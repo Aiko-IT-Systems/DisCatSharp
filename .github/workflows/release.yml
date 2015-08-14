@@ -1,0 +1,129 @@
+name: "Release DisCatSharp"
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_suffix:
+        description: "Version Suffix"
+        required: false
+        type: string
+      release_as_prerelease:
+        description: "Release as pre-release"
+        required: true
+        type: boolean
+        default: true
+      confirm_full_release:
+        description: "Confirm that you want to release as a full release"
+        required: false
+        type: boolean
+        default: false
+      packages_to_release:
+        description: "Packages to release"
+        required: false
+        type: choice
+        default: "DisCatSharp"
+        options:
+            - "DisCatSharp"
+            - "DisCatSharp.Attributes"
+#            - "DisCatSharp.Tools" # This does not work currently
+
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+
+jobs:
+  release:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    name: Build library and release
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Check Intention
+        if: ${{!inputs.release_as_prerelease}}
+        run: |
+          if [ "${{ inputs.confirm_full_release }}" = "false" ]; then
+            echo "Full release not confirmed, exiting."
+            exit 1
+          fi
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4.0.1
+        with:
+          dotnet-version: |
+            8.0.301
+            7.0.404
+      - name: Set outputs
+        if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
+        id: vars
+        run: |
+          echo "version=10.6.5" >> $GITHUB_OUTPUT
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+      - name: "Create Sentry prod release"
+        if: ${{ !inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp' }}
+        uses: getsentry/action-release@v1.7.0
+        with:
+          environment: prod
+          ignore_missing: true
+          version: DisCatSharp@${{ steps.vars.outputs.version }}+${{ steps.vars.outputs.sha }}
+      - name: "Create Sentry dev release"
+        if: ${{ inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp' }}
+        uses: getsentry/action-release@v1.7.0
+        with:
+          environment: dev
+          ignore_missing: true
+          version: DisCatSharp@${{ steps.vars.outputs.version }}-${{ github.event.inputs.version_suffix }}+${{ steps.vars.outputs.sha }}
+      - name: Restore dependencies (DisCatSharp)
+        if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
+        run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
+      - name: Restore dependencies (DisCatSharp.Attributes)
+        if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp.Attributes' }}
+        run: dotnet restore --no-cache -f -v minimal DisCatSharp.Attributes/DisCatSharp.Attributes.csproj
+      - name: Restore dependencies (DisCatSharp.Tools)
+        if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp.Tools' }}
+        run: dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.sln
+      - name: Build DisCatSharp as full release
+        if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp'}}
+        shell: pwsh
+        run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      - name: Build DisCatSharp as pre-release
+        if: ${{inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp'}}
+        shell: pwsh
+        run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      - name: Build DisCatSharp.Attributes as full release
+        if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Attributes'}}
+        shell: pwsh
+        run: ./DisCatSharp.Tools/rebuild-attributes.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
+      - name: Build DisCatSharp.Attributes as pre-release
+        if: ${{inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Attributes'}}
+        shell: pwsh
+        run: ./DisCatSharp.Tools/rebuild-attributes.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
+      - name: Build DisCatSharp.Tools as full release
+        if: ${{!inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Tools'}}
+        shell: pwsh
+        run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release
+      - name: Build DisCatSharp.Tools as pre-release
+        if: ${{inputs.release_as_prerelease && github.event.inputs.packages_to_release == 'DisCatSharp.Tools'}}
+        run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{github.event.inputs.version_suffix}}
+      - name: Remove invalid packages
+        if: ${{ github.event.inputs.packages_to_release == 'DisCatSharp' }}
+        shell: pwsh
+        run: rm *.symbols.*
+        working-directory: ./dcs-artifacts
+      - name: Publish to NuGet
+        shell: pwsh
+        run: dotnet nuget push --source https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} * --skip-duplicate
+        working-directory: ./dcs-artifacts
+      - name: Publish to GitHub Packages
+        shell: pwsh
+        run: dotnet nuget push --source https://nuget.pkg.github.com/Aiko-IT-Systems/index.json -k ${{secrets.NYUW_TOKEN_GH}} *
+        working-directory: ./dcs-artifacts

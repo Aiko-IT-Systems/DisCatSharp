@@ -1,0 +1,30 @@
+name: "Tweet Releases"
+on:
+  release:
+    types:
+        - published
+  workflow_dispatch:
+
+jobs:
+  tweet:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Get Release Tag"
+        id: tags
+        run: |
+          echo "release_tag=$(curl https://api.github.com/repos/Aiko-IT-Systems/DisCatSharp/releases/latest | jq -r '.tag_name')" >> $GITHUB_OUTPUT
+      - name: Tweet release
+        uses: Lulalaby/tweet@v2.0.0
+        with:
+          status: |
+            DisCatSharp ${{ steps.tags.outputs.release_tag }} is here!
+
+            Checkout our GitHub Page for the changelog regarding ${{ steps.tags.outputs.release_tag }}
+            Release: github.com/Aiko-IT-Systems/DisCatSharp/releases/tag/${{ steps.tags.outputs.release_tag }}
+        env:
+          CONSUMER_API_KEY: ${{ secrets.DCS_CONSUMER_KEY }}
+          CONSUMER_API_SECRET_KEY: ${{ secrets.DCS_CONSUMER_SECRET }}
+          ACCESS_TOKEN: ${{ secrets.DCS_ACCESS_TOKEN_KEY }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.DCS_ACCESS_TOKEN_SECRET }}

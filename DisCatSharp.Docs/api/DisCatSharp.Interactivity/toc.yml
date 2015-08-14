@@ -1,0 +1,65 @@
+### YamlMime:TableOfContent
+items:
+- uid: DisCatSharp.Interactivity
+  name: DisCatSharp.Interactivity
+  items:
+  - uid: DisCatSharp.Interactivity.InteractivityConfiguration
+    name: InteractivityConfiguration
+  - uid: DisCatSharp.Interactivity.InteractivityEvents
+    name: InteractivityEvents
+  - uid: DisCatSharp.Interactivity.InteractivityExtension
+    name: InteractivityExtension
+  - uid: DisCatSharp.Interactivity.InteractivityHelpers
+    name: InteractivityHelpers
+  - uid: DisCatSharp.Interactivity.InteractivityResult`1
+    name: InteractivityResult<T>
+  - uid: DisCatSharp.Interactivity.Page
+    name: Page
+  - uid: DisCatSharp.Interactivity.PaginationEmojis
+    name: PaginationEmojis
+- uid: DisCatSharp.Interactivity.Enums
+  name: DisCatSharp.Interactivity.Enums
+  items:
+  - uid: DisCatSharp.Interactivity.Enums.ButtonPaginationBehavior
+    name: ButtonPaginationBehavior
+  - uid: DisCatSharp.Interactivity.Enums.InteractionResponseBehavior
+    name: InteractionResponseBehavior
+  - uid: DisCatSharp.Interactivity.Enums.ModalPage
+    name: ModalPage
+  - uid: DisCatSharp.Interactivity.Enums.PaginatedModalResponse
+    name: PaginatedModalResponse
+  - uid: DisCatSharp.Interactivity.Enums.PaginationBehaviour
+    name: PaginationBehaviour
+  - uid: DisCatSharp.Interactivity.Enums.PaginationDeletion
+    name: PaginationDeletion
+  - uid: DisCatSharp.Interactivity.Enums.PollBehaviour
+    name: PollBehaviour
+  - uid: DisCatSharp.Interactivity.Enums.SplitType
+    name: SplitType
+- uid: DisCatSharp.Interactivity.EventHandling
+  name: DisCatSharp.Interactivity.EventHandling
+  items:
+  - uid: DisCatSharp.Interactivity.EventHandling.IPaginationRequest
+    name: IPaginationRequest
+  - uid: DisCatSharp.Interactivity.EventHandling.PaginationButtons
+    name: PaginationButtons
+  - uid: DisCatSharp.Interactivity.EventHandling.PollEmoji
+    name: PollEmoji
+  - uid: DisCatSharp.Interactivity.EventHandling.PollRequest
+    name: PollRequest
+  - uid: DisCatSharp.Interactivity.EventHandling.Reaction
+    name: Reaction
+  - uid: DisCatSharp.Interactivity.EventHandling.ReactionCollectRequest
+    name: ReactionCollectRequest
+- uid: DisCatSharp.Interactivity.Extensions
+  name: DisCatSharp.Interactivity.Extensions
+  items:
+  - uid: DisCatSharp.Interactivity.Extensions.ChannelExtensions
+    name: ChannelExtensions
+  - uid: DisCatSharp.Interactivity.Extensions.ClientExtensions
+    name: ClientExtensions
+  - uid: DisCatSharp.Interactivity.Extensions.InteractionExtensions
+    name: InteractionExtensions
+  - uid: DisCatSharp.Interactivity.Extensions.MessageExtensions
+    name: MessageExtensions
+memberLayout: SeparatePages

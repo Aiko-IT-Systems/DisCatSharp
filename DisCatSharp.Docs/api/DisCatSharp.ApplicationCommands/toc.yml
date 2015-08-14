@@ -1,0 +1,154 @@
+### YamlMime:TableOfContent
+items:
+- uid: DisCatSharp.ApplicationCommands
+  name: DisCatSharp.ApplicationCommands
+  items:
+  - uid: DisCatSharp.ApplicationCommands.ApplicationCommandsConfiguration
+    name: ApplicationCommandsConfiguration
+  - uid: DisCatSharp.ApplicationCommands.ApplicationCommandsExtension
+    name: ApplicationCommandsExtension
+  - uid: DisCatSharp.ApplicationCommands.ApplicationCommandsModule
+    name: ApplicationCommandsModule
+  - uid: DisCatSharp.ApplicationCommands.ApplicationCommandsUtilities
+    name: ApplicationCommandsUtilities
+  - uid: DisCatSharp.ApplicationCommands.ExtensionMethods
+    name: ExtensionMethods
+- uid: DisCatSharp.ApplicationCommands.Attributes
+  name: DisCatSharp.ApplicationCommands.Attributes
+  items:
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandCheckBaseAttribute
+    name: ApplicationCommandCheckBaseAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandModuleLifespanAttribute
+    name: ApplicationCommandModuleLifespanAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireBotPermissionsAttribute
+    name: ApplicationCommandRequireBotPermissionsAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireDirectMessageAttribute
+    name: ApplicationCommandRequireDirectMessageAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireDisCatSharpDeveloperAttribute
+    name: ApplicationCommandRequireDisCatSharpDeveloperAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireGuildAttribute
+    name: ApplicationCommandRequireGuildAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireGuildOwnerAttributeAttribute
+    name: ApplicationCommandRequireGuildOwnerAttributeAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireNsfwAttribute
+    name: ApplicationCommandRequireNsfwAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequirePermissionsAttribute
+    name: ApplicationCommandRequirePermissionsAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequirePremiumAttribute
+    name: ApplicationCommandRequirePremiumAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequirePremiumTestAttribute
+    name: ApplicationCommandRequirePremiumTestAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireTeamAdminAttribute
+    name: ApplicationCommandRequireTeamAdminAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireTeamDeveloperAttribute
+    name: ApplicationCommandRequireTeamDeveloperAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireTeamMemberAttribute
+    name: ApplicationCommandRequireTeamMemberAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireTeamOwnerAttribute
+    name: ApplicationCommandRequireTeamOwnerAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireTeamReadOnlyAttribute
+    name: ApplicationCommandRequireTeamReadOnlyAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ApplicationCommandRequireUserPermissionsAttribute
+    name: ApplicationCommandRequireUserPermissionsAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.AutocompleteAttribute
+    name: AutocompleteAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ChannelTypesAttribute
+    name: ChannelTypesAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ChoiceAttribute
+    name: ChoiceAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ChoiceNameAttribute
+    name: ChoiceNameAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ChoiceProvider
+    name: ChoiceProvider
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ChoiceProviderAttribute
+    name: ChoiceProviderAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ContextMenuAttribute
+    name: ContextMenuAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.ContextMenuCooldownAttribute
+    name: ContextMenuCooldownAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.DontInjectAttribute
+    name: DontInjectAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.IAutocompleteProvider
+    name: IAutocompleteProvider
+  - uid: DisCatSharp.ApplicationCommands.Attributes.IChoiceProvider
+    name: IChoiceProvider
+  - uid: DisCatSharp.ApplicationCommands.Attributes.MaximumLengthAttribute
+    name: MaximumLengthAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.MaximumValueAttribute
+    name: MaximumValueAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.MinimumLengthAttribute
+    name: MinimumLengthAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.MinimumValueAttribute
+    name: MinimumValueAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.OptionAttribute
+    name: OptionAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.RequireAnyPermissionsAttribute
+    name: RequireAnyPermissionsAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.SlashCommandAttribute
+    name: SlashCommandAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.SlashCommandCooldownAttribute
+    name: SlashCommandCooldownAttribute
+  - uid: DisCatSharp.ApplicationCommands.Attributes.SlashCommandGroupAttribute
+    name: SlashCommandGroupAttribute
+- uid: DisCatSharp.ApplicationCommands.Context
+  name: DisCatSharp.ApplicationCommands.Context
+  items:
+  - uid: DisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext
+    name: ApplicationCommandsTranslationContext
+  - uid: DisCatSharp.ApplicationCommands.Context.AutocompleteContext
+    name: AutocompleteContext
+  - uid: DisCatSharp.ApplicationCommands.Context.BaseContext
+    name: BaseContext
+  - uid: DisCatSharp.ApplicationCommands.Context.ContextMenuContext
+    name: ContextMenuContext
+  - uid: DisCatSharp.ApplicationCommands.Context.InteractionContext
+    name: InteractionContext
+- uid: DisCatSharp.ApplicationCommands.Entities
+  name: DisCatSharp.ApplicationCommands.Entities
+  items:
+  - uid: DisCatSharp.ApplicationCommands.Entities.ChoiceTranslator
+    name: ChoiceTranslator
+  - uid: DisCatSharp.ApplicationCommands.Entities.CommandTranslator
+    name: CommandTranslator
+  - uid: DisCatSharp.ApplicationCommands.Entities.GroupTranslator
+    name: GroupTranslator
+  - uid: DisCatSharp.ApplicationCommands.Entities.ICooldownResponder
+    name: ICooldownResponder
+  - uid: DisCatSharp.ApplicationCommands.Entities.OptionTranslator
+    name: OptionTranslator
+  - uid: DisCatSharp.ApplicationCommands.Entities.RegisteredDiscordApplicationCommand
+    name: RegisteredDiscordApplicationCommand
+  - uid: DisCatSharp.ApplicationCommands.Entities.SubGroupTranslator
+    name: SubGroupTranslator
+- uid: DisCatSharp.ApplicationCommands.Enums
+  name: DisCatSharp.ApplicationCommands.Enums
+  items:
+  - uid: DisCatSharp.ApplicationCommands.Enums.ApplicationCommandModuleLifespan
+    name: ApplicationCommandModuleLifespan
+- uid: DisCatSharp.ApplicationCommands.EventArgs
+  name: DisCatSharp.ApplicationCommands.EventArgs
+  items:
+  - uid: DisCatSharp.ApplicationCommands.EventArgs.ApplicationCommandsModuleReadyEventArgs
+    name: ApplicationCommandsModuleReadyEventArgs
+  - uid: DisCatSharp.ApplicationCommands.EventArgs.ApplicationCommandsModuleStartupFinishedEventArgs
+    name: ApplicationCommandsModuleStartupFinishedEventArgs
+  - uid: DisCatSharp.ApplicationCommands.EventArgs.ContextMenuErrorEventArgs
+    name: ContextMenuErrorEventArgs
+  - uid: DisCatSharp.ApplicationCommands.EventArgs.ContextMenuExecutedEventArgs
+    name: ContextMenuExecutedEventArgs
+  - uid: DisCatSharp.ApplicationCommands.EventArgs.GlobalApplicationCommandsRegisteredEventArgs
+    name: GlobalApplicationCommandsRegisteredEventArgs
+  - uid: DisCatSharp.ApplicationCommands.EventArgs.GuildApplicationCommandsRegisteredEventArgs
+    name: GuildApplicationCommandsRegisteredEventArgs
+  - uid: DisCatSharp.ApplicationCommands.EventArgs.SlashCommandErrorEventArgs
+    name: SlashCommandErrorEventArgs
+  - uid: DisCatSharp.ApplicationCommands.EventArgs.SlashCommandExecutedEventArgs
+    name: SlashCommandExecutedEventArgs
+- uid: DisCatSharp.ApplicationCommands.Exceptions
+  name: DisCatSharp.ApplicationCommands.Exceptions
+  items:
+  - uid: DisCatSharp.ApplicationCommands.Exceptions.ContextMenuExecutionChecksFailedException
+    name: ContextMenuExecutionChecksFailedException
+  - uid: DisCatSharp.ApplicationCommands.Exceptions.SlashExecutionChecksFailedException
+    name: SlashExecutionChecksFailedException
+memberLayout: SeparatePages

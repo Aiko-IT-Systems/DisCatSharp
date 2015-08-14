@@ -1,0 +1,116 @@
+name: "Documentation"
+on:
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+
+jobs:
+  build:
+    timeout-minutes: 25
+    runs-on: ubuntu-latest
+    name: Build documentation
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token:  ${{ secrets.NYUW_TOKEN_GH }}
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4.0.1
+      with:
+        dotnet-version: |
+          8.0.301
+          7.0.403
+    - name: Git fetch unshallow
+      run: git fetch --unshallow
+    - name: Install DocFX
+      run: dotnet tool update -g docfx
+    - name: Restore packages
+      run: dotnet restore --no-cache -f -v minimal DisCatSharp.sln
+    - name: Build library
+      run: dotnet build -c Release --no-restore -v minimal -f net8.0 DisCatSharp.sln
+      timeout-minutes: 7
+      continue-on-error: true
+    #- name: Add Custom Plugins
+    #  run: cp -R DisCatSharp.Docs/dcs/plugins/* /home/runner/.dotnet/tools/.store/docfx/2.67.0/docfx/2.67.0/tools/net7.0/any/
+    - name: Build Docs
+      run: docfx DisCatSharp.Docs/docfx.json
+    - name: Pack Docs
+      shell: pwsh
+      run: ./DisCatSharp.Tools/pack-docs.ps1 -DocsPath "./DisCatSharp.Docs" -OutputPath "./" -PackageName "dcs-docs"
+    - name: Upload packed docs
+      uses: actions/upload-artifact@v4
+      with:
+        name: dcs-docs.zip
+        path: dcs-docs.zip
+        retention-days: 5
+#    - name: Force add build files
+#      run: git add DisCatSharp.Docs/obj/.cache/build/* -f
+#    - name: Commit and push changes
+#      uses: EndBug/add-and-commit@main
+#      with:
+#        default_author: user_info
+#        author_name: NyuwBot
+#        author_email: nyuw@aitsys.dev
+#        committer_name: NyuwBot
+#        committer_email: nyuw@aitsys.dev
+#        commit: --signoff
+#        message: '[ci skip] Sync docs changes'
+#        tag_push: '--force'
+  documentation:
+    runs-on: ubuntu-latest
+    name: Upload documentation
+    needs: build
+    steps:
+    - name: Checkout docs repository
+      uses: actions/checkout@v4
+      with:
+        repository: Aiko-IT-Systems/DisCatSharp.Docs
+        token: ${{ secrets.NYUW_TOKEN_GH }}
+    - name: Purge old docs
+      shell: pwsh
+      run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
+    - name: Download packed docs
+      uses: actions/download-artifact@v4
+      with:
+        name: dcs-docs.zip
+    - name: Extract new docs
+      run: unzip dcs-docs.zip -d .
+    - name: Deleze zip
+      run: rm dcs-docs.zip
+    - name: Delete packed docs
+      uses: geekyeggo/delete-artifact@v5
+      with:
+        token: ${{ secrets.NYUW_TOKEN_GH }}
+        name: dcs-docs.zip
+    - name: Add .htaccess
+      run: rm -f .htaccess && wget https://gist.githubusercontent.com/Lulalaby/8a032d0ddebb9125691094edc67b6593/raw/0c4bf0423cfe334fdd5092b014d2481759dd052a/.htaccess
+    #- name: Add _redirects
+    #  run: rm -f _redirects && wget https://gist.githubusercontent.com/Lulalaby/0c784680a855fd161411002e3859b4fd/raw/9708d1acfce3f647cbb8da19c2022a20198979fa/_redirects
+    - name: Set access rights
+      run: sudo chmod 777 -R .
+    - name: Commit and push changes
+      uses: EndBug/add-and-commit@main
+      with:
+        default_author: user_info
+        author_name: NyuwBot
+        author_email: nyuw@aitsys.dev
+        committer_name: NyuwBot
+        committer_email: nyuw@aitsys.dev
+        commit: --signoff
+        message: 'Docs update (https://github.com/${{github.repository}}/commit/${{github.sha}})'
+  publish-backup:
+    runs-on: ubuntu-latest
+    name: Publish documentation on backup server
+    needs: documentation
+    steps:
+    - name: Get SSH Agent
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.AITSYS_SSH }}
+    - name: Publish on server
+      continue-on-error: true
+      run: ssh -o StrictHostKeyChecking=no -T root@207.180.240.241 -f 'cd /var/www/dcsdocs && git pull -f && service apache2 restart'

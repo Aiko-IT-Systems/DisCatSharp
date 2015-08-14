@@ -1,0 +1,70 @@
+name: "Internal Release"
+
+on:
+  workflow_dispatch:
+  merge_group:
+  push:
+    branches-ignore:
+      - main
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: true
+
+jobs:
+  release:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    name: Build library and release internally
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4.0.1
+        with:
+          dotnet-version: |
+            8.0.301
+            7.0.404
+      - name: Restore dependencies
+        run: |
+          dotnet restore --no-cache -f -v minimal DisCatSharp.sln
+          dotnet restore --no-cache -f -v minimal DisCatSharp.Tools/DisCatSharp.Tools.sln
+      - name: Set outputs
+        id: vars
+        run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+      - name: Build library as pre-release
+        shell: pwsh
+        run: ./DisCatSharp.Tools/rebuild-lib.ps1 -ArtifactLocation ./dcs-artifacts -Configuration Release -VersionSuffix ${{ steps.vars.outputs.sha }}
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+#      - name: Build tools as pre-release
+#        shell: pwsh
+#        run: ./DisCatSharp.Tools/rebuild-tools.ps1 -ArtifactLocation ./dcs-tools-artifacts -Configuration Release -VersionSuffix ${{ steps.vars.outputs.sha }}
+      - name: Build attributes as pre-release
+        shell: pwsh
+        run: ./DisCatSharp.Tools/rebuild-attributes.ps1 -ArtifactLocation ./dcs-attributes-artifacts -Configuration Release -VersionSuffix ${{ steps.vars.outputs.sha }}
+      - name: Remove invalid packages
+        run: rm *.symbols.*
+        working-directory: ./dcs-artifacts
+      - name: Remove symbol packages
+        run: rm *.snupkg
+        working-directory: ./dcs-artifacts
+#      - name: Remove symbol packages for tools
+#        run: rm *.snupkg
+#        working-directory: ./dcs-tools-artifacts
+      - name: Remove symbol packages for attributes
+        run: rm *.snupkg
+        working-directory: ./dcs-attributes-artifacts
+      - name: Add AITSYS Internal NuGet source
+        run: dotnet nuget add source --name aitsys https://registry.aitsys-infra.tools/nuget/aitsys/index.json --username bytesafe --password ${{ secrets.BYTESAFE }} --store-password-in-clear-text
+      - name: Publish to library to AITSYS Internal Registry
+        run: dotnet nuget push --source aitsys -k ${{ secrets.BYTESAFE }} *
+        working-directory: ./dcs-artifacts
+#      - name: Publish to tools to AITSYS Internal Registry
+#        run: dotnet nuget push --source aitsys -k ${{ secrets.BYTESAFE }} *
+#        working-directory: ./dcs-tools-artifacts
+      - name: Publish attributes to AITSYS Internal Registry
+        run: dotnet nuget push --source aitsys -k ${{ secrets.BYTESAFE }} *
+        working-directory: ./dcs-attributes-artifacts

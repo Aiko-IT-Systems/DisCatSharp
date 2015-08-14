@@ -1,0 +1,433 @@
+:root {
+	--bs-font-sans-gg: "gg-sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+body {
+	--bs-body-font-family: var(--bs-font-sans-gg) !important;
+}
+
+@media print {
+    body {
+		--bs-body-font-family: var(--bs-font-sans-gg) !important;
+		font-family: var(--bs-font-sans-gg) !important;
+    }
+
+	.discord-messages, discord-messages {
+		display: none !important;
+		visibility: hidden !important;
+	}
+}
+
+
+footer {
+	text-align: center !important;
+}
+
+.featherlight-content {
+	background-color: var(--bs-body-bg) !important;
+}
+
+#logo {
+	width: 40px !important;
+	height: 40px !important;
+}
+
+#ctheme {
+	display: none !important;
+}
+
+[data-bs-theme=dark] {
+	--bs-content-bg: #020202 !important;
+	--bs-body-bg: #0C0C0D !important;
+	--bs-heading-color: #5865F2 !important;
+	--bs-link-color-rgb: rgb(235, 69, 158) !important;
+	--bs-link-color: #EB459E !important;
+	--bs-link-opacity: 1 !important;
+	--bs-link-hover-color: #458FD0 !important;
+	--bs-affix-a-color: #8FCBFF !important;
+	--bs-affix-a-hover-color: #81E10C !important;
+	--bs-danger-text-emphasis: #020202 !important;
+	--bs-danger-bg-subtle: #ED4245 !important;
+	--bs-danger-border-subtle: #000000 !important;
+	--bs-warning-text-emphasis: #020202 !important;
+	--bs-warning-bg-subtle: #FEE75C !important;
+	--bs-warning-border-subtle: #000000 !important;
+	--bs-info-text-emphasis: #020202 !important;
+	--bs-info-bg-subtle: #78c5ff !important;
+	--bs-info-border-subtle: #000000 !important;
+	--bs-body-color: #FFFFFF !important;
+	--bs-navbar-brand-color: #FFFFFF !important;
+	--bs-heading-1-color: #FFFFFF !important;
+	--bs-code-color: #92EC71 !important;
+	--bs-code-bg: #000000 !important;
+	--bs-nav-link-color: #C89696 !important;
+	--bs-nav-tabs-link-active-color: #16DB6C !important;
+	--bs-nav-tabs-link-active-bg: #020202 !important;
+	--bs-nav-tabs-link-active-border-color: rgba(255, 255, 255, 0.05) !important;
+	--bs-pagination-man-color: #FFFFFF !important;
+}
+
+.toc-offcanvas,
+.affix {
+	background-color: var(--bs-body-bg) !important;
+}
+
+.content {
+	background-color: var(--bs-body-bg) !important;
+}
+
+.bg-body {
+	--bs-bg-opacity: 1;
+	background-color: var(--bs-body-bg) !important;
+}
+
+.bg-body .nav-link {
+	color: #B8BEFF !important;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+	color: var(--bs-nav-tabs-link-active-color) !important;
+	background-color: var(--bs-nav-tabs-link-active-bg);
+	border-color: var(--bs-nav-tabs-link-active-border-color);
+}
+
+.toc li.active > a {
+	color: var(--bs-nav-tabs-link-active-color) !important;
+	/*background-color: var(--bs-nav-tabs-link-active-bg);*/
+	/*border-color: var(--bs-nav-tabs-link-active-border-color);*/
+	font-weight: bold;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+	color: var(--bs-nav-link-hover-color) !important;
+}
+
+.nav-link {
+	display: block;
+	padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+	font-size: var(--bs-nav-link-font-size);
+	font-weight: var(--bs-nav-link-font-weight);
+	color: #C89696 !important;
+	text-decoration: none;
+	background: none;
+	border: 0;
+	transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+}
+
+.breadcrumb,
+.breadcrumb a {
+	color: #00ffcf !important;
+}
+
+code {
+	background-color: var(--bs-code-bg) !important;
+}
+
+h1 {
+	color: var(--bs-heading-1-color) !important;
+}
+
+.navbar-brand {
+	color: var(--bs-navbar-brand-color) !important;
+}
+
+.alert h5 {
+	color: var(--bs-alert-color) !important;
+}
+
+a {
+	color: var(--bs-link-color) !important;
+	text-decoration: underline;
+}
+
+a:hover {
+	color: var(--bs-link-hover-color) !important;
+}
+
+.affix a {
+	color: var(--bs-affix-a-color) !important;
+}
+
+.affix ul li a:hover,
+.affix ul li a:focus {
+	color: var(--bs-affix-a-hover-color) !important;
+}
+
+.affix h5 {
+	color: #ffdfa2 !important;
+	font-weight: bold !important;
+}
+
+.toc a {
+	color: var(--bs-affix-a-color) !important;
+}
+
+.toc a:hover,
+.toc a:focus {
+	color: var(--bs-affix-a-hover-color) !important;
+}
+
+.contribution a.edit-link {
+	color: #E5E891 !important;
+}
+
+.page-link {
+	position: relative;
+	display: block;
+	padding: var(--bs-pagination-padding-y) var(--bs-pagination-padding-x);
+	font-size: var(--bs-pagination-font-size) !important;
+	color: var(--bs-pagination-man-color) !important;
+	text-decoration: none;
+	background-color: var(--bs-pagination-bg) !important;
+	border: var(--bs-pagination-border-width) solid var(--bs-pagination-border-color);
+	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.page-link.disabled, .disabled > .page-link {
+	color: var(--bs-pagination-disabled-color) !important;
+	pointer-events: none;
+}
+
+.page-link.active, .active > .page-link {
+	z-index: 3;
+	color: var(--bs-pagination-active-color) !important;
+	background-color: var(--bs-pagination-active-bg) !important;
+	border-color: var(--bs-pagination-active-border-color) !important;
+}
+
+.page-link:hover {
+	z-index: 2;
+	color: var(--bs-pagination-hover-color) !important;
+	background-color: var(--bs-pagination-hover-bg) !important;
+	border-color: var(--bs-pagination-hover-border-color) !important;
+}
+
+.sr-item > div > b {
+	color: white;
+	background-image: linear-gradient(to right, #F27121cc, #E94057cc, #8A2387cc);
+	border-radius: 6px;
+	padding: 3px 0px;
+}
+
+/**
+ * @provides font-gg-sans
+ */
+
+@font-face {
+	font-family: "gg-sans";
+	font-style: normal;
+	font-weight: 400;
+	font-display: block;
+	src: url(/fonts/gg_sans_normal400.woff2);
+	src: url(/fonts/gg_sans_normal400.woff2) format('woff2'),
+		url(/fonts/gg_sans_normal400.eot) format('embedded-opentype'),
+		url(/fonts/gg_sans_normal400.woff) format('woff'),
+		url(/fonts/gg_sans_normal400.ttf) format('truetype');
+}
+
+@font-face {
+	font-family: "gg-sans";
+	font-style: italic;
+	font-weight: 400;
+	font-display: block;
+	src: url(/fonts/gg_sans_italic400.woff2);
+	src: url(/fonts/gg_sans_italic400.woff2) format('woff2'),
+		url(/fonts/gg_sans_italic400.eot) format('embedded-opentype'),
+		url(/fonts/gg_sans_italic400.woff) format('woff'),
+		url(/fonts/gg_sans_italic400.ttf) format('truetype');
+}
+
+@font-face {
+	font-family: "gg-sans";
+	font-style: normal;
+	font-weight: 500;
+	font-display: block;
+	src: url(/fonts/gg_sans_normal500.woff2);
+	src: url(/fonts/gg_sans_normal500.woff2) format('woff2'),
+		url(/fonts/gg_sans_normal500.eot) format('embedded-opentype'),
+		url(/fonts/gg_sans_normal500.woff) format('woff'),
+		url(/fonts/gg_sans_normal500.ttf) format('truetype');
+}
+
+@font-face {
+	font-family: "gg-sans";
+	font-style: italic;
+	font-weight: 500;
+	font-display: block;
+	src: url(/fonts/gg_sans_italic500.woff2);
+	src: url(/fonts/gg_sans_italic500.woff2) format("woff2");
+	src: url(/fonts/gg_sans_italic500.woff2) format('woff2'),
+		url(/fonts/gg_sans_italic500.eot) format('embedded-opentype'),
+		url(/fonts/gg_sans_italic500.woff) format('woff'),
+		url(/fonts/gg_sans_italic500.ttf) format('truetype');
+}
+
+@font-face {
+	font-family: "gg-sans";
+	font-style: normal;
+	font-weight: 600;
+	font-display: block;
+	src: url(/fonts/gg_sans_normal600.woff2);
+	src: url(/fonts/gg_sans_normal600.woff2) format('woff2'),
+		url(/fonts/gg_sans_normal600.eot) format('embedded-opentype'),
+		url(/fonts/gg_sans_normal600.woff) format('woff'),
+		url(/fonts/gg_sans_normal600.ttf) format('truetype');
+}
+
+@font-face {
+	font-family: "gg-sans";
+	font-style: italic;
+	font-weight: 600;
+	font-display: block;
+	src: url(/fonts/gg_sans_italic600.woff2);
+	src: url(/fonts/gg_sans_italic600.woff2) format('woff2'),
+		url(/fonts/gg_sans_italic600.eot) format('embedded-opentype'),
+		url(/fonts/gg_sans_italic600.woff) format('woff'),
+		url(/fonts/gg_sans_italic600.ttf) format('truetype');
+}
+
+@font-face {
+	font-family: "gg-sans";
+	font-style: normal;
+	font-weight: 700;
+	font-display: block;
+	src: url(/fonts/gg_sans_normal700.woff2);
+	src: url(/fonts/gg_sans_normal700.woff2) format('woff2'),
+		url(/fonts/gg_sans_normal700.eot) format('embedded-opentype'),
+		url(/fonts/gg_sans_normal700.woff) format('woff'),
+		url(/fonts/gg_sans_normal700.ttf) format('truetype');
+}
+
+@font-face {
+	font-family: "gg-sans";
+	font-style: italic;
+	font-weight: 700;
+	font-display: block;
+	src: url(/fonts/gg_sans_italic700.woff2);
+	src: url(/fonts/gg_sans_italic700.woff2) format("woff2");
+	src: url(/fonts/gg_sans_italic700.woff2) format('woff2'),
+		url(/fonts/gg_sans_italic700.eot) format('embedded-opentype'),
+		url(/fonts/gg_sans_italic700.woff) format('woff'),
+		url(/fonts/gg_sans_italic700.ttf) format('truetype');
+}
+
+@font-face {
+	font-family: "gg-sans";
+	font-style: normal;
+	font-weight: 800;
+	font-display: block;
+	src: url(/fonts/gg_sans_normal800.woff2);
+	src: url(/fonts/gg_sans_normal800.woff2) format("woff2");
+	src: url(/fonts/gg_sans_normal800.woff2) format('woff2'),
+		url(/fonts/gg_sans_normal800.eot) format('embedded-opentype'),
+		url(/fonts/gg_sans_normal800.woff) format('woff'),
+		url(/fonts/gg_sans_normal800.ttf) format('truetype');
+}
+
+@font-face {
+	font-family: "gg-sans";
+	font-style: italic;
+	font-weight: 800;
+	font-display: block;
+	src: url(/fonts/gg_sans_italic800.woff2);
+	src: url(/fonts/gg_sans_italic800.woff2) format("woff2");
+	src: url(/fonts/gg_sans_italic800.woff2) format('woff2'),
+		url(/fonts/gg_sans_italic800.eot) format('embedded-opentype'),
+		url(/fonts/gg_sans_italic800.woff) format('woff'),
+		url(/fonts/gg_sans_italic800.ttf) format('truetype');
+}
+
+.discord-messages {
+	background-color: #020202 !important;
+	color: #fff;
+	display: block;
+	font-size: 16px;
+	line-height: 170%;
+	border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.discord-messages,
+.discord-invite-counts,
+.discord-invite,
+.discord-invite-info,
+.discord-system-message,
+.discord-message,
+.discord-invite,
+.discord-attachments,
+.discord-replied-message {
+	font-family: var(--bs-font-sans-gg) !important;
+}
+
+a.discord-invite-join.external[href]::after {
+	content: '' !important;
+}
+
+.discord-embed-author>a {
+	color: white !important;
+}
+
+.discord-embed-author>a[href]::after {
+	content: '' !important;
+}
+
+.discord-embed-title>a {
+	color: #04A8FC !important;
+}
+
+.discord-embed-title>a[href]::after {
+	content: '' !important;
+}
+
+a.discord-link {
+	color: #04A8FC !important;
+}
+
+a.discord-link.external[href]::after {
+	content: '' !important;
+}
+
+a.discord-button[href] {
+	color: #fff !important;
+}
+
+a.discord-button[href]::after {
+	content: '' !important;
+}
+
+.discord-embed a.discord-provider {
+  color: #6f9c8e !important;
+}
+.discord-embed a.discord-provider::after {
+  content: '' !important;
+}
+
+*,
+::before,
+::after {
+	box-sizing: content-box !important;
+}
+
+.discord-invite .discord-invite-badge {
+	width: 16px !important;
+	height: 23px !important;
+}
+
+.discord-header-text {
+	flex-grow: 1;
+	left: 8px !important;
+	position: relative !important;
+}
+
+.discord-header {
+	display: contents !important;
+}
+
+.IMPORTANT > p > code {
+	color: #ffffff !important;
+}
+
+.table-responsive {
+	overflow-x: inherit !important;
+}

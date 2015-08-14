@@ -1,0 +1,20 @@
+items:
+- name: Visual Studio Tools
+  href: index.md
+- name: Analyzer
+  expanded: true
+  items:
+  - name: DisCatSharp Analyzer
+    items:
+    - name: DCS0001
+      href: analyzer/dcs/0001.md
+    - name: DCS0002
+      href: analyzer/dcs/0002.md
+    - name: DCS0101
+      href: analyzer/dcs/0101.md
+    - name: DCS0102
+      href: analyzer/dcs/0102.md
+    - name: DCS0103
+      href: analyzer/dcs/0103.md
+    - name: DCS0200
+      href: analyzer/dcs/0200.md

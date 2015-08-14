@@ -1,0 +1,18 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": [
+		"local>Aiko-IT-Systems/renovate-config",
+		":dependencyDashboard"
+	],
+	"ignoreDeps": ["Microsoft.VisualStudio.SDK"],
+	"packageRules": [
+		{
+			"matchManagers": ["npm"],
+			"enabled": false
+		}
+	],
+	"ignorePaths": [
+		"DisCatSharp.LavalinkV1/",
+		"DisCatSharp.Tools/DisCatSharp.Analytics.VSIX/"
+	]
+}

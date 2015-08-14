@@ -1,0 +1,44 @@
+### YamlMime:TableOfContent
+items:
+- uid: DisCatSharp.VoiceNext
+  name: DisCatSharp.VoiceNext
+  items:
+  - uid: DisCatSharp.VoiceNext.AudioFormat
+    name: AudioFormat
+  - uid: DisCatSharp.VoiceNext.ExtensionMethods
+    name: ExtensionMethods
+  - uid: DisCatSharp.VoiceNext.IVoiceFilter
+    name: IVoiceFilter
+  - uid: DisCatSharp.VoiceNext.StreamExtensions
+    name: StreamExtensions
+  - uid: DisCatSharp.VoiceNext.VoiceApplication
+    name: VoiceApplication
+  - uid: DisCatSharp.VoiceNext.VoiceNextConfiguration
+    name: VoiceNextConfiguration
+  - uid: DisCatSharp.VoiceNext.VoiceNextConnection
+    name: VoiceNextConnection
+  - uid: DisCatSharp.VoiceNext.VoiceNextEvents
+    name: VoiceNextEvents
+  - uid: DisCatSharp.VoiceNext.VoiceNextExtension
+    name: VoiceNextExtension
+  - uid: DisCatSharp.VoiceNext.VoiceTransmitSink
+    name: VoiceTransmitSink
+- uid: DisCatSharp.VoiceNext.Codec
+  name: DisCatSharp.VoiceNext.Codec
+  items:
+  - uid: DisCatSharp.VoiceNext.Codec.EncryptionMode
+    name: EncryptionMode
+  - uid: DisCatSharp.VoiceNext.Codec.Opus
+    name: Opus
+  - uid: DisCatSharp.VoiceNext.Codec.OpusDecoder
+    name: OpusDecoder
+- uid: DisCatSharp.VoiceNext.EventArgs
+  name: DisCatSharp.VoiceNext.EventArgs
+  items:
+  - uid: DisCatSharp.VoiceNext.EventArgs.VoiceReceiveEventArgs
+    name: VoiceReceiveEventArgs
+  - uid: DisCatSharp.VoiceNext.EventArgs.VoiceUserJoinEventArgs
+    name: VoiceUserJoinEventArgs
+  - uid: DisCatSharp.VoiceNext.EventArgs.VoiceUserLeaveEventArgs
+    name: VoiceUserLeaveEventArgs
+memberLayout: SeparatePages
