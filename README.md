@@ -1,12 +1,15 @@
 ![Logo of DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/raw/master/logo/dsharp+_smaller.png)
 
-# DSharpPlus
+# DSharpPlus - NextGen
 An unofficial .NET wrapper for the Discord API, based off [DiscordSharp](https://github.com/suicvne/DiscordSharp), but rewritten to fit the API standards.
 
 [![Build Status](https://img.shields.io/appveyor/ci/Emzi0767/dsharpplus/master.svg)](https://ci.appveyor.com/project/Emzi0767/dsharpplus/branch/master)
 [![Discord Server](https://img.shields.io/discord/379378609942560770.svg?label=discord)](https://discord.gg/dsharpplus) 
 [![SlimGet](https://img.shields.io/badge/dynamic/json.svg?color=yellow&label=slimget&query=%24.items%5B-1%3A%5D.upper&url=https%3A%2F%2Fnuget.emzi0767.com%2Fapi%2Fv3%2Fregistration%2FPlain%2Fdsharpplus%2Findex.json)](https://nuget.emzi0767.com/gallery/search?q=DSharpPlus&pre=true)
 [![NuGet](https://img.shields.io/nuget/vpre/DSharpPlus.svg)](https://nuget.org/packages/DSharpPlus)
+
+# Why NextGen?
+The way how DSP is working and the maintainer.. I don't like it. I decided to maintain an own version of it.
 
 # Installing
 You can install the library from following sources:
@@ -33,25 +36,17 @@ The following resources apply only for the latest stable version of the library.
 * [Making your first bot in C#](https://dsharpplus.github.io/articles/basics/bot_account.html).
 
 ### Example bots
-* [Example by Emzi0767](https://github.com/DSharpPlus/Example-Bots)
+* [Example by Lulalaby & Lunar](https://github.com/Aiko-IT-Systems/DSharpPlus.Examples.Bots)
 
 # I want to throw my money at you!
-If you want to give us some money as a thank you gesture, you can do so using one of these links:
+If you want to give me some money as a thank you gesture, you can do so using one of these links:
 
-* Naamloos
-   * [Ko-Fi](https://ko-fi.com/naamloos)
-* Emzi0767
-   * [Ko-Fi](https://ko-fi.com/emzi0767)
-   * [PayPal](https://paypal.me/Emzi0767/5USD)
-   * [Patreon](https://patreon.com/emzi0767)
+* Lulalany
+   * [PayPal](https://paypal.me/aitsys)
 
 # Questions?
 Come talk to us here:
 
-[![DSharpPlus Chat](https://discord.com/api/guilds/379378609942560770/embed.png?style=banner1)](https://discord.gg/dsharpplus)
-
-Alternatively, you could also join us in the [Discord API chat](https://discord.gg/discord-api) at **#dotnet_dsharpplus**.
-
-[![Discord API Chat](https://discord.com/api/guilds/81384788765712384/embed.png?style=banner1)](https://discord.gg/discord-api)
+[![DSharpPlus Chat](https://discord.com/api/guilds/858089281214087179/embed.png?style=banner1)](https://discord.gg/CPhrqxu2SF)
 
 #test
