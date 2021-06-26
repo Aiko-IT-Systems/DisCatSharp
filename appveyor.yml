@@ -49,10 +49,10 @@ deploy:
   server:
   api_key:
     secure: XtptFAacNyLULAZaRpAGh/e28Q1jkZSmODo4d2dkAUamFSsTQa3MzJAo4lSC1Vlb
-  skip_symbols: false
-  symbol_server:
+  skip_symbols: true
 - provider: NuGet
   server: https://nuget.pkg.github.com/Aiko-IT-Systems/index.json
   username: Lulalaby
   api_key:
     secure: 3l827zZPk7wTgnX2eZpc6bYcbOKVQnkB3xOkH43UTIHknJ0IMHrP7S6YNmgIRzkt
+  skip_symbols: true
