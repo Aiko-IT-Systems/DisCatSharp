@@ -19,8 +19,6 @@
     <RepositoryUrl>https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen</RepositoryUrl>
     <PackageId>DSharpPlusNextGen.SlashCommands</PackageId>
     <PackageIcon>d#+.png</PackageIcon>
-    <Version>6.0.0</Version>
-    <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <Company>AITSYS, IDoEverything</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
