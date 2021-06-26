@@ -33,7 +33,7 @@ namespace DSharpPlus.Entities
         /// The type of component this represents. Always returns button.
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-        public ComponentType Type { get; internal set; } = ComponentType.Button;
+        public new ComponentType Type { get; internal set; } = ComponentType.Button;
 
         /// <summary>
         /// The url to open when pressing this button.

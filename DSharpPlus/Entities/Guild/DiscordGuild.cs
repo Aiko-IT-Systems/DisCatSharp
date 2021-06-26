@@ -439,7 +439,7 @@ namespace DSharpPlus.Entities
         public bool HasWelcomeScreen => this.Features.Contains("WELCOME_SCREEN_ENABLED");
 
         /// <summary>
-        /// Whether this guild has enabled Membership Screening.
+        /// Whether this guild has enabled membership screening.
         /// </summary>
         [JsonIgnore]
         public bool HasMemberVerificationGate => this.Features.Contains("MEMBER_VERIFICATION_GATE_ENABLED");
