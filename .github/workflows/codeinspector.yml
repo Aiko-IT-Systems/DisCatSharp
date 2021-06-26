@@ -13,9 +13,9 @@ jobs:
         code_inspector_access_key: ${{ secrets.CODE_INSPECTOR_ACCESS_KEY }}
         code_inspector_secret_key: ${{ secrets.CODE_INSPECTOR_SECRET_KEY }}
         min_quality_grade: 'WARNING'
-        min_quality_score: '50'
+        min_quality_score: '30'
         max_defects_rate: '0.0001'
         max_complex_functions_rate: '0.0001'
         max_long_functions_rate: '0.0001'
-        project_name: ''
+        project_name: 'DSharpPlusNextGen'
         max_timeout_sec: '600'
