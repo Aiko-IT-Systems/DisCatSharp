@@ -47,8 +47,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlusNextGen.Rest", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlusNextGen.SlashCommands", "DSharpPlusNextGen.SlashCommands\DSharpPlusNextGen.SlashCommands.csproj", "{AD530FD0-523C-4DE7-9AF6-B9A3785492C1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlusNextGen.MSTest", "DSharpPlusNextGen.MSTest\DSharpPlusNextGen.MSTest.csproj", "{29671A92-C0BF-49CF-A936-6FC1E188E755}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
