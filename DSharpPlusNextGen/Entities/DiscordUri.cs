@@ -96,10 +96,9 @@ namespace DSharpPlusNextGen.Net
                 JsonSerializer serializer)
             {
                 var val = reader.Value;
-                if (val == null)
-                    return null;
-
-                return val is not string s
+                return val == null
+                    ? null
+                    : val is not string s
                     ? throw new JsonReaderException("DiscordUri value invalid format! This is a bug in DSharpPlus. " +
                                                   $"Include the type in your bug report: [[{reader.TokenType}]]")
                     : IsStandard(s)

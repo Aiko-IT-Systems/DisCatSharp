@@ -77,10 +77,9 @@ namespace DSharpPlusNextGen.Entities
         {
             get
             {
-                if (this.Id == 0)
-                    throw new InvalidOperationException("Cannot get URL of unicode emojis.");
-
-                return this.IsAnimated
+                return this.Id == 0
+                    ? throw new InvalidOperationException("Cannot get URL of unicode emojis.")
+                    : this.IsAnimated
                     ? $"https://cdn.discordapp.com/emojis/{this.Id.ToString(CultureInfo.InvariantCulture)}.gif"
                     : $"https://cdn.discordapp.com/emojis/{this.Id.ToString(CultureInfo.InvariantCulture)}.png";
             }
@@ -114,14 +113,11 @@ namespace DSharpPlusNextGen.Entities
         /// <returns>String representation of this emoji.</returns>
         public override string ToString()
         {
-            if (this.Id != 0)
-            {
-                return this.IsAnimated
+            return this.Id != 0
+                ? this.IsAnimated
                     ? $"<a:{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}>"
-                    : $"<:{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}>";
-            }
-
-            return this.Name;
+                    : $"<:{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}>"
+                : this.Name;
         }
 
         /// <summary>
@@ -138,10 +134,7 @@ namespace DSharpPlusNextGen.Entities
         /// <returns>Whether the <see cref="DiscordEmoji"/> is equal to this <see cref="DiscordEmoji"/>.</returns>
         public bool Equals(DiscordEmoji e)
         {
-            if (e is null)
-                return false;
-
-            return ReferenceEquals(this, e) ? true : this.Id == e.Id && this.Name == e.Name;
+            return e is null ? false : ReferenceEquals(this, e) ? true : this.Id == e.Id && this.Name == e.Name;
         }
 
         /// <summary>
@@ -173,10 +166,9 @@ namespace DSharpPlusNextGen.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            if ((o1 == null && o2 != null) || (o1 != null && o2 == null))
-                return false;
-
-            return o1 == null && o2 == null ? true : e1.Id == e2.Id && e1.Name == e2.Name;
+            return (o1 == null && o2 != null) || (o1 != null && o2 == null)
+                ? false
+                : o1 == null && o2 == null ? true : e1.Id == e2.Id && e1.Name == e2.Name;
         }
 
         /// <summary>

@@ -114,9 +114,9 @@ namespace DSharpPlusNextGen.Entities
         /// <returns>Whether given permissions are allowed, denied, or not set.</returns>
         public PermissionLevel CheckPermission(Permissions permission)
         {
-            if ((this.Allowed & permission) != 0)
-                return PermissionLevel.Allowed;
-            return (this.Denied & permission) != 0 ? PermissionLevel.Denied : PermissionLevel.Unset;
+            return (this.Allowed & permission) != 0
+                ? PermissionLevel.Allowed
+                : (this.Denied & permission) != 0 ? PermissionLevel.Denied : PermissionLevel.Unset;
         }
     }
 }

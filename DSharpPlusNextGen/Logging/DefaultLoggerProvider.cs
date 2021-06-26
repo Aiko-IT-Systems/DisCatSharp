@@ -49,10 +49,9 @@ namespace DSharpPlusNextGen
 
         public ILogger CreateLogger(string categoryName)
         {
-            if (this._isDisposed)
-                throw new InvalidOperationException("This logger provider is already disposed.");
-
-            return categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName
+            return this._isDisposed
+                ? throw new InvalidOperationException("This logger provider is already disposed.")
+                : categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName
                 ? throw new ArgumentException($"This provider can only provide instances of loggers for {typeof(BaseDiscordClient).FullName} or {typeof(DiscordWebhookClient).FullName}.", nameof(categoryName))
                 : new DefaultLogger(this.MinimumLevel, this.TimestampFormat);
         }

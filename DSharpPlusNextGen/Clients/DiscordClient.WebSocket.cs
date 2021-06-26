@@ -44,7 +44,7 @@ namespace DSharpPlusNextGen
         private DateTimeOffset _lastHeartbeat;
         private Task _heartbeatTask;
 
-        internal static DateTimeOffset DiscordEpoch = new(2015, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        internal static DateTimeOffset _discordEpoch = new(2015, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
         private int _skippedHeartbeats = 0;
         private long _lastSequence;
@@ -402,7 +402,7 @@ namespace DSharpPlusNextGen
         internal Task SendHeartbeatAsync()
         {
             var _last_heartbeat = DateTimeOffset.Now;
-            var _sequence = (long)(_last_heartbeat - DiscordEpoch).TotalMilliseconds;
+            var _sequence = (long)(_last_heartbeat - _discordEpoch).TotalMilliseconds;
 
             return this.SendHeartbeatAsync(_sequence);
         }

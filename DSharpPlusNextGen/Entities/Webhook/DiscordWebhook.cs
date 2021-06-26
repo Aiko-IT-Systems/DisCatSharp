@@ -219,10 +219,7 @@ namespace DSharpPlusNextGen.Entities
         /// <returns>Whether the <see cref="DiscordWebhook"/> is equal to this <see cref="DiscordWebhook"/>.</returns>
         public bool Equals(DiscordWebhook e)
         {
-            if (e is null)
-                return false;
-
-            return ReferenceEquals(this, e) ? true : this.Id == e.Id;
+            return e is null ? false : ReferenceEquals(this, e) ? true : this.Id == e.Id;
         }
 
         /// <summary>
@@ -242,10 +239,7 @@ namespace DSharpPlusNextGen.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            if ((o1 == null && o2 != null) || (o1 != null && o2 == null))
-                return false;
-
-            return o1 == null && o2 == null ? true : e1.Id == e2.Id;
+            return (o1 == null && o2 != null) || (o1 != null && o2 == null) ? false : o1 == null && o2 == null ? true : e1.Id == e2.Id;
         }
 
         /// <summary>

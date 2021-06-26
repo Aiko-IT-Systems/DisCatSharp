@@ -106,6 +106,26 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public DiscordTeam Team { get; internal set; }
 
+        /// <summary>
+        /// Gets the hex encoded key for verification in interactions and the GameSDK's GetTicket
+        /// </summary>
+        public string VerifyKey { get; internal set; }
+
+        /// <summary>
+        /// If this application is a game sold on Discord, this field will be the guild to which it has been linked
+        /// </summary>
+        public ulong? GuildId { get; internal set; }
+
+        /// <summary>
+        /// If this application is a game sold on Discord, this field will be the id of the "Game SKU" that is created, if exists
+        /// </summary>
+        public ulong? PrimarySkuId { get; internal set; }
+
+        /// <summary>
+        /// If this application is a game sold on Discord, this field will be the URL slug that links to the store page
+        /// </summary>
+        public string Slug { get; internal set; }
+
         private IReadOnlyList<DiscordApplicationAsset> Assets { get; set; }
 
         internal DiscordApplication() { }
@@ -184,13 +204,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <param name="e"><see cref="DiscordApplication"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordApplication"/> is equal to this <see cref="DiscordApplication"/>.</returns>
-        public bool Equals(DiscordApplication e)
-        {
-            if (e is null)
-                return false;
-
-            return ReferenceEquals(this, e) ? true : this.Id == e.Id;
-        }
+        public bool Equals(DiscordApplication e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordApplication"/>.
@@ -209,10 +223,7 @@ namespace DSharpPlusNextGen.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            if ((o1 == null && o2 != null) || (o1 != null && o2 == null))
-                return false;
-
-            return o1 == null && o2 == null ? true : e1.Id == e2.Id;
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
         }
 
         /// <summary>
@@ -290,13 +301,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <param name="e"><see cref="DiscordApplicationAsset"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordApplicationAsset"/> is equal to this <see cref="DiscordApplicationAsset"/>.</returns>
-        public bool Equals(DiscordApplicationAsset e)
-        {
-            if (e is null)
-                return false;
-
-            return ReferenceEquals(this, e) ? true : this.Id == e.Id;
-        }
+        public bool Equals(DiscordApplicationAsset e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordApplication"/>.
@@ -315,10 +320,7 @@ namespace DSharpPlusNextGen.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            if ((o1 == null && o2 != null) || (o1 != null && o2 == null))
-                return false;
-
-            return o1 == null && o2 == null ? true : e1.Id == e2.Id;
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
         }
 
         /// <summary>
