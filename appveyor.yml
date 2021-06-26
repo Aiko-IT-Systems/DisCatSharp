@@ -1,4 +1,4 @@
-version: 4.0.0-nightly-{build}
+version: 6.0.0-nightly-{build}
 pull_requests:
   do_not_increment_build_number: true
 branches:
@@ -33,20 +33,19 @@ build_script:
     {
         # Rebuild documentation
         Write-Host "Commencing complete build"
-        & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER -DocsPath ".\docs" -DocsPackageName "dsharpplus-docs"
+        & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER -DocsPath ".\docs" -DocsPackageName "dsharpplusnextgen-docs"
     }
     else
     {
         # Skip documentation
         Write-Host "Building from PR ($Env:APPVEYOR_PULL_REQUEST_NUMBER); skipping docs build"
-        & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER 
+        & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER
     }
 artifacts:
 - path: artifacts\*.nupkg
-- path: artifacts\dsharpplus-docs.tar.xz
+- path: artifacts\dsharpplusnextgen-docs.tar.xz
 deploy:
 - provider: NuGet
-  server: https://nuget.emzi0767.com/api/v2/package
+  server: https://api.nuget.org/v3/index.json
   api_key:
-    secure: gwTVmrx+sCJ+NMimUtrU0yoH8FcnkLphNMvGjRRkd04yN0Z2sgbgXh0ZsWYs9JJXDazeMUiroemb3HZBkg34Q2tQ9XEu5iXUVdqMNplpA0V2cxnFOv4OhDyHVSO9CPnwMhNGLaUwH4W+MEW1znYWLA==
-  symbol_server: https://nuget.emzi0767.com/api/v2/symbolpackage
+    secure: oy2d6bwdjksdqedpjv2adzcgjbtwe7ju3jvooqocwzwkza

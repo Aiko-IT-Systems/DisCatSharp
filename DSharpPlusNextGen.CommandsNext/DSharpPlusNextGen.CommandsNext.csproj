@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../DSharpPlusNextGen.targets" />
+
+  <PropertyGroup>
+    <AssemblyName>DSharpPlusNextGen.CommandsNext</AssemblyName>
+    <RootNamespace>DSharpPlusNextGen.CommandsNext</RootNamespace>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>DSharpPlusNextGen.CommandsNext</PackageId>
+    <Description>Advanced command framework for DSharpPlusNextGen.</Description>
+    <PackageTags>discord, discord-api, bots, discord-bots, chat, dsharp, dsharpplus, dsharpplusnextgen, csharp, dotnet, vb-net, fsharp, commands, commandsnext</PackageTags>
+    <PackageIcon>d#+.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>6.0.0</Version>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DSharpPlusNextGen\DSharpPlusNextGen.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\logo\d#+.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

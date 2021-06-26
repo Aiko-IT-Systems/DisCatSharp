@@ -13,7 +13,7 @@
 # ------------ Defaults -----------
 
 # Output path for bots binaries and documentation.
-$target = "..\dsp-artifacts"
+$target = "..\dsp-ng-artifacts"
 
 # Version suffix data. Default is none. General format is 5-digit number.
 # The version will be formatted as such: $version-$suffix-$build_number
@@ -24,7 +24,7 @@ $build_number = -1
 
 # Documentation build. Set either to empty string to skip documentation build.
 $docs_path = ".\docs"
-$docs_pkgname = "dsharpplus-docs"
+$docs_pkgname = "dsharpplusnextgen-docs"
 
 # --------- Execute build ---------
 & .\rebuild-all.ps1 -ArtifactLocation "$target" -Configuration "Release" -VersionSuffix "$suffix" -BuildNumber $build_number -DocsPath "$docs_path" -DocsPackageName "$docs_pkgname" | Out-Host
