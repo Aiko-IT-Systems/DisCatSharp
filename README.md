@@ -2,7 +2,7 @@
 An unofficial .NET wrapper for the Discord API, based off [DiscordSharp](https://github.com/suicvne/DiscordSharp), but rewritten to fit the API standards.
 
 [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=discord)](https://discord.gg/CPhrqxu2SF) 
-[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlus.svg)](https://nuget.org/packages/DSharpPlus)
+[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlus-NextGen.svg)](https://nuget.org/packages/DSharpPlus-NextGen)
 
 # Why NextGen?
 The way how DSP is working and the maintainer.. I don't like it. I decided to maintain an own version of it.
