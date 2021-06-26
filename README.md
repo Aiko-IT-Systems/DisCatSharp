@@ -1,9 +1,20 @@
 # DSharpPlus - NextGen
 An unofficial .NET wrapper for the Discord API, based off [DiscordSharp](https://github.com/suicvne/DiscordSharp), but rewritten to fit the API standards.
 
-[![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=discord)](https://discord.gg/CPhrqxu2SF) 
+![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DSharpPlus-NextGen)
 [![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg)](https://nuget.org/packages/DSharpPlusNextGen)
 [![Build status](https://ci.appveyor.com/api/projects/status/1123j3h5983lixsa?svg=true)](https://ci.appveyor.com/project/Lulalaby/dsharpplus-nextgen)
+![Coverage](https://img.shields.io/gitlab/coverage/Aiko-IT-Systems/DSHarpPlus-NextGen/main)
+![Sponsors](https://img.shields.io/github/sponsors/Lulalaby)
+![GitHub issues](https://img.shields.io/github/issues/Aiko-IT-Systems/DSharpPlus-NextGen)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DSharpPlus-NextGen)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DSharpPlus-NextGen)
+![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DSharpPlus-NextGen)
+![GitHub contributors](https://img.shields.io/github/contributors/Aiko-IT-Systems/DSharpPlus-NextGen)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DSharpPlus-NextGen)
+![GitHub Repo stars](https://img.shields.io/github/stars/Aiko-IT-Systems/DSharpPlus-NextGen)
+[![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=discord)](https://discord.gg/CPhrqxu2SF) 
+
 
 # Why NextGen?
 The way how DSP is working and the maintainer.. I don't like it. I decided to maintain an own version of it.
