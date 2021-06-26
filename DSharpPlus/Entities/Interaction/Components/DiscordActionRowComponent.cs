@@ -38,7 +38,7 @@ namespace DSharpPlus.Entities
         /// The type of component this represents. Always returns type 1.
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-        internal ComponentType Type { get; set; } = ComponentType.ActionRow;
+        internal new ComponentType Type { get; set; } = ComponentType.ActionRow;
 
         /// <summary>
         /// The components contained within the action row.
