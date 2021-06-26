@@ -34,7 +34,7 @@ The following resources apply only for the latest stable version of the library.
 # I want to throw my money at you!
 If you want to give me some money as a thank you gesture, you can do so using one of these links:
 
-* Lulalany
+* Lulalaby
    * [PayPal](https://paypal.me/aitsys)
 
 # Questions?
