@@ -49,9 +49,14 @@ namespace DSharpPlusNextGen
         public ILogger<BaseDiscordClient> Logger { get; }
 
         /// <summary>
-        /// Gets the string representing the version of D#+.
+        /// Gets the string representing the version of D#+NG.
         /// </summary>
         public string VersionString { get; }
+
+        /// <summary>
+        /// Gets the string representing the version of D#+NG.
+        /// </summary>
+        public string BotLibrary { get; };
 
         /// <summary>
         /// Gets the current user.
@@ -120,6 +125,8 @@ namespace DSharpPlusNextGen
                 if (v.Revision > 0)
                     this.VersionString = $"{vs}, CI build {v.Revision}";
             }
+
+            this.BotLibrary = "DSharpPlus NextGen";
         }
 
         /// <summary>

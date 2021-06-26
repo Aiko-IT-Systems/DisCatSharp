@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 # Rebuild-lib
 #
-# Rebuilds the entire DSharpPlus project, and places artifacts in specified directory.
+# Rebuilds the entire DSharpPlus NextGen project, and places artifacts in specified directory.
 # 
 # Author:       Emzi0767
 # Version:      2018-08-30 14:41

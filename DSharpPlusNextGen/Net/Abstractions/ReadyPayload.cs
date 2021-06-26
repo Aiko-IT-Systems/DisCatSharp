@@ -45,12 +45,6 @@ namespace DSharpPlusNextGen.Net.Abstractions
         public TransportUser CurrentUser { get; private set; }
 
         /// <summary>
-        /// Gets the private channels available for this shard.
-        /// </summary>
-        [JsonProperty("private_channels")]
-        public IReadOnlyList<DiscordDmChannel> DmChannels { get; private set; }
-
-        /// <summary>
         /// Gets the guilds available for this shard.
         /// </summary>
         [JsonProperty("guilds")]
