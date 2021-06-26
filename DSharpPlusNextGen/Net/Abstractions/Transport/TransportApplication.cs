@@ -22,6 +22,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using DSharpPlusNextGen.Entities;
 using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Net.Abstractions
@@ -68,21 +69,20 @@ namespace DSharpPlusNextGen.Net.Abstractions
         [JsonProperty("team", NullValueHandling = NullValueHandling.Include)]
         public TransportTeam Team { get; set; }
 
-        // These are dispatch (store) properties - can't imagine them being needed in bots
-        //[JsonProperty("verify_key", NullValueHandling = NullValueHandling.Include)]
-        //public string VerifyKey { get; set; }
+        [JsonProperty("verify_key", NullValueHandling = NullValueHandling.Include)]
+        public string VerifyKey { get; set; }
 
-        //[JsonProperty("guild_id")]
-        //public Optional<ulong> GuildId { get; set; }
+        [JsonProperty("guild_id")]
+        public Optional<ulong> GuildId { get; set; }
 
-        //[JsonProperty("primary_sku_id")]
-        //public Optional<ulong> PrimarySkuId { get; set; }
+        [JsonProperty("primary_sku_id")]
+        public Optional<ulong> PrimarySkuId { get; set; }
 
-        //[JsonProperty("slug")] // sluggg :DDDDDD
-        //public Optional<string> SkuSlug { get; set; }
+        [JsonProperty("slug")] // sluggg :DDDDDD
+        public Optional<string> SkuSlug { get; set; }
 
-        //[JsonProperty("cover_image")]
-        //public Optional<string> CoverImageHash { get; set; }
+        [JsonProperty("cover_image")]
+        public Optional<string> CoverImageHash { get; set; }
 
         internal TransportApplication() { }
     }

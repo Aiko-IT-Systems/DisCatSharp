@@ -142,7 +142,7 @@ namespace DSharpPlusNextGen
             {
                 if (this.Configuration.TokenType != TokenType.Bot)
                     this.Logger.LogWarning(LoggerEvents.Misc, "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful.");
-                this.Logger.LogInformation(LoggerEvents.Startup, "DSharpPlus, version {0}", this._versionString.Value);
+                this.Logger.LogInformation(LoggerEvents.Startup, "Lib {0}, version {1}", this._botLibrary, this._versionString.Value);
 
                 var shardc = await this.InitializeShardsAsync().ConfigureAwait(false);
                 var connectTasks = new List<Task>();
@@ -348,6 +348,8 @@ namespace DSharpPlusNextGen
 
             return vs;
         });
+
+        private readonly string _botLibrary = "DSharpPlus NextGen";
 
         #endregion
 

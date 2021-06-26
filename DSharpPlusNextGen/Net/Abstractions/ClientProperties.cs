@@ -76,7 +76,7 @@ namespace DSharpPlusNextGen.Net.Abstractions
             {
                 var a = typeof(DiscordClient).GetTypeInfo().Assembly;
                 var an = a.GetName();
-                return $"DSharpPlus {an.Version.ToString(4)}";
+                return $"DSharpPlus NextGen {an.Version.ToString(4)}";
             }
         }
 
