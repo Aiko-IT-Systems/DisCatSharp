@@ -48,4 +48,4 @@ deploy:
 - provider: NuGet
   server: https://api.nuget.org/v3/index.json
   api_key:
-    secure: oy2d6bwdjksdqedpjv2adzcgjbtwe7ju3jvooqocwzwkza
+    secure: XtptFAacNyLULAZaRpAGh/e28Q1jkZSmODo4d2dkAUamFSsTQa3MzJAo4lSC1Vlb
