@@ -1,11 +1,7 @@
-![Logo of DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/raw/master/logo/dsharp+_smaller.png)
-
 # DSharpPlus - NextGen
 An unofficial .NET wrapper for the Discord API, based off [DiscordSharp](https://github.com/suicvne/DiscordSharp), but rewritten to fit the API standards.
 
-[![Build Status](https://img.shields.io/appveyor/ci/Emzi0767/dsharpplus/master.svg)](https://ci.appveyor.com/project/Emzi0767/dsharpplus/branch/master)
-[![Discord Server](https://img.shields.io/discord/379378609942560770.svg?label=discord)](https://discord.gg/dsharpplus) 
-[![SlimGet](https://img.shields.io/badge/dynamic/json.svg?color=yellow&label=slimget&query=%24.items%5B-1%3A%5D.upper&url=https%3A%2F%2Fnuget.emzi0767.com%2Fapi%2Fv3%2Fregistration%2FPlain%2Fdsharpplus%2Findex.json)](https://nuget.emzi0767.com/gallery/search?q=DSharpPlus&pre=true)
+[![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=discord)](https://discord.gg/CPhrqxu2SF) 
 [![NuGet](https://img.shields.io/nuget/vpre/DSharpPlus.svg)](https://nuget.org/packages/DSharpPlus)
 
 # Why NextGen?
@@ -47,6 +43,6 @@ If you want to give me some money as a thank you gesture, you can do so using on
 # Questions?
 Come talk to us here:
 
-[![DSharpPlus Chat](https://discord.com/api/guilds/858089281214087179/embed.png?style=banner1)](https://discord.gg/CPhrqxu2SF)
+[![Project Nyaw~](https://discord.com/api/guilds/858089281214087179/embed.png?style=banner1)](https://discord.gg/CPhrqxu2SF)
 
 #test
