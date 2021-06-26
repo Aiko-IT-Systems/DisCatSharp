@@ -427,6 +427,24 @@ namespace DSharpPlus.Entities
             => !string.IsNullOrWhiteSpace(this.Banner) ? $"https://cdn.discordapp.com/banners/{this.Id}/{this.Banner}" : null;
 
         /// <summary>
+        /// Whether this guild has the community feature enabled.
+        /// </summary>
+        [JsonIgnore]
+        public bool IsCommunity => this.Features.Contains("COMMUNITY") || this.Features.Contains("NEWS");
+
+        /// <summary>
+        /// Whether this guild has enabled the welcome screen.
+        /// </summary>
+        [JsonIgnore]
+        public bool HasWelcomeScreen => this.Features.Contains("WELCOME_SCREEN_ENABLED");
+
+        /// <summary>
+        /// Whether this guild has enabled Membership Screening.
+        /// </summary>
+        [JsonIgnore]
+        public bool HasMemberVerificationGate => this.Features.Contains("MEMBER_VERIFICATION_GATE_ENABLED");
+
+        /// <summary>
         /// Gets this guild's premium tier (Nitro boosting).
         /// </summary>
         [JsonProperty("premium_tier")]
@@ -705,10 +723,9 @@ namespace DSharpPlus.Entities
         public Task<DiscordChannel> CreateChannelAsync(string name, ChannelType type, DiscordChannel parent = null, Optional<string> topic = default, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, VideoQualityMode? qualityMode = null, string reason = null)
         {
             // technically you can create news/store channels but not always
-            if (type != ChannelType.Text && type != ChannelType.Voice && type != ChannelType.Category && type != ChannelType.News && type != ChannelType.Store && type != ChannelType.Stage)
-                throw new ArgumentException("Channel type must be text, voice, stage, or category.", nameof(type));
-
-            return type == ChannelType.Category && parent != null
+            return type != ChannelType.Text && type != ChannelType.Voice && type != ChannelType.Category && type != ChannelType.News && type != ChannelType.Store && type != ChannelType.Stage
+                ? throw new ArgumentException("Channel type must be text, voice, stage, or category.", nameof(type))
+                : type == ChannelType.Category && parent != null
                 ? throw new ArgumentException("Cannot specify parent of a channel category.", nameof(parent))
                 : this.Discord.ApiClient.CreateGuildChannelAsync(this.Id, name, type, parent?.Id, topic, bitrate, userLimit, overwrites, nsfw, perUserRateLimit, qualityMode, reason);
         }
@@ -2023,10 +2040,9 @@ namespace DSharpPlus.Entities
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task DeleteEmojiAsync(DiscordGuildEmoji emoji, string reason = null)
         {
-            if (emoji == null)
-                throw new ArgumentNullException(nameof(emoji));
-
-            return emoji.Guild.Id != this.Id
+            return emoji == null
+                ? throw new ArgumentNullException(nameof(emoji))
+                : emoji.Guild.Id != this.Id
                 ? throw new ArgumentException("This emoji does not belong to this guild.")
                 : this.Discord.ApiClient.DeleteGuildEmojiAsync(this.Id, emoji.Id, reason);
         }
@@ -2223,13 +2239,7 @@ namespace DSharpPlus.Entities
         /// </summary>
         /// <param name="e"><see cref="DiscordGuild"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordGuild"/> is equal to this <see cref="DiscordGuild"/>.</returns>
-        public bool Equals(DiscordGuild e)
-        {
-            if (e is null)
-                return false;
-
-            return ReferenceEquals(this, e) ? true : this.Id == e.Id;
-        }
+        public bool Equals(DiscordGuild e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordGuild"/>.
@@ -2248,10 +2258,7 @@ namespace DSharpPlus.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            if ((o1 == null && o2 != null) || (o1 != null && o2 == null))
-                return false;
-
-            return o1 == null && o2 == null ? true : e1.Id == e2.Id;
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
         }
 
         /// <summary>
