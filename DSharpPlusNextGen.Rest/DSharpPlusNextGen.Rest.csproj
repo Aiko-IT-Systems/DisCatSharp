@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../DSharpPlusNextGen.targets" />
+
+  <PropertyGroup>
+    <AssemblyName>DSharpPlusNextGen.Rest</AssemblyName>
+    <RootNamespace>DSharpPlusNextGen.Rest</RootNamespace>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>DSharpPlusNextGen.Rest</PackageId>
+    <Description>A Rest-only client for DSharpPlusNextGen.</Description>
+    <PackageTags>discord, discord-api, bots, discord-bots, chat, dsharp, dsharpplus, dsharpplusnextgen, csharp, dotnet, vb-net, fsharp, rest-api, oauth2</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>d#+.png</PackageIcon>
+    <Version>6.0.0</Version>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DSharpPlusNextGen\DSharpPlusNextGen.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\logo\d#+.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
