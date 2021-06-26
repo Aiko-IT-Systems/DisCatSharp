@@ -54,7 +54,7 @@ namespace DSharpPlusNextGen
         public string VersionString { get; }
 
         /// <summary>
-        /// Gets the string representing the version of D#+NG.
+        /// Gets the bot library name.
         /// </summary>
         public string BotLibrary { get; }
 
