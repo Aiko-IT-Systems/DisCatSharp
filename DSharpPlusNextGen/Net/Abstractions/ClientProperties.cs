@@ -60,9 +60,7 @@ namespace DSharpPlusNextGen.Net.Abstractions
                     return "miros bsd";
                 else if (plat.Contains("desktopbsd"))
                     return "desktopbsd";
-                else if (plat.Contains("darwin"))
-                    return "osx";
-                else return plat.Contains("unix") ? "unix" : "toaster (unknown)";
+                else return plat.Contains("darwin") ? "osx" : plat.Contains("unix") ? "unix" : "toaster (unknown)";
             }
         }
 

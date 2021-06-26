@@ -764,10 +764,7 @@ namespace DSharpPlusNextGen.Entities
         /// <returns>Whether the <see cref="DiscordMessage"/> is equal to this <see cref="DiscordMessage"/>.</returns>
         public bool Equals(DiscordMessage e)
         {
-            if (e is null)
-                return false;
-
-            return ReferenceEquals(this, e) ? true : this.Id == e.Id && this.ChannelId == e.ChannelId;
+            return e is null ? false : ReferenceEquals(this, e) ? true : this.Id == e.Id && this.ChannelId == e.ChannelId;
         }
 
         /// <summary>
@@ -795,10 +792,9 @@ namespace DSharpPlusNextGen.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            if ((o1 == null && o2 != null) || (o1 != null && o2 == null))
-                return false;
-
-            return o1 == null && o2 == null ? true : e1.Id == e2.Id && e1.ChannelId == e2.ChannelId;
+            return (o1 == null && o2 != null) || (o1 != null && o2 == null)
+                ? false
+                : o1 == null && o2 == null ? true : e1.Id == e2.Id && e1.ChannelId == e2.ChannelId;
         }
 
         /// <summary>

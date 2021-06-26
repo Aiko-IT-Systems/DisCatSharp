@@ -70,7 +70,7 @@ namespace DSharpPlusNextGen.Net.Abstractions
         public TransportTeam Team { get; set; }
 
         [JsonProperty("verify_key", NullValueHandling = NullValueHandling.Include)]
-        public string VerifyKey { get; set; }
+        public Optional<string> VerifyKey { get; set; }
 
         [JsonProperty("guild_id")]
         public Optional<ulong> GuildId { get; set; }
@@ -78,8 +78,8 @@ namespace DSharpPlusNextGen.Net.Abstractions
         [JsonProperty("primary_sku_id")]
         public Optional<ulong> PrimarySkuId { get; set; }
 
-        [JsonProperty("slug")] // sluggg :DDDDDD
-        public Optional<string> SkuSlug { get; set; }
+        [JsonProperty("slug")]
+        public Optional<string> Slug { get; set; }
 
         [JsonProperty("cover_image")]
         public Optional<string> CoverImageHash { get; set; }

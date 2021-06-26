@@ -101,10 +101,7 @@ namespace DSharpPlusNextGen.Entities
             var o1 = left as object;
             var o2 = right as object;
 
-            if ((o1 == null && o2 != null) || (o1 != null && o2 == null))
-                return false;
-
-            return o1 == null && o2 == null ? true : left.Id == right.Id;
+            return (o1 == null && o2 != null) || (o1 != null && o2 == null) ? false : o1 == null && o2 == null ? true : left.Id == right.Id;
         }
 
         /// <summary>

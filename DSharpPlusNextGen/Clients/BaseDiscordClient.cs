@@ -56,7 +56,7 @@ namespace DSharpPlusNextGen
         /// <summary>
         /// Gets the string representing the version of D#+NG.
         /// </summary>
-        public string BotLibrary { get; };
+        public string BotLibrary { get; }
 
         /// <summary>
         /// Gets the current user.
@@ -148,7 +148,6 @@ namespace DSharpPlusNextGen
                 Flags = tapp.Flags,
                 RequiresCodeGrant = tapp.BotRequiresCodeGrant,
                 IsPublic = tapp.IsPublicBot,
-                CoverImageHash = null,
                 PrivacyPolicyUrl = tapp.PrivacyPolicyUrl,
                 TermsOfServiceUrl = tapp.TermsOfServiceUrl
             };
@@ -183,6 +182,12 @@ namespace DSharpPlusNextGen
                 app.Team.Members = new ReadOnlyCollection<DiscordTeamMember>(members);
                 app.TeamName = app.Team.Name;
             }
+
+            app.GuildId = tapp.GuildId.HasValue ? tapp.GuildId.Value : null;
+            app.Slug = tapp.Slug.HasValue ? tapp.Slug.Value : null;
+            app.PrimarySkuId = tapp.PrimarySkuId.HasValue ? tapp.PrimarySkuId.Value : null;
+            app.VerifyKey = tapp.VerifyKey.HasValue ? tapp.VerifyKey.Value : null;
+            app.CoverImageHash = tapp.CoverImageHash.HasValue ? tapp.CoverImageHash.Value : null;
 
             return app;
         }

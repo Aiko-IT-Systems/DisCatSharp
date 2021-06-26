@@ -205,10 +205,7 @@ namespace DSharpPlusNextGen.Net
         /// <returns>Whether the <see cref="RateLimitBucket"/> is equal to this <see cref="RateLimitBucket"/>.</returns>
         public bool Equals(RateLimitBucket e)
         {
-            if (e is null)
-                return false;
-
-            return ReferenceEquals(this, e) ? true : this.BucketId == e.BucketId;
+            return e is null ? false : ReferenceEquals(this, e) ? true : this.BucketId == e.BucketId;
         }
 
         /// <summary>

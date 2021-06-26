@@ -105,13 +105,13 @@ namespace DSharpPlusNextGen.Net
             foreach (var xp in rparams_props)
             {
                 var val = xp.GetValue(route_params);
-                if (val is string xs)
-                    rparams[xp.Name] = xs;
-                else if (val is DateTime dt)
-                    rparams[xp.Name] = dt.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture);
-                else if (val is DateTimeOffset dto)
-                    rparams[xp.Name] = dto.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture);
-                else rparams[xp.Name] = val is IFormattable xf ? xf.ToString(null, CultureInfo.InvariantCulture) : val.ToString();
+                rparams[xp.Name] = val is string xs
+                    ? xs
+                    : val is DateTime dt
+                    ? dt.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture)
+                    : val is DateTimeOffset dto
+                    ? dto.ToString("yyyy-MM-ddTHH:mm:sszzz", CultureInfo.InvariantCulture)
+                    : val is IFormattable xf ? xf.ToString(null, CultureInfo.InvariantCulture) : val.ToString();
             }
 
             var guild_id = rparams.ContainsKey("guild_id") ? rparams["guild_id"] : "";
