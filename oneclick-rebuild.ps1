@@ -17,7 +17,7 @@ $target = "..\dsp-ng-artifacts"
 
 # Version suffix data. Default is none. General format is 5-digit number.
 # The version will be formatted as such: $version-$suffix-$build_number
-# e.g. 4.0.0-ci-00579
+# e.g. 6.0.0-ci-00579
 # If build_number is set to -1, it will be ignored.
 $suffix = ""
 $build_number = -1

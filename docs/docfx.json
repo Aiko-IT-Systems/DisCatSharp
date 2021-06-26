@@ -65,7 +65,7 @@
     ],
     "dest": "_site",
     "globalMetadata": {
-      "_appFooter": "© 2016-2021 DSharpPlus Contributors",
+      "_appFooter": "© 2021 Aiko IT Systems",
       "_enableSearch": "true"
     },
     "globalMetadataFiles": [],
@@ -73,7 +73,7 @@
     "template": [
       "dsplus"
     ],
-    "postProcessors": ["ExtractSearchIndex", "CustomMemberIndexer"],
+    "postProcessors": [],
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false
