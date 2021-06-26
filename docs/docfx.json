@@ -73,7 +73,7 @@
     "template": [
       "dsplus"
     ],
-    "postProcessors": [],
+    "postProcessors": ["ExtractSearchIndex", "CustomMemberIndexer"],
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false
