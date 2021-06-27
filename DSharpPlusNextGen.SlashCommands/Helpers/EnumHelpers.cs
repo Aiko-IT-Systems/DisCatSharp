@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace DSharpPlusNextGen.SlashCommands
 {
+    /// <summary>
+    /// Defines some extension methods for enums.
+    /// </summary>
     public static class EnumHelpers
     {
         /// <summary>
@@ -17,19 +20,18 @@ namespace DSharpPlusNextGen.SlashCommands
         {
             if (e is Enum)
             {
-                Type type = e.GetType();
-                Array values = Enum.GetValues(type);
+                var type = e.GetType();
+                var values = Enum.GetValues(type);
 
                 foreach (int val in values)
                 {
                     if (val == e.ToInt32(CultureInfo.InvariantCulture))
                     {
                         var memInfo = type.GetMember(type.GetEnumName(val));
-                        var nameAttribute = memInfo[0]
-                            .GetCustomAttributes(typeof(ChoiceNameAttribute), false)
-                            .FirstOrDefault() as ChoiceNameAttribute;
 
-                        return nameAttribute != null ? nameAttribute.Name : type.GetEnumName(val);
+                        return memInfo[0]
+                            .GetCustomAttributes(typeof(ChoiceNameAttribute), false)
+                            .FirstOrDefault() is ChoiceNameAttribute nameAttribute ? nameAttribute.Name : type.GetEnumName(val);
                     }
                 }
             }

@@ -1,4 +1,4 @@
-﻿using DSharpPlusNextGen.Common.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 
 namespace DSharpPlusNextGen.SlashCommands.EventArgs
 {
