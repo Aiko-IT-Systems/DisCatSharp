@@ -25,7 +25,7 @@ You can install the library from following source:
 The latest release is always available on [NuGet](https://nuget.org/packages/DSharpPlusNextGen).
 
 # Documentation
-The documentation for the latest stable version is available at [dsharpplus.github.io](https://dsharpplus.github.io/).
+The documentation for the latest stable version is available at [dsp-nextgen.aitsys.dev](https://dsp-nextgen.aitsys.dev).
 
 Do note that the documentation might not reflect the latest changes in nightly version of the library.
 
@@ -33,13 +33,10 @@ Do note that the documentation might not reflect the latest changes in nightly v
 The following resources apply only for the latest stable version of the library.
 
 ### Tutorials
-* [Making your first bot in C#](https://dsharpplus.github.io/articles/basics/bot_account.html).
-
-### Example bots
-* [Example by Lulalaby & Lunar](https://github.com/Aiko-IT-Systems/DSharpPlus.Examples.Bots)
+* [Making your first bot in C#](https://dsp-nextgen.aitsys.dev/articles/basics/bot_account.html).
 
 # I want to throw my money at you!
-If you want to give me some money as a thank you gesture, you can do so using one of these links:
+If you want to give me some money as a thank you:
 
 * Lulalaby
    * [PayPal](https://paypal.me/aitsys)
