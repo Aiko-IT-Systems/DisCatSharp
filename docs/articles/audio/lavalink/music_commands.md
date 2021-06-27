@@ -12,7 +12,7 @@ This article assumes that you know how to use CommandsNext. If you do not, you s
 Before we start we will need to make sure CommandsNext is configured. For this we can make a simple configuration and command class: 
 
 ```csharp
-using DSharpPlus.CommandsNext;
+using DSharpPlusNextGen.CommandsNext;
 
 namespace MyFirstMusicBot
 {
@@ -73,10 +73,10 @@ So far, your command class should look something like this:
 
 ```csharp
 using System.Threading.Tasks;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlusNextGen;
+using DSharpPlusNextGen.Entities;
+using DSharpPlusNextGen.CommandsNext;
+using DSharpPlusNextGen.CommandsNext.Attributes;
 
 namespace MyFirstMusicBot
 {
@@ -333,6 +333,6 @@ public async Task Pause(CommandContext ctx)
 }
 ```
 
-Of course, there are other commands Lavalink has to offer. Check out [the docs](https://dsharpplus.github.io/api/DSharpPlus.Lavalink.LavalinkGuildConnection.html#methods) to view the commands you can use while playing tracks.
+Of course, there are other commands Lavalink has to offer. Check out [the docs](https://dsp-nextgen.aitsys.dev/api/DSharpPlusNextGen.Lavalink.LavalinkGuildConnection.html#methods) to view the commands you can use while playing tracks.
 
-There are also open source examples such as Emzi0767's [Companion Cube Bot](https://github.com/Emzi0767/Discord-Companion-Cube-Bot) and [Turret Bot](https://github.com/Emzi0767/Discord-Music-Turret-Bot).
+

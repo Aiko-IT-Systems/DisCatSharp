@@ -8,7 +8,7 @@ title: CommandsNext Introduction
 
 # Introduction to CommandsNext 
 This article will introduce you to some basic concepts of our native command framework: *CommandsNext*.<br/>
-Be sure to install the `DSharpPlus.CommandsNext` package from NuGet before continuing.
+Be sure to install the `DSharpPlusNextGen.CommandsNext` package from NuGet before continuing.
 
 ![CommandsNext NuGet Package](/images/commands_intro_01.png)
 
@@ -67,8 +67,8 @@ public async Task GreetCommand(CommandContext ctx)
 Your command module should now resemble this:
 ```cs
 using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlusNextGen.CommandsNext;
+using DSharpPlusNextGen.CommandsNext.Attributes;
 
 public class MyFirstModule : BaseCommandModule
 {
