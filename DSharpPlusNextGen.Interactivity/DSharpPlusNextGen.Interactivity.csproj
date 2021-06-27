@@ -17,6 +17,7 @@
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageIcon>d#+.png</PackageIcon>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <Authors>Lala Sabathil, Naamloos, afroraydude, DrCreo, Death, TiaqoY0, Axiom, Emzi0767, DSharpPlus contributors</Authors>
   </PropertyGroup>
 
   <ItemGroup>

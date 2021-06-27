@@ -14,7 +14,7 @@
     <PackageId>DSharpPlusNextGen.VoiceNext.Natives</PackageId>
     <Description>Voice Natives for DSharpPlus NextGen.</Description>
     <PackageTags>discord, discord-api, bots, discord-bots, chat, dsharp, dsharpplusnextgen, csharp, dotnet, vb-net, fsharp, audio, voice, radio, music</PackageTags>
-    <Authors>DSharpPlusNextGen.Common, WamWooWam</Authors>
+    <Authors>Emzi0767, WamWooWam</Authors>
 	<Company>DSharpPlus developers</Company>
 	<PackageProjectUrl>https://github.com/DSharpPlus/DSharpPlus-VoiceNext-Natives</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/DSharpPlus/DSharpPlus-VoiceNext-Natives</RepositoryUrl>
