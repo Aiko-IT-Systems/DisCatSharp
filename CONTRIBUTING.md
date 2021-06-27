@@ -1,4 +1,4 @@
-# Contributing to DSharpPlus
+# Contributing to DSharpPlus-NextGen
 We're really happy to accept contributions. However we also ask that you follow several rules when doing so.
 
 # Proper base
