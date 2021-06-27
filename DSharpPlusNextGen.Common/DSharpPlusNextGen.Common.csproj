@@ -35,13 +35,13 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Description>Assortment of various common types and utilities for DSharpPlusNextGen.CommonDSharpPlusNextGen.Common's projects.</Description>
-    <PackageTags>DSharpPlusNextGen.CommonDSharpPlusNextGen.Common common utilities dotnet dotnet-core dotnetfx netfx netcore csharp</PackageTags>
-    <Authors>DSharpPlusNextGen.CommonDSharpPlusNextGen.Common</Authors>
-    <Company>DSharpPlusNextGen.CommonDSharpPlusNextGen.Common</Company>
+    <Description>Assortment of various common types and utilities for DSharpPlusNextGen's projects.</Description>
+    <PackageTags>emzi0767 common utilities dotnet dotnet-core dotnetfx netfx netcore csharp</PackageTags>
+    <Authors>Emzi0767</Authors>
+    <Company>Emzi0767</Company>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/DSharpPlusNextGen.CommonDSharpPlusNextGen.Common/Common</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/DSharpPlusNextGen.CommonDSharpPlusNextGen.Common/Common</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Emzi0767/Common</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageLicenseFile>LICENSE.MD</PackageLicenseFile>
     <PackageIcon>d#+.png</PackageIcon>
