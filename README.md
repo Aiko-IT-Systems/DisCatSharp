@@ -49,5 +49,3 @@ If you want to give me some money as a thank you:
 Come talk to us here:
 
 [![Project Nyaw~](https://discord.com/api/guilds/858089281214087179/embed.png?style=banner1)](https://discord.gg/CPhrqxu2SF)
-
-#test
