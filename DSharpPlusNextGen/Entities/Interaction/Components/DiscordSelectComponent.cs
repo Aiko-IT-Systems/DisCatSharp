@@ -21,6 +21,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Entities
@@ -59,5 +62,27 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonProperty("max_values", NullValueHandling = NullValueHandling.Ignore)]
         public int? MaximumSelectedValues { get; set; }
+
+        /// <summary>
+        /// Constructs a new <see cref="DiscordSelectComponent"/>.
+        /// </summary>
+        /// <param name="customId">The Id to assign to the button. This is sent back when a user presses it.</param>
+        /// <param name="options">Array of options</param>
+        /// <param name="placeholder">Text to show if no option is slected.</param>
+        /// <param name="minOptions">Minmum count of selectable options.</param>
+        /// <param name="maxOptions">Maximum count of selectable options.</param>
+        public DiscordSelectComponent(string customId, IEnumerable<DiscordSelectComponentOption> options, string placeholder = null, int minOptions = 1, int maxOptions = 1) : this()
+        {
+            this.CustomId = customId;
+            this.Options = options.ToArray();
+            this.Placeholder = placeholder;
+            this.MinimumSelectedValues = minOptions;
+            this.MaximumSelectedValues = maxOptions;
+        }
+
+        internal DiscordSelectComponent()
+        {
+            this.Type = ComponentType.Select;
+        }
     }
 }
