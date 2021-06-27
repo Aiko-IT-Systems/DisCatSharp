@@ -32,7 +32,7 @@ namespace DSharpPlusNextGen.CommandsNext.Attributes
     /// <summary>
     /// Requires ownership of the bot or a whitelisted id to execute this command.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class RequireOwnerOrIdAttribute : CheckBaseAttribute
     {
         /// <summary>

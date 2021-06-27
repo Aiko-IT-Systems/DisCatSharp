@@ -41,7 +41,7 @@ using Microsoft.Extensions.Logging;
 namespace DSharpPlusNextGen.CommandsNext
 {
     /// <summary>
-    /// This is the class which handles command registration, management, and execution.
+    /// This is the class which handles command registration, management, and execution. 
     /// </summary>
     public class CommandsNextExtension : BaseExtension
     {
@@ -840,7 +840,9 @@ namespace DSharpPlusNextGen.CommandsNext
         /// <param name="value">Value to convert.</param>
         /// <param name="ctx">Context in which to convert to.</param>
         /// <returns>Converted object.</returns>
-        public async Task<object> ConvertArgumentAsync<T>(string value, CommandContext ctx)
+#pragma warning disable IDE1006 // Naming Styles
+        public async Task<object> ConvertArgument<T>(string value, CommandContext ctx)
+#pragma warning restore IDE1006 // Naming Styles
         {
             var t = typeof(T);
             if (!this.ArgumentConverters.ContainsKey(t))
@@ -860,7 +862,9 @@ namespace DSharpPlusNextGen.CommandsNext
         /// <param name="ctx">Context in which to convert to.</param>
         /// <param name="type">Type to convert to.</param>
         /// <returns>Converted object.</returns>
-        public async Task<object> ConvertArgumentAsync(string value, CommandContext ctx, Type type)
+#pragma warning disable IDE1006 // Naming Styles
+        public async Task<object> ConvertArgument(string value, CommandContext ctx, Type type)
+#pragma warning restore IDE1006 // Naming Styles
         {
             var m = this.ConvertGeneric.MakeGenericMethod(type);
             try
@@ -971,7 +975,7 @@ namespace DSharpPlusNextGen.CommandsNext
 
         #region Helpers
         /// <summary>
-        /// Gets the configuration-specific string comparer. This returns <see cref="StringComparer.Ordinal"/> or <see cref="StringComparer.OrdinalIgnoreCase"/>,
+        /// Gets the configuration-specific string comparer. This returns <see cref="StringComparer.Ordinal"/> or <see cref="StringComparer.OrdinalIgnoreCase"/>, 
         /// depending on whether <see cref="CommandsNextConfiguration.CaseSensitive"/> is set to <see langword="true"/> or <see langword="false"/>.
         /// </summary>
         /// <returns>A string comparer.</returns>
