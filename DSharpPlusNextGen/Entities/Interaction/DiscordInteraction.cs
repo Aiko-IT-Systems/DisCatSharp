@@ -106,7 +106,7 @@ namespace DSharpPlusNextGen.Entities
         /// <param name="type">The type of the response.</param>
         /// <param name="builder">The data, if any, to send.</param>
         public Task CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder builder = null) =>
-            this.Discord.ApiClient.CreateInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, type, builder);
+            this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
 
         /// <summary>
         /// Gets the original interaction response.
