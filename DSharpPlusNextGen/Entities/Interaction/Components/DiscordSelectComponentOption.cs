@@ -59,6 +59,15 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("emoji", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordComponentEmoji Emoji { get; internal set; }
 
+
+        /// <summary>
+        /// Constructs a new <see cref="DiscordSelectComponentOption"/>.
+        /// </summary>
+        /// <param name="label">The label of this option..</param>
+        /// <param name="value">The value of this option.</param>
+        /// <param name="description">Description of the option.</param>
+        /// <param name="isDefault">Whether this option is default. If true, this option will be pre-selected.</param>
+        /// <param name="emoji">The emoji to set with this option.</param>
         public DiscordSelectComponentOption(string label, string value, string description = null, bool isDefault = false, DiscordComponentEmoji emoji = null)
         {
             this.Label = label;
