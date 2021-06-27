@@ -18,13 +18,12 @@
 -->
   
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <Import Project="../DSharpPlusNextGen.targets" />
   
   <PropertyGroup>
     <AssemblyName>DSharpPlusNextGen.Common</AssemblyName>
     <RootNamespace>DSharpPlusNextGen.Common</RootNamespace>
     <LangVersion>9.0</LangVersion>
+    <VersionPrefix>9.0.0</VersionPrefix>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
