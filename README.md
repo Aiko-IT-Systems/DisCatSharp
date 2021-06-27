@@ -34,6 +34,7 @@ The following resources apply only for the latest stable version of the library.
 
 ### Tutorials
 * [Making your first bot in C#](https://dsp-nextgen.aitsys.dev/articles/basics/bot_account.html).
+* [Examples](https://github.com/Aiko-IT-Systems/DSharpPlusNextGen.Examples)
 
 # I want to throw my money at you!
 If you want to give me some money as a thank you:
