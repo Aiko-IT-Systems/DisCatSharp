@@ -1,4 +1,4 @@
-﻿using Emzi0767.Utilities;
+﻿using DSharpPlusNextGen.Common.Utilities;
 using System;
 
 namespace DSharpPlusNextGen.SlashCommands.EventArgs

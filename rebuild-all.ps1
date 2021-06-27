@@ -4,7 +4,7 @@
 # Rebuilds the DSharpPlus NextGen project and its documentation, and places artifacts in specified directories.
 # Not specifying documentation options will skip documentation build.
 # 
-# Author:       Emzi0767
+# Author:       DSharpPlusNextGen.Common
 # Version:      2018-08-30 14:41
 #
 # Arguments:

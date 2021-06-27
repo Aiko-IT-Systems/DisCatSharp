@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using DSharpPlusNextGen.EventArgs;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 
 namespace DSharpPlusNextGen.Net.WebSocket
 {

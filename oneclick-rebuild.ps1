@@ -3,7 +3,7 @@
 #
 # Rebuilds all DSharpPlus components with default values.
 #
-# Author: Emzi0767
+# Author: DSharpPlusNextGen.Common
 # Version: 2018-08-30 14:34
 #
 # Arguments: none

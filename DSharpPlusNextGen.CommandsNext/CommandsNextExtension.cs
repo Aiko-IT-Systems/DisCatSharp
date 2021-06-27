@@ -34,7 +34,7 @@ using DSharpPlusNextGen.CommandsNext.Entities;
 using DSharpPlusNextGen.CommandsNext.Exceptions;
 using DSharpPlusNextGen.Entities;
 using DSharpPlusNextGen.EventArgs;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -840,7 +840,7 @@ namespace DSharpPlusNextGen.CommandsNext
         /// <param name="value">Value to convert.</param>
         /// <param name="ctx">Context in which to convert to.</param>
         /// <returns>Converted object.</returns>
-        public async Task<object> ConvertArgument<T>(string value, CommandContext ctx)
+        public async Task<object> ConvertArgumentAsync<T>(string value, CommandContext ctx)
         {
             var t = typeof(T);
             if (!this.ArgumentConverters.ContainsKey(t))
@@ -860,7 +860,7 @@ namespace DSharpPlusNextGen.CommandsNext
         /// <param name="ctx">Context in which to convert to.</param>
         /// <param name="type">Type to convert to.</param>
         /// <returns>Converted object.</returns>
-        public async Task<object> ConvertArgument(string value, CommandContext ctx, Type type)
+        public async Task<object> ConvertArgumentAsync(string value, CommandContext ctx, Type type)
         {
             var m = this.ConvertGeneric.MakeGenericMethod(type);
             try

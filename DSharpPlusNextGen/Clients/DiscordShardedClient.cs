@@ -35,7 +35,7 @@ using System.Threading.Tasks;
 using DSharpPlusNextGen.Entities;
 using DSharpPlusNextGen.EventArgs;
 using DSharpPlusNextGen.Net;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 

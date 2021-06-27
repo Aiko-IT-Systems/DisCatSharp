@@ -22,7 +22,7 @@
 // SOFTWARE.
 
 using System;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 
 namespace DSharpPlusNextGen.Lavalink.EventArgs
 {

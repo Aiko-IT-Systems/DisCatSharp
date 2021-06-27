@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 using DSharpPlusNextGen.Entities;
 using DSharpPlusNextGen.Lavalink.EventArgs;
 using DSharpPlusNextGen.Net;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 
 namespace DSharpPlusNextGen.Lavalink
 {

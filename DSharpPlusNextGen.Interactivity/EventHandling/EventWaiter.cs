@@ -28,7 +28,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using ConcurrentCollections;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.Logging;
 
 namespace DSharpPlusNextGen.Interactivity.EventHandling
@@ -68,7 +68,7 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         /// </summary>
         /// <param name="request">Request to match</param>
         /// <returns></returns>
-        public async Task<T> WaitForMatch(MatchRequest<T> request)
+        public async Task<T> WaitForMatchAsync(MatchRequest<T> request)
         {
             T result = null;
             this._matchrequests.Add(request);
@@ -88,7 +88,7 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             return result;
         }
 
-        public async Task<ReadOnlyCollection<T>> CollectMatches(CollectRequest<T> request)
+        public async Task<ReadOnlyCollection<T>> CollectMatchesAsync(CollectRequest<T> request)
         {
             ReadOnlyCollection<T> result = null;
             this._collectrequests.Add(request);

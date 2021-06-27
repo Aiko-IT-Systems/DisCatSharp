@@ -33,7 +33,7 @@ using DSharpPlusNextGen.Entities;
 using DSharpPlusNextGen.EventArgs;
 using DSharpPlusNextGen.Net.Abstractions;
 using DSharpPlusNextGen.Net.Serialization;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 

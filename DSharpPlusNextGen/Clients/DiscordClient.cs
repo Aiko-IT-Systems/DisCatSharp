@@ -36,7 +36,7 @@ using DSharpPlusNextGen.Net;
 using DSharpPlusNextGen.Net.Abstractions;
 using DSharpPlusNextGen.Net.Models;
 using DSharpPlusNextGen.Net.Serialization;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
