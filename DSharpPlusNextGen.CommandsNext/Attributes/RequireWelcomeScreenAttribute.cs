@@ -21,14 +21,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
 
 namespace DSharpPlusNextGen.CommandsNext.Attributes
 {
     /// <summary>
     /// Defines that a command is only usable within a guild which has enabled the welcome screen.
     /// </summary>
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class RequireWelcomeScreenAttribute : CheckBaseAttribute
     {
         /// <summary>

@@ -190,7 +190,9 @@ namespace DSharpPlusNextGen.CommandsNext
             return s.Remove(li - ll + 1, ll);
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         internal static async Task<ArgumentBindingResult> BindArguments(CommandContext ctx, bool ignoreSurplus)
+#pragma warning restore IDE1006 // Naming Styles
         {
             var command = ctx.Command;
             var overload = ctx.Overload;
@@ -259,7 +261,7 @@ namespace DSharpPlusNextGen.CommandsNext
                     {
                         try
                         {
-                            array.SetValue(await ctx.CommandsNext.ConvertArgumentAsync(rawArgumentList[i], ctx, arg.Type).ConfigureAwait(false), i - start);
+                            array.SetValue(await ctx.CommandsNext.ConvertArgument(rawArgumentList[i], ctx, arg.Type).ConfigureAwait(false), i - start);
                         }
                         catch (Exception ex)
                         {
@@ -275,7 +277,7 @@ namespace DSharpPlusNextGen.CommandsNext
                 {
                     try
                     {
-                        args[i + 2] = rawArgumentList[i] != null ? await ctx.CommandsNext.ConvertArgumentAsync(rawArgumentList[i], ctx, arg.Type).ConfigureAwait(false) : arg.DefaultValue;
+                        args[i + 2] = rawArgumentList[i] != null ? await ctx.CommandsNext.ConvertArgument(rawArgumentList[i], ctx, arg.Type).ConfigureAwait(false) : arg.DefaultValue;
                     }
                     catch (Exception ex)
                     {
