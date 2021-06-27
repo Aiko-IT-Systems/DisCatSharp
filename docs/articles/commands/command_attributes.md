@@ -7,23 +7,23 @@ title: Command Attributes
 CommandsNext has a variety of built-in attributes to enhance your commands and provide some access control.
 The majority of these attributes can be applied to your command methods and command groups.
 
-- @DSharpPlus.CommandsNext.Attributes.AliasesAttribute
-- @DSharpPlus.CommandsNext.Attributes.CooldownAttribute
-- @DSharpPlus.CommandsNext.Attributes.DescriptionAttribute
-- @DSharpPlus.CommandsNext.Attributes.DontInjectAttribute
-- @DSharpPlus.CommandsNext.Attributes.HiddenAttribute
-- @DSharpPlus.CommandsNext.Attributes.ModuleLifespanAttribute
-- @DSharpPlus.CommandsNext.Attributes.PriorityAttribute
-- @DSharpPlus.CommandsNext.Attributes.RemainingTextAttribute
-- @DSharpPlus.CommandsNext.Attributes.RequireBotPermissionsAttribute
-- @DSharpPlus.CommandsNext.Attributes.RequireDirectMessageAttribute
-- @DSharpPlus.CommandsNext.Attributes.RequireGuildAttribute
-- @DSharpPlus.CommandsNext.Attributes.RequireNsfwAttribute
-- @DSharpPlus.CommandsNext.Attributes.RequireOwnerAttribute
-- @DSharpPlus.CommandsNext.Attributes.RequirePermissionsAttribute
-- @DSharpPlus.CommandsNext.Attributes.RequirePrefixesAttribute
-- @DSharpPlus.CommandsNext.Attributes.RequireRolesAttribute
-- @DSharpPlus.CommandsNext.Attributes.RequireUserPermissionsAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.AliasesAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.CooldownAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.DescriptionAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.DontInjectAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.HiddenAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.ModuleLifespanAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.PriorityAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RemainingTextAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireBotPermissionsAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireDirectMessageAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireGuildAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireNsfwAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireOwnerAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequirePermissionsAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequirePrefixesAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireRolesAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireUserPermissionsAttribute
 
 
 ## Custom Attributes

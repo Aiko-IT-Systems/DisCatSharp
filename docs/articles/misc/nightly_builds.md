@@ -5,7 +5,7 @@ title: Nightly Builds
 
 # I like living on the edge - give me the freshest builds
 
-We offer nightly builds for DSharpPlus. They contain bugfixes and new features before the NuGet releases, however they are
+We offer nightly builds for DSharpPlusNextGen. They contain bugfixes and new features before the NuGet releases, however they are
 not guaranteed to be stable, or work at all.
 Open the NuGet interface for your project, check **Prerelease**.
 
