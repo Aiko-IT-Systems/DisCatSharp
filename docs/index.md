@@ -1,11 +1,11 @@
 ---
 uid: index
-title: DSharpPlus NextGen 9.0 Documentation
+title: DSharpPlus NextGen 9.X Documentation
 ---
 
-<h1 class="delet-this">DSharpPlus NextGen 9.0 Documentation</h1>
+<h1 class="delet-this">DSharpPlus NextGen 9.X Documentation</h1>
 <h1 class="logo-center">![DSharpPlus NextGen Logo](/logobig.png "DSharpPlus NextGen Documentation")</h1>
-## DSharpPlus NextGen 9.0 Documentation
+## DSharpPlus NextGen 9.X Documentation
 [DSharpPlus-NetxGen](https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen) (D#+NG) is an unofficial .NET wrapper for the [Discord API](https://discordapp.com/developers/docs/intro "Discord API") which was originally a fork of [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus).<br/>
 The library has since been rewritten to fit quality and API standards as well as target wider range of .NET implementations. Furthermore this lib will be the most up-to-date.
 
