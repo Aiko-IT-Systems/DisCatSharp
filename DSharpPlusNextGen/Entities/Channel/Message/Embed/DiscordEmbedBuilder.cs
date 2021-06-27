@@ -57,8 +57,8 @@ namespace DSharpPlusNextGen.Entities
             get => this._description;
             set
             {
-                if (value != null && value.Length > 2048)
-                    throw new ArgumentException("Description length cannot exceed 2048 characters.", nameof(value));
+                if (value != null && value.Length > 4096)
+                    throw new ArgumentException("Description length cannot exceed 4096 characters.", nameof(value));
                 this._description = value;
             }
         }
