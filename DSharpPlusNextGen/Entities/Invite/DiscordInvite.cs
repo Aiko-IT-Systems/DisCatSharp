@@ -45,7 +45,7 @@ namespace DSharpPlusNextGen.Entities
         /// Gets the invite's url.
         /// </summary>
         [JsonIgnore]
-        public string Url => DiscordDomain.GetDomain(CoreDomain.DiscordShortlink) + "/" + this.Code;
+        public string Url => DiscordDomain.GetDomain(CoreDomain.DiscordShortlink).Url + "/" + this.Code;
 
         /// <summary>
         /// Gets the invite's url as Uri.
