@@ -13,9 +13,10 @@
   <PropertyGroup>
     <Description>A C# API for Discord based off DiscordSharp / DSharpPlus, but rewritten to fit the API standards.</Description>
     <PackageTags>discord, discord-api, bots, discord-bots, chat, dsharp, dsharpplus, dsharpplusnextgen, csharp, dotnet, vb-net, fsharp, webhooks</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression></PackageLicenseExpression>
     <PackageIcon>dsharpplus.png</PackageIcon>
     <PackageId>DSharpPlusNextGen</PackageId>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="..\logo\dsharpplus.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

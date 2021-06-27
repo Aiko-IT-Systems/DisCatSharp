@@ -14,8 +14,9 @@
     <PackageId>DSharpPlusNextGen.Interactivity</PackageId>
     <Description>An addon that adds interactivity capabilities to commands for DSharpPlusNextGen.</Description>
     <PackageTags>discord, discord-api, bots, discord-bots, chat, dsharp, dsharpplus, dsharpplusnextgen, csharp, dotnet, vb-net, fsharp, interactive, pagination, reactions</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression></PackageLicenseExpression>
     <PackageIcon>d#+.png</PackageIcon>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="..\logo\d#+.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

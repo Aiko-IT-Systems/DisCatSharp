@@ -13,14 +13,14 @@
   <PropertyGroup>
     <Authors>Lala Sabathil, IDoEverything, Epictek, sssvt-drabek-stepan, tygore587</Authors>
     <Description>An extension for DSharpPlusNextGen to make slash commands easy</Description>
-    <PackageLicenseFile></PackageLicenseFile>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen</PackageProjectUrl>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen</RepositoryUrl>
     <PackageId>DSharpPlusNextGen.SlashCommands</PackageId>
     <PackageIcon>d#+.png</PackageIcon>
     <Company>AITSYS, IDoEverything</Company>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression></PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -31,6 +31,10 @@
   <ItemGroup>
     <None Remove="LICENSE" />
     <None Remove="LICENSE" />
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

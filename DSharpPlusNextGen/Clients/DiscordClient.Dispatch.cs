@@ -1300,7 +1300,7 @@ namespace DSharpPlusNextGen
         internal async Task OnGuildRoleDeleteEventAsync(ulong roleId, DiscordGuild guild)
         {
             if (!guild._roles.TryRemove(roleId, out var role))
-                throw new InvalidOperationException("Attempted to delete a nonexistent role.");
+                this.Logger.LogWarning($"Attempted to delete a nonexistent role ({roleId}) from guild ({guild}).");
 
             var ea = new GuildRoleDeleteEventArgs
             {
@@ -2130,6 +2130,7 @@ namespace DSharpPlusNextGen
             {
 
                 interaction.Message.Discord = this;
+                interaction.Message.ChannelId = interaction.ChannelId;
                 var cea = new ComponentInteractionCreateEventArgs
                 {
                     Message = interaction.Message,
