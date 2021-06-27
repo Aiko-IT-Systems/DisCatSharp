@@ -6,7 +6,7 @@ using DSharpPlusNextGen.Entities;
 using System.Linq;
 using DSharpPlusNextGen.EventArgs;
 using Microsoft.Extensions.Logging;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using DSharpPlusNextGen.SlashCommands.EventArgs;
 

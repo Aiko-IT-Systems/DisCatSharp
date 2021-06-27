@@ -31,7 +31,7 @@ using DSharpPlusNextGen.Entities;
 using DSharpPlusNextGen.EventArgs;
 using DSharpPlusNextGen.Lavalink.Entities;
 using DSharpPlusNextGen.Lavalink.EventArgs;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Lavalink

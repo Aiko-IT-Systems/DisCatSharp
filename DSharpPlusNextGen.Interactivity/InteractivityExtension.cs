@@ -30,7 +30,7 @@ using DSharpPlusNextGen.Entities;
 using DSharpPlusNextGen.EventArgs;
 using DSharpPlusNextGen.Interactivity.Enums;
 using DSharpPlusNextGen.Interactivity.EventHandling;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 
 namespace DSharpPlusNextGen.Interactivity
 {
@@ -132,7 +132,7 @@ namespace DSharpPlusNextGen.Interactivity
             while (true)
             {
                 var result = await this.ComponentInteractionWaiter
-                    .WaitForMatch(new MatchRequest<ComponentInteractionCreateEventArgs>(c => c.Interaction.Type == InteractionType.Component
+                    .WaitForMatchAsync(new MatchRequest<ComponentInteractionCreateEventArgs>(c => c.Interaction.Type == InteractionType.Component
                                                                                              && c.Interaction.Data.ComponentType == ComponentType.Button
                                                                                              && c.Message == message
                                                                                              && buttons.Any(b => b.CustomId == c.Id), timeout)).ConfigureAwait(false);
@@ -163,7 +163,7 @@ namespace DSharpPlusNextGen.Interactivity
             while (true)
             {
                 var result = await this.ComponentInteractionWaiter
-                    .WaitForMatch(new MatchRequest<ComponentInteractionCreateEventArgs>(c => c.Interaction.Type == InteractionType.Component
+                    .WaitForMatchAsync(new MatchRequest<ComponentInteractionCreateEventArgs>(c => c.Interaction.Type == InteractionType.Component
                                                                                              && c.Interaction.Data.ComponentType == ComponentType.Button
                                                                                              && c.Message == message, timeout)).ConfigureAwait(false);
 
@@ -195,7 +195,7 @@ namespace DSharpPlusNextGen.Interactivity
             while (true)
             {
                 var result = await this.ComponentInteractionWaiter
-                    .WaitForMatch(new MatchRequest<ComponentInteractionCreateEventArgs>(c => c.Interaction.Type == InteractionType.Component && c.Interaction.Data.ComponentType == ComponentType.Button && c.Message.Id == message.Id && c.User == user, timeout)).ConfigureAwait(false);
+                    .WaitForMatchAsync(new MatchRequest<ComponentInteractionCreateEventArgs>(c => c.Interaction.Type == InteractionType.Component && c.Interaction.Data.ComponentType == ComponentType.Button && c.Message.Id == message.Id && c.User == user, timeout)).ConfigureAwait(false);
 
                 return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
             }
@@ -227,7 +227,7 @@ namespace DSharpPlusNextGen.Interactivity
             while (true)
             {
                 var result = await this.ComponentInteractionWaiter
-                    .WaitForMatch(new MatchRequest<ComponentInteractionCreateEventArgs>(c => c.Interaction.Type == InteractionType.Component && c.Interaction.Data.ComponentType == ComponentType.Button && c.Message == message, timeout)).ConfigureAwait(false);
+                    .WaitForMatchAsync(new MatchRequest<ComponentInteractionCreateEventArgs>(c => c.Interaction.Type == InteractionType.Component && c.Interaction.Data.ComponentType == ComponentType.Button && c.Message == message, timeout)).ConfigureAwait(false);
 
                 if (result is null)
                     return new InteractivityResult<ComponentInteractionCreateEventArgs>(true, null);
@@ -262,7 +262,7 @@ namespace DSharpPlusNextGen.Interactivity
             while (true)
             {
                 var res = await this.ComponentInteractionWaiter
-                    .WaitForMatch(new MatchRequest<ComponentInteractionCreateEventArgs>(c => c.Id == id && c.Message == message, timeoutOverride ?? this.Config.Timeout)).ConfigureAwait(false);
+                    .WaitForMatchAsync(new MatchRequest<ComponentInteractionCreateEventArgs>(c => c.Id == id && c.Message == message, timeoutOverride ?? this.Config.Timeout)).ConfigureAwait(false);
 
                 if (res is null)
                     return new InteractivityResult<ComponentInteractionCreateEventArgs>(true, null);
@@ -297,7 +297,7 @@ namespace DSharpPlusNextGen.Interactivity
             while (true)
             {
                 var res = await this.ComponentInteractionWaiter
-                    .WaitForMatch(new MatchRequest<ComponentInteractionCreateEventArgs>(c => c.Id == id && c.Message == message && c.User == user, timeoutOverride ?? this.Config.Timeout)).ConfigureAwait(false);
+                    .WaitForMatchAsync(new MatchRequest<ComponentInteractionCreateEventArgs>(c => c.Id == id && c.Message == message && c.User == user, timeoutOverride ?? this.Config.Timeout)).ConfigureAwait(false);
 
                 if (res is null)
                     return new InteractivityResult<ComponentInteractionCreateEventArgs>(true, null);
@@ -322,7 +322,7 @@ namespace DSharpPlusNextGen.Interactivity
                 throw new InvalidOperationException("No message intents are enabled.");
 
             var timeout = timeoutoverride ?? this.Config.Timeout;
-            var returns = await this.MessageCreatedWaiter.WaitForMatch(new MatchRequest<MessageCreateEventArgs>(x => predicate(x.Message), timeout)).ConfigureAwait(false);
+            var returns = await this.MessageCreatedWaiter.WaitForMatchAsync(new MatchRequest<MessageCreateEventArgs>(x => predicate(x.Message), timeout)).ConfigureAwait(false);
 
             return new InteractivityResult<DiscordMessage>(returns == null, returns?.Message);
         }
@@ -340,7 +340,7 @@ namespace DSharpPlusNextGen.Interactivity
                 throw new InvalidOperationException("No reaction intents are enabled.");
 
             var timeout = timeoutoverride ?? this.Config.Timeout;
-            var returns = await this.MessageReactionAddWaiter.WaitForMatch(new MatchRequest<MessageReactionAddEventArgs>(predicate, timeout)).ConfigureAwait(false);
+            var returns = await this.MessageReactionAddWaiter.WaitForMatchAsync(new MatchRequest<MessageReactionAddEventArgs>(predicate, timeout)).ConfigureAwait(false);
 
             return new InteractivityResult<MessageReactionAddEventArgs>(returns == null, returns);
         }
@@ -396,7 +396,7 @@ namespace DSharpPlusNextGen.Interactivity
                 throw new InvalidOperationException("No typing intents are enabled.");
 
             var timeout = timeoutoverride ?? this.Config.Timeout;
-            var returns = await this.TypingStartWaiter.WaitForMatch(
+            var returns = await this.TypingStartWaiter.WaitForMatchAsync(
                 new MatchRequest<TypingStartEventArgs>(x => x.User.Id == user.Id && x.Channel.Id == channel.Id, timeout))
                 .ConfigureAwait(false);
 
@@ -415,7 +415,7 @@ namespace DSharpPlusNextGen.Interactivity
                 throw new InvalidOperationException("No typing intents are enabled.");
 
             var timeout = timeoutoverride ?? this.Config.Timeout;
-            var returns = await this.TypingStartWaiter.WaitForMatch(
+            var returns = await this.TypingStartWaiter.WaitForMatchAsync(
                 new MatchRequest<TypingStartEventArgs>(x => x.User.Id == user.Id, timeout))
                 .ConfigureAwait(false);
 
@@ -434,7 +434,7 @@ namespace DSharpPlusNextGen.Interactivity
                 throw new InvalidOperationException("No typing intents are enabled.");
 
             var timeout = timeoutoverride ?? this.Config.Timeout;
-            var returns = await this.TypingStartWaiter.WaitForMatch(
+            var returns = await this.TypingStartWaiter.WaitForMatchAsync(
                 new MatchRequest<TypingStartEventArgs>(x => x.Channel.Id == channel.Id, timeout))
                 .ConfigureAwait(false);
 
@@ -470,7 +470,7 @@ namespace DSharpPlusNextGen.Interactivity
             var timeout = timeoutoverride ?? this.Config.Timeout;
 
             using var waiter = new EventWaiter<T>(this.Client);
-            var res = await waiter.WaitForMatch(new MatchRequest<T>(predicate, timeout)).ConfigureAwait(false);
+            var res = await waiter.WaitForMatchAsync(new MatchRequest<T>(predicate, timeout)).ConfigureAwait(false);
             return new InteractivityResult<T>(res == null, res);
         }
 
@@ -479,7 +479,7 @@ namespace DSharpPlusNextGen.Interactivity
             var timeout = timeoutoverride ?? this.Config.Timeout;
 
             using var waiter = new EventWaiter<T>(this.Client);
-            var res = await waiter.CollectMatches(new CollectRequest<T>(predicate, timeout)).ConfigureAwait(false);
+            var res = await waiter.CollectMatchesAsync(new CollectRequest<T>(predicate, timeout)).ConfigureAwait(false);
             return res;
         }
 

@@ -31,7 +31,7 @@ using System.Threading.Tasks;
 using ConcurrentCollections;
 using DSharpPlusNextGen.Entities;
 using DSharpPlusNextGen.EventArgs;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.Logging;
 
 namespace DSharpPlusNextGen.Interactivity.EventHandling

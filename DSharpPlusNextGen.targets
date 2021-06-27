@@ -12,7 +12,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Authors>Lala Sabathil, Naamloos, afroraydude, DrCreo, Death, TiaqoY0, Axiom, Emzi0767, DSharpPlus contributors</Authors>
+    <Authors>Lala Sabathil, Naamloos, afroraydude, DrCreo, Death, TiaqoY0, Axiom, DSharpPlusNextGen.Common, DSharpPlus contributors</Authors>
     <Company>AITSYS, DSharpPlus developers</Company>
     <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen</RepositoryUrl>

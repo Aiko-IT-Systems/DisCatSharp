@@ -24,7 +24,7 @@
 using System;
 using System.Threading.Tasks;
 using DSharpPlusNextGen.EventArgs;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.Logging;
 
 namespace DSharpPlusNextGen

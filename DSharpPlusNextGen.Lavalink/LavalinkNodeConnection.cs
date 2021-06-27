@@ -35,7 +35,7 @@ using DSharpPlusNextGen.Lavalink.Entities;
 using DSharpPlusNextGen.Lavalink.EventArgs;
 using DSharpPlusNextGen.Net;
 using DSharpPlusNextGen.Net.WebSocket;
-using Emzi0767.Utilities;
+using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
