@@ -19,6 +19,9 @@ An unofficial .NET wrapper for the Discord API, based off [DSharpPlus](https://g
 # Why NextGen?
 The way how DSP is working and the maintainer.. I don't like it. I decided to maintain an own version of it.
 
+# Goal
+We want this Lib always up-to-date. So the API version is always the newest, in the actual case `v9`.
+
 # Installing
 You can install the library from following source:
 
