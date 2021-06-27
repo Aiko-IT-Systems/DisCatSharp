@@ -563,10 +563,7 @@ namespace DSharpPlusNextGen.Entities
             perms |= this.Roles.Aggregate(Permissions.None, (c, role) => c | role.Permissions);
 
             // Adminstrator grants all permissions and cannot be overridden
-            if ((perms & Permissions.Administrator) == Permissions.Administrator)
-                return PermissionMethods.FULL_PERMS;
-
-            return perms;
+            return (perms & Permissions.Administrator) == Permissions.Administrator ? PermissionMethods.FULL_PERMS : perms;
         }
 
         /// <summary>
@@ -587,10 +584,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <param name="e"><see cref="DiscordMember"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordMember"/> is equal to this <see cref="DiscordMember"/>.</returns>
-        public bool Equals(DiscordMember e)
-        {
-            return e is null ? false : ReferenceEquals(this, e) ? true : this.Id == e.Id && this._guild_id == e._guild_id;
-        }
+        public bool Equals(DiscordMember e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this._guild_id == e._guild_id));
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordMember"/>.
@@ -617,9 +611,7 @@ namespace DSharpPlusNextGen.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            return (o1 == null && o2 != null) || (o1 != null && o2 == null)
-                ? false
-                : o1 == null && o2 == null ? true : e1.Id == e2.Id && e1._guild_id == e2._guild_id;
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1._guild_id == e2._guild_id));
         }
 
         /// <summary>
