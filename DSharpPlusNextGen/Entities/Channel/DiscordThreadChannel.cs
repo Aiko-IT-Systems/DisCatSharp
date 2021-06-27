@@ -293,15 +293,15 @@ namespace DSharpPlusNextGen.Entities
         public Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
         {
             return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
-                ? throw new ArgumentException("Cannot send a text message to a non-text channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, embed, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] {embed}, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
 
         /// <summary>
         /// Sends a message to this thread.
         /// </summary>
-        /// <param name="embed">Embed to attach to the message.</param>
         /// <param name="content">Content of the message to send.</param>
+        /// <param name="embed">Embed to attach to the message.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the client is missing <see cref="Permissions.UsePrivateThreads"/> or <see cref="Permissions.UsePublicThreads"/> or the thread is locked.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
@@ -310,8 +310,8 @@ namespace DSharpPlusNextGen.Entities
         public Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
         {
             return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
-                ? throw new ArgumentException("Cannot send a text message to a non-text channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, embed, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, new[] {embed}, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
 
         /// <summary>
@@ -339,7 +339,6 @@ namespace DSharpPlusNextGen.Entities
         {
             var builder = new DiscordMessageBuilder();
             action(builder);
-
 
             return this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
         }

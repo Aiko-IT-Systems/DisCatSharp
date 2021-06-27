@@ -27,7 +27,7 @@ namespace DSharpPlusNextGen
 {
     public static class PermissionMethods
     {
-        internal static Permissions FULL_PERMS { get; } = (Permissions)128849018879L;
+        internal static Permissions FULL_PERMS { get; } = (Permissions)137438953471L;
 
         /// <summary>
         /// Calculates whether this permission set contains the given permission.
@@ -92,7 +92,7 @@ namespace DSharpPlusNextGen
         /// Indicates all permissions are granted
         /// </summary>
         [PermissionString("All permissions")]
-        All = 128849018879,
+        All = 137438953471,
 
         /// <summary>
         /// Allows creation of instant channel invites.
@@ -263,10 +263,10 @@ namespace DSharpPlusNextGen
         ManageWebhooks = 0x0000000020000000,
 
         /// <summary>
-        /// Allows managing guild emoji.
+        /// Allows managing guild emojis and stickers.
         /// </summary>
-        [PermissionString("Manage emoji")]
-        ManageEmojis = 0x0000000040000000,
+        [PermissionString("Manage emojis & stickers")]
+        ManageEmojisAndStickers = 0x0000000040000000,
 
         /// <summary>
         /// Allows the user to go live.
@@ -285,6 +285,12 @@ namespace DSharpPlusNextGen
         /// </summary>
         [PermissionString("Request to speak")]
         RequestToSpeak = 0x0000000100000000,
+
+        /// <summary>
+        /// Allows managing guild events.
+        /// </summary>
+        [PermissionString("Manage Events")]
+        ManageEvents = 0x0000000200000000,
 
         /// <summary>
         /// Allows for deleting and archiving threads, and viewing all private threads.

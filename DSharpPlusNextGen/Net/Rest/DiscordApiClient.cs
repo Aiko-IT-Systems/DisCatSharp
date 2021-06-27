@@ -894,30 +894,31 @@ namespace DSharpPlusNextGen.Net
             return ret;
         }
 
-        internal async Task<DiscordMessage> CreateMessageAsync(ulong channel_id, string content, DiscordEmbed embed, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply)
+        internal async Task<DiscordMessage> CreateMessageAsync(ulong channel_id, string content, IEnumerable<DiscordEmbed> embeds, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply)
         {
             if (content != null && content.Length > 2000)
                 throw new ArgumentException("Message content length cannot exceed 2000 characters.");
 
-            if (embed == null)
+            if (!embeds?.Any() ?? true)
             {
                 if (content == null)
                     throw new ArgumentException("You must specify message content or an embed.");
-
                 if (content.Length == 0)
                     throw new ArgumentException("Message content must not be empty.");
             }
 
-            if (embed?.Timestamp != null)
-                embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
+            if (embeds != null)
+                foreach (var embed in embeds)
+                    if (embed.Timestamp != null)
+                        embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
             var pld = new RestChannelMessageCreatePayload
             {
                 HasContent = content != null,
                 Content = content,
                 IsTTS = false,
-                HasEmbed = embed != null,
-                Embed = embed
+                HasEmbed = embeds?.Any() ?? false,
+                Embeds = embeds
             };
 
             if (replyMessageId != null)
@@ -941,16 +942,18 @@ namespace DSharpPlusNextGen.Net
         {
             builder.Validate();
 
-            if (builder.Embed?.Timestamp != null)
-                builder.Embed.Timestamp = builder.Embed.Timestamp.Value.ToUniversalTime();
+            if (builder.Embeds != null)
+                foreach (var embed in builder.Embeds)
+                    if (embed.Timestamp != null)
+                        embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
             var pld = new RestChannelMessageCreatePayload
             {
                 HasContent = builder.Content != null,
                 Content = builder.Content,
                 IsTTS = builder.IsTTS,
-                HasEmbed = builder.Embed != null,
-                Embed = builder.Embed,
+                HasEmbed = builder.Embeds != null,
+                Embeds = builder.Embeds,
                 Components = builder.Components
             };
 
@@ -1111,17 +1114,19 @@ namespace DSharpPlusNextGen.Net
             return ret;
         }
 
-        internal async Task<DiscordMessage> EditMessageAsync(ulong channel_id, ulong message_id, Optional<string> content, Optional<DiscordEmbed> embed, IEnumerable<IMention> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppress_embed)
+        internal async Task<DiscordMessage> EditMessageAsync(ulong channel_id, ulong message_id, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, IEnumerable<IMention> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppress_embed, IReadOnlyCollection<DiscordMessageFile> files)
         {
-            if (embed.HasValue && embed.Value != null && embed.Value.Timestamp != null)
-                embed.Value.Timestamp = embed.Value.Timestamp.Value.ToUniversalTime();
+            if (embeds.HasValue && embeds.Value != null)
+                foreach (var embed in embeds.Value)
+                    if (embed.Timestamp != null)
+                        embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
             var pld = new RestChannelMessageEditPayload
             {
                 HasContent = content.HasValue,
                 Content = content.HasValue ? (string)content : null,
-                HasEmbed = embed.HasValue,
-                Embed = embed.HasValue ? (DiscordEmbed)embed : null,
+                HasEmbed = embeds.HasValue && (embeds.Value?.Any() ?? false),
+                Embeds = embeds.HasValue && (embeds.Value?.Any() ?? false) ? embeds.Value : null,
                 Components = components,
                 Flags = suppress_embed.HasValue ? (bool)suppress_embed ? MessageFlags.SuppressedEmbeds : null : null
             };
@@ -1129,13 +1134,23 @@ namespace DSharpPlusNextGen.Net
             if (mentions != null)
                 pld.Mentions = new DiscordMentions(mentions);
 
+            var values = new Dictionary<string, string>
+            {
+                ["payload_json"] = DiscordJson.SerializeObject(pld)
+            };
+
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id, message_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path);
-            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+            var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: files).ConfigureAwait(false);
 
             var ret = this.PrepareMessage(JObject.Parse(res.Response));
+
+            foreach (var file in files.Where(x => x.ResetPositionTo.HasValue))
+            {
+                file.Stream.Position = file.ResetPositionTo.Value;
+            }
 
             return ret;
         }
@@ -2163,6 +2178,8 @@ namespace DSharpPlusNextGen.Net
 
         internal async Task<DiscordMessage> EditWebhookMessageAsync(ulong webhook_id, string webhook_token, string message_id, DiscordWebhookBuilder builder)
         {
+            builder.Validate(true);
+
             var pld = new RestWebhookMessageEditPayload
             {
                 Content = builder.Content,
@@ -2172,14 +2189,24 @@ namespace DSharpPlusNextGen.Net
                 Attachments = builder.Attachments
             };
 
+            var values = new Dictionary<string, string>
+            {
+                ["payload_json"] = DiscordJson.SerializeObject(pld)
+            };
+
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id, webhook_token, message_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path);
-            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
+            var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files);
 
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
             ret.Discord = this.Discord;
+
+            foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue)) {
+                file.Stream.Position = file.ResetPositionTo.Value;
+            }
+
             return ret;
         }
 
@@ -2888,13 +2915,13 @@ namespace DSharpPlusNextGen.Net
         }
 
         internal Task<DiscordMessage> GetOriginalInteractionResponseAsync(ulong application_id, string interaction_token) =>
-            this.GetWebhookMessageAsync(application_id, interaction_token, "@original");
+            this.GetWebhookMessageAsync(application_id, interaction_token, Endpoints.ORIGINAL);
 
         internal Task<DiscordMessage> EditOriginalInteractionResponseAsync(ulong application_id, string interaction_token, DiscordWebhookBuilder builder) =>
-            this.EditWebhookMessageAsync(application_id, interaction_token, "@original", builder);
+            this.EditWebhookMessageAsync(application_id, interaction_token, Endpoints.ORIGINAL, builder);
 
         internal Task DeleteOriginalInteractionResponseAsync(ulong application_id, string interaction_token) =>
-            this.DeleteWebhookMessageAsync(application_id, interaction_token, "@original");
+            this.DeleteWebhookMessageAsync(application_id, interaction_token, Endpoints.ORIGINAL);
 
         internal async Task<DiscordMessage> CreateFollowupMessageAsync(ulong application_id, string interaction_token, DiscordFollowupMessageBuilder builder)
         {

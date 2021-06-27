@@ -47,6 +47,7 @@ namespace DSharpPlusNextGen.Entities
             this._mentionedUsersLazy = new Lazy<IReadOnlyList<DiscordUser>>(() => new ReadOnlyCollection<DiscordUser>(this._mentionedUsers));
             this._reactionsLazy = new Lazy<IReadOnlyList<DiscordReaction>>(() => new ReadOnlyCollection<DiscordReaction>(this._reactions));
             this._stickersLazy = new Lazy<IReadOnlyList<DiscordMessageSticker>>(() => new ReadOnlyCollection<DiscordMessageSticker>(this._stickers));
+            //this._stickerItemsLazy = new Lazy<IReadOnlyList<DiscordStickerItem>>(() => new ReadOnlyCollection<DiscordStickerItem>(this._stickerItems);
             this._jumpLink = new Lazy<Uri>(() =>
             {
                 var gid = this.Channel != null
@@ -74,6 +75,7 @@ namespace DSharpPlusNextGen.Entities
             this._mentionedUsers = new List<DiscordUser>(other._mentionedUsers);
             this._reactions = new List<DiscordReaction>(other._reactions);
             this._stickers = new List<DiscordMessageSticker>(other._stickers);
+            //this._stickerItems = new List<DiscordMessageSticker>(other._stickerItems);
 
             this.Author = other.Author;
             this.ChannelId = other.ChannelId;
@@ -337,7 +339,19 @@ namespace DSharpPlusNextGen.Entities
         internal List<DiscordMessageSticker> _stickers = new();
         [JsonIgnore]
         private readonly Lazy<IReadOnlyList<DiscordMessageSticker>> _stickersLazy;
+/*
+        /// <summary>
+        /// Gets sticker items for this message.
+        /// </summary>
+        [JsonIgnore]
+        public IReadOnlyList<DiscordStickerItem> Stickers
+            => this._stickerItemsLazy.Value;
 
+        [JsonProperty("sticker_items", NullValueHandling = NullValueHandling.Ignore)]
+        internal List<DiscordStickerItem> _stickerItems = new();
+        [JsonIgnore]
+        private readonly Lazy<IReadOnlyList<DiscordStickerItem>> _stickerItemsLazy;
++*/
         [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
         internal ulong? GuildId { get; set; }
 
@@ -460,7 +474,7 @@ namespace DSharpPlusNextGen.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> ModifyAsync(Optional<string> content)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, default, default, default, default);
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, default, default, default, default, Array.Empty<DiscordMessageFile>());
 
         /// <summary>
         /// Edits the message.
@@ -472,7 +486,7 @@ namespace DSharpPlusNextGen.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> ModifyAsync(Optional<DiscordEmbed> embed = default)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, embed, default, default, default);
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, embed.HasValue ? new[] {embed.Value} : Array.Empty<DiscordEmbed>(), default, default, default, Array.Empty<DiscordMessageFile>());
 
         /// <summary>
         /// Edits the message.
@@ -485,7 +499,20 @@ namespace DSharpPlusNextGen.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> ModifyAsync(Optional<string> content, Optional<DiscordEmbed> embed = default)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embed, default, default, default);
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embed.HasValue ? new[] {embed.Value} : Array.Empty<DiscordEmbed>(), default, default, default, Array.Empty<DiscordMessageFile>());
+
+        /// <summary>
+        /// Edits the message.
+        /// </summary>
+        /// <param name="content">New content.</param>
+        /// <param name="embeds">New embeds.</param>
+        /// <returns></returns>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task<DiscordMessage> ModifyAsync(Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds = default)
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embeds, default, default, default, Array.Empty<DiscordMessageFile>());
 
         /// <summary>
         /// Edits the message.
@@ -499,7 +526,7 @@ namespace DSharpPlusNextGen.Entities
         public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder)
         {
             builder.Validate(true);
-            return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, builder.Embed, builder.Mentions, builder.Components, builder.Suppressed).ConfigureAwait(false);
+            return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -512,7 +539,7 @@ namespace DSharpPlusNextGen.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> ModifySuppressionAsync(bool suppress = false)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, default, default, suppress);
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, default, default, suppress, default);
 
         /// <summary>
         /// Edits the message.
@@ -528,7 +555,7 @@ namespace DSharpPlusNextGen.Entities
             var builder = new DiscordMessageBuilder();
             action(builder);
             builder.Validate(true);
-            return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, builder.Embed, builder.Mentions, builder.Components, builder.Suppressed).ConfigureAwait(false);
+            return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -599,7 +626,7 @@ namespace DSharpPlusNextGen.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> RespondAsync(DiscordEmbed embed)
-            => this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, null, embed, replyMessageId: this.Id, mentionReply: false, failOnInvalidReply: false);
+            => this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, null, new[] {embed}, replyMessageId: this.Id, mentionReply: false, failOnInvalidReply: false);
 
         /// <summary>
         /// Responds to the message. This produces a reply.
@@ -612,7 +639,7 @@ namespace DSharpPlusNextGen.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> RespondAsync(string content, DiscordEmbed embed)
-            => this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, embed, replyMessageId: this.Id, mentionReply: false, failOnInvalidReply: false);
+            => this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, new[] {embed}, replyMessageId: this.Id, mentionReply: false, failOnInvalidReply: false);
 
         /// <summary>
         /// Responds to the message. This produces a reply.

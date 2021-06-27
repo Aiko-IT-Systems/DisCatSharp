@@ -31,6 +31,7 @@ namespace DSharpPlusNextGen.Net
         public const string APPLICATIONS = "/applications";
         public const string REACTIONS = "/reactions";
         public const string ME = "/@me";
+        public const string ORIGINAL = "/@original";
         public const string PERMISSIONS = "/permissions";
         public const string RECIPIENTS = "/recipients";
         public const string BULK_DELETE = "/bulk-delete";
@@ -86,5 +87,7 @@ namespace DSharpPlusNextGen.Net
         public const string THREAD_ACTIVE = "/active";
         public const string THREAD_ARCHIVED = "/archived";
         public const string THREAD_MEMBERS = "/thread-members";
+        public const string EVENTS = "/events";
+        public const string STICKERS = "/stickers";
     }
 }

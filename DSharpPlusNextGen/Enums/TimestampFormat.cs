@@ -1,5 +1,7 @@
-// This file is part of the DSharpPlus-NextGen project.
+// This file is part of the DSharpPlus project.
 //
+// Copyright (c) 2015 Mike Santiago
+// Copyright (c) 2016-2021 DSharpPlus Contributors
 // Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,28 +25,37 @@
 namespace DSharpPlusNextGen
 {
     /// <summary>
-    /// Represents the auto-archive duration for a thread.
+    /// Denotes the type of formatting to use for timestamps.
     /// </summary>
-    public enum ThreadAutoArchiveDuration : int
+    public enum TimestampFormat : byte
     {
         /// <summary>
-        /// Indicates that the thread will be auto archived after one hour.
+        /// A short date. e.g. 18/06/2021.
         /// </summary>
-        OneHour = 60,
-
+        ShortDate = (byte)'d',
         /// <summary>
-        /// Indicates that the thread will be auto archived after one day / twentyfour hours.
+        /// A long date. e.g. 18 June 2021.
         /// </summary>
-        OneDay = 1440,
-
+        LongDate = (byte)'D',
         /// <summary>
-        /// Indicates that the thread will be auto archived after three days. Needs boost level 1 for guild.
+        /// A short date and time. e.g. 18 June 2021 03:50.
         /// </summary>
-        ThreeDays = 4320,
-
+        ShortDateTime = (byte)'f',
         /// <summary>
-        /// Indicates that the thread will be auto archived after a week. Needs boost level 2 for guild.
+        /// A long date and time. e.g. Friday 18 June 2021 03:50.
         /// </summary>
-        OneWeek = 10080
+        LongDateTime = (byte)'F',
+        /// <summary>
+        /// A short time. e.g. 03:50.
+        /// </summary>
+        ShortTime = (byte)'t',
+        /// <summary>
+        /// A long time. e.g. 03:50:15.
+        /// </summary>
+        LongTime = (byte)'T',
+        /// <summary>
+        /// The time relative to the client. e.g. An hour ago.
+        /// </summary>
+        RelativeTime = (byte)'R'
     }
 }
