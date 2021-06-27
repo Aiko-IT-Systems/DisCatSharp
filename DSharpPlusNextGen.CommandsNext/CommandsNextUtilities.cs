@@ -53,10 +53,7 @@ namespace DSharpPlusNextGen.CommandsNext
         public static int GetStringPrefixLength(this DiscordMessage msg, string str, StringComparison comparisonType = StringComparison.Ordinal)
         {
             var content = msg.Content;
-            if (str.Length >= content.Length)
-                return -1;
-
-            return !content.StartsWith(str, comparisonType) ? -1 : str.Length;
+            return str.Length >= content.Length ? -1 : !content.StartsWith(str, comparisonType) ? -1 : str.Length;
         }
 
         /// <summary>
