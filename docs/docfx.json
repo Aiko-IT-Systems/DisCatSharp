@@ -71,7 +71,7 @@
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
-      "dsplus"
+      "dspng"
     ],
     "postProcessors": ["ExtractSearchIndex", "CustomMemberIndexer"],
     "noLangKeyword": false,

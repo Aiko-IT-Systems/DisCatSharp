@@ -4,8 +4,8 @@ title: DSharpPlus NextGen 6.0 Documentation
 ---
 
 <h1 class="delet-this">DSharpPlus NextGen 6.0 Documentation</h1>
-<h1 class="logo-center">![DSharpPlus Logo](/logobig.png "DSharpPlus Documentation")</h1>
-## DSharpPlus 4.0 Documentation
+<h1 class="logo-center">![DSharpPlus NextGen Logo](/logobig.png "DSharpPlus NextGen Documentation")</h1>
+## DSharpPlus NextGen 6.0 Documentation
 [DSharpPlus-NetxGen](https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen) (D#+NG) is an unofficial .NET wrapper for the [Discord API](https://discordapp.com/developers/docs/intro "Discord API") which was originally a fork of [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus).<br/>
 The library has since been rewritten to fit quality and API standards as well as target wider range of .NET implementations. Furthermore this lib will be the most up-to-date.
 
@@ -14,5 +14,5 @@ New users will want to take a look through the [articles](xref:preamble) for qui
 Once you've gotten through the articles, head on over to the [API Documentation](/api/index.html) for all classes and methods provided by this library.
 
 ## Source and Contributors
-DSharpPlus is licensed under MIT License, as detailed in the [license](https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen/blob/master/LICENSE) found in the repository.<br/>
+DSharpPlus NextGen is licensed under MIT License, as detailed in the [license](https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen/blob/master/LICENSE) found in the repository.<br/>
 The repository containing the source code for this library can be found [here](https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen). Contributions are welcomed.

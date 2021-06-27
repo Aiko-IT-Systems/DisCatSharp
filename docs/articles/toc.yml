@@ -24,7 +24,7 @@
   - name: Message Builder
     href: beyond_basics/messagebuilder.md
 - name: Commands
-  items:  
+  items:
   - name: Introduction
     href: commands/intro.md
   - name: Command Attributes
@@ -65,19 +65,9 @@
     href: advanced_topics/buttons.md
 - name: Hosting
   href: hosting.md
-- name: Version Migration
-  items:
-  - name: DiscordSharp to DSharpPlus
-    href: migration/dsharp.md
-  - name: 2.x to 3.x
-    href: migration/2x_to_3x.md
-  - name: 3.x to 4.x
-    href: migration/3x_to_4x.md
 - name: Miscellaneous
   items:
   - name: Nightly Builds
     href: misc/nightly_builds.md
-  - name: Debug Symbols
-    href: misc/debug_symbols.md
   - name: Reporting Issues
     href: misc/reporting_issues.md
