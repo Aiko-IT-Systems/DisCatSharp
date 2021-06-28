@@ -7,9 +7,9 @@ title: Lavalink Music Commands
 
 This article assumes that you know how to use CommandsNext. If you do not, you should learn [here](xref:commands_intro) before continuing with this guide.
 
-## Prerequisites 
+## Prerequisites
 
-Before we start we will need to make sure CommandsNext is configured. For this we can make a simple configuration and command class: 
+Before we start we will need to make sure CommandsNext is configured. For this we can make a simple configuration and command class:
 
 ```csharp
 using DSharpPlusNextGen.CommandsNext;
@@ -23,7 +23,7 @@ namespace MyFirstMusicBot
 }
 ```
 
-And be sure to register it in your program file: 
+And be sure to register it in your program file:
 
 ```csharp
 CommandsNext = Discord.UseCommandsNext(new CommandsNextConfiguration
@@ -36,13 +36,13 @@ CommandsNext.RegisterCommands<MyLavalinkCommands>();
 
 ## Adding join and leave commands
 
-Your bot, and Lavalink, will need to connect to a voice channel to play music. Let's create the base for these commands: 
+Your bot, and Lavalink, will need to connect to a voice channel to play music. Let's create the base for these commands:
 
 ```csharp
 [Command]
 public async Task Join(CommandContext ctx, DiscordChannel channel)
 {
-            
+
 }
 
 [Command]
@@ -52,24 +52,24 @@ public async Task Leave(CommandContext ctx, DiscordChannel channel)
 }
 ```
 
-In order to connect to a voice channel, we'll need to do a few things. 
+In order to connect to a voice channel, we'll need to do a few things.
 
 1. Get our node connection. You can either use linq or `GetIdealNodeConnection()`
 2. Check if the channel is a voice channel, and tell the user if not.
-3. Connect the node to the channel. 
+3. Connect the node to the channel.
 
 
-And for the leave command: 
+And for the leave command:
 
 1. Get the node connection, using the same process.
 2. Check if the channel is a voice channel, and tell the user if not.
-3. Get our existing connection. 
+3. Get our existing connection.
 4. Check if the connection exists, and tell the user if not.
 5. Disconnect from the channel.
 
 `GetIdealNodeConnection()` will return the least affected node through load balancing, which is useful for larger bots. It can also filter nodes based on an optional voice region to use the closest nodes available. Since we only have one connection we can use linq's `.First()` method on the extensions connected nodes to get what we need.
 
-So far, your command class should look something like this: 
+So far, your command class should look something like this:
 
 ```csharp
 using System.Threading.Tasks;
@@ -145,27 +145,27 @@ Now that we can join a voice channel, we can make our bot play music! Let's now 
 [Command]
 public async Task Play(CommandContext ctx, [RemainingText] string search)
 {
-    
+
 }
 ```
 One of Lavalink's best features is its ability to search for tracks from a variety of media sources, such as YouTube, SoundCloud, Twitch, and more. This is what makes bots like Rythm, Fredboat, and Groovy popular. The search is used in a REST request to get the track data, which is then sent through the WebSocket connection to play the track in the voice channel. That is what we will be doing in this command.
 
-Lavalink can also play tracks directly from a media url, in which case the play command can look like this: 
+Lavalink can also play tracks directly from a media url, in which case the play command can look like this:
 
 ```csharp
 [Command]
 public async Task Play(CommandContext ctx, Uri url)
 {
-    
+
 }
 ```
 
-Like before, we will need to get our node and guild connection and have the appropriate checks. Since it wouldn't make sense to have the channel as a parameter, we will instead get it from the member's voice state: 
+Like before, we will need to get our node and guild connection and have the appropriate checks. Since it wouldn't make sense to have the channel as a parameter, we will instead get it from the member's voice state:
 
 ```csharp
-//Important to check the voice state itself first, 
+//Important to check the voice state itself first,
 //as it may throw a NullReferenceException if they don't have a voice state.
-if (ctx.Member.VoiceState == null || ctx.Member.VoiceState.Channel == null)  
+if (ctx.Member.VoiceState == null || ctx.Member.VoiceState.Channel == null)
 {
     await ctx.RespondAsync("You are not in a voice channel.");
     return;
@@ -184,11 +184,11 @@ if (conn == null)
 
 Next, we will get the track details by calling `node.Rest.GetTracksAsync()`. There are a variety of overloads for this:
 
-1. `GetTracksAsync(LavalinkSearchType.Youtube, search)` will search YouTube for your search string. 
-2. `GetTracksAsync(LavalinkSearchType.SoundCloud, search)` will search SoundCloud for your search string. 
-3. `GetTracksAsync(Uri)` will use the direct url to obtain the track. This is mainly used for the other media sources. 
+1. `GetTracksAsync(LavalinkSearchType.Youtube, search)` will search YouTube for your search string.
+2. `GetTracksAsync(LavalinkSearchType.SoundCloud, search)` will search SoundCloud for your search string.
+3. `GetTracksAsync(Uri)` will use the direct url to obtain the track. This is mainly used for the other media sources.
 
-For this guide we will be searching YouTube. Let's pass in our search string and store the result in a variable: 
+For this guide we will be searching YouTube. Let's pass in our search string and store the result in a variable:
 
 ```csharp
 //We don't need to specify the search type here
@@ -196,11 +196,11 @@ For this guide we will be searching YouTube. Let's pass in our search string and
 var loadResult = await node.Rest.GetTracksAsync(search);
 ```
 
-The load result will contain an enum called `LoadResultType`, which will inform us if Lavalink was able to retrieve the track data. We can use this as a check: 
+The load result will contain an enum called `LoadResultType`, which will inform us if Lavalink was able to retrieve the track data. We can use this as a check:
 
 ```csharp
-//If something went wrong on Lavalink's end                          
-if (loadResult.LoadResultType == LavalinkLoadResultType.LoadFailed 
+//If something went wrong on Lavalink's end
+if (loadResult.LoadResultType == LavalinkLoadResultType.LoadFailed
 
     //or it just couldn't find anything.
     || loadResult.LoadResultType == LavalinkLoadResultType.NoMatches)
@@ -210,7 +210,7 @@ if (loadResult.LoadResultType == LavalinkLoadResultType.LoadFailed
 }
 ```
 
-Lavalink will return the track data from your search in a collection called `loadResult.Tracks`, similar to using the search bar in YouTube or SoundCloud directly. The first track is typically the most accurate one, so that is what we will use: 
+Lavalink will return the track data from your search in a collection called `loadResult.Tracks`, similar to using the search bar in YouTube or SoundCloud directly. The first track is typically the most accurate one, so that is what we will use:
 
 ```csharp
 var track = loadResult.Tracks.First();
@@ -224,7 +224,7 @@ await conn.PlayAsync(track);
 await ctx.RespondAsync($"Now playing {track.Title}!");
 ```
 
-Your play command should look like this: 
+Your play command should look like this:
 ```csharp
 [Command]
 public async Task Play(CommandContext ctx, [RemainingText] string search)
@@ -247,7 +247,7 @@ public async Task Play(CommandContext ctx, [RemainingText] string search)
 
     var loadResult = await node.Rest.GetTracksAsync(search);
 
-    if (loadResult.LoadResultType == LavalinkLoadResultType.LoadFailed 
+    if (loadResult.LoadResultType == LavalinkLoadResultType.LoadFailed
         || loadResult.LoadResultType == LavalinkLoadResultType.NoMatches)
     {
         await ctx.RespondAsync($"Track search failed for {search}.");
@@ -262,7 +262,7 @@ public async Task Play(CommandContext ctx, [RemainingText] string search)
 }
 ```
 
-Being able to pause the player is also useful. For this we can use most of the base from the play command: 
+Being able to pause the player is also useful. For this we can use most of the base from the play command:
 
 ```csharp
 [Command]
@@ -296,7 +296,7 @@ if (conn.CurrentState.CurrentTrack == null)
 }
 ```
 
-And finally, we can call pause: 
+And finally, we can call pause:
 
 ```csharp
 await conn.PauseAsync();

@@ -3,7 +3,7 @@
 #
 # Rebuilds the entire DSharpPlus NextGen project, and places artifacts in specified directory.
 # 
-# Author:       DSharpPlusNextGen.Common
+# Author:       Emzi0767
 # Version:      2018-08-30 14:41
 #
 # Arguments:

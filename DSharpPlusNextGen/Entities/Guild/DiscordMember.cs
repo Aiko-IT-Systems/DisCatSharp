@@ -1,7 +1,8 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlus-NextGen project.
 //
 // Copyright (c) 2015 Mike Santiago
 // Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -63,32 +64,33 @@ namespace DSharpPlusNextGen.Entities
             this.Nickname = mbr.Nickname;
             this.PremiumSince = mbr.PremiumSince;
             this.IsPending = mbr.IsPending;
+            this.GuildAvatarHash = mbr.GuildAvatarHash;
             this._avatarHash = mbr.AvatarHash;
             this._role_ids = mbr.Roles ?? new List<ulong>();
             this._role_ids_lazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._role_ids));
         }
-
+        
         /// <summary>
-        /// Gets the member's avatar for the current guild.
+        /// Gets the members avatar hash.
         /// </summary>
-        [JsonIgnore]
-        public string GuildAvatarHash => this._avatarHash ?? this.User.AvatarHash;
+        [JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual string GuildAvatarHash { get; internal set; }
 
         /// <summary>
-        /// Gets the members avatar url for the current guild.
+        /// Gets the members avatar URL.
         /// </summary>
         [JsonIgnore]
         public string GuildAvatarUrl
-            => !string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? (this.GuildAvatarHash.StartsWith("a_") ? $"https://cdn.discordapp.com{Endpoints.GUILDS}/{this._guild_id}{Endpoints.USERS}/{this.Id}{Endpoints.AVATARS}/{this.GuildAvatarHash}.gif?size=1024" : $"https://cdn.discordapp.com{Endpoints.GUILDS}/{this._guild_id}{Endpoints.USERS}/{this.Id}{Endpoints.AVATARS}/{this.GuildAvatarHash}.png?size=1024") : this.DefaultAvatarUrl;
-
-        [JsonIgnore]
-        internal string _avatarHash;
+            => !string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? (this.GuildAvatarHash.StartsWith("a_") ? $"https://cdn.discordapp.com/guilds/{this._guild_id.ToString(CultureInfo.InvariantCulture)}/users/{this.Id.ToString(CultureInfo.InvariantCulture)}/avatars/{this.GuildAvatarHash}.gif?size=1024" : $"https://cdn.discordapp.com/guilds/{this._guild_id.ToString(CultureInfo.InvariantCulture)}/users/{this.Id.ToString(CultureInfo.InvariantCulture)}/avatars/{this.GuildAvatarHash}.png?size=1024") : this.User.AvatarUrl;
 
         /// <summary>
         /// Gets this member's nickname.
         /// </summary>
         [JsonProperty("nick", NullValueHandling = NullValueHandling.Ignore)]
         public string Nickname { get; internal set; }
+
+        [JsonIgnore]
+        internal string _avatarHash;
 
         /// <summary>
         /// Gets this member's display name.
@@ -563,10 +565,7 @@ namespace DSharpPlusNextGen.Entities
             perms |= this.Roles.Aggregate(Permissions.None, (c, role) => c | role.Permissions);
 
             // Adminstrator grants all permissions and cannot be overridden
-            if ((perms & Permissions.Administrator) == Permissions.Administrator)
-                return PermissionMethods.FULL_PERMS;
-
-            return perms;
+            return (perms & Permissions.Administrator) == Permissions.Administrator ? PermissionMethods.FULL_PERMS : perms;
         }
 
         /// <summary>
@@ -587,10 +586,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <param name="e"><see cref="DiscordMember"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordMember"/> is equal to this <see cref="DiscordMember"/>.</returns>
-        public bool Equals(DiscordMember e)
-        {
-            return e is null ? false : ReferenceEquals(this, e) ? true : this.Id == e.Id && this._guild_id == e._guild_id;
-        }
+        public bool Equals(DiscordMember e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this._guild_id == e._guild_id));
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordMember"/>.
@@ -617,9 +613,7 @@ namespace DSharpPlusNextGen.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            return (o1 == null && o2 != null) || (o1 != null && o2 == null)
-                ? false
-                : o1 == null && o2 == null ? true : e1.Id == e2.Id && e1._guild_id == e2._guild_id;
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1._guild_id == e2._guild_id));
         }
 
         /// <summary>

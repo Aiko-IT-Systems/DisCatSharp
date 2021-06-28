@@ -18,8 +18,8 @@ Optionally, you can also provide an instance of `InteractivityConfiguration` to 
 ```cs
 var discord = new DiscordClient();
 
-discord.UseInteractivity(new InteractivityConfiguration() 
-{ 
+discord.UseInteractivity(new InteractivityConfiguration()
+{
     PollBehaviour = PollBehaviour.KeepEmojis,
     Timeout = TimeSpan.FromSeconds(30)
 });
@@ -27,7 +27,7 @@ discord.UseInteractivity(new InteractivityConfiguration()
 
 ## Using Interactivity
 
-There are two ways available to use interactivity: 
+There are two ways available to use interactivity:
 
 * Extension methods available for `DiscordChannel` and `DiscordMessage`.
 * [Instance methods](xref:DSharpPlusNextGen.Interactivity.InteractivityExtension#methods) available from `InteractivityExtension`.
@@ -40,7 +40,7 @@ The first (and arguably most useful) extension method is `SendPaginatedMessageAs
 This method displays a collection of *'pages'* which are selected one-at-a-time by the user through reaction buttons.
 Each button click will move the page view in one direction or the other until the timeout is reached.
 
-You'll need to create a collection of pages before you can invoke this method. 
+You'll need to create a collection of pages before you can invoke this method.
 This can be done easily using the `GeneratePagesInEmbed` and `GeneratePagesInContent` instance methods from `InteractivityExtension`.<br/>
 Alternatively, for pre-generated content, you can create and add individual instances of `Page` to a collection.
 

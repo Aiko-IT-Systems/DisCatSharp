@@ -862,7 +862,7 @@ namespace DSharpPlusNextGen
                     AfkTimeout = gld.AfkTimeout,
                     DefaultMessageNotifications = gld.DefaultMessageNotifications,
                     ExplicitContentFilter = gld.ExplicitContentFilter,
-                    Features = gld.Features,
+                    RawFeatures = gld.RawFeatures,
                     IconHash = gld.IconHash,
                     Id = gld.Id,
                     IsLarge = gld.IsLarge,
@@ -1152,6 +1152,7 @@ namespace DSharpPlusNextGen
             var roles_old = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles));
 
             mbr._avatarHash = member.AvatarHash;
+            mbr.GuildAvatarHash = member.GuildAvatarHash;
             mbr.Nickname = nick;
             mbr.IsPending = pending;
             mbr._role_ids.Clear();

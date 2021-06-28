@@ -77,7 +77,7 @@ namespace DSharpPlusNextGen
                 vs = v.ToString(3);
             }
 
-            VersionHeader = $"DiscordBot (https://github.com/DSharpPlus/DSharpPlus, v{vs})";
+            VersionHeader = $"DiscordBot (https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen, v{vs})";
         }
 
         internal static string GetApiBaseUri()
@@ -182,6 +182,15 @@ namespace DSharpPlusNextGen
             var regex = new Regex(@"^[\w-]{1,32}$", RegexOptions.ECMAScript);
             return regex.IsMatch(name);
         }
+
+        internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
+        {
+            return taad == ThreadAutoArchiveDuration.ThreeDays
+                ? (guild.PremiumTier.HasFlag(PremiumTier.Tier_1) || guild.Features.CanSetThreadArchiveDurationThreeDays)
+                : taad != ThreadAutoArchiveDuration.OneWeek || guild.PremiumTier.HasFlag(PremiumTier.Tier_2) || guild.Features.CanSetThreadArchiveDurationSevenDays;
+        }
+
+        internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.PremiumTier.HasFlag(PremiumTier.Tier_2) || guild.Features.CanCreatePrivateThreads;
 
         internal static bool HasMessageIntents(DiscordIntents intents)
             => intents.HasIntent(DiscordIntents.GuildMessages) || intents.HasIntent(DiscordIntents.DirectMessages);

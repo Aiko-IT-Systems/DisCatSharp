@@ -1,9 +1,9 @@
 #!/usr/bin/env pwsh
 # One-click rebuild
 #
-# Rebuilds all DSharpPlus components with default values.
+# Rebuilds all DSharpPlus NextGen components with default values.
 #
-# Author: DSharpPlusNextGen.Common
+# Author: Emzi0767
 # Version: 2018-08-30 14:34
 #
 # Arguments: none

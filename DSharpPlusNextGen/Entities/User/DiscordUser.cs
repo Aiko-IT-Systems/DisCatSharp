@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using DSharpPlusNextGen.Exceptions;
 using DSharpPlusNextGen.Net.Abstractions;
 using Newtonsoft.Json;
 
@@ -158,6 +159,86 @@ namespace DSharpPlusNextGen.Entities
         public bool IsCurrent
             => this.Id == this.Discord.CurrentUser.Id;
 
+        #region Extension of DiscordUser
+
+        /// <summary>
+        /// Whether this member is a <see cref="UserFlags.DiscordCertifiedModerator"/>
+        /// </summary>
+        /// <returns><see cref="bool"/></returns>
+        [JsonIgnore]
+        public bool IsMod
+                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.DiscordCertifiedModerator);
+
+        /// <summary>
+        /// Whether this member is a <see cref="UserFlags.DiscordPartner"/>
+        /// </summary>
+        /// <returns><see cref="bool"/></returns>
+        [JsonIgnore]
+        public bool IsPartner
+                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.DiscordPartner);
+
+        /// <summary>
+        /// Whether this member is a <see cref="UserFlags.VerifiedBot"/>
+        /// </summary>
+        /// <returns><see cref="bool"/></returns>
+        [JsonIgnore]
+        public bool IsVerifiedBot
+                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.VerifiedBot);
+
+        /// <summary>
+        /// Whether this member is a <see cref="UserFlags.VerifiedBotDeveloper"/>
+        /// </summary>
+        /// <returns><see cref="bool"/></returns>
+        [JsonIgnore]
+        public bool IsBotDev
+                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.VerifiedBotDeveloper);
+
+        /// <summary>
+        /// Whether this member is a <see cref="UserFlags.DiscordEmployee"/>
+        /// </summary>
+        /// <returns><see cref="bool"/></returns>
+        [JsonIgnore]
+        public bool IsStaff
+                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.DiscordEmployee);
+
+        #endregion
+
+        /// <summary>
+        /// Whether this user is in a <see cref="DiscordGuild"/>
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// DiscordGuild guild = await Client.GetGuildAsync(806675511555915806);
+        /// DiscordUser user = await Client.GetUserAsync(469957180968271873);
+        /// Console.WriteLine($"{user.Username} {(user.IsInGuild(guild) ? "is a" : "is not a")} member of {guild.Name}");
+        /// </code>
+        /// results to <c>J_M_Lutra is a member of Project Nyaw~</c>.
+        /// </example>
+        /// <param name="guild"><see cref="DiscordGuild"/></param>
+        /// <returns><see cref="bool"/></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+        public async Task<bool> IsInGuild(DiscordGuild guild)
+        {
+            try
+            {
+                var member = await guild.GetMemberAsync(this.Id);
+                return member is not null;
+
+            }
+            catch (NotFoundException)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Whether this user is not in a <see cref="DiscordGuild"/>
+        /// </summary>
+        /// <param name="guild"><see cref="DiscordGuild"/></param>
+        /// <returns><see cref="bool"/></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+        public async Task<bool> IsNotInGuild(DiscordGuild guild) => !await this.IsInGuild(guild);
+
         /// <summary>
         /// Unbans this user from a guild.
         /// </summary>
@@ -237,10 +318,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <param name="e"><see cref="DiscordUser"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordUser"/> is equal to this <see cref="DiscordUser"/>.</returns>
-        public bool Equals(DiscordUser e)
-        {
-            return e is null ? false : ReferenceEquals(this, e) ? true : this.Id == e.Id;
-        }
+        public bool Equals(DiscordUser e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordUser"/>.
@@ -259,7 +337,7 @@ namespace DSharpPlusNextGen.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            return (o1 == null && o2 != null) || (o1 != null && o2 == null) ? false : o1 == null && o2 == null ? true : e1.Id == e2.Id;
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
         }
 
         /// <summary>

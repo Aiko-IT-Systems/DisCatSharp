@@ -4,11 +4,11 @@ title: Your First Bot
 ---
 
 # Your First Bot
- >[!NOTE] 
+ >[!NOTE]
  > This article assumes the following:
  > * You have [created a bot account](xref:basics_bot_account "Creating a Bot Account") and have a bot token.
  > * You have [Visual Studio 2019](https://visualstudio.microsoft.com/vs/) installed on your computer.
- 
+
 
 ## Create a Project
 Open up Visual Studio and click on `Create a new project` towards the bottom right.
@@ -55,11 +55,12 @@ Package|Description
 :---: |:---:
 `DSharpPlusNextGen`|Main package; Discord API client.
 `DSharpPlusNextGen.CommandsNext`|Add-on which provides a command framework.
+`DSharpPlusNextGen.Common`|Common tools & converters
 `DSharpPlusNextGen.Interactivity`|Add-on which allows for interactive commands.
 `DSharpPlusNextGen.Lavalink`|Client implementation for [Lavalink](xref:audio_lavalink_setup). Useful for music bots.
-`DSharpPlusNextGen.VoiceNext`|Add-on which enables connectivity to Discord voice channels.
 `DSharpPlusNextGen.SlashCommands`|Add-on which makes dealing with slash commands easyer.
-`DSharpPlus.Rest`|REST-only Discord client.
+`DSharpPlusNextGen.VoiceNext`|Add-on which enables connectivity to Discord voice channels.
+`DSharpPlusNextGen.VoiceNext.Natives`|Voice next natives.
 
 <br/>
 We'll only need the `DSharpPlusNextGen` package for the basic bot we'll be writing in this article.<br/>
@@ -74,7 +75,7 @@ You're now ready to write some code!
 DSharpPlusNextGen implements [Task-based Asynchronous Pattern](https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/consuming-the-task-based-asynchronous-pattern).
 Because of this, the majority of DSharpPlusNextGen methods must be executed in a method marked as `async` so they can be properly `await`ed.
 
-Due to the way the compiler generates the underlying [IL](https://en.wikipedia.org/wiki/Common_Intermediate_Language) code, 
+Due to the way the compiler generates the underlying [IL](https://en.wikipedia.org/wiki/Common_Intermediate_Language) code,
 marking our `Main` method as `async` has the potential to cause problems. As a result, we must pass the program execution to an `async` method.
 
 Head back to your *Program.cs* tab and empty the `Main` method by deleting line 9.
@@ -92,8 +93,8 @@ static void Main(string[] args)
 
 static async Task MainAsync()
 {
-    
-}	
+
+}
 ```
 
 If you typed this in by hand, Intellisense should have generated the required `using` directive for you.<br/>
@@ -112,7 +113,7 @@ We'll now create a new `DiscordClient` instance in our brand new asynchronous me
 
 Create a new variable in `MainAsync` and assign it a new `DiscordClient` instance, then pass an instance of `DiscordConfiguration` to its constructor.
 Create an object initializer for `DiscordConfiguration` and populate the `Token` property with your bot token then set the `TokenType` property to `TokenType.Bot`.
-Next add the `Intents` Property and Populated it with the @DSharpPlusNextGen.DiscordIntents.AllUnprivileged value. These Intents 
+Next add the `Intents` Property and Populated it with the @DSharpPlusNextGen.DiscordIntents.AllUnprivileged value. These Intents
 are required for certain Events to be fired.  Please visit this [article](xref:beyond_basics_intents) for more information.
 
 ```cs
@@ -120,7 +121,7 @@ var discord = new DiscordClient(new DiscordConfiguration()
 {
     Token = "My First Token",
     TokenType = TokenType.Bot,
-    Intents = DiscordIntents.AllUnprivileged     
+    Intents = DiscordIntents.AllUnprivileged
 });
 ```
 
@@ -133,10 +134,10 @@ var discord = new DiscordClient(new DiscordConfiguration()
 Follow that up with `await discord.ConnectAsync();` to connect and login to Discord, and `await Task.Delay(-1);` at the end of the method to prevent the console window from closing prematurely.
 ```cs
 var discord = new DiscordClient();
-	
+
 await discord.ConnectAsync();
 await Task.Delay(-1);
-``` 
+```
 As before, Intellisense will have auto generated the needed `using` directive for you if you typed this in by hand.<br/>
 If you've copied the snippet, be sure to apply the recommended suggestion to insert the required directive.
 
@@ -148,24 +149,24 @@ If you hit `F5` on your keyboard to compile and run your program, you'll be gree
 ## Spicing Up Your Bot
 Right now our bot doesn't do a whole lot. Let's bring it to life by having it respond to a message!
 
-Hook the `MessageCreated` event fired by `DiscordClient` with a 
+Hook the `MessageCreated` event fired by `DiscordClient` with a
 [lambda](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/lambda-expressions).<br/>
 Mark it as `async` and give it two parameters: `s` and `e`.
 
 ```cs
 discord.MessageCreated += async (s, e) =>
 {
-    
+
 };
 ```
- 
-Then, add an `if` statement into the body of your event lambda that will check if `e.Message.Content` starts with your desired trigger word and respond with 
+
+Then, add an `if` statement into the body of your event lambda that will check if `e.Message.Content` starts with your desired trigger word and respond with
 a message using `e.Message.RespondAsync` if it does. For this example, we'll have the bot to respond with *pong!* for each message that starts with *ping*.
 
 ```cs
 discord.MessageCreated += async (s, e) =>
 {
-    if (e.Message.Content.ToLower().StartsWith("ping")) 
+    if (e.Message.Content.ToLower().StartsWith("ping"))
 		await e.Message.RespondAsync("pong!");
 };
 ```
@@ -198,7 +199,7 @@ namespace MyFirstBot
 
             discord.MessageCreated += async (s, e) =>
             {
-                if (e.Message.Content.ToLower().StartsWith("ping")) 
+                if (e.Message.Content.ToLower().StartsWith("ping"))
                     await e.Message.RespondAsync("pong!");
 
             };

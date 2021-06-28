@@ -579,8 +579,15 @@ namespace DSharpPlusNextGen.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified or <see cref="ChannelType.PrivateThread"/> is not enabled for guild. This happens, if the guild does not have <see cref="PremiumTier.Tier_2"/>.</exception>
         public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration auto_archive_duration = ThreadAutoArchiveDuration.OneHour)
-            => await this.Discord.ApiClient.CreateThreadWithMessageAsync(this.ChannelId, this.Id, name, auto_archive_duration);
+        {
+            return Utilities.CheckThreadPrivateFeature(this.Channel.Guild)
+                ? Utilities.CheckThreadAutoArchiveDurationFeature(this.Channel.Guild, auto_archive_duration)
+                    ? await this.Discord.ApiClient.CreateThreadWithMessageAsync(this.ChannelId, this.Id, name, auto_archive_duration)
+                    : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(auto_archive_duration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.")
+                : throw new NotSupportedException($"Cannot create a private thread. Guild needs to be boost tier two.");
+        }
 
         /// <summary>
         /// Pins the message in its channel.
@@ -789,10 +796,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <param name="e"><see cref="DiscordMessage"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordMessage"/> is equal to this <see cref="DiscordMessage"/>.</returns>
-        public bool Equals(DiscordMessage e)
-        {
-            return e is null ? false : ReferenceEquals(this, e) ? true : this.Id == e.Id && this.ChannelId == e.ChannelId;
-        }
+        public bool Equals(DiscordMessage e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.ChannelId == e.ChannelId));
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordMessage"/>.
@@ -819,9 +823,7 @@ namespace DSharpPlusNextGen.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            return (o1 == null && o2 != null) || (o1 != null && o2 == null)
-                ? false
-                : o1 == null && o2 == null ? true : e1.Id == e2.Id && e1.ChannelId == e2.ChannelId;
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.ChannelId == e2.ChannelId));
         }
 
         /// <summary>
