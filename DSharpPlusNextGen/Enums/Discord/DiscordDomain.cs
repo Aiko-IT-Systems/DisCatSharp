@@ -199,6 +199,9 @@ namespace DSharpPlusNextGen.Enums.Discord
             if (DomainEnum is not CoreDomain && DomainEnum is not OtherDomain && DomainEnum is not UnusedDomain)
                 throw new NotSupportedException($"Invalid type. Found: {DomainEnum.GetType()} Expected: CoreDomain or OtherDomain or UnusedDomain");
 
+            if (DomainEnum is CoreDomain domain && (domain == CoreDomain.DiscordAdmin || domain == CoreDomain.DiscordTools))
+                throw new UnauthorizedAccessException("You don't have access to this domains");
+
             var memberInfo = DomainEnum.GetType().GetMember(DomainEnum.ToString()).FirstOrDefault();
             if (memberInfo != null)
             {
