@@ -63,26 +63,23 @@ namespace DSharpPlusNextGen.Entities
             this.Nickname = mbr.Nickname;
             this.PremiumSince = mbr.PremiumSince;
             this.IsPending = mbr.IsPending;
-            this._avatarHash = mbr.AvatarHash;
+            this.GuildAvatarHash = mbr.GuildAvatarHash;
             this._role_ids = mbr.Roles ?? new List<ulong>();
             this._role_ids_lazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._role_ids));
         }
-
+        
         /// <summary>
-        /// Gets the member's avatar for the current guild.
+        /// Gets the members hash.
         /// </summary>
-        [JsonIgnore]
-        public string GuildAvatarHash => this._avatarHash ?? this.User.AvatarHash;
+        [JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual string GuildAvatarHash { get; internal set; }
 
         /// <summary>
-        /// Gets the members avatar url for the current guild.
+        /// Gets the members avatar URL.
         /// </summary>
         [JsonIgnore]
         public string GuildAvatarUrl
-            => !string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? (this.GuildAvatarHash.StartsWith("a_") ? $"https://cdn.discordapp.com{Endpoints.GUILDS}/{this._guild_id}{Endpoints.USERS}/{this.Id}{Endpoints.AVATARS}/{this.GuildAvatarHash}.gif?size=1024" : $"https://cdn.discordapp.com{Endpoints.GUILDS}/{this._guild_id}{Endpoints.USERS}/{this.Id}{Endpoints.AVATARS}/{this.GuildAvatarHash}.png?size=1024") : this.DefaultAvatarUrl;
-
-        [JsonIgnore]
-        internal string _avatarHash;
+            => !string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? (this.GuildAvatarHash.StartsWith("a_") ? $"https://cdn.discordapp.com/guilds/{this._guild_id.ToString(CultureInfo.InvariantCulture)}/users/{this.Id.ToString(CultureInfo.InvariantCulture)}/avatars/{this.GuildAvatarHash}.gif?size=1024" : $"https://cdn.discordapp.com/guilds/{this._guild_id.ToString(CultureInfo.InvariantCulture)}/users/{this.Id.ToString(CultureInfo.InvariantCulture)}/avatars/{this.GuildAvatarHash}.png?size=1024") : this.User.AvatarUrl;
 
         /// <summary>
         /// Gets this member's nickname.
