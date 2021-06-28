@@ -584,7 +584,7 @@ namespace DSharpPlusNextGen.Entities
         public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration auto_archive_duration = ThreadAutoArchiveDuration.OneHour)
         {
             return Utilities.CheckThreadPrivateFeature(this.Channel.Guild)
-                ? Utilities.CheckThreadAAD(this.Channel.Guild, auto_archive_duration)
+                ? Utilities.CheckThreadAutoArchiveDurationFeature(this.Channel.Guild, auto_archive_duration)
                     ? await this.Discord.ApiClient.CreateThreadWithMessageAsync(this.ChannelId, this.Id, name, auto_archive_duration)
                     : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(auto_archive_duration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.")
                 : throw new NotSupportedException($"Cannot create a private thread. Guild needs to be boosted.");

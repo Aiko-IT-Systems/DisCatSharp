@@ -237,10 +237,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <param name="e"><see cref="DiscordUser"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordUser"/> is equal to this <see cref="DiscordUser"/>.</returns>
-        public bool Equals(DiscordUser e)
-        {
-            return e is null ? false : ReferenceEquals(this, e) ? true : this.Id == e.Id;
-        }
+        public bool Equals(DiscordUser e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordUser"/>.
@@ -259,7 +256,7 @@ namespace DSharpPlusNextGen.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            return (o1 == null && o2 != null) || (o1 != null && o2 == null) ? false : o1 == null && o2 == null ? true : e1.Id == e2.Id;
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
         }
 
         /// <summary>

@@ -183,14 +183,14 @@ namespace DSharpPlusNextGen
             return regex.IsMatch(name);
         }
 
-        internal static bool CheckThreadAAD(DiscordGuild guild, ThreadAutoArchiveDuration taad)
+        internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
         {
             return taad == ThreadAutoArchiveDuration.ThreeDays
-                ? (guild.PremiumTier.HasFlag(PremiumTier.Tier_1) || guild.Features.Contains("THREE_DAY_THREAD_ARCHIVE"))
-                : taad != ThreadAutoArchiveDuration.OneWeek || guild.PremiumTier.HasFlag(PremiumTier.Tier_2) || guild.Features.Contains("SEVEN_DAY_THREAD_ARCHIVE");
+                ? (guild.PremiumTier.HasFlag(PremiumTier.Tier_1) || guild.Feature.CanSetThreadArchiveDurationThreeDays)
+                : taad != ThreadAutoArchiveDuration.OneWeek || guild.PremiumTier.HasFlag(PremiumTier.Tier_2) || guild.Feature.CanSetThreadArchiveDurationSevenDays;
         }
 
-        internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.Features.Contains("PRIVATE_THREADS");
+        internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.Feature.CanCreatePrivateThreads;
 
         internal static bool HasMessageIntents(DiscordIntents intents)
             => intents.HasIntent(DiscordIntents.GuildMessages) || intents.HasIntent(DiscordIntents.DirectMessages);
