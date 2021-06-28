@@ -55,11 +55,12 @@ Package|Description
 :---: |:---:
 `DSharpPlusNextGen`|Main package; Discord API client.
 `DSharpPlusNextGen.CommandsNext`|Add-on which provides a command framework.
+`DSharpPlusNextGen.Common`|Common tools & converters
 `DSharpPlusNextGen.Interactivity`|Add-on which allows for interactive commands.
 `DSharpPlusNextGen.Lavalink`|Client implementation for [Lavalink](xref:audio_lavalink_setup). Useful for music bots.
-`DSharpPlusNextGen.VoiceNext`|Add-on which enables connectivity to Discord voice channels.
 `DSharpPlusNextGen.SlashCommands`|Add-on which makes dealing with slash commands easyer.
-`DSharpPlus.Rest`|REST-only Discord client.
+`DSharpPlusNextGen.VoiceNext`|Add-on which enables connectivity to Discord voice channels.
+`DSharpPlusNextGen.VoiceNext.Natives`|Voice next natives.
 
 <br/>
 We'll only need the `DSharpPlusNextGen` package for the basic bot we'll be writing in this article.<br/>
