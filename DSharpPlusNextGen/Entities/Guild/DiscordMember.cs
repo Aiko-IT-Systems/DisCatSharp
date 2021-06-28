@@ -65,6 +65,7 @@ namespace DSharpPlusNextGen.Entities
             this.PremiumSince = mbr.PremiumSince;
             this.IsPending = mbr.IsPending;
             this.GuildAvatarHash = mbr.GuildAvatarHash;
+            this._avatarHash = mbr.AvatarHash;
             this._role_ids = mbr.Roles ?? new List<ulong>();
             this._role_ids_lazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._role_ids));
         }
@@ -87,6 +88,9 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonProperty("nick", NullValueHandling = NullValueHandling.Ignore)]
         public string Nickname { get; internal set; }
+
+        [JsonIgnore]
+        internal string _avatarHash;
 
         /// <summary>
         /// Gets this member's display name.
