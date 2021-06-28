@@ -862,7 +862,7 @@ namespace DSharpPlusNextGen
                     AfkTimeout = gld.AfkTimeout,
                     DefaultMessageNotifications = gld.DefaultMessageNotifications,
                     ExplicitContentFilter = gld.ExplicitContentFilter,
-                    Features = gld.Features,
+                    RawFeatures = gld.RawFeatures,
                     IconHash = gld.IconHash,
                     Id = gld.Id,
                     IsLarge = gld.IsLarge,
