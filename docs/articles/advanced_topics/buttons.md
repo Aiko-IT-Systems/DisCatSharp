@@ -123,20 +123,20 @@ And you're done! Simply add that to a builder, and when you send, you'll get a m
 
 # Responding to button presses
 
-When any button is pressed, it will fire the [ComponentInteractionCreated](xref:DSharpPlus.DiscordClient#ComponentInteractionCreated) event.
+When any button is pressed, it will fire the [ComponentInteractionCreated](xref:DSharpPlusNextGen.DiscordClient#ComponentInteractionCreated) event.
 
 In the event args, `Id` will be the id of the button you specified. There's also an `Interaction` property, which contains the interaction the event created. It's important to respond to an interaction within 3 seconds, or it will time out. Responding after this period will throw a `NotFoundException`.
 
-With buttons, there are two new response types: `DeferredMessageUpdate` and `UpdateMessage`.
+With buttons, there are two new response types: `DefferedMessageUpdate` and `UpdateMessage`.
 
-Using `DeferredMessageUpdate` lets you create followup messages via the [followup message builder](xref:DSharpPlus.Entities.DiscordFollowupMessageBuilder). The button will return to being in it's 'dormant' state, or it's 'unpushed' state, if you will.
+Using `DeferredMessageUpdate` lets you create followup messages via the [followup message builder](xref:DSharpPlusNextGen.Entities.DiscordFollowupMessageBuilder). The button will return to being in it's 'dormant' state, or it's 'unpushed' state, if you will.
 
 You have 15 minutes from that point to make followup messages. Responding to that interaction looks like this:
 
 ```cs
 client.ComponentInteractionCreated += async (s, e) =>
 {
-    await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+    await e.Interaction.CreateResponseAsync(InteractionResponseType.DefferedMessageUpdate);
     // Do things.. //
 }
 ```

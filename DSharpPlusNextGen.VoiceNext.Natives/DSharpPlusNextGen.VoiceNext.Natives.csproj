@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../DSharpPlusNextGen.targets" />
+  
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.3;netstandard2.0</TargetFrameworks>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>DSharpPlusNextGen.VoiceNext.Natives</PackageId>
+    <Description>Voice Natives for DSharpPlus NextGen.</Description>
+    <PackageTags>discord, discord-api, bots, discord-bots, chat, dsharp, dsharpplusnextgen, csharp, dotnet, vb-net, fsharp, audio, voice, radio, music</PackageTags>
+    <Authors>Emzi0767, WamWooWam</Authors>
+	<Company>DSharpPlus developers</Company>
+	<PackageProjectUrl>https://github.com/DSharpPlus/DSharpPlus-VoiceNext-Natives</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/DSharpPlus/DSharpPlus-VoiceNext-Natives</RepositoryUrl>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageIcon>d#+.png</PackageIcon>
+	<RepositoryType>Git</RepositoryType>
+	<PackageLicenseFile>LICENSES.MD</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="runtimes/**/*.*">
+      <Pack>true</Pack>
+      <PackagePath>runtimes</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\logo\d#+.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="LICENSES.MD">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reflection" Version="4.3.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
+  </ItemGroup>
+
+</Project>

@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 # Rebuild-docs
 #
-# Rebuilds the documentation for DSharpPlus project, and places artifacts in specified directory.
+# Rebuilds the documentation for DSharpPlus NextGen project, and places artifacts in specified directory.
 # 
 # Author:       Emzi0767
 # Version:      2017-09-11 14:20

@@ -296,10 +296,6 @@ artifacts/
 
 ### Test files
 config.json
-libsodium.dll
-libopus.dll
-sodium.dll
-opus.dll
 ffmpeg.exe
 *.pcm
 appveyor-test.ps1
