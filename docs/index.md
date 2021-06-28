@@ -15,4 +15,5 @@ Once you've gotten through the articles, head on over to the [API Documentation]
 
 ## Source and Contributors
 DSharpPlus NextGen is licensed under BSD-3-Clause License, as detailed in the [license](https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen/blob/master/LICENSE.md) found in the repository.<br/>
-The repository containing the source code for this library can be found [here](https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen). Contributions are welcomed.
+The repository containing the source code for this library can be found [here](https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen). Contributions are welcomed.<br/>
+<a href="discord://-/users/856780995629154305">Add</a> me on Discord.
