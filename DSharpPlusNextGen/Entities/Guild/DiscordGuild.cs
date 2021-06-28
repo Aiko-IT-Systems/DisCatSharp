@@ -29,7 +29,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlusNextGen.EventArgs;
 using DSharpPlusNextGen.Exceptions;
@@ -265,13 +264,13 @@ namespace DSharpPlusNextGen.Entities
         /// Gets a collection of this guild's features.
         /// </summary>
         [JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
-        public IReadOnlyList<string> Features { get; internal set; }
+        public IReadOnlyList<string> RawFeatures { get; internal set; }
 
         /// <summary>
         /// Gets the guild's features.
         /// </summary>
         [JsonIgnore]
-        public GuildFeatures Feature => new(this);
+        public GuildFeatures Features => new(this);
 
         /// <summary>
         /// Gets the required multi-factor authentication level for this guild.
@@ -457,19 +456,19 @@ namespace DSharpPlusNextGen.Entities
         /// Whether this guild has the community feature enabled.
         /// </summary>
         [JsonIgnore]
-        public bool IsCommunity => this.Features.Contains("COMMUNITY") || this.Features.Contains("NEWS");
+        public bool IsCommunity => this.RawFeatures.Contains("COMMUNITY") || this.RawFeatures.Contains("NEWS");
 
         /// <summary>
         /// Whether this guild has enabled the welcome screen.
         /// </summary>
         [JsonIgnore]
-        public bool HasWelcomeScreen => this.Features.Contains("WELCOME_SCREEN_ENABLED");
+        public bool HasWelcomeScreen => this.RawFeatures.Contains("WELCOME_SCREEN_ENABLED");
 
         /// <summary>
         /// Whether this guild has enabled membership screening.
         /// </summary>
         [JsonIgnore]
-        public bool HasMemberVerificationGate => this.Features.Contains("MEMBER_VERIFICATION_GATE_ENABLED");
+        public bool HasMemberVerificationGate => this.RawFeatures.Contains("MEMBER_VERIFICATION_GATE_ENABLED");
 
         /// <summary>
         /// Gets this guild's premium tier (Nitro boosting).
@@ -723,7 +722,7 @@ namespace DSharpPlusNextGen.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         /// <exception cref="NotSupportedException">Thrown when the guilds has not enabled community.</exception>
         public Task<DiscordChannel> CreateStageChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-            => this.Feature.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
+            => this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
 
         /// <summary>
         /// Creates a new news channel in this guild.
@@ -738,7 +737,7 @@ namespace DSharpPlusNextGen.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         /// <exception cref="NotSupportedException">Thrown when the guilds has not enabled community.</exception>
         public Task<DiscordChannel> CreateNewsChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-            => this.Feature.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
+            => this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
 
 
         /// <summary>
@@ -2446,68 +2445,173 @@ namespace DSharpPlusNextGen.Entities
         Banner4 = 4
     }
 
+    /// <summary>
+    /// Represents the guild features
+    /// </summary>
     public class GuildFeatures
     {
+        /// <summary>
+        /// Guild has access to set an animated guild icon
+        /// </summary>
         public bool CanSetAnimatedIcon { get; }
+
+        /// <summary>
+        /// Guild has access to set a guild banner image
+        /// </summary>
         public bool CanSetBanner { get; }
+
+        /// <summary>
+        /// Guild has access to use commerce features (i.e. create store channels)
+        /// </summary>
         public bool CanCreateStoreChannels { get; }
+
+        /// <summary>
+        /// Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates.
+        /// <see cref="ChannelType.Stage"/> is usable.
+        /// </summary>
         public bool HasCommunityEnabled { get; }
+
+        /// <summary>
+        /// Guild is able to be discovered in the directory
+        /// </summary>
         public bool IsDiscoverable { get; }
+
+        /// <summary>
+        /// Guild is able to be featured in the directory
+        /// </summary>
         public bool IsFeatureable { get; }
+
+        /// <summary>
+        /// Guild has access to set an invite splash background
+        /// </summary>
         public bool CanSetInviteSplash { get; }
+
+        /// <summary>
+        /// Guild has enabled Membership Screening 
+        /// </summary>
         public bool HasMembershipScreeningEnabled { get; }
+
+        /// <summary>
+        /// Guild has access to create news channels.
+        /// <see cref="ChannelType.News"/> is usable.
+        /// </summary>
         public bool CanCreateNewsChannels { get; }
+
+        /// <summary>
+        /// Guild is partnered
+        /// </summary>
         public bool IsPartnered { get; }
+
+        /// <summary>
+        /// Guild has increased custom emoji slots
+        /// </summary>
         public bool CanUploadMoreEmojis { get; }
+
+        /// <summary>
+        /// Guild can be previewed before joining via Membership Screening or the directory
+        /// </summary>
         public bool HasPreviewEnabled { get; }
+
+        /// <summary>
+        /// Guild has access to set a vanity URL
+        /// </summary>
         public bool CanSetVanityUrl { get; }
+
+        /// <summary>
+        /// Guild is verified
+        /// </summary>
         public bool IsVerified { get; }
+
+        /// <summary>
+        /// Guild has access to set 384kbps bitrate in voice (previously VIP voice servers)
+        /// </summary>
         public bool CanAccessVipRegions { get; }
+
+        /// <summary>
+        /// Guild has enabled the welcome screen
+        /// </summary>
         public bool HasWelcomeScreenEnabled { get; }
+
+        /// <summary>
+        /// Guild has enabled ticketed events
+        /// </summary>
         public bool HasTicketedEventsEnabled { get; }
+
+        /// <summary>
+        /// Guild has enabled monetization
+        /// </summary>
         public bool HasMonetizationEnabled { get; }
+
+        /// <summary>
+        /// Guild has increased custom sticker slots
+        /// </summary>
         public bool CanUploadMoreStickers { get; }
+
+        /// <summary>
+        /// Guild has access to the three day archive time for threads.
+        /// Needs Premium Tier 1 (<see cref="PremiumTier.Tier_1"/>).
+        /// </summary>
         public bool CanSetThreadArchiveDurationThreeDays { get; }
+
+        /// <summary>
+        /// Guild has access to the seven day archive time for threads.
+        /// Needs Premium Tier 2 (<see cref="PremiumTier.Tier_2"/>).
+        /// </summary>
         public bool CanSetThreadArchiveDurationSevenDays { get; }
+
+        /// <summary>
+        /// Guild has access to create private threads.
+        /// Needs maybe Premium Tier 3 (<see cref="PremiumTier.Tier_3"/>) [unknown].
+        /// </summary>
         public bool CanCreatePrivateThreads { get; }
+
+        /// <summary>
+        /// Guild is a hub.
+        /// <see cref="ChannelType.GuildDirectory"/> is usable.
+        /// </summary>
         public bool IsHub { get; }
 
-        public string RawFeatureString { get; }
-
+        /// <summary>
+        /// String of guild features
+        /// </summary>
         public string FeatureString { get; }
 
+        /// <summary>
+        /// Checks the guild features and constructs a new <see cref="GuildFeatures"/> object.
+        /// </summary>
+        /// <param name="guild">Guild to check</param>
         public GuildFeatures(DiscordGuild guild)
         {
-            this.CanSetAnimatedIcon = guild.Features.Contains("ANIMATED_ICON");
-            this.CanSetBanner = guild.Features.Contains("BANNER");
-            this.CanCreateStoreChannels = guild.Features.Contains("COMMERCE");
-            this.HasCommunityEnabled = guild.Features.Contains("COMMUNITY");
-            this.IsDiscoverable = guild.Features.Contains("DISCOVERABLE");
-            this.IsFeatureable = guild.Features.Contains("FEATURABLE");
-            this.CanSetInviteSplash = guild.Features.Contains("INVITE_SPLASH");
-            this.HasMembershipScreeningEnabled = guild.Features.Contains("MEMBER_VERIFICATION_GATE_ENABLED");
-            this.CanCreateNewsChannels = guild.Features.Contains("NEWS");
-            this.IsPartnered = guild.Features.Contains("PARTNERED");
-            this.CanUploadMoreEmojis = guild.Features.Contains("MORE_EMOJI");
-            this.HasPreviewEnabled = guild.Features.Contains("PREVIEW_ENABLED");
-            this.CanSetVanityUrl = guild.Features.Contains("VANITY_URL");
-            this.IsVerified = guild.Features.Contains("VERIFIED");
-            this.CanAccessVipRegions = guild.Features.Contains("VIP_REGIONS");
-            this.HasWelcomeScreenEnabled = guild.Features.Contains("WELCOME_SCREEN_ENABLED");
-            this.HasTicketedEventsEnabled = guild.Features.Contains("TICKETED_EVENTS_ENABLED");
-            this.HasMonetizationEnabled = guild.Features.Contains("MONETIZATION_ENABLED");
-            this.CanUploadMoreStickers = guild.Features.Contains("MORE_STICKERS");
-            this.CanSetThreadArchiveDurationThreeDays = guild.Features.Contains("THREE_DAY_THREAD_ARCHIVE");
-            this.CanSetThreadArchiveDurationSevenDays = guild.Features.Contains("SEVEN_DAY_THREAD_ARCHIVE");
-            this.CanCreatePrivateThreads = guild.Features.Contains("PRIVATE_THREADS");
-            this.IsHub = guild.Features.Contains("HUB");
+            this.CanSetAnimatedIcon = guild.RawFeatures.Contains("ANIMATED_ICON");
+            this.CanSetBanner = guild.RawFeatures.Contains("BANNER");
+            this.CanCreateStoreChannels = guild.RawFeatures.Contains("COMMERCE");
+            this.HasCommunityEnabled = guild.RawFeatures.Contains("COMMUNITY");
+            this.IsDiscoverable = guild.RawFeatures.Contains("DISCOVERABLE");
+            this.IsFeatureable = guild.RawFeatures.Contains("FEATURABLE");
+            this.CanSetInviteSplash = guild.RawFeatures.Contains("INVITE_SPLASH");
+            this.HasMembershipScreeningEnabled = guild.RawFeatures.Contains("MEMBER_VERIFICATION_GATE_ENABLED");
+            this.CanCreateNewsChannels = guild.RawFeatures.Contains("NEWS");
+            this.IsPartnered = guild.RawFeatures.Contains("PARTNERED");
+            this.CanUploadMoreEmojis = guild.RawFeatures.Contains("MORE_EMOJI");
+            this.HasPreviewEnabled = guild.RawFeatures.Contains("PREVIEW_ENABLED");
+            this.CanSetVanityUrl = guild.RawFeatures.Contains("VANITY_URL");
+            this.IsVerified = guild.RawFeatures.Contains("VERIFIED");
+            this.CanAccessVipRegions = guild.RawFeatures.Contains("VIP_REGIONS");
+            this.HasWelcomeScreenEnabled = guild.RawFeatures.Contains("WELCOME_SCREEN_ENABLED");
+            this.HasTicketedEventsEnabled = guild.RawFeatures.Contains("TICKETED_EVENTS_ENABLED");
+            this.HasMonetizationEnabled = guild.RawFeatures.Contains("MONETIZATION_ENABLED");
+            this.CanUploadMoreStickers = guild.RawFeatures.Contains("MORE_STICKERS");
+            this.CanSetThreadArchiveDurationThreeDays = guild.RawFeatures.Contains("THREE_DAY_THREAD_ARCHIVE");
+            this.CanSetThreadArchiveDurationSevenDays = guild.RawFeatures.Contains("SEVEN_DAY_THREAD_ARCHIVE");
+            this.CanCreatePrivateThreads = guild.RawFeatures.Contains("PRIVATE_THREADS");
+            this.IsHub = guild.RawFeatures.Contains("HUB");
 
-            var _rawFeatures = guild.Features.Any() ? "" : "NONE";
-            foreach(var feature in guild.Features)
+            var _features = guild.RawFeatures.Any() ? "" : "NONE";
+            foreach(var feature in guild.RawFeatures)
             {
-                _rawFeatures += feature + " ";
+                _features += feature + " ";
             }
-            this.RawFeatureString = _rawFeatures;
+            this.FeatureString = _features;
         }
     }
 }
