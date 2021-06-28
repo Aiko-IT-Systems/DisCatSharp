@@ -70,7 +70,7 @@ namespace DSharpPlusNextGen.Entities
         }
         
         /// <summary>
-        /// Gets the members hash.
+        /// Gets the members avatar hash.
         /// </summary>
         [JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
         public virtual string GuildAvatarHash { get; internal set; }
