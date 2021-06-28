@@ -936,7 +936,8 @@ namespace DSharpPlusNextGen
             guild.AfkChannelId = newGuild.AfkChannelId;
             guild.AfkTimeout = newGuild.AfkTimeout;
             guild.DefaultMessageNotifications = newGuild.DefaultMessageNotifications;
-            guild.Features = newGuild.Features;
+            guild.RawFeatures = newGuild.RawFeatures;
+            guild._threads = newGuild._threads; // # TODO: Check docs
             guild.IconHash = newGuild.IconHash;
             guild.MfaLevel = newGuild.MfaLevel;
             guild.OwnerId = newGuild.OwnerId;

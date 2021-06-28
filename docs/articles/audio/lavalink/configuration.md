@@ -41,7 +41,7 @@ We are now ready to connect to the server. Call the Lavalink extension's connect
 LavalinkNode = await Lavalink.ConnectAsync(lavalinkConfig);
 ```
 
-Your main bot file should now look like this: 
+Your main bot file should now look like this:
 
 ```csharp
 using System.Threading.Tasks;
@@ -86,8 +86,8 @@ namespace MyFirstMusicBot
             var lavalink = Discord.UseLavalink();
 
             await Discord.ConnectAsync();
-            await lavalink.ConnectAsync(lavalinkConfig); // Make sure this is after Discord.ConnectAsync(). 
-                                                         
+            await lavalink.ConnectAsync(lavalinkConfig); // Make sure this is after Discord.ConnectAsync().
+
             await Task.Delay(-1);
         }
     }
@@ -99,7 +99,7 @@ We are now ready to start the bot. If everything is configured properly, you sho
 [2020-10-10 17:56:07 -04:00] [403 /LavalinkConn] [Debug] Connection to Lavalink node established
 ```
 
-And a client connection appear in your Lavalink console: 
+And a client connection appear in your Lavalink console:
 
 ```
 INFO 5180 --- [  XNIO-1 task-1] io.undertow.servlet                      : Initializing Spring DispatcherServlet 'dispatcherServlet'

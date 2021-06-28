@@ -16,14 +16,21 @@ The majority of these attributes can be applied to your command methods and comm
 - @DSharpPlusNextGen.CommandsNext.Attributes.PriorityAttribute
 - @DSharpPlusNextGen.CommandsNext.Attributes.RemainingTextAttribute
 - @DSharpPlusNextGen.CommandsNext.Attributes.RequireBotPermissionsAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireCommunityAttribute
 - @DSharpPlusNextGen.CommandsNext.Attributes.RequireDirectMessageAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireDiscordCertifiedModeratorAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireDiscordEmployeeAttribute
 - @DSharpPlusNextGen.CommandsNext.Attributes.RequireGuildAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireGuildOwnerAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireMemberVerificationGateAttribute
 - @DSharpPlusNextGen.CommandsNext.Attributes.RequireNsfwAttribute
 - @DSharpPlusNextGen.CommandsNext.Attributes.RequireOwnerAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireOwnerOrIdAttribute
 - @DSharpPlusNextGen.CommandsNext.Attributes.RequirePermissionsAttribute
 - @DSharpPlusNextGen.CommandsNext.Attributes.RequirePrefixesAttribute
 - @DSharpPlusNextGen.CommandsNext.Attributes.RequireRolesAttribute
 - @DSharpPlusNextGen.CommandsNext.Attributes.RequireUserPermissionsAttribute
+- @DSharpPlusNextGen.CommandsNext.Attributes.RequireWelcomeScreenAttribute
 
 
 ## Custom Attributes
@@ -65,7 +72,7 @@ private async Task MainAsync()
 {
     var discord = new DiscordClient();
 	var commands = discord.UseCommandsNext();
-	
+
 	commands.CommandErrored += CmdErroredHandler;
 }
 
@@ -74,11 +81,11 @@ private async Task CmdErroredHandler(CommandsNextExtension _, CommandErrorEventA
     var failedChecks = ((ChecksFailedException)e.Exception).FailedChecks;
     foreach (var failedCheck in failedChecks)
     {
-        if (failedCheck is RequireYearAttribute) 
+        if (failedCheck is RequireYearAttribute)
         {
             var yearAttribute = (RequireYearAttribute)failedCheck;
             await e.Context.RespondAsync($"Only usable during year {yearAttribute.AllowedYear}.");
-        } 
+        }
     }
 }
 ```

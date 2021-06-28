@@ -53,7 +53,7 @@ Changing the properties of a role requires that your bot account have a role hig
 It does! Please take a look at our [article](xref:commands_dependency_injection) on the subject.
 
 ### Can I use a user token?
-Automating a user account is against Discord's Terms of Service and is not supported by DSharpPlus.
+Automating a user account is against Discord's [Terms of Service](https://dis.gd/terms) and is not supported by DSharpPlusNextGen.
 
 ### How can I set a custom status?
 If you mean a *true* custom status like this:
@@ -72,7 +72,7 @@ You can use either of the following
 * The overload for @DSharpPlusNextGen.DiscordClient.ConnectAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) which accepts a @DSharpPlusNextGen.Entities.DiscordActivity.
 * @DSharpPlusNextGen.DiscordClient.UpdateStatusAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) OR @DSharpPlusNextGen.DiscordShardedClient.UpdateStatusAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) (for the sharded client) at any point after `Ready` has been fired.
 
-### Am I able to retrieve a @DSharpPlus.Entities.DiscordRole by name?
+### Am I able to retrieve a @DSharpPlusNextGen.Entities.DiscordRole by name?
 Yes. Use LINQ on the `Roles` property of your instance of @DSharpPlusNextGen.Entities.DiscordGuild and compare against the `Name` of  each @DSharpPlusNextGen.Entities.DiscordRole.
 
 ### Why are you using Newtonsoft.Json when System.Text.Json is available

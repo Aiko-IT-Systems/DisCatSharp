@@ -35,9 +35,9 @@
   <PropertyGroup>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Description>Assortment of various common types and utilities for DSharpPlusNextGen's projects.</Description>
-    <PackageTags>emzi0767 common utilities dotnet dotnet-core dotnetfx netfx netcore csharp</PackageTags>
-    <Authors>Emzi0767</Authors>
-    <Company>Emzi0767</Company>
+    <PackageTags>common utilities dotnet dotnet-core dotnetfx netfx netcore csharp</PackageTags>
+    <Authors>Lala Sabathil, Emzi0767</Authors>
+    <Company>AITSYS</Company>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/DSharpPlusNextGen.CommonDSharpPlusNextGen.Common/Common</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Emzi0767/Common</RepositoryUrl>

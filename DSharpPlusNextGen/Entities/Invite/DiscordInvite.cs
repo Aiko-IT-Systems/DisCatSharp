@@ -24,6 +24,7 @@
 using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using DSharpPlusNextGen.Enums.Discord;
 
 namespace DSharpPlusNextGen.Entities
 {
@@ -39,6 +40,18 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonProperty("code", NullValueHandling = NullValueHandling.Ignore)]
         public string Code { get; internal set; }
+
+        /// <summary>
+        /// Gets the invite's url.
+        /// </summary>
+        [JsonIgnore]
+        public string Url => DiscordDomain.GetDomain(CoreDomain.DiscordShortlink).Url + "/" + this.Code;
+
+        /// <summary>
+        /// Gets the invite's url as Uri.
+        /// </summary>
+        [JsonIgnore]
+        public Uri Uri => new(this.Url);
 
         /// <summary>
         /// Gets the guild this invite is for.
