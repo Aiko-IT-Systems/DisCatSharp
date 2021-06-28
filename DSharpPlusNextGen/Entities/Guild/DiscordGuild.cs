@@ -29,6 +29,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlusNextGen.EventArgs;
 using DSharpPlusNextGen.Exceptions;
@@ -2470,7 +2471,10 @@ namespace DSharpPlusNextGen.Entities
         public bool CanSetThreadArchiveDurationSevenDays { get; }
         public bool CanCreatePrivateThreads { get; }
         public bool IsHub { get; }
-        public string RawFeatureString { get;  }
+
+        public string RawFeatureString { get; }
+
+        public string FeatureString { get; }
 
         public GuildFeatures(DiscordGuild guild)
         {
@@ -2497,7 +2501,13 @@ namespace DSharpPlusNextGen.Entities
             this.CanSetThreadArchiveDurationSevenDays = guild.Features.Contains("SEVEN_DAY_THREAD_ARCHIVE");
             this.CanCreatePrivateThreads = guild.Features.Contains("PRIVATE_THREADS");
             this.IsHub = guild.Features.Contains("HUB");
-            this.RawFeatureString = guild.Features.ToString();
+
+            var _rawFeatures = guild.Features.Any() ? "" : "NONE";
+            foreach(var feature in guild.Features)
+            {
+                _rawFeatures += feature + " ";
+            }
+            this.RawFeatureString = _rawFeatures;
         }
     }
 }
