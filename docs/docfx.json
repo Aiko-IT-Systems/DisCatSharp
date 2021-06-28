@@ -65,13 +65,13 @@
     ],
     "dest": "_site",
     "globalMetadata": {
-      "_appFooter": "© 2016-2021 DSharpPlus Contributors",
+      "_appFooter": "© 2021 Aiko IT Systems",
       "_enableSearch": "true"
     },
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
-      "dsplus"
+      "dspng"
     ],
     "postProcessors": ["ExtractSearchIndex", "CustomMemberIndexer"],
     "noLangKeyword": false,

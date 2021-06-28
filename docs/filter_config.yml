@@ -1,13 +1,17 @@
 apiRules:
 - exclude:
-    uidRegex: ^DSharpPlus\.Test.*$
+    uidRegex: ^System\.Collections\.Immutable$
 - exclude:
     uidRegex: ^System\..*$
 - exclude:
-    uidRegex: ^DSharpPlus\.RingBuffer.*$
+    uidRegex: ^DSharpPlusNextGen\.RingBuffer.*$
 - exclude:
-    uidRegex: ^DSharpPlus\.Base(WebSocket|Udp)Client.*$
+    uidRegex: ^DSharpPlusNextGen\.Base(WebSocket|Udp)Client.*$
 - exclude:
-    uidRegex: ^DSharpPlus\.HttpRequestMethod.*$
+    uidRegex: ^DSharpPlusNextGen\.HttpRequestMethod.*$
 - exclude:
-    uidRegex: ^DSharpPlus\.VoiceNext\.Codec.*$
+    uidRegex: ^DSharpPlusNextGen\.VoiceNext\.Codec.*$
+attributeRules:
+- exclude:
+    uidRegex: ^System\.Collections\.Immutable$
+    type: Namespace

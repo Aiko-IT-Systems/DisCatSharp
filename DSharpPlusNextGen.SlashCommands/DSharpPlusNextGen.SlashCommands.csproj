@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../DSharpPlusNextGen.targets" />
+  
+  <PropertyGroup>
+    <AssemblyName>DSharpPlusNextGen.SlashCommands</AssemblyName>
+    <RootNamespace>DSharpPlusNextGen.SlashCommands</RootNamespace>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+    
+  <PropertyGroup>
+    <Authors>Lala Sabathil, IDoEverything, Epictek, sssvt-drabek-stepan, tygore587</Authors>
+    <Description>An extension for DSharpPlusNextGen to make slash commands easy</Description>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen</PackageProjectUrl>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen</RepositoryUrl>
+    <PackageId>DSharpPlusNextGen.SlashCommands</PackageId>
+    <PackageIcon>d#+.png</PackageIcon>
+    <Company>AITSYS, IDoEverything</Company>
+    <PackageLicenseExpression></PackageLicenseExpression>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningLevel>3</WarningLevel>
+    <DocumentationFile>obj\Debug\netstandard2.0\DSharpPlus.SlashCommands.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="LICENSE" />
+    <None Remove="LICENSE" />
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DSharpPlusNextGen\DSharpPlusNextGen.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\logo\d#+.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

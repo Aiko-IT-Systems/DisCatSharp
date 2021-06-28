@@ -1,9 +1,9 @@
 #!/usr/bin/env pwsh
 # Rebuild-all
 #
-# Rebuilds the DSharpPlus project and its documentation, and places artifacts in specified directories.
+# Rebuilds the DSharpPlus NextGen project and its documentation, and places artifacts in specified directories.
 # Not specifying documentation options will skip documentation build.
-# 
+#
 # Author:       Emzi0767
 # Version:      2018-08-30 14:41
 #
@@ -26,10 +26,10 @@ param
 
     [parameter(Mandatory = $false)]
     [int] $BuildNumber = -1,
-    
+
     [parameter(Mandatory = $false)]
     [string] $DocsPath,
-    
+
     [parameter(Mandatory = $false)]
     [string] $DocsPackageName
 )
@@ -54,13 +54,13 @@ else
 {
     # Yup
     Write-Host "Building pre-production packages"
-    
+
     # Check if numeric suffix
     if (-not $BuildNumber -or $BuildNumber -lt 0)
     {
         $BuildNumber = -1
     }
-    
+
     # Invoke the build script
     & .\rebuild-lib.ps1 -ArtifactLocation "$ArtifactLocation" -Configuration "$Configuration" -VersionSuffix "$VersionSuffix" -BuildNumber $BuildNumber | Out-Host
 }
@@ -79,7 +79,7 @@ if ($DocsPath -and $DocsPackageName)
     # Yup
     Write-Host "Building documentation"
     & .\rebuild-docs.ps1 -DocsPath "$DocsPath" -OutputPath "$ArtifactLocation" -PackageName "$DocsPackageName"
-    
+
     # Check if it failed
     if ($LastExitCode -ne 0)
     {

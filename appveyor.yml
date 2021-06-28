@@ -1,9 +1,9 @@
-version: 4.1.0-nightly-{build}
+version: 9.3.2-nightly-{build}
 pull_requests:
   do_not_increment_build_number: true
 branches:
   only:
-  - master
+  - main
   - /release\/.*/
 skip_tags: true
 max_jobs: 1
@@ -33,28 +33,26 @@ build_script:
     {
         # Rebuild documentation
         Write-Host "Commencing complete build"
-        & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER -DocsPath ".\docs" -DocsPackageName "dsharpplus-docs"
+        & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER -DocsPath ".\docs" -DocsPackageName "dsharpplusnextgen-docs"
     }
     else
     {
         # Skip documentation
         Write-Host "Building from PR ($Env:APPVEYOR_PULL_REQUEST_NUMBER); skipping docs build"
-        & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER 
+        & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER
     }
 artifacts:
 - path: artifacts\*.nupkg
-- path: artifacts\dsharpplus-docs.tar.xz
+- path: artifacts\dsharpplusnextgen-docs.tar.xz
 deploy:
 - provider: NuGet
-  server: https://nuget.emzi0767.com/api/v2/package
+  server:
   api_key:
-    secure: 2FPGj0CvMvhz7C7BNX3debaLlgJiwZ99voNcwmQt2l+elxXQNIT36cdAl4qs6lTlsT7ffM+4EtRr9xMxZvuUHS44z0GD6tmlRZtyKYkUXc2YQvtDOmo14pLVoa+p94/kTWHNDLE4wa7sfPz//Uee5A==
-  symbol_server: https://nuget.emzi0767.com/api/v2/symbolpackage
-notifications:
-- provider: Slack
-  incoming_webhook:
-    secure: 6oAHVP26oRm4EUOaqyaXT7nkYNNbgZCWiZulyDW22vSNaVE+VWtAtgtOQVgtFF+9qpLyYu4A60QXPB0gD/0oFcJqGhPEKEVfASSLDqlO6USe6F2FnTxJJdmLIbFiunN4fq0qQmBqPR4pHXb+WoSM0GFi0wCHH7/5pbIoOtmT7L0=
-  channel: commits
-  on_build_success: true
-  on_build_failure: true
-  on_build_status_changed: false
+    secure: XtptFAacNyLULAZaRpAGh/e28Q1jkZSmODo4d2dkAUamFSsTQa3MzJAo4lSC1Vlb
+  skip_symbols: true
+#- provider: NuGet
+#  server: https://nuget.pkg.github.com/Aiko-IT-Systems/index.json
+#  username: Lulalaby
+#  api_key:
+#    secure: 3l827zZPk7wTgnX2eZpc6bYcbOKVQnkB3xOkH43UTIHknJ0IMHrP7S6YNmgIRzkt
+#  skip_symbols: true

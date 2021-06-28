@@ -3,12 +3,12 @@ uid: commands_intro
 title: CommandsNext Introduction
 ---
 
- >[!NOTE] 
+ >[!NOTE]
  > This article assumes you've recently read the article on *[writing your first bot](xref:basics_first_bot)*.
 
-# Introduction to CommandsNext 
+# Introduction to CommandsNext
 This article will introduce you to some basic concepts of our native command framework: *CommandsNext*.<br/>
-Be sure to install the `DSharpPlus.CommandsNext` package from NuGet before continuing.
+Be sure to install the `DSharpPlusNextGen.CommandsNext` package from NuGet before continuing.
 
 ![CommandsNext NuGet Package](/images/commands_intro_01.png)
 
@@ -17,9 +17,9 @@ Be sure to install the `DSharpPlus.CommandsNext` package from NuGet before conti
 ## Writing a Basic Command
 
 ### Create a Command Module
-A command module is simply a class which acts as a container for your command methods. Instead of registering individual commands, 
+A command module is simply a class which acts as a container for your command methods. Instead of registering individual commands,
 you'd register a single command module which contains multiple commands. There's no limit to the amount of modules you can have,
-and no limit to the amount of commands each module can contain. For example: you could have a module for moderation commands and 
+and no limit to the amount of commands each module can contain. For example: you could have a module for moderation commands and
 a separate module for image commands. This will help you keep your commands organized and reduce the clutter in your project.
 
 Our first demonstration will be simple, consisting of one command module with a simple command.<br/>
@@ -42,7 +42,7 @@ The first parameter of your method *must* be of type `CommandContext`, as requir
 ```cs
 public async Task GreetCommand(CommandContext ctx)
 {
-    
+
 }
 ```
 
@@ -51,8 +51,8 @@ In the body of our new method, we'll use `CommandContext#RespondAsync` to send a
 await ctx.RespondAsync("Greetings! Thank you for executing me!");
 ```
 
-Finally, mark your command method with the `Command` attribute so CommandsNext will know to treat our method as a command method. 
-This attribute takes a single parameter: the name of the command. 
+Finally, mark your command method with the `Command` attribute so CommandsNext will know to treat our method as a command method.
+This attribute takes a single parameter: the name of the command.
 
 We'll name our command *greet* to match the name of the method.
 ```cs
@@ -67,8 +67,8 @@ public async Task GreetCommand(CommandContext ctx)
 Your command module should now resemble this:
 ```cs
 using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlusNextGen.CommandsNext;
+using DSharpPlusNextGen.CommandsNext.Attributes;
 
 public class MyFirstModule : BaseCommandModule
 {
@@ -80,7 +80,7 @@ public class MyFirstModule : BaseCommandModule
 }
 ```
 
-### Cleanup and Configuration 
+### Cleanup and Configuration
 Before we can run our new command, we'll need modify our main method.<br/>
 Start by removing the event handler we created [previously](xref:basics_first_bot#spicing-up-your-bot).
 ```cs
@@ -92,7 +92,7 @@ discord.MessageCreated += async (s, e) =>               // REMOVE
         await e.Message.RespondAsync("pong!");          // THESE
 };                                                      // LINES
 
-await discord.ConnectAsync();            
+await discord.ConnectAsync();
 ```
 
 <br/>
@@ -107,7 +107,7 @@ Create an object initializer for `CommandsNextConfiguration` and assign the `Str
 Our example below will only define a single prefix: `!`.
 ```cs
 new CommandsNextConfiguration()
-{ 
+{
     StringPrefixes = new[] { "!" }
 }
 ```
@@ -121,7 +121,7 @@ var commands = discord.UseCommandsNext();
 
 commands.RegisterCommands<MyFirstModule>();
 
-await discord.ConnectAsync();            
+await discord.ConnectAsync();
 ```
 Alternatively, you can pass in your assembly to register commands from all modules in your program.
 ```cs
@@ -135,13 +135,13 @@ internal static async Task MainAsync()
 {
     var discord = new DiscordClient(new DiscordConfiguration());
     var commands = discord.UseCommandsNext(new CommandsNextConfiguration()
-    { 
+    {
         StringPrefixes = new[] { "!" }
     });
 
     commands.RegisterCommands<MyFirstModule>();
 
-    await discord.ConnectAsync();            
+    await discord.ConnectAsync();
     await Task.Delay(-1);
 }
 ```
@@ -162,8 +162,8 @@ Hit `F5` on your keyboard to compile and run your bot, then execute your command
 ### Command Arguments
 Now that we have a basic command down, let's spice it up a bit by defining *arguments* to accept user input.
 
-Defining an argument is simple; just add additional parameters to your signature of your command method. 
-CommandsNext will automatically parse user input and populate the parameters of your command method with those arguments. 
+Defining an argument is simple; just add additional parameters to your signature of your command method.
+CommandsNext will automatically parse user input and populate the parameters of your command method with those arguments.
 To demonstrate, we'll modify our *greet* command to greet a user with a given name.
 
 Head back to `MyFirstModule` and add a parameter of type `string` to the `GreetCommand` method.
@@ -203,7 +203,7 @@ CommandsNext will parse this as one argument, allowing your command to be execut
 ```
 
 If you would prefer not to use quotes, you can use the `RemainingText` attribute on your parameter.<br/>
-This attribute will instruct CommandsNext to parse all remaining arguments into that parameter. 
+This attribute will instruct CommandsNext to parse all remaining arguments into that parameter.
 ```cs
 public async Task GreetCommand(CommandContext ctx, [RemainingText] string name)
 ```
@@ -224,7 +224,7 @@ Each of these has their own caveats; it'll be up to you to choose the best solut
 
 ### Argument Converters
 CommandsNext can convert arguments, which are natively `string`, to the type specified by a command method parameter.
-This functionality is powered by *argument converters*, and it'll help to eliminate the boilerplate code needed to parse and convert `string` arguments. 
+This functionality is powered by *argument converters*, and it'll help to eliminate the boilerplate code needed to parse and convert `string` arguments.
 
 CommandsNext has built-in argument converters for the following types:
 
@@ -241,7 +241,7 @@ You're also able to create and provide your own [custom argument converters](xre
 
 
 <br/>
-Let's do a quick demonstration of the built-in converters. 
+Let's do a quick demonstration of the built-in converters.
 
 Create a new command method above our `GreetCommand` method named `RandomCommand` and have it take two integer arguments.
 As the method name suggests, this command will be named *random*.
@@ -249,7 +249,7 @@ As the method name suggests, this command will be named *random*.
 [Command("random")]
 public async Task RandomCommand(CommandContext ctx, int min, int max)
 {
-    
+
 }
 ```
 
@@ -271,7 +271,7 @@ CommandsNext converted the two arguments from `string` into `int` and passed the
 removing the need to manually parse and convert the arguments yourself.
 
 <br/>
-We'll do one more to drive the point home. Head back to our old `GreetCommand` method, remove our 
+We'll do one more to drive the point home. Head back to our old `GreetCommand` method, remove our
 `name` parameter, and replace it with a new parameter of type `DiscordMember` named `member`.
 ```cs
 public async Task GreetCommand(CommandContext ctx, DiscordMember member)
@@ -285,7 +285,7 @@ public async Task GreetCommand(CommandContext ctx, DiscordMember member)
 }
 ```
 
-Go ahead and give that a test run. 
+Go ahead and give that a test run.
 
 ![According to all known laws of aviation,](/images/commands_intro_06.png)
 
@@ -294,7 +294,7 @@ Go ahead and give that a test run.
 ![Its wings are too small to get its fat little body off the ground.](/images/commands_intro_08.png)
 
 The argument converter for `DiscordMember` is able to parse mentions, usernames, nicknames, and user IDs then look for a matching member within the guild the command was executed from.
-Ain't that neat? 
+Ain't that neat?
 
 
 ## Command Overloads
