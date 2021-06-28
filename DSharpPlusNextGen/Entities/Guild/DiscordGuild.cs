@@ -2561,7 +2561,7 @@ namespace DSharpPlusNextGen.Entities
 
         /// <summary>
         /// Guild has access to create private threads.
-        /// Needs maybe Premium Tier 3 (<see cref="PremiumTier.Tier_3"/>) [unknown].
+        /// Needs Premium Tier 2 (<see cref="PremiumTier.Tier_2"/>).
         /// </summary>
         public bool CanCreatePrivateThreads { get; }
 
