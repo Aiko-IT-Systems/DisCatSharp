@@ -17,7 +17,11 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/Aiko-IT-Systems/DSharpPlusNextGen?label=Stars)
 
 ## Why NextGen?
-The way how DSP is working and the maintainer.. I don't like it. I decided to maintain an own version of it.
+We want the lib always up-to-date. The newest features are important for us.
+
+With DSharpPlus and their way how to implement changes, it is not possible.
+
+We decided to maintain an own version of it.
 
 ## Goal
 We want this lib always up-to-date. So the API version is always the newest, in the actual case `v9`.
@@ -37,8 +41,6 @@ Do note that the documentation might not reflect the latest changes in nightly v
 * [Examples](https://github.com/Aiko-IT-Systems/DSharpPlusNextGen.Examples)
 
 ## Questions?
-Come talk to us here:
-
 [![Project Nyaw~](https://discord.com/api/guilds/858089281214087179/embed.png?style=banner1)](https://discord.gg/CPhrqxu2SF)
 
 
