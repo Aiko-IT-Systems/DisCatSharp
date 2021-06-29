@@ -40,7 +40,8 @@ Come talk to us here:
 
 [![Project Nyaw~](https://discord.com/api/guilds/858089281214087179/embed.png?style=banner1)](https://discord.gg/CPhrqxu2SF)
 
-# Build Status
+
+# NuGet
 ## DSharpPlusNextGen
 [![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg)](https://nuget.org/packages/DSharpPlusNextGen)
 ## DSharpPlusNextGen.CommandsNext
