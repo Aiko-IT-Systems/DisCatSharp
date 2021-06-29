@@ -3,7 +3,7 @@
 
 ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DSharpPlusNextGen)
 [![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg)](https://nuget.org/packages/DSharpPlusNextGen)
-[![Build status](https://ci.appveyor.com/api/projects/status/9hv6emqnew8dgjue?svg=true)](https://ci.appveyor.com/project/AITSYS/dsharpplusnextgen)
+[![Build status](https://ci.appveyor.com/api/projects/status/9hv6emqnew8dgjue/branch/main?svg=true)](https://ci.appveyor.com/project/AITSYS/dsharpplusnextgen/branch/main)
 ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby)
 ![GitHub issues](https://img.shields.io/github/issues/Aiko-IT-Systems/DSharpPlusNextGen)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DSharpPlusNextGen)
