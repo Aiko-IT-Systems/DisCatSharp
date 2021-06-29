@@ -2572,6 +2572,16 @@ namespace DSharpPlusNextGen.Entities
         public bool IsHub { get; }
 
         /// <summary>
+        /// Guild has full access to threads.
+        /// </summary>
+        public bool HasThreadTestingEnabled { get; }
+
+        /// <summary>
+        /// Guild has access to threads.
+        /// </summary>
+        public bool HasThreadsEnabled { get; }
+
+        /// <summary>
         /// String of guild features
         /// </summary>
         public string FeatureString { get; }
@@ -2605,6 +2615,8 @@ namespace DSharpPlusNextGen.Entities
             this.CanSetThreadArchiveDurationSevenDays = guild.RawFeatures.Contains("SEVEN_DAY_THREAD_ARCHIVE");
             this.CanCreatePrivateThreads = guild.RawFeatures.Contains("PRIVATE_THREADS");
             this.IsHub = guild.RawFeatures.Contains("HUB");
+            this.HasThreadTestingEnabled = guild.RawFeatures.Contains("THREADS_ENABLED_TESTING");
+            this.HasThreadsEnabled = guild.RawFeatures.Contains("THREADS_ENABLED");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach(var feature in guild.RawFeatures)
