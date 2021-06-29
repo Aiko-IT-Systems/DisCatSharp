@@ -39,3 +39,21 @@ Do note that the documentation might not reflect the latest changes in nightly v
 Come talk to us here:
 
 [![Project Nyaw~](https://discord.com/api/guilds/858089281214087179/embed.png?style=banner1)](https://discord.gg/CPhrqxu2SF)
+
+# Build Status
+## DSharpPlusNextGen
+[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg)](https://nuget.org/packages/DSharpPlusNextGen)
+## DSharpPlusNextGen.CommandsNext
+[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.CommandsNext.svg)](https://nuget.org/packages/DSharpPlusNextGen.CommandsNext)
+## DSharpPlusNextGen.Common
+[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Common.svg)](https://nuget.org/packages/DSharpPlusNextGen.Common)
+## DSharpPlusNextGen.Interactivity
+[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Interactivity.svg)](https://nuget.org/packages/DSharpPlusNextGen.Interactivity)
+## DSharpPlusNextGen.Lavalink
+[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Lavalink.svg)](https://nuget.org/packages/DSharpPlusNextGen.Lavalink)
+## DSharpPlusNextGen.SlashCommands
+[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.SlashCommands.svg)](https://nuget.org/packages/DSharpPlusNextGen.SlashCommands)
+## DSharpPlusNextGen.VoiceNext
+[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.VoiceNext.svg)](https://nuget.org/packages/DSharpPlusNextGen.VoiceNext)
+## DSharpPlusNextGen.VoiceNext.Natives
+[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.VoiceNext.Natives.svg)](https://nuget.org/packages/DSharpPlusNextGen.VoiceNext.Natives)
