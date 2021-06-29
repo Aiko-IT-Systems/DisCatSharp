@@ -1,4 +1,4 @@
-# DSharpPlus - NextGen ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DSharpPlusNextGen?label=License) ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)  [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/CPhrqxu2SF)
+# DSharpPlus - NextGen ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DSharpPlusNextGen?label=License) ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)  [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://github.com)
 .NET wrapper for the Discord API, based off [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus).
 
 #### Status
@@ -39,10 +39,6 @@ Do note that the documentation might not reflect the latest changes in nightly v
 ### Tutorials
 * [Howto](https://dsp-nextgen.aitsys.dev/articles/basics/bot_account.html)
 * [Examples](https://github.com/Aiko-IT-Systems/DSharpPlusNextGen.Examples)
-
-## Questions?
-[![Project Nyaw~](https://discord.com/api/guilds/858089281214087179/embed.png?style=banner1)](https://discord.gg/CPhrqxu2SF)
-
 
 ## NuGet
 Package|NuGet
