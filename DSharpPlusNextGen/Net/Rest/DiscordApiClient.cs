@@ -258,7 +258,7 @@ namespace DSharpPlusNextGen.Net
             if (this.Discord is DiscordClient dc)
             {
                 var gld = dc._guilds[guild_id];
-                await dc.OnGuildDeleteEventAsync(gld, null).ConfigureAwait(false);
+                await dc.OnGuildDeleteEventAsync(gld).ConfigureAwait(false);
             }
         }
 

@@ -104,7 +104,7 @@ namespace DSharpPlusNextGen.Entities
         {
             DiscordNameLookup.TryGetValue(this.Name, out var name);
 
-            return name == null ? $":{ this.Name }:" : name;
+            return name ?? $":{ this.Name }:";
         }
 
         /// <summary>
@@ -132,10 +132,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <param name="e"><see cref="DiscordEmoji"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordEmoji"/> is equal to this <see cref="DiscordEmoji"/>.</returns>
-        public bool Equals(DiscordEmoji e)
-        {
-            return e is null ? false : ReferenceEquals(this, e) ? true : this.Id == e.Id;
-        }
+        public bool Equals(DiscordEmoji e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.Name == e.Name));
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordEmoji"/>.
@@ -150,10 +147,7 @@ namespace DSharpPlusNextGen.Entities
             return hash;
         }
 
-        internal string ToReactionString()
-        {
-            return this.Id != 0 ? $"{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}" : this.Name;
-        }
+        internal string ToReactionString() => this.Id != 0 ? $"{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}" : this.Name;
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordEmoji"/> objects are equal.
@@ -166,9 +160,7 @@ namespace DSharpPlusNextGen.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            return (o1 == null && o2 != null) || (o1 != null && o2 == null)
-                ? false
-                : o1 == null && o2 == null ? true : e1.Id == e2.Id;
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
         }
 
         /// <summary>
