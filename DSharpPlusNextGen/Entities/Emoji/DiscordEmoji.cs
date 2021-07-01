@@ -168,7 +168,7 @@ namespace DSharpPlusNextGen.Entities
 
             return (o1 == null && o2 != null) || (o1 != null && o2 == null)
                 ? false
-                : o1 == null && o2 == null ? true : e1.Id == e2.Id && e1.Name == e2.Name;
+                : o1 == null && o2 == null ? true : e1.Id == e2.Id;
         }
 
         /// <summary>
