@@ -984,7 +984,6 @@ namespace DSharpPlusNextGen.Entities
         public Task<DiscordInvite> GetVanityInviteAsync()
             => this.Discord.ApiClient.GetGuildVanityUrlAsync(this.Id);
 
-
         /// <summary>
         /// Gets all the webhooks created for all the channels in this guild.
         /// </summary>
@@ -2110,6 +2109,89 @@ namespace DSharpPlusNextGen.Entities
                 : emoji.Guild.Id != this.Id
                 ? throw new ArgumentException("This emoji does not belong to this guild.")
                 : this.Discord.ApiClient.DeleteGuildEmojiAsync(this.Id, emoji.Id, reason);
+        }
+
+        /// <summary>
+        /// Gets all of this guild's custom stickers.
+        /// </summary>
+        /// <returns>All of this guild's custom stickers.</returns>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task<IReadOnlyList<DiscordSticker>> GetStickersAsync()
+            => this.Discord.ApiClient.GetGuildStickersAsync(this.Id);
+
+        /// <summary>
+        /// Gets a sticker
+        /// </summary>
+        /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
+        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
+        public Task<DiscordSticker> GetStickerAsync(ulong sticker_id)
+            => this.Discord.ApiClient.GetGuildStickerAsync(this.Id, sticker_id);
+
+        /// <summary>
+        /// Creates a sticker
+        /// </summary>
+        /// <param name="file">The file to use as sticker</param>
+        /// <param name="name">The name of the sticker</param>
+        /// <param name="description">The description of the sticker</param>
+        /// <param name="tags">The name of a unicode emoji representing the sticker's expression</param>
+        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task<DiscordSticker> CreateStickerAsync(string name, Optional<string> description, string tags, DiscordMessageFile file)
+        {
+            return file == null
+                ? throw new ArgumentNullException(nameof(file))
+                : name.Length < 2 || name.Length > 30
+                ? throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.")
+                : description.HasValue && (description.Value.Length < 1 || description.Value.Length > 100)
+                ? throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.")
+                : !DiscordEmoji.TryFromUnicode(this.Discord, tags, out _)
+                ? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
+                : this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, tags, file);
+        }
+
+        /// <summary>
+        /// Modifies a sticker
+        /// </summary>
+        /// <param name="sticker">The sticker to modify</param>
+        /// <param name="name">The name of the sticker</param>
+        /// <param name="description">The description of the sticker</param>
+        /// <param name="tags">The name of a unicode emoji representing the sticker's expression</param>
+        /// <returns>A sticker object</returns>
+        /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
+        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
+        public Task<DiscordSticker> ModifyStickerAsync(DiscordSticker sticker, string name = null, string description = null, string tags = null)
+        {
+            return sticker == null
+                ? throw new ArgumentNullException(nameof(sticker))
+                : sticker.Guild.Id != this.Id
+                ? throw new ArgumentException("This sticker does not belong to this guild.")
+                : name != null && (name.Length < 2 || name.Length > 30)
+                ? throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.")
+                : description != null && (description.Length < 1 || description.Length > 100)
+                ? throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.")
+                : tags != null && !DiscordEmoji.TryFromUnicode(this.Discord, tags, out var emoji)
+                ? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
+                : this.Discord.ApiClient.ModifyGuildStickerAsync(this.Id, sticker.Id, name, description, tags);
+        }
+
+        /// <summary>
+        /// Deletes this sticker
+        /// </summary>
+        /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
+        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
+        public Task DeleteStickerAsync(DiscordSticker sticker)
+        {
+            return sticker == null
+                ? throw new ArgumentNullException(nameof(sticker))
+                : sticker.Guild.Id != this.Id
+                ? throw new ArgumentException("This sticker does not belong to this guild.")
+                : this.Discord.ApiClient.DeleteGuildStickerAsync(this.Id, sticker.Id);
         }
 
         /// <summary>

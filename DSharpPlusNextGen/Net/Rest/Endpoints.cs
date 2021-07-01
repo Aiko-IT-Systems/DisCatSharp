@@ -89,5 +89,6 @@ namespace DSharpPlusNextGen.Net
         public const string THREAD_MEMBERS = "/thread-members";
         public const string EVENTS = "/events";
         public const string STICKERS = "/stickers";
+        public const string STICKERPACKS = "/sticker-packs";
     }
 }
