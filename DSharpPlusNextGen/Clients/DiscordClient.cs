@@ -569,6 +569,27 @@ namespace DSharpPlusNextGen
             => this.ApiClient.GetUsersConnectionsAsync();
 
         /// <summary>
+        /// Gets a sticker
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the sticker does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task<DiscordSticker> GetStickerAsync(ulong id)
+            => this.ApiClient.GetStickerAsync(id);
+
+        /// <summary>
+        /// Gets all nitro sticker packs
+        /// Don't know if this works :/
+        /// </summary>
+        /// <returns>List of sticker packs</returns>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
+            => this.ApiClient.GetStickerPacksAsync();
+
+        /// <summary>
         /// Gets a webhook
         /// </summary>
         /// <param name="id"></param>

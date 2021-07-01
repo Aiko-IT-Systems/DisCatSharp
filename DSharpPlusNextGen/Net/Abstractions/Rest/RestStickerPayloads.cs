@@ -20,39 +20,32 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-using System.Collections.Generic;
 using Newtonsoft.Json;
+using DSharpPlusNextGen.Entities;
 
-namespace DSharpPlusNextGen.Entities
+namespace DSharpPlusNextGen.Net.Abstractions
 {
-    /// <summary>
-    /// Represents a Discord sticker pack.
-    /// </summary>
-    public sealed class DiscordStickerPack : SnowflakeObject
+    internal class RestStickerCreatePayload
     {
-        /// <summary>
-        /// Gets the stickers contained in this pack.
-        /// </summary>
-        public IReadOnlyDictionary<ulong, DiscordSticker> Stickers => this._stickers;
+        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+        public string Name { get; set; }
 
-        [JsonProperty("stickers")]
-        internal Dictionary<ulong, DiscordSticker> _stickers = new();
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<string> Description { get; set; }
 
-        /// <summary>
-        /// Gets the name of this sticker pack.
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name { get; internal set; }
+        [JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
+        public string Tags { get; set; }
+    }
 
-        [JsonProperty("sku_id")]
-        public ulong SkuId { get; internal set; }
+    internal class RestStickerModifyPayload
+    {
+        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<string> Name { get; set; }
 
-        /// <summary>
-        /// Gets the Id of this pack's cover.
-        /// </summary>
-        [JsonProperty("cover_sticker_id")]
-        public ulong CoverStickerId { get; internal set; }
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<string> Description { get; set; }
 
-        internal DiscordStickerPack() { }
+        [JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<string> Tags { get; set; }
     }
 }
