@@ -23,25 +23,24 @@
 namespace DSharpPlusNextGen
 {
     /// <summary>
-    /// Represents a server's conetent level.
+    /// Represents a guild's conetent level.
     /// </summary>
     public enum NsfwLevel
     {
-        //I'm going off a hunch; default = safe(?) who knows. //
         /// <summary>
-        /// Indicates a server's nsfw level is the default.
+        /// Indicates the guild has no special NSFW level.
         /// </summary>
         Default = 0,
         /// <summary>
-        /// Indicates a server's content contains explicit material.
+        /// Indicates the guild has extremely suggestive or mature content that would only be suitable for users over 18
         /// </summary>
         Explicit = 1,
         /// <summary>
-        /// Indicates a server's content is safe for work (SFW).
+        /// Indicates the guild has no content that could be deemed NSFW. It is SFW.
         /// </summary>
         Safe = 2,
         /// <summary>
-        /// Indicates a server's content is age-gated.
+        /// Indicates the guild has mildly NSFW content that may not be suitable for users under 18.
         /// </summary>
         Age_Restricted = 3
     }
