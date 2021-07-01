@@ -134,7 +134,7 @@ namespace DSharpPlusNextGen.Entities
         /// <returns>Whether the <see cref="DiscordEmoji"/> is equal to this <see cref="DiscordEmoji"/>.</returns>
         public bool Equals(DiscordEmoji e)
         {
-            return e is null ? false : ReferenceEquals(this, e) ? true : this.Id == e.Id && this.Name == e.Name;
+            return e is null ? false : ReferenceEquals(this, e) ? true : this.Id == e.Id;
         }
 
         /// <summary>
