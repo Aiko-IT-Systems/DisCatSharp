@@ -111,7 +111,7 @@ namespace DSharpPlusNextGen.Entities
 
         [JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-        private string _internalTags { get; set; }
+        internal string _internalTags { get; set; }
 
         public bool Equals(DiscordSticker other) => this.Id == other.Id;
 
