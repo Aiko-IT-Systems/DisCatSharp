@@ -2116,8 +2116,23 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <returns>All of this guild's custom stickers.</returns>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<IReadOnlyList<DiscordSticker>> GetStickersAsync()
-            => this.Discord.ApiClient.GetGuildStickersAsync(this.Id);
+        public async Task<IReadOnlyList<DiscordSticker>> GetStickersAsync()
+        {
+            var stickers = await this.Discord.ApiClient.GetGuildStickersAsync(this.Id);
+
+            foreach (var xstr in stickers)
+            {
+                this._stickers.AddOrUpdate(xstr.Id, xstr, (id, old) =>
+                {
+                    old.Name = xstr.Name;
+                    old.Description = xstr.Description;
+                    old._internalTags = xstr._internalTags;
+                    return old;
+                });
+            }
+
+            return stickers;
+        }
 
         /// <summary>
         /// Gets a sticker
