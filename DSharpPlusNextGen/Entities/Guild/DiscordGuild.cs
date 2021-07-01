@@ -2132,23 +2132,30 @@ namespace DSharpPlusNextGen.Entities
         /// <summary>
         /// Creates a sticker
         /// </summary>
-        /// <param name="file">The file to use as sticker</param>
-        /// <param name="name">The name of the sticker</param>
-        /// <param name="description">The description of the sticker</param>
-        /// <param name="tags">The name of a unicode emoji representing the sticker's expression</param>
+        /// <param name="name">The name of the sticker.</param>
+        /// <param name="description">The optional description of the sticker.</param>
+        /// <param name="emoji">The emoji to associate the sticker with.</param>
+        /// <param name="format">The file format the sticker is written in.</param>
+        /// <param name="file">The sticker.</param>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordSticker> CreateStickerAsync(string name, Optional<string> description, string tags, DiscordMessageFile file)
+        public Task<DiscordSticker> CreateStickerAsync(string name, Optional<string> description, DiscordEmoji emoji, StickerFormat format, Stream file)
         {
-            return file == null
-                ? throw new ArgumentNullException(nameof(file))
+            var filename = format switch
+            {
+                StickerFormat.PNG => "sticker.png",
+                StickerFormat.APNG => "sticker.apng",
+                StickerFormat.LOTTIE => "sticker.json",
+                _ => throw new InvalidOperationException("This format is not supported.")
+            };
+
+            return emoji.Id is not 0
+                ? throw new InvalidOperationException("Only unicode emoji can be used for stickers.")
                 : name.Length < 2 || name.Length > 30
-                ? throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.")
+                ? throw new ArgumentOutOfRangeException(nameof(name), "Sticker name needs to be between 2 and 30 characters long.")
                 : description.HasValue && (description.Value.Length < 1 || description.Value.Length > 100)
-                ? throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.")
-                : !DiscordEmoji.TryFromUnicode(this.Discord, tags, out _)
-                ? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
-                : this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, tags, file);
+                ? throw new ArgumentOutOfRangeException(nameof(description), "Sticker description needs to be between 1 and 100 characters long.")
+                : this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.Name, new($"sticker.{format}", file , null));
         }
 
         /// <summary>
@@ -2157,25 +2164,37 @@ namespace DSharpPlusNextGen.Entities
         /// <param name="sticker">The sticker to modify</param>
         /// <param name="name">The name of the sticker</param>
         /// <param name="description">The description of the sticker</param>
-        /// <param name="tags">The name of a unicode emoji representing the sticker's expression</param>
+        /// <param name="emoji">The emoji to associate with this sticker.</param>
         /// <returns>A sticker object</returns>
         /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
-        public Task<DiscordSticker> ModifyStickerAsync(DiscordSticker sticker, string name = null, string description = null, string tags = null)
+        public async Task<DiscordSticker> ModifyStickerAsync(DiscordSticker sticker, Optional<string> name, Optional<string> description, Optional<DiscordEmoji> emoji)
         {
-            return sticker == null
-                ? throw new ArgumentNullException(nameof(sticker))
-                : sticker.Guild.Id != this.Id
-                ? throw new ArgumentException("This sticker does not belong to this guild.")
-                : name != null && (name.Length < 2 || name.Length > 30)
-                ? throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.")
-                : description != null && (description.Length < 1 || description.Length > 100)
-                ? throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.")
-                : tags != null && !DiscordEmoji.TryFromUnicode(this.Discord, tags, out var emoji)
-                ? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
-                : this.Discord.ApiClient.ModifyGuildStickerAsync(this.Id, sticker.Id, name, description, tags);
+
+            string uemoji = null;
+
+            if (sticker == null)
+                throw new ArgumentNullException(nameof(sticker));
+            if (sticker.Guild.Id != this.Id)
+                throw new ArgumentException("This sticker does not belong to this guild.");
+            if (name.HasValue && (name.Value.Length < 2 || name.Value.Length > 30))
+                throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.");
+            if (description.HasValue && (description.Value.Length < 1 || description.Value.Length > 100))
+                throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.");
+            if (emoji.HasValue && emoji.Value.Id > 0)
+                throw new ArgumentException("Only unicode emojis can be used with stickers.");
+            else if (emoji.HasValue)
+                uemoji = emoji.Value.Name;
+
+            var usticker = await this.Discord.ApiClient.ModifyGuildStickerAsync(this.Id, sticker.Id, name, description, uemoji).ConfigureAwait(false);
+
+
+            if (this._stickers.TryGetValue(usticker.Id, out var old))
+                this._stickers.TryUpdate(usticker.Id, usticker, old);
+
+            return usticker;
         }
 
         /// <summary>
