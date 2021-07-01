@@ -2710,7 +2710,7 @@ namespace DSharpPlusNextGen.Net
             var url = Utilities.GetApiUriFor(path);
 
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-            var ret = JObject.Parse(res.Response).ToDiscordObject<IEnumerable<DiscordSticker>>();
+            var ret = JArray.Parse(res.Response).ToDiscordObject<IEnumerable<DiscordSticker>>();
 
             foreach (var stkr in ret)
                 stkr.Discord = this.Discord;
