@@ -25,7 +25,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DSharpPlusNextGen.Exceptions;
+using DSharpPlusNextGen.Enums.Discord;
 using Newtonsoft.Json;
+using DSharpPlusNextGen.Net;
 
 namespace DSharpPlusNextGen.Entities
 {
@@ -112,6 +114,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
         internal string _internalTags { get; set; }
+
+        [JsonIgnore]
+        public string Url => $"https://cdn.{DiscordDomain.GetDomain(CoreDomain.DiscordAppMediaProxy).Domain}{Endpoints.STICKERS}/{this.Id}.png";
 
         public bool Equals(DiscordSticker other) => this.Id == other.Id;
 

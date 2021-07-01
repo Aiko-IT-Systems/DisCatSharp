@@ -2690,17 +2690,33 @@ namespace DSharpPlusNextGen.Net
             return ret;
         }
 
+        // TODO: Make it work!
         internal async Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
         {
             var route = $"{Endpoints.STICKERPACKS}";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, null, out var path);
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
 
             var url = Utilities.GetApiUriFor(path);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+            IEnumerable<DiscordStickerPack> ret = null;
+            try
+            {
+                var tret = JObject.Parse(res.Response);
+                var json = JArray.Parse(tret["sticker_packs"].ToString());
+                ret = json.ToDiscordObject<IEnumerable<DiscordStickerPack>>();
 
-            var stickerpacks_raw = JsonConvert.DeserializeObject<IEnumerable<DiscordStickerPack>>(res.Response).Select(xc => { xc.Discord = this.Discord; return xc; });
+                foreach (var stkr in ret)
+                {
+                    stkr.Discord = this.Discord;
+                }
+            } catch(Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                return null;
+            }
 
-            return new ReadOnlyCollection<DiscordStickerPack>(new List<DiscordStickerPack>(stickerpacks_raw));
+            return ret.ToList();
         }
 
         internal async Task<IReadOnlyList<DiscordSticker>> GetGuildStickersAsync(ulong guild_id)
@@ -2710,11 +2726,27 @@ namespace DSharpPlusNextGen.Net
             var url = Utilities.GetApiUriFor(path);
 
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-            var ret = JArray.Parse(res.Response).ToDiscordObject<IEnumerable<DiscordSticker>>();
+            var json = JArray.Parse(res.Response);
+            var ret = json.ToDiscordObject<IEnumerable<DiscordSticker>>();
 
             foreach (var stkr in ret)
+            {
                 stkr.Discord = this.Discord;
 
+                if (json["user"] is not null) // Null = Missing stickers perm //
+                {
+                    var tsr = json["user"].ToDiscordObject<TransportUser>();
+                    var usr = new DiscordUser(tsr) {Discord = this.Discord};
+                    usr = this.Discord.UserCache.AddOrUpdate(tsr.Id, usr, (id, old) =>
+                    {
+                        old.Username = usr.Username;
+                        old.Discriminator = usr.Discriminator;
+                        old.AvatarHash = usr.AvatarHash;
+                        return old;
+                    });
+                    stkr.User = usr;
+                }
+            }
             return ret.ToList();
         }
 
@@ -2725,8 +2757,22 @@ namespace DSharpPlusNextGen.Net
             var url = Utilities.GetApiUriFor(path);
 
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-            var ret = JObject.Parse(res.Response).ToDiscordObject<DiscordSticker>();
 
+            var json = JObject.Parse(res.Response);
+            var ret = json.ToDiscordObject<DiscordSticker>();
+            if (json["user"] is not null) // Null = Missing stickers perm //
+            {
+                var tsr = json["user"].ToDiscordObject<TransportUser>();
+                var usr = new DiscordUser(tsr) {Discord = this.Discord};
+                usr = this.Discord.UserCache.AddOrUpdate(tsr.Id, usr, (id, old) =>
+                {
+                    old.Username = usr.Username;
+                    old.Discriminator = usr.Discriminator;
+                    old.AvatarHash = usr.AvatarHash;
+                    return old;
+                });
+                ret.User = usr;
+            }
             ret.Discord = this.Discord;
             return ret;
         }

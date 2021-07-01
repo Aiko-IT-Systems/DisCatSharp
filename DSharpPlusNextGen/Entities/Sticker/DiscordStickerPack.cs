@@ -53,6 +53,12 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("cover_sticker_id")]
         public ulong CoverStickerId { get; internal set; }
 
+        /// <summary>
+        /// Gets the Id of this pack's cover.
+        /// </summary>
+        [JsonProperty("banner_asset_id")]
+        public ulong BannerAssetId { get; internal set; }
+
         internal DiscordStickerPack() { }
     }
 }
