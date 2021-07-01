@@ -34,12 +34,6 @@ namespace DSharpPlusNextGen.Entities
     public sealed class DiscordSelectComponent : DiscordComponent
     {
         /// <summary>
-        /// The custom Id of this component.
-        /// </summary>
-        [JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
-        public new string CustomId { get; set; }
-
-        /// <summary>
         /// The options to pick from on this component.
         /// </summary>
         [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
@@ -71,7 +65,7 @@ namespace DSharpPlusNextGen.Entities
         /// <param name="placeholder">Text to show if no option is slected.</param>
         /// <param name="minOptions">Minmum count of selectable options.</param>
         /// <param name="maxOptions">Maximum count of selectable options.</param>
-        public DiscordSelectComponent(string customId, IEnumerable<DiscordSelectComponentOption> options, string placeholder = null, int minOptions = 1, int maxOptions = 1) : this()
+        public DiscordSelectComponent(string customId, string placeholder = null, IEnumerable<DiscordSelectComponentOption> options = default, int minOptions = 1, int maxOptions = 1) : this()
         {
             this.CustomId = customId;
             this.Options = options.ToArray();
