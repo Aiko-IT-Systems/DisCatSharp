@@ -20,71 +20,58 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using DSharpPlusNextGen.Enums.Discord;
+using DSharpPlusNextGen.Net;
 using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Entities
 {
     /// <summary>
-    /// Represents a Discord Sticker.
+    /// Represents a Discord sticker pack.
     /// </summary>
-    public class DiscordMessageSticker : SnowflakeObject, IEquatable<DiscordMessageSticker>
+    public sealed class DiscordStickerPack : SnowflakeObject
     {
         /// <summary>
-        /// Gets the Pack ID of this sticker.
+        /// Gets the stickers contained in this pack.
         /// </summary>
-        [JsonProperty("pack_id")]
-        public ulong PackId { get; internal set; }
+        public IReadOnlyList<DiscordSticker> Stickers => this._stickers;
+
+        [JsonProperty("stickers")]
+        internal List<DiscordSticker> _stickers = new();
 
         /// <summary>
-        /// Gets the Name of the sticker.
+        /// Gets the name of this sticker pack.
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; internal set; }
 
-        /// <summary>
-        /// Gets the Description of the sticker.
-        /// </summary>
-        [JsonProperty("description")]
-        public string Description { get; internal set; }
+        [JsonProperty("sku_id")]
+        public ulong SkuId { get; internal set; }
 
         /// <summary>
-        /// Gets the list of tags for the sticker.
+        /// Gets the Id of this pack's cover sticker.
         /// </summary>
-        [JsonIgnore]
-        public IEnumerable<string> Tags
-            => this._internalTags != null ? this._internalTags.Split(',') : Array.Empty<string>();
+        [JsonProperty("cover_sticker_id")]
+        public ulong CoverStickerId { get; internal set; }
 
         /// <summary>
-        /// Gets the asset hash of the sticker.
+        /// Gets the pack's cover sticker.
         /// </summary>
-        [JsonProperty("asset")]
-        public string Asset { get; internal set; }
+        public Task<DiscordSticker> CoverSticker => this.Discord.ApiClient.GetStickerAsync(this.CoverStickerId);
 
         /// <summary>
-        /// Gets the preview asset hash of the sticker.
+        /// Gets the Id of this pack's banner.
         /// </summary>
-        [JsonProperty("preview_asset", NullValueHandling = NullValueHandling.Ignore)]
-        public string PreviewAsset { get; internal set; }
+        [JsonProperty("banner_asset_id")]
+        public ulong BannerAssetId { get; internal set; }
 
         /// <summary>
-        /// Gets the Format type of the sticker.
+        /// Gets the pack's banner url.
         /// </summary>
-        [JsonProperty("format_type")]
-        public StickerFormat FormatType { get; internal set; }
+        public string BannerUrl => $"https://cdn.{DiscordDomain.GetDomain(CoreDomain.DiscordAppOld).Domain}/{Endpoints.APP_ASSETS}/710982414301790216/{Endpoints.STORE}/{this.BannerAssetId}.png?size=4096";
 
-        [JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
-        private string _internalTags { get; set; }
-
-        public bool Equals(DiscordMessageSticker other) => this.Id == other.Id;
-    }
-
-    public enum StickerFormat
-    {
-        PNG = 1,
-        APNG = 2,
-        LOTTIE = 3
+        internal DiscordStickerPack() { }
     }
 }

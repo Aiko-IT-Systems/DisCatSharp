@@ -167,6 +167,12 @@ namespace DSharpPlusNextGen.Entities
         internal string LastPinTimestampRaw { get; set; }
 
         /// <summary>
+        /// Gets this channel's default duration for newly created threads, in minutes, to automatically archive the thread after recent activity.
+        /// </summary>
+        [JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
+        public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; internal set; }
+
+        /// <summary>
         /// Gets this channel's mention string.
         /// </summary>
         [JsonIgnore]
@@ -687,37 +693,38 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <param name="topic">Topic of stage.</param>
         /// <param name="privacy_level">Privacy level of stage (Defaults to <see cref="StagePrivacyLevel.GUILD_ONLY"/></param>
-        /// <returns></returns>
+        /// <param name="reason">Audit log reason</param>
+        /// <returns>Stage instance</returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordStageInstance> OpenStageAsync(string topic, StagePrivacyLevel privacy_level = StagePrivacyLevel.GUILD_ONLY)
-            => await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, privacy_level);
+        public async Task<DiscordStageInstance> OpenStageAsync(string topic, StagePrivacyLevel privacy_level = StagePrivacyLevel.GUILD_ONLY, string reason = null)
+            => await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, privacy_level, reason);
 
         /// <summary>
         /// Modifies a stage topic
         /// </summary>
         /// <param name="topic">New topic of stage.</param>
         /// <param name="privacy_level">New privacy level of stage.</param>
-        /// <returns></returns>
+        /// <param name="reason">Audit log reason</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task ModifyStageAsync(Optional<string> topic, Optional<StagePrivacyLevel> privacy_level)
-            => await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, privacy_level);
+        public async Task ModifyStageAsync(Optional<string> topic, Optional<StagePrivacyLevel> privacy_level, string reason = null)
+            => await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, privacy_level, reason);
 
         /// <summary>
         /// Closes a stage
         /// </summary>
-        /// <returns></returns>
+        /// <param name="reason">Audit log reason</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task CloseStageAsync()
-            => await this.Discord.ApiClient.DeleteStageInstanceAsync(this.Id);
+        public async Task CloseStageAsync(string reason = null)
+            => await this.Discord.ApiClient.DeleteStageInstanceAsync(this.Id, reason);
 
         /// <summary>
         /// Gets a stage

@@ -89,10 +89,10 @@ namespace DSharpPlusNextGen
         GuildBans = 1 << 2,
 
         /// <summary>
-        /// Whether to include guild emoji events.
+        /// Whether to include guild emoji and sticker events.
         /// <para>This includes <see cref="DiscordClient.GuildEmojisUpdated"/>.</para>
         /// </summary>
-        GuildEmojis = 1 << 3,
+        GuildEmojisAndStickers = 1 << 3,
 
         /// <summary>
         /// Whether to include guild integration events.
@@ -171,7 +171,7 @@ namespace DSharpPlusNextGen
         /// Includes all unprivileged intents.
         /// <para>These are all intents excluding <see cref="DiscordIntents.GuildMembers"/> and <see cref="DiscordIntents.GuildPresences"/>.</para>
         /// </summary>
-        AllUnprivileged = Guilds | GuildBans | GuildEmojis | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
+        AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
             GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping,
 
         /// <summary>

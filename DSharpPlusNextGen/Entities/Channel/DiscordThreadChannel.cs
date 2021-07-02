@@ -28,6 +28,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlusNextGen.Exceptions;
+using DSharpPlusNextGen.Enums;
 using DSharpPlusNextGen.Net.Models;
 using DSharpPlusNextGen.Net.Serialization;
 using Newtonsoft.Json;
@@ -90,6 +91,18 @@ namespace DSharpPlusNextGen.Entities
         public int? PerUserRateLimit { get; internal set; }
 
         /// <summary>
+        /// Gets an approximate count of messages in a thread, stops counting at 50.
+        /// </summary>
+        [JsonProperty("message_count", NullValueHandling = NullValueHandling.Ignore)]
+        public int? MessageCount { get; internal set; }
+
+        /// <summary>
+        /// Gets an approximate count of users in a thread, stops counting at 50.
+        /// </summary>
+        [JsonProperty("member_count", NullValueHandling = NullValueHandling.Ignore)]
+        public int? MemberCount { get; internal set; }
+
+        /// <summary>
         /// Gets when the last pinned message was pinned in this thread.
         /// </summary>
         [JsonIgnore]
@@ -107,7 +120,13 @@ namespace DSharpPlusNextGen.Entities
         public DiscordThreadChannelMetadata ThreadMetadata { get; internal set; }
 
         /// <summary>
-        /// Gets the thread member object.
+        /// Gets the default autoarchive duration for threads in the parent channel.
+        /// </summary>
+        [JsonIgnore]
+        public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration => this.Parent.DefaultAutoArchiveDuration;
+
+        /// <summary>
+        /// Gets the thread members object.
         /// </summary>
         [JsonIgnore]
         public IReadOnlyDictionary<ulong, DiscordThreadChannelMember> ThreadMembers => new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannelMember>(this._threadMembers);
@@ -129,6 +148,12 @@ namespace DSharpPlusNextGen.Entities
         [JsonIgnore]
         public DiscordChannel Parent
             => this.Guild.GetChannel(this.ParentId);
+
+        /// <summary>
+        /// Gets whether this thread is marked as nsfw.
+        /// </summary>
+        [JsonIgnore]
+        public bool IsNSFW => this.Parent.IsNSFW;
 
         internal DiscordThreadChannel() { }
 
