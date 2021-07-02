@@ -23,7 +23,7 @@
     <AssemblyName>DSharpPlusNextGen.Common</AssemblyName>
     <RootNamespace>DSharpPlusNextGen.Common</RootNamespace>
     <LangVersion>9.0</LangVersion>
-    <VersionPrefix>9.4.4</VersionPrefix>
+    <VersionPrefix>10.0.0</VersionPrefix>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
