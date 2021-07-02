@@ -90,5 +90,7 @@ namespace DSharpPlusNextGen.Net
         public const string EVENTS = "/events";
         public const string STICKERS = "/stickers";
         public const string STICKERPACKS = "/sticker-packs";
+        public const string STORE = "/store";
+        public const string APP_ASSETS = "/app-assets";
     }
 }

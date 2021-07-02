@@ -115,11 +115,22 @@ namespace DSharpPlusNextGen.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
         internal string _internalTags { get; set; }
 
+        /// <summary>
+        /// Gets the url of the sticker.
+        /// </summary>
         [JsonIgnore]
         public string Url => $"https://cdn.{DiscordDomain.GetDomain(CoreDomain.DiscordAppMediaProxy).Domain}{Endpoints.STICKERS}/{this.Id}.png";
 
+        /// <summary>
+        /// Whether to stickers are equal.
+        /// </summary>
+        /// <param name="other">DiscordSticker</param>
+        /// <returns></returns>
         public bool Equals(DiscordSticker other) => this.Id == other.Id;
 
+        /// <summary>
+        /// Gets the sticker in readable format.
+        /// </summary>
         public override string ToString() => $"Sticker {this.Id}; {this.Name}; {this.FormatType}";
 
         /// <summary>
@@ -157,16 +168,37 @@ namespace DSharpPlusNextGen.Entities
             => this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildStickerAsync(this.GuildId.Value, this.Id) : throw new ArgumentException("The requested sticker is no guild sticker.");
     }
 
+    /// <summary>
+    /// The sticker type
+    /// </summary>
     public enum StickerType
     {
+        /// <summary>
+        /// Standard nitro sticker
+        /// </summary>
         Standard = 1,
+        /// <summary>
+        /// Custom guild sticker
+        /// </summary>
         Guild = 2
     }
 
+    /// <summary>
+    /// The sticker type
+    /// </summary>
     public enum StickerFormat
     {
+        /// <summary>
+        /// Sticker is a png
+        /// </summary>
         PNG = 1,
+        /// <summary>
+        /// Sticker is a animated png
+        /// </summary>
         APNG = 2,
+        /// <summary>
+        /// Sticker is lottie
+        /// </summary>
         LOTTIE = 3
     }
 }

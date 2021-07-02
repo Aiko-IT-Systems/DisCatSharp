@@ -228,7 +228,7 @@ namespace DSharpPlusNextGen
 
         /// <summary>
         /// Fired when a guilds emojis get updated
-        /// For this Event you need the <see cref="DiscordIntents.GuildEmojis"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// For this Event you need the <see cref="DiscordIntents.GuildEmojisAndStickers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
         /// </summary>
         public event AsyncEventHandler<DiscordClient, GuildEmojisUpdateEventArgs> GuildEmojisUpdated
         {
@@ -236,6 +236,17 @@ namespace DSharpPlusNextGen
             remove => this._guildEmojisUpdated.Unregister(value);
         }
         private AsyncEvent<DiscordClient, GuildEmojisUpdateEventArgs> _guildEmojisUpdated;
+
+        /// <summary>
+        /// Fired when a guilds stickers get updated
+        /// For this Event you need the <see cref="DiscordIntents.GuildEmojisAndStickers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, GuildStickersUpdateEventArgs> GuildStickersUpdated
+        {
+            add => this._guildStickersUpdate.Register(value);
+            remove => this._guildStickersUpdate.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, GuildStickersUpdateEventArgs> _guildStickersUpdate;
 
         /// <summary>
         /// Fired when a guild integration is updated.
@@ -757,7 +768,6 @@ namespace DSharpPlusNextGen
             add => this._componentInteractionCreated.Register(value);
             remove => this._componentInteractionCreated.Unregister(value);
         }
-
         private AsyncEvent<DiscordClient, ComponentInteractionCreateEventArgs> _componentInteractionCreated;
 
         /// <summary>

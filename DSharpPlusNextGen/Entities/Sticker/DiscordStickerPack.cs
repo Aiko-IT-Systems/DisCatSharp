@@ -21,6 +21,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using DSharpPlusNextGen.Enums.Discord;
+using DSharpPlusNextGen.Net;
 using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Entities
@@ -48,16 +51,26 @@ namespace DSharpPlusNextGen.Entities
         public ulong SkuId { get; internal set; }
 
         /// <summary>
-        /// Gets the Id of this pack's cover.
+        /// Gets the Id of this pack's cover sticker.
         /// </summary>
         [JsonProperty("cover_sticker_id")]
         public ulong CoverStickerId { get; internal set; }
 
         /// <summary>
-        /// Gets the Id of this pack's cover.
+        /// Gets the pack's cover sticker.
+        /// </summary>
+        public Task<DiscordSticker> CoverSticker => this.Discord.ApiClient.GetStickerAsync(this.CoverStickerId);
+
+        /// <summary>
+        /// Gets the Id of this pack's banner.
         /// </summary>
         [JsonProperty("banner_asset_id")]
         public ulong BannerAssetId { get; internal set; }
+
+        /// <summary>
+        /// Gets the pack's banner url.
+        /// </summary>
+        public string BannerUrl => $"https://cdn.{DiscordDomain.GetDomain(CoreDomain.DiscordAppMediaProxy).Domain}/{Endpoints.APP_ASSETS}/710982414301790216/{Endpoints.STORE}/{this.BannerAssetId}.png?size=4096";
 
         internal DiscordStickerPack() { }
     }
