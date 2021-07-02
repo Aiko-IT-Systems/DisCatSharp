@@ -28,6 +28,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlusNextGen.Exceptions;
+using DSharpPlusNextGen.Enums;
 using DSharpPlusNextGen.Net.Models;
 using DSharpPlusNextGen.Net.Serialization;
 using Newtonsoft.Json;
@@ -106,8 +107,11 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("thread_metadata", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordThreadChannelMetadata ThreadMetadata { get; internal set; }
 
+        [JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
+        public ThreadAutoArchiveDuration DefaultAutoArchiveDuration { get; internal set; }
+
         /// <summary>
-        /// Gets the thread member object.
+        /// Gets the thread members object.
         /// </summary>
         [JsonIgnore]
         public IReadOnlyDictionary<ulong, DiscordThreadChannelMember> ThreadMembers => new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannelMember>(this._threadMembers);
