@@ -1794,33 +1794,10 @@ namespace DSharpPlusNextGen
             thread.Discord = this;
             var guild = thread.Guild;
 
-            var threadNew = this.InternalGetCachedThread(thread.Id);
-            DiscordThreadChannel threadOld = null;
+            var threadOld = this.InternalGetCachedThread(thread.Id);
+            var threadNew = thread;
 
-            if (threadNew != null)
-            {
-                threadOld = new DiscordThreadChannel
-                {
-                    GuildId = threadNew.GuildId,
-                    OwnerId = threadNew.OwnerId,
-                    ParentId = threadNew.ParentId,
-                    Name = threadNew.Name,
-                    Type = threadNew.Type,
-                    LastMessageId = threadNew.LastMessageId,
-                    //PerUserRateLimit?
-                    //LastPinTimestamp?
-                    ThreadMetadata = threadNew.ThreadMetadata,
-                    _threadMembers = threadNew._threadMembers,
-                };
-
-                threadNew.Name = thread.Name;
-                threadNew.LastMessageId = thread.LastMessageId;
-                threadNew.ThreadMetadata = thread.ThreadMetadata;
-            }
-            else if (guild != null)
-            {
-                guild._threads[thread.Id] = thread;
-            }
+            guild._threads[thread.Id] = thread;
 
             await this._threadUpdated.InvokeAsync(this, new ThreadUpdateEventArgs { ThreadAfter = threadNew, ThreadBefore = threadOld, Guild = thread.Guild, Parent = thread.Parent }).ConfigureAwait(false);
         }
