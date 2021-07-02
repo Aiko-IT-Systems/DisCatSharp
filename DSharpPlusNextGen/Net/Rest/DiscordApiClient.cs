@@ -2733,11 +2733,10 @@ namespace DSharpPlusNextGen.Net
             {
                 stkr.Discord = this.Discord;
 
-                if (json["user"] is not null) // Null = Missing stickers perm //
+                if (stkr.User is not null) // Null = Missing stickers perm //
                 {
-                    var tsr = json["user"].ToDiscordObject<TransportUser>();
-                    var usr = new DiscordUser(tsr) {Discord = this.Discord};
-                    usr = this.Discord.UserCache.AddOrUpdate(tsr.Id, usr, (id, old) =>
+                    var usr = stkr.User;
+                    usr = this.Discord.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
                     {
                         old.Username = usr.Username;
                         old.Discriminator = usr.Discriminator;

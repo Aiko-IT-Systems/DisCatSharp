@@ -119,7 +119,7 @@ namespace DSharpPlusNextGen.Entities
         /// Gets the url of the sticker.
         /// </summary>
         [JsonIgnore]
-        public string Url => $"https://cdn.{DiscordDomain.GetDomain(CoreDomain.DiscordAppMediaProxy).Domain}{Endpoints.STICKERS}/{this.Id}.png";
+        public string Url => $"https://cdn.{DiscordDomain.GetDomain(CoreDomain.DiscordAppOld).Domain}{Endpoints.STICKERS}/{this.Id}.png";
 
         /// <summary>
         /// Whether to stickers are equal.
