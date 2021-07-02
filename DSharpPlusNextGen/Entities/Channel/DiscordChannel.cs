@@ -167,6 +167,12 @@ namespace DSharpPlusNextGen.Entities
         internal string LastPinTimestampRaw { get; set; }
 
         /// <summary>
+        /// Gets this channel's default duration for newly created threads, in minutes, to automatically archive the thread after recent activity.
+        /// </summary>
+        [JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
+        public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; internal set; }
+
+        /// <summary>
         /// Gets this channel's mention string.
         /// </summary>
         [JsonIgnore]
