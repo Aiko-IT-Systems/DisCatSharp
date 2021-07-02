@@ -962,7 +962,6 @@ namespace DSharpPlusNextGen
             guild.AfkTimeout = newGuild.AfkTimeout;
             guild.DefaultMessageNotifications = newGuild.DefaultMessageNotifications;
             guild.RawFeatures = newGuild.RawFeatures;
-            guild._threads = newGuild._threads; // # TODO: Check docs
             guild.IconHash = newGuild.IconHash;
             guild.MfaLevel = newGuild.MfaLevel;
             guild.OwnerId = newGuild.OwnerId;
@@ -993,6 +992,7 @@ namespace DSharpPlusNextGen
             // fields not sent for update:
             // - guild.Channels
             // - voice states
+            // - guild threads
             // - guild.JoinedAt = new_guild.JoinedAt;
             // - guild.Large = new_guild.Large;
             // - guild.MemberCount = Math.Max(new_guild.MemberCount, guild._members.Count);
