@@ -173,7 +173,7 @@ namespace DSharpPlusNextGen.Entities
     /// <summary>
     /// The sticker type
     /// </summary>
-    public enum StickerType
+    public enum StickerType : long
     {
         /// <summary>
         /// Standard nitro sticker
@@ -188,7 +188,7 @@ namespace DSharpPlusNextGen.Entities
     /// <summary>
     /// The sticker type
     /// </summary>
-    public enum StickerFormat
+    public enum StickerFormat : long
     {
         /// <summary>
         /// Sticker is a png

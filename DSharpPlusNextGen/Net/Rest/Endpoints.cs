@@ -28,6 +28,7 @@ namespace DSharpPlusNextGen.Net
         public const string BASE_URI = "https://discord.com/api/v9";
 
         public const string OAUTH2 = "/oauth2";
+        public const string AUTHORIZE = "/authorize";
         public const string APPLICATIONS = "/applications";
         public const string REACTIONS = "/reactions";
         public const string ME = "/@me";

@@ -39,6 +39,7 @@ using DSharpPlusNextGen.Net.Serialization;
 using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using DSharpPlusNextGen.Enums.Discord;
 
 namespace DSharpPlusNextGen
 {
@@ -580,7 +581,7 @@ namespace DSharpPlusNextGen
         public Task<DiscordSticker> GetStickerAsync(ulong id)
             => this.ApiClient.GetStickerAsync(id);
 
-        /*
+        
         /// <summary>
         /// Gets all nitro sticker packs
         /// Don't know if this works :/
@@ -588,9 +589,21 @@ namespace DSharpPlusNextGen
         /// <returns>List of sticker packs</returns>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        private Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
+        public Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
             => this.ApiClient.GetStickerPacksAsync();
-        */
+
+
+        /// <summary>
+        /// Gets the In-App OAuth Url
+        /// </summary>
+        /// <param name="scopes">Defaults to 'bot applications.commands'</param>
+        /// <param name="perms">Defaults to <see cref="Permissions.None"/></param>
+        /// <returns></returns>
+        public Uri GetInAppOAuth(Permissions perms = Permissions.None, string scopes = "bot applications.commands")
+        {
+            var permissions = perms == Permissions.None ? 0 : (long)perms;
+            return new Uri($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}?client_id={this.CurrentApplication.Id}&scope={scopes.Replace(" ", "%20")}&permissions={permissions}&state=");
+        }
 
         /// <summary>
         /// Gets a webhook

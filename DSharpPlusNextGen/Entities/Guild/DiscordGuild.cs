@@ -1246,6 +1246,7 @@ namespace DSharpPlusNextGen.Entities
                 DiscordAuditLogEntry entry = null;
                 ulong t1, t2;
                 int t3, t4;
+                long t5, t6;
                 bool p1, p2;
                 switch (xac.ActionType)
                 {
@@ -1887,10 +1888,10 @@ namespace DSharpPlusNextGen.Entities
                                     };
                                     break;
                                 case "privacy_level":
-                                    entrysta.PrivacyLevelChange = new PropertyChange<StagePrivacyLevel>
+                                    entrysta.PrivacyLevelChange = new PropertyChange<StagePrivacyLevel?>
                                     {
-                                        Before = (StagePrivacyLevel)int.Parse((string)xc.OldValue),
-                                        After = (StagePrivacyLevel)int.Parse((string)xc.NewValue)
+                                        Before = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5) ? (StagePrivacyLevel)t5 : null,
+                                        After = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6) ? (StagePrivacyLevel)t6 : null,
                                     };
                                     break;
 
@@ -1900,7 +1901,7 @@ namespace DSharpPlusNextGen.Entities
                             }
                         }
                         break;
-                    /*
+                    
                     case AuditLogActionType.StickerCreate:
                     case AuditLogActionType.StickerDelete:
                     case AuditLogActionType.StickerUpdate:
@@ -1912,39 +1913,90 @@ namespace DSharpPlusNextGen.Entities
                         var entrysti = entry as DiscordAuditLogStickerEntry;
                         foreach (var xc in xac.Changes)
                         {
-                            switch (xc.Key.ToLowerInvariant())
-                            {
-                                case "name":
-                                    entrysti.NameChange = new PropertyChange<string>
-                                    {
-                                        Before = xc.OldValueString,
-                                        After = xc.NewValueString
-                                    };
-                                    break;
-                                case "description":
-                                    entrysti.DescriptionChange = new PropertyChange<string>
-                                    {
-                                        Before = xc.OldValueString,
-                                        After = xc.NewValueString
-                                    };
-                                    break;
-                                case "tags":
-                                    entrysti.TagsChange = new PropertyChange<string>
-                                    {
-                                        Before = xc.OldValueString,
-                                        After = xc.NewValueString
-                                    };
-                                    break;
+                                switch (xc.Key.ToLowerInvariant())
+                                {
+                                    case "name":
+                                        entrysti.NameChange = new PropertyChange<string>
+                                        {
+                                            Before = xc.OldValueString,
+                                            After = xc.NewValueString
+                                        };
+                                        break;
+                                    case "description":
+                                        entrysti.DescriptionChange = new PropertyChange<string>
+                                        {
+                                            Before = xc.OldValueString,
+                                            After = xc.NewValueString
+                                        };
+                                        break;
+                                    case "tags":
+                                        entrysti.TagsChange = new PropertyChange<string>
+                                        {
+                                            Before = xc.OldValueString,
+                                            After = xc.NewValueString
+                                        };
+                                        break;
+                                    case "guild_id":
+                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {xc.OldValue}");
+                                        entrysti.GuildIdChange = new PropertyChange<ulong?>
+                                        {
+                                            Before = ulong.TryParse(xc.OldValueString, out var ogid) ? ogid : null,
+                                            After = ulong.TryParse(xc.NewValueString, out var ngid) ? ngid : null
+                                        };
+                                        break;
+                                    case "available":
+                                        entrysti.AvailabilityChange = new PropertyChange<bool?>
+                                        {
+                                            Before = (bool?)xc.OldValue,
+                                            After = (bool?)xc.NewValue,
+                                        };
+                                        break;
+                                    case "asset":
+                                        entrysti.AssetChange = new PropertyChange<string>
+                                        {
+                                            Before = xc.OldValueString,
+                                            After = xc.NewValueString
+                                        };
+                                        break;
+                                    case "id":
+                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {xc.OldValue}");
+                                        entrysti.IdChange = new PropertyChange<ulong?>
+                                        {
+                                            Before = ulong.TryParse(xc.OldValueString, out var oid) ? oid : null,
+                                            After = ulong.TryParse(xc.NewValueString, out var nid) ? nid : null
+                                        };
+                                        break;
+                                    case "type":
+                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {xc.OldValue}");
+                                        p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
+                                        p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
+                                        entrysti.TypeChange = new PropertyChange<StickerType?>
+                                        {
+                                            Before = p1 ? (StickerType)t5 : null,
+                                            After = p2 ? (StickerType)t6 : null
+                                        };
+                                        break;
+                                    case "format_type":
+                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {xc.OldValue}");
+                                        p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
+                                        p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
+                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {p1}");
+                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {p2}");
+                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {t5}");
+                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {t6}");
+                                        entrysti.FormatChange = new PropertyChange<StickerFormat?>
+                                        {
+                                            Before = p1 ? (StickerFormat)t5 : null,
+                                            After = p2 ? (StickerFormat)t6 : null
+                                        };
+                                        break;
 
-                                default:
-                                    this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in sticker update: {0} - this should be reported to library developers", xc.Key);
-                                    break;
-                            }
+                                    default:
+                                        this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in sticker update: {0} - this should be reported to library developers", xc.Key);
+                                        break;
+                                }
                         }
                         break;
-                     
-                     
-                     */
 
                     case AuditLogActionType.MessageDelete:
                     case AuditLogActionType.MessageBulkDelete:
@@ -2085,9 +2137,9 @@ namespace DSharpPlusNextGen.Entities
 
                 entry.ActionCategory = xac.ActionType switch
                 {
-                    AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate => AuditLogActionCategory.Create,
-                    AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete => AuditLogActionCategory.Delete,
-                    AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate => AuditLogActionCategory.Update,
+                    AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate => AuditLogActionCategory.Create,
+                    AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete => AuditLogActionCategory.Delete,
+                    AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate => AuditLogActionCategory.Update,
                     _ => AuditLogActionCategory.Other,
                 };
                 entry.Discord = this.Discord;

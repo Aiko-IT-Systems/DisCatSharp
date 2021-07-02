@@ -37,31 +37,31 @@ namespace DSharpPlusNextGen.Entities
         /// The options to pick from on this component.
         /// </summary>
         [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordSelectComponentOption[] Options { get; set; } = Array.Empty<DiscordSelectComponentOption>();
+        public IReadOnlyList<DiscordSelectComponentOption> Options { get; internal set; } = Array.Empty<DiscordSelectComponentOption>();
 
         /// <summary>
         /// The text to show when no option is selected.
         /// </summary>
         [JsonProperty("placeholder", NullValueHandling = NullValueHandling.Ignore)]
-        public string Placeholder { get; set; }
+        public string Placeholder { get; internal set; }
 
         /// <summary>
         /// The minimum amount of options that can be selected. Must be greater than zero and less than or equal to <see cref="MaximumSelectedValues"/>. Defaults to one.
         /// </summary>
         [JsonProperty("min_values", NullValueHandling = NullValueHandling.Ignore)]
-        public int? MinimumSelectedValues { get; set; }
+        public int? MinimumSelectedValues { get; internal set; }
 
         /// <summary>
         /// The maximum amount of options that can be selected. Must be greater than zero and or equal to <see cref="MinimumSelectedValues"/>. Defaults to 1.
         /// </summary>
         [JsonProperty("max_values", NullValueHandling = NullValueHandling.Ignore)]
-        public int? MaximumSelectedValues { get; set; }
+        public int? MaximumSelectedValues { get; internal set; }
 
         /// <summary>
         /// Whether this select can be used.
         /// </summary>
         [JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
-        public bool Disabled { get; set; }
+        public bool Disabled { get; internal set; }
 
         /// <summary>
         /// Constructs a new <see cref="DiscordSelectComponent"/>.
@@ -72,7 +72,7 @@ namespace DSharpPlusNextGen.Entities
         /// <param name="minOptions">Minmum count of selectable options.</param>
         /// <param name="maxOptions">Maximum count of selectable options.</param>
         /// <param name="disabled">Whether this button should be initialized as being disabled. User sees a greyed out button that cannot be interacted with.</param>
-        public DiscordSelectComponent(string customId, string placeholder = null, IEnumerable<DiscordSelectComponentOption> options = default, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
+        public DiscordSelectComponent(string customId, string placeholder, IEnumerable<DiscordSelectComponentOption> options, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
         {
             this.CustomId = customId;
             this.Disabled = disabled;

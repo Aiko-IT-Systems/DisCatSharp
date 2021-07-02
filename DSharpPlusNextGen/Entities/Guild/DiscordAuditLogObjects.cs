@@ -440,6 +440,36 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public PropertyChange<string> TagsChange { get; internal set; }
 
+        /// <summary>
+        /// Gets the description of sticker's tags change.
+        /// </summary>
+        public PropertyChange<string> AssetChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the description of sticker's guild id change.
+        /// </summary>
+        public PropertyChange<ulong?> GuildIdChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the description of sticker's availability change.
+        /// </summary>
+        public PropertyChange<bool?> AvailabilityChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the description of sticker's id change.
+        /// </summary>
+        public PropertyChange<ulong?> IdChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the description of sticker's type change.
+        /// </summary>
+        public PropertyChange<StickerType?> TypeChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the description of sticker's format change.
+        /// </summary>
+        public PropertyChange<StickerFormat?> FormatChange { get; internal set; }
+
         internal DiscordAuditLogStickerEntry() { }
     }
 
@@ -545,7 +575,7 @@ namespace DSharpPlusNextGen.Entities
         /// <summary>
         /// Gets the description of stage instance's privacy level change.
         /// </summary>
-        public PropertyChange<StagePrivacyLevel> PrivacyLevelChange { get; internal set; }
+        public PropertyChange<StagePrivacyLevel?> PrivacyLevelChange { get; internal set; }
 
         internal DiscordAuditLogStageEntry() { }
     }
@@ -560,7 +590,7 @@ namespace DSharpPlusNextGen.Entities
         /// <summary>
         /// Gets the affected thread
         /// </summary>
-        public DiscordThreadChannel Thread { get; internal set; }
+        public DiscordThreadChannel Target { get; internal set; }
 
         internal DiscordAuditLogThreadEntry() { }
     }
@@ -789,22 +819,22 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         StageInstanceDelete = 85,
 
-        /*
         /// <summary>
         /// Indicates that an sticker was created.
         /// </summary>
-        StickerCreate = ,
+        StickerCreate = 90,
 
         /// <summary>
         /// Indicates that an sticker was updated.
         /// </summary>
-        StickerUpdate = ,
+        StickerUpdate = 91,
 
         /// <summary>
         /// Indicates that an sticker was deleted.
         /// </summary>
-        StickerDelete = ,
+        StickerDelete = 92,
 
+        /*
         /// <summary>
         /// Indicates that an event was created.
         /// </summary>
