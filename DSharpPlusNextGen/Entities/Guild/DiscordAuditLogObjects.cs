@@ -418,6 +418,31 @@ namespace DSharpPlusNextGen.Entities
         internal DiscordAuditLogEmojiEntry() { }
     }
 
+    public sealed class DiscordAuditLogStickerEntry : DiscordAuditLogEntry
+    {
+        /// <summary>
+        /// Gets the affected sticker.
+        /// </summary>
+        public DiscordSticker Target { get; internal set; }
+
+        /// <summary>
+        /// Gets the description of sticker's name change.
+        /// </summary>
+        public PropertyChange<string> NameChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the description of sticker's description change.
+        /// </summary>
+        public PropertyChange<string> DescriptionChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the description of sticker's tags change.
+        /// </summary>
+        public PropertyChange<string> TagsChange { get; internal set; }
+
+        internal DiscordAuditLogStickerEntry() { }
+    }
+
     public sealed class DiscordAuditLogMessageEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -503,6 +528,36 @@ namespace DSharpPlusNextGen.Entities
         /// Gets the description of expire behavior change.
         /// </summary>
         public PropertyChange<int?> ExpireBehavior { get; internal set; }
+    }
+
+    public sealed class DiscordAuditLogStageEntry : DiscordAuditLogEntry
+    {
+        /// <summary>
+        /// Gets the affected stage instance
+        /// </summary>
+        public DiscordStageInstance Target { get; internal set; }
+
+        /// <summary>
+        /// Gets the description of stage instance's topic change.
+        /// </summary>
+        public PropertyChange<string> TopicChange { get; internal set; }
+
+        internal DiscordAuditLogStageEntry() { }
+    }
+
+    public sealed class DiscordAuditLogEventEntry : DiscordAuditLogEntry
+    {
+        internal DiscordAuditLogEventEntry() { }
+    }
+
+    public sealed class DiscordAuditLogThreadEntry : DiscordAuditLogEntry
+    {
+        /// <summary>
+        /// Gets the affected thread
+        /// </summary>
+        public DiscordThreadChannel Thread { get; internal set; }
+
+        internal DiscordAuditLogThreadEntry() { }
     }
 
     /// <summary>
@@ -665,17 +720,17 @@ namespace DSharpPlusNextGen.Entities
         WebhookDelete = 52,
 
         /// <summary>
-        /// Indicates that the emoji was created.
+        /// Indicates that an emoji was created.
         /// </summary>
         EmojiCreate = 60,
 
         /// <summary>
-        /// Indicates that the emoji was updated.
+        /// Indicates that an emoji was updated.
         /// </summary>
         EmojiUpdate = 61,
 
         /// <summary>
-        /// Indicates that the emoji was deleted.
+        /// Indicates that an emoji was deleted.
         /// </summary>
         EmojiDelete = 62,
 
@@ -713,5 +768,67 @@ namespace DSharpPlusNextGen.Entities
         /// Indicates that an integration was deleted.
         /// </summary>
         IntegrationDelete = 82,
+
+        /// <summary>
+        /// Indicates that an stage instance was created.
+        /// </summary>
+        StageInstanceCreate = 83,
+
+        /// <summary>
+        /// Indicates that an stage instance was updated.
+        /// </summary>
+        StageInstanceUpdate = 84,
+
+        /// <summary>
+        /// Indicates that an stage instance was deleted.
+        /// </summary>
+        StageInstanceDelete = 85,
+
+        /*
+        /// <summary>
+        /// Indicates that an sticker was created.
+        /// </summary>
+        StickerCreate = ,
+
+        /// <summary>
+        /// Indicates that an sticker was updated.
+        /// </summary>
+        StickerUpdate = ,
+
+        /// <summary>
+        /// Indicates that an sticker was deleted.
+        /// </summary>
+        StickerDelete = ,
+
+        /// <summary>
+        /// Indicates that an event was created.
+        /// </summary>
+        EventCreate = ,
+
+        /// <summary>
+        /// Indicates that an event was updated.
+        /// </summary>
+        EventUpdate = ,
+
+        /// <summary>
+        /// Indicates that an event was deleted.
+        /// </summary>
+        EventDelete = ,
+
+        /// <summary>
+        /// Indicates that an thread was created.
+        /// </summary>
+        ThreadCreate = ,
+
+        /// <summary>
+        /// Indicates that an thread was updated.
+        /// </summary>
+        ThreadUpdate = ,
+
+        /// <summary>
+        /// Indicates that an thread was deleted.
+        /// </summary>
+        ThreadDelete = ,
+        */
     }
 }
