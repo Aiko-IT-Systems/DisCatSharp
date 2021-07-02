@@ -1866,6 +1866,79 @@ namespace DSharpPlusNextGen.Entities
                         }
                         break;
 
+                    case AuditLogActionType.StageInstanceCreate:
+                    case AuditLogActionType.StageInstanceDelete:
+                    case AuditLogActionType.StageInstanceUpdate:
+                        entry = new DiscordAuditLogStageEntry
+                        {
+                            Target = this._stageInstances.TryGetValue(xac.TargetId.Value, out var stage) ? stage : new DiscordStageInstance { Id = xac.TargetId.Value, Discord = this.Discord }
+                        };
+
+                        var entrysta = entry as DiscordAuditLogStageEntry;
+                        foreach (var xc in xac.Changes)
+                        {
+                            switch (xc.Key.ToLowerInvariant())
+                            {
+                                case "tpoic":
+                                    entrysta.TopicChange = new PropertyChange<string>
+                                    {
+                                        Before = xc.OldValueString,
+                                        After = xc.NewValueString
+                                    };
+                                    break;
+
+                                default:
+                                    this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in stage instance update: {0} - this should be reported to library developers", xc.Key);
+                                    break;
+                            }
+                        }
+                        break;
+                    /*
+                    case AuditLogActionType.StickerCreate:
+                    case AuditLogActionType.StickerDelete:
+                    case AuditLogActionType.StickerUpdate:
+                        entry = new DiscordAuditLogStickerEntry
+                        {
+                            Target = this._stickers.TryGetValue(xac.TargetId.Value, out var sticker) ? sticker : new DiscordSticker { Id = xac.TargetId.Value, Discord = this.Discord }
+                        };
+
+                        var entrysti = entry as DiscordAuditLogStickerEntry;
+                        foreach (var xc in xac.Changes)
+                        {
+                            switch (xc.Key.ToLowerInvariant())
+                            {
+                                case "name":
+                                    entrysti.NameChange = new PropertyChange<string>
+                                    {
+                                        Before = xc.OldValueString,
+                                        After = xc.NewValueString
+                                    };
+                                    break;
+                                case "description":
+                                    entrysti.DescriptionChange = new PropertyChange<string>
+                                    {
+                                        Before = xc.OldValueString,
+                                        After = xc.NewValueString
+                                    };
+                                    break;
+                                case "tags":
+                                    entrysti.TagsChange = new PropertyChange<string>
+                                    {
+                                        Before = xc.OldValueString,
+                                        After = xc.NewValueString
+                                    };
+                                    break;
+
+                                default:
+                                    this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in sticker update: {0} - this should be reported to library developers", xc.Key);
+                                    break;
+                            }
+                        }
+                        break;
+                     
+                     
+                     */
+
                     case AuditLogActionType.MessageDelete:
                     case AuditLogActionType.MessageBulkDelete:
                     {
@@ -2152,9 +2225,10 @@ namespace DSharpPlusNextGen.Entities
         /// <param name="emoji">The emoji to associate the sticker with.</param>
         /// <param name="format">The file format the sticker is written in.</param>
         /// <param name="file">The sticker.</param>
+        /// <param name="reason">Audit log reason</param>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordSticker> CreateStickerAsync(string name, Optional<string> description, DiscordEmoji emoji, StickerFormat format, Stream file)
+        public Task<DiscordSticker> CreateStickerAsync(string name, Optional<string> description, DiscordEmoji emoji, StickerFormat format, Stream file, string reason = null)
         {
             var filename = format switch
             {
@@ -2170,29 +2244,28 @@ namespace DSharpPlusNextGen.Entities
                 ? throw new ArgumentOutOfRangeException(nameof(name), "Sticker name needs to be between 2 and 30 characters long.")
                 : description.HasValue && (description.Value.Length < 1 || description.Value.Length > 100)
                 ? throw new ArgumentOutOfRangeException(nameof(description), "Sticker description needs to be between 1 and 100 characters long.")
-                : this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.Name, new($"sticker.{format}", file , null));
+                : this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.Name, new($"sticker.{format}", file , null), reason);
         }
 
         /// <summary>
         /// Modifies a sticker
         /// </summary>
-        /// <param name="sticker">The sticker to modify</param>
+        /// <param name="sticker">The id of the sticker to modify</param>
         /// <param name="name">The name of the sticker</param>
         /// <param name="description">The description of the sticker</param>
         /// <param name="emoji">The emoji to associate with this sticker.</param>
+        /// <param name="reason">Audit log reason</param>
         /// <returns>A sticker object</returns>
         /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
-        public async Task<DiscordSticker> ModifyStickerAsync(DiscordSticker sticker, Optional<string> name, Optional<string> description, Optional<DiscordEmoji> emoji)
+        public async Task<DiscordSticker> ModifyStickerAsync(ulong sticker, Optional<string> name, Optional<string> description, Optional<DiscordEmoji> emoji, string reason = null)
         {
 
             string uemoji = null;
 
-            if (sticker == null)
-                throw new ArgumentNullException(nameof(sticker));
-            if (sticker.Guild.Id != this.Id)
+            if (!this._stickers.TryGetValue(sticker, out var stickerobj) || stickerobj.Guild.Id != this.Id)
                 throw new ArgumentException("This sticker does not belong to this guild.");
             if (name.HasValue && (name.Value.Length < 2 || name.Value.Length > 30))
                 throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.");
@@ -2203,7 +2276,7 @@ namespace DSharpPlusNextGen.Entities
             else if (emoji.HasValue)
                 uemoji = emoji.Value.Name;
 
-            var usticker = await this.Discord.ApiClient.ModifyGuildStickerAsync(this.Id, sticker.Id, name, description, uemoji).ConfigureAwait(false);
+            var usticker = await this.Discord.ApiClient.ModifyGuildStickerAsync(this.Id, sticker, name, description, uemoji, reason).ConfigureAwait(false);
 
 
             if (this._stickers.TryGetValue(usticker.Id, out var old))
@@ -2213,20 +2286,50 @@ namespace DSharpPlusNextGen.Entities
         }
 
         /// <summary>
-        /// Deletes this sticker
+        /// Modifies a sticker
         /// </summary>
+        /// <param name="sticker">The sticker to modify</param>
+        /// <param name="name">The name of the sticker</param>
+        /// <param name="description">The description of the sticker</param>
+        /// <param name="emoji">The emoji to associate with this sticker.</param>
+        /// <param name="reason">Audit log reason</param>
+        /// <returns>A sticker object</returns>
         /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
-        public Task DeleteStickerAsync(DiscordSticker sticker)
+        public Task<DiscordSticker> ModifyStickerAsync(DiscordSticker sticker, Optional<string> name, Optional<string> description, Optional<DiscordEmoji> emoji, string reason = null)
+            => this.ModifyStickerAsync(sticker.Id, name, description, emoji, reason);
+
+        /// <summary>
+        /// Deletes a sticker
+        /// </summary>
+        /// <param name="sticker">Id of sticker to delete</param>
+        /// <param name="reason">Audit log reason</param>
+        /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
+        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
+        public Task DeleteStickerAsync(ulong sticker, string reason = null)
         {
-            return sticker == null
+            return !this._stickers.TryGetValue(sticker, out var stickerobj)
                 ? throw new ArgumentNullException(nameof(sticker))
-                : sticker.Guild.Id != this.Id
+                : stickerobj.Guild.Id != this.Id
                 ? throw new ArgumentException("This sticker does not belong to this guild.")
-                : this.Discord.ApiClient.DeleteGuildStickerAsync(this.Id, sticker.Id);
+                : this.Discord.ApiClient.DeleteGuildStickerAsync(this.Id, sticker, reason);
         }
+
+        /// <summary>
+        /// Deletes a sticker
+        /// </summary>
+        /// <param name="sticker">Sticker to delete</param>
+        /// <param name="reason">Audit log reason</param>
+        /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
+        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
+        public Task DeleteStickerAsync(DiscordSticker sticker, string reason = null)
+            => this.DeleteStickerAsync(sticker.Id, reason);
 
         /// <summary>
         /// <para>Gets the default channel for this guild.</para>
