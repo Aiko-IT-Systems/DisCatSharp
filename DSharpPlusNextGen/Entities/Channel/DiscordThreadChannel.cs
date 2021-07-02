@@ -149,6 +149,12 @@ namespace DSharpPlusNextGen.Entities
         public DiscordChannel Parent
             => this.Guild.GetChannel(this.ParentId);
 
+        /// <summary>
+        /// Gets whether this thread is marked as nsfw.
+        /// </summary>
+        [JsonIgnore]
+        public bool IsNSFW => this.Parent.IsNSFW;
+
         internal DiscordThreadChannel() { }
 
         #region Methods
