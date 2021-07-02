@@ -542,6 +542,11 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public PropertyChange<string> TopicChange { get; internal set; }
 
+        /// <summary>
+        /// Gets the description of stage instance's privacy level change.
+        /// </summary>
+        public PropertyChange<StagePrivacyLevel> PrivacyLevelChange { get; internal set; }
+
         internal DiscordAuditLogStageEntry() { }
     }
 

@@ -1879,11 +1879,18 @@ namespace DSharpPlusNextGen.Entities
                         {
                             switch (xc.Key.ToLowerInvariant())
                             {
-                                case "tpoic":
+                                case "topic":
                                     entrysta.TopicChange = new PropertyChange<string>
                                     {
                                         Before = xc.OldValueString,
                                         After = xc.NewValueString
+                                    };
+                                    break;
+                                case "privacy_level":
+                                    entrysta.PrivacyLevelChange = new PropertyChange<StagePrivacyLevel>
+                                    {
+                                        Before = (StagePrivacyLevel)int.Parse((string)xc.OldValue),
+                                        After = (StagePrivacyLevel)int.Parse((string)xc.NewValue)
                                     };
                                     break;
 
