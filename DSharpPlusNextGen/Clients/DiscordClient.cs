@@ -168,6 +168,7 @@ namespace DSharpPlusNextGen
             this._guildBanAdded = new AsyncEvent<DiscordClient, GuildBanAddEventArgs>("GUILD_BAN_ADD", EventExecutionLimit, this.EventErrorHandler);
             this._guildBanRemoved = new AsyncEvent<DiscordClient, GuildBanRemoveEventArgs>("GUILD_BAN_REMOVED", EventExecutionLimit, this.EventErrorHandler);
             this._guildEmojisUpdated = new AsyncEvent<DiscordClient, GuildEmojisUpdateEventArgs>("GUILD_EMOJI_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildStickersUpdate = new AsyncEvent<DiscordClient, GuildStickersUpdateEventArgs>("GUILD_STICKER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
             this._guildIntegrationsUpdated = new AsyncEvent<DiscordClient, GuildIntegrationsUpdateEventArgs>("GUILD_INTEGRATIONS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
             this._guildMemberAdded = new AsyncEvent<DiscordClient, GuildMemberAddEventArgs>("GUILD_MEMBER_ADD", EventExecutionLimit, this.EventErrorHandler);
             this._guildMemberRemoved = new AsyncEvent<DiscordClient, GuildMemberRemoveEventArgs>("GUILD_MEMBER_REMOVED", EventExecutionLimit, this.EventErrorHandler);
@@ -579,6 +580,7 @@ namespace DSharpPlusNextGen
         public Task<DiscordSticker> GetStickerAsync(ulong id)
             => this.ApiClient.GetStickerAsync(id);
 
+        /*
         /// <summary>
         /// Gets all nitro sticker packs
         /// Don't know if this works :/
@@ -586,8 +588,9 @@ namespace DSharpPlusNextGen
         /// <returns>List of sticker packs</returns>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
+        private Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
             => this.ApiClient.GetStickerPacksAsync();
+        */
 
         /// <summary>
         /// Gets a webhook

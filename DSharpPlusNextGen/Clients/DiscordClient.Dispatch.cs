@@ -136,6 +136,11 @@ namespace DSharpPlusNextGen
                     await this.OnGuildEmojisUpdateEventAsync(this._guilds[gid], ems).ConfigureAwait(false);
                     break;
 
+                case "guild_stickers_update":
+                    var strs = dat.ToDiscordObject<IEnumerable<DiscordSticker>>();
+                    await this.OnStickersUpdatedAsync(strs, dat).ConfigureAwait(false);
+                    break;
+
                 case "guild_integrations_update":
                     gid = (ulong)dat["guild_id"];
 
@@ -1033,6 +1038,31 @@ namespace DSharpPlusNextGen
                 EmojisBefore = new ReadOnlyConcurrentDictionary<ulong, DiscordEmoji>(oldEmojis)
             };
             await this._guildEmojisUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+        }
+
+        internal async Task OnStickersUpdatedAsync(IEnumerable<DiscordSticker> newStickers, JObject raw)
+        {
+            var guild = this.InternalGetCachedGuild((ulong)raw["guild_id"]);
+            var oldStickers = new ReadOnlyDictionary<ulong, DiscordSticker>(guild._stickers);
+            guild._stickers.Clear();
+
+            foreach (var nst in newStickers)
+            {
+                if (nst.User is not null)
+                    nst.User.Discord = this;
+                nst.Discord = this;
+
+                guild._stickers[nst.Id] = nst;
+            }
+
+            var sea = new GuildStickersUpdateEventArgs
+            {
+                Guild = guild,
+                StickersBefore = oldStickers,
+                StickersAfter = guild.Stickers
+            };
+
+            await this._guildStickersUpdate.InvokeAsync(this, sea);
         }
 
         internal async Task OnGuildIntegrationsUpdateEventAsync(DiscordGuild guild)
