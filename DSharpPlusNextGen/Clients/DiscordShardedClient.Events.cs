@@ -222,7 +222,7 @@ namespace DSharpPlusNextGen
 
         /// <summary>
         /// Fired when a guilds emojis get updated
-        /// For this Event you need the <see cref="DiscordIntents.GuildEmojis"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// For this Event you need the <see cref="DiscordIntents.GuildEmojisAndStickers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
         /// </summary>
         public event AsyncEventHandler<DiscordClient, GuildEmojisUpdateEventArgs> GuildEmojisUpdated
         {
@@ -230,6 +230,17 @@ namespace DSharpPlusNextGen
             remove => this._guildEmojisUpdated.Unregister(value);
         }
         private AsyncEvent<DiscordClient, GuildEmojisUpdateEventArgs> _guildEmojisUpdated;
+
+        /// <summary>
+        /// Fired when a guilds emojis get updated
+        /// For this Event you need the <see cref="DiscordIntents.GuildEmojisAndStickers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, GuildStickersUpdateEventArgs> GuildStickersUpdated
+        {
+            add => this._guildStickersUpdate.Register(value);
+            remove => this._guildStickersUpdate.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, GuildStickersUpdateEventArgs> _guildStickersUpdate;
 
         /// <summary>
         /// Fired when a guild integration is updated.
@@ -877,6 +888,9 @@ namespace DSharpPlusNextGen
 
         private Task Client_GuildEmojisUpdate(DiscordClient client, GuildEmojisUpdateEventArgs e)
             => this._guildEmojisUpdated.InvokeAsync(client, e);
+
+        private Task Client_GuildStickersUpdate(DiscordClient client, GuildStickersUpdateEventArgs e)
+            => this._guildStickersUpdate.InvokeAsync(client, e);
 
         private Task Client_GuildIntegrationsUpdate(DiscordClient client, GuildIntegrationsUpdateEventArgs e)
             => this._guildIntegrationsUpdated.InvokeAsync(client, e);

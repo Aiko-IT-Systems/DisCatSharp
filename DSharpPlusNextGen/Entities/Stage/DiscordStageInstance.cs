@@ -75,22 +75,24 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <param name="topic">Topic of the stage instance.</param>
         /// <param name="privacy_level">Privacy Level of the stage instance.</param>
+        /// <param name="reason">Audit log reason</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task ModifyAsync(Optional<string> topic, Optional<StagePrivacyLevel> privacy_level)
-            => await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, privacy_level);
+        public async Task ModifyAsync(Optional<string> topic, Optional<StagePrivacyLevel> privacy_level, string reason = null)
+            => await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, privacy_level, reason);
 
         /// <summary>
         /// Deletes a stage instance.
         /// </summary>
+        /// <param name="reason">Audit log reason</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task CloseAsync()
-            => await this.Discord.ApiClient.DeleteStageInstanceAsync(this.Id);
+        public async Task CloseAsync(string reason = null)
+            => await this.Discord.ApiClient.DeleteStageInstanceAsync(this.Id, reason);
 
         #endregion
 

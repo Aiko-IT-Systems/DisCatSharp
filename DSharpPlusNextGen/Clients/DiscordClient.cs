@@ -39,6 +39,7 @@ using DSharpPlusNextGen.Net.Serialization;
 using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using DSharpPlusNextGen.Enums.Discord;
 
 namespace DSharpPlusNextGen
 {
@@ -168,6 +169,7 @@ namespace DSharpPlusNextGen
             this._guildBanAdded = new AsyncEvent<DiscordClient, GuildBanAddEventArgs>("GUILD_BAN_ADD", EventExecutionLimit, this.EventErrorHandler);
             this._guildBanRemoved = new AsyncEvent<DiscordClient, GuildBanRemoveEventArgs>("GUILD_BAN_REMOVED", EventExecutionLimit, this.EventErrorHandler);
             this._guildEmojisUpdated = new AsyncEvent<DiscordClient, GuildEmojisUpdateEventArgs>("GUILD_EMOJI_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildStickersUpdate = new AsyncEvent<DiscordClient, GuildStickersUpdateEventArgs>("GUILD_STICKER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
             this._guildIntegrationsUpdated = new AsyncEvent<DiscordClient, GuildIntegrationsUpdateEventArgs>("GUILD_INTEGRATIONS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
             this._guildMemberAdded = new AsyncEvent<DiscordClient, GuildMemberAddEventArgs>("GUILD_MEMBER_ADD", EventExecutionLimit, this.EventErrorHandler);
             this._guildMemberRemoved = new AsyncEvent<DiscordClient, GuildMemberRemoveEventArgs>("GUILD_MEMBER_REMOVED", EventExecutionLimit, this.EventErrorHandler);
@@ -568,6 +570,41 @@ namespace DSharpPlusNextGen
             => this.ApiClient.GetUsersConnectionsAsync();
 
         /// <summary>
+        /// Gets a sticker
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the sticker does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task<DiscordSticker> GetStickerAsync(ulong id)
+            => this.ApiClient.GetStickerAsync(id);
+
+        
+        /// <summary>
+        /// Gets all nitro sticker packs
+        /// Don't know if this works :/
+        /// </summary>
+        /// <returns>List of sticker packs</returns>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
+            => this.ApiClient.GetStickerPacksAsync();
+
+
+        /// <summary>
+        /// Gets the In-App OAuth Url
+        /// </summary>
+        /// <param name="scopes">Defaults to 'bot applications.commands'</param>
+        /// <param name="perms">Defaults to <see cref="Permissions.None"/></param>
+        /// <returns></returns>
+        public Uri GetInAppOAuth(Permissions perms = Permissions.None, string scopes = "bot applications.commands")
+        {
+            var permissions = perms == Permissions.None ? 0 : (long)perms;
+            return new Uri($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}?client_id={this.CurrentApplication.Id}&scope={scopes.Replace(" ", "%20")}&permissions={permissions}&state=");
+        }
+
+        /// <summary>
         /// Gets a webhook
         /// </summary>
         /// <param name="id"></param>
@@ -937,7 +974,6 @@ namespace DSharpPlusNextGen
             guild.AfkTimeout = newGuild.AfkTimeout;
             guild.DefaultMessageNotifications = newGuild.DefaultMessageNotifications;
             guild.RawFeatures = newGuild.RawFeatures;
-            guild._threads = newGuild._threads; // # TODO: Check docs
             guild.IconHash = newGuild.IconHash;
             guild.MfaLevel = newGuild.MfaLevel;
             guild.OwnerId = newGuild.OwnerId;
@@ -967,6 +1003,7 @@ namespace DSharpPlusNextGen
             // fields not sent for update:
             // - guild.Channels
             // - voice states
+            // - guild threads
             // - guild.JoinedAt = new_guild.JoinedAt;
             // - guild.Large = new_guild.Large;
             // - guild.MemberCount = Math.Max(new_guild.MemberCount, guild._members.Count);

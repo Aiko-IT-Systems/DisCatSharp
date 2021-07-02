@@ -28,6 +28,7 @@ namespace DSharpPlusNextGen.Net
         public const string BASE_URI = "https://discord.com/api/v10";
 
         public const string OAUTH2 = "/oauth2";
+        public const string AUTHORIZE = "/authorize";
         public const string APPLICATIONS = "/applications";
         public const string REACTIONS = "/reactions";
         public const string ME = "/@me";
@@ -89,5 +90,8 @@ namespace DSharpPlusNextGen.Net
         public const string THREAD_MEMBERS = "/thread-members";
         public const string EVENTS = "/events";
         public const string STICKERS = "/stickers";
+        public const string STICKERPACKS = "/sticker-packs";
+        public const string STORE = "/store";
+        public const string APP_ASSETS = "/app-assets";
     }
 }

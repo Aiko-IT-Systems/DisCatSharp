@@ -46,8 +46,7 @@ namespace DSharpPlusNextGen.Entities
             this._mentionedRolesLazy = new Lazy<IReadOnlyList<DiscordRole>>(() => this._mentionedRoles != null ? new ReadOnlyCollection<DiscordRole>(this._mentionedRoles) : Array.Empty<DiscordRole>());
             this._mentionedUsersLazy = new Lazy<IReadOnlyList<DiscordUser>>(() => new ReadOnlyCollection<DiscordUser>(this._mentionedUsers));
             this._reactionsLazy = new Lazy<IReadOnlyList<DiscordReaction>>(() => new ReadOnlyCollection<DiscordReaction>(this._reactions));
-            this._stickersLazy = new Lazy<IReadOnlyList<DiscordMessageSticker>>(() => new ReadOnlyCollection<DiscordMessageSticker>(this._stickers));
-            //this._stickerItemsLazy = new Lazy<IReadOnlyList<DiscordStickerItem>>(() => new ReadOnlyCollection<DiscordStickerItem>(this._stickerItems);
+            this._stickersLazy = new Lazy<IReadOnlyList<DiscordSticker>>(() => new ReadOnlyCollection<DiscordSticker>(this._stickers));
             this._jumpLink = new Lazy<Uri>(() =>
             {
                 var gid = this.Channel != null
@@ -74,8 +73,7 @@ namespace DSharpPlusNextGen.Entities
                 this._mentionedRoles = new List<DiscordRole>(other._mentionedRoles);
             this._mentionedUsers = new List<DiscordUser>(other._mentionedUsers);
             this._reactions = new List<DiscordReaction>(other._reactions);
-            this._stickers = new List<DiscordMessageSticker>(other._stickers);
-            //this._stickerItems = new List<DiscordMessageSticker>(other._stickerItems);
+            this._stickers = new List<DiscordSticker>(other._stickers);
 
             this.Author = other.Author;
             this.ChannelId = other.ChannelId;
@@ -332,26 +330,14 @@ namespace DSharpPlusNextGen.Entities
         /// Gets stickers for this message.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyList<DiscordMessageSticker> Stickers
+        public IReadOnlyList<DiscordSticker> Stickers
             => this._stickersLazy.Value;
 
-        [JsonProperty("stickers", NullValueHandling = NullValueHandling.Ignore)]
-        internal List<DiscordMessageSticker> _stickers = new();
-        [JsonIgnore]
-        private readonly Lazy<IReadOnlyList<DiscordMessageSticker>> _stickersLazy;
-/*
-        /// <summary>
-        /// Gets sticker items for this message.
-        /// </summary>
-        [JsonIgnore]
-        public IReadOnlyList<DiscordStickerItem> Stickers
-            => this._stickerItemsLazy.Value;
-
         [JsonProperty("sticker_items", NullValueHandling = NullValueHandling.Ignore)]
-        internal List<DiscordStickerItem> _stickerItems = new();
+        internal List<DiscordSticker> _stickers = new();
         [JsonIgnore]
-        private readonly Lazy<IReadOnlyList<DiscordStickerItem>> _stickerItemsLazy;
-+*/
+        private readonly Lazy<IReadOnlyList<DiscordSticker>> _stickersLazy;
+
         [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
         internal ulong? GuildId { get; set; }
 
