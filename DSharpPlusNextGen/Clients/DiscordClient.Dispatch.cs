@@ -404,6 +404,7 @@ namespace DSharpPlusNextGen
                     break;
 
                 case "thread_update":
+                    Console.WriteLine(dat);
                     trd = dat.ToObject<DiscordThreadChannel>();
                     await this.OnThreadUpdateEventAsync(trd).ConfigureAwait(false);
                     break;
@@ -675,7 +676,8 @@ namespace DSharpPlusNextGen
                     IsNSFW = channel_new.IsNSFW,
                     PerUserRateLimit = channel_new.PerUserRateLimit,
                     RtcRegionId = channel_new.RtcRegionId,
-                    QualityMode = channel_new.QualityMode
+                    QualityMode = channel_new.QualityMode,
+                    DefaultAutoArchiveDuration = channel_new.DefaultAutoArchiveDuration
                 };
 
                 channel_new.Bitrate = channel.Bitrate;
@@ -689,6 +691,7 @@ namespace DSharpPlusNextGen
                 channel_new.Type = channel.Type;
                 channel_new.RtcRegionId = channel.RtcRegionId;
                 channel_new.QualityMode = channel.QualityMode;
+                channel_new.DefaultAutoArchiveDuration = channel.DefaultAutoArchiveDuration;
 
                 channel_new._permissionOverwrites.Clear();
 
@@ -1794,8 +1797,37 @@ namespace DSharpPlusNextGen
             thread.Discord = this;
             var guild = thread.Guild;
 
-            var threadOld = this.InternalGetCachedThread(thread.Id);
-            var threadNew = thread;
+            var threadNew = this.InternalGetCachedThread(thread.Id);
+            DiscordThreadChannel threadOld = null;
+
+            if (threadNew != null)
+            {
+                threadOld = new DiscordThreadChannel
+                {
+                    Discord = this,
+                    Type = threadOld.Type,
+                    ThreadMetadata = thread.ThreadMetadata,
+                    _threadMembers = threadOld._threadMembers,
+                    ParentId = thread.ParentId,
+                    OwnerId = thread.OwnerId,
+                    Name = thread.Name,
+                    LastMessageId = thread.LastMessageId,
+                    MessageCount = thread.MessageCount,
+                    MemberCount = thread.MemberCount,
+                    GuildId = thread.GuildId,
+                    LastPinTimestampRaw = threadOld.LastPinTimestampRaw,
+                    PerUserRateLimit = threadOld.PerUserRateLimit
+                };
+
+                threadNew.ThreadMetadata = thread.ThreadMetadata;
+                threadNew.ParentId = thread.ParentId;
+                threadNew.OwnerId = thread.OwnerId;
+                threadNew.Name = thread.Name;
+                threadNew.LastMessageId = thread.LastMessageId;
+                threadNew.MessageCount = thread.MessageCount;
+                threadNew.MemberCount = thread.MemberCount;
+                threadNew.GuildId = thread.GuildId;
+            }
 
             guild._threads[thread.Id] = thread;
 

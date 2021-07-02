@@ -91,6 +91,18 @@ namespace DSharpPlusNextGen.Entities
         public int? PerUserRateLimit { get; internal set; }
 
         /// <summary>
+        /// Gets an approximate count of messages in a thread, stops counting at 50.
+        /// </summary>
+        [JsonProperty("message_count", NullValueHandling = NullValueHandling.Ignore)]
+        public int? MessageCount { get; internal set; }
+
+        /// <summary>
+        /// Gets an approximate count of users in a thread, stops counting at 50.
+        /// </summary>
+        [JsonProperty("member_count", NullValueHandling = NullValueHandling.Ignore)]
+        public int? MemberCount { get; internal set; }
+
+        /// <summary>
         /// Gets when the last pinned message was pinned in this thread.
         /// </summary>
         [JsonIgnore]
@@ -107,8 +119,11 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("thread_metadata", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordThreadChannelMetadata ThreadMetadata { get; internal set; }
 
-        [JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
-        public ThreadAutoArchiveDuration DefaultAutoArchiveDuration { get; internal set; }
+        /// <summary>
+        /// Gets the default autoarchive duration for threads in the parent channel.
+        /// </summary>
+        [JsonIgnore]
+        public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration => this.Parent.DefaultAutoArchiveDuration;
 
         /// <summary>
         /// Gets the thread members object.
