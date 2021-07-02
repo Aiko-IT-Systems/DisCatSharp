@@ -2699,7 +2699,6 @@ namespace DSharpPlusNextGen.Net
             return ret;
         }
 
-        // TODO: Make it work!
         internal async Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
         {
             var route = $"{Endpoints.STICKERPACKS}";
@@ -2707,23 +2706,9 @@ namespace DSharpPlusNextGen.Net
 
             var url = Utilities.GetApiUriFor(path);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-            IEnumerable<DiscordStickerPack> ret = null;
-            try
-            {
-                var tret = JObject.Parse(res.Response);
-                var json = JArray.Parse(tret["sticker_packs"].ToString());
-                ret = json.ToDiscordObject<IEnumerable<DiscordStickerPack>>();
 
-                foreach (var stkr in ret)
-                {
-                    stkr.Discord = this.Discord;
-                }
-            } catch(Exception ex)
-            {
-                Console.WriteLine($"ERROR: {ex.Message}");
-                Console.WriteLine(ex.StackTrace);
-                return null;
-            }
+            var json = JObject.Parse(res.Response)["sticker_packs"] as JArray;
+            var ret = json.ToDiscordObject<DiscordStickerPack[]>();
 
             return ret.ToList();
         }
@@ -2736,16 +2721,18 @@ namespace DSharpPlusNextGen.Net
 
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
             var json = JArray.Parse(res.Response);
-            var ret = json.ToDiscordObject<IEnumerable<DiscordSticker>>();
+            var ret = json.ToDiscordObject<DiscordSticker[]>();
 
-            foreach (var stkr in ret)
+            for (var i = 0; i < ret.Length; i++)
             {
+                var stkr = ret[i];
                 stkr.Discord = this.Discord;
 
-                if (stkr.User is not null) // Null = Missing stickers perm //
+                if (json[i]["user"] is JObject obj) // Null = Missing stickers perm //
                 {
-                    var usr = stkr.User;
-                    usr = this.Discord.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
+                    var tsr = obj.ToDiscordObject<TransportUser>();
+                    var usr = new DiscordUser(tsr) {Discord = this.Discord};
+                    usr = this.Discord.UserCache.AddOrUpdate(tsr.Id, usr, (id, old) =>
                     {
                         old.Username = usr.Username;
                         old.Discriminator = usr.Discriminator;
@@ -2755,6 +2742,7 @@ namespace DSharpPlusNextGen.Net
                     stkr.User = usr;
                 }
             }
+
             return ret.ToList();
         }
 
