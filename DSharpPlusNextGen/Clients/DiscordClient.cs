@@ -169,7 +169,7 @@ namespace DSharpPlusNextGen
             this._guildBanAdded = new AsyncEvent<DiscordClient, GuildBanAddEventArgs>("GUILD_BAN_ADD", EventExecutionLimit, this.EventErrorHandler);
             this._guildBanRemoved = new AsyncEvent<DiscordClient, GuildBanRemoveEventArgs>("GUILD_BAN_REMOVED", EventExecutionLimit, this.EventErrorHandler);
             this._guildEmojisUpdated = new AsyncEvent<DiscordClient, GuildEmojisUpdateEventArgs>("GUILD_EMOJI_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-            this._guildStickersUpdate = new AsyncEvent<DiscordClient, GuildStickersUpdateEventArgs>("GUILD_STICKER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildStickersUpdated = new AsyncEvent<DiscordClient, GuildStickersUpdateEventArgs>("GUILD_STICKER_UPDATED", EventExecutionLimit, this.EventErrorHandler);
             this._guildIntegrationsUpdated = new AsyncEvent<DiscordClient, GuildIntegrationsUpdateEventArgs>("GUILD_INTEGRATIONS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
             this._guildMemberAdded = new AsyncEvent<DiscordClient, GuildMemberAddEventArgs>("GUILD_MEMBER_ADD", EventExecutionLimit, this.EventErrorHandler);
             this._guildMemberRemoved = new AsyncEvent<DiscordClient, GuildMemberRemoveEventArgs>("GUILD_MEMBER_REMOVED", EventExecutionLimit, this.EventErrorHandler);
@@ -409,7 +409,7 @@ namespace DSharpPlusNextGen
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content = null)
-            => this.ApiClient.CreateMessageAsync(channel.Id, content, embeds: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+            => this.ApiClient.CreateMessageAsync(channel.Id, content, embeds: null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
         /// <summary>
         /// Sends a message
@@ -422,7 +422,7 @@ namespace DSharpPlusNextGen
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordEmbed embed = null)
-            => this.ApiClient.CreateMessageAsync(channel.Id, null, new[] {embed}, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+            => this.ApiClient.CreateMessageAsync(channel.Id, null, new[] {embed}, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
         /// <summary>
         /// Sends a message
@@ -436,7 +436,7 @@ namespace DSharpPlusNextGen
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content = null, DiscordEmbed embed = null)
-            => this.ApiClient.CreateMessageAsync(channel.Id, content, new[] {embed}, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+            => this.ApiClient.CreateMessageAsync(channel.Id, content, new[] {embed}, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
         /// <summary>
         /// Sends a message
@@ -940,6 +940,12 @@ namespace DSharpPlusNextGen
             foreach (var newEmoji in newGuild._emojis.Values)
                 _ = guild._emojis.GetOrAdd(newEmoji.Id, _ => newEmoji);
 
+            foreach (var newSticker in newGuild._stickers.Values)
+                _ = guild._stickers.GetOrAdd(newSticker.Id, _ => newSticker);
+
+            foreach (var newStageInstance in newGuild._stageInstances.Values)
+                _ = guild._stageInstances.GetOrAdd(newStageInstance.Id, _ => newStageInstance);
+
             if (rawMembers != null)
             {
                 guild._members.Clear();
@@ -1005,7 +1011,6 @@ namespace DSharpPlusNextGen
             // fields not sent for update:
             // - guild.Channels
             // - voice states
-            // - guild threads
             // - guild.JoinedAt = new_guild.JoinedAt;
             // - guild.Large = new_guild.Large;
             // - guild.MemberCount = Math.Max(new_guild.MemberCount, guild._members.Count);

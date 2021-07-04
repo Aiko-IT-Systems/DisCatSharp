@@ -137,7 +137,7 @@ namespace DSharpPlusNextGen
                     break;
 
                 case "guild_stickers_update":
-                    var strs = dat.ToDiscordObject<IEnumerable<DiscordSticker>>();
+                    var strs = dat["stickers"].ToDiscordObject<IEnumerable<DiscordSticker>>();
                     await this.OnStickersUpdatedAsync(strs, dat).ConfigureAwait(false);
                     break;
 
@@ -1065,7 +1065,7 @@ namespace DSharpPlusNextGen
                 StickersAfter = guild.Stickers
             };
 
-            await this._guildStickersUpdate.InvokeAsync(this, sea);
+            await this._guildStickersUpdated.InvokeAsync(this, sea);
         }
 
         internal async Task OnGuildIntegrationsUpdateEventAsync(DiscordGuild guild)
@@ -1455,6 +1455,9 @@ namespace DSharpPlusNextGen
                 this.PopulateMessageReactionsAndCache(message.ReferencedMessage, referenceAuthor, referenceMember);
                 message.ReferencedMessage.PopulateMentions();
             }
+
+            foreach (var sticker in message.Stickers)
+                sticker.Discord = this;
 
             var ea = new MessageCreateEventArgs
             {

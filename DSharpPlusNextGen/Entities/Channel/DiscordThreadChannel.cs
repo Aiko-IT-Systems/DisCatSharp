@@ -261,6 +261,17 @@ namespace DSharpPlusNextGen.Entities
             => this.Discord.ApiClient.AddThreadMemberAsync(this.Id, member);
 
         /// <summary>
+        /// Adds a thread member.
+        /// </summary>
+        /// <param name="member">The member to be added.</param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task AddMemberAsync(DiscordMember member)
+            => this.AddMemberAsync(member.Id);
+
+        /// <summary>
         /// Removes a thread member.
         /// </summary>
         /// <param name="member">The member id to be removed.</param>
@@ -270,6 +281,17 @@ namespace DSharpPlusNextGen.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task RemoveMemberAsync(ulong member)
             => this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, member);
+
+        /// <summary>
+        /// Removes a thread member.
+        /// </summary>
+        /// <param name="member">The member to be removed.</param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task RemoveMemberAsync(DiscordMember member)
+            => this.RemoveMemberAsync(member.Id);
 
         /// <summary>
         /// Joins a thread
@@ -305,7 +327,7 @@ namespace DSharpPlusNextGen.Entities
         {
             return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
 
         /// <summary>
@@ -321,7 +343,7 @@ namespace DSharpPlusNextGen.Entities
         {
             return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] {embed}, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] {embed}, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
 
         /// <summary>
@@ -338,7 +360,7 @@ namespace DSharpPlusNextGen.Entities
         {
             return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, new[] {embed}, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, new[] {embed}, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
 
         /// <summary>

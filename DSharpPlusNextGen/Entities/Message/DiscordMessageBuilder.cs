@@ -63,6 +63,8 @@ namespace DSharpPlusNextGen.Entities
             }
         }
 
+        public DiscordSticker Sticker { get; set; }
+
         /// <summary>
         /// Gets the Embeds to be sent.
         /// </summary>
@@ -126,6 +128,17 @@ namespace DSharpPlusNextGen.Entities
         public DiscordMessageBuilder WithContent(string content)
         {
             this.Content = content;
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a sticker to the message. Sticker must be from current guild.
+        /// </summary>
+        /// <param name="sticker">The sticker to add.</param>
+        /// <returns>The current builder to be chained.</returns>
+        public DiscordMessageBuilder WithSticker(DiscordSticker sticker)
+        {
+            this.Sticker = sticker;
             return this;
         }
 
@@ -368,6 +381,7 @@ namespace DSharpPlusNextGen.Entities
             this.MentionOnReply = false;
             this._components.Clear();
             this.Suppressed = false;
+            this.Sticker = null;
         }
 
         /// <summary>
@@ -386,8 +400,8 @@ namespace DSharpPlusNextGen.Entities
             }
             else
             {
-                if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true))
-                    throw new ArgumentException("You must specify content, an embed, or at least one file.");
+                if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null)
+                    throw new ArgumentException("You must specify content, an embed, a sticker or at least one file.");
 
                 if (this.Components.Count > 5)
                     throw new InvalidOperationException("You can only have 5 action rows per message.");
