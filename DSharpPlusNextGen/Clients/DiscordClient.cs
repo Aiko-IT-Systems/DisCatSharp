@@ -40,6 +40,7 @@ using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using DSharpPlusNextGen.Enums.Discord;
+using System.Globalization;
 
 namespace DSharpPlusNextGen
 {
@@ -597,12 +598,18 @@ namespace DSharpPlusNextGen
         /// Gets the In-App OAuth Url
         /// </summary>
         /// <param name="scopes">Defaults to 'bot applications.commands'</param>
-        /// <param name="perms">Defaults to <see cref="Permissions.None"/></param>
+        /// <param name="permissions">Defaults to <see cref="Permissions.None"/></param>
         /// <returns></returns>
-        public Uri GetInAppOAuth(Permissions perms = Permissions.None, string scopes = "bot applications.commands")
+        public Uri GetInAppOAuth(Permissions permissions = Permissions.None, string scopes = "bot applications.commands")
         {
-            var permissions = perms == Permissions.None ? 0 : (long)perms;
-            return new Uri($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}?client_id={this.CurrentApplication.Id}&scope={scopes.Replace(" ", "%20")}&permissions={permissions}&state=");
+            permissions &= PermissionMethods.FULL_PERMS;
+            // hey look, it's not all annoying and blue :P
+            return new Uri(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
+                .AddParameter("client_id", this.CurrentApplication.Id.ToString(CultureInfo.InvariantCulture))
+                .AddParameter("scope", scopes.Replace(" ", "%20"))
+                .AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
+                .AddParameter("state", "")
+                .ToString());
         }
 
         /// <summary>
@@ -992,10 +999,9 @@ namespace DSharpPlusNextGen
             guild.ExplicitContentFilter = newGuild.ExplicitContentFilter;
             guild.PremiumTier = newGuild.PremiumTier;
             guild.PremiumSubscriptionCount = newGuild.PremiumSubscriptionCount;
-            guild.Banner = newGuild.Banner;
+            guild.BannerHash = newGuild.BannerHash;
             guild.Description = newGuild.Description;
             guild.VanityUrlCode = newGuild.VanityUrlCode;
-            guild.Banner = newGuild.Banner;
             guild.SystemChannelId = newGuild.SystemChannelId;
             guild.SystemChannelFlags = newGuild.SystemChannelFlags;
             guild.DiscoverySplashHash = newGuild.DiscoverySplashHash;

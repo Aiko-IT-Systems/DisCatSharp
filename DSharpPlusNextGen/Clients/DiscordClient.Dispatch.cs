@@ -806,7 +806,7 @@ namespace DSharpPlusNextGen
             guild.IsUnavailable = eventGuild.IsUnavailable;
             guild.PremiumSubscriptionCount = eventGuild.PremiumSubscriptionCount;
             guild.PremiumTier = eventGuild.PremiumTier;
-            guild.Banner = eventGuild.Banner;
+            guild.BannerHash = eventGuild.BannerHash;
             guild.VanityUrlCode = eventGuild.VanityUrlCode;
             guild.Description = eventGuild.Description;
             guild.IsNSFW = eventGuild.IsNSFW;

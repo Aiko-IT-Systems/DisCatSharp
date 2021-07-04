@@ -24,6 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using DSharpPlusNextGen.Enums.Discord;
+using DSharpPlusNextGen.Net;
 using DSharpPlusNextGen.Net.Abstractions;
 
 namespace DSharpPlusNextGen.Entities
@@ -47,7 +49,7 @@ namespace DSharpPlusNextGen.Entities
         /// Gets the team's icon.
         /// </summary>
         public string Icon
-            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"https://cdn.discordapp.com/team-icons/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TEAM_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets the owner of the team.

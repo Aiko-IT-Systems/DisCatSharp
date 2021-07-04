@@ -311,10 +311,9 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
                 var name = m.Groups["name"].Value;
                 var anim = m.Groups["animated"].Success;
 
-                if (!ulong.TryParse(sid, NumberStyles.Integer, CultureInfo.InvariantCulture, out var id))
-                    return Task.FromResult(Optional.FromNoValue<DiscordEmoji>());
-
-                return DiscordEmoji.TryFromGuildEmote(ctx.Client, id, out emoji)
+                return !ulong.TryParse(sid, NumberStyles.Integer, CultureInfo.InvariantCulture, out var id)
+                    ? Task.FromResult(Optional.FromNoValue<DiscordEmoji>())
+                    : DiscordEmoji.TryFromGuildEmote(ctx.Client, id, out emoji)
                     ? Task.FromResult(Optional.FromValue(emoji))
                     : Task.FromResult(Optional.FromValue(new DiscordEmoji
                 {

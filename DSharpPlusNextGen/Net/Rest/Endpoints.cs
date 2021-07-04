@@ -50,6 +50,8 @@ namespace DSharpPlusNextGen.Net
         public const string PINS = "/pins";
         public const string USERS = "/users";
         public const string GUILDS = "/guilds";
+        public const string GUILD_DISCOVERY_SPLASHES = "/discovery-splashes";
+        public const string SPLASHES = "/splashes";
         public const string SEARCH = "/search";
         public const string INVITES = "/invites";
         public const string ROLES = "/roles";
@@ -66,6 +68,7 @@ namespace DSharpPlusNextGen.Net
         public const string ACK = "/ack";
         public const string NICK = "/nick";
         public const string ASSETS = "/assets";
+        public const string EMBED = "/embed";
         public const string EMOJIS = "/emojis";
         public const string VANITY_URL = "/vanity-url";
         public const string WIDGET_PNG = "/widget.png";
@@ -93,5 +96,9 @@ namespace DSharpPlusNextGen.Net
         public const string STICKERPACKS = "/sticker-packs";
         public const string STORE = "/store";
         public const string APP_ASSETS = "/app-assets";
+        public const string APP_ICONS = "/app-icons";
+        public const string TEAM_ICONS = "/team-icons";
+        public const string BANNERS = "/banners";
+        public const string  STICKER_APPLICATION = "/710982414301790216";
     }
 }

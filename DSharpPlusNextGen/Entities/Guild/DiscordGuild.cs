@@ -30,8 +30,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DSharpPlusNextGen.Enums.Discord;
 using DSharpPlusNextGen.EventArgs;
 using DSharpPlusNextGen.Exceptions;
+using DSharpPlusNextGen.Net;
 using DSharpPlusNextGen.Net.Abstractions;
 using DSharpPlusNextGen.Net.Models;
 using DSharpPlusNextGen.Net.Serialization;
@@ -63,7 +65,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public string IconUrl
-            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"https://cdn.discordapp.com/icons/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.jpg" : null;
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{(this.IconHash.StartsWith("a_") ? "gif" : "png")}?size=1024" : null;
 
         /// <summary>
         /// Gets the guild splash's hash.
@@ -76,7 +78,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public string SplashUrl
-            => !string.IsNullOrWhiteSpace(this.SplashHash) ? $"https://cdn.discordapp.com/splashes/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.jpg" : null;
+         => !string.IsNullOrWhiteSpace(this.SplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets the guild discovery splash's hash.
@@ -89,7 +91,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public string DiscoverySplashUrl
-            => !string.IsNullOrWhiteSpace(this.DiscoverySplashHash) ? $"https://cdn.discordapp.com/discovery-splashes/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.DiscoverySplashHash}.jpg" : null;
+            => !string.IsNullOrWhiteSpace(this.DiscoverySplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_DISCOVERY_SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.DiscoverySplashHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets the preferred locale of this guild.
@@ -443,26 +445,26 @@ namespace DSharpPlusNextGen.Entities
         /// Gets this guild's banner hash, when applicable.
         /// </summary>
         [JsonProperty("banner")]
-        public string Banner { get; internal set; }
+        public string BannerHash { get; internal set; }
 
         /// <summary>
         /// Gets this guild's banner in url form.
         /// </summary>
         [JsonIgnore]
         public string BannerUrl
-            => !string.IsNullOrWhiteSpace(this.Banner) ? $"https://cdn.discordapp.com/banners/{this.Id}/{this.Banner}" : null;
+            => !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.png" : null;
 
         /// <summary>
         /// Whether this guild has the community feature enabled.
         /// </summary>
         [JsonIgnore]
-        public bool IsCommunity => this.RawFeatures.Contains("COMMUNITY") || this.RawFeatures.Contains("NEWS");
+        public bool IsCommunity => this.Features.HasCommunityEnabled;
 
         /// <summary>
         /// Whether this guild has enabled the welcome screen.
         /// </summary>
         [JsonIgnore]
-        public bool HasWelcomeScreen => this.RawFeatures.Contains("WELCOME_SCREEN_ENABLED");
+        public bool HasWelcomeScreen => this.Features.HasWelcomeScreenEnabled;
 
         /// <summary>
         /// Whether this guild has enabled membership screening.
@@ -1008,7 +1010,7 @@ namespace DSharpPlusNextGen.Entities
                 WidgetType.Banner4 => "banner4",
                 _ => "shield",
             };
-            return $"{Net.Endpoints.BASE_URI}{Net.Endpoints.GUILDS}/{this.Id}{Net.Endpoints.WIDGET_PNG}?style={param}";
+            return $"{Endpoints.BASE_URI}{Endpoints.GUILDS}/{this.Id}{Endpoints.WIDGET_PNG}?style={param}";
         }
 
         /// <summary>
@@ -1280,8 +1282,8 @@ namespace DSharpPlusNextGen.Entities
                                 case "icon_hash":
                                     entrygld.IconChange = new PropertyChange<string>
                                     {
-                                        Before = xc.OldValueString != null ? $"https://cdn.discordapp.com/icons/{this.Id}/{xc.OldValueString}.webp" : null,
-                                        After = xc.OldValueString != null ? $"https://cdn.discordapp.com/icons/{this.Id}/{xc.NewValueString}.webp" : null
+                                        Before = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.OldValueString}.webp" : null,
+                                        After = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.NewValueString}.webp" : null
                                     };
                                     break;
 
@@ -1318,8 +1320,8 @@ namespace DSharpPlusNextGen.Entities
                                 case "splash_hash":
                                     entrygld.SplashChange = new PropertyChange<string>
                                     {
-                                        Before = xc.OldValueString != null ? $"https://cdn.discordapp.com/splashes/{this.Id}/{xc.OldValueString}.webp?size=2048" : null,
-                                        After = xc.NewValueString != null ? $"https://cdn.discordapp.com/splashes/{this.Id}/{xc.NewValueString}.webp?size=2048" : null
+                                        Before = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.OldValueString}.webp?size=2048" : null,
+                                        After = xc.NewValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.NewValueString}.webp?size=2048" : null
                                     };
                                     break;
 

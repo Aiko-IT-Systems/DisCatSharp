@@ -25,7 +25,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using DSharpPlusNextGen.Enums.Discord;
 using DSharpPlusNextGen.Exceptions;
+using DSharpPlusNextGen.Net;
 using DSharpPlusNextGen.Net.Abstractions;
 using Newtonsoft.Json;
 
@@ -70,6 +72,28 @@ namespace DSharpPlusNextGen.Entities
             => int.Parse(this.Discriminator, NumberStyles.Integer, CultureInfo.InvariantCulture);
 
         /// <summary>
+        /// Gets the user's banner color, if set.
+        /// </summary>
+        public DiscordColor? BannerColor
+            => string.IsNullOrEmpty(this._bannerColor) ? null : new DiscordColor(this._bannerColor);
+
+        [JsonProperty("banner_color")]
+        internal string _bannerColor;
+
+        /// <summary>
+        /// Gets the user's profile banner hash.
+        /// </summary>
+        [JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual string BannerHash { get; internal set; }
+
+        /// <summary>
+        /// Gets the user's banner url
+        /// </summary>
+        [JsonIgnore]
+        public string BannerUrl
+            => string.IsNullOrWhiteSpace(this.BannerHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
+
+        /// <summary>
         /// Gets the user's avatar hash.
         /// </summary>
         [JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
@@ -80,14 +104,14 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public string AvatarUrl
-            => !string.IsNullOrWhiteSpace(this.AvatarHash) ? (this.AvatarHash.StartsWith("a_") ? $"https://cdn.discordapp.com/avatars/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.gif?size=1024" : $"https://cdn.discordapp.com/avatars/{this.Id}/{this.AvatarHash}.png?size=1024") : this.DefaultAvatarUrl;
+            => string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
         /// <summary>
         /// Gets the URL of default avatar for this user.
         /// </summary>
         [JsonIgnore]
         public string DefaultAvatarUrl
-            => $"https://cdn.discordapp.com/embed/avatars/{(this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture)}.png?size=1024";
+            => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{(this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture)}.png?size=1024";
 
         /// <summary>
         /// Gets whether the user is a bot.
@@ -291,12 +315,12 @@ namespace DSharpPlusNextGen.Entities
             if (!string.IsNullOrWhiteSpace(this.AvatarHash))
             {
                 var id = this.Id.ToString(CultureInfo.InvariantCulture);
-                return $"https://cdn.discordapp.com/avatars/{id}/{this.AvatarHash}.{sfmt}?size={ssize}";
+                return $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{id}/{this.AvatarHash}.{sfmt}?size={ssize}";
             }
             else
             {
                 var type = (this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture);
-                return $"https://cdn.discordapp.com/embed/avatars/{type}.{sfmt}?size={ssize}";
+                return $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{type}.{sfmt}?size={ssize}";
             }
         }
 
