@@ -606,7 +606,7 @@ namespace DSharpPlusNextGen
             // hey look, it's not all annoying and blue :P
             return new Uri(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
                 .AddParameter("client_id", this.CurrentApplication.Id.ToString(CultureInfo.InvariantCulture))
-                .AddParameter("scope", scopes.Replace(" ", "%20"))
+                .AddParameter("scope", scopes.ToLower())
                 .AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
                 .AddParameter("state", "")
                 .ToString());
