@@ -23,39 +23,63 @@
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
+using DSharpPlusNextGen.Enums.Discord;
+using DSharpPlusNextGen.Net;
 using DSharpPlusNextGen.Net.Serialization;
 using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Entities
 {
     /// <summary>
-    /// Represents a Discord integration. These appear on the profile as linked 3rd party accounts.
+    /// Represents the guild preview.
     /// </summary>
     public class DiscordGuildPreview : SnowflakeObject
     {
         /// <summary>
-        /// Gets the integration name.
+        /// Gets the guild name.
         /// </summary>
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; internal set; }
 
         /// <summary>
-        /// Gets the integration type.
+        /// Gets the guild icon's hash.
         /// </summary>
         [JsonProperty("icon", NullValueHandling = NullValueHandling.Ignore)]
-        public string Icon { get; internal set; }
+        public string IconHash { get; internal set; }
 
         /// <summary>
-        /// Gets the integration type.
+        /// Gets the guild icon's url.
+        /// </summary>
+        [JsonIgnore]
+        public string IconUrl
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{(this.IconHash.StartsWith("a_") ? "gif" : "png")}?size=1024" : null;
+
+        /// <summary>
+        /// Gets the guild splash's hash.
         /// </summary>
         [JsonProperty("splash", NullValueHandling = NullValueHandling.Ignore)]
-        public string Splash { get; internal set; }
+        public string SplashHash { get; internal set; }
 
         /// <summary>
-        /// Gets the integration type.
+        /// Gets the guild splash's url.
+        /// </summary>
+        [JsonIgnore]
+        public string SplashUrl
+         => !string.IsNullOrWhiteSpace(this.SplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.png?size=1024" : null;
+
+        /// <summary>
+        /// Gets the guild discovery splash's hash.
         /// </summary>
         [JsonProperty("discovery_splash", NullValueHandling = NullValueHandling.Ignore)]
-        public string DiscoverySplash { get; internal set; }
+        public string DiscoverySplashHash { get; internal set; }
+
+        /// <summary>
+        /// Gets the guild discovery splash's url.
+        /// </summary>
+        [JsonIgnore]
+        public string DiscoverySplashUrl
+            => !string.IsNullOrWhiteSpace(this.DiscoverySplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_DISCOVERY_SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.DiscoverySplashHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets a collection of this guild's emojis.

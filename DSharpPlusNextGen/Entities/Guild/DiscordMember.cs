@@ -28,6 +28,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using DSharpPlusNextGen.Enums.Discord;
 using DSharpPlusNextGen.Net;
 using DSharpPlusNextGen.Net.Abstractions;
 using DSharpPlusNextGen.Net.Models;
@@ -81,7 +82,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public string GuildAvatarUrl
-            => !string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? (this.GuildAvatarHash.StartsWith("a_") ? $"https://cdn.discordapp.com/guilds/{this._guild_id.ToString(CultureInfo.InvariantCulture)}/users/{this.Id.ToString(CultureInfo.InvariantCulture)}/avatars/{this.GuildAvatarHash}.gif?size=1024" : $"https://cdn.discordapp.com/guilds/{this._guild_id.ToString(CultureInfo.InvariantCulture)}/users/{this.Id.ToString(CultureInfo.InvariantCulture)}/avatars/{this.GuildAvatarHash}.png?size=1024") : this.User.AvatarUrl;
+            => string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? this.User.AvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this._guild_id.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/avatars/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
         /// <summary>
         /// Gets this member's nickname.

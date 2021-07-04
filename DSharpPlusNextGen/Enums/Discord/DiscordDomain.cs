@@ -140,6 +140,12 @@ namespace DSharpPlusNextGen.Enums.Discord
         [DomainHelp("Status page", "discordstatus.com")]
         DiscordStatus = 18,
 
+        /// <summary>
+        /// cdn.discordapp.com
+        /// </summary>
+        [DomainHelp("CDN", "cdn.discordapp.com")]
+        DiscordCdn = 19,
+
     }
 
     /// <summary>

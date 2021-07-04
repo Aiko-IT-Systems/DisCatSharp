@@ -70,7 +70,7 @@ namespace DSharpPlusNextGen.Entities
         /// <summary>
         /// Gets the pack's banner url.
         /// </summary>
-        public string BannerUrl => $"https://cdn.{DiscordDomain.GetDomain(CoreDomain.DiscordAppOld).Domain}/{Endpoints.APP_ASSETS}/710982414301790216/{Endpoints.STORE}/{this.BannerAssetId}.png?size=4096";
+        public string BannerUrl => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}{Endpoints.STICKER_APPLICATION}{Endpoints.STORE}/{this.BannerAssetId}.png?size=4096";
 
         internal DiscordStickerPack() { }
     }
