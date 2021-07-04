@@ -832,8 +832,6 @@ namespace DSharpPlusNextGen
                 xe.Discord = this;
             foreach (var xs in guild._stickers.Values)
                 xs.Discord = this;
-            foreach (var xt in guild._stickers.Values)
-                xt.Discord = this;
             foreach (var xvs in guild._voiceStates.Values)
                 xvs.Discord = this;
             foreach (var xsi in guild._stageInstances.Values)
@@ -1045,13 +1043,16 @@ namespace DSharpPlusNextGen
         internal async Task OnStickersUpdatedAsync(IEnumerable<DiscordSticker> newStickers, JObject raw)
         {
             var guild = this.InternalGetCachedGuild((ulong)raw["guild_id"]);
-            var oldStickers = new ReadOnlyDictionary<ulong, DiscordSticker>(guild._stickers);
+            var oldStickers = new ConcurrentDictionary<ulong, DiscordSticker>(guild._stickers);
             guild._stickers.Clear();
 
             foreach (var nst in newStickers)
             {
                 if (nst.User is not null)
+                {
                     nst.User.Discord = this;
+                    this.UserCache.AddOrUpdate(nst.User.Id, nst.User, (old, @new) => @new);
+                }
                 nst.Discord = this;
 
                 guild._stickers[nst.Id] = nst;
@@ -1380,6 +1381,12 @@ namespace DSharpPlusNextGen
             var channel = this.InternalGetCachedChannel(channelId);
 
             invite.Discord = this;
+
+            if(invite.Inviter is not null)
+            {
+                invite.Inviter.Discord = this;
+                this.UserCache.AddOrUpdate(invite.Inviter.Id, invite.Inviter, (old, @new) => @new);
+            }
 
             guild._invites[invite.Code] = invite;
 
@@ -1759,12 +1766,17 @@ namespace DSharpPlusNextGen
         {
             stage.Discord = this;
 
+            var guild = this.InternalGetCachedGuild(stage.GuildId);
+            guild._stageInstances[stage.Id] = stage;
+
             await this._stageInstanceCreated.InvokeAsync(this, new StageInstanceCreateEventArgs { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
         }
 
         internal async Task OnStageInstanceUpdateEventAsync(DiscordStageInstance stage)
         {
             stage.Discord = this;
+            var guild = this.InternalGetCachedGuild(stage.GuildId);
+            guild._stageInstances[stage.Id] = stage;
 
             await this._stageInstanceUpdated.InvokeAsync(this, new StageInstanceUpdateEventArgs { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
         }
@@ -1772,6 +1784,8 @@ namespace DSharpPlusNextGen
         internal async Task OnStageInstanceDeleteEventAsync(DiscordStageInstance stage)
         {
             stage.Discord = this;
+            var guild = this.InternalGetCachedGuild(stage.GuildId);
+            guild._stageInstances[stage.Id] = stage;
 
             await this._stageInstanceDeleted.InvokeAsync(this, new StageInstanceDeleteEventArgs { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
         }
@@ -2132,7 +2146,7 @@ namespace DSharpPlusNextGen
 
         #endregion
 
-        #region Misc
+        #region Interaction
 
         internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction)
         {
@@ -2156,6 +2170,7 @@ namespace DSharpPlusNextGen
                     foreach (var c in resolved.Users)
                     {
                         c.Value.Discord = this;
+                        this.UserCache.AddOrUpdate(c.Value.Id, c.Value, (old, @new) => @new);
                     }
                 }
 
@@ -2166,6 +2181,8 @@ namespace DSharpPlusNextGen
                         c.Value.Discord = this;
                         c.Value.Id = c.Key;
                         c.Value._guild_id = guildId.Value;
+                        c.Value.User.Discord = this;
+                        this.UserCache.AddOrUpdate(c.Value.User.Id, c.Value.User, (old, @new) => @new);
                     }
                 }
 
@@ -2215,6 +2232,10 @@ namespace DSharpPlusNextGen
                 await this._interactionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
             }
         }
+
+        #endregion
+
+        #region Misc
 
         internal async Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel channel, ulong? guildId, DateTimeOffset started, TransportMember mbr)
         {

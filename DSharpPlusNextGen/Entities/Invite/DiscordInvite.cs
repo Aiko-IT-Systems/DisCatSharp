@@ -143,6 +143,12 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("revoked", NullValueHandling = NullValueHandling.Ignore)]
         public bool IsRevoked { get; internal set; }
 
+        /// <summary>
+        /// Gets the stage instance this invite is for.
+        /// </summary>
+        [JsonProperty("stage_instance", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordInviteStage Stage { get; internal set; }
+
         internal DiscordInvite() { }
 
         /// <summary>
@@ -173,6 +179,6 @@ namespace DSharpPlusNextGen.Entities
         /// Converts this invite into an invite link.
         /// </summary>
         /// <returns>A discord.gg invite link.</returns>
-        public override string ToString() => $"https://discord.gg/{this.Code}";
+        public override string ToString() => $"{DiscordDomain.GetDomain(CoreDomain.DiscordShortlink).Url}/{this.Code}";
     }
 }
