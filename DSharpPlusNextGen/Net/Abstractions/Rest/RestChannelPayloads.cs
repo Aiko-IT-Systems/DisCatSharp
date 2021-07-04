@@ -131,6 +131,9 @@ namespace DSharpPlusNextGen.Net.Abstractions
         [JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
         public bool? IsTTS { get; set; }
 
+        [JsonProperty("sticker_ids", NullValueHandling = NullValueHandling.Ignore)]
+        public IEnumerable<ulong> StickersIds { get; set; }
+
         [JsonProperty("message_reference", NullValueHandling = NullValueHandling.Ignore)]
         public InternalDiscordMessageReference? MessageReference { get; set; }
 

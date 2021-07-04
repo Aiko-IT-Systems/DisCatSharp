@@ -894,15 +894,15 @@ namespace DSharpPlusNextGen.Net
             return ret;
         }
 
-        internal async Task<DiscordMessage> CreateMessageAsync(ulong channel_id, string content, IEnumerable<DiscordEmbed> embeds, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply)
+        internal async Task<DiscordMessage> CreateMessageAsync(ulong channel_id, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply)
         {
             if (content != null && content.Length > 2000)
                 throw new ArgumentException("Message content length cannot exceed 2000 characters.");
 
             if (!embeds?.Any() ?? true)
             {
-                if (content == null)
-                    throw new ArgumentException("You must specify message content or an embed.");
+                if (content == null && sticker == null)
+                    throw new ArgumentException("You must specify message content, a sticker or an embed.");
                 if (content.Length == 0)
                     throw new ArgumentException("Message content must not be empty.");
             }
@@ -916,6 +916,7 @@ namespace DSharpPlusNextGen.Net
             {
                 HasContent = content != null,
                 Content = content,
+                StickersIds = sticker is null ? Array.Empty<ulong>() : new[] {sticker.Id},
                 IsTTS = false,
                 HasEmbed = embeds?.Any() ?? false,
                 Embeds = embeds
@@ -951,6 +952,7 @@ namespace DSharpPlusNextGen.Net
             {
                 HasContent = builder.Content != null,
                 Content = builder.Content,
+                StickersIds = builder.Sticker is null ? Array.Empty<ulong>() : new[] {builder.Sticker.Id},
                 IsTTS = builder.IsTTS,
                 HasEmbed = builder.Embeds != null,
                 Embeds = builder.Embeds,

@@ -72,7 +72,7 @@ namespace DSharpPlusNextGen.Entities
         public DiscordGuild Guild => (this.Discord as DiscordClient).InternalGetCachedGuild(this.GuildId);
 
         [JsonProperty("guild_id")]
-        internal ulong? GuildId { get; set; }
+        public ulong? GuildId { get; internal set; }
 
         /// <summary>
         /// Gets whether this sticker is available. Only applicable to guild stickers.
