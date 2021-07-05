@@ -2,7 +2,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	
 	<PropertyGroup>
-    <VersionPrefix>9.5.0</VersionPrefix>
     <NoWarn>1591</NoWarn>
     <LangVersion>9.0</LangVersion>
     <Optimize>True</Optimize>
@@ -21,24 +20,6 @@
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <Optimize>False</Optimize>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' != ''">
-    <Version>$(VersionPrefix)-$(VersionSuffix)-$(BuildNumber)</Version>
-    <AssemblyVersion>$(VersionPrefix).$(BuildNumber)</AssemblyVersion>
-    <FileVersion>$(VersionPrefix).$(BuildNumber)</FileVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' == ''">
-    <Version>$(VersionPrefix)-$(VersionSuffix)</Version>
-    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
-    <FileVersion>$(VersionPrefix).0</FileVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(VersionSuffix)' == ''">
-    <Version>$(VersionPrefix)</Version>
-    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
-    <FileVersion>$(VersionPrefix).0</FileVersion>
   </PropertyGroup>
 
 </Project>

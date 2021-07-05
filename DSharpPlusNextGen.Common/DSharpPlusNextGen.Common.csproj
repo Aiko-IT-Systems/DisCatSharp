@@ -2,7 +2,7 @@
 <!-- 
     This file is a part of DSharpPlusNextGen.CommonDSharpPlusNextGen.Common project.
     
-    Copyright 2020 Emzi0767DSharpPlusNextGen.Common
+    Copyright 2020 Emzi0767
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@
 -->
   
 <Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Version.targets" />
   
   <PropertyGroup>
     <AssemblyName>DSharpPlusNextGen.Common</AssemblyName>
     <RootNamespace>DSharpPlusNextGen.Common</RootNamespace>
     <LangVersion>9.0</LangVersion>
-    <VersionPrefix>9.5.0</VersionPrefix>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Optimize>True</Optimize>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -56,18 +57,6 @@
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <Optimize>False</Optimize>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' != ''">
-    <Version>$(VersionPrefix)-$(VersionSuffix)-$(BuildNumber)</Version>
-    <AssemblyVersion>$(VersionPrefix).$(BuildNumber)</AssemblyVersion>
-    <FileVersion>$(VersionPrefix).$(BuildNumber)</FileVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(VersionSuffix)' == '' Or '$(BuildNumber)' == ''">
-    <Version>$(VersionPrefix)</Version>
-    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
-    <FileVersion>$(VersionPrefix).0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
