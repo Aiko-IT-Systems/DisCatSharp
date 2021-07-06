@@ -1,0 +1,244 @@
+/* Discord Style */
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-bg-color);
+    border-color: var(--scrollbar-thumb-border-color);
+}
+
+html, body
+{
+    font: 15px/150% 'Roboto', sans-serif;
+    color: var(--text-color);
+    background-color: var(--main-bg-color);
+}
+
+h1,h2,h3,h4,h5
+{
+    color: var(--link-active-color);
+}
+
+h3
+{
+    color: var(--h3-color);
+}
+
+h4
+{
+    opacity: 1;
+    color: var(--h4-color);
+    border-bottom: 2px solid var(--separator-color);
+}
+
+
+h5 {
+    color: var(--h5-color);
+}
+
+a
+{
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color .25s;
+}
+
+a:focus, a:hover
+{
+    color: var(--link-hover-color);
+    text-decoration: underline;
+}
+
+a.anchorjs-link:hover {
+    text-decoration: none;
+}
+
+a.active, a:active
+{
+    color: var(--link-active-color);
+}
+
+nav
+{
+    background-color: var(--sidebar-bg-color);
+}
+
+.sidebar-item
+{
+    color: var(--sidebar-item-color);
+}
+
+a.sidebar-item:hover, a.sidebar-item:focus
+{
+    color: var(--link-active-color);
+    text-decoration: none;
+}
+
+a.sidebar-item.active
+{
+    color: var(--link-active-color);
+}
+
+#toc ul.level1 > li > a.sidebar-item.active
+{
+    background-color: var(--link-active-bg-color);
+}
+
+.sidebar-item-separator
+{
+    background-color: var(--separator-color);
+}
+
+span.sidebar-item
+{
+    color: var(--text-color);
+}
+
+.main-panel
+{
+    background-color: var(--main-bg-color);
+}
+
+.top-navbar
+{
+    background-color: var(--topbar-bg-color);
+}
+
+.brand-title
+{
+    color: var(--link-active-color);
+}
+
+.footer
+{
+    background-color: var(--footer-bg-color);
+    color: var(--link-active-color);
+}
+
+.blackout
+{
+    background-color: var(--footer-bg-color);
+}
+
+@keyframes showThat {
+    0% { opacity: 0; visibility: hidden; }
+    1% { opacity: 0; visibility: visible; }
+    100% { opacity: 1; visibility: visible;}
+}
+
+@keyframes hideThat {
+    0% { opacity: 1; visibility: visible; }
+    99% { opacity: 0; visibility: visible; }
+    100% { opacity: 0; visibility: hidden;}
+}
+
+.showThat
+{
+    animation: showThat .5s forwards;
+}
+
+.hideThat
+{
+    animation: hideThat .5s forwards;
+}
+
+/* Table */
+
+table
+{
+    background-color: var(--code-bg-color);
+}
+
+table.table-striped tbody tr:nth-child(2n)
+{
+    background-color: var(--table-strip-bg-color);
+}
+
+table thead
+{
+    background: var(--table-header-bg-color);
+}
+
+table th
+{
+    color: var(--table-header-color);
+    border-bottom: 1px solid var(--table-header-border-color);
+}
+
+.alert.alert-info
+{
+    border: 2px solid var(--alert-info-border-color);
+    background: var(--alert-info-bg-color);
+}
+
+.alert.alert-warning
+{
+    border: 2px solid var(--alert-warning-border-color);
+    background: var(--alert-warning-bg-color);
+}
+
+.alert.alert-danger
+{
+    border: 2px solid var(--alert-danger-border-color);
+    background: var(--alert-danger-bg-color);
+}
+
+.TIP.alert.alert-info
+{
+    border: 2px solid var(--alert-tip-border-color);
+    background: var(--alert-tip-bg-color);
+}
+
+blockquote {
+    border-left: 4px solid var(--blockquote-border-color);
+    background: var(--blockquote-bg-color);
+}
+
+/* Breadcrumb */
+
+#breadcrumb
+{
+    background: var(--breadcrumb-bg-color);
+}
+
+/* Code */
+
+legend, pre
+{
+    background-color: var(--code-bg-color);
+}
+
+code
+{
+    background-color: var(--code-bg-color);
+}
+
+
+/* DocFX related */
+
+ul.level2 > li > a.sidebar-item
+{
+    color: var(--sidebar-item-2nd-color);
+}
+
+ul.level3 > li > a.sidebar-item
+{
+    color: var(--sidebar-item-3rd-color);
+}
+
+ul.level2 > li > a.sidebar-item:hover,
+ul.level2 > li > a.sidebar-item:focus,
+ul.level3 > li > a.sidebar-item:hover,
+ul.level3 > li > a.sidebar-item:focus
+{
+    color: var(--link-active-color);
+    text-decoration: underline;
+}
+
+ul.level2 > li > a.sidebar-item.active,
+ul.level3 > li > a.sidebar-item.active
+{
+    color: var(--link-active-color);
+}
