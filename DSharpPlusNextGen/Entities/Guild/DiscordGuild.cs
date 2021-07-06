@@ -382,21 +382,21 @@ namespace DSharpPlusNextGen.Entities
         /// Gets a dictionary of all the active threads associated with this guild the user has permission to view. The dictionary's key is the channel ID.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordThreadChannel> Threads => new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this._threads);
+        public IReadOnlyDictionary<ulong, DiscordThreadChannel> Threads { get; internal set; }
 
         [JsonProperty("threads", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordThreadChannel> _threads;
+        internal ConcurrentDictionary<ulong, DiscordThreadChannel> _threads = new();
 
         /// <summary>
         /// Gets a dictionary of all active stage instances. The dictionary's key is the stage ID.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordStageInstance> StageInstances => new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this._stageInstances);
+        public IReadOnlyDictionary<ulong, DiscordStageInstance> StageInstances { get; internal set; }
 
         [JsonProperty("stage_instances", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordStageInstance> _stageInstances;
+        internal ConcurrentDictionary<ulong, DiscordStageInstance> _stageInstances = new();
 
         /// <summary>
         /// Gets the guild member for current user.
@@ -507,6 +507,8 @@ namespace DSharpPlusNextGen.Entities
         {
             this._current_member_lazy = new Lazy<DiscordMember>(() => (this._members != null && this._members.TryGetValue(this.Discord.CurrentUser.Id, out var member)) ? member : null);
             this._invites = new ConcurrentDictionary<string, DiscordInvite>();
+            this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this._threads);
+            this.StageInstances = new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this._stageInstances);
         }
 
         #region Guild Methods
