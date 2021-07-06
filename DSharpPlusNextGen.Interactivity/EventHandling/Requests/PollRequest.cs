@@ -61,6 +61,9 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             }
         }
 
+        /// <summary>
+        /// Clears the collected.
+        /// </summary>
         internal void ClearCollected()
         {
             this._collected.Clear();
@@ -70,6 +73,11 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             }
         }
 
+        /// <summary>
+        /// Removes the reaction.
+        /// </summary>
+        /// <param name="emoji">The emoji.</param>
+        /// <param name="member">The member.</param>
         internal void RemoveReaction(DiscordEmoji emoji, DiscordUser member)
         {
             if (this._collected.Any(x => x.Emoji == emoji))
@@ -84,6 +92,11 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             }
         }
 
+        /// <summary>
+        /// Adds the reaction.
+        /// </summary>
+        /// <param name="emoji">The emoji.</param>
+        /// <param name="member">The member.</param>
         internal void AddReaction(DiscordEmoji emoji, DiscordUser member)
         {
             if (this._collected.Any(x => x.Emoji == emoji))
@@ -127,6 +140,9 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
 
         public DiscordEmoji Emoji;
         public ConcurrentHashSet<DiscordUser> Voted;
+        /// <summary>
+        /// Gets the total.
+        /// </summary>
         public int Total => this.Voted.Count;
     }
 }

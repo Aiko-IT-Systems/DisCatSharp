@@ -135,6 +135,9 @@ namespace DSharpPlusNextGen.Common.Utilities
             }
         }
 
+        /// <summary>
+        /// The state ref.
+        /// </summary>
         private sealed class StateRef<T>
         {
             /// <summary>
@@ -158,7 +161,7 @@ namespace DSharpPlusNextGen.Common.Utilities
             public bool HasResult { get; set; } = false;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="StateRef"/> class.
+            /// Initializes a new instance of the <see cref="StateRef{T}"/> class.
             /// </summary>
             /// <param name="lock">The lock.</param>
             public StateRef(AutoResetEvent @lock)

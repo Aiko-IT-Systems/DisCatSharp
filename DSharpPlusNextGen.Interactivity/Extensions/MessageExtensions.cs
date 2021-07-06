@@ -149,9 +149,7 @@ namespace DSharpPlusNextGen.Interactivity.Extensions
             var client = (DiscordClient)message.Discord;
             var interactivity = client.GetInteractivity();
 
-            return interactivity == null
-                ? throw new InvalidOperationException($"Interactivity is not enabled for this {(client._isShard ? "shard" : "client")}.")
-                : interactivity;
+            return interactivity ?? throw new InvalidOperationException($"Interactivity is not enabled for this {(client._isShard ? "shard" : "client")}.");
         }
     }
 }

@@ -38,7 +38,7 @@ namespace DSharpPlusNextGen.Interactivity
         public T Result { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InteractivityResult"/> class.
+        /// Initializes a new instance of the <see cref="InteractivityResult{T}"/> class.
         /// </summary>
         /// <param name="timedout">If true, timedout.</param>
         /// <param name="result">The result.</param>
