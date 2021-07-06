@@ -812,6 +812,12 @@ namespace DSharpPlusNextGen
             guild.IsNSFW = eventGuild.IsNSFW;
 
             foreach (var kvp in eventGuild._voiceStates) guild._voiceStates[kvp.Key] = kvp.Value;
+            foreach (var kvp in eventGuild._channels) guild._channels[kvp.Key] = kvp.Value;
+            foreach (var kvp in eventGuild._roles) guild._roles[kvp.Key] = kvp.Value;
+            foreach (var kvp in eventGuild._emojis) guild._emojis[kvp.Key] = kvp.Value;
+            foreach (var kvp in eventGuild._threads) guild._threads[kvp.Key] = kvp.Value;
+            foreach (var kvp in eventGuild._stickers) guild._stickers[kvp.Key] = kvp.Value;
+            foreach (var kvp in eventGuild._stageInstances) guild._stageInstances[kvp.Key] = kvp.Value;
 
             foreach (var xc in guild._channels.Values)
             {
