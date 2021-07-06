@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,10 +30,19 @@ using DSharpPlusNextGen.Entities;
 
 namespace DSharpPlusNextGen.CommandsNext.Converters
 {
+    /// <summary>
+    /// Represents a discord user converter.
+    /// </summary>
     public class DiscordUserConverter : IArgumentConverter<DiscordUser>
     {
+        /// <summary>
+        /// Gets the user regex.
+        /// </summary>
         private static Regex UserRegex { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordUserConverter"/> class.
+        /// </summary>
         static DiscordUserConverter()
         {
 #if NETSTANDARD1_3
@@ -44,6 +52,11 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
 #endif
         }
 
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
         async Task<Optional<DiscordUser>> IArgumentConverter<DiscordUser>.ConvertAsync(string value, CommandContext ctx)
         {
             if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var uid))
@@ -78,10 +91,19 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
         }
     }
 
+    /// <summary>
+    /// Represents a discord member converter.
+    /// </summary>
     public class DiscordMemberConverter : IArgumentConverter<DiscordMember>
     {
+        /// <summary>
+        /// Gets the user regex.
+        /// </summary>
         private static Regex UserRegex { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordMemberConverter"/> class.
+        /// </summary>
         static DiscordMemberConverter()
         {
 #if NETSTANDARD1_3
@@ -91,6 +113,11 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
 #endif
         }
 
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
         async Task<Optional<DiscordMember>> IArgumentConverter<DiscordMember>.ConvertAsync(string value, CommandContext ctx)
         {
             if (ctx.Guild == null)
@@ -132,10 +159,19 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
         }
     }
 
+    /// <summary>
+    /// Represents a discord channel converter.
+    /// </summary>
     public class DiscordChannelConverter : IArgumentConverter<DiscordChannel>
     {
+        /// <summary>
+        /// Gets the channel regex.
+        /// </summary>
         private static Regex ChannelRegex { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordChannelConverter"/> class.
+        /// </summary>
         static DiscordChannelConverter()
         {
 #if NETSTANDARD1_3
@@ -145,6 +181,11 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
 #endif
         }
 
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
         async Task<Optional<DiscordChannel>> IArgumentConverter<DiscordChannel>.ConvertAsync(string value, CommandContext ctx)
         {
             if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var cid))
@@ -171,10 +212,19 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
         }
     }
 
+    /// <summary>
+    /// Represents a discord role converter.
+    /// </summary>
     public class DiscordRoleConverter : IArgumentConverter<DiscordRole>
     {
+        /// <summary>
+        /// Gets the role regex.
+        /// </summary>
         private static Regex RoleRegex { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordRoleConverter"/> class.
+        /// </summary>
         static DiscordRoleConverter()
         {
 #if NETSTANDARD1_3
@@ -184,6 +234,11 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
 #endif
         }
 
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
         Task<Optional<DiscordRole>> IArgumentConverter<DiscordRole>.ConvertAsync(string value, CommandContext ctx)
         {
             if (ctx.Guild == null)
@@ -213,8 +268,16 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
         }
     }
 
+    /// <summary>
+    /// Represents a discord guild converter.
+    /// </summary>
     public class DiscordGuildConverter : IArgumentConverter<DiscordGuild>
     {
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
         Task<Optional<DiscordGuild>> IArgumentConverter<DiscordGuild>.ConvertAsync(string value, CommandContext ctx)
         {
             if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var gid))
@@ -233,10 +296,19 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
         }
     }
 
+    /// <summary>
+    /// Represents a discord message converter.
+    /// </summary>
     public class DiscordMessageConverter : IArgumentConverter<DiscordMessage>
     {
+        /// <summary>
+        /// Gets the message path regex.
+        /// </summary>
         private static Regex MessagePathRegex { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordMessageConverter"/> class.
+        /// </summary>
         static DiscordMessageConverter()
         {
 #if NETSTANDARD1_3
@@ -246,6 +318,11 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
 #endif
         }
 
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
         async Task<Optional<DiscordMessage>> IArgumentConverter<DiscordMessage>.ConvertAsync(string value, CommandContext ctx)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -282,10 +359,19 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
         }
     }
 
+    /// <summary>
+    /// Represents a discord emoji converter.
+    /// </summary>
     public class DiscordEmojiConverter : IArgumentConverter<DiscordEmoji>
     {
+        /// <summary>
+        /// Gets the emote regex.
+        /// </summary>
         private static Regex EmoteRegex { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordEmojiConverter"/> class.
+        /// </summary>
         static DiscordEmojiConverter()
         {
 #if NETSTANDARD1_3
@@ -295,6 +381,11 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
 #endif
         }
 
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
         Task<Optional<DiscordEmoji>> IArgumentConverter<DiscordEmoji>.ConvertAsync(string value, CommandContext ctx)
         {
             if (DiscordEmoji.TryFromUnicode(ctx.Client, value, out var emoji))
@@ -330,11 +421,23 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
         }
     }
 
+    /// <summary>
+    /// Represents a discord color converter.
+    /// </summary>
     public class DiscordColorConverter : IArgumentConverter<DiscordColor>
     {
+        /// <summary>
+        /// Gets the color regex hex.
+        /// </summary>
         private static Regex ColorRegexHex { get; }
+        /// <summary>
+        /// Gets the color regex rgb.
+        /// </summary>
         private static Regex ColorRegexRgb { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordColorConverter"/> class.
+        /// </summary>
         static DiscordColorConverter()
         {
 #if NETSTANDARD1_3
@@ -346,6 +449,11 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
 #endif
         }
 
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
         Task<Optional<DiscordColor>> IArgumentConverter<DiscordColor>.ConvertAsync(string value, CommandContext ctx)
         {
             var m = ColorRegexHex.Match(value);

@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +23,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
+using DSharpPlusNextGen.Enums.Discord;
+using DSharpPlusNextGen.Net;
 
 namespace DSharpPlusNextGen.Entities
 {
@@ -49,7 +50,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public string IconUrl
-            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"https://cdn.discordapp.com/icons/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.jpg" : null;
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.jpg" : null;
 
         /// <summary>
         /// Gets the hash of guild's invite splash.
@@ -62,7 +63,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public string SplashUrl
-            => !string.IsNullOrWhiteSpace(this.SplashHash) ? $"https://cdn.discordapp.com/splashes/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.jpg" : null;
+            => !string.IsNullOrWhiteSpace(this.SplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.jpg" : null;
 
         /// <summary>
         /// Gets the guild's banner hash, when applicable.
@@ -75,7 +76,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public string BannerUrl
-            => !string.IsNullOrWhiteSpace(this.Banner) ? $"https://cdn.discordapp.com/banners/{this.Id}/{this.Banner}" : null;
+            => !string.IsNullOrWhiteSpace(this.Banner) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id}/{this.Banner}" : null;
 
         /// <summary>
         /// Gets the guild description, when applicable.
@@ -107,6 +108,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("welcome_screen", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordGuildWelcomeScreen WelcomeScreen { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordInviteGuild"/> class.
+        /// </summary>
         internal DiscordInviteGuild() { }
     }
 }

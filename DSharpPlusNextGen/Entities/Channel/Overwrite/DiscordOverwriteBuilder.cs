@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -157,15 +156,27 @@ namespace DSharpPlusNextGen.Entities
 
     internal struct DiscordRestOverwrite
     {
+        /// <summary>
+        /// Determines what is allowed.
+        /// </summary>
         [JsonProperty("allow", NullValueHandling = NullValueHandling.Ignore)]
         internal Permissions Allow { get; set; }
 
+        /// <summary>
+        /// Determines what is denied.
+        /// </summary>
         [JsonProperty("deny", NullValueHandling = NullValueHandling.Ignore)]
         internal Permissions Deny { get; set; }
 
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
         [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
         internal ulong Id { get; set; }
 
+        /// <summary>
+        /// Gets or sets the overwrite type.
+        /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         internal OverwriteType Type { get; set; }
     }

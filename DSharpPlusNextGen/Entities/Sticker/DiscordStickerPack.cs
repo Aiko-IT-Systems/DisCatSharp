@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DSharpPlusNextGen.Enums.Discord;
@@ -47,6 +47,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("name")]
         public string Name { get; internal set; }
 
+        /// <summary>
+        /// Gets the sku id.
+        /// </summary>
         [JsonProperty("sku_id")]
         public ulong SkuId { get; internal set; }
 
@@ -72,6 +75,9 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public string BannerUrl => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}{Endpoints.STICKER_APPLICATION}{Endpoints.STORE}/{this.BannerAssetId}.png?size=4096";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordStickerPack"/> class.
+        /// </summary>
         internal DiscordStickerPack() { }
     }
 }

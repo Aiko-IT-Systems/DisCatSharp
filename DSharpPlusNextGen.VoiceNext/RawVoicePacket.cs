@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +28,12 @@ namespace DSharpPlusNextGen.VoiceNext
 {
     internal readonly struct RawVoicePacket
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RawVoicePacket"/> class.
+        /// </summary>
+        /// <param name="bytes">The bytes.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="silence">If true, silence.</param>
         public RawVoicePacket(Memory<byte> bytes, int duration, bool silence)
         {
             this.Bytes = bytes;
@@ -37,6 +42,13 @@ namespace DSharpPlusNextGen.VoiceNext
             this.RentedBuffer = null;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RawVoicePacket"/> class.
+        /// </summary>
+        /// <param name="bytes">The bytes.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="silence">If true, silence.</param>
+        /// <param name="rentedBuffer">The rented buffer.</param>
         public RawVoicePacket(Memory<byte> bytes, int duration, bool silence, byte[] rentedBuffer)
             : this(bytes, duration, silence)
         {

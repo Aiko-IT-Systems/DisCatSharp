@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -42,12 +41,20 @@ namespace DSharpPlusNextGen.Net
         /// </summary>
         public DiscordUriType Type { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordUri"/> class.
+        /// </summary>
+        /// <param name="value">The value.</param>
         internal DiscordUri(Uri value)
         {
             this._value = value ?? throw new ArgumentNullException(nameof(value));
             this.Type = DiscordUriType.Standard;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordUri"/> class.
+        /// </summary>
+        /// <param name="value">The value.</param>
         internal DiscordUri(string value)
         {
             if (value == null)
@@ -66,6 +73,10 @@ namespace DSharpPlusNextGen.Net
         }
 
         // can be changed in future
+        /// <summary>
+        /// If the uri is a standard uri
+        /// </summary>
+        /// <param name="value">Uri string</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsStandard(string value) => !value.StartsWith("attachment://");
 
@@ -88,10 +99,26 @@ namespace DSharpPlusNextGen.Net
                 : throw new UriFormatException(
                     $@"DiscordUri ""{this._value}"" would be invalid as a regular URI, please the {nameof(this.Type)} property first.");
 
+        /// <summary>
+        /// Represents a uri json converter.
+        /// </summary>
         internal sealed class DiscordUriJsonConverter : JsonConverter
         {
+            /// <summary>
+            /// Writes the json.
+            /// </summary>
+            /// <param name="writer">The writer.</param>
+            /// <param name="value">The value.</param>
+            /// <param name="serializer">The serializer.</param>
             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => writer.WriteValue((value as DiscordUri)._value);
 
+            /// <summary>
+            /// Reads the json.
+            /// </summary>
+            /// <param name="reader">The reader.</param>
+            /// <param name="objectType">The object type.</param>
+            /// <param name="existingValue">The existing value.</param>
+            /// <param name="serializer">The serializer.</param>
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
                 JsonSerializer serializer)
             {
@@ -106,10 +133,18 @@ namespace DSharpPlusNextGen.Net
                     : new DiscordUri(s);
             }
 
+            /// <summary>
+            /// Whether it can be converted.
+            /// </summary>
+            /// <param name="objectType">The object type.</param>
+            /// <returns>A bool.</returns>
             public override bool CanConvert(Type objectType) => objectType == typeof(DiscordUri);
         }
     }
 
+    /// <summary>
+    /// Represents a uri type.
+    /// </summary>
     public enum DiscordUriType : byte
     {
         /// <summary>

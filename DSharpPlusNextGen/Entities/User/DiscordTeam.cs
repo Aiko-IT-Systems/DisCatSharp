@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -61,6 +60,10 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public IReadOnlyList<DiscordTeamMember> Members { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordTeam"/> class.
+        /// </summary>
+        /// <param name="tt">The tt.</param>
         internal DiscordTeam(TransportTeam tt)
         {
             this.Id = tt.Id;
@@ -130,6 +133,10 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public DiscordUser User { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordTeamMember"/> class.
+        /// </summary>
+        /// <param name="ttm">The ttm.</param>
         internal DiscordTeamMember(TransportTeamMember ttm)
         {
             this.MembershipStatus = (DiscordTeamMembershipStatus)ttm.MembershipState;

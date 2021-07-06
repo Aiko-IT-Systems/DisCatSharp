@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlus-NextGen project.
+// This file is part of the DSharpPlusNextGen project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -110,6 +110,9 @@ namespace DSharpPlusNextGen.Entities
             => !string.IsNullOrWhiteSpace(this.LastPinTimestampRaw) && DateTimeOffset.TryParse(this.LastPinTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
                 dto : null;
 
+        /// <summary>
+        /// Gets when the last pinned message was pinned in this thread as raw string.
+        /// </summary>
         [JsonProperty("last_pin_timestamp", NullValueHandling = NullValueHandling.Ignore)]
         internal string LastPinTimestampRaw { get; set; }
 
@@ -155,6 +158,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonIgnore]
         public bool IsNSFW => this.Parent.IsNSFW;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
+        /// </summary>
         internal DiscordThreadChannel() { }
 
         #region Methods
@@ -458,6 +464,13 @@ namespace DSharpPlusNextGen.Entities
         public Task<IReadOnlyList<DiscordMessage>> GetMessagesAsync(int limit = 100) =>
             this.GetMessagesInternalAsync(limit, null, null, null);
 
+        /// <summary>
+        /// Returns a list of messages
+        /// </summary>
+        /// <param name="limit">How many messages should be returned.</param>
+        /// <param name="before">Get messages before snowflake.</param>
+        /// <param name="after">Get messages after snowflake.</param>
+        /// <param name="around">Get messages around snowflake.</param>
         private async Task<IReadOnlyList<DiscordMessage>> GetMessagesInternalAsync(int limit = 100, ulong? before = null, ulong? after = null, ulong? around = null)
         {
             if (this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread)

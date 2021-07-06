@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +39,13 @@ namespace DSharpPlusNextGen
     /// </summary>
     public abstract class BaseDiscordClient : IDisposable
     {
+        /// <summary>
+        /// Gets the api client.
+        /// </summary>
         internal protected DiscordApiClient ApiClient { get; }
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
         internal protected DiscordConfiguration Configuration { get; }
 
         /// <summary>
@@ -248,12 +253,21 @@ namespace DSharpPlusNextGen
             return await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Gets a cached user.
+        /// </summary>
+        /// <param name="user_id">The user_id.</param>
         internal DiscordUser GetCachedOrEmptyUserInternal(ulong user_id)
         {
             this.TryGetCachedUserInternal(user_id, out var user);
             return user;
         }
 
+        /// <summary>
+        /// Tries the get a cached user.
+        /// </summary>
+        /// <param name="user_id">The user_id.</param>
+        /// <param name="user">The user.</param>
         internal bool TryGetCachedUserInternal(ulong user_id, out DiscordUser user)
         {
             if (this.UserCache.TryGetValue(user_id, out user))

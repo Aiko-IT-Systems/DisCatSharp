@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -86,8 +85,15 @@ namespace DSharpPlusNextGen.Entities
         public bool Equals(DiscordVoiceRegion region)
             => this == region;
 
+        /// <summary>
+        /// Whether two regions are equal.
+        /// </summary>
+        /// <param name="obj">A voice region.</param>
         public override bool Equals(object obj) => this.Equals(obj as DiscordVoiceRegion);
 
+        /// <summary>
+        /// Gets the hash code.
+        /// </summary>
         public override int GetHashCode() => this.Id.GetHashCode();
 
         /// <summary>
@@ -101,7 +107,7 @@ namespace DSharpPlusNextGen.Entities
             var o1 = left as object;
             var o2 = right as object;
 
-            return (o1 == null && o2 != null) || (o1 != null && o2 == null) ? false : o1 == null && o2 == null ? true : left.Id == right.Id;
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || left.Id == right.Id);
         }
 
         /// <summary>
@@ -113,6 +119,9 @@ namespace DSharpPlusNextGen.Entities
         public static bool operator !=(DiscordVoiceRegion left, DiscordVoiceRegion right)
             => !(left == right);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordVoiceRegion"/> class.
+        /// </summary>
         internal DiscordVoiceRegion() { }
     }
 }

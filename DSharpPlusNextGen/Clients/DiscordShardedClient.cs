@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -83,6 +82,9 @@ namespace DSharpPlusNextGen
 
         #region Private Properties/Fields
 
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
         private DiscordConfiguration Configuration { get; }
 
         /// <summary>
@@ -235,6 +237,10 @@ namespace DSharpPlusNextGen
 
         #region Internal Methods
 
+        /// <summary>
+        /// Initializes the shards async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         internal async Task<int> InitializeShardsAsync()
         {
             if (this._shards.Count != 0)
@@ -264,6 +270,10 @@ namespace DSharpPlusNextGen
 
         #region Private Methods/Version Property
 
+        /// <summary>
+        /// Gets the gateway info async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         private async Task<GatewayInfo> GetGatewayInfoAsync()
         {
             var url = $"{Utilities.GetApiBaseUri()}{Endpoints.GATEWAY}{Endpoints.BOT}";
@@ -355,6 +365,11 @@ namespace DSharpPlusNextGen
 
         #region Private Connection Methods
 
+        /// <summary>
+        /// Connects the shard async.
+        /// </summary>
+        /// <param name="i">The i.</param>
+        /// <returns>A Task.</returns>
         private async Task ConnectShardAsync(int i)
         {
             if (!this._shards.TryGetValue(i, out var client))
@@ -397,6 +412,11 @@ namespace DSharpPlusNextGen
             }
         }
 
+        /// <summary>
+        /// Internals the stop async.
+        /// </summary>
+        /// <param name="enableLogger">If true, enable logger.</param>
+        /// <returns>A Task.</returns>
         private Task InternalStopAsync(bool enableLogger = true)
         {
             if (!this._isStarted)
@@ -434,6 +454,9 @@ namespace DSharpPlusNextGen
 
         #region Event Handler Initialization/Registering
 
+        /// <summary>
+        /// Internals the setup.
+        /// </summary>
         private void InternalSetup()
         {
             this._clientErrored = new AsyncEvent<DiscordClient, ClientErrorEventArgs>("CLIENT_ERRORED", DiscordClient.EventExecutionLimit, this.Goof);
@@ -503,6 +526,10 @@ namespace DSharpPlusNextGen
             this._threadMembersUpdated = new AsyncEvent<DiscordClient, ThreadMembersUpdateEventArgs>("THREAD_MEMBERS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
         }
 
+        /// <summary>
+        /// Hooks the event handlers.
+        /// </summary>
+        /// <param name="client">The client.</param>
         private void HookEventHandlers(DiscordClient client)
         {
             client.ClientErrored += this.Client_ClientError;
@@ -572,6 +599,10 @@ namespace DSharpPlusNextGen
             client.ThreadMembersUpdated += this.Client_ThreadMembersUpdated;
         }
 
+        /// <summary>
+        /// Unhooks the event handlers.
+        /// </summary>
+        /// <param name="client">The client.</param>
         private void UnhookEventHandlers(DiscordClient client)
         {
             client.ClientErrored -= this.Client_ClientError;
@@ -640,6 +671,11 @@ namespace DSharpPlusNextGen
             client.ThreadMembersUpdated -= this.Client_ThreadMembersUpdated;
         }
 
+        /// <summary>
+        /// Gets the shard id from guilds.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>An int.</returns>
         private int GetShardIdFromGuilds(ulong id)
         {
             foreach (var s in this._shards.Values)

@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,20 +26,46 @@ using DSharpPlusNextGen.VoiceNext.Codec;
 
 namespace DSharpPlusNextGen.VoiceNext.Entities
 {
+    /// <summary>
+    /// The audio sender.
+    /// </summary>
     internal class AudioSender : IDisposable
     {
+        /// <summary>
+        /// Gets the s s r c.
+        /// </summary>
         public uint SSRC { get; }
+        /// <summary>
+        /// Gets the id.
+        /// </summary>
         public ulong Id => this.User?.Id ?? 0;
+        /// <summary>
+        /// Gets the decoder.
+        /// </summary>
         public OpusDecoder Decoder { get; }
+        /// <summary>
+        /// Gets or sets the user.
+        /// </summary>
         public DiscordUser User { get; set; } = null;
+        /// <summary>
+        /// Gets or sets the last sequence.
+        /// </summary>
         public ushort LastSequence { get; set; } = 0;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AudioSender"/> class.
+        /// </summary>
+        /// <param name="ssrc">The ssrc.</param>
+        /// <param name="decoder">The decoder.</param>
         public AudioSender(uint ssrc, OpusDecoder decoder)
         {
             this.SSRC = ssrc;
             this.Decoder = decoder;
         }
 
+        /// <summary>
+        /// Disposes .
+        /// </summary>
         public void Dispose() => this.Decoder?.Dispose();
     }
 }

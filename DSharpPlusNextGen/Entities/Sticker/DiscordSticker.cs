@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -71,6 +70,9 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public DiscordGuild Guild => (this.Discord as DiscordClient).InternalGetCachedGuild(this.GuildId);
 
+        /// <summary>
+        /// Gets the guild id the sticker belongs too.
+        /// </summary>
         [JsonProperty("guild_id")]
         public ulong? GuildId { get; internal set; }
 
@@ -111,6 +113,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("format_type")]
         public StickerFormat FormatType { get; internal set; }
 
+        /// <summary>
+        /// Gets the tags of the sticker.
+        /// </summary>
         [JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
         internal string _internalTags { get; set; }

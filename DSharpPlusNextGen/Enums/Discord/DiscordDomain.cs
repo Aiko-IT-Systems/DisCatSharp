@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlus-NextGen project.
+// This file is part of the DSharpPlusNextGen project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,9 +21,7 @@
 // SOFTWARE.
 
 using System;
-using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 
 namespace DSharpPlusNextGen.Enums.Discord
 {
@@ -198,8 +196,17 @@ namespace DSharpPlusNextGen.Enums.Discord
         DiscordCdnCom = 2
     }
 
+    /// <summary>
+    /// Represents a discord domain.
+    /// </summary>
     public static class DiscordDomain
     {
+        /// <summary>
+        /// Gets a domain.
+        /// Valid types: <see cref="CoreDomain"/>, <see cref="OtherDomain"/> and <see cref="UnusedDomain"/>.
+        /// </summary>
+        /// <param name="DomainEnum">The domain type.</param>
+        /// <returns>A DomainHelpAttribute.</returns>
         public static DomainHelpAttribute GetDomain(Enum DomainEnum)
         {
             if (DomainEnum is not CoreDomain && DomainEnum is not OtherDomain && DomainEnum is not UnusedDomain)

@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,6 +39,11 @@ namespace DSharpPlusNextGen.Lavalink.EventArgs
         /// </summary>
         public bool IsCleanClose { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NodeDisconnectedEventArgs"/> class.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="isClean">If true, is clean.</param>
         internal NodeDisconnectedEventArgs(LavalinkNodeConnection node, bool isClean)
         {
             this.LavalinkNode = node;

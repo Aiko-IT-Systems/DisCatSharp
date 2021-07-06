@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,18 +26,48 @@ using System.Threading.Tasks;
 
 namespace DSharpPlusNextGen.Net.WebSocket
 {
-    // Licensed from Clyde.NET (etc; I don't know how licenses work)
+    // Licensed from Clyde.NET
 
+    /// <summary>
+    /// Represents a socket lock.
+    /// </summary>
     internal sealed class SocketLock : IDisposable
     {
+        /// <summary>
+        /// Gets the application id.
+        /// </summary>
         public ulong ApplicationId { get; }
 
+        /// <summary>
+        /// Gets the lock semaphore.
+        /// </summary>
         private SemaphoreSlim LockSemaphore { get; }
+
+        /// <summary>
+        /// Gets or sets the timeout cancel source.
+        /// </summary>
         private CancellationTokenSource TimeoutCancelSource { get; set; }
+
+        /// <summary>
+        /// Gets the cancel token.
+        /// </summary>
         private CancellationToken TimeoutCancel => this.TimeoutCancelSource.Token;
+
+        /// <summary>
+        /// Gets or sets the unlock task.
+        /// </summary>
         private Task UnlockTask { get; set; }
+
+        /// <summary>
+        /// Gets or sets the max concurrency.
+        /// </summary>
         private int MaxConcurrency { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SocketLock"/> class.
+        /// </summary>
+        /// <param name="appId">The app id.</param>
+        /// <param name="maxConcurrency">The max concurrency.</param>
         public SocketLock(ulong appId, int maxConcurrency)
         {
             this.ApplicationId = appId;
@@ -47,6 +76,9 @@ namespace DSharpPlusNextGen.Net.WebSocket
             this.LockSemaphore = new SemaphoreSlim(maxConcurrency);
         }
 
+        /// <summary>
+        /// Locks the socket.
+        /// </summary>
         public async Task LockAsync()
         {
             await this.LockSemaphore.WaitAsync().ConfigureAwait(false);
@@ -56,6 +88,10 @@ namespace DSharpPlusNextGen.Net.WebSocket
             _ = this.UnlockTask.ContinueWith(this.InternalUnlock, TaskContinuationOptions.NotOnCanceled);
         }
 
+        /// <summary>
+        /// Unlocks the socket after a given timespan.
+        /// </summary>
+        /// <param name="unlockDelay">The unlock delay.</param>
         public void UnlockAfter(TimeSpan unlockDelay)
         {
             if (this.TimeoutCancelSource == null || this.LockSemaphore.CurrentCount > 0)
@@ -73,9 +109,16 @@ namespace DSharpPlusNextGen.Net.WebSocket
             _ = this.UnlockTask.ContinueWith(this.InternalUnlock);
         }
 
+        /// <summary>
+        /// Waits for the socket lock.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public Task WaitAsync()
             => this.LockSemaphore.WaitAsync();
 
+        /// <summary>
+        /// Disposes the socket lock.
+        /// </summary>
         public void Dispose()
         {
             try
@@ -86,6 +129,10 @@ namespace DSharpPlusNextGen.Net.WebSocket
             catch { }
         }
 
+        /// <summary>
+        /// Unlocks the socket.
+        /// </summary>
+        /// <param name="t">The task.</param>
         private void InternalUnlock(Task t)
             => this.LockSemaphore.Release(this.MaxConcurrency);
     }

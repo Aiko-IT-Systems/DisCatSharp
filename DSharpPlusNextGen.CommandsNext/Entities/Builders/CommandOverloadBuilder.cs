@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -58,6 +57,9 @@ namespace DSharpPlusNextGen.CommandsNext.Builders
         /// </summary>
         public Delegate Callable { get; set; }
 
+        /// <summary>
+        /// Gets the invocation target.
+        /// </summary>
         private object InvocationTarget { get; }
 
         /// <summary>
@@ -76,6 +78,11 @@ namespace DSharpPlusNextGen.CommandsNext.Builders
             : this(method.GetMethodInfo(), method.Target)
         { }
 
+        /// <summary>
+        /// Prevents a default instance of the <see cref="CommandOverloadBuilder"/> class from being created.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="target">The target.</param>
         private CommandOverloadBuilder(MethodInfo method, object target)
         {
             if (!method.IsCommandCandidate(out var prms))
@@ -167,6 +174,9 @@ namespace DSharpPlusNextGen.CommandsNext.Builders
             return this;
         }
 
+        /// <summary>
+        /// Builds the command overload.
+        /// </summary>
         internal CommandOverload Build()
         {
             var ovl = new CommandOverload()

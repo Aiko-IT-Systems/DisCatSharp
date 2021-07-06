@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +24,9 @@ using System;
 
 namespace DSharpPlusNextGen
 {
+    /// <summary>
+    /// Represents a discord intent extensions.
+    /// </summary>
     public static class DiscordIntentExtensions
     {
         /// <summary>
@@ -54,6 +56,10 @@ namespace DSharpPlusNextGen
         public static DiscordIntents RemoveIntent(this DiscordIntents intents, DiscordIntents toRemove)
             => intents &= ~toRemove;
 
+        /// <summary>
+        /// Whether it has all privileged intents.
+        /// </summary>
+        /// <param name="intents">The intents.</param>
         internal static bool HasAllPrivilegedIntents(this DiscordIntents intents)
             => intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences);
     }
@@ -90,7 +96,7 @@ namespace DSharpPlusNextGen
 
         /// <summary>
         /// Whether to include guild emoji and sticker events.
-        /// <para>This includes <see cref="DiscordClient.GuildEmojisUpdated"/>.</para>
+        /// <para>This includes <see cref="DiscordClient.GuildEmojisUpdated"/> and <see cref="DiscordClient.GuildStickersUpdated"/>.</para>
         /// </summary>
         GuildEmojisAndStickers = 1 << 3,
 

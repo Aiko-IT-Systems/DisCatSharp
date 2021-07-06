@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using DSharpPlusNextGen.Enums;
 using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Entities
@@ -62,6 +62,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("component_type", NullValueHandling = NullValueHandling.Ignore)]
         public ComponentType ComponentType { get; internal set; }
 
+        /// <summary>
+        /// Gets the values of the interaction.
+        /// </summary>
         [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
         public string[] Values { get; internal set; } = Array.Empty<string>();
     }

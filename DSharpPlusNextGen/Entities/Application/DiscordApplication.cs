@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -128,8 +127,14 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public string Slug { get; internal set; }
 
+        /// <summary>
+        /// Gets or sets a list of <see cref="DiscordApplicationAsset"/>.
+        /// </summary>
         private IReadOnlyList<DiscordApplicationAsset> Assets { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordApplication"/> class.
+        /// </summary>
         internal DiscordApplication() { }
 
         /// <summary>
@@ -177,6 +182,11 @@ namespace DSharpPlusNextGen.Entities
             return this.Assets;
         }
 
+        /// <summary>
+        /// Generates an oauth url for the application.
+        /// </summary>
+        /// <param name="permissions">The permissions.</param>
+        /// <returns>OAuth Url</returns>
         public string GenerateBotOAuth(Permissions permissions = Permissions.None)
         {
             permissions &= PermissionMethods.FULL_PERMS;
@@ -232,6 +242,9 @@ namespace DSharpPlusNextGen.Entities
             => !(e1 == e2);
     }
 
+    /// <summary>
+    /// Represents an discord asset.
+    /// </summary>
     public abstract class DiscordAsset
     {
         /// <summary>
@@ -278,8 +291,15 @@ namespace DSharpPlusNextGen.Entities
         public override Uri Url
             => new($"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}/{this.Application.Id.ToString(CultureInfo.InvariantCulture)}/{this.Id}.png");
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
+        /// </summary>
         internal DiscordApplicationAsset() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
+        /// </summary>
+        /// <param name="app">The app.</param>
         internal DiscordApplicationAsset(DiscordApplication app)
         {
             this.Discord = app.Discord;
@@ -329,6 +349,9 @@ namespace DSharpPlusNextGen.Entities
             => !(e1 == e2);
     }
 
+    /// <summary>
+    /// Represents an spotify asset.
+    /// </summary>
     public sealed class DiscordSpotifyAsset : DiscordAsset
     {
         /// <summary>
@@ -339,6 +362,9 @@ namespace DSharpPlusNextGen.Entities
 
         private readonly Lazy<Uri> _url;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordSpotifyAsset"/> class.
+        /// </summary>
         public DiscordSpotifyAsset()
         {
             this._url = new Lazy<Uri>(() =>

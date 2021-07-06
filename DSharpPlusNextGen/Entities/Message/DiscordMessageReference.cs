@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,23 +44,42 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public DiscordGuild Guild { get; internal set; }
 
+        /// <summary>
+        /// Gets a readable message reference string.
+        /// </summary>
+        /// <returns>A string.</returns>
         public override string ToString()
             => $"Guild: {this.Guild.Id}, Channel: {this.Channel.Id}, Message: {this.Message.Id}";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordMessageReference"/> class.
+        /// </summary>
         internal DiscordMessageReference() { }
     }
 
     internal struct InternalDiscordMessageReference
     {
+        /// <summary>
+        /// Gets the message id.
+        /// </summary>
         [JsonProperty("message_id", NullValueHandling = NullValueHandling.Ignore)]
         internal ulong? MessageId { get; set; }
 
+        /// <summary>
+        /// Gets the channel id.
+        /// </summary>
         [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
         internal ulong? ChannelId { get; set; }
 
+        /// <summary>
+        /// Gets the guild id.
+        /// </summary>
         [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
         internal ulong? GuildId { get; set; }
 
+        /// <summary>
+        /// Whether it should fail if it does not exists.
+        /// </summary>
         [JsonProperty("fail_if_not_exists", NullValueHandling = NullValueHandling.Ignore)]
         public bool FailIfNotExists { get; set; }
     }

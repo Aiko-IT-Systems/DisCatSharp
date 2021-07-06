@@ -1,7 +1,5 @@
-// This file is part of the DSharpPlus-NextGen project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
 // Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,6 +24,9 @@ using System;
 
 namespace DSharpPlusNextGen
 {
+    /// <summary>
+    /// Represents a message flag extensions.
+    /// </summary>
     public static class MessageFlagExtensions
     {
         /// <summary>

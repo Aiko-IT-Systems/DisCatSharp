@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,12 +24,34 @@ using DSharpPlusNextGen.Common.Utilities;
 
 namespace DSharpPlusNextGen.Lavalink.EventArgs
 {
+    /// <summary>
+    /// The event type.
+    /// </summary>
     internal enum EventType
     {
+        /// <summary>
+        /// Track start event
+        /// </summary>
         TrackStartEvent,
+
+        /// <summary>
+        /// Track end event
+        /// </summary>
         TrackEndEvent,
+
+        /// <summary>
+        /// Track exception event
+        /// </summary>
         TrackExceptionEvent,
+
+        /// <summary>
+        /// Track stuck event
+        /// </summary>
         TrackStuckEvent,
+
+        /// <summary>
+        /// Websocket closed event
+        /// </summary>
         WebSocketClosedEvent
     }
 
@@ -49,6 +70,11 @@ namespace DSharpPlusNextGen.Lavalink.EventArgs
         /// </summary>
         public LavalinkGuildConnection Player { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TrackStartEventArgs"/> class.
+        /// </summary>
+        /// <param name="lvl">The lvl.</param>
+        /// <param name="track">The track.</param>
         internal TrackStartEventArgs(LavalinkGuildConnection lvl, LavalinkTrack track)
         {
             this.Track = track;
@@ -56,9 +82,18 @@ namespace DSharpPlusNextGen.Lavalink.EventArgs
         }
     }
 
+    /// <summary>
+    /// Represents track finish data
+    /// </summary>
     internal struct TrackFinishData
     {
+        /// <summary>
+        /// Gets or sets the track.
+        /// </summary>
         public string Track { get; set; }
+        /// <summary>
+        /// Gets or sets the reason.
+        /// </summary>
         public TrackEndReason Reason { get; set; }
     }
 
@@ -82,6 +117,12 @@ namespace DSharpPlusNextGen.Lavalink.EventArgs
         /// </summary>
         public LavalinkGuildConnection Player { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TrackFinishEventArgs"/> class.
+        /// </summary>
+        /// <param name="lvl">The lvl.</param>
+        /// <param name="track">The track.</param>
+        /// <param name="reason">The reason.</param>
         internal TrackFinishEventArgs(LavalinkGuildConnection lvl, LavalinkTrack track, TrackEndReason reason)
         {
             this.Track = track;
@@ -121,9 +162,18 @@ namespace DSharpPlusNextGen.Lavalink.EventArgs
         Cleanup
     }
 
+    /// <summary>
+    /// Represents track stuck data
+    /// </summary>
     internal struct TrackStuckData
     {
+        /// <summary>
+        /// Gets or sets the threshold.
+        /// </summary>
         public long Threshold { get; set; }
+        /// <summary>
+        /// Gets or sets the track.
+        /// </summary>
         public string Track { get; set; }
     }
 
@@ -147,6 +197,12 @@ namespace DSharpPlusNextGen.Lavalink.EventArgs
         /// </summary>
         public LavalinkGuildConnection Player { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TrackStuckEventArgs"/> class.
+        /// </summary>
+        /// <param name="lvl">The lvl.</param>
+        /// <param name="thresholdMs">The threshold ms.</param>
+        /// <param name="track">The track.</param>
         internal TrackStuckEventArgs(LavalinkGuildConnection lvl, long thresholdMs, LavalinkTrack track)
         {
             this.ThresholdMilliseconds = thresholdMs;
@@ -155,9 +211,18 @@ namespace DSharpPlusNextGen.Lavalink.EventArgs
         }
     }
 
+    /// <summary>
+    /// Represents track exception data
+    /// </summary>
     internal struct TrackExceptionData
     {
+        /// <summary>
+        /// Gets or sets the error.
+        /// </summary>
         public string Error { get; set; }
+        /// <summary>
+        /// Gets or sets the track.
+        /// </summary>
         public string Track { get; set; }
     }
 
@@ -181,6 +246,12 @@ namespace DSharpPlusNextGen.Lavalink.EventArgs
         /// </summary>
         public LavalinkGuildConnection Player { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TrackExceptionEventArgs"/> class.
+        /// </summary>
+        /// <param name="lvl">The lvl.</param>
+        /// <param name="error">The error.</param>
+        /// <param name="track">The track.</param>
         internal TrackExceptionEventArgs(LavalinkGuildConnection lvl, string error, LavalinkTrack track)
         {
             this.Error = error;

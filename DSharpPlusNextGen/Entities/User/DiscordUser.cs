@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +37,14 @@ namespace DSharpPlusNextGen.Entities
     /// </summary>
     public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordUser"/> class.
+        /// </summary>
         internal DiscordUser() { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordUser"/> class.
+        /// </summary>
+        /// <param name="transport">The transport.</param>
         internal DiscordUser(TransportUser transport)
         {
             this.Id = transport.Id;
@@ -67,6 +73,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore)]
         public virtual string Discriminator { get; internal set; }
 
+        /// <summary>
+        /// Gets the discriminator integer.
+        /// </summary>
         [JsonIgnore]
         internal int DiscriminatorInt
             => int.Parse(this.Discriminator, NumberStyles.Integer, CultureInfo.InvariantCulture);
@@ -374,10 +383,22 @@ namespace DSharpPlusNextGen.Entities
             => !(e1 == e2);
     }
 
+    /// <summary>
+    /// Represents a user comparer.
+    /// </summary>
     internal class DiscordUserComparer : IEqualityComparer<DiscordUser>
     {
+        /// <summary>
+        /// Whether the users are equal.
+        /// </summary>
+        /// <param name="x">The first user</param>
+        /// <param name="y">The second user.</param>
         public bool Equals(DiscordUser x, DiscordUser y) => x.Equals(y);
 
+        /// <summary>
+        /// Gets the hash code.
+        /// </summary>
+        /// <param name="obj">The user.</param>
         public int GetHashCode(DiscordUser obj) => obj.Id.GetHashCode();
     }
 }

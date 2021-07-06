@@ -1,18 +1,24 @@
-// This file is part of DSharpPlusNextGen.Common project
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright 2020 Emzi0767
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//   http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) 2021 AITSYS
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 using System;
 using System.Collections;
@@ -34,14 +40,26 @@ namespace DSharpPlusNextGen.Common
         /// Gets the collection of all keys present in this dictionary.
         /// </summary>
         public IEnumerable<string> Keys => this.GetKeysInternal();
+        /// <summary>
+        /// Gets the keys.
+        /// </summary>
         ICollection<string> IDictionary<string, TValue>.Keys => this.GetKeysInternal();
+        /// <summary>
+        /// Gets the keys.
+        /// </summary>
         ICollection IDictionary.Keys => this.GetKeysInternal();
 
         /// <summary>
         /// Gets the collection of all values present in this dictionary.
         /// </summary>
         public IEnumerable<TValue> Values => this.GetValuesInternal();
+        /// <summary>
+        /// Gets the values.
+        /// </summary>
         ICollection<TValue> IDictionary<string, TValue>.Values => this.GetValuesInternal();
+        /// <summary>
+        /// Gets the values.
+        /// </summary>
         ICollection IDictionary.Values => this.GetValuesInternal();
 
         /// <summary>
@@ -154,6 +172,9 @@ namespace DSharpPlusNextGen.Common
             }
         }
 
+        /// <summary>
+        /// Gets the internal buckets.
+        /// </summary>
         private Dictionary<ulong, KeyedValue> InternalBuckets { get; }
 
         /// <summary>
@@ -345,9 +366,19 @@ namespace DSharpPlusNextGen.Common
         public IEnumerator<KeyValuePair<string, TValue>> GetEnumerator()
             => new Enumerator(this);
 
+        /// <summary>
+        /// Removes the.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>A bool.</returns>
         bool IDictionary<string, TValue>.Remove(string key)
             => this.TryRemove(key.AsSpan(), out _);
 
+        /// <summary>
+        /// Adds the.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
         void IDictionary.Add(object key, object value)
         {
             if (!(key is string tkey))
@@ -363,6 +394,10 @@ namespace DSharpPlusNextGen.Common
             this.Add(tkey, tvalue);
         }
 
+        /// <summary>
+        /// Removes the.
+        /// </summary>
+        /// <param name="key">The key.</param>
         void IDictionary.Remove(object key)
         {
             if (!(key is string tkey))
@@ -371,6 +406,11 @@ namespace DSharpPlusNextGen.Common
             this.TryRemove(tkey, out _);
         }
 
+        /// <summary>
+        /// Contains the.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>A bool.</returns>
         bool IDictionary.Contains(object key)
         {
             if (!(key is string tkey))
@@ -379,18 +419,41 @@ namespace DSharpPlusNextGen.Common
             return this.ContainsKey(tkey);
         }
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns>An IDictionaryEnumerator.</returns>
         IDictionaryEnumerator IDictionary.GetEnumerator()
             => new Enumerator(this);
 
+        /// <summary>
+        /// Adds the.
+        /// </summary>
+        /// <param name="item">The item.</param>
         void ICollection<KeyValuePair<string, TValue>>.Add(KeyValuePair<string, TValue> item)
             => this.Add(item.Key, item.Value);
 
+        /// <summary>
+        /// Removes the.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>A bool.</returns>
         bool ICollection<KeyValuePair<string, TValue>>.Remove(KeyValuePair<string, TValue> item)
             => this.TryRemove(item.Key, out _);
 
+        /// <summary>
+        /// Contains the.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns>A bool.</returns>
         bool ICollection<KeyValuePair<string, TValue>>.Contains(KeyValuePair<string, TValue> item)
             => this.TryGetValue(item.Key, out var value) && EqualityComparer<TValue>.Default.Equals(value, item.Value);
 
+        /// <summary>
+        /// Copies the to.
+        /// </summary>
+        /// <param name="array">The array.</param>
+        /// <param name="arrayIndex">The array index.</param>
         void ICollection<KeyValuePair<string, TValue>>.CopyTo(KeyValuePair<string, TValue>[] array, int arrayIndex)
         {
             if (array.Length - arrayIndex < this.Count)
@@ -408,6 +471,11 @@ namespace DSharpPlusNextGen.Common
             }
         }
 
+        /// <summary>
+        /// Copies the to.
+        /// </summary>
+        /// <param name="array">The array.</param>
+        /// <param name="arrayIndex">The array index.</param>
         void ICollection.CopyTo(Array array, int arrayIndex)
         {
             if (array is KeyValuePair<string, TValue>[] tarray)
@@ -431,9 +499,20 @@ namespace DSharpPlusNextGen.Common
             }
         }
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns>An IEnumerator.</returns>
         IEnumerator IEnumerable.GetEnumerator()
             => this.GetEnumerator();
 
+        /// <summary>
+        /// Tries the insert internal.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="replace">If true, replace.</param>
+        /// <returns>A bool.</returns>
         private bool TryInsertInternal(string key, TValue value, bool replace)
         {
             if (key == null)
@@ -469,6 +548,12 @@ namespace DSharpPlusNextGen.Common
             return true;
         }
 
+        /// <summary>
+        /// Tries the retrieve internal.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>A bool.</returns>
         private bool TryRetrieveInternal(ReadOnlySpan<char> key, out TValue value)
         {
             value = default;
@@ -489,6 +574,12 @@ namespace DSharpPlusNextGen.Common
             return false;
         }
 
+        /// <summary>
+        /// Tries the remove internal.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>A bool.</returns>
         private bool TryRemoveInternal(ReadOnlySpan<char> key, out TValue value)
         {
             value = default;
@@ -543,6 +634,11 @@ namespace DSharpPlusNextGen.Common
             return false;
         }
 
+        /// <summary>
+        /// Contains the key internal.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>A bool.</returns>
         private bool ContainsKeyInternal(ReadOnlySpan<char> key)
         {
             var hash = key.CalculateKnuthHash();
@@ -560,6 +656,10 @@ namespace DSharpPlusNextGen.Common
             return false;
         }
 
+        /// <summary>
+        /// Gets the keys internal.
+        /// </summary>
+        /// <returns>An ImmutableArray.</returns>
         private ImmutableArray<string> GetKeysInternal()
         {
             var builder = ImmutableArray.CreateBuilder<string>(this.Count);
@@ -576,6 +676,10 @@ namespace DSharpPlusNextGen.Common
             return builder.MoveToImmutable();
         }
 
+        /// <summary>
+        /// Gets the values internal.
+        /// </summary>
+        /// <returns>An ImmutableArray.</returns>
         private ImmutableArray<TValue> GetValuesInternal()
         {
             var builder = ImmutableArray.CreateBuilder<TValue>(this.Count);
@@ -594,12 +698,30 @@ namespace DSharpPlusNextGen.Common
 
         private class KeyedValue
         {
+            /// <summary>
+            /// Gets the key hash.
+            /// </summary>
             public ulong KeyHash { get; }
+            /// <summary>
+            /// Gets the key.
+            /// </summary>
             public string Key { get; }
+            /// <summary>
+            /// Gets or sets the value.
+            /// </summary>
             public TValue Value { get; set; }
 
+            /// <summary>
+            /// Gets or sets the next.
+            /// </summary>
             public KeyedValue Next { get; set; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="KeyedValue"/> class.
+            /// </summary>
+            /// <param name="key">The key.</param>
+            /// <param name="keyHash">The key hash.</param>
+            /// <param name="value">The value.</param>
             public KeyedValue(string key, ulong keyHash, TValue value)
             {
                 this.KeyHash = keyHash;
@@ -612,22 +734,54 @@ namespace DSharpPlusNextGen.Common
             IEnumerator<KeyValuePair<string, TValue>>,
             IDictionaryEnumerator
         {
+            /// <summary>
+            /// Gets the current.
+            /// </summary>
             public KeyValuePair<string, TValue> Current { get; private set; }
+            /// <summary>
+            /// Gets the current.
+            /// </summary>
             object IEnumerator.Current => this.Current;
+            /// <summary>
+            /// Gets the key.
+            /// </summary>
             object IDictionaryEnumerator.Key => this.Current.Key;
+            /// <summary>
+            /// Gets the value.
+            /// </summary>
             object IDictionaryEnumerator.Value => this.Current.Value;
+            /// <summary>
+            /// Gets the entry.
+            /// </summary>
             DictionaryEntry IDictionaryEnumerator.Entry => new DictionaryEntry(this.Current.Key, this.Current.Value);
 
+            /// <summary>
+            /// Gets the internal dictionary.
+            /// </summary>
             private CharSpanLookupDictionary<TValue> InternalDictionary { get; }
+            /// <summary>
+            /// Gets the internal enumerator.
+            /// </summary>
             private IEnumerator<KeyValuePair<ulong, KeyedValue>> InternalEnumerator { get; }
+            /// <summary>
+            /// Gets or sets the current value.
+            /// </summary>
             private KeyedValue CurrentValue { get; set; } = null;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Enumerator"/> class.
+            /// </summary>
+            /// <param name="spDict">The sp dict.</param>
             public Enumerator(CharSpanLookupDictionary<TValue> spDict)
             {
                 this.InternalDictionary = spDict;
                 this.InternalEnumerator = this.InternalDictionary.InternalBuckets.GetEnumerator();
             }
 
+            /// <summary>
+            /// Moves the next.
+            /// </summary>
+            /// <returns>A bool.</returns>
             public bool MoveNext()
             {
                 var kdv = this.CurrentValue;
@@ -648,6 +802,9 @@ namespace DSharpPlusNextGen.Common
                 return true;
             }
 
+            /// <summary>
+            /// Resets the.
+            /// </summary>
             public void Reset()
             {
                 this.InternalEnumerator.Reset();
@@ -655,6 +812,9 @@ namespace DSharpPlusNextGen.Common
                 this.CurrentValue = null;
             }
 
+            /// <summary>
+            /// Disposes the.
+            /// </summary>
             public void Dispose()
             {
                 this.Reset();

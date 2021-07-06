@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,14 +27,13 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DSharpPlusNextGen.Common.Utilities;
 using DSharpPlusNextGen.Entities;
 using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Exceptions;
 using DSharpPlusNextGen.Lavalink.Entities;
 using DSharpPlusNextGen.Lavalink.EventArgs;
 using DSharpPlusNextGen.Net;
 using DSharpPlusNextGen.Net.WebSocket;
-using DSharpPlusNextGen.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -141,7 +139,13 @@ namespace DSharpPlusNextGen.Lavalink
         public bool IsConnected => !Volatile.Read(ref this._isDisposed);
         private bool _isDisposed = false;
         private int _backoff = 0;
+        /// <summary>
+        /// The minimum backoff.
+        /// </summary>
         private const int MinimumBackoff = 7500;
+        /// <summary>
+        /// The maximum backoff.
+        /// </summary>
         private const int MaximumBackoff = 120000;
 
         /// <summary>
@@ -170,14 +174,35 @@ namespace DSharpPlusNextGen.Lavalink
         /// </summary>
         public DiscordClient Discord { get; }
 
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
         internal LavalinkConfiguration Configuration { get; }
+        /// <summary>
+        /// Gets the region.
+        /// </summary>
         internal DiscordVoiceRegion Region { get; }
 
+        /// <summary>
+        /// Gets or sets the web socket.
+        /// </summary>
         private IWebSocketClient WebSocket { get; set; }
 
+        /// <summary>
+        /// Gets the voice state updates.
+        /// </summary>
         private ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>> VoiceStateUpdates { get; }
+        /// <summary>
+        /// Gets the voice server updates.
+        /// </summary>
         private ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>> VoiceServerUpdates { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LavalinkNodeConnection"/> class.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="extension">the event.tension.</param>
+        /// <param name="config">The config.</param>
         internal LavalinkNodeConnection(DiscordClient client, LavalinkExtension extension, LavalinkConfiguration config)
         {
             this.Discord = client;
@@ -341,9 +366,18 @@ namespace DSharpPlusNextGen.Lavalink
         public LavalinkGuildConnection GetGuildConnection(DiscordGuild guild)
             => this._connectedGuilds.TryGetValue(guild.Id, out var lgc) && lgc.IsConnected ? lgc : null;
 
+        /// <summary>
+        /// Sends the payload async.
+        /// </summary>
+        /// <param name="payload">The payload.</param>
         internal async Task SendPayloadAsync(LavalinkPayload payload)
             => await this.WsSendAsync(JsonConvert.SerializeObject(payload, Formatting.None)).ConfigureAwait(false);
 
+        /// <summary>
+        /// Webs the socket_ on message.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">the event.ent.</param>
         private async Task WebSocket_OnMessage(IWebSocketClient client, SocketMessageEventArgs e)
         {
             if (e is not SocketTextMessageEventArgs et)
@@ -427,9 +461,19 @@ namespace DSharpPlusNextGen.Lavalink
             }
         }
 
+        /// <summary>
+        /// Webs the socket_ on exception.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">the event.</param>
         private Task WebSocket_OnException(IWebSocketClient client, SocketErrorEventArgs e)
             => this._lavalinkSocketError.InvokeAsync(this, new SocketErrorEventArgs { Exception = e.Exception });
 
+        /// <summary>
+        /// Webs the socket_ on disconnect.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">the event.</param>
         private async Task WebSocket_OnDisconnect(IWebSocketClient client, SocketCloseEventArgs e)
         {
             if (this.IsConnected && e.CloseCode != 1001 && e.CloseCode != -1)
@@ -463,6 +507,11 @@ namespace DSharpPlusNextGen.Lavalink
             }
         }
 
+        /// <summary>
+        /// Webs the socket_ on connect.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="ea">the event..</param>
         private async Task WebSocket_OnConnect(IWebSocketClient client, SocketEventArgs ea)
         {
             this.Discord.Logger.LogDebug(LavalinkEvents.LavalinkConnected, "Connection to Lavalink node established");
@@ -472,9 +521,18 @@ namespace DSharpPlusNextGen.Lavalink
                 await this.SendPayloadAsync(new LavalinkConfigureResume(this.Configuration.ResumeKey, this.Configuration.ResumeTimeout)).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Con_S the channel disconnected.
+        /// </summary>
+        /// <param name="con">The con.</param>
         private void Con_ChannelDisconnected(LavalinkGuildConnection con)
             => this._connectedGuilds.TryRemove(con.GuildId, out _);
 
+        /// <summary>
+        /// Discord voice state updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">the event.</param>
         private Task Discord_VoiceStateUpdated(DiscordClient client, VoiceStateUpdateEventArgs e)
         {
             var gld = e.Guild;
@@ -509,6 +567,11 @@ namespace DSharpPlusNextGen.Lavalink
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Discord voice server updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">the event.</param>
         private Task Discord_VoiceServerUpdated(DiscordClient client, VoiceServerUpdateEventArgs e)
         {
             var gld = e.Guild;
@@ -526,7 +589,10 @@ namespace DSharpPlusNextGen.Lavalink
 
             return Task.CompletedTask;
         }
-
+        /// <summary>
+        /// Ws the send async.
+        /// </summary>
+        /// <param name="payload">The payload.</param>
         private async Task WsSendAsync(string payload)
         {
             this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsTx, payload);
@@ -536,7 +602,3 @@ namespace DSharpPlusNextGen.Lavalink
         internal event NodeDisconnectedEventHandler NodeDisconnected;
     }
 }
-
-// Kinda think this deserves another pack of instant noodles :^) -Emzi
-// No I did it before in sai- alright then.
-// Coroned noodles

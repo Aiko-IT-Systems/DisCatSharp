@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,35 +26,68 @@ using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Net.Abstractions
 {
+    /// <summary>
+    /// Represents a transport member.
+    /// </summary>
     internal class TransportMember
     {
+        /// <summary>
+        /// Gets the avatar hash.
+        /// </summary>
         [JsonIgnore]
         public string AvatarHash { get; internal set; }
 
+        /// <summary>
+        /// Gets the guild avatar hash.
+        /// </summary>
         [JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
         public string GuildAvatarHash { get; internal set; }
 
+        /// <summary>
+        /// Gets the user.
+        /// </summary>
         [JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
         public TransportUser User { get; internal set; }
 
+        /// <summary>
+        /// Gets the nickname.
+        /// </summary>
         [JsonProperty("nick", NullValueHandling = NullValueHandling.Ignore)]
         public string Nickname { get; internal set; }
 
+        /// <summary>
+        /// Gets the roles.
+        /// </summary>
         [JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
         public List<ulong> Roles { get; internal set; }
 
+        /// <summary>
+        /// Gets the joined at.
+        /// </summary>
         [JsonProperty("joined_at", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime JoinedAt { get; internal set; }
 
+        /// <summary>
+        /// Whether this member is deafened.
+        /// </summary>
         [JsonProperty("deaf", NullValueHandling = NullValueHandling.Ignore)]
         public bool IsDeafened { get; internal set; }
 
+        /// <summary>
+        /// Whether this member is muted.
+        /// </summary>
         [JsonProperty("mute", NullValueHandling = NullValueHandling.Ignore)]
         public bool IsMuted { get; internal set; }
 
+        /// <summary>
+        /// Gets the premium since.
+        /// </summary>
         [JsonProperty("premium_since", NullValueHandling = NullValueHandling.Ignore)]
         public DateTime? PremiumSince { get; internal set; }
 
+        /// <summary>
+        /// Whether this member is marked as pending.
+        /// </summary>
         [JsonProperty("pending", NullValueHandling = NullValueHandling.Ignore)]
         public bool? IsPending { get; internal set; }
     }

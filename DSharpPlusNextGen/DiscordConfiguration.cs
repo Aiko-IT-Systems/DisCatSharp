@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -170,15 +169,15 @@ namespace DSharpPlusNextGen
 
         /// <summary>
         /// <para>Sets the factory method used to create instances of UDP clients.</para>
-        /// <para>Use <see cref="DspUdpClient.CreateNew"/> and equivalents on other implementations to switch out client implementations.</para>
-        /// <para>Defaults to <see cref="DspUdpClient.CreateNew"/>.</para>
+        /// <para>Use <see cref="DspNgUdpClient.CreateNew"/> and equivalents on other implementations to switch out client implementations.</para>
+        /// <para>Defaults to <see cref="DspNgUdpClient.CreateNew"/>.</para>
         /// </summary>
         public UdpClientFactoryDelegate UdpClientFactory
         {
             internal get => this._udpClientFactory;
             set => this._udpClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid UDP client factory method.");
         }
-        private UdpClientFactoryDelegate _udpClientFactory = DspUdpClient.CreateNew;
+        private UdpClientFactoryDelegate _udpClientFactory = DspNgUdpClient.CreateNew;
 
         /// <summary>
         /// <para>Sets the logger implementation to use.</para>

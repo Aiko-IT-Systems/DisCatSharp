@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,62 +26,122 @@ using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Net.Abstractions
 {
+    /// <summary>
+    /// Represents a application command create payload.
+    /// </summary>
     internal class RestApplicationCommandCreatePayload
     {
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets the description.
+        /// </summary>
         [JsonProperty("description")]
         public string Description { get; set; }
 
+        /// <summary>
+        /// Gets the options.
+        /// </summary>
         [JsonProperty("options")]
         public IEnumerable<DiscordApplicationCommandOption> Options { get; set; }
 
+        /// <summary>
+        /// Whether the command is allowed for everyone.
+        /// </summary>
         [JsonProperty("default_permission")]
         public bool DefaultPermission { get; set; }
     }
 
+    /// <summary>
+    /// Represents a application command edit payload.
+    /// </summary>
     internal class RestApplicationCommandEditPayload
     {
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
         [JsonProperty("name")]
         public Optional<string> Name { get; set; }
 
+        /// <summary>
+        /// Gets the description.
+        /// </summary>
         [JsonProperty("description")]
         public Optional<string> Description { get; set; }
 
+        /// <summary>
+        /// Gets the options.
+        /// </summary>
         [JsonProperty("options")]
         public Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> Options { get; set; }
 
+        /// <summary>
+        /// Gets the default permission.
+        /// </summary>
         [JsonProperty("default_permission")]
         public Optional<bool> DefaultPermission { get; set; }
     }
 
+    /// <summary>
+    /// Represents a interaction response payload.
+    /// </summary>
     internal class RestInteractionResponsePayload
     {
+        /// <summary>
+        /// Gets the type.
+        /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public InteractionResponseType Type { get; set; }
 
+        /// <summary>
+        /// Gets the data.
+        /// </summary>
         [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordInteractionApplicationCommandCallbackData Data { get; set; }
     }
 
+    /// <summary>
+    /// Represents a followup message create payload.
+    /// </summary>
     internal class RestFollowupMessageCreatePayload
     {
+        /// <summary>
+        /// Gets the content.
+        /// </summary>
         [JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
         public string Content { get; set; }
 
+        /// <summary>
+        /// Get whether the message is tts.
+        /// </summary>
         [JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
         public bool? IsTTS { get; set; }
 
+        /// <summary>
+        /// Gets the embeds.
+        /// </summary>
         [JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
         public IEnumerable<DiscordEmbed> Embeds { get; set; }
 
+        /// <summary>
+        /// Gets the mentions.
+        /// </summary>
         [JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordMentions Mentions { get; set; }
 
+        /// <summary>
+        /// Gets the flags.
+        /// </summary>
         [JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
         public int? Flags { get; set; }
 
+        /// <summary>
+        /// Gets the components.
+        /// </summary>
         [JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyCollection<DiscordActionRowComponent> Components { get; set; }
     }

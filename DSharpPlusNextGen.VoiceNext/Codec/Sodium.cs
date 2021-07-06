@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,16 +30,37 @@ using System.Security.Cryptography;
 
 namespace DSharpPlusNextGen.VoiceNext.Codec
 {
+    /// <summary>
+    /// The sodium.
+    /// </summary>
     internal sealed class Sodium : IDisposable
     {
+        /// <summary>
+        /// Gets the supported modes.
+        /// </summary>
         public static IReadOnlyDictionary<string, EncryptionMode> SupportedModes { get; }
 
+        /// <summary>
+        /// Gets the nonce size.
+        /// </summary>
         public static int NonceSize => Interop.SodiumNonceSize;
 
+        /// <summary>
+        /// Gets the c s p r n g.
+        /// </summary>
         private RandomNumberGenerator CSPRNG { get; }
+        /// <summary>
+        /// Gets the buffer.
+        /// </summary>
         private byte[] Buffer { get; }
+        /// <summary>
+        /// Gets the key.
+        /// </summary>
         private ReadOnlyMemory<byte> Key { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sodium"/> class.
+        /// </summary>
         static Sodium()
         {
             SupportedModes = new ReadOnlyDictionary<string, EncryptionMode>(new Dictionary<string, EncryptionMode>()
@@ -51,6 +71,10 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             });
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sodium"/> class.
+        /// </summary>
+        /// <param name="key">The key.</param>
         public Sodium(ReadOnlyMemory<byte> key)
         {
             if (key.Length != Interop.SodiumKeySize)
@@ -62,6 +86,11 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             this.Buffer = new byte[Interop.SodiumNonceSize];
         }
 
+        /// <summary>
+        /// Generates the nonce.
+        /// </summary>
+        /// <param name="rtpHeader">The rtp header.</param>
+        /// <param name="target">The target.</param>
         public void GenerateNonce(ReadOnlySpan<byte> rtpHeader, Span<byte> target)
         {
             if (rtpHeader.Length != Rtp.HeaderSize)
@@ -77,6 +106,10 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             Helpers.ZeroFill(target.Slice(rtpHeader.Length));
         }
 
+        /// <summary>
+        /// Generates the nonce.
+        /// </summary>
+        /// <param name="target">The target.</param>
         public void GenerateNonce(Span<byte> target)
         {
             if (target.Length != Interop.SodiumNonceSize)
@@ -86,6 +119,11 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             this.Buffer.AsSpan().CopyTo(target);
         }
 
+        /// <summary>
+        /// Generates the nonce.
+        /// </summary>
+        /// <param name="nonce">The nonce.</param>
+        /// <param name="target">The target.</param>
         public void GenerateNonce(uint nonce, Span<byte> target)
         {
             if (target.Length != Interop.SodiumNonceSize)
@@ -98,6 +136,12 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             Helpers.ZeroFill(target.Slice(4));
         }
 
+        /// <summary>
+        /// Appends the nonce.
+        /// </summary>
+        /// <param name="nonce">The nonce.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="encryptionMode">The encryption mode.</param>
         public void AppendNonce(ReadOnlySpan<byte> nonce, Span<byte> target, EncryptionMode encryptionMode)
         {
             switch (encryptionMode)
@@ -118,6 +162,12 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             }
         }
 
+        /// <summary>
+        /// Gets the nonce.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="encryptionMode">The encryption mode.</param>
         public void GetNonce(ReadOnlySpan<byte> source, Span<byte> target, EncryptionMode encryptionMode)
         {
             if (target.Length != Interop.SodiumNonceSize)
@@ -142,6 +192,12 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             }
         }
 
+        /// <summary>
+        /// Encrypts the Sodium.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="nonce">The nonce.</param>
         public void Encrypt(ReadOnlySpan<byte> source, Span<byte> target, ReadOnlySpan<byte> nonce)
         {
             if (nonce.Length != Interop.SodiumNonceSize)
@@ -155,6 +211,12 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
                 throw new CryptographicException($"Could not encrypt the buffer. Sodium returned code {result}.");
         }
 
+        /// <summary>
+        /// Decrypts the Sodium.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="nonce">The nonce.</param>
         public void Decrypt(ReadOnlySpan<byte> source, Span<byte> target, ReadOnlySpan<byte> nonce)
         {
             if (nonce.Length != Interop.SodiumNonceSize)
@@ -168,8 +230,16 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
                 throw new CryptographicException($"Could not decrypt the buffer. Sodium returned code {result}.");
         }
 
+        /// <summary>
+        /// Disposes the Sodium.
+        /// </summary>
         public void Dispose() => this.CSPRNG.Dispose();
 
+        /// <summary>
+        /// Selects the mode.
+        /// </summary>
+        /// <param name="availableModes">The available modes.</param>
+        /// <returns>A KeyValuePair.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static KeyValuePair<string, EncryptionMode> SelectMode(IEnumerable<string> availableModes)
         {
@@ -180,10 +250,20 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             throw new CryptographicException("Could not negotiate Sodium encryption modes, as none of the modes offered by Discord are supported. This is usually an indicator that something went very wrong.");
         }
 
+        /// <summary>
+        /// Calculates the target size.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <returns>An int.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int CalculateTargetSize(ReadOnlySpan<byte> source)
             => source.Length + Interop.SodiumMacSize;
 
+        /// <summary>
+        /// Calculates the source size.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <returns>An int.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int CalculateSourceSize(ReadOnlySpan<byte> source)
             => source.Length - Interop.SodiumMacSize;

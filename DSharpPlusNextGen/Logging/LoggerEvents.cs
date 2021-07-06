@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +32,7 @@ namespace DSharpPlusNextGen
         /// <summary>
         /// Miscellaneous events, that do not fit in any other category.
         /// </summary>
-        public static EventId Misc { get; } = new EventId(100, "DSharpPlus");
+        public static EventId Misc { get; } = new EventId(100, "DSharpPlusNextGen");
 
         /// <summary>
         /// Events pertaining to startup tasks.
@@ -155,8 +154,14 @@ namespace DSharpPlusNextGen
         /// </summary>
         public static EventId RestTx { get; } = new EventId(124, "REST ↑");
 
+        /// <summary>
+        /// Event is rest cleaner.
+        /// </summary>
         public static EventId RestCleaner { get; } = new EventId(125, nameof(RestCleaner));
 
+        /// <summary>
+        /// Event is rest hash mover.
+        /// </summary>
         public static EventId RestHashMover { get; } = new EventId(126, nameof(RestHashMover));
 
         /// <summary>

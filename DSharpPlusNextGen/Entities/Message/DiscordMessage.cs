@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +35,9 @@ namespace DSharpPlusNextGen.Entities
     /// </summary>
     public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordMessage"/> class.
+        /// </summary>
         internal DiscordMessage()
         {
             this._attachmentsLazy = new Lazy<IReadOnlyList<DiscordAttachment>>(() => new ReadOnlyCollection<DiscordAttachment>(this._attachments));
@@ -59,6 +61,10 @@ namespace DSharpPlusNextGen.Entities
             });
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordMessage"/> class.
+        /// </summary>
+        /// <param name="other">The other.</param>
         internal DiscordMessage(DiscordMessage other)
             : this()
         {
@@ -144,6 +150,9 @@ namespace DSharpPlusNextGen.Entities
             => !string.IsNullOrWhiteSpace(this.TimestampRaw) && DateTimeOffset.TryParse(this.TimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
                 dto : this.CreationTimestamp;
 
+        /// <summary>
+        /// Gets the message's creation timestamp as raw string.
+        /// </summary>
         [JsonProperty("timestamp", NullValueHandling = NullValueHandling.Ignore)]
         internal string TimestampRaw { get; set; }
 
@@ -155,6 +164,9 @@ namespace DSharpPlusNextGen.Entities
             => !string.IsNullOrWhiteSpace(this.EditedTimestampRaw) && DateTimeOffset.TryParse(this.EditedTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
                 (DateTimeOffset?)dto : null;
 
+        /// <summary>
+        /// Gets the message's edit timestamp as raw string. Will be null if the message was not edited.
+        /// </summary>
         [JsonProperty("edited_timestamp", NullValueHandling = NullValueHandling.Ignore)]
         internal string EditedTimestampRaw { get; set; }
 
@@ -296,6 +308,9 @@ namespace DSharpPlusNextGen.Entities
         public ulong ApplicationId { get; internal set; }
 
 
+        /// <summary>
+        /// Gets the internal reference.
+        /// </summary>
         [JsonProperty("message_reference", NullValueHandling = NullValueHandling.Ignore)]
         internal InternalDiscordMessageReference? InternalReference { get; set; }
 
@@ -338,6 +353,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonIgnore]
         private readonly Lazy<IReadOnlyList<DiscordSticker>> _stickersLazy;
 
+        /// <summary>
+        /// Gets the guild id.
+        /// </summary>
         [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
         internal ulong? GuildId { get; set; }
 
@@ -359,6 +377,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("thread", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordThreadChannel Thread { get; internal set; }
 
+        /// <summary>
+        /// Build the message reference.
+        /// </summary>
         internal DiscordMessageReference InternalBuildMessageReference()
         {
             var client = this.Discord as DiscordClient;
@@ -411,8 +432,9 @@ namespace DSharpPlusNextGen.Entities
             return reference;
         }
 
-
-
+        /// <summary>
+        /// Populates the mentions.
+        /// </summary>
         internal void PopulateMentions()
         {
             var guild = this.Channel?.Guild;
@@ -736,6 +758,12 @@ namespace DSharpPlusNextGen.Entities
         public Task DeleteReactionsEmojiAsync(DiscordEmoji emoji)
             => this.Discord.ApiClient.DeleteReactionsEmojiAsync(this.ChannelId, this.Id, emoji.ToReactionString());
 
+        /// <summary>
+        /// Gets the reactions.
+        /// </summary>
+        /// <param name="emoji">The emoji to search for.</param>
+        /// <param name="limit">The limit of results.</param>
+        /// <param name="after">Get the reasctions after snowflake.</param>
         private async Task<IReadOnlyList<DiscordUser>> GetReactionsInternalAsync(DiscordEmoji emoji, int limit = 25, ulong? after = null)
         {
             if (limit < 0)

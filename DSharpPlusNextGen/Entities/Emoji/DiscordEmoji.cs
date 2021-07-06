@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +25,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using DSharpPlusNextGen.Enums.Discord;
+using DSharpPlusNextGen.Net;
 using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Entities
@@ -80,8 +81,8 @@ namespace DSharpPlusNextGen.Entities
                 return this.Id == 0
                     ? throw new InvalidOperationException("Cannot get URL of unicode emojis.")
                     : this.IsAnimated
-                    ? $"https://cdn.discordapp.com/emojis/{this.Id.ToString(CultureInfo.InvariantCulture)}.gif"
-                    : $"https://cdn.discordapp.com/emojis/{this.Id.ToString(CultureInfo.InvariantCulture)}.png";
+                    ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.gif"
+                    : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.png";
             }
         }
 
@@ -92,6 +93,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("available", NullValueHandling = NullValueHandling.Ignore)]
         public bool IsAvailable { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordEmoji"/> class.
+        /// </summary>
         internal DiscordEmoji()
         {
             this._rolesLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._roles));
@@ -147,6 +151,9 @@ namespace DSharpPlusNextGen.Entities
             return hash;
         }
 
+        /// <summary>
+        /// Gets the reactions string.
+        /// </summary>
         internal string ToReactionString() => this.Id != 0 ? $"{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}" : this.Name;
 
         /// <summary>

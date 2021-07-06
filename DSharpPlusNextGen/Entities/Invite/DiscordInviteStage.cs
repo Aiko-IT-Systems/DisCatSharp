@@ -22,7 +22,6 @@
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Globalization;
 using DSharpPlusNextGen.Net.Serialization;
 using Newtonsoft.Json;
 
@@ -61,6 +60,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
         public string Topic { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordInviteStage"/> class.
+        /// </summary>
         internal DiscordInviteStage() {
             this.Members = new ReadOnlyConcurrentDictionary<ulong, DiscordMember>(this._members);
         }

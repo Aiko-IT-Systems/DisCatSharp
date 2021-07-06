@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,13 +27,22 @@ using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Lavalink.Entities
 {
+    /// <summary>
+    /// The lavalink state.
+    /// </summary>
     internal sealed class LavalinkState
     {
+        /// <summary>
+        /// Gets the time.
+        /// </summary>
         [JsonIgnore]
         public DateTimeOffset Time => Utilities.GetDateTimeOffsetFromMilliseconds(this._time);
         [JsonProperty("time")]
         private readonly long _time;
 
+        /// <summary>
+        /// Gets the position.
+        /// </summary>
         [JsonIgnore]
         public TimeSpan Position => TimeSpan.FromMilliseconds(this._position);
         [JsonProperty("position")]
@@ -62,63 +70,123 @@ namespace DSharpPlusNextGen.Lavalink.Entities
         public LavalinkTrack CurrentTrack { get; internal set; }
     }
 
+    /// <summary>
+    /// The lavalink stats.
+    /// </summary>
     internal sealed class LavalinkStats
     {
+        /// <summary>
+        /// Gets or sets the active players.
+        /// </summary>
         [JsonProperty("playingPlayers")]
         public int ActivePlayers { get; set; }
 
+        /// <summary>
+        /// Gets or sets the total players.
+        /// </summary>
         [JsonProperty("players")]
         public int TotalPlayers { get; set; }
 
+        /// <summary>
+        /// Gets the uptime.
+        /// </summary>
         [JsonIgnore]
         public TimeSpan Uptime => TimeSpan.FromMilliseconds(this._uptime);
         [JsonProperty("uptime")]
         private readonly long _uptime;
 
+        /// <summary>
+        /// Gets or sets the cpu.
+        /// </summary>
         [JsonProperty("cpu")]
         public CpuStats Cpu { get; set; }
 
+        /// <summary>
+        /// Gets or sets the memory.
+        /// </summary>
         [JsonProperty("memory")]
         public MemoryStats Memory { get; set; }
 
+        /// <summary>
+        /// Gets or sets the frames.
+        /// </summary>
         [JsonProperty("frameStats")]
         public FrameStats Frames { get; set; }
 
+        /// <summary>
+        /// The cpu stats.
+        /// </summary>
         internal sealed class CpuStats
         {
+            /// <summary>
+            /// Gets or sets the cores.
+            /// </summary>
             [JsonProperty("cores")]
             public int Cores { get; set; }
 
+            /// <summary>
+            /// Gets or sets the system load.
+            /// </summary>
             [JsonProperty("systemLoad")]
             public double SystemLoad { get; set; }
 
+            /// <summary>
+            /// Gets or sets the lavalink load.
+            /// </summary>
             [JsonProperty("lavalinkLoad")]
             public double LavalinkLoad { get; set; }
         }
 
+        /// <summary>
+        /// The memory stats.
+        /// </summary>
         internal sealed class MemoryStats
         {
+            /// <summary>
+            /// Gets or sets the reservable.
+            /// </summary>
             [JsonProperty("reservable")]
             public long Reservable { get; set; }
 
+            /// <summary>
+            /// Gets or sets the used.
+            /// </summary>
             [JsonProperty("used")]
             public long Used { get; set; }
 
+            /// <summary>
+            /// Gets or sets the free.
+            /// </summary>
             [JsonProperty("free")]
             public long Free { get; set; }
 
+            /// <summary>
+            /// Gets or sets the allocated.
+            /// </summary>
             [JsonProperty("allocated")]
             public long Allocated { get; set; }
         }
 
+        /// <summary>
+        /// The frame stats.
+        /// </summary>
         internal sealed class FrameStats
         {
+            /// <summary>
+            /// Gets or sets the sent.
+            /// </summary>
             [JsonProperty("sent")]
             public int Sent { get; set; }
 
+            /// <summary>
+            /// Gets or sets the nulled.
+            /// </summary>
             [JsonProperty("nulled")]
             public int Nulled { get; set; }
 
+            /// <summary>
+            /// Gets or sets the deficit.
+            /// </summary>
             [JsonProperty("deficit")]
             public int Deficit { get; set; }
         }
@@ -194,17 +262,24 @@ namespace DSharpPlusNextGen.Lavalink.Entities
         /// </summary>
         public int AverageDeficitFramesPerMinute { get; private set; }
 
-        internal bool Updated;
+        internal bool _updated;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LavalinkStatistics"/> class.
+        /// </summary>
         internal LavalinkStatistics()
         {
-            this.Updated = false;
+            this._updated = false;
         }
 
+        /// <summary>
+        /// Updates the stats.
+        /// </summary>
+        /// <param name="newStats">The new stats.</param>
         internal void Update(LavalinkStats newStats)
         {
-            if (!this.Updated)
-                this.Updated = true;
+            if (!this._updated)
+                this._updated = true;
 
             this.ActivePlayers = newStats.ActivePlayers;
             this.TotalPlayers = newStats.TotalPlayers;

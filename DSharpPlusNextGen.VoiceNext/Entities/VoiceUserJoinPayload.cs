@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,11 +24,20 @@ using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.VoiceNext.Entities
 {
+    /// <summary>
+    /// The voice user join payload.
+    /// </summary>
     internal sealed class VoiceUserJoinPayload
     {
+        /// <summary>
+        /// Gets the user id.
+        /// </summary>
         [JsonProperty("user_id")]
         public ulong UserId { get; private set; }
 
+        /// <summary>
+        /// Gets the s s r c.
+        /// </summary>
         [JsonProperty("audio_ssrc")]
         public uint SSRC { get; private set; }
     }

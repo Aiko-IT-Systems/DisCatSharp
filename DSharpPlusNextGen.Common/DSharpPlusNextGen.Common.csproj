@@ -51,10 +51,6 @@
     <DefineConstants>HAS_SPAN_STREAM_OVERLOADS</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netcoreapp2.1'">
-    
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <Optimize>False</Optimize>
   </PropertyGroup>

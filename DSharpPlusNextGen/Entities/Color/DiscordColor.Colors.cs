@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -67,41 +66,36 @@ namespace DSharpPlusNextGen.Entities
         // https://discord.com/branding
 
         /// <summary>
-        /// Discord Blurple, or #7289DA.
+        /// Discord Blurple, or #5865F2.
         /// </summary>
-        public static DiscordColor Blurple { get; } = new DiscordColor(0x7289DA);
+        public static DiscordColor Blurple { get; } = new DiscordColor("5865F2");
 
         /// <summary>
-        /// Discord Grayple, or #99AAB5.
+        /// Discord Fuchsia, or #EB459E.
         /// </summary>
-        public static DiscordColor Grayple { get; } = new DiscordColor(0x99AAB5);
+        public static DiscordColor Fuchsia { get; } = new DiscordColor("EB459E");
 
         /// <summary>
-        /// Discord Dark, But Not Black, or #2C2F33.
+        /// Discord Green, or #57F287.
         /// </summary>
-        public static DiscordColor DarkButNotBlack { get; } = new DiscordColor(0x2C2F33);
+        public static DiscordColor Green { get; } = new DiscordColor("57F287");
 
         /// <summary>
-        /// Discord Not QuiteBlack, or #23272A.
+        /// Discord Yellow, or #FEE75C.
         /// </summary>
-        public static DiscordColor NotQuiteBlack { get; } = new DiscordColor(0x23272A);
+        public static DiscordColor Yellow { get; } = new DiscordColor("FEE75C");
+
+        /// <summary>
+        /// Discord Red, or #ED4245.
+        /// </summary>
+        public static DiscordColor Red { get; } = new DiscordColor("ED4245");
         #endregion
 
         #region Other colors
         /// <summary>
-        /// Red, or #FF0000.
-        /// </summary>
-        public static DiscordColor Red { get; } = new DiscordColor(0xFF0000);
-
-        /// <summary>
         /// Dark red, or #7F0000.
         /// </summary>
         public static DiscordColor DarkRed { get; } = new DiscordColor(0x7F0000);
-
-        /// <summary>
-        /// Green, or #00FF00.
-        /// </summary>
-        public static DiscordColor Green { get; } = new DiscordColor(0x00FF00);
 
         /// <summary>
         /// Dark green, or #007F00.
@@ -117,11 +111,6 @@ namespace DSharpPlusNextGen.Entities
         /// Dark blue, or #00007F.
         /// </summary>
         public static DiscordColor DarkBlue { get; } = new DiscordColor(0x00007F);
-
-        /// <summary>
-        /// Yellow, or #FFFF00.
-        /// </summary>
-        public static DiscordColor Yellow { get; } = new DiscordColor(0xFFFF00);
 
         /// <summary>
         /// Cyan, or #00FFFF.

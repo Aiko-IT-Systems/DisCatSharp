@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -130,11 +129,29 @@ namespace DSharpPlusNextGen.Lavalink
         /// </summary>
         public LavalinkNodeConnection Node { get; }
 
+        /// <summary>
+        /// Gets the guild id string.
+        /// </summary>
         internal string GuildIdString => this.GuildId.ToString(CultureInfo.InvariantCulture);
+        /// <summary>
+        /// Gets the guild id.
+        /// </summary>
         internal ulong GuildId => this.Channel.Guild.Id;
+        /// <summary>
+        /// Gets or sets the voice state update.
+        /// </summary>
         internal VoiceStateUpdateEventArgs VoiceStateUpdate { get; set; }
+        /// <summary>
+        /// Gets or sets the voice ws disconnect tcs.
+        /// </summary>
         internal TaskCompletionSource<bool> VoiceWsDisconnectTcs { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LavalinkGuildConnection"/> class.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="channel">The channel.</param>
+        /// <param name="vstu">The vstu.</param>
         internal LavalinkGuildConnection(LavalinkNodeConnection node, DiscordChannel channel, VoiceStateUpdateEventArgs vstu)
         {
             this.Node = node;
@@ -160,6 +177,12 @@ namespace DSharpPlusNextGen.Lavalink
         public Task DisconnectAsync(bool shouldDestroy = true)
             => this.DisconnectInternalAsync(shouldDestroy);
 
+        /// <summary>
+        /// Disconnects the internal async.
+        /// </summary>
+        /// <param name="shouldDestroy">If true, should destroy.</param>
+        /// <param name="isManualDisconnection">If true, is manual disconnection.</param>
+
         internal async Task DisconnectInternalAsync(bool shouldDestroy, bool isManualDisconnection = false)
         {
             if (!this.IsConnected && !isManualDisconnection)
@@ -176,6 +199,10 @@ namespace DSharpPlusNextGen.Lavalink
                 this.ChannelDisconnected?.Invoke(this);
             }
         }
+
+        /// <summary>
+        /// Sends the voice update async.
+        /// </summary>
 
         internal async Task SendVoiceUpdateAsync()
         {
@@ -339,6 +366,11 @@ namespace DSharpPlusNextGen.Lavalink
             await this.Node.SendPayloadAsync(new LavalinkEqualizer(this, Enumerable.Range(0, 15).Select(x => new LavalinkBandAdjustment(x, 0)))).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Internals the update player state async.
+        /// </summary>
+        /// <param name="newState">The new state.</param>
+
         internal Task InternalUpdatePlayerStateAsync(LavalinkState newState)
         {
             this.CurrentState.LastUpdate = newState.Time;
@@ -347,11 +379,21 @@ namespace DSharpPlusNextGen.Lavalink
             return this._playerUpdated.InvokeAsync(this, new PlayerUpdateEventArgs(this, newState.Time, newState.Position));
         }
 
+        /// <summary>
+        /// Internals the playback started async.
+        /// </summary>
+        /// <param name="track">The track.</param>
+
         internal Task InternalPlaybackStartedAsync(string track)
         {
             var ea = new TrackStartEventArgs(this, LavalinkUtilities.DecodeTrack(track));
             return this._playbackStarted.InvokeAsync(this, ea);
         }
+
+        /// <summary>
+        /// Internals the playback finished async.
+        /// </summary>
+        /// <param name="e">The e.</param>
 
         internal Task InternalPlaybackFinishedAsync(TrackFinishData e)
         {
@@ -362,17 +404,32 @@ namespace DSharpPlusNextGen.Lavalink
             return this._playbackFinished.InvokeAsync(this, ea);
         }
 
+        /// <summary>
+        /// Internals the track stuck async.
+        /// </summary>
+        /// <param name="e">The e.</param>
+
         internal Task InternalTrackStuckAsync(TrackStuckData e)
         {
             var ea = new TrackStuckEventArgs(this, e.Threshold, LavalinkUtilities.DecodeTrack(e.Track));
             return this._trackStuck.InvokeAsync(this, ea);
         }
 
+        /// <summary>
+        /// Internals the track exception async.
+        /// </summary>
+        /// <param name="e">The e.</param>
+
         internal Task InternalTrackExceptionAsync(TrackExceptionData e)
         {
             var ea = new TrackExceptionEventArgs(this, e.Error, LavalinkUtilities.DecodeTrack(e.Track));
             return this._trackException.InvokeAsync(this, ea);
         }
+
+        /// <summary>
+        /// Internals the web socket closed async.
+        /// </summary>
+        /// <param name="e">The e.</param>
 
         internal Task InternalWebSocketClosedAsync(WebSocketCloseEventArgs e)
             => this._webSocketClosed.InvokeAsync(this, e);

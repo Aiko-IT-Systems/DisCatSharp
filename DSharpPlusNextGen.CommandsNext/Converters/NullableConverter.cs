@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +26,16 @@ using DSharpPlusNextGen.Entities;
 
 namespace DSharpPlusNextGen.CommandsNext.Converters
 {
+    /// <summary>
+    /// Represents a nullable converter.
+    /// </summary>
     public class NullableConverter<T> : IArgumentConverter<Nullable<T>> where T : struct
     {
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
         async Task<Optional<Nullable<T>>> IArgumentConverter<Nullable<T>>.ConvertAsync(string value, CommandContext ctx)
         {
             if (!ctx.Config.CaseSensitive)

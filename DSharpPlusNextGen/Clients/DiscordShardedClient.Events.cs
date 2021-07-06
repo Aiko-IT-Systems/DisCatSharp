@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +28,9 @@ using Microsoft.Extensions.Logging;
 
 namespace DSharpPlusNextGen
 {
+    /// <summary>
+    /// Represents a discord sharded client.
+    /// </summary>
     public sealed partial class DiscordShardedClient
     {
         #region WebSocket
@@ -232,7 +234,7 @@ namespace DSharpPlusNextGen
         private AsyncEvent<DiscordClient, GuildEmojisUpdateEventArgs> _guildEmojisUpdated;
 
         /// <summary>
-        /// Fired when a guilds emojis get updated
+        /// Fired when a guilds stickers get updated
         /// For this Event you need the <see cref="DiscordIntents.GuildEmojisAndStickers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
         /// </summary>
         public event AsyncEventHandler<DiscordClient, GuildStickersUpdateEventArgs> GuildStickersUpdated
@@ -797,6 +799,14 @@ namespace DSharpPlusNextGen
 
         #region Error Handling
 
+        /// <summary>
+        /// Events the error handler.
+        /// </summary>
+        /// <param name="asyncEvent">The async event.</param>
+        /// <param name="ex">The ex.</param>
+        /// <param name="handler">The handler.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArgs">The event args.</param>
         internal void EventErrorHandler<TArgs>(AsyncEvent<DiscordClient, TArgs> asyncEvent, Exception ex, AsyncEventHandler<DiscordClient, TArgs> handler, DiscordClient sender, TArgs eventArgs)
             where TArgs : AsyncEventArgs
         {
@@ -810,6 +820,14 @@ namespace DSharpPlusNextGen
             this._clientErrored.InvokeAsync(sender, new ClientErrorEventArgs { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
+        /// <summary>
+        /// Goofs the.
+        /// </summary>
+        /// <param name="asyncEvent">The async event.</param>
+        /// <param name="ex">The ex.</param>
+        /// <param name="handler">The handler.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArgs">The event args.</param>
         private void Goof<TArgs>(AsyncEvent<DiscordClient, TArgs> asyncEvent, Exception ex, AsyncEventHandler<DiscordClient, TArgs> handler, DiscordClient sender, TArgs eventArgs)
             where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {0} (defined in {1}) threw an exception", handler.Method, handler.Method.DeclaringType);
 
@@ -817,197 +835,587 @@ namespace DSharpPlusNextGen
 
         #region Event Dispatchers
 
+        /// <summary>
+        /// Client_S the client error.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ClientError(DiscordClient client, ClientErrorEventArgs e)
             => this._clientErrored.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the socket error.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_SocketError(DiscordClient client, SocketErrorEventArgs e)
             => this._socketErrored.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the socket opened.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_SocketOpened(DiscordClient client, SocketEventArgs e)
             => this._socketOpened.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the socket closed.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_SocketClosed(DiscordClient client, SocketCloseEventArgs e)
             => this._socketClosed.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the ready.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_Ready(DiscordClient client, ReadyEventArgs e)
             => this._ready.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the resumed.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_Resumed(DiscordClient client, ReadyEventArgs e)
             => this._resumed.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the channel created.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ChannelCreated(DiscordClient client, ChannelCreateEventArgs e)
             => this._channelCreated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the channel updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ChannelUpdated(DiscordClient client, ChannelUpdateEventArgs e)
             => this._channelUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the channel deleted.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ChannelDeleted(DiscordClient client, ChannelDeleteEventArgs e)
             => this._channelDeleted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the d m channel deleted.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_DMChannelDeleted(DiscordClient client, DmChannelDeleteEventArgs e)
             => this._dmChannelDeleted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the channel pins updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ChannelPinsUpdated(DiscordClient client, ChannelPinsUpdateEventArgs e)
             => this._channelPinsUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild created.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildCreated(DiscordClient client, GuildCreateEventArgs e)
             => this._guildCreated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild available.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildAvailable(DiscordClient client, GuildCreateEventArgs e)
             => this._guildAvailable.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildUpdated(DiscordClient client, GuildUpdateEventArgs e)
             => this._guildUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild deleted.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildDeleted(DiscordClient client, GuildDeleteEventArgs e)
             => this._guildDeleted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild unavailable.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildUnavailable(DiscordClient client, GuildDeleteEventArgs e)
             => this._guildUnavailable.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild download completed.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildDownloadCompleted(DiscordClient client, GuildDownloadCompletedEventArgs e)
             => this._guildDownloadCompleted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the message created.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_MessageCreated(DiscordClient client, MessageCreateEventArgs e)
             => this._messageCreated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the invite created.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_InviteCreated(DiscordClient client, InviteCreateEventArgs e)
             => this._inviteCreated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the invite deleted.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_InviteDeleted(DiscordClient client, InviteDeleteEventArgs e)
             => this._inviteDeleted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the presence update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_PresenceUpdate(DiscordClient client, PresenceUpdateEventArgs e)
             => this._presenceUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild ban add.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildBanAdd(DiscordClient client, GuildBanAddEventArgs e)
             => this._guildBanAdded.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild ban remove.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildBanRemove(DiscordClient client, GuildBanRemoveEventArgs e)
             => this._guildBanRemoved.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild emojis update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildEmojisUpdate(DiscordClient client, GuildEmojisUpdateEventArgs e)
             => this._guildEmojisUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild stickers update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildStickersUpdate(DiscordClient client, GuildStickersUpdateEventArgs e)
             => this._guildStickersUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild integrations update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildIntegrationsUpdate(DiscordClient client, GuildIntegrationsUpdateEventArgs e)
             => this._guildIntegrationsUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild member add.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildMemberAdd(DiscordClient client, GuildMemberAddEventArgs e)
             => this._guildMemberAdded.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild member remove.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildMemberRemove(DiscordClient client, GuildMemberRemoveEventArgs e)
             => this._guildMemberRemoved.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild member update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildMemberUpdate(DiscordClient client, GuildMemberUpdateEventArgs e)
             => this._guildMemberUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild role create.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildRoleCreate(DiscordClient client, GuildRoleCreateEventArgs e)
             => this._guildRoleCreated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild role update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildRoleUpdate(DiscordClient client, GuildRoleUpdateEventArgs e)
             => this._guildRoleUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild role delete.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildRoleDelete(DiscordClient client, GuildRoleDeleteEventArgs e)
             => this._guildRoleDeleted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the message update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_MessageUpdate(DiscordClient client, MessageUpdateEventArgs e)
             => this._messageUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the message delete.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_MessageDelete(DiscordClient client, MessageDeleteEventArgs e)
             => this._messageDeleted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the message bulk delete.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_MessageBulkDelete(DiscordClient client, MessageBulkDeleteEventArgs e)
             => this._messageBulkDeleted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the typing start.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_TypingStart(DiscordClient client, TypingStartEventArgs e)
             => this._typingStarted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the user settings update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_UserSettingsUpdate(DiscordClient client, UserSettingsUpdateEventArgs e)
             => this._userSettingsUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the user update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_UserUpdate(DiscordClient client, UserUpdateEventArgs e)
             => this._userUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the voice state update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_VoiceStateUpdate(DiscordClient client, VoiceStateUpdateEventArgs e)
             => this._voiceStateUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the voice server update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_VoiceServerUpdate(DiscordClient client, VoiceServerUpdateEventArgs e)
             => this._voiceServerUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild members chunk.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildMembersChunk(DiscordClient client, GuildMembersChunkEventArgs e)
             => this._guildMembersChunk.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the unknown event.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_UnknownEvent(DiscordClient client, UnknownEventArgs e)
             => this._unknownEvent.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the message reaction add.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_MessageReactionAdd(DiscordClient client, MessageReactionAddEventArgs e)
             => this._messageReactionAdded.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the message reaction remove.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_MessageReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs e)
             => this._messageReactionRemoved.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the message reaction remove all.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_MessageReactionRemoveAll(DiscordClient client, MessageReactionsClearEventArgs e)
             => this._messageReactionsCleared.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the message reaction removed emoji.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_MessageReactionRemovedEmoji(DiscordClient client, MessageReactionRemoveEmojiEventArgs e)
             => this._messageReactionRemovedEmoji.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the interaction create.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_InteractionCreate(DiscordClient client, InteractionCreateEventArgs e)
             => this._interactionCreated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the component interaction create.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ComponentInteractionCreate(DiscordClient client, ComponentInteractionCreateEventArgs e)
             => this._componentInteractionCreated.InvokeAsync(client, e);
+        /// <summary>
+        /// Client_S the webhooks update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_WebhooksUpdate(DiscordClient client, WebhooksUpdateEventArgs e)
             => this._webhooksUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the heart beated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_HeartBeated(DiscordClient client, HeartbeatEventArgs e)
             => this._heartbeated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the application command created.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ApplicationCommandCreated(DiscordClient client, ApplicationCommandEventArgs e)
             => this._applicationCommandCreated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the application command updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ApplicationCommandUpdated(DiscordClient client, ApplicationCommandEventArgs e)
             => this._applicationCommandUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the application command deleted.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ApplicationCommandDeleted(DiscordClient client, ApplicationCommandEventArgs e)
             => this._applicationCommandDeleted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild integration created.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildIntegrationCreated(DiscordClient client, GuildIntegrationCreateEventArgs e)
             => this._guildIntegrationCreated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild integration updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildIntegrationUpdated(DiscordClient client, GuildIntegrationUpdateEventArgs e)
             => this._guildIntegrationUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the guild integration deleted.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_GuildIntegrationDeleted(DiscordClient client, GuildIntegrationDeleteEventArgs e)
             => this._guildIntegrationDeleted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the stage instance created.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_StageInstanceCreated(DiscordClient client, StageInstanceCreateEventArgs e)
             => this._stageInstanceCreated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the stage instance updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_StageInstanceUpdated(DiscordClient client, StageInstanceUpdateEventArgs e)
             => this._stageInstanceUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the stage instance deleted.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_StageInstanceDeleted(DiscordClient client, StageInstanceDeleteEventArgs e)
             => this._stageInstanceDeleted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the thread created.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ThreadCreated(DiscordClient client, ThreadCreateEventArgs e)
             => this._threadCreated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the thread updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ThreadUpdated(DiscordClient client, ThreadUpdateEventArgs e)
             => this._threadUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the thread deleted.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ThreadDeleted(DiscordClient client, ThreadDeleteEventArgs e)
             => this._threadDeleted.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the thread list synced.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ThreadListSynced(DiscordClient client, ThreadListSyncEventArgs e)
             => this._threadListSynced.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the thread member updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ThreadMemberUpdated(DiscordClient client, ThreadMemberUpdateEventArgs e)
             => this._threadMemberUpdated.InvokeAsync(client, e);
 
+        /// <summary>
+        /// Client_S the thread members updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_ThreadMembersUpdated(DiscordClient client, ThreadMembersUpdateEventArgs e)
             => this._threadMembersUpdated.InvokeAsync(client, e);
 

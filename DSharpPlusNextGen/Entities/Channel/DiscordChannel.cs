@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -163,6 +162,9 @@ namespace DSharpPlusNextGen.Entities
             => !string.IsNullOrWhiteSpace(this.LastPinTimestampRaw) && DateTimeOffset.TryParse(this.LastPinTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
                 dto : null;
 
+        /// <summary>
+        /// Gets when the last pinned message was pinned as raw string.
+        /// </summary>
         [JsonProperty("last_pin_timestamp", NullValueHandling = NullValueHandling.Ignore)]
         internal string LastPinTimestampRaw { get; set; }
 
@@ -215,6 +217,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("nsfw")]
         public bool IsNSFW { get; internal set; }
 
+        /// <summary>
+        /// Gets this channel's region id (if voice channel).
+        /// </summary>
         [JsonProperty("rtc_region", NullValueHandling = NullValueHandling.Ignore)]
         internal string RtcRegionId { get; set; }
 
@@ -225,6 +230,9 @@ namespace DSharpPlusNextGen.Entities
         public DiscordVoiceRegion RtcRegion
             => this.RtcRegionId != null ? this.Discord.VoiceRegions[this.RtcRegionId] : null;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordChannel"/> class.
+        /// </summary>
         internal DiscordChannel()
         {
             this._permissionOverwritesLazy = new Lazy<IReadOnlyList<DiscordOverwrite>>(() => new ReadOnlyCollection<DiscordOverwrite>(this._permissionOverwrites));
@@ -341,7 +349,9 @@ namespace DSharpPlusNextGen.Entities
 
             var ovrs = new List<DiscordOverwriteBuilder>();
             foreach (var ovr in this._permissionOverwrites)
+#pragma warning disable CS0618 // Type or member is obsolete
                 ovrs.Add(await new DiscordOverwriteBuilder().FromAsync(ovr).ConfigureAwait(false));
+#pragma warning restore CS0618 // Type or member is obsolete
 
             var bitrate = this.Bitrate;
             var userLimit = this.UserLimit;
@@ -567,6 +577,13 @@ namespace DSharpPlusNextGen.Entities
         public Task<IReadOnlyList<DiscordMessage>> GetMessagesAsync(int limit = 100) =>
             this.GetMessagesInternalAsync(limit, null, null, null);
 
+        /// <summary>
+        /// Returns a list of messages
+        /// </summary>
+        /// <param name="limit">How many messages should be returned.</param>
+        /// <param name="before">Get messages before snowflake.</param>
+        /// <param name="after">Get messages after snowflake.</param>
+        /// <param name="around">Get messages around snowflake.</param>
         private async Task<IReadOnlyList<DiscordMessage>> GetMessagesInternalAsync(int limit = 100, ulong? before = null, ulong? after = null, ulong? around = null)
         {
             if (this.Type != ChannelType.Text && this.Type != ChannelType.Private && this.Type != ChannelType.Group && this.Type != ChannelType.News)

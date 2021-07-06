@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,10 +31,16 @@ namespace DSharpPlusNextGen.Entities
     /// </summary>
     public sealed class DiscordPresence
     {
+        /// <summary>
+        /// Gets the discord client.
+        /// </summary>
         [JsonIgnore]
         internal DiscordClient Discord { get; set; }
 
         // "The user object within this event can be partial, the only field which must be sent is the id field, everything else is optional."
+        /// <summary>
+        /// Gets the internal user.
+        /// </summary>
         [JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
         internal TransportUser InternalUser { get; set; }
 
@@ -52,6 +57,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonIgnore]
         public DiscordActivity Activity { get; internal set; }
 
+        /// <summary>
+        /// Gets the raw activity.
+        /// </summary>
         internal TransportActivity RawActivity { get; set; }
 
         /// <summary>
@@ -63,6 +71,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonIgnore]
         internal DiscordActivity[] _internalActivities;
 
+        /// <summary>
+        /// Gets the raw activities.
+        /// </summary>
         [JsonProperty("activities", NullValueHandling = NullValueHandling.Ignore)]
         internal TransportActivity[] RawActivities { get; set; }
 
@@ -72,6 +83,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public UserStatus Status { get; internal set; }
 
+        /// <summary>
+        /// Gets the guild id for which this presence was set.
+        /// </summary>
         [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
         internal ulong GuildId { get; set; }
 
@@ -88,8 +102,15 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("client_status", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordClientStatus ClientStatus { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordPresence"/> class.
+        /// </summary>
         internal DiscordPresence() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordPresence"/> class.
+        /// </summary>
+        /// <param name="other">The other.</param>
         internal DiscordPresence(DiscordPresence other)
         {
             this.Discord = other.Discord;
@@ -102,6 +123,9 @@ namespace DSharpPlusNextGen.Entities
         }
     }
 
+    /// <summary>
+    /// Represents a client status.
+    /// </summary>
     public sealed class DiscordClientStatus
     {
         /// <summary>

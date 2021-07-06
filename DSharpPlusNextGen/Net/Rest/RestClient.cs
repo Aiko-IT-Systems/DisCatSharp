@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -44,14 +43,50 @@ namespace DSharpPlusNextGen.Net
     /// </summary>
     internal sealed class RestClient : IDisposable
     {
+        /// <summary>
+        /// Gets the route argument regex.
+        /// </summary>
         private static Regex RouteArgumentRegex { get; } = new Regex(@":([a-z_]+)");
+
+        /// <summary>
+        /// Gets the http client.
+        /// </summary>
         private HttpClient HttpClient { get; }
+
+        /// <summary>
+        /// Gets the discord.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>")]
         private BaseDiscordClient Discord { get; }
+
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
         private ILogger Logger { get; }
+
+        /// <summary>
+        /// Gets the routes to hashes.
+        /// </summary>
         private ConcurrentDictionary<string, string> RoutesToHashes { get; }
+
+        /// <summary>
+        /// Gets the hashes to buckets.
+        /// </summary>
         private ConcurrentDictionary<string, RateLimitBucket> HashesToBuckets { get; }
+
+        /// <summary>
+        /// Gets the request queue.
+        /// </summary>
         private ConcurrentDictionary<string, int> RequestQueue { get; }
+
+        /// <summary>
+        /// Gets the global rate limit event.
+        /// </summary>
         private AsyncManualResetEvent GlobalRateLimitEvent { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether use reset after.
+        /// </summary>
         private bool UseResetAfter { get; }
 
         private CancellationTokenSource _bucketCleanerTokenSource;
@@ -60,6 +95,10 @@ namespace DSharpPlusNextGen.Net
         private Task _cleanerTask;
         private volatile bool _disposed;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RestClient"/> class.
+        /// </summary>
+        /// <param name="client">The client.</param>
         internal RestClient(BaseDiscordClient client)
             : this(client.Configuration.Proxy, client.Configuration.HttpTimeout, client.Configuration.UseRelativeRatelimit, client.Logger)
         {
@@ -67,6 +106,13 @@ namespace DSharpPlusNextGen.Net
             this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(client));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RestClient"/> class.
+        /// </summary>
+        /// <param name="proxy">The proxy.</param>
+        /// <param name="timeout">The timeout.</param>
+        /// <param name="useRelativeRatelimit">If true, use relative ratelimit.</param>
+        /// <param name="logger">The logger.</param>
         internal RestClient(IWebProxy proxy, TimeSpan timeout, bool useRelativeRatelimit,
             ILogger logger) // This is for meta-clients, such as the webhook client
         {
@@ -96,6 +142,14 @@ namespace DSharpPlusNextGen.Net
             this.UseResetAfter = useRelativeRatelimit;
         }
 
+        /// <summary>
+        /// Gets a bucket.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="route">The route.</param>
+        /// <param name="route_params">The route paramaters.</param>
+        /// <param name="url">The url.</param>
+        /// <returns>A ratelimit bucket.</returns>
         public RateLimitBucket GetBucket(RestRequestMethod method, string route, object route_params, out string url)
         {
             var rparams_props = route_params.GetType()
@@ -163,10 +217,20 @@ namespace DSharpPlusNextGen.Net
             return bucket;
         }
 
+        /// <summary>
+        /// Executes the request async.
+        /// </summary>
+        /// <param name="request">The request to be executed.</param>
         public Task ExecuteRequestAsync(BaseRestRequest request)
             => request == null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteRequestAsync(request, null, null);
 
-        // to allow proper rescheduling of the first request from a bucket
+        /// <summary>
+        /// Executes the request async.
+        /// This is to allow proper rescheduling of the first request from a bucket.
+        /// </summary>
+        /// <param name="request">The request to be executed.</param>
+        /// <param name="bucket">The bucket.</param>
+        /// <param name="ratelimitTcs">The ratelimit task completion source.</param>
         private async Task ExecuteRequestAsync(BaseRestRequest request, RateLimitBucket bucket, TaskCompletionSource<bool> ratelimitTcs)
         {
             if (this._disposed)
@@ -200,7 +264,7 @@ namespace DSharpPlusNextGen.Net
                         if (this.UseResetAfter)
                         {
                             delay = bucket.ResetAfter.Value;
-                            resetDate = bucket._resetAfterOffset;
+                            resetDate = bucket.ResetAfterOffset;
                         }
 
                         if (delay < new TimeSpan(-TimeSpan.TicksPerMinute))
@@ -355,6 +419,12 @@ namespace DSharpPlusNextGen.Net
             }
         }
 
+        /// <summary>
+        /// Fails the initial rate limit test.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="ratelimitTcs">The ratelimit task completion source.</param>
+        /// <param name="resetToInitial">If true, reset to initial.</param>
         private void FailInitialRateLimitTest(BaseRestRequest request, TaskCompletionSource<bool> ratelimitTcs, bool resetToInitial = false)
         {
             if (ratelimitTcs == null && !resetToInitial)
@@ -379,6 +449,10 @@ namespace DSharpPlusNextGen.Net
             _ = Task.Run(() => ratelimitTcs.TrySetResult(false));
         }
 
+        /// <summary>
+        /// Waits for the initial rate limit.
+        /// </summary>
+        /// <param name="bucket">The bucket.</param>
         private async Task<TaskCompletionSource<bool>> WaitForInitialRateLimit(RateLimitBucket bucket)
         {
             while (!bucket._limitValid)
@@ -409,6 +483,11 @@ namespace DSharpPlusNextGen.Net
             return null;
         }
 
+        /// <summary>
+        /// Builds the request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>A http request message.</returns>
         private HttpRequestMessage BuildRequest(BaseRestRequest request)
         {
             var req = new HttpRequestMessage(new HttpMethod(request.Method.ToString()), request.Url);
@@ -451,6 +530,12 @@ namespace DSharpPlusNextGen.Net
             return req;
         }
 
+        /// <summary>
+        /// Handles the http 429 status.
+        /// </summary>
+        /// <param name="response">The response.</param>
+        /// <param name="wait_task">The wait task.</param>
+        /// <param name="global">If true, global.</param>
         private void Handle429(RestResponse response, out Task wait_task, out bool global)
         {
             wait_task = null;
@@ -475,6 +560,12 @@ namespace DSharpPlusNextGen.Net
             }
         }
 
+        /// <summary>
+        /// Updates the bucket.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="response">The response.</param>
+        /// <param name="ratelimitTcs">The ratelimit task completion source.</param>
         private void UpdateBucket(BaseRestRequest request, RestResponse response, TaskCompletionSource<bool> ratelimitTcs)
         {
             var bucket = request.RateLimitBucket;
@@ -534,7 +625,7 @@ namespace DSharpPlusNextGen.Net
                 newReset = clienttime + bucket.ResetAfter.Value + (request.RateLimitWaitOverride.HasValue
                     ? resetdelta
                     : TimeSpan.Zero);
-                bucket._resetAfterOffset = newReset;
+                bucket.ResetAfterOffset = newReset;
             }
             else
                 bucket.Reset = newReset;
@@ -561,6 +652,12 @@ namespace DSharpPlusNextGen.Net
             this.UpdateHashCaches(request, bucket, hash);
         }
 
+        /// <summary>
+        /// Updates the hash caches.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="bucket">The bucket.</param>
+        /// <param name="newHash">The new hash.</param>
         private void UpdateHashCaches(BaseRestRequest request, RateLimitBucket bucket, string newHash = null)
         {
             var hashKey = RateLimitBucket.GenerateHashKey(request.Method, request.Route);
@@ -579,7 +676,7 @@ namespace DSharpPlusNextGen.Net
             // Only update the hash once, due to a bug on Discord's end.
             // This will cause issues if the bucket hashes are dynamically changed from the API while running,
             // in which case, Dispose will need to be called to clear the caches.
-            if (bucket.IsUnlimited && newHash != oldHash)
+            if (bucket._isUnlimited && newHash != oldHash)
             {
                 this.Logger.LogDebug(LoggerEvents.RestHashMover, "Updating hash in {0}: \"{1}\" -> \"{2}\"", hashKey, oldHash, newHash);
                 var bucketId = RateLimitBucket.GenerateBucketId(newHash, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);
@@ -601,6 +698,9 @@ namespace DSharpPlusNextGen.Net
             return;
         }
 
+        /// <summary>
+        /// Cleanups the buckets.
+        /// </summary>
         private async Task CleanupBucketsAsync()
         {
             while (!this._bucketCleanerTokenSource.IsCancellationRequested)
@@ -635,13 +735,13 @@ namespace DSharpPlusNextGen.Net
                     var value = kvp.Value;
 
                     // Don't remove the bucket if it's currently being handled by the rest client, unless it's an unlimited bucket.
-                    if (this.RequestQueue.ContainsKey(value.BucketId) && !value.IsUnlimited)
+                    if (this.RequestQueue.ContainsKey(value.BucketId) && !value._isUnlimited)
                         continue;
 
-                    var resetOffset = this.UseResetAfter ? value._resetAfterOffset : value.Reset;
+                    var resetOffset = this.UseResetAfter ? value.ResetAfterOffset : value.Reset;
 
                     // Don't remove the bucket if it's reset date is less than now + the additional wait time, unless it's an unlimited bucket.
-                    if (resetOffset != null && !value.IsUnlimited && (resetOffset > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - resetOffset < this._bucketCleanupDelay))
+                    if (resetOffset != null && !value._isUnlimited && (resetOffset > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - resetOffset < this._bucketCleanupDelay))
                         continue;
 
                     _ = this.HashesToBuckets.TryRemove(key, out _);
@@ -665,7 +765,10 @@ namespace DSharpPlusNextGen.Net
 
         ~RestClient()
             => this.Dispose();
-
+        
+        /// <summary>
+        /// Disposes the rest client.
+        /// </summary>
         public void Dispose()
         {
             if (this._disposed)
@@ -695,9 +798,3 @@ namespace DSharpPlusNextGen.Net
         }
     }
 }
-
-
-//       More useless comments, sorry..
-//  Was listening to this, felt like sharing.
-// https://www.youtube.com/watch?v=ePX5qgDe9s4
-//         ♫♪.ılılıll|̲̅̅●̲̅̅|̲̅̅=̲̅̅|̲̅̅●̲̅̅|llılılı.♫♪

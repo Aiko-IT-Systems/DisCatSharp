@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,11 +24,20 @@ using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.VoiceNext.Entities
 {
+    /// <summary>
+    /// The voice session description payload.
+    /// </summary>
     internal sealed class VoiceSessionDescriptionPayload
     {
+        /// <summary>
+        /// Gets or sets the secret key.
+        /// </summary>
         [JsonProperty("secret_key")]
         public byte[] SecretKey { get; set; }
 
+        /// <summary>
+        /// Gets or sets the mode.
+        /// </summary>
         [JsonProperty("mode")]
         public string Mode { get; set; }
     }
