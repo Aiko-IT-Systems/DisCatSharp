@@ -85,6 +85,11 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             this._reactionClearEvent.Register(this._reactionClearHandler);
         }
 
+        /// <summary>
+        /// Collects the async.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>A Task.</returns>
         public async Task<ReadOnlyCollection<Reaction>> CollectAsync(ReactionCollectRequest request)
         {
             this._requests.Add(request);
@@ -107,6 +112,12 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             return result;
         }
 
+        /// <summary>
+        /// Handles the reaction add.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="eventargs">The eventargs.</param>
+        /// <returns>A Task.</returns>
         private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventargs)
         {
             // foreach request add
@@ -134,6 +145,12 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Handles the reaction remove.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="eventargs">The eventargs.</param>
+        /// <returns>A Task.</returns>
         private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventargs)
         {
             // foreach request remove
@@ -154,6 +171,12 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Handles the reaction clear.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="eventargs">The eventargs.</param>
+        /// <returns>A Task.</returns>
         private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventargs)
         {
             // foreach request add
@@ -223,6 +246,9 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             this.Dispose();
         }
 
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
         public void Dispose()
         {
             GC.SuppressFinalize(this);
@@ -236,8 +262,17 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
 
     public class Reaction
     {
+        /// <summary>
+        /// Gets the emoji.
+        /// </summary>
         public DiscordEmoji Emoji { get; internal set; }
+        /// <summary>
+        /// Gets the users.
+        /// </summary>
         public ConcurrentHashSet<DiscordUser> Users { get; internal set; }
+        /// <summary>
+        /// Gets the total.
+        /// </summary>
         public int Total => this.Users.Count;
     }
 }
