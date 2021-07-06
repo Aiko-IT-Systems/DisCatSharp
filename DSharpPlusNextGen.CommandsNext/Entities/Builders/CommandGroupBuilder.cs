@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +36,9 @@ namespace DSharpPlusNextGen.CommandsNext.Builders
         /// Gets the list of child commands registered for this group.
         /// </summary>
         public IReadOnlyList<CommandBuilder> Children { get; }
+        /// <summary>
+        /// Gets the children list.
+        /// </summary>
         private List<CommandBuilder> ChildrenList { get; }
 
         /// <summary>
@@ -68,6 +70,10 @@ namespace DSharpPlusNextGen.CommandsNext.Builders
             return this;
         }
 
+        /// <summary>
+        /// Builds the command group.
+        /// </summary>
+        /// <param name="parent">The parent command group.</param>
         internal override Command Build(CommandGroup parent)
         {
             var cmd = new CommandGroup

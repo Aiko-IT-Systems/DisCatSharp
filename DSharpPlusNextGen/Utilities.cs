@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,10 +44,20 @@ namespace DSharpPlusNextGen
         /// Gets the version of the library
         /// </summary>
         private static string VersionHeader { get; set; }
+
+        /// <summary>
+        /// Gets or sets the permission strings.
+        /// </summary>
         private static Dictionary<Permissions, string> PermissionStrings { get; set; }
 
+        /// <summary>
+        /// Gets the utf8 encoding
+        /// </summary>
         internal static UTF8Encoding UTF8 { get; } = new UTF8Encoding(false);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Utilities"/> class.
+        /// </summary>
         static Utilities()
         {
             PermissionStrings = new Dictionary<Permissions, string>();
@@ -80,20 +89,50 @@ namespace DSharpPlusNextGen
             VersionHeader = $"DiscordBot (https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen, v{vs})";
         }
 
+        /// <summary>
+        /// Gets the api base uri.
+        /// </summary>
+        /// <returns>A string.</returns>
         internal static string GetApiBaseUri()
             => Endpoints.BASE_URI;
 
+        /// <summary>
+        /// Gets the api uri for.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>An Uri.</returns>
         internal static Uri GetApiUriFor(string path)
             => new($"{GetApiBaseUri()}{path}");
 
+        /// <summary>
+        /// Gets the api uri for.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="queryString">The query string.</param>
+        /// <returns>An Uri.</returns>
         internal static Uri GetApiUriFor(string path, string queryString)
             => new($"{GetApiBaseUri()}{path}{queryString}");
 
+        /// <summary>
+        /// Gets the api uri builder for.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns>A QueryUriBuilder.</returns>
         internal static QueryUriBuilder GetApiUriBuilderFor(string path)
             => new($"{GetApiBaseUri()}{path}");
 
+        /// <summary>
+        /// Gets the formatted token.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <returns>A string.</returns>
         internal static string GetFormattedToken(BaseDiscordClient client) => GetFormattedToken(client.Configuration);
 
+        /// <summary>
+        /// Gets the formatted token.
+        /// </summary>
+        /// <param name="config">The config.</param>
+        /// <returns>A string.</returns>
         internal static string GetFormattedToken(DiscordConfiguration config)
         {
             return config.TokenType switch
@@ -104,12 +143,25 @@ namespace DSharpPlusNextGen
             };
         }
 
+        /// <summary>
+        /// Gets the base headers.
+        /// </summary>
+        /// <returns>A Dictionary.</returns>
         internal static Dictionary<string, string> GetBaseHeaders()
             => new();
 
+        /// <summary>
+        /// Gets the user agent.
+        /// </summary>
+        /// <returns>A string.</returns>
         internal static string GetUserAgent()
             => VersionHeader;
 
+        /// <summary>
+        /// Contains the user mentions.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>A bool.</returns>
         internal static bool ContainsUserMentions(string message)
         {
             var pattern = @"<@(\d+)>";
@@ -117,6 +169,11 @@ namespace DSharpPlusNextGen
             return regex.IsMatch(message);
         }
 
+        /// <summary>
+        /// Contains the nickname mentions.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>A bool.</returns>
         internal static bool ContainsNicknameMentions(string message)
         {
             var pattern = @"<@!(\d+)>";
@@ -124,6 +181,11 @@ namespace DSharpPlusNextGen
             return regex.IsMatch(message);
         }
 
+        /// <summary>
+        /// Contains the channel mentions.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>A bool.</returns>
         internal static bool ContainsChannelMentions(string message)
         {
             var pattern = @"<#(\d+)>";
@@ -131,6 +193,11 @@ namespace DSharpPlusNextGen
             return regex.IsMatch(message);
         }
 
+        /// <summary>
+        /// Contains the role mentions.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>A bool.</returns>
         internal static bool ContainsRoleMentions(string message)
         {
             var pattern = @"<@&(\d+)>";
@@ -138,6 +205,11 @@ namespace DSharpPlusNextGen
             return regex.IsMatch(message);
         }
 
+        /// <summary>
+        /// Contains the emojis.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>A bool.</returns>
         internal static bool ContainsEmojis(string message)
         {
             var pattern = @"<a?:(.*):(\d+)>";
@@ -145,6 +217,11 @@ namespace DSharpPlusNextGen
             return regex.IsMatch(message);
         }
 
+        /// <summary>
+        /// Gets the user mentions.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>A list of ulong.</returns>
         internal static IEnumerable<ulong> GetUserMentions(DiscordMessage message)
         {
             var regex = new Regex(@"<@!?(\d+)>", RegexOptions.ECMAScript);
@@ -153,6 +230,11 @@ namespace DSharpPlusNextGen
                 yield return ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// Gets the role mentions.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>A list of ulong.</returns>
         internal static IEnumerable<ulong> GetRoleMentions(DiscordMessage message)
         {
             var regex = new Regex(@"<@&(\d+)>", RegexOptions.ECMAScript);
@@ -161,6 +243,11 @@ namespace DSharpPlusNextGen
                 yield return ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// Gets the channel mentions.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>A list of ulong.</returns>
         internal static IEnumerable<ulong> GetChannelMentions(DiscordMessage message)
         {
             var regex = new Regex(@"<#(\d+)>", RegexOptions.ECMAScript);
@@ -169,6 +256,11 @@ namespace DSharpPlusNextGen
                 yield return ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// Gets the emojis.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>A list of ulong.</returns>
         internal static IEnumerable<ulong> GetEmojis(DiscordMessage message)
         {
             var regex = new Regex(@"<a?:([a-zA-Z0-9_]+):(\d+)>", RegexOptions.ECMAScript);
@@ -177,12 +269,23 @@ namespace DSharpPlusNextGen
                 yield return ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// Are the valid slash command name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>A bool.</returns>
         internal static bool IsValidSlashCommandName(string name)
         {
             var regex = new Regex(@"^[\w-]{1,32}$", RegexOptions.ECMAScript);
             return regex.IsMatch(name);
         }
 
+        /// <summary>
+        /// Checks the thread auto archive duration feature.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <param name="taad">The taad.</param>
+        /// <returns>A bool.</returns>
         internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
         {
             return taad == ThreadAutoArchiveDuration.ThreeDays
@@ -190,14 +293,34 @@ namespace DSharpPlusNextGen
                 : taad != ThreadAutoArchiveDuration.OneWeek || guild.PremiumTier.HasFlag(PremiumTier.Tier_2) || guild.Features.CanSetThreadArchiveDurationSevenDays;
         }
 
+        /// <summary>
+        /// Checks the thread private feature.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A bool.</returns>
         internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.PremiumTier.HasFlag(PremiumTier.Tier_2) || guild.Features.CanCreatePrivateThreads;
 
+        /// <summary>
+        /// Have the message intents.
+        /// </summary>
+        /// <param name="intents">The intents.</param>
+        /// <returns>A bool.</returns>
         internal static bool HasMessageIntents(DiscordIntents intents)
             => intents.HasIntent(DiscordIntents.GuildMessages) || intents.HasIntent(DiscordIntents.DirectMessages);
 
+        /// <summary>
+        /// Have the reaction intents.
+        /// </summary>
+        /// <param name="intents">The intents.</param>
+        /// <returns>A bool.</returns>
         internal static bool HasReactionIntents(DiscordIntents intents)
             => intents.HasIntent(DiscordIntents.GuildMessageReactions) || intents.HasIntent(DiscordIntents.DirectMessageReactions);
 
+        /// <summary>
+        /// Have the typing intents.
+        /// </summary>
+        /// <param name="intents">The intents.</param>
+        /// <returns>A bool.</returns>
         internal static bool HasTypingIntents(DiscordIntents intents)
             => intents.HasIntent(DiscordIntents.GuildMessageTyping) || intents.HasIntent(DiscordIntents.DirectMessageTyping);
 
@@ -304,6 +427,14 @@ namespace DSharpPlusNextGen
             return false;
         }
 
+        /// <summary>
+        /// Logs the task fault.
+        /// </summary>
+        /// <param name="task">The task.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="level">The level.</param>
+        /// <param name="eventId">The event id.</param>
+        /// <param name="message">The message.</param>
         internal static void LogTaskFault(this Task task, ILogger logger, LogLevel level, EventId eventId, string message)
         {
             if (task == null)
@@ -315,6 +446,12 @@ namespace DSharpPlusNextGen
             task.ContinueWith(t => logger.Log(level, eventId, t.Exception, message), TaskContinuationOptions.OnlyOnFaulted);
         }
 
+        /// <summary>
+        /// Deconstructs the.
+        /// </summary>
+        /// <param name="kvp">The kvp.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
         internal static void Deconstruct<TKey, TValue>(this KeyValuePair<TKey, TValue> kvp, out TKey key, out TValue value)
         {
             key = kvp.Key;

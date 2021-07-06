@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -52,11 +51,17 @@ namespace DSharpPlusNextGen
         #region Internal Fields/Properties
 
         internal bool _isShard = false;
+        /// <summary>
+        /// Gets the message cache.
+        /// </summary>
         internal RingBuffer<DiscordMessage> MessageCache { get; }
 
         private List<BaseExtension> _extensions = new();
         private StatusUpdate _status = null;
 
+        /// <summary>
+        /// Gets the connection lock.
+        /// </summary>
         private ManualResetEventSlim ConnectionLock { get; } = new ManualResetEventSlim(true);
 
         #endregion
@@ -144,6 +149,9 @@ namespace DSharpPlusNextGen
             this.Guilds = new ReadOnlyConcurrentDictionary<ulong, DiscordGuild>(this._guilds);
         }
 
+        /// <summary>
+        /// setup.
+        /// </summary>
         internal void InternalSetup()
         {
             this._clientErrored = new AsyncEvent<DiscordClient, ClientErrorEventArgs>("CLIENT_ERRORED", EventExecutionLimit, this.Goof);
@@ -336,6 +344,10 @@ namespace DSharpPlusNextGen
                 cl?.Set();
         }
 
+        /// <summary>
+        /// Reconnects the async.
+        /// </summary>
+        /// <param name="startNewSession">If true, start new session.</param>
         public Task ReconnectAsync(bool startNewSession = false)
             => this.InternalReconnectAsync(startNewSession, code: startNewSession ? 1000 : 4002);
 
@@ -793,6 +805,11 @@ namespace DSharpPlusNextGen
         #endregion
 
         #region Internal Caching Methods
+        /// <summary>
+        /// Internals the get cached thread.
+        /// </summary>
+        /// <param name="threadId">The thread id.</param>
+        /// <returns>A DiscordThreadChannel.</returns>
         internal DiscordThreadChannel InternalGetCachedThread(ulong threadId)
         {
             foreach (var guild in this.Guilds.Values)
@@ -802,6 +819,11 @@ namespace DSharpPlusNextGen
             return null;
         }
 
+        /// <summary>
+        /// Internals the get cached channel.
+        /// </summary>
+        /// <param name="channelId">The channel id.</param>
+        /// <returns>A DiscordChannel.</returns>
         internal DiscordChannel InternalGetCachedChannel(ulong channelId)
         {
             foreach (var guild in this.Guilds.Values)
@@ -811,6 +833,11 @@ namespace DSharpPlusNextGen
             return null;
         }
 
+        /// <summary>
+        /// Internals the get cached guild.
+        /// </summary>
+        /// <param name="guildId">The guild id.</param>
+        /// <returns>A DiscordGuild.</returns>
         internal DiscordGuild InternalGetCachedGuild(ulong? guildId)
         {
             if (this._guilds != null && guildId.HasValue)
@@ -822,6 +849,13 @@ namespace DSharpPlusNextGen
             return null;
         }
 
+        /// <summary>
+        /// Updates the message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="author">The author.</param>
+        /// <param name="guild">The guild.</param>
+        /// <param name="member">The member.</param>
         private void UpdateMessage(DiscordMessage message, TransportUser author, DiscordGuild guild, TransportMember member)
         {
             if (author != null)
@@ -854,6 +888,14 @@ namespace DSharpPlusNextGen
             message.Channel = channel;
         }
 
+        /// <summary>
+        /// Updates the user.
+        /// </summary>
+        /// <param name="usr">The usr.</param>
+        /// <param name="guildId">The guild id.</param>
+        /// <param name="guild">The guild.</param>
+        /// <param name="mbr">The mbr.</param>
+        /// <returns>A DiscordUser.</returns>
         private DiscordUser UpdateUser(DiscordUser usr, ulong? guildId, DiscordGuild guild, TransportMember mbr)
         {
             if (mbr != null)
@@ -909,6 +951,11 @@ namespace DSharpPlusNextGen
             return usr;
         }
 
+        /// <summary>
+        /// Updates the cached guild.
+        /// </summary>
+        /// <param name="newGuild">The new guild.</param>
+        /// <param name="rawMembers">The raw members.</param>
         private void UpdateCachedGuild(DiscordGuild newGuild, JArray rawMembers)
         {
             if (this._disposed)
@@ -1023,6 +1070,12 @@ namespace DSharpPlusNextGen
             // - guild.Unavailable = new_guild.Unavailable;
         }
 
+        /// <summary>
+        /// Populates the message reactions and cache.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="author">The author.</param>
+        /// <param name="member">The member.</param>
         private void PopulateMessageReactionsAndCache(DiscordMessage message, TransportUser author, TransportMember member)
         {
             var guild = message.Channel?.Guild ?? this.InternalGetCachedGuild(message.GuildId);

@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -106,65 +105,197 @@ namespace DSharpPlusNextGen.VoiceNext
 
         internal event VoiceDisconnectedEventHandler VoiceDisconnected;
 
+        /// <summary>
+        /// Gets the unix epoch.
+        /// </summary>
         private static DateTimeOffset UnixEpoch { get; } = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
+        /// <summary>
+        /// Gets the discord.
+        /// </summary>
         private DiscordClient Discord { get; }
+        /// <summary>
+        /// Gets the guild.
+        /// </summary>
         private DiscordGuild Guild { get; }
+        /// <summary>
+        /// Gets the transmitting s s r cs.
+        /// </summary>
         private ConcurrentDictionary<uint, AudioSender> TransmittingSSRCs { get; }
 
+        /// <summary>
+        /// Gets the udp client.
+        /// </summary>
         private BaseUdpClient UdpClient { get; }
+        /// <summary>
+        /// Gets or sets the voice ws.
+        /// </summary>
         private IWebSocketClient VoiceWs { get; set; }
+        /// <summary>
+        /// Gets or sets the heartbeat task.
+        /// </summary>
         private Task HeartbeatTask { get; set; }
+        /// <summary>
+        /// Gets or sets the heartbeat interval.
+        /// </summary>
         private int HeartbeatInterval { get; set; }
+        /// <summary>
+        /// Gets or sets the last heartbeat.
+        /// </summary>
         private DateTimeOffset LastHeartbeat { get; set; }
 
+        /// <summary>
+        /// Gets or sets the token source.
+        /// </summary>
         private CancellationTokenSource TokenSource { get; set; }
+        /// <summary>
+        /// Gets the token.
+        /// </summary>
         private CancellationToken Token
             => this.TokenSource.Token;
 
+        /// <summary>
+        /// Gets or sets the server data.
+        /// </summary>
         internal VoiceServerUpdatePayload ServerData { get; set; }
+        /// <summary>
+        /// Gets or sets the state data.
+        /// </summary>
         internal VoiceStateUpdatePayload StateData { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether resume.
+        /// </summary>
         internal bool Resume { get; set; }
 
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
         private VoiceNextConfiguration Configuration { get; }
+        /// <summary>
+        /// Gets or sets the opus.
+        /// </summary>
         private Opus Opus { get; set; }
+        /// <summary>
+        /// Gets or sets the sodium.
+        /// </summary>
         private Sodium Sodium { get; set; }
+        /// <summary>
+        /// Gets or sets the rtp.
+        /// </summary>
         private Rtp Rtp { get; set; }
+        /// <summary>
+        /// Gets or sets the selected encryption mode.
+        /// </summary>
         private EncryptionMode SelectedEncryptionMode { get; set; }
+        /// <summary>
+        /// Gets or sets the nonce.
+        /// </summary>
         private uint Nonce { get; set; } = 0;
 
+        /// <summary>
+        /// Gets or sets the sequence.
+        /// </summary>
         private ushort Sequence { get; set; }
+        /// <summary>
+        /// Gets or sets the timestamp.
+        /// </summary>
         private uint Timestamp { get; set; }
+        /// <summary>
+        /// Gets or sets the s s r c.
+        /// </summary>
         private uint SSRC { get; set; }
+        /// <summary>
+        /// Gets or sets the key.
+        /// </summary>
         private byte[] Key { get; set; }
+        /// <summary>
+        /// Gets or sets the discovered endpoint.
+        /// </summary>
         private IpEndpoint DiscoveredEndpoint { get; set; }
+        /// <summary>
+        /// Gets or sets the web socket endpoint.
+        /// </summary>
         internal ConnectionEndpoint WebSocketEndpoint { get; set; }
+        /// <summary>
+        /// Gets or sets the udp endpoint.
+        /// </summary>
         internal ConnectionEndpoint UdpEndpoint { get; set; }
 
+        /// <summary>
+        /// Gets or sets the ready wait.
+        /// </summary>
         private TaskCompletionSource<bool> ReadyWait { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether is initialized.
+        /// </summary>
         private bool IsInitialized { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether is disposed.
+        /// </summary>
         private bool IsDisposed { get; set; }
 
+        /// <summary>
+        /// Gets or sets the playing wait.
+        /// </summary>
         private TaskCompletionSource<bool> PlayingWait { get; set; }
 
+        /// <summary>
+        /// Gets the pause event.
+        /// </summary>
         private AsyncManualResetEvent PauseEvent { get; }
+        /// <summary>
+        /// Gets or sets the transmit stream.
+        /// </summary>
         private VoiceTransmitSink TransmitStream { get; set; }
+        /// <summary>
+        /// Gets the transmit channel.
+        /// </summary>
         private Channel<RawVoicePacket> TransmitChannel { get; }
+        /// <summary>
+        /// Gets the keepalive timestamps.
+        /// </summary>
         private ConcurrentDictionary<ulong, long> KeepaliveTimestamps { get; }
         private ulong _lastKeepalive = 0;
 
+        /// <summary>
+        /// Gets or sets the sender task.
+        /// </summary>
         private Task SenderTask { get; set; }
+        /// <summary>
+        /// Gets or sets the sender token source.
+        /// </summary>
         private CancellationTokenSource SenderTokenSource { get; set; }
+        /// <summary>
+        /// Gets the sender token.
+        /// </summary>
         private CancellationToken SenderToken
             => this.SenderTokenSource.Token;
 
+        /// <summary>
+        /// Gets or sets the receiver task.
+        /// </summary>
         private Task ReceiverTask { get; set; }
+        /// <summary>
+        /// Gets or sets the receiver token source.
+        /// </summary>
         private CancellationTokenSource ReceiverTokenSource { get; set; }
+        /// <summary>
+        /// Gets the receiver token.
+        /// </summary>
         private CancellationToken ReceiverToken
             => this.ReceiverTokenSource.Token;
 
+        /// <summary>
+        /// Gets or sets the keepalive task.
+        /// </summary>
         private Task KeepaliveTask { get; set; }
+        /// <summary>
+        /// Gets or sets the keepalive token source.
+        /// </summary>
         private CancellationTokenSource KeepaliveTokenSource { get; set; }
+        /// <summary>
+        /// Gets the keepalive token.
+        /// </summary>
         private CancellationToken KeepaliveToken
             => this.KeepaliveTokenSource.Token;
 
@@ -202,6 +333,15 @@ namespace DSharpPlusNextGen.VoiceNext
         /// </summary>
         public DiscordChannel TargetChannel { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VoiceNextConnection"/> class.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="guild">The guild.</param>
+        /// <param name="channel">The channel.</param>
+        /// <param name="config">The config.</param>
+        /// <param name="server">The server.</param>
+        /// <param name="state">The state.</param>
         internal VoiceNextConnection(DiscordClient client, DiscordGuild guild, DiscordChannel channel, VoiceNextConfiguration config, VoiceServerUpdatePayload server, VoiceStateUpdatePayload state)
         {
             this.Discord = client;
@@ -277,9 +417,17 @@ namespace DSharpPlusNextGen.VoiceNext
             return this.VoiceWs.ConnectAsync(gwuri.Uri);
         }
 
+        /// <summary>
+        /// Reconnects .
+        /// </summary>
+        /// <returns>A Task.</returns>
         internal Task ReconnectAsync()
             => this.VoiceWs.DisconnectAsync();
 
+        /// <summary>
+        /// Starts .
+        /// </summary>
+        /// <returns>A Task.</returns>
         internal async Task StartAsync()
         {
             // Let's announce our intentions to the server
@@ -311,15 +459,32 @@ namespace DSharpPlusNextGen.VoiceNext
             await this.WsSendAsync(vdj).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Waits the for ready async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         internal Task WaitForReadyAsync()
             => this.ReadyWait.Task;
 
+        /// <summary>
+        /// Enqueues the packet async.
+        /// </summary>
+        /// <param name="packet">The packet.</param>
+        /// <param name="token">The token.</param>
+        /// <returns>A Task.</returns>
         internal async Task EnqueuePacketAsync(RawVoicePacket packet, CancellationToken token = default)
         {
             await this.TransmitChannel.Writer.WriteAsync(packet, token).ConfigureAwait(false);
             this._queueCount++;
         }
 
+        /// <summary>
+        /// Prepares the packet.
+        /// </summary>
+        /// <param name="pcm">The pcm.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="length">The length.</param>
+        /// <returns>A bool.</returns>
         internal bool PreparePacket(ReadOnlySpan<byte> pcm, out byte[] target, out int length)
         {
             target = null;
@@ -371,6 +536,10 @@ namespace DSharpPlusNextGen.VoiceNext
             return true;
         }
 
+        /// <summary>
+        /// Voices the sender task.
+        /// </summary>
+        /// <returns>A Task.</returns>
         private async Task VoiceSenderTask()
         {
             var token = this.SenderToken;
@@ -450,6 +619,16 @@ namespace DSharpPlusNextGen.VoiceNext
             }
         }
 
+        /// <summary>
+        /// Processes the packet.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="opus">The opus.</param>
+        /// <param name="pcm">The pcm.</param>
+        /// <param name="pcmPackets">The pcm packets.</param>
+        /// <param name="voiceSender">The voice sender.</param>
+        /// <param name="outputFormat">The output format.</param>
+        /// <returns>A bool.</returns>
         private bool ProcessPacket(ReadOnlySpan<byte> data, ref Memory<byte> opus, ref Memory<byte> pcm, IList<ReadOnlyMemory<byte>> pcmPackets, out AudioSender voiceSender, out AudioFormat outputFormat)
         {
             voiceSender = null;
@@ -559,6 +738,11 @@ namespace DSharpPlusNextGen.VoiceNext
             return true;
         }
 
+        /// <summary>
+        /// Processes the voice packet.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>A Task.</returns>
         private async Task ProcessVoicePacket(byte[] data)
         {
             if (data.Length < 13) // minimum packet length
@@ -601,6 +785,10 @@ namespace DSharpPlusNextGen.VoiceNext
             }
         }
 
+        /// <summary>
+        /// Processes the keepalive.
+        /// </summary>
+        /// <param name="data">The data.</param>
         private void ProcessKeepalive(byte[] data)
         {
             try
@@ -620,6 +808,10 @@ namespace DSharpPlusNextGen.VoiceNext
             }
         }
 
+        /// <summary>
+        /// Udps the receiver task.
+        /// </summary>
+        /// <returns>A Task.</returns>
         private async Task UdpReceiverTask()
         {
             var token = this.ReceiverToken;
@@ -740,6 +932,10 @@ namespace DSharpPlusNextGen.VoiceNext
             this.VoiceDisconnected?.Invoke(this.Guild);
         }
 
+        /// <summary>
+        /// Heartbeats .
+        /// </summary>
+        /// <returns>A Task.</returns>
         private async Task HeartbeatAsync()
         {
             await Task.Yield();
@@ -772,6 +968,10 @@ namespace DSharpPlusNextGen.VoiceNext
             }
         }
 
+        /// <summary>
+        /// Keepalives .
+        /// </summary>
+        /// <returns>A Task.</returns>
         private async Task KeepaliveAsync()
         {
             await Task.Yield();
@@ -795,6 +995,11 @@ namespace DSharpPlusNextGen.VoiceNext
             }
         }
 
+        /// <summary>
+        /// Stage1S .
+        /// </summary>
+        /// <param name="voiceReady">The voice ready.</param>
+        /// <returns>A Task.</returns>
         private async Task Stage1(VoiceReadyPayload voiceReady)
         {
             // IP Discovery
@@ -861,6 +1066,11 @@ namespace DSharpPlusNextGen.VoiceNext
             this.ReceiverTask = Task.Run(this.UdpReceiverTask, this.ReceiverToken);
         }
 
+        /// <summary>
+        /// Stage2S .
+        /// </summary>
+        /// <param name="voiceSessionDescription">The voice session description.</param>
+        /// <returns>A Task.</returns>
         private async Task Stage2(VoiceSessionDescriptionPayload voiceSessionDescription)
         {
             this.SelectedEncryptionMode = Sodium.SupportedModes[voiceSessionDescription.Mode.ToLowerInvariant()];
@@ -883,6 +1093,11 @@ namespace DSharpPlusNextGen.VoiceNext
             this.ReadyWait.SetResult(true);
         }
 
+        /// <summary>
+        /// Handles the dispatch.
+        /// </summary>
+        /// <param name="jo">The jo.</param>
+        /// <returns>A Task.</returns>
         private async Task HandleDispatch(JObject jo)
         {
             var opc = (int)jo["op"];
@@ -1003,6 +1218,12 @@ namespace DSharpPlusNextGen.VoiceNext
             }
         }
 
+        /// <summary>
+        /// Voices the w s_ socket closed.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private async Task VoiceWS_SocketClosed(IWebSocketClient client, SocketCloseEventArgs e)
         {
             this.Discord.Logger.LogDebug(VoiceNextEvents.VoiceConnectionClose, "Voice WebSocket closed ({0}, '{1}')", e.CloseCode, e.CloseMessage);
@@ -1029,6 +1250,12 @@ namespace DSharpPlusNextGen.VoiceNext
             }
         }
 
+        /// <summary>
+        /// Voices the w s_ socket message.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task VoiceWS_SocketMessage(IWebSocketClient client, SocketMessageEventArgs e)
         {
             if (e is not SocketTextMessageEventArgs et)
@@ -1041,18 +1268,40 @@ namespace DSharpPlusNextGen.VoiceNext
             return this.HandleDispatch(JObject.Parse(et.Message));
         }
 
+        /// <summary>
+        /// Voices the w s_ socket opened.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task VoiceWS_SocketOpened(IWebSocketClient client, SocketEventArgs e)
             => this.StartAsync();
 
+        /// <summary>
+        /// Voices the ws_ socket exception.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task VoiceWs_SocketException(IWebSocketClient client, SocketErrorEventArgs e)
             => this._voiceSocketError.InvokeAsync(this, new SocketErrorEventArgs { Exception = e.Exception });
 
+        /// <summary>
+        /// Ws the send async.
+        /// </summary>
+        /// <param name="payload">The payload.</param>
+        /// <returns>A Task.</returns>
         private async Task WsSendAsync(string payload)
         {
             this.Discord.Logger.LogTrace(VoiceNextEvents.VoiceWsTx, payload);
             await this.VoiceWs.SendMessageAsync(payload).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Unixes the timestamp.
+        /// </summary>
+        /// <param name="dt">The dt.</param>
+        /// <returns>An uint.</returns>
         private static uint UnixTimestamp(DateTime dt)
         {
             var ts = dt - UnixEpoch;

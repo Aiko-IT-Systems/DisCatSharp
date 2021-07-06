@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,14 +32,24 @@ namespace DSharpPlusNextGen
     /// </summary>
     internal class AsyncManualResetEvent
     {
+        /// <summary>
+        /// Gets a value indicating whether this is set.
+        /// </summary>
         public bool IsSet => this._tsc != null && this._tsc.Task.IsCompleted;
 
         private TaskCompletionSource<bool> _tsc;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncManualResetEvent"/> class.
+        /// </summary>
         public AsyncManualResetEvent()
             : this(false)
         { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AsyncManualResetEvent"/> class.
+        /// </summary>
+        /// <param name="initialState">If true, initial state.</param>
         public AsyncManualResetEvent(bool initialState)
         {
             this._tsc = new TaskCompletionSource<bool>();
@@ -48,10 +57,19 @@ namespace DSharpPlusNextGen
             if (initialState) this._tsc.TrySetResult(true);
         }
 
+        /// <summary>
+        /// Waits async.
+        /// </summary>
         public Task WaitAsync() => this._tsc.Task;
 
+        /// <summary>
+        /// Sets async.
+        /// </summary>
         public Task SetAsync() => Task.Run(() => this._tsc.TrySetResult(true));
 
+        /// <summary>
+        /// Resets.
+        /// </summary>
         public void Reset()
         {
             while (true)

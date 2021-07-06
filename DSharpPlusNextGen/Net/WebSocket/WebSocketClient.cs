@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,13 +40,24 @@ namespace DSharpPlusNextGen.Net.WebSocket
     /// </summary>
     public class WebSocketClient : IWebSocketClient
     {
+        /// <summary>
+        /// The outgoing chunk size.
+        /// </summary>
         private const int OutgoingChunkSize = 8192; // 8 KiB
+
+        /// <summary>
+        /// The incoming chunk size.
+        /// </summary>
         private const int IncomingChunkSize = 32768; // 32 KiB
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the proxy settings for this client.
+        /// </summary>
         public IWebProxy Proxy { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the collection of default headers to send when connecting to the remote endpoint.
+        /// </summary>
         public IReadOnlyDictionary<string, string> DefaultHeaders { get; }
         private readonly Dictionary<string, string> _defaultHeaders;
 
@@ -87,7 +97,10 @@ namespace DSharpPlusNextGen.Net.WebSocket
             this._socketToken = CancellationToken.None;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Connects to a specified remote WebSocket endpoint.
+        /// </summary>
+        /// <param name="uri">The URI of the WebSocket endpoint.</param>
         public async Task ConnectAsync(Uri uri)
         {
             // Disconnect first
@@ -127,7 +140,13 @@ namespace DSharpPlusNextGen.Net.WebSocket
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Disconnects the WebSocket connection.
+        /// </summary>
+        /// <param name="code">The code</param>
+        /// <param name="message">The message</param>
+        /// <created>Lala Sabathil,06.07.2021</created>
+        /// <changed>Lala Sabathil,06.07.2021</changed>
         public async Task DisconnectAsync(int code = 1000, string message = "")
         {
             // Ensure that messages cannot be sent
@@ -166,7 +185,10 @@ namespace DSharpPlusNextGen.Net.WebSocket
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Send a message to the WebSocket server.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
         public async Task SendMessageAsync(string message)
         {
             if (this._ws == null)
@@ -198,14 +220,23 @@ namespace DSharpPlusNextGen.Net.WebSocket
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Adds a header to the default header collection.
+        /// </summary>
+        /// <param name="name">Name of the header to add.</param>
+        /// <param name="value">Value of the header to add.</param>
+        /// <returns>Whether the operation succeeded.</returns>
         public bool AddDefaultHeader(string name, string value)
         {
             this._defaultHeaders[name] = value;
             return true;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Removes a header from the default header collection.
+        /// </summary>
+        /// <param name="name">Name of the header to remove.</param>
+        /// <returns>Whether the operation succeeded.</returns>
         public bool RemoveDefaultHeader(string name)
             => this._defaultHeaders.Remove(name);
 
@@ -225,6 +256,9 @@ namespace DSharpPlusNextGen.Net.WebSocket
             this._socketTokenSource?.Dispose();
         }
 
+        /// <summary>
+        /// Receivers the loop.
+        /// </summary>
         internal async Task ReceiverLoopAsync()
         {
             await Task.Yield();
@@ -350,6 +384,14 @@ namespace DSharpPlusNextGen.Net.WebSocket
         }
         private readonly AsyncEvent<WebSocketClient, SocketErrorEventArgs> _exceptionThrown;
 
+        /// <summary>
+        /// Events the error handler.
+        /// </summary>
+        /// <param name="asyncEvent">The event.</param>
+        /// <param name="ex">The exeption.</param>
+        /// <param name="handler">The handler.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArgs">The event args.</param>
         private void EventErrorHandler<TArgs>(AsyncEvent<WebSocketClient, TArgs> asyncEvent, Exception ex, AsyncEventHandler<WebSocketClient, TArgs> handler, WebSocketClient sender, TArgs eventArgs)
             where TArgs : AsyncEventArgs
             => this._exceptionThrown.InvokeAsync(this, new SocketErrorEventArgs() { Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();

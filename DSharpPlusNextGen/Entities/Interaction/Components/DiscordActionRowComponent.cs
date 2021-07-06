@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +19,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-using System;
+
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
+using DSharpPlusNextGen.Enums;
 using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Entities
@@ -48,6 +47,9 @@ namespace DSharpPlusNextGen.Entities
             this.Components = components.ToList().AsReadOnly();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordActionRowComponent"/> class.
+        /// </summary>
         internal DiscordActionRowComponent()
         {
             this.Type = ComponentType.ActionRow;

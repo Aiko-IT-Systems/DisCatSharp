@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +38,9 @@ using Newtonsoft.Json.Linq;
 
 namespace DSharpPlusNextGen
 {
+    /// <summary>
+    /// Represents a discord client.
+    /// </summary>
     public sealed partial class DiscordClient
     {
         #region Private Fields
@@ -50,6 +52,11 @@ namespace DSharpPlusNextGen
 
         #region Dispatch Handler
 
+        /// <summary>
+        /// Handles the dispatch.
+        /// </summary>
+        /// <param name="payload">The payload.</param>
+        /// <returns>A Task.</returns>
         internal async Task HandleDispatchAsync(GatewayPayload payload)
         {
             if (payload.Data is not JObject dat)
@@ -530,6 +537,12 @@ namespace DSharpPlusNextGen
 
         #region Gateway
 
+        /// <summary>
+        /// Handles the ready event.
+        /// </summary>
+        /// <param name="ready">The ready.</param>
+        /// <param name="rawGuilds">The raw guilds.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnReadyEventAsync(ReadyPayload ready, JArray rawGuilds)
         {
             //ready.CurrentUser.Discord = this;
@@ -619,6 +632,10 @@ namespace DSharpPlusNextGen
             await this._ready.InvokeAsync(this, new ReadyEventArgs()).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the resumed.
+        /// </summary>
+        /// <returns>A Task.</returns>
         internal Task OnResumedAsync()
         {
             this.Logger.LogInformation(LoggerEvents.SessionUpdate, "Session resumed");
@@ -629,6 +646,11 @@ namespace DSharpPlusNextGen
 
         #region Channel
 
+        /// <summary>
+        /// Handles the channel create event.
+        /// </summary>
+        /// <param name="channel">The channel.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnChannelCreateEventAsync(DiscordChannel channel)
         {
             channel.Discord = this;
@@ -643,6 +665,11 @@ namespace DSharpPlusNextGen
             await this._channelCreated.InvokeAsync(this, new ChannelCreateEventArgs { Channel = channel, Guild = channel.Guild }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the channel update event.
+        /// </summary>
+        /// <param name="channel">The channel.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnChannelUpdateEventAsync(DiscordChannel channel)
         {
             if (channel == null)
@@ -710,6 +737,11 @@ namespace DSharpPlusNextGen
             await this._channelUpdated.InvokeAsync(this, new ChannelUpdateEventArgs { ChannelAfter = channel_new, Guild = gld, ChannelBefore = channel_old }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the channel delete event.
+        /// </summary>
+        /// <param name="channel">The channel.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnChannelDeleteEventAsync(DiscordChannel channel)
         {
             if (channel == null)
@@ -734,6 +766,13 @@ namespace DSharpPlusNextGen
             }
         }
 
+        /// <summary>
+        /// Handles the channel pins update.
+        /// </summary>
+        /// <param name="guildId">The guild id.</param>
+        /// <param name="channel">The channel.</param>
+        /// <param name="lastPinTimestamp">The last pin timestamp.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnChannelPinsUpdateAsync(ulong? guildId, DiscordChannel channel, DateTimeOffset? lastPinTimestamp)
         {
             if (channel == null)
@@ -754,6 +793,13 @@ namespace DSharpPlusNextGen
 
         #region Guild
 
+        /// <summary>
+        /// Handles the guild create event.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <param name="rawMembers">The raw members.</param>
+        /// <param name="presences">The presences.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildCreateEventAsync(DiscordGuild guild, JArray rawMembers, IEnumerable<DiscordPresence> presences)
         {
             if (presences != null)
@@ -864,6 +910,12 @@ namespace DSharpPlusNextGen
                 await this._guildDownloadCompletedEv.InvokeAsync(this, new GuildDownloadCompletedEventArgs(this.Guilds)).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the guild update event.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <param name="rawMembers">The raw members.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildUpdateEventAsync(DiscordGuild guild, JArray rawMembers)
         {
             DiscordGuild oldGuild;
@@ -992,6 +1044,11 @@ namespace DSharpPlusNextGen
             await this._guildUpdated.InvokeAsync(this, new GuildUpdateEventArgs { GuildBefore = oldGuild, GuildAfter = guild }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the guild delete event.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildDeleteEventAsync(DiscordGuild guild)
         {
             if (guild.IsUnavailable)
@@ -1012,6 +1069,14 @@ namespace DSharpPlusNextGen
             }
         }
 
+        /// <summary>
+        /// Handles the guild sync event.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <param name="isLarge">If true, is large.</param>
+        /// <param name="rawMembers">The raw members.</param>
+        /// <param name="presences">The presences.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildSyncEventAsync(DiscordGuild guild, bool isLarge, JArray rawMembers, IEnumerable<DiscordPresence> presences)
         {
             presences = presences.Select(xp => { xp.Discord = this; xp.Activity = new DiscordActivity(xp.RawActivity); return xp; });
@@ -1026,6 +1091,12 @@ namespace DSharpPlusNextGen
             await this._guildAvailable.InvokeAsync(this, new GuildCreateEventArgs { Guild = guild }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the guild emojis update event.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <param name="newEmojis">The new emojis.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildEmojisUpdateEventAsync(DiscordGuild guild, IEnumerable<DiscordEmoji> newEmojis)
         {
             var oldEmojis = new ConcurrentDictionary<ulong, DiscordEmoji>(guild._emojis);
@@ -1046,6 +1117,12 @@ namespace DSharpPlusNextGen
             await this._guildEmojisUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the stickers updated.
+        /// </summary>
+        /// <param name="newStickers">The new stickers.</param>
+        /// <param name="raw">The raw.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnStickersUpdatedAsync(IEnumerable<DiscordSticker> newStickers, JObject raw)
         {
             var guild = this.InternalGetCachedGuild((ulong)raw["guild_id"]);
@@ -1074,6 +1151,11 @@ namespace DSharpPlusNextGen
             await this._guildStickersUpdated.InvokeAsync(this, sea);
         }
 
+        /// <summary>
+        /// Handles the guild integrations update event.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildIntegrationsUpdateEventAsync(DiscordGuild guild)
         {
             var ea = new GuildIntegrationsUpdateEventArgs
@@ -1087,6 +1169,12 @@ namespace DSharpPlusNextGen
 
         #region Guild Ban
 
+        /// <summary>
+        /// Handles the guild ban add event.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildBanAddEventAsync(TransportUser user, DiscordGuild guild)
         {
             var usr = new DiscordUser(user) { Discord = this };
@@ -1108,6 +1196,12 @@ namespace DSharpPlusNextGen
             await this._guildBanAdded.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the guild ban remove event.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildBanRemoveEventAsync(TransportUser user, DiscordGuild guild)
         {
             var usr = new DiscordUser(user) { Discord = this };
@@ -1133,6 +1227,12 @@ namespace DSharpPlusNextGen
 
         #region Guild Integration
 
+        /// <summary>
+        /// Handles the guild integration create event.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <param name="integration">The integration.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildIntegrationCreateEventAsync(DiscordGuild guild, DiscordIntegration integration)
         {
             integration.Discord = this;
@@ -1140,6 +1240,12 @@ namespace DSharpPlusNextGen
             await this._guildIntegrationCreated.InvokeAsync(this, new GuildIntegrationCreateEventArgs { Integration = integration, Guild = guild }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the guild integration update event.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <param name="integration">The integration.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildIntegrationUpdateEventAsync(DiscordGuild guild, DiscordIntegration integration)
         {
             integration.Discord = this;
@@ -1147,6 +1253,13 @@ namespace DSharpPlusNextGen
             await this._guildIntegrationUpdated.InvokeAsync(this, new GuildIntegrationUpdateEventArgs { Integration = integration, Guild = guild }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the guild integration delete event.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <param name="integration_id">The integration_id.</param>
+        /// <param name="application_id">The application_id.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildIntegrationDeleteEventAsync(DiscordGuild guild, ulong integration_id, ulong? application_id)
             => await this._guildIntegrationDeleted.InvokeAsync(this, new GuildIntegrationDeleteEventArgs { Guild = guild, IntegrationId = integration_id, ApplicationId = application_id }).ConfigureAwait(false);
 
@@ -1154,6 +1267,12 @@ namespace DSharpPlusNextGen
 
         #region Guild Member
 
+        /// <summary>
+        /// Handles the guild member add event.
+        /// </summary>
+        /// <param name="member">The member.</param>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildMemberAddEventAsync(TransportMember member, DiscordGuild guild)
         {
             var usr = new DiscordUser(member.User) { Discord = this };
@@ -1182,6 +1301,12 @@ namespace DSharpPlusNextGen
             await this._guildMemberAdded.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the guild member remove event.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildMemberRemoveEventAsync(TransportUser user, DiscordGuild guild)
         {
             var usr = new DiscordUser(user);
@@ -1200,6 +1325,15 @@ namespace DSharpPlusNextGen
             await this._guildMemberRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the guild member update event.
+        /// </summary>
+        /// <param name="member">The member.</param>
+        /// <param name="guild">The guild.</param>
+        /// <param name="roles">The roles.</param>
+        /// <param name="nick">The nick.</param>
+        /// <param name="pending">If true, pending.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildMemberUpdateEventAsync(TransportMember member, DiscordGuild guild, IEnumerable<ulong> roles, string nick, bool? pending)
         {
             var usr = new DiscordUser(member.User) { Discord = this };
@@ -1241,6 +1375,11 @@ namespace DSharpPlusNextGen
             await this._guildMemberUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the guild members chunk event.
+        /// </summary>
+        /// <param name="dat">The dat.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildMembersChunkEventAsync(JObject dat)
         {
             var guild = this.Guilds[(ulong)dat["guild_id"]];
@@ -1314,6 +1453,12 @@ namespace DSharpPlusNextGen
 
         #region Guild Role
 
+        /// <summary>
+        /// Handles the guild role create event.
+        /// </summary>
+        /// <param name="role">The role.</param>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildRoleCreateEventAsync(DiscordRole role, DiscordGuild guild)
         {
             role.Discord = this;
@@ -1329,6 +1474,12 @@ namespace DSharpPlusNextGen
             await this._guildRoleCreated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the guild role update event.
+        /// </summary>
+        /// <param name="role">The role.</param>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildRoleUpdateEventAsync(DiscordRole role, DiscordGuild guild)
         {
             var newRole = guild.GetRole(role.Id);
@@ -1364,6 +1515,12 @@ namespace DSharpPlusNextGen
             await this._guildRoleUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the guild role delete event.
+        /// </summary>
+        /// <param name="roleId">The role id.</param>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnGuildRoleDeleteEventAsync(ulong roleId, DiscordGuild guild)
         {
             if (!guild._roles.TryRemove(roleId, out var role))
@@ -1381,6 +1538,13 @@ namespace DSharpPlusNextGen
 
         #region Invite
 
+        /// <summary>
+        /// Handles the invite create event.
+        /// </summary>
+        /// <param name="channelId">The channel id.</param>
+        /// <param name="guildId">The guild id.</param>
+        /// <param name="invite">The invite.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnInviteCreateEventAsync(ulong channelId, ulong guildId, DiscordInvite invite)
         {
             var guild = this.InternalGetCachedGuild(guildId);
@@ -1405,6 +1569,13 @@ namespace DSharpPlusNextGen
             await this._inviteCreated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the invite delete event.
+        /// </summary>
+        /// <param name="channelId">The channel id.</param>
+        /// <param name="guildId">The guild id.</param>
+        /// <param name="dat">The dat.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnInviteDeleteEventAsync(ulong channelId, ulong guildId, JToken dat)
         {
             var guild = this.InternalGetCachedGuild(guildId);
@@ -1431,6 +1602,12 @@ namespace DSharpPlusNextGen
 
         #region Message
 
+        /// <summary>
+        /// Handles the message ack event.
+        /// </summary>
+        /// <param name="chn">The chn.</param>
+        /// <param name="messageId">The message id.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnMessageAckEventAsync(DiscordChannel chn, ulong messageId)
         {
             if (this.MessageCache == null || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == chn.Id, out var msg))
@@ -1446,6 +1623,15 @@ namespace DSharpPlusNextGen
             await this._messageAcknowledged.InvokeAsync(this, new MessageAcknowledgeEventArgs { Message = msg }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the message create event.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="author">The author.</param>
+        /// <param name="member">The member.</param>
+        /// <param name="referenceAuthor">The reference author.</param>
+        /// <param name="referenceMember">The reference member.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnMessageCreateEventAsync(DiscordMessage message, TransportUser author, TransportMember member, TransportUser referenceAuthor, TransportMember referenceMember)
         {
             message.Discord = this;
@@ -1476,6 +1662,15 @@ namespace DSharpPlusNextGen
             await this._messageCreated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the message update event.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="author">The author.</param>
+        /// <param name="member">The member.</param>
+        /// <param name="referenceAuthor">The reference author.</param>
+        /// <param name="referenceMember">The reference member.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnMessageUpdateEventAsync(DiscordMessage message, TransportUser author, TransportMember member, TransportUser referenceAuthor, TransportMember referenceMember)
         {
             DiscordGuild guild;
@@ -1526,6 +1721,13 @@ namespace DSharpPlusNextGen
             await this._messageUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the message delete event.
+        /// </summary>
+        /// <param name="messageId">The message id.</param>
+        /// <param name="channelId">The channel id.</param>
+        /// <param name="guildId">The guild id.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnMessageDeleteEventAsync(ulong messageId, ulong channelId, ulong? guildId)
         {
             var channel = this.InternalGetCachedChannel(channelId);
@@ -1557,6 +1759,13 @@ namespace DSharpPlusNextGen
             await this._messageDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the message bulk delete event.
+        /// </summary>
+        /// <param name="messageIds">The message ids.</param>
+        /// <param name="channelId">The channel id.</param>
+        /// <param name="guildId">The guild id.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnMessageBulkDeleteEventAsync(ulong[] messageIds, ulong channelId, ulong? guildId)
         {
             var channel = this.InternalGetCachedChannel(channelId);
@@ -1596,6 +1805,16 @@ namespace DSharpPlusNextGen
 
         #region Message Reaction
 
+        /// <summary>
+        /// Handles the message reaction add.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="messageId">The message id.</param>
+        /// <param name="channelId">The channel id.</param>
+        /// <param name="guildId">The guild id.</param>
+        /// <param name="mbr">The mbr.</param>
+        /// <param name="emoji">The emoji.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnMessageReactionAddAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, TransportMember mbr, DiscordEmoji emoji)
         {
             var channel = this.InternalGetCachedChannel(channelId);
@@ -1644,6 +1863,15 @@ namespace DSharpPlusNextGen
             await this._messageReactionAdded.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the message reaction remove.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="messageId">The message id.</param>
+        /// <param name="channelId">The channel id.</param>
+        /// <param name="guildId">The guild id.</param>
+        /// <param name="emoji">The emoji.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnMessageReactionRemoveAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, DiscordEmoji emoji)
         {
             var channel = this.InternalGetCachedChannel(channelId);
@@ -1698,6 +1926,13 @@ namespace DSharpPlusNextGen
             await this._messageReactionRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the message reaction remove all.
+        /// </summary>
+        /// <param name="messageId">The message id.</param>
+        /// <param name="channelId">The channel id.</param>
+        /// <param name="guildId">The guild id.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnMessageReactionRemoveAllAsync(ulong messageId, ulong channelId, ulong? guildId)
         {
             var channel = this.InternalGetCachedChannel(channelId);
@@ -1728,6 +1963,14 @@ namespace DSharpPlusNextGen
             await this._messageReactionsCleared.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the message reaction remove emoji.
+        /// </summary>
+        /// <param name="messageId">The message id.</param>
+        /// <param name="channelId">The channel id.</param>
+        /// <param name="guildId">The guild id.</param>
+        /// <param name="dat">The dat.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnMessageReactionRemoveEmojiAsync(ulong messageId, ulong channelId, ulong guildId, JToken dat)
         {
             var guild = this.InternalGetCachedGuild(guildId);
@@ -1771,6 +2014,11 @@ namespace DSharpPlusNextGen
 
         #region Stage Instance
 
+        /// <summary>
+        /// Handles the stage instance create event.
+        /// </summary>
+        /// <param name="stage">The stage.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnStageInstanceCreateEventAsync(DiscordStageInstance stage)
         {
             stage.Discord = this;
@@ -1781,6 +2029,11 @@ namespace DSharpPlusNextGen
             await this._stageInstanceCreated.InvokeAsync(this, new StageInstanceCreateEventArgs { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the stage instance update event.
+        /// </summary>
+        /// <param name="stage">The stage.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnStageInstanceUpdateEventAsync(DiscordStageInstance stage)
         {
             stage.Discord = this;
@@ -1790,6 +2043,11 @@ namespace DSharpPlusNextGen
             await this._stageInstanceUpdated.InvokeAsync(this, new StageInstanceUpdateEventArgs { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the stage instance delete event.
+        /// </summary>
+        /// <param name="stage">The stage.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnStageInstanceDeleteEventAsync(DiscordStageInstance stage)
         {
             stage.Discord = this;
@@ -1803,6 +2061,11 @@ namespace DSharpPlusNextGen
 
         #region Thread
 
+        /// <summary>
+        /// Handles the thread create event.
+        /// </summary>
+        /// <param name="thread">The thread.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnThreadCreateEventAsync(DiscordThreadChannel thread)
         {
             thread.Discord = this;
@@ -1811,6 +2074,11 @@ namespace DSharpPlusNextGen
             await this._threadCreated.InvokeAsync(this, new ThreadCreateEventArgs { Thread = thread, Guild = thread.Guild, Parent = thread.Parent }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the thread update event.
+        /// </summary>
+        /// <param name="thread">The thread.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnThreadUpdateEventAsync(DiscordThreadChannel thread)
         {
             if (thread == null)
@@ -1856,6 +2124,11 @@ namespace DSharpPlusNextGen
             await this._threadUpdated.InvokeAsync(this, new ThreadUpdateEventArgs { ThreadAfter = threadNew, ThreadBefore = threadOld, Guild = thread.Guild, Parent = thread.Parent }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the thread delete event.
+        /// </summary>
+        /// <param name="thread">The thread.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnThreadDeleteEventAsync(DiscordThreadChannel thread)
         {
             if (thread == null)
@@ -1870,6 +2143,14 @@ namespace DSharpPlusNextGen
             await this._threadDeleted.InvokeAsync(this, new ThreadDeleteEventArgs { Thread = thread, Guild = thread.Guild, Parent = thread.Parent, Type = thread.Type }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the thread list sync event.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <param name="channel_ids">The channel_ids.</param>
+        /// <param name="threads">The threads.</param>
+        /// <param name="members">The members.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnThreadListSyncEventAsync(DiscordGuild guild, IReadOnlyList<ulong?> channel_ids, IReadOnlyList<DiscordThreadChannel> threads, IReadOnlyList<DiscordThreadChannelMember> members)
         {
             guild.Discord = this;
@@ -1883,6 +2164,11 @@ namespace DSharpPlusNextGen
             await this._threadListSynced.InvokeAsync(this, new ThreadListSyncEventArgs { Guild = guild, Channels = channels.ToList().AsReadOnly(), Threads = threads, Members = members.ToList().AsReadOnly() }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the thread member update event.
+        /// </summary>
+        /// <param name="member">The member.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnThreadMemberUpdateEventAsync(DiscordThreadChannelMember member)
         {
             member.Discord = this;
@@ -1890,6 +2176,15 @@ namespace DSharpPlusNextGen
             await this._threadMemberUpdated.InvokeAsync(this, new ThreadMemberUpdateEventArgs { ThreadMember = member }).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the thread members update event.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <param name="thread_id">The thread_id.</param>
+        /// <param name="addedMembers">The added members.</param>
+        /// <param name="removed_member_ids">The removed_member_ids.</param>
+        /// <param name="member_count">The member_count.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnThreadMembersUpdateEventAsync(DiscordGuild guild, ulong thread_id, IReadOnlyList<DiscordThreadChannelMember> addedMembers, IReadOnlyList<ulong?> removed_member_ids, int member_count)
         {
             guild.Discord = this;
@@ -1910,6 +2205,12 @@ namespace DSharpPlusNextGen
 
         #region User/Presence Update
 
+        /// <summary>
+        /// Handles the presence update event.
+        /// </summary>
+        /// <param name="rawPresence">The raw presence.</param>
+        /// <param name="rawUser">The raw user.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnPresenceUpdateEventAsync(JObject rawPresence, JObject rawUser)
         {
             var uid = (ulong)rawUser["id"];
@@ -1987,6 +2288,11 @@ namespace DSharpPlusNextGen
             await this._presenceUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the user settings update event.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnUserSettingsUpdateEventAsync(TransportUser user)
         {
             var usr = new DiscordUser(user) { Discord = this };
@@ -1998,6 +2304,11 @@ namespace DSharpPlusNextGen
             await this._userSettingsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the user update event.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnUserUpdateEventAsync(TransportUser user)
         {
             var usr_old = new DiscordUser
@@ -2034,6 +2345,11 @@ namespace DSharpPlusNextGen
 
         #region Voice
 
+        /// <summary>
+        /// Handles the voice state update event.
+        /// </summary>
+        /// <param name="raw">The raw.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnVoiceStateUpdateEventAsync(JObject raw)
         {
             var gid = (ulong)raw["guild_id"];
@@ -2066,6 +2382,13 @@ namespace DSharpPlusNextGen
             await this._voiceStateUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the voice server update event.
+        /// </summary>
+        /// <param name="endpoint">The endpoint.</param>
+        /// <param name="token">The token.</param>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnVoiceServerUpdateEventAsync(string endpoint, string token, DiscordGuild guild)
         {
             var ea = new VoiceServerUpdateEventArgs
@@ -2081,6 +2404,12 @@ namespace DSharpPlusNextGen
 
         #region Commands
 
+        /// <summary>
+        /// Handles the application command create.
+        /// </summary>
+        /// <param name="cmd">The cmd.</param>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnApplicationCommandCreateAsync(DiscordApplicationCommand cmd, ulong? guild_id)
         {
             cmd.Discord = this;
@@ -2105,6 +2434,12 @@ namespace DSharpPlusNextGen
             await this._applicationCommandCreated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the application command update.
+        /// </summary>
+        /// <param name="cmd">The cmd.</param>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnApplicationCommandUpdateAsync(DiscordApplicationCommand cmd, ulong? guild_id)
         {
             cmd.Discord = this;
@@ -2129,6 +2464,12 @@ namespace DSharpPlusNextGen
             await this._applicationCommandUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the application command delete.
+        /// </summary>
+        /// <param name="cmd">The cmd.</param>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnApplicationCommandDeleteAsync(DiscordApplicationCommand cmd, ulong? guild_id)
         {
             cmd.Discord = this;
@@ -2157,6 +2498,15 @@ namespace DSharpPlusNextGen
 
         #region Interaction
 
+        /// <summary>
+        /// Handles the interaction create.
+        /// </summary>
+        /// <param name="guildId">The guild id.</param>
+        /// <param name="channelId">The channel id.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="member">The member.</param>
+        /// <param name="interaction">The interaction.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction)
         {
             var usr = new DiscordUser(user) { Discord = this };
@@ -2246,6 +2596,16 @@ namespace DSharpPlusNextGen
 
         #region Misc
 
+        /// <summary>
+        /// Handles the typing start event.
+        /// </summary>
+        /// <param name="userId">The user id.</param>
+        /// <param name="channelId">The channel id.</param>
+        /// <param name="channel">The channel.</param>
+        /// <param name="guildId">The guild id.</param>
+        /// <param name="started">The started.</param>
+        /// <param name="mbr">The mbr.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel channel, ulong? guildId, DateTimeOffset started, TransportMember mbr)
         {
             if (channel == null)
@@ -2271,6 +2631,12 @@ namespace DSharpPlusNextGen
             await this._typingStarted.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the webhooks update.
+        /// </summary>
+        /// <param name="channel">The channel.</param>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnWebhooksUpdateAsync(DiscordChannel channel, DiscordGuild guild)
         {
             var ea = new WebhooksUpdateEventArgs
@@ -2281,6 +2647,11 @@ namespace DSharpPlusNextGen
             await this._webhooksUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Handles the unknown event.
+        /// </summary>
+        /// <param name="payload">The payload.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnUnknownEventAsync(GatewayPayload payload)
         {
             var ea = new UnknownEventArgs { EventName = payload.EventName, Json = (payload.Data as JObject)?.ToString() };

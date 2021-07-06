@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -119,22 +118,45 @@ namespace DSharpPlusNextGen.VoiceNext
         public int GetMaximumBufferSize()
             => this.CalculateMaximumFrameSize();
 
+        /// <summary>
+        /// Calculates the sample duration.
+        /// </summary>
+        /// <param name="sampleSize">The sample size.</param>
+        /// <returns>An int.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal int CalculateSampleDuration(int sampleSize)
             => sampleSize / (this.SampleRate / 1000) / this.ChannelCount / 2 /* sizeof(int16_t) */;
 
+        /// <summary>
+        /// Calculates the frame size.
+        /// </summary>
+        /// <param name="sampleDuration">The sample duration.</param>
+        /// <returns>An int.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal int CalculateFrameSize(int sampleDuration)
             => sampleDuration * (this.SampleRate / 1000);
 
+        /// <summary>
+        /// Calculates the maximum frame size.
+        /// </summary>
+        /// <returns>An int.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal int CalculateMaximumFrameSize()
             => 120 * (this.SampleRate / 1000);
 
+        /// <summary>
+        /// Samples the count to sample size.
+        /// </summary>
+        /// <param name="sampleCount">The sample count.</param>
+        /// <returns>An int.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal int SampleCountToSampleSize(int sampleCount)
             => sampleCount * this.ChannelCount * 2 /* sizeof(int16_t) */;
 
+        /// <summary>
+        /// Are the valid.
+        /// </summary>
+        /// <returns>A bool.</returns>
         internal bool IsValid()
             => AllowedSampleRates.Contains(this.SampleRate) && AllowedChannelCounts.Contains(this.ChannelCount) &&
                 (this.VoiceApplication == VoiceApplication.Music || this.VoiceApplication == VoiceApplication.Voice || this.VoiceApplication == VoiceApplication.LowLatency);

@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlus-NextGen project.
+// This file is part of the DSharpPlusNextGen project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -35,6 +35,10 @@ namespace DSharpPlusNextGen.SlashCommands
         /// </summary>
         public IReadOnlyList<SlashCheckBaseAttribute> FailedChecks;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SlashExecutionChecksFailedException"/> class.
+        /// </summary>
+        /// <param name="failedChecks">The failed checks.</param>
         internal SlashExecutionChecksFailedException(List<SlashCheckBaseAttribute> failedChecks)
         {
             this.FailedChecks = failedChecks;

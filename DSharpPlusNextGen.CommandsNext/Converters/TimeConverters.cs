@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,8 +28,16 @@ using DSharpPlusNextGen.Entities;
 
 namespace DSharpPlusNextGen.CommandsNext.Converters
 {
+    /// <summary>
+    /// Represents a date time converter.
+    /// </summary>
     public class DateTimeConverter : IArgumentConverter<DateTime>
     {
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
         Task<Optional<DateTime>> IArgumentConverter<DateTime>.ConvertAsync(string value, CommandContext ctx)
         {
             return DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
@@ -39,8 +46,16 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
         }
     }
 
+    /// <summary>
+    /// Represents a date time offset converter.
+    /// </summary>
     public class DateTimeOffsetConverter : IArgumentConverter<DateTimeOffset>
     {
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
         Task<Optional<DateTimeOffset>> IArgumentConverter<DateTimeOffset>.ConvertAsync(string value, CommandContext ctx)
         {
             return DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
@@ -49,10 +64,19 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
         }
     }
 
+    /// <summary>
+    /// Represents a time span converter.
+    /// </summary>
     public class TimeSpanConverter : IArgumentConverter<TimeSpan>
     {
+        /// <summary>
+        /// Gets or sets the time span regex.
+        /// </summary>
         private static Regex TimeSpanRegex { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TimeSpanConverter"/> class.
+        /// </summary>
         static TimeSpanConverter()
         {
 #if NETSTANDARD1_3
@@ -62,6 +86,11 @@ namespace DSharpPlusNextGen.CommandsNext.Converters
 #endif
         }
 
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
         Task<Optional<TimeSpan>> IArgumentConverter<TimeSpan>.ConvertAsync(string value, CommandContext ctx)
         {
             if (value == "0")

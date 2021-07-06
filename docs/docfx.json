@@ -77,7 +77,6 @@
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
-    "markdownEngineName": "markdig",
     "disableGitFeatures": false
   }
 }

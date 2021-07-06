@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -218,6 +217,9 @@ namespace DSharpPlusNextGen.Interactivity
         public DiscordEmoji Right;
         public DiscordEmoji Stop;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PaginationEmojis"/> class.
+        /// </summary>
         public PaginationEmojis()
         {
             this.Left = DiscordEmoji.FromUnicode("◀");
@@ -233,6 +235,11 @@ namespace DSharpPlusNextGen.Interactivity
         public string Content { get; set; }
         public DiscordEmbed Embed { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Page"/> class.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        /// <param name="embed">The embed.</param>
         public Page(string content = "", DiscordEmbedBuilder embed = null)
         {
             this.Content = content;

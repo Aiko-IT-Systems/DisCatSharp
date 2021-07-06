@@ -1,7 +1,5 @@
-// This file is part of the DSharpPlus-NextGen project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
 // Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -51,6 +49,9 @@ namespace DSharpPlusNextGen.EventArgs
         /// </summary>
         public ChannelType Type { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThreadDeleteEventArgs"/> class.
+        /// </summary>
         internal ThreadDeleteEventArgs() : base() { }
     }
 }

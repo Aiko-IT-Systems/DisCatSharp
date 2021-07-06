@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,11 +44,26 @@ namespace DSharpPlusNextGen.CommandsNext
     /// </summary>
     public class CommandsNextExtension : BaseExtension
     {
+        /// <summary>
+        /// Gets the config.
+        /// </summary>
         private CommandsNextConfiguration Config { get; }
+        /// <summary>
+        /// Gets the help formatter.
+        /// </summary>
         private HelpFormatterFactory HelpFormatter { get; }
 
+        /// <summary>
+        /// Gets the convert generic.
+        /// </summary>
         private MethodInfo ConvertGeneric { get; }
+        /// <summary>
+        /// Gets the user friendly type names.
+        /// </summary>
         private Dictionary<Type, string> UserFriendlyTypeNames { get; }
+        /// <summary>
+        /// Gets the argument converters.
+        /// </summary>
         internal Dictionary<Type, IArgumentConverter> ArgumentConverters { get; }
 
         /// <summary>
@@ -58,6 +72,10 @@ namespace DSharpPlusNextGen.CommandsNext
         public IServiceProvider Services
             => this.Config.Services;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandsNextExtension"/> class.
+        /// </summary>
+        /// <param name="cfg">The cfg.</param>
         internal CommandsNextExtension(CommandsNextConfiguration cfg)
         {
             this.Config = new CommandsNextConfiguration(cfg);
@@ -197,6 +215,12 @@ namespace DSharpPlusNextGen.CommandsNext
         #endregion
 
         #region Command Handling
+        /// <summary>
+        /// Handles the commands async.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private async Task HandleCommandsAsync(DiscordClient sender, MessageCreateEventArgs e)
         {
             if (e.Author.IsBot) // bad bot
@@ -364,6 +388,12 @@ namespace DSharpPlusNextGen.CommandsNext
             }
         }
 
+        /// <summary>
+        /// Runs the all checks async.
+        /// </summary>
+        /// <param name="cmd">The cmd.</param>
+        /// <param name="ctx">The ctx.</param>
+        /// <returns>A Task.</returns>
         private async Task RunAllChecksAsync(Command cmd, CommandContext ctx)
         {
             if (cmd.Parent != null)
@@ -382,6 +412,9 @@ namespace DSharpPlusNextGen.CommandsNext
         public IReadOnlyDictionary<string, Command> RegisteredCommands
             => this._registeredCommandsLazy.Value;
 
+        /// <summary>
+        /// Gets or sets the top level commands.
+        /// </summary>
         private Dictionary<string, Command> TopLevelCommands { get; set; }
         private readonly Lazy<IReadOnlyDictionary<string, Command>> _registeredCommandsLazy;
 
@@ -429,6 +462,13 @@ namespace DSharpPlusNextGen.CommandsNext
                     this.AddToCommandDictionary(command.Build(null));
         }
 
+        /// <summary>
+        /// Registers the commands.
+        /// </summary>
+        /// <param name="t">The type.</param>
+        /// <param name="currentParent">The current parent.</param>
+        /// <param name="inheritedChecks">The inherited checks.</param>
+        /// <param name="foundCommands">The found commands.</param>
         private void RegisterCommands(Type t, CommandGroupBuilder currentParent, IEnumerable<CheckBaseAttribute> inheritedChecks, out List<CommandBuilder> foundCommands)
         {
             var ti = t.GetTypeInfo();
@@ -642,6 +682,10 @@ namespace DSharpPlusNextGen.CommandsNext
                 this.TopLevelCommands.Remove(key);
         }
 
+        /// <summary>
+        /// Adds the to command dictionary.
+        /// </summary>
+        /// <param name="cmd">The cmd.</param>
         private void AddToCommandDictionary(Command cmd)
         {
             if (cmd.Parent != null)
@@ -658,9 +702,18 @@ namespace DSharpPlusNextGen.CommandsNext
         #endregion
 
         #region Default Help
+        /// <summary>
+        /// Represents the default help module.
+        /// </summary>
         [ModuleLifespan(ModuleLifespan.Transient)]
         public class DefaultHelpModule : BaseCommandModule
         {
+            /// <summary>
+            /// Defaults the help async.
+            /// </summary>
+            /// <param name="ctx">The ctx.</param>
+            /// <param name="command">The command.</param>
+            /// <returns>A Task.</returns>
             [Command("help"), Description("Displays command help.")]
             public async Task DefaultHelpAsync(CommandContext ctx, [Description("Command to provide help for.")] params string[] command)
             {
@@ -1006,9 +1059,19 @@ namespace DSharpPlusNextGen.CommandsNext
         }
         private AsyncEvent<CommandsNextExtension, CommandErrorEventArgs> _error;
 
+        /// <summary>
+        /// Ons the command executed.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task OnCommandExecuted(CommandExecutionEventArgs e)
             => this._executed.InvokeAsync(this, e);
 
+        /// <summary>
+        /// Ons the command errored.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task OnCommandErrored(CommandErrorEventArgs e)
             => this._error.InvokeAsync(this, e);
         #endregion

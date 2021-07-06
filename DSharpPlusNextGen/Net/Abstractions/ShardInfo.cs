@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -44,8 +43,17 @@ namespace DSharpPlusNextGen.Net.Abstractions
         public int ShardCount { get; set; }
     }
 
+    /// <summary>
+    /// Represents a shard info converter.
+    /// </summary>
     internal sealed class ShardInfoConverter : JsonConverter
     {
+        /// <summary>
+        /// Writes the json.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var sinfo = value as ShardInfo;
@@ -53,6 +61,13 @@ namespace DSharpPlusNextGen.Net.Abstractions
             serializer.Serialize(writer, obj);
         }
 
+        /// <summary>
+        /// Reads the json.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="objectType">The object type.</param>
+        /// <param name="existingValue">The existing value.</param>
+        /// <param name="serializer">The serializer.</param>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var arr = this.ReadArrayObject(reader, serializer);
@@ -63,6 +78,11 @@ namespace DSharpPlusNextGen.Net.Abstractions
             };
         }
 
+        /// <summary>
+        /// Reads the array object.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="serializer">The serializer.</param>
         private JArray ReadArrayObject(JsonReader reader, JsonSerializer serializer)
         {
             return serializer.Deserialize<JToken>(reader) is not JArray arr || arr.Count != 2
@@ -70,6 +90,10 @@ namespace DSharpPlusNextGen.Net.Abstractions
                 : arr;
         }
 
+        /// <summary>
+        /// Whether this can be converted.
+        /// </summary>
+        /// <param name="objectType">The object type.</param>
         public override bool CanConvert(Type objectType) => objectType == typeof(ShardInfo);
     }
 }

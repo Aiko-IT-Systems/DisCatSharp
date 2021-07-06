@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -68,6 +67,9 @@ namespace DSharpPlusNextGen.Entities
         public T After { get; internal set; }
     }
 
+    /// <summary>
+    /// Represents a audit log guild entry.
+    /// </summary>
     public sealed class DiscordAuditLogGuildEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -135,9 +137,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public PropertyChange<string> RegionChange { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogGuildEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogGuildEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log channel entry.
+    /// </summary>
     public sealed class DiscordAuditLogChannelEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -180,9 +188,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public PropertyChange<int?> PerUserRateLimitChange { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogChannelEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogChannelEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log overwrite entry.
+    /// </summary>
     public sealed class DiscordAuditLogOverwriteEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -215,9 +229,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public PropertyChange<ulong?> TargetIdChange { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogOverwriteEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogOverwriteEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log kick entry.
+    /// </summary>
     public sealed class DiscordAuditLogKickEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -225,9 +245,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public DiscordMember Target { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogKickEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogKickEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log prune entry.
+    /// </summary>
     public sealed class DiscordAuditLogPruneEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -240,9 +266,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public int Toll { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogPruneEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogPruneEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log ban entry.
+    /// </summary>
     public sealed class DiscordAuditLogBanEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -250,9 +282,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public DiscordMember Target { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogBanEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogBanEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log member update entry.
+    /// </summary>
     public sealed class DiscordAuditLogMemberUpdateEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -285,9 +323,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public PropertyChange<bool?> DeafenChange { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogMemberUpdateEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogMemberUpdateEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log role update entry.
+    /// </summary>
     public sealed class DiscordAuditLogRoleUpdateEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -325,9 +369,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public PropertyChange<bool?> HoistChange { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogRoleUpdateEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogRoleUpdateEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log invite entry.
+    /// </summary>
     public sealed class DiscordAuditLogInviteEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -370,9 +420,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public PropertyChange<int?> MaxUsesChange { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogInviteEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogInviteEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log webhook entry.
+    /// </summary>
     public sealed class DiscordAuditLogWebhookEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -400,9 +456,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public PropertyChange<string> AvatarHashChange { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogWebhookEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogWebhookEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log emoji entry.
+    /// </summary>
     public sealed class DiscordAuditLogEmojiEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -415,9 +477,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public PropertyChange<string> NameChange { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogEmojiEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogEmojiEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log sticker entry.
+    /// </summary>
     public sealed class DiscordAuditLogStickerEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -470,9 +538,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public PropertyChange<StickerFormat?> FormatChange { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogStickerEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogStickerEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log message entry.
+    /// </summary>
     public sealed class DiscordAuditLogMessageEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -490,9 +564,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public int? MessageCount { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogMessageEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogMessageEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log message pin entry.
+    /// </summary>
     public sealed class DiscordAuditLogMessagePinEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -510,9 +590,15 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public DiscordMessage Message { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogMessagePinEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogMessagePinEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log bot add entry.
+    /// </summary>
     public sealed class DiscordAuditLogBotAddEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -521,6 +607,9 @@ namespace DSharpPlusNextGen.Entities
         public DiscordUser TargetBot { get; internal set; }
     }
 
+    /// <summary>
+    /// Represents a audit log member move entry.
+    /// </summary>
     public sealed class DiscordAuditLogMemberMoveEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -534,6 +623,9 @@ namespace DSharpPlusNextGen.Entities
         public int UserCount { get; internal set; }
     }
 
+    /// <summary>
+    /// Represents a audit log member disconnect entry.
+    /// </summary>
     public sealed class DiscordAuditLogMemberDisconnectEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -542,6 +634,9 @@ namespace DSharpPlusNextGen.Entities
         public int UserCount { get; internal set; }
     }
 
+    /// <summary>
+    /// Represents a audit log integration entry.
+    /// </summary>
     public sealed class DiscordAuditLogIntegrationEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -560,6 +655,9 @@ namespace DSharpPlusNextGen.Entities
         public PropertyChange<int?> ExpireBehavior { get; internal set; }
     }
 
+    /// <summary>
+    /// Represents a audit log stage entry.
+    /// </summary>
     public sealed class DiscordAuditLogStageEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -577,14 +675,26 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public PropertyChange<StagePrivacyLevel?> PrivacyLevelChange { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogStageEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogStageEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log event entry.
+    /// </summary>
     public sealed class DiscordAuditLogEventEntry : DiscordAuditLogEntry
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogEventEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogEventEntry() { }
     }
 
+    /// <summary>
+    /// Represents a audit log thread entry.
+    /// </summary>
     public sealed class DiscordAuditLogThreadEntry : DiscordAuditLogEntry
     {
         /// <summary>
@@ -592,6 +702,9 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public DiscordThreadChannel Target { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogThreadEntry"/> class.
+        /// </summary>
         internal DiscordAuditLogThreadEntry() { }
     }
 

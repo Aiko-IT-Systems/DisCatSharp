@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +25,9 @@ using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Lavalink.Entities
 {
+    /// <summary>
+    /// The lavalink route status.
+    /// </summary>
     public class LavalinkRouteStatus
     {
         /// <summary>
@@ -33,7 +35,7 @@ namespace DSharpPlusNextGen.Lavalink.Entities
         /// </summary>
         [JsonIgnore]
         public LavalinkRoutePlannerType? Class
-            => this.GetLavalinkRoutePlannerType(this._class);
+            => this.GetLavalinkRoutePlannerType(this.PlannerTypeClass);
 
         /// <summary>
         /// Gets the details of the route planner.
@@ -41,9 +43,16 @@ namespace DSharpPlusNextGen.Lavalink.Entities
         [JsonProperty("details", NullValueHandling = NullValueHandling.Ignore)]
         public LavalinkRouteStatusDetails Details { get; internal set; }
 
+        /// <summary>
+        /// Gets or sets the class.
+        /// </summary>
         [JsonProperty("class", NullValueHandling = NullValueHandling.Ignore)]
-        internal string _class { get; set; }
+        internal string PlannerTypeClass { get; set; }
 
+        /// <summary>
+        /// Gets the lavalink route planner type.
+        /// </summary>
+        /// <param name="type">The type.</param>
         private LavalinkRoutePlannerType? GetLavalinkRoutePlannerType(string type)
         {
             return type switch
@@ -57,6 +66,9 @@ namespace DSharpPlusNextGen.Lavalink.Entities
         }
     }
 
+    /// <summary>
+    /// The lavalink route status details.
+    /// </summary>
     public class LavalinkRouteStatusDetails
     {
         /// <summary>

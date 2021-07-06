@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -56,13 +55,15 @@ namespace DSharpPlusNextGen.Net.WebSocket
         /// Connects to a specified remote WebSocket endpoint.
         /// </summary>
         /// <param name="uri">The URI of the WebSocket endpoint.</param>
-        /// <returns></returns>
         Task ConnectAsync(Uri uri);
 
         /// <summary>
         /// Disconnects the WebSocket connection.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="code">The code</param>
+        /// <param name="message">The message</param>
+        /// <created>Lala Sabathil,06.07.2021</created>
+        /// <changed>Lala Sabathil,06.07.2021</changed>
         Task DisconnectAsync(int code = 1000, string message = "");
 
         /// <summary>

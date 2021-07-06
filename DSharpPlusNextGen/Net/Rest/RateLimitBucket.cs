@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +61,7 @@ namespace DSharpPlusNextGen.Net
 
             internal set
             {
-                this.IsUnlimited = value.Contains(UNLIMITED_HASH);
+                this._isUnlimited = value.Contains(_unlimitedHash);
 
                 if (this.BucketId != null && !this.BucketId.StartsWith(value))
                 {
@@ -108,7 +107,10 @@ namespace DSharpPlusNextGen.Net
         /// </summary>
         public TimeSpan? ResetAfter { get; internal set; } = null;
 
-        internal DateTimeOffset _resetAfterOffset { get; set; }
+        /// <summary>
+        /// Gets the time interval to wait before the rate limit resets as offset
+        /// </summary>
+        internal DateTimeOffset ResetAfterOffset { get; set; }
 
         internal volatile int _remaining;
 
@@ -116,7 +118,7 @@ namespace DSharpPlusNextGen.Net
         /// Gets whether this bucket has it's ratelimit determined.
         /// <para>This will be <see langword="false"/> if the ratelimit is determined.</para>
         /// </summary>
-        internal volatile bool IsUnlimited;
+        internal volatile bool _isUnlimited;
 
         /// <summary>
         /// If the initial request for this bucket that is deterternining the rate limits is currently executing
@@ -147,8 +149,15 @@ namespace DSharpPlusNextGen.Net
         /// </summary>
         internal volatile int _limitResetting;
 
-        private static readonly string UNLIMITED_HASH = "unlimited";
+        private static readonly string _unlimitedHash = "unlimited";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RateLimitBucket"/> class.
+        /// </summary>
+        /// <param name="hash">The hash.</param>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <param name="channel_id">The channel_id.</param>
+        /// <param name="webhook_id">The webhook_id.</param>
         internal RateLimitBucket(string hash, string guild_id, string channel_id, string webhook_id)
         {
             this.Hash = hash;
@@ -171,11 +180,23 @@ namespace DSharpPlusNextGen.Net
         public static string GenerateBucketId(string hash, string guild_id, string channel_id, string webhook_id)
             => $"{hash}:{guild_id}:{channel_id}:{webhook_id}";
 
+        /// <summary>
+        /// Generates the hash key.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="route">The route.</param>
+        /// <returns>A string.</returns>
         public static string GenerateHashKey(RestRequestMethod method, string route)
             => $"{method}:{route}";
 
+        /// <summary>
+        /// Generates the unlimited hash.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="route">The route.</param>
+        /// <returns>A string.</returns>
         public static string GenerateUnlimitedHash(RestRequestMethod method, string route)
-            => $"{GenerateHashKey(method, route)}:{UNLIMITED_HASH}";
+            => $"{GenerateHashKey(method, route)}:{_unlimitedHash}";
 
         /// <summary>
         /// Returns a string representation of this bucket.
@@ -187,7 +208,7 @@ namespace DSharpPlusNextGen.Net
             var channelId = this.ChannelId != string.Empty ? this.ChannelId : "channel_id";
             var webhookId = this.WebhookId != string.Empty ? this.WebhookId : "webhook_id";
 
-            return $"rate limit bucket [{this.Hash}:{guildId}:{channelId}:{webhookId}] [{this.Remaining}/{this.Maximum}] {(this.ResetAfter.HasValue ? this._resetAfterOffset : this.Reset)}";
+            return $"rate limit bucket [{this.Hash}:{guildId}:{channelId}:{webhookId}] [{this.Remaining}/{this.Maximum}] {(this.ResetAfter.HasValue ? this.ResetAfterOffset : this.Reset)}";
         }
 
         /// <summary>
@@ -203,10 +224,7 @@ namespace DSharpPlusNextGen.Net
         /// </summary>
         /// <param name="e"><see cref="RateLimitBucket"/> to compare to.</param>
         /// <returns>Whether the <see cref="RateLimitBucket"/> is equal to this <see cref="RateLimitBucket"/>.</returns>
-        public bool Equals(RateLimitBucket e)
-        {
-            return e is null ? false : ReferenceEquals(this, e) ? true : this.BucketId == e.BucketId;
-        }
+        public bool Equals(RateLimitBucket e) => e is not null && (ReferenceEquals(this, e) || this.BucketId == e.BucketId);
 
         /// <summary>
         /// Gets the hash code for this <see cref="RateLimitBucket"/>.
@@ -222,7 +240,7 @@ namespace DSharpPlusNextGen.Net
         internal async Task TryResetLimitAsync(DateTimeOffset now)
         {
             if (this.ResetAfter.HasValue)
-                this.ResetAfter = this._resetAfterOffset - now;
+                this.ResetAfter = this.ResetAfterOffset - now;
 
             if (this._nextReset == 0)
                 return;
@@ -243,6 +261,12 @@ namespace DSharpPlusNextGen.Net
             this._limitResetting = 0;
         }
 
+        /// <summary>
+        /// Sets the initial values.
+        /// </summary>
+        /// <param name="max">The max.</param>
+        /// <param name="usesLeft">The uses left.</param>
+        /// <param name="newReset">The new reset.</param>
         internal void SetInitialValues(int max, int usesLeft, DateTimeOffset newReset)
         {
             this.Maximum = max;

@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -79,6 +78,11 @@ namespace DSharpPlusNextGen.Lavalink
             this.ConfigureHttpHandling(password);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LavalinkRestClient"/> class.
+        /// </summary>
+        /// <param name="config">The config.</param>
+        /// <param name="client">The client.</param>
         internal LavalinkRestClient(LavalinkConfiguration config, BaseDiscordClient client)
         {
             this.RestEndpoint = config.RestEndpoint;
@@ -207,6 +211,11 @@ namespace DSharpPlusNextGen.Lavalink
 
         #endregion
 
+        /// <summary>
+        /// get version async.
+        /// </summary>
+        /// <param name="uri">The uri.</param>
+        /// <returns>A Task.</returns>
         internal async Task<string> InternalGetVersionAsync(Uri uri)
         {
             using var req = await this._http.GetAsync(uri).ConfigureAwait(false);
@@ -218,6 +227,11 @@ namespace DSharpPlusNextGen.Lavalink
 
         #region Internal_Track_Loading
 
+        /// <summary>
+        /// resolve tracks async.
+        /// </summary>
+        /// <param name="uri">The uri.</param>
+        /// <returns>A Task.</returns>
         internal async Task<LavalinkLoadResult> InternalResolveTracksAsync(Uri uri)
         {
             // this function returns a Lavalink 3-like dataset regardless of input data version
@@ -272,6 +286,11 @@ namespace DSharpPlusNextGen.Lavalink
                 return null;
         }
 
+        /// <summary>
+        /// decode track async.
+        /// </summary>
+        /// <param name="uri">The uri.</param>
+        /// <returns>A Task.</returns>
         internal async Task<LavalinkTrack> InternalDecodeTrackAsync(Uri uri)
         {
             using var req = await this._http.GetAsync(uri).ConfigureAwait(false);
@@ -289,6 +308,12 @@ namespace DSharpPlusNextGen.Lavalink
             return track;
         }
 
+        /// <summary>
+        /// decode tracks async.
+        /// </summary>
+        /// <param name="uri">The uri.</param>
+        /// <param name="ids">The ids.</param>
+        /// <returns>A Task.</returns>
         internal async Task<IEnumerable<LavalinkTrack>> InternalDecodeTracksAsync(Uri uri, string[] ids)
         {
             var jsonOut = JsonConvert.SerializeObject(ids);
@@ -322,6 +347,11 @@ namespace DSharpPlusNextGen.Lavalink
 
         #region Internal_Route_Planner
 
+        /// <summary>
+        /// get route planner status async.
+        /// </summary>
+        /// <param name="uri">The uri.</param>
+        /// <returns>A Task.</returns>
         internal async Task<LavalinkRouteStatus> InternalGetRoutePlannerStatusAsync(Uri uri)
         {
             using var req = await this._http.GetAsync(uri).ConfigureAwait(false);
@@ -332,6 +362,12 @@ namespace DSharpPlusNextGen.Lavalink
             return status;
         }
 
+        /// <summary>
+        /// free address async.
+        /// </summary>
+        /// <param name="uri">The uri.</param>
+        /// <param name="address">The address.</param>
+        /// <returns>A Task.</returns>
         internal async Task InternalFreeAddressAsync(Uri uri, string address)
         {
             var payload = new StringContent(address, Utilities.UTF8, "application/json");
@@ -341,6 +377,11 @@ namespace DSharpPlusNextGen.Lavalink
 
         }
 
+        /// <summary>
+        /// free all addresses async.
+        /// </summary>
+        /// <param name="uri">The uri.</param>
+        /// <returns>A Task.</returns>
         internal async Task InternalFreeAllAddressesAsync(Uri uri)
         {
             var httpReq = new HttpRequestMessage(HttpMethod.Post, uri);
@@ -351,6 +392,11 @@ namespace DSharpPlusNextGen.Lavalink
 
         #endregion
 
+        /// <summary>
+        /// Configures the http handling.
+        /// </summary>
+        /// <param name="password">The password.</param>
+        /// <param name="client">The client.</param>
         private void ConfigureHttpHandling(string password, BaseDiscordClient client = null)
         {
             var httphandler = new HttpClientHandler

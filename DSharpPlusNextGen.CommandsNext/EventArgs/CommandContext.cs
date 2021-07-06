@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -107,10 +106,19 @@ namespace DSharpPlusNextGen.CommandsNext
         /// </summary>
         public string Prefix { get; internal set; }
 
+        /// <summary>
+        /// Gets or sets the config.
+        /// </summary>
         internal CommandsNextConfiguration Config { get; set; }
 
+        /// <summary>
+        /// Gets or sets the service scope context.
+        /// </summary>
         internal ServiceContext ServiceScopeContext { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandContext"/> class.
+        /// </summary>
         internal CommandContext()
         {
             this._lazyAssMember = new Lazy<DiscordMember>(() => this.Guild != null && this.Guild.Members.TryGetValue(this.User.Id, out var member) ? member : this.Guild?.GetMemberAsync(this.User.Id).ConfigureAwait(false).GetAwaiter().GetResult());
@@ -166,10 +174,24 @@ namespace DSharpPlusNextGen.CommandsNext
 
         internal struct ServiceContext : IDisposable
         {
+            /// <summary>
+            /// Gets the provider.
+            /// </summary>
             public IServiceProvider Provider { get; }
+            /// <summary>
+            /// Gets the scope.
+            /// </summary>
             public IServiceScope Scope { get; }
+            /// <summary>
+            /// Gets a value indicating whether is initialized.
+            /// </summary>
             public bool IsInitialized { get; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ServiceContext"/> class.
+            /// </summary>
+            /// <param name="services">The services.</param>
+            /// <param name="scope">The scope.</param>
             public ServiceContext(IServiceProvider services, IServiceScope scope)
             {
                 this.Provider = services;
@@ -177,6 +199,9 @@ namespace DSharpPlusNextGen.CommandsNext
                 this.IsInitialized = true;
             }
 
+            /// <summary>
+            /// Disposes the command context.
+            /// </summary>
             public void Dispose() => this.Scope?.Dispose();
         }
     }

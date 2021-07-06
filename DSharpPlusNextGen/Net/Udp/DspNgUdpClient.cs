@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,20 +31,44 @@ namespace DSharpPlusNextGen.Net.Udp
     /// <summary>
     /// The default, native-based UDP client implementation.
     /// </summary>
-    internal class DspUdpClient : BaseUdpClient
+    internal class DspNgUdpClient : BaseUdpClient
     {
+        /// <summary>
+        /// Gets the client.
+        /// </summary>
         private UdpClient Client { get; set; }
+
+        /// <summary>
+        /// Gets the end point.
+        /// </summary>
         private ConnectionEndpoint EndPoint { get; set; }
+
+        /// <summary>
+        /// Gets the packet queue.
+        /// </summary>
         private BlockingCollection<byte[]> PacketQueue { get; }
 
+
+        /// <summary>
+        /// Gets the receiver task.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>")]
         private Task ReceiverTask { get; set; }
+
+        /// <summary>
+        /// Gets the cancellation token source.
+        /// </summary>
         private CancellationTokenSource TokenSource { get; }
+
+        /// <summary>
+        /// Gets the cancellation token.
+        /// </summary>
         private CancellationToken Token => this.TokenSource.Token;
 
         /// <summary>
         /// Creates a new UDP client instance.
         /// </summary>
-        public DspUdpClient()
+        public DspNgUdpClient()
         {
             this.PacketQueue = new BlockingCollection<byte[]>();
             this.TokenSource = new CancellationTokenSource();
@@ -75,10 +98,7 @@ namespace DSharpPlusNextGen.Net.Udp
         /// Receives a datagram.
         /// </summary>
         /// <returns>The received bytes.</returns>
-        public override Task<byte[]> ReceiveAsync()
-        {
-            return this.PacketQueue.Count > 0 ? Task.FromResult(this.PacketQueue.Take()) : Task.Run(() => this.PacketQueue.Take());
-        }
+        public override Task<byte[]> ReceiveAsync() => this.PacketQueue.Count > 0 ? Task.FromResult(this.PacketQueue.Take()) : Task.Run(() => this.PacketQueue.Take());
 
         /// <summary>
         /// Closes and disposes the client.
@@ -96,6 +116,9 @@ namespace DSharpPlusNextGen.Net.Udp
             this.PacketQueue.Dispose();
         }
 
+        /// <summary>
+        /// Receivers the loop.
+        /// </summary>
         private async Task ReceiverLoopAsync()
         {
             while (!this.Token.IsCancellationRequested)
@@ -110,10 +133,9 @@ namespace DSharpPlusNextGen.Net.Udp
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="DspUdpClient"/>.
+        /// Creates a new instance of <see cref="DspNgUdpClient"/>.
         /// </summary>
-        /// <returns>An instance of <see cref="DspUdpClient"/>.</returns>
         public static BaseUdpClient CreateNew()
-            => new DspUdpClient();
+            => new DspNgUdpClient();
     }
 }

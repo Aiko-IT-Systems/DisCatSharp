@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -50,24 +49,48 @@ namespace DSharpPlusNextGen
             this._underlyingDict = underlyingDict;
         }
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => this._underlyingDict.GetEnumerator();
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this._underlyingDict).GetEnumerator();
 
+        /// <summary>
+        /// Gets the count.
+        /// </summary>
         public int Count => this._underlyingDict.Count;
 
+        /// <summary>
+        /// Contains the key.
+        /// </summary>
+        /// <param name="key">The key.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool ContainsKey(TKey key) => this._underlyingDict.ContainsKey(key);
 
+        /// <summary>
+        /// Tries the get value.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryGetValue(TKey key, out TValue value) => this._underlyingDict.TryGetValue(key, out value);
 
         public TValue this[TKey key] => this._underlyingDict[key];
 
+        /// <summary>
+        /// Gets the keys.
+        /// </summary>
         public IEnumerable<TKey> Keys => this._underlyingDict.Keys;
 
+        /// <summary>
+        /// Gets the values.
+        /// </summary>
         public IEnumerable<TValue> Values => this._underlyingDict.Values;
     }
 }

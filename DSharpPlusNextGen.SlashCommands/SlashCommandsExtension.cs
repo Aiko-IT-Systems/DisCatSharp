@@ -1,3 +1,25 @@
+// This file is part of the DSharpPlusNextGen project.
+//
+// Copyright (c) 2021 AITSYS
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -18,15 +40,34 @@ namespace DSharpPlusNextGen.SlashCommands
     /// </summary>
     public class SlashCommandsExtension : BaseExtension
     {
+        /// <summary>
+        /// Gets or sets the command methods.
+        /// </summary>
         private static List<CommandMethod> CommandMethods { get; set; } = new List<CommandMethod>();
+        /// <summary>
+        /// Gets or sets the group commands.
+        /// </summary>
         private static List<GroupCommand> GroupCommands { get; set; } = new List<GroupCommand>();
+        /// <summary>
+        /// Gets or sets the sub group commands.
+        /// </summary>
         private static List<SubGroupCommand> SubGroupCommands { get; set; } = new List<SubGroupCommand>();
 
+        /// <summary>
+        /// Gets or sets the update list.
+        /// </summary>
         private List<KeyValuePair<ulong?, Type>> UpdateList { get; set; } = new List<KeyValuePair<ulong?, Type>>();
 
         private readonly SlashCommandsConfiguration _configuration;
+        /// <summary>
+        /// Gets or sets a value indicating whether errored.
+        /// </summary>
         private static bool Errored { get; set; } = false;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SlashCommandsExtension"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
         internal SlashCommandsExtension(SlashCommandsConfiguration configuration)
         {
             this._configuration = configuration;
@@ -34,9 +75,11 @@ namespace DSharpPlusNextGen.SlashCommands
 
         /// <summary>
         /// Runs setup. DO NOT RUN THIS MANUALLY. DO NOT DO ANYTHING WITH THIS.
+        /// I could've broken it..
         /// </summary>
         /// <param name="client">The client to setup on.</param>
-        protected override void Setup(DiscordClient client)
+        /// <changed>Lala Sabathil,06.07.2021</changed>
+        protected internal override void Setup(DiscordClient client)
         {
             if (this.Client != null)
                 throw new InvalidOperationException("What did I tell you?");
@@ -76,6 +119,12 @@ namespace DSharpPlusNextGen.SlashCommands
                 this.UpdateList.Add(new KeyValuePair<ulong?, Type>(guildId, type));
         }
 
+        /// <summary>
+        /// Updates the.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The event.</param>
+
         internal Task Update(DiscordClient client, ReadyEventArgs e)
         {
             if (client.ShardId == 0)
@@ -88,6 +137,11 @@ namespace DSharpPlusNextGen.SlashCommands
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Registers the commands.
+        /// </summary>
+        /// <param name="types">The types.</param>
+        /// <param name="guildid">The guildid.</param>
         private void RegisterCommands(IEnumerable<Type> types, ulong? guildid)
         {
             var InternalCommandMethods = new List<CommandMethod>();
@@ -237,6 +291,11 @@ namespace DSharpPlusNextGen.SlashCommands
             });
         }
 
+        /// <summary>
+        /// Gets the choice attributes from provider.
+        /// </summary>
+        /// <param name="customAttributes">The custom attributes.</param>
+
         private async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(IEnumerable<ChoiceProviderAttribute> customAttributes)
         {
             var choices = new List<DiscordApplicationCommandOptionChoice>();
@@ -261,6 +320,11 @@ namespace DSharpPlusNextGen.SlashCommands
             return choices;
         }
 
+        /// <summary>
+        /// Gets the choice attributes from enum parameter.
+        /// </summary>
+        /// <param name="enumParam">The enum param.</param>
+        /// <returns>A list of DiscordApplicationCommandOptionChoices.</returns>
         private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromEnumParameter(Type enumParam)
         {
             var choices = new List<DiscordApplicationCommandOptionChoice>();
@@ -272,6 +336,12 @@ namespace DSharpPlusNextGen.SlashCommands
         }
 
         //Handler
+        /// <summary>
+        /// Interactions the handler.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The event.</param>
+
         private Task InteractionHandler(DiscordClient client, InteractionCreateEventArgs e)
         {
             _ = Task.Run(async () =>
@@ -375,6 +445,12 @@ namespace DSharpPlusNextGen.SlashCommands
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Creates the instance.
+        /// </summary>
+        /// <param name="t">The t.</param>
+        /// <param name="services">The services.</param>
+        /// <returns>An object.</returns>
         internal static object CreateInstance(Type t, IServiceProvider services)
         {
             var ti = t.GetTypeInfo();
@@ -429,6 +505,14 @@ namespace DSharpPlusNextGen.SlashCommands
 
             return moduleInstance;
         }
+
+        /// <summary>
+        /// Resolves the interaction command parameters.
+        /// </summary>
+        /// <param name="e">The event.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="options">The options.</param>
 
         private async Task<List<object>> ResolveInteractionCommandParameters(InteractionCreateEventArgs e, InteractionContext context, MethodInfo method, IEnumerable<DiscordInteractionDataOption> options)
         {
@@ -502,6 +586,12 @@ namespace DSharpPlusNextGen.SlashCommands
             return args;
         }
 
+        /// <summary>
+        /// Runs the preexecution checks async.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="ctx">The ctx.</param>
+
         private async Task RunPreexecutionChecksAsync(MethodInfo method, InteractionContext ctx)
         {
             var attributes = method.GetCustomAttributes<SlashCheckBaseAttribute>(true);
@@ -538,6 +628,11 @@ namespace DSharpPlusNextGen.SlashCommands
         }
         private AsyncEvent<SlashCommandsExtension, SlashCommandExecutedEventArgs> _executed;
 
+        /// <summary>
+        /// Gets the parameter type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>An ApplicationCommandOptionType.</returns>
         private ApplicationCommandOptionType GetParameterType(Type type)
         {
             ApplicationCommandOptionType parametertype;
@@ -562,6 +657,11 @@ namespace DSharpPlusNextGen.SlashCommands
             return parametertype;
         }
 
+        /// <summary>
+        /// Gets the choice attributes from parameter.
+        /// </summary>
+        /// <param name="choiceattributes">The choiceattributes.</param>
+        /// <returns>A list of DiscordApplicationCommandOptionChoices.</returns>
         private List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(IEnumerable<ChoiceAttribute> choiceattributes)
         {
             if (!choiceattributes.Any())
@@ -571,6 +671,11 @@ namespace DSharpPlusNextGen.SlashCommands
 
             return choiceattributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, att.Value)).ToList();
         }
+
+        /// <summary>
+        /// Parses the parameters.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
 
         private async Task<List<DiscordApplicationCommandOption>> ParseParameters(ParameterInfo[] parameters)
         {
@@ -606,6 +711,9 @@ namespace DSharpPlusNextGen.SlashCommands
 
     }
 
+    /// <summary>
+    /// Represents a command method.
+    /// </summary>
     internal class CommandMethod
     {
         public ulong Id;
@@ -615,6 +723,9 @@ namespace DSharpPlusNextGen.SlashCommands
         public Type ParentClass;
     }
 
+    /// <summary>
+    /// Represents a group command.
+    /// </summary>
     internal class GroupCommand
     {
         public ulong Id;
@@ -624,6 +735,9 @@ namespace DSharpPlusNextGen.SlashCommands
         public Type ParentClass;
     }
 
+    /// <summary>
+    /// Represents a sub group command.
+    /// </summary>
     internal class SubGroupCommand
     {
         public ulong Id;

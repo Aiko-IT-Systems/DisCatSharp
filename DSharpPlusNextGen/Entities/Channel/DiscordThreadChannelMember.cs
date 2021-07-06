@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlus-NextGen project.
+// This file is part of the DSharpPlusNextGen project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -32,19 +32,22 @@ namespace DSharpPlusNextGen.Entities
     public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThreadChannelMember>
     {
         /// <summary>
-        /// Gets ID of the user.
+        /// Gets the id of the user.
         /// </summary>
         [JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
         public ulong UserId { get; internal set; }
 
         /// <summary>
-        /// Gets timestamp when the user joined the thread.
+        /// Gets the timestamp when the user joined the thread.
         /// </summary>
         [JsonIgnore]
         public DateTimeOffset? JoinTimeStamp
             => !string.IsNullOrWhiteSpace(this.JoinTimeStampRaw) && DateTimeOffset.TryParse(this.JoinTimeStampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
                 dto : null;
 
+        /// <summary>
+        /// Gets the timestamp when the user joined the thread as raw string.
+        /// </summary>
         [JsonProperty("join_timestamp", NullValueHandling = NullValueHandling.Ignore)]
         internal string JoinTimeStampRaw { get; set; }
 
@@ -98,6 +101,9 @@ namespace DSharpPlusNextGen.Entities
         public static bool operator !=(DiscordThreadChannelMember e1, DiscordThreadChannelMember e2)
             => !(e1 == e2);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordThreadChannelMember"/> class.
+        /// </summary>
         internal DiscordThreadChannelMember() { }
     }
 }

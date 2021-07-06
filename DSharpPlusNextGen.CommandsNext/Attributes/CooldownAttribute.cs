@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -89,10 +88,7 @@ namespace DSharpPlusNextGen.CommandsNext.Attributes
         public TimeSpan GetRemainingCooldown(CommandContext ctx)
         {
             var bucket = this.GetBucket(ctx);
-            if (bucket == null)
-                return TimeSpan.Zero;
-
-            return bucket.RemainingUses > 0 ? TimeSpan.Zero : bucket.ResetsAt - DateTimeOffset.UtcNow;
+            return bucket == null ? TimeSpan.Zero : bucket.RemainingUses > 0 ? TimeSpan.Zero : bucket.ResetsAt - DateTimeOffset.UtcNow;
         }
 
         /// <summary>
@@ -123,6 +119,11 @@ namespace DSharpPlusNextGen.CommandsNext.Attributes
             return bid;
         }
 
+        /// <summary>
+        /// Executes a check.
+        /// </summary>
+        /// <param name="ctx">The command context.</param>
+        /// <param name="help">If true, help - returns true.</param>
         public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
         {
             if (help)
@@ -288,15 +289,7 @@ namespace DSharpPlusNextGen.CommandsNext.Attributes
         /// </summary>
         /// <param name="other"><see cref="CommandCooldownBucket"/> to compare to.</param>
         /// <returns>Whether the <see cref="CommandCooldownBucket"/> is equal to this <see cref="CommandCooldownBucket"/>.</returns>
-        public bool Equals(CommandCooldownBucket other)
-        {
-            if (other is null)
-                return false;
-
-            return ReferenceEquals(this, other)
-                ? true
-                : this.UserId == other.UserId && this.ChannelId == other.ChannelId && this.GuildId == other.GuildId;
-        }
+        public bool Equals(CommandCooldownBucket other) => other is not null && (ReferenceEquals(this, other) || (this.UserId == other.UserId && this.ChannelId == other.ChannelId && this.GuildId == other.GuildId));
 
         /// <summary>
         /// Gets the hash code for this <see cref="CommandCooldownBucket"/>.
@@ -324,10 +317,7 @@ namespace DSharpPlusNextGen.CommandsNext.Attributes
             var null1 = bucket1 is null;
             var null2 = bucket2 is null;
 
-            if (null1 && null2)
-                return true;
-
-            return null1 != null2 ? false : null1.Equals(null2);
+            return (null1 && null2) || (null1 == null2 && null1.Equals(null2));
         }
 
         /// <summary>

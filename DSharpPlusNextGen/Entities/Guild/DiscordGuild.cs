@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -177,6 +176,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("nsfw_level")]
         public NsfwLevel NsfwLevel { get; internal set; }
 
+        /// <summary>
+        /// Gets the system channel id.
+        /// </summary>
         [JsonProperty("system_channel_id", NullValueHandling = NullValueHandling.Include)]
         internal ulong? SystemChannelId { get; set; }
 
@@ -200,6 +202,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("widget_enabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool? WidgetEnabled { get; internal set; }
 
+        /// <summary>
+        /// Gets the widget channel id.
+        /// </summary>
         [JsonProperty("widget_channel_id", NullValueHandling = NullValueHandling.Ignore)]
         internal ulong? WidgetChannelId { get; set; }
 
@@ -211,6 +216,9 @@ namespace DSharpPlusNextGen.Entities
             ? this.GetChannel(this.WidgetChannelId.Value)
             : null;
 
+        /// <summary>
+        /// Gets the rules channel id.
+        /// </summary>
         [JsonProperty("rules_channel_id")]
         internal ulong? RulesChannelId { get; set; }
 
@@ -223,6 +231,9 @@ namespace DSharpPlusNextGen.Entities
             ? this.GetChannel(this.RulesChannelId.Value)
             : null;
 
+        /// <summary>
+        /// Gets the public updates channel id.
+        /// </summary>
         [JsonProperty("public_updates_channel_id")]
         internal ulong? PublicUpdatesChannelId { get; set; }
 
@@ -500,9 +511,15 @@ namespace DSharpPlusNextGen.Entities
         // public IEnumerable<DiscordChannel> OrderedChannels
         //    => this._channels.OrderBy(xc => xc.Parent?.Position).ThenBy(xc => xc.Type).ThenBy(xc => xc.Position);
 
+        /// <summary>
+        /// Whether it is synced.
+        /// </summary>
         [JsonIgnore]
         internal bool IsSynced { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordGuild"/> class.
+        /// </summary>
         internal DiscordGuild()
         {
             this._current_member_lazy = new Lazy<DiscordMember>(() => (this._members != null && this._members.TryGetValue(this.Discord.CurrentUser.Id, out var member)) ? member : null);

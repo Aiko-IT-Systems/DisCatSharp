@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -37,10 +36,22 @@ namespace DSharpPlusNextGen.VoiceNext
     /// </summary>
     public sealed class VoiceNextExtension : BaseExtension
     {
+        /// <summary>
+        /// Gets or sets the configuration.
+        /// </summary>
         private VoiceNextConfiguration Configuration { get; set; }
 
+        /// <summary>
+        /// Gets or sets the active connections.
+        /// </summary>
         private ConcurrentDictionary<ulong, VoiceNextConnection> ActiveConnections { get; set; }
+        /// <summary>
+        /// Gets or sets the voice state updates.
+        /// </summary>
         private ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>> VoiceStateUpdates { get; set; }
+        /// <summary>
+        /// Gets or sets the voice server updates.
+        /// </summary>
         private ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>> VoiceServerUpdates { get; set; }
 
         /// <summary>
@@ -48,6 +59,10 @@ namespace DSharpPlusNextGen.VoiceNext
         /// </summary>
         public bool IsIncomingEnabled { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VoiceNextExtension"/> class.
+        /// </summary>
+        /// <param name="config">The config.</param>
         internal VoiceNextExtension(VoiceNextConfiguration config)
         {
             this.Configuration = new VoiceNextConfiguration(config);
@@ -142,6 +157,11 @@ namespace DSharpPlusNextGen.VoiceNext
         /// <returns>VoiceNext connection for the specified guild.</returns>
         public VoiceNextConnection GetConnection(DiscordGuild guild) => this.ActiveConnections.ContainsKey(guild.Id) ? this.ActiveConnections[guild.Id] : null;
 
+        /// <summary>
+        /// Vnc_S the voice disconnected.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <returns>A Task.</returns>
         private async Task Vnc_VoiceDisconnected(DiscordGuild guild)
         {
             VoiceNextConnection vnc = null;
@@ -161,6 +181,12 @@ namespace DSharpPlusNextGen.VoiceNext
             await (guild.Discord as DiscordClient).WsSendAsync(vsj).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Client_S the voice state update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private Task Client_VoiceStateUpdate(DiscordClient client, VoiceStateUpdateEventArgs e)
         {
             var gld = e.Guild;
@@ -185,6 +211,12 @@ namespace DSharpPlusNextGen.VoiceNext
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Client_S the voice server update.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
         private async Task Client_VoiceServerUpdate(DiscordClient client, VoiceServerUpdateEventArgs e)
         {
             var gld = e.Guild;

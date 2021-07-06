@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,8 +34,17 @@ namespace DSharpPlusNextGen.Entities
     {
         //https://discord.com/developers/docs/resources/channel#allowed-mentions-object
 
+        /// <summary>
+        /// Parse users.
+        /// </summary>
         private const string ParseUsers = "users";
+        /// <summary>
+        /// Parse roles.
+        /// </summary>
         private const string ParseRoles = "roles";
+        /// <summary>
+        /// Parse everyone.
+        /// </summary>
         private const string ParseEveryone = "everyone";
 
         /// <summary>
@@ -58,9 +66,18 @@ namespace DSharpPlusNextGen.Entities
         public IEnumerable<string> Parse { get; }
 
         // WHY IS THERE NO DOCSTRING HERE
+        /// <summary>
+        /// For replies, whether to mention the author of the message being replied to.
+        /// </summary>
         [JsonProperty("replied_user", NullValueHandling = NullValueHandling.Ignore)]
         public bool? RepliedUser { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordMentions"/> class.
+        /// </summary>
+        /// <param name="mentions">The mentions.</param>
+        /// <param name="mention">If true, mention.</param>
+        /// <param name="repliedUser">If true, replied user.</param>
         internal DiscordMentions(IEnumerable<IMention> mentions, bool mention = false, bool repliedUser = false)
         {
             //Null check just to be safe

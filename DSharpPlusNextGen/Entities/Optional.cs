@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -59,9 +58,19 @@ namespace DSharpPlusNextGen.Entities
     }
 
     // used internally to make serialization more convenient, do NOT change this, do NOT implement this yourself
+    /// <summary>
+    /// Represents a IOptional interface.
+    /// </summary>
     internal interface IOptional
     {
+        /// <summary>
+        /// Gets a whether it has a value.
+        /// </summary>
         bool HasValue { get; }
+
+        /// <summary>
+        /// Gets the raw value.
+        /// </summary>
         object RawValue { get; } // must NOT throw InvalidOperationException
     }
 
@@ -82,6 +91,10 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <exception cref="InvalidOperationException">If this <see cref="Optional{T}"/> has no value.</exception>
         public T Value => this.HasValue ? this._val : throw new InvalidOperationException("Value is not set.");
+
+        /// <summary>
+        /// Gets the raw value.
+        /// </summary>
         object IOptional.RawValue => this._val;
 
         private readonly T _val;
@@ -122,10 +135,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <param name="e"><see cref="Optional{T}"/> to compare to.</param>
         /// <returns>Whether the <see cref="Optional{T}"/> is equal to this <see cref="Optional{T}"/>.</returns>
-        public bool Equals(Optional<T> e)
-        {
-            return !this.HasValue && !e.HasValue ? true : this.HasValue == e.HasValue && this.Value.Equals(e.Value);
-        }
+        public bool Equals(Optional<T> e) => (!this.HasValue && !e.HasValue) || (this.HasValue == e.HasValue && this.Value.Equals(e.Value));
 
         /// <summary>
         /// Checks whether the value of this <see cref="Optional{T}"/> is equal to specified object.
@@ -175,9 +185,17 @@ namespace DSharpPlusNextGen.Entities
         public Optional<TTarget> IfPresent<TTarget>(Func<T, TTarget> mapper) => this.HasValue ? new Optional<TTarget>(mapper(this.Value)) : default;
     }
 
-    /// <seealso cref="DiscordJson.Serializer"/>
+    /// <summary>
+    /// Represents an optional json contract resolver.
+    /// <seealso cref="DiscordJson._serializer"/>
+    /// </summary>
     internal sealed class OptionalJsonContractResolver : DefaultContractResolver
     {
+        /// <summary>
+        /// Creates the property.
+        /// </summary>
+        /// <param name="member">The member.</param>
+        /// <param name="memberSerialization">The member serialization.</param>
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             var property = base.CreateProperty(member, memberSerialization);
@@ -216,8 +234,17 @@ namespace DSharpPlusNextGen.Entities
         }
     }
 
+    /// <summary>
+    /// Represents an optional json converter.
+    /// </summary>
     internal sealed class OptionalJsonConverter : JsonConverter
     {
+        /// <summary>
+        /// Writes the json.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             // we don't check for HasValue here since it's checked in OptionalJsonContractResolver
@@ -237,6 +264,13 @@ namespace DSharpPlusNextGen.Entities
             }
         }
 
+        /// <summary>
+        /// Reads the json.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="objectType">The object type.</param>
+        /// <param name="existingValue">The existing value.</param>
+        /// <param name="serializer">The serializer.</param>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
             JsonSerializer serializer)
         {
@@ -248,6 +282,10 @@ namespace DSharpPlusNextGen.Entities
             return constructor.Invoke(new[] { serializer.Deserialize(reader, genericType) });
         }
 
+        /// <summary>
+        /// Whether it can convert.
+        /// </summary>
+        /// <param name="objectType">The object type.</param>
         public override bool CanConvert(Type objectType) => objectType.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IOptional));
     }
 }

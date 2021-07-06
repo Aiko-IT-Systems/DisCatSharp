@@ -1,18 +1,24 @@
-﻿// This file is part of DSharpPlusNextGen.Common project
+﻿// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright 2020 Emzi0767
-// 
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// 
-//   http://www.apache.org/licenses/LICENSE-2.0
-// 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) 2021 AITSYS
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 using System;
 using System.Collections;
@@ -78,6 +84,9 @@ namespace DSharpPlusNextGen.Common
             }
         }
 
+        /// <summary>
+        /// Gets the internal buckets.
+        /// </summary>
         private IReadOnlyDictionary<ulong, KeyedValue> InternalBuckets { get; }
 
         /// <summary>
@@ -152,9 +161,19 @@ namespace DSharpPlusNextGen.Common
         public IEnumerator<KeyValuePair<string, TValue>> GetEnumerator()
             => new Enumerator(this);
 
+        /// <summary>
+        /// Gets the enumerator.
+        /// </summary>
+        /// <returns>An IEnumerator.</returns>
         IEnumerator IEnumerable.GetEnumerator()
             => this.GetEnumerator();
 
+        /// <summary>
+        /// Tries the retrieve internal.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>A bool.</returns>
         private bool TryRetrieveInternal(ReadOnlySpan<char> key, out TValue value)
         {
             value = default;
@@ -175,6 +194,11 @@ namespace DSharpPlusNextGen.Common
             return false;
         }
 
+        /// <summary>
+        /// Contains the key internal.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>A bool.</returns>
         private bool ContainsKeyInternal(ReadOnlySpan<char> key)
         {
             var hash = key.CalculateKnuthHash();
@@ -192,6 +216,10 @@ namespace DSharpPlusNextGen.Common
             return false;
         }
 
+        /// <summary>
+        /// Gets the keys internal.
+        /// </summary>
+        /// <returns>An ImmutableArray.</returns>
         private ImmutableArray<string> GetKeysInternal()
         {
             var builder = ImmutableArray.CreateBuilder<string>(this.Count);
@@ -208,6 +236,10 @@ namespace DSharpPlusNextGen.Common
             return builder.MoveToImmutable();
         }
 
+        /// <summary>
+        /// Gets the values internal.
+        /// </summary>
+        /// <returns>An ImmutableArray.</returns>
         private ImmutableArray<TValue> GetValuesInternal()
         {
             var builder = ImmutableArray.CreateBuilder<TValue>(this.Count);
@@ -224,6 +256,12 @@ namespace DSharpPlusNextGen.Common
             return builder.MoveToImmutable();
         }
 
+        /// <summary>
+        /// Prepares the items.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        /// <param name="count">The count.</param>
+        /// <returns>An IReadOnlyDictionary.</returns>
         private static IReadOnlyDictionary<ulong, KeyedValue> PrepareItems(IEnumerable<KeyValuePair<string, TValue>> items, out int count)
         {
             count = 0;
@@ -261,12 +299,30 @@ namespace DSharpPlusNextGen.Common
 
         private class KeyedValue
         {
+            /// <summary>
+            /// Gets the key hash.
+            /// </summary>
             public ulong KeyHash { get; }
+            /// <summary>
+            /// Gets the key.
+            /// </summary>
             public string Key { get; }
+            /// <summary>
+            /// Gets or sets the value.
+            /// </summary>
             public TValue Value { get; set; }
 
+            /// <summary>
+            /// Gets or sets the next.
+            /// </summary>
             public KeyedValue Next { get; set; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="KeyedValue"/> class.
+            /// </summary>
+            /// <param name="key">The key.</param>
+            /// <param name="keyHash">The key hash.</param>
+            /// <param name="value">The value.</param>
             public KeyedValue(string key, ulong keyHash, TValue value)
             {
                 this.KeyHash = keyHash;
@@ -277,19 +333,42 @@ namespace DSharpPlusNextGen.Common
 
         private class Enumerator : IEnumerator<KeyValuePair<string, TValue>>
         {
+            /// <summary>
+            /// Gets the current.
+            /// </summary>
             public KeyValuePair<string, TValue> Current { get; private set; }
+            /// <summary>
+            /// Gets the current.
+            /// </summary>
             object IEnumerator.Current => this.Current;
 
+            /// <summary>
+            /// Gets the internal dictionary.
+            /// </summary>
             private CharSpanLookupReadOnlyDictionary<TValue> InternalDictionary { get; }
+            /// <summary>
+            /// Gets the internal enumerator.
+            /// </summary>
             private IEnumerator<KeyValuePair<ulong, KeyedValue>> InternalEnumerator { get; }
+            /// <summary>
+            /// Gets or sets the current value.
+            /// </summary>
             private KeyedValue CurrentValue { get; set; } = null;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Enumerator"/> class.
+            /// </summary>
+            /// <param name="spDict">The sp dict.</param>
             public Enumerator(CharSpanLookupReadOnlyDictionary<TValue> spDict)
             {
                 this.InternalDictionary = spDict;
                 this.InternalEnumerator = this.InternalDictionary.InternalBuckets.GetEnumerator();
             }
 
+            /// <summary>
+            /// Moves the next.
+            /// </summary>
+            /// <returns>A bool.</returns>
             public bool MoveNext()
             {
                 var kdv = this.CurrentValue;
@@ -310,6 +389,9 @@ namespace DSharpPlusNextGen.Common
                 return true;
             }
 
+            /// <summary>
+            /// Resets the.
+            /// </summary>
             public void Reset()
             {
                 this.InternalEnumerator.Reset();
@@ -317,6 +399,9 @@ namespace DSharpPlusNextGen.Common
                 this.CurrentValue = null;
             }
 
+            /// <summary>
+            /// Disposes the.
+            /// </summary>
             public void Dispose()
             {
                 this.Reset();

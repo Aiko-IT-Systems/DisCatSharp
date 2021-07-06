@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -54,6 +53,12 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Ignore)]
         public string EmojiName { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordGuildWelcomeScreenChannel"/> class.
+        /// </summary>
+        /// <param name="channelId">The channel id.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="emoji">The emoji.</param>
         public DiscordGuildWelcomeScreenChannel(ulong channelId, string description, DiscordEmoji emoji = null)
         {
             this.ChannelId = channelId;

@@ -2,16 +2,86 @@ apiRules:
 - exclude:
     uidRegex: ^System\.Collections\.Immutable$
 - exclude:
+    uidRegex: ^System\.Runtime\.CompilerServices\.Unsafe$
+- exclude:
+    uidRegex: ^System\.Runtime\.CompilerServices$
+- exclude:
     uidRegex: ^System\..*$
-- exclude:
-    uidRegex: ^DSharpPlusNextGen\.RingBuffer.*$
-- exclude:
-    uidRegex: ^DSharpPlusNextGen\.Base(WebSocket|Udp)Client.*$
-- exclude:
-    uidRegex: ^DSharpPlusNextGen\.HttpRequestMethod.*$
-- exclude:
-    uidRegex: ^DSharpPlusNextGen\.VoiceNext\.Codec.*$
 attributeRules:
 - exclude:
     uidRegex: ^System\.Collections\.Immutable$
     type: Namespace
+- exclude:
+    uidRegex: ^System\.Runtime\.CompilerServices\.Unsafe$
+    type: Namespace
+- exclude:
+    uidRegex: ^System\.Runtime\.CompilerServices$
+    type: Namespace
+- exclude:
+    uidRegex: ^System\.ComponentModel\.Design$
+    type: Namespace
+- exclude:
+    uidRegex: ^System\.ComponentModel\.Design\.Serialization$
+    type: Namespace
+- exclude:
+    uidRegex: ^System\.Xml\.Serialization$
+    type: Namespace
+- exclude:
+    uidRegex: ^System\.Web\.Compilation$
+    type: Namespace
+- exclude:
+    uidRegex: ^System\.Runtime\.Versioning$
+    type: Namespace
+- exclude:
+    uidRegex: ^System\.Runtime\.ConstrainedExecution$
+    type: Namespace
+- exclude:
+    uidRegex: ^System\.EnterpriseServices$
+    type: Namespace
+- exclude:
+    uidRegex: ^System\.Diagnostics\.CodeAnalysis$
+    type: Namespace
+- include:
+    uidRegex: ^System\.Diagnostics\.(ConditionalAttribute|EventLogPermissionAttribute|PerformanceCounterPermissionAttribute)$
+    type: Type
+- exclude:
+    uidRegex: '^System\.Diagnostics\.[^.]+$'
+    type: Type
+- include:
+    uidRegex: ^System\.ComponentModel\.(BindableAttribute|BrowsableAttribute|ComplexBindingPropertiesAttribute|DataObjectAttribute|DefaultBindingPropertyAttribute|ListBindableAttribute|LookupBindingPropertiesAttribute|SettingsBindableAttribute|TypeConverterAttribute)$
+    type: Type
+- exclude:
+    uidRegex: '^System\.ComponentModel\.[^.]+$'
+    type: Type
+- exclude:
+    uidRegex: ^System\.Reflection\.DefaultMemberAttribute$
+    type: Type
+- exclude:
+    uidRegex: ^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$
+    type: Type
+- exclude:
+    uidRegex: '^System\.Runtime\.CompilerServices\.[^.]+$'
+    type: Type
+- exclude:
+    uidRegex: '^System\.Runtime\.InteropServices\.[^.]+$'
+    type: Type
+- include:
+    uidRegex: ^System\.Security\.(SecurityCriticalAttribute|SecurityTreatAsSafeAttribute|AllowPartiallyTrustedCallersAttribute)$
+    type: Type
+- exclude:
+    uidRegex: '^System\.Security\.[^.]+$'
+    type: Type
+- exclude:
+    uidRegex: '^System\.Web\.UI\.[^.]+$'
+    type: Type
+- exclude:
+    uidRegex: '^System\.Windows\.Markup\.[^.]+$'
+    type: Type
+#- exclude:
+#    uidRegex: ^DSharpPlusNextGen\.RingBuffer.*$
+#- exclude:
+#    uidRegex: ^DSharpPlusNextGen\.Base(WebSocket|Udp)Client.*$
+#- exclude:
+#    uidRegex: ^DSharpPlusNextGen\.HttpRequestMethod.*$
+#- exclude:
+#    uidRegex: ^DSharpPlusNextGen\.VoiceNext\.Codec.*$

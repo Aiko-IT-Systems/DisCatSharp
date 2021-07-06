@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -105,6 +104,9 @@ namespace DSharpPlusNextGen.Entities
                 : (await this.Discord.ApiClient.GetChannelAsync(this._channel_id).ConfigureAwait(false)).Guild.GetRole(this.Id);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordOverwrite"/> class.
+        /// </summary>
         internal DiscordOverwrite() { }
 
         /// <summary>

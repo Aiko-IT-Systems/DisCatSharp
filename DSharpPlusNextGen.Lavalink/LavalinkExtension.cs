@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +32,9 @@ using DSharpPlusNextGen.Common.Utilities;
 
 namespace DSharpPlusNextGen.Lavalink
 {
+    /// <summary>
+    /// The lavalink extension.
+    /// </summary>
     public sealed class LavalinkExtension : BaseExtension
     {
         /// <summary>
@@ -147,11 +149,15 @@ namespace DSharpPlusNextGen.Lavalink
             return node?.GetGuildConnection(guild);
         }
 
+        /// <summary>
+        /// Filters the by load.
+        /// </summary>
+        /// <param name="nodes">The nodes.</param>
         private LavalinkNodeConnection FilterByLoad(LavalinkNodeConnection[] nodes)
         {
             Array.Sort(nodes, (a, b) =>
             {
-                if (!a.Statistics.Updated || !b.Statistics.Updated)
+                if (!a.Statistics._updated || !b.Statistics._updated)
                     return 0;
 
                 //https://github.com/FredBoat/Lavalink-Client/blob/48bc27784f57be5b95d2ff2eff6665451b9366f5/src/main/java/lavalink/client/io/LavalinkLoadBalancer.java#L122
@@ -191,9 +197,18 @@ namespace DSharpPlusNextGen.Lavalink
             return nodes[0];
         }
 
+        /// <summary>
+        /// Removes a node.
+        /// </summary>
+        /// <param name="node">The node to be removed.</param>
         private void Con_NodeDisconnected(LavalinkNodeConnection node)
             => this._connectedNodes.TryRemove(node.NodeEndpoint, out _);
 
+        /// <summary>
+        /// Disconnects a node.
+        /// </summary>
+        /// <param name="node">The affected node.</param>
+        /// <param name="e">The node disconnected event args.</param>
         private Task Con_Disconnected(LavalinkNodeConnection node, NodeDisconnectedEventArgs e)
             => this._nodeDisconnected.InvokeAsync(node, e);
     }

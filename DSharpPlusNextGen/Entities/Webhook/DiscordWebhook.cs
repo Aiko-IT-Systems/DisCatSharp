@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +33,9 @@ namespace DSharpPlusNextGen.Entities
     /// </summary>
     public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
     {
+        /// <summary>
+        /// Gets the api client.
+        /// </summary>
         internal DiscordApiClient ApiClient { get; set; }
 
         /// <summary>
@@ -96,6 +98,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("token", NullValueHandling = NullValueHandling.Ignore)]
         public string Token { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordWebhook"/> class.
+        /// </summary>
         internal DiscordWebhook() { }
 
         /// <summary>
@@ -217,10 +222,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         /// <param name="e"><see cref="DiscordWebhook"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordWebhook"/> is equal to this <see cref="DiscordWebhook"/>.</returns>
-        public bool Equals(DiscordWebhook e)
-        {
-            return e is null ? false : ReferenceEquals(this, e) ? true : this.Id == e.Id;
-        }
+        public bool Equals(DiscordWebhook e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordWebhook"/>.
@@ -239,7 +241,7 @@ namespace DSharpPlusNextGen.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            return (o1 == null && o2 != null) || (o1 != null && o2 == null) ? false : o1 == null && o2 == null ? true : e1.Id == e2.Id;
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
         }
 
         /// <summary>

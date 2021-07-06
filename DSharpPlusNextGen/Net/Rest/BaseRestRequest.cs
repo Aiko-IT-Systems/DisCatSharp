@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +32,14 @@ namespace DSharpPlusNextGen.Net
     /// </summary>
     public abstract class BaseRestRequest
     {
+        /// <summary>
+        /// Gets the discord client.
+        /// </summary>
         protected internal BaseDiscordClient Discord { get; }
+
+        /// <summary>
+        /// Gets the request task source.
+        /// </summary>
         protected internal TaskCompletionSource<RestResponse> RequestTaskSource { get; }
 
         /// <summary>
@@ -101,12 +107,24 @@ namespace DSharpPlusNextGen.Net
         public Task<RestResponse> WaitForCompletionAsync()
             => this.RequestTaskSource.Task;
 
+        /// <summary>
+        /// Sets as completed.
+        /// </summary>
+        /// <param name="response">The response to set.</param>
         protected internal void SetCompleted(RestResponse response)
             => this.RequestTaskSource.SetResult(response);
 
+        /// <summary>
+        /// Sets as faulted.
+        /// </summary>
+        /// <param name="ex">The exception to set.</param>
         protected internal void SetFaulted(Exception ex)
             => this.RequestTaskSource.SetException(ex);
 
+        /// <summary>
+        /// Tries to set as faulted.
+        /// </summary>
+        /// <param name="ex">The exception to set.</param>
         protected internal bool TrySetFaulted(Exception ex)
             => this.RequestTaskSource.TrySetException(ex);
 

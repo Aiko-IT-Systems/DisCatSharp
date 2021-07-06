@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,13 +27,15 @@ using Microsoft.Extensions.Logging;
 
 namespace DSharpPlusNextGen
 {
+    /// <summary>
+    /// Represents a discord client.
+    /// </summary>
     public sealed partial class DiscordClient
     {
+        /// <summary>
+        /// Gets the event execution limit.
+        /// </summary>
         internal static TimeSpan EventExecutionLimit { get; } = TimeSpan.FromSeconds(1);
-
-        // oh lord why did you have to pack into regions
-        // this makes simple copy-paste ineffective
-        // :notlikethis:
 
         #region WebSocket
 
@@ -814,6 +815,14 @@ namespace DSharpPlusNextGen
 
         #region Error Handling
 
+        /// <summary>
+        /// Events the error handler.
+        /// </summary>
+        /// <param name="asyncEvent">The async event.</param>
+        /// <param name="ex">The ex.</param>
+        /// <param name="handler">The handler.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArgs">The event args.</param>
         internal void EventErrorHandler<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
             where TArgs : AsyncEventArgs
         {
@@ -827,6 +836,14 @@ namespace DSharpPlusNextGen
             this._clientErrored.InvokeAsync(this, new ClientErrorEventArgs { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
+        /// <summary>
+        /// Goofing.
+        /// </summary>
+        /// <param name="asyncEvent">The async event.</param>
+        /// <param name="ex">The ex.</param>
+        /// <param name="handler">The handler.</param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArgs">The event args.</param>
         private void Goof<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
             where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {0} (defined in {1}) threw an exception", handler.Method, handler.Method.DeclaringType);
 

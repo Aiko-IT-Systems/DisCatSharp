@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +31,9 @@ namespace DSharpPlusNextGen.Entities
     /// </summary>
     public class DiscordVoiceState
     {
+        /// <summary>
+        /// Gets the discord client.
+        /// </summary>
         internal DiscordClient Discord { get; set; }
 
         /// <summary>
@@ -141,9 +143,16 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("request_to_speak_timestamp", NullValueHandling = NullValueHandling.Ignore)]
         internal DateTimeOffset? RequestToSpeakTimestamp { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordVoiceState"/> class.
+        /// </summary>
         internal DiscordVoiceState() { }
 
         // copy constructor for reduced boilerplate
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordVoiceState"/> class.
+        /// </summary>
+        /// <param name="other">The other.</param>
         internal DiscordVoiceState(DiscordVoiceState other)
         {
             this.Discord = other.Discord;
@@ -164,6 +173,10 @@ namespace DSharpPlusNextGen.Entities
             this.RequestToSpeakTimestamp = other.RequestToSpeakTimestamp;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordVoiceState"/> class.
+        /// </summary>
+        /// <param name="m">The m.</param>
         internal DiscordVoiceState(DiscordMember m)
         {
             this.Discord = m.Discord as DiscordClient;
@@ -178,6 +191,9 @@ namespace DSharpPlusNextGen.Entities
             // Values not filled out are values that are not known from a DiscordMember
         }
 
+        /// <summary>
+        /// Gets a readable voice state string.
+        /// </summary>
         public override string ToString() => $"{this.UserId.ToString(CultureInfo.InvariantCulture)} in {(this.GuildId ?? this.Channel.GuildId.Value).ToString(CultureInfo.InvariantCulture)}";
     }
 }

@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,23 +26,44 @@ using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Net.Abstractions
 {
+    /// <summary>
+    /// Represents a stage instance create payload.
+    /// </summary>
     internal sealed class RestStageInstanceCreatePayload
     {
+        /// <summary>
+        /// Gets or sets the channel id.
+        /// </summary>
         [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
         public ulong ChannelId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the topic.
+        /// </summary>
         [JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
         public string Topic { get; set; }
 
+        /// <summary>
+        /// Gets or sets the privacy level.
+        /// </summary>
         [JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
         public StagePrivacyLevel PrivacyLevel { get; set; }
     }
 
+    /// <summary>
+    /// Represents a stage instance modify payload.
+    /// </summary>
     internal sealed class RestStageInstanceModifyPayload
     {
+        /// <summary>
+        /// Gets or sets the topic.
+        /// </summary>
         [JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
         public Optional<string> Topic { get; set; }
 
+        /// <summary>
+        /// Gets or sets the privacy level.
+        /// </summary>
         [JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
         public Optional<StagePrivacyLevel> PrivacyLevel { get; set; }
     }
