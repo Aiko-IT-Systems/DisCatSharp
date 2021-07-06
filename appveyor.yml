@@ -47,7 +47,7 @@ deploy:
 - provider: NuGet
   server:
   api_key:
-    secure: XtptFAacNyLULAZaRpAGh/e28Q1jkZSmODo4d2dkAUamFSsTQa3MzJAo4lSC1Vlb
+    secure: eml4lPttwjBZg7WdwX3tbx34ZDNssgb2zwthatNbolRY0PnaCIswbuPClf9IWrw7
   skip_symbols: true
 #- provider: NuGet
 #  server: https://nuget.pkg.github.com/Aiko-IT-Systems/index.json
