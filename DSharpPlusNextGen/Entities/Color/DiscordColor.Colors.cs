@@ -68,27 +68,27 @@ namespace DSharpPlusNextGen.Entities
         /// <summary>
         /// Discord Blurple, or #5865F2.
         /// </summary>
-        public static DiscordColor Blurple { get; } = new DiscordColor("5865F2");
+        public static DiscordColor Blurple { get; } = new DiscordColor(0x5865F2);
 
         /// <summary>
         /// Discord Fuchsia, or #EB459E.
         /// </summary>
-        public static DiscordColor Fuchsia { get; } = new DiscordColor("EB459E");
+        public static DiscordColor Fuchsia { get; } = new DiscordColor(0xEB459E);
 
         /// <summary>
         /// Discord Green, or #57F287.
         /// </summary>
-        public static DiscordColor Green { get; } = new DiscordColor("57F287");
+        public static DiscordColor Green { get; } = new DiscordColor(0x57F287);
 
         /// <summary>
         /// Discord Yellow, or #FEE75C.
         /// </summary>
-        public static DiscordColor Yellow { get; } = new DiscordColor("FEE75C");
+        public static DiscordColor Yellow { get; } = new DiscordColor(0xFEE75C);
 
         /// <summary>
         /// Discord Red, or #ED4245.
         /// </summary>
-        public static DiscordColor Red { get; } = new DiscordColor("ED4245");
+        public static DiscordColor Red { get; } = new DiscordColor(0xED4245);
         #endregion
 
         #region Other colors

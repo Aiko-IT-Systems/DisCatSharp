@@ -1,4 +1,4 @@
-version: 9.5.2-nightly-{build}
+version: 9.5.3
 pull_requests:
   do_not_increment_build_number: true
 branches:
@@ -12,7 +12,6 @@ build_script:
 - ps: |-
     # Version number
     $BUILD_NUMBER = [int]$Env:APPVEYOR_BUILD_NUMBER
-    $BUILD_SUFFIX = "nightly"
 
     # Branch
     $BRANCH = "$Env:APPVEYOR_REPO_BRANCH"
@@ -32,13 +31,13 @@ build_script:
     {
         # Rebuild documentation
         Write-Host "Commencing complete build"
-        & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER -DocsPath ".\docs" -DocsPackageName "dsharpplusnextgen-docs"
+        & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -BuildNumber $BUILD_NUMBER -DocsPath ".\docs" -DocsPackageName "dsharpplusnextgen-docs"
     }
     else
     {
         # Skip documentation
         Write-Host "Building from PR ($Env:APPVEYOR_PULL_REQUEST_NUMBER); skipping docs build"
-        & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER
+        & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -BuildNumber $BUILD_NUMBER
     }
 artifacts:
 - path: artifacts\*.nupkg
