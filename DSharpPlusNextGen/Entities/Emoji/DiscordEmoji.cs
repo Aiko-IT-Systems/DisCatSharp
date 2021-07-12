@@ -71,6 +71,12 @@ namespace DSharpPlusNextGen.Entities
         public bool IsAnimated { get; internal set; }
 
         /// <summary>
+        /// Gets whether this emoji is available.
+        /// </summary>
+        [JsonProperty("available")]
+        public bool Available { get; internal set; }
+
+        /// <summary>
         /// Gets the image URL of this emoji.
         /// </summary>
         [JsonIgnore]
