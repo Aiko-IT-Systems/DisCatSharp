@@ -28,9 +28,15 @@ namespace DSharpPlusNextGen
     public enum PremiumType
     {
         /// <summary>
+        /// User does not have any perks.
+        /// </summary>
+        None = 0,
+        
+        /// <summary>
         /// Includes app perks like animated emojis and avatars, but not games.
         /// </summary>
         NitroClassic = 1,
+        
         /// <summary>
         /// Includes app perks as well as the games subscription service.
         /// </summary>
