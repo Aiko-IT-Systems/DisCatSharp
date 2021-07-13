@@ -37,6 +37,12 @@ namespace DSharpPlusNextGen.Net.Models
         public Optional<string> Name { internal get; set; }
 
         /// <summary>
+        /// The new guild voice region.
+        /// </summary>
+        [Obsolete("Channels use their own voice regions. Guild region is deprecated. Please use the newer one on the voice channels.", false)]
+        public Optional<DiscordVoiceRegion> Region { internal get; set; }
+
+        /// <summary>
         /// The new guild icon.
         /// </summary>
         public Optional<Stream> Icon { internal get; set; }

@@ -24,7 +24,7 @@ With DSharpPlus and their way how to implement changes, it is not possible.
 We decided to maintain an own version of it.
 
 ## Goal
-We want this lib always up-to-date. So the API version is always the newest, in the actual case `v10`.
+We want this lib always up-to-date. So the API version is always the newest, in the actual case `v9`.
 
 ## Installing
 You can install the library from following source:

@@ -486,6 +486,7 @@ namespace DSharpPlusNextGen
         /// Creates a guild. This requires the bot to be in less than 10 guilds total.
         /// </summary>
         /// <param name="name">Name of the guild.</param>
+        /// <param name="region">Voice region of the guild.</param>
         /// <param name="icon">Stream containing the icon for the guild.</param>
         /// <param name="verificationLevel">Verification level for the guild.</param>
         /// <param name="defaultMessageNotifications">Default message notification settings for the guild.</param>
@@ -493,7 +494,7 @@ namespace DSharpPlusNextGen
         /// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordGuild> CreateGuildAsync(string name, Optional<Stream> icon = default, VerificationLevel? verificationLevel = null,
+        public Task<DiscordGuild> CreateGuildAsync(string name, string region = null, Optional<Stream> icon = default, VerificationLevel? verificationLevel = null,
             DefaultMessageNotifications? defaultMessageNotifications = null)
         {
             var iconb64 = Optional.FromNoValue<string>();
@@ -503,7 +504,7 @@ namespace DSharpPlusNextGen
             else if (icon.HasValue)
                 iconb64 = null;
 
-            return this.ApiClient.CreateGuildAsync(name, iconb64, verificationLevel, defaultMessageNotifications);
+            return this.ApiClient.CreateGuildAsync(name, region, iconb64, verificationLevel, defaultMessageNotifications);
         }
 
         /// <summary>
@@ -1037,6 +1038,7 @@ namespace DSharpPlusNextGen
             guild.IconHash = newGuild.IconHash;
             guild.MfaLevel = newGuild.MfaLevel;
             guild.OwnerId = newGuild.OwnerId;
+            guild.VoiceRegionId = newGuild.VoiceRegionId;
             guild.SplashHash = newGuild.SplashHash;
             guild.VerificationLevel = newGuild.VerificationLevel;
             guild.WidgetEnabled = newGuild.WidgetEnabled;
