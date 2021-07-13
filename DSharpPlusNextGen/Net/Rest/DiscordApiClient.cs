@@ -477,14 +477,16 @@ namespace DSharpPlusNextGen.Net
             {
                 ["delete_message_days"] = delete_message_days.ToString(CultureInfo.InvariantCulture)
             };
-            if (reason != null)
-                urlparams["reason"] = reason;
+
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers.Add(REASON_HEADER_NAME, reason);
 
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id, user_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, BuildQueryString(urlparams));
-            return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route);
+            return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers);
         }
 
         /// <summary>
@@ -496,15 +498,15 @@ namespace DSharpPlusNextGen.Net
         /// <returns>A Task.</returns>
         internal Task RemoveGuildBanAsync(ulong guild_id, ulong user_id, string reason)
         {
-            var urlparams = new Dictionary<string, string>();
-            if (reason != null)
-                urlparams["reason"] = reason;
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers.Add(REASON_HEADER_NAME, reason);
 
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, BuildQueryString(urlparams));
-            return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
+            var url = Utilities.GetApiUriFor(path);
+            return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
 
         /// <summary>
@@ -2383,14 +2385,15 @@ namespace DSharpPlusNextGen.Net
                     sb.Append($"&include_roles={roleArray[i]}");
             }
 
-            if (reason != null)
-                urlparams["reason"] = reason;
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers.Add(REASON_HEADER_NAME, reason);
 
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PRUNE}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, $"{BuildQueryString(urlparams)}{sb}");
-            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route).ConfigureAwait(false);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers).ConfigureAwait(false);
 
             var pruned = JsonConvert.DeserializeObject<RestGuildPruneResultPayload>(res.Response);
 
