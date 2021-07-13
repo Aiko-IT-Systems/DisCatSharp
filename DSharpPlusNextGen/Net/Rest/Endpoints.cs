@@ -31,7 +31,7 @@ namespace DSharpPlusNextGen.Net
         /// <summary>
         /// The base discord api uri
         /// </summary>
-        public const string BASE_URI = "https://discord.com/api/v9";
+        public const string BASE_URI = "https://discord.com/api/v10";
 
         /// <summary>
         /// The oauth2 endpoint

@@ -963,7 +963,6 @@ namespace DSharpPlusNextGen
                     VerificationLevel = gld.VerificationLevel,
                     RulesChannelId = gld.RulesChannelId,
                     PublicUpdatesChannelId = gld.PublicUpdatesChannelId,
-                    VoiceRegionId = gld.VoiceRegionId,
                     IsNSFW = gld.IsNSFW,
                     _channels = new ConcurrentDictionary<ulong, DiscordChannel>(),
                     _threads = new ConcurrentDictionary<ulong, DiscordThreadChannel>(),

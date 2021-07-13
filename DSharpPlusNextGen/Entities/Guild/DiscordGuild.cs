@@ -121,19 +121,6 @@ namespace DSharpPlusNextGen.Entities
                 : this.Discord.ApiClient.GetGuildMemberAsync(this.Id, this.OwnerId).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <summary>
-        /// Gets the guild's voice region ID.
-        /// </summary>
-        [JsonProperty("region", NullValueHandling = NullValueHandling.Ignore)]
-        internal string VoiceRegionId { get; set; }
-
-        /// <summary>
-        /// Gets the guild's voice region.
-        /// </summary>
-        [JsonIgnore]
-        public DiscordVoiceRegion VoiceRegion
-            => this.Discord.VoiceRegions[this.VoiceRegionId];
-
-        /// <summary>
         /// Gets the guild's AFK voice channel ID.
         /// </summary>
         [JsonProperty("afk_channel_id", NullValueHandling = NullValueHandling.Ignore)]
@@ -602,7 +589,7 @@ namespace DSharpPlusNextGen.Entities
             else if (mdl.Description.HasValue)
                 description = null;
 
-            return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name, mdl.Region.IfPresent(e => e.Id),
+            return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name,
                 mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
                 mdl.AfkChannel.IfPresent(e => e?.Id), mdl.AfkTimeout, iconb64, mdl.Owner.IfPresent(e => e.Id), splashb64,
                 mdl.SystemChannel.IfPresent(e => e?.Id), mdl.SystemChannelFlags, description, mdl.AuditLogReason).ConfigureAwait(false);
