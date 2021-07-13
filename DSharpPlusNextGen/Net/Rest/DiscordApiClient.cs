@@ -282,13 +282,12 @@ namespace DSharpPlusNextGen.Net
         /// <param name="verification_level">The verification_level.</param>
         /// <param name="default_message_notifications">The default_message_notifications.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordGuild> CreateGuildAsync(string name, string region_id, Optional<string> iconb64, VerificationLevel? verification_level,
+        internal async Task<DiscordGuild> CreateGuildAsync(string name, Optional<string> iconb64, VerificationLevel? verification_level,
             DefaultMessageNotifications? default_message_notifications)
         {
             var pld = new RestGuildCreatePayload
             {
                 Name = name,
-                RegionId = region_id,
                 DefaultMessageNotifications = default_message_notifications,
                 VerificationLevel = verification_level,
                 IconBase64 = iconb64
@@ -380,7 +379,7 @@ namespace DSharpPlusNextGen.Net
         /// <param name="reason">The reason.</param>
         /// <returns>A Task.</returns>
         internal async Task<DiscordGuild> ModifyGuildAsync(ulong guildId, Optional<string> name,
-            Optional<string> region, Optional<VerificationLevel> verificationLevel,
+            Optional<VerificationLevel> verificationLevel,
             Optional<DefaultMessageNotifications> defaultMessageNotifications, Optional<MfaLevel> mfaLevel,
             Optional<ExplicitContentFilter> explicitContentFilter, Optional<ulong?> afkChannelId,
             Optional<int> afkTimeout, Optional<string> iconb64, Optional<ulong> ownerId, Optional<string> splashb64,
@@ -389,7 +388,6 @@ namespace DSharpPlusNextGen.Net
             var pld = new RestGuildModifyPayload
             {
                 Name = name,
-                RegionId = region,
                 VerificationLevel = verificationLevel,
                 DefaultMessageNotifications = defaultMessageNotifications,
                 MfaLevel = mfaLevel,
