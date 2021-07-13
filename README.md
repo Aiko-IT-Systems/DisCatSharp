@@ -1,5 +1,5 @@
 # DSharpPlus - NextGen ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DSharpPlusNextGen?label=License) ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)  [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://github.com)
-.NET wrapper for the Discord API, based off [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus).
+Discord Bot Library written in C# for .NET - based off [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus).
 
 #### Status
 [![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg?label=NuGet%20Overall%20Version)](https://nuget.org/packages/DSharpPlusNextGen)
@@ -24,7 +24,7 @@ With DSharpPlus and their way how to implement changes, it is not possible.
 We decided to maintain an own version of it.
 
 ## Goal
-We want this lib always up-to-date. So the API version is always the newest, in the actual case `v10`.
+We want this lib always up-to-date. So the API version is always the newest, in the actual case `v9`.
 
 ## Installing
 You can install the library from following source:

@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using DSharpPlusNextGen.Enums.Discord;
+using DSharpPlusNextGen.Net;
 using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.Entities
@@ -43,7 +44,7 @@ namespace DSharpPlusNextGen.Entities
         /// Gets the application's icon.
         /// </summary>
         public override string Icon
-            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"https://cdn.discordapp.com/app-icons/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets the application's icon hash.
@@ -99,7 +100,7 @@ namespace DSharpPlusNextGen.Entities
         /// Gets this application's cover image URL.
         /// </summary>
         public override string CoverImageUrl
-            => $"https://cdn.discordapp.com/app-icons/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png?size=1024";
+            => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png?size=1024";
 
         /// <summary>
         /// Gets the team which owns this application.
@@ -126,8 +127,14 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public string Slug { get; internal set; }
 
+        /// <summary>
+        /// Gets or sets a list of <see cref="DiscordApplicationAsset"/>.
+        /// </summary>
         private IReadOnlyList<DiscordApplicationAsset> Assets { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordApplication"/> class.
+        /// </summary>
         internal DiscordApplication() { }
 
         /// <summary>
@@ -158,15 +165,9 @@ namespace DSharpPlusNextGen.Entities
                 _ => throw new ArgumentOutOfRangeException(nameof(fmt)),
             };
             var ssize = size.ToString(CultureInfo.InvariantCulture);
-            if (!string.IsNullOrWhiteSpace(this.CoverImageHash))
-            {
-                var id = this.Id.ToString(CultureInfo.InvariantCulture);
-                return $"https://cdn.discordapp.com/avatars/{id}/{this.CoverImageHash}.{sfmt}?size={ssize}";
-            }
-            else
-            {
-                return null;
-            }
+            return !string.IsNullOrWhiteSpace(this.CoverImageHash)
+                ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{sfmt}?size={ssize}"
+                : null;
         }
 
         /// <summary>
@@ -181,11 +182,16 @@ namespace DSharpPlusNextGen.Entities
             return this.Assets;
         }
 
+        /// <summary>
+        /// Generates an oauth url for the application.
+        /// </summary>
+        /// <param name="permissions">The permissions.</param>
+        /// <returns>OAuth Url</returns>
         public string GenerateBotOAuth(Permissions permissions = Permissions.None)
         {
             permissions &= PermissionMethods.FULL_PERMS;
             // hey look, it's not all annoying and blue :P
-            return new QueryUriBuilder("https://discord.com/oauth2/authorize")
+            return new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
                 .AddParameter("client_id", this.Id.ToString(CultureInfo.InvariantCulture))
                 .AddParameter("scope", "bot")
                 .AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
@@ -236,6 +242,9 @@ namespace DSharpPlusNextGen.Entities
             => !(e1 == e2);
     }
 
+    /// <summary>
+    /// Represents an discord asset.
+    /// </summary>
     public abstract class DiscordAsset
     {
         /// <summary>
@@ -280,10 +289,17 @@ namespace DSharpPlusNextGen.Entities
         /// Gets the Url of this asset.
         /// </summary>
         public override Uri Url
-            => new($"https://cdn.discordapp.com/app-assets/{this.Application.Id.ToString(CultureInfo.InvariantCulture)}/{this.Id}.png");
+            => new($"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}/{this.Application.Id.ToString(CultureInfo.InvariantCulture)}/{this.Id}.png");
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
+        /// </summary>
         internal DiscordApplicationAsset() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
+        /// </summary>
+        /// <param name="app">The app.</param>
         internal DiscordApplicationAsset(DiscordApplication app)
         {
             this.Discord = app.Discord;
@@ -333,6 +349,9 @@ namespace DSharpPlusNextGen.Entities
             => !(e1 == e2);
     }
 
+    /// <summary>
+    /// Represents an spotify asset.
+    /// </summary>
     public sealed class DiscordSpotifyAsset : DiscordAsset
     {
         /// <summary>
@@ -343,6 +362,9 @@ namespace DSharpPlusNextGen.Entities
 
         private readonly Lazy<Uri> _url;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordSpotifyAsset"/> class.
+        /// </summary>
         public DiscordSpotifyAsset()
         {
             this._url = new Lazy<Uri>(() =>

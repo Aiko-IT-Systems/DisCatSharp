@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -46,6 +45,12 @@ namespace DSharpPlusNextGen.Lavalink.EventArgs
         /// </summary>
         public LavalinkGuildConnection Player { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlayerUpdateEventArgs"/> class.
+        /// </summary>
+        /// <param name="lvl">The lvl.</param>
+        /// <param name="timestamp">The timestamp.</param>
+        /// <param name="position">The position.</param>
         internal PlayerUpdateEventArgs(LavalinkGuildConnection lvl, DateTimeOffset timestamp, TimeSpan position)
         {
             this.Player = lvl;

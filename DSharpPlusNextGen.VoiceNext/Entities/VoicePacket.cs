@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,10 +26,25 @@ namespace DSharpPlusNextGen.VoiceNext.Entities
 {
     internal struct VoicePacket
     {
+        /// <summary>
+        /// Gets the bytes.
+        /// </summary>
         public ReadOnlyMemory<byte> Bytes { get; }
+        /// <summary>
+        /// Gets the millisecond duration.
+        /// </summary>
         public int MillisecondDuration { get; }
+        /// <summary>
+        /// Gets or sets a value indicating whether is silence.
+        /// </summary>
         public bool IsSilence { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VoicePacket"/> class.
+        /// </summary>
+        /// <param name="bytes">The bytes.</param>
+        /// <param name="msDuration">The ms duration.</param>
+        /// <param name="isSilence">If true, is silence.</param>
         public VoicePacket(ReadOnlyMemory<byte> bytes, int msDuration, bool isSilence = false)
         {
             this.Bytes = bytes;

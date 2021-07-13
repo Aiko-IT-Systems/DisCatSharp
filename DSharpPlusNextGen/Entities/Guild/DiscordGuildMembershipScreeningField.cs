@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -56,6 +55,13 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
         public bool IsRequired { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordGuildMembershipScreeningField"/> class.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="label">The label.</param>
+        /// <param name="values">The values.</param>
+        /// <param name="required">If true, required.</param>
         public DiscordGuildMembershipScreeningField(MembershipScreeningFieldType type, string label, IEnumerable<string> values, bool required = true)
         {
             this.Type = type;
@@ -64,6 +70,9 @@ namespace DSharpPlusNextGen.Entities
             this.IsRequired = required;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordGuildMembershipScreeningField"/> class.
+        /// </summary>
         internal DiscordGuildMembershipScreeningField() { }
     }
 }

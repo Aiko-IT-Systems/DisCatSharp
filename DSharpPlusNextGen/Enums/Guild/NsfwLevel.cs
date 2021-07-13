@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+
 namespace DSharpPlusNextGen
 {
     /// <summary>
@@ -31,14 +31,17 @@ namespace DSharpPlusNextGen
         /// Indicates the guild has no special NSFW level.
         /// </summary>
         Default = 0,
+
         /// <summary>
         /// Indicates the guild has extremely suggestive or mature content that would only be suitable for users over 18
         /// </summary>
         Explicit = 1,
+
         /// <summary>
         /// Indicates the guild has no content that could be deemed NSFW. It is SFW.
         /// </summary>
         Safe = 2,
+
         /// <summary>
         /// Indicates the guild has mildly NSFW content that may not be suitable for users under 18.
         /// </summary>

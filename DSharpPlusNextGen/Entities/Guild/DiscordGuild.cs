@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +29,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DSharpPlusNextGen.Enums.Discord;
 using DSharpPlusNextGen.EventArgs;
 using DSharpPlusNextGen.Exceptions;
+using DSharpPlusNextGen.Net;
 using DSharpPlusNextGen.Net.Abstractions;
 using DSharpPlusNextGen.Net.Models;
 using DSharpPlusNextGen.Net.Serialization;
@@ -63,7 +64,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public string IconUrl
-            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"https://cdn.discordapp.com/icons/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.jpg" : null;
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{(this.IconHash.StartsWith("a_") ? "gif" : "png")}?size=1024" : null;
 
         /// <summary>
         /// Gets the guild splash's hash.
@@ -76,7 +77,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public string SplashUrl
-            => !string.IsNullOrWhiteSpace(this.SplashHash) ? $"https://cdn.discordapp.com/splashes/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.jpg" : null;
+         => !string.IsNullOrWhiteSpace(this.SplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets the guild discovery splash's hash.
@@ -89,7 +90,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public string DiscoverySplashUrl
-            => !string.IsNullOrWhiteSpace(this.DiscoverySplashHash) ? $"https://cdn.discordapp.com/discovery-splashes/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.DiscoverySplashHash}.jpg" : null;
+            => !string.IsNullOrWhiteSpace(this.DiscoverySplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILD_DISCOVERY_SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.DiscoverySplashHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets the preferred locale of this guild.
@@ -118,6 +119,19 @@ namespace DSharpPlusNextGen.Entities
             => this.Members.TryGetValue(this.OwnerId, out var owner)
                 ? owner
                 : this.Discord.ApiClient.GetGuildMemberAsync(this.Id, this.OwnerId).ConfigureAwait(false).GetAwaiter().GetResult();
+
+        /// <summary>
+        /// Gets the guild's voice region ID.
+        /// </summary>
+        [JsonProperty("region", NullValueHandling = NullValueHandling.Ignore)]
+        internal string VoiceRegionId { get; set; }
+
+        /// <summary>
+        /// Gets the guild's voice region.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordVoiceRegion VoiceRegion
+            => this.Discord.VoiceRegions[this.VoiceRegionId];
 
         /// <summary>
         /// Gets the guild's AFK voice channel ID.
@@ -162,6 +176,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("nsfw_level")]
         public NsfwLevel NsfwLevel { get; internal set; }
 
+        /// <summary>
+        /// Gets the system channel id.
+        /// </summary>
         [JsonProperty("system_channel_id", NullValueHandling = NullValueHandling.Include)]
         internal ulong? SystemChannelId { get; set; }
 
@@ -185,6 +202,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("widget_enabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool? WidgetEnabled { get; internal set; }
 
+        /// <summary>
+        /// Gets the widget channel id.
+        /// </summary>
         [JsonProperty("widget_channel_id", NullValueHandling = NullValueHandling.Ignore)]
         internal ulong? WidgetChannelId { get; set; }
 
@@ -196,6 +216,9 @@ namespace DSharpPlusNextGen.Entities
             ? this.GetChannel(this.WidgetChannelId.Value)
             : null;
 
+        /// <summary>
+        /// Gets the rules channel id.
+        /// </summary>
         [JsonProperty("rules_channel_id")]
         internal ulong? RulesChannelId { get; set; }
 
@@ -208,6 +231,9 @@ namespace DSharpPlusNextGen.Entities
             ? this.GetChannel(this.RulesChannelId.Value)
             : null;
 
+        /// <summary>
+        /// Gets the public updates channel id.
+        /// </summary>
         [JsonProperty("public_updates_channel_id")]
         internal ulong? PublicUpdatesChannelId { get; set; }
 
@@ -230,32 +256,31 @@ namespace DSharpPlusNextGen.Entities
         /// Gets a collection of this guild's roles.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordRole> Roles { get; internal set; }
+        public IReadOnlyDictionary<ulong, DiscordRole> Roles => new ReadOnlyConcurrentDictionary<ulong, DiscordRole>(this._roles);
 
         [JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordRole> _roles = new();
-
+        internal ConcurrentDictionary<ulong, DiscordRole> _roles;
 
         /// <summary>
         /// Gets a collection of this guild's stickers.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordSticker> Stickers { get; internal set; }
+        public IReadOnlyDictionary<ulong, DiscordSticker> Stickers => new ReadOnlyConcurrentDictionary<ulong, DiscordSticker>(this._stickers);
 
         [JsonProperty("stickers", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordSticker> _stickers = new();
+        internal ConcurrentDictionary<ulong, DiscordSticker> _stickers;
 
         /// <summary>
         /// Gets a collection of this guild's emojis.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordEmoji> Emojis { get; internal set; }
+        public IReadOnlyDictionary<ulong, DiscordEmoji> Emojis => new ReadOnlyConcurrentDictionary<ulong, DiscordEmoji>(this._emojis);
 
         [JsonProperty("emojis", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordEmoji> _emojis = new();
+        internal ConcurrentDictionary<ulong, DiscordEmoji> _emojis;
 
         /// <summary>
         /// Gets a collection of this guild's features.
@@ -336,31 +361,31 @@ namespace DSharpPlusNextGen.Entities
         /// the voice state corresponds to.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordVoiceState> VoiceStates { get; internal set; }
+        public IReadOnlyDictionary<ulong, DiscordVoiceState> VoiceStates => new ReadOnlyConcurrentDictionary<ulong, DiscordVoiceState>(this._voiceStates);
 
         [JsonProperty("voice_states", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordVoiceState> _voiceStates = new();
+        internal ConcurrentDictionary<ulong, DiscordVoiceState> _voiceStates;
 
         /// <summary>
         /// Gets a dictionary of all the members that belong to this guild. The dictionary's key is the member ID.
         /// </summary>
         [JsonIgnore] // TODO overhead of => vs Lazy? it's a struct
-        public IReadOnlyDictionary<ulong, DiscordMember> Members { get; internal set; }
+        public IReadOnlyDictionary<ulong, DiscordMember> Members => new ReadOnlyConcurrentDictionary<ulong, DiscordMember>(this._members);
 
         [JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordMember> _members = new();
+        internal ConcurrentDictionary<ulong, DiscordMember> _members;
 
         /// <summary>
         /// Gets a dictionary of all the channels associated with this guild. The dictionary's key is the channel ID.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordChannel> Channels { get; internal set; }
+        public IReadOnlyDictionary<ulong, DiscordChannel> Channels => new ReadOnlyConcurrentDictionary<ulong, DiscordChannel>(this._channels);
 
         [JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordChannel> _channels = new();
+        internal ConcurrentDictionary<ulong, DiscordChannel> _channels;
 
         internal ConcurrentDictionary<string, DiscordInvite> _invites;
 
@@ -430,32 +455,32 @@ namespace DSharpPlusNextGen.Entities
         /// Gets this guild's banner hash, when applicable.
         /// </summary>
         [JsonProperty("banner")]
-        public string Banner { get; internal set; }
+        public string BannerHash { get; internal set; }
 
         /// <summary>
         /// Gets this guild's banner in url form.
         /// </summary>
         [JsonIgnore]
         public string BannerUrl
-            => !string.IsNullOrWhiteSpace(this.Banner) ? $"https://cdn.discordapp.com/banners/{this.Id}/{this.Banner}" : null;
+            => !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.png" : null;
 
         /// <summary>
         /// Whether this guild has the community feature enabled.
         /// </summary>
         [JsonIgnore]
-        public bool IsCommunity => this.RawFeatures.Contains("COMMUNITY") || this.RawFeatures.Contains("NEWS");
+        public bool IsCommunity => this.Features.HasCommunityEnabled;
 
         /// <summary>
         /// Whether this guild has enabled the welcome screen.
         /// </summary>
         [JsonIgnore]
-        public bool HasWelcomeScreen => this.RawFeatures.Contains("WELCOME_SCREEN_ENABLED");
+        public bool HasWelcomeScreen => this.Features.HasWelcomeScreenEnabled;
 
         /// <summary>
         /// Whether this guild has enabled membership screening.
         /// </summary>
         [JsonIgnore]
-        public bool HasMemberVerificationGate => this.RawFeatures.Contains("MEMBER_VERIFICATION_GATE_ENABLED");
+        public bool HasMemberVerificationGate => this.Features.HasMembershipScreeningEnabled;
 
         /// <summary>
         /// Gets this guild's premium tier (Nitro boosting).
@@ -486,21 +511,21 @@ namespace DSharpPlusNextGen.Entities
         // public IEnumerable<DiscordChannel> OrderedChannels
         //    => this._channels.OrderBy(xc => xc.Parent?.Position).ThenBy(xc => xc.Type).ThenBy(xc => xc.Position);
 
+        /// <summary>
+        /// Whether it is synced.
+        /// </summary>
         [JsonIgnore]
         internal bool IsSynced { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordGuild"/> class.
+        /// </summary>
         internal DiscordGuild()
         {
-            this.Roles = new ReadOnlyConcurrentDictionary<ulong, DiscordRole>(this._roles);
-            this.Emojis = new ReadOnlyConcurrentDictionary<ulong, DiscordEmoji>(this._emojis);
-            this.Stickers = new ReadOnlyConcurrentDictionary<ulong, DiscordSticker>(this._stickers);
-            this.VoiceStates = new ReadOnlyConcurrentDictionary<ulong, DiscordVoiceState>(this._voiceStates);
-            this.Members = new ReadOnlyConcurrentDictionary<ulong, DiscordMember>(this._members);
-            this.Channels = new ReadOnlyConcurrentDictionary<ulong, DiscordChannel>(this._channels);
-            this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this._threads);
-            this.StageInstances = new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this._stageInstances);
             this._current_member_lazy = new Lazy<DiscordMember>(() => (this._members != null && this._members.TryGetValue(this.Discord.CurrentUser.Id, out var member)) ? member : null);
             this._invites = new ConcurrentDictionary<string, DiscordInvite>();
+            this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this._threads);
+            this.StageInstances = new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this._stageInstances);
         }
 
         #region Guild Methods
@@ -577,7 +602,7 @@ namespace DSharpPlusNextGen.Entities
             else if (mdl.Description.HasValue)
                 description = null;
 
-            return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name,
+            return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name, mdl.Region.IfPresent(e => e.Id),
                 mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
                 mdl.AfkChannel.IfPresent(e => e?.Id), mdl.AfkTimeout, iconb64, mdl.Owner.IfPresent(e => e.Id), splashb64,
                 mdl.SystemChannel.IfPresent(e => e?.Id), mdl.SystemChannelFlags, description, mdl.AuditLogReason).ConfigureAwait(false);
@@ -995,7 +1020,7 @@ namespace DSharpPlusNextGen.Entities
                 WidgetType.Banner4 => "banner4",
                 _ => "shield",
             };
-            return $"{Net.Endpoints.BASE_URI}{Net.Endpoints.GUILDS}/{this.Id}{Net.Endpoints.WIDGET_PNG}?style={param}";
+            return $"{Endpoints.BASE_URI}{Endpoints.GUILDS}/{this.Id}{Endpoints.WIDGET_PNG}?style={param}";
         }
 
         /// <summary>
@@ -1267,8 +1292,8 @@ namespace DSharpPlusNextGen.Entities
                                 case "icon_hash":
                                     entrygld.IconChange = new PropertyChange<string>
                                     {
-                                        Before = xc.OldValueString != null ? $"https://cdn.discordapp.com/icons/{this.Id}/{xc.OldValueString}.webp" : null,
-                                        After = xc.OldValueString != null ? $"https://cdn.discordapp.com/icons/{this.Id}/{xc.NewValueString}.webp" : null
+                                        Before = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.OldValueString}.webp" : null,
+                                        After = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id}/{xc.NewValueString}.webp" : null
                                     };
                                     break;
 
@@ -1305,8 +1330,8 @@ namespace DSharpPlusNextGen.Entities
                                 case "splash_hash":
                                     entrygld.SplashChange = new PropertyChange<string>
                                     {
-                                        Before = xc.OldValueString != null ? $"https://cdn.discordapp.com/splashes/{this.Id}/{xc.OldValueString}.webp?size=2048" : null,
-                                        After = xc.NewValueString != null ? $"https://cdn.discordapp.com/splashes/{this.Id}/{xc.NewValueString}.webp?size=2048" : null
+                                        Before = xc.OldValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.OldValueString}.webp?size=2048" : null,
+                                        After = xc.NewValueString != null ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id}/{xc.NewValueString}.webp?size=2048" : null
                                     };
                                     break;
 

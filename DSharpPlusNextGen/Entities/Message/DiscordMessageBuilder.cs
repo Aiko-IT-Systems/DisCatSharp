@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -62,6 +61,11 @@ namespace DSharpPlusNextGen.Entities
                 this._embeds.Add(value);
             }
         }
+
+        /// <summary>
+        /// Gets the Sticker to be send.
+        /// </summary>
+        public DiscordSticker Sticker { get; set; }
 
         /// <summary>
         /// Gets the Embeds to be sent.
@@ -126,6 +130,17 @@ namespace DSharpPlusNextGen.Entities
         public DiscordMessageBuilder WithContent(string content)
         {
             this.Content = content;
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a sticker to the message. Sticker must be from current guild.
+        /// </summary>
+        /// <param name="sticker">The sticker to add.</param>
+        /// <returns>The current builder to be chained.</returns>
+        public DiscordMessageBuilder WithSticker(DiscordSticker sticker)
+        {
+            this.Sticker = sticker;
             return this;
         }
 
@@ -368,6 +383,7 @@ namespace DSharpPlusNextGen.Entities
             this.MentionOnReply = false;
             this._components.Clear();
             this.Suppressed = false;
+            this.Sticker = null;
         }
 
         /// <summary>
@@ -386,8 +402,8 @@ namespace DSharpPlusNextGen.Entities
             }
             else
             {
-                if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true))
-                    throw new ArgumentException("You must specify content, an embed, or at least one file.");
+                if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null)
+                    throw new ArgumentException("You must specify content, an embed, a sticker or at least one file.");
 
                 if (this.Components.Count > 5)
                     throw new InvalidOperationException("You can only have 5 action rows per message.");

@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,13 +26,26 @@ using System.Linq;
 
 namespace DSharpPlusNextGen
 {
+    /// <summary>
+    /// Represents a query uri builder.
+    /// </summary>
     internal class QueryUriBuilder
     {
+        /// <summary>
+        /// Gets the source uri.
+        /// </summary>
         public Uri SourceUri { get; }
 
+        /// <summary>
+        /// Gets the query parameters.
+        /// </summary>
         public IReadOnlyList<KeyValuePair<string, string>> QueryParameters => this._queryParams;
         private readonly List<KeyValuePair<string, string>> _queryParams = new();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueryUriBuilder"/> class.
+        /// </summary>
+        /// <param name="uri">The uri.</param>
         public QueryUriBuilder(string uri)
         {
             if (uri == null)
@@ -42,6 +54,10 @@ namespace DSharpPlusNextGen
             this.SourceUri = new Uri(uri);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueryUriBuilder"/> class.
+        /// </summary>
+        /// <param name="uri">The uri.</param>
         public QueryUriBuilder(Uri uri)
         {
             if (uri == null)
@@ -50,12 +66,20 @@ namespace DSharpPlusNextGen
             this.SourceUri = uri;
         }
 
+        /// <summary>
+        /// Adds a parameter.
+        /// </summary>
+        /// <param name="key">The key to be added.</param>
+        /// <param name="value">The value to be added.</param>
         public QueryUriBuilder AddParameter(string key, string value)
         {
             this._queryParams.Add(new KeyValuePair<string, string>(key, value));
             return this;
         }
 
+        /// <summary>
+        /// Builds the uri.
+        /// </summary>
         public Uri Build()
         {
             return new UriBuilder(this.SourceUri)
@@ -64,6 +88,9 @@ namespace DSharpPlusNextGen
             }.Uri;
         }
 
+        /// <summary>
+        /// Returns a readable string.
+        /// </summary>
         public override string ToString() => this.Build().ToString();
     }
 }

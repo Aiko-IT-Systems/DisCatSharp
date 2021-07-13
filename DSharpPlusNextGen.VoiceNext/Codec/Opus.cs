@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,14 +25,30 @@ using System.Collections.Generic;
 
 namespace DSharpPlusNextGen.VoiceNext.Codec
 {
+    /// <summary>
+    /// The opus.
+    /// </summary>
     internal sealed class Opus : IDisposable
     {
+        /// <summary>
+        /// Gets the audio format.
+        /// </summary>
         public AudioFormat AudioFormat { get; }
 
+        /// <summary>
+        /// Gets the encoder.
+        /// </summary>
         private IntPtr Encoder { get; }
 
+        /// <summary>
+        /// Gets the managed decoders.
+        /// </summary>
         private List<OpusDecoder> ManagedDecoders { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Opus"/> class.
+        /// </summary>
+        /// <param name="audioFormat">The audio format.</param>
         public Opus(AudioFormat audioFormat)
         {
             if (!audioFormat.IsValid())
@@ -62,6 +77,11 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             this.ManagedDecoders = new List<OpusDecoder>();
         }
 
+        /// <summary>
+        /// Encodes the Opus.
+        /// </summary>
+        /// <param name="pcm">The pcm.</param>
+        /// <param name="target">The target.</param>
         public void Encode(ReadOnlySpan<byte> pcm, ref Span<byte> target)
         {
             if (pcm.Length != target.Length)
@@ -77,6 +97,14 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             Interop.OpusEncode(this.Encoder, pcm, frameSize, ref target);
         }
 
+        /// <summary>
+        /// Decodes the Opus.
+        /// </summary>
+        /// <param name="decoder">The decoder.</param>
+        /// <param name="opus">The opus.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="useFec">If true, use fec.</param>
+        /// <param name="outputFormat">The output format.</param>
         public void Decode(OpusDecoder decoder, ReadOnlySpan<byte> opus, ref Span<byte> target, bool useFec, out AudioFormat outputFormat)
         {
             //if (target.Length != this.AudioFormat.CalculateMaximumFrameSize())
@@ -94,14 +122,29 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             target = target.Slice(0, sampleSize);
         }
 
+        /// <summary>
+        /// Processes the packet loss.
+        /// </summary>
+        /// <param name="decoder">The decoder.</param>
+        /// <param name="frameSize">The frame size.</param>
+        /// <param name="target">The target.</param>
         public void ProcessPacketLoss(OpusDecoder decoder, int frameSize, ref Span<byte> target) => Interop.OpusDecode(decoder.Decoder, frameSize, target);
 
+        /// <summary>
+        /// Gets the last packet sample count.
+        /// </summary>
+        /// <param name="decoder">The decoder.</param>
+        /// <returns>An int.</returns>
         public int GetLastPacketSampleCount(OpusDecoder decoder)
         {
             Interop.OpusGetLastPacketDuration(decoder.Decoder, out var sampleCount);
             return sampleCount;
         }
 
+        /// <summary>
+        /// Creates the decoder.
+        /// </summary>
+        /// <returns>An OpusDecoder.</returns>
         public OpusDecoder CreateDecoder()
         {
             lock (this.ManagedDecoders)
@@ -112,6 +155,10 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             }
         }
 
+        /// <summary>
+        /// Destroys the decoder.
+        /// </summary>
+        /// <param name="decoder">The decoder.</param>
         public void DestroyDecoder(OpusDecoder decoder)
         {
             lock (this.ManagedDecoders)
@@ -124,6 +171,9 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
             }
         }
 
+        /// <summary>
+        /// Disposes the Opus.
+        /// </summary>
         public void Dispose()
         {
             Interop.OpusDestroyEncoder(this.Encoder);
@@ -146,11 +196,21 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
         /// </summary>
         public AudioFormat AudioFormat { get; private set; }
 
+        /// <summary>
+        /// Gets the opus.
+        /// </summary>
         internal Opus Opus { get; }
+        /// <summary>
+        /// Gets the decoder.
+        /// </summary>
         internal IntPtr Decoder { get; private set; }
 
         private volatile bool _isDisposed = false;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpusDecoder"/> class.
+        /// </summary>
+        /// <param name="managedOpus">The managed opus.</param>
         internal OpusDecoder(Opus managedOpus)
         {
             this.Opus = managedOpus;
@@ -186,6 +246,9 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
         }
     }
 
+    /// <summary>
+    /// The opus error.
+    /// </summary>
     [Flags]
     internal enum OpusError
     {
@@ -199,6 +262,9 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
         AllocationFailure = -7
     }
 
+    /// <summary>
+    /// The opus control.
+    /// </summary>
     internal enum OpusControl : int
     {
         SetBitrate = 4002,
@@ -210,6 +276,9 @@ namespace DSharpPlusNextGen.VoiceNext.Codec
         GetLastPacketDuration = 4039
     }
 
+    /// <summary>
+    /// The opus signal.
+    /// </summary>
     internal enum OpusSignal : int
     {
         Auto = -1000,

@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,12 +26,21 @@ using DSharpPlusNextGen.Entities;
 
 namespace DSharpPlusNextGen.Net.Models
 {
+    /// <summary>
+    /// Represents a guild edit model.
+    /// </summary>
     public class GuildEditModel : BaseEditModel
     {
         /// <summary>
         /// The new guild name.
         /// </summary>
         public Optional<string> Name { internal get; set; }
+
+        /// <summary>
+        /// The new guild voice region.
+        /// </summary>
+        [Obsolete("Channels use their own voice regions. Guild region is deprecated. Please use the newer one on the voice channels.", false)]
+        public Optional<DiscordVoiceRegion> Region { internal get; set; }
 
         /// <summary>
         /// The new guild icon.
@@ -109,6 +117,9 @@ namespace DSharpPlusNextGen.Net.Models
         /// </summary>
         public Optional<string> PreferredLocale { internal get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GuildEditModel"/> class.
+        /// </summary>
         internal GuildEditModel()
         {
 

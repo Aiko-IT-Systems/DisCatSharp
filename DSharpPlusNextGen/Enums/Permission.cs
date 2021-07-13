@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +24,14 @@ using System;
 
 namespace DSharpPlusNextGen
 {
+    /// <summary>
+    /// Represents permission methods.
+    /// </summary>
     public static class PermissionMethods
     {
+        /// <summary>
+        /// Gets the full permissions enum (long).
+        /// </summary>
         internal static Permissions FULL_PERMS { get; } = (Permissions)137438953471L;
 
         /// <summary>

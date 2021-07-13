@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +44,9 @@ namespace DSharpPlusNextGen.CommandsNext.Builders
         /// Gets the aliases set for this command.
         /// </summary>
         public IReadOnlyList<string> Aliases { get; }
+        /// <summary>
+        /// Gets the alias list.
+        /// </summary>
         private List<string> AliasList { get; }
 
         /// <summary>
@@ -61,13 +63,22 @@ namespace DSharpPlusNextGen.CommandsNext.Builders
         /// Gets the execution checks defined for this command.
         /// </summary>
         public IReadOnlyList<CheckBaseAttribute> ExecutionChecks { get; }
+        /// <summary>
+        /// Gets the execution check list.
+        /// </summary>
         private List<CheckBaseAttribute> ExecutionCheckList { get; }
 
         /// <summary>
         /// Gets the collection of this command's overloads.
         /// </summary>
         public IReadOnlyList<CommandOverloadBuilder> Overloads { get; }
+        /// <summary>
+        /// Gets the overload list.
+        /// </summary>
         private List<CommandOverloadBuilder> OverloadList { get; }
+        /// <summary>
+        /// Gets the overload argument sets.
+        /// </summary>
         private HashSet<string> OverloadArgumentSets { get; }
 
         /// <summary>
@@ -79,6 +90,9 @@ namespace DSharpPlusNextGen.CommandsNext.Builders
         /// Gets custom attributes defined on this command.
         /// </summary>
         public IReadOnlyList<Attribute> CustomAttributes { get; }
+        /// <summary>
+        /// Gets the custom attribute list.
+        /// </summary>
         private List<Attribute> CustomAttributeList { get; }
 
         /// <summary>
@@ -261,6 +275,10 @@ namespace DSharpPlusNextGen.CommandsNext.Builders
             return this;
         }
 
+        /// <summary>
+        /// Builds the command.
+        /// </summary>
+        /// <param name="parent">The parent command group.</param>
         internal virtual Command Build(CommandGroup parent)
         {
             var cmd = new Command

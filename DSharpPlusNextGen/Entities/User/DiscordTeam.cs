@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +23,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using DSharpPlusNextGen.Enums.Discord;
+using DSharpPlusNextGen.Net;
 using DSharpPlusNextGen.Net.Abstractions;
 
 namespace DSharpPlusNextGen.Entities
@@ -47,7 +48,7 @@ namespace DSharpPlusNextGen.Entities
         /// Gets the team's icon.
         /// </summary>
         public string Icon
-            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"https://cdn.discordapp.com/team-icons/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TEAM_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets the owner of the team.
@@ -59,6 +60,10 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public IReadOnlyList<DiscordTeamMember> Members { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordTeam"/> class.
+        /// </summary>
+        /// <param name="tt">The tt.</param>
         internal DiscordTeam(TransportTeam tt)
         {
             this.Id = tt.Id;
@@ -128,6 +133,10 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public DiscordUser User { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordTeamMember"/> class.
+        /// </summary>
+        /// <param name="ttm">The ttm.</param>
         internal DiscordTeamMember(TransportTeamMember ttm)
         {
             this.MembershipStatus = (DiscordTeamMembershipStatus)ttm.MembershipState;

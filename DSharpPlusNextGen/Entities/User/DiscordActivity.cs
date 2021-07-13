@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -61,8 +60,17 @@ namespace DSharpPlusNextGen.Entities
         Invisible = 5
     }
 
+    /// <summary>
+    /// Represents a user status converter.
+    /// </summary>
     internal sealed class UserStatusConverter : JsonConverter
     {
+        /// <summary>
+        /// Writes the json.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             if (value is UserStatus status)
@@ -93,6 +101,13 @@ namespace DSharpPlusNextGen.Entities
             }
         }
 
+        /// <summary>
+        /// Reads the json.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="objectType">The object type.</param>
+        /// <param name="existingValue">The existing value.</param>
+        /// <param name="serializer">The serializer.</param>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             // Active sessions are indicated with an "online", "idle", or "dnd" string per platform. If a user is
@@ -107,6 +122,11 @@ namespace DSharpPlusNextGen.Entities
             };
         }
 
+        /// <summary>
+        /// Whether this user5 status can be converted.
+        /// </summary>
+        /// <param name="objectType">The object type.</param>
+        /// <returns>A bool.</returns>
         public override bool CanConvert(Type objectType) => objectType == typeof(UserStatus);
     }
 
@@ -192,11 +212,19 @@ namespace DSharpPlusNextGen.Entities
             this.ActivityType = type;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordActivity"/> class.
+        /// </summary>
+        /// <param name="rawActivity">The raw activity.</param>
         internal DiscordActivity(TransportActivity rawActivity)
         {
             this.UpdateWith(rawActivity);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordActivity"/> class.
+        /// </summary>
+        /// <param name="other">The other.</param>
         internal DiscordActivity(DiscordActivity other)
         {
             this.Name = other.Name;
@@ -209,6 +237,10 @@ namespace DSharpPlusNextGen.Entities
             this.CustomStatus = new DiscordCustomStatus(other.CustomStatus);
         }
 
+        /// <summary>
+        /// Updates a activity with an transport activity.
+        /// </summary>
+        /// <param name="rawActivity">The raw activity.</param>
         internal void UpdateWith(TransportActivity rawActivity)
         {
             this.Name = rawActivity?.Name;
@@ -249,14 +281,26 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public DiscordEmoji Emoji { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordCustomStatus"/> class.
+        /// </summary>
         internal DiscordCustomStatus() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordCustomStatus"/> class.
+        /// </summary>
+        /// <param name="other">The other.</param>
         internal DiscordCustomStatus(DiscordCustomStatus other)
         {
             this.Name = other.Name;
             this.Emoji = other.Emoji;
         }
 
+        /// <summary>
+        /// Updates a discord status.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        /// <param name="emoji">The emoji.</param>
         internal void UpdateWith(string state, DiscordEmoji emoji)
         {
             this.Name = state;
@@ -354,13 +398,24 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         public string SpectateSecret { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
+        /// </summary>
         internal DiscordRichPresence() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
+        /// </summary>
+        /// <param name="rawGame">The raw game.</param>
         internal DiscordRichPresence(TransportActivity rawGame)
         {
             this.UpdateWith(rawGame);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
+        /// </summary>
+        /// <param name="other">The other.</param>
         internal DiscordRichPresence(DiscordRichPresence other)
         {
             this.Details = other.Details;
@@ -382,6 +437,10 @@ namespace DSharpPlusNextGen.Entities
             this.SpectateSecret = other.SpectateSecret;
         }
 
+        /// <summary>
+        /// Updates a game activity with an transport activity.
+        /// </summary>
+        /// <param name="rawGame">The raw game.</param>
         internal void UpdateWith(TransportActivity rawGame)
         {
             this.Details = rawGame?.Details;
@@ -390,8 +449,6 @@ namespace DSharpPlusNextGen.Entities
             this.Instance = rawGame?.Instance;
             this.LargeImageText = rawGame?.Assets?.LargeImageText;
             this.SmallImageText = rawGame?.Assets?.SmallImageText;
-            //this.LargeImage = rawGame?.Assets?.LargeImage != null ? new DiscordApplicationAsset { Application = this.Application, Id = rawGame.Assets.LargeImage.Value, Type = ApplicationAssetType.LargeImage } : null;
-            //this.SmallImage = rawGame?.Assets?.SmallImage != null ? new DiscordApplicationAsset { Application = this.Application, Id = rawGame.Assets.SmallImage.Value, Type = ApplicationAssetType.SmallImage } : null;
             this.CurrentPartySize = rawGame?.Party?.Size?.Current;
             this.MaximumPartySize = rawGame?.Party?.Size?.Maximum;
             if (rawGame?.Party != null && ulong.TryParse(rawGame.Party.Id, NumberStyles.Number, CultureInfo.InvariantCulture, out var partyId))

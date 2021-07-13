@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +30,7 @@ using DSharpPlusNextGen.EventArgs;
 using DSharpPlusNextGen.Interactivity.Enums;
 using DSharpPlusNextGen.Interactivity.EventHandling;
 using DSharpPlusNextGen.Common.Utilities;
+using DSharpPlusNextGen.Enums;
 
 namespace DSharpPlusNextGen.Interactivity
 {
@@ -40,7 +40,10 @@ namespace DSharpPlusNextGen.Interactivity
     public class InteractivityExtension : BaseExtension
     {
 
-        #pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable IDE1006 // Naming Styles
+        /// <summary>
+        /// Gets the config.
+        /// </summary>
         internal InteractivityConfiguration Config { get; }
 
         private EventWaiter<MessageCreateEventArgs> MessageCreatedWaiter;
@@ -56,13 +59,21 @@ namespace DSharpPlusNextGen.Interactivity
         private Poller Poller;
 
         private Paginator Paginator;
-        #pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore IDE1006 // Naming Styles
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InteractivityExtension"/> class.
+        /// </summary>
+        /// <param name="cfg">The cfg.</param>
         internal InteractivityExtension(InteractivityConfiguration cfg)
         {
             this.Config = new InteractivityConfiguration(cfg);
         }
 
+        /// <summary>
+        /// Setups the.
+        /// </summary>
+        /// <param name="client">The client.</param>
         protected internal override void Setup(DiscordClient client)
         {
             this.Client = client;
@@ -474,6 +485,12 @@ namespace DSharpPlusNextGen.Interactivity
             return new InteractivityResult<T>(res == null, res);
         }
 
+        /// <summary>
+        /// Collects the event args async.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="timeoutoverride">The timeoutoverride.</param>
+        /// <returns>A Task.</returns>
         public async Task<ReadOnlyCollection<T>> CollectEventArgsAsync<T>(Func<T, bool> predicate, TimeSpan? timeoutoverride = null) where T : AsyncEventArgs
         {
             var timeout = timeoutoverride ?? this.Config.Timeout;
@@ -625,6 +642,12 @@ namespace DSharpPlusNextGen.Interactivity
             return result;
         }
 
+        /// <summary>
+        /// Splits the string.
+        /// </summary>
+        /// <param name="str">The str.</param>
+        /// <param name="chunkSize">The chunk size.</param>
+        /// <returns>A list of string.</returns>
         private List<string> SplitString(string str, int chunkSize)
         {
             var res = new List<string>();
@@ -641,6 +664,11 @@ namespace DSharpPlusNextGen.Interactivity
             return res;
         }
 
+        /// <summary>
+        /// Handles the invalid interaction.
+        /// </summary>
+        /// <param name="interaction">The interaction.</param>
+        /// <returns>A Task.</returns>
         private async Task HandleInvalidInteraction(DiscordInteraction interaction)
         {
             var at = this.Config.ResponseBehavior switch

@@ -76,6 +76,7 @@
     "postProcessors": ["ExtractSearchIndex", "CustomMemberIndexer"],
     "noLangKeyword": false,
     "keepFileLink": false,
-    "cleanupCacheHistory": false
+    "cleanupCacheHistory": false,
+    "disableGitFeatures": false
   }
 }

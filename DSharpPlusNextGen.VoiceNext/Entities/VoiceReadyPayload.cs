@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,20 +25,38 @@ using Newtonsoft.Json;
 
 namespace DSharpPlusNextGen.VoiceNext.Entities
 {
+    /// <summary>
+    /// The voice ready payload.
+    /// </summary>
     internal sealed class VoiceReadyPayload
     {
+        /// <summary>
+        /// Gets or sets the s s r c.
+        /// </summary>
         [JsonProperty("ssrc")]
         public uint SSRC { get; set; }
 
+        /// <summary>
+        /// Gets or sets the address.
+        /// </summary>
         [JsonProperty("ip")]
         public string Address { get; set; }
 
+        /// <summary>
+        /// Gets or sets the port.
+        /// </summary>
         [JsonProperty("port")]
         public ushort Port { get; set; }
 
+        /// <summary>
+        /// Gets or sets the modes.
+        /// </summary>
         [JsonProperty("modes")]
         public IReadOnlyList<string> Modes { get; set; }
 
+        /// <summary>
+        /// Gets or sets the heartbeat interval.
+        /// </summary>
         [JsonProperty("heartbeat_interval")]
         public int HeartbeatInterval { get; set; }
     }

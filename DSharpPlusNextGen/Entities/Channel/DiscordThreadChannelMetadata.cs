@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlus-NextGen project.
+// This file is part of the DSharpPlusNextGen project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -56,6 +56,9 @@ namespace DSharpPlusNextGen.Entities
             => !string.IsNullOrWhiteSpace(this.ArchiveTimestampRaw) && DateTimeOffset.TryParse(this.ArchiveTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
                 dto : null;
 
+        /// <summary>
+        /// Gets the timestamp when it was archived as raw string.
+        /// </summary>
         [JsonProperty("archive_timestamp", NullValueHandling = NullValueHandling.Ignore)]
         internal string ArchiveTimestampRaw { get; set; }
 
@@ -65,6 +68,9 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("locked", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Locked { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordThreadChannelMetadata"/> class.
+        /// </summary>
         internal DiscordThreadChannelMetadata() { }
 
     }

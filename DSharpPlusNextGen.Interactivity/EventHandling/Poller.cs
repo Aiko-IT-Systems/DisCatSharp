@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -51,6 +50,11 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             this._client.MessageReactionsCleared += this.HandleReactionClear;
         }
 
+        /// <summary>
+        /// Dos the poll async.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>A Task.</returns>
         public async Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(PollRequest request)
         {
             ReadOnlyCollection<PollEmoji> result = null;
@@ -72,6 +76,12 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             return result;
         }
 
+        /// <summary>
+        /// Handles the reaction add.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="eventargs">The eventargs.</param>
+        /// <returns>A Task.</returns>
         private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventargs)
         {
             if (this._requests.Count == 0)
@@ -101,6 +111,12 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Handles the reaction remove.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="eventargs">The eventargs.</param>
+        /// <returns>A Task.</returns>
         private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventargs)
         {
             foreach (var req in this._requests)
@@ -115,6 +131,12 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Handles the reaction clear.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="eventargs">The eventargs.</param>
+        /// <returns>A Task.</returns>
         private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventargs)
         {
             foreach (var req in this._requests)

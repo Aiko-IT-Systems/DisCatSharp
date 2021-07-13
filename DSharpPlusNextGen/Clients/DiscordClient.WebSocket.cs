@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,12 +35,16 @@ using Newtonsoft.Json.Linq;
 
 namespace DSharpPlusNextGen
 {
+    /// <summary>
+    /// Represents a discord websocket client.
+    /// </summary>
     public sealed partial class DiscordClient
     {
         #region Private Fields
 
         private int _heartbeatInterval;
         private DateTimeOffset _lastHeartbeat;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>")]
         private Task _heartbeatTask;
 
         internal static DateTimeOffset _discordEpoch = new(2015, 1, 1, 0, 0, 0, TimeSpan.Zero);
@@ -59,13 +62,27 @@ namespace DSharpPlusNextGen
 
         #region Connection Semaphore
 
+        /// <summary>
+        /// Gets the socket locks.
+        /// </summary>
         private static ConcurrentDictionary<ulong, SocketLock> SocketLocks { get; } = new ConcurrentDictionary<ulong, SocketLock>();
+
+        /// <summary>
+        /// Gets the session lock.
+        /// </summary>
         private ManualResetEventSlim SessionLock { get; } = new ManualResetEventSlim(true);
 
         #endregion
 
         #region Internal Connection Methods
 
+        /// <summary>
+        /// Internals the reconnect async.
+        /// </summary>
+        /// <param name="startNewSession">If true, start new session.</param>
+        /// <param name="code">The code.</param>
+        /// <param name="message">The message.</param>
+        /// <returns>A Task.</returns>
         private Task InternalReconnectAsync(bool startNewSession = false, int code = 1000, string message = "")
         {
             if (startNewSession)
@@ -75,6 +92,10 @@ namespace DSharpPlusNextGen
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Internals the connect async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         internal async Task InternalConnectAsync()
         {
             SocketLock socketLock = null;
@@ -217,6 +238,11 @@ namespace DSharpPlusNextGen
 
         #region WebSocket (Events)
 
+        /// <summary>
+        /// Handles the socket message async.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>A Task.</returns>
         internal async Task HandleSocketMessageAsync(string data)
         {
             var payload = JsonConvert.DeserializeObject<GatewayPayload>(data);
@@ -252,18 +278,32 @@ namespace DSharpPlusNextGen
             }
         }
 
+        /// <summary>
+        /// Ons the heartbeat async.
+        /// </summary>
+        /// <param name="seq">The seq.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnHeartbeatAsync(long seq)
         {
             this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received HEARTBEAT (OP1)");
             await this.SendHeartbeatAsync(seq).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Ons the reconnect async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         internal async Task OnReconnectAsync()
         {
             this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received RECONNECT (OP7)");
             await this.InternalReconnectAsync(code: 4000, message: "OP7 acknowledged").ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Ons the invalidate session async.
+        /// </summary>
+        /// <param name="data">If true, data.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnInvalidateSessionAsync(bool data)
         {
             // begin a session if one is not open already
@@ -289,6 +329,11 @@ namespace DSharpPlusNextGen
             }
         }
 
+        /// <summary>
+        /// Ons the hello async.
+        /// </summary>
+        /// <param name="hello">The hello.</param>
+        /// <returns>A Task.</returns>
         internal async Task OnHelloAsync(GatewayHello hello)
         {
             this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received HELLO (OP10)");
@@ -314,6 +359,10 @@ namespace DSharpPlusNextGen
                 await this.SendResumeAsync().ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Ons the heartbeat ack async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         internal async Task OnHeartbeatAckAsync()
         {
             Interlocked.Decrement(ref this._skippedHeartbeats);
@@ -333,6 +382,10 @@ namespace DSharpPlusNextGen
             await this._heartbeated.InvokeAsync(this, args).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Heartbeats the loop async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         internal async Task HeartbeatLoopAsync()
         {
             this.Logger.LogDebug(LoggerEvents.Heartbeat, "Heartbeat task started");
@@ -353,6 +406,13 @@ namespace DSharpPlusNextGen
 
         #region Internal Gateway Methods
 
+        /// <summary>
+        /// Internals the update status async.
+        /// </summary>
+        /// <param name="activity">The activity.</param>
+        /// <param name="userStatus">The user status.</param>
+        /// <param name="idleSince">The idle since.</param>
+        /// <returns>A Task.</returns>
         internal async Task InternalUpdateStatusAsync(DiscordActivity activity, UserStatus? userStatus, DateTimeOffset? idleSince)
         {
             if (activity != null && activity.Name != null && activity.Name.Length > 128)
@@ -399,6 +459,10 @@ namespace DSharpPlusNextGen
             }
         }
 
+        /// <summary>
+        /// Sends the heartbeat async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         internal Task SendHeartbeatAsync()
         {
             var _last_heartbeat = DateTimeOffset.Now;
@@ -407,6 +471,11 @@ namespace DSharpPlusNextGen
             return this.SendHeartbeatAsync(_sequence);
         }
 
+        /// <summary>
+        /// Sends the heartbeat async.
+        /// </summary>
+        /// <param name="seq">The seq.</param>
+        /// <returns>A Task.</returns>
         internal async Task SendHeartbeatAsync(long seq)
         {
             var more_than_5 = Volatile.Read(ref this._skippedHeartbeats) > 5;
@@ -437,6 +506,11 @@ namespace DSharpPlusNextGen
             Interlocked.Increment(ref this._skippedHeartbeats);
         }
 
+        /// <summary>
+        /// Sends the identify async.
+        /// </summary>
+        /// <param name="status">The status.</param>
+        /// <returns>A Task.</returns>
         internal async Task SendIdentifyAsync(StatusUpdate status)
         {
             var identify = new GatewayIdentify
@@ -463,6 +537,10 @@ namespace DSharpPlusNextGen
             this.Logger.LogDebug(LoggerEvents.Intents, "Registered gateway intents ({0})", this.Configuration.Intents);
         }
 
+        /// <summary>
+        /// Sends the resume async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         internal async Task SendResumeAsync()
         {
             var resume = new GatewayResume
@@ -480,6 +558,10 @@ namespace DSharpPlusNextGen
 
             await this.WsSendAsync(resumestr).ConfigureAwait(false);
         }
+        /// <summary>
+        /// Internals the update gateway async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         internal async Task InternalUpdateGatewayAsync()
         {
             var info = await this.GetGatewayInfoAsync().ConfigureAwait(false);
@@ -487,6 +569,11 @@ namespace DSharpPlusNextGen
             this.GatewayUri = new Uri(info.Url);
         }
 
+        /// <summary>
+        /// Ws the send async.
+        /// </summary>
+        /// <param name="payload">The payload.</param>
+        /// <returns>A Task.</returns>
         internal async Task WsSendAsync(string payload)
         {
             this.Logger.LogTrace(LoggerEvents.GatewayWsTx, payload);
@@ -497,6 +584,10 @@ namespace DSharpPlusNextGen
 
         #region Semaphore Methods
 
+        /// <summary>
+        /// Gets the socket lock.
+        /// </summary>
+        /// <returns>A SocketLock.</returns>
         private SocketLock GetSocketLock()
             => SocketLocks.GetOrAdd(this.CurrentApplication.Id, appId => new SocketLock(appId, this.GatewayInfo.SessionBucket.MaxConcurrency));
 

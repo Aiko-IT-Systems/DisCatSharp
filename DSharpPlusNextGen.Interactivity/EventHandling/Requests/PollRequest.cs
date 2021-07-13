@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -62,6 +61,9 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             }
         }
 
+        /// <summary>
+        /// Clears the collected.
+        /// </summary>
         internal void ClearCollected()
         {
             this._collected.Clear();
@@ -71,6 +73,11 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             }
         }
 
+        /// <summary>
+        /// Removes the reaction.
+        /// </summary>
+        /// <param name="emoji">The emoji.</param>
+        /// <param name="member">The member.</param>
         internal void RemoveReaction(DiscordEmoji emoji, DiscordUser member)
         {
             if (this._collected.Any(x => x.Emoji == emoji))
@@ -85,6 +92,11 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             }
         }
 
+        /// <summary>
+        /// Adds the reaction.
+        /// </summary>
+        /// <param name="emoji">The emoji.</param>
+        /// <param name="member">The member.</param>
         internal void AddReaction(DiscordEmoji emoji, DiscordUser member)
         {
             if (this._collected.Any(x => x.Emoji == emoji))
@@ -116,6 +128,10 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
 
     public class PollEmoji
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PollEmoji"/> class.
+        /// </summary>
+        /// <param name="emoji">The emoji.</param>
         internal PollEmoji(DiscordEmoji emoji)
         {
             this.Emoji = emoji;
@@ -124,6 +140,9 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
 
         public DiscordEmoji Emoji;
         public ConcurrentHashSet<DiscordUser> Voted;
+        /// <summary>
+        /// Gets the total.
+        /// </summary>
         public int Total => this.Voted.Count;
     }
 }

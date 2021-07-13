@@ -45,6 +45,9 @@ namespace DSharpPlusNextGen.EventArgs
         /// </summary>
         public DiscordGuild Guild { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GuildStickersUpdateEventArgs"/> class.
+        /// </summary>
         internal GuildStickersUpdateEventArgs() : base() { }
     }
 }

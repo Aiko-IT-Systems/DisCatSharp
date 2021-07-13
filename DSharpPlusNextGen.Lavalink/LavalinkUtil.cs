@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -102,13 +101,21 @@ namespace DSharpPlusNextGen.Lavalink
     /// </summary>
     internal class JavaBinaryReader : BinaryReader
     {
-        private static readonly Encoding Utf8NoBom = new UTF8Encoding();
+        private static readonly Encoding _utf8NoBom = new UTF8Encoding();
 
-        public JavaBinaryReader(Stream ms) : base(ms, Utf8NoBom)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JavaBinaryReader"/> class.
+        /// </summary>
+        /// <param name="ms">The ms.</param>
+        public JavaBinaryReader(Stream ms) : base(ms, _utf8NoBom)
         {
         }
 
         // https://docs.oracle.com/javase/7/docs/api/java/io/DataInput.html#readUTF()
+        /// <summary>
+        /// Reads the java utf8.
+        /// </summary>
+        /// <returns>A string.</returns>
         public string ReadJavaUtf8()
         {
             var length = this.ReadUInt16(); // string size in bytes
@@ -164,28 +171,74 @@ namespace DSharpPlusNextGen.Lavalink
         }
 
         // https://github.com/sedmelluq/lavaplayer/blob/b0c536098c4f92e6d03b00f19221021f8f50b19b/main/src/main/java/com/sedmelluq/discord/lavaplayer/tools/DataFormatTools.java#L114-L125
+        /// <summary>
+        /// Reads the nullable string.
+        /// </summary>
+        /// <returns>A string.</returns>
         public string ReadNullableString() => this.ReadBoolean() ? this.ReadJavaUtf8() : null;
 
         // swap endianness
+        /// <summary>
+        /// Reads the decimal.
+        /// </summary>
+        /// <returns>A decimal.</returns>
         public override decimal ReadDecimal() => throw new MissingMethodException("This method does not have a Java equivalent");
 
         // from https://github.com/Zoltu/Zoltu.EndianAwareBinaryReaderWriter under CC0
+        /// <summary>
+        /// Reads the single.
+        /// </summary>
+        /// <returns>A float.</returns>
         public override float ReadSingle() => this.Read(4, BitConverter.ToSingle);
 
+        /// <summary>
+        /// Reads the double.
+        /// </summary>
+        /// <returns>A double.</returns>
         public override double ReadDouble() => this.Read(8, BitConverter.ToDouble);
 
+        /// <summary>
+        /// Reads the int16.
+        /// </summary>
+        /// <returns>A short.</returns>
         public override short ReadInt16() => this.Read(2, BitConverter.ToInt16);
 
+        /// <summary>
+        /// Reads the int32.
+        /// </summary>
+        /// <returns>An int.</returns>
         public override int ReadInt32() => this.Read(4, BitConverter.ToInt32);
 
+        /// <summary>
+        /// Reads the int64.
+        /// </summary>
+        /// <returns>A long.</returns>
         public override long ReadInt64() => this.Read(8, BitConverter.ToInt64);
 
+        /// <summary>
+        /// Reads the u int16.
+        /// </summary>
+        /// <returns>An ushort.</returns>
         public override ushort ReadUInt16() => this.Read(2, BitConverter.ToUInt16);
 
+        /// <summary>
+        /// Reads the u int32.
+        /// </summary>
+        /// <returns>An uint.</returns>
         public override uint ReadUInt32() => this.Read(4, BitConverter.ToUInt32);
 
+        /// <summary>
+        /// Reads the u int64.
+        /// </summary>
+        /// <returns>An ulong.</returns>
         public override ulong ReadUInt64() => this.Read(8, BitConverter.ToUInt64);
 
+        /// <summary>
+        /// Reads the.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="converter">The converter.</param>
+        /// <returns>A T.</returns>
         private T Read<T>(int size, Func<byte[], int, T> converter) where T : struct
         {
             //Contract.Requires(size >= 0);
@@ -195,6 +248,11 @@ namespace DSharpPlusNextGen.Lavalink
             return converter(bytes, 0);
         }
 
+        /// <summary>
+        /// Gets the next bytes native endian.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <returns>An array of byte.</returns>
         private byte[] GetNextBytesNativeEndian(int count)
         {
             //Contract.Requires(count >= 0);
@@ -207,6 +265,11 @@ namespace DSharpPlusNextGen.Lavalink
             return bytes;
         }
 
+        /// <summary>
+        /// Gets the next bytes.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <returns>An array of byte.</returns>
         private byte[] GetNextBytes(int count)
         {
             //Contract.Requires(count >= 0);

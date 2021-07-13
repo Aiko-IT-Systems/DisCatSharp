@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,14 +24,30 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DSharpPlusNextGen.CommandsNext.Converters
 {
+    /// <summary>
+    /// Represents the help formatter factory.
+    /// </summary>
     internal class HelpFormatterFactory
     {
+        /// <summary>
+        /// Gets or sets the factory.
+        /// </summary>
         private ObjectFactory Factory { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HelpFormatterFactory"/> class.
+        /// </summary>
         public HelpFormatterFactory() { }
 
+        /// <summary>
+        /// Sets the formatter type.
+        /// </summary>
         public void SetFormatterType<T>() where T : BaseHelpFormatter => this.Factory = ActivatorUtilities.CreateFactory(typeof(T), new[] { typeof(CommandContext) });
 
+        /// <summary>
+        /// Creates the help formatter.
+        /// </summary>
+        /// <param name="ctx">The command context.</param>
         public BaseHelpFormatter Create(CommandContext ctx) => this.Factory(ctx.Services, new object[] { ctx }) as BaseHelpFormatter;
     }
 }

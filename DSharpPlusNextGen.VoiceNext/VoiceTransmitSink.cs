@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -69,14 +68,40 @@ namespace DSharpPlusNextGen.VoiceNext
         }
         private double _volume = 1.0;
 
+        /// <summary>
+        /// Gets the connection.
+        /// </summary>
         private VoiceNextConnection Connection { get; }
+        /// <summary>
+        /// Gets the pcm buffer duration.
+        /// </summary>
         private int PcmBufferDuration { get; }
+        /// <summary>
+        /// Gets the pcm buffer.
+        /// </summary>
         private byte[] PcmBuffer { get; }
+        /// <summary>
+        /// Gets the pcm memory.
+        /// </summary>
         private Memory<byte> PcmMemory { get; }
+        /// <summary>
+        /// Gets or sets the pcm buffer length.
+        /// </summary>
         private int PcmBufferLength { get; set; }
+        /// <summary>
+        /// Gets the write semaphore.
+        /// </summary>
         private SemaphoreSlim WriteSemaphore { get; }
+        /// <summary>
+        /// Gets the filters.
+        /// </summary>
         private List<IVoiceFilter> Filters { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VoiceTransmitSink"/> class.
+        /// </summary>
+        /// <param name="vnc">The vnc.</param>
+        /// <param name="pcmBufferDuration">The pcm buffer duration.</param>
         internal VoiceTransmitSink(VoiceNextConnection vnc, int pcmBufferDuration)
         {
             this.Connection = vnc;
@@ -221,10 +246,14 @@ namespace DSharpPlusNextGen.VoiceNext
             lock (this.Filters)
             {
                 var filters = this.Filters;
-                return !filters.Contains(filter) ? false : filters.Remove(filter);
+                return filters.Contains(filter) && filters.Remove(filter);
             }
         }
 
+        /// <summary>
+        /// Applies the filters sync.
+        /// </summary>
+        /// <param name="pcmSpan">The pcm span.</param>
         private void ApplyFiltersSync(Memory<byte> pcmSpan)
         {
             var pcm16 = MemoryMarshal.Cast<byte, short>(pcmSpan.Span);
@@ -247,6 +276,9 @@ namespace DSharpPlusNextGen.VoiceNext
             }
         }
 
+        /// <summary>
+        /// Disposes .
+        /// </summary>
         public void Dispose() => throw new NotImplementedException();
     }
 }

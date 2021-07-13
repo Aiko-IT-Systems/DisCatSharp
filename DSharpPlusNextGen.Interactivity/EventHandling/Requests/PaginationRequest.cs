@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -74,10 +73,20 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             }
         }
 
+        /// <summary>
+        /// Gets the page count.
+        /// </summary>
         public int PageCount => this._pages.Count;
 
+        /// <summary>
+        /// Gets the pagination deletion.
+        /// </summary>
         public PaginationDeletion PaginationDeletion { get; }
 
+        /// <summary>
+        /// Gets the page async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public async Task<Page> GetPageAsync()
         {
             await Task.Yield();
@@ -85,6 +94,10 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             return this._pages[this.index];
         }
 
+        /// <summary>
+        /// Skips the left async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public async Task SkipLeftAsync()
         {
             await Task.Yield();
@@ -92,6 +105,10 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             this.index = 0;
         }
 
+        /// <summary>
+        /// Skips the right async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public async Task SkipRightAsync()
         {
             await Task.Yield();
@@ -99,6 +116,10 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             this.index = this._pages.Count - 1;
         }
 
+        /// <summary>
+        /// Nexts the page async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public async Task NextPageAsync()
         {
             await Task.Yield();
@@ -123,6 +144,10 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             }
         }
 
+        /// <summary>
+        /// Previous the page async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public async Task PreviousPageAsync()
         {
             await Task.Yield();
@@ -147,6 +172,10 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             }
         }
 
+        /// <summary>
+        /// Gets the emojis async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public async Task<PaginationEmojis> GetEmojisAsync()
         {
             await Task.Yield();
@@ -154,6 +183,10 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             return this._emojis;
         }
 
+        /// <summary>
+        /// Gets the message async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public async Task<DiscordMessage> GetMessageAsync()
         {
             await Task.Yield();
@@ -161,6 +194,10 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             return this._message;
         }
 
+        /// <summary>
+        /// Gets the user async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public async Task<DiscordUser> GetUserAsync()
         {
             await Task.Yield();
@@ -168,6 +205,10 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             return this._user;
         }
 
+        /// <summary>
+        /// Dos the cleanup async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public async Task DoCleanupAsync()
         {
             switch (this.PaginationDeletion)
@@ -185,6 +226,10 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             }
         }
 
+        /// <summary>
+        /// Gets the task completion source async.
+        /// </summary>
+        /// <returns>A Task.</returns>
         public async Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync()
         {
             await Task.Yield();
@@ -218,6 +263,9 @@ namespace DSharpPlusNextGen.Interactivity
         public DiscordEmoji Right;
         public DiscordEmoji Stop;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PaginationEmojis"/> class.
+        /// </summary>
         public PaginationEmojis()
         {
             this.Left = DiscordEmoji.FromUnicode("◀");
@@ -230,9 +278,20 @@ namespace DSharpPlusNextGen.Interactivity
 
     public class Page
     {
+        /// <summary>
+        /// Gets or sets the content.
+        /// </summary>
         public string Content { get; set; }
+        /// <summary>
+        /// Gets or sets the embed.
+        /// </summary>
         public DiscordEmbed Embed { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Page"/> class.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        /// <param name="embed">The embed.</param>
         public Page(string content = "", DiscordEmbedBuilder embed = null)
         {
             this.Content = content;

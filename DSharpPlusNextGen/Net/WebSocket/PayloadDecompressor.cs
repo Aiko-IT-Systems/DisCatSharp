@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,16 +27,40 @@ using System.IO.Compression;
 
 namespace DSharpPlusNextGen.Net.WebSocket
 {
+    /// <summary>
+    /// Represents a payload decompressor.
+    /// </summary>
     internal sealed class PayloadDecompressor : IDisposable
     {
+        /// <summary>
+        /// The zlib flush.
+        /// </summary>
         private const uint ZlibFlush = 0x0000FFFF;
+
+        /// <summary>
+        /// The zlib prefix.
+        /// </summary>
         private const byte ZlibPrefix = 0x78;
 
+        /// <summary>
+        /// Gets the compression level.
+        /// </summary>
         public GatewayCompressionLevel CompressionLevel { get; }
 
+        /// <summary>
+        /// Gets the compressed stream.
+        /// </summary>
         private MemoryStream CompressedStream { get; }
+
+        /// <summary>
+        /// Gets the decompressor stream.
+        /// </summary>
         private DeflateStream DecompressorStream { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PayloadDecompressor"/> class.
+        /// </summary>
+        /// <param name="compressionLevel">The compression level.</param>
         public PayloadDecompressor(GatewayCompressionLevel compressionLevel)
         {
             if (compressionLevel == GatewayCompressionLevel.None)
@@ -49,6 +72,11 @@ namespace DSharpPlusNextGen.Net.WebSocket
                 this.DecompressorStream = new DeflateStream(this.CompressedStream, CompressionMode.Decompress);
         }
 
+        /// <summary>
+        /// Tries the decompress.
+        /// </summary>
+        /// <param name="compressed">The compressed bytes.</param>
+        /// <param name="decompressed">The decompressed memory stream.</param>
         public bool TryDecompress(ArraySegment<byte> compressed, MemoryStream decompressed)
         {
             var zlib = this.CompressionLevel == GatewayCompressionLevel.Stream
@@ -89,6 +117,9 @@ namespace DSharpPlusNextGen.Net.WebSocket
             }
         }
 
+        /// <summary>
+        /// Disposes the decompressor.
+        /// </summary>
         public void Dispose()
         {
             this.DecompressorStream?.Dispose();

@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +24,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using DSharpPlusNextGen.Enums.Discord;
 using DSharpPlusNextGen.Exceptions;
+using DSharpPlusNextGen.Net;
 using DSharpPlusNextGen.Net.Abstractions;
 using Newtonsoft.Json;
 
@@ -36,7 +37,14 @@ namespace DSharpPlusNextGen.Entities
     /// </summary>
     public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordUser"/> class.
+        /// </summary>
         internal DiscordUser() { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordUser"/> class.
+        /// </summary>
+        /// <param name="transport">The transport.</param>
         internal DiscordUser(TransportUser transport)
         {
             this.Id = transport.Id;
@@ -65,9 +73,34 @@ namespace DSharpPlusNextGen.Entities
         [JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore)]
         public virtual string Discriminator { get; internal set; }
 
+        /// <summary>
+        /// Gets the discriminator integer.
+        /// </summary>
         [JsonIgnore]
         internal int DiscriminatorInt
             => int.Parse(this.Discriminator, NumberStyles.Integer, CultureInfo.InvariantCulture);
+
+        /// <summary>
+        /// Gets the user's banner color, if set.
+        /// </summary>
+        public DiscordColor? BannerColor
+            => string.IsNullOrEmpty(this._bannerColor) ? null : new DiscordColor(this._bannerColor);
+
+        [JsonProperty("banner_color")]
+        internal string _bannerColor;
+
+        /// <summary>
+        /// Gets the user's profile banner hash.
+        /// </summary>
+        [JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual string BannerHash { get; internal set; }
+
+        /// <summary>
+        /// Gets the user's banner url
+        /// </summary>
+        [JsonIgnore]
+        public string BannerUrl
+            => string.IsNullOrWhiteSpace(this.BannerHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
 
         /// <summary>
         /// Gets the user's avatar hash.
@@ -80,14 +113,14 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public string AvatarUrl
-            => !string.IsNullOrWhiteSpace(this.AvatarHash) ? (this.AvatarHash.StartsWith("a_") ? $"https://cdn.discordapp.com/avatars/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.gif?size=1024" : $"https://cdn.discordapp.com/avatars/{this.Id}/{this.AvatarHash}.png?size=1024") : this.DefaultAvatarUrl;
+            => string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
         /// <summary>
         /// Gets the URL of default avatar for this user.
         /// </summary>
         [JsonIgnore]
         public string DefaultAvatarUrl
-            => $"https://cdn.discordapp.com/embed/avatars/{(this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture)}.png?size=1024";
+            => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{(this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture)}.png?size=1024";
 
         /// <summary>
         /// Gets whether the user is a bot.
@@ -291,12 +324,12 @@ namespace DSharpPlusNextGen.Entities
             if (!string.IsNullOrWhiteSpace(this.AvatarHash))
             {
                 var id = this.Id.ToString(CultureInfo.InvariantCulture);
-                return $"https://cdn.discordapp.com/avatars/{id}/{this.AvatarHash}.{sfmt}?size={ssize}";
+                return $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{id}/{this.AvatarHash}.{sfmt}?size={ssize}";
             }
             else
             {
                 var type = (this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture);
-                return $"https://cdn.discordapp.com/embed/avatars/{type}.{sfmt}?size={ssize}";
+                return $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{type}.{sfmt}?size={ssize}";
             }
         }
 
@@ -350,10 +383,22 @@ namespace DSharpPlusNextGen.Entities
             => !(e1 == e2);
     }
 
+    /// <summary>
+    /// Represents a user comparer.
+    /// </summary>
     internal class DiscordUserComparer : IEqualityComparer<DiscordUser>
     {
+        /// <summary>
+        /// Whether the users are equal.
+        /// </summary>
+        /// <param name="x">The first user</param>
+        /// <param name="y">The second user.</param>
         public bool Equals(DiscordUser x, DiscordUser y) => x.Equals(y);
 
+        /// <summary>
+        /// Gets the hash code.
+        /// </summary>
+        /// <param name="obj">The user.</param>
         public int GetHashCode(DiscordUser obj) => obj.Id.GetHashCode();
     }
 }

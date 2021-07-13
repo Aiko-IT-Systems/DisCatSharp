@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +41,12 @@ namespace DSharpPlusNextGen.Net.Serialization
     /// </summary>
     internal class SnowflakeArrayAsDictionaryJsonConverter : JsonConverter
     {
+        /// <summary>
+        /// Writes the json.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="serializer">The serializer.</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             if (value == null)
@@ -55,6 +60,13 @@ namespace DSharpPlusNextGen.Net.Serialization
             }
         }
 
+        /// <summary>
+        /// Reads the json.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="objectType">The object type.</param>
+        /// <param name="existingValue">The existing value.</param>
+        /// <param name="serializer">The serializer.</param>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var constructor = objectType.GetTypeInfo().DeclaredConstructors
@@ -79,6 +91,10 @@ namespace DSharpPlusNextGen.Net.Serialization
             return dict;
         }
 
+        /// <summary>
+        /// Whether the snowflake can be converted.
+        /// </summary>
+        /// <param name="objectType">The object type.</param>
         public override bool CanConvert(Type objectType)
         {
             var genericTypedef = objectType.GetGenericTypeDefinition();

@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,16 +31,46 @@ namespace DSharpPlusNextGen
     /// </summary>
     public sealed class ImageTool : IDisposable
     {
+        /// <summary>
+        /// The png magic .
+        /// </summary>
         private const ulong PNG_MAGIC = 0x0A1A_0A0D_474E_5089;
+        /// <summary>
+        /// The jpeg magic 1.
+        /// </summary>
         private const ushort JPEG_MAGIC_1 = 0xD8FF;
+        /// <summary>
+        /// The jpeg magic 2.
+        /// </summary>
         private const ushort JPEG_MAGIC_2 = 0xD9FF;
+        /// <summary>
+        /// The gif magic 1
+        /// </summary>
         private const ulong GIF_MAGIC_1 = 0x0000_6139_3846_4947;
+        /// <summary>
+        /// The gif magic 2.
+        /// </summary>
         private const ulong GIF_MAGIC_2 = 0x0000_6137_3846_4947;
+        /// <summary>
+        /// The webp magic 1.
+        /// </summary>
         private const uint WEBP_MAGIC_1 = 0x4646_4952;
+        /// <summary>
+        /// The webp magic 2.
+        /// </summary>
         private const uint WEBP_MAGIC_2 = 0x5042_4557;
 
+        /// <summary>
+        /// The gif mask.
+        /// </summary>
         private const ulong GIF_MASK = 0x0000_FFFF_FFFF_FFFF;
+        /// <summary>
+        /// The mask 32.
+        /// </summary>
         private const ulong MASK32 = 0x0000_0000_FFFF_FFFF;
+        /// <summary>
+        /// The mask 16.
+        /// </summary>
         private const uint MASK16 = 0x0000_FFFF;
 
         /// <summary>
@@ -148,11 +177,34 @@ namespace DSharpPlusNextGen
     /// </summary>
     public enum ImageFormat : int
     {
+        /// <summary>
+        /// The format is unknown
+        /// </summary>
         Unknown = 0,
+
+        /// <summary>
+        /// The format is a jpeg
+        /// </summary>
         Jpeg = 1,
+
+        /// <summary>
+        /// The format is a png
+        /// </summary>
         Png = 2,
+
+        /// <summary>
+        /// The format is a gif
+        /// </summary>
         Gif = 3,
+
+        /// <summary>
+        /// The format is a webp
+        /// </summary>
         WebP = 4,
+
+        /// <summary>
+        /// The format will be automatically detected
+        /// </summary>
         Auto = 5
     }
 }

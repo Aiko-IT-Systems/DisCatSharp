@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,17 +25,35 @@ using Microsoft.Extensions.Logging;
 
 namespace DSharpPlusNextGen
 {
+    /// <summary>
+    /// Represents a sharded logger factory.
+    /// </summary>
     internal class ShardedLoggerFactory : ILoggerFactory
     {
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
         private ILogger<BaseDiscordClient> Logger { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ShardedLoggerFactory"/> class.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
         public ShardedLoggerFactory(ILogger<BaseDiscordClient> instance)
         {
             this.Logger = instance;
         }
 
+        /// <summary>
+        /// Adds a provider.
+        /// </summary>
+        /// <param name="provider">The provider to be added.</param>
         public void AddProvider(ILoggerProvider provider) => throw new InvalidOperationException("This is a passthrough logger container, it cannot register new providers.");
 
+        /// <summary>
+        /// Creates a logger.
+        /// </summary>
+        /// <param name="categoryName">The category name.</param>
         public ILogger CreateLogger(string categoryName)
         {
             return categoryName != typeof(BaseDiscordClient).FullName
@@ -44,6 +61,9 @@ namespace DSharpPlusNextGen
                 : this.Logger;
         }
 
+        /// <summary>
+        /// Disposes the logger.
+        /// </summary>
         public void Dispose()
         { }
     }

@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,6 +40,9 @@ namespace DSharpPlusNextGen.CommandsNext
     /// </summary>
     public static class CommandsNextUtilities
     {
+        /// <summary>
+        /// Gets the user regex.
+        /// </summary>
         private static Regex UserRegex { get; } = new Regex(@"<@\!?(\d+?)> ", RegexOptions.ECMAScript);
 
         /// <summary>
@@ -82,6 +84,11 @@ namespace DSharpPlusNextGen.CommandsNext
         }
 
         //internal static string ExtractNextArgument(string str, out string remainder)
+        /// <summary>
+        /// Extracts the next argument.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <param name="startPos">The start position.</param>
         internal static string ExtractNextArgument(this string str, ref int startPos)
         {
             if (string.IsNullOrWhiteSpace(str))
@@ -164,6 +171,11 @@ namespace DSharpPlusNextGen.CommandsNext
             return startPos != startPosition ? str.Substring(startPosition).CleanupString(removeIndices) : null;
         }
 
+        /// <summary>
+        /// Cleanups the string.
+        /// </summary>
+        /// <param name="s">The string.</param>
+        /// <param name="indices">The indices.</param>
         internal static string CleanupString(this string s, IList<int> indices)
         {
             if (!indices.Any())
@@ -188,6 +200,11 @@ namespace DSharpPlusNextGen.CommandsNext
         }
 
 #pragma warning disable IDE1006 // Naming Styles
+        /// <summary>
+        /// Binds the arguments.
+        /// </summary>
+        /// <param name="ctx">The command context.</param>
+        /// <param name="ignoreSurplus">If true, ignore further text in string.</param>
         internal static async Task<ArgumentBindingResult> BindArguments(CommandContext ctx, bool ignoreSurplus)
 #pragma warning restore IDE1006 // Naming Styles
         {
@@ -286,9 +303,17 @@ namespace DSharpPlusNextGen.CommandsNext
             return new ArgumentBindingResult(args, rawArgumentList);
         }
 
+        /// <summary>
+        /// Whether this module is a candidate type.
+        /// </summary>
+        /// <param name="type">The type.</param>
         internal static bool IsModuleCandidateType(this Type type)
             => type.GetTypeInfo().IsModuleCandidateType();
 
+        /// <summary>
+        /// Whether this module is a candidate type.
+        /// </summary>
+        /// <param name="ti">The type info.</param>
         internal static bool IsModuleCandidateType(this TypeInfo ti)
         {
             // check if compiler-generated
@@ -318,6 +343,11 @@ namespace DSharpPlusNextGen.CommandsNext
             return ti.DeclaredMethods.Any(xmi => xmi.IsCommandCandidate(out _)) || ti.DeclaredNestedTypes.Any(xti => xti.IsModuleCandidateType());
         }
 
+        /// <summary>
+        /// Whether this is a command candidate.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="parameters">The parameters.</param>
         internal static bool IsCommandCandidate(this MethodInfo method, out ParameterInfo[] parameters)
         {
             parameters = null;
@@ -338,6 +368,11 @@ namespace DSharpPlusNextGen.CommandsNext
             return true;
         }
 
+        /// <summary>
+        /// Creates the instance.
+        /// </summary>
+        /// <param name="t">The type.</param>
+        /// <param name="services">The services provider.</param>
         internal static object CreateInstance(this Type t, IServiceProvider services)
         {
             var ti = t.GetTypeInfo();

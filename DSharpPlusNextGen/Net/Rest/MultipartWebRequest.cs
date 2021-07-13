@@ -1,7 +1,6 @@
-// This file is part of the DSharpPlus project.
+// This file is part of the DSharpPlusNextGen project.
 //
-// Copyright (c) 2015 Mike Santiago
-// Copyright (c) 2016-2021 DSharpPlus Contributors
+// Copyright (c) 2021 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -44,6 +43,18 @@ namespace DSharpPlusNextGen.Net
         /// </summary>
         public IReadOnlyDictionary<string, Stream> Files { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MultipartWebRequest"/> class.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="bucket">The bucket.</param>
+        /// <param name="url">The url.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="route">The route.</param>
+        /// <param name="headers">The headers.</param>
+        /// <param name="values">The values.</param>
+        /// <param name="files">The files.</param>
+        /// <param name="ratelimit_wait_override">The ratelimit_wait_override.</param>
         internal MultipartWebRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, IReadOnlyDictionary<string, string> values = null,
             IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimit_wait_override = null)
             : base(client, bucket, url, method, route, headers, ratelimit_wait_override)
