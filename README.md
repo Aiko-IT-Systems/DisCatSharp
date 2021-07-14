@@ -2,7 +2,7 @@
 Discord Bot Library written in C# for .NET - based off [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus).
 
 #### Status
-[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg?label=NuGet%20Overall%20Version)](https://nuget.org/packages/DSharpPlusNextGen)
+[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg?label=NuGet%20Overall%20Version)](https://nuget.dspng.aitsys.dev)
 [![Build status](https://ci.appveyor.com/api/projects/status/9hv6emqnew8dgjue/branch/main?svg=true)](https://ci.appveyor.com/project/AITSYS/dsharpplusnextgen/branch/main)
 
 #### Commit Activities
