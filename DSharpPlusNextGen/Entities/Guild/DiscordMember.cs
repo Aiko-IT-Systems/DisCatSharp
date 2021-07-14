@@ -207,7 +207,7 @@ namespace DSharpPlusNextGen.Entities
         /// </summary>
         [JsonIgnore]
         public Permissions Permissions => this.GetPermissions();
-
+        
         #region Overridden user properties
         /// <summary>
         /// Gets the user.
