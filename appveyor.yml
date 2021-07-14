@@ -61,11 +61,12 @@
   on_failure:
     - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
     - ps: ./send.ps1 failure $env:WEBHOOK_URL
+# Releases
 -
   branches:
     only:
     - /release/
-  version: $(APPVEYOR_REPO_COMMIT_MESSAGE)
+  version: 9.5.5
   pull_requests:
     do_not_increment_build_number: true
   skip_tags: true

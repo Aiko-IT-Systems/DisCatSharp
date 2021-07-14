@@ -58,3 +58,12 @@ DSharpPlusNextGen.Lavalink|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlu
 DSharpPlusNextGen.SlashCommands|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.SlashCommands.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.SlashCommands)
 DSharpPlusNextGen.VoiceNext|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.VoiceNext.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.VoiceNext)
 DSharpPlusNextGen.VoiceNext.Natives|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.VoiceNext.Natives.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.VoiceNext.Natives)
+
+## Releasing
+To release a new version do the following steps:
+- Create locally a repo named `release/VERSION` (Don't forget to replace VERSION with the target version number)
+- Replace version number with the correct version in https://github.com/Aiko-IT-Systems/DSharpPlusNextGen/blob/main/appveyor.yml#L69 and https://github.com/Aiko-IT-Systems/DSharpPlusNextGen/blob/main/appveyor.yml#L5
+- Replace nuget version number in https://github.com/Aiko-IT-Systems/DSharpPlusNextGen/blob/main/Version.targets
+- Publish branch to GitHub
+- Wait for the CI/CD to complete.
+- Merge the branch into main and delete it afterwards
