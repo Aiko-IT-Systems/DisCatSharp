@@ -535,6 +535,8 @@ namespace DSharpPlusNextGen.SlashCommands
                         args.Add(Enum.Parse(parameter.ParameterType, (string)option.Value));
                     else if (ReferenceEquals(parameter.ParameterType, typeof(long)))
                         args.Add((long)option.Value);
+                    else if (ReferenceEquals(parameter.ParameterType, typeof(double)))
+                        args.Add(double.Parse(option.Value.ToString()));
                     else if (ReferenceEquals(parameter.ParameterType, typeof(bool)))
                         args.Add((bool)option.Value);
                     else if (ReferenceEquals(parameter.ParameterType, typeof(DiscordUser)))

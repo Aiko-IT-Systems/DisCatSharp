@@ -49,8 +49,8 @@ namespace DSharpPlusNextGen.Entities
         /// <param name="value">The value of the parameter choice.</param>
         public DiscordApplicationCommandOptionChoice(string name, object value)
         {
-            if (!(value is string || value is long || value is int))
-                throw new InvalidOperationException($"Only {typeof(string)}, {typeof(long)} or {typeof(int)} types may be passed to a command option choice.");
+            if (!(value is string || value is long || value is int || value is double))
+                throw new InvalidOperationException($"Only {typeof(string)}, {typeof(long)}, {typeof(int)} or {typeof(double)} types may be passed to a command option choice.");
 
             if (name.Length > 100)
                 throw new ArgumentException("Slash command choice name cannot exceed 100 characters.", nameof(name));

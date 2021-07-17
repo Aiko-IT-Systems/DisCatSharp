@@ -193,6 +193,12 @@ namespace DSharpPlusNextGen
         public bool MobileStatus { internal get; set; } = false;
 
         /// <summary>
+        /// <para>Use canary.</para>
+        /// <para>Defaults to false.</para>
+        /// </summary>
+        public bool UseCanary { internal get; set; } = false;
+
+        /// <summary>
         /// Creates a new configuration with default values.
         /// </summary>
         public DiscordConfiguration()
@@ -223,6 +229,7 @@ namespace DSharpPlusNextGen
             this.Intents = other.Intents;
             this.LoggerFactory = other.LoggerFactory;
             this.MobileStatus = other.MobileStatus;
+            this.UseCanary = other.UseCanary;
         }
     }
 }

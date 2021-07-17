@@ -32,6 +32,7 @@ using System.Threading.Tasks;
 using DSharpPlusNextGen.Entities;
 using DSharpPlusNextGen.Net;
 using Microsoft.Extensions.Logging;
+using static System.Net.WebRequestMethods;
 
 namespace DSharpPlusNextGen
 {
@@ -86,40 +87,43 @@ namespace DSharpPlusNextGen
                 vs = v.ToString(3);
             }
 
-            VersionHeader = $"DiscordBot (https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen, v{vs})";
+            VersionHeader = $"DiscordBot (https://github.com/Aiko-IT-Systems/DSharpPlusNextGen, v{vs})";
         }
 
         /// <summary>
         /// Gets the api base uri.
         /// </summary>
         /// <returns>A string.</returns>
-        internal static string GetApiBaseUri()
-            => Endpoints.BASE_URI;
+        internal static string GetApiBaseUri(bool canary = false)
+            => canary ? "https://canary.discord.com/api/v9" : Endpoints.BASE_URI;
 
         /// <summary>
         /// Gets the api uri for.
         /// </summary>
         /// <param name="path">The path.</param>
+        /// <param name="canary">Use canary</param>
         /// <returns>An Uri.</returns>
-        internal static Uri GetApiUriFor(string path)
-            => new($"{GetApiBaseUri()}{path}");
+        internal static Uri GetApiUriFor(string path, bool canary = false)
+            => new($"{GetApiBaseUri(canary)}{path}");
 
         /// <summary>
         /// Gets the api uri for.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="queryString">The query string.</param>
+        /// <param name="canary">Use canary</param>
         /// <returns>An Uri.</returns>
-        internal static Uri GetApiUriFor(string path, string queryString)
-            => new($"{GetApiBaseUri()}{path}{queryString}");
+        internal static Uri GetApiUriFor(string path, string queryString, bool canary = false)
+            => new($"{GetApiBaseUri(canary)}{path}{queryString}");
 
         /// <summary>
         /// Gets the api uri builder for.
         /// </summary>
         /// <param name="path">The path.</param>
+        /// <param name="canary">Use canary</param>
         /// <returns>A QueryUriBuilder.</returns>
-        internal static QueryUriBuilder GetApiUriBuilderFor(string path)
-            => new($"{GetApiBaseUri()}{path}");
+        internal static QueryUriBuilder GetApiUriBuilderFor(string path, bool canary = false)
+            => new($"{GetApiBaseUri(canary)}{path}");
 
         /// <summary>
         /// Gets the formatted token.
