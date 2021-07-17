@@ -246,6 +246,7 @@ namespace DSharpPlusNextGen
         internal async Task HandleSocketMessageAsync(string data)
         {
             var payload = JsonConvert.DeserializeObject<GatewayPayload>(data);
+            this._lastSequence = payload.Sequence ?? this._lastSequence;
             switch (payload.OpCode)
             {
                 case GatewayOpCode.Dispatch:
@@ -394,7 +395,7 @@ namespace DSharpPlusNextGen
             {
                 while (true)
                 {
-                    await this.SendHeartbeatAsync().ConfigureAwait(false);
+                    await this.SendHeartbeatAsync(this._lastSequence).ConfigureAwait(false);
                     await Task.Delay(this._heartbeatInterval, token).ConfigureAwait(false);
                     token.ThrowIfCancellationRequested();
                 }
@@ -462,18 +463,6 @@ namespace DSharpPlusNextGen
         /// <summary>
         /// Sends the heartbeat async.
         /// </summary>
-        /// <returns>A Task.</returns>
-        internal Task SendHeartbeatAsync()
-        {
-            var _last_heartbeat = DateTimeOffset.Now;
-            var _sequence = (long)(_last_heartbeat - _discordEpoch).TotalMilliseconds;
-
-            return this.SendHeartbeatAsync(_sequence);
-        }
-
-        /// <summary>
-        /// Sends the heartbeat async.
-        /// </summary>
         /// <param name="seq">The seq.</param>
         /// <returns>A Task.</returns>
         internal async Task SendHeartbeatAsync(long seq)
@@ -524,7 +513,8 @@ namespace DSharpPlusNextGen
                     ShardCount = this.Configuration.ShardCount
                 },
                 Presence = status,
-                Intents = this.Configuration.Intents
+                Intents = this.Configuration.Intents,
+                Discord = this
             };
             var payload = new GatewayPayload
             {

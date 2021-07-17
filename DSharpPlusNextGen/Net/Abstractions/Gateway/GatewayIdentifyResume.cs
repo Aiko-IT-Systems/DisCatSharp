@@ -30,6 +30,12 @@ namespace DSharpPlusNextGen.Net.Abstractions
     internal sealed class GatewayIdentify
     {
         /// <summary>
+        /// Gets or sets the discord client.
+        /// </summary>
+        [JsonIgnore]
+        public BaseDiscordClient Discord { get; set; }
+
+        /// <summary>
         /// Gets or sets the token used to identify the client to Discord.
         /// </summary>
         [JsonProperty("token")]
@@ -39,7 +45,8 @@ namespace DSharpPlusNextGen.Net.Abstractions
         /// Gets or sets the client's properties.
         /// </summary>
         [JsonProperty("properties")]
-        public ClientProperties ClientProperties { get; } = new ClientProperties();
+        public ClientProperties ClientProperties =>
+            new() { Discord = this.Discord };
 
         /// <summary>
         /// Gets or sets whether to encrypt websocket traffic.

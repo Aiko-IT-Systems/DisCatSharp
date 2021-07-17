@@ -35,41 +35,46 @@ namespace DSharpPlusNextGen
         /// <summary>
         /// Whether this parameter is apart of a subcommand group.
         /// </summary>
-        SubCommandGroup,
+        SubCommandGroup = 2,
 
         /// <summary>
         /// Whether this parameter is a string.
         /// </summary>
-        String,
+        String = 3,
 
         /// <summary>
         /// Whether this parameter is an integer.
         /// </summary>
-        Integer,
+        Integer = 4,
 
         /// <summary>
         /// Whether this parameter is a boolean.
         /// </summary>
-        Boolean,
+        Boolean = 5,
 
         /// <summary>
         /// Whether this parameter is a Discord user.
         /// </summary>
-        User,
+        User = 6,
 
         /// <summary>
         /// Whether this parameter is a Discord channel.
         /// </summary>
-        Channel,
+        Channel = 7,
 
         /// <summary>
         /// Whether this parameter is a Discord role.
         /// </summary>
-        Role,
+        Role = 8,
 
         /// <summary>
         /// Whether this parameter is a mentionable.
         /// </summary>
-        Mentionable
+        Mentionable = 9,
+
+        /// <summary>
+        /// Whether this parameter is a number.
+        /// </summary>
+        Number = 10
     }
 }
