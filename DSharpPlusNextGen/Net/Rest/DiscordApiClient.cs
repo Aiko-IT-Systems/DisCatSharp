@@ -248,7 +248,7 @@ namespace DSharpPlusNextGen.Net
                 ["query"] = name,
                 ["limit"] = limit.ToString()
             };
-            var url = Utilities.GetApiUriFor(path, BuildQueryString(querydict));
+            var url = Utilities.GetApiUriFor(path, BuildQueryString(querydict), this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
             var json = JArray.Parse(res.Response);
             var tms = json.ToObject<IReadOnlyList<TransportMember>>();
@@ -283,7 +283,7 @@ namespace DSharpPlusNextGen.Net
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id, user_id}, out var url);
-            var uri = Utilities.GetApiUriFor(url);
+            var uri = Utilities.GetApiUriFor(url, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, uri, RestRequestMethod.GET, route).ConfigureAwait(false);
             var json = JObject.Parse(res.Response);
 
@@ -316,7 +316,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var json = JObject.Parse(res.Response);
@@ -346,7 +346,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}{Endpoints.TEMPLATES}/:template_code";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { template_code }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var json = JObject.Parse(res.Response);
@@ -368,7 +368,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route).ConfigureAwait(false);
 
             if (this.Discord is DiscordClient dc)
@@ -430,7 +430,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var json = JObject.Parse(res.Response);
@@ -454,7 +454,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var bans_raw = JsonConvert.DeserializeObject<IEnumerable<DiscordBan>>(res.Response).Select(xb =>
@@ -504,7 +504,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, BuildQueryString(urlparams));
+            var url = Utilities.GetApiUriFor(path, BuildQueryString(urlparams), this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers);
         }
 
@@ -524,7 +524,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
 
@@ -538,7 +538,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}/:guild_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
         }
 
@@ -567,7 +567,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var tm = JsonConvert.DeserializeObject<TransportMember>(res.Response);
@@ -593,7 +593,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "");
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var members_raw = JsonConvert.DeserializeObject<List<TransportMember>>(res.Response);
@@ -617,7 +617,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id{Endpoints.ROLES}/:role_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id, user_id, role_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers);
         }
 
@@ -638,7 +638,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id{Endpoints.ROLES}/:role_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, user_id, role_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
 
@@ -658,7 +658,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CHANNELS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
         }
 
@@ -678,7 +678,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CHANNELS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
         }
 
@@ -698,7 +698,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CHANNELS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
         }
 
@@ -718,7 +718,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ROLES}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
         }
 
@@ -750,7 +750,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.AUDIT_LOGS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "");
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var audit_log_data_raw = JsonConvert.DeserializeObject<AuditLog>(res.Response);
@@ -768,7 +768,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VANITY_URL}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var invite = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
@@ -786,7 +786,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WIDGET_JSON}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var json = JObject.Parse(res.Response);
@@ -823,7 +823,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WIDGET}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordWidgetSettings>(res.Response);
@@ -855,7 +855,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WIDGET}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordWidgetSettings>(res.Response);
@@ -874,7 +874,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var templates_raw = JsonConvert.DeserializeObject<IEnumerable<DiscordGuildTemplate>>(res.Response);
@@ -900,7 +900,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordGuildTemplate>(res.Response);
@@ -919,7 +919,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}/:template_code";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { guild_id, template_code }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route).ConfigureAwait(false);
 
             var template_raw = JsonConvert.DeserializeObject<DiscordGuildTemplate>(res.Response);
@@ -946,7 +946,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}/:template_code";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id, template_code }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var template_raw = JsonConvert.DeserializeObject<DiscordGuildTemplate>(res.Response);
@@ -965,7 +965,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}/:template_code";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, template_code }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route).ConfigureAwait(false);
 
             var template_raw = JsonConvert.DeserializeObject<DiscordGuildTemplate>(res.Response);
@@ -983,7 +983,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBER_VERIFICATION}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var screening_raw = JsonConvert.DeserializeObject<DiscordGuildMembershipScreening>(res.Response);
@@ -1011,7 +1011,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBER_VERIFICATION}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var screening_raw = JsonConvert.DeserializeObject<DiscordGuildMembershipScreening>(res.Response);
@@ -1029,7 +1029,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WELCOME_SCREEN}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var ret = JsonConvert.DeserializeObject<DiscordGuildWelcomeScreen>(res.Response);
@@ -1056,7 +1056,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WELCOME_SCREEN}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
 
             var ret = JsonConvert.DeserializeObject<DiscordGuildWelcomeScreen>(res.Response);
@@ -1083,7 +1083,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}/@me";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
         }
 
@@ -1106,7 +1106,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VOICE_STATES}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
         }
         #endregion
@@ -1156,7 +1156,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CHANNELS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
@@ -1209,7 +1209,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
         }
 
@@ -1223,7 +1223,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
@@ -1252,7 +1252,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
 
@@ -1267,7 +1267,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var ret = this.PrepareMessage(JObject.Parse(res.Response));
@@ -1323,7 +1323,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = this.PrepareMessage(JObject.Parse(res.Response));
@@ -1368,7 +1368,7 @@ namespace DSharpPlusNextGen.Net
                 var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}";
                 var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id }, out var path);
 
-                var url = Utilities.GetApiUriFor(path);
+                var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
                 var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
                 var ret = this.PrepareMessage(JObject.Parse(res.Response));
@@ -1384,7 +1384,7 @@ namespace DSharpPlusNextGen.Net
                 var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}";
                 var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id }, out var path);
 
-                var url = Utilities.GetApiUriFor(path);
+                var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
                 var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
 
                 var ret = this.PrepareMessage(JObject.Parse(res.Response));
@@ -1408,7 +1408,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CHANNELS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var channels_raw = JsonConvert.DeserializeObject<IEnumerable<DiscordChannel>>(res.Response).Select(xc => { xc.Discord = this.Discord; return xc; });
@@ -1446,7 +1446,7 @@ namespace DSharpPlusNextGen.Net
             if (!string.IsNullOrWhiteSpace(reason))
                 headers.Add(REASON_HEADER_NAME, reason);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var stageInstance = JsonConvert.DeserializeObject<DiscordStageInstance>(res.Response);
@@ -1464,7 +1464,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.STAGE_INSTANCES}/:channel_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var stageInstance = JsonConvert.DeserializeObject<DiscordStageInstance>(res.Response);
@@ -1494,7 +1494,7 @@ namespace DSharpPlusNextGen.Net
             if (!string.IsNullOrWhiteSpace(reason))
                 headers.Add(REASON_HEADER_NAME, reason);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
         }
 
@@ -1512,7 +1512,7 @@ namespace DSharpPlusNextGen.Net
             if (!string.IsNullOrWhiteSpace(reason))
                 headers.Add(REASON_HEADER_NAME, reason);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
 
@@ -1540,7 +1540,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "");
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var msgs_raw = JArray.Parse(res.Response);
@@ -1562,7 +1562,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var ret = this.PrepareMessage(JObject.Parse(res.Response));
@@ -1610,7 +1610,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: files).ConfigureAwait(false);
 
             var ret = this.PrepareMessage(JObject.Parse(res.Response));
@@ -1639,7 +1639,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
 
@@ -1664,7 +1664,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}{Endpoints.BULK_DELETE}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
         }
 
@@ -1678,7 +1678,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.INVITES}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var invites_raw = JsonConvert.DeserializeObject<IEnumerable<DiscordInvite>>(res.Response).Select(xi => { xi.Discord = this.Discord; return xi; });
@@ -1717,7 +1717,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.INVITES}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
@@ -1742,7 +1742,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PERMISSIONS}/:overwrite_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id, overwrite_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
 
@@ -1772,7 +1772,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PERMISSIONS}/:overwrite_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { channel_id, overwrite_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld));
         }
 
@@ -1786,7 +1786,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.TYPING}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route);
         }
 
@@ -1800,7 +1800,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var msgs_raw = JArray.Parse(res.Response);
@@ -1822,7 +1822,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { channel_id, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route);
         }
 
@@ -1837,7 +1837,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
         }
 
@@ -1860,7 +1860,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CHANNELS}/:channel_id{Endpoints.RECIPIENTS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { channel_id, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
         }
 
@@ -1875,7 +1875,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CHANNELS}/:channel_id{Endpoints.RECIPIENTS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
         }
 
@@ -1896,7 +1896,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CHANNELS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordDmChannel>(res.Response);
@@ -1920,7 +1920,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CHANNELS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordDmChannel>(res.Response);
@@ -1945,7 +1945,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.FOLLOWERS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var response = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             return JsonConvert.DeserializeObject<DiscordFollowedChannel>(response.Response);
@@ -1962,7 +1962,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.CROSSPOST}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var response = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<DiscordMessage>(response.Response);
         }
@@ -1995,7 +1995,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.USERS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var user_raw = JsonConvert.DeserializeObject<TransportUser>(res.Response);
@@ -2015,7 +2015,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var tm = JsonConvert.DeserializeObject<TransportMember>(res.Response);
@@ -2052,7 +2052,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, BuildQueryString(urlparams));
+            var url = Utilities.GetApiUriFor(path, BuildQueryString(urlparams), this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
         }
 
@@ -2074,7 +2074,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.USERS}{Endpoints.ME}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var user_raw = JsonConvert.DeserializeObject<TransportUser>(res.Response);
@@ -2149,7 +2149,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: DiscordJson.SerializeObject(pld));
         }
 
@@ -2174,7 +2174,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}{Endpoints.ME}{Endpoints.NICK}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: DiscordJson.SerializeObject(pld));
         }
         #endregion
@@ -2190,7 +2190,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ROLES}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var roles_raw = JsonConvert.DeserializeObject<IEnumerable<DiscordRole>>(res.Response).Select(xr => { xr.Discord = this.Discord; xr._guild_id = guild_id; return xr; });
@@ -2213,7 +2213,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "");
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, urlparams).ConfigureAwait(false);
 
             var json = JObject.Parse(res.Response);
@@ -2264,7 +2264,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ROLES}/:role_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id, role_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordRole>(res.Response);
@@ -2290,7 +2290,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ROLES}/:role_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, role_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
 
@@ -2323,7 +2323,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ROLES}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordRole>(res.Response);
@@ -2365,7 +2365,7 @@ namespace DSharpPlusNextGen.Net
 
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PRUNE}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
-            var url = Utilities.GetApiUriFor(path, $"{BuildQueryString(urlparams)}{sb}");
+            var url = Utilities.GetApiUriFor(path, $"{BuildQueryString(urlparams)}{sb}", this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var pruned = JsonConvert.DeserializeObject<RestGuildPruneResultPayload>(res.Response);
@@ -2411,7 +2411,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PRUNE}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, $"{BuildQueryString(urlparams)}{sb}");
+            var url = Utilities.GetApiUriFor(path, $"{BuildQueryString(urlparams)}{sb}", this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers).ConfigureAwait(false);
 
             var pruned = JsonConvert.DeserializeObject<RestGuildPruneResultPayload>(res.Response);
@@ -2431,7 +2431,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}{Endpoints.TEMPLATES}/:code";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { code }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var templates_raw = JsonConvert.DeserializeObject<DiscordGuildTemplate>(res.Response);
@@ -2449,7 +2449,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INTEGRATIONS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var integrations_raw = JsonConvert.DeserializeObject<IEnumerable<DiscordIntegration>>(res.Response).Select(xi => { xi.Discord = this.Discord; return xi; });
@@ -2467,7 +2467,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PREVIEW}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordGuildPreview>(res.Response);
@@ -2494,7 +2494,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INTEGRATIONS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordIntegration>(res.Response);
@@ -2524,7 +2524,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INTEGRATIONS}/:integration_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id, integration_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordIntegration>(res.Response);
@@ -2544,7 +2544,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INTEGRATIONS}/:integration_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, integration_id = integration.Id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, payload: DiscordJson.SerializeObject(integration));
         }
 
@@ -2559,7 +2559,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INTEGRATIONS}/:integration_id{Endpoints.SYNC}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id, integration_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route);
         }
 
@@ -2573,7 +2573,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.REGIONS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var regions_raw = JsonConvert.DeserializeObject<IEnumerable<DiscordVoiceRegion>>(res.Response);
@@ -2591,7 +2591,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INVITES}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var invites_raw = JsonConvert.DeserializeObject<IEnumerable<DiscordInvite>>(res.Response).Select(xi => { xi.Discord = this.Discord; return xi; });
@@ -2619,7 +2619,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.INVITES}/:invite_code";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { invite_code }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "");
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
@@ -2643,7 +2643,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.INVITES}/:invite_code";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { invite_code }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
@@ -2681,7 +2681,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CONNECTIONS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var connections_raw = JsonConvert.DeserializeObject<IEnumerable<DiscordConnection>>(res.Response).Select(xc => { xc.Discord = this.Discord; return xc; });
@@ -2700,7 +2700,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.VOICE}{Endpoints.REGIONS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var regions = JsonConvert.DeserializeObject<IEnumerable<DiscordVoiceRegion>>(res.Response);
@@ -2734,7 +2734,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.WEBHOOKS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordWebhook>(res.Response);
@@ -2754,7 +2754,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.WEBHOOKS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var webhooks_raw = JsonConvert.DeserializeObject<IEnumerable<DiscordWebhook>>(res.Response).Select(xw => { xw.Discord = this.Discord; xw.ApiClient = this; return xw; });
@@ -2772,7 +2772,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WEBHOOKS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var webhooks_raw = JsonConvert.DeserializeObject<IEnumerable<DiscordWebhook>>(res.Response).Select(xw => { xw.Discord = this.Discord; xw.ApiClient = this; return xw; });
@@ -2790,7 +2790,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { webhook_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordWebhook>(res.Response);
@@ -2812,7 +2812,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { webhook_id, webhook_token }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordWebhook>(res.Response);
@@ -2850,7 +2850,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordWebhook>(res.Response);
@@ -2884,7 +2884,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id, webhook_token }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordWebhook>(res.Response);
@@ -2909,7 +2909,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { webhook_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
 
@@ -2929,7 +2929,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { webhook_id, webhook_token }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
 
@@ -3053,7 +3053,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id, webhook_token, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files);
 
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
@@ -3089,7 +3089,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { webhook_id, webhook_token, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
@@ -3119,7 +3119,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { webhook_id, webhook_token, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
         }
         /// <summary>
@@ -3146,7 +3146,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji{Endpoints.ME}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { channel_id, message_id, emoji }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : (double?)0.26);
         }
 
@@ -3162,7 +3162,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji{Endpoints.ME}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id, message_id, emoji }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : (double?)0.26);
         }
 
@@ -3184,7 +3184,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id, message_id, emoji, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : (double?)0.26);
         }
 
@@ -3208,7 +3208,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id, message_id, emoji }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, BuildQueryString(urlparams));
+            var url = Utilities.GetApiUriFor(path, BuildQueryString(urlparams), this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var reacters_raw = JsonConvert.DeserializeObject<IEnumerable<TransportUser>>(res.Response);
@@ -3246,7 +3246,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : (double?)0.26);
         }
 
@@ -3262,7 +3262,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id, message_id, emoji }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : (double?)0.26);
         }
         #endregion
@@ -3288,7 +3288,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.THREADS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
 
             var thread_channel = JsonConvert.DeserializeObject<DiscordThreadChannel>(res.Response);
@@ -3314,7 +3314,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
 
             var thread_channel = JsonConvert.DeserializeObject<DiscordThreadChannel>(res.Response);
@@ -3332,7 +3332,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { thread_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var ret = JsonConvert.DeserializeObject<DiscordThreadChannel>(res.Response);
@@ -3351,7 +3351,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}{Endpoints.ME}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route);
         }
 
@@ -3365,7 +3365,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}{Endpoints.ME}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
         }
 
@@ -3380,7 +3380,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { channel_id, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route);
         }
 
@@ -3395,7 +3395,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}/:user_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id, user_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
         }
 
@@ -3409,7 +3409,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var thread_members_raw = JsonConvert.DeserializeObject<List<DiscordThreadChannelMember>>(res.Response);
@@ -3427,7 +3427,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}{Endpoints.THREAD_ACTIVE}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var thread_return = JsonConvert.DeserializeObject<DiscordThreadResult>(res.Response);
@@ -3453,7 +3453,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.USERS}{Endpoints.ME}{Endpoints.THREADS}{Endpoints.THREAD_ARCHIVED}{Endpoints.THREAD_PRIVATE}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "");
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var thread_return = JsonConvert.DeserializeObject<DiscordThreadResult>(res.Response);
@@ -3479,7 +3479,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}{Endpoints.THREAD_ARCHIVED}{Endpoints.THREAD_PUBLIC}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "");
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var thread_return = JsonConvert.DeserializeObject<DiscordThreadResult>(res.Response);
@@ -3505,7 +3505,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}{Endpoints.THREAD_ARCHIVED}{Endpoints.THREAD_PRIVATE}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "");
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var thread_return = JsonConvert.DeserializeObject<DiscordThreadResult>(res.Response);
@@ -3542,7 +3542,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
         }
 
@@ -3561,7 +3561,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.CHANNELS}/:channel_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
 
@@ -3578,7 +3578,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.EMOJIS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var emojisRaw = JsonConvert.DeserializeObject<IEnumerable<JObject>>(res.Response);
@@ -3620,7 +3620,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.EMOJIS}/:emoji_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, emoji_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             this.Discord.Guilds.TryGetValue(guild_id, out var gld);
@@ -3661,7 +3661,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.EMOJIS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             this.Discord.Guilds.TryGetValue(guild_id, out var gld);
@@ -3702,7 +3702,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.EMOJIS}/:emoji_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id, emoji_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
             this.Discord.Guilds.TryGetValue(guild_id, out var gld);
@@ -3734,7 +3734,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.EMOJIS}/:emoji_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, emoji_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
         #endregion
@@ -3750,7 +3750,7 @@ namespace DSharpPlusNextGen.Net
         {
             var route = $"{Endpoints.STICKERS}/:sticker_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {sticker_id}, out var path);
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
 
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
             var ret = JObject.Parse(res.Response).ToDiscordObject<DiscordSticker>();
@@ -3768,7 +3768,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.STICKERPACKS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var json = JObject.Parse(res.Response)["sticker_packs"] as JArray;
@@ -3786,7 +3786,7 @@ namespace DSharpPlusNextGen.Net
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id}, out var path);
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
 
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
             var json = JArray.Parse(res.Response);
@@ -3825,7 +3825,7 @@ namespace DSharpPlusNextGen.Net
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id, sticker_id}, out var path);
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
 
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
@@ -3862,7 +3862,7 @@ namespace DSharpPlusNextGen.Net
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {guild_id}, out var path);
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
                 headers.Add(REASON_HEADER_NAME, reason);
@@ -3901,7 +3901,7 @@ namespace DSharpPlusNextGen.Net
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new {guild_id, sticker_id}, out var path);
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
                 headers.Add(REASON_HEADER_NAME, reason);
@@ -3936,7 +3936,7 @@ namespace DSharpPlusNextGen.Net
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, sticker_id }, out var path);
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
                 headers.Add(REASON_HEADER_NAME, reason);
@@ -3956,7 +3956,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response);
@@ -3988,7 +3988,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
 
             var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response);
@@ -4016,7 +4016,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { application_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
 
             var ret = JsonConvert.DeserializeObject<DiscordApplicationCommand>(res.Response);
@@ -4036,7 +4036,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id, command_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var ret = JsonConvert.DeserializeObject<DiscordApplicationCommand>(res.Response);
@@ -4068,7 +4068,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { application_id, command_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
 
             var ret = JsonConvert.DeserializeObject<DiscordApplicationCommand>(res.Response);
@@ -4088,7 +4088,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { application_id, command_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
         }
 
@@ -4103,7 +4103,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id, guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response);
@@ -4136,7 +4136,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id, guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
 
             var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response);
@@ -4166,7 +4166,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { application_id, guild_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
 
             var ret = JsonConvert.DeserializeObject<DiscordApplicationCommand>(res.Response);
@@ -4187,7 +4187,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id, guild_id, command_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var ret = JsonConvert.DeserializeObject<DiscordApplicationCommand>(res.Response);
@@ -4220,7 +4220,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { application_id, guild_id, command_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
 
             var ret = JsonConvert.DeserializeObject<DiscordApplicationCommand>(res.Response);
@@ -4241,7 +4241,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { application_id, guild_id, command_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
         }
 
@@ -4272,7 +4272,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
         }
 
@@ -4402,7 +4402,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             return JsonConvert.DeserializeObject<TransportApplication>(res.Response);
@@ -4418,7 +4418,7 @@ namespace DSharpPlusNextGen.Net
             var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id{Endpoints.ASSETS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id = application.Id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var assets = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationAsset>>(res.Response);
@@ -4443,7 +4443,7 @@ namespace DSharpPlusNextGen.Net
                 route += Endpoints.BOT;
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
 
-            var url = Utilities.GetApiUriFor(path);
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route, headers).ConfigureAwait(false);
 
             var info = JObject.Parse(res.Response).ToObject<GatewayInfo>();
