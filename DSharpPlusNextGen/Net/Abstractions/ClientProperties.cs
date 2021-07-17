@@ -32,6 +32,12 @@ namespace DSharpPlusNextGen.Net.Abstractions
     internal sealed class ClientProperties
     {
         /// <summary>
+        /// Gets or sets the discord client.
+        /// </summary>
+        [JsonIgnore]
+        public BaseDiscordClient Discord { get; set; }
+
+        /// <summary>
         /// Gets the client's operating system.
         /// </summary>
         [JsonProperty("$os")]
@@ -71,9 +77,15 @@ namespace DSharpPlusNextGen.Net.Abstractions
         {
             get
             {
-                var a = typeof(DiscordClient).GetTypeInfo().Assembly;
-                var an = a.GetName();
-                return $"DSharpPlus NextGen {an.Version.ToString(4)}";
+                if (this.Discord.Configuration.MobileStatus)
+                    return "Discord Android";
+
+                else
+                {
+                    var a = typeof(DiscordClient).GetTypeInfo().Assembly;
+                    var an = a.GetName();
+                    return $"DSharpPlusNextGen {an.Version.ToString(4)}";
+                }
             }
         }
 

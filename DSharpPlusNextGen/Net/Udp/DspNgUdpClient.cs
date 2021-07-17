@@ -98,7 +98,7 @@ namespace DSharpPlusNextGen.Net.Udp
         /// Receives a datagram.
         /// </summary>
         /// <returns>The received bytes.</returns>
-        public override Task<byte[]> ReceiveAsync() => this.PacketQueue.Count > 0 ? Task.FromResult(this.PacketQueue.Take()) : Task.Run(() => this.PacketQueue.Take());
+        public override Task<byte[]> ReceiveAsync() => Task.FromResult(this.PacketQueue.Take(this.Token));
 
         /// <summary>
         /// Closes and disposes the client.

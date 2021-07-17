@@ -642,6 +642,8 @@ namespace DSharpPlusNextGen.SlashCommands
                 parametertype = ApplicationCommandOptionType.Integer;
             else if (ReferenceEquals(type, typeof(bool)))
                 parametertype = ApplicationCommandOptionType.Boolean;
+            else if (ReferenceEquals(type, typeof(double)))
+                parametertype = ApplicationCommandOptionType.Number;
             else if (ReferenceEquals(type, typeof(DiscordChannel)))
                 parametertype = ApplicationCommandOptionType.Channel;
             else if (ReferenceEquals(type, typeof(DiscordUser)))
@@ -652,7 +654,7 @@ namespace DSharpPlusNextGen.SlashCommands
                 parametertype = ApplicationCommandOptionType.String;
 
             else
-                throw new ArgumentException("Cannot convert type! Argument types must be string, long, bool, DiscordChannel, DiscordUser, DiscordRole or an Enum.");
+                throw new ArgumentException("Cannot convert type! Argument types must be string, long, bool, double, DiscordChannel, DiscordUser, DiscordRole or an Enum.");
 
             return parametertype;
         }

@@ -912,8 +912,7 @@ namespace DSharpPlusNextGen.VoiceNext
             this.IsInitialized = false;
             this.TokenSource.Cancel();
             this.SenderTokenSource.Cancel();
-            if (this.Configuration.EnableIncoming)
-                this.ReceiverTokenSource.Cancel();
+            this.ReceiverTokenSource?.Cancel();
 
             try
             {

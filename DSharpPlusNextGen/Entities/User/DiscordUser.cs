@@ -84,10 +84,10 @@ namespace DSharpPlusNextGen.Entities
         /// Gets the user's banner color, if set.
         /// </summary>
         public DiscordColor? BannerColor
-            => string.IsNullOrEmpty(this._bannerColor) ? null : new DiscordColor(this._bannerColor);
+            => this._bannerColor.HasValue ? new DiscordColor(this._bannerColor.Value) : null;
 
         [JsonProperty("banner_color")]
-        internal string _bannerColor;
+        internal int? _bannerColor;
 
         /// <summary>
         /// Gets the user's profile banner hash.
