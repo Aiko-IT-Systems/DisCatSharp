@@ -71,10 +71,11 @@ namespace DSharpPlusNextGen.Entities
         public bool IsAnimated { get; internal set; }
 
         /// <summary>
-        /// Gets whether this emoji is available.
+        /// Gets whether the emoji is available for use.
+        /// An emoji may not be available due to loss of server boost.
         /// </summary>
-        [JsonProperty("available")]
-        public bool Available { get; internal set; }
+        [JsonProperty("available", NullValueHandling = NullValueHandling.Ignore)]
+        public bool IsAvailable { get; internal set; }
 
         /// <summary>
         /// Gets the image URL of this emoji.
@@ -91,13 +92,6 @@ namespace DSharpPlusNextGen.Entities
                     : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMOJIS}/{this.Id.ToString(CultureInfo.InvariantCulture)}.png";
             }
         }
-
-        /// <summary>
-        /// Gets whether the emoji is available for use.
-        /// An emoji may not be available due to loss of server boost.
-        /// </summary>
-        [JsonProperty("available", NullValueHandling = NullValueHandling.Ignore)]
-        public bool IsAvailable { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordEmoji"/> class.
