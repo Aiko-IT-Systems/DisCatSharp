@@ -51,7 +51,7 @@ namespace DSharpPlusNextGen.Entities
 
         /// <summary>
         /// Gets the value of this interaction parameter.
-        /// <para>This can be cast to a <see langword="long"/>, <see langword="bool"></see>, <see langword="string"></see> or <see langword="ulong"/> depending on the <see cref="Type"/></para>
+        /// <para>This can be cast to a <see langword="long"/>, <see langword="bool"></see>, <see langword="string"></see>, <see langword="double"></see> or <see langword="ulong"/> depending on the <see cref="Type"/></para>
         /// </summary>
         [JsonIgnore]
         public object Value
@@ -67,6 +67,7 @@ namespace DSharpPlusNextGen.Entities
                     ApplicationCommandOptionType.User => ulong.Parse(this._value),
                     ApplicationCommandOptionType.Role => ulong.Parse(this._value),
                     ApplicationCommandOptionType.Mentionable => ulong.Parse(this._value),
+                    ApplicationCommandOptionType.Number => double.Parse(this._value),
                     _ => this._value,
                 };
             }
