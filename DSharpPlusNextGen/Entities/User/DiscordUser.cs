@@ -83,19 +83,13 @@ namespace DSharpPlusNextGen.Entities
             => int.Parse(this.Discriminator, NumberStyles.Integer, CultureInfo.InvariantCulture);
 
         /// <summary>
-        /// Gets the user's banner color, if set.
+        /// Gets the user's banner color, if set. Mutually exclusive with <see cref="BannerHash"/>.
         /// </summary>
-        public DiscordColor? BannerColor
-            => this._bannerColor.HasValue ? new DiscordColor(this._bannerColor.Value) : null;
+        public virtual DiscordColor? BannerColor
+            => this._bannerColor == 0 ? null : new DiscordColor(this._bannerColor);
 
         [JsonProperty("banner_color")]
-        internal int? _bannerColor;
-
-        /// <summary>
-        /// Gets the user's profile banner hash.
-        /// </summary>
-        [JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
-        public virtual string BannerHash { get; internal set; }
+        internal int _bannerColor;
 
         /// <summary>
         /// Gets the user's banner url
@@ -103,6 +97,12 @@ namespace DSharpPlusNextGen.Entities
         [JsonIgnore]
         public string BannerUrl
             => string.IsNullOrWhiteSpace(this.BannerHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
+
+        /// <summary>
+        /// Gets the user's profile banner hash. Mutually exclusive with <see cref="BannerColor"/>.
+        /// </summary>
+        [JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual string BannerHash { get; internal set; }
 
         /// <summary>
         /// Gets the user's avatar hash.
