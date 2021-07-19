@@ -94,6 +94,30 @@ namespace DSharpPlusNextGen.Entities
             => string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? this.User.AvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this._guild_id.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/avatars/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
         /// <summary>
+        /// Gets this member's banner url.
+        /// </summary>
+        [JsonIgnore]
+#pragma warning disable CS0108 // Member hides inherited member; missing new keyword
+        public string BannerUrl => this.User.BannerUrl;
+#pragma warning restore CS0108 // Member hides inherited member; missing new keyword
+
+        /// <summary>
+        /// Gets the member's banner hash.
+        /// </summary>
+        [JsonIgnore]
+        public override string BannerHash
+        {
+            get => this.User.BannerHash;
+            internal set => this.User.BannerHash = value;
+        }
+
+        /// <summary>
+        /// The color of this member's banner. Mutually exclusive with <see cref="BannerHash"/>.
+        /// </summary>
+        [JsonIgnore]
+        public override DiscordColor? BannerColor => this.User.BannerColor;
+
+        /// <summary>
         /// Gets this member's nickname.
         /// </summary>
         [JsonProperty("nick", NullValueHandling = NullValueHandling.Ignore)]
