@@ -32,7 +32,7 @@ namespace DSharpPlusNextGen
         /// <summary>
         /// Gets the full permissions enum (long).
         /// </summary>
-        internal static Permissions FULL_PERMS { get; } = (Permissions)137438953471L;
+        internal static Permissions FULL_PERMS { get; } = (Permissions)274877906943L;
 
         /// <summary>
         /// Calculates whether this permission set contains the given permission.
@@ -97,7 +97,7 @@ namespace DSharpPlusNextGen
         /// Indicates all permissions are granted
         /// </summary>
         [PermissionString("All permissions")]
-        All = 137438953471,
+        All = 274877906943,
 
         /// <summary>
         /// Allows creation of instant channel invites.
@@ -313,9 +313,15 @@ namespace DSharpPlusNextGen
         /// Allows for creating and participating in private threads.
         /// </summary>
         [PermissionString("Use Private Threads")]
-        UsePrivateThreads = 0x0000001000000000
-    }
+        UsePrivateThreads = 0x0000001000000000,
 
+        /// <summary>
+        /// Allows the usage of custom stickers from other servers.
+        /// </summary>
+        [PermissionString("Use external Stickers")]
+        UseExternalStickers = 0x0000002000000000
+    }
+    
     /// <summary>
     /// Defines a readable name for this permission.
     /// </summary>
