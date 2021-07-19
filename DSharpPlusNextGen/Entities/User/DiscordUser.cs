@@ -88,7 +88,7 @@ namespace DSharpPlusNextGen.Entities
         public virtual DiscordColor? BannerColor
             => this._bannerColor == 0 ? null : new DiscordColor(this._bannerColor);
 
-        [JsonProperty("banner_color")]
+        [JsonProperty("accent_color")]
         internal int _bannerColor;
 
         /// <summary>

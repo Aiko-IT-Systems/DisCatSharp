@@ -62,7 +62,7 @@ namespace DSharpPlusNextGen.Net.Abstractions
         /// <summary>
         /// Gets the banner color.
         /// </summary>
-        [JsonProperty("banner_color")]
+        [JsonProperty("accent_color")]
         public int BannerColor { get; internal set; }
 
         /// <summary>
