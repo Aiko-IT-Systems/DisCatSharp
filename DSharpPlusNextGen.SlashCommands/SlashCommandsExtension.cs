@@ -200,6 +200,8 @@ namespace DSharpPlusNextGen.SlashCommands
 
                                 var options = new List<DiscordApplicationCommandOption>();
 
+                                var currentMethods = new List<KeyValuePair<string, MethodInfo>>();
+
                                 foreach (var subsubmethod in subsubmethods)
                                 {
                                     var suboptions = new List<DiscordApplicationCommandOption>();
@@ -213,10 +215,11 @@ namespace DSharpPlusNextGen.SlashCommands
                                     var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, suboptions);
                                     options.Add(subsubpayload);
                                     commandmethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
+                                    currentMethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
                                 }
 
                                 var subpayload = new DiscordApplicationCommandOption(subgroupatt.Name, subgroupatt.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options);
-                                command.SubCommands.Add(new GroupCommand { Name = subgroupatt.Name, ParentClass = subclass, Methods = commandmethods });
+                                command.SubCommands.Add(new GroupCommand { Name = subgroupatt.Name, ParentClass = subclass, Methods = currentMethods });
                                 InternalSubGroupCommands.Add(command);
                                 payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload });
                             }
@@ -413,7 +416,10 @@ namespace DSharpPlusNextGen.SlashCommands
                         else if (subgroups.Any())
                         {
                             var command = e.Interaction.Data.Options.First();
-                            var group = subgroups.First(x => x.SubCommands.Any(y => y.Name == command.Name)).SubCommands.First(x => x.Name == command.Name);
+
+                            var subgroup = subgroups.First();
+
+                            var group = subgroup.SubCommands.First(x => x.Name == command.Name);
 
                             var method = group.Methods.First(x => x.Key == command.Options.First().Name).Value;
 
@@ -536,7 +542,7 @@ namespace DSharpPlusNextGen.SlashCommands
                     else if (ReferenceEquals(parameter.ParameterType, typeof(long)))
                         args.Add((long)option.Value);
                     else if (ReferenceEquals(parameter.ParameterType, typeof(double)))
-                        args.Add(double.Parse(option.Value.ToString()));
+                        args.Add((double)option.Value);
                     else if (ReferenceEquals(parameter.ParameterType, typeof(bool)))
                         args.Add((bool)option.Value);
                     else if (ReferenceEquals(parameter.ParameterType, typeof(DiscordUser)))

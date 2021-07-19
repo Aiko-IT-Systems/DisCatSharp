@@ -51,6 +51,8 @@ namespace DSharpPlusNextGen.Entities
             this.Username = transport.Username;
             this.Discriminator = transport.Discriminator;
             this.AvatarHash = transport.AvatarHash;
+            this.BannerHash = transport.BannerHash;
+            this._bannerColor = transport.BannerColor;
             this.IsBot = transport.IsBot;
             this.MfaEnabled = transport.MfaEnabled;
             this.Verified = transport.Verified;
