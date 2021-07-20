@@ -2894,7 +2894,7 @@ namespace DSharpPlusNextGen.Entities
             this.CanSetBanner = guild.RawFeatures.Contains("BANNER");
             this.CanCreateStoreChannels = guild.RawFeatures.Contains("COMMERCE");
             this.HasCommunityEnabled = guild.RawFeatures.Contains("COMMUNITY");
-            this.IsDiscoverable = guild.RawFeatures.Contains("DISCOVERABLE");
+            this.IsDiscoverable = !guild.RawFeatures.Contains("DISCOVERABLE_DISABLED") && guild.RawFeatures.Contains("DISCOVERABLE");
             this.IsFeatureable = guild.RawFeatures.Contains("FEATURABLE");
             this.CanSetInviteSplash = guild.RawFeatures.Contains("INVITE_SPLASH");
             this.HasMembershipScreeningEnabled = guild.RawFeatures.Contains("MEMBER_VERIFICATION_GATE_ENABLED");
