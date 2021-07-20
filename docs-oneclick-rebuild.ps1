@@ -1,1 +1,1 @@
-.\rebuild-docs.ps1 -DocsPath ".\docs" -OutputPath "..\dsp-nextgen.aitsys.dev\" -PackageName "dsp-nextgen-docs"
+.\rebuild-docs.ps1 -DocsPath ".\docs" -OutputPath "..\docs.dcs.aitsys.dev\" -PackageName "dcs-docs"

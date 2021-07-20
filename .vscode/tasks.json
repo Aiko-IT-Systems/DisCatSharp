@@ -23,7 +23,7 @@
         },
         {
             "label": "buildReleaseDocs",
-            "command": "./rebuild-all.ps1 artifacts -configuration Release -docspath docs -docspackagename dsharpplusnextgen-docs",
+            "command": "./rebuild-all.ps1 artifacts -configuration Release -docspath docs -docspackagename dcs-docs",
             "type": "shell",
             "group": "build",
             "presentation": {
