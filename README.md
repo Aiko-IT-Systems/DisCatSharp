@@ -1,4 +1,4 @@
-# DisCatSharp ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License) ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)  ![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)
+# DisCatSharp ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License) ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors) ![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)
 Discord Bot Library written in C# for .NET.
 
 #### Status
