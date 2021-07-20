@@ -1,4 +1,4 @@
-# Building DSharpPlus
+# Building DisCatSharp
 These are detailed instructions on how to build the DisCatSharp library under various environmnets.
 
 It is recommended you have prior experience with multi-target .NET Core/Standard projects, as well as the `dotnet` CLI utility, and MSBuild.
