@@ -1,5 +1,5 @@
-# DSharpPlusNextGen ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DSharpPlusNextGen?label=License) ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)  ![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)
-Discord Bot Library written in C# for .NET - based off [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus).
+# DisCatSharp ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DSharpPlusNextGen?label=License) ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)  ![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)
+Discord Bot Library written in C# for .NET.
 
 #### Status
 [![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg?label=NuGet%20Overall%20Version)](https://nuget.dspng.aitsys.dev)
@@ -16,7 +16,7 @@ Discord Bot Library written in C# for .NET - based off [DSharpPlus](https://gith
 ![GitHub contributors](https://img.shields.io/github/contributors/Aiko-IT-Systems/DSharpPlusNextGen)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Aiko-IT-Systems/DSharpPlusNextGen?label=Stars)
 
-## Why NextGen?
+## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
 
 With DSharpPlus and their way how to implement changes, it is not possible.
@@ -29,16 +29,16 @@ We want this lib always up-to-date. So the API version is always the newest, in 
 ## Installing
 You can install the library from following source:
 
-The latest release is always available on [NuGet](https://nuget.dspng.aitsys.dev).
+The latest release is always available on [NuGet](https://nuget.dcs.aitsys.dev).
 
 ## Documentation
-The documentation for the latest stable version is available at [docs.dspng.aitsys.dev](https://docs.dspng.aitsys.dev).
+The documentation for the latest stable version is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
 Do note that the documentation might not reflect the latest changes in nightly version of the library.
 
 ### Tutorials
-* [Howto](https://docs.dspng.aitsys.dev/articles/basics/bot_account.html)
-* [Examples](https://examples.dspng.aitsys.dev)
+* [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
+* [Examples](https://examples.dcs.aitsys.dev)
 
 ## Notice
 **Do not start a fight**
@@ -50,14 +50,14 @@ Feel free to re-use code in DSharpPlus.
 ## NuGet
 Package|NuGet
 |--|--|
-DSharpPlusNextGen|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen)
+DisCatSharp|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen)
 DSharpPlusNextGen.CommandsNext|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.CommandsNext.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.CommandsNext)
-DSharpPlusNextGen.Common|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Common.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.Common)
-DSharpPlusNextGen.Interactivity|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Interactivity.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.Interactivity)
-DSharpPlusNextGen.Lavalink|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Lavalink.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.Lavalink)
-DSharpPlusNextGen.SlashCommands|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.SlashCommands.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.SlashCommands)
-DSharpPlusNextGen.VoiceNext|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.VoiceNext.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.VoiceNext)
-DSharpPlusNextGen.VoiceNext.Natives|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.VoiceNext.Natives.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.VoiceNext.Natives)
+DisCatSharp.Common|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Common.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.Common)
+DisCatSharp.Interactivity|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Interactivity.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.Interactivity)
+DisCatSharp.Lavalink|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Lavalink.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.Lavalink)
+DisCatSharp.SlashCommands|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.SlashCommands.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.SlashCommands)
+DisCatSharp.VoiceNext|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.VoiceNext.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.VoiceNext)
+DisCatSharp.VoiceNext.Natives|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.VoiceNext.Natives.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.VoiceNext.Natives)
 
 ## Releasing
 To release a new version do the following steps:
