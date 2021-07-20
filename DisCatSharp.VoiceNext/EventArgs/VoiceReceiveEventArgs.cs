@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,10 +21,10 @@
 // SOFTWARE.
 
 using System;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.EventArgs;
+using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
 
-namespace DSharpPlusNextGen.VoiceNext.EventArgs
+namespace DisCatSharp.VoiceNext.EventArgs
 {
     /// <summary>
     /// Represents arguments for VoiceReceived events.

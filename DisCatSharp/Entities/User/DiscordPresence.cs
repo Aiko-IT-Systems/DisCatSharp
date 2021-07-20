@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,10 +21,10 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using DSharpPlusNextGen.Net.Abstractions;
+using DisCatSharp.Net.Abstractions;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// Represents a user presence.

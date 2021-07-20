@@ -1,4 +1,4 @@
-﻿// This file is part of the DSharpPlusNextGen project.
+﻿// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,7 +22,7 @@
 
 using System.Threading.Tasks;
 
-namespace DSharpPlusNextGen.Common.Utilities
+namespace DisCatSharp.Common.Utilities
 {
     /// <summary>
     /// Handles an asynchronous event of type <see cref="AsyncEvent{TSender, TArgs}"/>. The handler will take an instance of <typeparamref name="TArgs"/> as its arguments.

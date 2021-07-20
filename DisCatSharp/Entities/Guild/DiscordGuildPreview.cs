@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,12 +23,12 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
-using DSharpPlusNextGen.Enums.Discord;
-using DSharpPlusNextGen.Net;
-using DSharpPlusNextGen.Net.Serialization;
+using DisCatSharp.Enums.Discord;
+using DisCatSharp.Net;
+using DisCatSharp.Net.Serialization;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// Represents the guild preview.

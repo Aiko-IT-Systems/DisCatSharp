@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,10 +22,10 @@
 
 using System;
 using System.Collections.Generic;
-using DSharpPlusNextGen.Entities;
+using DisCatSharp.Entities;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Net.Abstractions
+namespace DisCatSharp.Net.Abstractions
 {
     /// <summary>
     /// The reason action.

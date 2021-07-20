@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace DSharpPlusNextGen.CommandsNext.Attributes
+namespace DisCatSharp.CommandsNext.Attributes
 {
     /// <summary>
     /// Adds aliases to this command or group.

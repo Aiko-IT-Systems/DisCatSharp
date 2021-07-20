@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -28,11 +28,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.Net;
+using DisCatSharp.Entities;
+using DisCatSharp.Net;
 using Microsoft.Extensions.Logging;
 
-namespace DSharpPlusNextGen
+namespace DisCatSharp
 {
     /// <summary>
     /// Represents a common base for various Discord client implementations.
@@ -131,7 +131,7 @@ namespace DSharpPlusNextGen
                     this.VersionString = $"{vs}, CI build {v.Revision}";
             }
 
-            this.BotLibrary = "DSharpPlus NextGen";
+            this.BotLibrary = "DisCatSharp";
         }
 
         /// <summary>

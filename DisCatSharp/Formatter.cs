@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,9 +23,9 @@
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using DSharpPlusNextGen.Entities;
+using DisCatSharp.Entities;
 
-namespace DSharpPlusNextGen
+namespace DisCatSharp
 {
     /// <summary>
     /// Contains markdown formatting helpers.

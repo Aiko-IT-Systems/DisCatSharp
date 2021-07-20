@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,10 +26,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcurrentCollections;
-using DSharpPlusNextGen.EventArgs;
+using DisCatSharp.EventArgs;
 using Microsoft.Extensions.Logging;
 
-namespace DSharpPlusNextGen.Interactivity.EventHandling
+namespace DisCatSharp.Interactivity.EventHandling
 {
     internal class Poller
     {

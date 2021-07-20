@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,12 +21,12 @@
 // SOFTWARE.
 
 using System;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.Enums;
+using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DSharpPlusNextGen.Net.Serialization
+namespace DisCatSharp.Net.Serialization
 {
     /// <summary>
     /// Represents a discord component json converter.

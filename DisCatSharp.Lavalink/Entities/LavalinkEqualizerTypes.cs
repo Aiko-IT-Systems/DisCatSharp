@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Lavalink
+namespace DisCatSharp.Lavalink
 {
     /// <summary>
     /// Represents Lavalink equalizer band adjustment. This is used to alter the sound output by using Lavalink's equalizer.

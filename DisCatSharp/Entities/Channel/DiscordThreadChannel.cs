@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -27,13 +27,13 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Exceptions;
-using DSharpPlusNextGen.Enums;
-using DSharpPlusNextGen.Net.Models;
-using DSharpPlusNextGen.Net.Serialization;
+using DisCatSharp.Exceptions;
+using DisCatSharp.Enums;
+using DisCatSharp.Net.Models;
+using DisCatSharp.Net.Serialization;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// Represents a discord thread channel.

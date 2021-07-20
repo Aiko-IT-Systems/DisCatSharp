@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace DSharpPlusNextGen.SlashCommands
+namespace DisCatSharp.SlashCommands
 {
     /// <summary>
     /// Defines various extension methods for slash commands

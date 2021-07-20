@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,13 +26,13 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Enums.Discord;
-using DSharpPlusNextGen.Net;
-using DSharpPlusNextGen.Net.Abstractions;
-using DSharpPlusNextGen.Net.Models;
+using DisCatSharp.Enums.Discord;
+using DisCatSharp.Net;
+using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.Models;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// Represents a Discord guild member.

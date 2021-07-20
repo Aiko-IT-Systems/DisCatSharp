@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DSharpPlusNextGen.CommandsNext.Attributes
+namespace DisCatSharp.CommandsNext.Attributes
 {
     /// <summary>
     /// Gives this command, group, or argument a description, which is used when listing help.

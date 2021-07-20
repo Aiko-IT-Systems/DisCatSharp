@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,10 +21,10 @@
 // SOFTWARE.
 
 using System;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.VoiceNext.Codec;
+using DisCatSharp.Entities;
+using DisCatSharp.VoiceNext.Codec;
 
-namespace DSharpPlusNextGen.VoiceNext.Entities
+namespace DisCatSharp.VoiceNext.Entities
 {
     /// <summary>
     /// The audio sender.

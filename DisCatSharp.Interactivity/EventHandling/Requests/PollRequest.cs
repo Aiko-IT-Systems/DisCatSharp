@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,9 +26,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ConcurrentCollections;
-using DSharpPlusNextGen.Entities;
+using DisCatSharp.Entities;
 
-namespace DSharpPlusNextGen.Interactivity.EventHandling
+namespace DisCatSharp.Interactivity.EventHandling
 {
     public class PollRequest
     {

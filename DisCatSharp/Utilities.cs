@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -29,12 +29,12 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.Net;
+using DisCatSharp.Entities;
+using DisCatSharp.Net;
 using Microsoft.Extensions.Logging;
 using static System.Net.WebRequestMethods;
 
-namespace DSharpPlusNextGen
+namespace DisCatSharp
 {
     /// <summary>
     /// Various Discord-related utilities.
@@ -87,7 +87,7 @@ namespace DSharpPlusNextGen
                 vs = v.ToString(3);
             }
 
-            VersionHeader = $"DiscordBot (https://github.com/Aiko-IT-Systems/DSharpPlusNextGen, v{vs})";
+            VersionHeader = $"DiscordBot (https://github.com/Aiko-IT-Systems/DisCatSharp, v{vs})";
         }
 
         /// <summary>

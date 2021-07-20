@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,12 +24,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.CommandsNext.Attributes;
-using DSharpPlusNextGen.CommandsNext.Converters;
-using DSharpPlusNextGen.Entities;
+using DisCatSharp.CommandsNext.Attributes;
+using DisCatSharp.CommandsNext.Converters;
+using DisCatSharp.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DSharpPlusNextGen.CommandsNext
+namespace DisCatSharp.CommandsNext
 {
     /// <summary>
     /// <para>Represents a delegate for a function that takes a message, and returns the position of the start of command invocation in the message. It has to return -1 if prefix is not present.</para>

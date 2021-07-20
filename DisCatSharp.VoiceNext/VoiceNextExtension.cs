@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,13 +23,13 @@
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Net;
-using DSharpPlusNextGen.VoiceNext.Entities;
+using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Net;
+using DisCatSharp.VoiceNext.Entities;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.VoiceNext
+namespace DisCatSharp.VoiceNext
 {
     /// <summary>
     /// Represents VoiceNext extension, which acts as Discord voice client.

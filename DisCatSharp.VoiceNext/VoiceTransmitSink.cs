@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -29,10 +29,10 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.VoiceNext.Codec;
-using DSharpPlusNextGen.VoiceNext.Entities;
+using DisCatSharp.VoiceNext.Codec;
+using DisCatSharp.VoiceNext.Entities;
 
-namespace DSharpPlusNextGen.VoiceNext
+namespace DisCatSharp.VoiceNext
 {
     /// <summary>
     /// Sink used to transmit audio data via <see cref="VoiceNextConnection"/>.

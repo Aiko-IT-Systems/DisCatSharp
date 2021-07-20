@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,7 +23,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DSharpPlusNextGen.Common.Utilities
+namespace DisCatSharp.Common.Utilities
 {
     /// <summary>
     /// Represents a thread synchronization event that, when signaled, must be reset manually. Unlike <see cref="ManualResetEventSlim"/>, this event is asynchronous.

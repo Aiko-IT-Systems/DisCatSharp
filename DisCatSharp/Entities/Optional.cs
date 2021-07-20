@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,12 +23,12 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using DSharpPlusNextGen.Net.Serialization;
+using DisCatSharp.Net.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// Helper methods for instantiating an <see cref="Optional{T}"/>.

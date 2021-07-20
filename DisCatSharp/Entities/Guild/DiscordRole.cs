@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,11 +23,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Net.Abstractions;
-using DSharpPlusNextGen.Net.Models;
+using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.Models;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// Represents a discord role, to which users can be assigned.

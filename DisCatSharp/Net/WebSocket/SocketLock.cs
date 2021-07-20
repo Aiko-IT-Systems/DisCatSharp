@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,7 +24,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DSharpPlusNextGen.Net.WebSocket
+namespace DisCatSharp.Net.WebSocket
 {
     // Licensed from Clyde.NET
 

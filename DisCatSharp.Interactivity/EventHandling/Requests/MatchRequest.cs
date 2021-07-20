@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,9 +23,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.Common.Utilities;
 
-namespace DSharpPlusNextGen.Interactivity.EventHandling
+namespace DisCatSharp.Interactivity.EventHandling
 {
     /// <summary>
     /// MatchRequest is a class that serves as a representation of a

@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,9 +21,9 @@
 // SOFTWARE.
 
 using System;
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.Common.Utilities;
 
-namespace DSharpPlusNextGen.Lavalink.EventArgs
+namespace DisCatSharp.Lavalink.EventArgs
 {
     /// <summary>
     /// Represents arguments for player update event.

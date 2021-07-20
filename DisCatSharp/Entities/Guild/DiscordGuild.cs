@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -29,18 +29,18 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Enums.Discord;
-using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Exceptions;
-using DSharpPlusNextGen.Net;
-using DSharpPlusNextGen.Net.Abstractions;
-using DSharpPlusNextGen.Net.Models;
-using DSharpPlusNextGen.Net.Serialization;
+using DisCatSharp.Enums.Discord;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Exceptions;
+using DisCatSharp.Net;
+using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.Models;
+using DisCatSharp.Net.Serialization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// Represents a Discord guild.
@@ -2412,7 +2412,7 @@ namespace DSharpPlusNextGen.Entities
         {
             return this._channels?.Values.Where(xc => xc.Type == ChannelType.Text)
                     .OrderBy(xc => xc.Position)
-                    .FirstOrDefault(xc => (xc.PermissionsFor(this.CurrentMember) & DSharpPlusNextGen.Permissions.AccessChannels) == DSharpPlusNextGen.Permissions.AccessChannels);
+                    .FirstOrDefault(xc => (xc.PermissionsFor(this.CurrentMember) & DisCatSharp.Permissions.AccessChannels) == DisCatSharp.Permissions.AccessChannels);
         }
 
         /// <summary>

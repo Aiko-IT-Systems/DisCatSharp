@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,7 +23,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DSharpPlusNextGen.SlashCommands
+namespace DisCatSharp.SlashCommands
 {
     /// <summary>
     /// A configuration for a <see cref="SlashCommandsExtension"/>

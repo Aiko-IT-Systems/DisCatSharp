@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,18 +26,18 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.CommandsNext.Attributes;
-using DSharpPlusNextGen.CommandsNext.Builders;
-using DSharpPlusNextGen.CommandsNext.Converters;
-using DSharpPlusNextGen.CommandsNext.Entities;
-using DSharpPlusNextGen.CommandsNext.Exceptions;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.CommandsNext.Attributes;
+using DisCatSharp.CommandsNext.Builders;
+using DisCatSharp.CommandsNext.Converters;
+using DisCatSharp.CommandsNext.Entities;
+using DisCatSharp.CommandsNext.Exceptions;
+using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace DSharpPlusNextGen.CommandsNext
+namespace DisCatSharp.CommandsNext
 {
     /// <summary>
     /// This is the class which handles command registration, management, and execution. 

@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,12 +26,12 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DSharpPlusNextGen.Net.Udp
+namespace DisCatSharp.Net.Udp
 {
     /// <summary>
     /// The default, native-based UDP client implementation.
     /// </summary>
-    internal class DspNgUdpClient : BaseUdpClient
+    internal class DCSUdpClient : BaseUdpClient
     {
         /// <summary>
         /// Gets the client.
@@ -68,7 +68,7 @@ namespace DSharpPlusNextGen.Net.Udp
         /// <summary>
         /// Creates a new UDP client instance.
         /// </summary>
-        public DspNgUdpClient()
+        public DCSUdpClient()
         {
             this.PacketQueue = new BlockingCollection<byte[]>();
             this.TokenSource = new CancellationTokenSource();
@@ -133,9 +133,9 @@ namespace DSharpPlusNextGen.Net.Udp
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="DspNgUdpClient"/>.
+        /// Creates a new instance of <see cref="DCSUdpClient"/>.
         /// </summary>
         public static BaseUdpClient CreateNew()
-            => new DspNgUdpClient();
+            => new DCSUdpClient();
     }
 }

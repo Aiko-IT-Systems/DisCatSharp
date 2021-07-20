@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,16 +24,16 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using DSharpPlusNextGen.Entities;
+using DisCatSharp.Entities;
 using System.Linq;
-using DSharpPlusNextGen.EventArgs;
+using DisCatSharp.EventArgs;
 using Microsoft.Extensions.Logging;
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.DependencyInjection;
-using DSharpPlusNextGen.SlashCommands.EventArgs;
-using DSharpPlusNextGen.Exceptions;
+using DisCatSharp.SlashCommands.EventArgs;
+using DisCatSharp.Exceptions;
 
-namespace DSharpPlusNextGen.SlashCommands
+namespace DisCatSharp.SlashCommands
 {
     /// <summary>
     /// A class that handles slash commands for a client

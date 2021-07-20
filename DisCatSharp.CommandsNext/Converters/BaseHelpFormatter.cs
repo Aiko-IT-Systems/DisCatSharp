@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,9 +21,9 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using DSharpPlusNextGen.CommandsNext.Entities;
+using DisCatSharp.CommandsNext.Entities;
 
-namespace DSharpPlusNextGen.CommandsNext.Converters
+namespace DisCatSharp.CommandsNext.Converters
 {
     /// <summary>
     /// Represents a base class for all default help formatters.

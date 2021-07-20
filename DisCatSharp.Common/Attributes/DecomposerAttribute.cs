@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DSharpPlusNextGen.Common.Serialization
+namespace DisCatSharp.Common.Serialization
 {
     /// <summary>
     /// Specifies a decomposer for a given type or property.
@@ -42,7 +42,7 @@ namespace DSharpPlusNextGen.Common.Serialization
         public DecomposerAttribute(Type type)
         {
             if (!typeof(IDecomposer).IsAssignableFrom(type) || !type.IsClass || type.IsAbstract) // abstract covers static - static = abstract + sealed
-                throw new ArgumentException("Invalid type specified. Must be a non-abstract class which implements DSharpPlusNextGen.Common.Serialization.IDecomposer interface.", nameof(type));
+                throw new ArgumentException("Invalid type specified. Must be a non-abstract class which implements DisCatSharp.Common.Serialization.IDecomposer interface.", nameof(type));
 
             this.DecomposerType = type;
         }

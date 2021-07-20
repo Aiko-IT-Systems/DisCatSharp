@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DSharpPlusNextGen.EventArgs
+namespace DisCatSharp.EventArgs
 {
     /// <summary>
     /// Represents arguments for <see cref="DiscordClient.SocketClosed"/> event.

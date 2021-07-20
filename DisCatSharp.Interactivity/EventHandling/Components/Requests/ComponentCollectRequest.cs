@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,9 +23,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
-using DSharpPlusNextGen.EventArgs;
+using DisCatSharp.EventArgs;
 
-namespace DSharpPlusNextGen.Interactivity.EventHandling
+namespace DisCatSharp.Interactivity.EventHandling
 {
     /// <summary>
     /// Represents a component event that is being waited for.

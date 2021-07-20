@@ -1,4 +1,4 @@
-// This file is part of Represents a DSharpPlusNextGen project.
+// This file is part of Represents a DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,11 +21,11 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using DSharpPlusNextGen.Entities;
+using DisCatSharp.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DSharpPlusNextGen.Net.Abstractions
+namespace DisCatSharp.Net.Abstractions
 {
     /// <summary>
     /// Represents a audit log user.

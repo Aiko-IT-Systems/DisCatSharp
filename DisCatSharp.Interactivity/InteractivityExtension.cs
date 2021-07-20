@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,15 +25,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Interactivity.Enums;
-using DSharpPlusNextGen.Interactivity.EventHandling;
-using DSharpPlusNextGen.Common.Utilities;
-using DSharpPlusNextGen.Enums;
+using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Interactivity.Enums;
+using DisCatSharp.Interactivity.EventHandling;
+using DisCatSharp.Common.Utilities;
+using DisCatSharp.Enums;
 using System.Threading;
 
-namespace DSharpPlusNextGen.Interactivity
+namespace DisCatSharp.Interactivity
 {
     /// <summary>
     /// Extension class for DSharpPlus.Interactivity

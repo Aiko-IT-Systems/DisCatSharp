@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,10 +22,10 @@
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using DSharpPlusNextGen.Net.Serialization;
+using DisCatSharp.Net.Serialization;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// Represents a stage instance to which the user is invited.

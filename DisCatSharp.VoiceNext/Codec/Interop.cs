@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,7 +23,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace DSharpPlusNextGen.VoiceNext.Codec
+namespace DisCatSharp.VoiceNext.Codec
 {
     /// <summary>
     /// This is an interop class. It contains wrapper methods for Opus and Sodium.

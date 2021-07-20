@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,11 +21,11 @@
 // SOFTWARE.
 
 using System;
-using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 
-namespace DSharpPlusNextGen
+namespace DisCatSharp
 {
     /// <summary>
     /// Represents a discord client.

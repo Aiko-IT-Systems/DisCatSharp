@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,7 +24,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Net.Abstractions
+namespace DisCatSharp.Net.Abstractions
 {
     /// <summary>
     /// Represents data for identify payload's client properties.
@@ -84,7 +84,7 @@ namespace DSharpPlusNextGen.Net.Abstractions
                 {
                     var a = typeof(DiscordClient).GetTypeInfo().Assembly;
                     var an = a.GetName();
-                    return $"DSharpPlusNextGen {an.Version.ToString(4)}";
+                    return $"DisCatSharp {an.Version.ToString(4)}";
                 }
             }
         }

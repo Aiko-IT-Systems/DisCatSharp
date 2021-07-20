@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,9 +23,9 @@
 using System;
 using System.IO;
 using System.Text;
-using DSharpPlusNextGen.Lavalink.EventArgs;
+using DisCatSharp.Lavalink.EventArgs;
 
-namespace DSharpPlusNextGen.Lavalink
+namespace DisCatSharp.Lavalink
 {
     /// <summary>
     /// Various utilities for Lavalink.
