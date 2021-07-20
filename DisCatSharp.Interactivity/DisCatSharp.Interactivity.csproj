@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Version.targets" />
+  <Import Project="../DisCatSharp.targets" />
+
+  <PropertyGroup>
+    <AssemblyName>DisCatSharp.Interactivity</AssemblyName>
+    <RootNamespace>DisCatSharp.Interactivity</RootNamespace>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>DisCatSharp.Interactivity</PackageId>
+    <Description>Interactivity extension for DisCatSharp.</Description>
+    <PackageTags>discord, discord-api, bots, discord-bots, chat, dcs, discatsharp, csharp, dotnet, vb-net, fsharp, interactive, pagination, reactions</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ConcurrentHashSet" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

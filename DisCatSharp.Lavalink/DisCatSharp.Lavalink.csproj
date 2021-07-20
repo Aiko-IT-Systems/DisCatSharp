@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Version.targets" />
+  <Import Project="../DisCatSharp.targets" />
+
+  <PropertyGroup>
+    <AssemblyName>DisCatSharp.Lavalink</AssemblyName>
+    <RootNamespace>DisCatSharp.Lavalink</RootNamespace>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>DisCatSharp.Lavalink</PackageId>
+    <Description>Lavalink implementation for DisCatSharp.</Description>
+    <PackageTags>discord, discord-api, bots, discord-bots, chat, dcs, discatsharp, csharp, dotnet, vb-net, fsharp, audio, voice, radio, music, lavalink, lavaplayer</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

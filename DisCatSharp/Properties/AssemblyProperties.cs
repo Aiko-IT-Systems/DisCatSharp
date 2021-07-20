@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,10 +22,10 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("DSharpPlusNextGen.Common")]
-[assembly: InternalsVisibleTo("DSharpPlusNextGen.CommandsNext")]
-[assembly: InternalsVisibleTo("DSharpPlusNextGen.Interactivity")]
-[assembly: InternalsVisibleTo("DSharpPlusNextGen.Lavalink")]
-[assembly: InternalsVisibleTo("DSharpPlusNextGen.SlashCommands")]
-[assembly: InternalsVisibleTo("DSharpPlusNextGen.VoiceNext")]
-[assembly: InternalsVisibleTo("DSharpPlusNextGen.VoiceNext.Natives")]
+[assembly: InternalsVisibleTo("DisCatSharp.Common")]
+[assembly: InternalsVisibleTo("DisCatSharp.CommandsNext")]
+[assembly: InternalsVisibleTo("DisCatSharp.Interactivity")]
+[assembly: InternalsVisibleTo("DisCatSharp.Lavalink")]
+[assembly: InternalsVisibleTo("DisCatSharp.SlashCommands")]
+[assembly: InternalsVisibleTo("DisCatSharp.VoiceNext")]
+[assembly: InternalsVisibleTo("DisCatSharp.VoiceNext.Natives")]
