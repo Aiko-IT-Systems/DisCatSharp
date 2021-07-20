@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	
+
 	<PropertyGroup>
-    <VersionPrefix>9.5.7</VersionPrefix>
+    <VersionPrefix>9.5.8</VersionPrefix>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>../logo/dsc.png</PackageIcon>
+    <Authors>Lala Sabathil, Lunar, J_M_Lutra & AITSYS contributors</Authors>
+	  <Company>Aiko IT Systems</Company>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' != ''">
@@ -22,5 +26,4 @@
     <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
     <FileVersion>$(VersionPrefix).0</FileVersion>
   </PropertyGroup>
-
 </Project>

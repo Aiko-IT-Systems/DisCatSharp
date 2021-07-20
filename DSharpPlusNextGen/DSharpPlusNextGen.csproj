@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="../Version.targets" />
-  <Import Project="../DSharpPlusNextGen.targets" />
+  <Import Project="../DisCatSharp.targets" />
 
   <PropertyGroup>
     <AssemblyName>DSharpPlusNextGen</AssemblyName>
@@ -14,11 +14,7 @@
   <PropertyGroup>
     <Description>A C# API for Discord based off DiscordSharp / DSharpPlus, but rewritten to fit the API standards.</Description>
     <PackageTags>discord, discord-api, bots, discord-bots, chat, dsharp, dsharpplus, dsharpplusnextgen, csharp, dotnet, vb-net, fsharp, webhooks</PackageTags>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <PackageIcon>dsharpplus.png</PackageIcon>
     <PackageId>DSharpPlusNextGen</PackageId>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <Authors>Lala Sabathil, Naamloos, afroraydude, DrCreo, Death, TiaqoY0, Axiom, Emzi0767, DSharpPlus contributors</Authors>
   </PropertyGroup>
 
   <ItemGroup>

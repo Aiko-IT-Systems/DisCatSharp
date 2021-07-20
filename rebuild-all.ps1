@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 # Rebuild-all
 #
-# Rebuilds the DSharpPlus NextGen project and its documentation, and places artifacts in specified directories.
+# Rebuilds the DisCatSharp project and its documentation, and places artifacts in specified directories.
 # Not specifying documentation options will skip documentation build.
 #
 # Author:       Emzi0767

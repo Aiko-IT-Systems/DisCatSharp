@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="../Version.targets" />
-  <Import Project="../DSharpPlusNextGen.targets" />
+  <Import Project="../DisCatSharp.targets" />
 
   <PropertyGroup>
     <AssemblyName>DSharpPlusNextGen.Lavalink</AssemblyName>
@@ -16,10 +16,6 @@
     <PackageId>DSharpPlusNextGen.Lavalink</PackageId>
     <Description>Lavalink implementation for DSharpPlusNextGen. Lavalink is an easy and lightweight method of streaming audio to Discord.</Description>
     <PackageTags>discord, discord-api, bots, discord-bots, chat, dsharp, dsharpplus, dsharpplusnextgen, csharp, dotnet, vb-net, fsharp, audio, voice, radio, music, lavalink, lavaplayer</PackageTags>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <PackageIcon>d#+.png</PackageIcon>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <Authors>Lala Sabathil, Naamloos, afroraydude, DrCreo, Death, TiaqoY0, Axiom, Emzi0767, DSharpPlus contributors</Authors>
   </PropertyGroup>
 
   <ItemGroup>

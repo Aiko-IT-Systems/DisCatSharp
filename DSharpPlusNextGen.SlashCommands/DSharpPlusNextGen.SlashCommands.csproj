@@ -2,26 +2,21 @@
   <Project Sdk="Microsoft.NET.Sdk">
 
     <Import Project="../Version.targets" />
-  <Import Project="../DSharpPlusNextGen.targets" />
-  
+  <Import Project="../DisCatSharp.targets" />
+
   <PropertyGroup>
     <AssemblyName>DSharpPlusNextGen.SlashCommands</AssemblyName>
     <RootNamespace>DSharpPlusNextGen.SlashCommands</RootNamespace>
     <OutputType>Library</OutputType>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
-    
+
   <PropertyGroup>
-    <Authors>Lala Sabathil, IDoEverything, Epictek, sssvt-drabek-stepan, tygore587</Authors>
     <Description>An extension for DSharpPlusNextGen to make slash commands easy</Description>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen</PackageProjectUrl>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen</RepositoryUrl>
     <PackageId>DSharpPlusNextGen.SlashCommands</PackageId>
-    <PackageIcon>d#+.png</PackageIcon>
-    <Company>AITSYS, IDoEverything</Company>
-    <PackageLicenseExpression></PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -30,7 +25,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="LICENSE" />
     <None Remove="LICENSE" />
     <None Include="..\LICENSE.md">
       <Pack>True</Pack>

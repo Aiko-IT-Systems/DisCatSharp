@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
-    This file is a part of DSharpPlusNextGen.CommonDSharpPlusNextGen.Common project.
-    
+<!--
+    This file is a part of DisCatSharp project.
+
     Copyright 2020 Emzi0767
-    
+
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-    
+
       http://www.apache.org/licenses/LICENSE-2.0
-      
+
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-  
+
 <Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="../Version.targets" />
-  
+
   <PropertyGroup>
     <AssemblyName>DSharpPlusNextGen.Common</AssemblyName>
     <RootNamespace>DSharpPlusNextGen.Common</RootNamespace>
@@ -37,14 +37,10 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Description>Assortment of various common types and utilities for DSharpPlusNextGen's projects.</Description>
     <PackageTags>common utilities dotnet dotnet-core dotnetfx netfx netcore csharp</PackageTags>
-    <Authors>Lala Sabathil, Emzi0767</Authors>
-    <Company>AITSYS</Company>
-    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/DSharpPlusNextGen.CommonDSharpPlusNextGen.Common/Common</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Emzi0767/Common</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <PackageLicenseFile>LICENSE.MD</PackageLicenseFile>
-    <PackageIcon>d#+.png</PackageIcon>
+    <PackageLicenseExpression>Apache License</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
