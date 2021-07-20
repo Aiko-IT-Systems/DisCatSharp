@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlusNextGen", "DSharpPlusNextGen\DSharpPlusNextGen.csproj", "{EB3D8310-DFAD-4295-97F9-82E253647583}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp", "DisCatSharp\DisCatSharp.csproj", "{EB3D8310-DFAD-4295-97F9-82E253647583}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlusNextGen.VoiceNext", "DSharpPlusNextGen.VoiceNext\DSharpPlusNextGen.VoiceNext.csproj", "{FB6B9EE9-65FB-4DFB-8D51-06F0BE6C1BA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.VoiceNext", "DisCatSharp.VoiceNext\DisCatSharp.VoiceNext.csproj", "{FB6B9EE9-65FB-4DFB-8D51-06F0BE6C1BA5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4255B64D-92EC-46B3-BC3B-ED2C3A8073EE}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,9 +20,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SECURITY.md = SECURITY.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlusNextGen.CommandsNext", "DSharpPlusNextGen.CommandsNext\DSharpPlusNextGen.CommandsNext.csproj", "{C8ED55FB-E028-468D-955F-1534C20274EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.CommandsNext", "DisCatSharp.CommandsNext\DisCatSharp.CommandsNext.csproj", "{C8ED55FB-E028-468D-955F-1534C20274EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlusNextGen.Interactivity", "DSharpPlusNextGen.Interactivity\DSharpPlusNextGen.Interactivity.csproj", "{DD32BEC3-0189-479F-86DC-CCF95E5634A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Interactivity", "DisCatSharp.Interactivity\DisCatSharp.Interactivity.csproj", "{DD32BEC3-0189-479F-86DC-CCF95E5634A9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F953F5D0-F0C9-41E6-ADBF-60A76D295899}"
 	ProjectSection(SolutionItems) = preProject
@@ -33,8 +33,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Items", "Build Items"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
 		.github\dependabot.yml = .github\dependabot.yml
-		DSharpPlusNextGen.targets = DSharpPlusNextGen.targets
+		DSharpPlusNextGen.targets = DisCatSharp.targets
 		oneclick-rebuild.ps1 = oneclick-rebuild.ps1
+		docs-oneclick-rebuild.ps1 = docs-oneclick-rebuild.ps1
 		rebuild-all.ps1 = rebuild-all.ps1
 		rebuild-docs.ps1 = rebuild-docs.ps1
 		rebuild-lib.ps1 = rebuild-lib.ps1
@@ -49,13 +50,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{430C
 		.github\pull_request_template.md = .github\pull_request_template.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlusNextGen.Lavalink", "DSharpPlusNextGen.Lavalink\DSharpPlusNextGen.Lavalink.csproj", "{A8B8FB09-C6AF-4F28-89B8-B53EE0DCE6E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Lavalink", "DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj", "{A8B8FB09-C6AF-4F28-89B8-B53EE0DCE6E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlusNextGen.SlashCommands", "DSharpPlusNextGen.SlashCommands\DSharpPlusNextGen.SlashCommands.csproj", "{AD530FD0-523C-4DE7-9AF6-B9A3785492C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.SlashCommands", "DisCatSharp.SlashCommands\DisCatSharp.SlashCommands.csproj", "{AD530FD0-523C-4DE7-9AF6-B9A3785492C1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlusNextGen.VoiceNext.Natives", "DSharpPlusNextGen.VoiceNext.Natives\DSharpPlusNextGen.VoiceNext.Natives.csproj", "{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.VoiceNext.Natives", "DisCatSharp.VoiceNext.Natives\DisCatSharp.VoiceNext.Natives.csproj", "{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DSharpPlusNextGen.Common", "DSharpPlusNextGen.Common\DSharpPlusNextGen.Common.csproj", "{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Common", "DisCatSharp.Common\DisCatSharp.Common.csproj", "{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
