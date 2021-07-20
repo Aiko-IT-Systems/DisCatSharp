@@ -130,9 +130,8 @@ namespace DSharpPlusNextGen.Entities
         }
 
         /// <summary>
-        /// Gets the previously-sent webhook message from the same token of this webhook.
+        /// Gets a previously-sent webhook message.
         /// </summary>
-        /// <returns></returns>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
