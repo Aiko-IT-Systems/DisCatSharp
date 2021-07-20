@@ -9,4 +9,4 @@
 
 ## Reporting a Vulnerability
 
-Write an mail to security-dspng@aitsys.dev or open an issue https://github.com/Aiko-IT-Systems/DSharpPlusNextGen/issues/new
+Write an mail to security-dcs@aitsys.dev or open an issue https://github.com/Aiko-IT-Systems/DisCatSharp/issues/new

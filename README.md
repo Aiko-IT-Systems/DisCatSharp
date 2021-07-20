@@ -1,22 +1,22 @@
-# DSharpPlusNextGen ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DSharpPlusNextGen?label=License) ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)  ![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)
-Discord Bot Library written in C# for .NET - based off [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus).
+# DisCatSharp ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License) ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)  ![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)
+Discord Bot Library written in C# for .NET.
 
 #### Status
-[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg?label=NuGet%20Overall%20Version)](https://nuget.dspng.aitsys.dev)
-[![Build status](https://ci.appveyor.com/api/projects/status/9hv6emqnew8dgjue/branch/main?svg=true)](https://ci.appveyor.com/project/AITSYS/dsharpplusnextgen/branch/main)
+[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.svg?label=NuGet%20Overall%20Version)](https://nuget.dcs.aitsys.dev)
+[![Build status](https://ci.appveyor.com/api/projects/status/9hv6emqnew8dgjue/branch/main?svg=true)](https://ci.appveyor.com/project/AITSYS/DisCatSharp/branch/main)
 
 #### Commit Activities
-![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DSharpPlusNextGen?label=Last%20Commit)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DSharpPlusNextGen?label=Commit%20Activity)
+![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DisCatSharp?label=Commit%20Activity)
 
 #### Stats
-![GitHub issues](https://img.shields.io/github/issues/Aiko-IT-Systems/DSharpPlusNextGen?label=Issues)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DSharpPlusNextGen?label=PRs)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DSharpPlusNextGen?label=Size)
-![GitHub contributors](https://img.shields.io/github/contributors/Aiko-IT-Systems/DSharpPlusNextGen)
-![GitHub Repo stars](https://img.shields.io/github/stars/Aiko-IT-Systems/DSharpPlusNextGen?label=Stars)
+![GitHub issues](https://img.shields.io/github/issues/Aiko-IT-Systems/DisCatSharp?label=Issues)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DisCatSharp?label=PRs)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DisCatSharp?label=Size)
+![GitHub contributors](https://img.shields.io/github/contributors/Aiko-IT-Systems/DisCatSharp)
+![GitHub Repo stars](https://img.shields.io/github/stars/Aiko-IT-Systems/DisCatSharp?label=Stars)
 
-## Why NextGen?
+## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
 
 With DSharpPlus and their way how to implement changes, it is not possible.
@@ -29,16 +29,16 @@ We want this lib always up-to-date. So the API version is always the newest, in 
 ## Installing
 You can install the library from following source:
 
-The latest release is always available on [NuGet](https://nuget.dspng.aitsys.dev).
+The latest release is always available on [NuGet](https://nuget.dcs.aitsys.dev).
 
 ## Documentation
-The documentation for the latest stable version is available at [docs.dspng.aitsys.dev](https://docs.dspng.aitsys.dev).
+The documentation for the latest stable version is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
 Do note that the documentation might not reflect the latest changes in nightly version of the library.
 
 ### Tutorials
-* [Howto](https://docs.dspng.aitsys.dev/articles/basics/bot_account.html)
-* [Examples](https://examples.dspng.aitsys.dev)
+* [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
+* [Examples](https://examples.dcs.aitsys.dev)
 
 ## Notice
 **Do not start a fight**
@@ -50,20 +50,20 @@ Feel free to re-use code in DSharpPlus.
 ## NuGet
 Package|NuGet
 |--|--|
-DSharpPlusNextGen|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen)
-DSharpPlusNextGen.CommandsNext|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.CommandsNext.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.CommandsNext)
-DSharpPlusNextGen.Common|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Common.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.Common)
-DSharpPlusNextGen.Interactivity|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Interactivity.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.Interactivity)
-DSharpPlusNextGen.Lavalink|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Lavalink.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.Lavalink)
-DSharpPlusNextGen.SlashCommands|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.SlashCommands.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.SlashCommands)
-DSharpPlusNextGen.VoiceNext|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.VoiceNext.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.VoiceNext)
-DSharpPlusNextGen.VoiceNext.Natives|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.VoiceNext.Natives.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.VoiceNext.Natives)
+DisCatSharp|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp)
+DisCatSharp.CommandsNext|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.CommandsNext.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.CommandsNext)
+DisCatSharp.Common|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Common.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Common)
+DisCatSharp.Interactivity|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Interactivity.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Interactivity)
+DisCatSharp.Lavalink|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Lavalink.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Lavalink)
+DisCatSharp.SlashCommands|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.SlashCommands.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.SlashCommands)
+DisCatSharp.VoiceNext|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.VoiceNext.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.VoiceNext)
+DisCatSharp.VoiceNext.Natives|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.VoiceNext.Natives.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.VoiceNext.Natives)
 
 ## Releasing
 To release a new version do the following steps:
 - Create locally a repo named `release/VERSION` (Don't forget to replace VERSION with the target version number)
-- Replace version number with the correct version in https://github.com/Aiko-IT-Systems/DSharpPlusNextGen/blob/main/appveyor.yml#L69 and https://github.com/Aiko-IT-Systems/DSharpPlusNextGen/blob/main/appveyor.yml#L5
-- Replace nuget version number in https://github.com/Aiko-IT-Systems/DSharpPlusNextGen/blob/main/Version.targets
+- Replace version number with the correct version in https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/appveyor.yml#L69 and https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/appveyor.yml#L5
+- Replace nuget version number in https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/Version.targets
 - Publish branch to GitHub
 - Wait for the CI/CD to complete.
 - Merge the branch into main and delete it afterwards

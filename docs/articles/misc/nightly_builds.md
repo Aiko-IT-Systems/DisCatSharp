@@ -5,11 +5,11 @@ title: Nightly Builds
 
 # I like living on the edge - give me the freshest builds
 
-We offer nightly builds for DSharpPlusNextGen. They contain bugfixes and new features before the NuGet releases, however they are
+We offer nightly builds for DisCatSharp. They contain bugfixes and new features before the NuGet releases, however they are
 not guaranteed to be stable, or work at all.
 Open the NuGet interface for your project, check **Prerelease**.
 
-Then just select **Latest prerelease** version of DSharpPlusNextGen packages, and install them.
+Then just select **Latest prerelease** version of DisCatSharp packages, and install them.
 
 You might need to restart Visual Studio for changes to take effect.
 

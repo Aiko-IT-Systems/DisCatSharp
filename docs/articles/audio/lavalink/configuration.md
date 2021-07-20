@@ -7,10 +7,10 @@ title: Lavalink Configuration
 
 ## Configuring Your Client
 
-To begin using DSharpPlusNextGen's Lavalink client, you will need to add the `DSharpPlusNextGen.Lavalink` nuget package. Once installed, simply add these namespaces at the top of your bot file:
+To begin using DisCatSharp's Lavalink client, you will need to add the `DisCatSharp.Lavalink` nuget package. Once installed, simply add these namespaces at the top of your bot file:
 ```csharp
-using DSharpPlusNextGen.Net;
-using DSharpPlusNextGen.Lavalink;
+using DisCatSharp.Net;
+using DisCatSharp.Lavalink;
 ```
 
 After that, we will need to create a configuration for our extension to use. This is where the special values from the server configuration are used.
@@ -46,9 +46,9 @@ Your main bot file should now look like this:
 ```csharp
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using DSharpPlusNextGen;
-using DSharpPlusNextGen.Net;
-using DSharpPlusNextGen.Lavalink;
+using DisCatSharp;
+using DisCatSharp.Net;
+using DisCatSharp.Lavalink;
 
 namespace MyFirstMusicBot
 {
@@ -93,7 +93,7 @@ namespace MyFirstMusicBot
     }
 }
 ```
-We are now ready to start the bot. If everything is configured properly, you should see a Lavalink connection appear in your DSharpPlusNextGen console:
+We are now ready to start the bot. If everything is configured properly, you should see a Lavalink connection appear in your DisCatSharp console:
 
 ```
 [2020-10-10 17:56:07 -04:00] [403 /LavalinkConn] [Debug] Connection to Lavalink node established

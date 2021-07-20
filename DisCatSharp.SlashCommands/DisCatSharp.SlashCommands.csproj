@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="../Version.targets" />
+  <Import Project="../DisCatSharp.targets" />
+
+  <PropertyGroup>
+    <AssemblyName>DisCatSharp.SlashCommands</AssemblyName>
+    <RootNamespace>DisCatSharp.SlashCommands</RootNamespace>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>DisCatSharp.SlashCommands</PackageId>
+    <Description>SlashCommands for DisCatSharp</Description>
+    <PackageTags>discord, discord-api, bots, discord-bots, chat, dcs, discatsharp, csharp, dotnet, vb-net, fsharp, slash, slashcommands</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+  </ItemGroup>
+
+</Project>

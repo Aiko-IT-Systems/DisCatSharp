@@ -7,7 +7,7 @@ title: Interactivity Introduction
 Interactivity will enable you to write commands which the user can interact with through reactions and messages.
 The goal of this article is to introduce you to the general flow of this extension.
 
-Make sure to install the `DSharpPlusNextGen.Interactivity` package from NuGet before continuing.
+Make sure to install the `DisCatSharp.Interactivity` package from NuGet before continuing.
 
 ![Interactivity NuGet](/images/interactivity_01.png)
 
@@ -30,7 +30,7 @@ discord.UseInteractivity(new InteractivityConfiguration()
 There are two ways available to use interactivity:
 
 * Extension methods available for `DiscordChannel` and `DiscordMessage`.
-* [Instance methods](xref:DSharpPlusNextGen.Interactivity.InteractivityExtension#methods) available from `InteractivityExtension`.
+* [Instance methods](xref:DisCatSharp.Interactivity.InteractivityExtension#methods) available from `InteractivityExtension`.
 
 We'll have a quick look at a few common interactivity methods along with an example of use for each.
 

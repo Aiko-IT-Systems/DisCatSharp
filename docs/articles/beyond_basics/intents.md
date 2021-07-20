@@ -6,7 +6,7 @@ title: Intents
 ## Intents
 Intents were added to Discord to help the service not have to push so many events to the bots that were not using them.  If you are going to be needing
 to subscribe to any type of event, they are going to have to be defined **BOTH** within the
-[Discord Application under the Bot Page](https://discord.com/developers/applications) on Discords Site and also within the @DSharpPlusNextGen.DiscordConfiguration.
+[Discord Application under the Bot Page](https://discord.com/developers/applications) on Discords Site and also within the @DisCatSharp.DiscordConfiguration.
 
 
 ### Discord Application
@@ -22,7 +22,7 @@ On the [Discord Application under the Bot Page](https://discord.com/developers/a
 
 ### Discord Configuration
 Within your `DiscordConfiguration` you will have to specify all the intents you will need. Here is a list of all the
-[Intents](xref:DSharpPlusNextGen.DiscordIntents) DSharpPlus Supports. By default, the configuration will use `DiscordIntents.AllUnprivileged` as the default value. Like above however, we recommend having all intents enabled at first, so you should specify `DiscordIntents.All` in your configuration which will include the privleged intents you enabled in your application:
+[Intents](xref:DisCatSharp.DiscordIntents) DSharpPlus Supports. By default, the configuration will use `DiscordIntents.AllUnprivileged` as the default value. Like above however, we recommend having all intents enabled at first, so you should specify `DiscordIntents.All` in your configuration which will include the privleged intents you enabled in your application:
 
 ```csharp
 var config = new DiscordConfiguration()
