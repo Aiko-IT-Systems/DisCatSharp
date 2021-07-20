@@ -30,7 +30,10 @@ using Microsoft.Extensions.Logging;
 
 namespace DSharpPlusNextGen.Interactivity.EventHandling
 {
-    internal class Paginator
+    /// <summary>
+    /// The paginator.
+    /// </summary>
+    internal class Paginator : IPaginator
     {
         DiscordClient _client;
         ConcurrentHashSet<IPaginationRequest> _requests;
@@ -38,7 +41,7 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         /// <summary>
         /// Creates a new Eventwaiter object.
         /// </summary>
-        /// <param name="client">Your DiscordClient</param>
+        /// <param name="client">Discord client</param>
         public Paginator(DiscordClient client)
         {
             this._client = client;
@@ -53,7 +56,6 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         /// Dos the pagination async.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <returns>A Task.</returns>
         public async Task DoPaginationAsync(IPaginationRequest request)
         {
             await this.ResetReactionsAsync(request).ConfigureAwait(false);
@@ -86,7 +88,6 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="eventargs">The eventargs.</param>
-        /// <returns>A Task.</returns>
         private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventargs)
         {
             if (this._requests.Count == 0)
@@ -146,7 +147,6 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="eventargs">The eventargs.</param>
-        /// <returns>A Task.</returns>
         private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventargs)
         {
             if (this._requests.Count == 0)
@@ -192,7 +192,6 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="eventargs">The eventargs.</param>
-        /// <returns>A Task.</returns>
         private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventargs)
         {
             if (this._requests.Count == 0)
@@ -218,7 +217,6 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         /// Resets the reactions async.
         /// </summary>
         /// <param name="p">The p.</param>
-        /// <returns>A Task.</returns>
         private async Task ResetReactionsAsync(IPaginationRequest p)
         {
             var msg = await p.GetMessageAsync().ConfigureAwait(false);
@@ -264,7 +262,6 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         /// </summary>
         /// <param name="p">The p.</param>
         /// <param name="emoji">The emoji.</param>
-        /// <returns>A Task.</returns>
         private async Task PaginateAsync(IPaginationRequest p, DiscordEmoji emoji)
         {
             var emojis = await p.GetEmojisAsync().ConfigureAwait(false);

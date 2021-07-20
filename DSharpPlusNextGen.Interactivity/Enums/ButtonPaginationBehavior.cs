@@ -20,36 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DSharpPlusNextGen
+namespace DSharpPlusNextGen.Interactivity.Enums
 {
     /// <summary>
-    /// Represents the type of interaction response
+    /// Represents options of how to handle pagination timing out.
     /// </summary>
-    public enum InteractionResponseType
+    public enum ButtonPaginationBehavior
     {
         /// <summary>
-        /// Acknowledges a Ping.
+        /// The buttons should be disabled when pagination times out.
         /// </summary>
-        Pong = 1,
-
+        Disable,
         /// <summary>
-        /// Responds to the interaction with a message.
+        /// The buttons should be left as is when pagination times out.
         /// </summary>
-        ChannelMessageWithSource = 4,
-
+        Ignore,
         /// <summary>
-        /// Acknowledges an interaction to edit to a response later. The user sees a "thinking" state.
+        /// The entire message should be deleted when pagination times out.
         /// </summary>
-        DeferredChannelMessageWithSource = 5,
-
+        DeleteMessage,
         /// <summary>
-        /// Acknowledges a component interaction to allow a response later.
+        /// The buttons should be removed entirely when pagination times out.
         /// </summary>
-        DeferredMessageUpdate = 6,
-
-        /// <summary>
-        /// Responds to a component interaction by editing the message it's attached to.
-        /// </summary>
-        UpdateMessage = 7,
+        DeleteButtons
     }
 }

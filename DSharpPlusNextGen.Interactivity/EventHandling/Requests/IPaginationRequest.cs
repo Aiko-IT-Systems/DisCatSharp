@@ -20,11 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DSharpPlusNextGen.Entities;
 
 namespace DSharpPlusNextGen.Interactivity.EventHandling
 {
+    /// <summary>
+    /// The pagination request.
+    /// </summary>
     public interface IPaginationRequest
     {
         /// <summary>
@@ -62,6 +66,12 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         /// </summary>
         /// <returns></returns>
         Task PreviousPageAsync();
+
+        /// <summary>
+        /// Requests the message buttons from the pagination request.
+        /// </summary>
+        /// <returns>The buttons.</returns>
+        Task<IEnumerable<DiscordButtonComponent>> GetButtonsAsync();
 
         /// <summary>
         /// Requests message emojis from pagination request.

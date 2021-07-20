@@ -91,7 +91,6 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         /// Collects the matches async.
         /// </summary>
         /// <param name="request">The request.</param>
-        /// <returns>A Task.</returns>
         public async Task<ReadOnlyCollection<T>> CollectMatchesAsync(CollectRequest<T> request)
         {
             ReadOnlyCollection<T> result = null;
@@ -117,8 +116,7 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         /// Handles the event.
         /// </summary>
         /// <param name="client">The client.</param>
-        /// <param name="eventargs">The eventargs.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="eventargs">The event args.</param>
         private Task HandleEvent(DiscordClient client, T eventargs)
         {
             if (!this.disposed)

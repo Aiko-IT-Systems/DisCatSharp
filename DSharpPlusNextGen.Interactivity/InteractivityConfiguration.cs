@@ -22,6 +22,7 @@
 
 using System;
 using DSharpPlusNextGen.Interactivity.Enums;
+using DSharpPlusNextGen.Interactivity.EventHandling;
 
 namespace DSharpPlusNextGen.Interactivity
 {
@@ -44,7 +45,22 @@ namespace DSharpPlusNextGen.Interactivity
         /// <summary>
         /// Emojis to use for pagination
         /// </summary>
-        public PaginationEmojis PaginationEmojis { internal get; set; } = new PaginationEmojis();
+        public PaginationEmojis PaginationEmojis { internal get; set; } = new();
+
+        /// <summary>
+        /// Buttons to use for pagination.
+        /// </summary>
+        public PaginationButtons PaginationButtons { internal get; set; } = new();
+
+        /// <summary>
+        /// Whether interactivity should ACK buttons that are pushed. Setting this to <see langword="true"/> will also prevent subsequent event handlers from running.
+        /// </summary>
+        public bool AckPaginationButtons { internal get; set; }
+
+        /// <summary>
+        /// How to handle buttons after pagination ends.
+        /// </summary>
+        public ButtonPaginationBehavior ButtonBehavior { internal get; set; } = new();
 
         /// <summary>
         /// How to handle pagination. Defaults to WrapAround.
@@ -79,6 +95,9 @@ namespace DSharpPlusNextGen.Interactivity
         /// <param name="other">Configuration the properties of which are to be copied.</param>
         public InteractivityConfiguration(InteractivityConfiguration other)
         {
+            this.AckPaginationButtons = other.AckPaginationButtons;
+            this.PaginationButtons = other.PaginationButtons;
+            this.ButtonBehavior = other.ButtonBehavior;
             this.PaginationBehaviour = other.PaginationBehaviour;
             this.PaginationDeletion = other.PaginationDeletion;
             this.ResponseBehavior = other.ResponseBehavior;

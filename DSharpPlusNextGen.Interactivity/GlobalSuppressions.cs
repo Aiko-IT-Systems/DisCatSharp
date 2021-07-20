@@ -24,3 +24,7 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Interactivity.EventHandling.EventWaiter`1.disposed")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Interactivity.EventHandling.ReactionCollectRequest.message")]
+[assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Interactivity.EventHandling.ComponentEventWaiter._emptyMatchIds")]
+[assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Interactivity.InteractivityExtension.ComponentInteractionWaiter")]
+[assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:DSharpPlusNextGen.Interactivity.InteractivityExtension.HandleInvalidInteraction(DSharpPlusNextGen.Entities.DiscordInteraction)~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Interactivity.EventHandling.PaginationRequest._timeout")]
