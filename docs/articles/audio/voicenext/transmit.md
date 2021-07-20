@@ -6,7 +6,7 @@ title: Transmitting
 ## Transmitting with VoiceNext
 
 ### Enable VoiceNext
-Install the `DSharpPlusNextGen.VoiceNext` package from NuGet.
+Install the `DisCatSharp.VoiceNext` package from NuGet.
 
 ![NuGet Package Manager](/images/voicenext_transmit_01.png)
 
