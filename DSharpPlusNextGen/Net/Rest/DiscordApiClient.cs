@@ -3096,6 +3096,7 @@ namespace DSharpPlusNextGen.Net
             ret.Discord = this.Discord;
             return ret;
         }
+
         /// <summary>
         /// Gets the webhook message async.
         /// </summary>
@@ -3105,7 +3106,6 @@ namespace DSharpPlusNextGen.Net
         /// <returns>A Task.</returns>
         internal Task<DiscordMessage> GetWebhookMessageAsync(ulong webhook_id, string webhook_token, ulong message_id) =>
             this.GetWebhookMessageAsync(webhook_id, webhook_token, message_id.ToString());
-
 
         /// <summary>
         /// Deletes the webhook message async.
@@ -4351,6 +4351,16 @@ namespace DSharpPlusNextGen.Net
             ret.Discord = this.Discord;
             return ret;
         }
+
+        /// <summary>
+        /// Gets the followup message async.
+        /// </summary>
+        /// <param name="application_id">The application_id.</param>
+        /// <param name="interaction_token">The interaction_token.</param>
+        /// <param name="message_id">The message_id.</param>
+        /// <returns>A Task.</returns>
+        internal Task<DiscordMessage> GetFollowupMessageAsync(ulong application_id, string interaction_token, ulong message_id) =>
+            this.GetWebhookMessageAsync(application_id, interaction_token, message_id);
 
         /// <summary>
         /// Edits the followup message async.
