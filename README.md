@@ -51,7 +51,7 @@ Feel free to re-use code in DSharpPlus.
 Package|NuGet
 |--|--|
 DisCatSharp|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen)
-DSharpPlusNextGen.CommandsNext|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.CommandsNext.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.CommandsNext)
+DisCatSharp.CommandsNext|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.CommandsNext.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.CommandsNext)
 DisCatSharp.Common|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Common.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.Common)
 DisCatSharp.Interactivity|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Interactivity.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.Interactivity)
 DisCatSharp.Lavalink|[![NuGet](https://img.shields.io/nuget/vpre/DSharpPlusNextGen.Lavalink.svg?label=)](https://nuget.dspng.aitsys.dev/DSharpPlusNextGen.Lavalink)
