@@ -213,6 +213,9 @@ namespace DSharpPlusNextGen.Entities
         /// <returns>The current builder to be chained.</returns>
         public DiscordMessageBuilder WithEmbed(DiscordEmbed embed)
         {
+            if (embed == null)
+                return this;
+
             this.Embed = embed;
             return this;
         }
@@ -224,6 +227,8 @@ namespace DSharpPlusNextGen.Entities
         /// <returns>The current builder to be chained.</returns>
         public DiscordMessageBuilder AddEmbed(DiscordEmbed embed)
         {
+            if (embed == null)
+                return this; //Providing null embeds will produce a 400 response from Discord.//
             this._embeds.Add(embed);
             return this;
         }
@@ -368,6 +373,12 @@ namespace DSharpPlusNextGen.Entities
         /// <param name="msg">The original Message to modify.</param>
         /// <returns>The current builder to be chained.</returns>
         public Task<DiscordMessage> ModifyAsync(DiscordMessage msg) => msg.ModifyAsync(this);
+
+        /// <summary>
+        /// Clears all message components on this builder.
+        /// </summary>
+        public void ClearComponents()
+            => this._components.Clear();
 
         /// <summary>
         /// Allows for clearing the Message Builder so that it can be used again to send a new message.

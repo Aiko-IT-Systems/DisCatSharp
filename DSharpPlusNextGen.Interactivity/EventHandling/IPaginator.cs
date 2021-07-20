@@ -20,36 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DSharpPlusNextGen
+using System.Threading.Tasks;
+
+namespace DSharpPlusNextGen.Interactivity.EventHandling
 {
+
     /// <summary>
-    /// Represents the type of interaction response
+    /// The paginator.
     /// </summary>
-    public enum InteractionResponseType
+    internal interface IPaginator
     {
         /// <summary>
-        /// Acknowledges a Ping.
+        /// Paginates.
         /// </summary>
-        Pong = 1,
+        /// <param name="request">The request to paginate.</param>
+        /// <returns>A task that completes when the pagination finishes or times out.</returns>
+        Task DoPaginationAsync(IPaginationRequest request);
 
         /// <summary>
-        /// Responds to the interaction with a message.
+        /// Disposes this EventWaiter
         /// </summary>
-        ChannelMessageWithSource = 4,
-
-        /// <summary>
-        /// Acknowledges an interaction to edit to a response later. The user sees a "thinking" state.
-        /// </summary>
-        DeferredChannelMessageWithSource = 5,
-
-        /// <summary>
-        /// Acknowledges a component interaction to allow a response later.
-        /// </summary>
-        DeferredMessageUpdate = 6,
-
-        /// <summary>
-        /// Responds to a component interaction by editing the message it's attached to.
-        /// </summary>
-        UpdateMessage = 7,
+        void Dispose();
     }
 }

@@ -1343,7 +1343,7 @@ namespace DSharpPlusNextGen.Net
 
             if (builder.Embeds != null)
                 foreach (var embed in builder.Embeds)
-                    if (embed.Timestamp != null)
+                    if (embed?.Timestamp != null)
                         embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
             var pld = new RestChannelMessageCreatePayload

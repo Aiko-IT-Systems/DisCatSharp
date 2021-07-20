@@ -20,36 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DSharpPlusNextGen
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using DSharpPlusNextGen.EventArgs;
+
+namespace DSharpPlusNextGen.Interactivity.EventHandling
 {
     /// <summary>
-    /// Represents the type of interaction response
+    /// Represents a component event that is being waited for.
     /// </summary>
-    public enum InteractionResponseType
+    internal sealed class ComponentCollectRequest : ComponentMatchRequest
     {
         /// <summary>
-        /// Acknowledges a Ping.
+        /// Gets the collected.
         /// </summary>
-        Pong = 1,
+        public ConcurrentBag<ComponentInteractionCreateEventArgs> Collected { get; private set; }
 
         /// <summary>
-        /// Responds to the interaction with a message.
+        /// Initializes a new instance of the <see cref="ComponentCollectRequest"/> class.
         /// </summary>
-        ChannelMessageWithSource = 4,
-
-        /// <summary>
-        /// Acknowledges an interaction to edit to a response later. The user sees a "thinking" state.
-        /// </summary>
-        DeferredChannelMessageWithSource = 5,
-
-        /// <summary>
-        /// Acknowledges a component interaction to allow a response later.
-        /// </summary>
-        DeferredMessageUpdate = 6,
-
-        /// <summary>
-        /// Responds to a component interaction by editing the message it's attached to.
-        /// </summary>
-        UpdateMessage = 7,
+        /// <param name="id">The id.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="cancellation">The cancellation token.</param>
+        public ComponentCollectRequest(ulong id, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation) : base(id, predicate, cancellation) { }
     }
 }

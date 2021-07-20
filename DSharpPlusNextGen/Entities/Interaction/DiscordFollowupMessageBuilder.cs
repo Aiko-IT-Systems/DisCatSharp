@@ -282,6 +282,12 @@ namespace DSharpPlusNextGen.Entities
         }
 
         /// <summary>
+        /// Clears all message components on this builder.
+        /// </summary>
+        public void ClearComponents()
+            => this._components.Clear();
+
+        /// <summary>
         /// Allows for clearing the Followup Message builder so that it can be used again to send a new message.
         /// </summary>
         public void Clear()

@@ -29,6 +29,9 @@ using DSharpPlusNextGen.Interactivity.Enums;
 
 namespace DSharpPlusNextGen.Interactivity.EventHandling
 {
+    /// <summary>
+    /// The pagination request.
+    /// </summary>
     internal class PaginationRequest : IPaginationRequest
     {
         private TaskCompletionSource<bool> _tcs;
@@ -39,7 +42,7 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         private readonly DiscordMessage _message;
         private readonly PaginationEmojis _emojis;
         private readonly DiscordUser _user;
-        private int index = 0;
+        private int _index = 0;
 
         /// <summary>
         /// Creates a new Pagination request
@@ -54,8 +57,8 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         internal PaginationRequest(DiscordMessage message, DiscordUser user, PaginationBehaviour behaviour, PaginationDeletion deletion,
             PaginationEmojis emojis, TimeSpan timeout, params Page[] pages)
         {
-            this._tcs = new TaskCompletionSource<bool>();
-            this._ct = new CancellationTokenSource(timeout);
+            this._tcs = new();
+            this._ct = new(timeout);
             this._ct.Token.Register(() => this._tcs.TrySetResult(true));
             this._timeout = timeout;
 
@@ -91,7 +94,7 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         {
             await Task.Yield();
 
-            return this._pages[this.index];
+            return this._pages[this._index];
         }
 
         /// <summary>
@@ -102,7 +105,7 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         {
             await Task.Yield();
 
-            this.index = 0;
+            this._index = 0;
         }
 
         /// <summary>
@@ -113,7 +116,7 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
         {
             await Task.Yield();
 
-            this.index = this._pages.Count - 1;
+            this._index = this._pages.Count - 1;
         }
 
         /// <summary>
@@ -127,18 +130,18 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             switch (this._behaviour)
             {
                 case PaginationBehaviour.Ignore:
-                    if (this.index == this._pages.Count - 1)
+                    if (this._index == this._pages.Count - 1)
                         break;
                     else
-                        this.index++;
+                        this._index++;
 
                     break;
 
                 case PaginationBehaviour.WrapAround:
-                    if (this.index == this._pages.Count - 1)
-                        this.index = 0;
+                    if (this._index == this._pages.Count - 1)
+                        this._index = 0;
                     else
-                        this.index++;
+                        this._index++;
 
                     break;
             }
@@ -155,22 +158,31 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
             switch (this._behaviour)
             {
                 case PaginationBehaviour.Ignore:
-                    if (this.index == 0)
+                    if (this._index == 0)
                         break;
                     else
-                        this.index--;
+                        this._index--;
 
                     break;
 
                 case PaginationBehaviour.WrapAround:
-                    if (this.index == 0)
-                        this.index = this._pages.Count - 1;
+                    if (this._index == 0)
+                        this._index = this._pages.Count - 1;
                     else
-                        this.index--;
+                        this._index--;
 
                     break;
             }
         }
+
+        /// <summary>
+        /// Gets the buttons async.
+        /// </summary>
+        /// <returns><see cref="NotSupportedException"/></returns>
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        public async Task<IEnumerable<DiscordButtonComponent>> GetButtonsAsync()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+            => throw new NotSupportedException("This request does not support buttons.");
 
         /// <summary>
         /// Gets the emojis async.
@@ -255,6 +267,9 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
 
 namespace DSharpPlusNextGen.Interactivity
 {
+    /// <summary>
+    /// The pagination emojis.
+    /// </summary>
     public class PaginationEmojis
     {
         public DiscordEmoji SkipLeft;
@@ -276,6 +291,9 @@ namespace DSharpPlusNextGen.Interactivity
         }
     }
 
+    /// <summary>
+    /// The page.
+    /// </summary>
     public class Page
     {
         /// <summary>

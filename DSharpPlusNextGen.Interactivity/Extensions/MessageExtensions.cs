@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlusNextGen.Entities;
 using DSharpPlusNextGen.EventArgs;
@@ -62,6 +63,14 @@ namespace DSharpPlusNextGen.Interactivity.Extensions
             => GetInteractivity(message).WaitForButtonAsync(message, timeoutOverride);
 
         /// <summary>
+        /// Waits for any button to be pressed on the specified message.
+        /// </summary>
+        /// <param name="message">The message to wait on.</param>
+        /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
+        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(this DiscordMessage message, CancellationToken? token = null)
+            => GetInteractivity(message).WaitForButtonAsync(message, token);
+
+        /// <summary>
         /// Waits for a button with the specified Id to be pressed on the specified message.
         /// </summary>
         /// <param name="message">The message to wait on.</param>
@@ -69,6 +78,15 @@ namespace DSharpPlusNextGen.Interactivity.Extensions
         /// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout"/></param>
         public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(this DiscordMessage message, string id, TimeSpan? timeoutOverride = null)
             => GetInteractivity(message).WaitForButtonAsync(message, id, timeoutOverride);
+
+        /// <summary>
+        /// Waits for a button with the specified Id to be pressed on the specified message.
+        /// </summary>
+        /// <param name="message">The message to wait on.</param>
+        /// <param name="id">The Id of the button to wait for.</param>
+        /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
+        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(this DiscordMessage message, string id, CancellationToken? token = null)
+            => GetInteractivity(message).WaitForButtonAsync(message, id, token);
 
         /// <summary>
         /// Waits for any button to be pressed on the specified message by the specified user.
@@ -89,15 +107,33 @@ namespace DSharpPlusNextGen.Interactivity.Extensions
             => GetInteractivity(message).WaitForSelectAsync(message, id, timeoutOverride);
 
         /// <summary>
+        /// Waits for a dropdown to be interacted with.
+        /// </summary>
+        /// <param name="message">The message to wait on.</param>
+        /// <param name="id">The Id of the dropdown to wait for.</param>
+        /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
+        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, string id, CancellationToken? token = null)
+            => GetInteractivity(message).WaitForSelectAsync(message, id, token);
+
+        /// <summary>
         /// Waits for a dropdown to be interacted with by the specified user.
         /// </summary>
         /// <param name="message">The message to wait on.</param>
         /// <param name="user">The user to wait for.</param>
         /// <param name="id">The Id of the dropdown to wait for.</param>
         /// <param name="timeoutOverride"></param>
-        /// <returns></returns>
         public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, DiscordUser user, string id, TimeSpan? timeoutOverride = null)
             => GetInteractivity(message).WaitForSelectAsync(message, user, id, timeoutOverride);
+
+        /// <summary>
+        /// Waits for a dropdown to be interacted with by the specified user.
+        /// </summary>
+        /// <param name="message">The message to wait on.</param>
+        /// <param name="user">The user to wait for.</param>
+        /// <param name="id">The Id of the dropdown to wait for.</param>
+        /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
+        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, DiscordUser user, string id, CancellationToken? token = null)
+            => GetInteractivity(message).WaitForSelectAsync(message, user, id, token);
 
         /// <summary>
         /// Waits for a reaction on this message from a specific user.
