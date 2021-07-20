@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,7 +26,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DSharpPlusNextGen.CommandsNext.Attributes
+namespace DisCatSharp.CommandsNext.Attributes
 {
     /// <summary>
     /// Defines that usage of this command is restricted to members with specified role. Note that it's much preferred to restrict access using <see cref="RequirePermissionsAttribute"/>.

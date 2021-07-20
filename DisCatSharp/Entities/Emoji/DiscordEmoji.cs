@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,11 +25,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using DSharpPlusNextGen.Enums.Discord;
-using DSharpPlusNextGen.Net;
+using DisCatSharp.Enums.Discord;
+using DisCatSharp.Net;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// Represents a Discord emoji.

@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,7 +26,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DSharpPlusNextGen.CommandsNext.Attributes
+namespace DisCatSharp.CommandsNext.Attributes
 {
     /// <summary>
     /// Defines a cooldown for this command. This allows you to define how many times can users execute a specific command

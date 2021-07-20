@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,7 +22,7 @@
 
 using System.Collections.Generic;
 
-namespace DSharpPlusNextGen.Net
+namespace DisCatSharp.Net
 {
     /// <summary>
     /// Represents a response sent by the remote HTTP party.

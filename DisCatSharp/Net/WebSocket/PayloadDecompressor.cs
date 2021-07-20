@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,7 +25,7 @@ using System.Buffers.Binary;
 using System.IO;
 using System.IO.Compression;
 
-namespace DSharpPlusNextGen.Net.WebSocket
+namespace DisCatSharp.Net.WebSocket
 {
     /// <summary>
     /// Represents a payload decompressor.

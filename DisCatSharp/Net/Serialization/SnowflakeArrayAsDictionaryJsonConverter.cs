@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,11 +26,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DSharpPlusNextGen.Entities;
+using DisCatSharp.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DSharpPlusNextGen.Net.Serialization
+namespace DisCatSharp.Net.Serialization
 {
     /// <summary>
     /// Used for a <see cref="Dictionary{TKey,TValue}"/> or <see cref="ConcurrentDictionary{TKey,TValue}"/> mapping

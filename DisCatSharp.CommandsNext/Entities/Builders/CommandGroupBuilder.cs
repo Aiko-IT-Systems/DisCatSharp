@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,9 +23,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using DSharpPlusNextGen.CommandsNext.Entities;
+using DisCatSharp.CommandsNext.Entities;
 
-namespace DSharpPlusNextGen.CommandsNext.Builders
+namespace DisCatSharp.CommandsNext.Builders
 {
     /// <summary>
     /// Represents an interface to build a command group.

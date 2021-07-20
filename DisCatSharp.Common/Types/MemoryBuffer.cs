@@ -1,4 +1,4 @@
-﻿// This file is part of the DSharpPlusNextGen project.
+﻿// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -28,7 +28,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace DSharpPlusNextGen.Common.Types
+namespace DisCatSharp.Common.Types
 {
     /// <summary>
     /// Provides a resizable memory buffer, which can be read from and written to. It will automatically resize whenever required.

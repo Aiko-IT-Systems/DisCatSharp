@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DSharpPlusNextGen.VoiceNext
+namespace DisCatSharp.VoiceNext
 {
     /// <summary>
     /// Represents a filter for PCM data. PCM data submitted through a <see cref="VoiceTransmitSink"/> will be sent through all installed instances of <see cref="IVoiceFilter"/> first.

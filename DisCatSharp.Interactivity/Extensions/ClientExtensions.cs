@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,7 +26,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DSharpPlusNextGen.Interactivity.Extensions
+namespace DisCatSharp.Interactivity.Extensions
 {
     /// <summary>
     /// Interactivity extension methods for <see cref="DiscordClient"/> and <see cref="DiscordShardedClient"/>.

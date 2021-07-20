@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -28,14 +28,14 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.Net.Abstractions;
-using DSharpPlusNextGen.Net.Serialization;
+using DisCatSharp.Entities;
+using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.Serialization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DSharpPlusNextGen.Net
+namespace DisCatSharp.Net
 {
     /// <summary>
     /// Represents a discord api client.

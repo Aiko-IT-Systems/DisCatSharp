@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,15 +22,15 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~P:DSharpPlusNextGen.Net.Abstractions.ClientProperties.OperatingSystem")]
+[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.Net.Abstractions.ClientProperties.OperatingSystem")]
 [assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Entities.DiscordUnicodeEmoji._1SkinTone1")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Entities.DiscordUnicodeEmoji._1SkinTone2")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Entities.DiscordUnicodeEmoji._1SkinTone3")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Entities.DiscordUnicodeEmoji._1SkinTone4")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Entities.DiscordUnicodeEmoji._1SkinTone5")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Entities.DiscordUnicodeEmoji._8ball")]
-[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.DiscordShardedClient._guildStickersUpdate")]
-[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.DiscordClient._guildStickersUpdate")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Entities.DiscordColor.HexAlphabet")]
-[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DSharpPlusNextGen.Entities.DiscordColor.HexAlphabet")]
+[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordUnicodeEmoji._1SkinTone1")]
+[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordUnicodeEmoji._1SkinTone2")]
+[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordUnicodeEmoji._1SkinTone3")]
+[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordUnicodeEmoji._1SkinTone4")]
+[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordUnicodeEmoji._1SkinTone5")]
+[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordUnicodeEmoji._8ball")]
+[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.DiscordShardedClient._guildStickersUpdate")]
+[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.DiscordClient._guildStickersUpdate")]
+[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordColor.HexAlphabet")]
+[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordColor.HexAlphabet")]

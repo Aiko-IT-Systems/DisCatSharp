@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,7 +25,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DSharpPlusNextGen.Net
+namespace DisCatSharp.Net
 {
     /// <summary>
     /// Represents a rate limit bucket.

@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,10 +25,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
+using DisCatSharp.Entities;
 using Microsoft.Extensions.Logging;
 
-namespace DSharpPlusNextGen.Lavalink
+namespace DisCatSharp.Lavalink
 {
     /// <summary>
     /// The discord client extensions.

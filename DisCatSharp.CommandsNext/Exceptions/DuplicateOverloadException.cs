@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace DSharpPlusNextGen.CommandsNext.Exceptions
+namespace DisCatSharp.CommandsNext.Exceptions
 {
     /// <summary>
     /// Indicates that given argument set already exists as an overload for specified command.

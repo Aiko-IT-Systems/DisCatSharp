@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.EventArgs;
+using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
 
-namespace DSharpPlusNextGen.VoiceNext.EventArgs
+namespace DisCatSharp.VoiceNext.EventArgs
 {
     /// <summary>
     /// Arguments for <see cref="VoiceNextConnection.UserLeft"/>.

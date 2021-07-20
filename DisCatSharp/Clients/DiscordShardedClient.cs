@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -31,14 +31,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Net;
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Net;
+using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
-namespace DSharpPlusNextGen
+namespace DisCatSharp
 {
     /// <summary>
     /// A Discord client that shards automatically.
@@ -359,7 +359,7 @@ namespace DSharpPlusNextGen
             return vs;
         });
 
-        private readonly string _botLibrary = "DSharpPlus NextGen";
+        private readonly string _botLibrary = "DisCatSharp";
 
         #endregion
 

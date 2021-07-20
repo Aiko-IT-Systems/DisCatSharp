@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,11 +22,11 @@
 
 using System;
 using System.Net;
-using DSharpPlusNextGen.Net.Udp;
-using DSharpPlusNextGen.Net.WebSocket;
+using DisCatSharp.Net.Udp;
+using DisCatSharp.Net.WebSocket;
 using Microsoft.Extensions.Logging;
 
-namespace DSharpPlusNextGen
+namespace DisCatSharp
 {
     /// <summary>
     /// Represents configuration for <see cref="DiscordClient"/> and <see cref="DiscordShardedClient"/>.
@@ -169,15 +169,15 @@ namespace DSharpPlusNextGen
 
         /// <summary>
         /// <para>Sets the factory method used to create instances of UDP clients.</para>
-        /// <para>Use <see cref="DspNgUdpClient.CreateNew"/> and equivalents on other implementations to switch out client implementations.</para>
-        /// <para>Defaults to <see cref="DspNgUdpClient.CreateNew"/>.</para>
+        /// <para>Use <see cref="DCSUdpClient.CreateNew"/> and equivalents on other implementations to switch out client implementations.</para>
+        /// <para>Defaults to <see cref="DCSUdpClient.CreateNew"/>.</para>
         /// </summary>
         public UdpClientFactoryDelegate UdpClientFactory
         {
             internal get => this._udpClientFactory;
             set => this._udpClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid UDP client factory method.");
         }
-        private UdpClientFactoryDelegate _udpClientFactory = DspNgUdpClient.CreateNew;
+        private UdpClientFactoryDelegate _udpClientFactory = DCSUdpClient.CreateNew;
 
         /// <summary>
         /// <para>Sets the logger implementation to use.</para>

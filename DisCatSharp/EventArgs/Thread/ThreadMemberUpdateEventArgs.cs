@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using DSharpPlusNextGen.Entities;
+using DisCatSharp.Entities;
 
-namespace DSharpPlusNextGen.EventArgs
+namespace DisCatSharp.EventArgs
 {
     /// <summary>
     /// Represents arguments for <see cref="DiscordClient.ThreadMemberUpdated"/> event.

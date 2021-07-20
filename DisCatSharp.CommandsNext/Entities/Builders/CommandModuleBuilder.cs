@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,10 +21,10 @@
 // SOFTWARE.
 
 using System;
-using DSharpPlusNextGen.CommandsNext.Attributes;
-using DSharpPlusNextGen.CommandsNext.Entities;
+using DisCatSharp.CommandsNext.Attributes;
+using DisCatSharp.CommandsNext.Entities;
 
-namespace DSharpPlusNextGen.CommandsNext.Builders
+namespace DisCatSharp.CommandsNext.Builders
 {
     /// <summary>
     /// Represents an interface to build a command module.

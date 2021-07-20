@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,7 +23,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DSharpPlusNextGen.CommandsNext
+namespace DisCatSharp.CommandsNext
 {
     /// <summary>
     /// Represents a command argument.

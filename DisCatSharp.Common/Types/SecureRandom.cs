@@ -1,4 +1,4 @@
-﻿// This file is part of the DSharpPlusNextGen project.
+﻿// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,7 +26,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-namespace DSharpPlusNextGen.Common
+namespace DisCatSharp.Common
 {
     /// <summary>
     /// Provides a cryptographically-secure pseudorandom number generator (CSPRNG) implementation compatible with <see cref="Random"/>.

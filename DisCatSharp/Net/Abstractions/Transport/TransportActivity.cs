@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,11 +23,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using DSharpPlusNextGen.Entities;
+using DisCatSharp.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DSharpPlusNextGen.Net.Abstractions
+namespace DisCatSharp.Net.Abstractions
 {
     /// <summary>
     /// Represents a game a user is playing.

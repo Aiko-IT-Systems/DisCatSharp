@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -28,7 +28,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
-namespace DSharpPlusNextGen.VoiceNext.Codec
+namespace DisCatSharp.VoiceNext.Codec
 {
     /// <summary>
     /// The sodium.

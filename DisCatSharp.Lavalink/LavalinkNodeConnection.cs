@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -27,18 +27,18 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Common.Utilities;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Lavalink.Entities;
-using DSharpPlusNextGen.Lavalink.EventArgs;
-using DSharpPlusNextGen.Net;
-using DSharpPlusNextGen.Net.WebSocket;
+using DisCatSharp.Common.Utilities;
+using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Lavalink.Entities;
+using DisCatSharp.Lavalink.EventArgs;
+using DisCatSharp.Net;
+using DisCatSharp.Net.WebSocket;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DSharpPlusNextGen.Lavalink
+namespace DisCatSharp.Lavalink
 {
     internal delegate void NodeDisconnectedEventHandler(LavalinkNodeConnection node);
 

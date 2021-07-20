@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -28,10 +28,10 @@ using System.Net;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Common.Utilities;
 
-namespace DSharpPlusNextGen.Net.WebSocket
+namespace DisCatSharp.Net.WebSocket
 {
     // weebsocket
     // not even sure whether emzi or I posted this. much love, naam.

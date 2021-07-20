@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace DSharpPlusNextGen.Common
+namespace DisCatSharp.Common
 {
     /// <summary>
     /// Assortment of various extension and utility methods, designed to make working with various types a little easier.

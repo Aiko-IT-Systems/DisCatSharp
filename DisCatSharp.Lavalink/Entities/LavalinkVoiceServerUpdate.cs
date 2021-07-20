@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,10 +21,10 @@
 // SOFTWARE.
 
 using System.Globalization;
-using DSharpPlusNextGen.EventArgs;
+using DisCatSharp.EventArgs;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Lavalink.Entities
+namespace DisCatSharp.Lavalink.Entities
 {
     /// <summary>
     /// The lavalink voice server update.

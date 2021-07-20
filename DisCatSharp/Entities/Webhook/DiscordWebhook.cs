@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,10 +23,10 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Net;
+using DisCatSharp.Net;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// Represents information about a Discord webhook.

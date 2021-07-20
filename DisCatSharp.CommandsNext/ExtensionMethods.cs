@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,11 +26,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.CommandsNext.Builders;
-using DSharpPlusNextGen.CommandsNext.Converters;
+using DisCatSharp.CommandsNext.Builders;
+using DisCatSharp.CommandsNext.Converters;
 using Microsoft.Extensions.Logging;
 
-namespace DSharpPlusNextGen.CommandsNext
+namespace DisCatSharp.CommandsNext
 {
     /// <summary>
     /// Defines various extensions specific to CommandsNext.

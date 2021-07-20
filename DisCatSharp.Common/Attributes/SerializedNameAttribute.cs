@@ -1,4 +1,4 @@
-﻿// This file is part of the DSharpPlusNextGen project.
+﻿// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DSharpPlusNextGen.Common.Serialization
+namespace DisCatSharp.Common.Serialization
 {
     /// <summary>
     /// Declares name of a property in serialized data. This is used for mapping serialized data to object properties and fields.

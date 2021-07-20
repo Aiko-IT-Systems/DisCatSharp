@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,7 +24,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Net
+namespace DisCatSharp.Net
 {
     /// <summary>
     /// An URI in a Discord embed doesn't necessarily conform to the RFC 3986. If it uses the <c>attachment://</c>

@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DSharpPlusNextGen.SlashCommands
+namespace DisCatSharp.SlashCommands
 {
     /// <summary>
     /// Prevents this field or property from having its value injected by dependency injection.

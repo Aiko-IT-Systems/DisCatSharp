@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,7 +24,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace DSharpPlusNextGen
+namespace DisCatSharp
 {
     /// <summary>
     /// Tool to detect image formats and convert from binary data to base64 strings.

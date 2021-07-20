@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.Common.Utilities;
 
-namespace DSharpPlusNextGen.SlashCommands.EventArgs
+namespace DisCatSharp.SlashCommands.EventArgs
 {
     /// <summary>
     /// Represents the arguments for a <see cref="SlashCommandsExtension.SlashCommandExecuted"/> event

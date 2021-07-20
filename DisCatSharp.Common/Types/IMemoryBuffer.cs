@@ -1,4 +1,4 @@
-﻿// This file is part of the DSharpPlusNextGen project.
+﻿// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,7 +23,7 @@
 using System;
 using System.IO;
 
-namespace DSharpPlusNextGen.Common.Types
+namespace DisCatSharp.Common.Types
 {
     /// <summary>
     /// An interface describing the API of resizable memory buffers, such as <see cref="MemoryBuffer{T}"/> and <see cref="ContinuousMemoryBuffer{T}"/>.

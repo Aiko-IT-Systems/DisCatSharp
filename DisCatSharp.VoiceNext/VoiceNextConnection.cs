@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -31,20 +31,20 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Net;
-using DSharpPlusNextGen.Net.Udp;
-using DSharpPlusNextGen.Net.WebSocket;
-using DSharpPlusNextGen.VoiceNext.Codec;
-using DSharpPlusNextGen.VoiceNext.Entities;
-using DSharpPlusNextGen.VoiceNext.EventArgs;
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Net;
+using DisCatSharp.Net.Udp;
+using DisCatSharp.Net.WebSocket;
+using DisCatSharp.VoiceNext.Codec;
+using DisCatSharp.VoiceNext.Entities;
+using DisCatSharp.VoiceNext.EventArgs;
+using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DSharpPlusNextGen.VoiceNext
+namespace DisCatSharp.VoiceNext
 {
     internal delegate Task VoiceDisconnectedEventHandler(DiscordGuild guild);
 

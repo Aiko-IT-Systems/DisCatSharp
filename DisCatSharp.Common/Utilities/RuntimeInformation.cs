@@ -1,4 +1,4 @@
-﻿// This file is part of the DSharpPlusNextGen project.
+﻿// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,7 +26,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace DSharpPlusNextGen.Common.Utilities
+namespace DisCatSharp.Common.Utilities
 {
     /// <summary>
     /// Gets information about current runtime.

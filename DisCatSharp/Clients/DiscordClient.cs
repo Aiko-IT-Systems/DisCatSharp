@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -28,20 +28,20 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Exceptions;
-using DSharpPlusNextGen.Net;
-using DSharpPlusNextGen.Net.Abstractions;
-using DSharpPlusNextGen.Net.Models;
-using DSharpPlusNextGen.Net.Serialization;
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Exceptions;
+using DisCatSharp.Net;
+using DisCatSharp.Net.Abstractions;
+using DisCatSharp.Net.Models;
+using DisCatSharp.Net.Serialization;
+using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using DSharpPlusNextGen.Enums.Discord;
+using DisCatSharp.Enums.Discord;
 using System.Globalization;
 
-namespace DSharpPlusNextGen
+namespace DisCatSharp
 {
     /// <summary>
     /// A Discord API wrapper.

@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,9 +22,9 @@
 
 using System;
 using System.Collections.Generic;
-using DSharpPlusNextGen.Entities;
+using DisCatSharp.Entities;
 
-namespace DSharpPlusNextGen.Net.Models
+namespace DisCatSharp.Net.Models
 {
     /// <summary>
     /// Represents a application command edit model.

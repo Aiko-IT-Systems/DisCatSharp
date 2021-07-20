@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.Common.Utilities;
 
-namespace DSharpPlusNextGen.EventArgs
+namespace DisCatSharp.EventArgs
 {
     // Note: this might seem useless, but should we ever need to add a common property or method to all event arg
     // classes, it would be useful to already have a base for all of it.

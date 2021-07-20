@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DSharpPlusNextGen.CommandsNext.Attributes.RequireUserPermissionsAttribute.ExecuteCheckAsync(DSharpPlusNextGen.CommandsNext.CommandContext,System.Boolean)~System.Threading.Tasks.Task{System.Boolean}")]
+[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.CommandsNext.Attributes.RequireUserPermissionsAttribute.ExecuteCheckAsync(DisCatSharp.CommandsNext.CommandContext,System.Boolean)~System.Threading.Tasks.Task{System.Boolean}")]

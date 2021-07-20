@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,17 +22,17 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace DSharpPlusNextGen
+namespace DisCatSharp
 {
     /// <summary>
-    /// Contains well-defined event IDs used by core of DSharpPlusNextGen.
+    /// Contains well-defined event IDs used by core of DisCatSharp.
     /// </summary>
     public static class LoggerEvents
     {
         /// <summary>
         /// Miscellaneous events, that do not fit in any other category.
         /// </summary>
-        public static EventId Misc { get; } = new EventId(100, "DSharpPlusNextGen");
+        public static EventId Misc { get; } = new EventId(100, "DisCatSharp");
 
         /// <summary>
         /// Events pertaining to startup tasks.

@@ -1,4 +1,4 @@
-﻿// This file is part of the DSharpPlusNextGen project.
+﻿// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DSharpPlusNextGen.Common.Serialization
+namespace DisCatSharp.Common.Serialization
 {
     /// <summary>
     /// <para>Specifies that if the value of the field or property is null, it should be included in the serialized data.</para>

@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,7 +23,7 @@
 using System;
 using System.Reflection;
 
-namespace DSharpPlusNextGen.CommandsNext.Exceptions
+namespace DisCatSharp.CommandsNext.Exceptions
 {
     /// <summary>
     /// Thrown when the command service fails to build a command due to a problem with its overload.

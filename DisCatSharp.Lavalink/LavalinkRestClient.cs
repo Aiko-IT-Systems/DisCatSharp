@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -28,13 +28,13 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Lavalink.Entities;
-using DSharpPlusNextGen.Net;
+using DisCatSharp.Lavalink.Entities;
+using DisCatSharp.Net;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DSharpPlusNextGen.Lavalink
+namespace DisCatSharp.Lavalink
 {
     /// <summary>
     /// Represents a class for Lavalink REST calls.
@@ -410,7 +410,7 @@ namespace DSharpPlusNextGen.Lavalink
 
             this._http = new HttpClient(httphandler);
 
-            this._http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"DSharpPlusNextGen.LavaLink/{this._dsharpplusVersionString}");
+            this._http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"DisCatSharp.LavaLink/{this._dsharpplusVersionString}");
             this._http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", password);
         }
     }

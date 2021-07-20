@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,10 +21,10 @@
 // SOFTWARE.
 
 using System;
-using DSharpPlusNextGen.Interactivity.Enums;
-using DSharpPlusNextGen.Interactivity.EventHandling;
+using DisCatSharp.Interactivity.Enums;
+using DisCatSharp.Interactivity.EventHandling;
 
-namespace DSharpPlusNextGen.Interactivity
+namespace DisCatSharp.Interactivity
 {
     /// <summary>
     /// Configuration class for your Interactivity extension

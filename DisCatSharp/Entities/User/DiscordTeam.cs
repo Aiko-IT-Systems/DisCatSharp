@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,11 +23,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using DSharpPlusNextGen.Enums.Discord;
-using DSharpPlusNextGen.Net;
-using DSharpPlusNextGen.Net.Abstractions;
+using DisCatSharp.Enums.Discord;
+using DisCatSharp.Net;
+using DisCatSharp.Net.Abstractions;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// Represents a team consisting of users. A team can own an application.

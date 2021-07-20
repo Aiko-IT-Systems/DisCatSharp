@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-namespace DSharpPlusNextGen.Common.Serialization
+namespace DisCatSharp.Common.Serialization
 {
     /// <summary>
     /// Decomposes <see cref="Complex"/> numbers into tuples (arrays of 2).

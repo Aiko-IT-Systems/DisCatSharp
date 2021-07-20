@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -28,12 +28,12 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.Exceptions;
-using DSharpPlusNextGen.Net;
+using DisCatSharp.Entities;
+using DisCatSharp.Exceptions;
+using DisCatSharp.Net;
 using Microsoft.Extensions.Logging;
 
-namespace DSharpPlusNextGen
+namespace DisCatSharp
 {
     /// <summary>
     /// Represents a webhook-only client. This client can be used to execute Discord webhooks.

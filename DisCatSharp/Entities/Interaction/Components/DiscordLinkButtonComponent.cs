@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using DSharpPlusNextGen.Enums;
+using DisCatSharp.Enums;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// Represents a link button. Clicking a link button does not send an interaction.

@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,12 +25,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Interactivity.Enums;
-using DSharpPlusNextGen.Interactivity.EventHandling;
+using DisCatSharp.Entities;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Interactivity.Enums;
+using DisCatSharp.Interactivity.EventHandling;
 
-namespace DSharpPlusNextGen.Interactivity.Extensions
+namespace DisCatSharp.Interactivity.Extensions
 {
     /// <summary>
     /// Interactivity extension methods for <see cref="DiscordMessage"/>.

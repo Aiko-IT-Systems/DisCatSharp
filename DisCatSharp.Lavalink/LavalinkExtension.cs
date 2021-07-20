@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,12 +25,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.Lavalink.EventArgs;
-using DSharpPlusNextGen.Net;
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.Entities;
+using DisCatSharp.Lavalink.EventArgs;
+using DisCatSharp.Net;
+using DisCatSharp.Common.Utilities;
 
-namespace DSharpPlusNextGen.Lavalink
+namespace DisCatSharp.Lavalink
 {
     /// <summary>
     /// The lavalink extension.

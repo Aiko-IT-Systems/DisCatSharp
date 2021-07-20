@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,10 +21,10 @@
 // SOFTWARE.
 
 using System;
-using DSharpPlusNextGen.Net;
+using DisCatSharp.Net;
 using Newtonsoft.Json.Linq;
 
-namespace DSharpPlusNextGen.Exceptions
+namespace DisCatSharp.Exceptions
 {
     /// <summary>
     /// Represents an exception thrown when too many requests are sent.

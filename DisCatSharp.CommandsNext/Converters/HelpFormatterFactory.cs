@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,7 +22,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DSharpPlusNextGen.CommandsNext.Converters
+namespace DisCatSharp.CommandsNext.Converters
 {
     /// <summary>
     /// Represents the help formatter factory.

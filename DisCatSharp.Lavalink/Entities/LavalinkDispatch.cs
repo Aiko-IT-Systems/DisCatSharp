@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,7 +22,7 @@
 
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Lavalink.Entities
+namespace DisCatSharp.Lavalink.Entities
 {
     /// <summary>
     /// The voice dispatch.

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<PropertyGroup>
+  <PropertyGroup>
     <VersionPrefix>9.5.8</VersionPrefix>
-    <PackageIcon>../logo/dsc.png</PackageIcon>
-    <Authors>Lala Sabathil, Lunar, J_M_Lutra & AITSYS contributors</Authors>
-	  <Company>Aiko IT Systems</Company>
+    <Authors>Lala Sabathil, Lunar, J_M_Lutra, AITSYS contributors</Authors>
+	<Company>Aiko IT Systems</Company>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>

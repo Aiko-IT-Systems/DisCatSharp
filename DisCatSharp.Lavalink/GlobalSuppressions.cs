@@ -1,4 +1,4 @@
-﻿// This file is part of the DSharpPlusNextGen project.
+﻿// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,4 +22,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>", Scope = "member", Target = "~M:DSharpPlusNextGen.Lavalink.LavalinkGuildConnection.#ctor(DSharpPlusNextGen.Lavalink.LavalinkNodeConnection,DSharpPlusNextGen.Entities.DiscordChannel,DSharpPlusNextGen.EventArgs.VoiceStateUpdateEventArgs)")]
+[assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Lavalink.LavalinkGuildConnection.#ctor(DisCatSharp.Lavalink.LavalinkNodeConnection,DisCatSharp.Entities.DiscordChannel,DisCatSharp.EventArgs.VoiceStateUpdateEventArgs)")]

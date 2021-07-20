@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -28,7 +28,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DSharpPlusNextGen.VoiceNext
+namespace DisCatSharp.VoiceNext
 {
     /// <summary>
     /// The stream extensions.

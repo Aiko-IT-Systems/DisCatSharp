@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,10 +24,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
-using DSharpPlusNextGen.Interactivity.Enums;
+using DisCatSharp.Entities;
+using DisCatSharp.Interactivity.Enums;
 
-namespace DSharpPlusNextGen.Interactivity.EventHandling
+namespace DisCatSharp.Interactivity.EventHandling
 {
     /// <summary>
     /// The pagination request.
@@ -265,7 +265,7 @@ namespace DSharpPlusNextGen.Interactivity.EventHandling
     }
 }
 
-namespace DSharpPlusNextGen.Interactivity
+namespace DisCatSharp.Interactivity
 {
     /// <summary>
     /// The pagination emojis.

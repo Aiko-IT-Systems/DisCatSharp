@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,10 +23,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DSharpPlusNextGen.Enums;
+using DisCatSharp.Enums;
 using Newtonsoft.Json;
 
-namespace DSharpPlusNextGen.Entities
+namespace DisCatSharp.Entities
 {
     /// <summary>
     /// A select menu with multiple options to choose from.

@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,10 +24,10 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DSharpPlusNextGen.EventArgs;
-using DSharpPlusNextGen.Common.Utilities;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Common.Utilities;
 
-namespace DSharpPlusNextGen.Net.WebSocket
+namespace DisCatSharp.Net.WebSocket
 {
     /// <summary>
     /// Creates an instance of a WebSocket client implementation.

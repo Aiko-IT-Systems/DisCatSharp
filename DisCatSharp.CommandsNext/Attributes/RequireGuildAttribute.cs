@@ -1,4 +1,4 @@
-// This file is part of the DSharpPlusNextGen project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,9 +21,9 @@
 // SOFTWARE.
 
 using System.Threading.Tasks;
-using DSharpPlusNextGen.Entities;
+using DisCatSharp.Entities;
 
-namespace DSharpPlusNextGen.CommandsNext.Attributes
+namespace DisCatSharp.CommandsNext.Attributes
 {
     /// <summary>
     /// Defines that a command is only usable within a guild.
