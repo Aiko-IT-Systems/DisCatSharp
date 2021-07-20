@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="../Version.targets" />
-  <Import Project="../DSharpPlusNextGen.targets" />
+  <Import Project="../DisCatSharp.targets" />
 
   <PropertyGroup>
     <AssemblyName>DSharpPlusNextGen.VoiceNext</AssemblyName>
@@ -16,10 +16,6 @@
     <PackageId>DSharpPlusNextGen.VoiceNext</PackageId>
     <Description>Voice implementation for DSharpPlusNextGen.</Description>
     <PackageTags>discord, discord-api, bots, discord-bots, chat, dsharp, dsharpplus, dsharpplusnextgen, csharp, dotnet, vb-net, fsharp, audio, voice, radio, music</PackageTags>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <PackageIcon>d#+.png</PackageIcon>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <Authors>Lala Sabathil, Naamloos, afroraydude, DrCreo, Death, TiaqoY0, Axiom, Emzi0767, DSharpPlus contributors</Authors>
   </PropertyGroup>
 
   <ItemGroup>

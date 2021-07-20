@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	
+
 	<PropertyGroup>
     <NoWarn>1591;NU5128</NoWarn>
     <LangVersion>9.0</LangVersion>
@@ -11,8 +11,6 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Authors>Lala Sabathil, Naamloos, afroraydude, DrCreo, Death, TiaqoY0, Axiom, Emzi0767, DSharpPlus contributors</Authors>
-    <Company>AITSYS, DSharpPlus developers</Company>
     <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Aiko-IT-Systems/DSharpPlus-NextGen</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>

@@ -2,8 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="../Version.targets" />
-  <Import Project="../DSharpPlusNextGen.targets" />
-  
+  <Import Project="../DisCatSharp.targets" />
+
   <PropertyGroup>
     <TargetFrameworks>netstandard1.3;netstandard2.0</TargetFrameworks>
     <IncludeBuildOutput>false</IncludeBuildOutput>
@@ -15,14 +15,9 @@
     <PackageId>DSharpPlusNextGen.VoiceNext.Natives</PackageId>
     <Description>Voice Natives for DSharpPlus NextGen.</Description>
     <PackageTags>discord, discord-api, bots, discord-bots, chat, dsharp, dsharpplusnextgen, csharp, dotnet, vb-net, fsharp, audio, voice, radio, music</PackageTags>
-    <Authors>Emzi0767, WamWooWam</Authors>
-	<Company>DSharpPlus developers</Company>
-	<PackageProjectUrl>https://github.com/DSharpPlus/DSharpPlus-VoiceNext-Natives</PackageProjectUrl>
-	<RepositoryUrl>https://github.com/DSharpPlus/DSharpPlus-VoiceNext-Natives</RepositoryUrl>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <PackageIcon>d#+.png</PackageIcon>
-	<RepositoryType>Git</RepositoryType>
-	<PackageLicenseFile>LICENSES.MD</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/DSharpPlus/DSharpPlus-VoiceNext-Natives</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DSharpPlus/DSharpPlus-VoiceNext-Natives</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
