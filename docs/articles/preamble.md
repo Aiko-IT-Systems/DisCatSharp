@@ -14,7 +14,7 @@ His videos go through all the basics, from setting up your development environme
 If you're not sure what to do first, Bob's tutorial series should be your starting point!
 
 ## Supported .NET Implementations
-Because DSharpPlusNextGen targets .NET Standard 2.0, there are many implementations that may function with DSharpPlusNextGen.
+Because DisCatSharp targets .NET Standard 2.0, there are many implementations that may function with DisCatSharp.
 However, there are only a few versions we will *explicitly* provide support for.
 
 Implementation|Support|Notes
@@ -22,7 +22,7 @@ Implementation|Support|Notes
 [.NET Core](https://en.wikipedia.org/wiki/.NET_Core)|✔️|LTS versions 2.1 and 3.1 are supported.
 [.NET Framework](https://en.wikipedia.org/wiki/.NET_Framework)|⚠️|Versions 4.6.1 through 4.8 *should* work fine.<br/>However, we do not directly support .NET Framework.<br/>We recommend that you use the latest LTS version of .NET Core.
 [Mono](https://en.wikipedia.org/wiki/Mono_(software))|❌️|Has numerous flaws which can break things without warning.<br/>If you need a cross platform runtime, use .NET Core.
-[Unity](https://en.wikipedia.org/wiki/Unity_(game_engine))|❌️|Game engines with C# support will never be supported by DSharpPlusNextGen. You should consider using the official [Discord GameSDK](https://discord.com/developers/docs/game-sdk/sdk-starter-guide) instead.
+[Unity](https://en.wikipedia.org/wiki/Unity_(game_engine))|❌️|Game engines with C# support will never be supported by DisCatSharp. You should consider using the official [Discord GameSDK](https://discord.com/developers/docs/game-sdk/sdk-starter-guide) instead.
 
 If you use an unsupported implementation and encounter issues, you'll be on your own.
 
@@ -35,5 +35,5 @@ Once you're up and running, feel free to browse through the [API Documentation](
 ## Support and Questions
 You can get in contact with us on Discord through one of the following guilds:
 
-**DSharpPlusNextGen Guild**:</br>
+**DisCatSharp Guild**:</br>
 [![Project Nyaw~](https://discordapp.com/api/guilds/858089281214087179/embed.png?style=banner2)](https://discord.gg/CPhrqxu2SF)

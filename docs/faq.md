@@ -21,8 +21,8 @@ Instead, we recommend using either the latest LTS release or most recent stable 
 ### Connecting to a voice channel with VoiceNext will either hang or throw an exception.
 To troubleshoot, please ensure that:
 
-* You are using the latest version of DSharpPlusNextGen.
-* You have properly enabled VoiceNext with your instance of @DSharpPlusNextGen.DiscordClient.
+* You are using the latest version of DisCatSharp.
+* You have properly enabled VoiceNext with your instance of @DisCatSharp.DiscordClient.
 * You are *not* using VoiceNext in an event handler.
 * You have [opus and libsodium](xref:voicenext_prerequisites) available in your target environment.
 
@@ -53,7 +53,7 @@ Changing the properties of a role requires that your bot account have a role hig
 It does! Please take a look at our [article](xref:commands_dependency_injection) on the subject.
 
 ### Can I use a user token?
-Automating a user account is against Discord's [Terms of Service](https://dis.gd/terms) and is not supported by DSharpPlusNextGen.
+Automating a user account is against Discord's [Terms of Service](https://dis.gd/terms) and is not supported by DisCatSharp.
 
 ### How can I set a custom status?
 If you mean a *true* custom status like this:
@@ -69,16 +69,16 @@ However, if you meant an activity like this:
 
 You can use either of the following
 
-* The overload for @DSharpPlusNextGen.DiscordClient.ConnectAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) which accepts a @DSharpPlusNextGen.Entities.DiscordActivity.
-* @DSharpPlusNextGen.DiscordClient.UpdateStatusAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) OR @DSharpPlusNextGen.DiscordShardedClient.UpdateStatusAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) (for the sharded client) at any point after `Ready` has been fired.
+* The overload for @DisCatSharp.DiscordClient.ConnectAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) which accepts a @DisCatSharp.Entities.DiscordActivity.
+* @DisCatSharp.DiscordClient.UpdateStatusAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) OR @DisCatSharp.DiscordShardedClient.UpdateStatusAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) (for the sharded client) at any point after `Ready` has been fired.
 
-### Am I able to retrieve a @DSharpPlusNextGen.Entities.DiscordRole by name?
-Yes. Use LINQ on the `Roles` property of your instance of @DSharpPlusNextGen.Entities.DiscordGuild and compare against the `Name` of  each @DSharpPlusNextGen.Entities.DiscordRole.
+### Am I able to retrieve a @DisCatSharp.Entities.DiscordRole by name?
+Yes. Use LINQ on the `Roles` property of your instance of @DisCatSharp.Entities.DiscordGuild and compare against the `Name` of  each @DisCatSharp.Entities.DiscordRole.
 
 ### Why are you using Newtonsoft.Json when System.Text.Json is available
 Yes `System.Text.Json` is available to use but it still doesnt stand up to what we currently need which is why we still use Newtonsoft.Json.
 Maybe in time we can switch to your favorite Json Deserializer but for right now we will be using Newtonsoft.Json for the forseeable future.
 
 ### Why the hell are my events not firing?
-This is because in the Discord V8 API, they require @DSharpPlusNextGen.DiscordIntents to be enabled on @DSharpPlusNextGen.DiscordConfiguration and the
+This is because in the Discord V8 API, they require @DisCatSharp.DiscordIntents to be enabled on @DisCatSharp.DiscordConfiguration and the
 Discord Application Portal. We have an [article](xref:beyond_basics_intents) that covers all that has to be done to set this up.

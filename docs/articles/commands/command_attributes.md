@@ -7,30 +7,30 @@ title: Command Attributes
 CommandsNext has a variety of built-in attributes to enhance your commands and provide some access control.
 The majority of these attributes can be applied to your command methods and command groups.
 
-- @DSharpPlusNextGen.CommandsNext.Attributes.AliasesAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.CooldownAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.DescriptionAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.DontInjectAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.HiddenAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.ModuleLifespanAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.PriorityAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RemainingTextAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireBotPermissionsAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireCommunityAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireDirectMessageAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireDiscordCertifiedModeratorAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireDiscordEmployeeAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireGuildAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireGuildOwnerAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireMemberVerificationGateAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireNsfwAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireOwnerAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireOwnerOrIdAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequirePermissionsAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequirePrefixesAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireRolesAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireUserPermissionsAttribute
-- @DSharpPlusNextGen.CommandsNext.Attributes.RequireWelcomeScreenAttribute
+- @DisCatSharp.CommandsNext.Attributes.AliasesAttribute
+- @DisCatSharp.CommandsNext.Attributes.CooldownAttribute
+- @DisCatSharp.CommandsNext.Attributes.DescriptionAttribute
+- @DisCatSharp.CommandsNext.Attributes.DontInjectAttribute
+- @DisCatSharp.CommandsNext.Attributes.HiddenAttribute
+- @DisCatSharp.CommandsNext.Attributes.ModuleLifespanAttribute
+- @DisCatSharp.CommandsNext.Attributes.PriorityAttribute
+- @DisCatSharp.CommandsNext.Attributes.RemainingTextAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireBotPermissionsAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireCommunityAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireDirectMessageAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireDiscordCertifiedModeratorAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireDiscordEmployeeAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireGuildAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireGuildOwnerAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireMemberVerificationGateAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireNsfwAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireOwnerAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireOwnerOrIdAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequirePermissionsAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequirePrefixesAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireRolesAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireUserPermissionsAttribute
+- @DisCatSharp.CommandsNext.Attributes.RequireWelcomeScreenAttribute
 
 
 ## Custom Attributes
