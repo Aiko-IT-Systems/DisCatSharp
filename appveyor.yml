@@ -33,7 +33,8 @@
       {
           # Rebuild documentation
           Write-Host "Commencing complete build"
-          & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER -DocsPath ".\docs" -DocsPackageName "dsharpplusnextgen-docs"
+          & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER 
+          #-DocsPath ".\docs" -DocsPackageName "dsharpplusnextgen-docs"
       }
       else
       {
