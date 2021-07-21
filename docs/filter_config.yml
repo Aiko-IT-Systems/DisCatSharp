@@ -77,11 +77,3 @@ attributeRules:
 - exclude:
     uidRegex: '^System\.Windows\.Markup\.[^.]+$'
     type: Type
-#- exclude:
-#    uidRegex: ^DSharpPlusNextGen\.RingBuffer.*$
-#- exclude:
-#    uidRegex: ^DSharpPlusNextGen\.Base(WebSocket|Udp)Client.*$
-#- exclude:
-#    uidRegex: ^DSharpPlusNextGen\.HttpRequestMethod.*$
-#- exclude:
-#    uidRegex: ^DSharpPlusNextGen\.VoiceNext\.Codec.*$
