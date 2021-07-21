@@ -63,7 +63,7 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets the banner color.
         /// </summary>
         [JsonProperty("accent_color")]
-        public int BannerColor { get; internal set; }
+        public int? BannerColor { get; internal set; }
 
         /// <summary>
         /// Gets a value indicating whether is bot.
