@@ -2,7 +2,7 @@
 Discord Bot Library written in C# for .NET.
 
 #### Status
-[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.svg?label=NuGet%20Overall%20Version)](https://nuget.dcs.aitsys.dev)
+[![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=NuGet%20Overall%20Version)](https://nuget.dcs.aitsys.dev)
 [![Build status](https://ci.appveyor.com/api/projects/status/fy4xn9s3cq7j30j7/branch/main?svg=true)](https://ci.appveyor.com/project/AITSYS/discatsharp/branch/main)
 
 #### Commit Activities
@@ -47,7 +47,7 @@ No one have to use this. This is just to provide transparency & to provide this 
 
 Feel free to re-use code in DSharpPlus.
 
-## NuGet
+## Latest NuGet
 Package|NuGet
 |--|--|
 DisCatSharp|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp)
