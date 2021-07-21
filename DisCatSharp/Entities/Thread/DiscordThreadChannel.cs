@@ -28,7 +28,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using DisCatSharp.Exceptions;
-using DisCatSharp.Enums;
 using DisCatSharp.Net.Models;
 using DisCatSharp.Net.Serialization;
 using Newtonsoft.Json;
@@ -169,7 +168,6 @@ namespace DisCatSharp.Entities
         /// Deletes a thread
         /// </summary>
         /// <param name="reason">Reason for audit logs.</param>
-        /// <returns></returns>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -182,7 +180,6 @@ namespace DisCatSharp.Entities
         /// Modifies the current thread.
         /// </summary>
         /// <param name="action">Action to perform on this thread</param>
-        /// <returns></returns>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -202,7 +199,6 @@ namespace DisCatSharp.Entities
         /// Locks a thread
         /// </summary>
         /// <param name="reason">Reason for audit logs.</param>
-        /// <returns></returns>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -214,7 +210,6 @@ namespace DisCatSharp.Entities
         /// Unlocks a thread
         /// </summary>
         /// <param name="reason">Reason for audit logs.</param>
-        /// <returns></returns>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -226,7 +221,6 @@ namespace DisCatSharp.Entities
         /// Archives a thread
         /// </summary>
         /// <param name="reason">Reason for audit logs.</param>
-        /// <returns></returns>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -238,7 +232,6 @@ namespace DisCatSharp.Entities
         /// Unarchives a thread
         /// </summary>
         /// <param name="reason">Reason for audit logs.</param>
-        /// <returns></returns>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -248,7 +241,6 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the members of a thread. Needs the <see cref="DiscordIntents.GuildMembers"/> intent.
         /// </summary>
-        /// <returns></returns>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -259,7 +251,6 @@ namespace DisCatSharp.Entities
         /// Adds a thread member.
         /// </summary>
         /// <param name="member">The member id to be added.</param>
-        /// <returns></returns>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -270,7 +261,6 @@ namespace DisCatSharp.Entities
         /// Adds a thread member.
         /// </summary>
         /// <param name="member">The member to be added.</param>
-        /// <returns></returns>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -281,7 +271,6 @@ namespace DisCatSharp.Entities
         /// Removes a thread member.
         /// </summary>
         /// <param name="member">The member id to be removed.</param>
-        /// <returns></returns>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -292,17 +281,72 @@ namespace DisCatSharp.Entities
         /// Removes a thread member.
         /// </summary>
         /// <param name="member">The member to be removed.</param>
-        /// <returns></returns>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task RemoveMemberAsync(DiscordMember member)
             => this.RemoveMemberAsync(member.Id);
 
+        // ----------
+        /// <summary>
+        /// Adds a role to a thread.
+        /// </summary>
+        /// <param name="role_id">The role id to be added.</param>
+        /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task AddRoleAsync(ulong role_id)
+        {
+            var role = this.Guild.GetRole(role_id);
+            var members = await this.Guild.GetAllMembersAsync();
+            var roleMembers = members.Where(m => m.Roles.Contains(role));
+            foreach(var member in roleMembers)
+            {
+                await this.Discord.ApiClient.AddThreadMemberAsync(this.Id, member.Id);
+            }
+        }
+
+        /// <summary>
+        /// Adds a role to a thread.
+        /// </summary>
+        /// <param name="role">The role to be added.</param>
+        /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task AddRoleAsync(DiscordRole role)
+            => this.AddRoleAsync(role.Id);
+
+        /// <summary>
+        /// Removes a role from a thread.
+        /// </summary>
+        /// <param name="role_id">The role id to be removed.</param>
+        /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task RemoveRoleAsync(ulong role_id)
+        {
+            var role = this.Guild.GetRole(role_id);
+            var members = await this.Guild.GetAllMembersAsync();
+            var roleMembers = members.Where(m => m.Roles.Contains(role));
+            foreach (var member in roleMembers)
+            {
+                await this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, member.Id);
+            }
+        }
+
+        /// <summary>
+        /// Removes a role from a thread.
+        /// </summary>
+        /// <param name="role">The role to be removed.</param>
+        /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task RemoveRoleAsync(DiscordRole role)
+            => this.RemoveRoleAsync(role.Id);
+
         /// <summary>
         /// Joins a thread
         /// </summary>
-        /// <returns></returns>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -402,7 +446,6 @@ namespace DisCatSharp.Entities
         /// Returns a specific message
         /// </summary>
         /// <param name="id">The id of the message</param>
-        /// <returns></returns>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission or the client is missing <see cref="Permissions.UsePrivateThreads"/> or <see cref="Permissions.UsePublicThreads"/>.</exception>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -521,7 +564,6 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="messages">A collection of messages to delete.</param>
         /// <param name="reason">Reason for audit logs.</param>
-        /// <returns></returns>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -548,7 +590,6 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="message">The message to be deleted.</param>
         /// <param name="reason">Reason for audit logs.</param>
-        /// <returns></returns>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -560,7 +601,6 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Post a typing indicator
         /// </summary>
-        /// <returns></returns>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -574,7 +614,6 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Returns all pinned messages
         /// </summary>
-        /// <returns></returns>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission or the client is missing <see cref="Permissions.UsePrivateThreads"/> or <see cref="Permissions.UsePublicThreads"/> or <see cref="Permissions.ReadMessageHistory"/>.</exception>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>

@@ -3270,26 +3270,30 @@ namespace DisCatSharp.Net
         #region Threads
 
         /// <summary>
-        /// Creates the thread with message async.
+        /// Creates the thread with message.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <param name="message_id">The message_id.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="auto_archive_duration">The auto_archive_duration.</param>
-        /// <returns>A Task.</returns>
-        internal async Task<DiscordThreadChannel> CreateThreadWithMessageAsync(ulong channel_id, ulong message_id, string name, ThreadAutoArchiveDuration auto_archive_duration)
+        /// <param name="channel_id">The channel id to create the thread in.</param>
+        /// <param name="message_id">The message id to create the thread from.</param>
+        /// <param name="name">The name of the thread.</param>
+        /// <param name="auto_archive_duration">The auto_archive_duration for the thread.</param>
+        /// <param name="reason">The reason.</param>
+        internal async Task<DiscordThreadChannel> CreateThreadWithMessageAsync(ulong channel_id, ulong message_id, string name, ThreadAutoArchiveDuration auto_archive_duration, string reason)
         {
             var pld = new RestThreadChannelCreatePayload
             {
                 Name = name,
                 AutoArchiveDuration = auto_archive_duration
             };
+
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers.Add(REASON_HEADER_NAME, reason);
 
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.THREADS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id, message_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
-            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
 
             var thread_channel = JsonConvert.DeserializeObject<DiscordThreadChannel>(res.Response);
 
@@ -3297,13 +3301,13 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Creates the thread without message async.
+        /// Creates the thread without a message.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="auto_archive_duration">The auto_archive_duration.</param>
-        /// <returns>A Task.</returns>
-        internal async Task<DiscordThreadChannel> CreateThreadWithoutMessageAsync(ulong channel_id, string name, ThreadAutoArchiveDuration auto_archive_duration)
+        /// <param name="channel_id">The channel id to create the thread in.</param>
+        /// <param name="name">The name of the thread.</param>
+        /// <param name="auto_archive_duration">The auto_archive_duration for the thread.</param>
+        /// <param name="reason">The reason.</param>
+        internal async Task<DiscordThreadChannel> CreateThreadWithoutMessageAsync(ulong channel_id, string name, ThreadAutoArchiveDuration auto_archive_duration, string reason)
         {
             var pld = new RestThreadChannelCreatePayload
             {
@@ -3311,11 +3315,15 @@ namespace DisCatSharp.Net
                 AutoArchiveDuration = auto_archive_duration
             };
 
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers.Add(REASON_HEADER_NAME, reason);
+
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
-            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
 
             var thread_channel = JsonConvert.DeserializeObject<DiscordThreadChannel>(res.Response);
 
@@ -3323,10 +3331,9 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Gets the thread async.
+        /// Gets the thread.
         /// </summary>
-        /// <param name="thread_id">The thread_id.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="thread_id">The thread id.</param>
         internal async Task<DiscordThreadChannel> GetThreadAsync(ulong thread_id)
         {
             var route = $"{Endpoints.CHANNELS}/:channel_id";
@@ -3342,10 +3349,9 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Joins the thread async.
+        /// Joins the thread.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="channel_id">The channel id.</param>
         internal async Task JoinThreadAsync(ulong channel_id)
         {
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}{Endpoints.ME}";
@@ -3356,10 +3362,9 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Leaves the thread async.
+        /// Leaves the thread.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="channel_id">The channel id.</param>
         internal async Task LeaveThreadAsync(ulong channel_id)
         {
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}{Endpoints.ME}";
@@ -3370,11 +3375,10 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Adds the thread member async.
+        /// Adds the thread member.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <param name="user_id">The user_id.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="channel_id">The channel id to add the member to.</param>
+        /// <param name="user_id">The user id to add.</param>
         internal async Task AddThreadMemberAsync(ulong channel_id, ulong user_id)
         {
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}/:user_id";
@@ -3385,11 +3389,10 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Removes the thread member async.
+        /// Removes the thread member.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <param name="user_id">The user_id.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="channel_id">The channel id to remove the member from.</param>
+        /// <param name="user_id">The user id to remove.</param>
         internal async Task RemoveThreadMemberAsync(ulong channel_id, ulong user_id)
         {
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}/:user_id";
@@ -3400,14 +3403,13 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Gets the thread members async.
+        /// Gets the thread members.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <returns>A Task.</returns>
-        internal async Task<IReadOnlyList<DiscordThreadChannelMember>> GetThreadMembersAsync(ulong channel_id)
+        /// <param name="thread_id">The thread id.</param>
+        internal async Task<IReadOnlyList<DiscordThreadChannelMember>> GetThreadMembersAsync(ulong thread_id)
         {
-            var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
+            var route = $"{Endpoints.CHANNELS}/:thread_id{Endpoints.THREAD_MEMBERS}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { thread_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
@@ -3418,10 +3420,9 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Gets the active threads async.
+        /// Gets the active threads in a channel.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="channel_id">The channel id.</param>
         internal async Task<DiscordThreadResult> GetActiveThreadsAsync(ulong channel_id)
         {
             var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}{Endpoints.THREAD_ACTIVE}";
@@ -3436,12 +3437,11 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Gets the joined private archived threads async.
+        /// Gets the joined private archived threads in a channel.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <param name="before">The before.</param>
-        /// <param name="limit">The limit.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="channel_id">The channel id.</param>
+        /// <param name="before">Get threads before snowflake.</param>
+        /// <param name="limit">Limit the results.</param>
         internal async Task<DiscordThreadResult> GetJoinedPrivateArchivedThreadsAsync(ulong channel_id, ulong? before, int? limit)
         {
             var urlparams = new Dictionary<string, string>();
@@ -3462,12 +3462,11 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Gets the public archived threads async.
+        /// Gets the public archived threads in a channel.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <param name="before">The before.</param>
-        /// <param name="limit">The limit.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="channel_id">The channel id.</param>
+        /// <param name="before">Get threads before snowflake.</param>
+        /// <param name="limit">Limit the results.</param>
         internal async Task<DiscordThreadResult> GetPublicArchivedThreadsAsync(ulong channel_id, ulong? before, int? limit)
         {
             var urlparams = new Dictionary<string, string>();
@@ -3488,12 +3487,11 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Gets the private archived threads async.
+        /// Gets the private archived threads in a channel.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <param name="before">The before.</param>
-        /// <param name="limit">The limit.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="channel_id">The channel id.</param>
+        /// <param name="before">Get threads before snowflake.</param>
+        /// <param name="limit">Limit the results.</param>
         internal async Task<DiscordThreadResult> GetPrivateArchivedThreadsAsync(ulong channel_id, ulong? before, int? limit)
         {
             var urlparams = new Dictionary<string, string>();
@@ -3514,17 +3512,16 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Modifies the thread async.
+        /// Modifies a thread.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="locked">The locked.</param>
-        /// <param name="archived">The archived.</param>
-        /// <param name="autoArchiveDuration">The auto archive duration.</param>
-        /// <param name="perUserRateLimit">The per user rate limit.</param>
-        /// <param name="reason">The reason.</param>
-        /// <returns>A Task.</returns>
-        internal Task ModifyThreadAsync(ulong channel_id, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<int?> perUserRateLimit, string reason)
+        /// <param name="thread_id">The thread to modify.</param>
+        /// <param name="name">The new name.</param>
+        /// <param name="locked">The new locked state.</param>
+        /// <param name="archived">The new archived state.</param>
+        /// <param name="autoArchiveDuration">The new auto archive duration.</param>
+        /// <param name="perUserRateLimit">The new per user rate limit.</param>
+        /// <param name="reason">The reason for the modification.</param>
+        internal Task ModifyThreadAsync(ulong thread_id, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<int?> perUserRateLimit, string reason)
         {
             var pld = new RestThreadChannelModifyPayload
             {
@@ -3539,27 +3536,26 @@ namespace DisCatSharp.Net
             if (!string.IsNullOrWhiteSpace(reason))
                 headers.Add(REASON_HEADER_NAME, reason);
 
-            var route = $"{Endpoints.CHANNELS}/:channel_id";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id }, out var path);
+            var route = $"{Endpoints.CHANNELS}/:thread_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { thread_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
         }
 
         /// <summary>
-        /// Deletes the thread async.
+        /// Deletes a thread.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
-        /// <param name="reason">The reason.</param>
-        /// <returns>A Task.</returns>
-        internal Task DeleteThreadAsync(ulong channel_id, string reason)
+        /// <param name="thread_id">The thread to delete.</param>
+        /// <param name="reason">The reason for deletion.</param>
+        internal Task DeleteThreadAsync(ulong thread_id, string reason)
         {
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
                 headers.Add(REASON_HEADER_NAME, reason);
 
-            var route = $"{Endpoints.CHANNELS}/:channel_id";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id }, out var path);
+            var route = $"{Endpoints.CHANNELS}/:thread_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { thread_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
