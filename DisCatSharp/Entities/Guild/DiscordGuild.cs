@@ -2304,7 +2304,7 @@ namespace DisCatSharp.Entities
             var filename = format switch
             {
                 StickerFormat.PNG => "sticker.png",
-                StickerFormat.APNG => "sticker.apng",
+                StickerFormat.APNG => "sticker.png",
                 StickerFormat.LOTTIE => "sticker.json",
                 _ => throw new InvalidOperationException("This format is not supported.")
             };
@@ -2315,7 +2315,7 @@ namespace DisCatSharp.Entities
                 ? throw new ArgumentOutOfRangeException(nameof(name), "Sticker name needs to be between 2 and 30 characters long.")
                 : description.HasValue && (description.Value.Length < 1 || description.Value.Length > 100)
                 ? throw new ArgumentOutOfRangeException(nameof(description), "Sticker description needs to be between 1 and 100 characters long.")
-                : this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.Name, new($"sticker.{format}", file , null), reason);
+                : this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.Name, new(filename, file , null), reason);
         }
 
         /// <summary>

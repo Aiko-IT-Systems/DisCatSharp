@@ -3853,7 +3853,6 @@ namespace DisCatSharp.Net
         /// <param name="tags">The tags.</param>
         /// <param name="file">The file.</param>
         /// <param name="reason">The reason.</param>
-        /// <returns>A Task.</returns>
         internal async Task<DiscordSticker> CreateGuildStickerAsync(ulong guild_id, string name, Optional<string> description, string tags, DiscordMessageFile file, string reason)
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}";
@@ -3862,20 +3861,23 @@ namespace DisCatSharp.Net
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
                 headers.Add(REASON_HEADER_NAME, reason);
-
+            /*
             var pld = new RestStickerCreatePayload()
             {
                 Name = name,
                 Description = description,
                 Tags = tags
             };
-
+            */
             var values = new Dictionary<string, string>
             {
-                ["payload_json"] = DiscordJson.SerializeObject(pld)
+                { "name", name },
+                { "description", description.HasValue ? description.Value : null },
+                { "tags", tags }
             };
 
             var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, values, new[] {file});
+            
             var ret = JObject.Parse(res.Response).ToDiscordObject<DiscordSticker>();
 
             ret.Discord = this.Discord;
