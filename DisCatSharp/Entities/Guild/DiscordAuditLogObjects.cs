@@ -703,6 +703,36 @@ namespace DisCatSharp.Entities
         public DiscordThreadChannel Target { get; internal set; }
 
         /// <summary>
+        /// Gets the name of the thread.
+        /// </summary>
+        public PropertyChange<string> NameChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the type of the thread.
+        /// </summary>
+        public PropertyChange<ChannelType?> TypeChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the archived state of the thread.
+        /// </summary>
+        public PropertyChange<bool?> ArchivedChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the locked state of the thread.
+        /// </summary>
+        public PropertyChange<bool?> LockedChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the new auto archive duration of the thread.
+        /// </summary>
+        public PropertyChange<ThreadAutoArchiveDuration?> AutoArchiveDurationChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the new ratelimit of the thread.
+        /// </summary>
+        public PropertyChange<int?> PerUserRateLimitChange { get; internal set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DiscordAuditLogThreadEntry"/> class.
         /// </summary>
         internal DiscordAuditLogThreadEntry() { }
@@ -962,21 +992,21 @@ namespace DisCatSharp.Entities
         /// Indicates that an event was deleted.
         /// </summary>
         EventDelete = ,
-
+        */
         /// <summary>
         /// Indicates that an thread was created.
         /// </summary>
-        ThreadCreate = ,
+        ThreadCreate = 110,
 
         /// <summary>
         /// Indicates that an thread was updated.
         /// </summary>
-        ThreadUpdate = ,
+        ThreadUpdate = 111,
 
         /// <summary>
         /// Indicates that an thread was deleted.
         /// </summary>
-        ThreadDelete = ,
-        */
+        ThreadDelete = 112,
+        
     }
 }
