@@ -772,16 +772,6 @@ namespace DisCatSharp.Entities
         public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration auto_archive_duration = ThreadAutoArchiveDuration.OneHour, string reason = null) => Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, auto_archive_duration) ? await this.Discord.ApiClient.CreateThreadWithoutMessageAsync(this.Id, name, auto_archive_duration, reason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(auto_archive_duration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 
         /// <summary>
-        /// Gets active threads. Can contain more threads. Watch for HasMore.
-        /// </summary>
-        /// <returns><see cref="DiscordThreadResult"/></returns>
-        /// <exception cref="Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordThreadResult> GetActiveThreadsAsync()
-            => await this.Discord.ApiClient.GetActiveThreadsAsync(this.Id);
-
-        /// <summary>
         /// Gets joined archived private threads. Can contain more threads. Watch for HasMore.
         /// </summary>
         /// <param name="before">Get threads before this timestamp.</param>
