@@ -807,6 +807,15 @@ namespace DisCatSharp.Entities
                 : this.Discord.ApiClient.CreateGuildChannelAsync(this.Id, name, type, parent?.Id, topic, bitrate, userLimit, overwrites, nsfw, perUserRateLimit, qualityMode, reason);
         }
 
+        /// <summary>
+        /// Gets active threads. Can contain more threads. Watch for HasMore.
+        /// </summary>
+        /// <returns><see cref="DiscordThreadResult"/></returns>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</ex>        public async Task<DiscordThreadResult> GetActiveThreadsAsync()
+	public Task<DiscordThreadResult> GetActiveThreadsAsync()
+            => this.Discord.ApiClient.GetActiveThreadsAsync(this.Id);
+
         // this is to commemorate the Great DAPI Channel Massacre of 2017-11-19.
         /// <summary>
         /// <para>Deletes all channels in this guild.</para>

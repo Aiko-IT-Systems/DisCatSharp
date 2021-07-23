@@ -3420,13 +3420,13 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Gets the active threads in a channel.
+        /// Gets the active threads in a guild.
         /// </summary>
-        /// <param name="channel_id">The channel id.</param>
-        internal async Task<DiscordThreadResult> GetActiveThreadsAsync(ulong channel_id)
+        /// <param name="guild_id">The guild id.</param>
+        internal async Task<DiscordThreadResult> GetActiveThreadsAsync(ulong guild_id)
         {
-            var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}{Endpoints.THREAD_ACTIVE}";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id }, out var path);
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.THREADS}{Endpoints.THREAD_ACTIVE}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
