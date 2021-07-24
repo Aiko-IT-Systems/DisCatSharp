@@ -10,6 +10,8 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <IncludeSymbols>false</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <PropertyGroup>
