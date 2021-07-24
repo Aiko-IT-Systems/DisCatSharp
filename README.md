@@ -41,10 +41,6 @@ Do note that the documentation might not reflect the latest changes in nightly v
 * [Examples](https://examples.dcs.aitsys.dev)
 
 ## Notice
-**Do not start a fight**
-
-No one have to use this. This is just to provide transparency & to provide this version to everyone who wants to use it.
-
 Feel free to re-use code in DSharpPlus.
 
 ## Latest NuGet
