@@ -58,7 +58,6 @@
       secure: oMF8sv9mhVjO7pBctQOwlmfd5aHQ4hvMoVCz77bgO9+1zBQSelPHxk0bCVfXNCCp
     prerelease: true
     force_update: true
-  deploy:
   - provider: NuGet
     server: https://nuget.pkg.github.com/Aiko-IT-Systems/index.json
     username: lulalaby
@@ -131,7 +130,6 @@
       secure: oMF8sv9mhVjO7pBctQOwlmfd5aHQ4hvMoVCz77bgO9+1zBQSelPHxk0bCVfXNCCp
     prerelease: false
     force_update: true
-  deploy:
   - provider: NuGet
     server: https://nuget.pkg.github.com/Aiko-IT-Systems/index.json
     username: lulalaby
