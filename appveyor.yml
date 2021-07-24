@@ -58,6 +58,13 @@
       secure: oMF8sv9mhVjO7pBctQOwlmfd5aHQ4hvMoVCz77bgO9+1zBQSelPHxk0bCVfXNCCp
     prerelease: true
     force_update: true
+  deploy:
+  - provider: NuGet
+    server: https://nuget.pkg.github.com/Aiko-IT-Systems/index.json
+    username: lulalaby
+    api_key:
+      secure: SBGo8KrGJ7t5wwMNHKD0WSzrQ+PLJbqXE3FtDH2yGkSrQewO+kzmwp/xGk5a84He
+    skip_symbols: false
   on_success:
     - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
     - ps: ./send.ps1 success $env:WEBHOOK_URL
@@ -124,6 +131,13 @@
       secure: oMF8sv9mhVjO7pBctQOwlmfd5aHQ4hvMoVCz77bgO9+1zBQSelPHxk0bCVfXNCCp
     prerelease: false
     force_update: true
+  deploy:
+  - provider: NuGet
+    server: https://nuget.pkg.github.com/Aiko-IT-Systems/index.json
+    username: lulalaby
+    api_key:
+      secure: SBGo8KrGJ7t5wwMNHKD0WSzrQ+PLJbqXE3FtDH2yGkSrQewO+kzmwp/xGk5a84He
+    skip_symbols: false
   on_success:
     - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
     - ps: ./send.ps1 success $env:WEBHOOK_URL
