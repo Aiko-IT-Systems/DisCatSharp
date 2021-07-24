@@ -63,7 +63,7 @@
     username: lulalaby
     api_key:
       secure: SBGo8KrGJ7t5wwMNHKD0WSzrQ+PLJbqXE3FtDH2yGkSrQewO+kzmwp/xGk5a84He
-    skip_symbols: false
+    skip_symbols: true
   on_success:
     - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
     - ps: ./send.ps1 success $env:WEBHOOK_URL
@@ -135,17 +135,10 @@
     username: lulalaby
     api_key:
       secure: SBGo8KrGJ7t5wwMNHKD0WSzrQ+PLJbqXE3FtDH2yGkSrQewO+kzmwp/xGk5a84He
-    skip_symbols: false
+    skip_symbols: true
   on_success:
     - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
     - ps: ./send.ps1 success $env:WEBHOOK_URL
   on_failure:
     - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
     - ps: ./send.ps1 failure $env:WEBHOOK_URL
-# Old stuff
-  #- provider: NuGet
-  #  server: https://nuget.pkg.github.com/Aiko-IT-Systems/index.json
-  #  username: Lulalaby
-  #  api_key:
-  #    secure: 3l827zZPk7wTgnX2eZpc6bYcbOKVQnkB3xOkH43UTIHknJ0IMHrP7S6YNmgIRzkt
-  #  skip_symbols: true
