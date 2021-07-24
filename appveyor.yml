@@ -43,6 +43,7 @@
           & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER
       }
   artifacts:
+  - path: artifacts\*.snupkg
   - path: artifacts\*.nupkg
   - path: artifacts\dcs-docs.tar.xz
   deploy:
@@ -50,7 +51,7 @@
     server:
     api_key:
       secure: eml4lPttwjBZg7WdwX3tbx34ZDNssgb2zwthatNbolRY0PnaCIswbuPClf9IWrw7
-    skip_symbols: true
+    skip_symbols: false
   - provider: GitHub
     auth_token:
       secure: oMF8sv9mhVjO7pBctQOwlmfd5aHQ4hvMoVCz77bgO9+1zBQSelPHxk0bCVfXNCCp
@@ -106,6 +107,7 @@
           & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release"
       }
   artifacts:
+  - path: artifacts\*.snupkg
   - path: artifacts\*.nupkg
   - path: artifacts\dcs-docs.tar.xz
   deploy:
@@ -113,7 +115,7 @@
     server:
     api_key:
       secure: eml4lPttwjBZg7WdwX3tbx34ZDNssgb2zwthatNbolRY0PnaCIswbuPClf9IWrw7
-    skip_symbols: true
+    skip_symbols: false
   - provider: GitHub
     auth_token:
       secure: oMF8sv9mhVjO7pBctQOwlmfd5aHQ4hvMoVCz77bgO9+1zBQSelPHxk0bCVfXNCCp
