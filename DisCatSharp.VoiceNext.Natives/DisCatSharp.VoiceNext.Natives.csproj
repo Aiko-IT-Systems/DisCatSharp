@@ -3,6 +3,7 @@
 
   <Import Project="../Version.targets" />
   <Import Project="../DisCatSharp.targets" />
+  <Import Project="../Package.targets" />
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>

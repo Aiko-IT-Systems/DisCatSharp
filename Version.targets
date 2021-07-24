@@ -1,30 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
   <PropertyGroup>
     <VersionPrefix>9.6.1</VersionPrefix>
-    <Authors>Lala Sabathil, Lunar, J_M_Lutra, AITSYS contributors</Authors>
-    <Company>Aiko IT Systems</Company>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' != ''">
     <Version>$(VersionPrefix)-$(VersionSuffix)-$(BuildNumber)</Version>
     <AssemblyVersion>$(VersionPrefix).$(BuildNumber)</AssemblyVersion>
     <FileVersion>$(VersionPrefix).$(BuildNumber)</FileVersion>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' == ''">
     <Version>$(VersionPrefix)-$(VersionSuffix)</Version>
     <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
     <FileVersion>$(VersionPrefix).0</FileVersion>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(VersionSuffix)' == ''">
     <Version>$(VersionPrefix)</Version>
     <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
