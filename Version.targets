@@ -4,11 +4,13 @@
   <PropertyGroup>
     <VersionPrefix>9.6.1</VersionPrefix>
     <Authors>Lala Sabathil, Lunar, J_M_Lutra, AITSYS contributors</Authors>
-	<Company>Aiko IT Systems</Company>
+    <Company>Aiko IT Systems</Company>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' != ''">
