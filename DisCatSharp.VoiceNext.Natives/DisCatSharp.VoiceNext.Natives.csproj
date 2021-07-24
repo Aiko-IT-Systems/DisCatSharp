@@ -11,7 +11,7 @@
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
     <IncludeSymbols>false</IncludeSymbols>
-    <SymbolPackageFormat>fake-snupkg</SymbolPackageFormat>
+    <SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <PropertyGroup>
