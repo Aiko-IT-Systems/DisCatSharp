@@ -3,6 +3,8 @@
 
   <Import Project="../Version.targets" />
   <Import Project="../DisCatSharp.targets" />
+  <Import Project="../Package.targets" />
+  <Import Project="../NuGet.targets" />
 
   <PropertyGroup>
     <AssemblyName>DisCatSharp.CommandsNext</AssemblyName>

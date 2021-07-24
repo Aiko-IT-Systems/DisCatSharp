@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
 	<PropertyGroup>
-    <NoWarn>1591;NU5128</NoWarn>
-    <LangVersion>9.0</LangVersion>
-    <Optimize>True</Optimize>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DebugType>Portable</DebugType>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>Lala Sabathil, Lunar, J_M_Lutra, AITSYS contributors</Authors>
+    <Company>Aiko IT Systems</Company>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <Optimize>False</Optimize>
-  </PropertyGroup>
-
 </Project>
