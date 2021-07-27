@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
@@ -58,6 +60,7 @@ namespace DisCatSharp.Entities
         {
             get
             {
+                Console.WriteLine("Value: " + this._value.GetType().ToString());
                 return this.Type switch
                 {
                     ApplicationCommandOptionType.Boolean => bool.Parse(this._value),

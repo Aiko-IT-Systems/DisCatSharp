@@ -981,6 +981,7 @@ namespace DisCatSharp
                     guild._channels[channel.Id] = channel;
                 }
             }
+
             if (newGuild._threads != null && newGuild._threads.Count > 0)
             {
                 foreach (var thread in newGuild._threads.Values)

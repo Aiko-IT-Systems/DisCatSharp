@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.Net
@@ -61,6 +62,70 @@ namespace DisCatSharp.Net
         {
             this.Values = values;
             this.Files = files.ToDictionary(x => x.FileName, x => x.Stream);
+        }
+    }
+
+
+    /// <summary>
+    /// Represents a multipart HTTP request for stickers.
+    /// </summary>
+    internal sealed class MultipartStickerWebRequest : BaseRestRequest
+    {
+        /// <summary>
+        /// Gets the file.
+        /// </summary>
+        public Stream File { get; }
+
+        /// <summary>
+        /// Gets the file type.
+        /// </summary>
+        public string FileType { get; }
+
+        /// <summary>
+        /// Gets the file name.
+        /// </summary>
+        public string FileName { get; }
+
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Gets the description.
+        /// </summary>
+        public string Description { get; }
+
+        /// <summary>
+        /// Gets the tags.
+        /// </summary>
+        public string Tags { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MultipartStickerWebRequest"/> class.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="bucket">The bucket.</param>
+        /// <param name="url">The url.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="route">The route.</param>
+        /// <param name="headers">The headers.</param>
+        /// <param name="file">The file.</param>
+        /// <param name="name">The sticker name.</param>
+        /// <param name="tags">The sticker tag.</param>
+        /// <param name="description">The sticker description.</param>
+        /// <param name="file_type">The file type.</param>
+        /// <param name="ratelimit_wait_override">The ratelimit_wait_override.</param>
+        internal MultipartStickerWebRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null,
+            DiscordMessageFile file = null, string name = "", string tags = "", string description = null, string file_type = "image/png", double? ratelimit_wait_override = null)
+            : base(client, bucket, url, method, route, headers, ratelimit_wait_override)
+        {
+            this.File = file.Stream;
+            this.FileType = file_type;
+            this.FileName = file.FileName;
+            this.Name = name;
+            this.Description = description;
+            this.Tags = tags;
         }
     }
 }

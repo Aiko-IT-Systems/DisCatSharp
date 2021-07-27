@@ -26,6 +26,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
@@ -181,7 +182,7 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Dos the request async.
+        /// Execute a rest request.
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="bucket">The bucket.</param>
@@ -195,6 +196,35 @@ namespace DisCatSharp.Net
         private Task<RestResponse> DoRequestAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, string payload = null, double? ratelimitWaitOverride = null)
         {
             var req = new RestRequest(client, bucket, url, method, route, headers, payload, ratelimitWaitOverride);
+
+            if (this.Discord != null)
+                this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
+            else
+                _ = this.Rest.ExecuteRequestAsync(req);
+
+            return req.WaitForCompletionAsync();
+        }
+
+        /// <summary>
+        /// Execute a multipart rest request.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="bucket">The bucket.</param>
+        /// <param name="url">The url.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="route">The route.</param>
+        /// <param name="headers">The headers.</param>
+        /// <param name="file">The file.</param>
+        /// <param name="name">The sticker name.</param>
+        /// <param name="tags">The sticker tag.</param>
+        /// <param name="description">The sticker description.</param>
+        /// <param name="file_type">The file type.</param>
+        /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
+        /// <returns>A Task.</returns>
+        private Task<RestResponse> DoStickerMultipartAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null,
+            DiscordMessageFile file = null, string name = "", string tags = "", string description = null, string file_type = "", double? ratelimitWaitOverride = null)
+{
+            var req = new MultipartStickerWebRequest(client, bucket, url, method, route, headers, file, name, tags, description, file_type, ratelimitWaitOverride);
 
             if (this.Discord != null)
                 this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
@@ -229,7 +259,6 @@ namespace DisCatSharp.Net
 
             return req.WaitForCompletionAsync();
         }
-
         #region Guild
 
         /// <summary>
@@ -3852,8 +3881,9 @@ namespace DisCatSharp.Net
         /// <param name="description">The description.</param>
         /// <param name="tags">The tags.</param>
         /// <param name="file">The file.</param>
+        /// <param name="file_type">The file type.</param>
         /// <param name="reason">The reason.</param>
-        internal async Task<DiscordSticker> CreateGuildStickerAsync(ulong guild_id, string name, Optional<string> description, string tags, DiscordMessageFile file, string reason)
+        internal async Task<DiscordSticker> CreateGuildStickerAsync(ulong guild_id, string name, Optional<string> description, string tags, DiscordMessageFile file, string file_type, string reason)
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {guild_id}, out var path);
@@ -3861,26 +3891,16 @@ namespace DisCatSharp.Net
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
                 headers.Add(REASON_HEADER_NAME, reason);
-            /*
-            var pld = new RestStickerCreatePayload()
-            {
-                Name = name,
-                Description = description,
-                Tags = tags
-            };
-            */
-            var values = new Dictionary<string, string>
-            {
-                { "name", name },
-                { "description", description.HasValue ? description.Value : null },
-                { "tags", tags }
-            };
 
-            var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, values, new[] {file});
+            this.Discord.Logger.LogDebug($"Sticker: {name} | {description.Value} | {tags} | {file.FileName} | {file_type} | {headers}");
+
+            var res = await this.DoStickerMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, file, name, tags, description.HasValue ? description.Value : null, file_type);
             
             var ret = JObject.Parse(res.Response).ToDiscordObject<DiscordSticker>();
 
             ret.Discord = this.Discord;
+
+            file.Stream.Position = file.ResetPositionTo.Value;
 
             return ret;
         }
