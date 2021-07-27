@@ -759,7 +759,6 @@ namespace DisCatSharp.Entities
         public Task<DiscordChannel> CreateNewsChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
             => this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
 
-
         /// <summary>
         /// Creates a new voice channel in this guild.
         /// </summary>
@@ -2395,13 +2394,21 @@ namespace DisCatSharp.Entities
                 _ => throw new InvalidOperationException("This format is not supported.")
             };
 
+            var filetype = format switch
+            {
+                StickerFormat.PNG => "image/png",
+                StickerFormat.APNG => "image/png",
+                StickerFormat.LOTTIE => "application/json",
+                _ => throw new InvalidOperationException("This format is not supported.")
+            };
+
             return emoji.Id is not 0
                 ? throw new InvalidOperationException("Only unicode emoji can be used for stickers.")
                 : name.Length < 2 || name.Length > 30
                 ? throw new ArgumentOutOfRangeException(nameof(name), "Sticker name needs to be between 2 and 30 characters long.")
                 : description.HasValue && (description.Value.Length < 1 || description.Value.Length > 100)
                 ? throw new ArgumentOutOfRangeException(nameof(description), "Sticker description needs to be between 1 and 100 characters long.")
-                : this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.Name, new(filename, file , null), reason);
+                : this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.GetDiscordName().Replace(":", ""), new(filename, file , null), filetype, reason);
         }
 
         /// <summary>

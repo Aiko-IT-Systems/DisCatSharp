@@ -24,6 +24,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -58,6 +59,11 @@ namespace DisCatSharp.Net
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>")]
         private BaseDiscordClient Discord { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether debug is enabled.
+        /// </summary>
+        internal bool Debug { get; set; }
 
         /// <summary>
         /// Gets the logger.
@@ -289,6 +295,10 @@ namespace DisCatSharp.Net
                     this.Logger.LogDebug(LoggerEvents.RatelimitDiag, "Initial request for {0} is allowed", bucket.ToString());
 
                 var req = this.BuildRequest(request);
+
+                if(this.Debug)
+                    this.Logger.LogTrace(LoggerEvents.Misc, await req.Content.ReadAsStringAsync());
+
                 var response = new RestResponse();
                 try
                 {
@@ -523,6 +533,30 @@ namespace DisCatSharp.Net
                     foreach (var f in mprequest.Files)
                         content.Add(new StreamContent(f.Value), $"file{i++.ToString(CultureInfo.InvariantCulture)}", f.Key);
                 }
+
+                req.Content = content;
+            }
+
+            if (request is MultipartStickerWebRequest mpsrequest)
+            {
+                this.Logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
+
+                var boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
+
+                req.Headers.Add("Connection", "keep-alive");
+                req.Headers.Add("Keep-Alive", "600");
+
+                /*MemoryStream ms = new();
+                mpsrequest.File.CopyTo(ms);
+                */
+                var content = new MultipartFormDataContent(boundary)
+                {
+                    { new StringContent(mpsrequest.Name), "name" },
+                    { new StringContent(mpsrequest.Tags), "tags" },
+                    { new StringContent(mpsrequest.Description), "description" },
+                    { new StreamContent(mpsrequest.File), "file", mpsrequest.FileName }
+                };
+                content.Headers.ContentType.MediaType = mpsrequest.FileType; // multipart/form-data
 
                 req.Content = content;
             }
