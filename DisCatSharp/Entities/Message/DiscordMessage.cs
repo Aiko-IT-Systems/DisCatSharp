@@ -57,7 +57,7 @@ namespace DisCatSharp.Entities
                 var cid = this.ChannelId.ToString(CultureInfo.InvariantCulture);
                 var mid = this.Id.ToString(CultureInfo.InvariantCulture);
 
-                return new Uri($"https://discord.com/channels/{gid}/{cid}/{mid}");
+                return new Uri($"https://{(this.Discord.Configuration.UseCanary ? "canary.discord.com" : "discord.com")}/channels/{gid}/{cid}/{mid}");
             });
         }
 

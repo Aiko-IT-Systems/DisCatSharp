@@ -38,6 +38,18 @@ namespace DisCatSharp.Entities
         public ulong UserId { get; internal set; }
 
         /// <summary>
+        /// Gets the id of the user.
+        /// </summary>
+        [JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordMember Member { get; internal set; }
+
+        /// <summary>
+        /// Gets the id of the user.
+        /// </summary>
+        [JsonProperty("presence", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordPresence Presence { get; internal set; }
+
+        /// <summary>
         /// Gets the timestamp when the user joined the thread.
         /// </summary>
         [JsonIgnore]
