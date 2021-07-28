@@ -27,36 +27,36 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities
 {
     /// <summary>
-    /// Represents a Stage instance
+    /// Represents a Stage instance.
     /// </summary>
     public class DiscordStageInstance : SnowflakeObject, IEquatable<DiscordStageInstance>
     {
         /// <summary>
-        /// Gets the guild id of the associated Stage channel
+        /// Gets the guild id of the associated Stage channel.
         /// </summary>
         [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
         public ulong GuildId { get; internal set; }
 
         /// <summary>
-        /// Gets id of the associated Stage channel
+        /// Gets id of the associated Stage channel.
         /// </summary>
         [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
         public ulong ChannelId { get; internal set; }
 
         /// <summary>
-        /// Gets the topic of the Stage instance
+        /// Gets the topic of the Stage instance.
         /// </summary>
         [JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
         public string Topic { get; internal set; }
 
         /// <summary>
-        /// Gets the topic of the Stage instance
+        /// Gets the topic of the Stage instance.
         /// </summary>
         [JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
         public StagePrivacyLevel PrivacyLevel { get; internal set; }
 
         /// <summary>
-        /// Gets whether or not stage discovery is disabled
+        /// Gets whether or not stage discovery is disabled.
         /// </summary>
         [JsonProperty("discoverable_disabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool DiscoverableDisabled { get; internal set; }

@@ -1213,9 +1213,10 @@ namespace DisCatSharp.Net
         /// <param name="perUserRateLimit">The per user rate limit.</param>
         /// <param name="rtcRegion">The rtc region.</param>
         /// <param name="qualityMode">The quality mode.</param>
+        /// <param name="autoArchiveDuration">The default auto archive duration.</param>
         /// <param name="reason">The reason.</param>
         /// <returns>A Task.</returns>
-        internal Task ModifyChannelAsync(ulong channel_id, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? user_limit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, string reason)
+        internal Task ModifyChannelAsync(ulong channel_id, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? user_limit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, string reason)
         {
             var pld = new RestChannelModifyPayload
             {
@@ -1229,6 +1230,7 @@ namespace DisCatSharp.Net
                 PerUserRateLimit = perUserRateLimit,
                 RtcRegion = rtcRegion,
                 QualityMode = qualityMode,
+                DefaultAutoArchiveDuration = autoArchiveDuration
             };
 
             var headers = Utilities.GetBaseHeaders();
@@ -3306,7 +3308,7 @@ namespace DisCatSharp.Net
         /// <param name="name">The name of the thread.</param>
         /// <param name="auto_archive_duration">The auto_archive_duration for the thread.</param>
         /// <param name="reason">The reason.</param>
-        internal async Task<DiscordThreadChannel> CreateThreadWithMessageAsync(ulong channel_id, ulong message_id, string name, ThreadAutoArchiveDuration auto_archive_duration, string reason)
+        internal async Task<DiscordThreadChannel> CreateThreadWithMessageAsync(ulong channel_id, ulong message_id, string name, ThreadAutoArchiveDuration auto_archive_duration, string reason = null)
         {
             var pld = new RestThreadChannelCreatePayload
             {
@@ -3335,13 +3337,15 @@ namespace DisCatSharp.Net
         /// <param name="channel_id">The channel id to create the thread in.</param>
         /// <param name="name">The name of the thread.</param>
         /// <param name="auto_archive_duration">The auto_archive_duration for the thread.</param>
+        /// <param name="type">Can be either <see cref="ChannelType.PublicThread"/> or <see cref="ChannelType.PrivateThread"/>.</param>
         /// <param name="reason">The reason.</param>
-        internal async Task<DiscordThreadChannel> CreateThreadWithoutMessageAsync(ulong channel_id, string name, ThreadAutoArchiveDuration auto_archive_duration, string reason)
+        internal async Task<DiscordThreadChannel> CreateThreadWithoutMessageAsync(ulong channel_id, string name, ThreadAutoArchiveDuration auto_archive_duration, ChannelType type = ChannelType.PublicThread, string reason = null)
         {
             var pld = new RestThreadChannelCreatePayload
             {
                 Name = name,
-                AutoArchiveDuration = auto_archive_duration
+                AutoArchiveDuration = auto_archive_duration,
+                Type = type
             };
 
             var headers = Utilities.GetBaseHeaders();
