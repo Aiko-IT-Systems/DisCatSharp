@@ -807,13 +807,13 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Gets active threads. Can contain more threads. Watch for HasMore.
+        /// Gets active threads. Can contain more threads.
+        /// If the result's value 'HasMore' is true, you need to recall this function to get older threads.
         /// </summary>
-        /// <returns><see cref="DiscordThreadResult"/></returns>
-        /// <exception cref="Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordThreadResult> GetActiveThreadsAsync()
+        /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task<DiscordThreadResult> GetActiveThreadsAsync()
             => this.Discord.ApiClient.GetActiveThreadsAsync(this.Id);
 
         // this is to commemorate the Great DAPI Channel Massacre of 2017-11-19.

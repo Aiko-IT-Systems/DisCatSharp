@@ -83,8 +83,8 @@ namespace DisCatSharp.Entities
         public ulong? LastMessageId { get; internal set; }
 
         /// <summary>
-        /// <para>Gets the slow mode delay configured for this thread.</para>
-        /// <para>All bots, as well as users with <see cref="Permissions.ManageChannels"/> or <see cref="Permissions.ManageMessages"/> permissions in the channel are exempt from slow mode.</para>
+        /// <para>Gets the slowmode delay configured for this thread.</para>
+        /// <para>All bots, as well as users with <see cref="Permissions.ManageChannels"/> or <see cref="Permissions.ManageMessages"/> permissions in the channel are exempt from slowmode.</para>
         /// </summary>
         [JsonProperty("rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
         public int? PerUserRateLimit { get; internal set; }
@@ -165,7 +165,7 @@ namespace DisCatSharp.Entities
         #region Methods
 
         /// <summary>
-        /// Deletes a thread
+        /// Deletes a thread.
         /// </summary>
         /// <param name="reason">Reason for audit logs.</param>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
@@ -196,7 +196,7 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Locks a thread
+        /// Locks a thread.
         /// </summary>
         /// <param name="reason">Reason for audit logs.</param>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
@@ -207,7 +207,7 @@ namespace DisCatSharp.Entities
             => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, true, null, null, null, reason: reason);
 
         /// <summary>
-        /// Unlocks a thread
+        /// Unlocks a thread.
         /// </summary>
         /// <param name="reason">Reason for audit logs.</param>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
@@ -218,7 +218,7 @@ namespace DisCatSharp.Entities
             => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, false, null, null, null, reason: reason);
 
         /// <summary>
-        /// Archives a thread
+        /// Archives a thread.
         /// </summary>
         /// <param name="reason">Reason for audit logs.</param>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
@@ -229,7 +229,7 @@ namespace DisCatSharp.Entities
             => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, true, null, null, reason: reason);
 
         /// <summary>
-        /// Unarchives a thread
+        /// Unarchives a thread.
         /// </summary>
         /// <param name="reason">Reason for audit logs.</param>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
@@ -248,7 +248,7 @@ namespace DisCatSharp.Entities
             => await this.Discord.ApiClient.GetThreadMembersAsync(this.Id);
 
         /// <summary>
-        /// Adds a thread member.
+        /// Adds a member to this thread. Only applicable to private threads.
         /// </summary>
         /// <param name="member">The member id to be added.</param>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
@@ -258,7 +258,7 @@ namespace DisCatSharp.Entities
             => this.Discord.ApiClient.AddThreadMemberAsync(this.Id, member);
 
         /// <summary>
-        /// Adds a thread member.
+        /// Adds a member to this thread. Only applicable to private threads.
         /// </summary>
         /// <param name="member">The member to be added.</param>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
@@ -268,7 +268,7 @@ namespace DisCatSharp.Entities
             => this.AddMemberAsync(member.Id);
 
         /// <summary>
-        /// Removes a thread member.
+        /// Removes a member from this thread. Only applicable to private threads.
         /// </summary>
         /// <param name="member">The member id to be removed.</param>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
@@ -278,7 +278,7 @@ namespace DisCatSharp.Entities
             => this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, member);
 
         /// <summary>
-        /// Removes a thread member.
+        /// Removes a member from this thread. Only applicable to private threads.
         /// </summary>
         /// <param name="member">The member to be removed.</param>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
@@ -287,9 +287,8 @@ namespace DisCatSharp.Entities
         public Task RemoveMemberAsync(DiscordMember member)
             => this.RemoveMemberAsync(member.Id);
 
-        // ----------
         /// <summary>
-        /// Adds a role to a thread.
+        /// Adds a role to this thread. Only applicable to private threads.
         /// </summary>
         /// <param name="role_id">The role id to be added.</param>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
@@ -307,7 +306,7 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Adds a role to a thread.
+        /// Adds a role to this thread. Only applicable to private threads.
         /// </summary>
         /// <param name="role">The role to be added.</param>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
@@ -317,7 +316,7 @@ namespace DisCatSharp.Entities
             => this.AddRoleAsync(role.Id);
 
         /// <summary>
-        /// Removes a role from a thread.
+        /// Removes a role from this thread. Only applicable to private threads.
         /// </summary>
         /// <param name="role_id">The role id to be removed.</param>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
@@ -335,7 +334,7 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Removes a role from a thread.
+        /// Removes a role to from thread. Only applicable to private threads.
         /// </summary>
         /// <param name="role">The role to be removed.</param>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
@@ -345,8 +344,9 @@ namespace DisCatSharp.Entities
             => this.RemoveRoleAsync(role.Id);
 
         /// <summary>
-        /// Joins a thread
+        /// Joins a thread.
         /// </summary>
+        /// <exception cref="UnauthorizedException">Thrown when the client has no access to this thread.</exception>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -354,9 +354,9 @@ namespace DisCatSharp.Entities
             => this.Discord.ApiClient.JoinThreadAsync(this.Id);
 
         /// <summary>
-        /// Leaves a thread
+        /// Leaves a thread.
         /// </summary>
-        /// <returns></returns>
+        /// <exception cref="UnauthorizedException">Thrown when the client has no access to this thread.</exception>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>

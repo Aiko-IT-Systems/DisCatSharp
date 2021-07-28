@@ -84,6 +84,11 @@ namespace DisCatSharp.Net.Models
         public VideoQualityMode? QualityMode { internal get; set; }
 
         /// <summary>
+        /// Sets this channel's default duration for newly created threads, in minutes, to automatically archive the thread after recent activity.
+        /// </summary>
+        public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { internal get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ChannelEditModel"/> class.
         /// </summary>
         internal ChannelEditModel() { }

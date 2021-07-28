@@ -55,6 +55,11 @@ namespace DisCatSharp
 	    /// <summary>
         /// Represents the embedded application Chess in the park.
         /// </summary>
-        ChessInThePark = 832012586023256104
+        ChessInThePark = 832012586023256104,
+
+        /// <summary>
+        /// Represents the embedded application Chess in the park.
+        /// </summary>
+        ChessInThePark2 = 832012774040141894
     }
 }

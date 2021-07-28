@@ -90,6 +90,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("video_quality_mode", NullValueHandling = NullValueHandling.Ignore)]
         public VideoQualityMode? QualityMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default auto archive duration.
+        /// </summary>
+        [JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
+        public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; set; }
     }
 
     /// <summary>
@@ -156,6 +162,13 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("video_quality_mode", NullValueHandling = NullValueHandling.Ignore)]
         public VideoQualityMode? QualityMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default auto archive duration.
+        /// </summary>
+        [JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
+        public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; set; }
+
     }
 
     /// <summary>
@@ -409,6 +422,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("auto_archive_duration")]
         public ThreadAutoArchiveDuration AutoArchiveDuration { get; set; }
+
+        /// <summary>
+        /// Gets or sets the thread type.
+        /// </summary>
+        [JsonProperty("type")]
+        public ChannelType Type { get; set; }
     }
 
     /// <summary>
