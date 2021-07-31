@@ -36,6 +36,9 @@ The documentation for the latest stable version is available at [docs.dcs.aitsys
 
 Do note that the documentation might not reflect the latest changes in nightly version of the library.
 
+## Bugs or Feature requests?
+Write me on Discord (Catra#9999) and I'll add you to our Support Server. After that you get access to [bugs.aitsys.dev](https://bugs.aitsys.dev).
+
 ### Tutorials
 * [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
 * [Examples](https://examples.dcs.aitsys.dev)
