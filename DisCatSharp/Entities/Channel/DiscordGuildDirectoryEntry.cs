@@ -51,7 +51,20 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("primary_category_id", NullValueHandling = NullValueHandling.Ignore)]
         public DirectoryCategory PrimaryCategory { get; internal set; }
-    
+
+        /// <summary>
+        /// Gets the guild id of the associated directory entry.
+        /// </summary>
+        [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong GuildId { get; internal set; }
+
+        /// <summary>
+        /// Gets the guild to which this directory entry belongs.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordGuild Guild
+            => this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordGuildDirectoryEntry"/> class.
         /// </summary>
