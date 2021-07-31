@@ -133,7 +133,7 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Gets whether the two <see cref="DiscordChannel"/> objects are not equal.
+        /// Gets whether the two <see cref="DiscordStageInstance"/> objects are not equal.
         /// </summary>
         /// <param name="e1">First channel to compare.</param>
         /// <param name="e2">Second channel to compare.</param>
