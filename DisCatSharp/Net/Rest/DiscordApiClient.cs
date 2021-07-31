@@ -1459,9 +1459,9 @@ namespace DisCatSharp.Net
         /// </summary>
         /// <param name="channel_id">The channel_id.</param>
         /// <param name="topic">The topic.</param>
+        /// <param name="send_start_notification">Whether everyone should be notified about the stage.</param>
         /// <param name="privacy_level">The privacy_level.</param>
         /// <param name="reason">The reason.</param>
-        /// <returns>A Task.</returns>
         internal async Task<DiscordStageInstance> CreateStageInstanceAsync(ulong channel_id, string topic, bool send_start_notification, StagePrivacyLevel privacy_level, string reason)
         {
             var pld = new RestStageInstanceCreatePayload
@@ -1490,7 +1490,6 @@ namespace DisCatSharp.Net
         /// Gets the stage instance async.
         /// </summary>
         /// <param name="channel_id">The channel_id.</param>
-        /// <returns>A Task.</returns>
         internal async Task<DiscordStageInstance> GetStageInstanceAsync(ulong channel_id)
         {
             var route = $"{Endpoints.STAGE_INSTANCES}/:channel_id";
@@ -1511,7 +1510,6 @@ namespace DisCatSharp.Net
         /// <param name="topic">The topic.</param>
         /// <param name="privacy_level">The privacy_level.</param>
         /// <param name="reason">The reason.</param>
-        /// <returns>A Task.</returns>
         internal Task ModifyStageInstanceAsync(ulong channel_id, Optional<string> topic, Optional<StagePrivacyLevel> privacy_level, string reason)
         {
             var pld = new RestStageInstanceModifyPayload
@@ -1535,7 +1533,6 @@ namespace DisCatSharp.Net
         /// </summary>
         /// <param name="channel_id">The channel_id.</param>
         /// <param name="reason">The reason.</param>
-        /// <returns>A Task.</returns>
         internal Task DeleteStageInstanceAsync(ulong channel_id, string reason)
         {
             var route = $"{Endpoints.STAGE_INSTANCES}/:channel_id";
@@ -1551,7 +1548,7 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Gets the channel messages async.
         /// </summary>
-        /// <param name="channel_id">The channel_id.</param>
+        /// <param name="channel_id">The channel id.</param>
         /// <param name="limit">The limit.</param>
         /// <param name="before">The before.</param>
         /// <param name="after">The after.</param>
