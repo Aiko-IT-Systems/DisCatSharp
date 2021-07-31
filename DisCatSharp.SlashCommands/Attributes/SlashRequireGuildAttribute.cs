@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,29 +21,26 @@
 // SOFTWARE.
 
 using System;
+using System.Threading.Tasks;
 
-namespace DisCatSharp.SlashCommands
+namespace DisCatSharp.SlashCommands.Attributes
 {
     /// <summary>
-    /// Sets a IChoiceProvider for a command options. ChoiceProviders can be used to provide
-    /// DiscordApplicationCommandOptionChoice from external sources such as a database.
+    /// Defines that this slash command is only usable within a guild.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true)]
-    public class ChoiceProviderAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public sealed class SlashRequireGuildAttribute : SlashCheckBaseAttribute
     {
+        /// <summary>
+        /// Defines that this command is only usable within a guild.
+        /// </summary>
+        public SlashRequireGuildAttribute()
+        { }
 
         /// <summary>
-        /// The type of the provider.
+        /// Runs checks.
         /// </summary>
-        public Type ProviderType { get; }
-
-        /// <summary>
-        /// Adds a choice provider to this command.
-        /// </summary>
-        /// <param name="providerType">The type of the provider.</param>
-        public ChoiceProviderAttribute(Type providerType)
-        {
-            this.ProviderType = providerType;
-        }
+        public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+            => Task.FromResult(ctx.Guild != null);
     }
 }

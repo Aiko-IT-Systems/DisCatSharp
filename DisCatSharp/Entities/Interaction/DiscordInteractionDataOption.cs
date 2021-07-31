@@ -60,7 +60,6 @@ namespace DisCatSharp.Entities
         {
             get
             {
-                Console.WriteLine("Value: " + this._value.GetType().ToString());
                 return this.Type switch
                 {
                     ApplicationCommandOptionType.Boolean => bool.Parse(this._value),
