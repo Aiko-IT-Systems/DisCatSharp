@@ -35,9 +35,13 @@ namespace DisCatSharp.Entities
         /// <param name="fileName">The file name.</param>
         /// <param name="stream">The stream.</param>
         /// <param name="resetPositionTo">The reset position to.</param>
-        internal DiscordMessageFile(string fileName, Stream stream, long? resetPositionTo)
-        {
+        /// <param name="fileType">The file type.</param>
+        /// <param name="contentType">The content type.</param>
+        internal DiscordMessageFile(string fileName, Stream stream, long? resetPositionTo, string fileType = null, string contentType = null)
+{
             this.FileName = fileName;
+            this.FileType = fileType;
+            this.ContentType = contentType;
             this.Stream = stream;
             this.ResetPositionTo = resetPositionTo;
         }
@@ -51,6 +55,16 @@ namespace DisCatSharp.Entities
         /// Gets the stream of the File.
         /// </summary>
         public Stream Stream { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the file type.
+        /// </summary>
+        internal string FileType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the content type.
+        /// </summary>
+        internal string ContentType { get; set; }
 
         /// <summary>
         /// Gets the position the File should be reset to.

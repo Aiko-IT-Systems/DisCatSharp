@@ -546,17 +546,23 @@ namespace DisCatSharp.Net
                 req.Headers.Add("Connection", "keep-alive");
                 req.Headers.Add("Keep-Alive", "600");
 
-                /*MemoryStream ms = new();
-                mpsrequest.File.CopyTo(ms);
-                */
+                var sc = new StreamContent(mpsrequest.File.Stream);
+
+                if (mpsrequest.File.ContentType != null)
+                    sc.Headers.ContentType = new MediaTypeHeaderValue(mpsrequest.File.ContentType);
+
+                var fileName = mpsrequest.File.FileName;
+
+                if (mpsrequest.File.FileType != null)
+                    fileName += '.' + mpsrequest.File.FileType;
+
                 var content = new MultipartFormDataContent(boundary)
                 {
                     { new StringContent(mpsrequest.Name), "name" },
                     { new StringContent(mpsrequest.Tags), "tags" },
                     { new StringContent(mpsrequest.Description), "description" },
-                    { new StreamContent(mpsrequest.File), "file", mpsrequest.FileName }
+                    { sc, "file", fileName }
                 };
-                content.Headers.ContentType.MediaType = mpsrequest.FileType; // multipart/form-data
 
                 req.Content = content;
             }

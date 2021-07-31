@@ -206,7 +206,7 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Execute a multipart rest request.
+        /// Execute a multipart rest request for stickers.
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="bucket">The bucket.</param>
@@ -218,13 +218,12 @@ namespace DisCatSharp.Net
         /// <param name="name">The sticker name.</param>
         /// <param name="tags">The sticker tag.</param>
         /// <param name="description">The sticker description.</param>
-        /// <param name="file_type">The file type.</param>
         /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
         /// <returns>A Task.</returns>
         private Task<RestResponse> DoStickerMultipartAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null,
-            DiscordMessageFile file = null, string name = "", string tags = "", string description = null, string file_type = "", double? ratelimitWaitOverride = null)
+            DiscordMessageFile file = null, string name = "", string tags = "", string description = "", double? ratelimitWaitOverride = null)
 {
-            var req = new MultipartStickerWebRequest(client, bucket, url, method, route, headers, file, name, tags, description, file_type, ratelimitWaitOverride);
+            var req = new MultipartStickerWebRequest(client, bucket, url, method, route, headers, file, name, tags, description, ratelimitWaitOverride);
 
             if (this.Discord != null)
                 this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
@@ -259,6 +258,7 @@ namespace DisCatSharp.Net
 
             return req.WaitForCompletionAsync();
         }
+
         #region Guild
 
         /// <summary>
@@ -3769,10 +3769,9 @@ namespace DisCatSharp.Net
         #region Stickers
 
         /// <summary>
-        /// Gets the sticker async.
+        /// Gets a sticker.
         /// </summary>
-        /// <param name="sticker_id">The sticker_id.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="sticker_id">The sticker id.</param>
         internal async Task<DiscordSticker> GetStickerAsync(ulong sticker_id)
         {
             var route = $"{Endpoints.STICKERS}/:sticker_id";
@@ -3787,9 +3786,8 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Gets the sticker packs async.
+        /// Gets the sticker packs.
         /// </summary>
-        /// <returns>A Task.</returns>
         internal async Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
         {
             var route = $"{Endpoints.STICKERPACKS}";
@@ -3805,10 +3803,9 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Gets the guild stickers async.
+        /// Gets the guild stickers.
         /// </summary>
-        /// <param name="guild_id">The guild_id.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="guild_id">The guild id.</param>
         internal async Task<IReadOnlyList<DiscordSticker>> GetGuildStickersAsync(ulong guild_id)
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}";
@@ -3843,11 +3840,10 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Gets the guild sticker async.
+        /// Gets a guild sticker.
         /// </summary>
-        /// <param name="guild_id">The guild_id.</param>
-        /// <param name="sticker_id">The sticker_id.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="guild_id">The guild id.</param>
+        /// <param name="sticker_id">The sticker id.</param>
         internal async Task<DiscordSticker> GetGuildStickerAsync(ulong guild_id, ulong sticker_id)
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";
@@ -3876,47 +3872,42 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Creates the guild sticker async.
+        /// Creates the guild sticker.
         /// </summary>
-        /// <param name="guild_id">The guild_id.</param>
+        /// <param name="guild_id">The guild id.</param>
         /// <param name="name">The name.</param>
         /// <param name="description">The description.</param>
         /// <param name="tags">The tags.</param>
         /// <param name="file">The file.</param>
-        /// <param name="file_type">The file type.</param>
         /// <param name="reason">The reason.</param>
-        internal async Task<DiscordSticker> CreateGuildStickerAsync(ulong guild_id, string name, Optional<string> description, string tags, DiscordMessageFile file, string file_type, string reason)
+        internal async Task<DiscordSticker> CreateGuildStickerAsync(ulong guild_id, string name, string description, string tags, DiscordMessageFile file, string reason)
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {guild_id}, out var path);
             var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
+
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
                 headers.Add(REASON_HEADER_NAME, reason);
 
-            this.Discord.Logger.LogDebug($"Sticker: {name} | {description.Value} | {tags} | {file.FileName} | {file_type} | {headers}");
+            var res = await this.DoStickerMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, file, name, tags, description);
 
-            var res = await this.DoStickerMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, file, name, tags, description.HasValue ? description.Value : null, file_type);
-            
             var ret = JObject.Parse(res.Response).ToDiscordObject<DiscordSticker>();
 
             ret.Discord = this.Discord;
-
-            file.Stream.Position = file.ResetPositionTo.Value;
 
             return ret;
         }
 
         /// <summary>
-        /// Modifies the guild sticker async.
+        /// Modifies the guild sticker.
         /// </summary>
-        /// <param name="guild_id">The guild_id.</param>
-        /// <param name="sticker_id">The sticker_id.</param>
+        /// <param name="guild_id">The guild id.</param>
+        /// <param name="sticker_id">The sticker id.</param>
         /// <param name="name">The name.</param>
         /// <param name="description">The description.</param>
         /// <param name="tags">The tags.</param>
         /// <param name="reason">The reason.</param>
-        /// <returns>A Task.</returns>
         internal async Task<DiscordSticker> ModifyGuildStickerAsync(ulong guild_id, ulong sticker_id, Optional<string> name, Optional<string> description, Optional<string> tags, string reason)
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";
@@ -3948,10 +3939,9 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Deletes the guild sticker async.
         /// </summary>
-        /// <param name="guild_id">The guild_id.</param>
-        /// <param name="sticker_id">The sticker_id.</param>
+        /// <param name="guild_id">The guild id.</param>
+        /// <param name="sticker_id">The sticker id.</param>
         /// <param name="reason">The reason.</param>
-        /// <returns>A Task.</returns>
         internal async Task DeleteGuildStickerAsync(ulong guild_id, ulong sticker_id, string reason)
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.STICKERS}/:sticker_id";

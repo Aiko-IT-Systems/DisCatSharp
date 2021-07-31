@@ -2384,17 +2384,17 @@ namespace DisCatSharp.Entities
         /// <param name="reason">Audit log reason</param>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordSticker> CreateStickerAsync(string name, Optional<string> description, DiscordEmoji emoji, StickerFormat format, Stream file, string reason = null)
+        public Task<DiscordSticker> CreateStickerAsync(string name, string description, DiscordEmoji emoji, Stream file, StickerFormat format, string reason = null)
         {
-            var filename = format switch
+            var fileExt = format switch
             {
-                StickerFormat.PNG => "sticker.png",
-                StickerFormat.APNG => "sticker.png",
-                StickerFormat.LOTTIE => "sticker.json",
+                StickerFormat.PNG => "png",
+                StickerFormat.APNG => "png",
+                StickerFormat.LOTTIE => "json",
                 _ => throw new InvalidOperationException("This format is not supported.")
             };
 
-            var filetype = format switch
+            var contentType = format switch
             {
                 StickerFormat.PNG => "image/png",
                 StickerFormat.APNG => "image/png",
@@ -2406,9 +2406,9 @@ namespace DisCatSharp.Entities
                 ? throw new InvalidOperationException("Only unicode emoji can be used for stickers.")
                 : name.Length < 2 || name.Length > 30
                 ? throw new ArgumentOutOfRangeException(nameof(name), "Sticker name needs to be between 2 and 30 characters long.")
-                : description.HasValue && (description.Value.Length < 1 || description.Value.Length > 100)
+                : description.Length < 1 || description.Length > 100
                 ? throw new ArgumentOutOfRangeException(nameof(description), "Sticker description needs to be between 1 and 100 characters long.")
-                : this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.GetDiscordName().Replace(":", ""), new(filename, file , null), filetype, reason);
+                : this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.GetDiscordName().Replace(":", ""), new("sticker", file , null, fileExt, contentType), reason);
         }
 
         /// <summary>
@@ -2438,7 +2438,7 @@ namespace DisCatSharp.Entities
             if (emoji.HasValue && emoji.Value.Id > 0)
                 throw new ArgumentException("Only unicode emojis can be used with stickers.");
             else if (emoji.HasValue)
-                uemoji = emoji.Value.Name;
+                uemoji = emoji.Value.GetDiscordName().Replace(":", "");
 
             var usticker = await this.Discord.ApiClient.ModifyGuildStickerAsync(this.Id, sticker, name, description, uemoji, reason).ConfigureAwait(false);
 

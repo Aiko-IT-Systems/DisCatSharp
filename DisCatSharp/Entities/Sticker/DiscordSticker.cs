@@ -38,8 +38,8 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the Pack ID of this sticker.
         /// </summary>
-        [JsonProperty("pack_id")]
-        public ulong PackId { get; internal set; }
+        [JsonProperty("pack_id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong? PackId { get; internal set; }
 
         /// <summary>
         /// Gets the Name of the sticker.
@@ -50,7 +50,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the Description of the sticker.
         /// </summary>
-        [JsonProperty("description")]
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; internal set; }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// For guild stickers, gets the user that made the sticker.
         /// </summary>
-        [JsonProperty("user")]
+        [JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordUser User { get; internal set; }
 
         /// <summary>
@@ -73,20 +73,20 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the guild id the sticker belongs too.
         /// </summary>
-        [JsonProperty("guild_id")]
+        [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
         public ulong? GuildId { get; internal set; }
 
         /// <summary>
         /// Gets whether this sticker is available. Only applicable to guild stickers.
         /// </summary>
-        [JsonProperty("available")]
+        [JsonProperty("available", NullValueHandling = NullValueHandling.Ignore)]
         public bool Available { get; internal set; }
 
         /// <summary>
         /// Gets the sticker's sort order, if it's in a pack.
         /// </summary>
-        [JsonProperty("sort_value")]
-        public int SortValue { get; internal set; }
+        [JsonProperty("sort_value", NullValueHandling = NullValueHandling.Ignore)]
+        public int? SortValue { get; internal set; }
 
         /// <summary>
         /// Gets the list of tags for the sticker.
@@ -98,7 +98,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the asset hash of the sticker.
         /// </summary>
-        [JsonProperty("asset")]
+        [JsonProperty("asset", NullValueHandling = NullValueHandling.Ignore)]
         public string Asset { get; internal set; }
 
         /// <summary>
@@ -124,7 +124,12 @@ namespace DisCatSharp.Entities
         /// Gets the url of the sticker.
         /// </summary>
         [JsonIgnore]
-        public string Url => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.STICKERS}/{this.Id}.png";
+        public string Url => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.STICKERS}/{this.Id}.{(this.FormatType == StickerFormat.LOTTIE ? "json" : "png")}";
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordSticker"/> class.
+        /// </summary>
+        internal DiscordSticker() { }
 
         /// <summary>
         /// Whether to stickers are equal.
