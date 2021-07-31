@@ -48,6 +48,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
         public StagePrivacyLevel PrivacyLevel { get; set; }
+        
+        /// <summary>
+        /// Whether everyone should be notified about the start.
+        /// </summary>
+        [JsonProperty("send_start_notification", NullValueHandling = NullValueHandling.Ignore)]
+        public bool SendStartNotification { get; set; }
     }
 
     /// <summary>
