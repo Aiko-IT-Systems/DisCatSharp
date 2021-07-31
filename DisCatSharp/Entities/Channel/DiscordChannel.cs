@@ -714,6 +714,7 @@ namespace DisCatSharp.Entities
         /// Opens a stage.
         /// </summary>
         /// <param name="topic">Topic of the stage.</param>
+        /// <param name="send_start_notification">Whether @everyone should be notified.</param>
         /// <param name="privacy_level">Privacy level of the stage (Defaults to <see cref="StagePrivacyLevel.GUILD_ONLY"/>.</param>
         /// <param name="reason">Audit log reason.</param>
         /// <returns>Stage instance</returns>
@@ -721,8 +722,8 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordStageInstance> OpenStageAsync(string topic, StagePrivacyLevel privacy_level = StagePrivacyLevel.GUILD_ONLY, string reason = null)
-            => await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, privacy_level, reason);
+        public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool send_start_notification = false, StagePrivacyLevel privacy_level = StagePrivacyLevel.GUILD_ONLY, string reason = null)
+            => await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, send_start_notification, privacy_level, reason);
 
         /// <summary>
         /// Modifies a stage topic.
