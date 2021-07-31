@@ -40,9 +40,9 @@ namespace DisCatSharp.Entities
     public class DiscordGuildDirectoryChannel : SnowflakeObject, IEquatable<DiscordGuildDirectoryChannel>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GuildDirectoryChannel"/> class.
+        /// Initializes a new instance of the <see cref="DiscordGuildDirectoryChannel"/> class.
         /// </summary>
-        internal GuildDirectoryChannel() { }
+        internal DiscordGuildDirectoryChannel() { }
         
         #region Methods
         
