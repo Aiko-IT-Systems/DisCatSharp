@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,26 +24,41 @@ using System;
 
 namespace DisCatSharp.SlashCommands
 {
+
     /// <summary>
-    /// Sets a IChoiceProvider for a command options. ChoiceProviders can be used to provide
-    /// DiscordApplicationCommandOptionChoice from external sources such as a database.
+    /// Defines this slash command module's lifespan. Module lifespans are transient by default.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true)]
-    public class ChoiceProviderAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public class SlashModuleLifespanAttribute : Attribute
     {
+        /// <summary>
+        /// Gets the lifespan.
+        /// </summary>
+        public SlashModuleLifespan Lifespan { get; }
 
         /// <summary>
-        /// The type of the provider.
+        /// Defines this slash command module's lifespan.
         /// </summary>
-        public Type ProviderType { get; }
-
-        /// <summary>
-        /// Adds a choice provider to this command.
-        /// </summary>
-        /// <param name="providerType">The type of the provider.</param>
-        public ChoiceProviderAttribute(Type providerType)
+        /// <param name="lifespan">The lifespan of the module. Module lifespans are transient by default.</param>
+        public SlashModuleLifespanAttribute(SlashModuleLifespan lifespan)
         {
-            this.ProviderType = providerType;
+            this.Lifespan = lifespan;
         }
+    }
+
+    /// <summary>
+    /// Represents a slash command module lifespan.
+    /// </summary>
+    public enum SlashModuleLifespan
+    {
+        /// <summary>
+        /// Whether this module should be initiated every time a command is run.
+        /// </summary>
+        Transient,
+
+        /// <summary>
+        /// Whether this module should be initiated at startup.
+        /// </summary>
+        Singleton
     }
 }

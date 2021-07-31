@@ -36,9 +36,9 @@ using DisCatSharp.Exceptions;
 namespace DisCatSharp.SlashCommands
 {
     /// <summary>
-    /// A class that handles slash commands for a client
+    /// A class that handles slash commands for a client.
     /// </summary>
-    public class SlashCommandsExtension : BaseExtension
+    public sealed class SlashCommandsExtension : BaseExtension
     {
         /// <summary>
         /// Gets or sets the command methods.
@@ -54,10 +54,14 @@ namespace DisCatSharp.SlashCommands
         private static List<SubGroupCommand> SubGroupCommands { get; set; } = new List<SubGroupCommand>();
 
         /// <summary>
+        /// Gets or sets the singleton modules.
+        /// </summary>
+        private static List<object> SingletonModules { get; set; } = new List<object>();
+
+        /// <summary>
         /// Gets or sets the update list.
         /// </summary>
         private List<KeyValuePair<ulong?, Type>> UpdateList { get; set; } = new List<KeyValuePair<ulong?, Type>>();
-
         private readonly SlashCommandsConfiguration _configuration;
         /// <summary>
         /// Gets or sets a value indicating whether errored.
@@ -65,20 +69,27 @@ namespace DisCatSharp.SlashCommands
         private static bool Errored { get; set; } = false;
 
         /// <summary>
+        /// Gets a list of registered commands. The key is the guild id (null if global).
+        /// </summary>
+        public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> RegisteredCommands
+            => _registeredCommands;
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
+        private static List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> _registeredCommands = new();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SlashCommandsExtension"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         internal SlashCommandsExtension(SlashCommandsConfiguration configuration)
         {
-            this._configuration = configuration;
+            _configuration = configuration;
         }
 
         /// <summary>
         /// Runs setup. DO NOT RUN THIS MANUALLY. DO NOT DO ANYTHING WITH THIS.
-        /// I could've broken it..
         /// </summary>
         /// <param name="client">The client to setup on.</param>
-        /// <changed>Lala Sabathil,06.07.2021</changed>
         protected internal override void Setup(DiscordClient client)
         {
             if (this.Client != null)
@@ -86,48 +97,51 @@ namespace DisCatSharp.SlashCommands
 
             this.Client = client;
 
-            this._error = new AsyncEvent<SlashCommandsExtension, SlashCommandErrorEventArgs>("SLASHCOMMAND_ERRORED", TimeSpan.Zero, null);
-            this._executed = new AsyncEvent<SlashCommandsExtension, SlashCommandExecutedEventArgs>("SLASHCOMMAND_EXECUTED", TimeSpan.Zero, null);
+            _error = new AsyncEvent<SlashCommandsExtension, SlashCommandErrorEventArgs>("SLASHCOMMAND_ERRORED", TimeSpan.Zero, null);
+            _executed = new AsyncEvent<SlashCommandsExtension, SlashCommandExecutedEventArgs>("SLASHCOMMAND_EXECUTED", TimeSpan.Zero, null);
 
             this.Client.Ready += this.Update;
             this.Client.InteractionCreated += this.InteractionHandler;
         }
 
-        //Register
-
         /// <summary>
-        /// Registers a command class
+        /// Registers a command class.
         /// </summary>
-        /// <typeparam name="T">The command class to register</typeparam>
-        /// <param name="guildId">The guild id to register it on. If you want global commands, leave it null.</param>
-        public void RegisterCommands<T>(ulong? guildId = null) where T : SlashCommandModule
+        /// <typeparam name="T">The command class to register.</typeparam>
+        /// <param name="guild_id">The guild id to register it on. If you want global commands, leave it null.</param>
+        public void RegisterCommands<T>(ulong? guild_id = null) where T : SlashCommandModule
         {
             if (this.Client.ShardId == 0)
-                this.UpdateList.Add(new KeyValuePair<ulong?, Type>(guildId, typeof(T)));
+                this.UpdateList.Add(new KeyValuePair<ulong?, Type>(guild_id, typeof(T)));
         }
 
         /// <summary>
-        /// Registers a command class
+        /// Registers a command class.
         /// </summary>
-        /// <param name="type">The <see cref="Type"/> of the command class to register</param>
-        /// <param name="guildId">The guild id to register it on. If you want global commands, leave it null.</param>
-        public void RegisterCommands(Type type, ulong? guildId = null)
+        /// <param name="type">The <see cref="Type"/> of the command class to register.</param>
+        /// <param name="guild_id">The guild id to register it on. If you want global commands, leave it null.</param>
+        public void RegisterCommands(Type type, ulong? guild_id = null)
         {
             if (!typeof(SlashCommandModule).IsAssignableFrom(type))
                 throw new ArgumentException("Command classes have to inherit from SlashCommandModule", nameof(type));
             if (this.Client.ShardId == 0)
-                this.UpdateList.Add(new KeyValuePair<ulong?, Type>(guildId, type));
+                this.UpdateList.Add(new KeyValuePair<ulong?, Type>(guild_id, type));
         }
 
         /// <summary>
-        /// Updates the.
+        /// Updates the slashcommands.
         /// </summary>
         /// <param name="client">The client.</param>
-        /// <param name="e">The event.</param>
-
+        /// <param name="e">The event args.</param>
         internal Task Update(DiscordClient client, ReadyEventArgs e)
+            => this.Update();
+
+        /// <summary>
+        /// Updates the slash commands.
+        /// </summary>
+        internal Task Update()
         {
-            if (client.ShardId == 0)
+            if (this.Client.ShardId == 0)
             {
                 foreach (var key in this.UpdateList.Select(x => x.Key).Distinct())
                 {
@@ -141,40 +155,50 @@ namespace DisCatSharp.SlashCommands
         /// Registers the commands.
         /// </summary>
         /// <param name="types">The types.</param>
-        /// <param name="guildid">The guildid.</param>
-        private void RegisterCommands(IEnumerable<Type> types, ulong? guildid)
+        /// <param name="guild_id">The guild id.</param>
+        private void RegisterCommands(IEnumerable<Type> types, ulong? guild_id)
         {
-            var InternalCommandMethods = new List<CommandMethod>();
-            var InternalGroupCommands = new List<GroupCommand>();
-            var InternalSubGroupCommands = new List<SubGroupCommand>();
-            var ToUpdate = new List<DiscordApplicationCommand>();
+            var commandMethods = new List<CommandMethod>();
+            var groupCommands = new List<GroupCommand>();
+            var subGroupCommands = new List<SubGroupCommand>();
+            var updateList = new List<DiscordApplicationCommand>();
 
             _ = Task.Run(async () =>
             {
-                foreach (var t in types)
+                foreach (var type in types)
                 {
                     try
                     {
-                        var ti = t.GetTypeInfo();
+                        var module = type.GetTypeInfo();
 
-                        var classes = ti.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null);
-                        foreach (var tti in classes)
+                        var classes = new List<TypeInfo>();
+
+                        //Add module to classes list only if it's a group
+                        if (module.GetCustomAttribute<SlashCommandGroupAttribute>() != null)
                         {
-                            var groupatt = tti.GetCustomAttribute<SlashCommandGroupAttribute>();
-                            var submethods = tti.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null).ToList();
-                            var subclasses = tti.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
+                            classes.Add(module);
+                        }
+                        else
+                        {
+                            classes = module.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
+                        }
+
+                        //Handles groups
+                        foreach (var subclassinfo in classes)
+                        {
+                            var groupatt = subclassinfo.GetCustomAttribute<SlashCommandGroupAttribute>();
+                            var submethods = subclassinfo.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
+                            var subclasses = subclassinfo.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null);
                             if (subclasses.Any() && submethods.Any())
                             {
                                 throw new ArgumentException("Slash command groups cannot have both subcommands and subgroups!");
                             }
-                            var payload = new DiscordApplicationCommand(groupatt.Name, groupatt.Description);
-
+                            var payload = new DiscordApplicationCommand(groupatt.Name, groupatt.Description, default_permission: groupatt.DefaultPermission);
 
                             var commandmethods = new List<KeyValuePair<string, MethodInfo>>();
                             foreach (var submethod in submethods)
                             {
                                 var commandattribute = submethod.GetCustomAttribute<SlashCommandAttribute>();
-
 
                                 var parameters = submethod.GetParameters();
                                 if (!ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
@@ -187,16 +211,15 @@ namespace DisCatSharp.SlashCommands
 
                                 commandmethods.Add(new KeyValuePair<string, MethodInfo>(commandattribute.Name, submethod));
 
-                                payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload });
+                                payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission);
 
-                                InternalGroupCommands.Add(new GroupCommand { Name = groupatt.Name, ParentClass = tti, Methods = commandmethods });
+                                groupCommands.Add(new GroupCommand { Name = groupatt.Name, Methods = commandmethods });
                             }
+                            var command = new SubGroupCommand { Name = groupatt.Name };
                             foreach (var subclass in subclasses)
                             {
                                 var subgroupatt = subclass.GetCustomAttribute<SlashCommandGroupAttribute>();
                                 var subsubmethods = subclass.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
-
-                                var command = new SubGroupCommand { Name = groupatt.Name };
 
                                 var options = new List<DiscordApplicationCommandOption>();
 
@@ -219,30 +242,59 @@ namespace DisCatSharp.SlashCommands
                                 }
 
                                 var subpayload = new DiscordApplicationCommandOption(subgroupatt.Name, subgroupatt.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options);
-                                command.SubCommands.Add(new GroupCommand { Name = subgroupatt.Name, ParentClass = subclass, Methods = currentMethods });
-                                InternalSubGroupCommands.Add(command);
-                                payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload });
+                                command.SubCommands.Add(new GroupCommand { Name = subgroupatt.Name, Methods = currentMethods });
+                                payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission);
+
+                                if (subclass.GetCustomAttribute<SlashModuleLifespanAttribute>() != null)
+                                {
+                                    if (subclass.GetCustomAttribute<SlashModuleLifespanAttribute>().Lifespan == SlashModuleLifespan.Singleton)
+                                    {
+                                        SingletonModules.Add(this.CreateInstance(subclass, _configuration?.Services));
+                                    }
+                                }
                             }
-                            ToUpdate.Add(payload);
+                            if (command.SubCommands.Any()) subGroupCommands.Add(command);
+                            updateList.Add(payload);
+
+
+                            if (subclassinfo.GetCustomAttribute<SlashModuleLifespanAttribute>() != null)
+                            {
+                                if (subclassinfo.GetCustomAttribute<SlashModuleLifespanAttribute>().Lifespan == SlashModuleLifespan.Singleton)
+                                {
+                                    SingletonModules.Add(this.CreateInstance(subclassinfo, _configuration?.Services));
+                                }
+                            }
                         }
 
-                        var methods = ti.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
-                        foreach (var method in methods)
+                        //Handles methods, only if the module isn't a group itself.
+                        if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
                         {
-                            var commandattribute = method.GetCustomAttribute<SlashCommandAttribute>();
+                            var methods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
+                            foreach (var method in methods)
+                            {
+                                var commandattribute = method.GetCustomAttribute<SlashCommandAttribute>();
 
-                            var options = new List<DiscordApplicationCommandOption>();
+                                var options = new List<DiscordApplicationCommandOption>();
 
-                            var parameters = method.GetParameters();
-                            if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
-                                throw new ArgumentException($"The first argument must be an InteractionContext!");
-                            parameters = parameters.Skip(1).ToArray();
-                            options = options.Concat(await this.ParseParameters(parameters)).ToList();
+                                var parameters = method.GetParameters();
+                                if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
+                                    throw new ArgumentException($"The first argument must be an InteractionContext!");
+                                parameters = parameters.Skip(1).ToArray();
+                                options = options.Concat(await this.ParseParameters(parameters)).ToList();
 
-                            InternalCommandMethods.Add(new CommandMethod { Method = method, Name = commandattribute.Name, ParentClass = t });
+                                commandMethods.Add(new CommandMethod { Method = method, Name = commandattribute.Name });
 
-                            var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, options);
-                            ToUpdate.Add(payload);
+                                var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, options, commandattribute.DefaultPermission);
+                                updateList.Add(payload);
+                            }
+
+                            if (module.GetCustomAttribute<SlashModuleLifespanAttribute>() != null)
+                            {
+                                if (module.GetCustomAttribute<SlashModuleLifespanAttribute>().Lifespan == SlashModuleLifespan.Singleton)
+                                {
+                                    SingletonModules.Add(this.CreateInstance(module, _configuration?.Services));
+                                }
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -259,28 +311,30 @@ namespace DisCatSharp.SlashCommands
                     try
                     {
                         IEnumerable<DiscordApplicationCommand> commands;
-                        if (guildid == null)
+                        if (guild_id == null)
                         {
-                            commands = await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(ToUpdate);
+                            commands = await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(updateList);
                         }
                         else
                         {
-                            commands = await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guildid.Value, ToUpdate);
+                            commands = await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild_id.Value, updateList);
                         }
                         foreach (var command in commands)
                         {
-                            if (InternalCommandMethods.Any(x => x.Name == command.Name))
-                                InternalCommandMethods.First(x => x.Name == command.Name).Id = command.Id;
+                            if (commandMethods.Any(x => x.Name == command.Name))
+                                commandMethods.First(x => x.Name == command.Name).CommandId = command.Id;
 
-                            else if (InternalGroupCommands.Any(x => x.Name == command.Name))
-                                InternalGroupCommands.First(x => x.Name == command.Name).Id = command.Id;
+                            else if (groupCommands.Any(x => x.Name == command.Name))
+                                groupCommands.First(x => x.Name == command.Name).CommandId = command.Id;
 
-                            else if (InternalSubGroupCommands.Any(x => x.Name == command.Name))
-                                InternalSubGroupCommands.First(x => x.Name == command.Name).Id = command.Id;
+                            else if (subGroupCommands.Any(x => x.Name == command.Name))
+                                subGroupCommands.First(x => x.Name == command.Name).CommandId = command.Id;
                         }
-                        CommandMethods.AddRange(InternalCommandMethods);
-                        GroupCommands.AddRange(InternalGroupCommands);
-                        SubGroupCommands.AddRange(InternalSubGroupCommands);
+                        CommandMethods.AddRange(commandMethods);
+                        GroupCommands.AddRange(groupCommands);
+                        SubGroupCommands.AddRange(subGroupCommands);
+
+                        _registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guild_id, commands.ToList()));
                     }
                     catch (Exception ex)
                     {
@@ -295,56 +349,10 @@ namespace DisCatSharp.SlashCommands
         }
 
         /// <summary>
-        /// Gets the choice attributes from provider.
-        /// </summary>
-        /// <param name="customAttributes">The custom attributes.</param>
-
-        private async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(IEnumerable<ChoiceProviderAttribute> customAttributes)
-        {
-            var choices = new List<DiscordApplicationCommandOptionChoice>();
-            foreach (var choiceProviderAttribute in customAttributes)
-            {
-                var method = choiceProviderAttribute.ProviderType.GetMethod(nameof(IChoiceProvider.Provider));
-
-                if (method == null)
-                    throw new ArgumentException("ChoiceProviders must inherit from IChoiceProvider.");
-                else
-                {
-                    var instance = Activator.CreateInstance(choiceProviderAttribute.ProviderType);
-                    var result = await (Task<IEnumerable<DiscordApplicationCommandOptionChoice>>)method.Invoke(instance, null);
-
-                    if (result.Any())
-                    {
-                        choices.AddRange(result);
-                    }
-                }
-            }
-
-            return choices;
-        }
-
-        /// <summary>
-        /// Gets the choice attributes from enum parameter.
-        /// </summary>
-        /// <param name="enumParam">The enum param.</param>
-        /// <returns>A list of DiscordApplicationCommandOptionChoices.</returns>
-        private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromEnumParameter(Type enumParam)
-        {
-            var choices = new List<DiscordApplicationCommandOptionChoice>();
-            foreach (Enum foo in Enum.GetValues(enumParam))
-            {
-                choices.Add(new DiscordApplicationCommandOptionChoice(foo.GetName(), foo.ToString()));
-            }
-            return choices;
-        }
-
-        //Handler
-        /// <summary>
         /// Interactions the handler.
         /// </summary>
         /// <param name="client">The client.</param>
-        /// <param name="e">The event.</param>
-
+        /// <param name="e">The event args.</param>
         private Task InteractionHandler(DiscordClient client, InteractionCreateEventArgs e)
         {
             _ = Task.Run(async () =>
@@ -362,35 +370,26 @@ namespace DisCatSharp.SlashCommands
                         CommandName = e.Interaction.Data.Name,
                         InteractionId = e.Interaction.Id,
                         Token = e.Interaction.Token,
-                        Services = this._configuration?.Services
+                        Services = _configuration?.Services
                     };
 
                     try
                     {
                         if (Errored)
                             throw new InvalidOperationException("Slash commands failed to register properly on startup.");
-                        var methods = CommandMethods.Where(x => x.Id == e.Interaction.Data.Id);
-                        var groups = GroupCommands.Where(x => x.Id == e.Interaction.Data.Id);
-                        var subgroups = SubGroupCommands.Where(x => x.Id == e.Interaction.Data.Id);
+                        var methods = CommandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
+                        var groups = GroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+                        var subgroups = SubGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
                         if (!methods.Any() && !groups.Any() && !subgroups.Any())
                             throw new InvalidOperationException("A slash command was executed, but no command was registered for it.");
 
                         if (methods.Any())
                         {
-                            var method = methods.First();
+                            var method = methods.First().Method;
 
-                            var args = await this.ResolveInteractionCommandParameters(e, context, method.Method, e.Interaction.Data.Options);
+                            var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options);
 
-                            object classinstance = method.Method.IsStatic ? ActivatorUtilities.CreateInstance(this._configuration?.Services, method.ParentClass) : CreateInstance(method.Method.DeclaringType, this._configuration?.Services);
-
-                            await this.RunPreexecutionChecksAsync(method.Method, context);
-
-                            await ((SlashCommandModule)classinstance).BeforeExecutionAsync(context);
-
-                            var task = (Task)method.Method.Invoke(classinstance, args.ToArray());
-                            await task;
-
-                            await ((SlashCommandModule)classinstance).AfterExecutionAsync(context);
+                            await this.RunCommandAsync(context, method, args);
                         }
                         else if (groups.Any())
                         {
@@ -398,53 +397,26 @@ namespace DisCatSharp.SlashCommands
                             var method = groups.First().Methods.First(x => x.Key == command.Name).Value;
 
                             var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options.First().Options);
-                            object classinstance = method.IsStatic ? ActivatorUtilities.CreateInstance(this._configuration?.Services, groups.First().ParentClass) : CreateInstance(groups.First().ParentClass, this._configuration?.Services);
 
-                            SlashCommandModule module = null;
-                            if (classinstance is SlashCommandModule _module)
-                                module = _module;
-
-                            await this.RunPreexecutionChecksAsync(method, context);
-
-                            await (module?.BeforeExecutionAsync(context) ?? Task.CompletedTask);
-
-                            var task = (Task)method.Invoke(classinstance, args.ToArray());
-                            await task;
-
-                            await (module?.AfterExecutionAsync(context) ?? Task.CompletedTask);
+                            await this.RunCommandAsync(context, method, args);
                         }
                         else if (subgroups.Any())
                         {
                             var command = e.Interaction.Data.Options.First();
-
-                            var subgroup = subgroups.First();
-
-                            var group = subgroup.SubCommands.First(x => x.Name == command.Name);
+                            var group = subgroups.First().SubCommands.First(x => x.Name == command.Name);
 
                             var method = group.Methods.First(x => x.Key == command.Options.First().Name).Value;
 
                             var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options.First().Options.First().Options);
-                            object classinstance = method.IsStatic ? ActivatorUtilities.CreateInstance(this._configuration?.Services, group.ParentClass) : CreateInstance(group.ParentClass, this._configuration?.Services);
 
-                            SlashCommandModule module = null;
-                            if (classinstance is SlashCommandModule _module)
-                                module = _module;
-
-                            await this.RunPreexecutionChecksAsync(method, context);
-
-                            await (module?.BeforeExecutionAsync(context) ?? Task.CompletedTask);
-
-                            var task = (Task)method.Invoke(classinstance, args.ToArray());
-                            await task;
-
-                            await (module?.AfterExecutionAsync(context) ?? Task.CompletedTask);
+                            await this.RunCommandAsync(context, method, args);
                         }
 
-                        await this._executed.InvokeAsync(this, new SlashCommandExecutedEventArgs { Context = context });
+                        await _executed.InvokeAsync(this, new SlashCommandExecutedEventArgs { Context = context });
                     }
                     catch (Exception ex)
                     {
-                        await this._error.InvokeAsync(this, new SlashCommandErrorEventArgs { Context = context, Exception = ex });
+                        await _error.InvokeAsync(this, new SlashCommandErrorEventArgs { Context = context, Exception = ex });
                     }
                 }
             });
@@ -452,12 +424,35 @@ namespace DisCatSharp.SlashCommands
         }
 
         /// <summary>
+        /// Runs the command.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="args">The arguments.</param>
+        internal async Task RunCommandAsync(InteractionContext context, MethodInfo method, IEnumerable<object> args)
+        {
+            var classinstance = method.DeclaringType.GetCustomAttribute<SlashModuleLifespanAttribute>() != null && method.DeclaringType.GetCustomAttribute<SlashModuleLifespanAttribute>()?.Lifespan == SlashModuleLifespan.Singleton
+                ? SingletonModules.First(x => ReferenceEquals(x.GetType(), method.DeclaringType))
+                : method.IsStatic ? ActivatorUtilities.CreateInstance(_configuration?.Services, method.DeclaringType) : this.CreateInstance(method.DeclaringType, _configuration?.Services);
+            SlashCommandModule module = null;
+            if (classinstance is SlashCommandModule mod)
+                module = mod;
+
+            await this.RunPreexecutionChecksAsync(method, context);
+
+            await (module?.BeforeExecutionAsync(context) ?? Task.CompletedTask);
+
+            await (Task)method.Invoke(classinstance, args.ToArray());
+
+            await (module?.AfterExecutionAsync(context) ?? Task.CompletedTask);
+        }
+
+        /// <summary>
         /// Creates the instance.
         /// </summary>
-        /// <param name="t">The t.</param>
+        /// <param name="t">The type.</param>
         /// <param name="services">The services.</param>
-        /// <returns>An object.</returns>
-        internal static object CreateInstance(Type t, IServiceProvider services)
+        internal object CreateInstance(Type t, IServiceProvider services)
         {
             var ti = t.GetTypeInfo();
             var constructors = ti.DeclaredConstructors
@@ -515,11 +510,11 @@ namespace DisCatSharp.SlashCommands
         /// <summary>
         /// Resolves the interaction command parameters.
         /// </summary>
-        /// <param name="e">The event.</param>
+        /// <param name="e">The event args.</param>
         /// <param name="context">The context.</param>
         /// <param name="method">The method.</param>
         /// <param name="options">The options.</param>
-
+        /// <returns>A Task.</returns>
         private async Task<List<object>> ResolveInteractionCommandParameters(InteractionCreateEventArgs e, InteractionContext context, MethodInfo method, IEnumerable<DiscordInteractionDataOption> options)
         {
             var args = new List<object> { context };
@@ -541,10 +536,10 @@ namespace DisCatSharp.SlashCommands
                         args.Add(Enum.Parse(parameter.ParameterType, (string)option.Value));
                     else if (ReferenceEquals(parameter.ParameterType, typeof(long)))
                         args.Add((long)option.Value);
-                    else if (ReferenceEquals(parameter.ParameterType, typeof(double)))
-                        args.Add((double)option.Value);
                     else if (ReferenceEquals(parameter.ParameterType, typeof(bool)))
                         args.Add((bool)option.Value);
+                    else if (ReferenceEquals(parameter.ParameterType, typeof(double)))
+                        args.Add((double)option.Value);
                     else if (ReferenceEquals(parameter.ParameterType, typeof(DiscordUser)))
                     {
                         if (e.Interaction.Data.Resolved.Members != null &&
@@ -586,6 +581,25 @@ namespace DisCatSharp.SlashCommands
                             args.Add(e.Interaction.Guild.GetRole((ulong)option.Value));
                         }
                     }
+                    else if (ReferenceEquals(parameter.ParameterType, typeof(SnowflakeObject)))
+                    {
+                        if (e.Interaction.Data.Resolved.Roles != null && e.Interaction.Data.Resolved.Roles.TryGetValue((ulong)option.Value, out var role))
+                        {
+                            args.Add(role);
+                        }
+                        else if (e.Interaction.Data.Resolved.Members != null && e.Interaction.Data.Resolved.Members.TryGetValue((ulong)option.Value, out var member))
+                        {
+                            args.Add(member);
+                        }
+                        else if (e.Interaction.Data.Resolved.Users != null && e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
+                        {
+                            args.Add(user);
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Error resolving mentionable option.");
+                        }
+                    }
                     else
                         throw new ArgumentException($"Error resolving interaction.");
                 }
@@ -595,14 +609,24 @@ namespace DisCatSharp.SlashCommands
         }
 
         /// <summary>
-        /// Runs the preexecution checks async.
+        /// Runs the preexecution checks.
         /// </summary>
         /// <param name="method">The method.</param>
-        /// <param name="ctx">The ctx.</param>
-
+        /// <param name="ctx">The command context.</param>
         private async Task RunPreexecutionChecksAsync(MethodInfo method, InteractionContext ctx)
         {
-            var attributes = method.GetCustomAttributes<SlashCheckBaseAttribute>(true);
+            var attributes = new List<SlashCheckBaseAttribute>();
+            attributes.AddRange(method.GetCustomAttributes<SlashCheckBaseAttribute>(true));
+            attributes.AddRange(method.DeclaringType.GetCustomAttributes<SlashCheckBaseAttribute>());
+            if (method.DeclaringType.DeclaringType != null)
+            {
+                attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<SlashCheckBaseAttribute>());
+                if (method.DeclaringType.DeclaringType.DeclaringType != null)
+                {
+                    attributes.AddRange(method.DeclaringType.DeclaringType.DeclaringType.GetCustomAttributes<SlashCheckBaseAttribute>());
+                }
+            }
+
             var dict = new Dictionary<SlashCheckBaseAttribute, bool>();
             foreach (var att in attributes)
             {
@@ -614,33 +638,52 @@ namespace DisCatSharp.SlashCommands
                 throw new SlashExecutionChecksFailedException(dict.Where(x => x.Value == false).Select(x => x.Key).ToList());
         }
 
-        //Events
+        /// <summary>
+        /// Gets the choice attributes from provider.
+        /// </summary>
+        /// <param name="customAttributes">The custom attributes.</param>
+        private async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(IEnumerable<ChoiceProviderAttribute> customAttributes)
+        {
+            var choices = new List<DiscordApplicationCommandOptionChoice>();
+            foreach (var choiceProviderAttribute in customAttributes)
+            {
+                var method = choiceProviderAttribute.ProviderType.GetMethod(nameof(IChoiceProvider.Provider));
+
+                if (method == null)
+                    throw new ArgumentException("ChoiceProviders must inherit from IChoiceProvider.");
+                else
+                {
+                    var instance = Activator.CreateInstance(choiceProviderAttribute.ProviderType);
+                    var result = await (Task<IEnumerable<DiscordApplicationCommandOptionChoice>>)method.Invoke(instance, null);
+
+                    if (result.Any())
+                    {
+                        choices.AddRange(result);
+                    }
+                }
+            }
+
+            return choices;
+        }
 
         /// <summary>
-        /// Fires whenver the execution of a slash command fails
+        /// Gets the choice attributes from enum parameter.
         /// </summary>
-        public event AsyncEventHandler<SlashCommandsExtension, SlashCommandErrorEventArgs> SlashCommandErrored
+        /// <param name="enumParam">The enum param.</param>
+        private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromEnumParameter(Type enumParam)
         {
-            add { this._error.Register(value); }
-            remove { this._error.Unregister(value); }
+            var choices = new List<DiscordApplicationCommandOptionChoice>();
+            foreach (Enum foo in Enum.GetValues(enumParam))
+            {
+                choices.Add(new DiscordApplicationCommandOptionChoice(foo.GetName(), foo.ToString()));
+            }
+            return choices;
         }
-        private AsyncEvent<SlashCommandsExtension, SlashCommandErrorEventArgs> _error;
-
-        /// <summary>
-        /// Fires when the execution of a slash command is successful
-        /// </summary>
-        public event AsyncEventHandler<SlashCommandsExtension, SlashCommandExecutedEventArgs> SlashCommandExecuted
-        {
-            add { this._executed.Register(value); }
-            remove { this._executed.Unregister(value); }
-        }
-        private AsyncEvent<SlashCommandsExtension, SlashCommandExecutedEventArgs> _executed;
 
         /// <summary>
         /// Gets the parameter type.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>An ApplicationCommandOptionType.</returns>
         private ApplicationCommandOptionType GetParameterType(Type type)
         {
             ApplicationCommandOptionType parametertype;
@@ -658,11 +701,13 @@ namespace DisCatSharp.SlashCommands
                 parametertype = ApplicationCommandOptionType.User;
             else if (ReferenceEquals(type, typeof(DiscordRole)))
                 parametertype = ApplicationCommandOptionType.Role;
+            else if (ReferenceEquals(type, typeof(SnowflakeObject)))
+                parametertype = ApplicationCommandOptionType.Mentionable;
             else if (type.IsEnum)
                 parametertype = ApplicationCommandOptionType.String;
 
             else
-                throw new ArgumentException("Cannot convert type! Argument types must be string, long, bool, double, DiscordChannel, DiscordUser, DiscordRole or an Enum.");
+                throw new ArgumentException("Cannot convert type! Argument types must be string, long, bool, double, DiscordChannel, DiscordUser, DiscordRole, SnowflakeObject or an Enum.");
 
             return parametertype;
         }
@@ -671,7 +716,6 @@ namespace DisCatSharp.SlashCommands
         /// Gets the choice attributes from parameter.
         /// </summary>
         /// <param name="choiceattributes">The choiceattributes.</param>
-        /// <returns>A list of DiscordApplicationCommandOptionChoices.</returns>
         private List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(IEnumerable<ChoiceAttribute> choiceattributes)
         {
             if (!choiceattributes.Any())
@@ -686,7 +730,6 @@ namespace DisCatSharp.SlashCommands
         /// Parses the parameters.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-
         private async Task<List<DiscordApplicationCommandOption>> ParseParameters(ParameterInfo[] parameters)
         {
             var options = new List<DiscordApplicationCommandOption>();
@@ -719,39 +762,68 @@ namespace DisCatSharp.SlashCommands
             return options;
         }
 
+        /// <summary>
+        /// <para>Refreshes your commands, used for refreshing choice providers or applying commands registered after the ready event on the discord client. 
+        /// Should only be run on the slash command extension linked to shard 0 if sharding.</para>
+        /// <para>Not recommended and should be avoided since it can make slash commands be unresponsive for a while.</para>
+        /// </summary>
+        public async Task RefreshCommandsAsync()
+        {
+            CommandMethods.Clear();
+            GroupCommands.Clear();
+            SubGroupCommands.Clear();
+            _registeredCommands.Clear();
+
+            await this.Update();
+        }
+
+        /// <summary>
+        /// Fires whenver the execution of a slash command fails.
+        /// </summary>
+        public event AsyncEventHandler<SlashCommandsExtension, SlashCommandErrorEventArgs> SlashCommandErrored
+        {
+            add { _error.Register(value); }
+            remove { _error.Unregister(value); }
+        }
+        private AsyncEvent<SlashCommandsExtension, SlashCommandErrorEventArgs> _error;
+
+        /// <summary>
+        /// Fires when the execution of a slash command is successful.
+        /// </summary>
+        public event AsyncEventHandler<SlashCommandsExtension, SlashCommandExecutedEventArgs> SlashCommandExecuted
+        {
+            add { _executed.Register(value); }
+            remove { _executed.Unregister(value); }
+        }
+        private AsyncEvent<SlashCommandsExtension, SlashCommandExecutedEventArgs> _executed;
     }
 
     /// <summary>
-    /// Represents a command method.
+    /// The command method.
     /// </summary>
     internal class CommandMethod
     {
-        public ulong Id;
-
+        public ulong CommandId;
         public string Name;
         public MethodInfo Method;
-        public Type ParentClass;
     }
 
     /// <summary>
-    /// Represents a group command.
+    /// The group command.
     /// </summary>
     internal class GroupCommand
     {
-        public ulong Id;
-
+        public ulong CommandId;
         public string Name;
         public List<KeyValuePair<string, MethodInfo>> Methods = null;
-        public Type ParentClass;
     }
 
     /// <summary>
-    /// Represents a sub group command.
+    /// The sub group command.
     /// </summary>
     internal class SubGroupCommand
     {
-        public ulong Id;
-
+        public ulong CommandId;
         public string Name;
         public List<GroupCommand> SubCommands = new List<GroupCommand>();
     }

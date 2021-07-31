@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,43 +21,32 @@
 // SOFTWARE.
 
 using System;
-using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace DisCatSharp.SlashCommands
+namespace DisCatSharp.SlashCommands.Attributes
 {
     /// <summary>
-    /// Defines some extension methods for enums.
+    /// Defines that this slash command is restricted to the owner of the bot.
     /// </summary>
-    public static class EnumHelpers
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public sealed class SlashRequireOwnerAttribute : SlashCheckBaseAttribute
     {
         /// <summary>
-        /// Gets the name from the <see cref="ChoiceNameAttribute"/> for this enum value.
+        /// Defines that this slash command is restricted to the owner of the bot.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="e"></param>
-        /// <returns>The name.</returns>
-        public static string GetName<T>(this T e) where T : IConvertible
+        public SlashRequireOwnerAttribute()
+        { }
+
+        /// <summary>
+        /// Runs checks.
+        /// </summary>
+        public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
         {
-            if (e is Enum)
-            {
-                var type = e.GetType();
-                var values = Enum.GetValues(type);
+            var app = ctx.Client.CurrentApplication;
+            var me = ctx.Client.CurrentUser;
 
-                foreach (int val in values)
-                {
-                    if (val == e.ToInt32(CultureInfo.InvariantCulture))
-                    {
-                        var memInfo = type.GetMember(type.GetEnumName(val));
-
-                        return memInfo[0]
-                            .GetCustomAttributes(typeof(ChoiceNameAttribute), false)
-                            .FirstOrDefault() is ChoiceNameAttribute nameAttribute ? nameAttribute.Name : type.GetEnumName(val);
-                    }
-                }
-            }
-            return null;
+            return app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
         }
     }
 }
