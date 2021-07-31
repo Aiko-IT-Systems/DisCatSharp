@@ -1462,13 +1462,14 @@ namespace DisCatSharp.Net
         /// <param name="privacy_level">The privacy_level.</param>
         /// <param name="reason">The reason.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordStageInstance> CreateStageInstanceAsync(ulong channel_id, string topic, StagePrivacyLevel privacy_level, string reason)
+        internal async Task<DiscordStageInstance> CreateStageInstanceAsync(ulong channel_id, string topic, bool send_start_notification, StagePrivacyLevel privacy_level, string reason)
         {
             var pld = new RestStageInstanceCreatePayload
             {
                 ChannelId = channel_id,
                 Topic = topic,
-                PrivacyLevel = privacy_level
+                PrivacyLevel = privacy_level,
+                SendStartNotification = send_start_notification
             };
 
             var route = $"{Endpoints.STAGE_INSTANCES}";
