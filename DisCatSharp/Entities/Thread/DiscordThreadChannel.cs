@@ -196,37 +196,16 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Locks a thread.
-        /// </summary>
-        /// <param name="reason">Reason for audit logs.</param>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
-        /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task LockAsync(string reason = null)
-            => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, true, null, null, null, reason: reason);
-
-        /// <summary>
-        /// Unlocks a thread.
-        /// </summary>
-        /// <param name="reason">Reason for audit logs.</param>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
-        /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task UnlockAsync(string reason = null)
-            => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, false, null, null, null, reason: reason);
-
-        /// <summary>
         /// Archives a thread.
         /// </summary>
+        /// <param name="locked">Whether the thread should be locked.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task ArchiveAsync(string reason = null)
-            => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, true, null, null, reason: reason);
+        public Task ArchiveAsync(bool locked = true, string reason = null)
+            => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, locked, true, null, null, reason: reason);
 
         /// <summary>
         /// Unarchives a thread.

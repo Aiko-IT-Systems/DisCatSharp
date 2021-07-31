@@ -103,7 +103,9 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task ModifyAsync(Optional<string> name, Optional<string> description, Optional<DateTime> scheduled_start_time, Optional<StagePrivacyLevel> privacy_level, string reason = null)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
             => throw new NotImplementedException("This method is not implemented yet."); /*await this.Discord.ApiClient.ModifyStageEventAsync(this.Id, name, scheduled_start_time, description, privacy_level, reason);*/
 
         /// <summary>
@@ -114,7 +116,9 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task DeleteAsync(string reason = null)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
             => throw new NotImplementedException("This method is not implemented yet."); /*await this.Discord.ApiClient.DeleteStageEventAsync(this.Id, reason);*/
 
         #endregion

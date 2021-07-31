@@ -74,17 +74,7 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Gets the file.
         /// </summary>
-        public Stream File { get; }
-
-        /// <summary>
-        /// Gets the file type.
-        /// </summary>
-        public string FileType { get; }
-
-        /// <summary>
-        /// Gets the file name.
-        /// </summary>
-        public string FileName { get; }
+        public DiscordMessageFile File { get; }
 
         /// <summary>
         /// Gets the name.
@@ -114,15 +104,12 @@ namespace DisCatSharp.Net
         /// <param name="name">The sticker name.</param>
         /// <param name="tags">The sticker tag.</param>
         /// <param name="description">The sticker description.</param>
-        /// <param name="file_type">The file type.</param>
         /// <param name="ratelimit_wait_override">The ratelimit_wait_override.</param>
         internal MultipartStickerWebRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null,
-            DiscordMessageFile file = null, string name = "", string tags = "", string description = null, string file_type = "image/png", double? ratelimit_wait_override = null)
+            DiscordMessageFile file = null, string name = "", string tags = "", string description = "", double? ratelimit_wait_override = null)
             : base(client, bucket, url, method, route, headers, ratelimit_wait_override)
         {
-            this.File = file.Stream;
-            this.FileType = file_type;
-            this.FileName = file.FileName;
+            this.File = file;
             this.Name = name;
             this.Description = description;
             this.Tags = tags;
