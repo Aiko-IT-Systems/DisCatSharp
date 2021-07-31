@@ -38,6 +38,13 @@ namespace DisCatSharp.Entities
         public ulong GuildId { get; internal set; }
 
         /// <summary>
+        /// Gets the guild to which this channel belongs.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordGuild Guild
+            => this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
+
+        /// <summary>
         /// Gets id of the associated Stage channel.
         /// </summary>
         [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
@@ -64,13 +71,6 @@ namespace DisCatSharp.Entities
         #region Methods
 
         /// <summary>
-        /// Gets the guild to which this channel belongs.
-        /// </summary>
-        [JsonIgnore]
-        public DiscordGuild Guild
-            => this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
-
-        /// <summary>
         /// Updates a stage instance.
         /// </summary>
         /// <param name="topic">Topic of the stage instance.</param>
@@ -93,6 +93,21 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task CloseAsync(string reason = null)
             => await this.Discord.ApiClient.DeleteStageInstanceAsync(this.Id, reason);
+
+        /// <summary>
+        /// Creates a Stage Event.
+        /// </summary>
+        /// <param name="name">Name of the event.</param>
+        /// <param name="scheduled_start_time">DateTime when the event should start.</param>
+        /// <param name="description">Description of the event.</param>
+        /// <param name="privacy_level">Privacy Level of the stage instance.</param>
+        /// <param name="reason">Audit log reason</param>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the stage channel does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task CreateEventAsync(string name, DateTime scheduled_start_time, string description = null, StagePrivacyLevel privacy_level = StagePrivacyLevel.GUILD_ONLY, string reason = null)
+            => throw new NotImplementedException("This method is not implemented yet."); /*await this.Discord.ApiClient.CreateStageEventAsync(this.Id, name, scheduled_start_time, description, privacy_level, reason);*/
 
         #endregion
 
