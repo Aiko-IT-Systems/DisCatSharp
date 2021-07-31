@@ -60,7 +60,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="e"><see cref="DiscordGuildDirectoryChannel"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordGuildDirectoryChannel"/> is equal to this <see cref="DiscordGuildDirectoryChannel"/>.</returns>
-        public bool Equals(DiscordChannel e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+        public bool Equals(DiscordGuildDirectoryChannel e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordGuildDirectoryChannel"/>.
