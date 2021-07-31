@@ -981,17 +981,17 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Indicates that an event was created.
         /// </summary>
-        EventCreate = ,
+        EventCreate = 100,
 
         /// <summary>
         /// Indicates that an event was updated.
         /// </summary>
-        EventUpdate = ,
+        EventUpdate = 101,
 
         /// <summary>
         /// Indicates that an event was deleted.
         /// </summary>
-        EventDelete = ,
+        EventDelete = 102,
         */
         /// <summary>
         /// Indicates that an thread was created.
