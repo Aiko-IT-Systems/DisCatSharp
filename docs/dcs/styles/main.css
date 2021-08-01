@@ -3,6 +3,10 @@
 	max-height: 50px;
 }
 
+.navbar-default {
+    background-color: #2f3136;
+}
+
 h1.logo-center
 {
 	text-align: center;
