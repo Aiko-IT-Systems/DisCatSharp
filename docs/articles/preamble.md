@@ -36,4 +36,4 @@ Once you're up and running, feel free to browse through the [API Documentation](
 You can get in contact with us on Discord through one of the following guilds:
 
 **DisCatSharp Guild**:</br>
-[![Project Nyaw~](https://discordapp.com/api/guilds/858089281214087179/embed.png?style=banner2)](https://discord.gg/CPhrqxu2SF)
+[![Nyaw~ & DCS | Support](https://discordapp.com/api/guilds/858089281214087179/embed.png?style=banner2)](https://discord.gg/2XTmQuxqQw)
