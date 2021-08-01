@@ -26,7 +26,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
@@ -182,7 +181,7 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Execute a rest request.
+        /// Executes a rest request.
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="bucket">The bucket.</param>
@@ -206,7 +205,7 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Execute a multipart rest request for stickers.
+        /// Executes a multipart rest request for stickers.
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="bucket">The bucket.</param>
@@ -234,7 +233,7 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Dos the multipart async.
+        /// Executes a multipart request.
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="bucket">The bucket.</param>
@@ -4191,7 +4190,6 @@ namespace DisCatSharp.Net
         /// <param name="application_id">The application_id.</param>
         /// <param name="guild_id">The guild_id.</param>
         /// <param name="command_id">The command_id.</param>
-        /// <returns>A Task.</returns>
         internal async Task<DiscordApplicationCommand> GetGuildApplicationCommandAsync(ulong application_id, ulong guild_id, ulong command_id)
         {
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
@@ -4216,7 +4214,6 @@ namespace DisCatSharp.Net
         /// <param name="description">The description.</param>
         /// <param name="options">The options.</param>
         /// <param name="default_permission">The default_permission.</param>
-        /// <returns>A Task.</returns>
         internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong application_id, ulong guild_id, ulong command_id, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> default_permission)
         {
             var pld = new RestApplicationCommandEditPayload
@@ -4245,7 +4242,6 @@ namespace DisCatSharp.Net
         /// <param name="application_id">The application_id.</param>
         /// <param name="guild_id">The guild_id.</param>
         /// <param name="command_id">The command_id.</param>
-        /// <returns>A Task.</returns>
         internal async Task DeleteGuildApplicationCommandAsync(ulong application_id, ulong guild_id, ulong command_id)
         {
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
@@ -4253,6 +4249,115 @@ namespace DisCatSharp.Net
 
             var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
+        }
+
+        /// <summary>
+        /// Gets the guild application command permissions.
+        /// </summary>
+        /// <param name="application_id">The target application id.</param>
+        /// <param name="guild_id">The target guild id.</param>
+        internal async Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> GetGuildApplicationCommandPermissionsAsync(ulong application_id, ulong guild_id)
+        {
+            var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}{Endpoints.PERMISSIONS}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id, guild_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
+
+            var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordGuildApplicationCommandPermission>>(res.Response);
+
+            foreach (var app in ret)
+                app.Discord = this.Discord;
+
+            return ret.ToList();
+        }
+
+        /// <summary>
+        /// Gets the application command permission.
+        /// </summary>
+        /// <param name="application_id">The target application id.</param>
+        /// <param name="guild_id">The target guild id.</param>
+        /// <param name="command_id">The target command id.</param>
+        internal async Task<DiscordGuildApplicationCommandPermission> GetApplicationCommandPermissionAsync(ulong application_id, ulong guild_id, ulong command_id)
+        {
+            var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id{Endpoints.PERMISSIONS}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id, guild_id, command_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
+
+            var ret = JsonConvert.DeserializeObject<DiscordGuildApplicationCommandPermission>(res.Response);
+
+            ret.Discord = this.Discord;
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Overwrites the guild application command permissions.
+        /// </summary>
+        /// <param name="application_id">The target application id.</param>
+        /// <param name="guild_id">The target guild id.</param>
+        /// <param name="command_id">The target command id.</param>
+        /// <param name="permissions">Array of permissions.</param>
+        internal async Task<DiscordGuildApplicationCommandPermission> OverwriteGuildApplicationCommandPermissionsAsync(ulong application_id, ulong guild_id, ulong command_id, IEnumerable<DiscordApplicationCommandPermission> permissions)
+        {
+            var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id{Endpoints.PERMISSIONS}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id, guild_id, command_id }, out var path);
+
+            if (permissions.ToArray().Length > 10)
+                throw new NotSupportedException("You can add only up to 10 permission overwrites per command.");
+
+            var pld = new RestApplicationCommandPermissionEditPayload
+            {
+                Permissions = permissions
+            };
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
+
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
+
+            var ret = JsonConvert.DeserializeObject<DiscordGuildApplicationCommandPermission>(res.Response);
+
+            ret.Discord = this.Discord;
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Bulks overwrite the application command permissions.
+        /// </summary>
+        /// <param name="application_id">The target application id.</param>
+        /// <param name="guild_id">The target guild id.</param>
+        /// <param name="permission_overwrites"></param>
+        internal async Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> BulkOverwriteApplicationCommandPermissionsAsync(ulong application_id, ulong guild_id, IEnumerable<DiscordGuildApplicationCommandPermission> permission_overwrites)
+        {
+            var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}{Endpoints.PERMISSIONS}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id, guild_id }, out var path);
+
+            var pld = new List<RestGuildApplicationCommandPermissionEditPayload>();
+            foreach (var overwrite in permission_overwrites)
+            {
+                if (overwrite.Permissions.Count > 10)
+                    throw new NotSupportedException("You can add only up to 10 permission overwrites per command.");
+
+                pld.Add(new RestGuildApplicationCommandPermissionEditPayload
+                {
+                    CommandId = overwrite.Id,
+                    Permissions = overwrite.Permissions
+                });
+            }
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
+
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld.ToArray()));
+
+            var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordGuildApplicationCommandPermission>>(res.Response);
+
+            foreach (var app in ret)
+                app.Discord = this.Discord;
+
+            return ret.ToList();
         }
 
         /// <summary>
