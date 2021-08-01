@@ -279,6 +279,7 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Disposes .
         /// </summary>
-        public void Dispose() => throw new NotImplementedException();
+        public void Dispose()
+            => this.WriteSemaphore?.Dispose();
     }
 }
