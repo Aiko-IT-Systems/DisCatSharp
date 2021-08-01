@@ -43,8 +43,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\Stage\Events\" />
-  </ItemGroup>
-
 </Project>
