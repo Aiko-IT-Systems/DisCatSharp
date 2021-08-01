@@ -31,16 +31,27 @@ namespace DisCatSharp.Entities
     public sealed class DiscordApplicationCommandPermission : SnowflakeObject, IEquatable<DiscordApplicationCommandPermission>
     {
         /// <summary>
+        /// Gets the id of the role or user.
+        /// </summary>
+        [JsonProperty("id")]
+        public new ulong Id { get; set; }
+
+        /// <summary>
         /// Gets the application command permission type.
         /// </summary>
         [JsonProperty("type")]
-        public ApplicationCommandPermissionType Type { get; internal set; }
+        public ApplicationCommandPermissionType Type { get; set; }
 
         /// <summary>
         /// Gets the permission .
         /// </summary>
         [JsonProperty("permission")]
-        public bool Permission { get; internal set; }
+        public bool Permission { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordApplicationCommandPermission"/> class.
+        /// </summary>
+        internal DiscordApplicationCommandPermission() { }
 
         /// <summary>
         /// Checks whether this <see cref="DiscordApplicationCommandPermission"/> object is equal to another object.
@@ -73,7 +84,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="other">The object to compare to.</param>
         /// <returns>Whether the two <see cref="DiscordApplicationCommandPermission"/> objects are not equal.</returns>
-        public override bool Equals(object other) => other is DiscordApplicationCommandPermission dac && this.Equals(dac);
+        public override bool Equals(object other) => other is DiscordApplicationCommandPermission dacp && this.Equals(dacp);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordApplicationCommandPermission"/>.

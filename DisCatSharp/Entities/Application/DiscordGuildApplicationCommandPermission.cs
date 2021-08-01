@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
@@ -31,22 +32,40 @@ namespace DisCatSharp.Entities
     public sealed class DiscordGuildApplicationCommandPermission : SnowflakeObject, IEquatable<DiscordGuildApplicationCommandPermission>
     {
         /// <summary>
+        /// Gets the id of the command.
+        /// </summary>
+        [JsonProperty("id")]
+        public new ulong Id { get; set; }
+
+        /// <summary>
         /// Gets the unique ID of this command's application.
         /// </summary>
         [JsonProperty("application_id")]
-        public ulong ApplicationId { get; internal set; }
+        public ulong ApplicationId { get; set; }
 
         /// <summary>
         /// Gets the guild id this permission applies to.
         /// </summary>
         [JsonProperty("guild_id")]
-        public ulong GuildId { get; internal set; }
+        public ulong GuildId { get; set; }
+
+        /// <summary>
+        /// Gets the guild this permission applies to.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordGuild Guild
+            => this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
 
         /// <summary>
         /// Gets the permission array.
         /// </summary>
         [JsonProperty("permissions")]
-        public DiscordApplicationCommandPermission Permissions { get; internal set; }
+        public IReadOnlyList<DiscordApplicationCommandPermission> Permissions { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordGuildApplicationCommandPermission"/> class.
+        /// </summary>
+        internal DiscordGuildApplicationCommandPermission() { }
 
         /// <summary>
         /// Checks whether this <see cref="DiscordGuildApplicationCommandPermission"/> object is equal to another object.
@@ -79,7 +98,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="other">The object to compare to.</param>
         /// <returns>Whether the two <see cref="DiscordGuildApplicationCommandPermission"/> objects are not equal.</returns>
-        public override bool Equals(object other) => other is DiscordGuildApplicationCommandPermission dac && this.Equals(dac);
+        public override bool Equals(object other) => other is DiscordGuildApplicationCommandPermission dgacp && this.Equals(dgacp);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordGuildApplicationCommandPermission"/>.

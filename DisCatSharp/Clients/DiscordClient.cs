@@ -798,6 +798,40 @@ namespace DisCatSharp
         /// <param name="commandId">The id of the command.</param>
         public Task DeleteGuildApplicationCommandAsync(ulong guildId, ulong commandId) =>
             this.ApiClient.DeleteGuildApplicationCommandAsync(this.CurrentApplication.Id, guildId, commandId);
+
+        /// <summary>
+        /// Gets all command permissions for a guild.
+        /// </summary>
+        /// <param name="guildId">The target guild.</param>
+        public Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> GetGuildApplicationCommandPermissionsAsync(ulong guildId) =>
+            this.ApiClient.GetGuildApplicationCommandPermissionsAsync(this.CurrentApplication.Id, guildId);
+
+        /// <summary>
+        /// Gets the permissions for a guild command.
+        /// </summary>
+        /// <param name="guildId">The target guild.</param>
+        /// <param name="commandId">The target command id.</param>
+        public Task<DiscordGuildApplicationCommandPermission> GetApplicationCommandPermissionAsync(ulong guildId, ulong commandId) =>
+            this.ApiClient.GetApplicationCommandPermissionAsync(this.CurrentApplication.Id, guildId, commandId);
+
+        /// <summary>
+        /// Overwrites the existing permissions for a slash command in a guild. New permissions are automatically created and missing permissions are deleted.
+        /// A command takes up to 10 permission overwrites.
+        /// </summary>
+        /// <param name="guildId">The id of the guild.</param>
+        /// <param name="commandId">The id of the command.</param>
+        /// <param name="permissions">List of permissions.</param>
+        public Task<DiscordGuildApplicationCommandPermission> OverwriteGuildApplicationCommandPermissionsAsync(ulong guildId, ulong commandId, IEnumerable<DiscordApplicationCommandPermission> permissions) =>
+            this.ApiClient.OverwriteGuildApplicationCommandPermissionsAsync(this.CurrentApplication.Id, guildId, commandId, permissions);
+
+        /// <summary>
+        /// Overwrites the existing slash command permissions in a guild. New permissions are automatically created and missing permissions are deleted.
+        /// Each command takes up to 10 permission overwrites.
+        /// </summary>
+        /// <param name="guildId">The id of the guild.</param>
+        /// <param name="permissionsOverwrites">The list of permissions to overwrite with.</param>
+        public Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> BulkOverwriteGuildApplicationCommandsAsync(ulong guildId, IEnumerable<DiscordGuildApplicationCommandPermission> permissionsOverwrites) =>
+            this.ApiClient.BulkOverwriteApplicationCommandPermissionsAsync(this.CurrentApplication.Id, guildId, permissionsOverwrites);
         #endregion
 
         #region Internal Caching Methods
