@@ -72,7 +72,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// </summary>
         /// <param name="message">The message to wait on.</param>
         /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
-        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(this DiscordMessage message, CancellationToken? token = default)
+        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(this DiscordMessage message, CancellationToken token = default)
             => GetInteractivity(message).WaitForButtonAsync(message, token);
         /// <summary>
         /// Waits for a button with the specified Id to be pressed on the specified message.
@@ -88,7 +88,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// <param name="message">The message to wait on.</param>
         /// <param name="id">The Id of the button to wait for.</param>
         /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
-        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(this DiscordMessage message, string id, CancellationToken? token = default)
+        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(this DiscordMessage message, string id, CancellationToken token = default)
             => GetInteractivity(message).WaitForButtonAsync(message, id, token);
         /// <summary>
         /// Waits for any button to be pressed on the specified message by the specified user.
@@ -104,7 +104,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// <param name="message">The message to wait on.</param>
         /// <param name="user">The user to wait for button input from.</param>
         /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
-        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(this DiscordMessage message, DiscordUser user, CancellationToken? token = default)
+        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(this DiscordMessage message, DiscordUser user, CancellationToken token = default)
             => GetInteractivity(message).WaitForButtonAsync(message, user, token);
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// <param name="message">The message to wait on.</param>
         /// <param name="id">The Id of the dropdown to wait for.</param>
         /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
-        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, string id, CancellationToken? token = default)
+        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, string id, CancellationToken token = default)
             => GetInteractivity(message).WaitForSelectAsync(message, id, token);
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// <param name="user">The user to wait for.</param>
         /// <param name="id">The Id of the dropdown to wait for.</param>
         /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
-        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, DiscordUser user, string id, CancellationToken? token = default)
+        public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, DiscordUser user, string id, CancellationToken token = default)
             => GetInteractivity(message).WaitForSelectAsync(message, user, id, token);
 
         /// <summary>
