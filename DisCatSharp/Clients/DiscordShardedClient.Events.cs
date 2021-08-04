@@ -732,6 +732,16 @@ namespace DisCatSharp
         private AsyncEvent<DiscordClient, ApplicationCommandEventArgs> _applicationCommandDeleted;
 
         /// <summary>
+        /// Fired when a new application command is registered.
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, GuildApplicationCommandCountEventArgs> GuildApplicationCommandCountUpdated
+        {
+            add => this._guildApplicationCommandCountUpdated.Register(value);
+            remove => this._guildApplicationCommandCountUpdated.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, GuildApplicationCommandCountEventArgs> _guildApplicationCommandCountUpdated;
+
+        /// <summary>
         /// Fired when a user uses a context menu.
         /// </summary>
         public event AsyncEventHandler<DiscordClient, ContextMenuInteractionCreateEventArgs> ContextMenuInteractionCreated
@@ -1370,6 +1380,16 @@ namespace DisCatSharp
         /// <returns>A Task.</returns>
         private Task Client_ApplicationCommandDeleted(DiscordClient client, ApplicationCommandEventArgs e)
             => this._applicationCommandDeleted.InvokeAsync(client, e);
+
+
+        /// <summary>
+        /// Client_S the guild application command count updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
+        private Task Client_GuildApplicationCommandCountUpdated(DiscordClient client, GuildApplicationCommandCountEventArgs e)
+            => this._guildApplicationCommandCountUpdated.InvokeAsync(client, e);
 
         /// <summary>
         /// Client_S the guild integration created.

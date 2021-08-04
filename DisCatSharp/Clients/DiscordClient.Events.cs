@@ -747,6 +747,15 @@ namespace DisCatSharp
         }
         private AsyncEvent<DiscordClient, ApplicationCommandEventArgs> _applicationCommandDeleted;
 
+        /// <summary>
+        /// Fired when a new application command is registered.
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, GuildApplicationCommandCountEventArgs> GuildApplicationCommandCountUpdated
+        {
+            add => this._guildApplicationCommandCountUpdated.Register(value);
+            remove => this._guildApplicationCommandCountUpdated.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, GuildApplicationCommandCountEventArgs> _guildApplicationCommandCountUpdated;
 
         /// <summary>
         /// Fired when a user uses a context menu.

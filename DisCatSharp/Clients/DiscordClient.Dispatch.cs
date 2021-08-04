@@ -506,6 +506,10 @@ namespace DisCatSharp
                     await this.OnApplicationCommandDeleteAsync(dat.ToObject<DiscordApplicationCommand>(), (ulong?)dat["guild_id"]).ConfigureAwait(false);
                     break;
 
+                case "guild_application_command_counts_update":
+                    await this.OnGuildApplicationCommandCountsUpdateAsync((int)dat["1"], (int)dat["2"], (int)dat["3"], (ulong)dat["guild_id"]).ConfigureAwait(false);
+                    break;
+
                 #endregion
 
                 #region Misc
@@ -2490,6 +2494,38 @@ namespace DisCatSharp
             };
 
             await this._applicationCommandDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Ons the guild application command counts update async.
+        /// </summary>
+        /// <param name="sc">The <see cref="ApplicationCommandType.SlashCommand"/> count.</param>
+        /// <param name="ucmc">The <see cref="ApplicationCommandType.UserContextMenu"/> count.</param>
+        /// <param name="mcmc">The <see cref="ApplicationCommandType.MessageContextMenu"/> count.</param>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <returns>Count of application commands.</returns>
+        internal async Task OnGuildApplicationCommandCountsUpdateAsync(int sc, int ucmc, int mcmc, ulong guild_id)
+        {
+            var guild = this.InternalGetCachedGuild(guild_id);
+
+            if (guild == null)
+            {
+                guild = new DiscordGuild
+                {
+                    Id = guild_id,
+                    Discord = this
+                };
+            }
+
+            var ea = new GuildApplicationCommandCountEventArgs
+            {
+                SlashCommands = sc,
+                UserContextMenuCommands = ucmc,
+                MessageContextMenuCommands = mcmc,
+                Guild = guild
+            };
+
+            await this._guildApplicationCommandCountUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
         #endregion
