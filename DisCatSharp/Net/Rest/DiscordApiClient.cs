@@ -3987,6 +3987,7 @@ namespace DisCatSharp.Net
             {
                 pld.Add(new RestApplicationCommandCreatePayload
                 {
+                    Type = command.Type,
                     Name = command.Name,
                     Description = command.Description,
                     Options = command.Options,
@@ -4016,6 +4017,7 @@ namespace DisCatSharp.Net
         {
             var pld = new RestApplicationCommandCreatePayload
             {
+                Type = command.Type,
                 Name = command.Name,
                 Description = command.Description,
                 Options = command.Options,
@@ -4135,6 +4137,7 @@ namespace DisCatSharp.Net
             {
                 pld.Add(new RestApplicationCommandCreatePayload
                 {
+                    Type = command.Type,
                     Name = command.Name,
                     Description = command.Description,
                     Options = command.Options,
@@ -4165,6 +4168,7 @@ namespace DisCatSharp.Net
         {
             var pld = new RestApplicationCommandCreatePayload
             {
+                Type = command.Type,
                 Name = command.Name,
                 Description = command.Description,
                 Options = command.Options,

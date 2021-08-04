@@ -35,6 +35,7 @@ using DisCatSharp.Net.Serialization;
 using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using DisCatSharp.Enums;
 
 namespace DisCatSharp
 {
@@ -64,6 +65,12 @@ namespace DisCatSharp
                 this.Logger.LogWarning(LoggerEvents.WebSocketReceive, "Invalid payload body (this message is probably safe to ignore); opcode: {0} event: {1}; payload: {2}", payload.OpCode, payload.EventName, payload.Data);
                 return;
             }
+
+            await this._payloadReceived.InvokeAsync(this, new()
+            {
+                EventName = payload.EventName,
+                PayloadObject = dat
+            }).ConfigureAwait(false);
 
             DiscordChannel chn;
             ulong gid;
@@ -2557,6 +2564,18 @@ namespace DisCatSharp
                             c.Value._guild_id = guildId.Value;
                     }
                 }
+
+
+                if (resolved.Messages != null)
+                {
+                    foreach (var m in resolved.Messages)
+                    {
+                        m.Value.Discord = this;
+
+                        if (guildId.HasValue)
+                            m.Value.GuildId = guildId.Value;
+                    }
+                }
             }
 
             if (interaction.Type is InteractionType.Component)
@@ -2574,12 +2593,35 @@ namespace DisCatSharp
             }
             else
             {
-                var ea = new InteractionCreateEventArgs
+                if (interaction.Data.Target.HasValue) // Context-Menu. //
                 {
-                    Interaction = interaction
-                };
+                    var targetId = interaction.Data.Target.Value;
+                    DiscordUser targetUser = null;
+                    DiscordMember targetMember = null;
+                    DiscordMessage targetMessage = null;
 
-                await this._interactionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+                    interaction.Data.Resolved.Messages?.TryGetValue(targetId, out targetMessage);
+                    interaction.Data.Resolved.Members?.TryGetValue(targetId, out targetMember);
+                    interaction.Data.Resolved.Users?.TryGetValue(targetId, out targetUser);
+
+                    var ctea = new ContextMenuInteractionCreateEventArgs
+                    {
+                        Interaction = interaction,
+                        TargetUser = targetMember ?? targetUser,
+                        TargetMessage = targetMessage,
+                        Type = targetUser == null ? ApplicationCommandType.MessageContextMenu : ApplicationCommandType.UserContextMenu,
+                    };
+                    await this._contextMenuInteractionCreated.InvokeAsync(this, ctea).ConfigureAwait(false);
+                }
+                else
+                {
+                    var ea = new InteractionCreateEventArgs
+                    {
+                        Interaction = interaction
+                    };
+
+                    await this._interactionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+                }
             }
         }
 

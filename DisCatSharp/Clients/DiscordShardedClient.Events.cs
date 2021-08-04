@@ -731,6 +731,17 @@ namespace DisCatSharp
         }
         private AsyncEvent<DiscordClient, ApplicationCommandEventArgs> _applicationCommandDeleted;
 
+        /// <summary>
+        /// Fired when a user uses a context menu.
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, ContextMenuInteractionCreateEventArgs> ContextMenuInteractionCreated
+        {
+            add => this._contextMenuInteractionCreated.Register(value);
+            remove => this._contextMenuInteractionCreated.Unregister(value);
+        }
+
+        private AsyncEvent<DiscordClient, ContextMenuInteractionCreateEventArgs> _contextMenuInteractionCreated;
+
         #endregion
 
         #region Misc
@@ -832,6 +843,16 @@ namespace DisCatSharp
         private AsyncEvent<DiscordClient, ZombiedEventArgs> _zombied;
 
         /// <summary>
+        /// Fired when a gateway
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, PayloadReceivedEventArgs> PayloadReceived
+        {
+            add => this._payloadReceived.Register(value);
+            remove => this._payloadReceived.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, PayloadReceivedEventArgs> _payloadReceived;
+
+        /// <summary>
         /// Goofs the.
         /// </summary>
         /// <param name="asyncEvent">The async event.</param>
@@ -854,6 +875,15 @@ namespace DisCatSharp
         /// <returns>A Task.</returns>
         private Task Client_Zombied(DiscordClient client, ZombiedEventArgs e)
             => this._zombied.InvokeAsync(client, e);
+
+        /// <summary>
+        /// Payload_S the received.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
+        private Task Client_PayloadReceived(DiscordClient client, PayloadReceivedEventArgs e)
+            => this._payloadReceived.InvokeAsync(client, e);
 
         /// <summary>
         /// Client_S the client error.
@@ -1286,6 +1316,16 @@ namespace DisCatSharp
         /// <returns>A Task.</returns>
         private Task Client_ComponentInteractionCreate(DiscordClient client, ComponentInteractionCreateEventArgs e)
             => this._componentInteractionCreated.InvokeAsync(client, e);
+
+        /// <summary>
+        /// Client_S the context menu interaction create.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
+        private Task Client_ContextMenuInteractionCreate(DiscordClient client, ContextMenuInteractionCreateEventArgs e)
+            => this._contextMenuInteractionCreated.InvokeAsync(client, e);
+
         /// <summary>
         /// Client_S the webhooks update.
         /// </summary>

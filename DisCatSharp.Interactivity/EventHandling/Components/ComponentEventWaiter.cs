@@ -112,12 +112,6 @@ namespace DisCatSharp.Interactivity.EventHandling
         {
             if (this._matchRequests.TryGetValue(args.Message.Id, out var mreq))
             {
-                if (this._config.AckPaginationButtons)
-                {
-                    await args.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
-                    args.Handled = true;
-                }
-
                 if (mreq.IsMatch(args))
                     mreq.Tcs.TrySetResult(args);
 

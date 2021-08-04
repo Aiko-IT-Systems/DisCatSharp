@@ -145,7 +145,7 @@ namespace DisCatSharp.Interactivity
         /// <returns>A <see cref="InteractivityResult{T}"/> with the result of button that was pressed, if any.</returns>
         /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
-        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, IEnumerable<DiscordButtonComponent> buttons, CancellationToken? token = null)
+        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, IEnumerable<DiscordButtonComponent> buttons, CancellationToken token = default)
         {
             if (message.Author != this.Client.CurrentUser)
                 throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
@@ -156,13 +156,11 @@ namespace DisCatSharp.Interactivity
             if (!buttons.Any())
                 throw new ArgumentException("You must specify at least one button to listen for.");
 
-            token ??= this.GetCancellationToken(null);
-
             var res = await this.ComponentEventWaiter
                 .WaitForMatchAsync(new(message.Id,
                     c =>
                         c.Interaction.Data.ComponentType == ComponentType.Button &&
-                        buttons.Any(b => b.CustomId == c.Id), token.Value));
+                        buttons.Any(b => b.CustomId == c.Id), token));
 
             return new(res is null, res);
         }
@@ -175,7 +173,7 @@ namespace DisCatSharp.Interactivity
         /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
         public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message)
-            => this.WaitForButtonAsync(message, token: null);
+            => this.WaitForButtonAsync(message);
 
         /// <summary>
         /// Waits for any button on the specified message to be pressed.
@@ -196,7 +194,7 @@ namespace DisCatSharp.Interactivity
         /// <returns>A <see cref="InteractivityResult{T}"/> with the result of button that was pressed, if any.</returns>
         /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
-        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, CancellationToken? token = null)
+        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, CancellationToken token = default)
         {
             if (message.Author != this.Client.CurrentUser)
                 throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
@@ -206,12 +204,10 @@ namespace DisCatSharp.Interactivity
 
             var ids = message.Components.SelectMany(m => m.Components).Select(c => c.CustomId);
 
-            token ??= this.GetCancellationToken(null);
-
             var result =
                 await this
                 .ComponentEventWaiter
-                .WaitForMatchAsync(new(message.Id, c => c.Interaction.Data.ComponentType == ComponentType.Button, token.Value))
+                .WaitForMatchAsync(new(message.Id, c => c.Interaction.Data.ComponentType == ComponentType.Button, token))
                 .ConfigureAwait(false);
 
             return new(result is null, result);
@@ -238,7 +234,7 @@ namespace DisCatSharp.Interactivity
         /// <returns>A <see cref="InteractivityResult{T}"/> with the result of button that was pressed, if any.</returns>
         /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
-        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, DiscordUser user, CancellationToken? token = null)
+        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, DiscordUser user, CancellationToken token = default)
         {
             if (message.Author != this.Client.CurrentUser)
                 throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
@@ -246,11 +242,9 @@ namespace DisCatSharp.Interactivity
             if (message.Components is null || !message.Components.Select(a => a.Components).Any())
                 throw new ArgumentException("Message does not contain any buttons.");
 
-            token ??= this.GetCancellationToken(null);
-
             var result = await this
                 .ComponentEventWaiter
-                .WaitForMatchAsync(new(message.Id, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.User == user, token.Value))
+                .WaitForMatchAsync(new(message.Id, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.User == user, token))
                 .ConfigureAwait(false);
 
             return new(result is null, result);
@@ -278,7 +272,7 @@ namespace DisCatSharp.Interactivity
         /// <returns>A <see cref="InteractivityResult{T}"/> with the result of the operation.</returns>
         /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
-        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, string id, CancellationToken? token = null)
+        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, string id, CancellationToken token = default)
         {
             if (message.Author != this.Client.CurrentUser)
                 throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
@@ -289,11 +283,9 @@ namespace DisCatSharp.Interactivity
             if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button && c.CustomId == id))
                 throw new ArgumentException($"Message does not contain button with Id of '{id}'.");
 
-            token ??= this.GetCancellationToken(null);
-
             var result = await this
                 .ComponentEventWaiter
-                .WaitForMatchAsync(new(message.Id, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.Id == id, token.Value))
+                .WaitForMatchAsync(new(message.Id, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.Id == id, token))
                 .ConfigureAwait(false);
 
             return new(result is null, result);
@@ -317,7 +309,7 @@ namespace DisCatSharp.Interactivity
         /// <param name="id">The Id of the dropdown to wait on.</param>
         /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
         /// <exception cref="ArgumentException">Thrown when the message does not have any dropdowns or any dropdown with the specified Id.</exception>
-        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, string id, CancellationToken? token = null)
+        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, string id, CancellationToken token = default)
         {
             if (!message.Components.Any())
                 throw new ArgumentException("Message doesn't contain any components!");
@@ -330,11 +322,9 @@ namespace DisCatSharp.Interactivity
             if (scmps.All(c => c.CustomId != id))
                 throw new ArgumentException("Message doesn't contain a select menu with that Id!");
 
-            token ??= this.GetCancellationToken(null);
-
             var result = await this
                 .ComponentEventWaiter
-                .WaitForMatchAsync(new(message.Id, (c) => c.Interaction.Data.ComponentType is ComponentType.Select && c.Id == id, token.Value))
+                .WaitForMatchAsync(new(message.Id, (c) => c.Interaction.Data.ComponentType is ComponentType.Select && c.Id == id, token))
                 .ConfigureAwait(false);
 
             return new(result is null, result);
@@ -359,7 +349,7 @@ namespace DisCatSharp.Interactivity
         /// <param name="id">The Id of the dropdown to wait on.</param>
         /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
         /// <exception cref="ArgumentException">Thrown when the message does not have any dropdowns or any dropdown with the specified Id.</exception>
-        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, DiscordUser user, string id, CancellationToken? token = null)
+        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, DiscordUser user, string id, CancellationToken token = default)
         {
             if (!message.Components.Any())
                 throw new ArgumentException("Message doesn't contain any components!");
@@ -372,11 +362,9 @@ namespace DisCatSharp.Interactivity
             if (scmps.All(c => c.CustomId != id))
                 throw new ArgumentException("Message doesn't contain a select menu with that Id!");
 
-            token ??= this.GetCancellationToken(null);
-
             var result = await this
                 .ComponentEventWaiter
-                .WaitForMatchAsync(new(message.Id, (c) => c.Id == id && c.User == user, token.Value)).ConfigureAwait(false);
+                .WaitForMatchAsync(new(message.Id, (c) => c.Id == id && c.User == user, token)).ConfigureAwait(false);
 
             return new(result is null, result);
         }
@@ -557,13 +545,13 @@ namespace DisCatSharp.Interactivity
         /// <param name="channel">The channel to send it on.</param>
         /// <param name="user">User to give control.</param>
         /// <param name="pages">The pages.</param>
-        /// <param name="buttons">Pagination buttons (leave null to default to ones on configuration).</param>
+        /// <param name="buttons">Pagination buttons (pass null to default to ones on configuration).</param>
         /// <param name="behaviour">Pagination behaviour.</param>
         /// <param name="deletion">Deletion behaviour</param>
         /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
         public async Task SendPaginatedMessageAsync(
-            DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons = null,
-            PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken? token = default)
+            DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons,
+            PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
         {
             var bhv = behaviour ?? this.Config.PaginationBehaviour;
             var del = deletion ?? this.Config.ButtonBehavior;
@@ -575,37 +563,47 @@ namespace DisCatSharp.Interactivity
 
             var message = await builder.SendAsync(channel).ConfigureAwait(false);
 
-            var req = new ButtonPaginationRequest(message, user, bhv, del, bts, pages.ToArray(), token.Value);
+            var req = new ButtonPaginationRequest(message, user, bhv, del, bts, pages.ToArray(), token);
 
             await builder // We *COULD* just construct a req with a null message and grab the buttons from that, but eh. //
                 .AddComponents(await req.GetButtonsAsync().ConfigureAwait(false))
                 .ModifyAsync(message).ConfigureAwait(false);
 
-            token ??= new CancellationTokenSource(this.Config.Timeout).Token;
-
 
             await this._compPaginator.DoPaginationAsync(req).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Sends the paginated message async.
+        /// </summary>
+        /// <param name="channel">The channel.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="pages">The pages.</param>
+        /// <param name="behaviour">The behaviour.</param>
+        /// <param name="deletion">The deletion.</param>
+        /// <param name="token">The token.</param>
+        /// <returns>A Task.</returns>
+        public Task SendPaginatedMessageAsync(DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
+            => this.SendPaginatedMessageAsync(channel, user, pages, default, behaviour, deletion, token);
 
         /// <summary>
         /// Sends a paginated message.
         /// For this Event you need the <see cref="DiscordIntents.GuildMessageReactions"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
         /// </summary>
-        /// <param name="c">Channel to send paginated message in.</param>
-        /// <param name="u">User to give control.</param>
+        /// <param name="channel">Channel to send paginated message in.</param>
+        /// <param name="user">User to give control.</param>
         /// <param name="pages">Pages.</param>
         /// <param name="emojis">Pagination emojis (emojis set to null get disabled).</param>
         /// <param name="behaviour">Pagination behaviour (when hitting max and min indices).</param>
         /// <param name="deletion">Deletion behaviour.</param>
         /// <param name="timeoutoverride">Override timeout period.</param>
-        public async Task SendPaginatedMessageAsync(DiscordChannel c, DiscordUser u, IEnumerable<Page> pages, PaginationEmojis emojis = null,
+        public async Task SendPaginatedMessageAsync(DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationEmojis emojis,
             PaginationBehaviour? behaviour = default, PaginationDeletion? deletion = default, TimeSpan? timeoutoverride = null)
         {
             var builder = new DiscordMessageBuilder()
                 .WithContent(pages.First().Content)
                 .WithEmbed(pages.First().Embed);
-            var m = await builder.SendAsync(c).ConfigureAwait(false);
+            var m = await builder.SendAsync(channel).ConfigureAwait(false);
 
             var timeout = timeoutoverride ?? this.Config.Timeout;
 
@@ -613,7 +611,7 @@ namespace DisCatSharp.Interactivity
             var del = deletion ?? this.Config.PaginationDeletion;
             var ems = emojis ?? this.Config.PaginationEmojis;
 
-            var prequest = new PaginationRequest(m, u, bhv, del, ems, timeout, pages.ToArray());
+            var prequest = new PaginationRequest(m, user, bhv, del, ems, timeout, pages.ToArray());
 
             await this.Paginator.DoPaginationAsync(prequest).ConfigureAwait(false);
         }

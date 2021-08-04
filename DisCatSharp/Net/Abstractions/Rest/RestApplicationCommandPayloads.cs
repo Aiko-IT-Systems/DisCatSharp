@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions
@@ -31,6 +32,12 @@ namespace DisCatSharp.Net.Abstractions
     /// </summary>
     internal class RestApplicationCommandCreatePayload
     {
+        /// <summary>
+        /// Gets the type.
+        /// </summary>
+        [JsonProperty("type")]
+        public ApplicationCommandType Type { get; set; }
+
         /// <summary>
         /// Gets the name.
         /// </summary>

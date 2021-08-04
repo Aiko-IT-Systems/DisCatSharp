@@ -496,6 +496,7 @@ namespace DisCatSharp
             this._messageBulkDeleted = new AsyncEvent<DiscordClient, MessageBulkDeleteEventArgs>("MESSAGE_BULK_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._interactionCreated = new AsyncEvent<DiscordClient, InteractionCreateEventArgs>("INTERACTION_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._componentInteractionCreated = new AsyncEvent<DiscordClient, ComponentInteractionCreateEventArgs>("COMPONENT_INTERACTED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+            this._contextMenuInteractionCreated = new AsyncEvent<DiscordClient, ContextMenuInteractionCreateEventArgs>("CONTEXT_MENU_INTERACTED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._typingStarted = new AsyncEvent<DiscordClient, TypingStartEventArgs>("TYPING_STARTED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._userSettingsUpdated = new AsyncEvent<DiscordClient, UserSettingsUpdateEventArgs>("USER_SETTINGS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._userUpdated = new AsyncEvent<DiscordClient, UserUpdateEventArgs>("USER_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
@@ -525,6 +526,7 @@ namespace DisCatSharp
             this._threadMemberUpdated = new AsyncEvent<DiscordClient, ThreadMemberUpdateEventArgs>("THREAD_MEMBER_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._threadMembersUpdated = new AsyncEvent<DiscordClient, ThreadMembersUpdateEventArgs>("THREAD_MEMBERS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._zombied = new AsyncEvent<DiscordClient, ZombiedEventArgs>("ZOMBIED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+            this._payloadReceived = new AsyncEvent<DiscordClient, PayloadReceivedEventArgs>("PAYLOAD_RECEIVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
         }
 
         /// <summary>
@@ -570,6 +572,7 @@ namespace DisCatSharp
             client.MessagesBulkDeleted += this.Client_MessageBulkDelete;
             client.InteractionCreated += this.Client_InteractionCreate;
             client.ComponentInteractionCreated += this.Client_ComponentInteractionCreate;
+            client.ContextMenuInteractionCreated += this.Client_ContextMenuInteractionCreate;
             client.TypingStarted += this.Client_TypingStart;
             client.UserSettingsUpdated += this.Client_UserSettingsUpdate;
             client.UserUpdated += this.Client_UserUpdate;
@@ -599,6 +602,7 @@ namespace DisCatSharp
             client.ThreadMemberUpdated += this.Client_ThreadMemberUpdated;
             client.ThreadMembersUpdated += this.Client_ThreadMembersUpdated;
             client.Zombied += this.Client_Zombied;
+            client.PayloadReceived += this.Client_PayloadReceived;
         }
 
         /// <summary>
@@ -643,6 +647,8 @@ namespace DisCatSharp
             client.MessageDeleted -= this.Client_MessageDelete;
             client.MessagesBulkDeleted -= this.Client_MessageBulkDelete;
             client.InteractionCreated -= this.Client_InteractionCreate;
+            client.ComponentInteractionCreated -= this.Client_ComponentInteractionCreate;
+            client.ContextMenuInteractionCreated -= this.Client_ContextMenuInteractionCreate;
             client.TypingStarted -= this.Client_TypingStart;
             client.UserSettingsUpdated -= this.Client_UserSettingsUpdate;
             client.UserUpdated -= this.Client_UserUpdate;
@@ -672,6 +678,7 @@ namespace DisCatSharp
             client.ThreadMemberUpdated -= this.Client_ThreadMemberUpdated;
             client.ThreadMembersUpdated -= this.Client_ThreadMembersUpdated;
             client.Zombied -= this.Client_Zombied;
+            client.PayloadReceived -= this.Client_PayloadReceived;
         }
 
         /// <summary>
