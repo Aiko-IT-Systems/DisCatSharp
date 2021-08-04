@@ -54,5 +54,10 @@ namespace DisCatSharp.Entities
         [JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyDictionary<ulong, DiscordRole> Roles { get; internal set; }
 
+        /// <summary>
+        /// Gets the resolved message objects, if any.
+        /// </summary>
+        [JsonProperty("messages", NullValueHandling = NullValueHandling.Ignore)]
+        public IReadOnlyDictionary<ulong, DiscordMessage> Messages { get; internal set; }
     }
 }

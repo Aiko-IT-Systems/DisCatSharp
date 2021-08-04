@@ -747,6 +747,18 @@ namespace DisCatSharp
         }
         private AsyncEvent<DiscordClient, ApplicationCommandEventArgs> _applicationCommandDeleted;
 
+
+        /// <summary>
+        /// Fired when a user uses a context menu.
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, ContextMenuInteractionCreateEventArgs> ContextMenuInteractionCreated
+        {
+            add => this._contextMenuInteractionCreated.Register(value);
+            remove => this._contextMenuInteractionCreated.Unregister(value);
+        }
+
+        private AsyncEvent<DiscordClient, ContextMenuInteractionCreateEventArgs> _contextMenuInteractionCreated;
+
         #endregion
 
         #region Misc
@@ -845,6 +857,16 @@ namespace DisCatSharp
             remove => this._zombied.Unregister(value);
         }
         private AsyncEvent<DiscordClient, ZombiedEventArgs> _zombied;
+
+        /// <summary>
+        /// Fired when a gateway
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, PayloadReceivedEventArgs> PayloadReceived
+        {
+            add => this._payloadReceived.Register(value);
+            remove => this._payloadReceived.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, PayloadReceivedEventArgs> _payloadReceived;
 
         /// <summary>
         /// Goofing.

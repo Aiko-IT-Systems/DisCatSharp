@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using DisCatSharp.Enums;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
@@ -33,6 +34,12 @@ namespace DisCatSharp.Entities
     /// </summary>
     public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<DiscordApplicationCommand>
     {
+        /// <summary>
+        /// Gets the type of this application command.
+        /// </summary>
+        [JsonProperty("type")]
+        public ApplicationCommandType Type { get; internal set; }
+
         /// <summary>
         /// Gets the unique ID of this command's application.
         /// </summary>
