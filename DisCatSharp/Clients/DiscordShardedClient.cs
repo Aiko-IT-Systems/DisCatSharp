@@ -524,6 +524,7 @@ namespace DisCatSharp
             this._threadListSynced = new AsyncEvent<DiscordClient, ThreadListSyncEventArgs>("THREAD_LIST_SYNCED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._threadMemberUpdated = new AsyncEvent<DiscordClient, ThreadMemberUpdateEventArgs>("THREAD_MEMBER_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._threadMembersUpdated = new AsyncEvent<DiscordClient, ThreadMembersUpdateEventArgs>("THREAD_MEMBERS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+            this._zombied = new AsyncEvent<DiscordClient, ZombiedEventArgs>("ZOMBIED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
         }
 
         /// <summary>
@@ -597,6 +598,7 @@ namespace DisCatSharp
             client.ThreadListSynced += this.Client_ThreadListSynced;
             client.ThreadMemberUpdated += this.Client_ThreadMemberUpdated;
             client.ThreadMembersUpdated += this.Client_ThreadMembersUpdated;
+            client.Zombied += this.Client_Zombied;
         }
 
         /// <summary>
@@ -669,6 +671,7 @@ namespace DisCatSharp
             client.ThreadListSynced -= this.Client_ThreadListSynced;
             client.ThreadMemberUpdated -= this.Client_ThreadMemberUpdated;
             client.ThreadMembersUpdated -= this.Client_ThreadMembersUpdated;
+            client.Zombied -= this.Client_Zombied;
         }
 
         /// <summary>

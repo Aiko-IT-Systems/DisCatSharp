@@ -820,6 +820,17 @@ namespace DisCatSharp
             this._clientErrored.InvokeAsync(sender, new ClientErrorEventArgs { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
+
+        /// <summary>
+        /// Fired on heartbeat attempt cancellation due to too many failed heartbeats.
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, ZombiedEventArgs> Zombied
+        {
+            add => this._zombied.Register(value);
+            remove => this._zombied.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, ZombiedEventArgs> _zombied;
+
         /// <summary>
         /// Goofs the.
         /// </summary>
@@ -834,6 +845,15 @@ namespace DisCatSharp
         #endregion
 
         #region Event Dispatchers
+
+        /// <summary>
+        /// Client_S the zombied.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
+        private Task Client_Zombied(DiscordClient client, ZombiedEventArgs e)
+            => this._zombied.InvokeAsync(client, e);
 
         /// <summary>
         /// Client_S the client error.
