@@ -371,12 +371,13 @@ namespace DisCatSharp
         /// Gets a user.
         /// </summary>
         /// <param name="userId">Id of the user</param>
+        /// <param name="fetch">Whether to fetch the user again (Defaults to false).</param>
         /// <returns>The requested user.</returns>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordUser> GetUserAsync(ulong userId)
+        public async Task<DiscordUser> GetUserAsync(ulong userId, bool fetch = false)
         {
-            if (this.TryGetCachedUserInternal(userId, out var usr))
+            if (!fetch && this.TryGetCachedUserInternal(userId, out var usr))
                 return usr;
 
             usr = await this.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
@@ -385,6 +386,8 @@ namespace DisCatSharp
                 old.Username = usr.Username;
                 old.Discriminator = usr.Discriminator;
                 old.AvatarHash = usr.AvatarHash;
+                old.BannerHash = usr.BannerHash;
+                old._bannerColor = usr._bannerColor;
                 return old;
             });
 
