@@ -79,7 +79,7 @@ namespace DisCatSharp.Entities
         internal string ScheduledStartTimeRaw { get; set; }
         
         /// <summary>
-        /// Gets the topic of the Stage Event.
+        /// Gets the privacy level of the Stage Event.
         /// </summary>
         [JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
         public StagePrivacyLevel PrivacyLevel { get; internal set; }
