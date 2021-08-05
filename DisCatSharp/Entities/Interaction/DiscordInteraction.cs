@@ -118,7 +118,7 @@ namespace DisCatSharp.Entities
         /// Edits the original interaction response.
         /// </summary>
         /// <param name="builder">The webhook builder.</param>
-        /// <returns>The <see cref="DiscordMessage"/> edited.</returns>
+        /// <returns>The edited <see cref="DiscordMessage"/>.</returns>
         public async Task<DiscordMessage> EditOriginalResponseAsync(DiscordWebhookBuilder builder)
         {
             builder.Validate(isInteractionResponse: true);
@@ -136,7 +136,7 @@ namespace DisCatSharp.Entities
         /// Creates a follow up message to this interaction.
         /// </summary>
         /// <param name="builder">The webhook builder.</param>
-        /// <returns>The <see cref="DiscordMessage"/> created.</returns>
+        /// <returns>The created <see cref="DiscordMessage"/>.</returns>
         public async Task<DiscordMessage> CreateFollowupMessageAsync(DiscordFollowupMessageBuilder builder)
         {
             builder.Validate();
@@ -156,7 +156,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="messageId">The id of the follow up message.</param>
         /// <param name="builder">The webhook builder.</param>
-        /// <returns>The <see cref="DiscordMessage"/> edited.</returns>
+        /// <returns>The edited <see cref="DiscordMessage"/>.</returns>
         public async Task<DiscordMessage> EditFollowupMessageAsync(ulong messageId, DiscordWebhookBuilder builder)
         {
             builder.Validate(isFollowup: true);

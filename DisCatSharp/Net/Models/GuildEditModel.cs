@@ -118,6 +118,16 @@ namespace DisCatSharp.Net.Models
         public Optional<string> PreferredLocale { internal get; set; }
 
         /// <summary>
+        /// The new banner of the guild
+        /// </summary>
+        public Optional<Stream> Banner { get; set; }
+
+        /// <summary>
+        /// The new discorvery splash image of the guild
+        /// </summary>
+        public Optional<Stream> DiscoverySplash { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="GuildEditModel"/> class.
         /// </summary>
         internal GuildEditModel()

@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using DisCatSharp.Entities;
 using System;
 using System.Threading.Tasks;
+using DisCatSharp.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.SlashCommands

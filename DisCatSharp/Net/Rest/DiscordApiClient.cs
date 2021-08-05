@@ -328,9 +328,9 @@ namespace DisCatSharp.Net
         /// <param name="iconb64">The iconb64.</param>
         /// <param name="verification_level">The verification_level.</param>
         /// <param name="default_message_notifications">The default_message_notifications.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="system_channel_flags">The system_channel_flags.</param>
         internal async Task<DiscordGuild> CreateGuildAsync(string name, string region_id, Optional<string> iconb64, VerificationLevel? verification_level,
-            DefaultMessageNotifications? default_message_notifications)
+            DefaultMessageNotifications? default_message_notifications, SystemChannelFlags? system_channel_flags)
         {
             var pld = new RestGuildCreatePayload
             {
@@ -338,7 +338,9 @@ namespace DisCatSharp.Net
                 RegionId = region_id,
                 DefaultMessageNotifications = default_message_notifications,
                 VerificationLevel = verification_level,
-                IconBase64 = iconb64
+                IconBase64 = iconb64,
+                SystemChannelFlags = system_channel_flags
+                
             };
 
             var route = $"{Endpoints.GUILDS}";
@@ -362,7 +364,6 @@ namespace DisCatSharp.Net
         /// <param name="template_code">The template_code.</param>
         /// <param name="name">The name.</param>
         /// <param name="iconb64">The iconb64.</param>
-        /// <returns>A Task.</returns>
         internal async Task<DiscordGuild> CreateGuildFromTemplateAsync(string template_code, string name, Optional<string> iconb64)
         {
             var pld = new RestGuildCreateFromTemplatePayload
@@ -390,7 +391,6 @@ namespace DisCatSharp.Net
         /// Deletes the guild async.
         /// </summary>
         /// <param name="guild_id">The guild_id.</param>
-        /// <returns>A Task.</returns>
         internal async Task DeleteGuildAsync(ulong guild_id)
         {
             var route = $"{Endpoints.GUILDS}/:guild_id";
@@ -423,15 +423,21 @@ namespace DisCatSharp.Net
         /// <param name="splashb64">The splashb64.</param>
         /// <param name="systemChannelId">The system channel id.</param>
         /// <param name="systemChannelFlags">The system channel flags.</param>
+        /// <param name="publicUpdatesChannelId">The public updates channel id.</param>
+        /// <param name="rulesChannelId">The rules channel id.</param>
         /// <param name="description">The description.</param>
+        /// <param name="bannerb64">The banner base64.</param>
+        /// <param name="discorverySplashb64">The discovery base64.</param>
+        /// <param name="preferredLocale">The preferred locale.</param>
         /// <param name="reason">The reason.</param>
-        /// <returns>A Task.</returns>
         internal async Task<DiscordGuild> ModifyGuildAsync(ulong guildId, Optional<string> name,
             Optional<string> region, Optional<VerificationLevel> verificationLevel,
             Optional<DefaultMessageNotifications> defaultMessageNotifications, Optional<MfaLevel> mfaLevel,
             Optional<ExplicitContentFilter> explicitContentFilter, Optional<ulong?> afkChannelId,
             Optional<int> afkTimeout, Optional<string> iconb64, Optional<ulong> ownerId, Optional<string> splashb64,
-            Optional<ulong?> systemChannelId, Optional<SystemChannelFlags> systemChannelFlags, Optional<string> description, string reason)
+            Optional<ulong?> systemChannelId, Optional<SystemChannelFlags> systemChannelFlags,
+            Optional<ulong?> publicUpdatesChannelId, Optional<ulong?> rulesChannelId, Optional<string> description,
+            Optional<string> bannerb64, Optional<string> discorverySplashb64, Optional<string> preferredLocale, string reason)
         {
             var pld = new RestGuildModifyPayload
             {
@@ -445,9 +451,14 @@ namespace DisCatSharp.Net
                 AfkTimeout = afkTimeout,
                 IconBase64 = iconb64,
                 SplashBase64 = splashb64,
+                BannerBase64 = bannerb64,
+                DiscoverySplashBase64 = discorverySplashb64,
                 OwnerId = ownerId,
                 SystemChannelId = systemChannelId,
                 SystemChannelFlags = systemChannelFlags,
+                RulesChannelId = rulesChannelId,
+                PublicUpdatesChannelId = publicUpdatesChannelId,
+                PreferredLocale = preferredLocale,
                 Description = description
             };
 

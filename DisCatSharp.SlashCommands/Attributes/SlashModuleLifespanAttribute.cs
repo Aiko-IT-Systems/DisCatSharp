@@ -52,6 +52,11 @@ namespace DisCatSharp.SlashCommands
     public enum SlashModuleLifespan
     {
         /// <summary>
+        /// Whether this module should be initiated every time a command is run, with dependencies injected from a scope.
+        /// </summary>
+        Scoped,
+
+        /// <summary>
         /// Whether this module should be initiated every time a command is run.
         /// </summary>
         Transient,

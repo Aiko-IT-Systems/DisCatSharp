@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -48,7 +48,7 @@ namespace DisCatSharp.SlashCommands
         public OptionAttribute(string name, string description)
         {
             if(name.Length > 32)
-                throw new ArgumentException("Slash command option names cannot go over 100 characters.");
+                throw new ArgumentException("Slash command option names cannot go over 32 characters.");
             if (description.Length > 100)
                 throw new ArgumentException("Slash command option descriptions cannot go over 100 characters.");
             this.Name = name.ToLower();
