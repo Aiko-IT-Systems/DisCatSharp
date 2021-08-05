@@ -507,7 +507,8 @@ namespace DisCatSharp
                     break;
 
                 case "guild_application_command_counts_update":
-                    await this.OnGuildApplicationCommandCountsUpdateAsync((int)dat["1"], (int)dat["2"], (int)dat["3"], (ulong)dat["guild_id"]).ConfigureAwait(false);
+                    var counts = dat["application_command_counts"];
+                    await this.OnGuildApplicationCommandCountsUpdateAsync((int)counts["1"], (int)counts["2"], (int)counts["3"], (ulong)dat["guild_id"]).ConfigureAwait(false);
                     break;
 
                 #endregion
