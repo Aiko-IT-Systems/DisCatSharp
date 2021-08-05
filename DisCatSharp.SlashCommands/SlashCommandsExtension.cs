@@ -431,20 +431,28 @@ namespace DisCatSharp.SlashCommands
         /// <param name="args">The arguments.</param>
         internal async Task RunCommandAsync(InteractionContext context, MethodInfo method, IEnumerable<object> args)
         {
-            var classinstance = method.DeclaringType.GetCustomAttribute<SlashModuleLifespanAttribute>() != null && method.DeclaringType.GetCustomAttribute<SlashModuleLifespanAttribute>()?.Lifespan == SlashModuleLifespan.Singleton
-                ? SingletonModules.First(x => ReferenceEquals(x.GetType(), method.DeclaringType))
-                : method.IsStatic ? ActivatorUtilities.CreateInstance(_configuration?.Services, method.DeclaringType) : this.CreateInstance(method.DeclaringType, _configuration?.Services);
+            var moduleLifespan = (method.DeclaringType.GetCustomAttribute<SlashModuleLifespanAttribute>() != null ? method.DeclaringType.GetCustomAttribute<SlashModuleLifespanAttribute>()?.Lifespan : SlashModuleLifespan.Transient) ?? SlashModuleLifespan.Transient;
+            var classinstance = moduleLifespan switch
+            {
+                SlashModuleLifespan.Scoped => method.IsStatic ? ActivatorUtilities.CreateInstance(_configuration?.Services.CreateScope().ServiceProvider, method.DeclaringType) : this.CreateInstance(method.DeclaringType, _configuration?.Services),
+                SlashModuleLifespan.Transient => method.IsStatic ? ActivatorUtilities.CreateInstance(_configuration?.Services, method.DeclaringType) : this.CreateInstance(method.DeclaringType, _configuration?.Services),
+                SlashModuleLifespan.Singleton => SingletonModules.First(x => ReferenceEquals(x.GetType(), method.DeclaringType)),
+                _ => throw new Exception($"An unknown {nameof(SlashModuleLifespanAttribute)} scope was specified on command {context.CommandName}"),
+            };
             SlashCommandModule module = null;
             if (classinstance is SlashCommandModule mod)
                 module = mod;
 
             await this.RunPreexecutionChecksAsync(method, context);
 
-            await (module?.BeforeExecutionAsync(context) ?? Task.CompletedTask);
+            var shouldExecute = await (module?.BeforeExecutionAsync(context) ?? Task.FromResult(true));
 
-            await (Task)method.Invoke(classinstance, args.ToArray());
+            if (shouldExecute)
+            {
+                await (Task)method.Invoke(classinstance, args.ToArray());
 
-            await (module?.AfterExecutionAsync(context) ?? Task.CompletedTask);
+                await (module?.AfterExecutionAsync(context) ?? Task.CompletedTask);
+            }
         }
 
         /// <summary>

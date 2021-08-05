@@ -596,6 +596,20 @@ namespace DisCatSharp.Entities
             else if (mdl.Splash.HasValue)
                 splashb64 = null;
 
+            var bannerb64 = Optional.FromNoValue<string>();
+            if (mdl.Banner.HasValue && mdl.Banner.Value != null)
+                using (var imgtool = new ImageTool(mdl.Banner.Value))
+                    bannerb64 = imgtool.GetBase64();
+            else if (mdl.Banner.HasValue)
+                bannerb64 = null;
+
+            var discoverySplash64 = Optional.FromNoValue<string>();
+            if (mdl.DiscoverySplash.HasValue && mdl.DiscoverySplash.Value != null)
+                using (var imgtool = new ImageTool(mdl.DiscoverySplash.Value))
+                    discoverySplash64 = imgtool.GetBase64();
+            else if (mdl.DiscoverySplash.HasValue)
+                discoverySplash64 = null;
+
             var description = Optional.FromNoValue<string>();
             if (mdl.Description.HasValue && mdl.Description.Value != null)
                 description = mdl.Description;
@@ -605,7 +619,8 @@ namespace DisCatSharp.Entities
             return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name, mdl.Region.IfPresent(e => e.Id),
                 mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
                 mdl.AfkChannel.IfPresent(e => e?.Id), mdl.AfkTimeout, iconb64, mdl.Owner.IfPresent(e => e.Id), splashb64,
-                mdl.SystemChannel.IfPresent(e => e?.Id), mdl.SystemChannelFlags, description, mdl.AuditLogReason).ConfigureAwait(false);
+                mdl.SystemChannel.IfPresent(e => e?.Id), mdl.SystemChannelFlags, mdl.PublicUpdatesChannel.IfPresent(e => e?.Id),
+                mdl.RulesChannel.IfPresent(e => e?.Id), description, bannerb64, discoverySplash64, mdl.PreferredLocale, mdl.AuditLogReason).ConfigureAwait(false);
         }
 
         /// <summary>

@@ -77,6 +77,12 @@ namespace DisCatSharp.Net.Abstractions
         public DefaultMessageNotifications? DefaultMessageNotifications { get; set; }
 
         /// <summary>
+        /// Gets or sets the system channel flags.
+        /// </summary>
+        [JsonProperty("system_channel_flags", NullValueHandling = NullValueHandling.Ignore)]
+        public SystemChannelFlags? SystemChannelFlags { get; set; }
+
+        /// <summary>
         /// Gets or sets the roles.
         /// </summary>
         [JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
@@ -155,6 +161,19 @@ namespace DisCatSharp.Net.Abstractions
         public Optional<string> SplashBase64 { get; set; }
 
         /// <summary>
+        /// Gets or sets the icon base64.
+        /// </summary>
+        [JsonProperty("banner")]
+        public Optional<string> BannerBase64 { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the discovery splash base64.
+        /// </summary>
+        [JsonProperty("discorvery_splash")]
+        public Optional<string> DiscoverySplashBase64 { get; set; }
+
+        /// <summary>
         /// Gets or sets the afk channel id.
         /// </summary>
         [JsonProperty("afk_channel_id")]
@@ -189,6 +208,24 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("system_channel_flags", NullValueHandling = NullValueHandling.Ignore)]
         public Optional<SystemChannelFlags> SystemChannelFlags { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rules channel id.
+        /// </summary>
+        [JsonProperty("rules_channel_id")]
+        public Optional<ulong?> RulesChannelId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the public updates channel id.
+        /// </summary>
+        [JsonProperty("public_updates_channel_id")]
+        public Optional<ulong?> PublicUpdatesChannelId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the preferred locale.
+        /// </summary>
+        [JsonProperty("preferred_locale")]
+        public Optional<string> PreferredLocale { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
