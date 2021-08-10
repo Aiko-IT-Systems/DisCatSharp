@@ -55,6 +55,11 @@ namespace DisCatSharp.Net.Models
         public Optional<int?> PerUserRateLimit { internal get; set; }
 
         /// <summary>
+        /// Sets the threads's invitable state.
+        /// </summary>
+        public Optional<bool?> Invitable { internal get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ThreadEditModel"/> class.
         /// </summary>
         internal ThreadEditModel() { }

@@ -83,5 +83,16 @@ namespace DisCatSharp.SlashCommands
             this.Name = name;
             this.Value = value;
         }
+
+        /// <summary>
+        /// Adds a choice to the slash command option
+        /// </summary>
+        /// <param name="name">The name of the choice</param>
+        /// <param name="value">The value of the choice</param>
+        public ChoiceAttribute(string name, bool value)
+        {
+            this.Name = name;
+            this.Value = value;
+        }
     }
 }
