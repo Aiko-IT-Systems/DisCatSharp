@@ -3561,8 +3561,9 @@ namespace DisCatSharp.Net
         /// <param name="archived">The new archived state.</param>
         /// <param name="autoArchiveDuration">The new auto archive duration.</param>
         /// <param name="perUserRateLimit">The new per user rate limit.</param>
+        /// <param name="invitable">The new user invitable state.</param>
         /// <param name="reason">The reason for the modification.</param>
-        internal Task ModifyThreadAsync(ulong thread_id, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<int?> perUserRateLimit, string reason)
+        internal Task ModifyThreadAsync(ulong thread_id, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<int?> perUserRateLimit, Optional<bool?> invitable, string reason)
         {
             var pld = new RestThreadChannelModifyPayload
             {
@@ -3570,7 +3571,8 @@ namespace DisCatSharp.Net
                 Archived = archived,
                 AutoArchiveDuration = autoArchiveDuration,
                 Locked = locked,
-                PerUserRateLimit = perUserRateLimit
+                PerUserRateLimit = perUserRateLimit,
+                Invitable = invitable
             };
 
             var headers = Utilities.GetBaseHeaders();

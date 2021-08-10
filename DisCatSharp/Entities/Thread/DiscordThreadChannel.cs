@@ -191,8 +191,11 @@ namespace DisCatSharp.Entities
             action(mdl);
 
             var can_continue = !mdl.AutoArchiveDuration.HasValue || !mdl.AutoArchiveDuration.Value.HasValue || Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.AutoArchiveDuration.Value.Value);
-
-            return can_continue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, mdl.Name, mdl.Locked, mdl.Archived, mdl.AutoArchiveDuration, mdl.PerUserRateLimit, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+            if (mdl.Invitable.HasValue)
+            {
+                can_continue = this.Guild.Features.CanCreatePrivateThreads;
+            }
+            return can_continue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, mdl.Name, mdl.Locked, mdl.Archived, mdl.AutoArchiveDuration, mdl.PerUserRateLimit, mdl.Invitable, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
         }
 
         /// <summary>
@@ -205,7 +208,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task ArchiveAsync(bool locked = true, string reason = null)
-            => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, locked, true, null, null, reason: reason);
+            => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, locked, true, null, null, null, reason: reason);
 
         /// <summary>
         /// Unarchives a thread.
@@ -215,7 +218,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task UnarchiveAsync(string reason = null)
-            => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, false, null, null, reason: reason);
+            => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, false, null, null, null, reason: reason);
 
         /// <summary>
         /// Gets the members of a thread. Needs the <see cref="DiscordIntents.GuildMembers"/> intent.

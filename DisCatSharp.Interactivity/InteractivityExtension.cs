@@ -32,6 +32,7 @@ using DisCatSharp.Interactivity.EventHandling;
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Enums;
 using System.Threading;
+using System.Globalization;
 
 namespace DisCatSharp.Interactivity
 {
@@ -157,7 +158,7 @@ namespace DisCatSharp.Interactivity
                 throw new ArgumentException("You must specify at least one button to listen for.");
 
             var res = await this.ComponentEventWaiter
-                .WaitForMatchAsync(new(message.Id,
+                .WaitForMatchAsync(new(message.Id.ToString(CultureInfo.InvariantCulture),
                     c =>
                         c.Interaction.Data.ComponentType == ComponentType.Button &&
                         buttons.Any(b => b.CustomId == c.Id), token));
@@ -207,7 +208,7 @@ namespace DisCatSharp.Interactivity
             var result =
                 await this
                 .ComponentEventWaiter
-                .WaitForMatchAsync(new(message.Id, c => c.Interaction.Data.ComponentType == ComponentType.Button, token))
+                .WaitForMatchAsync(new(message.Id.ToString(CultureInfo.InvariantCulture), c => c.Interaction.Data.ComponentType == ComponentType.Button && ids.Contains(c.Id), token))
                 .ConfigureAwait(false);
 
             return new(result is null, result);
@@ -244,7 +245,7 @@ namespace DisCatSharp.Interactivity
 
             var result = await this
                 .ComponentEventWaiter
-                .WaitForMatchAsync(new(message.Id, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.User == user, token))
+                .WaitForMatchAsync(new(message.Id.ToString(CultureInfo.InvariantCulture), (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.User == user, token))
                 .ConfigureAwait(false);
 
             return new(result is null, result);
@@ -280,12 +281,12 @@ namespace DisCatSharp.Interactivity
             if (message.Components is null || !message.Components.Select(a => a.Components).Any())
                 throw new ArgumentException("Message does not contain any buttons.");
 
-            if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button && c.CustomId == id))
+            if (!message.Components.SelectMany(c => c.Components).OfType<DiscordButtonComponent>().Any(c => c.CustomId == id))
                 throw new ArgumentException($"Message does not contain button with Id of '{id}'.");
 
             var result = await this
                 .ComponentEventWaiter
-                .WaitForMatchAsync(new(message.Id, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.Id == id, token))
+                .WaitForMatchAsync(new(id, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.Id == id, token))
                 .ConfigureAwait(false);
 
             return new(result is null, result);
@@ -324,7 +325,7 @@ namespace DisCatSharp.Interactivity
 
             var result = await this
                 .ComponentEventWaiter
-                .WaitForMatchAsync(new(message.Id, (c) => c.Interaction.Data.ComponentType is ComponentType.Select && c.Id == id, token))
+                .WaitForMatchAsync(new(id, (c) => c.Interaction.Data.ComponentType is ComponentType.Select && c.Id == id, token))
                 .ConfigureAwait(false);
 
             return new(result is null, result);
@@ -364,7 +365,7 @@ namespace DisCatSharp.Interactivity
 
             var result = await this
                 .ComponentEventWaiter
-                .WaitForMatchAsync(new(message.Id, (c) => c.Id == id && c.User == user, token)).ConfigureAwait(false);
+                .WaitForMatchAsync(new(id, (c) => c.Id == id && c.User == user, token)).ConfigureAwait(false);
 
             return new(result is null, result);
         }

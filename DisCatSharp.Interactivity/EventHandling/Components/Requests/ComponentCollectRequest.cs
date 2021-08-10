@@ -43,6 +43,6 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <param name="id">The id.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="cancellation">The cancellation token.</param>
-        public ComponentCollectRequest(ulong id, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation) : base(id, predicate, cancellation) { }
+        public ComponentCollectRequest(string id, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation) : base(id, predicate, cancellation) { }
     }
 }

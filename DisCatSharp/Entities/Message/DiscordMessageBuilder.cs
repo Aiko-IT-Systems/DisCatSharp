@@ -283,7 +283,7 @@ namespace DisCatSharp.Entities
         /// <returns>The current builder to be chained.</returns>
         public DiscordMessageBuilder WithFile(string fileName, Stream stream, bool resetStreamPosition = false)
         {
-            if (this.Files.Count >= 10)
+            if (this.Files.Count > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
             if (this._files.Any(x => x.FileName == fileName))
@@ -305,7 +305,7 @@ namespace DisCatSharp.Entities
         /// <returns>The current builder to be chained.</returns>
         public DiscordMessageBuilder WithFile(FileStream stream, bool resetStreamPosition = false)
         {
-            if (this.Files.Count >= 10)
+            if (this.Files.Count > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
             if (this._files.Any(x => x.FileName == stream.Name))
@@ -327,7 +327,7 @@ namespace DisCatSharp.Entities
         /// <returns>The current builder to be chained.</returns>
         public DiscordMessageBuilder WithFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
         {
-            if (this.Files.Count + files.Count >= 10)
+            if (this.Files.Count + files.Count > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
             foreach (var file in files)
