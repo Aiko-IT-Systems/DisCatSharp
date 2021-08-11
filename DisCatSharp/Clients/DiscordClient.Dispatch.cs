@@ -2500,9 +2500,9 @@ namespace DisCatSharp
         /// <summary>
         /// Ons the guild application command counts update async.
         /// </summary>
-        /// <param name="sc">The <see cref="ApplicationCommandType.SlashCommand"/> count.</param>
-        /// <param name="ucmc">The <see cref="ApplicationCommandType.UserContextMenu"/> count.</param>
-        /// <param name="mcmc">The <see cref="ApplicationCommandType.MessageContextMenu"/> count.</param>
+        /// <param name="sc">The <see cref="ApplicationCommandType.ChatInput"/> count.</param>
+        /// <param name="ucmc">The <see cref="ApplicationCommandType.User"/> count.</param>
+        /// <param name="mcmc">The <see cref="ApplicationCommandType.Message"/> count.</param>
         /// <param name="guild_id">The guild_id.</param>
         /// <returns>Count of application commands.</returns>
         internal async Task OnGuildApplicationCommandCountsUpdateAsync(int sc, int ucmc, int mcmc, ulong guild_id)
@@ -2646,7 +2646,7 @@ namespace DisCatSharp
                         Interaction = interaction,
                         TargetUser = targetMember ?? targetUser,
                         TargetMessage = targetMessage,
-                        Type = targetUser == null ? ApplicationCommandType.MessageContextMenu : ApplicationCommandType.UserContextMenu,
+                        Type = targetUser == null ? ApplicationCommandType.Message : ApplicationCommandType.User,
                     };
                     await this._contextMenuInteractionCreated.InvokeAsync(this, ctea).ConfigureAwait(false);
                 }

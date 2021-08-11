@@ -32,7 +32,7 @@ namespace DisCatSharp.Enums
         /// <summary>
         /// This command is registered as a slash-command, aka "Chat Input".
         /// </summary>
-        ChatInpur = 1,
+        ChatInput = 1,
         /// <summary>
         /// This command is registered as a user context menu, and is applicable when interacting a user.
         /// </summary>
