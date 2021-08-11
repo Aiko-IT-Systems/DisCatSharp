@@ -92,7 +92,7 @@ namespace DisCatSharp.Entities
             this.Description = description;
             this.Options = optionsList;
             this.DefaultPermission = default_permission;
-            this.Type = ApplicationCommandType.SlashCommand;
+            this.Type = ApplicationCommandType.ChatInput;
         }
 
         /// <summary>
