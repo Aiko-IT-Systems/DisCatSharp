@@ -69,6 +69,12 @@ namespace DisCatSharp.Entities
         public bool? Locked { get; internal set; }
 
         /// <summary>
+        /// Gets whether non-moderators can add other non-moderators to a thread; only available on private threads.
+        /// </summary>
+        [JsonProperty("invitable", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Invitable { get; internal set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DiscordThreadChannelMetadata"/> class.
         /// </summary>
         internal DiscordThreadChannelMetadata() { }
