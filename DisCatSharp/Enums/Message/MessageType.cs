@@ -123,9 +123,9 @@ namespace DisCatSharp
         Reply = 19,
 
         /// <summary>
-        /// Message indicating an application command was invoked.
+        /// Message indicating an slash command was invoked.
         /// </summary>
-        ApplicationCommand = 20,
+        SlashCommand = 20,
 
         /// <summary>
         /// Message indicating a new was message sent as the first message in threads that are started from an existing message in the parent channel.
@@ -135,6 +135,11 @@ namespace DisCatSharp
         /// <summary>
         /// Message reminding you to invite people to help you build the server.
         /// </summary>
-        GuildInviteReminder = 22
+        GuildInviteReminder = 22,
+
+        /// <summary>
+        /// Message indicating an context menu command was invoked.
+        /// </summary>
+        ContextMenuCommand = 23
     }
 }
