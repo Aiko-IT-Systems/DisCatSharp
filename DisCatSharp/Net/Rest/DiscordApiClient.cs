@@ -1638,8 +1638,7 @@ namespace DisCatSharp.Net
                 Flags = suppress_embed.HasValue ? (bool)suppress_embed ? MessageFlags.SuppressedEmbeds : null : null
             };
 
-            if (mentions != null)
-                pld.Mentions = new DiscordMentions(mentions);
+            pld.Mentions = new DiscordMentions(mentions ?? Mentions.None, false, mentions?.OfType<RepliedUserMention>().Any() ?? false);
 
             var values = new Dictionary<string, string>
             {
@@ -3967,7 +3966,7 @@ namespace DisCatSharp.Net
         }
         #endregion
 
-        #region Slash Commands
+        #region Application Commands
         /// <summary>
         /// Gets the global application commands async.
         /// </summary>
@@ -4387,6 +4386,11 @@ namespace DisCatSharp.Net
         /// <returns>A Task.</returns>
         internal async Task CreateInteractionResponseAsync(ulong interaction_id, string interaction_token, InteractionResponseType type, DiscordInteractionResponseBuilder builder)
         {
+            if (builder?.Embeds != null)
+                foreach (var embed in builder.Embeds)
+                    if (embed.Timestamp != null)
+                        embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
+
             var pld = new RestInteractionResponsePayload
             {
                 Type = type,
@@ -4401,11 +4405,29 @@ namespace DisCatSharp.Net
                 } : null
             };
 
+            var values = new Dictionary<string, string>();
+
+            if (builder != null)
+                if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTTS == true || builder.Mentions != null)
+                    values["payload_json"] = DiscordJson.SerializeObject(pld);
+
             var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
-            await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
+            var url = Utilities.GetApiUriBuilderFor(path).AddParameter("wait", "true").Build();
+            if (builder != null)
+            {
+                await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files);
+
+                foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+                {
+                    file.Stream.Position = file.ResetPositionTo.Value;
+                }
+            }
+            else
+            {
+                await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
+            }
         }
 
         /// <summary>

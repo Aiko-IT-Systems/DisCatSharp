@@ -73,5 +73,12 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
         public string[] Values { get; internal set; } = Array.Empty<string>();
+
+
+        /// <summary>
+        /// Gets the type of the interaction.
+        /// </summary>
+        [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+        public ApplicationCommandType Type { get; internal set; }
     }
 }

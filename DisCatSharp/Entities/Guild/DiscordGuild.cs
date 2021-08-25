@@ -2626,14 +2626,14 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Gets all the slash commands in this guild.
+        /// Gets all the application commands in this guild.
         /// </summary>
-        /// <returns>A list of slash commands in this guild.</returns>
+        /// <returns>A list of application commands in this guild.</returns>
         public Task<IReadOnlyList<DiscordApplicationCommand>> GetApplicationCommandsAsync() =>
             this.Discord.ApiClient.GetGuildApplicationCommandsAsync(this.Discord.CurrentApplication.Id, this.Id);
 
         /// <summary>
-        /// Overwrites the existing slash commands in this guild. New commands are automatically created and missing commands are automatically delete
+        /// Overwrites the existing application commands in this guild. New commands are automatically created and missing commands are automatically delete
         /// </summary>
         /// <param name="commands">The list of commands to overwrite with.</param>
         /// <returns>The list of guild commands</returns>
@@ -2641,7 +2641,7 @@ namespace DisCatSharp.Entities
             this.Discord.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.Discord.CurrentApplication.Id, this.Id, commands);
 
         /// <summary>
-        /// Creates or overwrites a slash command in this guild.
+        /// Creates or overwrites a application command in this guild.
         /// </summary>
         /// <param name="command">The command to create.</param>
         /// <returns>The created command.</returns>
@@ -2649,7 +2649,7 @@ namespace DisCatSharp.Entities
             this.Discord.ApiClient.CreateGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, command);
 
         /// <summary>
-        /// Edits a slash command in this guild.
+        /// Edits a application command in this guild.
         /// </summary>
         /// <param name="commandId">The id of the command to edit.</param>
         /// <param name="action">Action to perform.</param>
@@ -2713,9 +2713,9 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordGuild"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First member to compare.</param>
-        /// <param name="e2">Second member to compare.</param>
-        /// <returns>Whether the two members are equal.</returns>
+        /// <param name="e1">First guild to compare.</param>
+        /// <param name="e2">Second guild to compare.</param>
+        /// <returns>Whether the two guilds are equal.</returns>
         public static bool operator ==(DiscordGuild e1, DiscordGuild e2)
         {
             var o1 = e1 as object;
@@ -2727,9 +2727,9 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordGuild"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First member to compare.</param>
-        /// <param name="e2">Second member to compare.</param>
-        /// <returns>Whether the two members are not equal.</returns>
+        /// <param name="e1">First guild to compare.</param>
+        /// <param name="e2">Second guild to compare.</param>
+        /// <returns>Whether the two guilds are not equal.</returns>
         public static bool operator !=(DiscordGuild e1, DiscordGuild e2)
             => !(e1 == e2);
 
@@ -2756,12 +2756,12 @@ namespace DisCatSharp.Entities
         Medium = 2,
 
         /// <summary>
-        /// (╯°□°）╯︵ ┻━┻ verification level. Users are required to have a verified email attached to their account, account age need to be at least 5 minutes, and they need to be in the server for at least 10 minutes in order to be able to chat.
+        /// High verification level. Users are required to have a verified email attached to their account, account age need to be at least 5 minutes, and they need to be in the server for at least 10 minutes in order to be able to chat.
         /// </summary>
         High = 3,
 
         /// <summary>
-        /// ┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻ verification level. Users are required to have a verified phone number attached to their account.
+        /// Highest verification level. Users are required to have a verified phone number attached to their account.
         /// </summary>
         Highest = 4
     }
@@ -2988,6 +2988,11 @@ namespace DisCatSharp.Entities
         public bool HasThreadsEnabled { get; }
 
         /// <summary>
+        /// Guild can set role icons.
+        /// </summary>
+        public bool CanSetRoleIcons { get; }
+
+        /// <summary>
         /// String of guild features
         /// </summary>
         public string FeatureString { get; }
@@ -3023,6 +3028,7 @@ namespace DisCatSharp.Entities
             this.IsHub = guild.RawFeatures.Contains("HUB");
             this.HasThreadTestingEnabled = guild.RawFeatures.Contains("THREADS_ENABLED_TESTING");
             this.HasThreadsEnabled = guild.RawFeatures.Contains("THREADS_ENABLED");
+            this.CanSetRoleIcons = guild.RawFeatures.Contains("ROLE_ICONS");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach(var feature in guild.RawFeatures)

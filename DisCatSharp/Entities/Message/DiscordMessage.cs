@@ -77,6 +77,8 @@ namespace DisCatSharp.Entities
                 this._mentionedChannels = new List<DiscordChannel>(other._mentionedChannels);
             if (other._mentionedRoles != null)
                 this._mentionedRoles = new List<DiscordRole>(other._mentionedRoles);
+            if (other._mentionedRoleIds != null)
+                this._mentionedRoleIds = new List<ulong>(other._mentionedRoleIds);
             this._mentionedUsers = new List<DiscordUser>(other._mentionedUsers);
             this._reactions = new List<DiscordReaction>(other._reactions);
             this._stickers = new List<DiscordSticker>(other._stickers);
@@ -212,6 +214,10 @@ namespace DisCatSharp.Entities
 
         [JsonIgnore]
         internal List<DiscordRole> _mentionedRoles;
+
+        [JsonProperty("mention_roles")]
+        internal List<ulong> _mentionedRoleIds;
+
         [JsonIgnore]
         private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
 
@@ -432,6 +438,27 @@ namespace DisCatSharp.Entities
             return reference;
         }
 
+
+        /// <summary>
+        /// Gets the mentions.
+        /// </summary>
+        /// <returns>An array of IMentions.</returns>
+        private IMention[] GetMentions()
+        {
+            var mentions = new List<IMention>();
+
+            if (this.ReferencedMessage != null && this._mentionedUsers.Contains(this.ReferencedMessage.Author))
+                mentions.Add(new RepliedUserMention()); // Return null to allow all mentions
+
+            if (this._mentionedUsers.Any())
+                mentions.AddRange(this._mentionedUsers.Select(m => (IMention)new UserMention(m)));
+
+            if (this._mentionedRoleIds.Any())
+                mentions.AddRange(this._mentionedRoleIds.Select(r => (IMention)new RoleMention(r)));
+
+            return mentions.ToArray();
+        }
+
         /// <summary>
         /// Populates the mentions.
         /// </summary>
@@ -482,7 +509,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> ModifyAsync(Optional<string> content)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, default, default, default, default, Array.Empty<DiscordMessageFile>());
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, default, this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>());
 
         /// <summary>
         /// Edits the message.
@@ -494,7 +521,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> ModifyAsync(Optional<DiscordEmbed> embed = default)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, embed.HasValue ? new[] {embed.Value} : Array.Empty<DiscordEmbed>(), default, default, default, Array.Empty<DiscordMessageFile>());
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, embed.HasValue ? new[] {embed.Value} : Array.Empty<DiscordEmbed>(), this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>());
 
         /// <summary>
         /// Edits the message.
@@ -507,7 +534,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> ModifyAsync(Optional<string> content, Optional<DiscordEmbed> embed = default)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embed.HasValue ? new[] {embed.Value} : Array.Empty<DiscordEmbed>(), default, default, default, Array.Empty<DiscordMessageFile>());
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embed.HasValue ? new[] {embed.Value} : Array.Empty<DiscordEmbed>(), this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>());
 
         /// <summary>
         /// Edits the message.
@@ -520,7 +547,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> ModifyAsync(Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds = default)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embeds, default, default, default, Array.Empty<DiscordMessageFile>());
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embeds, this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>());
 
         /// <summary>
         /// Edits the message.
@@ -547,7 +574,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> ModifySuppressionAsync(bool suppress = false)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, default, default, suppress, default);
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, this.GetMentions(), default, suppress, default);
 
         /// <summary>
         /// Edits the message.
@@ -585,7 +612,7 @@ namespace DisCatSharp.Entities
         /// <param name="auto_archive_duration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/></param>
         /// <param name="reason">The reason.</param>
         /// <returns></returns>
-        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.UsePublicThreads"/> or <see cref="Permissions.SendMessages"/> permission.</exception>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePrivateThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>

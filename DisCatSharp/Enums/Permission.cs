@@ -32,7 +32,7 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the full permissions enum (long).
         /// </summary>
-        internal static Permissions FULL_PERMS { get; } = (Permissions)274877906943L;
+        internal static Permissions FULL_PERMS { get; } = (Permissions)549755813887L;
 
         /// <summary>
         /// Calculates whether this permission set contains the given permission.
@@ -97,7 +97,7 @@ namespace DisCatSharp
         /// Indicates all permissions are granted
         /// </summary>
         [PermissionString("All permissions")]
-        All = 274877906943,
+        All = 549755813887,
 
         /// <summary>
         /// Allows creation of instant channel invites.
@@ -160,7 +160,7 @@ namespace DisCatSharp
         AccessChannels = 0x0000000000000400,
 
         /// <summary>
-        /// Allows sending messages.
+        /// Allows sending messages (does not allow sending messages in threads).
         /// </summary>
         [PermissionString("Send messages")]
         SendMessages = 0x0000000000000800,
@@ -304,22 +304,28 @@ namespace DisCatSharp
         ManageThreads = 0x0000000400000000,
 
         /// <summary>
-        /// Allows for creating and participating in threads.
+        /// Allows for creating threads.
         /// </summary>
-        [PermissionString("Use Public Threads")]
-        UsePublicThreads = 0x0000000800000000,
+        [PermissionString("Create Public Threads")]
+        CreatePublicThreads = 0x0000000800000000,
 
         /// <summary>
-        /// Allows for creating and participating in private threads.
+        /// Allows for creating private threads.
         /// </summary>
-        [PermissionString("Use Private Threads")]
-        UsePrivateThreads = 0x0000001000000000,
+        [PermissionString("Create Private Threads")]
+        CreatePrivateThreads = 0x0000001000000000,
 
         /// <summary>
         /// Allows the usage of custom stickers from other servers.
         /// </summary>
         [PermissionString("Use external Stickers")]
-        UseExternalStickers = 0x0000002000000000
+        UseExternalStickers = 0x0000002000000000,
+
+        /// <summary>
+        /// Allows for sending messages in threads.
+        /// </summary>
+        [PermissionString("Send messages in Threads")]
+        SendMessagesInThreads = 0x0000004000000000
     }
     
     /// <summary>

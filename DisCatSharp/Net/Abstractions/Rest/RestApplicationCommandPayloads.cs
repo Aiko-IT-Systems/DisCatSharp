@@ -47,13 +47,13 @@ namespace DisCatSharp.Net.Abstractions
         /// <summary>
         /// Gets the description.
         /// </summary>
-        [JsonProperty("description")]
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
 
         /// <summary>
         /// Gets the options.
         /// </summary>
-        [JsonProperty("options")]
+        [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
         public IEnumerable<DiscordApplicationCommandOption> Options { get; set; }
 
         /// <summary>

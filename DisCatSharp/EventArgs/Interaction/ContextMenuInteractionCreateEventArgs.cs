@@ -31,7 +31,7 @@ namespace DisCatSharp.EventArgs
     public sealed class ContextMenuInteractionCreateEventArgs : InteractionCreateEventArgs
     {
         /// <summary>
-        /// The type of context menu that was used. This is never <see cref="ApplicationCommandType.SlashCommand"/>.
+        /// The type of context menu that was used. This is never <see cref="ApplicationCommandType.ChatInput"/>.
         /// </summary>
         public ApplicationCommandType Type { get; internal set; }
 
