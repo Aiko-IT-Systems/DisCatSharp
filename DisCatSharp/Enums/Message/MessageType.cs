@@ -125,7 +125,7 @@ namespace DisCatSharp
         /// <summary>
         /// Message indicating an slash command was invoked.
         /// </summary>
-        SlashCommand = 20,
+        ChatInputCommand = 20,
 
         /// <summary>
         /// Message indicating a new was message sent as the first message in threads that are started from an existing message in the parent channel.

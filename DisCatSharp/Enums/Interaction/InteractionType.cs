@@ -32,7 +32,7 @@ namespace DisCatSharp
         /// </summary>
         Ping = 1,
         /// <summary>
-        /// A slash command.
+        /// An application command.
         /// </summary>
         ApplicationCommand = 2,
         /// <summary>

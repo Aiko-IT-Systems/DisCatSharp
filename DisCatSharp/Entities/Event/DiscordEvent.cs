@@ -28,9 +28,9 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities
 {
     /// <summary>
-    /// Represents a Stage Event.
+    /// Represents an Event.
     /// </summary>
-    public class DiscordStageEvent : SnowflakeObject, IEquatable<DiscordStageEvent>
+    public class DiscordEvent : SnowflakeObject, IEquatable<DiscordEvent>
     {
         /// <summary>
         /// Gets id of the associated Stage Channel.
@@ -85,9 +85,9 @@ namespace DisCatSharp.Entities
         public StagePrivacyLevel PrivacyLevel { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordStageEvent"/> class.
+        /// Initializes a new instance of the <see cref="DiscordEvent"/> class.
         /// </summary>
-        internal DiscordStageEvent() { }
+        internal DiscordEvent() { }
 
         #region Methods
 
@@ -124,34 +124,34 @@ namespace DisCatSharp.Entities
         #endregion
 
         /// <summary>
-        /// Checks whether this <see cref="DiscordStageEvent"/> is equal to another object.
+        /// Checks whether this <see cref="DiscordEvent"/> is equal to another object.
         /// </summary>
         /// <param name="obj">Object to compare to.</param>
-        /// <returns>Whether the object is equal to this <see cref="DiscordStageEvent"/>.</returns>
+        /// <returns>Whether the object is equal to this <see cref="DiscordEvent"/>.</returns>
         public override bool Equals(object obj)
-            => this.Equals(obj as DiscordStageEvent);
+            => this.Equals(obj as DiscordEvent);
 
         /// <summary>
-        /// Checks whether this <see cref="DiscordStageEvent"/> is equal to another <see cref="DiscordStageEvent"/>.
+        /// Checks whether this <see cref="DiscordEvent"/> is equal to another <see cref="DiscordEvent"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordStageEvent"/> to compare to.</param>
-        /// <returns>Whether the <see cref="DiscordStageEvent"/> is equal to this <see cref="DiscordStageEvent"/>.</returns>
-        public bool Equals(DiscordStageEvent e)
+        /// <param name="e"><see cref="DiscordEvent"/> to compare to.</param>
+        /// <returns>Whether the <see cref="DiscordEvent"/> is equal to this <see cref="DiscordEvent"/>.</returns>
+        public bool Equals(DiscordEvent e)
             => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
         /// <summary>
-        /// Gets the hash code for this <see cref="DiscordStageEvent"/>.
+        /// Gets the hash code for this <see cref="DiscordEvent"/>.
         /// </summary>
-        /// <returns>The hash code for this <see cref="DiscordStageEvent"/>.</returns>
+        /// <returns>The hash code for this <see cref="DiscordEvent"/>.</returns>
         public override int GetHashCode() => this.Id.GetHashCode();
 
         /// <summary>
-        /// Gets whether the two <see cref="DiscordStageEvent"/> objects are equal.
+        /// Gets whether the two <see cref="DiscordEvent"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First channel to compare.</param>
-        /// <param name="e2">Second channel to compare.</param>
-        /// <returns>Whether the two channels are equal.</returns>
-        public static bool operator ==(DiscordStageEvent e1, DiscordStageEvent e2)
+        /// <param name="e1">First event to compare.</param>
+        /// <param name="e2">Second ecent to compare.</param>
+        /// <returns>Whether the two events are equal.</returns>
+        public static bool operator ==(DiscordEvent e1, DiscordEvent e2)
         {
             var o1 = e1 as object;
             var o2 = e2 as object;
@@ -160,12 +160,12 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Gets whether the two <see cref="DiscordStageEvent"/> objects are not equal.
+        /// Gets whether the two <see cref="DiscordEvent"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First channel to compare.</param>
-        /// <param name="e2">Second channel to compare.</param>
-        /// <returns>Whether the two channels are not equal.</returns>
-        public static bool operator !=(DiscordStageEvent e1, DiscordStageEvent e2)
+        /// <param name="e1">First event to compare.</param>
+        /// <param name="e2">Second event to compare.</param>
+        /// <returns>Whether the two events are not equal.</returns>
+        public static bool operator !=(DiscordEvent e1, DiscordEvent e2)
             => !(e1 == e2);
     }
 }

@@ -2362,9 +2362,12 @@ namespace DisCatSharp
             var vstateNew = raw.ToObject<DiscordVoiceState>();
             vstateNew.Discord = this;
 
-            gld._voiceStates.TryGetValue(uid, out var vstateOld);
+            gld._voiceStates.TryRemove(uid, out var vstateOld);
 
-            gld._voiceStates[vstateNew.UserId] = vstateNew;
+            if (vstateNew.Channel != null)
+            {
+                gld._voiceStates[vstateNew.UserId] = vstateNew;
+            }
 
             if (gld._members.TryGetValue(uid, out var mbr))
             {
@@ -2646,7 +2649,7 @@ namespace DisCatSharp
                         Interaction = interaction,
                         TargetUser = targetMember ?? targetUser,
                         TargetMessage = targetMessage,
-                        Type = targetUser == null ? ApplicationCommandType.Message : ApplicationCommandType.User,
+                        Type = interaction.Data.Type,
                     };
                     await this._contextMenuInteractionCreated.InvokeAsync(this, ctea).ConfigureAwait(false);
                 }

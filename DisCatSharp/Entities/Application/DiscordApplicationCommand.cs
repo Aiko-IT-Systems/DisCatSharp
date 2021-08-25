@@ -77,22 +77,33 @@ namespace DisCatSharp.Entities
         /// <param name="description">The description of the command.</param>
         /// <param name="options">Optional parameters for this command.</param>
         /// <param name="default_permission">Optional default permission for this command.</param>
-        public DiscordApplicationCommand(string name, string description, IEnumerable<DiscordApplicationCommandOption> options = null, bool default_permission = true)
+        /// <param name="type">The type of the command. Defaults to ChatInput.</param>
+        public DiscordApplicationCommand(string name, string description, IEnumerable<DiscordApplicationCommandOption> options = null, bool default_permission = true, ApplicationCommandType type = ApplicationCommandType.ChatInput)
         {
-            if (!Utilities.IsValidSlashCommandName(name))
+            if (type == ApplicationCommandType.ChatInput)
+            {
+                if (!Utilities.IsValidSlashCommandName(name))
                 throw new ArgumentException("Invalid slash command name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
-            if (name.Any(ch => char.IsUpper(ch)))
-                throw new ArgumentException("Slash command name cannot have any upper case characters.", nameof(name));
-            if (description.Length > 100)
-                throw new ArgumentException("Slash command description cannot exceed 100 characters.", nameof(description));
+                if (name.Any(ch => char.IsUpper(ch)))
+                    throw new ArgumentException("Slash command name cannot have any upper case characters.", nameof(name));
+                if (description.Length > 100)
+                    throw new ArgumentException("Slash command description cannot exceed 100 characters.", nameof(description));
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(description))
+                    throw new ArgumentException("Context menus do not support descriptions.");
+                if (options?.Any() ?? false)
+                    throw new ArgumentException("Context menus do not support options.");
+            }
 
             var optionsList = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;
 
+            this.Type = type;
             this.Name = name;
             this.Description = description;
             this.Options = optionsList;
             this.DefaultPermission = default_permission;
-            this.Type = ApplicationCommandType.ChatInput;
         }
 
         /// <summary>

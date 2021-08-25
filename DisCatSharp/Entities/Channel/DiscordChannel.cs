@@ -184,13 +184,13 @@ namespace DisCatSharp.Entities
         /// Gets this channel's children. This applies only to channel categories.
         /// </summary>
         [JsonIgnore]
-        public IEnumerable<DiscordChannel> Children
+        public IReadOnlyList<DiscordChannel> Children
         {
             get
             {
                 return !this.IsCategory
                     ? throw new ArgumentException("Only channel categories contain children.")
-                    : this.Guild._channels.Values.Where(e => e.ParentId == this.Id);
+                    : this.Guild._channels.Values.Where(e => e.ParentId == this.Id).ToList();
             }
         }
 
@@ -198,15 +198,15 @@ namespace DisCatSharp.Entities
         /// Gets the list of members currently in the channel (if voice channel), or members who can see the channel (otherwise).
         /// </summary>
         [JsonIgnore]
-        public virtual IEnumerable<DiscordMember> Users
+        public virtual IReadOnlyList<DiscordMember> Users
         {
             get
             {
                 return this.Guild == null
                     ? throw new InvalidOperationException("Cannot query users outside of guild channels.")
                     : this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
-                    ? this.Guild.Members.Values.Where(x => x.VoiceState?.ChannelId == this.Id)
-                    : this.Guild.Members.Values.Where(x => (this.PermissionsFor(x) & Permissions.AccessChannels) == Permissions.AccessChannels);
+                    ? this.Guild.Members.Values.Where(x => x.VoiceState?.ChannelId == this.Id).ToList()
+                    : this.Guild.Members.Values.Where(x => (this.PermissionsFor(x) & Permissions.AccessChannels) == Permissions.AccessChannels).ToList();
             }
         }
 
@@ -774,7 +774,7 @@ namespace DisCatSharp.Entities
         /// <param name="type">Can be either an <see cref="ChannelType.PrivateThread"/> or an <see cref="ChannelType.PublicThread"/>.</param>
         /// <param name="reason">Audit log reason.</param>
         /// <returns>The created thread.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.UsePublicThreads"/> or <see cref="Permissions.SendMessages"/> permission.</exception>
+        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePublicThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> or if creating a private thread the <see cref="Permissions.CreatePrivateThreads"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>

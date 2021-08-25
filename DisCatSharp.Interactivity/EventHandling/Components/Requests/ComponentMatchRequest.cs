@@ -23,6 +23,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.Interactivity.EventHandling
@@ -35,7 +36,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// The id to wait on. This should be uniquely formatted to avoid collisions.
         /// </summary>
-        public string Id { get; private set; }
+        public DiscordMessage Message { get; private set; }
 
         /// <summary>
         /// The completion source that represents the result of the match.
@@ -48,12 +49,12 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentMatchRequest"/> class.
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="message">The message.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="cancellation">The cancellation token.</param>
-        public ComponentMatchRequest(string id, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation)
+        public ComponentMatchRequest(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation)
         {
-            this.Id = id;
+            this.Message = message;
             this._predicate = predicate;
             this._cancellation = cancellation;
             this._cancellation.Register(() => this.Tcs.TrySetResult(null)); // TrySetCancelled would probably be better but I digress ~Velvet //

@@ -40,6 +40,12 @@ namespace DisCatSharp
     /// </summary>
     public class DiscordWebhookClient
     {
+
+        /// <summary>
+        /// Gets the logger for this client.
+        /// </summary>
+        public ILogger<DiscordWebhookClient> Logger { get; }
+
         /// <summary>
         /// Gets the webhook regex.
         /// this regex has 2 named capture groups: "id" and "token".
@@ -95,11 +101,11 @@ namespace DisCatSharp
                 loggerFactory.AddProvider(new DefaultLoggerProvider(this));
             }
 
-            var logger = loggerFactory.CreateLogger<DiscordWebhookClient>();
+            this.Logger = loggerFactory.CreateLogger<DiscordWebhookClient>();
 
             var parsedTimeout = timeout ?? TimeSpan.FromSeconds(10);
 
-            this._apiclient = new DiscordApiClient(proxy, parsedTimeout, useRelativeRateLimit, logger);
+            this._apiclient = new DiscordApiClient(proxy, parsedTimeout, useRelativeRateLimit, this.Logger);
             this._hooks = new List<DiscordWebhook>();
             this.Webhooks = new ReadOnlyCollection<DiscordWebhook>(this._hooks);
         }

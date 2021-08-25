@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
+using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.Interactivity.EventHandling
@@ -40,9 +41,9 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentCollectRequest"/> class.
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="message"></param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="cancellation">The cancellation token.</param>
-        public ComponentCollectRequest(string id, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation) : base(id, predicate, cancellation) { }
+        public ComponentCollectRequest(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation) : base(message, predicate, cancellation) { }
     }
 }
