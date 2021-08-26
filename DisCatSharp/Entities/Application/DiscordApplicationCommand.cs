@@ -95,6 +95,7 @@ namespace DisCatSharp.Entities
                     throw new ArgumentException("Context menus do not support descriptions.");
                 if (options?.Any() ?? false)
                     throw new ArgumentException("Context menus do not support options.");
+                description = string.Empty;
             }
 
             var optionsList = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;

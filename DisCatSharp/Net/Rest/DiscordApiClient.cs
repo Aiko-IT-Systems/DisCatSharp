@@ -2282,9 +2282,9 @@ namespace DisCatSharp.Net
         /// <param name="color">The color.</param>
         /// <param name="hoist">If true, hoist.</param>
         /// <param name="mentionable">If true, mentionable.</param>
+        /// <param name="iconb64">The icon.</param>
         /// <param name="reason">The reason.</param>
-        /// <returns>A Task.</returns>
-        internal async Task<DiscordRole> ModifyGuildRoleAsync(ulong guild_id, ulong role_id, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, string reason)
+        internal async Task<DiscordRole> ModifyGuildRoleAsync(ulong guild_id, ulong role_id, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, Optional<string> iconb64, string reason)
         {
             var pld = new RestGuildRolePayload
             {
@@ -2292,8 +2292,11 @@ namespace DisCatSharp.Net
                 Permissions = permissions & PermissionMethods.FULL_PERMS,
                 Color = color,
                 Hoist = hoist,
-                Mentionable = mentionable
+                Mentionable = mentionable,
             };
+
+            if (iconb64.HasValue)
+                pld.IconBase64 = iconb64;
 
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
