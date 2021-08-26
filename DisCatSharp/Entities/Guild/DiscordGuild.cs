@@ -410,6 +410,16 @@ namespace DisCatSharp.Entities
         internal ConcurrentDictionary<ulong, DiscordStageInstance> _stageInstances = new();
 
         /// <summary>
+        /// Gets a dictionary of all sheduled events.
+        /// </summary>
+        [JsonIgnore]
+        public IReadOnlyDictionary<ulong, DiscordEvent> SheduledEvents { get; internal set; }
+
+        [JsonProperty("events", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
+        internal ConcurrentDictionary<ulong, DiscordEvent> _sheduledEvents = new();
+
+        /// <summary>
         /// Gets the guild member for current user.
         /// </summary>
         [JsonIgnore]

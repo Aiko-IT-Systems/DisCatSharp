@@ -282,6 +282,43 @@ namespace DisCatSharp
 
         #endregion
 
+        #region Guild Event
+
+        /// <summary>
+        /// Fired when a Sheduled Event is created.
+        /// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, GuildSheduledEventCreateEventArgs> GuildSheduledEventCreated
+        {
+            add => this._guildSheduledEventCreated.Register(value);
+            remove => this._guildSheduledEventCreated.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, GuildSheduledEventCreateEventArgs> _guildSheduledEventCreated;
+
+        /// <summary>
+        /// Fired when a Sheduled Event is updated.
+        /// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, GuildSheduledEventUpdateEventArgs> GuildSheduledEventUpdated
+        {
+            add => this._guildSheduledEventUpdated.Register(value);
+            remove => this._guildSheduledEventUpdated.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, GuildSheduledEventUpdateEventArgs> _guildSheduledEventUpdated;
+
+        /// <summary>
+        /// Fired when a Sheduled Event is deleted.
+        /// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, GuildSheduledEventDeleteEventArgs> GuildSheduledEventDeleted
+        {
+            add => this._guildSheduledEventDeleted.Register(value);
+            remove => this._guildSheduledEventDeleted.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, GuildSheduledEventDeleteEventArgs> _guildSheduledEventDeleted;
+
+        #endregion
+
         #region Guild Integration
 
         /// <summary>
@@ -1498,6 +1535,34 @@ namespace DisCatSharp
         /// <returns>A Task.</returns>
         private Task Client_ThreadMembersUpdated(DiscordClient client, ThreadMembersUpdateEventArgs e)
             => this._threadMembersUpdated.InvokeAsync(client, e);
+
+
+        /// <summary>
+        /// Client_S the sheduled event created.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
+        private Task Client_GuildSheduledEventCreated(DiscordClient client, GuildSheduledEventCreateEventArgs e)
+            => this._guildSheduledEventCreated.InvokeAsync(client, e);
+
+        /// <summary>
+        /// Client_S the sheduled event updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
+        private Task Client_GuildSheduledEventUpdated(DiscordClient client, GuildSheduledEventUpdateEventArgs e)
+            => this._guildSheduledEventUpdated.InvokeAsync(client, e);
+
+        /// <summary>
+        /// Client_S the sheduled event deleted.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The e.</param>
+        /// <returns>A Task.</returns>
+        private Task Client_GuildSheduledEventDeleted(DiscordClient client, GuildSheduledEventDeleteEventArgs e)
+            => this._guildSheduledEventDeleted.InvokeAsync(client, e);
 
         #endregion
     }
