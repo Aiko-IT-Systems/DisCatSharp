@@ -1973,7 +1973,6 @@ namespace DisCatSharp.Entities
                                         };
                                         break;
                                     case "guild_id":
-                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {xc.OldValue}");
                                         entrysti.GuildIdChange = new PropertyChange<ulong?>
                                         {
                                             Before = ulong.TryParse(xc.OldValueString, out var ogid) ? ogid : null,
@@ -1995,7 +1994,6 @@ namespace DisCatSharp.Entities
                                         };
                                         break;
                                     case "id":
-                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {xc.OldValue}");
                                         entrysti.IdChange = new PropertyChange<ulong?>
                                         {
                                             Before = ulong.TryParse(xc.OldValueString, out var oid) ? oid : null,
@@ -2003,7 +2001,6 @@ namespace DisCatSharp.Entities
                                         };
                                         break;
                                     case "type":
-                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {xc.OldValue}");
                                         p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
                                         p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
                                         entrysti.TypeChange = new PropertyChange<StickerType?>
@@ -2013,13 +2010,8 @@ namespace DisCatSharp.Entities
                                         };
                                         break;
                                     case "format_type":
-                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {xc.OldValue}");
                                         p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
                                         p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
-                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {p1}");
-                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {p2}");
-                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {t5}");
-                                        Console.WriteLine($"{xc.Key.ToLowerInvariant()}: {t6}");
                                         entrysti.FormatChange = new PropertyChange<StickerFormat?>
                                         {
                                             Before = p1 ? (StickerFormat?)t5 : null,
@@ -2214,13 +2206,13 @@ namespace DisCatSharp.Entities
                                     break;
 
                                 case "auto_archive_duration":
-                                    p1 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-                                    p2 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+                                    p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
+                                    p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 
                                     entrythr.AutoArchiveDurationChange = new PropertyChange<ThreadAutoArchiveDuration?>
                                     {
-                                        Before = p1 ? (ThreadAutoArchiveDuration?)t1 : null,
-                                        After = p2 ? (ThreadAutoArchiveDuration?)t2 : null
+                                        Before = p1 ? (ThreadAutoArchiveDuration?)t5 : null,
+                                        After = p2 ? (ThreadAutoArchiveDuration?)t6 : null
                                     };
                                     break;
 
@@ -2239,6 +2231,65 @@ namespace DisCatSharp.Entities
                         }
                         break;
 
+
+                    case AuditLogActionType.SheduledEventCreate:
+                    case AuditLogActionType.SheduledEventDelete:
+                    case AuditLogActionType.SheduledEventUpdate:
+                        entry = new DiscordAuditLogSheduledEventEntry
+                        {
+                            //Target = this._events.TryGetValue(xac.TargetId.Value, out var sheduled_event) ? sheduled_event : new DiscordEvent { Id = xac.TargetId.Value, Discord = this.Discord }
+                        };
+
+                        var entryse = entry as DiscordAuditLogSheduledEventEntry;
+                        foreach (var xc in xac.Changes)
+                        {
+                            switch (xc.Key.ToLowerInvariant())
+                            {
+                                case "channel_id":
+                                    entryse.ChannelIdChange = new PropertyChange<ulong?>
+                                    {
+                                        Before = ulong.TryParse(xc.OldValueString, out var ogid) ? ogid : null,
+                                        After = ulong.TryParse(xc.NewValueString, out var ngid) ? ngid : null
+                                    };
+                                    break;
+
+                                case "description":
+                                    entryse.DescriptionChange = new PropertyChange<string>
+                                    {
+                                        Before = xc.OldValue != null ? xc.OldValueString : null,
+                                        After = xc.NewValue != null ? xc.NewValueString : null
+                                    };
+                                    break;
+
+                                case "privacy_level":
+                                    p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
+                                    p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
+
+                                    entryse.PrivacyLevelChange = new PropertyChange<StagePrivacyLevel?>
+                                    {
+                                        Before = p1 ? (StagePrivacyLevel?)t5 : null,
+                                        After = p2 ? (StagePrivacyLevel?)t6 : null
+                                    };
+                                    break;
+
+                                case "status":
+                                    p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
+                                    p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
+
+                                    entryse.StatusChange = new PropertyChange<EventStatus?>
+                                    {
+                                        Before = p1 ? (EventStatus?)t5 : null,
+                                        After = p2 ? (EventStatus?)t6 : null
+                                    };
+                                    break;
+
+                                default:
+                                    this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in sheduled event update: {0} - this should be reported to library developers", xc.Key);
+                                    break;
+                            }
+                        }
+                        break;
+
                     default:
                         this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown audit log action type: {0} - this should be reported to library developers", (int)xac.ActionType);
                         break;
@@ -2249,9 +2300,9 @@ namespace DisCatSharp.Entities
 
                 entry.ActionCategory = xac.ActionType switch
                 {
-                    AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate => AuditLogActionCategory.Create,
-                    AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete or AuditLogActionType.ThreadDelete => AuditLogActionCategory.Delete,
-                    AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate => AuditLogActionCategory.Update,
+                    AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate or AuditLogActionType.SheduledEventCreate => AuditLogActionCategory.Create,
+                    AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete or AuditLogActionType.ThreadDelete or AuditLogActionType.SheduledEventDelete => AuditLogActionCategory.Delete,
+                    AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate or AuditLogActionType.SheduledEventUpdate => AuditLogActionCategory.Update,
                     _ => AuditLogActionCategory.Other,
                 };
                 entry.Discord = this.Discord;

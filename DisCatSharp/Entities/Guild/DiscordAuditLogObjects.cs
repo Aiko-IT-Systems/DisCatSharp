@@ -684,12 +684,48 @@ namespace DisCatSharp.Entities
     /// <summary>
     /// Represents a audit log event entry.
     /// </summary>
-    public sealed class DiscordAuditLogEventEntry : DiscordAuditLogEntry
+    public sealed class DiscordAuditLogSheduledEventEntry : DiscordAuditLogEntry
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordAuditLogEventEntry"/> class.
+        /// Gets the affected thread
         /// </summary>
-        internal DiscordAuditLogEventEntry() { }
+        public DiscordEvent Target { get; internal set; }
+
+        /// <summary>
+        /// Gets the channel change.
+        /// </summary>
+        public PropertyChange<ulong?> ChannelIdChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the description change.
+        /// </summary>
+        public PropertyChange<string> DescriptionChange { get; internal set; }
+
+        /*
+        public PropertyChange<> SheduledStartTimeChange { get; internal set; }
+
+        public PropertyChange<> SheduledEndTimeChange { get; internal set; }
+        */
+
+        /// <summary>
+        /// Gets the privacy level change.
+        /// </summary>
+        public PropertyChange<StagePrivacyLevel?> PrivacyLevelChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the status change.
+        /// </summary>
+        public PropertyChange<EventStatus?> StatusChange { get; internal set; }
+
+        /// <summary>
+        /// Gets the sku ids change.
+        /// </summary>
+        public PropertyChange<IReadOnlyList<ulong>> SkuIdsChange { get; internal set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordAuditLogSheduledEventEntry"/> class.
+        /// </summary>
+        internal DiscordAuditLogSheduledEventEntry() { }
     }
 
     /// <summary>
@@ -977,22 +1013,21 @@ namespace DisCatSharp.Entities
         /// </summary>
         StickerDelete = 92,
 
-        /*
         /// <summary>
         /// Indicates that an event was created.
         /// </summary>
-        EventCreate = 100,
+        SheduledEventCreate = 100,
 
         /// <summary>
         /// Indicates that an event was updated.
         /// </summary>
-        EventUpdate = 101,
+        SheduledEventUpdate = 101,
 
         /// <summary>
         /// Indicates that an event was deleted.
         /// </summary>
-        EventDelete = 102,
-        */
+        SheduledEventDelete = 102,
+        
         /// <summary>
         /// Indicates that an thread was created.
         /// </summary>
