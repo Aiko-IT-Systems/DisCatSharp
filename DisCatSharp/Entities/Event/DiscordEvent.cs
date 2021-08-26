@@ -28,44 +28,37 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities
 {
     /// <summary>
-    /// Represents an Event.
+    /// Represents an sheduled event.
     /// </summary>
     public class DiscordEvent : SnowflakeObject, IEquatable<DiscordEvent>
     {
         /// <summary>
-        /// Gets id of the associated Stage Channel.
+        /// Gets id of the associated stage channel.
         /// </summary>
         [JsonIgnore]
         public Task<DiscordChannel> Stage
-            => this.Discord.ApiClient.GetChannelAsync(this.ChannelId);
-            
-        /// <summary>
-        /// Gets id of the associated Stage Channel id.
-        /// </summary>
-        [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong ChannelId { get; internal set; }
+            => this.ChannelId.HasValue ? this.Discord.ApiClient.GetChannelAsync(this.ChannelId.Value) : null;
 
         /// <summary>
-        /// Gets the name of the Stage Event.
+        /// Gets id of the associated stage channel id.
+        /// </summary>
+        [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong? ChannelId { get; internal set; }
+
+        /// <summary>
+        /// Gets the name of the sheduled event.
         /// </summary>
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; internal set; }
 
         /// <summary>
-        /// Gets the description of the Stage Event.
+        /// Gets the description of the sheduled event.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; internal set; }
 
         /// <summary>
-        /// Gets the entity type of the Stage Event.
-        /// Research.
-        /// </summary>
-        [JsonProperty("entity_type", NullValueHandling = NullValueHandling.Ignore)]
-        public int? EntityType { get; internal set; }
-        
-        /// <summary>
-        /// Gets the scheduled start time of the Stage Event.
+        /// Gets the scheduled start time of the sheduled event.
         /// </summary>
         [JsonIgnore]
         public DateTimeOffset? ScheduledStartTime
@@ -73,16 +66,60 @@ namespace DisCatSharp.Entities
                 dto : null;
 
         /// <summary>
-        /// Gets the scheduled start time of the Stage Event as raw string.
+        /// Gets the scheduled start time of the sheduled event as raw string.
         /// </summary>
         [JsonProperty("scheduled_start_time", NullValueHandling = NullValueHandling.Ignore)]
         internal string ScheduledStartTimeRaw { get; set; }
-        
+
         /// <summary>
-        /// Gets the privacy level of the Stage Event.
+        /// Gets the scheduled end time of the sheduled event.
+        /// </summary>
+        [JsonIgnore]
+        public DateTimeOffset? ScheduledEndTime
+            => !string.IsNullOrWhiteSpace(this.ScheduledEndTimeRaw) && DateTimeOffset.TryParse(this.ScheduledEndTimeRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
+                dto : null;
+
+        /// <summary>
+        /// Gets the scheduled end time of the sheduled event as raw string.
+        /// </summary>
+        [JsonProperty("scheduled_end_time", NullValueHandling = NullValueHandling.Ignore)]
+        internal string ScheduledEndTimeRaw { get; set; }
+
+        /// <summary>
+        /// Gets the privacy level of the sheduled event.
         /// </summary>
         [JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
         public StagePrivacyLevel PrivacyLevel { get; internal set; }
+
+        /// <summary>
+        /// Gets the status of the sheduled event.
+        /// </summary>
+        [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
+        public EventStatus Status { get; internal set; }
+
+        /// <summary>
+        /// Gets the entity type.
+        /// </summary>
+        [JsonProperty("entity_type", NullValueHandling = NullValueHandling.Ignore)]
+        public EventEntityType EntityType { get; internal set; }
+
+        /// <summary>
+        /// Gets id of the entity.
+        /// </summary>
+        [JsonProperty("entity_id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong? EntityId { get; internal set; }
+
+        /// <summary>
+        /// Gets metadata of the entity.
+        /// </summary>
+        [JsonProperty("entity_metadata", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordEventEntityMetadata EntityMetadata { get; internal set; }
+
+        /// <summary>
+        /// Gets the total number of users subscribed to the sheduled event.
+        /// </summary>
+        [JsonProperty("user_count", NullValueHandling = NullValueHandling.Ignore)]
+        public int UserCount { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordEvent"/> class.
@@ -92,7 +129,7 @@ namespace DisCatSharp.Entities
         #region Methods
 
         /// <summary>
-        /// Updates a Stage Event.
+        /// Updates a sheduled event.
         /// </summary>
         /// <param name="name">New name of the event.</param>
         /// <param name="scheduled_start_time">New DateTime when the event should start.</param>
@@ -109,7 +146,7 @@ namespace DisCatSharp.Entities
             => throw new NotImplementedException("This method is not implemented yet."); /*await this.Discord.ApiClient.ModifyStageEventAsync(this.Id, name, scheduled_start_time, description, privacy_level, reason);*/
 
         /// <summary>
-        /// Deletes a Stage Event.
+        /// Deletes a sheduled event.
         /// </summary>
         /// <param name="reason">Audit log reason</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
