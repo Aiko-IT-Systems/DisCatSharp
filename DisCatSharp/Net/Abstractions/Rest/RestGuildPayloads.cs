@@ -430,6 +430,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("mentionable", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Mentionable { get; set; }
+
+        /// <summary>
+        /// Gets or sets the icon base64.
+        /// </summary>
+        [JsonProperty("icon")]
+        public Optional<string> IconBase64 { get; set; }
     }
 
     /// <summary>

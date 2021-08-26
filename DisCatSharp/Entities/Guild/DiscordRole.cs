@@ -135,7 +135,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task ModifyAsync(string name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string reason = null)
-            => this.Discord.ApiClient.ModifyGuildRoleAsync(this._guild_id, this.Id, name, permissions, color?.Value, hoist, mentionable, reason);
+            => this.Discord.ApiClient.ModifyGuildRoleAsync(this._guild_id, this.Id, name, permissions, color?.Value, hoist, mentionable, null, reason);
 
         /// <summary>
         /// Updates this role.
@@ -150,7 +150,18 @@ namespace DisCatSharp.Entities
             var mdl = new RoleEditModel();
             action(mdl);
 
-            return this.ModifyAsync(mdl.Name, mdl.Permissions, mdl.Color, mdl.Hoist, mdl.Mentionable, mdl.AuditLogReason);
+            var iconb64 = Optional.FromNoValue<string>();
+            var can_continue = true;
+            if (mdl.Icon.HasValue)
+                can_continue = this.Discord.Guilds[this._guild_id].Features.CanSetRoleIcons;
+
+            if (mdl.Icon.HasValue && mdl.Icon.Value != null)
+                using (var imgtool = new ImageTool(mdl.Icon.Value))
+                    iconb64 = imgtool.GetBase64();
+            else if (mdl.Icon.HasValue)
+                iconb64 = null;
+
+            return can_continue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this._guild_id, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
         }
 
         /// <summary>

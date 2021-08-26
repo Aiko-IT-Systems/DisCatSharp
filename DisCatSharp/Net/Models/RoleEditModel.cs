@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.IO;
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.Net.Models
@@ -33,22 +34,31 @@ namespace DisCatSharp.Net.Models
         /// New role name
         /// </summary>
 		public string Name { internal get; set; }
+
         /// <summary>
         /// New role permissions
         /// </summary>
 		public Permissions? Permissions { internal get; set; }
+
         /// <summary>
         /// New role color
         /// </summary>
 		public DiscordColor? Color { internal get; set; }
+
         /// <summary>
-        /// Whether new role should be hoisted
+        /// Whether new role should be hoisted (Shown in the sidebar)
         /// </summary>
-		public bool? Hoist { internal get; set; } //tbh what is hoist
+		public bool? Hoist { internal get; set; }
+
         /// <summary>
         /// Whether new role should be mentionable
         /// </summary>
 		public bool? Mentionable { internal get; set; }
+
+        /// <summary>
+        /// The new role icon.
+        /// </summary>
+        public Optional<Stream> Icon { internal get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoleEditModel"/> class.
@@ -60,6 +70,7 @@ namespace DisCatSharp.Net.Models
             this.Color = null;
             this.Hoist = null;
             this.Mentionable = null;
+            this.Icon = null;
         }
     }
 }
