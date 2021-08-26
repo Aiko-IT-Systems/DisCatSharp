@@ -36,7 +36,7 @@ namespace DisCatSharp.Entities
         /// Gets id of the associated stage channel.
         /// </summary>
         [JsonIgnore]
-        public Task<DiscordChannel> Stage
+        public Task<DiscordChannel> Channel
             => this.ChannelId.HasValue ? this.Discord.ApiClient.GetChannelAsync(this.ChannelId.Value) : null;
 
         /// <summary>
@@ -44,6 +44,20 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
         public ulong? ChannelId { get; internal set; }
+
+
+        /// <summary>
+        /// Gets the guild id of the associated Stage channel.
+        /// </summary>
+        [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong GuildId { get; internal set; }
+
+        /// <summary>
+        /// Gets the guild to which this channel belongs.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordGuild Guild
+            => this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
 
         /// <summary>
         /// Gets the name of the sheduled event.

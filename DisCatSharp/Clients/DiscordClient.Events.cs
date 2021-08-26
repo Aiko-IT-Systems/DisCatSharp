@@ -287,6 +287,43 @@ namespace DisCatSharp
 
         #endregion
 
+        #region Guild Event
+
+        /// <summary>
+        /// Fired when a Sheduled Event is created.
+        /// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, GuildSheduledEventCreateEventArgs> GuildSheduledEventCreated
+        {
+            add => this._guildSheduledEventCreated.Register(value);
+            remove => this._guildSheduledEventCreated.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, GuildSheduledEventCreateEventArgs> _guildSheduledEventCreated;
+
+        /// <summary>
+        /// Fired when a Sheduled Event is updated.
+        /// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, GuildSheduledEventUpdateEventArgs> GuildSheduledEventUpdated
+        {
+            add => this._guildSheduledEventUpdated.Register(value);
+            remove => this._guildSheduledEventUpdated.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, GuildSheduledEventUpdateEventArgs> _guildSheduledEventUpdated;
+
+        /// <summary>
+        /// Fired when a Sheduled Event is deleted.
+        /// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, GuildSheduledEventDeleteEventArgs> GuildSheduledEventDeleted
+        {
+            add => this._guildSheduledEventDeleted.Register(value);
+            remove => this._guildSheduledEventDeleted.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, GuildSheduledEventDeleteEventArgs> _guildSheduledEventDeleted;
+
+        #endregion
+
         #region Guild Integration
 
         /// <summary>
