@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 using Newtonsoft.Json;
+using DisCatSharp.Exceptions;
+using System;
 
 namespace DisCatSharp.Entities
 {
@@ -70,6 +72,11 @@ namespace DisCatSharp.Entities
         /// <param name="emoji">The emoji to set with this option.</param>
         public DiscordSelectComponentOption(string label, string value, string description = null, bool isDefault = false, DiscordComponentEmoji emoji = null)
         {
+            if (label.Length > 100)
+                throw new NotSupportedException("Select label can't be longer then 100 chars.");
+            if (value.Length > 100)
+                throw new NotSupportedException("Select label can't be longer then 100 chars.");
+
             this.Label = label;
             this.Value = value;
             this.Description = description;
