@@ -52,11 +52,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{430C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Lavalink", "DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj", "{A8B8FB09-C6AF-4F28-89B8-B53EE0DCE6E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.SlashCommands", "DisCatSharp.SlashCommands\DisCatSharp.SlashCommands.csproj", "{AD530FD0-523C-4DE7-9AF6-B9A3785492C1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.VoiceNext.Natives", "DisCatSharp.VoiceNext.Natives\DisCatSharp.VoiceNext.Natives.csproj", "{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Common", "DisCatSharp.Common\DisCatSharp.Common.csproj", "{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.ApplicationCommands", "DisCatSharp.ApplicationCommands\DisCatSharp.ApplicationCommands.csproj", "{AD530FD0-523C-4DE7-9AF6-B9A3785492C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,10 +84,6 @@ Global
 		{A8B8FB09-C6AF-4F28-89B8-B53EE0DCE6E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8B8FB09-C6AF-4F28-89B8-B53EE0DCE6E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8B8FB09-C6AF-4F28-89B8-B53EE0DCE6E5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AD530FD0-523C-4DE7-9AF6-B9A3785492C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD530FD0-523C-4DE7-9AF6-B9A3785492C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD530FD0-523C-4DE7-9AF6-B9A3785492C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD530FD0-523C-4DE7-9AF6-B9A3785492C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -96,6 +92,10 @@ Global
 		{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD530FD0-523C-4DE7-9AF6-B9A3785492C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD530FD0-523C-4DE7-9AF6-B9A3785492C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD530FD0-523C-4DE7-9AF6-B9A3785492C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD530FD0-523C-4DE7-9AF6-B9A3785492C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
