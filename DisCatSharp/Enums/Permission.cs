@@ -282,8 +282,8 @@ namespace DisCatSharp
         /// <summary>
         /// Allows the user to use slash commands.
         /// </summary>
-        [PermissionString("Use slash commands")]
-        UseSlashCommands = 0x0000000080000000,
+        [PermissionString("Use application commands")]
+        UseApplicationCommands = 0x0000000080000000,
 
         /// <summary>
         /// Allows for requesting to speak in stage channels.
