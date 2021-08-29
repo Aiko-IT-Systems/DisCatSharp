@@ -3,9 +3,9 @@ uid: misc_nightly_builds
 title: Nightly Builds
 ---
 
-# I like living on the edge - give me the freshest builds
+# Do you have nightly builds?
 
-We offer nightly builds for DisCatSharp. They contain bugfixes and new features before the NuGet releases, however they are
+We offer nightly builds for DisCatSharp. They contain bugfixes and new features before the official NuGet releases, however they are
 not guaranteed to be stable, or work at all.
 Open the NuGet interface for your project, check **Prerelease**.
 

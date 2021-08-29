@@ -14,17 +14,17 @@ His videos go through all the basics, from setting up your development environme
 If you're not sure what to do first, Bob's tutorial series should be your starting point!
 
 ## Supported .NET Implementations
-Because DisCatSharp targets .NET Standard 2.0, there are many implementations that may function with DisCatSharp.
-However, there are only a few versions we will *explicitly* provide support for.
+DisCatSharp targets .NET Standard 2.0 means that there are many implementations that *may* function with DisCatSharp.
+However, the following versions we will *explicitly* provide support for.
 
 Implementation|Support|Notes
 :---: |:---:|:---
-[.NET Core](https://en.wikipedia.org/wiki/.NET_Core)|✔️|LTS versions 2.1 and 3.1 are supported.
-[.NET Framework](https://en.wikipedia.org/wiki/.NET_Framework)|⚠️|Versions 4.6.1 through 4.8 *should* work fine.<br/>However, we do not directly support .NET Framework.<br/>We recommend that you use the latest LTS version of .NET Core.
-[Mono](https://en.wikipedia.org/wiki/Mono_(software))|❌️|Has numerous flaws which can break things without warning.<br/>If you need a cross platform runtime, use .NET Core.
-[Unity](https://en.wikipedia.org/wiki/Unity_(game_engine))|❌️|Game engines with C# support will never be supported by DisCatSharp. You should consider using the official [Discord GameSDK](https://discord.com/developers/docs/game-sdk/sdk-starter-guide) instead.
+[.NET Core](https://en.wikipedia.org/wiki/.NET_Core)|✔️|LTS versions 2.1 & 3.1 and the current 5.0 are supported.
+[.NET Framework](https://en.wikipedia.org/wiki/.NET_Framework)|⚠️|Versions 4.6.1 through 4.8 *should* work fine.<br/>But we recommend that you use the latest LTS version of .NET Core.
+[Mono](https://en.wikipedia.org/wiki/Mono_(software))|❌️|If you need a cross platform runtime, use .NET Core.
+[Unity](https://en.wikipedia.org/wiki/Unity_(game_engine))|❌️|Consider using the official [Discord GameSDK](https://discord.com/developers/docs/game-sdk/sdk-starter-guide) instead.
 
-If you use an unsupported implementation and encounter issues, you'll be on your own.
+If you use an unsupported implementation and encounter issues, you may ask for support but mostly you're on your own.
 
 ## Getting Started
 If you're writing a Discord bot for the first time, you'll want to start with *[creating a bot account](xref:basics_bot_account)*.</br>
@@ -33,7 +33,7 @@ Otherwise, if you have a bot account already, start off with the *[writing your 
 Once you're up and running, feel free to browse through the [API Documentation](/api/index.html)!
 
 ## Support and Questions
-You can get in contact with us on Discord through one of the following guilds:
+You can get in contact with us on Discord through the following guild:
 
 **DisCatSharp Guild**:</br>
 [![Nyaw~ & DCS | Support](https://discordapp.com/api/guilds/858089281214087179/embed.png?style=banner2)](https://discord.gg/2XTmQuxqQw)

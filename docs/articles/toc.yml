@@ -23,6 +23,8 @@
     href: beyond_basics/sharding.md
   - name: Message Builder
     href: beyond_basics/messagebuilder.md
+  - name: Buttons
+    href: beyond_basics/buttons.md
 - name: Commands
   items:
   - name: Introduction
@@ -59,10 +61,10 @@
       href: audio/voicenext/receive.md
 - name: Interactivity
   href: interactivity.md
-- name: Advanced Topics
+- name: Important Changes
   items:
-  - name: Buttons
-    href: advanced_topics/buttons.md
+  - name: Application Commands
+    href: important_changes/ac.md
 - name: Hosting
   href: hosting.md
 - name: Miscellaneous
