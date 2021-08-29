@@ -145,19 +145,21 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Updates a sheduled event.
         /// </summary>
+        /// <param name="channel">New channel of the event.</param>
         /// <param name="name">New name of the event.</param>
         /// <param name="scheduled_start_time">New DateTime when the event should start.</param>
         /// <param name="description">New description of the event.</param>
         /// <param name="privacy_level">New Privacy Level of the stage instance.</param>
+        /// <param name="type">New <see cref="EventEntityType"/> of the event.</param>
         /// <param name="reason">Audit log reason</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task ModifyAsync(Optional<string> name, Optional<string> description, Optional<DateTime> scheduled_start_time, Optional<StagePrivacyLevel> privacy_level, string reason = null)
+        public async Task ModifyAsync(Optional<DiscordChannel> channel, Optional<string> name, Optional<string> description, Optional<DateTime> scheduled_start_time, Optional<StagePrivacyLevel> privacy_level, Optional<EventEntityType> type, string reason = null)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
-            => throw new NotImplementedException("This method is not implemented yet."); /*await this.Discord.ApiClient.ModifyStageEventAsync(this.Id, name, scheduled_start_time, description, privacy_level, reason);*/
+            => throw new NotImplementedException("This method is not implemented yet."); /*await this.Discord.ApiClient.ModifyStageEventAsync(this.Id, channel, name, scheduled_start_time, description, privacy_level, type, reason);*/
 
         /// <summary>
         /// Deletes a sheduled event.
