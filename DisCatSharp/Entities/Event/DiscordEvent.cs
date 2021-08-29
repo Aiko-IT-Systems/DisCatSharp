@@ -33,14 +33,14 @@ namespace DisCatSharp.Entities
     public class DiscordEvent : SnowflakeObject, IEquatable<DiscordEvent>
     {
         /// <summary>
-        /// Gets id of the associated stage channel.
+        /// Gets id of the associated channel.
         /// </summary>
         [JsonIgnore]
         public Task<DiscordChannel> Channel
             => this.ChannelId.HasValue ? this.Discord.ApiClient.GetChannelAsync(this.ChannelId.Value) : null;
 
         /// <summary>
-        /// Gets id of the associated stage channel id.
+        /// Gets id of the associated channel id.
         /// </summary>
         [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
         public ulong? ChannelId { get; internal set; }
