@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
@@ -32,6 +33,13 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the the speakers of the stage channel.
         /// </summary>
+        [JsonProperty("speaker_ids", NullValueHandling = NullValueHandling.Ignore)]
         public List<DiscordMember> Speakers { get; internal set; }
+
+        /// <summary>
+        /// Gets the the location of the event.
+        /// </summary>
+        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
+        public string Location { get; internal set; }
     }
 }
