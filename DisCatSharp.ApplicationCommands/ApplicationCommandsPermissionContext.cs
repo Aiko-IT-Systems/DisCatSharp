@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using DisCatSharp.Entities;
 
@@ -27,8 +28,17 @@ namespace DisCatSharp.ApplicationCommands
 {
     public class ApplicationCommandsPermissionContext
     {
+        public Type Type { get; }
+        public string Name { get; }
+
         public IReadOnlyCollection<DiscordApplicationCommandPermission> Permissions => _permissions;
         private readonly List<DiscordApplicationCommandPermission> _permissions = new();
+
+        internal ApplicationCommandsPermissionContext(Type type, string name)
+        {
+            this.Type = type;
+            this.Name = name;
+        }
 
         /// <summary>
         /// Adds a user to the permission system.

@@ -69,7 +69,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// List of modules to register.
         /// </summary>
-        private List<KeyValuePair<ulong?, Type>> _updateList { get; set; } = new List<KeyValuePair<ulong?, Type>>();
+        private List<KeyValuePair<ulong?, ApplicationCommandConfiguration>> _updateList { get; set; } = new List<KeyValuePair<ulong?, ApplicationCommandConfiguration>>();
 
         /// <summary>
         /// Configuration for Discord.
@@ -126,7 +126,7 @@ namespace DisCatSharp.ApplicationCommands
         public void RegisterCommands<T>(ulong? guildId = null) where T : ApplicationCommandsModule
         {
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, Type>(guildId, typeof(T)));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandConfiguration>(guildId, new ApplicationCommandConfiguration(typeof(T))));
         }
 
         /// <summary>
@@ -140,7 +140,46 @@ namespace DisCatSharp.ApplicationCommands
                 throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
             //If sharding, only register for shard 0
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, Type>(guildId, type));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandConfiguration>(guildId, new ApplicationCommandConfiguration(type)));
+        }
+
+        /// <summary>
+        /// Registers a command class with permission setup.
+        /// </summary>
+        /// <typeparam name="T">The command class to register.</typeparam>
+        /// <param name="guildId">The guild id to register it on. If you want global commands, leave it null.</param>
+        /// <param name="permissionSetup">A callback to setup permissions with.</param>
+        public void RegisterCommands<T>(ulong? guildId = null, Action<ApplicationCommandsPermissionContext> permissionSetup = null) where T : ApplicationCommandsModule
+        {
+            if (this.Client.ShardId == 0)
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandConfiguration>(guildId, new ApplicationCommandConfiguration(typeof(T), permissionSetup)));
+        }
+
+        /// <summary>
+        /// Registers a command class with permission setup.
+        /// </summary>
+        /// <param name="type">The <see cref="Type"/> of the command class to register.</param>
+        /// <param name="guildId">The guild id to register it on. If you want global commands, leave it null.</param>
+        /// <param name="permissionSetup">A callback to setup permissions with.</param>
+        public void RegisterCommands(Type type, ulong? guildId = null, Action<ApplicationCommandsPermissionContext> permissionSetup = null)
+        {
+            if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
+                throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
+            //If sharding, only register for shard 0
+            if (this.Client.ShardId == 0)
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandConfiguration>(guildId, new ApplicationCommandConfiguration(type, permissionSetup)));
+        }
+
+        internal class ApplicationCommandConfiguration
+        {
+            public Type Type { get; }
+            public Action<ApplicationCommandsPermissionContext> Setup { get; }
+
+            public ApplicationCommandConfiguration(Type type, Action<ApplicationCommandsPermissionContext> setup = null)
+            {
+                this.Type = type;
+                this.Setup = setup;
+            }
         }
 
         /// <summary>
@@ -173,7 +212,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         /// <param name="types">The types.</param>
         /// <param name="guildid">The optional guild id.</param>
-        private void RegisterCommands(IEnumerable<Type> types, ulong? guildid)
+        private void RegisterCommands(IEnumerable<ApplicationCommandConfiguration> types, ulong? guildid)
         {
             //Initialize empty lists to be added to the global ones at the end
             var commandMethods = new List<CommandMethod>();
@@ -185,8 +224,9 @@ namespace DisCatSharp.ApplicationCommands
             _ = Task.Run(async () =>
             {
                 //Iterates over all the modules
-                foreach (var type in types)
+                foreach (var config in types)
                 {
+                    var type = config.Type;
                     try
                     {
                         var module = type.GetTypeInfo();
