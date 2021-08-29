@@ -54,6 +54,19 @@ namespace DisCatSharp.Entities
         internal DiscordApplicationCommandPermission() { }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordApplicationCommandPermission"/> class.
+        /// </summary>
+        /// <param name="id">The Id of the role or user for this permission.</param>
+        /// <param name="type">Defines whether the permission effects a user or role.</param>
+        /// <param name="permission">The permission for this command. True allows the subject to use the command, false does not allow the subject to use the command.</param>
+        public DiscordApplicationCommandPermission(ulong id, ApplicationCommandPermissionType type, bool permission)
+        {
+            this.Id = id;
+            this.Type = type;
+            this.Permission = permission;
+        }
+
+        /// <summary>
         /// Checks whether this <see cref="DiscordApplicationCommandPermission"/> object is equal to another object.
         /// </summary>
         /// <param name="other">The command to compare to.</param>
