@@ -22,7 +22,6 @@
 
 using System;
 using System.Threading.Tasks;
-using DisCatSharp.Entities;
 
 namespace DisCatSharp.CommandsNext.Attributes
 {
@@ -35,32 +34,32 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Gets the required boost time.
         /// </summary>
-        public DateTime? Since { get; }
+        public int Since { get; }
 
         /// <summary>
         /// Gets the required guild.
         /// </summary>
-        public DiscordGuild Guild { get; }
+        public ulong GuildId { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequireBoostingAttribute"/> class.
         /// </summary>
-        /// <param name="since">Boosting since.</param>
-        public RequireBoostingAttribute(DateTime? since = null)
+        /// <param name="days">Boosting since days.</param>
+        public RequireBoostingAttribute(int days = 0)
         {
-            this.Guild = null;
-            this.Since = since;
+            this.GuildId = 0;
+            this.Since = days;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequireBoostingAttribute"/> class.
         /// </summary>
-        /// <param name="guild">Target guild.</param>
-        /// <param name="since">Boosting since.</param>
-        public RequireBoostingAttribute(DiscordGuild guild, DateTime? since = null)
+        /// <param name="guild_id">Target guild id.</param>
+        /// <param name="days">Boosting since days.</param>
+        public RequireBoostingAttribute(ulong guild_id, int days = 0)
         {
-            this.Guild = guild;
-            this.Since = since;
+            this.GuildId = guild_id;
+            this.Since = days;
         }
 
         /// <summary>
@@ -70,14 +69,15 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <param name="help">If true, help - returns true.</param>
         public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
         {
-            if (this.Guild != null)
+            if (this.GuildId != 0)
             {
-                var member = await this.Guild.GetMemberAsync(ctx.User.Id);
-                return member != null && member.PremiumSince.HasValue ? this.Since.HasValue ? await Task.FromResult(member.PremiumSince.Value.DateTime <= this.Since) : await Task.FromResult(true) : await Task.FromResult(false);
+                var guild = await ctx.Client.GetGuildAsync(this.GuildId);
+                var member = await guild.GetMemberAsync(ctx.User.Id);
+                return member != null && member.PremiumSince.HasValue ? await Task.FromResult(member.PremiumSince.Value.UtcDateTime.Date < DateTime.UtcNow.Date.AddDays(-this.Since)) : await Task.FromResult(false);
             }
             else
             {
-                return ctx.Member != null && ctx.Member.PremiumSince.HasValue ? this.Since.HasValue ? await Task.FromResult(ctx.Member.PremiumSince.Value.DateTime <= this.Since) : await Task.FromResult(true) : await Task.FromResult(false);
+                return ctx.Member != null && ctx.Member.PremiumSince.HasValue ? await Task.FromResult(ctx.Member.PremiumSince.Value.UtcDateTime.Date < DateTime.UtcNow.Date.AddDays(-this.Since)): await Task.FromResult(false);
             }
         }
     }
