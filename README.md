@@ -66,8 +66,8 @@ DisCatSharp.SlashCommands|[![NuGet](https://img.shields.io/nuget/vpre/DisCatShar
 ## Releasing
 To release a new version do the following steps:
 - Create locally a repo named `release/VERSION` (Don't forget to replace VERSION with the target version number)
-- Replace version number with the correct version in [appveyor.yml#L70](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/appveyor.yml#L70) with the new release number and [appveyor.yml#L5](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/appveyor.yml#L5) with the next-ahead release number.
-- Replace nuget version number in [Version.targets](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/Version.targets)
+- Replace version number with the correct version in [appveyor.yml#L78](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/appveyor.yml#L78) with the new release number and [appveyor.yml#L5](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/appveyor.yml#L5) with the next-ahead release number.
+- Replace nuget version number in [Version.targets#L4](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/Version.targets#L4)
 - Publish branch to GitHub
 - Wait for the CI/CD to complete.
 - Merge the branch into main and delete it afterwards
