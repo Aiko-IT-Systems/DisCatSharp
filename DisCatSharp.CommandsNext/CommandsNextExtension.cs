@@ -110,6 +110,8 @@ namespace DisCatSharp.CommandsNext
                 [typeof(DiscordGuild)] = new DiscordGuildConverter(),
                 [typeof(DiscordMessage)] = new DiscordMessageConverter(),
                 [typeof(DiscordEmoji)] = new DiscordEmojiConverter(),
+                [typeof(DiscordThreadChannel)] = new DiscordThreadChannelConverter(),
+                [typeof(DiscordInvite)] = new DiscordInviteConverter(),
                 [typeof(DiscordColor)] = new DiscordColorConverter()
             };
 
@@ -139,6 +141,8 @@ namespace DisCatSharp.CommandsNext
                 [typeof(DiscordGuild)] = "guild",
                 [typeof(DiscordMessage)] = "message",
                 [typeof(DiscordEmoji)] = "emoji",
+                [typeof(DiscordThreadChannel)] = "thread",
+                [typeof(DiscordInvite)] = "invite",
                 [typeof(DiscordColor)] = "color"
             };
 
