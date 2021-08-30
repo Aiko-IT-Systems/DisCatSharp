@@ -6,7 +6,7 @@
 | ------- | ------------------ |
 | > 9.8   | :white_check_mark: |
 |   9.7   | :white_check_mark: |
-| < 9.5   | :x:                |
+| < 9.7   | :x:                |
 
 ## Reporting a Vulnerability
 
