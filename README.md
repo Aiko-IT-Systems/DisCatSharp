@@ -46,17 +46,22 @@ Write me on Discord ([Catra#9999](https://discord.com/users/856780995629154305))
 ## Notice
 Feel free to re-use code in DSharpPlus.
 
-## Latest NuGet
+## Latest NuGet Packages
 Package|NuGet
 |--|--|
 DisCatSharp|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp)
+DisCatSharp.ApplicationCommands|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.ApplicationCommands.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.ApplicationCommands)
 DisCatSharp.CommandsNext|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.CommandsNext.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.CommandsNext)
 DisCatSharp.Common|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Common.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Common)
 DisCatSharp.Interactivity|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Interactivity.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Interactivity)
 DisCatSharp.Lavalink|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Lavalink.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Lavalink)
-DisCatSharp.SlashCommands|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.SlashCommands.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.SlashCommands)
 DisCatSharp.VoiceNext|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.VoiceNext.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.VoiceNext)
 DisCatSharp.VoiceNext.Natives|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.VoiceNext.Natives.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.VoiceNext.Natives)
+
+## Outdated NuGet Packages
+Package|NuGet
+|--|--|
+DisCatSharp.SlashCommands|[![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.SlashCommands.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.SlashCommands)
 
 ## Releasing
 To release a new version do the following steps:
