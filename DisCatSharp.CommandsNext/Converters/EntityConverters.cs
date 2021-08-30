@@ -213,6 +213,59 @@ namespace DisCatSharp.CommandsNext.Converters
     }
 
     /// <summary>
+    /// Represents a discord thread channel converter.
+    /// </summary>
+    public class DiscordThreadChannelConverter : IArgumentConverter<DiscordThreadChannel>
+    {
+        /// <summary>
+        /// Gets the channel regex.
+        /// </summary>
+        private static Regex ChannelRegex { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordThreadChannelConverter"/> class.
+        /// </summary>
+        static DiscordThreadChannelConverter()
+        {
+#if NETSTANDARD1_3
+            ChannelRegex = new Regex(@"^<#(\d+)>$", RegexOptions.ECMAScript);
+#else
+            ChannelRegex = new Regex(@"^<#(\d+)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+#endif
+        }
+
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
+        async Task<Optional<DiscordThreadChannel>> IArgumentConverter<DiscordThreadChannel>.ConvertAsync(string value, CommandContext ctx)
+        {
+            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var tid))
+            {
+                var result = await ctx.Client.GetThreadAsync(tid).ConfigureAwait(false);
+                var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordThreadChannel>();
+                return ret;
+            }
+
+            var m = ChannelRegex.Match(value);
+            if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out tid))
+            {
+                var result = await ctx.Client.GetThreadAsync(tid).ConfigureAwait(false);
+                var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordThreadChannel>();
+                return ret;
+            }
+
+            var cs = ctx.Config.CaseSensitive;
+            if (!cs)
+                value = value.ToLowerInvariant();
+
+            var tchn = ctx.Guild?.Threads.Values.FirstOrDefault(xc => (cs ? xc.Name : xc.Name.ToLowerInvariant()) == value);
+            return tchn != null ? Optional.FromValue(tchn) : Optional.FromNoValue<DiscordThreadChannel>();
+        }
+    }
+
+    /// <summary>
     /// Represents a discord role converter.
     /// </summary>
     public class DiscordRoleConverter : IArgumentConverter<DiscordRole>
@@ -293,6 +346,53 @@ namespace DisCatSharp.CommandsNext.Converters
 
             var gld = ctx.Client.Guilds.Values.FirstOrDefault(xg => (cs ? xg.Name : xg.Name.ToLowerInvariant()) == value);
             return Task.FromResult(gld != null ? Optional.FromValue(gld) : Optional.FromNoValue<DiscordGuild>());
+        }
+    }
+
+
+    /// <summary>
+    /// Represents a discord invite converter.
+    /// </summary>
+    public class DiscordInviteConverter : IArgumentConverter<DiscordInvite>
+    {
+        /// <summary>
+        /// Gets the invite regex.
+        /// </summary>
+        private static Regex InviteRegex { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordInviteConverter"/> class.
+        /// </summary>
+        static DiscordInviteConverter()
+        {
+#if NETSTANDARD1_3
+            InviteRegex = new Regex(@"^(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/(.+[a-z])$", RegexOptions.ECMAScript);
+#else
+            InviteRegex = new Regex(@"^(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/(.+[a-z])$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+#endif
+        }
+
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
+        async Task<Optional<DiscordInvite>> IArgumentConverter<DiscordInvite>.ConvertAsync(string value, CommandContext ctx)
+        {
+            var m = InviteRegex.Match(value);
+            if (m.Success)
+{
+                var result = await ctx.Client.GetInviteByCodeAsync(m.Groups[5].Value).ConfigureAwait(false);
+                var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordInvite>();
+                return ret;
+            }
+
+            var cs = ctx.Config.CaseSensitive;
+            if (!cs)
+                value = value?.ToLowerInvariant();
+
+            var inv  = await ctx.Client.GetInviteByCodeAsync(value);
+            return inv != null ? Optional.FromValue(inv) : Optional.FromNoValue<DiscordInvite>();
         }
     }
 
