@@ -3054,6 +3054,11 @@ namespace DisCatSharp.Entities
         public bool CanSetRoleIcons { get; }
 
         /// <summary>
+        /// Guild has the new thread permissions.
+        /// </summary>
+        public bool HasNewThreadPermissions { get; }
+
+        /// <summary>
         /// String of guild features
         /// </summary>
         public string FeatureString { get; }
@@ -3090,6 +3095,7 @@ namespace DisCatSharp.Entities
             this.HasThreadTestingEnabled = guild.RawFeatures.Contains("THREADS_ENABLED_TESTING");
             this.HasThreadsEnabled = guild.RawFeatures.Contains("THREADS_ENABLED");
             this.CanSetRoleIcons = guild.RawFeatures.Contains("ROLE_ICONS");
+            this.HasNewThreadPermissions = guild.RawFeatures.Contains("NEW_THREAD_PERMISSIONS");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach(var feature in guild.RawFeatures)
