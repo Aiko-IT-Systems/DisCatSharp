@@ -805,6 +805,17 @@ namespace DisCatSharp
 
         private AsyncEvent<DiscordClient, ContextMenuInteractionCreateEventArgs> _contextMenuInteractionCreated;
 
+        /// <summary>
+        /// Fired when application command permissions gets updated.
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, ApplicationCommandPermissionsUpdateEventArgs> ApplicationCommandPermissionsUpdated
+        {
+            add => this._applicationCommandPermissionsUpdated.Register(value);
+            remove => this._applicationCommandPermissionsUpdated.Unregister(value);
+        }
+
+        private AsyncEvent<DiscordClient, ApplicationCommandPermissionsUpdateEventArgs> _applicationCommandPermissionsUpdated;
+
         #endregion
 
         #region Misc

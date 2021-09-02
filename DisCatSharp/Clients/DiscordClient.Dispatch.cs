@@ -530,6 +530,12 @@ namespace DisCatSharp
                     await this.OnGuildApplicationCommandCountsUpdateAsync((int)counts["1"], (int)counts["2"], (int)counts["3"], (ulong)dat["guild_id"]).ConfigureAwait(false);
                     break;
 
+                case "application_command_permissions_update":
+                    var pms = dat["permissions"].ToObject<IEnumerable<DiscordApplicationCommandPermission>>();
+                    gid = (ulong)dat["guild_id"];
+                    await this.OnApplicationCommandPermissionsUpdateAsync(pms, (ulong)dat["id"], gid, (ulong)dat["application_id"]);
+                    break;
+
                 #endregion
 
                 #region Misc
@@ -2564,7 +2570,7 @@ namespace DisCatSharp
         }
 
         /// <summary>
-        /// Ons the guild application command counts update async.
+        /// Handles the guild application command counts update.
         /// </summary>
         /// <param name="sc">The <see cref="ApplicationCommandType.ChatInput"/> count.</param>
         /// <param name="ucmc">The <see cref="ApplicationCommandType.User"/> count.</param>
@@ -2593,6 +2599,38 @@ namespace DisCatSharp
             };
 
             await this._guildApplicationCommandCountUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Handles the application command permissions update.
+        /// </summary>
+        /// <param name="perms">The new permissions.</param>
+        /// <param name="c_id">The command id.</param>
+        /// <param name="guild_id">The guild id.</param>
+        /// <param name="a_id">The application id.</param>
+        internal async Task OnApplicationCommandPermissionsUpdateAsync(IEnumerable<DiscordApplicationCommandPermission> perms, ulong c_id, ulong guild_id, ulong a_id)
+        {
+            var guild = this.InternalGetCachedGuild(guild_id);
+            var cmd = await this.GetGuildApplicationCommandAsync(guild_id, c_id);
+
+            if (guild == null)
+            {
+                guild = new DiscordGuild
+                {
+                    Id = guild_id,
+                    Discord = this
+                };
+            }
+
+            var ea = new ApplicationCommandPermissionsUpdateEventArgs
+            {
+                Permissions = perms.ToList(),
+                Command = cmd,
+                ApplicationId = a_id,
+                Guild = guild
+            };
+
+            await this._applicationCommandPermissionsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 
         #endregion

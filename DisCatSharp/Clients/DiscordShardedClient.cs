@@ -514,6 +514,7 @@ namespace DisCatSharp
             this._applicationCommandUpdated = new AsyncEvent<DiscordClient, ApplicationCommandEventArgs>("APPLICATION_COMMAND_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._applicationCommandDeleted = new AsyncEvent<DiscordClient, ApplicationCommandEventArgs>("APPLICATION_COMMAND_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._guildApplicationCommandCountUpdated = new AsyncEvent<DiscordClient, GuildApplicationCommandCountEventArgs>("GUILD_APPLICATION_COMMAND_COUNTS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+            this._applicationCommandPermissionsUpdated = new AsyncEvent<DiscordClient, ApplicationCommandPermissionsUpdateEventArgs>("APPLICATION_COMMAND_PERMISSIONS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._guildIntegrationCreated = new AsyncEvent<DiscordClient, GuildIntegrationCreateEventArgs>("INTEGRATION_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._guildIntegrationUpdated = new AsyncEvent<DiscordClient, GuildIntegrationUpdateEventArgs>("INTEGRATION_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._guildIntegrationDeleted = new AsyncEvent<DiscordClient, GuildIntegrationDeleteEventArgs>("INTEGRATION_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
@@ -594,6 +595,7 @@ namespace DisCatSharp
             client.ApplicationCommandUpdated += this.Client_ApplicationCommandUpdated;
             client.ApplicationCommandDeleted += this.Client_ApplicationCommandDeleted;
             client.GuildApplicationCommandCountUpdated += this.Client_GuildApplicationCommandCountUpdated;
+            client.ApplicationCommandPermissionsUpdated += this.Client_ApplicationCommandPermissionsUpdated;
             client.GuildIntegrationCreated += this.Client_GuildIntegrationCreated;
             client.GuildIntegrationUpdated += this.Client_GuildIntegrationUpdated;
             client.GuildIntegrationDeleted += this.Client_GuildIntegrationDeleted;
@@ -674,6 +676,7 @@ namespace DisCatSharp
             client.ApplicationCommandUpdated -= this.Client_ApplicationCommandUpdated;
             client.ApplicationCommandDeleted -= this.Client_ApplicationCommandDeleted;
             client.GuildApplicationCommandCountUpdated -= this.Client_GuildApplicationCommandCountUpdated;
+            client.ApplicationCommandPermissionsUpdated -= this.Client_ApplicationCommandPermissionsUpdated;
             client.GuildIntegrationCreated -= this.Client_GuildIntegrationCreated;
             client.GuildIntegrationUpdated -= this.Client_GuildIntegrationUpdated;
             client.GuildIntegrationDeleted -= this.Client_GuildIntegrationDeleted;
