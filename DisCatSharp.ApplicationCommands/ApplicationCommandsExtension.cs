@@ -69,7 +69,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// List of modules to register.
         /// </summary>
-        private List<KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>> _updateList { get; set; } = new List<KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>>();
+        private List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>> _updateList { get; set; } = new List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>>();
 
         /// <summary>
         /// Configuration for Discord.
@@ -126,7 +126,7 @@ namespace DisCatSharp.ApplicationCommands
         public void RegisterCommands<T>(ulong? guildId = null) where T : ApplicationCommandsModule
         {
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>(guildId, new ApplicationCommandModuleConfiguration(typeof(T))));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T))));
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace DisCatSharp.ApplicationCommands
                 throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
             //If sharding, only register for shard 0
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>(guildId, new ApplicationCommandModuleConfiguration(type)));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type)));
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace DisCatSharp.ApplicationCommands
         public void RegisterCommands<T>(ulong guildId, Action<ApplicationCommandsPermissionContext> permissionSetup = null) where T : ApplicationCommandsModule
         {
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>(guildId, new ApplicationCommandModuleConfiguration(typeof(T), permissionSetup)));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T), permissionSetup)));
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace DisCatSharp.ApplicationCommands
                 throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
             //If sharding, only register for shard 0
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>(guildId, new ApplicationCommandModuleConfiguration(type, permissionSetup)));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type, permissionSetup)));
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         /// <param name="types">The types.</param>
         /// <param name="guildid">The optional guild id.</param>
-        private void RegisterCommands(IEnumerable<ApplicationCommandModuleConfiguration> types, ulong? guildid)
+        private void RegisterCommands(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildid)
         {
             //Initialize empty lists to be added to the global ones at the end
             var commandMethods = new List<CommandMethod>();
@@ -1080,7 +1080,7 @@ namespace DisCatSharp.ApplicationCommands
     /// <summary>
     /// Holds configuration data for setting up an application command.
     /// </summary>
-    internal class ApplicationCommandModuleConfiguration
+    internal class ApplicationCommandsModuleConfiguration
     {
         /// <summary>
         /// The type of the command module.
@@ -1097,7 +1097,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         /// <param name="type">The type of the command module.</param>
         /// <param name="setup">The permission setup callback.</param>
-        public ApplicationCommandModuleConfiguration(Type type, Action<ApplicationCommandsPermissionContext> setup = null)
+        public ApplicationCommandsModuleConfiguration(Type type, Action<ApplicationCommandsPermissionContext> setup = null)
         {
             this.Type = type;
             this.Setup = setup;

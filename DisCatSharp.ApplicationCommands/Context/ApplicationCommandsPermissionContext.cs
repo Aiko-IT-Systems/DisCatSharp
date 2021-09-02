@@ -26,14 +26,32 @@ using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands
 {
+    /// <summary>
+    /// The application commands permission context.
+    /// </summary>
     public class ApplicationCommandsPermissionContext
     {
+        /// <summary>
+        /// Gets the type.
+        /// </summary>
         public Type Type { get; }
+
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// Gets the permissions.
+        /// </summary>
         public IReadOnlyCollection<DiscordApplicationCommandPermission> Permissions => _permissions;
         private readonly List<DiscordApplicationCommandPermission> _permissions = new();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplicationCommandsPermissionContext"/> class.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="name">The name.</param>
         internal ApplicationCommandsPermissionContext(Type type, string name)
         {
             this.Type = type;
