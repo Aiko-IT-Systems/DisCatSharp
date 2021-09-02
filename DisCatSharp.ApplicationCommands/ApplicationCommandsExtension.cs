@@ -69,7 +69,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// List of modules to register.
         /// </summary>
-        private List<KeyValuePair<ulong?, ApplicationCommandConfiguration>> _updateList { get; set; } = new List<KeyValuePair<ulong?, ApplicationCommandConfiguration>>();
+        private List<KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>> _updateList { get; set; } = new List<KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>>();
 
         /// <summary>
         /// Configuration for Discord.
@@ -126,7 +126,7 @@ namespace DisCatSharp.ApplicationCommands
         public void RegisterCommands<T>(ulong? guildId = null) where T : ApplicationCommandsModule
         {
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandConfiguration>(guildId, new ApplicationCommandConfiguration(typeof(T))));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>(guildId, new ApplicationCommandModuleConfiguration(typeof(T))));
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace DisCatSharp.ApplicationCommands
                 throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
             //If sharding, only register for shard 0
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandConfiguration>(guildId, new ApplicationCommandConfiguration(type)));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>(guildId, new ApplicationCommandModuleConfiguration(type)));
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace DisCatSharp.ApplicationCommands
         public void RegisterCommands<T>(ulong guildId, Action<ApplicationCommandsPermissionContext> permissionSetup = null) where T : ApplicationCommandsModule
         {
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandConfiguration>(guildId, new ApplicationCommandConfiguration(typeof(T), permissionSetup)));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>(guildId, new ApplicationCommandModuleConfiguration(typeof(T), permissionSetup)));
         }
 
         /// <summary>
@@ -167,19 +167,7 @@ namespace DisCatSharp.ApplicationCommands
                 throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
             //If sharding, only register for shard 0
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandConfiguration>(guildId, new ApplicationCommandConfiguration(type, permissionSetup)));
-        }
-
-        internal class ApplicationCommandConfiguration
-        {
-            public Type Type { get; }
-            public Action<ApplicationCommandsPermissionContext> Setup { get; }
-
-            public ApplicationCommandConfiguration(Type type, Action<ApplicationCommandsPermissionContext> setup = null)
-            {
-                this.Type = type;
-                this.Setup = setup;
-            }
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>(guildId, new ApplicationCommandModuleConfiguration(type, permissionSetup)));
         }
 
         /// <summary>
@@ -207,19 +195,12 @@ namespace DisCatSharp.ApplicationCommands
             return Task.CompletedTask;
         }
 
-        internal class ApplicationCommandSourceLink
-        {
-            public DiscordApplicationCommand ApplicationCommand { get; set; }
-            public Type RootCommandContainerType { get; set; }
-            public Type CommandContainerType { get; set; }
-        }
-
         /// <summary>
         /// Method for registering commands for a target from modules.
         /// </summary>
         /// <param name="types">The types.</param>
         /// <param name="guildid">The optional guild id.</param>
-        private void RegisterCommands(IEnumerable<ApplicationCommandConfiguration> types, ulong? guildid)
+        private void RegisterCommands(IEnumerable<ApplicationCommandModuleConfiguration> types, ulong? guildid)
         {
             //Initialize empty lists to be added to the global ones at the end
             var commandMethods = new List<CommandMethod>();
@@ -1094,6 +1075,54 @@ namespace DisCatSharp.ApplicationCommands
             remove { this._contextMenuExecuted.Unregister(value); }
         }
         private AsyncEvent<ApplicationCommandsExtension, ContextMenuExecutedEventArgs> _contextMenuExecuted;
+    }
+
+    /// <summary>
+    /// Holds configuration data for setting up an application command.
+    /// </summary>
+    internal class ApplicationCommandModuleConfiguration
+    {
+        /// <summary>
+        /// The type of the command module.
+        /// </summary>
+        public Type Type { get; }
+
+        /// <summary>
+        /// The permission setup.
+        /// </summary>
+        public Action<ApplicationCommandsPermissionContext> Setup { get; }
+
+        /// <summary>
+        /// Creates a new command configuration.
+        /// </summary>
+        /// <param name="type">The type of the command module.</param>
+        /// <param name="setup">The permission setup callback.</param>
+        public ApplicationCommandModuleConfiguration(Type type, Action<ApplicationCommandsPermissionContext> setup = null)
+        {
+            this.Type = type;
+            this.Setup = setup;
+        }
+    }
+
+    /// <summary>
+    /// Links a command to its original command module.
+    /// </summary>
+    internal class ApplicationCommandSourceLink
+    {
+        /// <summary>
+        /// The command.
+        /// </summary>
+        public DiscordApplicationCommand ApplicationCommand { get; set; }
+
+        /// <summary>
+        /// The base/root module the command is contained in.
+        /// </summary>
+        public Type RootCommandContainerType { get; set; }
+
+        /// <summary>
+        /// The direct group the command is contained in.
+        /// </summary>
+        public Type CommandContainerType { get; set; }
     }
 
     /// <summary>
