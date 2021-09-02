@@ -71,3 +71,11 @@ To release a new version do the following steps:
 - Publish branch to GitHub
 - Wait for the CI/CD to complete.
 - Merge the branch into main and delete it afterwards
+
+## Thanks
+Big thanks goes to the following people who helps us ♥️
+- [Auros Nexus](https://github.com/Auros)
+- [Lunar Starstrum](https://github.com/OoLunar)
+- [Johannes](https://github.com/JMLutra)
+- [Geferon](https://github.com/geferon)
+- [Alice](https://github.com/mortAlice)
