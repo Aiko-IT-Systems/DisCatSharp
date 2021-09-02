@@ -69,7 +69,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// List of modules to register.
         /// </summary>
-        private List<KeyValuePair<ulong?, Type>> _updateList { get; set; } = new List<KeyValuePair<ulong?, Type>>();
+        private List<KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>> _updateList { get; set; } = new List<KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>>();
 
         /// <summary>
         /// Configuration for Discord.
@@ -126,7 +126,7 @@ namespace DisCatSharp.ApplicationCommands
         public void RegisterCommands<T>(ulong? guildId = null) where T : ApplicationCommandsModule
         {
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, Type>(guildId, typeof(T)));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>(guildId, new ApplicationCommandModuleConfiguration(typeof(T))));
         }
 
         /// <summary>
@@ -140,7 +140,34 @@ namespace DisCatSharp.ApplicationCommands
                 throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
             //If sharding, only register for shard 0
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, Type>(guildId, type));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>(guildId, new ApplicationCommandModuleConfiguration(type)));
+        }
+
+        /// <summary>
+        /// Registers a command class with permission setup.
+        /// </summary>
+        /// <typeparam name="T">The command class to register.</typeparam>
+        /// <param name="guildId">The guild id to register it on.</param>
+        /// <param name="permissionSetup">A callback to setup permissions with.</param>
+        public void RegisterCommands<T>(ulong guildId, Action<ApplicationCommandsPermissionContext> permissionSetup = null) where T : ApplicationCommandsModule
+        {
+            if (this.Client.ShardId == 0)
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>(guildId, new ApplicationCommandModuleConfiguration(typeof(T), permissionSetup)));
+        }
+
+        /// <summary>
+        /// Registers a command class with permission setup.
+        /// </summary>
+        /// <param name="type">The <see cref="Type"/> of the command class to register.</param>
+        /// <param name="guildId">The guild id to register it on.</param>
+        /// <param name="permissionSetup">A callback to setup permissions with.</param>
+        public void RegisterCommands(Type type, ulong guildId, Action<ApplicationCommandsPermissionContext> permissionSetup = null)
+        {
+            if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
+                throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
+            //If sharding, only register for shard 0
+            if (this.Client.ShardId == 0)
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandModuleConfiguration>(guildId, new ApplicationCommandModuleConfiguration(type, permissionSetup)));
         }
 
         /// <summary>
@@ -173,7 +200,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         /// <param name="types">The types.</param>
         /// <param name="guildid">The optional guild id.</param>
-        private void RegisterCommands(IEnumerable<Type> types, ulong? guildid)
+        private void RegisterCommands(IEnumerable<ApplicationCommandModuleConfiguration> types, ulong? guildid)
         {
             //Initialize empty lists to be added to the global ones at the end
             var commandMethods = new List<CommandMethod>();
@@ -182,11 +209,14 @@ namespace DisCatSharp.ApplicationCommands
             var contextMenuCommands = new List<ContextMenuCommand>();
             var updateList = new List<DiscordApplicationCommand>();
 
+            var commandTypeSources = new List<KeyValuePair<Type, Type>>();
+
             _ = Task.Run(async () =>
             {
                 //Iterates over all the modules
-                foreach (var type in types)
+                foreach (var config in types)
                 {
+                    var type = config.Type;
                     try
                     {
                         var module = type.GetTypeInfo();
@@ -217,6 +247,7 @@ namespace DisCatSharp.ApplicationCommands
 
                             //Initializes the command
                             var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, default_permission: groupAttribute.DefaultPermission);
+                            commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 
                             var commandmethods = new List<KeyValuePair<string, MethodInfo>>();
                             //Handles commands in the group
@@ -235,6 +266,7 @@ namespace DisCatSharp.ApplicationCommands
                                 //Creates the subcommand and adds it to the main command
                                 var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, null, null, options);
                                 payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission);
+                                commandTypeSources.Add(new KeyValuePair<Type, Type>(subclassinfo, type));
 
                                 //Adds it to the method lists
                                 commandmethods.Add(new KeyValuePair<string, MethodInfo>(commandAttribute.Name, submethod));
@@ -274,6 +306,7 @@ namespace DisCatSharp.ApplicationCommands
                                 var subpayload = new DiscordApplicationCommandOption(subGroupAttribute.Name, subGroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options);
                                 command.SubCommands.Add(new GroupCommand { Name = subGroupAttribute.Name, Methods = currentMethods });
                                 payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission);
+                                commandTypeSources.Add(new KeyValuePair<Type, Type>(subclass, type));
 
                                 //Accounts for lifespans for the sub group
                                 if (subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null)
@@ -316,6 +349,7 @@ namespace DisCatSharp.ApplicationCommands
 
                                 var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, options, commandattribute.DefaultPermission);
                                 updateList.Add(payload);
+                                commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
                             }
 
                             //Context Menus
@@ -334,6 +368,7 @@ namespace DisCatSharp.ApplicationCommands
                                 contextMenuCommands.Add(new ContextMenuCommand { Method = contextMethod, Name = contextAttribute.Name });
 
                                 updateList.Add(command);
+                                commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
                             }
 
                             //Accounts for lifespans
@@ -360,25 +395,79 @@ namespace DisCatSharp.ApplicationCommands
                 {
                     try
                     {
+                        async Task UpdateCommandPermission(ulong commandId, string commandName, Type commandDeclaringType, Type commandRootType)
+                        {
+                            if (guildid == null)
+                            {
+                                throw new NotImplementedException("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
+                            }
+                            else
+                            {
+                                var ctx = new ApplicationCommandsPermissionContext(commandDeclaringType, commandName);
+                                var conf = types.First(t => t.Type == commandRootType);
+                                conf.Setup?.Invoke(ctx);
+
+                                if (ctx.Permissions.Count == 0)
+                                    return;
+
+                                await this.Client.OverwriteGuildApplicationCommandPermissionsAsync(guildid.Value, commandId, ctx.Permissions);
+                            }
+                        }
+
+                        async Task UpdateCommandPermissionGroup(GroupCommand groupCommand)
+                        {
+                            foreach (var com in groupCommand.Methods)
+                            {
+                                var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Value.DeclaringType);
+                                
+                                await UpdateCommandPermission(groupCommand.CommandId, com.Key, source.Key, source.Value);
+                            }
+                        }
+
                         var commands = guildid == null
                             ? await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(updateList)
                             : (IEnumerable<DiscordApplicationCommand>)await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guildid.Value, updateList);
+
                         //Creates a guild command if a guild id is specified, otherwise global
                         //Checks against the ids and adds them to the command method lists
                         foreach (var command in commands)
                         {
                             if (commandMethods.Any(x => x.Name == command.Name))
-                                commandMethods.First(x => x.Name == command.Name).CommandId = command.Id;
+                            {
+                                var com = commandMethods.First(x => x.Name == command.Name);
+                                com.CommandId = command.Id;
+
+                                var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Method.DeclaringType);
+                                await UpdateCommandPermission(command.Id, com.Name, source.Value, source.Key);
+                            }
 
                             else if (groupCommands.Any(x => x.Name == command.Name))
-                                groupCommands.First(x => x.Name == command.Name).CommandId = command.Id;
+                            {
+                                var com = groupCommands.First(x => x.Name == command.Name);
+                                com.CommandId = command.Id;
+
+                                await UpdateCommandPermissionGroup(com);
+                            }
 
                             else if (subGroupCommands.Any(x => x.Name == command.Name))
-                                subGroupCommands.First(x => x.Name == command.Name).CommandId = command.Id;
+                            {
+                                var com = subGroupCommands.First(x => x.Name == command.Name);
+                                com.CommandId = command.Id;
+
+                                foreach (var groupComs in com.SubCommands)
+                                    await UpdateCommandPermissionGroup(groupComs);
+                            }
 
                             else if (contextMenuCommands.Any(x => x.Name == command.Name))
-                                contextMenuCommands.First(x => x.Name == command.Name).CommandId = command.Id;
+                            {
+                                var com = contextMenuCommands.First(x => x.Name == command.Name);
+                                com.CommandId = command.Id;
+
+                                var source = commandTypeSources.First(f => f.Key == com.Method.DeclaringType);
+                                await UpdateCommandPermission(command.Id, com.Name, source.Value, source.Key);
+                            }
                         }
+
                         //Adds to the global lists finally
                         _commandMethods.AddRange(commandMethods);
                         _groupCommands.AddRange(groupCommands);
@@ -386,6 +475,11 @@ namespace DisCatSharp.ApplicationCommands
                         _contextMenuCommands.AddRange(contextMenuCommands);
 
                         _registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildid, commands.ToList()));
+
+                        foreach (var command in commandMethods)
+                        {
+                            var app = types.First(t => t.Type == command.Method.DeclaringType);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -981,6 +1075,54 @@ namespace DisCatSharp.ApplicationCommands
             remove { this._contextMenuExecuted.Unregister(value); }
         }
         private AsyncEvent<ApplicationCommandsExtension, ContextMenuExecutedEventArgs> _contextMenuExecuted;
+    }
+
+    /// <summary>
+    /// Holds configuration data for setting up an application command.
+    /// </summary>
+    internal class ApplicationCommandModuleConfiguration
+    {
+        /// <summary>
+        /// The type of the command module.
+        /// </summary>
+        public Type Type { get; }
+
+        /// <summary>
+        /// The permission setup.
+        /// </summary>
+        public Action<ApplicationCommandsPermissionContext> Setup { get; }
+
+        /// <summary>
+        /// Creates a new command configuration.
+        /// </summary>
+        /// <param name="type">The type of the command module.</param>
+        /// <param name="setup">The permission setup callback.</param>
+        public ApplicationCommandModuleConfiguration(Type type, Action<ApplicationCommandsPermissionContext> setup = null)
+        {
+            this.Type = type;
+            this.Setup = setup;
+        }
+    }
+
+    /// <summary>
+    /// Links a command to its original command module.
+    /// </summary>
+    internal class ApplicationCommandSourceLink
+    {
+        /// <summary>
+        /// The command.
+        /// </summary>
+        public DiscordApplicationCommand ApplicationCommand { get; set; }
+
+        /// <summary>
+        /// The base/root module the command is contained in.
+        /// </summary>
+        public Type RootCommandContainerType { get; set; }
+
+        /// <summary>
+        /// The direct group the command is contained in.
+        /// </summary>
+        public Type CommandContainerType { get; set; }
     }
 
     /// <summary>
