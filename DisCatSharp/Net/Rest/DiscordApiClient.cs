@@ -2133,7 +2133,7 @@ namespace DisCatSharp.Net
 
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
 
-            var url = Utilities.GetApiUriBuilderFor(path)
+            var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration.UseCanary)
                 .AddParameter($"limit", limit.ToString(CultureInfo.InvariantCulture));
 
             if (before != null)
@@ -3010,7 +3010,7 @@ namespace DisCatSharp.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { webhook_id, webhook_token }, out var path);
 
-            var qub = Utilities.GetApiUriBuilderFor(path).AddParameter("wait", "true");
+            var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration.UseCanary).AddParameter("wait", "true");
             if (thread_id != null)
                 qub.AddParameter("thread_id", thread_id);
             var url = qub.Build();
@@ -3039,7 +3039,7 @@ namespace DisCatSharp.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.SLACK}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { webhook_id, webhook_token }, out var path);
 
-            var url = Utilities.GetApiUriBuilderFor(path).AddParameter("wait", "true").Build();
+            var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration.UseCanary).AddParameter("wait", "true").Build();
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: json_payload).ConfigureAwait(false);
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
             ret.Discord = this.Discord;
@@ -3058,7 +3058,7 @@ namespace DisCatSharp.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.GITHUB}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { webhook_id, webhook_token }, out var path);
 
-            var url = Utilities.GetApiUriBuilderFor(path).AddParameter("wait", "true").Build();
+            var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration.UseCanary).AddParameter("wait", "true").Build();
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: json_payload).ConfigureAwait(false);
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
             ret.Discord = this.Discord;
@@ -4417,7 +4417,7 @@ namespace DisCatSharp.Net
             var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
 
-            var url = Utilities.GetApiUriBuilderFor(path).AddParameter("wait", "true").Build();
+            var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration.UseCanary).AddParameter("wait", "true").Build();
             if (builder != null)
             {
                 await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files);
@@ -4496,7 +4496,7 @@ namespace DisCatSharp.Net
             var route = $"{Endpoints.WEBHOOKS}/:application_id/:interaction_token";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { application_id, interaction_token }, out var path);
 
-            var url = Utilities.GetApiUriBuilderFor(path).AddParameter("wait", "true").Build();
+            var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration.UseCanary).AddParameter("wait", "true").Build();
             var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
 
