@@ -418,7 +418,7 @@ namespace DisCatSharp.ApplicationCommands
                         {
                             if (guildid == null)
                             {
-                                // Not supported by V9 ATM
+                                throw new NotImplementedException("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
                             }
                             else
                             {
