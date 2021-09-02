@@ -771,7 +771,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="name">The name of the thread.</param>
         /// <param name="auto_archive_duration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/>.</param>
-        /// <param name="type">Can be either an <see cref="ChannelType.PrivateThread"/> or an <see cref="ChannelType.PublicThread"/>.</param>
+        /// <param name="type">Can be either an <see cref="ChannelType.PrivateThread"/>, <see cref="ChannelType.NewsThread"/> or an <see cref="ChannelType.PublicThread"/>.</param>
         /// <param name="reason">Audit log reason.</param>
         /// <returns>The created thread.</returns>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePublicThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> or if creating a private thread the <see cref="Permissions.CreatePrivateThreads"/> permission.</exception>
@@ -781,8 +781,10 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>. Or if <see cref="GuildFeatures.CanCreatePrivateThreads"/> is not enabled for guild. This happens, if the guild does not have <see cref="PremiumTier.Tier_2"/></exception>
         public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration auto_archive_duration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, string reason = null)
         {
-            return (type != ChannelType.NewsThread || type != ChannelType.PublicThread || type != ChannelType.PrivateThread || this.Type != ChannelType.News || this.Type != ChannelType.Text)
-                ? throw new NotSupportedException((this.Type != ChannelType.News || this.Type != ChannelType.Text) ? "Parent channel is no text or news channel" : "Wrong thread type given.")
+            return (type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread)
+                ? throw new NotSupportedException("Wrong thread type given.")
+                : (this.Type != ChannelType.News && this.Type != ChannelType.Text)
+                ? throw new NotSupportedException("Parent channel is no text or news channel")
                 : type == ChannelType.PrivateThread
                 ? Utilities.CheckThreadPrivateFeature(this.Guild)
                 ? Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, auto_archive_duration)
@@ -793,6 +795,7 @@ namespace DisCatSharp.Entities
                     ? await this.Discord.ApiClient.CreateThreadWithoutMessageAsync(this.Id, name, auto_archive_duration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, reason)
                 : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(auto_archive_duration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
         }
+
 
         /// <summary>
         /// Gets joined archived private threads. Can contain more threads.
