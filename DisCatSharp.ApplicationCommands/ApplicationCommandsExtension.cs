@@ -399,7 +399,7 @@ namespace DisCatSharp.ApplicationCommands
                         {
                             if (guildid == null)
                             {
-                                throw new NotImplementedException("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
+                                //throw new NotImplementedException("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
                             }
                             else
                             {
