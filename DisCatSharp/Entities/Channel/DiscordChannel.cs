@@ -77,6 +77,26 @@ namespace DisCatSharp.Entities
         public int Position { get; internal set; }
 
         /// <summary>
+        /// Gets the maximum available position to move the channel to.
+        /// </summary>
+        public int GetMaxPosition()
+        {
+            return this.ParentId != null ?
+                this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId).OrderBy(xc => xc.Position).ToArray().Last().Position
+                : this.Guild._channels.Values.Where(xc => xc.ParentId == null).OrderBy(xc => xc.Position).ToArray().Last().Position;
+        }
+
+        /// <summary>
+        /// Gets the minimum available position to move the channel to.
+        /// </summary>
+        public int GetMinPosition()
+        {
+            return this.ParentId != null ?
+                this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId).OrderBy(xc => xc.Position).ToArray().First().Position
+                : this.Guild._channels.Values.Where(xc => xc.ParentId == null).OrderBy(xc => xc.Position).ToArray().First().Position;
+        }
+
+        /// <summary>
         /// Gets whether this channel is a DM channel.
         /// </summary>
         [JsonIgnore]
@@ -417,7 +437,6 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="position">Position the channel should be moved to.</param>
         /// <param name="reason">Reason for audit logs.</param>
-
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -443,12 +462,76 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
+        /// Updates the channel position within it's own category. Use <see cref="ModifyParentAsync"/> for moving to other categories.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <param name="reason">The reason.</param>
+        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+        /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="IndexOutOfRangeException">Thrown when <paramref name="position"/> is out of range.</exception>
+        /// <exception cref="NotSupportedException">Thrown when function is called on a channel without a parent channel.</exception>
+        public Task ModifyPositionInCategoryAsync(int position, string reason = null)
+        {
+            if (this.ParentId == null)
+                throw new NotSupportedException("You can call this function only on channels in categories.");
+
+            var isUp = position > this.Position;
+
+            var chns = this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId);
+            var ochns = chns.OrderBy(xc => xc.Position).ToArray();
+            var min = ochns.First().Position;
+            var max = ochns.Last().Position;
+
+            if (!Enumerable.Range(min, max).Contains(position))
+                throw new IndexOutOfRangeException($"Position is not in range of category. {position} is {(position > max ? "greater then the maximal" : "lower then the minimal")} position.");
+
+            var pmds = new RestGuildChannelReorderPayload[ochns.Length];
+            for (var i = 0; i < ochns.Length; i++)
+            {
+                pmds[i] = new RestGuildChannelReorderPayload
+                {
+                    ChannelId = ochns[i].Id,
+                };
+
+                if (ochns[i].Id == this.Id)
+                {
+                    pmds[i].Position = position;
+                } else
+                {
+                    if(isUp)
+                    {
+                        if (ochns[i].Position <= position && ochns[i].Position > this.Position)
+                        {
+                            pmds[i].Position = ochns[i].Position - 1;
+                        } else if(ochns[i].Position < this.Position || ochns[i].Position > position)
+                        {
+                            pmds[i].Position = ochns[i].Position;
+                        }
+                    } else
+                    {
+                        if (ochns[i].Position >= position && ochns[i].Position < this.Position)
+                        {
+                            pmds[i].Position = ochns[i].Position + 1;
+                        }
+                        else if (ochns[i].Position > this.Position || ochns[i].Position < position)
+                        {
+                            pmds[i].Position = ochns[i].Position;
+                        }
+                    }
+                }
+            }
+
+            return this.Discord.ApiClient.ModifyGuildChannelPositionAsync(this.Guild.Id, pmds, reason);
+        }
+
+        /// <summary>
         /// Updates the channel parent, moving the channel to the bottom of the new category.
         /// </summary>
         /// <param name="newParent">New parent fpr channel. Will move out of parent if null.</param>
         /// <param name="lock_permissions">Sync permissions with parent. Defaults to null.</param>
         /// <param name="reason">Reason for audit logs.</param>
-
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
