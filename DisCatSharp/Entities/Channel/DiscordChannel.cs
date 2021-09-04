@@ -571,7 +571,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="ArgumentException">Thrown when function is called on a channel without a parent channel, a wrong mode is givven or given position is zero.</exception>
         public Task ModifyPositionInCategorySmartAsync(string mode, int position, string reason = null)
         {
-            if (mode != "+" || mode != "-" || mode != "down" || mode != "up")
+            if (mode != "+" && mode != "-" && mode != "down" && mode != "up")
                 throw new ArgumentException("Error with the selected mode: Valid is '+' or 'down' to move a channel down and '-' or 'up' to move a channel up");
 
             var positive = mode == "+" || mode == "positive" || mode == "down";
