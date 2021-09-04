@@ -586,7 +586,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Updates the channel parent, moving the channel to the bottom of the new category.
         /// </summary>
-        /// <param name="newParent">New parent fpr channel. Will move out of parent if null.</param>
+        /// <param name="newParent">New parent for channel. Will move out of parent if null.</param>
         /// <param name="lock_permissions">Sync permissions with parent. Defaults to null.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
