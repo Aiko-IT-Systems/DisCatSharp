@@ -82,8 +82,8 @@ namespace DisCatSharp.Entities
         public int GetMaxPosition()
         {
             return this.ParentId != null ?
-                this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId).OrderBy(xc => xc.Position).ToArray().Last().Position
-                : this.Guild._channels.Values.Where(xc => xc.ParentId == null).OrderBy(xc => xc.Position).ToArray().Last().Position;
+                this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().Last().Position
+                : this.Guild._channels.Values.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().Last().Position;
         }
 
         /// <summary>
@@ -92,8 +92,8 @@ namespace DisCatSharp.Entities
         public int GetMinPosition()
         {
             return this.ParentId != null ?
-                this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId).OrderBy(xc => xc.Position).ToArray().First().Position
-                : this.Guild._channels.Values.Where(xc => xc.ParentId == null).OrderBy(xc => xc.Position).ToArray().First().Position;
+                this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().First().Position
+                : this.Guild._channels.Values.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().First().Position;
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace DisCatSharp.Entities
         {
             return this.Type != ChannelType.Text && this.Type != ChannelType.Private && this.Type != ChannelType.Group && this.Type != ChannelType.News
                 ? throw new ArgumentException("Cannot send a text message to a non-text channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] {embed}, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] { embed }, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace DisCatSharp.Entities
         {
             return this.Type != ChannelType.Text && this.Type != ChannelType.Private && this.Type != ChannelType.Group && this.Type != ChannelType.News
                 ? throw new ArgumentException("Cannot send a text message to a non-text channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, new[] {embed}, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, new[] { embed }, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
 
         /// <summary>
@@ -479,7 +479,7 @@ namespace DisCatSharp.Entities
 
             var isUp = position > this.Position;
 
-            var chns = this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId);
+            var chns = this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type);
             var ochns = chns.OrderBy(xc => xc.Position).ToArray();
             var min = ochns.First().Position;
             var max = ochns.Last().Position;
@@ -498,18 +498,21 @@ namespace DisCatSharp.Entities
                 if (ochns[i].Id == this.Id)
                 {
                     pmds[i].Position = position;
-                } else
+                }
+                else
                 {
-                    if(isUp)
+                    if (isUp)
                     {
                         if (ochns[i].Position <= position && ochns[i].Position > this.Position)
                         {
                             pmds[i].Position = ochns[i].Position - 1;
-                        } else if(ochns[i].Position < this.Position || ochns[i].Position > position)
+                        }
+                        else if (ochns[i].Position < this.Position || ochns[i].Position > position)
                         {
                             pmds[i].Position = ochns[i].Position;
                         }
-                    } else
+                    }
+                    else
                     {
                         if (ochns[i].Position >= position && ochns[i].Position < this.Position)
                         {
@@ -544,7 +547,7 @@ namespace DisCatSharp.Entities
                 throw new ArgumentException("Cannot modify parent of non-guild channels.");
             if (this.IsCategory)
                 throw new ArgumentException("Cannot modify parent of category channels.");
-            if(newParent.Type is not ChannelType.Category)
+            if (newParent.Type is not ChannelType.Category)
                 throw new ArgumentException("Only category type channels can be parents.");
 
 
@@ -563,10 +566,10 @@ namespace DisCatSharp.Entities
                     ChannelId = chns[i].Id,
                     Position = chns[i].Position >= position ? chns[i].Position + 1 : chns[i].Position,
                 };
-                if(chns[i].Id == this.Id)
+                if (chns[i].Id == this.Id)
                 {
                     pmds[i].Position = position;
-                    pmds[i].ParentId = newParent is not null? newParent.Id : null;
+                    pmds[i].ParentId = newParent is not null ? newParent.Id : null;
                     pmds[i].LockPermissions = lock_permissions;
                 }
             }
