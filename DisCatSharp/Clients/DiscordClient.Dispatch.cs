@@ -699,6 +699,11 @@ namespace DisCatSharp
 
             this._guilds[channel.GuildId.Value]._channels[channel.Id] = channel;
 
+            /*if (this.Configuration.AutoRefreshChannelCache)
+            {
+                await this.RefreshChannelsAsync(channel.Guild.Id);
+            }*/
+
             await this._channelCreated.InvokeAsync(this, new ChannelCreateEventArgs { Channel = channel, Guild = channel.Guild }).ConfigureAwait(false);
         }
 
@@ -765,10 +770,20 @@ namespace DisCatSharp
                 }
 
                 channel_new._permissionOverwrites.AddRange(channel._permissionOverwrites);
+                
+                if (this.Configuration.AutoRefreshChannelCache && gld != null)
+                {
+                    await this.RefreshChannelsAsync(channel.Guild.Id);
+                }
             }
             else if (gld != null)
             {
                 gld._channels[channel.Id] = channel;
+
+                if (this.Configuration.AutoRefreshChannelCache)
+                {
+                    await this.RefreshChannelsAsync(channel.Guild.Id);
+                }
             }
 
             await this._channelUpdated.InvokeAsync(this, new ChannelUpdateEventArgs { ChannelAfter = channel_new, Guild = gld, ChannelBefore = channel_old }).ConfigureAwait(false);
@@ -799,7 +814,33 @@ namespace DisCatSharp
 
                 if (gld._channels.TryRemove(channel.Id, out var cachedChannel)) channel = cachedChannel;
 
+                if(this.Configuration.AutoRefreshChannelCache)
+                {
+                    await this.RefreshChannelsAsync(channel.Guild.Id);
+                }
+
                 await this._channelDeleted.InvokeAsync(this, new ChannelDeleteEventArgs { Channel = channel, Guild = gld }).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Refreshes the channels.
+        /// </summary>
+        /// <param name="guildId">The guild id.</param>
+        internal async Task RefreshChannelsAsync(ulong guildId)
+        {
+            var guild = this.InternalGetCachedGuild(guildId);
+            var channels = await this.ApiClient.GetGuildChannelsAsync(guildId);
+            guild._channels.Clear();
+            foreach (var channel in channels.ToList())
+            {
+                channel.Discord = this;
+                foreach (var xo in channel._permissionOverwrites)
+                {
+                    xo.Discord = this;
+                    xo._channel_id = channel.Id;
+                }
+                guild._channels[channel.Id] = channel;
             }
         }
 

@@ -199,6 +199,12 @@ namespace DisCatSharp
         public bool UseCanary { internal get; set; } = false;
 
         /// <summary>
+        /// <para>Refresh full guild channel cache.</para>
+        /// <para>Defaults to false.</para>
+        /// </summary>
+        public bool AutoRefreshChannelCache { internal get; set; } = false;
+
+        /// <summary>
         /// Creates a new configuration with default values.
         /// </summary>
         public DiscordConfiguration()
@@ -230,6 +236,7 @@ namespace DisCatSharp
             this.LoggerFactory = other.LoggerFactory;
             this.MobileStatus = other.MobileStatus;
             this.UseCanary = other.UseCanary;
+            this.AutoRefreshChannelCache = other.AutoRefreshChannelCache;
         }
     }
 }
