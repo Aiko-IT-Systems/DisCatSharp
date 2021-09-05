@@ -78,16 +78,18 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Gets the maximum available position to move the channel to.
+        /// This can contain outdated informations.
         /// </summary>
         public int GetMaxPosition()
         {
+            var channels = this.Guild.Channels.Values;
             return this.ParentId != null
                 ? this.Type == ChannelType.Text || this.Type == ChannelType.News
-                    ? this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News)).OrderBy(xc => xc.Position).ToArray().Last().Position
+                    ? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News)).OrderBy(xc => xc.Position).ToArray().Last().Position
                     : this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
-                        ? this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).OrderBy(xc => xc.Position).ToArray().Last().Position
-                        : this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().Last().Position
-                : this.Guild._channels.Values.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().Last().Position;
+                        ? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).OrderBy(xc => xc.Position).ToArray().Last().Position
+                        : channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().Last().Position
+                : channels.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().Last().Position;
         }
 
         /// <summary>
@@ -95,13 +97,14 @@ namespace DisCatSharp.Entities
         /// </summary>
         public int GetMinPosition()
         {
+            var channels = this.Guild.Channels.Values;
             return this.ParentId != null
                 ? this.Type == ChannelType.Text || this.Type == ChannelType.News
-                    ? this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News)).OrderBy(xc => xc.Position).ToArray().First().Position
+                    ? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News)).OrderBy(xc => xc.Position).ToArray().First().Position
                     : this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
-                        ? this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).OrderBy(xc => xc.Position).ToArray().First().Position
-                        : this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().First().Position
-                : this.Guild._channels.Values.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().First().Position;
+                        ? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).OrderBy(xc => xc.Position).ToArray().First().Position
+                        : channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().First().Position
+                : channels.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().First().Position;
         }
 
         /// <summary>
@@ -453,6 +456,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        [Obsolete("This will be replaced by ModifyPositionInCategoryAsync. Use it instead.")]
         public Task ModifyPositionAsync(int position, string reason = null)
         {
             if (this.Guild == null)
@@ -490,25 +494,33 @@ namespace DisCatSharp.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         /// <exception cref="IndexOutOfRangeException">Thrown when <paramref name="position"/> is out of range.</exception>
         /// <exception cref="ArgumentException">Thrown when function is called on a channel without a parent channel.</exception>
-        public Task ModifyPositionInCategoryAsync(int position, string reason = null)
+        public async Task ModifyPositionInCategoryAsync(int position, string reason = null)
         {
-            if (this.ParentId == null)
-                throw new ArgumentException("You can call this function only on channels in categories.");
+            //if (this.ParentId == null)
+            //    throw new ArgumentException("You can call this function only on channels in categories.");
 
             var isUp = position > this.Position;
 
-            var chns = this.Type == ChannelType.Text || this.Type == ChannelType.News
-                ? this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News))
-                : this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
-                    ? this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage))
-                    : this.Guild._channels.Values.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type);
+            var channels = await this.InternalRefreshChannelsAsync();
+
+            var chns = this.ParentId != null
+                ? this.Type == ChannelType.Text || this.Type == ChannelType.News
+                    ? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News))
+                    : this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
+                        ? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage))
+                        : channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type)
+                : this.Type == ChannelType.Text || this.Type == ChannelType.News
+                    ? channels.Where(xc => xc.ParentId == null && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News))
+                    : this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
+                        ? channels.Where(xc => xc.ParentId == null && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage))
+                        : channels.Where(xc => xc.ParentId == null && xc.Type == this.Type);
 
             var ochns = chns.OrderBy(xc => xc.Position).ToArray();
             var min = ochns.First().Position;
             var max = ochns.Last().Position;
 
             if (position > max || position < min)
-                throw new IndexOutOfRangeException($"Position is not in range of category. {position} is {(position > max ? "greater then the maximal" : "lower then the minimal")} position.");
+                throw new IndexOutOfRangeException($"Position is not in range. {position} is {(position > max ? "greater then the maximal" : "lower then the minimal")} position.");
 
             var pmds = new RestGuildChannelReorderPayload[ochns.Length];
             for (var i = 0; i < ochns.Length; i++)
@@ -549,7 +561,34 @@ namespace DisCatSharp.Entities
                 }
             }
 
-            return this.Discord.ApiClient.ModifyGuildChannelPositionAsync(this.Guild.Id, pmds, reason);
+            await this.Discord.ApiClient.ModifyGuildChannelPositionAsync(this.Guild.Id, pmds, reason).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Internaly refreshes the channel list.
+        /// </summary>
+        private async Task<IReadOnlyList<DiscordChannel>> InternalRefreshChannelsAsync() {
+            await this.RefreshPositionsAsync();
+            return this.Guild.Channels.Values.ToList().AsReadOnly();
+        }
+
+        /// <summary>
+        /// Refreshes the positions.
+        /// </summary>
+        public async Task RefreshPositionsAsync()
+        {
+            var channels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Guild.Id);
+            this.Guild._channels.Clear();
+            foreach (var channel in channels.ToList())
+            {
+                channel.Discord = this.Discord;
+                foreach (var xo in channel._permissionOverwrites)
+                {
+                    xo.Discord = this.Discord;
+                    xo._channel_id = channel.Id;
+                }
+                this.Guild._channels[channel.Id] = channel;
+            }
         }
 
         /// <summary>
@@ -577,9 +616,13 @@ namespace DisCatSharp.Entities
             var positive = mode == "+" || mode == "positive" || mode == "down";
             var negative = mode == "-" || mode == "negative" || mode == "up";
             return positive
-                ? position < this.GetMaxPosition() ? this .ModifyPositionInCategoryAsync(this.Position + position, reason) : throw new IndexOutOfRangeException($"Position is not in range of category.")
+                ? position < this.GetMaxPosition()
+                    ? this.ModifyPositionInCategoryAsync(this.Position + position, reason)
+                    : throw new IndexOutOfRangeException($"Position is not in range of category.")
                 : negative
-                    ? position > this.GetMinPosition() ? this.ModifyPositionInCategoryAsync(this.Position - position, reason) : throw new IndexOutOfRangeException($"Position is not in range of category.")
+                    ? position > this.GetMinPosition()
+                        ? this.ModifyPositionInCategoryAsync(this.Position - position, reason)
+                        : throw new IndexOutOfRangeException($"Position is not in range of category.")
                     : throw new ArgumentException("You can only modify with +X or -X. 0 is not valid.");
         }
 
