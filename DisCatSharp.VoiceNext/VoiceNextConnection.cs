@@ -913,6 +913,11 @@ namespace DisCatSharp.VoiceNext
             this.TokenSource.Cancel();
             this.SenderTokenSource.Cancel();
             this.ReceiverTokenSource?.Cancel();
+            this.KeepaliveTokenSource.Cancel();
+            this.TokenSource.Dispose();
+            this.SenderTokenSource.Dispose();
+            this.ReceiverTokenSource?.Dispose();
+            this.KeepaliveTokenSource.Dispose();
 
             try
             {
@@ -1297,10 +1302,9 @@ namespace DisCatSharp.VoiceNext
         }
 
         /// <summary>
-        /// Unixes the timestamp.
+        /// Gets the unix timestamp.
         /// </summary>
-        /// <param name="dt">The dt.</param>
-        /// <returns>An uint.</returns>
+        /// <param name="dt">The datetine.</param>
         private static uint UnixTimestamp(DateTime dt)
         {
             var ts = dt - UnixEpoch;
@@ -1310,8 +1314,3 @@ namespace DisCatSharp.VoiceNext
         }
     }
 }
-
-// Naam you still owe me those noodles :^)
-// I remember
-// Alexa, how much is shipping to emzi
-// NL -> PL is 18.50€ for packages <=2kg it seems (https://www.postnl.nl/en/mail-and-parcels/parcels/international-parcel/)
