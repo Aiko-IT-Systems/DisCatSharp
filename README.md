@@ -1,4 +1,4 @@
-# DisCatSharp ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License) ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/JSzCT6qKA2)
+# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/JSzCT6qKA2)
 Discord Bot Library written in C# for .NET.
 
 #### Status
@@ -6,15 +6,14 @@ Discord Bot Library written in C# for .NET.
 [![Build status](https://ci.appveyor.com/api/projects/status/fy4xn9s3cq7j30j7/branch/main?svg=true)](https://ci.appveyor.com/project/AITSYS/discatsharp/branch/main)
 
 #### Commit Activities
-![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DisCatSharp?label=Commit%20Activity)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit)](https://bugs.aitsys.dev/source/DisCatSharp/history/)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DisCatSharp?label=Commit%20Activity)](https://github.com/Aiko-IT-Systems/DisCatSharp/commits/main)
 
 #### Stats
-![GitHub issues](https://img.shields.io/github/issues/Aiko-IT-Systems/DisCatSharp?label=Issues)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DisCatSharp?label=PRs)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DisCatSharp?label=Size)
-![GitHub contributors](https://img.shields.io/github/contributors/Aiko-IT-Systems/DisCatSharp)
-![GitHub Repo stars](https://img.shields.io/github/stars/Aiko-IT-Systems/DisCatSharp?label=Stars)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DisCatSharp?label=PRs)](https://github.com/Aiko-IT-Systems/DisCatSharp/pulls)
+[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DisCatSharp?label=Size)](#)
+[![GitHub contributors](https://img.shields.io/github/contributors/Aiko-IT-Systems/DisCatSharp)](https://github.com/Aiko-IT-Systems/DisCatSharp/graphs/contributors)
+[![GitHub Repo stars](https://img.shields.io/github/stars/Aiko-IT-Systems/DisCatSharp?label=Stars)](https://github.com/Aiko-IT-Systems/DisCatSharp/stargazers)
 
 ## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
