@@ -1,4 +1,4 @@
-# DisCatSharp ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License) ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors) ![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)
+# DisCatSharp ![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License) ![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/JSzCT6qKA2)
 Discord Bot Library written in C# for .NET.
 
 #### Status
@@ -25,6 +25,9 @@ We decided to maintain an own version of it.
 
 ## Goal
 We want this lib always up-to-date. So the API version is always the newest, in the actual case `v9`.
+
+## Where is the changelog?
+On our guild! You find it [here](#bugs-or-feature-requests).
 
 ## Installing
 You can install the library from following source:
