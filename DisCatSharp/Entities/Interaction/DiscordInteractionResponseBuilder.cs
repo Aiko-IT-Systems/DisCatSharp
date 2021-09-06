@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
@@ -185,7 +184,8 @@ namespace DisCatSharp.Entities
         /// <param name="embed">Embed to add.</param>
         public DiscordInteractionResponseBuilder AddEmbed(DiscordEmbed embed)
         {
-            this._embeds.Add(embed);
+            if (embed != null)
+                this._embeds.Add(embed); // Interactions will 400 silently //
             return this;
         }
 

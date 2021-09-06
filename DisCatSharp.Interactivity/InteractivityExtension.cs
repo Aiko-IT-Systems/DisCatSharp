@@ -620,7 +620,7 @@ namespace DisCatSharp.Interactivity
         /// <param name="channel">The channel to send it on.</param>
         /// <param name="user">User to give control.</param>
         /// <param name="pages">The pages.</param>
-        /// <param name="buttons">Pagination buttons (pass null to default to ones on configuration).</param>
+        /// <param name="buttons">Pagination buttons (pass null to use buttons defined in <see cref="InteractivityConfiguration"/>).</param>
         /// <param name="behaviour">Pagination behaviour.</param>
         /// <param name="deletion">Deletion behaviour</param>
         /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
@@ -632,24 +632,39 @@ namespace DisCatSharp.Interactivity
             var del = deletion ?? this.Config.ButtonBehavior;
             var bts = buttons ?? this.Config.PaginationButtons;
 
+            bts = new(bts);
+            bts.SkipLeft.Disable();
+            bts.Left.Disable();
+
             var builder = new DiscordMessageBuilder()
                 .WithContent(pages.First().Content)
-                .WithEmbed(pages.First().Embed);
+                .WithEmbed(pages.First().Embed)
+                .AddComponents(bts.ButtonArray);
 
             var message = await builder.SendAsync(channel).ConfigureAwait(false);
 
-            var req = new ButtonPaginationRequest(message, user, bhv, del, bts, pages.ToArray(), token);
-
-            await builder // We *COULD* just construct a req with a null message and grab the buttons from that, but eh. //
-                .AddComponents(await req.GetButtonsAsync().ConfigureAwait(false))
-                .ModifyAsync(message).ConfigureAwait(false);
-
+            var req = new ButtonPaginationRequest(message, user, bhv, del, bts, pages.ToArray(), token == default ? this.GetCancellationToken() : token);
 
             await this._compPaginator.DoPaginationAsync(req).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Sends the paginated message async.
+        /// Sends a paginated message with buttons.
+        /// </summary>
+        /// <param name="channel">The channel to send it on.</param>
+        /// <param name="user">User to give control.</param>
+        /// <param name="pages">The pages.</param>
+        /// <param name="buttons">Pagination buttons (pass null to use buttons defined in <see cref="InteractivityConfiguration"/>).</param>
+        /// <param name="behaviour">Pagination behaviour.</param>
+        /// <param name="deletion">Deletion behaviour</param>
+        /// <param name="timeoutoverride">Override timeout period.</param>
+        public Task SendPaginatedMessageAsync(
+            DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons, TimeSpan? timeoutoverride,
+            PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default)
+            => this.SendPaginatedMessageAsync(channel, user, pages, buttons, behaviour, deletion, this.GetCancellationToken(timeoutoverride));
+
+        /// <summary>
+        /// Sends the paginated message.
         /// </summary>
         /// <param name="channel">The channel.</param>
         /// <param name="user">The user.</param>
@@ -662,13 +677,26 @@ namespace DisCatSharp.Interactivity
             => this.SendPaginatedMessageAsync(channel, user, pages, default, behaviour, deletion, token);
 
         /// <summary>
+        /// Sends the paginated message.
+        /// </summary>
+        /// <param name="channel">The channel.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="pages">The pages.</param>
+        /// <param name="timeoutoverride">The timeoutoverride.</param>
+        /// <param name="behaviour">The behaviour.</param>
+        /// <param name="deletion">The deletion.</param>
+        /// <returns>A Task.</returns>
+        public Task SendPaginatedMessageAsync(DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, TimeSpan? timeoutoverride, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default)
+            => this.SendPaginatedMessageAsync(channel, user, pages, timeoutoverride, behaviour, deletion);
+
+        /// <summary>
         /// Sends a paginated message.
         /// For this Event you need the <see cref="DiscordIntents.GuildMessageReactions"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
         /// </summary>
         /// <param name="channel">Channel to send paginated message in.</param>
         /// <param name="user">User to give control.</param>
         /// <param name="pages">Pages.</param>
-        /// <param name="emojis">Pagination emojis (emojis set to null get disabled).</param>
+        /// <param name="emojis">Pagination emojis.</param>
         /// <param name="behaviour">Pagination behaviour (when hitting max and min indices).</param>
         /// <param name="deletion">Deletion behaviour.</param>
         /// <param name="timeoutoverride">Override timeout period.</param>
@@ -690,6 +718,45 @@ namespace DisCatSharp.Interactivity
 
             await this.Paginator.DoPaginationAsync(prequest).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Sends a paginated message in response to an interaction.
+        /// <para>
+        /// <b>Pass the interaction directly. Interactivity will ACK it.</b>
+        /// </para>
+        /// </summary>
+        /// <param name="interaction">The interaction to create a response to.</param>
+        /// <param name="ephemeral">Whether the response should be ephemeral.</param>
+        /// <param name="user">The user to listen for button presses from.</param>
+        /// <param name="pages">The pages to paginate.</param>
+        /// <param name="buttons">Optional: custom buttons</param>
+        /// <param name="behaviour">Pagination behaviour.</param>
+        /// <param name="deletion">Deletion behaviour</param>
+        /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
+        public async Task SendPaginatedResponseAsync(DiscordInteraction interaction, bool ephemeral, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons = null, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
+        {
+            var bhv = behaviour ?? this.Config.PaginationBehaviour;
+            var del = deletion ?? this.Config.ButtonBehavior;
+            var bts = buttons ?? this.Config.PaginationButtons;
+
+            bts = new(bts);
+            bts.SkipLeft.Disable();
+            bts.Left.Disable();
+
+            var builder = new DiscordInteractionResponseBuilder()
+                .WithContent(pages.First().Content)
+                .AddEmbed(pages.First().Embed)
+                .AsEphemeral(ephemeral)
+                .AddComponents(bts.ButtonArray);
+
+            await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder);
+            var message = await interaction.GetOriginalResponseAsync();
+
+            var req = new InteractionPaginationRequest(interaction, message, user, bhv, del, bts, pages, token);
+
+            await this._compPaginator.DoPaginationAsync(req);
+        }
+
 
         /// <summary>
         /// Waits for a custom pagination request to finish.
@@ -835,7 +902,7 @@ namespace DisCatSharp.Interactivity
         /// Gets the cancellation token.
         /// </summary>
         /// <param name="timeout">The timeout.</param>
-        private CancellationToken GetCancellationToken(TimeSpan? timeout) => new CancellationTokenSource(timeout ?? this.Config.Timeout).Token;
+        private CancellationToken GetCancellationToken(TimeSpan? timeout = null) => new CancellationTokenSource(timeout ?? this.Config.Timeout).Token;
 
         /// <summary>
         /// Handles an invalid interaction.

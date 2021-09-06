@@ -114,6 +114,8 @@ namespace DisCatSharp.Interactivity.EventHandling
                 return;
             }
 
+            if (req is InteractionPaginationRequest ipr)
+                ipr.RegenerateCTS(e.Interaction); // Necessary to ensure we don't prematurely yeet the CTS //
 
             await this.HandlePaginationAsync(req, e).ConfigureAwait(false);
         }
@@ -148,12 +150,26 @@ namespace DisCatSharp.Interactivity.EventHandling
 
             var page = await request.GetPageAsync().ConfigureAwait(false);
 
+
+            var bts = await request.GetButtonsAsync().ConfigureAwait(false);
+
+            if (request is InteractionPaginationRequest ipr)
+            {
+                var builder = new DiscordWebhookBuilder()
+                    .WithContent(page.Content)
+                    .AddEmbed(page.Embed)
+                    .AddComponents(bts);
+
+                await args.Interaction.EditOriginalResponseAsync(builder);
+                return;
+            }
+
             this._builder.Clear();
 
             this._builder
                 .WithContent(page.Content)
                 .AddEmbed(page.Embed)
-                .AddComponents(await request.GetButtonsAsync().ConfigureAwait(false));
+                .AddComponents(bts);
 
             await this._builder.ModifyAsync(msg);
 
