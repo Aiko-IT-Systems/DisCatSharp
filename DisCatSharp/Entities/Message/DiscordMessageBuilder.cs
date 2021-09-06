@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace DisCatSharp.Entities
@@ -369,6 +368,7 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Sends the modified message.
+        /// <para>Note: Message replies cannot be modified. To clear the reply, simply pass <see langword="null"/> to <see cref="WithReply"/>.</para>
         /// </summary>
         /// <param name="msg">The original Message to modify.</param>
         /// <returns>The current builder to be chained.</returns>

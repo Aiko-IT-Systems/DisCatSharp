@@ -232,7 +232,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// <summary>
         /// Retrieves an interactivity instance from a message instance.
         /// </summary>
-        private static InteractivityExtension GetInteractivity(DiscordMessage message)
+        internal static InteractivityExtension GetInteractivity(DiscordMessage message)
         {
             var client = (DiscordClient)message.Discord;
             var interactivity = client.GetInteractivity();

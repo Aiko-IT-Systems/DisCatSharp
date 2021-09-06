@@ -197,7 +197,9 @@ namespace DisCatSharp.Entities
         /// <param name="embed">Embed to add.</param>
         public DiscordWebhookBuilder AddEmbed(DiscordEmbed embed)
         {
-            this._embeds.Add(embed);
+            if (embed != null)
+                this._embeds.Add(embed);
+
             return this;
         }
 
