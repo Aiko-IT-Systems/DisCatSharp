@@ -25,7 +25,7 @@ We decided to maintain an own version of it.
 ## Goal
 We want this lib always up-to-date. So the API version is always the newest, in the actual case `v9`.
 
-## Where is the changelog?
+## Where is the Changelog?
 On our guild! You find it [here](#bugs-or-feature-requests).
 
 ## Installing
