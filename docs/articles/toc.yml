@@ -25,6 +25,8 @@
     href: beyond_basics/messagebuilder.md
   - name: Buttons
     href: beyond_basics/buttons.md
+  - name: Workarounds
+    href: beyond_basics/workarounds.md
 - name: Commands
   items:
   - name: Introduction
