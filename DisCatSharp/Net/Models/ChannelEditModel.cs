@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using DisCatSharp.Entities;
+using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Models
 {
@@ -33,6 +35,12 @@ namespace DisCatSharp.Net.Models
         /// Sets the channel's new name.
         /// </summary>
         public string Name { internal get; set; }
+
+        /// <summary>
+        /// Sets the channel's type.
+        /// This can only be used to convert between text and news channels.
+        /// </summary>
+        public Optional<ChannelType> Type { internal get; set; }
 
         /// <summary>
         /// Sets the channel's new position.
@@ -87,6 +95,12 @@ namespace DisCatSharp.Net.Models
         /// Sets this channel's default duration for newly created threads, in minutes, to automatically archive the thread after recent activity.
         /// </summary>
         public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { internal get; set; }
+
+
+        /// <summary>
+        /// Sets the channel's permission overwrites.
+        /// </summary>
+        public IEnumerable<DiscordOverwriteBuilder> PermissionOverwrites { internal get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChannelEditModel"/> class.

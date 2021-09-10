@@ -260,6 +260,13 @@ namespace DisCatSharp.Entities
         public DiscordVoiceRegion RtcRegion
             => this.RtcRegionId != null ? this.Discord.VoiceRegions[this.RtcRegionId] : null;
 
+
+        /// <summary>
+        /// Only sent on the resolved channels of interaction responses for application commands. Gets the permissions of the user in this channel who invoked the command.
+        /// </summary>
+        [JsonProperty("permissions")]
+        public Permissions? UserPermissions { get; internal set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordChannel"/> class.
         /// </summary>
@@ -299,7 +306,7 @@ namespace DisCatSharp.Entities
         {
             return this.Type != ChannelType.Text && this.Type != ChannelType.Private && this.Type != ChannelType.Group && this.Type != ChannelType.News
                 ? throw new ArgumentException("Cannot send a text message to a non-text channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] { embed }, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
 
         /// <summary>
@@ -316,7 +323,7 @@ namespace DisCatSharp.Entities
         {
             return this.Type != ChannelType.Text && this.Type != ChannelType.Private && this.Type != ChannelType.Group && this.Type != ChannelType.News
                 ? throw new ArgumentException("Cannot send a text message to a non-text channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, new[] { embed }, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
 
         /// <summary>
@@ -440,7 +447,7 @@ namespace DisCatSharp.Entities
 
             return this.Discord.ApiClient.ModifyChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Nsfw,
                 mdl.Parent.HasValue ? mdl.Parent.Value?.Id : default(Optional<ulong?>), mdl.Bitrate, mdl.Userlimit, mdl.PerUserRateLimit, mdl.RtcRegion.IfPresent(r => r?.Id),
-                mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.AuditLogReason);
+                mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, mdl.AuditLogReason);
         }
 
         /// <summary>
