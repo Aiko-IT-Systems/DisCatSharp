@@ -169,7 +169,32 @@ namespace DisCatSharp.ApplicationCommands
             if (this.Client.ShardId == 0)
                 this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type, permissionSetup)));
         }
+        /*
+        /// <summary>
+        /// Registers a command class with permission setup but without a guild id.
+        /// </summary>
+        /// <typeparam name="T">The command class to register.</typeparam>
+        /// <param name="permissionSetup">A callback to setup permissions with.</param>
+        public void RegisterCommands<T>(Action<ApplicationCommandsPermissionContext> permissionSetup = null) where T : ApplicationCommandsModule
+        {
+            if (this.Client.ShardId == 0)
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(typeof(T), permissionSetup)));
+        }
 
+        /// <summary>
+        /// Registers a command class with permission setup but without a guild id.
+        /// </summary>
+        /// <param name="type">The <see cref="Type"/> of the command class to register.</param>
+        /// <param name="permissionSetup">A callback to setup permissions with.</param>
+        public void RegisterCommands(Type type, Action<ApplicationCommandsPermissionContext> permissionSetup = null)
+        {
+            if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
+                throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
+            //If sharding, only register for shard 0
+            if (this.Client.ShardId == 0)
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(type, permissionSetup)));
+        }
+        */
         /// <summary>
         /// To be run on ready.
         /// </summary>
