@@ -22,6 +22,7 @@
 
 using System;
 using System.Globalization;
+using DisCatSharp.Net.Abstractions;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
@@ -142,6 +143,19 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("request_to_speak_timestamp", NullValueHandling = NullValueHandling.Ignore)]
         internal DateTimeOffset? RequestToSpeakTimestamp { get; set; }
+
+        /// <summary>
+        /// Gets the member this voice state belongs to.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordMember Member
+            => this.Guild.Members.TryGetValue(this.TransportMember.User.Id, out var member) ? member : new DiscordMember(this.TransportMember) { Discord = this.Discord };
+
+        /// <summary>
+        /// Gets the transport member.
+        /// </summary>
+        [JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
+        internal TransportMember TransportMember { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordVoiceState"/> class.

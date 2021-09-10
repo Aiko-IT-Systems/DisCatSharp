@@ -2484,6 +2484,11 @@ namespace DisCatSharp
                 mbr.IsMuted = vstateNew.IsServerMuted;
                 mbr.IsDeafened = vstateNew.IsServerDeafened;
             }
+            else
+            {
+                var transportMbr = vstateNew.TransportMember;
+                this.UpdateUser(new DiscordUser(transportMbr.User) { Discord = this }, gid, gld, transportMbr);
+            }
 
             var ea = new VoiceStateUpdateEventArgs
             {
@@ -2690,16 +2695,23 @@ namespace DisCatSharp
         internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction)
         {
             var usr = new DiscordUser(user) { Discord = this };
-            this.UserCache.AddOrUpdate(usr.Id, usr, (old, @new) => @new);
 
-            if (member != null)
-                usr = new DiscordMember(member) { _guild_id = guildId.Value, Discord = this };
-
-            interaction.User = usr;
             interaction.ChannelId = channelId;
             interaction.GuildId = guildId;
             interaction.Discord = this;
             interaction.Data.Discord = this;
+
+            if (member != null)
+            {
+                usr = new DiscordMember(member) { _guild_id = guildId.Value, Discord = this };
+                this.UpdateUser(usr, guildId, interaction.Guild, member);
+            }
+            else
+            {
+                this.UserCache.AddOrUpdate(usr.Id, usr, (old, @new) => @new);
+            }
+
+            interaction.User = usr;
 
             var resolved = interaction.Data.Resolved;
             if (resolved != null)

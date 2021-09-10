@@ -33,7 +33,7 @@ namespace DisCatSharp.Entities
         /// Gets the activity type.
         /// </summary>
         [JsonProperty("type")]
-        public int Type { get; internal set; }
+        public MessageActivityType Type { get; internal set; }
 
         /// <summary>
         /// Gets the party id of the activity.

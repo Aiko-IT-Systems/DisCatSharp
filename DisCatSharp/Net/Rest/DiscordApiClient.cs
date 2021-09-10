@@ -1224,10 +1224,20 @@ namespace DisCatSharp.Net
         /// <param name="rtcRegion">The rtc region.</param>
         /// <param name="qualityMode">The quality mode.</param>
         /// <param name="autoArchiveDuration">The default auto archive duration.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="permissionOverwrites">The permission overwrites</param>
         /// <param name="reason">The reason.</param>
-        /// <returns>A Task.</returns>
-        internal Task ModifyChannelAsync(ulong channel_id, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? user_limit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, string reason)
+        internal Task ModifyChannelAsync(ulong channel_id, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? user_limit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, string reason)
         {
+
+            List<DiscordRestOverwrite> restoverwrites = null;
+            if (permissionOverwrites != null)
+            {
+                restoverwrites = new List<DiscordRestOverwrite>();
+                foreach (var ow in permissionOverwrites)
+                    restoverwrites.Add(ow.Build());
+            }
+
             var pld = new RestChannelModifyPayload
             {
                 Name = name,
@@ -1240,7 +1250,9 @@ namespace DisCatSharp.Net
                 PerUserRateLimit = perUserRateLimit,
                 RtcRegion = rtcRegion,
                 QualityMode = qualityMode,
-                DefaultAutoArchiveDuration = autoArchiveDuration
+                DefaultAutoArchiveDuration = autoArchiveDuration,
+                Type = type,
+                PermissionOverwrites = restoverwrites
             };
 
             var headers = Utilities.GetBaseHeaders();

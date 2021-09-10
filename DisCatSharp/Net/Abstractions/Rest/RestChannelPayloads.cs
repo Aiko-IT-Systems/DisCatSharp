@@ -110,6 +110,12 @@ namespace DisCatSharp.Net.Abstractions
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        [JsonProperty("type")]
+        public Optional<ChannelType> Type { get; set; }
+
+        /// <summary>
         /// Gets or sets the position.
         /// </summary>
         [JsonProperty("position", NullValueHandling = NullValueHandling.Ignore)]
@@ -168,6 +174,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
         public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; set; }
+
+        /// <summary>
+        /// Gets or sets the permission overwrites.
+        /// </summary>
+        [JsonProperty("permission_overwrites", NullValueHandling = NullValueHandling.Ignore)]
+        public IEnumerable<DiscordRestOverwrite> PermissionOverwrites { get; set; }
 
     }
 
