@@ -1,4 +1,4 @@
-# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/JSzCT6qKA2)
+# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/6yeC6ZN8yB)
 Discord Bot Library written in C# for .NET.
 
 #### Status
@@ -39,7 +39,7 @@ The documentation for the latest stable version is available at [docs.dcs.aitsys
 Do note that the documentation might not reflect the latest changes in nightly version of the library.
 
 ## Bugs or Feature requests?
-Write me on Discord ([Catra#9999](https://discord.com/users/856780995629154305)) or join our [support guild](https://discord.gg/JSzCT6qKA2) and open a support ticket. All requests are tracked at [bugs.aitsys.dev](https://bugs.aitsys.dev).
+Write me on Discord ([Catra#9999](https://discord.com/users/856780995629154305)) or join our [support guild](https://discord.gg/6yeC6ZN8yB) and open a support ticket. All requests are tracked at [bugs.aitsys.dev](https://bugs.aitsys.dev).
 
 ### Tutorials
 * [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
