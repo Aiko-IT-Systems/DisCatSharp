@@ -164,7 +164,7 @@ namespace DisCatSharp.Interactivity
                 .WaitForMatchAsync(new(message,
                     c =>
                         c.Interaction.Data.ComponentType == ComponentType.Button &&
-                        buttons.Any(b => b.CustomId == c.Id), token));
+                        buttons.Any(b => b.CustomId == c.Id), token)).ConfigureAwait(false);
 
             return new(res is null, res);
         }
@@ -749,12 +749,12 @@ namespace DisCatSharp.Interactivity
                 .AsEphemeral(ephemeral)
                 .AddComponents(bts.ButtonArray);
 
-            await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder);
-            var message = await interaction.GetOriginalResponseAsync();
+            await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false);
+            var message = await interaction.GetOriginalResponseAsync().ConfigureAwait(false);
 
             var req = new InteractionPaginationRequest(interaction, message, user, bhv, del, bts, pages, token);
 
-            await this._compPaginator.DoPaginationAsync(req);
+            await this._compPaginator.DoPaginationAsync(req).ConfigureAwait(false);
         }
 
 

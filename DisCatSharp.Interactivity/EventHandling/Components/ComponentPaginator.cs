@@ -64,7 +64,7 @@ namespace DisCatSharp.Interactivity.EventHandling
             try
             {
                 var tcs = await request.GetTaskCompletionSourceAsync().ConfigureAwait(false);
-                await tcs.Task;
+                await tcs.Task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -103,13 +103,13 @@ namespace DisCatSharp.Interactivity.EventHandling
             if (this._config.AckPaginationButtons)
             {
                 e.Handled = true;
-                await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+                await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
             }
 
             if (await req.GetUserAsync().ConfigureAwait(false) != e.User)
             {
                 if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-                    await e.Interaction.CreateFollowupMessageAsync(new() { Content = this._config.ResponseMessage, IsEphemeral = true });
+                    await e.Interaction.CreateFollowupMessageAsync(new() { Content = this._config.ResponseMessage, IsEphemeral = true }).ConfigureAwait(false);
 
                 return;
             }
@@ -160,7 +160,7 @@ namespace DisCatSharp.Interactivity.EventHandling
                     .AddEmbed(page.Embed)
                     .AddComponents(bts);
 
-                await args.Interaction.EditOriginalResponseAsync(builder);
+                await args.Interaction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
                 return;
             }
 
@@ -171,7 +171,7 @@ namespace DisCatSharp.Interactivity.EventHandling
                 .AddEmbed(page.Embed)
                 .AddComponents(bts);
 
-            await this._builder.ModifyAsync(msg);
+            await this._builder.ModifyAsync(msg).ConfigureAwait(false);
 
         }
     }

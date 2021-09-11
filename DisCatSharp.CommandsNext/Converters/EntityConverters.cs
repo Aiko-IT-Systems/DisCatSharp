@@ -138,7 +138,7 @@ namespace DisCatSharp.CommandsNext.Converters
                 return ret;
             }
 
-            var searchResult = await ctx.Guild.SearchMembersAsync(value);
+            var searchResult = await ctx.Guild.SearchMembersAsync(value).ConfigureAwait(false);
             if (searchResult.Any())
                 return Optional.FromValue(searchResult.First());
 
@@ -381,7 +381,7 @@ namespace DisCatSharp.CommandsNext.Converters
         {
             var m = InviteRegex.Match(value);
             if (m.Success)
-{
+            {
                 var result = await ctx.Client.GetInviteByCodeAsync(m.Groups[5].Value).ConfigureAwait(false);
                 var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordInvite>();
                 return ret;
@@ -507,14 +507,14 @@ namespace DisCatSharp.CommandsNext.Converters
                     : DiscordEmoji.TryFromGuildEmote(ctx.Client, id, out emoji)
                     ? Task.FromResult(Optional.FromValue(emoji))
                     : Task.FromResult(Optional.FromValue(new DiscordEmoji
-                {
-                    Discord = ctx.Client,
-                    Id = id,
-                    Name = name,
-                    IsAnimated = anim,
-                    RequiresColons = true,
-                    IsManaged = false
-                }));
+                    {
+                        Discord = ctx.Client,
+                        Id = id,
+                        Name = name,
+                        IsAnimated = anim,
+                        RequiresColons = true,
+                        IsManaged = false
+                    }));
             }
 
             return Task.FromResult(Optional.FromNoValue<DiscordEmoji>());
