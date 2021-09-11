@@ -580,6 +580,40 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
+        /// Makes the user a speaker.
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown when the user is not inside an stage channel.</exception>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task MakeSpeakerAsync()
+        {
+            var vs = this.VoiceState;
+            if (vs == null || vs.Channel.Type != ChannelType.Stage)
+                throw new ArgumentException("Voice state can only be updated when the user is inside an stage channel.");
+
+            await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, false).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Moves the user to audience.
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown when the user is not inside an stage channel.</exception>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task MoveToAudienceAsync()
+        {
+            var vs = this.VoiceState;
+            if (vs == null || vs.Channel.Type != ChannelType.Stage)
+                throw new ArgumentException("Voice state can only be updated when the user is inside an stage channel.");
+
+            await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, true).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Calculates permissions in a given channel for this member.
         /// </summary>
         /// <param name="channel">Channel to calculate permissions for.</param>
