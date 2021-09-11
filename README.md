@@ -45,9 +45,6 @@ Write me on Discord ([Catra#9999](https://discord.com/users/856780995629154305))
 * [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
 * [Examples](https://examples.dcs.aitsys.dev)
 
-## Notice
-Feel free to re-use code in DSharpPlus.
-
 ## Latest NuGet Packages
 Package|NuGet
 |--|--|
@@ -81,3 +78,6 @@ Big thanks goes to the following people who helps us ♥️
 - [Johannes](https://github.com/JMLutra)
 - [Geferon](https://github.com/geferon)
 - [Alice](https://github.com/mortAlice)
+
+## Notice
+Feel free to re-use code in DSharpPlus.
