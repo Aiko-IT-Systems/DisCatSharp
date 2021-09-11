@@ -112,7 +112,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <returns>The origingal message that was sent. This <b>does not work on ephemeral messages.</b></returns>
         public Task<DiscordMessage> GetOriginalResponseAsync() =>
-            this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id ,this.Token);
+            this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
 
         /// <summary>
         /// Edits the original interaction response.
@@ -123,7 +123,7 @@ namespace DisCatSharp.Entities
         {
             builder.Validate(isInteractionResponse: true);
 
-            return await this.Discord.ApiClient.EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder);
+            return await this.Discord.ApiClient.EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace DisCatSharp.Entities
         {
             builder.Validate();
 
-            return await this.Discord.ApiClient.CreateFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, builder);
+            return await this.Discord.ApiClient.CreateFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace DisCatSharp.Entities
         {
             builder.Validate(isFollowup: true);
 
-            return await this.Discord.ApiClient.EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder);
+            return await this.Discord.ApiClient.EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder).ConfigureAwait(false);
         }
 
         /// <summary>

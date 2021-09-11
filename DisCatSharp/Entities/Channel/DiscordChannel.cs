@@ -574,7 +574,8 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Internaly refreshes the channel list.
         /// </summary>
-        private async Task<IReadOnlyList<DiscordChannel>> InternalRefreshChannelsAsync() {
+        private async Task<IReadOnlyList<DiscordChannel>> InternalRefreshChannelsAsync()
+        {
             await this.RefreshPositionsAsync();
             return this.Guild.Channels.Values.ToList().AsReadOnly();
         }
@@ -1204,7 +1205,7 @@ namespace DisCatSharp.Entities
             if (this.Type != ChannelType.Stage)
                 throw new ArgumentException("Voice state can only be updated in a stage channel.");
 
-            await this.Discord.ApiClient.UpdateCurrentUserVoiceStateAsync(this.GuildId.Value, this.Id, suppress, requestToSpeakTimestamp);
+            await this.Discord.ApiClient.UpdateCurrentUserVoiceStateAsync(this.GuildId.Value, this.Id, suppress, requestToSpeakTimestamp).ConfigureAwait(false);
         }
 
         /// <summary>

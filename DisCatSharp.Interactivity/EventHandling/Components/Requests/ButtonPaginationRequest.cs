@@ -218,7 +218,7 @@ namespace DisCatSharp.Interactivity.EventHandling
                         .AddEmbed(this._pages[this._index].Embed)
                         .AddComponents(buttons);
 
-                    await builder.ModifyAsync(this._message);
+                    await builder.ModifyAsync(this._message).ConfigureAwait(false);
                     break;
 
                 case ButtonPaginationBehavior.DeleteButtons:
@@ -226,11 +226,11 @@ namespace DisCatSharp.Interactivity.EventHandling
                         .WithContent(this._pages[this._index].Content)
                         .AddEmbed(this._pages[this._index].Embed);
 
-                    await builder.ModifyAsync(this._message);
+                    await builder.ModifyAsync(this._message).ConfigureAwait(false);
                     break;
 
                 case ButtonPaginationBehavior.DeleteMessage:
-                    await this._message.DeleteAsync();
+                    await this._message.DeleteAsync().ConfigureAwait(false);
                     break;
 
                 case ButtonPaginationBehavior.Ignore:

@@ -79,7 +79,7 @@ namespace DisCatSharp.Entities
             this._role_ids = mbr.Roles ?? new List<ulong>();
             this._role_ids_lazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._role_ids));
         }
-        
+
         /// <summary>
         /// Gets the members avatar hash.
         /// </summary>
@@ -231,7 +231,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public Permissions Permissions => this.GetPermissions();
-        
+
         #region Overridden user properties
         /// <summary>
         /// Gets the user.
@@ -576,7 +576,7 @@ namespace DisCatSharp.Entities
             if (channel.Type != ChannelType.Stage)
                 throw new ArgumentException("Voice state can only be updated in a stage channel.");
 
-            await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, channel.Id, suppress);
+            await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, channel.Id, suppress).ConfigureAwait(false);
         }
 
         /// <summary>

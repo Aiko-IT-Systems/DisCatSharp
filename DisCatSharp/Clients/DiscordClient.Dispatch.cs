@@ -1226,7 +1226,7 @@ namespace DisCatSharp
                 StickersAfter = guild.Stickers
             };
 
-            await this._guildStickersUpdated.InvokeAsync(this, sea);
+            await this._guildStickersUpdated.InvokeAsync(this, sea).ConfigureAwait(false);
         }
 
         /// <summary>
