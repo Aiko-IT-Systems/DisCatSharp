@@ -23,8 +23,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DisCatSharp.Enums.Discord;
+using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Models;
+using DisCatSharp.Net.Serialization;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
