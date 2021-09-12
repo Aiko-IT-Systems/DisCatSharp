@@ -85,6 +85,20 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordRoleTags Tags { get; internal set; }
+        
+        /// <summary>
+        /// Gets the role icon's hash.
+        /// </summary>
+        [JsonProperty("icon", NullValueHandling = NullValueHandling.Ignore)]
+        public string IconHash { get; internal set; }
+
+        /// <summary>
+        /// Gets the role icon's url.
+        /// </summary>
+        [JsonIgnore]
+        public string IconUrl
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ROLE_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=64" : null;
+
 
         [JsonIgnore]
         internal ulong _guild_id = 0;
