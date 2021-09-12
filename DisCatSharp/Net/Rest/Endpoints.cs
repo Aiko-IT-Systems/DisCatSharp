@@ -362,5 +362,9 @@ namespace DisCatSharp.Net
         /// The list endpoint.
         /// </summary>
         public const string LIST = "/list";
+        /// <summary>
+        /// The role icons endpoint.
+        /// </summary>
+        public const string ROLE_ICONS = "/role-icons";
     }
 }
