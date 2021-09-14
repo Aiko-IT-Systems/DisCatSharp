@@ -54,7 +54,7 @@ namespace DisCatSharp
         public ILogger<BaseDiscordClient> Logger { get; }
 
         /// <summary>
-        /// Gets the string representing the version of D#+NG.
+        /// Gets the string representing the version of lib.
         /// </summary>
         public string VersionString { get; }
 
