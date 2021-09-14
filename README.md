@@ -41,9 +41,12 @@ Do note that the documentation might not reflect the latest changes in nightly v
 ## Bugs or Feature requests?
 Write me on Discord ([Catra#9999](https://discord.com/users/856780995629154305)) or join our [support guild](https://discord.gg/6yeC6ZN8yB) and open a support ticket. All requests are tracked at [bugs.aitsys.dev](https://bugs.aitsys.dev).
 
-### Tutorials
+## Tutorials
 * [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
 * [Examples](https://examples.dcs.aitsys.dev)
+
+## Snippts
+[Snippets for Visual Studio](https://github.com/Aiko-IT-Systems/DisCatSharp.Snippets)
 
 ## Latest NuGet Packages
 Package|NuGet
