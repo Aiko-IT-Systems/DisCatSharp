@@ -3057,6 +3057,12 @@ namespace DisCatSharp.Entities
         /// Guild has the new thread permissions.
         /// </summary>
         public bool HasNewThreadPermissions { get; }
+        
+        
+        /// <summary>
+        /// Guild has enabled role subsriptions.
+        /// </summary>
+        public bool HasRoleSubscriptionsEnabled { get; }
 
         /// <summary>
         /// String of guild features
@@ -3096,6 +3102,7 @@ namespace DisCatSharp.Entities
             this.HasThreadsEnabled = guild.RawFeatures.Contains("THREADS_ENABLED");
             this.CanSetRoleIcons = guild.RawFeatures.Contains("ROLE_ICONS");
             this.HasNewThreadPermissions = guild.RawFeatures.Contains("NEW_THREAD_PERMISSIONS");
+            this.HasRoleSubscriptionsEnabled = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_ENABLED");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach (var feature in guild.RawFeatures)
