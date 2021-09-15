@@ -21,6 +21,9 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -41,18 +44,26 @@ namespace DisCatSharp.ApplicationCommands
         public string Description;
 
         /// <summary>
-        /// Marks this parameter as an option for a slash command
+        /// Gets the optional allowed channel types.
         /// </summary>
-        /// <param name="name">The name of the option</param>
-        /// <param name="description">The description of the option</param>
-        public OptionAttribute(string name, string description)
+        public IReadOnlyCollection<ChannelType> ChannelTypes { get; }
+
+        /// <summary>
+        /// Marks this parameter as an option for a slash command.
+        /// </summary>
+        /// <param name="name">The name of the option.</param>
+        /// <param name="description">The description of the option.</param>
+        /// <param name="channeltypes">The optional selectable channel types.</param>
+        public OptionAttribute(string name, string description, params ChannelType[] channeltypes)
         {
             if(name.Length > 32)
                 throw new ArgumentException("Slash command option names cannot go over 32 characters.");
             if (description.Length > 100)
                 throw new ArgumentException("Slash command option descriptions cannot go over 100 characters.");
+            var channelTypes = channeltypes.Any() ? new ReadOnlyCollection<ChannelType>(channeltypes) : null;
             this.Name = name.ToLower();
             this.Description = description;
+            this.ChannelTypes = channelTypes;
         }
     }
 }

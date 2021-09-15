@@ -1039,7 +1039,12 @@ namespace DisCatSharp.ApplicationCommands
                     choices = await this.GetChoiceAttributesFromProvider(choiceProviders);
                 }
 
-                options.Add(new DiscordApplicationCommandOption(optionattribute.Name, optionattribute.Description, parametertype, !parameter.IsOptional, choices));
+                if(optionattribute.ChannelTypes != null && parametertype != ApplicationCommandOptionType.Channel)
+                {
+                    throw new ArgumentException($"You can use the channel types argument only on the option type channel.");
+                }
+
+                options.Add(new DiscordApplicationCommandOption(optionattribute.Name, optionattribute.Description, parametertype, !parameter.IsOptional, choices, channeltypes: optionattribute.ChannelTypes));
             }
 
             return options;

@@ -70,6 +70,12 @@ namespace DisCatSharp.Entities
         public IReadOnlyCollection<DiscordApplicationCommandOption> Options { get; internal set; }
 
         /// <summary>
+        /// Gets the optional allowed channel types.
+        /// </summary>
+        [JsonProperty("channel_types", NullValueHandling = NullValueHandling.Ignore)]
+        public IReadOnlyCollection<ChannelType> ChannelTypes { get; internal set; }
+
+        /// <summary>
         /// Gets whether the command is enabled by default when the app is added to a guild.
         /// </summary>
         [JsonProperty("default_permission", NullValueHandling = NullValueHandling.Ignore)]
@@ -84,18 +90,20 @@ namespace DisCatSharp.Entities
         /// <param name="required">Whether the parameter is required.</param>
         /// <param name="choices">The optional choice selection for this parameter.</param>
         /// <param name="options">The optional subcommands for this parameter.</param>
+        /// <param name="channeltypes">If the option is a channel type, the channels shown will be restricted to these types</param>
         /// <param name="default_permission">Optional default permission for this command.</param>
-        public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool? required = null, IEnumerable<DiscordApplicationCommandOptionChoice> choices = null, IEnumerable<DiscordApplicationCommandOption> options = null, bool default_permission = true)
+        public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool? required = null, IEnumerable<DiscordApplicationCommandOptionChoice> choices = null, IEnumerable<DiscordApplicationCommandOption> options = null, IEnumerable<ChannelType> channeltypes = null, bool default_permission = true)
         {
             if (!Utilities.IsValidSlashCommandName(name))
-                throw new ArgumentException("Invalid slash command option name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
+                throw new ArgumentException("Invalid application command option name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
             if (name.Any(ch => char.IsUpper(ch)))
-                throw new ArgumentException("Slash command option name cannot have any upper case characters.", nameof(name));
+                throw new ArgumentException("Application command option name cannot have any upper case characters.", nameof(name));
             if (description.Length > 100)
-                throw new ArgumentException("Slash command option description cannot exceed 100 characters.", nameof(description));
+                throw new ArgumentException("Application command option description cannot exceed 100 characters.", nameof(description));
 
             var choiceList = choices != null ? new ReadOnlyCollection<DiscordApplicationCommandOptionChoice>(choices.ToList()) : null;
             var optionList = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;
+            var channelTypes = channeltypes!= null ? new ReadOnlyCollection<ChannelType>(channeltypes.ToList()) : null;
 
             this.Name = name;
             this.Description = description;
@@ -103,6 +111,7 @@ namespace DisCatSharp.Entities
             this.Required = required;
             this.Choices = choiceList;
             this.Options = optionList;
+            this.ChannelTypes = channelTypes;
             this.DefaultPermission = default_permission;
         }
     }
