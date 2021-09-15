@@ -86,7 +86,10 @@ namespace DisCatSharp.Interactivity.EventHandling
 
             if (this.PageCount is 1)
             {
-                this._buttons.ButtonArray.Select(b => b.Disable());
+                this._buttons.SkipLeft.Disable();
+                this._buttons.Left.Disable();
+                this._buttons.Right.Disable();
+                this._buttons.SkipRight.Disable();
                 this._buttons.Stop.Enable();
                 return page;
             }
@@ -98,7 +101,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 
             this._buttons.Left.Disabled = this._index < 1;
 
-            this._buttons.Right.Disabled = this._index == this.PageCount - 1;
+            this._buttons.Right.Disabled = this._index >= this.PageCount - 1;
 
             this._buttons.SkipRight.Disabled = this._index >= this.PageCount - 2;
 
