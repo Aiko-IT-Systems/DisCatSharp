@@ -140,6 +140,12 @@ namespace DisCatSharp.Entities
         public DateTimeOffset ExpiresAt { get; internal set; }
 
         /// <summary>
+        /// Gets the date and time when this invite got expired.
+        /// </summary>
+        [JsonProperty("expired_at", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTimeOffset ExpiredAt { get; internal set; }
+
+        /// <summary>
         /// Gets whether this invite is revoked.
         /// </summary>
         [JsonProperty("revoked", NullValueHandling = NullValueHandling.Ignore)]
