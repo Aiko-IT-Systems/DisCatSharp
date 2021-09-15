@@ -34,9 +34,9 @@ You can install the library from following source:
 The latest release is always available on [NuGet](https://nuget.dcs.aitsys.dev).
 
 ## Documentation
-The documentation for the latest stable version is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
+The documentation for the latest stable version is available at [docs.dcs.aitsys.dev/lts](https://docs.dcs.aitsys.dev/lts).
 
-Do note that the documentation might not reflect the latest changes in nightly version of the library.
+The documentation of the latest nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
 Write me on Discord ([Catra#9999](https://discord.com/users/856780995629154305)) or join our [support guild](https://discord.gg/6yeC6ZN8yB) and open a support ticket. All requests are tracked at [bugs.aitsys.dev](https://bugs.aitsys.dev).
