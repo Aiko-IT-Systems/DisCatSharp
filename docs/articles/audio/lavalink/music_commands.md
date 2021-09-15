@@ -333,6 +333,6 @@ public async Task Pause(CommandContext ctx)
 }
 ```
 
-Of course, there are other commands Lavalink has to offer. Check out [the docs](https://dsp-nextgen.aitsys.dev/api/DisCatSharp.Lavalink.LavalinkGuildConnection.html#methods) to view the commands you can use while playing tracks.
+Of course, there are other commands Lavalink has to offer. Check out [the docs](https://docs.dcs.aitsys.dev/api/DisCatSharp.Lavalink.LavalinkGuildConnection.html#methods) to view the commands you can use while playing tracks.
 
 
