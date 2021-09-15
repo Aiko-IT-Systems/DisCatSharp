@@ -36,7 +36,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Gets the name of this option
         /// </summary>
-        public string Name { get; }
+        public string Name;
 
         /// <summary>
         /// Gets the description of this option
@@ -58,12 +58,13 @@ namespace DisCatSharp.ApplicationCommands
         {
             if(name.Length > 32)
                 throw new ArgumentException("Slash command option names cannot go over 32 characters.");
-            if (description.Length > 100)
+            else if (description.Length > 100)
                 throw new ArgumentException("Slash command option descriptions cannot go over 100 characters.");
-            var channelTypes = channeltypes.Any() ? new ReadOnlyCollection<ChannelType>(channeltypes) : null;
-            this.Name = name.ToLower();
-            this.Description = description;
-            this.ChannelTypes = channelTypes;
+
+            ReadOnlyCollection<ChannelType> channelTypes = channeltypes.Any() ? new(channeltypes) : null;
+            Name = name.ToLower();
+            Description = description;
+            ChannelTypes = channelTypes;
         }
     }
 }
