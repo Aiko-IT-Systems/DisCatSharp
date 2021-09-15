@@ -633,8 +633,11 @@ namespace DisCatSharp.Interactivity
             var bts = buttons ?? this.Config.PaginationButtons;
 
             bts = new(bts);
-            bts.SkipLeft.Disable();
-            bts.Left.Disable();
+            if (this.Config.PaginationBehaviour is PaginationBehaviour.Ignore)
+            {
+                bts.SkipLeft.Disable();
+                bts.Left.Disable();
+            }
 
             var builder = new DiscordMessageBuilder()
                 .WithContent(pages.First().Content)
