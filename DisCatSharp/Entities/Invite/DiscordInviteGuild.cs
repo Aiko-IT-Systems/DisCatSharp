@@ -109,6 +109,18 @@ namespace DisCatSharp.Entities
         public DiscordGuildWelcomeScreen WelcomeScreen { get; internal set; }
 
         /// <summary>
+        /// Gets the guild nsfw status.
+        /// </summary>
+        [JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
+        public bool IsNsfw { get; internal set; }
+
+        /// <summary>
+        /// Gets the guild nsfw level.
+        /// </summary>
+        [JsonProperty("nsfw_level", NullValueHandling = NullValueHandling.Ignore)]
+        public NsfwLevel NsfwLevel { get; internal set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DiscordInviteGuild"/> class.
         /// </summary>
         internal DiscordInviteGuild() { }
