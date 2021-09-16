@@ -29,13 +29,6 @@ Examples of good commit messages:
   - Cache itself is now a ring buffer.
   ```
 
-Examples of bad commit messages:
-
-* `I a bad.`
-* `Tit and tat.`
-* `Fixed.`
-* `Oops.`
-
 # Code style
 We use [Microsoft C# Coding Conventions](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions)
 throughout the repository, with several exceptions:

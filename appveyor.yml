@@ -33,14 +33,14 @@
       {
           # Rebuild documentation
           Write-Host "Commencing complete build"
-          & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER
+          & .\s_oneclick-rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER
           & Remove-Item "$dir\*.symbols.nupkg"
       }
       else
       {
           # Skip documentation
           Write-Host "Building from PR ($Env:APPVEYOR_PULL_REQUEST_NUMBER); skipping docs build"
-          & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER
+          & .\s_oneclick-rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER
           & Remove-Item "$dir\*.symbols.nupkg"
       }
   artifacts:
@@ -105,14 +105,14 @@
       {
           # Rebuild documentation
           Write-Host "Commencing complete build"
-          & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -DocsPath ".\docs" -DocsPackageName "dcs-docs"
+          & .\s_oneclick-rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -DocsPath ".\docs" -DocsPackageName "dcs-docs"
           & Remove-Item "$dir\*.symbols.nupkg"
       }
       else
       {
           # Skip documentation
           Write-Host "Building from PR ($Env:APPVEYOR_PULL_REQUEST_NUMBER); skipping docs build"
-          & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release"
+          & .\s_oneclick-rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release"
           & Remove-Item "$dir\*.symbols.nupkg"
       }
   artifacts:
