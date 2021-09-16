@@ -531,12 +531,13 @@ namespace DisCatSharp
                     break;
 
                 case "application_command_permissions_update":
-                    var pms = dat["permissions"].ToObject<IEnumerable<DiscordApplicationCommandPermission>>();
                     var aid = (ulong)dat["application_id"];
                     if (aid != this.CurrentApplication.Id)
                         return;
+
+                    var pms = dat["permissions"].ToObject<IEnumerable<DiscordApplicationCommandPermission>>();
                     gid = (ulong)dat["guild_id"];
-                    await this.OnApplicationCommandPermissionsUpdateAsync(pms, (ulong)dat["id"], gid, aid);
+                    await this.OnApplicationCommandPermissionsUpdateAsync(pms, (ulong)dat["id"], gid, aid).ConfigureAwait(false);
                     break;
 
                 #endregion
@@ -2659,6 +2660,9 @@ namespace DisCatSharp
         /// <param name="a_id">The application id.</param>
         internal async Task OnApplicationCommandPermissionsUpdateAsync(IEnumerable<DiscordApplicationCommandPermission> perms, ulong c_id, ulong guild_id, ulong a_id)
         {
+            if (a_id != this.CurrentApplication.Id)
+                return;
+
             var guild = this.InternalGetCachedGuild(guild_id);
             var cmd = await this.GetGuildApplicationCommandAsync(guild_id, c_id);
 
