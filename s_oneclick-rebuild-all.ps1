@@ -23,7 +23,7 @@ $suffix = ""
 $build_number = -1
 
 # Documentation build. Set either to empty string to skip documentation build.
-$docs_path = ".\docs"
+$docs_path = ".\DisCatSharp.Docs"
 $docs_pkgname = "dcs-docs"
 
 # --------- Execute build ---------
