@@ -532,8 +532,11 @@ namespace DisCatSharp
 
                 case "application_command_permissions_update":
                     var pms = dat["permissions"].ToObject<IEnumerable<DiscordApplicationCommandPermission>>();
+                    var aid = (ulong)dat["application_id"];
+                    if (aid != this.CurrentApplication.Id)
+                        return;
                     gid = (ulong)dat["guild_id"];
-                    await this.OnApplicationCommandPermissionsUpdateAsync(pms, (ulong)dat["id"], gid, (ulong)dat["application_id"]);
+                    await this.OnApplicationCommandPermissionsUpdateAsync(pms, (ulong)dat["id"], gid, aid);
                     break;
 
                 #endregion
