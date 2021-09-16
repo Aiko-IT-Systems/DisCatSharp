@@ -1,1 +1,1 @@
-.\rebuild-docs.ps1 -DocsPath ".\docs" -OutputPath "..\DisCatSharp.Docs\" -PackageName "dcs-docs"
+.\rebuild-docs.ps1 -DocsPath ".\DisCatSharp.Docs" -OutputPath "..\DisCatSharp.Docs\" -PackageName "dcs-docs"

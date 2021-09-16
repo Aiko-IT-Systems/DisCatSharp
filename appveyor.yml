@@ -31,16 +31,14 @@
       # Check if this is a PR
       if (-not $Env:APPVEYOR_PULL_REQUEST_NUMBER)
       {
-          # Rebuild documentation
           Write-Host "Commencing complete build"
-          & .\s_oneclick-rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER
+          & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER
           & Remove-Item "$dir\*.symbols.nupkg"
       }
       else
       {
-          # Skip documentation
-          Write-Host "Building from PR ($Env:APPVEYOR_PULL_REQUEST_NUMBER); skipping docs build"
-          & .\s_oneclick-rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER
+          Write-Host "Building from PR ($Env:APPVEYOR_PULL_REQUEST_NUMBER)"
+          & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -VersionSuffix "$BUILD_SUFFIX" -BuildNumber $BUILD_NUMBER
           & Remove-Item "$dir\*.symbols.nupkg"
       }
   artifacts:
@@ -105,14 +103,14 @@
       {
           # Rebuild documentation
           Write-Host "Commencing complete build"
-          & .\s_oneclick-rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -DocsPath ".\docs" -DocsPackageName "dcs-docs"
+          & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release" -DocsPath ".\DisCatSharp.Docs" -DocsPackageName "dcs-docs"
           & Remove-Item "$dir\*.symbols.nupkg"
       }
       else
       {
           # Skip documentation
           Write-Host "Building from PR ($Env:APPVEYOR_PULL_REQUEST_NUMBER); skipping docs build"
-          & .\s_oneclick-rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release"
+          & .\rebuild-all.ps1 -ArtifactLocation "$dir" -Configuration "Release"
           & Remove-Item "$dir\*.symbols.nupkg"
       }
   artifacts:
