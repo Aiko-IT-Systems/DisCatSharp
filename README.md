@@ -20,6 +20,7 @@ Discord Bot Library written in C# for .NET.
 
 ## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
+
 So the API version is always the newest, in the actual case `v9`.
 
 ## Where is the Changelog?
