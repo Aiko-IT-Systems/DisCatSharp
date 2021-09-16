@@ -60,6 +60,11 @@ namespace DisCatSharp
         /// <summary>
         /// Represents the embedded application Chess in the park.
         /// </summary>
-        ChessInThePark2 = 832012774040141894
+        ChessInThePark2 = 832012774040141894,
+
+        /// <summary>
+        /// Represents the embedded application YouTube Together.
+        /// </summary>
+        YouTubeTogetherV2 = 880218394199220334
     }
 }
