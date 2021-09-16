@@ -3,7 +3,7 @@
     "tasks": [
         {
             "label": "buildDebug",
-            "command": "./rebuild-all.ps1 artifacts -configuration Debug",
+            "command": "./s_oneclick-rebuild-all.ps1 artifacts -configuration Debug",
             "type": "shell",
             "group": "build",
             "presentation": {
@@ -13,7 +13,7 @@
         },
         {
             "label": "buildRelease",
-            "command": "./rebuild-all.ps1 artifacts -configuration Release",
+            "command": "./s_oneclick-rebuild-all.ps1 artifacts -configuration Release",
             "type": "shell",
             "group": "build",
             "presentation": {
@@ -23,7 +23,7 @@
         },
         {
             "label": "buildReleaseDocs",
-            "command": "./rebuild-all.ps1 artifacts -configuration Release -docspath docs -docspackagename dcs-docs",
+            "command": "./s_oneclick-rebuild-all.ps1 artifacts -configuration Release -docspath docs -docspackagename dcs-docs",
             "type": "shell",
             "group": "build",
             "presentation": {

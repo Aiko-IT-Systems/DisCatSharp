@@ -9,7 +9,7 @@ In order to build the library, you will first need to install some software.
 ### Windows
 On Windows, we only officially support Visual Studio 2019 16.10 or newer. Visual Studio Code and other IDEs might work, but are generally not supported or even guaranteed to work properly.
 
-* **Windows 10** - while we support running the library on Windows 7 and above, we only support building on Windows 10.
+* **Windows 10** - while we support running the library on Windows 7 and above, we only support building on Windows 10 and better.
 * [**Git for Windows**](https://git-scm.com/download/win) - required to clone the repository.
 * [**Visual Studio 2019**](https://www.visualstudio.com/downloads/) - community edition or better. We do not support Visual Studio 2017 and older. Note that to build the library, you need Visual Studio 2019 version 16.10 or newer.
    * **Workloads**:
@@ -29,7 +29,7 @@ While these should apply to any modern distribution, we only test against Debian
 
 When installing the below, make sure you install all the dependencies properly. We might ship a build environmnent as a docker container in the future.
 
-* **Any modern GNU/Linux distribution** - like Debian 9.
+* **Any modern GNU/Linux distribution** - like Debian 10.
 * **Git** - to clone the repository.
 * [**Visual Studio Code**](https://code.visualstudio.com/Download) - a recent version is required.
    * **C# for Visual Studio Code (powered by OmniSharp)** - required for syntax highlighting and basic Intellisense
@@ -56,7 +56,7 @@ Building through Visual Studio yields just binaries you can use in your projects
 Building this way outputs NuGet packages, and a documentation package. Ensure you have an internet connection available, as the script will install programs necessary to build the documentation.
 
 1. Open PowerShell and navigate to the directory which you cloned DisCatSharp to.
-2. Execute `.\rebuild-all.ps1 -configuration Release` and wait for the script to finish execution.
+2. Execute `.\s_oneclick-rebuild-all.ps1 -configuration Release` and wait for the script to finish execution.
 3. Once it's done, the artifacts will be available in *dcs-artifacts* directory, next to the directory to which the repository is cloned.
 
 ### GNU/Linux
@@ -70,5 +70,5 @@ When all necessary prerequisites are installed, you can proceed to building. The
 
 #### Through PowerShell
 1. Open PowerShell (`pwsh`) and navigate to the directory which you cloned DisCatSharp to.
-2. Execute `.\rebuild-all.ps1 -configuration Release` and wait for the script to finish execution.
+2. Execute `.\s_oneclick-rebuild-all.ps1 -configuration Release` and wait for the script to finish execution.
 3. Once it's done, the artifacts will be available in *dcs-artifacts* directory, next to the directory to which the repository is cloned.
