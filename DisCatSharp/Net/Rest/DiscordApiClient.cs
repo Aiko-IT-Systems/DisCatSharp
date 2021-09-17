@@ -2661,13 +2661,15 @@ namespace DisCatSharp.Net
         /// <param name="with_counts">If true, with_counts.</param>
         /// <param name="with_expiration">If true, with_expiration.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordInvite> GetInviteAsync(string invite_code, bool? with_counts, bool? with_expiration)
+        internal async Task<DiscordInvite> GetInviteAsync(string invite_code, bool? with_counts, bool? with_expiration, ulong? guild_scheduled_event_id)
         {
             var urlparams = new Dictionary<string, string>();
             if (with_counts.HasValue)
                 urlparams["with_counts"] = with_counts?.ToString();
             if (with_expiration.HasValue)
                 urlparams["with_expiration"] = with_expiration?.ToString();
+            if (guild_scheduled_event_id.HasValue)
+                urlparams["guild_scheduled_event_id"] = guild_scheduled_event_id?.ToString();
 
             var route = $"{Endpoints.INVITES}/:invite_code";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { invite_code }, out var path);
