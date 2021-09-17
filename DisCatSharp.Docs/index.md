@@ -16,4 +16,4 @@ Once you've gotten through the articles, head on over to the [API Documentation]
 ## Source and Contributors
 DisCatSharp is licensed under MIT License, as detailed in the [license](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/master/LICENSE.md) found in the repository.<br/>
 The repository containing the source code for this library can be found [here](https://github.com/Aiko-IT-Systems/DisCatSharp). Contributions are welcomed.<br/>
-[Add me](https://discord.com/users/856780995629154305) on Discord.
+[Join our guild](https://discord.gg/discatsharp).

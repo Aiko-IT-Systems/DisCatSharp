@@ -340,7 +340,7 @@ namespace DisCatSharp.Net
                 VerificationLevel = verification_level,
                 IconBase64 = iconb64,
                 SystemChannelFlags = system_channel_flags
-                
+
             };
 
             var route = $"{Endpoints.GUILDS}";
@@ -4658,7 +4658,7 @@ namespace DisCatSharp.Net
                     LogoHash = guild.IconHash,
                     GuildId = guild.Id,
                     Guild = guild,
-                    SupportInvite = await this.GetInviteAsync("6yeC6ZN8yB", true, true)
+                    SupportInvite = await this.GetInviteAsync("discatsharp", true, true)
                 };
                 List<DisCatSharpTeamMember> team = new();
                 DisCatSharpTeamMember owner = new();

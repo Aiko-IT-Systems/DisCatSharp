@@ -1,8 +1,8 @@
-# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/6yeC6ZN8yB)
+# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/discatsharp)
 
 ![Temporary Logo](https://docs.dcs.aitsys.dev/logobig.png)
 
-Discord Bot Library written in C# for .NET.
+Discord Bot Library written in C# for .NET. https://discord.gg/discatsharp
 
 #### Status
 [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=NuGet%20Overall%20Version)](https://nuget.dcs.aitsys.dev)
@@ -37,7 +37,7 @@ The documentation for the latest stable version is available at [docs.dcs.aitsys
 The documentation of the latest nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
-Join our [support guild](https://discord.gg/6yeC6ZN8yB) and open a support ticket. All requests are tracked at [bugs.aitsys.dev](https://bugs.aitsys.dev).
+Join our [support guild](https://discord.gg/discatsharp) and open a support ticket. All requests are tracked at [bugs.aitsys.dev](https://bugs.aitsys.dev).
 
 ## Tutorials
 * [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
