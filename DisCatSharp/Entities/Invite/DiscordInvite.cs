@@ -94,7 +94,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the approximate guild total member count for the invite.
         /// </summary>
-        [JsonProperty("approximate_member_count")]
+        [JsonProperty("approximate_member_count", NullValueHandling = NullValueHandling.Ignore)]
         public int? ApproximateMemberCount { get; internal set; }
 
         /// <summary>
@@ -156,6 +156,12 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("stage_instance", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordInviteStage Stage { get; internal set; }
+
+        /// <summary>
+        /// Gets the | guild scheduled event data for the invite.
+        /// </summary>
+        [JsonProperty("guild_scheduled_event", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordEvent GuildSheduledEvent { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordInvite"/> class.
