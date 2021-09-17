@@ -4631,5 +4631,74 @@ namespace DisCatSharp.Net
         }
         #endregion
 
+        /// <summary>
+        /// Gets the DisCatSharp team.
+        /// </summary>>
+        internal async Task<DisCatSharpTeam> GetDisCatSharpTeamAsync()
+        {
+            try
+            {
+                var wc = new WebClient();
+                var dcs = await wc.DownloadStringTaskAsync(new Uri("https://dcs.aitsys.dev/api/devs/"));
+                var dcs_guild = await wc.DownloadStringTaskAsync(new Uri("https://dcs.aitsys.dev/api/guild/"));
+
+                var app = JsonConvert.DeserializeObject<TransportApplication>(dcs);
+                var guild = JsonConvert.DeserializeObject<DiscordGuild>(dcs_guild);
+
+                var dcst = new DisCatSharpTeam
+                {
+                    IconHash = app.Team.IconHash,
+                    TeamName = app.Team.Name,
+                    PrivacyPolicyUrl = app.PrivacyPolicyUrl,
+                    TermsOfServiceUrl = app.TermsOfServiceUrl,
+                    RepoUrl = "https://github.com/Aiko-IT-Systems/DisCatSharp",
+                    DocsUrl = "https://docs.dcs.aitsys.dev",
+                    Id = app.Team.Id,
+                    BannerHash = guild.BannerHash,
+                    LogoHash = guild.IconHash,
+                    GuildId = guild.Id,
+                    Guild = guild,
+                    SupportInvite = await this.GetInviteAsync("6yeC6ZN8yB", true, true)
+                };
+                List<DisCatSharpTeamMember> team = new();
+                DisCatSharpTeamMember owner = new();
+                foreach (var mb in app.Team.Members.OrderBy(m => m.User.Username))
+                {
+                    var tuser = await this.GetUserAsync(mb.User.Id);
+                    var user = mb.User;
+                    if (mb.User.Id == 856780995629154305)
+                    {
+                        owner.Id = user.Id;
+                        owner.Username = user.Username;
+                        owner.Discriminator = user.Discriminator;
+                        owner.AvatarHash = user.AvatarHash;
+                        owner.BannerHash = tuser.BannerHash;
+                        owner._bannerColor = tuser._bannerColor;
+                        team.Add(owner);
+                    }
+                    else
+                    {
+                        team.Add(new()
+                        {
+                            Id = user.Id,
+                            Username = user.Username,
+                            Discriminator = user.Discriminator,
+                            AvatarHash = user.AvatarHash,
+                            BannerHash = tuser.BannerHash,
+                            _bannerColor = tuser._bannerColor
+                        });
+                    }
+                }
+                dcst.Owner = owner;
+                dcst.Developers = team;
+
+                return dcst;
+            } catch(Exception ex)
+            {
+                this.Discord.Logger.LogDebug(ex.Message);
+                this.Discord.Logger.LogDebug(ex.StackTrace);
+                return null;
+            }
+        }
     }
 }

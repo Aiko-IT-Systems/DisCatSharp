@@ -73,6 +73,12 @@ namespace DisCatSharp
         public DiscordApplication CurrentApplication { get; private set; }
 
         /// <summary>
+        /// Gets the library team.
+        /// </summary>
+        public DisCatSharpTeam LibraryDeveloperTeam
+            => this.GetShard(0).LibraryDeveloperTeam;
+
+        /// <summary>
         /// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
         /// </summary>
         public IReadOnlyDictionary<string, DiscordVoiceRegion> VoiceRegions

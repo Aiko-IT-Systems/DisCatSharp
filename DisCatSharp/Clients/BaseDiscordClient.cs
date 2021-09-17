@@ -54,7 +54,7 @@ namespace DisCatSharp
         public ILogger<BaseDiscordClient> Logger { get; }
 
         /// <summary>
-        /// Gets the string representing the version of lib.
+        /// Gets the string representing the version of bot lib.
         /// </summary>
         public string VersionString { get; }
 
@@ -62,6 +62,12 @@ namespace DisCatSharp
         /// Gets the bot library name.
         /// </summary>
         public string BotLibrary { get; }
+
+        /// <summary>
+        /// Gets the library team.
+        /// </summary>
+        public DisCatSharpTeam LibraryDeveloperTeam
+            => this.ApiClient.GetDisCatSharpTeamAsync().Result;
 
         /// <summary>
         /// Gets the current user.
