@@ -9,8 +9,8 @@ was becoming a major code smell and it was hard to maintain and add more paramet
 message with an embed, or a message builder.
 
 ## Using the Message Builder
-The API Documentation for the message builder can be found at @DSharpPlus.Entities.DiscordMessageBuilder but here we'll go over some of the concepts of using the
-message builder:
+The API Documentation for the message builder can be found [there](xref:DisCatSharp.Entities.DiscordMessageBuilder), 
+but here we'll go over some of the concepts of using the message builder:
 
 ### Adding a File:
 For sending files, you'll have to use the MessageBuilder to construct your message, see example below:

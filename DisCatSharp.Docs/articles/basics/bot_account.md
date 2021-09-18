@@ -72,7 +72,7 @@ Be sure to copy it again after any changes!
 
 ## Get Bot Token
 Instead of logging in to Discord with a username and password, bot accounts use a long string called a *token* to authenticate.
-You'll want to retrieve the token for your bot account so you can use it with DSharpPlus.
+You'll want to retrieve the token for your bot account so you can use it with DisCatSharp.
 
 Head back to the bot page and click on `Click to Reveal Token` just above the `Copy` and `Regenerate` buttons to take a peek at your token.
 

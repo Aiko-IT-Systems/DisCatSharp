@@ -5,7 +5,7 @@ title: Third Party Logging
 
 # Using a Third Party Logger
 While the default logging implementation will meet the needs of most, some may desire to make use of a more robust implementation which provides more features.
-Thankfully, DSharpPlus allows you to use any logging library which has an implementation for the [logging abstractions](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.logging) provided by Microsoft.
+Thankfully, DisCatSharp allows you to use any logging library which has an implementation for the [logging abstractions](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.logging) provided by Microsoft.
 
 [Serilog](https://serilog.net/), one of the more popular logging libraries, will be used to demonstrate.
 This will simply be a brief demo, so we won't go into the configuration of Serilog.
@@ -58,6 +58,6 @@ public async Task MainAsync()
 
 ```
 
-And that's it! If you now run your bot, you'll see DSharpPlus log messages formatted and displayed by Serilog.
+And that's it! If you now run your bot, you'll see DisCatSharp log messages formatted and displayed by Serilog.
 
 ![Console](/images/beyond_basics_logging_third_party_01.png)

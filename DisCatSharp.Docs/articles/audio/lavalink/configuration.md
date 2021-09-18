@@ -3,7 +3,7 @@ uid: audio_lavalink_configuration
 title: Lavalink Configuration
 ---
 
-# Setting up DSharpPlus.Lavalink
+# Setting up DisCatSharp.Lavalink
 
 ## Configuring Your Client
 
