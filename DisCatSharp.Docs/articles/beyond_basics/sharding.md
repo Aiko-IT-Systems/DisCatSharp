@@ -11,9 +11,9 @@ Each shard handles a separate set of servers and will *only* receive events from
 Sharding is recommended once you reach 1,000 servers, and is a *requirement* when you hit 2,500 servers.
 
 ## Automated Sharding
-DSharpPlus provides a built-in sharding solution: `DiscordShardedClient`. 
+DisCatSharp provides a built-in sharding solution: `DiscordShardedClient`. 
 This client will *automatically* spawn shards for you and manage their events.
-Each DSharpPlus extension (e.g. CommandsNext, Interactivity) also supplies an extension method to register themselves automatically on each shard.
+Each DisCatSharp extension (e.g. CommandsNext, Interactivity) also supplies an extension method to register themselves automatically on each shard.
 
 ```cs
 var discord = new DiscordShardedClient(new DiscordConfiguration

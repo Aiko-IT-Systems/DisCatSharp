@@ -4,7 +4,7 @@ title: The Default Logger
 ---
 
 ## The Default Logger
-DSharpPlus ships with a default logging implementation which is **enabled automatically** with **no setup required**.
+DisCatSharp ships with a default logging implementation which is **enabled automatically** with **no setup required**.
 
 ![Info Level Logging](/images/beyond_basics_logging_default_01.png)
 
@@ -51,4 +51,4 @@ Name|Position|Description
  >[!WARNING]
  > The `Trace` log level is *not* recommended for use in production.
  >
- > It is intended for debugging DSharpPlus and may display tokens and other sensitive data.
+ > It is intended for debugging DisCatSharp and may display tokens and other sensitive data.

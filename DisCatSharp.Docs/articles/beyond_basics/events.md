@@ -1,10 +1,10 @@
 ---
 uid: beyond_basics_events
-title: DSharpPlus Events
+title: DisCatSharp Events
 ---
 
 # Consuming Events
-DSharpPlus makes use of *asynchronous events* which will execute each handler asynchronously in sequential order. 
+DisCatSharp makes use of *asynchronous events* which will execute each handler asynchronously in sequential order. 
 This event system will require event handlers have a `Task` return type and take two parameters.
 
 The first parameter will contain an instance of the object which fired the event.<br/>

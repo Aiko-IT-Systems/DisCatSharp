@@ -90,4 +90,4 @@ If everything is configured properly, you should see this appear somewhere in th
 [           main] lavalink.server.Launcher                 : Started Launcher in 5.769 seconds (JVM running for 6.758)
 ```
 
-If it does, congratulations. We are now ready to interact with it using DSharpPlus.
+If it does, congratulations. We are now ready to interact with it using DisCatSharp.
