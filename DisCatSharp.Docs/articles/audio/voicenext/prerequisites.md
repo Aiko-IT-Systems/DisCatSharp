@@ -11,7 +11,7 @@ Both *must* be available on your development and host machines otherwise VoiceNe
 ### Windows
 When installing VoiceNext though NuGet, an additional package containing the native Windows binaries  will automatically be included with **no additional steps required**.
 
-However, if you are using DSharpPlus from source or without a NuGet package manager, you must manually [download](xref:natives) the binaries and place them at the root of your working directory where your application is located.
+However, if you are using DisCatSharp from source or without a NuGet package manager, you must manually [download](xref:natives) the binaries and place them at the root of your working directory where your application is located.
 
 ### MacOS
 Native libraries for Apple's macOS can be installed using the [Homebrew](https://brew.sh) package manager:

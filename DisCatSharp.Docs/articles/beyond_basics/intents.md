@@ -22,7 +22,7 @@ On the [Discord Application under the Bot Page](https://discord.com/developers/a
 
 ### Discord Configuration
 Within your `DiscordConfiguration` you will have to specify all the intents you will need. Here is a list of all the
-[Intents](xref:DisCatSharp.DiscordIntents) DSharpPlus Supports. By default, the configuration will use `DiscordIntents.AllUnprivileged` as the default value. Like above however, we recommend having all intents enabled at first, so you should specify `DiscordIntents.All` in your configuration which will include the privleged intents you enabled in your application:
+[Intents](xref:DisCatSharp.DiscordIntents) DisCatSharp Supports. By default, the configuration will use `DiscordIntents.AllUnprivileged` as the default value. Like above however, we recommend having all intents enabled at first, so you should specify `DiscordIntents.All` in your configuration which will include the privleged intents you enabled in your application:
 
 ```csharp
 var config = new DiscordConfiguration()
