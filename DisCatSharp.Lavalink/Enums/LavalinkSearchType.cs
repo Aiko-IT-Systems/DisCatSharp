@@ -34,8 +34,13 @@ namespace DisCatSharp.Lavalink
         SoundCloud,
 
         /// <summary>
-        /// Search on YouTube
+        /// Search on Youtube.
         /// </summary>
-        Youtube
+        Youtube,
+
+        /// <summary>
+        /// Provide Lavalink with a plain URL.
+        /// </summary>
+        Plain
     }
 }
