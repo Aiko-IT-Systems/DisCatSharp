@@ -436,6 +436,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("icon")]
         public Optional<string> IconBase64 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the icon base64.
+        /// </summary>
+        [JsonProperty("unicode_emoji")]
+        public Optional<string> UnicodeEmoji { get; set; }
     }
 
     /// <summary>

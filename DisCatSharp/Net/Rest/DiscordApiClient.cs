@@ -2295,8 +2295,9 @@ namespace DisCatSharp.Net
         /// <param name="hoist">If true, hoist.</param>
         /// <param name="mentionable">If true, mentionable.</param>
         /// <param name="iconb64">The icon.</param>
+        /// <param name="emoji">The unicode emoji icon.</param>
         /// <param name="reason">The reason.</param>
-        internal async Task<DiscordRole> ModifyGuildRoleAsync(ulong guild_id, ulong role_id, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, Optional<string> iconb64, string reason)
+        internal async Task<DiscordRole> ModifyGuildRoleAsync(ulong guild_id, ulong role_id, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, Optional<string> iconb64, Optional<string> emoji, string reason)
         {
             var pld = new RestGuildRolePayload
             {
@@ -2306,6 +2307,8 @@ namespace DisCatSharp.Net
                 Hoist = hoist,
                 Mentionable = mentionable,
             };
+            if (emoji.HasValue)
+                pld.UnicodeEmoji = emoji;
 
             if (iconb64.HasValue)
                 pld.IconBase64 = iconb64;
