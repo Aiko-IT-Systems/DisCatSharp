@@ -28,7 +28,6 @@ using DisCatSharp.Enums.Discord;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Models;
-using DisCatSharp.Net.Serialization;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
@@ -103,6 +102,14 @@ namespace DisCatSharp.Entities
         public string IconUrl
             => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ROLE_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=64" : null;
 
+        /// <summary>
+        /// Gets the role unicode_emoji.
+        /// </summary>
+        [JsonProperty("unicode_emoji", NullValueHandling = NullValueHandling.Ignore)]
+        internal string EmojiString { get; set; }
+
+        public DiscordEmoji UnicodeEmoji
+            => this.EmojiString != null ? DiscordEmoji.FromUnicode(this.Discord, this.EmojiString) : null;
 
         [JsonIgnore]
         internal ulong _guild_id = 0;
@@ -153,7 +160,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task ModifyAsync(string name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string reason = null)
-            => this.Discord.ApiClient.ModifyGuildRoleAsync(this._guild_id, this.Id, name, permissions, color?.Value, hoist, mentionable, null, reason);
+            => this.Discord.ApiClient.ModifyGuildRoleAsync(this._guild_id, this.Id, name, permissions, color?.Value, hoist, mentionable, null, null, reason);
 
         /// <summary>
         /// Updates this role.
@@ -169,8 +176,9 @@ namespace DisCatSharp.Entities
             action(mdl);
 
             var iconb64 = Optional.FromNoValue<string>();
+            var emoji = Optional.FromNoValue<string>();
             var can_continue = true;
-            if (mdl.Icon.HasValue)
+            if (mdl.Icon.HasValue || mdl.UnicodeEmoji.HasValue)
                 can_continue = this.Discord.Guilds[this._guild_id].Features.CanSetRoleIcons;
 
             if (mdl.Icon.HasValue && mdl.Icon.Value != null)
@@ -179,7 +187,12 @@ namespace DisCatSharp.Entities
             else if (mdl.Icon.HasValue)
                 iconb64 = null;
 
-            return can_continue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this._guild_id, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
+            if (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null)
+                emoji = mdl.UnicodeEmoji.Value.Id == 0 ? mdl.UnicodeEmoji.Value.Name : throw new ArgumentException("Emoji must be unicode");
+            else if (mdl.UnicodeEmoji.HasValue)
+                emoji = null;
+
+            return can_continue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this._guild_id, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
         }
 
         /// <summary>

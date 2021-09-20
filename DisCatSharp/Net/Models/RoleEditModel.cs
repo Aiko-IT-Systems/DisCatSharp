@@ -61,6 +61,11 @@ namespace DisCatSharp.Net.Models
         public Optional<Stream> Icon { internal get; set; }
 
         /// <summary>
+        /// The new role icon from unicode emoji.
+        /// </summary>
+        public Optional<DiscordEmoji> UnicodeEmoji { internal get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RoleEditModel"/> class.
         /// </summary>
         internal RoleEditModel()
@@ -71,6 +76,7 @@ namespace DisCatSharp.Net.Models
             this.Hoist = null;
             this.Mentionable = null;
             this.Icon = null;
+            this.UnicodeEmoji = null;
         }
     }
 }
