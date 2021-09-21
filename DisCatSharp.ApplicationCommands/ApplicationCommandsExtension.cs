@@ -943,7 +943,7 @@ namespace DisCatSharp.ApplicationCommands
                     throw new ArgumentException("ChoiceProviders must inherit from IChoiceProvider.");
                 else
                 {
-                    var instance = Activator.CreateInstance(choiceProviderAttribute.ProviderType);
+                    var instance = this.CreateInstance(choiceProviderAttribute.ProviderType, this._configuration?.Services);
                     //Gets the choices from the method
                     var result = await (Task<IEnumerable<DiscordApplicationCommandOptionChoice>>)method.Invoke(instance, null);
 
