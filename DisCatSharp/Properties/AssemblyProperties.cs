@@ -23,9 +23,10 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("DisCatSharp.Common")]
+[assembly: InternalsVisibleTo("DisCatSharp.ApplicationCommands")]
 [assembly: InternalsVisibleTo("DisCatSharp.CommandsNext")]
 [assembly: InternalsVisibleTo("DisCatSharp.Interactivity")]
 [assembly: InternalsVisibleTo("DisCatSharp.Lavalink")]
-[assembly: InternalsVisibleTo("DisCatSharp.SlashCommands")]
 [assembly: InternalsVisibleTo("DisCatSharp.VoiceNext")]
 [assembly: InternalsVisibleTo("DisCatSharp.VoiceNext.Natives")]
+[assembly: InternalsVisibleTo("Nyaw")] // Ignore pls, DisCatSharp Dev Debug
