@@ -70,6 +70,14 @@ namespace DisCatSharp.Entities
         public virtual string Username { get; internal set; }
 
         /// <summary>
+        /// Gets this user's username with the discriminator.
+        /// Example: Discord#0000
+        /// </summary>
+        [JsonIgnore]
+        public virtual string UsernameWithDiscriminator
+            => $"{this.Username}#{this.Discriminator}";
+
+        /// <summary>
         /// Gets the user's 4-digit discriminator.
         /// </summary>
         [JsonProperty("discriminator", NullValueHandling = NullValueHandling.Ignore)]
