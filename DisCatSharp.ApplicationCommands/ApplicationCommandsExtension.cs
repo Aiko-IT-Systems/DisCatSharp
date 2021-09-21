@@ -101,7 +101,7 @@ namespace DisCatSharp.ApplicationCommands
         /// Runs setup. DO NOT RUN THIS MANUALLY. DO NOT DO ANYTHING WITH THIS.
         /// </summary>
         /// <param name="client">The client to setup on.</param>
-        protected override void Setup(DiscordClient client)
+        protected internal override void Setup(DiscordClient client)
         {
             if (this.Client != null)
                 throw new InvalidOperationException("What did I tell you?");
