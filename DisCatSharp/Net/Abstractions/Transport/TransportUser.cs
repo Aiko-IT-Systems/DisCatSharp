@@ -48,6 +48,12 @@ namespace DisCatSharp.Net.Abstractions
         internal string Discriminator { get; set; }
 
         /// <summary>
+        /// Gets the username with discriminator.
+        /// </summary>
+        internal string UsernameWithDiscriminator
+            => $"{this.Username}#{this.Discriminator}";
+
+        /// <summary>
         /// Gets the avatar hash.
         /// </summary>
         [JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
