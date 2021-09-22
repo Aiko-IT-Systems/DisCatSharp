@@ -3063,6 +3063,11 @@ namespace DisCatSharp.Entities
         /// Guild has enabled role subsriptions.
         /// </summary>
         public bool HasRoleSubscriptionsEnabled { get; }
+        
+        /// <summary>
+        /// Guild has premium tier 3 override.
+        /// </summary>
+        public bool PremiumTierThreeOverride { get; }
 
         /// <summary>
         /// String of guild features
@@ -3103,6 +3108,7 @@ namespace DisCatSharp.Entities
             this.CanSetRoleIcons = guild.RawFeatures.Contains("ROLE_ICONS");
             this.HasNewThreadPermissions = guild.RawFeatures.Contains("NEW_THREAD_PERMISSIONS");
             this.HasRoleSubscriptionsEnabled = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_ENABLED");
+            this.PremiumTierThreeOverride = guild.RawFeatures.Contains("PREMIUM_TIER_3_OVERRIDE");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach (var feature in guild.RawFeatures)
