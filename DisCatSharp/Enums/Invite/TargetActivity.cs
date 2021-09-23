@@ -54,17 +54,31 @@ namespace DisCatSharp
 
 	    /// <summary>
         /// Represents the embedded application Chess in the park.
+        /// Dev?
         /// </summary>
         ChessInThePark = 832012586023256104,
 
         /// <summary>
         /// Represents the embedded application Chess in the park.
+        /// This is another version.
+        /// Stable?
         /// </summary>
         ChessInThePark2 = 832012774040141894,
 
         /// <summary>
         /// Represents the embedded application YouTube Together.
+        /// This is the new (staff only) version.
         /// </summary>
-        YouTubeTogetherV2 = 880218394199220334
+        YouTubeTogetherV2 = 880218394199220334,
+
+        /// <summary>
+        /// Represents the embedded application Letter Tile.
+        /// </summary>
+        LetterTile = 879863686565621790,
+
+        /// <summary>
+        /// Represents the embedded application Word Snacks.
+        /// </summary>
+        WordSnacks = 879863976006127627
     }
 }
