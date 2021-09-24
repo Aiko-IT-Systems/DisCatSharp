@@ -34,6 +34,7 @@ using DisCatSharp.ApplicationCommands.EventArgs;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Enums;
 using DisCatSharp.ApplicationCommands.Attributes;
+using DisCatSharp.ApplicationCommands.Attributes.SlashCommand;
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -613,6 +614,7 @@ namespace DisCatSharp.ApplicationCommands
                     if (methods.Any())
                     {
                         var focusedOption = e.Interaction.Data.Options.First(o => o.Focused);
+                        this.Client.Logger.LogDebug(focusedOption.Name + ": " + focusedOption.RawValue);
                         var method = methods.First().Method;
 
                         var option = method.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
@@ -1072,9 +1074,9 @@ namespace DisCatSharp.ApplicationCommands
                     throw new ArgumentException("Arguments must have the Option attribute!");
 
                 var autocompleteAttribute = parameter.GetCustomAttribute<AutocompleteAttribute>();
-                if (optionattribute.Autocomplete.HasValue && autocompleteAttribute == null)
+                if (optionattribute.Autocomplete && autocompleteAttribute == null)
                     throw new ArgumentException("Autocomplete options must have the Autocomplete attribute!");
-                if (!optionattribute.Autocomplete.HasValue && autocompleteAttribute != null)
+                if (!optionattribute.Autocomplete && autocompleteAttribute != null)
                     throw new ArgumentException("Setting an autocomplete provider requires the option to have autocomplete set to true!");
 
                 //Sets the type
@@ -1096,12 +1098,9 @@ namespace DisCatSharp.ApplicationCommands
                     choices = await this.GetChoiceAttributesFromProvider(choiceProviders, guildId);
                 }
 
-                if (optionattribute.ChannelTypes != null && parametertype != ApplicationCommandOptionType.Channel)
-                {
-                    throw new ArgumentException($"You can use the channel types argument only on the option type channel.");
-                }
+                var channelTypes = parameter.GetCustomAttribute<ChannelTypesAttribute>()?.ChannelTypes ?? null;
 
-                options.Add(new DiscordApplicationCommandOption(optionattribute.Name, optionattribute.Description, parametertype, !parameter.IsOptional, choices, null, optionattribute.ChannelTypes, optionattribute.Autocomplete));
+                options.Add(new DiscordApplicationCommandOption(optionattribute.Name, optionattribute.Description, parametertype, !parameter.IsOptional, choices, null, channelTypes, optionattribute.Autocomplete));
             }
 
             return options;

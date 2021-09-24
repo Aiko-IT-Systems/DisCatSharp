@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,48 +22,27 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
-namespace DisCatSharp.ApplicationCommands
+namespace DisCatSharp.ApplicationCommands.Attributes.SlashCommand
 {
     /// <summary>
-    /// Marks this parameter as an option for a slash command
+    /// Defines allowed channel types for a channel parameter.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-    public class OptionAttribute : Attribute
+    public class ChannelTypesAttribute : Attribute
     {
         /// <summary>
-        /// Gets the name of this option.
+        /// Allowed channel types.
         /// </summary>
-        public string Name;
+        public IEnumerable<ChannelType> ChannelTypes { get; }
 
         /// <summary>
-        /// Gets the description of this option.
+        /// Defines allowed channel types for a channel parameter.
         /// </summary>
-        public string Description;
-
-        /// <summary>
-        /// Whether to autocomplete this option.
-        /// </summary>
-        public bool Autocomplete;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OptionAttribute"/> class.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="description">The description.</param>
-        /// <param name="autocomplete">If true, autocomplete.</param>
-        public OptionAttribute(string name, string description, bool autocomplete = false)
+        /// <param name="channelTypes">The channel types to allow.</param>
+        public ChannelTypesAttribute(params ChannelType[] channelTypes)
         {
-            if (name.Length > 32)
-                throw new ArgumentException("Slash command option names cannot go over 32 characters.");
-            else if (description.Length > 100)
-                throw new ArgumentException("Slash command option descriptions cannot go over 100 characters.");
-
-            Name = name.ToLower();
-            Description = description;
-            Autocomplete = autocomplete;
+            this.ChannelTypes = channelTypes;
         }
     }
 }

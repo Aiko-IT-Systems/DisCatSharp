@@ -70,6 +70,6 @@ namespace DisCatSharp.Entities
         /// Gets the choices.
         /// </summary>
         [JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
-        public IReadOnlyCollection<DiscordApplicationCommandAutocompleteChoice> Choices { get; internal set; }
+        public IEnumerable<DiscordApplicationCommandAutocompleteChoice> Choices { get; internal set; }
     }
 }

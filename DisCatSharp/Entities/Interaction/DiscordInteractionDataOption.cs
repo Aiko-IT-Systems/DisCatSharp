@@ -42,7 +42,6 @@ namespace DisCatSharp.Entities
         [JsonProperty("type")]
         public ApplicationCommandOptionType Type { get; internal set; }
 
-
         /// <summary>
         /// Whether this option is currently focused by the user.
         /// Only applicable for autocomplete option choices.
