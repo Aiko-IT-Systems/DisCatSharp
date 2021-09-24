@@ -35,6 +35,8 @@ using DisCatSharp.Exceptions;
 using DisCatSharp.Enums;
 using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.ApplicationCommands.Attributes.SlashCommand;
+using System.Text.RegularExpressions;
+using DisCatSharp.Common;
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -555,14 +557,12 @@ namespace DisCatSharp.ApplicationCommands
                         if (_errored)
                             throw new InvalidOperationException("Slash commands failed to register properly on startup.");
 
-                        //Gets the method for the command
                         var methods = _commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
                         var groups = _groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
                         var subgroups = _subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
                         if (!methods.Any() && !groups.Any() && !subgroups.Any())
                             throw new InvalidOperationException("A slash command was executed, but no command was registered for it.");
 
-                        //Just read the code you'll get it
                         if (methods.Any())
                         {
                             var method = methods.First().Method;
@@ -604,33 +604,83 @@ namespace DisCatSharp.ApplicationCommands
                     if (_errored)
                         throw new InvalidOperationException("Slash commands failed to register properly on startup.");
 
-                    //Gets the method for the command
                     var methods = _commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
                     var groups = _groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
                     var subgroups = _subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
                     if (!methods.Any() && !groups.Any() && !subgroups.Any())
                         throw new InvalidOperationException("An autocomplete interaction was created, but no command was registered for it.");
 
-                    if (methods.Any())
+                    try
                     {
-                        var focusedOption = e.Interaction.Data.Options.First(o => o.Focused);
-                        this.Client.Logger.LogDebug(focusedOption.Name + ": " + focusedOption.RawValue);
-                        var method = methods.First().Method;
-
-                        var option = method.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
-                        var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
-                        var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
-                        var providerInstance = Activator.CreateInstance(provider);
-
-                        var context = new AutocompleteContext
+                        if (methods.Any())
                         {
-                            Interaction = e.Interaction,
-                            Options = e.Interaction.Data.Options.ToList(),
-                            FocusedOption = focusedOption
-                        };
+                            var focusedOption = e.Interaction.Data.Options.First(o => o.Focused);
+                            var method = methods.First().Method;
 
-                        var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
-                        await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
+                            var option = method.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
+                            var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
+                            var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
+                            var providerInstance = Activator.CreateInstance(provider);
+
+                            var context = new AutocompleteContext
+                            {
+                                Interaction = e.Interaction,
+                                Options = e.Interaction.Data.Options.ToList(),
+                                FocusedOption = focusedOption
+                            };
+
+                            var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
+                        }
+                        else if (groups.Any())
+                        {
+                            var command = e.Interaction.Data.Options.First();
+                            var group = groups.First().Methods.First(x => x.Key == command.Name).Value;
+
+                            var focusedOption = command.Options.First(o => o.Focused);
+                            var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
+                            var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
+                            var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
+                            var providerInstance = Activator.CreateInstance(provider);
+
+                            var context = new AutocompleteContext
+                            {
+                                Interaction = e.Interaction,
+                                Options = command.Options.ToList(),
+                                FocusedOption = focusedOption
+                            };
+
+                            var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
+                        }
+                        /*else if (subgroups.Any())
+                        {
+                            var command = e.Interaction.Data.Options.First();
+                            var method = methods.First().Method;
+                            var group = subgroups.First().SubCommands.First(x => x.Name == command.Name);
+
+                            var focusedOption = command.Options.First(x => x.Name == group.Name).Options.First(o => o.Focused);
+                            this.Client.Logger.LogDebug("SUBGROUP::" + focusedOption.Name + ": " + focusedOption.RawValue);
+
+                            var option = group.Methods.First(p => p.Value.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name).Value;
+                            var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
+                            var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
+                            var providerInstance = Activator.CreateInstance(provider);
+
+                            var context = new AutocompleteContext
+                            {
+                                Interaction = e.Interaction,
+                                Options = command.Options.First(x => x.Name == group.Name).Options.ToList(),
+                                FocusedOption = focusedOption
+                            };
+
+                            var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
+                            await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
+                        }*/
+                    }
+                    catch (Exception ex)
+                    {
+                        this.Client.Logger.LogError(ex, "Error in autocomplete interaction");
                     }
                 }
             });
