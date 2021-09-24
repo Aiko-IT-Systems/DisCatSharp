@@ -315,8 +315,6 @@ namespace DisCatSharp.Entities
         /// <returns>The current builder to chain calls with.</returns>
         public DiscordInteractionResponseBuilder AddAutoCompleteChoices(IEnumerable<DiscordApplicationCommandAutocompleteChoice> choices)
         {
-            foreach (var choice in choices)
-                Console.WriteLine($"Adding choice {choice.Name} with value {choice.Value as string}");
             this._choices.AddRange(choices);
             return this;
         }

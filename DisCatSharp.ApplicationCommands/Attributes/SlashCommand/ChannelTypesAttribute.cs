@@ -23,7 +23,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DisCatSharp.ApplicationCommands.Attributes.SlashCommand
+namespace DisCatSharp.ApplicationCommands.Attributes
 {
     /// <summary>
     /// Defines allowed channel types for a channel parameter.
