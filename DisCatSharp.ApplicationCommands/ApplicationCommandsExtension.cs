@@ -34,7 +34,6 @@ using DisCatSharp.ApplicationCommands.EventArgs;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Enums;
 using DisCatSharp.ApplicationCommands.Attributes;
-using DisCatSharp.ApplicationCommands.Attributes.SlashCommand;
 using System.Text.RegularExpressions;
 using DisCatSharp.Common;
 
