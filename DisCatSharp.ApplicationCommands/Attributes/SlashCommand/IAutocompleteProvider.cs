@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,41 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using DisCatSharp.Entities;
+
+namespace DisCatSharp.ApplicationCommands.Attributes
 {
     /// <summary>
-    /// Represents the type of interaction response
+    /// The autocomplete provider.
     /// </summary>
-    public enum InteractionResponseType
+    public interface IAutocompleteProvider
     {
         /// <summary>
-        /// Acknowledges a Ping.
+        /// Provider the autocompletion.
         /// </summary>
-        Pong = 1,
-
-        /// <summary>
-        /// Responds to the interaction with a message.
-        /// </summary>
-        ChannelMessageWithSource = 4,
-
-        /// <summary>
-        /// Acknowledges an interaction to edit to a response later. The user sees a "thinking" state.
-        /// </summary>
-        DeferredChannelMessageWithSource = 5,
-
-        /// <summary>
-        /// Acknowledges a component interaction to allow a response later.
-        /// </summary>
-        DeferredMessageUpdate = 6,
-
-        /// <summary>
-        /// Responds to a component interaction by editing the message it's attached to.
-        /// </summary>
-        UpdateMessage = 7,
-
-        /// <summary>
-        /// Responds to an auto-complete request.
-        /// </summary>
-        AutoCompleteResult = 8
+        /// <param name="context">The context.</param>
+        Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context);
     }
 }

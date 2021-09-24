@@ -31,10 +31,12 @@ namespace DisCatSharp.Enums
         /// A row of components.
         /// </summary>
         ActionRow = 1,
+
         /// <summary>
         /// A button.
         /// </summary>
         Button = 2,
+
         /// <summary>
         /// A select menu.
         /// </summary>

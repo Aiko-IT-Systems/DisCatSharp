@@ -59,6 +59,7 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Gets the optional choices for this command parameter.
+        /// Not applicable for auto-complete options.
         /// </summary>
         [JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyCollection<DiscordApplicationCommandOptionChoice> Choices { get; internal set; }
@@ -76,10 +77,10 @@ namespace DisCatSharp.Entities
         public IReadOnlyCollection<ChannelType> ChannelTypes { get; internal set; }
 
         /// <summary>
-        /// Gets whether the command is enabled by default when the app is added to a guild.
+        /// Gets whether this option provides autocompletion.
         /// </summary>
-        [JsonProperty("default_permission", NullValueHandling = NullValueHandling.Ignore)]
-        public bool DefaultPermission { get; internal set; }
+        [JsonProperty("autocomplete", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? AutoComplete { get; internal set; }
 
         /// <summary>
         /// Creates a new instance of a <see cref="DiscordApplicationCommandOption"/>.
@@ -91,8 +92,8 @@ namespace DisCatSharp.Entities
         /// <param name="choices">The optional choice selection for this parameter.</param>
         /// <param name="options">The optional subcommands for this parameter.</param>
         /// <param name="channeltypes">If the option is a channel type, the channels shown will be restricted to these types</param>
-        /// <param name="default_permission">Optional default permission for this command.</param>
-        public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool? required = null, IEnumerable<DiscordApplicationCommandOptionChoice> choices = null, IEnumerable<DiscordApplicationCommandOption> options = null, IEnumerable<ChannelType> channeltypes = null, bool default_permission = true)
+        /// <param name="autocomplete">Whether this option provides autocompletion.</param>
+        public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool? required = null, IEnumerable<DiscordApplicationCommandOptionChoice> choices = null, IEnumerable<DiscordApplicationCommandOption> options = null, IEnumerable<ChannelType> channeltypes = null, bool? autocomplete = null)
         {
             if (!Utilities.IsValidSlashCommandName(name))
                 throw new ArgumentException("Invalid application command option name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
@@ -100,6 +101,8 @@ namespace DisCatSharp.Entities
                 throw new ArgumentException("Application command option name cannot have any upper case characters.", nameof(name));
             if (description.Length > 100)
                 throw new ArgumentException("Application command option description cannot exceed 100 characters.", nameof(description));
+            if ((autocomplete ?? false) && (choices?.Any() ?? false))
+                throw new InvalidOperationException("Auto-complete slash command options cannot provide choices.");
 
             var choiceList = choices != null ? new ReadOnlyCollection<DiscordApplicationCommandOptionChoice>(choices.ToList()) : null;
             var optionList = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;
@@ -112,7 +115,7 @@ namespace DisCatSharp.Entities
             this.Choices = choiceList;
             this.Options = optionList;
             this.ChannelTypes = channelTypes;
-            this.DefaultPermission = default_permission;
+            this.AutoComplete = autocomplete;
         }
     }
 }

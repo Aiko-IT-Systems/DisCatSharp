@@ -40,6 +40,11 @@ namespace DisCatSharp.Enums
         /// <summary>
         /// This command is registered as a message context menu, and is applicable when interacting with a message.
         /// </summary>
-        Message = 3
+        Message = 3,
+
+        /// <summary>
+        /// Inbound only: An auto-complete option is being interacted with.
+        /// </summary>
+        AutoCompleteRequest = 4
     }
 }

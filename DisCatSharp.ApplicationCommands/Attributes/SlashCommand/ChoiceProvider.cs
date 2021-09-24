@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,41 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using DisCatSharp.Entities;
+
+namespace DisCatSharp.ApplicationCommands
 {
     /// <summary>
-    /// Represents the type of interaction response
+    /// Implementation of <see cref="IChoiceProvider"/> with access to service collection.
     /// </summary>
-    public enum InteractionResponseType
+    public abstract class ChoiceProvider : IChoiceProvider
     {
         /// <summary>
-        /// Acknowledges a Ping.
+        /// Sets the choices for the slash command.
         /// </summary>
-        Pong = 1,
+        public abstract Task<IEnumerable<DiscordApplicationCommandOptionChoice>> Provider();
 
         /// <summary>
-        /// Responds to the interaction with a message.
+        /// Sets the service provider.
         /// </summary>
-        ChannelMessageWithSource = 4,
+        public IServiceProvider Services { get; set; }
 
         /// <summary>
-        /// Acknowledges an interaction to edit to a response later. The user sees a "thinking" state.
+        /// The optional ID of the Guild the command got registered for.
         /// </summary>
-        DeferredChannelMessageWithSource = 5,
-
-        /// <summary>
-        /// Acknowledges a component interaction to allow a response later.
-        /// </summary>
-        DeferredMessageUpdate = 6,
-
-        /// <summary>
-        /// Responds to a component interaction by editing the message it's attached to.
-        /// </summary>
-        UpdateMessage = 7,
-
-        /// <summary>
-        /// Responds to an auto-complete request.
-        /// </summary>
-        AutoCompleteResult = 8
+        public ulong? GuildId { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,41 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+using System;
+
+namespace DisCatSharp.ApplicationCommands.Attributes
 {
+
     /// <summary>
-    /// Represents the type of interaction response
+    /// The autocomplete attribute.
     /// </summary>
-    public enum InteractionResponseType
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+    public class AutocompleteAttribute : Attribute
     {
         /// <summary>
-        /// Acknowledges a Ping.
+        /// The type of the provider.
         /// </summary>
-        Pong = 1,
+        public Type ProviderType { get; }
 
         /// <summary>
-        /// Responds to the interaction with a message.
+        /// Adds an autocomplete provider to this command option.
         /// </summary>
-        ChannelMessageWithSource = 4,
-
-        /// <summary>
-        /// Acknowledges an interaction to edit to a response later. The user sees a "thinking" state.
-        /// </summary>
-        DeferredChannelMessageWithSource = 5,
-
-        /// <summary>
-        /// Acknowledges a component interaction to allow a response later.
-        /// </summary>
-        DeferredMessageUpdate = 6,
-
-        /// <summary>
-        /// Responds to a component interaction by editing the message it's attached to.
-        /// </summary>
-        UpdateMessage = 7,
-
-        /// <summary>
-        /// Responds to an auto-complete request.
-        /// </summary>
-        AutoCompleteResult = 8
+        /// <param name="providerType">The type of the provider.</param>
+        public AutocompleteAttribute(Type providerType)
+        {
+            this.ProviderType = providerType;
+        }
     }
 }
