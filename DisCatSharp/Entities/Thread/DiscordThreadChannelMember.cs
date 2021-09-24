@@ -32,6 +32,12 @@ namespace DisCatSharp.Entities
     public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThreadChannelMember>
     {
         /// <summary>
+        /// Gets ID of the thread.
+        /// </summary>
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong ThreadId { get; set; }
+
+        /// <summary>
         /// Gets the id of the user.
         /// </summary>
         [JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
@@ -41,7 +47,8 @@ namespace DisCatSharp.Entities
         /// Gets the member object of the user.
         /// </summary>
         [JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordMember Member { get; internal set; }
+        public DiscordMember Member
+            => this.Guild != null ? (this.Guild._members.TryGetValue(this.Id, out var member) ? member : new DiscordMember { Id = this.Id, _guild_id = this._guild_id, Discord = this.Discord }) : null;
 
         /// <summary>
         /// Gets the presence of the user.
@@ -69,6 +76,22 @@ namespace DisCatSharp.Entities
         [JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
         public ThreadNotificationSetting Flags { get; internal set; }
 
+        /// <summary>
+        /// Gets the category that contains this channel. For threads, gets the channel this thread was created in.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordChannel Thread
+            => this.Guild != null ? (this.Guild._threads.TryGetValue(this.ThreadId, out var thread) ? thread : null) : null;
+
+        /// <summary>
+        /// Gets the guild to which this channel belongs.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordGuild Guild
+            => this.Discord.Guilds.TryGetValue(this._guild_id, out var guild) ? guild : null;
+
+        [JsonIgnore]
+        internal ulong _guild_id;
 
         /// <summary>
         /// Checks whether this <see cref="DiscordThreadChannelMember"/> is equal to another object.

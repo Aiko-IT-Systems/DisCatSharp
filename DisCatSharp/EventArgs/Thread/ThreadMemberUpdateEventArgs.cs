@@ -35,6 +35,11 @@ namespace DisCatSharp.EventArgs
         public DiscordThreadChannelMember ThreadMember { get; internal set; }
 
         /// <summary>
+        /// Gets the thread.
+        /// </summary>
+        public DiscordThreadChannel Thread { get; internal set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ThreadMemberUpdateEventArgs"/> class.
         /// </summary>
         internal ThreadMemberUpdateEventArgs() : base() { }

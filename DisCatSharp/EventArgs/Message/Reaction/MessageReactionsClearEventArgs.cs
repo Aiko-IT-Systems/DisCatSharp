@@ -47,7 +47,8 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Gets the guild in which the reactions were cleared.
         /// </summary>
-        public DiscordGuild Guild { get; internal set; }
+        public DiscordGuild Guild
+            => this.Channel.Guild;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageReactionsClearEventArgs"/> class.
