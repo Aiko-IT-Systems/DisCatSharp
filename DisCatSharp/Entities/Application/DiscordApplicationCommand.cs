@@ -86,7 +86,7 @@ namespace DisCatSharp.Entities
         /// <param name="type">The type of the command. Defaults to ChatInput.</param>
         public DiscordApplicationCommand(string name, string description, IEnumerable<DiscordApplicationCommandOption> options = null, bool default_permission = true, ApplicationCommandType type = ApplicationCommandType.ChatInput)
         {
-            if (type == ApplicationCommandType.ChatInput)
+            if (type is ApplicationCommandType.ChatInput)
             {
                 if (!Utilities.IsValidSlashCommandName(name))
                 throw new ArgumentException("Invalid slash command name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));

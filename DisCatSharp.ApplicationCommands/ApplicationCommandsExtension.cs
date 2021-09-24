@@ -33,6 +33,7 @@ using Microsoft.Extensions.DependencyInjection;
 using DisCatSharp.ApplicationCommands.EventArgs;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Enums;
+using DisCatSharp.ApplicationCommands.Attributes;
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -286,7 +287,7 @@ namespace DisCatSharp.ApplicationCommands
                                     throw new ArgumentException($"The first argument must be an InteractionContext!");
                                 parameters = parameters.Skip(1).ToArray();
 
-                                var options = await this.ParseParameters(parameters);
+                                var options = await this.ParseParameters(parameters, guildid);
 
                                 //Creates the subcommand and adds it to the main command
                                 var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, null, null, options);
@@ -319,7 +320,7 @@ namespace DisCatSharp.ApplicationCommands
                                     if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
                                         throw new ArgumentException($"The first argument must be an InteractionContext!");
                                     parameters = parameters.Skip(1).ToArray();
-                                    suboptions = suboptions.Concat(await this.ParseParameters(parameters)).ToList();
+                                    suboptions = suboptions.Concat(await this.ParseParameters(parameters, guildid)).ToList();
 
                                     var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, suboptions);
                                     options.Add(subsubpayload);
@@ -368,7 +369,7 @@ namespace DisCatSharp.ApplicationCommands
                                 if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
                                     throw new ArgumentException($"The first argument must be an InteractionContext!");
                                 parameters = parameters.Skip(1).ToArray();
-                                var options = await this.ParseParameters(parameters);
+                                var options = await this.ParseParameters(parameters, guildid);
 
                                 commandMethods.Add(new CommandMethod { Method = method, Name = commandattribute.Name });
 
@@ -595,6 +596,39 @@ namespace DisCatSharp.ApplicationCommands
                     catch (Exception ex)
                     {
                         await this._slashError.InvokeAsync(this, new SlashCommandErrorEventArgs { Context = context, Exception = ex });
+                    }
+                }
+                else if (e.Interaction.Type == InteractionType.AutoComplete)
+                {
+                    if (_errored)
+                        throw new InvalidOperationException("Slash commands failed to register properly on startup.");
+
+                    //Gets the method for the command
+                    var methods = _commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
+                    var groups = _groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+                    var subgroups = _subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+                    if (!methods.Any() && !groups.Any() && !subgroups.Any())
+                        throw new InvalidOperationException("An autocomplete interaction was created, but no command was registered for it.");
+
+                    if (methods.Any())
+                    {
+                        var focusedOption = e.Interaction.Data.Options.First(o => o.Focused);
+                        var method = methods.First().Method;
+
+                        var option = method.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
+                        var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
+                        var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
+                        var providerInstance = Activator.CreateInstance(provider);
+
+                        var context = new AutocompleteContext
+                        {
+                            Interaction = e.Interaction,
+                            Options = e.Interaction.Data.Options.ToList(),
+                            FocusedOption = focusedOption
+                        };
+
+                        var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
+                        await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
                     }
                 }
             });
@@ -932,7 +966,8 @@ namespace DisCatSharp.ApplicationCommands
         /// Gets the choice attributes from choice provider.
         /// </summary>
         /// <param name="customAttributes">The custom attributes.</param>
-        private async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(IEnumerable<ChoiceProviderAttribute> customAttributes)
+        /// <param name="guildId"></param>
+        private async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(IEnumerable<ChoiceProviderAttribute> customAttributes, ulong? guildId = null)
         {
             var choices = new List<DiscordApplicationCommandOptionChoice>();
             foreach (var choiceProviderAttribute in customAttributes)
@@ -943,7 +978,18 @@ namespace DisCatSharp.ApplicationCommands
                     throw new ArgumentException("ChoiceProviders must inherit from IChoiceProvider.");
                 else
                 {
-                    var instance = this.CreateInstance(choiceProviderAttribute.ProviderType, this._configuration?.Services);
+                    var instance = Activator.CreateInstance(choiceProviderAttribute.ProviderType);
+
+                    // Abstract class offers more properties that can be set
+                    if (choiceProviderAttribute.ProviderType.IsSubclassOf(typeof(ChoiceProvider)))
+                    {
+                        choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.GuildId))
+                            ?.SetValue(instance, guildId);
+
+                        choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.Services))
+                            ?.SetValue(instance, _configuration.Services);
+                    }
+
                     //Gets the choices from the method
                     var result = await (Task<IEnumerable<DiscordApplicationCommandOptionChoice>>)method.Invoke(instance, null);
 
@@ -956,7 +1002,6 @@ namespace DisCatSharp.ApplicationCommands
 
             return choices;
         }
-
         /// <summary>
         /// Gets the choice attributes from enum parameter.
         /// </summary>
@@ -1010,41 +1055,53 @@ namespace DisCatSharp.ApplicationCommands
                 : choiceattributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, att.Value)).ToList();
         }
 
-
         /// <summary>
-        /// Parses the parameters for slash commands.
+        /// Parses the parameters.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        private async Task<List<DiscordApplicationCommandOption>> ParseParameters(ParameterInfo[] parameters)
+        /// <param name="guildId">The guild id.</param>
+        /// <returns>A Task.</returns>
+        private async Task<List<DiscordApplicationCommandOption>> ParseParameters(ParameterInfo[] parameters, ulong? guildId)
         {
             var options = new List<DiscordApplicationCommandOption>();
             foreach (var parameter in parameters)
             {
+                //Gets the attribute
                 var optionattribute = parameter.GetCustomAttribute<OptionAttribute>();
                 if (optionattribute == null)
                     throw new ArgumentException("Arguments must have the Option attribute!");
 
+                var autocompleteAttribute = parameter.GetCustomAttribute<AutocompleteAttribute>();
+                if (optionattribute.Autocomplete.HasValue && autocompleteAttribute == null)
+                    throw new ArgumentException("Autocomplete options must have the Autocomplete attribute!");
+                if (!optionattribute.Autocomplete.HasValue && autocompleteAttribute != null)
+                    throw new ArgumentException("Setting an autocomplete provider requires the option to have autocomplete set to true!");
+
+                //Sets the type
                 var type = parameter.ParameterType;
                 var parametertype = this.GetParameterType(type);
 
+                //Handles choices
+                //From attributes
                 var choices = this.GetChoiceAttributesFromParameter(parameter.GetCustomAttributes<ChoiceAttribute>());
+                //From enums
                 if (parameter.ParameterType.IsEnum)
                 {
                     choices = GetChoiceAttributesFromEnumParameter(parameter.ParameterType);
                 }
-
+                //From choice provider
                 var choiceProviders = parameter.GetCustomAttributes<ChoiceProviderAttribute>();
                 if (choiceProviders.Any())
                 {
-                    choices = await this.GetChoiceAttributesFromProvider(choiceProviders);
+                    choices = await this.GetChoiceAttributesFromProvider(choiceProviders, guildId);
                 }
 
-                if(optionattribute.ChannelTypes != null && parametertype != ApplicationCommandOptionType.Channel)
+                if (optionattribute.ChannelTypes != null && parametertype != ApplicationCommandOptionType.Channel)
                 {
                     throw new ArgumentException($"You can use the channel types argument only on the option type channel.");
                 }
 
-                options.Add(new DiscordApplicationCommandOption(optionattribute.Name, optionattribute.Description, parametertype, !parameter.IsOptional, choices, channeltypes: optionattribute.ChannelTypes));
+                options.Add(new DiscordApplicationCommandOption(optionattribute.Name, optionattribute.Description, parametertype, !parameter.IsOptional, choices, null, optionattribute.ChannelTypes, optionattribute.Autocomplete));
             }
 
             return options;

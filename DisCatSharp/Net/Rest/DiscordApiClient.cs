@@ -4412,6 +4412,11 @@ namespace DisCatSharp.Net
                     if (embed.Timestamp != null)
                         embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
+            if(builder?.Choices != null && (builder?.Components != null || builder?.Embeds != null || builder?.Content != null))
+            {
+                throw new ArgumentException("You can not provide components, embeds and content when choices is not null");
+            }
+
             var pld = new RestInteractionResponsePayload
             {
                 Type = type,
@@ -4422,7 +4427,8 @@ namespace DisCatSharp.Net
                     IsTTS = builder.IsTTS,
                     Mentions = builder.Mentions,
                     Flags = builder.IsEphemeral ? MessageFlags.Ephemeral : 0,
-                    Components = builder.Components
+                    Components = builder.Components,
+                    Choices = builder.Choices
                 } : null
             };
 

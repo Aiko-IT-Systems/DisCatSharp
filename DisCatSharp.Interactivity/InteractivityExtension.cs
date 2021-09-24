@@ -155,10 +155,10 @@ namespace DisCatSharp.Interactivity
                 throw new ArgumentException("You must specify at least one button to listen for.");
 
             if (!message.Components.Any())
-                throw new ArgumentException("Message doesn't contain any components.");
+                throw new ArgumentException("Provided message does not contain any components.");
 
             if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
-                throw new ArgumentException("Message does not contain any button components.");
+                throw new ArgumentException("Provided Message does not contain any button components.");
 
             var res = await this.ComponentEventWaiter
                 .WaitForMatchAsync(new(message,
@@ -194,7 +194,7 @@ namespace DisCatSharp.Interactivity
                 throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
             if (!message.Components.Any())
-                throw new ArgumentException("Message doesn't contain any components.");
+                throw new ArgumentException("Provided message does not contain any components.");
 
             if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
                 throw new ArgumentException("Message does not contain any button components.");
@@ -237,7 +237,7 @@ namespace DisCatSharp.Interactivity
                 throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
             if (!message.Components.Any())
-                throw new ArgumentException("Message doesn't contain any components.");
+                throw new ArgumentException("Provided message does not contain any components.");
 
             if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
                 throw new ArgumentException("Message does not contain any button components.");
@@ -278,7 +278,7 @@ namespace DisCatSharp.Interactivity
                 throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
             if (!message.Components.Any())
-                throw new ArgumentException("Message doesn't contain any components.");
+                throw new ArgumentException("Provided message does not contain any components.");
 
             if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
                 throw new ArgumentException("Message does not contain any button components.");
@@ -314,7 +314,7 @@ namespace DisCatSharp.Interactivity
                 throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
             if (!message.Components.Any())
-                throw new ArgumentException("Message doesn't contain any components.");
+                throw new ArgumentException("Provided message does not contain any components.");
 
             if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
                 throw new ArgumentException("Message does not contain any button components.");
@@ -334,7 +334,7 @@ namespace DisCatSharp.Interactivity
         /// <param name="message">The message to wait for.</param>
         /// <param name="predicate">A filter predicate.</param>
         /// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
-        /// <exception cref="ArgumentException">Thrown when the message doesn't contain any dropdowns</exception>
+        /// <exception cref="ArgumentException">Thrown when the Provided message does not contain any dropdowns</exception>
         public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, TimeSpan? timeoutOverride = null)
             => this.WaitForSelectAsync(message, predicate, this.GetCancellationToken(timeoutOverride));
 
@@ -344,14 +344,14 @@ namespace DisCatSharp.Interactivity
         /// <param name="message">The message to wait for.</param>
         /// <param name="predicate">A filter predicate.</param>
         /// <param name="token">A token that can be used to cancel interactivity. Pass <see cref="CancellationToken.None"/> to wait indefinitely.</param>
-        /// <exception cref="ArgumentException">Thrown when the message doesn't contain any dropdowns</exception>
+        /// <exception cref="ArgumentException">Thrown when the Provided message does not contain any dropdowns</exception>
         public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken token)
         {
             if (message.Author != this.Client.CurrentUser)
                 throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
             if (!message.Components.Any())
-                throw new ArgumentException("Message doesn't contain any components.");
+                throw new ArgumentException("Provided message does not contain any components.");
 
             if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Select))
                 throw new ArgumentException("Message does not contain any select components.");
@@ -388,7 +388,7 @@ namespace DisCatSharp.Interactivity
                 throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
             if (!message.Components.Any())
-                throw new ArgumentException("Message doesn't contain any components.");
+                throw new ArgumentException("Provided message does not contain any components.");
 
             if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Select))
                 throw new ArgumentException("Message does not contain any select components.");
@@ -429,7 +429,7 @@ namespace DisCatSharp.Interactivity
                 throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
 
             if (!message.Components.Any())
-                throw new ArgumentException("Message doesn't contain any components.");
+                throw new ArgumentException("Provided message does not contain any components.");
 
             if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Select))
                 throw new ArgumentException("Message does not contain any select components.");

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,41 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+using System.Collections.Generic;
+using DisCatSharp.Entities;
+
+namespace DisCatSharp.ApplicationCommands
 {
     /// <summary>
-    /// Represents the type of interaction response
+    /// Represents a context for an autocomplete interaction.
     /// </summary>
-    public enum InteractionResponseType
+    public class AutocompleteContext
     {
         /// <summary>
-        /// Acknowledges a Ping.
+        /// The interaction created.
         /// </summary>
-        Pong = 1,
+        public DiscordInteraction Interaction { get; internal set; }
 
         /// <summary>
-        /// Responds to the interaction with a message.
+        /// The options already provided.
         /// </summary>
-        ChannelMessageWithSource = 4,
+        public IReadOnlyList<DiscordInteractionDataOption> Options { get; internal set; }
 
         /// <summary>
-        /// Acknowledges an interaction to edit to a response later. The user sees a "thinking" state.
+        /// The option to autocomplete.
         /// </summary>
-        DeferredChannelMessageWithSource = 5,
-
-        /// <summary>
-        /// Acknowledges a component interaction to allow a response later.
-        /// </summary>
-        DeferredMessageUpdate = 6,
-
-        /// <summary>
-        /// Responds to a component interaction by editing the message it's attached to.
-        /// </summary>
-        UpdateMessage = 7,
-
-        /// <summary>
-        /// Responds to an auto-complete request.
-        /// </summary>
-        AutoCompleteResult = 8
+        public DiscordInteractionDataOption FocusedOption { get; internal set; }
     }
 }

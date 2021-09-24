@@ -20,9 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
@@ -44,12 +42,19 @@ namespace DisCatSharp.Entities
         [JsonProperty("type")]
         public ApplicationCommandOptionType Type { get; internal set; }
 
+
+        /// <summary>
+        /// Whether this option is currently focused by the user.
+        /// Only applicable for autocomplete option choices.
+        /// </summary>
+        [JsonProperty("focused")]
+        public bool Focused { get; internal set; }
+
         /// <summary>
         /// Gets the value of this interaction parameter.
         /// </summary>
         [JsonProperty("value")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-        internal string _value { get; set; }
+        internal string RawValue { get; set; }
 
         /// <summary>
         /// Gets the value of this interaction parameter.
@@ -62,15 +67,15 @@ namespace DisCatSharp.Entities
             {
                 return this.Type switch
                 {
-                    ApplicationCommandOptionType.Boolean => bool.Parse(this._value),
-                    ApplicationCommandOptionType.Integer => long.Parse(this._value),
-                    ApplicationCommandOptionType.String => this._value,
-                    ApplicationCommandOptionType.Channel => ulong.Parse(this._value),
-                    ApplicationCommandOptionType.User => ulong.Parse(this._value),
-                    ApplicationCommandOptionType.Role => ulong.Parse(this._value),
-                    ApplicationCommandOptionType.Mentionable => ulong.Parse(this._value),
-                    ApplicationCommandOptionType.Number => double.Parse(this._value),
-                    _ => this._value,
+                    ApplicationCommandOptionType.Boolean => bool.Parse(this.RawValue),
+                    ApplicationCommandOptionType.Integer => long.Parse(this.RawValue),
+                    ApplicationCommandOptionType.String => this.RawValue,
+                    ApplicationCommandOptionType.Channel => ulong.Parse(this.RawValue),
+                    ApplicationCommandOptionType.User => ulong.Parse(this.RawValue),
+                    ApplicationCommandOptionType.Role => ulong.Parse(this.RawValue),
+                    ApplicationCommandOptionType.Mentionable => ulong.Parse(this.RawValue),
+                    ApplicationCommandOptionType.Number => double.Parse(this.RawValue),
+                    _ => this.RawValue,
                 };
             }
         }

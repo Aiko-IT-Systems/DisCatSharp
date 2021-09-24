@@ -76,6 +76,13 @@ namespace DisCatSharp.Entities
         public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
         private readonly List<DiscordActionRowComponent> _components = new();
 
+        /// <summary>
+        /// The choices to send on this interaction response.
+        /// Mutually exclusive with content, embed, and components.
+        /// </summary>
+        public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices => this._choices;
+        private readonly List<DiscordApplicationCommandAutocompleteChoice> _choices = new();
+
 
         /// <summary>
         /// Mentions to send on this interaction response.
@@ -291,6 +298,36 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
+        /// Adds a single auto-complete choice to the builder.
+        /// </summary>
+        /// <param name="choice">The choice to add.</param>
+        /// <returns>The current builder to chain calls with.</returns>
+        public DiscordInteractionResponseBuilder AddAutoCompleteChoice(DiscordApplicationCommandAutocompleteChoice choice)
+        {
+            this._choices.Add(choice);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds auto-complete choices to the builder.
+        /// </summary>
+        /// <param name="choices">The choices to add.</param>
+        /// <returns>The current builder to chain calls with.</returns>
+        public DiscordInteractionResponseBuilder AddAutoCompleteChoices(IEnumerable<DiscordApplicationCommandAutocompleteChoice> choices)
+        {
+            this._choices.AddRange(choices);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds auto-complete choices to the builder.
+        /// </summary>
+        /// <param name="choices">The choices to add.</param>
+        /// <returns>The current builder to chain calls with.</returns>
+        public DiscordInteractionResponseBuilder AddAutoCompleteChoices(params DiscordApplicationCommandAutocompleteChoice[] choices)
+            => this.AddAutoCompleteChoices((IEnumerable<DiscordApplicationCommandAutocompleteChoice>)choices);
+
+        /// <summary>
         /// Clears all message components on this builder.
         /// </summary>
         public void ClearComponents()
@@ -307,6 +344,7 @@ namespace DisCatSharp.Entities
             this.IsEphemeral = false;
             this._mentions.Clear();
             this._components.Clear();
+            this._choices.Clear();
             this._files.Clear();
         }
     }
