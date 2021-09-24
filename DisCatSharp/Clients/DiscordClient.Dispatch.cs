@@ -121,7 +121,7 @@ namespace DisCatSharp
                 case "channel_pins_update":
                     cid = (ulong)dat["channel_id"];
                     var ts = (string)dat["last_pin_timestamp"];
-                    await this.OnChannelPinsUpdateAsync((ulong?)dat["guild_id"], this.InternalGetCachedChannel(cid), ts != null ? DateTimeOffset.Parse(ts, CultureInfo.InvariantCulture) : default(DateTimeOffset?)).ConfigureAwait(false);
+                    await this.OnChannelPinsUpdateAsync((ulong?)dat["guild_id"], cid, ts != null ? DateTimeOffset.Parse(ts, CultureInfo.InvariantCulture) : default(DateTimeOffset?)).ConfigureAwait(false);
                     break;
 
                 #endregion
@@ -852,15 +852,13 @@ namespace DisCatSharp
         /// Handles the channel pins update.
         /// </summary>
         /// <param name="guildId">The guild id.</param>
-        /// <param name="channel">The channel.</param>
+        /// <param name="channelId">The channel id.</param>
         /// <param name="lastPinTimestamp">The last pin timestamp.</param>
 
-        internal async Task OnChannelPinsUpdateAsync(ulong? guildId, DiscordChannel channel, DateTimeOffset? lastPinTimestamp)
+        internal async Task OnChannelPinsUpdateAsync(ulong? guildId, ulong channelId, DateTimeOffset? lastPinTimestamp)
         {
-            if (channel == null)
-                return;
-
             var guild = this.InternalGetCachedGuild(guildId);
+            var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 
             var ea = new ChannelPinsUpdateEventArgs
             {
@@ -1856,7 +1854,7 @@ namespace DisCatSharp
 
         internal async Task OnMessageDeleteEventAsync(ulong messageId, ulong channelId, ulong? guildId)
         {
-            var channel = this.InternalGetCachedChannel(channelId);
+            var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
             var guild = this.InternalGetCachedGuild(guildId);
 
             if (channel == null
@@ -1894,7 +1892,7 @@ namespace DisCatSharp
 
         internal async Task OnMessageBulkDeleteEventAsync(ulong[] messageIds, ulong channelId, ulong? guildId)
         {
-            var channel = this.InternalGetCachedChannel(channelId);
+            var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 
             var msgs = new List<DiscordMessage>(messageIds.Length);
             foreach (var messageId in messageIds)
@@ -1943,7 +1941,7 @@ namespace DisCatSharp
 
         internal async Task OnMessageReactionAddAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, TransportMember mbr, DiscordEmoji emoji)
         {
-            var channel = this.InternalGetCachedChannel(channelId);
+            var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
             var guild = this.InternalGetCachedGuild(guildId);
             emoji.Discord = this;
 
@@ -2000,7 +1998,7 @@ namespace DisCatSharp
 
         internal async Task OnMessageReactionRemoveAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, DiscordEmoji emoji)
         {
-            var channel = this.InternalGetCachedChannel(channelId);
+            var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 
             emoji.Discord = this;
 
@@ -2061,7 +2059,7 @@ namespace DisCatSharp
 
         internal async Task OnMessageReactionRemoveAllAsync(ulong messageId, ulong channelId, ulong? guildId)
         {
-            var channel = this.InternalGetCachedChannel(channelId);
+            var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 
             if (channel == null
                 || this.Configuration.MessageCacheSize == 0
@@ -2082,8 +2080,7 @@ namespace DisCatSharp
 
             var ea = new MessageReactionsClearEventArgs
             {
-                Message = msg,
-                Guild = guild
+                Message = msg
             };
 
             await this._messageReactionsCleared.InvokeAsync(this, ea).ConfigureAwait(false);
@@ -2100,7 +2097,7 @@ namespace DisCatSharp
         internal async Task OnMessageReactionRemoveEmojiAsync(ulong messageId, ulong channelId, ulong guildId, JToken dat)
         {
             var guild = this.InternalGetCachedGuild(guildId);
-            var channel = this.InternalGetCachedChannel(channelId);
+            var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 
             if (channel == null
                 || this.Configuration.MessageCacheSize == 0
@@ -2191,7 +2188,7 @@ namespace DisCatSharp
         internal async Task OnThreadCreateEventAsync(DiscordThreadChannel thread)
         {
             thread.Discord = this;
-            this.InternalGetCachedGuild(thread.GuildId)._threads[thread.Id] = thread;
+            this.InternalGetCachedGuild(thread.GuildId)._threads.AddOrUpdate(thread.Id, thread, (oldThread, newThread) => newThread);
 
             await this._threadCreated.InvokeAsync(this, new ThreadCreateEventArgs { Thread = thread, Guild = thread.Guild, Parent = thread.Parent }).ConfigureAwait(false);
         }
@@ -2210,6 +2207,7 @@ namespace DisCatSharp
 
             var threadNew = this.InternalGetCachedThread(thread.Id);
             DiscordThreadChannel threadOld = null;
+            ThreadUpdateEventArgs updateEvent;
 
             if (threadNew != null)
             {
@@ -2227,7 +2225,8 @@ namespace DisCatSharp
                     MemberCount = thread.MemberCount,
                     GuildId = thread.GuildId,
                     LastPinTimestampRaw = threadNew.LastPinTimestampRaw,
-                    PerUserRateLimit = threadNew.PerUserRateLimit
+                    PerUserRateLimit = threadNew.PerUserRateLimit,
+                    CurrentMember = threadNew.CurrentMember
                 };
 
                 threadNew.ThreadMetadata = thread.ThreadMetadata;
@@ -2238,11 +2237,27 @@ namespace DisCatSharp
                 threadNew.MessageCount = thread.MessageCount;
                 threadNew.MemberCount = thread.MemberCount;
                 threadNew.GuildId = thread.GuildId;
+
+                updateEvent = new ThreadUpdateEventArgs
+                {
+                    ThreadAfter = thread,
+                    ThreadBefore = threadOld,
+                    Guild = thread.Guild,
+                    Parent = thread.Parent
+                };
+            }
+            else
+            {
+                updateEvent = new ThreadUpdateEventArgs
+                {
+                    ThreadAfter = thread,
+                    Guild = thread.Guild,
+                    Parent = thread.Parent
+                };
+                guild._threads[thread.Id] = thread;
             }
 
-            guild._threads[thread.Id] = thread;
-
-            await this._threadUpdated.InvokeAsync(this, new ThreadUpdateEventArgs { ThreadAfter = threadNew, ThreadBefore = threadOld, Guild = thread.Guild, Parent = thread.Parent }).ConfigureAwait(false);
+            await this._threadUpdated.InvokeAsync(this, updateEvent).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -2290,8 +2305,12 @@ namespace DisCatSharp
         internal async Task OnThreadMemberUpdateEventAsync(DiscordThreadChannelMember member)
         {
             member.Discord = this;
+            var thread = this.InternalGetCachedThread(member.ThreadId);
+            thread.CurrentMember = member;
+            thread.Guild._threads.AddOrUpdate(member.ThreadId, thread, (oldThread, newThread) => newThread);
 
-            await this._threadMemberUpdated.InvokeAsync(this, new ThreadMemberUpdateEventArgs { ThreadMember = member }).ConfigureAwait(false);
+
+            await this._threadMemberUpdated.InvokeAsync(this, new ThreadMemberUpdateEventArgs { ThreadMember = member, Thread = thread }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -2304,14 +2323,44 @@ namespace DisCatSharp
         /// <param name="member_count">The new member count.</param>
         internal async Task OnThreadMembersUpdateEventAsync(DiscordGuild guild, ulong thread_id, IReadOnlyList<DiscordThreadChannelMember> addedMembers, IReadOnlyList<ulong?> removed_member_ids, int member_count)
         {
+            var thread = this.InternalGetCachedThread(thread_id);
+            thread.Discord = this;
             guild.Discord = this;
+
+            var removedMembers = new List<DiscordMember>();
+            if (removed_member_ids != null)
+            {
+                foreach (var removedId in removed_member_ids)
+                {
+                    removedMembers.Add(guild._members.TryGetValue(removedId.Value, out var member) ? member : new DiscordMember { Id = removedId.Value, _guild_id = guild.Id, Discord = this });
+                }
+            }
+            else
+                removed_member_ids = Array.Empty<ulong?>();
+            if (addedMembers != null)
+            {
+                foreach (var threadMember in addedMembers)
+                {
+                    threadMember.Discord = this;
+                    threadMember._guild_id = guild.Id;
+
+                    if (threadMember.Id == this.CurrentUser.Id)
+                        thread.CurrentMember = threadMember;
+                }
+            }
+            else
+                addedMembers = Array.Empty<DiscordThreadChannelMember>();
+
+            if (removed_member_ids.Contains(this.CurrentUser.Id)) //indicates the bot was removed from the thread
+                thread.CurrentMember = null;
+            thread.MemberCount = member_count;
 
             var threadMembersUpdateArg = new ThreadMembersUpdateEventArgs
             {
                 Guild = guild,
-                ThreadId = thread_id,
-                AddedMembers = addedMembers ?? Array.Empty<DiscordThreadChannelMember>(),
-                RemovedMemberIds = removed_member_ids ?? Array.Empty<ulong?>(),
+                Thread = thread,
+                AddedMembers = addedMembers,
+                RemovedMembers = removedMembers,
                 MemberCount = member_count
             };
 

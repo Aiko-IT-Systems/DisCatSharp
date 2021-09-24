@@ -17,6 +17,8 @@
     <PackageId>DisCatSharp.CommandsNext</PackageId>
     <Description>CommandNext extension for DisCatSharp.</Description>
     <PackageTags>discord, discord-api, bots, discord-bots, chat, dcs, discatsharp, csharp, dotnet, vb-net, fsharp, commands, commandsnext</PackageTags>
+    <PackageLicenseExpression />
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">

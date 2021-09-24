@@ -37,14 +37,8 @@ namespace DisCatSharp.Entities
     /// <summary>
     /// Represents a discord thread channel.
     /// </summary>
-    public class DiscordThreadChannel : SnowflakeObject, IEquatable<DiscordThreadChannel>
+    public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChannel>
     {
-        /// <summary>
-        /// Gets ID of the guild to which this thread belongs.
-        /// </summary>
-        [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong GuildId { get; internal set; }
-
         /// <summary>
         /// Gets ID of the owner that started this thread.
         /// </summary>
@@ -52,42 +46,36 @@ namespace DisCatSharp.Entities
         public ulong OwnerId { get; internal set; }
 
         /// <summary>
-        /// Gets ID of the news or text channel that contains this thread.
-        /// </summary>
-        [JsonProperty("parent_id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong ParentId { get; internal set; }
-
-        /// <summary>
         /// Gets the name of this thread.
         /// </summary>
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; internal set; }
+        public new string Name { get; internal set; }
 
         /// <summary>
         /// Gets the type of this thread.
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-        public ChannelType Type { get; internal set; }
+        public new ChannelType Type { get; internal set; }
 
         /// <summary>
         /// Gets whether this thread is private.
         /// </summary>
         [JsonIgnore]
-        public bool IsPrivate
+        public new bool IsPrivate
             => this.Type == ChannelType.PrivateThread;
 
         /// <summary>
         /// Gets the ID of the last message sent in this thread.
         /// </summary>
         [JsonProperty("last_message_id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong? LastMessageId { get; internal set; }
+        public new ulong? LastMessageId { get; internal set; }
 
         /// <summary>
         /// <para>Gets the slowmode delay configured for this thread.</para>
         /// <para>All bots, as well as users with <see cref="Permissions.ManageChannels"/> or <see cref="Permissions.ManageMessages"/> permissions in the channel are exempt from slowmode.</para>
         /// </summary>
         [JsonProperty("rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
-        public int? PerUserRateLimit { get; internal set; }
+        public new int? PerUserRateLimit { get; internal set; }
 
         /// <summary>
         /// Gets an approximate count of messages in a thread, stops counting at 50.
@@ -102,10 +90,17 @@ namespace DisCatSharp.Entities
         public int? MemberCount { get; internal set; }
 
         /// <summary>
+        /// Represents the current member for this thread. This will have a value if the user has joined the thread.
+        /// </summary>
+        [JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordThreadChannelMember CurrentMember { get; internal set; }
+
+
+        /// <summary>
         /// Gets when the last pinned message was pinned in this thread.
         /// </summary>
         [JsonIgnore]
-        public DateTimeOffset? LastPinTimestamp
+        public new DateTimeOffset? LastPinTimestamp
             => !string.IsNullOrWhiteSpace(this.LastPinTimestampRaw) && DateTimeOffset.TryParse(this.LastPinTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
                 dto : null;
 
@@ -113,19 +108,13 @@ namespace DisCatSharp.Entities
         /// Gets when the last pinned message was pinned in this thread as raw string.
         /// </summary>
         [JsonProperty("last_pin_timestamp", NullValueHandling = NullValueHandling.Ignore)]
-        internal string LastPinTimestampRaw { get; set; }
+        internal new string LastPinTimestampRaw { get; set; }
 
         /// <summary>
         /// Gets the threads metadata.
         /// </summary>
         [JsonProperty("thread_metadata", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordThreadChannelMetadata ThreadMetadata { get; internal set; }
-
-        /// <summary>
-        /// Gets the default autoarchive duration for threads in the parent channel.
-        /// </summary>
-        [JsonIgnore]
-        public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration => this.Parent.DefaultAutoArchiveDuration;
 
         /// <summary>
         /// Gets the thread members object.
@@ -136,26 +125,6 @@ namespace DisCatSharp.Entities
         [JsonProperty("thread_member", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
         internal ConcurrentDictionary<ulong, DiscordThreadChannelMember> _threadMembers;
-
-        /// <summary>
-        /// Gets the <see cref="DiscordGuild"/> to which this thread belongs.
-        /// </summary>
-        [JsonIgnore]
-        public DiscordGuild Guild
-            => this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
-
-        /// <summary>
-        /// Gets the <see cref="DiscordChannel"/> that contains this thread.
-        /// </summary>
-        [JsonIgnore]
-        public DiscordChannel Parent
-            => this.Guild.GetChannel(this.ParentId);
-
-        /// <summary>
-        /// Gets whether this thread is marked as nsfw.
-        /// </summary>
-        [JsonIgnore]
-        public bool IsNSFW => this.Parent.IsNSFW;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
@@ -172,7 +141,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task DeleteAsync(string reason = null)
+        public new Task DeleteAsync(string reason = null)
             => this.Discord.ApiClient.DeleteThreadAsync(this.Id, reason);
 
 
@@ -355,7 +324,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> SendMessageAsync(string content)
+        public new Task<DiscordMessage> SendMessageAsync(string content)
         {
             return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
@@ -371,7 +340,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
+        public new Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
         {
             return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
@@ -388,7 +357,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
+        public new Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
         {
             return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
@@ -404,7 +373,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
+        public new Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
             => this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
 
         /// <summary>
@@ -416,7 +385,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> SendMessageAsync(Action<DiscordMessageBuilder> action)
+        public new Task<DiscordMessage> SendMessageAsync(Action<DiscordMessageBuilder> action)
         {
             var builder = new DiscordMessageBuilder();
             action(builder);
@@ -432,7 +401,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordMessage> GetMessageAsync(ulong id)
+        public new async Task<DiscordMessage> GetMessageAsync(ulong id)
         {
             return this.Discord.Configuration.MessageCacheSize > 0
                 && this.Discord is DiscordClient dc
@@ -451,7 +420,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<IReadOnlyList<DiscordMessage>> GetMessagesBeforeAsync(ulong before, int limit = 100)
+        public new Task<IReadOnlyList<DiscordMessage>> GetMessagesBeforeAsync(ulong before, int limit = 100)
             => this.GetMessagesInternalAsync(limit, before, null, null);
 
         /// <summary>
@@ -463,7 +432,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<IReadOnlyList<DiscordMessage>> GetMessagesAfterAsync(ulong after, int limit = 100)
+        public new Task<IReadOnlyList<DiscordMessage>> GetMessagesAfterAsync(ulong after, int limit = 100)
             => this.GetMessagesInternalAsync(limit, null, after, null);
 
         /// <summary>
@@ -475,7 +444,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<IReadOnlyList<DiscordMessage>> GetMessagesAroundAsync(ulong around, int limit = 100)
+        public new Task<IReadOnlyList<DiscordMessage>> GetMessagesAroundAsync(ulong around, int limit = 100)
             => this.GetMessagesInternalAsync(limit, null, null, around);
 
         /// <summary>
@@ -486,7 +455,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<IReadOnlyList<DiscordMessage>> GetMessagesAsync(int limit = 100) =>
+        public new Task<IReadOnlyList<DiscordMessage>> GetMessagesAsync(int limit = 100) =>
             this.GetMessagesInternalAsync(limit, null, null, null);
 
         /// <summary>
@@ -550,7 +519,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task DeleteMessagesAsync(IEnumerable<DiscordMessage> messages, string reason = null)
+        public new async Task DeleteMessagesAsync(IEnumerable<DiscordMessage> messages, string reason = null)
         {
             // don't enumerate more than once
             var msgs = messages.Where(x => x.Channel.Id == this.Id).Select(x => x.Id).ToArray();
@@ -576,7 +545,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task DeleteMessageAsync(DiscordMessage message, string reason = null)
+        public new Task DeleteMessageAsync(DiscordMessage message, string reason = null)
             => this.Discord.ApiClient.DeleteMessageAsync(this.Id, message.Id, reason);
 
 
@@ -586,7 +555,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task TriggerTypingAsync()
+        public new Task TriggerTypingAsync()
         {
             return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
                 ? throw new ArgumentException("Cannot start typing in a non-text channel.")
@@ -600,7 +569,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync()
+        public new Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync()
         {
             return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread&& this.Type != ChannelType.News
                 ? throw new ArgumentException("A non-thread channel does not have pinned messages.")

@@ -18,6 +18,8 @@
     <PackageId>DisCatSharp.Lavalink</PackageId>
     <Description>Lavalink implementation for DisCatSharp.</Description>
     <PackageTags>discord, discord-api, bots, discord-bots, chat, dcs, discatsharp, csharp, dotnet, vb-net, fsharp, audio, voice, radio, music, lavalink, lavaplayer</PackageTags>
+    <PackageLicenseExpression />
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>

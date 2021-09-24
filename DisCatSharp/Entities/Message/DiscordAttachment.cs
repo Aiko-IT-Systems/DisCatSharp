@@ -72,6 +72,14 @@ namespace DisCatSharp.Entities
         public int? Width { get; internal set; }
 
         /// <summary>
+        /// Gets whether this attachment is ephemeral.
+        /// Ephemeral attachments will automatically be removed after a set period of time.
+        /// Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.
+        /// </summary>
+        [JsonProperty("ephemeral", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Emphemeral { get; internal set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DiscordAttachment"/> class.
         /// </summary>
         internal DiscordAttachment() { }

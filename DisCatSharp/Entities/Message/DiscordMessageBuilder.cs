@@ -355,6 +355,13 @@ namespace DisCatSharp.Entities
             this.ReplyId = messageId;
             this.MentionOnReply = mention;
             this.FailOnInvalidReply = failOnInvalidReply;
+
+            if (mention)
+            {
+                this.Mentions ??= new List<IMention>();
+                this.Mentions.Add(new RepliedUserMention());
+            }
+
             return this;
         }
 

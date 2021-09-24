@@ -36,9 +36,10 @@ namespace DisCatSharp.EventArgs
         public int MemberCount { get; internal set; }
 
         /// <summary>
-        /// Gets the id of the users who were removed from the thread.
+        /// Gets the users who were removed from the thread.
         /// </summary>
-        public IReadOnlyList<ulong?> RemovedMemberIds { get; internal set; }
+        public IReadOnlyList<DiscordMember> RemovedMembers { get; internal set; }
+
 
         /// <summary>
         /// Gets the users who were added to the thread.
@@ -49,6 +50,11 @@ namespace DisCatSharp.EventArgs
         /// Gets the id of the thread.
         /// </summary>
         public ulong ThreadId { get; internal set; }
+
+        /// <summary>
+        /// Gets the id of the thread.
+        /// </summary>
+        public DiscordThreadChannel Thread { get; internal set; }
 
         /// <summary>
         /// Gets the guild.
