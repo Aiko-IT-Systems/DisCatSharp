@@ -4414,12 +4414,18 @@ namespace DisCatSharp.Net
                         if (embed.Timestamp != null)
                             embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
-                var pld = builder?.Choices != null
+                var pld = type == InteractionResponseType.AutoCompleteResult
                 ? new RestInteractionResponsePayload
                 {
                     Type = type,
                     Data = new DiscordInteractionApplicationCommandCallbackData
                     {
+                        Content = null,
+                        Embeds = null,
+                        IsTTS = null,
+                        Mentions = null,
+                        Flags = null,
+                        Components = null,
                         Choices = builder.Choices
                     }
                 }
@@ -4433,7 +4439,8 @@ namespace DisCatSharp.Net
                         IsTTS = builder.IsTTS,
                         Mentions = builder.Mentions,
                         Flags = builder.IsEphemeral ? MessageFlags.Ephemeral : 0,
-                        Components = builder.Components
+                        Components = builder.Components,
+                        Choices = null
                     } : null
                 };
                 var values = new Dictionary<string, string>();
