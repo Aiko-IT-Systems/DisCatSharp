@@ -28,6 +28,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using DisCatSharp.Enums.Discord;
 using DisCatSharp.EventArgs;
@@ -510,16 +511,87 @@ namespace DisCatSharp.Entities
         [JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
         public bool IsNSFW { get; internal set; }
 
-        // Seriously discord?
+        /// <summary>
+        /// Gets an ordered <see cref="DiscordChannel"/> list out of the channel cache.
+        /// Returns a Dictionary where the key is an ulong and can be mapped to <see cref="ChannelType.Category"/> <see cref="DiscordChannel"/>s.
+        /// Ignore the 0 key here, because that indicates that this is the "has no category" list.
+        /// Each value contains a ordered list of text/news and voice/stage channels as <see cref="DiscordChannel"/>.
+        /// </summary>
+        /// <returns>A ordered list of categories with its channels</returns>
+        public Dictionary<ulong, List<DiscordChannel>> GetOrderedChannels()
+        {
+            IReadOnlyList<DiscordChannel> raw_channels = this._channels.Values.ToList();
 
-        // I need to work on this
-        //
-        // /// <summary>
-        // /// Gets channels ordered in a manner in which they'd be ordered in the UI of the discord client.
-        // /// </summary>
-        // [JsonIgnore]
-        // public IEnumerable<DiscordChannel> OrderedChannels
-        //    => this._channels.OrderBy(xc => xc.Parent?.Position).ThenBy(xc => xc.Type).ThenBy(xc => xc.Position);
+            Dictionary<ulong, List<DiscordChannel>> ordered_channels = new();
+
+            ordered_channels.Add(0, new List<DiscordChannel>());
+
+            foreach (var channel in raw_channels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
+            {
+                ordered_channels.Add(channel.Id, new List<DiscordChannel>());
+            }
+
+            foreach (var channel in raw_channels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
+            {
+                ordered_channels[channel.ParentId.Value].Add(channel);
+            }
+            foreach (var channel in raw_channels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
+            {
+                ordered_channels[channel.ParentId.Value].Add(channel);
+            }
+
+            foreach (var channel in raw_channels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
+            {
+                ordered_channels[0].Add(channel);
+            }
+            foreach (var channel in raw_channels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
+            {
+                ordered_channels[0].Add(channel);
+            }
+
+            return ordered_channels;
+        }
+
+        /// <summary>
+        /// Gets an ordered <see cref="DiscordChannel"/> list.
+        /// Returns a Dictionary where the key is an ulong and can be mapped to <see cref="ChannelType.Category"/> <see cref="DiscordChannel"/>s.
+        /// Ignore the 0 key here, because that indicates that this is the "has no category" list.
+        /// Each value contains a ordered list of text/news and voice/stage channels as <see cref="DiscordChannel"/>.
+        /// </summary>
+        /// <returns>A ordered list of categories with its channels</returns>
+        public async Task<Dictionary<ulong, List<DiscordChannel>>> GetOrderedChannelsAsync()
+        {
+            var raw_channels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Id);
+
+            Dictionary<ulong, List<DiscordChannel>> ordered_channels = new();
+
+            ordered_channels.Add(0, new List<DiscordChannel>());
+
+            foreach (var channel in raw_channels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
+            {
+                ordered_channels.Add(channel.Id, new List<DiscordChannel>());
+            }
+
+            foreach (var channel in raw_channels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
+            {
+                ordered_channels[channel.ParentId.Value].Add(channel);
+            }
+            foreach (var channel in raw_channels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
+            {
+                ordered_channels[channel.ParentId.Value].Add(channel);
+            }
+
+            foreach (var channel in raw_channels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
+            {
+                ordered_channels[0].Add(channel);
+            }
+            foreach (var channel in raw_channels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
+            {
+                ordered_channels[0].Add(channel);
+            }
+
+            return ordered_channels;
+        }
 
         /// <summary>
         /// Whether it is synced.
@@ -589,8 +661,38 @@ namespace DisCatSharp.Entities
         {
             var mdl = new GuildEditModel();
             action(mdl);
-            if (mdl.AfkChannel.HasValue && mdl.AfkChannel.Value.Type != ChannelType.Voice)
+
+            var afkChannelId = Optional.FromNoValue<ulong?>();
+            if (mdl.AfkChannel.HasValue && mdl.AfkChannel.Value.Type != ChannelType.Voice && mdl.AfkChannel.Value != null)
                 throw new ArgumentException("AFK channel needs to be a voice channel.");
+            else if (mdl.AfkChannel.HasValue && mdl.AfkChannel.Value != null)
+                afkChannelId = mdl.AfkChannel.Value.Id;
+            else if (mdl.AfkChannel.HasValue)
+                afkChannelId = null;
+
+            var rulesChannelId = Optional.FromNoValue<ulong?>();
+            if (mdl.RulesChannel.HasValue && mdl.RulesChannel.Value != null && mdl.RulesChannel.Value.Type != ChannelType.Text && mdl.RulesChannel.Value.Type != ChannelType.News )
+                throw new ArgumentException("Rules channel needs to be a text channel.");
+            else if (mdl.RulesChannel.HasValue && mdl.RulesChannel.Value != null)
+                rulesChannelId = mdl.RulesChannel.Value.Id;
+            else if (mdl.RulesChannel.HasValue)
+                rulesChannelId = null;
+
+            var publicUpdatesChannelId = Optional.FromNoValue<ulong?>();
+            if (mdl.PublicUpdatesChannel.HasValue && mdl.PublicUpdatesChannel.Value != null && mdl.PublicUpdatesChannel.Value.Type != ChannelType.Text && mdl.PublicUpdatesChannel.Value.Type != ChannelType.News)
+                throw new ArgumentException("Public updates channel needs to be a text channel.");
+            else if (mdl.PublicUpdatesChannel.HasValue && mdl.PublicUpdatesChannel.Value != null)
+                publicUpdatesChannelId = mdl.PublicUpdatesChannel.Value.Id;
+            else if (mdl.PublicUpdatesChannel.HasValue)
+                publicUpdatesChannelId = null;
+
+            var systemChannelId = Optional.FromNoValue<ulong?>();
+            if (mdl.SystemChannel.HasValue && mdl.SystemChannel.Value != null && mdl.SystemChannel.Value.Type != ChannelType.Text && mdl.SystemChannel.Value.Type != ChannelType.News)
+                throw new ArgumentException("Public updates channel needs to be a text channel.");
+            else if (mdl.SystemChannel.HasValue && mdl.SystemChannel.Value != null)
+                systemChannelId = mdl.SystemChannel.Value.Id;
+            else if (mdl.SystemChannel.HasValue)
+                systemChannelId = null;
 
             var iconb64 = Optional.FromNoValue<string>();
             if (mdl.Icon.HasValue && mdl.Icon.Value != null)
@@ -628,9 +730,53 @@ namespace DisCatSharp.Entities
 
             return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name, mdl.Region.IfPresent(e => e.Id),
                 mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
-                mdl.AfkChannel.IfPresent(e => e?.Id), mdl.AfkTimeout, iconb64, mdl.Owner.IfPresent(e => e.Id), splashb64,
-                mdl.SystemChannel.IfPresent(e => e?.Id), mdl.SystemChannelFlags, mdl.PublicUpdatesChannel.IfPresent(e => e?.Id),
-                mdl.RulesChannel.IfPresent(e => e?.Id), description, bannerb64, discoverySplash64, mdl.PreferredLocale, mdl.AuditLogReason).ConfigureAwait(false);
+                afkChannelId, mdl.AfkTimeout, iconb64, mdl.Owner.IfPresent(e => e.Id), splashb64,
+                systemChannelId, mdl.SystemChannelFlags, publicUpdatesChannelId, rulesChannelId,
+                description, bannerb64, discoverySplash64, mdl.PreferredLocale, mdl.AuditLogReason).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Modifies the community settings async.
+        /// This sets <see cref="VerificationLevel.High"/> if not highest and <see cref="ExplicitContentFilter.AllMembers"/>.
+        /// </summary>
+        /// <param name="enabled">If true, enable <see cref="GuildFeatures.HasCommunityEnabled"/>.</param>
+        /// <param name="rulesChannel">The rules channel.</param>
+        /// <param name="publicUpdatesChannel">The public updates channel.</param>
+        /// <param name="preferredLocale">The preferred locale. Defaults to en-US.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="defaultMessageNotifications">The default message notifications. Defaults to <see cref="DefaultMessageNotifications.MentionsOnly"/></param>
+        /// <param name="reason">The auditlog reason.</param>
+        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordGuild> ModifyCommunitySettingsAsync(bool enabled, DiscordChannel rulesChannel = null, DiscordChannel publicUpdatesChannel = null, string preferredLocale = "en-US", string description = null, DefaultMessageNotifications defaultMessageNotifications = DefaultMessageNotifications.MentionsOnly, string reason = null)
+        {
+            var verificationLevel = this.VerificationLevel;
+            if(this.VerificationLevel != VerificationLevel.Highest)
+            {
+                verificationLevel = VerificationLevel.High;
+            }
+
+            var explicitContentFilter = ExplicitContentFilter.AllMembers;
+
+            var rulesChannelId = Optional.FromNoValue<ulong?>();
+            if (rulesChannel != null && rulesChannel.Type != ChannelType.Text && rulesChannel.Type != ChannelType.News)
+                throw new ArgumentException("Rules channel needs to be a text channel.");
+            else if (rulesChannel != null)
+                rulesChannelId = rulesChannel.Id;
+            else if (rulesChannel == null)
+                rulesChannelId = null;
+
+            var publicUpdatesChannelId = Optional.FromNoValue<ulong?>();
+            if (publicUpdatesChannel != null && publicUpdatesChannel.Type != ChannelType.Text && publicUpdatesChannel.Type != ChannelType.News)
+                throw new ArgumentException("Public updates channel needs to be a text channel.");
+            else if (publicUpdatesChannel != null)
+                publicUpdatesChannelId = publicUpdatesChannel.Id;
+            else if (publicUpdatesChannel == null)
+                publicUpdatesChannelId = null;
+
+        return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, enabled, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
         }
 
         /// <summary>

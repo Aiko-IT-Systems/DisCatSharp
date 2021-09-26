@@ -235,6 +235,54 @@ namespace DisCatSharp.Net.Abstractions
     }
 
     /// <summary>
+    /// Represents a guild community modify payload.
+    /// </summary>
+    internal sealed class RestGuildCommunityModifyPayload
+    {
+        /// <summary>
+        /// Gets or sets the verification level.
+        /// </summary>
+        [JsonProperty("verification_level", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<VerificationLevel> VerificationLevel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the default message notifications.
+        /// </summary>
+        [JsonProperty("default_message_notifications", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<DefaultMessageNotifications> DefaultMessageNotifications { get; set; }
+
+        /// <summary>
+        /// Gets or sets the explicit content filter.
+        /// </summary>
+        [JsonProperty("explicit_content_filter", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<ExplicitContentFilter> ExplicitContentFilter { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rules channel id.
+        /// </summary>
+        [JsonProperty("rules_channel_id", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<ulong?> RulesChannelId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the public updates channel id.
+        /// </summary>
+        [JsonProperty("public_updates_channel_id", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<ulong?> PublicUpdatesChannelId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the preferred locale.
+        /// </summary>
+        [JsonProperty("preferred_locale")]
+        public Optional<string> PreferredLocale { get; set; }
+
+        /// <summary>
+        /// Gets or sets the description.
+        /// </summary>
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Include)]
+        public Optional<string> Description { get; set; }
+    }
+
+    /// <summary>
     /// Represents a guild member add payload.
     /// </summary>
     internal sealed class RestGuildMemberAddPayload : IOAuth2Payload
