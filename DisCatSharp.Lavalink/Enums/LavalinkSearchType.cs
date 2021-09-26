@@ -36,11 +36,6 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Search on Youtube.
         /// </summary>
-        Youtube,
-
-        /// <summary>
-        /// Provide Lavalink with a plain URL.
-        /// </summary>
-        Plain
+        Youtube
     }
 }
