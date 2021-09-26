@@ -489,7 +489,7 @@ namespace DisCatSharp.Net
         /// Modifies the guild community settings.
         /// </summary>
         /// <param name="guildId">The guild id.</param>
-        /// <param name="enabled">If true, enabled.</param>
+        /// <param name="features">The guild features.</param>
         /// <param name="rulesChannelId">The rules channel id.</param>
         /// <param name="publicUpdatesChannelId">The public updates channel id.</param>
         /// <param name="preferredLocale">The preferred locale.</param>
@@ -498,9 +498,9 @@ namespace DisCatSharp.Net
         /// <param name="explicitContentFilter">The explicit content filter.</param>
         /// <param name="verificationLevel">The verification level.</param>
         /// <param name="reason">The reason.</param>
-        internal async Task<DiscordGuild> ModifyGuildCommunitySettingsAsync(ulong guildId, bool enabled, Optional<ulong?> rulesChannelId, Optional<ulong?> publicUpdatesChannelId, string preferredLocale, string description, DefaultMessageNotifications defaultMessageNotifications, ExplicitContentFilter explicitContentFilter, VerificationLevel verificationLevel, string reason)
+        internal async Task<DiscordGuild> ModifyGuildCommunitySettingsAsync(ulong guildId, List<string> features, Optional<ulong?> rulesChannelId, Optional<ulong?> publicUpdatesChannelId, string preferredLocale, string description, DefaultMessageNotifications defaultMessageNotifications, ExplicitContentFilter explicitContentFilter, VerificationLevel verificationLevel, string reason)
         {
-            var pld = new RestGuildModifyPayload
+            var pld = new RestGuildCommunityModifyPayload
             {
                 VerificationLevel = verificationLevel,
                 DefaultMessageNotifications = defaultMessageNotifications,
@@ -508,7 +508,8 @@ namespace DisCatSharp.Net
                 RulesChannelId = rulesChannelId,
                 PublicUpdatesChannelId = publicUpdatesChannelId,
                 PreferredLocale = preferredLocale,
-                Description = description ?? Optional.FromNoValue<string>()
+                Description = description ?? Optional.FromNoValue<string>(),
+                Features = features
             };
 
             var headers = Utilities.GetBaseHeaders();
