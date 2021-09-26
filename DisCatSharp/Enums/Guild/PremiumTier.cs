@@ -43,7 +43,7 @@ namespace DisCatSharp
         Tier_2 = 2,
 
         /// <summary>
-        /// Indicates that this server was boosted forteen times.
+        /// Indicates that this server was boosted fourteen times.
         /// </summary>
         Tier_3 = 3,
 
