@@ -280,6 +280,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Include)]
         public Optional<string> Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the featzres.
+        /// </summary>
+        [JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Features { get; set; }
     }
 
     /// <summary>

@@ -776,7 +776,26 @@ namespace DisCatSharp.Entities
             else if (publicUpdatesChannel == null)
                 publicUpdatesChannelId = null;
 
-        return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, enabled, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
+            List<string> features = new();
+            var rfeatures = this.RawFeatures.ToList();
+            if (this.RawFeatures.Contains("COMMUNITY") && enabled)
+            {
+                features = rfeatures;
+            } else if(!this.RawFeatures.Contains("COMMUNITY") && enabled)
+            {
+                rfeatures.Add("COMMUNITY");
+                features = rfeatures;
+            }
+            else if (this.RawFeatures.Contains("COMMUNITY") && !enabled)
+            {
+                rfeatures.Remove("COMMUNITY");
+                features = rfeatures;
+            } else if(!this.RawFeatures.Contains("COMMUNITY") && !enabled)
+            {
+                features = rfeatures;
+            }
+
+            return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, features, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
         }
 
         /// <summary>
