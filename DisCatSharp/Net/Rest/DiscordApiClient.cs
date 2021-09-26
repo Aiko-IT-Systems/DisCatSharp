@@ -407,7 +407,7 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Modifies the guild async.
+        /// Modifies the guild.
         /// </summary>
         /// <param name="guildId">The guild id.</param>
         /// <param name="name">The name.</param>
@@ -460,6 +460,55 @@ namespace DisCatSharp.Net
                 PublicUpdatesChannelId = publicUpdatesChannelId,
                 PreferredLocale = preferredLocale,
                 Description = description
+            };
+
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers.Add(REASON_HEADER_NAME, reason);
+
+            var route = $"{Endpoints.GUILDS}/:guild_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration.UseCanary);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+            var json = JObject.Parse(res.Response);
+            var rawMembers = (JArray)json["members"];
+            var guild = json.ToDiscordObject<DiscordGuild>();
+            foreach (var r in guild._roles.Values)
+                r._guild_id = guild.Id;
+
+            if (this.Discord is DiscordClient dc)
+                await dc.OnGuildUpdateEventAsync(guild, rawMembers).ConfigureAwait(false);
+            return guild;
+        }
+
+
+
+        /// <summary>
+        /// Modifies the guild community settings.
+        /// </summary>
+        /// <param name="guildId">The guild id.</param>
+        /// <param name="enabled">If true, enabled.</param>
+        /// <param name="rulesChannelId">The rules channel id.</param>
+        /// <param name="publicUpdatesChannelId">The public updates channel id.</param>
+        /// <param name="preferredLocale">The preferred locale.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="defaultMessageNotifications">The default message notifications.</param>
+        /// <param name="explicitContentFilter">The explicit content filter.</param>
+        /// <param name="verificationLevel">The verification level.</param>
+        /// <param name="reason">The reason.</param>
+        internal async Task<DiscordGuild> ModifyGuildCommunitySettingsAsync(ulong guildId, bool enabled, Optional<ulong?> rulesChannelId, Optional<ulong?> publicUpdatesChannelId, string preferredLocale, string description, DefaultMessageNotifications defaultMessageNotifications, ExplicitContentFilter explicitContentFilter, VerificationLevel verificationLevel, string reason)
+        {
+            var pld = new RestGuildModifyPayload
+            {
+                VerificationLevel = verificationLevel,
+                DefaultMessageNotifications = defaultMessageNotifications,
+                ExplicitContentFilter = explicitContentFilter,
+                RulesChannelId = rulesChannelId,
+                PublicUpdatesChannelId = publicUpdatesChannelId,
+                PreferredLocale = preferredLocale,
+                Description = description ?? Optional.FromNoValue<string>()
             };
 
             var headers = Utilities.GetBaseHeaders();

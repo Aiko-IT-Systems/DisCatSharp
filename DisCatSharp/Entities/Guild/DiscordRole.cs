@@ -108,6 +108,9 @@ namespace DisCatSharp.Entities
         [JsonProperty("unicode_emoji", NullValueHandling = NullValueHandling.Ignore)]
         internal string EmojiString { get; set; }
 
+        /// <summary>
+        /// Gets the unicode emoji.
+        /// </summary>
         public DiscordEmoji UnicodeEmoji
             => this.EmojiString != null ? DiscordEmoji.FromUnicode(this.Discord, this.EmojiString) : null;
 
