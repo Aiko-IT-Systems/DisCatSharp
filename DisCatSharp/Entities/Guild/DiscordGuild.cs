@@ -3078,17 +3078,17 @@ namespace DisCatSharp.Entities
     }
 
     /// <summary>
-    /// Represents the guild features
+    /// Represents the guild features.
     /// </summary>
     public class GuildFeatures
     {
         /// <summary>
-        /// Guild has access to set an animated guild icon
+        /// Guild has access to set an animated guild icon.
         /// </summary>
         public bool CanSetAnimatedIcon { get; }
 
         /// <summary>
-        /// Guild has access to set a guild banner image
+        /// Guild has access to set a guild banner image.
         /// </summary>
         public bool CanSetBanner { get; }
 
@@ -3098,28 +3098,29 @@ namespace DisCatSharp.Entities
         public bool CanCreateStoreChannels { get; }
 
         /// <summary>
-        /// Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates.
-        /// <see cref="ChannelType.Stage"/> is usable.
+        /// Guild can enable Welcome Screen, Membership Screening, Stage Channels, News Channels and receives community updates.
+        /// Furthermore the guild can apply as a partner and for the discovery (if the prerequisites are given).
+        /// <see cref="ChannelType.Stage"/> and <see cref="ChannelType.News"/> is usable.
         /// </summary>
         public bool HasCommunityEnabled { get; }
 
         /// <summary>
-        /// Guild is able to be discovered in the directory
+        /// Guild is able to be discovered in the discovery.
         /// </summary>
         public bool IsDiscoverable { get; }
 
         /// <summary>
-        /// Guild is able to be featured in the directory
+        /// Guild is able to be featured in the discovery.
         /// </summary>
         public bool IsFeatureable { get; }
 
         /// <summary>
-        /// Guild has access to set an invite splash background
+        /// Guild has access to set an invite splash background.
         /// </summary>
         public bool CanSetInviteSplash { get; }
 
         /// <summary>
-        /// Guild has enabled Membership Screening 
+        /// Guild has enabled Membership Screening.
         /// </summary>
         public bool HasMembershipScreeningEnabled { get; }
 
@@ -3130,52 +3131,52 @@ namespace DisCatSharp.Entities
         public bool CanCreateNewsChannels { get; }
 
         /// <summary>
-        /// Guild is partnered
+        /// Guild is partnered.
         /// </summary>
         public bool IsPartnered { get; }
 
         /// <summary>
-        /// Guild has increased custom emoji slots
+        /// Guild has increased custom emoji slots.
         /// </summary>
         public bool CanUploadMoreEmojis { get; }
 
         /// <summary>
-        /// Guild can be previewed before joining via Membership Screening or the directory
+        /// Guild can be previewed before joining via Membership Screening or the discovery.
         /// </summary>
         public bool HasPreviewEnabled { get; }
 
         /// <summary>
-        /// Guild has access to set a vanity URL
+        /// Guild has access to set a vanity URL.
         /// </summary>
         public bool CanSetVanityUrl { get; }
 
         /// <summary>
-        /// Guild is verified
+        /// Guild is verified.
         /// </summary>
         public bool IsVerified { get; }
 
         /// <summary>
-        /// Guild has access to set 384kbps bitrate in voice (previously VIP voice servers)
+        /// Guild has access to set 384kbps bitrate in voice (previously VIP voice servers).
         /// </summary>
         public bool CanAccessVipRegions { get; }
 
         /// <summary>
-        /// Guild has enabled the welcome screen
+        /// Guild has enabled the welcome screen.
         /// </summary>
         public bool HasWelcomeScreenEnabled { get; }
 
         /// <summary>
-        /// Guild has enabled ticketed events
+        /// Guild has enabled ticketed events.
         /// </summary>
         public bool HasTicketedEventsEnabled { get; }
 
         /// <summary>
-        /// Guild has enabled monetization
+        /// Guild has enabled monetization.
         /// </summary>
         public bool HasMonetizationEnabled { get; }
 
         /// <summary>
-        /// Guild has increased custom sticker slots
+        /// Guild has increased custom sticker slots.
         /// </summary>
         public bool CanUploadMoreStickers { get; }
 
@@ -3235,7 +3236,7 @@ namespace DisCatSharp.Entities
         public bool PremiumTierThreeOverride { get; }
 
         /// <summary>
-        /// String of guild features
+        /// String of guild features.
         /// </summary>
         public string FeatureString { get; }
 
