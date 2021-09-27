@@ -512,6 +512,29 @@ namespace DisCatSharp.Entities
         public bool IsNSFW { get; internal set; }
 
         /// <summary>
+        /// Gets a dictionary of all by position ordered channels associated with this guild. The dictionary's key is the channel ID.
+        /// </summary>
+        [JsonIgnore]
+        public IReadOnlyDictionary<ulong, DiscordChannel> OrderedChannels => new ReadOnlyDictionary<ulong, DiscordChannel>(this.InternalSortChannels());
+
+        /// <summary>
+        /// Sorts the channels.
+        /// </summary>
+        private Dictionary<ulong, DiscordChannel> InternalSortChannels()
+        {
+            Dictionary<ulong, DiscordChannel> keyValuePairs = new();
+            var ochannels = this.GetOrderedChannels();
+            foreach (var ochan in ochannels)
+            {
+                if (ochan.Key != 0)
+                    keyValuePairs.Add(ochan.Key, this.GetChannel(ochan.Key));
+                foreach (var chan in ochan.Value)
+                    keyValuePairs.Add(chan.Id, chan);
+            }
+            return keyValuePairs;
+        }
+
+        /// <summary>
         /// Gets an ordered <see cref="DiscordChannel"/> list out of the channel cache.
         /// Returns a Dictionary where the key is an ulong and can be mapped to <see cref="ChannelType.Category"/> <see cref="DiscordChannel"/>s.
         /// Ignore the 0 key here, because that indicates that this is the "has no category" list.
