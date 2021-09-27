@@ -67,9 +67,9 @@ namespace DisCatSharp.CommandsNext
         /// Gets the member who triggered the execution. This property is null for commands sent over direct messages.
         /// </summary>
         public DiscordMember Member
-            => this._lazyAssMember.Value;
+            => this._lazyMember.Value;
 
-        private readonly Lazy<DiscordMember> _lazyAssMember;
+        private readonly Lazy<DiscordMember> _lazyMember;
 
         /// <summary>
         /// Gets the CommandsNext service instance that handled this command.
