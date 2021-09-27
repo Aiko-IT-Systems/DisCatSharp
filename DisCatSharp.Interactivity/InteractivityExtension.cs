@@ -393,7 +393,7 @@ namespace DisCatSharp.Interactivity
             if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Select))
                 throw new ArgumentException("Message does not contain any select components.");
 
-            if (!message.Components.SelectMany(c => c.Components).OfType<DiscordSelectComponent>().Any(c => c.CustomId == id))
+            if (message.Components.SelectMany(c => c.Components).OfType<DiscordSelectComponent>().All(c => c.CustomId != id))
                 throw new ArgumentException($"Message does not contain select component with Id of '{id}'.");
 
             var result = await this
@@ -434,7 +434,7 @@ namespace DisCatSharp.Interactivity
             if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Select))
                 throw new ArgumentException("Message does not contain any select components.");
 
-            if (!message.Components.SelectMany(c => c.Components).OfType<DiscordSelectComponent>().Any(c => c.CustomId == id))
+            if (message.Components.SelectMany(c => c.Components).OfType<DiscordSelectComponent>().All(c => c.CustomId != id))
                 throw new ArgumentException($"Message does not contain select with Id of '{id}'.");
 
             var result = await this
