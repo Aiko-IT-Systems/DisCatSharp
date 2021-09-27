@@ -908,16 +908,23 @@ namespace DisCatSharp.VoiceNext
             if (this.IsDisposed)
                 return;
 
-            this.IsDisposed = true;
-            this.IsInitialized = false;
-            this.TokenSource.Cancel();
-            this.SenderTokenSource.Cancel();
-            this.ReceiverTokenSource?.Cancel();
-            this.KeepaliveTokenSource.Cancel();
-            this.TokenSource.Dispose();
-            this.SenderTokenSource.Dispose();
-            this.ReceiverTokenSource?.Dispose();
-            this.KeepaliveTokenSource.Dispose();
+            try
+            {
+                this.IsDisposed = true;
+                this.IsInitialized = false;
+                this.TokenSource?.Cancel();
+                this.SenderTokenSource?.Cancel();
+                this.ReceiverTokenSource?.Cancel();
+                this.KeepaliveTokenSource?.Cancel();
+                this.TokenSource?.Dispose();
+                this.SenderTokenSource?.Dispose();
+                this.ReceiverTokenSource?.Dispose();
+                this.KeepaliveTokenSource?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                this.Discord.Logger.LogError(ex, ex.Message);
+            }
 
             try
             {
@@ -926,12 +933,19 @@ namespace DisCatSharp.VoiceNext
             }
             catch { }
 
-            this.Opus?.Dispose();
-            this.Opus = null;
-            this.Sodium?.Dispose();
-            this.Sodium = null;
-            this.Rtp?.Dispose();
-            this.Rtp = null;
+            try
+            {
+                this.Opus?.Dispose();
+                this.Opus = null;
+                this.Sodium?.Dispose();
+                this.Sodium = null;
+                this.Rtp?.Dispose();
+                this.Rtp = null;
+            }
+            catch(Exception ex)
+            {
+                this.Discord.Logger.LogError(ex, ex.Message);
+            }
 
             this.VoiceDisconnected?.Invoke(this.Guild);
         }
