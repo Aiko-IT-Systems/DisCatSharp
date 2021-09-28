@@ -357,6 +357,8 @@ namespace DisCatSharp.VoiceNext
             this.TokenSource = new CancellationTokenSource();
 
             this.Configuration = config;
+            this.IsInitialized = false;
+            this.IsDisposed = false;
             this.Opus = new Opus(this.AudioFormat);
             //this.Sodium = new Sodium();
             this.Rtp = new Rtp();
@@ -380,8 +382,6 @@ namespace DisCatSharp.VoiceNext
             this.WebSocketEndpoint = new ConnectionEndpoint { Hostname = eph, Port = epp };
 
             this.ReadyWait = new TaskCompletionSource<bool>();
-            this.IsInitialized = false;
-            this.IsDisposed = false;
 
             this.PlayingWait = null;
             this.TransmitChannel = Channel.CreateBounded<RawVoicePacket>(new BoundedChannelOptions(this.Configuration.PacketQueueSize));
@@ -915,11 +915,6 @@ namespace DisCatSharp.VoiceNext
                 this.TokenSource?.Cancel();
                 this.SenderTokenSource?.Cancel();
                 this.ReceiverTokenSource?.Cancel();
-                this.KeepaliveTokenSource?.Cancel();
-                this.TokenSource?.Dispose();
-                this.SenderTokenSource?.Dispose();
-                this.ReceiverTokenSource?.Dispose();
-                this.KeepaliveTokenSource?.Dispose();
             }
             catch (Exception ex)
             {
@@ -935,6 +930,11 @@ namespace DisCatSharp.VoiceNext
 
             try
             {
+                this.KeepaliveTokenSource?.Cancel();
+                this.TokenSource?.Dispose();
+                this.SenderTokenSource?.Dispose();
+                this.ReceiverTokenSource?.Dispose();
+                this.KeepaliveTokenSource?.Dispose();
                 this.Opus?.Dispose();
                 this.Opus = null;
                 this.Sodium?.Dispose();
