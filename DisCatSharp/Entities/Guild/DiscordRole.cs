@@ -106,13 +106,13 @@ namespace DisCatSharp.Entities
         /// Gets the role unicode_emoji.
         /// </summary>
         [JsonProperty("unicode_emoji", NullValueHandling = NullValueHandling.Ignore)]
-        internal string EmojiString { get; set; }
+        internal string _unicodeEmojiString;
 
         /// <summary>
         /// Gets the unicode emoji.
         /// </summary>
         public DiscordEmoji UnicodeEmoji
-            => this.EmojiString != null ? DiscordEmoji.FromUnicode(this.Discord, this.EmojiString) : null;
+            => this._unicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this._unicodeEmojiString}:", false) : null;
 
         [JsonIgnore]
         internal ulong _guild_id = 0;
