@@ -696,6 +696,9 @@ namespace DisCatSharp.Common
             return builder.MoveToImmutable();
         }
 
+        /// <summary>
+        /// The keyed value.
+        /// </summary>
         private class KeyedValue
         {
             /// <summary>
@@ -730,6 +733,9 @@ namespace DisCatSharp.Common
             }
         }
 
+        /// <summary>
+        /// The enumerator.
+        /// </summary>
         private class Enumerator :
             IEnumerator<KeyValuePair<string, TValue>>,
             IDictionaryEnumerator

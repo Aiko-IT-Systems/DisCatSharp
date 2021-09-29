@@ -30,7 +30,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordUnicodeEmoji._1SkinTone4")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordUnicodeEmoji._1SkinTone5")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordUnicodeEmoji._8ball")]
-[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.DiscordShardedClient._guildStickersUpdate")]
-[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.DiscordClient._guildStickersUpdate")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordColor.HexAlphabet")]
 [assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordColor.HexAlphabet")]

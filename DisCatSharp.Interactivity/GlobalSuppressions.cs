@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,7 +24,6 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Interactivity.EventHandling.EventWaiter`1.disposed")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Interactivity.EventHandling.ReactionCollectRequest.message")]
-[assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Interactivity.EventHandling.ComponentEventWaiter._emptyMatchIds")]
 [assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Interactivity.InteractivityExtension.ComponentInteractionWaiter")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Interactivity.InteractivityExtension.HandleInvalidInteraction(DisCatSharp.Entities.DiscordInteraction)~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Interactivity.EventHandling.PaginationRequest._timeout")]

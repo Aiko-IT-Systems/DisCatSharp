@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,12 +22,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0090:Use 'new(...)'", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.SlashCommands.SubGroupCommand.SubCommands")]
-[assembly: SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.SlashCommands.SlashCommandsExtension.GetChoiceAttributesFromParameter(System.Collections.Generic.IEnumerable{DisCatSharp.SlashCommands.ChoiceAttribute})~System.Collections.Generic.List{DisCatSharp.Entities.DiscordApplicationCommandOptionChoice}")]
-[assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.SlashCommands.SlashCommandsExtension.GetParameterType(System.Type)~DisCatSharp.ApplicationCommandOptionType")]
-[assembly: SuppressMessage("Style", "IDE0007:Use implicit type", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.SlashCommands.SlashCommandsExtension.InteractionHandler(DisCatSharp.DiscordClient,DisCatSharp.EventArgs.InteractionCreateEventArgs)~System.Threading.Tasks.Task")]
-[assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.SlashCommands.SlashCommandsExtension.RegisterCommands(System.Collections.Generic.IEnumerable{System.Type},System.Nullable{System.UInt64})")]
-[assembly: SuppressMessage("Style", "IDE0007:Use implicit type", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.SlashCommands.SlashCommandsExtension.ResolveInteractionCommandParameters(DisCatSharp.EventArgs.InteractionCreateEventArgs,DisCatSharp.SlashCommands.InteractionContext,System.Reflection.MethodInfo,System.Collections.Generic.IEnumerable{DisCatSharp.Entities.DiscordInteractionDataOption})~System.Threading.Tasks.Task{System.Collections.Generic.List{System.Object}}")]
 [assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._registeredCommands")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._commandMethods")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._contextMenuCommands")]
