@@ -218,6 +218,9 @@ namespace DisCatSharp.Interactivity.EventHandling
         }
     }
 
+    /// <summary>
+    /// The reaction collect request.
+    /// </summary>
     public class ReactionCollectRequest : IDisposable
     {
         internal TaskCompletionSource<Reaction> _tcs;
@@ -260,6 +263,9 @@ namespace DisCatSharp.Interactivity.EventHandling
         }
     }
 
+    /// <summary>
+    /// The reaction.
+    /// </summary>
     public class Reaction
     {
         /// <summary>

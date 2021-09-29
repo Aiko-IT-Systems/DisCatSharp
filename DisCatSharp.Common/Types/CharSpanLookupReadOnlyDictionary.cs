@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -297,6 +297,9 @@ namespace DisCatSharp.Common
             return new ReadOnlyDictionary<ulong, KeyedValue>(dict);
         }
 
+        /// <summary>
+        /// The keyed value.
+        /// </summary>
         private class KeyedValue
         {
             /// <summary>
@@ -331,6 +334,9 @@ namespace DisCatSharp.Common
             }
         }
 
+        /// <summary>
+        /// The enumerator.
+        /// </summary>
         private class Enumerator : IEnumerator<KeyValuePair<string, TValue>>
         {
             /// <summary>

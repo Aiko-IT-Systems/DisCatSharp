@@ -30,6 +30,9 @@ using DisCatSharp.Entities;
 
 namespace DisCatSharp.Interactivity.EventHandling
 {
+    /// <summary>
+    /// The poll request.
+    /// </summary>
     public class PollRequest
     {
         internal TaskCompletionSource<bool> _tcs;
@@ -126,6 +129,9 @@ namespace DisCatSharp.Interactivity.EventHandling
         }
     }
 
+    /// <summary>
+    /// The poll emoji.
+    /// </summary>
     public class PollEmoji
     {
         /// <summary>

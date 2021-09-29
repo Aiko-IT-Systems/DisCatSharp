@@ -31,6 +31,9 @@ using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.Interactivity.EventHandling
 {
+    /// <summary>
+    /// The poller.
+    /// </summary>
     internal class Poller
     {
         DiscordClient _client;

@@ -22,6 +22,9 @@
 
 namespace DisCatSharp.Interactivity.Enums
 {
+    /// <summary>
+    /// The interaction response behavior.
+    /// </summary>
     public enum InteractionResponseBehavior
     {
         /// <summary>
