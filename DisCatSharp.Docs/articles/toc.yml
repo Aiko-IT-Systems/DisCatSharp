@@ -23,10 +23,22 @@
     href: beyond_basics/sharding.md
   - name: Message Builder
     href: beyond_basics/messagebuilder.md
-  - name: Buttons
-    href: beyond_basics/buttons.md
+  - name: Components
+    items:
+    - name: Buttons
+      href: beyond_basics/components/buttons.md
+    - name: Select Menu
+      href: beyond_basics/components/select_menus.md
   - name: Workarounds
     href: beyond_basics/workarounds.md
+- name: Application Commands
+  items:
+  - name: Introduction
+    href: application_commands/intro.md
+  - name: Options
+    href: application_commands/options.md
+  - name: Events
+    href: application_commands/events.md
 - name: Commands
   items:
   - name: Introduction
