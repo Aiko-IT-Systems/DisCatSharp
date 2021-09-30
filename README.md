@@ -9,7 +9,7 @@ Discord Bot Library written in C# for .NET. https://discord.gg/discatsharp
 [![Build status](https://ci.appveyor.com/api/projects/status/fy4xn9s3cq7j30j7/branch/main?svg=true)](https://ci.appveyor.com/project/AITSYS/discatsharp/branch/main)
 
 #### Commit Activities
-[![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit)](https://bugs.aitsys.dev/source/DisCatSharp/history/)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit)](https://aitsys.dev/source/DisCatSharp/history/)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DisCatSharp?label=Commit%20Activity)](https://github.com/Aiko-IT-Systems/DisCatSharp/commits/main)
 
 #### Stats
@@ -37,7 +37,7 @@ The documentation for the latest stable version is available at [docs.dcs.aitsys
 The documentation of the latest nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
-Join our [support guild](https://discord.gg/discatsharp) and open a support ticket. All requests are tracked at [bugs.aitsys.dev](https://bugs.aitsys.dev).
+Join our [support guild](https://discord.gg/discatsharp) and open a support ticket. All requests are tracked at [aitsys.dev](https://aitsys.dev).
 
 ## Tutorials
 * [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)

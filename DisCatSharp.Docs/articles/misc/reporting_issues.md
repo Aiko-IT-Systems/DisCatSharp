@@ -13,13 +13,13 @@ that happen while we fix bugs or implement new issues.
 
 If you find a bug, come up with a new idea, or just want to report something, you can open an ticket on our support [server](https://discord.gg/discatsharp).
 
-[Issue Tracker](https://bugs.aitsys.dev/project/view/1/ "DisCatSharp issues").
+[Issue Tracker](https://aitsys.dev/project/view/1/ "DisCatSharp issues").
 
 When reporting an issue, make sure to include as much detail as possible. If at all possible, please include:
 
 * Steps to reproduce the issue
 * What were you trying to achieve
-* Expected/acutal result
+* Expected/actual result
 * Stack traces, exception types, messages
 * Attempted solutions
 
