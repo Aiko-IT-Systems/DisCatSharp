@@ -115,6 +115,7 @@ the commit with `[ci skip]`.
 In the event you change something outside of code (i.e. a meta-change or documentation), you must tag your commit with
 `[ci skip]`.
 
+# Developer Certificate of Origin (DCO) 
 ```
 Version 1.1
 
