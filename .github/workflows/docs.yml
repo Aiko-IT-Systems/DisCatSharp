@@ -2,7 +2,7 @@ name: "DisCatSharp Docs"
 
 on:
   push:
-    branches: [ docs-workflow ]
+    branches: [ main ]
 
 jobs:
   build:
