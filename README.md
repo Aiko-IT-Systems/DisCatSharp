@@ -19,6 +19,7 @@ Discord Bot Library written in C# for .NET. https://discord.gg/discatsharp
 [![GitHub contributors](https://img.shields.io/github/contributors/Aiko-IT-Systems/DisCatSharp)](https://github.com/Aiko-IT-Systems/DisCatSharp/graphs/contributors)
 [![GitHub Repo stars](https://img.shields.io/github/stars/Aiko-IT-Systems/DisCatSharp?label=Stars)](https://github.com/Aiko-IT-Systems/DisCatSharp/stargazers)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5282/badge)](https://bestpractices.coreinfrastructure.org/projects/5282)
+[![StackShare](http://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/aiko-it-systems/discatsharp)
 
 ## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
