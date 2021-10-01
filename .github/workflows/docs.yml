@@ -27,7 +27,7 @@ jobs:
     - name: Purge old docs
       working-directory: ./DisCatSharp.Docs
       run: |
-        find . \! -name '.git|.gitignore' -delete
+        rm -rf !(.git|.gitignore)
         
     - name: Extract new docs
       run: |
