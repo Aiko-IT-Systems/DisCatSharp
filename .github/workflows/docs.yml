@@ -18,6 +18,11 @@ jobs:
         path: DisCatSharp.Docs
         token: ${{ secrets.DOCS_TOKEN }}
         
+    - name: Get SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        
     - name: Build Docs
       working-directory: ./DisCatSharp
       shell: pwsh
@@ -43,3 +48,9 @@ jobs:
         author_email: discatsharp@aitsys.dev
         message: 'Docs update for commit ${{ github.repository }} (${{ github.sha }})'
         pull_strategy: 'NO-PULL' # No need to pull, we already checked out earlier
+        
+    - name: Publish to Prod
+      run: |
+        ssh root@80.153.182.68 -f 'cd /var/www/dcs/docs && git pull'
+
+        
