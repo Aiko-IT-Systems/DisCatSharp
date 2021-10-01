@@ -11,6 +11,7 @@ Discord Bot Library written in C# for .NET. https://discord.gg/discatsharp
 #### Commit Activities
 [![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit)](https://aitsys.dev/source/DisCatSharp/history/)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DisCatSharp?label=Commit%20Activity)](https://github.com/Aiko-IT-Systems/DisCatSharp/commits/main)
+[![wakatime](https://wakatime.com/badge/github/Aiko-IT-Systems/DisCatSharp.svg)](https://wakatime.com/badge/github/Aiko-IT-Systems/DisCatSharp)
 
 #### Stats
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DisCatSharp?label=PRs)](https://github.com/Aiko-IT-Systems/DisCatSharp/pulls)
