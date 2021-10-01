@@ -51,6 +51,4 @@ jobs:
         
     - name: Publish to Prod
       run: |
-        ssh root@80.153.182.68 -f 'cd /var/www/dcs/docs && git pull'
-
-        
+        ssh -o StrictHostKeyChecking=no root@80.153.182.68 -f 'cd /var/www/dcs/docs && git pull'
