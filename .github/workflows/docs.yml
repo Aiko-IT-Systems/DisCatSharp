@@ -1,0 +1,35 @@
+name: "DisCatSharp Docs"
+
+on:
+  push:
+    branches: [ docs-workflow ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: DisCatSharp
+    - uses: actions/checkout@v2
+      with:
+        repository: Aiko-IT-Systems/DisCatSharp.Docs
+        path: DisCatSharp.Docs
+        token: ${{ secrets.DOCS_TOKEN }}
+        
+    - name: Build Docs
+      working-directory: ./DisCatSharp
+      shell: pwsh
+      run: |
+        ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output "../DisCatSharp.Docs" -PackageName "dcs-docs"
+        
+    - name: Commit and push changes
+      uses: Aiko-IT-Systems/add-and-commit
+      with:
+        cwd: ./DisCatSharp.Docs
+        default_author: github_actions
+        author_name: DisCatSharp
+        author_email: discatsharp@aitsys.dev
+        message: 'Docs update for commit ${{ github.repository }} (${{ github.sha }})'
+        pull_strategy: 'NO-PULL' # No need to pull, we already checked out earlier
