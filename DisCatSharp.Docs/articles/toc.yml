@@ -77,8 +77,10 @@
   href: interactivity.md
 - name: Important Changes
   items:
-  - name: Application Commands
-    href: important_changes/ac.md
+  - name: Version 9.8.2
+    href: important_changes/9_8_2.md
+  - name: Version 9.8.3
+    href: important_changes/9_8_3.md
 - name: Hosting
   href: hosting.md
 - name: Miscellaneous
