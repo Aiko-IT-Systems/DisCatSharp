@@ -366,5 +366,13 @@ namespace DisCatSharp.Net
         /// The role icons endpoint.
         /// </summary>
         public const string ROLE_ICONS = "/role-icons";
+        /// <summary>
+        /// The activities endpoint.
+        /// </summary>
+        public const string ACTIVITIES = "/activities ";
+        /// <summary>
+        /// The config endpoint.
+        /// </summary>
+        public const string CONFIG = "/config";
     }
 }
