@@ -15,12 +15,12 @@
 
   <PropertyGroup>
     <PackageId>DisCatSharp.ApplicationCommands</PackageId>
-    <Description>ApplicationCommands for DisCatSharp</Description>
+    <Description>ApplicationCommands Extension for DisCatSharp</Description>
     <PackageTags>discord, discord-api, bots, discord-bots, chat, dcs, discatsharp, csharp, dotnet, vb-net, fsharp, slash, slashcommands, contextmenu</PackageTags>
     <PackageLicenseExpression />
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
-
+    
   <ItemGroup>
     <None Include="..\LICENSE.md">
       <Pack>True</Pack>
