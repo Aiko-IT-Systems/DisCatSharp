@@ -47,8 +47,8 @@ jobs:
         author_name: DisCatSharp
         author_email: discatsharp@aitsys.dev
         message: 'Docs update for commit ${{ github.repository }} (${{ github.sha }})'
-        pull_strategy: 'NO-PULL' # No need to pull, we already checked out earlier
+        pull: 'NO-PULL'
         
     - name: Publish to Prod
       run: |
-        ssh -o StrictHostKeyChecking=no root@80.153.182.68 -f 'cd /var/www/dcs/docs && git pull'
+        ssh -o StrictHostKeyChecking=no -T root@80.153.182.68 -f 'cd /var/www/dcs/docs && git pull -f'
