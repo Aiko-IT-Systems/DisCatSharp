@@ -128,6 +128,11 @@ namespace DisCatSharp
         /// <summary>
         /// The user is a discord certified moderator.
         /// </summary>
-        DiscordCertifiedModerator = 1 << 18
+        DiscordCertifiedModerator = 1 << 18,
+
+        /// <summary>
+        /// The user is a bot http interaction.
+        /// </summary>
+        BotHttpInteractions = 1 << 19
     }
 }

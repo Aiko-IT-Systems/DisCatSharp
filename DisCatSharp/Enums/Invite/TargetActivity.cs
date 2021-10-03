@@ -79,6 +79,11 @@ namespace DisCatSharp
         /// <summary>
         /// Represents the embedded application Word Snacks.
         /// </summary>
-        WordSnacks = 879863976006127627
+        WordSnacks = 879863976006127627,
+
+        /// <summary>
+        /// Represents the embedded application Doodle Crew.
+        /// </summary>
+        DoodleCrew = 878067389634314250
     }
 }

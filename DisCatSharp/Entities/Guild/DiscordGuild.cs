@@ -3229,6 +3229,7 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Guild has full access to threads.
+        /// Old Feature.
         /// </summary>
         public bool HasThreadTestingEnabled { get; }
 
@@ -3244,10 +3245,16 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Guild has the new thread permissions.
+        /// Old Feature.
         /// </summary>
         public bool HasNewThreadPermissions { get; }
-        
-        
+
+        /// <summary>
+        /// Guild can set thread default auto archive duration.
+        /// Old Feature.
+        /// </summary>
+        public bool CanSetThreadDefaultAutoArchiveDuration { get; }
+
         /// <summary>
         /// Guild has enabled role subsriptions.
         /// </summary>
@@ -3257,6 +3264,11 @@ namespace DisCatSharp.Entities
         /// Guild has premium tier 3 override.
         /// </summary>
         public bool PremiumTierThreeOverride { get; }
+
+        /// <summary>
+        /// Guild has access to text in voice.
+        /// </summary>
+        public bool TextInVoiceEnabled { get; }
 
         /// <summary>
         /// String of guild features.
@@ -3298,6 +3310,8 @@ namespace DisCatSharp.Entities
             this.HasNewThreadPermissions = guild.RawFeatures.Contains("NEW_THREAD_PERMISSIONS");
             this.HasRoleSubscriptionsEnabled = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_ENABLED");
             this.PremiumTierThreeOverride = guild.RawFeatures.Contains("PREMIUM_TIER_3_OVERRIDE");
+            this.CanSetThreadDefaultAutoArchiveDuration = guild.RawFeatures.Contains("THREAD_DEFAULT_AUTO_ARCHIVE_DURATION");
+            this.TextInVoiceEnabled = guild.RawFeatures.Contains("TEXT_IN_VOICE_ENABLED");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach (var feature in guild.RawFeatures)
