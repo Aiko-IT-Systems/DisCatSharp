@@ -30,3 +30,5 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("DisCatSharp.VoiceNext")]
 [assembly: InternalsVisibleTo("DisCatSharp.VoiceNext.Natives")]
 [assembly: InternalsVisibleTo("Nyaw")] // Ignore pls, DisCatSharp Dev Debug
+[assembly: InternalsVisibleTo("DisCatSharp.Configuration.Tests")]
+
