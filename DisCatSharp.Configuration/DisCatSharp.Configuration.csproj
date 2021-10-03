@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <RootNamespace>DisCatSharp.Common.Configuration</RootNamespace>
+        <RootNamespace>DisCatSharp.Configuration</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

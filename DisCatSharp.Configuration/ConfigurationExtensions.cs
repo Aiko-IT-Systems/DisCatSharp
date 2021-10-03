@@ -22,15 +22,15 @@
 
 using System;
 using System.Reflection;
-using DisCatSharp.Common.Configuration.Models;
+using DisCatSharp.Configuration.Models;
 using Microsoft.Extensions.Configuration;
 
-namespace DisCatSharp.Common.Configuration
+namespace DisCatSharp.Configuration
 {
     internal static class ConfigurationExtensions
     {
         private const string FactoryErrorMessage = "Require a function which provides a default entity to work with";
-        private const string DefaultRootLib = "DisCatSharp";
+        public const string DefaultRootLib = "DisCatSharp";
 
         /// <summary>
         /// Easily piece together paths that will work within <see cref="IConfiguration"/>

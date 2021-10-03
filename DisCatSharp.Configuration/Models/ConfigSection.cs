@@ -22,7 +22,7 @@
 
 using Microsoft.Extensions.Configuration;
 
-namespace DisCatSharp.Common.Configuration.Models
+namespace DisCatSharp.Configuration.Models
 {
     /// <summary>
     /// Represents an object in <see cref="IConfiguration"/>
