@@ -22,13 +22,14 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("DisCatSharp.Common")]
 [assembly: InternalsVisibleTo("DisCatSharp.ApplicationCommands")]
 [assembly: InternalsVisibleTo("DisCatSharp.CommandsNext")]
+[assembly: InternalsVisibleTo("DisCatSharp.Common")]
+[assembly: InternalsVisibleTo("DisCatSharp.Configuration.Tests")]
 [assembly: InternalsVisibleTo("DisCatSharp.Interactivity")]
 [assembly: InternalsVisibleTo("DisCatSharp.Lavalink")]
+[assembly: InternalsVisibleTo("DisCatSharp.Phabricator")]
+[assembly: InternalsVisibleTo("DisCatSharp.Support")]
 [assembly: InternalsVisibleTo("DisCatSharp.VoiceNext")]
 [assembly: InternalsVisibleTo("DisCatSharp.VoiceNext.Natives")]
-[assembly: InternalsVisibleTo("Nyaw")] // Ignore pls, DisCatSharp Dev Debug
-[assembly: InternalsVisibleTo("DisCatSharp.Configuration.Tests")]
-
+[assembly: InternalsVisibleTo("Nyaw")]
