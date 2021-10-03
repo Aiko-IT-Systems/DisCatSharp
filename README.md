@@ -40,7 +40,10 @@ The documentation for the latest stable version is available at [docs.dcs.aitsys
 The documentation of the latest nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
-Join our [support guild](https://discord.gg/discatsharp) and open a support ticket. All requests are tracked at [aitsys.dev](https://aitsys.dev).
+Either join our [support guild](https://discord.gg/discatsharp) and open a support ticket.
+Or write a mail to dcs@aitsys.dev.
+
+All requests are tracked at [aitsys.dev](https://aitsys.dev).
 
 ## Tutorials
 * [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
