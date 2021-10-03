@@ -121,9 +121,9 @@ namespace DisCatSharp
         /// <summary>
         /// <para>Sets the timeout for HTTP requests.</para>
         /// <para>Set to <see cref="System.Threading.Timeout.InfiniteTimeSpan"/> to disable timeouts.</para>
-        /// <para>Defaults to 10 seconds.</para>
+        /// <para>Defaults to 20 seconds.</para>
         /// </summary>
-        public TimeSpan HttpTimeout { internal get; set; } = TimeSpan.FromSeconds(100);
+        public TimeSpan HttpTimeout { internal get; set; } = TimeSpan.FromSeconds(20);
 
         /// <summary>
         /// <para>Defines that the client should attempt to reconnect indefinitely.</para>
