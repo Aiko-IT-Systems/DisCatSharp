@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DisCatSharp.Common.Configuration;
-using DisCatSharp.Common.Configuration.Models;
+using DisCatSharp.Configuration.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Xunit;
