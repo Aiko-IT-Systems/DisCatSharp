@@ -35,14 +35,23 @@ namespace DisCatSharp.Common.Configuration.Models
         public string SectionName { get;}
 
         /// <summary>
+        /// Optional used to indicate this section is nested within another
+        /// </summary>
+        public string? Root { get; }
+
+        /// <summary>
         /// Reference to <see cref="IConfiguration"/> used within application
         /// </summary>
         public IConfiguration Config { get; }
 
-        public ConfigSection(ref IConfiguration config, string sectionName)
+        /// <param name="config">Reference to config</param>
+        /// <param name="sectionName">Section of interest</param>
+        /// <param name="rootName">(Optional) Indicates <paramref name="sectionName"/> is nested within this name. Default value is DisCatSharp</param>
+        public ConfigSection(ref IConfiguration config, string sectionName, string? rootName = "DisCatSharp")
         {
             this.Config = config;
             this.SectionName = sectionName;
+            this.Root = rootName;
         }
 
         /// <summary>
@@ -52,17 +61,17 @@ namespace DisCatSharp.Common.Configuration.Models
         /// <param name="path">Config path to key</param>
         /// <param name="root">(Optional) Root key to use. Default is DisCatSharp because configs in library should be consolidated</param>
         /// <returns>True if key exists, otherwise false. Outputs path to config regardless</returns>
-        public bool ContainsKey(string name, out string path, string root = "DisCatSharp")
+        public bool ContainsKey(string name, out string path)
         {
-            path = string.IsNullOrEmpty(root)
+            path = string.IsNullOrEmpty(this.Root)
                 ? this.Config.ConfigPath(this.SectionName, name)
-                : this.Config.ConfigPath(root, this.SectionName, name);
+                : this.Config.ConfigPath(this.Root, this.SectionName, name);
 
             return !string.IsNullOrEmpty(this.Config[path]);
         }
 
         /// <summary>
-        /// Attempts to get value associated to the config path.
+        /// Attempts to get value associated to the config path. <br/> Should be used in unison with <see cref="ContainsKey"/>
         /// </summary>
         /// <param name="path">Config path to value</param>
         /// <returns>Value found at <paramref name="path"/></returns>

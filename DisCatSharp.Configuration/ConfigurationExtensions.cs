@@ -43,12 +43,13 @@ namespace DisCatSharp.Common.Configuration
         /// </summary>
         /// <param name="config">Loaded App Configuration</param>
         /// <param name="sectionName">Name of section to load</param>
+        /// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is DisCatSharp</param>
         /// <typeparam name="TConfig">Type of instance that <paramref name="sectionName"/> represents</typeparam>
         /// <returns>Hydrated instance of <typeparamref name="TConfig"/> which contains the user-defined values (if any).</returns>
-        public static TConfig ExtractConfig<TConfig>(this IConfiguration config, string sectionName)
+        public static TConfig ExtractConfig<TConfig>(this IConfiguration config, string sectionName, string? rootSectionName = "DisCatSharp")
             where TConfig : new()
         {
-            var section = new ConfigSection(ref config, sectionName);
+            var section = new ConfigSection(ref config, sectionName, rootSectionName);
 
             // Default values should hopefully be provided from the constructor
             TConfig configInstance = new();
