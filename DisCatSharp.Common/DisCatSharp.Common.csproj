@@ -21,7 +21,7 @@
     <PackageId>DisCatSharp.Common</PackageId>
     <Description>Assortment of various common types and utilities for DisCatSharp's projects.</Description>
     <PackageTags>common utilities dotnet dotnet-core dotnetfx netfx netcore csharp</PackageTags>
-    <PackageLicenseFile>LICENSE.MD</PackageLicenseFile>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -45,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="LICENSE.MD">
+    <None Include="..\LICENSE.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

@@ -19,7 +19,7 @@
     <Description>Voice Natives for DisCatSharp.</Description>
     <PackageTags>discord, discord-api, bots, discord-bots, chat, dcs, discatsharp, csharp, dotnet, vb-net, fsharp, audio, voice, radio, music</PackageTags>
     <PackageLicenseExpression />
-    <PackageLicenseFile>LICENSES.MD</PackageLicenseFile>
+    <PackageLicenseFile>LICENSES.md</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="LICENSES.MD">
+    <None Include="..\LICENSES.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
