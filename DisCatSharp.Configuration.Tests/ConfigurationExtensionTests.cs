@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DisCatSharp.Common.Configuration;
+using DisCatSharp.Common.Configuration.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -9,6 +10,25 @@ namespace DisCatSharp.Configuration.Tests
 {
     public class ConfigurationExtensionTests
     {
+        class SampleClass
+        {
+            public int Amount { get; set; }
+            public string Email { get; set; }
+        }
+
+        class SampleClass2
+        {
+            public TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(7);
+            public string Name { get; set; } = "Sample";
+
+            public string ConstructorValue { get; }
+
+            public SampleClass2(string value)
+            {
+                this.ConstructorValue = value;
+            }
+        }
+
         private IConfiguration BasicDiscordConfiguration() => new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>()
             {
@@ -58,6 +78,21 @@ namespace DisCatSharp.Configuration.Tests
             })
             .Build();
 
+        private IConfiguration SampleClass2Configuration_Default() => new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>
+            {
+                {"Random:Stuff", "Meow"},
+                {"SampleClass2:Name", "Purfection"}
+            })
+            .Build();
+
+        private IConfiguration SampleClass2Configuration_Change() => new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "SampleClass:Timeout", "01:30:00" }, { "SampleClass:NotValid", "Something" }
+            })
+            .Build();
+
         [Fact]
         public void TestExtractDiscordConfig_Intents()
         {
@@ -83,9 +118,7 @@ namespace DisCatSharp.Configuration.Tests
             Assert.Equal(expectedIntents, config.Intents);
             Assert.True(config.MobileStatus);
             Assert.Equal(1000, config.LargeThreshold);
-
-            var expectedTimeout = TimeSpan.FromHours(10);
-            Assert.Equal(expectedTimeout, config.HttpTimeout);
+            Assert.Equal(TimeSpan.FromHours(10), config.HttpTimeout);
         }
 
         [Fact]
@@ -104,21 +137,13 @@ namespace DisCatSharp.Configuration.Tests
             Assert.Equal(123123, config.ShardId);
             Assert.Equal(GatewayCompressionLevel.Stream, config.GatewayCompressionLevel);
             Assert.Equal(1024, config.MessageCacheSize);
-
-            TimeSpan timeout = TimeSpan.FromSeconds(20);
-            Assert.Equal(timeout, config.HttpTimeout);
+            Assert.Equal(TimeSpan.FromSeconds(20), config.HttpTimeout);
             Assert.False(config.ReconnectIndefinitely);
             Assert.True(config.AlwaysCacheMembers);
             Assert.Equal(DiscordIntents.AllUnprivileged, config.Intents);
             Assert.False(config.MobileStatus);
             Assert.False(config.UseCanary);
             Assert.False(config.AutoRefreshChannelCache);
-        }
-
-        class SampleClass
-        {
-            public int Amount { get; set; }
-            public string Email { get; set; }
         }
 
         [Fact]
@@ -129,6 +154,54 @@ namespace DisCatSharp.Configuration.Tests
 
             Assert.Equal(200, config.Amount);
             Assert.Equal("test@gmail.com", config.Email);
+        }
+
+        [Fact]
+        public void TestExtractConfig_V2_Default()
+        {
+            var source = this.SampleClass2Configuration_Default();
+            var config = (SampleClass2) source.ExtractConfig("SampleClass", () => new SampleClass2("Test"), null);
+            Assert.Equal(TimeSpan.FromMinutes(7), config.Timeout);
+            Assert.Equal("Test", config.ConstructorValue);
+            Assert.Equal("Sample", config.Name);
+        }
+
+        [Fact]
+        public void TestExtractConfig_V2_Change()
+        {
+            var source = this.SampleClass2Configuration_Change();
+            var config = (SampleClass2) source.ExtractConfig("SampleClass", () => new SampleClass2("Test123"), null);
+            var span = new TimeSpan(0, 1, 30, 0);
+            Assert.Equal(span, config.Timeout);
+            Assert.Equal("Test123", config.ConstructorValue);
+            Assert.Equal("Sample", config.Name);
+        }
+
+        [Fact]
+        public void TestExtractConfig_V3_Default()
+        {
+            var source = this.SampleClass2Configuration_Default();
+            var config =
+                (SampleClass2)new ConfigSection(ref source, "SampleClass", null).ExtractConfig(() =>
+                    new SampleClass2("Meow"));
+
+            Assert.Equal("Meow", config.ConstructorValue);
+            Assert.Equal(TimeSpan.FromMinutes(7), config.Timeout);
+            Assert.Equal("Sample", config.Name);
+        }
+
+        [Fact]
+        public void TestExtractConfig_V3_Change()
+        {
+            var source = this.SampleClass2Configuration_Change();
+            var config =
+                (SampleClass2)new ConfigSection(ref source, "SampleClass", null).ExtractConfig(() =>
+                    new SampleClass2("Meow"));
+
+            Assert.Equal("Meow", config.ConstructorValue);
+            var span = new TimeSpan(0, 1, 30, 0);
+            Assert.Equal(span, config.Timeout);
+            Assert.Equal("Sample", config.Name);
         }
     }
 }
