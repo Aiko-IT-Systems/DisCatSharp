@@ -53,7 +53,7 @@ var selectMenu = new DiscordSelectComponent("my_select_menu", "Please select one
 
 This will create a select menu with two options and the text "Please select one of the options".
 When a user select **one** option, `"my_select_menu"` will be sent back as the `Id` property on the event.
-This is expanded on in the [how to respond to select menus](#responding-to-options-selected).
+This is expanded on in the [how to respond to select menus](#responding-to-select-menus).
 
 You can increase the maximum/minimum number of selections in the select menu constructor. You can also block the select menu, or options.
 
