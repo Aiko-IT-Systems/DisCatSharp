@@ -11,12 +11,15 @@ Discord Bot Library written in C# for .NET. https://discord.gg/discatsharp
 #### Commit Activities
 [![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit)](https://aitsys.dev/source/DisCatSharp/history/)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DisCatSharp?label=Commit%20Activity)](https://github.com/Aiko-IT-Systems/DisCatSharp/commits/main)
+[![wakatime](https://wakatime.com/badge/github/Aiko-IT-Systems/DisCatSharp.svg)](https://wakatime.com/badge/github/Aiko-IT-Systems/DisCatSharp)
 
 #### Stats
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DisCatSharp?label=PRs)](https://github.com/Aiko-IT-Systems/DisCatSharp/pulls)
 [![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DisCatSharp?label=Size)](#)
 [![GitHub contributors](https://img.shields.io/github/contributors/Aiko-IT-Systems/DisCatSharp)](https://github.com/Aiko-IT-Systems/DisCatSharp/graphs/contributors)
 [![GitHub Repo stars](https://img.shields.io/github/stars/Aiko-IT-Systems/DisCatSharp?label=Stars)](https://github.com/Aiko-IT-Systems/DisCatSharp/stargazers)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5282/badge)](https://bestpractices.coreinfrastructure.org/projects/5282)
+[![StackShare](http://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/aiko-it-systems/discatsharp)
 
 ## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
@@ -37,7 +40,10 @@ The documentation for the latest stable version is available at [docs.dcs.aitsys
 The documentation of the latest nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
-Join our [support guild](https://discord.gg/discatsharp) and open a support ticket. All requests are tracked at [aitsys.dev](https://aitsys.dev).
+Either join our [support guild](https://discord.gg/discatsharp) and open a support ticket.
+Or write a mail to dcs@aitsys.dev.
+
+All requests are tracked at [aitsys.dev](https://aitsys.dev).
 
 ## Tutorials
 * [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
