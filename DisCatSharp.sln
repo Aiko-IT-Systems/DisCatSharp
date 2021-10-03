@@ -64,6 +64,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Configuration",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Configuration.Tests", "DisCatSharp.Configuration.Tests\DisCatSharp.Configuration.Tests.csproj", "{E15E88B4-63AD-42DE-B685-D31697C62194}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Hosting", "DisCatSharp.Hosting\DisCatSharp.Hosting.csproj", "{72CCE5D5-926B-432A-876A-065FA2BC9B7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +112,10 @@ Global
 		{E15E88B4-63AD-42DE-B685-D31697C62194}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E15E88B4-63AD-42DE-B685-D31697C62194}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E15E88B4-63AD-42DE-B685-D31697C62194}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72CCE5D5-926B-432A-876A-065FA2BC9B7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72CCE5D5-926B-432A-876A-065FA2BC9B7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72CCE5D5-926B-432A-876A-065FA2BC9B7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72CCE5D5-926B-432A-876A-065FA2BC9B7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
