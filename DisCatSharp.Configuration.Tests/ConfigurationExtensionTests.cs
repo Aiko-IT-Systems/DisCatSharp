@@ -50,6 +50,14 @@ namespace DisCatSharp.Configuration.Tests
             })
             .Build();
 
+        private IConfiguration SampleConfig() => new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "Sample:Amount", "200" },
+                { "Sample:Email", "test@gmail.com" }
+            })
+            .Build();
+
         [Fact]
         public void TestExtractDiscordConfig_Intents()
         {
@@ -85,7 +93,7 @@ namespace DisCatSharp.Configuration.Tests
         {
             var source = this.BasicDiscordConfiguration();
             DiscordConfiguration config = source.ExtractConfig<DiscordConfiguration>("Discord");
-            
+
             Assert.Equal("1234567890", config.Token);
             Assert.Equal(TokenType.Bot, config.TokenType);
             Assert.Equal(LogLevel.Information, config.MinimumLogLevel);
@@ -107,7 +115,21 @@ namespace DisCatSharp.Configuration.Tests
             Assert.False(config.AutoRefreshChannelCache);
         }
 
+        class SampleClass
+        {
+            public int Amount { get; set; }
+            public string Email { get; set; }
+        }
 
+        [Fact]
+        public void TestSection()
+        {
+            var source = this.SampleConfig();
+            SampleClass config = source.ExtractConfig<SampleClass>("Sample", null);
+
+            Assert.Equal(200, config.Amount);
+            Assert.Equal("test@gmail.com", config.Email);
+        }
     }
 }
 
