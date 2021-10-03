@@ -23,8 +23,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DisCatSharp.Common.Configuration;
-using DisCatSharp.Common.Configuration.Models;
+using DisCatSharp.Configuration;
+using DisCatSharp.Configuration.Models;
 using Microsoft.Extensions.Configuration;
 
 namespace DisCatSharp.Hosting
@@ -32,15 +32,13 @@ namespace DisCatSharp.Hosting
     internal struct ExtensionConfigResult
     {
         public string Name { get; set; }
-        public DisCatSharp.Common.Configuration.Models.ConfigSection Section { get; set; }
+        public ConfigSection Section { get; set; }
         public Type ConfigType { get; set; }
         public Type ImplementationType { get; set; }
     }
 
     internal static class ConfigurationExtensions
     {
-        private const string LibName = "DisCatSharp";
-
         /// <summary>
         /// Easily identify which configuration types have been added to the <paramref name="configuration"/> <br/>
         /// This way we can dynamically load extensions without explicitly doing so
@@ -58,7 +56,7 @@ namespace DisCatSharp.Hosting
 
             // Assemblies managed by DisCatSharp
             var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(x => x.FullName != null && x.FullName.StartsWith(LibName));
+                .Where(x => x.FullName != null && x.FullName.StartsWith(Configuration.ConfigurationExtensions.DefaultRootLib));
 
             foreach (var assembly in assemblies)
             {
