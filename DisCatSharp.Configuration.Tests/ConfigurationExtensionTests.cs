@@ -12,7 +12,7 @@ namespace DisCatSharp.Configuration.Tests
         class SampleClass
         {
             public int Amount { get; set; }
-            public string Email { get; set; }
+            public string? Email { get; set; }
         }
 
         class SampleClass2
