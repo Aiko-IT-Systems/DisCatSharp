@@ -57,12 +57,12 @@ namespace DisCatSharp.Hosting.Tests
 
         public Dictionary<string, string> DiscordInteractivity() => new (this.DefaultDiscord())
         {
-            { "DisCatSharp:Interactivity", "" } // this should be enough to automatically add the extension
+            {"DisCatSharp:Using","[\"DisCatSharp.Interactivity\"]"},
         };
 
         public Dictionary<string, string> DiscordInteractivityAndLavalink() => new (this.DefaultDiscord())
         {
-            { "DisCatSharp:Interactivity", "" }, { "DisCatSharp:LavaLink", "" }
+            {"DisCatSharp:Using","[\"DisCatSharp.Interactivity\", \"DisCatSharp.Lavalink\"]"},
         };
 
         IHostBuilder Create(Dictionary<string, string> configValues) =>
@@ -110,7 +110,7 @@ namespace DisCatSharp.Hosting.Tests
                 Assert.NotNull(service.Client.GetExtension<InteractivityExtension>());
 
                 // Also verify IDiscordHostedService.Extensions
-                Assert.Equal(2, service.Extensions.Count);
+                Assert.Equal(1, service.Extensions.Count);
             }
             finally
             {

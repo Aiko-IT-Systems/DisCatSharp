@@ -68,9 +68,18 @@ namespace DisCatSharp.Hosting
 
             Dictionary<string, ExtensionConfigResult> results = new();
 
+            // Has the user defined a using section within the root name?
+            if (!configuration.HasSection(rootName, "Using") ||
+                string.IsNullOrEmpty(configuration[configuration.ConfigPath(rootName,"Using")]))
+                return results;
+
+            string usingAssemblies = configuration[configuration.ConfigPath(rootName, "Using")];
+
+            var assemblyNames = Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(usingAssemblies);
+
             // Assemblies managed by DisCatSharp
             var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(x => x.FullName != null && x.FullName.StartsWith(Configuration.ConfigurationExtensions.DefaultRootLib));
+                .Where(x => assemblyNames.Contains(x.GetName().Name));
 
             foreach (var assembly in assemblies)
             {
