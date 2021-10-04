@@ -37,7 +37,7 @@ namespace DisCatSharp.Hosting
     /// <summary>
     /// Simple implementation for <see cref="DiscordClient"/> to work as a <see cref="BackgroundService"/>
     /// </summary>
-    public sealed class DiscordHostedService : BackgroundService, IDiscordHostedService
+    public class DiscordHostedService : BackgroundService, IDiscordHostedService
     {
         /// <inheritdoc cref="IDiscordHostedService"/>
         public DiscordClient Client { get; private set; }
@@ -128,11 +128,23 @@ namespace DisCatSharp.Hosting
             if (this.Client == null)
                 throw new NullReferenceException("Discord Client cannot be null");
 
+            await this.PreConnect();
             await this.Client.ConnectAsync();
+            await this.PostConnect();
 
             // Wait indefinitely -- but use stopping token so we can properly cancel if needed
             await Task.Delay(-1, stoppingToken);
         }
+
+        /// <summary>
+        /// Runs just prior to the bot connecting
+        /// </summary>
+        protected virtual Task PreConnect() => Task.CompletedTask;
+
+        /// <summary>
+        /// Runs immediately after the bot connects
+        /// </summary>
+        protected virtual Task PostConnect() => Task.CompletedTask;
 
     }
 }
