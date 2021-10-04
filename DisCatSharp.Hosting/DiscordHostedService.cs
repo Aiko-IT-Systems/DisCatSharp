@@ -106,9 +106,9 @@ namespace DisCatSharp.Hosting
                        ActivatorUtilities requires a public constructor, anything with internal breaks
                      */
 
-                    if (ctors.Any(x => x.GetParameters().Length == 1))
+                    if (ctors.Any(x => x.GetParameters().Length == 1 && x.GetParameters().First().ParameterType == typePair.Value.ConfigType))
                         instance = Activator.CreateInstance(typePair.Value.ImplementationType, flags, null,
-                            new[] { configInstance }, null);
+                                                    new[] { configInstance }, null);
                     else
                         instance = Activator.CreateInstance(typePair.Value.ImplementationType, true);
 
