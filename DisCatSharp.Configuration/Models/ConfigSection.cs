@@ -59,7 +59,6 @@ namespace DisCatSharp.Configuration.Models
         /// </summary>
         /// <param name="name">Property / Key to search for in section</param>
         /// <param name="path">Config path to key</param>
-        /// <param name="root">(Optional) Root key to use. Default is DisCatSharp because configs in library should be consolidated</param>
         /// <returns>True if key exists, otherwise false. Outputs path to config regardless</returns>
         public bool ContainsKey(string name, out string path)
         {
