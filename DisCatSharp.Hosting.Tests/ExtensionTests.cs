@@ -8,7 +8,7 @@ using DisCatSharp.Lavalink;
 
 namespace DisCatSharp.Hosting.Tests
 {
-    public class UnitTest1
+    public class HostExtensionTests
     {
         #region Reference to external assemblies - required to ensure they're loaded
         private InteractivityConfiguration interactivityConfig = null;
@@ -76,7 +76,7 @@ namespace DisCatSharp.Hosting.Tests
             var discovered = source.FindImplementedExtensions();
 
             // Remember that DiscordConfiguration does not have an implementation type which is assignable to BaseExtension
-            Assert.Single(discovered);
+            Assert.Equal(2,discovered.Count);
             var item = discovered.First();
 
             Assert.Equal(typeof(InteractivityConfiguration), item.Value.ConfigType);

@@ -110,7 +110,7 @@ namespace DisCatSharp.Hosting.Tests
                 Assert.NotNull(service.Client.GetExtension<InteractivityExtension>());
 
                 // Also verify IDiscordHostedService.Extensions
-                Assert.Single(service.Extensions);
+                Assert.Equal(2, service.Extensions.Count);
             }
             finally
             {
