@@ -66,6 +66,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Configuration.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Hosting", "DisCatSharp.Hosting\DisCatSharp.Hosting.csproj", "{72CCE5D5-926B-432A-876A-065FA2BC9B7B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Hosting.Tests", "DisCatSharp.Hosting.Tests\DisCatSharp.Hosting.Tests.csproj", "{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Hosting.DependencyInjection", "DisCatSharp.Hosting.DependencyInjection\DisCatSharp.Hosting.DependencyInjection.csproj", "{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,6 +120,14 @@ Global
 		{72CCE5D5-926B-432A-876A-065FA2BC9B7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72CCE5D5-926B-432A-876A-065FA2BC9B7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72CCE5D5-926B-432A-876A-065FA2BC9B7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

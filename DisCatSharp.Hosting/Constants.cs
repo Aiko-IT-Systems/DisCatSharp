@@ -20,27 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-
 namespace DisCatSharp.Hosting
 {
-
-    /// <summary>
-    /// Contract required for <see cref="DiscordClient"/> to work in a web hosting environment
-    /// </summary>
-    public interface IDiscordHostedService : Microsoft.Extensions.Hosting.IHostedService
+    internal static class Constants
     {
-        /// <summary>
-        /// Reference to connected client
-        /// </summary>
-        DiscordClient Client { get; }
-
-        /// <summary>
-        /// Extensions cached by their implementation type
-        /// </summary>
-        /// <example>
-        /// Key: "InteractivityExtension" Value: Instance of InteractivityExtension
-        /// </example>
-        Dictionary<string, BaseExtension> Extensions { get; }
+        public static string LibName => Configuration.ConfigurationExtensions.DefaultRootLib;
+        public static string ConfigSuffix => "Configuration";
+        public static string ExtensionSuffix => "Extension";
     }
 }
