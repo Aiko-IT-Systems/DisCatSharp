@@ -11,9 +11,13 @@ namespace DisCatSharp.Hosting.Tests
     public class HostExtensionTests
     {
         #region Reference to external assemblies - required to ensure they're loaded
-        private InteractivityConfiguration interactivityConfig = null;
-        private LavalinkConfiguration lavalinkConfig = null;
-        private DiscordConfiguration discordConfig = null;
+        #pragma warning disable 414
+
+        private InteractivityConfiguration? _interactivityConfig = null;
+        private LavalinkConfiguration? _lavalinkConfig = null;
+        private DiscordConfiguration? _discordConfig = null;
+
+        #pragma warning restore 414
         #endregion
 
         private Dictionary<string, string> DefaultDiscord() =>
@@ -76,7 +80,7 @@ namespace DisCatSharp.Hosting.Tests
             var discovered = source.FindImplementedExtensions();
 
             // Remember that DiscordConfiguration does not have an implementation type which is assignable to BaseExtension
-            Assert.Equal(1,discovered.Count);
+            Assert.Single(discovered);
             var item = discovered.First();
 
             Assert.Equal(typeof(InteractivityConfiguration), item.Value.ConfigType);
