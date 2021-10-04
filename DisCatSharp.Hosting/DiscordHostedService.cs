@@ -47,11 +47,13 @@ namespace DisCatSharp.Hosting
         /// <inheritdoc cref="IDiscordHostedService"/>
         public Dictionary<string, BaseExtension> Extensions { get; } = new();
 
+        #pragma warning disable 8618
         public DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider)
         {
             this._logger = logger;
             this.Initialize(config, provider);
         }
+        #pragma warning restore 8618
 
         /// <summary>
         /// Automatically search for and configure <see cref="Client"/>
@@ -109,6 +111,12 @@ namespace DisCatSharp.Hosting
                             new[] { configInstance }, null);
                     else
                         instance = Activator.CreateInstance(typePair.Value.ImplementationType, true);
+
+                    if (instance == null)
+                    {
+                        this._logger.LogError($"Unable to instantiate '{typePair.Value.ImplementationType.Name}'");
+                        continue;
+                    }
 
                     // Add an easy reference to our extensions for later use
                     this.Extensions.Add(typePair.Value.ImplementationType.Name, (BaseExtension) instance);
