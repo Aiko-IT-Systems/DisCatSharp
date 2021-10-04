@@ -42,7 +42,7 @@ namespace DisCatSharp.Hosting.Tests
         public IConfiguration DiscordInteractivityConfiguration() => new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>(this.DefaultDiscord())
             {
-                {"DisCatSharp:Interactivity", ""} // this should be enough to automatically add the extension
+                {"DisCatSharp:Using", "[\"DisCatSharp.Interactivity\"]"} // this should be enough to automatically add the extension
             })
             .Build();
 
@@ -53,7 +53,7 @@ namespace DisCatSharp.Hosting.Tests
         public IConfiguration DiscordInteractivityAndLavaLinkConfiguration() => new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>(this.DefaultDiscord())
             {
-                { "DisCatSharp:Interactivity", "" }, { "DisCatSharp:LavaLink", "" }
+                {"DisCatSharp:Using", "[\"DisCatSharp.Interactivity\",\"DisCatSharp.Lavalink\"]"}
             })
             .Build();
 
@@ -76,7 +76,7 @@ namespace DisCatSharp.Hosting.Tests
             var discovered = source.FindImplementedExtensions();
 
             // Remember that DiscordConfiguration does not have an implementation type which is assignable to BaseExtension
-            Assert.Equal(2,discovered.Count);
+            Assert.Equal(1,discovered.Count);
             var item = discovered.First();
 
             Assert.Equal(typeof(InteractivityConfiguration), item.Value.ConfigType);
