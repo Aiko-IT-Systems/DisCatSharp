@@ -22,8 +22,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using DisCatSharp.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,13 +34,18 @@ using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.Hosting
 {
-    public class DiscordHostedService : BackgroundService, IDiscordHostedService
+    /// <summary>
+    /// Simple implementation for <see cref="DiscordClient"/> to work as a <see cref="BackgroundService"/>
+    /// </summary>
+    public sealed class DiscordHostedService : BackgroundService, IDiscordHostedService
     {
+        /// <inheritdoc cref="IDiscordHostedService"/>
         public DiscordClient Client { get; private set; }
 
         private readonly ILogger<DiscordHostedService> _logger;
 
-        public Dictionary<string, object> Extensions { get; } = new();
+        /// <inheritdoc cref="IDiscordHostedService"/>
+        public Dictionary<string, BaseExtension> Extensions { get; } = new();
 
         public DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider)
         {
@@ -45,40 +53,82 @@ namespace DisCatSharp.Hosting
             this.Initialize(config, provider);
         }
 
-        internal void Initialize(IConfiguration config, IServiceProvider provider)
+        /// <summary>
+        /// Automatically search for and configure <see cref="Client"/>
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="provider"></param>
+        private void Initialize(IConfiguration config, IServiceProvider provider)
         {
-            var typeMap = config.FindImplementedConfigs();
+            var typeMap = config.FindImplementedExtensions();
+
+            this._logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
+
+            var section = config.HasSection(Constants.LibName, "Discord")
+                ? "Discord"
+                : config.HasSection(config.ConfigPath(Constants.LibName, $"Discord{Constants.ConfigSuffix}"))
+                    ? $"Discord{Constants.ConfigSuffix}"
+                    : null;
+
+            // If not section was provided we'll still just use the default config
+            if (string.IsNullOrEmpty(section))
+                this.Client = new DiscordClient(new());
+            else
+                this.Client = new DiscordClient(config.ExtractConfig<DiscordConfiguration>(section));
 
             foreach (var typePair in typeMap)
                 try
                 {
-                    // First we must create an instance of the configuration type
-                    object configInstance = ActivatorUtilities.CreateInstance(provider, typePair.Value.ConfigType);
+                    // First retrieve our configuration!
+                    object configInstance = typePair.Value.Section.ExtractConfig(() =>
+                        ActivatorUtilities.CreateInstance(provider, typePair.Value.ConfigType));
 
-                    // Secondly -- instantiate corresponding implemented types
-                    if (typePair.Value.ImplementationType == typeof(DiscordClient))
-                    {
-                        this.Client = (DiscordClient)ActivatorUtilities.CreateInstance(provider,
-                            typePair.Value.ImplementationType, configInstance);
+                    /*
+                        Explanation for bindings
 
-                        continue;
-                    }
+                        Internal Constructors --> NonPublic
+                        Public Constructors --> Public
+                        Constructors --> Instance
+                     */
 
-                    object instance = ActivatorUtilities.CreateInstance(provider, typePair.Value.ImplementationType, configInstance);
+                    BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+                    var ctors = typePair.Value.ImplementationType.GetConstructors(flags);
 
-                    this.Extensions.Add(typePair.Value.ImplementationType.Name, instance);
-                    this.Client.AddExtension((BaseExtension) instance);
+                    object? instance;
+
+                    /*
+                       Certain extensions do not require a configuration argument
+                       Those who do -- pass config instance in,
+                       Those who don't -- simply instantiate
+
+                       ActivatorUtilities requires a public constructor, anything with internal breaks
+                     */
+
+                    if (ctors.Any(x => x.GetParameters().Length == 1))
+                        instance = Activator.CreateInstance(typePair.Value.ImplementationType, flags, null,
+                            new[] { configInstance }, null);
+                    else
+                        instance = Activator.CreateInstance(typePair.Value.ImplementationType, true);
+
+                    // Add an easy reference to our extensions for later use
+                    this.Extensions.Add(typePair.Value.ImplementationType.Name, (BaseExtension) instance);
                 }
                 catch (Exception ex)
                 {
                     this._logger.LogError($"Unable to register '{typePair.Value.ImplementationType.Name}': \n\t{ex.Message}");
                 }
+
+            // Add of our extensions to our client
+            foreach (var extension in this.Extensions.Values)
+                this.Client.AddExtension(extension);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (this.Client == null)
                 throw new NullReferenceException("Discord Client cannot be null");
+
+            await this.Client.ConnectAsync();
 
             // Wait indefinitely -- but use stopping token so we can properly cancel if needed
             await Task.Delay(-1, stoppingToken);

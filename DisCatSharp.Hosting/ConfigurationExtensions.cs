@@ -31,7 +31,6 @@ namespace DisCatSharp.Hosting
 {
     internal struct ExtensionConfigResult
     {
-        public string Name { get; set; }
         public ConfigSection Section { get; set; }
         public Type ConfigType { get; set; }
         public Type ImplementationType { get; set; }
@@ -39,15 +38,30 @@ namespace DisCatSharp.Hosting
 
     internal static class ConfigurationExtensions
     {
+        public static bool HasSection(this IConfiguration config, params string[] values)
+        {
+            // We require something to be passed in
+            if (!values.Any())
+                return false;
+
+            Queue<string> queue = new(values);
+            IConfigurationSection section = config.GetSection(queue.Dequeue());
+
+            while (section != null && queue.Any())
+                config.GetSection(queue.Dequeue());
+
+            return section != null;
+        }
+
         /// <summary>
         /// Easily identify which configuration types have been added to the <paramref name="configuration"/> <br/>
         /// This way we can dynamically load extensions without explicitly doing so
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="rootName"></param>
-        /// <returns>Dictionary </returns>
-        public static Dictionary<string, ExtensionConfigResult> FindImplementedConfigs(this IConfiguration configuration,
-            string rootName = "DisCatSharp")
+        /// <returns>Dictionary where Key -> Name of implemented type<br/>Value -> <see cref="ExtensionConfigResult"/></returns>
+        public static Dictionary<string, ExtensionConfigResult> FindImplementedExtensions(this IConfiguration configuration,
+            string rootName = Configuration.ConfigurationExtensions.DefaultRootLib)
         {
             if (string.IsNullOrEmpty(rootName))
                 throw new ArgumentNullException(nameof(rootName), "Root name must be provided");
@@ -63,35 +77,43 @@ namespace DisCatSharp.Hosting
                 ExtensionConfigResult result = new();
 
                 foreach (var type in assembly.ExportedTypes
-                    .Where(x => x.Name.EndsWith("Configuration") && !x.IsAbstract && !x.IsInterface))
+                    .Where(x => x.Name.EndsWith(Constants.ConfigSuffix) && !x.IsAbstract && !x.IsInterface))
                 {
-
-                    // Strip name to be whatever prefix
-                    result.Name = type.Name
-                        .Replace("Configuration", "");
+                    string sectionName = type.Name;
+                    string prefix = type.Name.Replace(Constants.ConfigSuffix, "");
 
                     result.ConfigType = type;
 
-                    if (!string.IsNullOrEmpty(configuration[configuration.ConfigPath(rootName, type.Name)]))
+                    // Does a section exist with the classname? (DiscordConfiguration - for instance)
+                    if(configuration.HasSection(rootName, sectionName))
                         result.Section = new ConfigSection(ref configuration, type.Name, rootName);
-                    else if (!string.IsNullOrEmpty(configuration[configuration.ConfigPath(rootName, result.Name)]))
-                        result.Section = new ConfigSection(ref configuration, result.Name, rootName);
+
+                    // Does a section exist with the classname minus Configuration? (Discord - for Instance)
+                    else if (configuration.HasSection(rootName, prefix))
+                        result.Section = new ConfigSection(ref configuration, prefix, rootName);
+
+                    // We require the implemented type to exist so we'll continue onward
+                    else
+                        continue;
 
                     /*
+                        Now we need to find the type which should consume our config
+
                         In the event a user has some "fluff" between prefix and suffix we'll
                         just check for beginning and ending values.
 
-                        Type should not be an interface or abstract
+                        Type should not be an interface or abstract, should also be assignable to BaseExtension
                      */
 
                     var implementationType = assembly.ExportedTypes.FirstOrDefault(x =>
-                        !x.IsAbstract && !x.IsInterface && x.Name.StartsWith(result.Name) &&
-                        x.Name.EndsWith("Extension"));
+                        !x.IsAbstract && !x.IsInterface && x.Name.StartsWith(prefix) &&
+                        x.Name.EndsWith(Constants.ExtensionSuffix) && x.IsAssignableTo(typeof(BaseExtension)));
 
+                    // If the implementation type was found we can add it to our result set
                     if (implementationType != null)
                     {
-                        results.Add(result.Name, result);
                         result.ImplementationType = implementationType;
+                        results.Add(implementationType.Name, result);
                     }
                 }
             }
