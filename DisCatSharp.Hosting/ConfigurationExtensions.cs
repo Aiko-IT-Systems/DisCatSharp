@@ -79,7 +79,7 @@ namespace DisCatSharp.Hosting
 
             // Assemblies managed by DisCatSharp
             var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(x => assemblyNames.Contains(x.GetName().Name));
+                .Where(x => assemblyNames?.Contains(x.GetName().Name) ?? false);
 
             foreach (var assembly in assemblies)
             {
