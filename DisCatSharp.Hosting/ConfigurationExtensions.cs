@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using DisCatSharp.Configuration;
 using DisCatSharp.Configuration.Models;
 using Microsoft.Extensions.Configuration;
@@ -54,6 +55,62 @@ namespace DisCatSharp.Hosting
         }
 
         /// <summary>
+        /// Find assemblies that match the names provided via <paramref name="names"/>.
+        /// </summary>
+        /// <remarks>
+        /// In some cases the assembly the user is after could be used in the application but
+        /// not appear within the <see cref="AppDomain"/>. <br/>
+        /// The workaround for this is to check the assemblies in the <see cref="AppDomain"/>, as well as referenced
+        /// assemblies. If the targeted assembly is a reference, we need to load it into our workspace to get more info.
+        /// </remarks>
+        /// <param name="names">Names of assemblies to look for</param>
+        /// <returns>Assemblies which meet the given names. No duplicates</returns>
+        public static Assembly[] FindAssemblies(string[]? names)
+        {
+            /*
+              There is a possibility that an assembly can be referenced in multiple assemblies.
+              To alleviate duplicates we need to shrink our queue as we find things
+             */
+            List<Assembly> results = new();
+
+            if (names is null)
+                return results.ToArray();
+
+            List<string> queue = new(names);
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (!queue.Any())
+                    break;
+
+                // Is the loaded assembly one we're looking for?
+                if (queue.Contains(assembly.GetName().Name))
+                {
+                    results.Add(assembly);
+
+                    // Shrink queue so we don't accidentally add the same assembly > 1 times
+                    queue.Remove(assembly.GetName().Name);
+                    continue;
+                }
+
+                // We shall check referenced assembly names... just in case
+                foreach(var referencedAssembly in assembly.GetReferencedAssemblies()
+                                                          .Where(x => queue.Contains(x.Name)))
+                    try
+                    {
+                        // Must load the assembly into our workspace so we can do stuff with it later
+                        results.Add(Assembly.Load(referencedAssembly));
+                        queue.Remove(referencedAssembly.Name);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Error.WriteLine($"Unable to load referenced assembly: '{referencedAssembly.Name}' \n\t{ex.Message}");
+                    }
+            }
+
+            return results.ToArray();
+        }
+
+        /// <summary>
         /// Easily identify which configuration types have been added to the <paramref name="configuration"/> <br/>
         /// This way we can dynamically load extensions without explicitly doing so
         /// </summary>
@@ -67,21 +124,27 @@ namespace DisCatSharp.Hosting
                 throw new ArgumentNullException(nameof(rootName), "Root name must be provided");
 
             Dictionary<string, ExtensionConfigResult> results = new();
+            string[]? assemblyNames;
 
             // Has the user defined a using section within the root name?
-            if (!configuration.HasSection(rootName, "Using") ||
-                string.IsNullOrEmpty(configuration[configuration.ConfigPath(rootName,"Using")]))
+            if (!configuration.HasSection(rootName, "Using"))
                 return results;
 
-            string usingAssemblies = configuration[configuration.ConfigPath(rootName, "Using")];
+            /*
+               There are 2 ways a user could list which assemblies are used
+               "Using": "[\"Assembly.Name\"]"
+               "Using": ["Assembly.Name"]
 
-            var assemblyNames = Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(usingAssemblies);
+               JSON or as Text.
+             */
+            if (string.IsNullOrEmpty(configuration[configuration.ConfigPath(rootName, "Using")]))
+                assemblyNames = configuration.GetSection(configuration.ConfigPath(rootName, "Using")).Get<string[]>();
+            else
+                assemblyNames =
+                    Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(
+                        configuration[configuration.ConfigPath(rootName, "Using")]);
 
-            // Assemblies managed by DisCatSharp
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(x => assemblyNames?.Contains(x.GetName().Name) ?? false);
-
-            foreach (var assembly in assemblies)
+            foreach (var assembly in FindAssemblies(assemblyNames))
             {
                 ExtensionConfigResult result = new();
 
