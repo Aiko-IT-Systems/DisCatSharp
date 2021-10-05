@@ -39,13 +39,10 @@ namespace DisCatSharp.Hosting
     /// </summary>
     public class DiscordHostedService : BackgroundService, IDiscordHostedService
     {
-        /// <inheritdoc cref="IDiscordHostedService"/>
+        /// <inheritdoc/>
         public DiscordClient Client { get; private set; }
 
         private readonly ILogger<DiscordHostedService> _logger;
-
-        /// <inheritdoc cref="IDiscordHostedService"/>
-        public Dictionary<string, BaseExtension> Extensions { get; } = new();
 
         #pragma warning disable 8618
         public DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider)
@@ -119,16 +116,12 @@ namespace DisCatSharp.Hosting
                     }
 
                     // Add an easy reference to our extensions for later use
-                    this.Extensions.Add(typePair.Value.ImplementationType.Name, (BaseExtension) instance);
+                    this.Client.AddExtension((BaseExtension)instance);
                 }
                 catch (Exception ex)
                 {
                     this._logger.LogError($"Unable to register '{typePair.Value.ImplementationType.Name}': \n\t{ex.Message}");
                 }
-
-            // Add of our extensions to our client
-            foreach (var extension in this.Extensions.Values)
-                this.Client.AddExtension(extension);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

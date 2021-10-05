@@ -108,9 +108,6 @@ namespace DisCatSharp.Hosting.Tests
                 Assert.NotNull(service);
                 Assert.NotNull(service.Client);
                 Assert.NotNull(service.Client.GetExtension<InteractivityExtension>());
-
-                // Also verify IDiscordHostedService.Extensions
-                Assert.Single(service.Extensions);
             }
             finally
             {
@@ -133,8 +130,6 @@ namespace DisCatSharp.Hosting.Tests
                 Assert.NotNull(service.Client);
                 Assert.NotNull(service.Client.GetExtension<InteractivityExtension>());
                 Assert.NotNull(service.Client.GetExtension<LavalinkExtension>());
-
-                Assert.Equal(2, service.Extensions.Count);
             }
             finally
             {

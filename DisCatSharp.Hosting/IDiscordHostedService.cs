@@ -34,13 +34,5 @@ namespace DisCatSharp.Hosting
         /// Reference to connected client
         /// </summary>
         DiscordClient Client { get; }
-
-        /// <summary>
-        /// Extensions cached by their implementation type
-        /// </summary>
-        /// <example>
-        /// Key: "InteractivityExtension" Value: Instance of InteractivityExtension
-        /// </example>
-        Dictionary<string, BaseExtension> Extensions { get; }
     }
 }
