@@ -67,6 +67,7 @@ namespace DisCatSharp.Hosting
         /// <returns>Assemblies which meet the given names. No duplicates</returns>
         public static Assembly[] FindAssemblies(string[]? names)
         {
+
             /*
               There is a possibility that an assembly can be referenced in multiple assemblies.
               To alleviate duplicates we need to shrink our queue as we find things
@@ -82,24 +83,32 @@ namespace DisCatSharp.Hosting
                 if (!queue.Any())
                     break;
 
-                // Is the loaded assembly one we're looking for?
-                if (queue.Contains(assembly.GetName().Name))
+                var loadedAssemblyName = assembly.GetName().Name;
+
+                // Kinda need the name to do our thing
+                if (loadedAssemblyName == null)
+                    continue;
+
+                // Is this something we're looking for?
+                if (queue.Contains(loadedAssemblyName))
                 {
                     results.Add(assembly);
 
                     // Shrink queue so we don't accidentally add the same assembly > 1 times
-                    queue.Remove(assembly.GetName().Name);
-                    continue;
+                    queue.Remove(loadedAssemblyName);
                 }
 
-                // We shall check referenced assembly names... just in case
+                // Time to check if one of the referenced assemblies is something we're looking for
                 foreach(var referencedAssembly in assembly.GetReferencedAssemblies()
-                                                          .Where(x => queue.Contains(x.Name)))
+                                                          .Where(x => x.Name != null && queue.Contains(x.Name)))
                     try
                     {
                         // Must load the assembly into our workspace so we can do stuff with it later
                         results.Add(Assembly.Load(referencedAssembly));
+
+                        #pragma warning disable 8604
                         queue.Remove(referencedAssembly.Name);
+                        #pragma warning restore 8604
                     }
                     catch (Exception ex)
                     {
