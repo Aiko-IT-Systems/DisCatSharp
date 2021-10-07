@@ -2356,8 +2356,15 @@ namespace DisCatSharp.Net
                 Hoist = hoist,
                 Mentionable = mentionable,
             };
-            if (emoji.HasValue)
+
+            if (emoji.HasValue && !iconb64.HasValue)
                 pld.UnicodeEmoji = emoji;
+
+            if (emoji.HasValue && iconb64.HasValue)
+            {
+                pld.IconBase64 = null;
+                pld.UnicodeEmoji = emoji;
+            }
 
             if (iconb64.HasValue)
                 pld.IconBase64 = iconb64;
