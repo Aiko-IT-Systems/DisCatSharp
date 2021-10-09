@@ -3228,6 +3228,11 @@ namespace DisCatSharp.Entities
         public bool IsHub { get; }
 
         /// <summary>
+        /// Guild has directory channels.
+        /// </summary>
+        public bool HasDirectoryEntry { get;  }
+
+        /// <summary>
         /// Guild has full access to threads.
         /// Old Feature.
         /// </summary>
@@ -3271,6 +3276,11 @@ namespace DisCatSharp.Entities
         public bool TextInVoiceEnabled { get; }
 
         /// <summary>
+        /// Guild can set an animated banner.
+        /// </summary>
+        public bool CanSetAnimatedBanner { get; }
+
+        /// <summary>
         /// String of guild features.
         /// </summary>
         public string FeatureString { get; }
@@ -3282,6 +3292,7 @@ namespace DisCatSharp.Entities
         public GuildFeatures(DiscordGuild guild)
         {
             this.CanSetAnimatedIcon = guild.RawFeatures.Contains("ANIMATED_ICON");
+            this.CanSetAnimatedBanner = guild.RawFeatures.Contains("ANIMATED_BANNER");
             this.CanSetBanner = guild.RawFeatures.Contains("BANNER");
             this.CanCreateStoreChannels = guild.RawFeatures.Contains("COMMERCE");
             this.HasCommunityEnabled = guild.RawFeatures.Contains("COMMUNITY");
@@ -3312,6 +3323,7 @@ namespace DisCatSharp.Entities
             this.PremiumTierThreeOverride = guild.RawFeatures.Contains("PREMIUM_TIER_3_OVERRIDE");
             this.CanSetThreadDefaultAutoArchiveDuration = guild.RawFeatures.Contains("THREAD_DEFAULT_AUTO_ARCHIVE_DURATION");
             this.TextInVoiceEnabled = guild.RawFeatures.Contains("TEXT_IN_VOICE_ENABLED");
+            this.HasDirectoryEntry = guild.RawFeatures.Contains("HAS_DIRECTORY_ENTRY");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach (var feature in guild.RawFeatures)
