@@ -28,7 +28,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using DisCatSharp.Enums.Discord;
 using DisCatSharp.EventArgs;
