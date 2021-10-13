@@ -63,9 +63,9 @@ namespace DisCatSharp.Hosting
 
             this._logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
 
-            var section = config.HasSection(Constants.LibName, "Discord")
+            var section = config.HasSection("Discord")
                 ? "Discord"
-                : config.HasSection(config.ConfigPath(Constants.LibName, $"Discord{Constants.ConfigSuffix}"))
+                : config.HasSection($"Discord{Constants.ConfigSuffix}")
                     ? $"Discord{Constants.ConfigSuffix}"
                     : null;
 

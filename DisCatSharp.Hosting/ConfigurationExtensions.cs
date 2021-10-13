@@ -39,21 +39,6 @@ namespace DisCatSharp.Hosting
 
     internal static class ConfigurationExtensions
     {
-        public static bool HasSection(this IConfiguration config, params string[] values)
-        {
-            // We require something to be passed in
-            if (!values.Any())
-                return false;
-
-            Queue<string> queue = new(values);
-            IConfigurationSection section = config.GetSection(queue.Dequeue());
-
-            while (section != null && queue.Any())
-                config.GetSection(queue.Dequeue());
-
-            return section != null;
-        }
-
         /// <summary>
         /// Find assemblies that match the names provided via <paramref name="names"/>.
         /// </summary>
@@ -136,7 +121,7 @@ namespace DisCatSharp.Hosting
             string[]? assemblyNames;
 
             // Has the user defined a using section within the root name?
-            if (!configuration.HasSection(rootName, "Using"))
+            if (!configuration.HasSection("Using", rootName))
                 return results;
 
             /*
@@ -166,11 +151,11 @@ namespace DisCatSharp.Hosting
                     result.ConfigType = type;
 
                     // Does a section exist with the classname? (DiscordConfiguration - for instance)
-                    if(configuration.HasSection(rootName, sectionName))
+                    if(configuration.HasSection( sectionName, rootName))
                         result.Section = new ConfigSection(ref configuration, type.Name, rootName);
 
                     // Does a section exist with the classname minus Configuration? (Discord - for Instance)
-                    else if (configuration.HasSection(rootName, prefix))
+                    else if (configuration.HasSection( prefix, rootName))
                         result.Section = new ConfigSection(ref configuration, prefix, rootName);
 
                     // We require the implemented type to exist so we'll continue onward
