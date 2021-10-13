@@ -57,7 +57,12 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// User is invisible. They will appear as Offline to anyone but themselves.
         /// </summary>
-        Invisible = 5
+        Invisible = 5,
+
+        /// <summary>
+        /// User is streaming.
+        /// </summary>
+        Streaming = 6
     }
 
     /// <summary>
@@ -93,6 +98,10 @@ namespace DisCatSharp.Entities
                         writer.WriteValue("invisible");
                         return;
 
+                    case UserStatus.Streaming:
+                        writer.WriteValue("streaming");
+                        return;
+
                     case UserStatus.Offline:
                     default:
                         writer.WriteValue("offline");
@@ -118,6 +127,7 @@ namespace DisCatSharp.Entities
                 "idle" => UserStatus.Idle,
                 "dnd" => UserStatus.DoNotDisturb,
                 "invisible" => UserStatus.Invisible,
+                "streaming" => UserStatus.Streaming,
                 _ => UserStatus.Offline,
             };
         }
