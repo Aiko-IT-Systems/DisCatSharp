@@ -62,18 +62,6 @@ namespace DisCatSharp.Hosting.Tests
             .Build();
 
         [Fact]
-        public void HasSection_Tests()
-        {
-            var source = this.DiscordInteractivityConfiguration();
-
-            bool hasDisCatSharp = source.HasSection("DisCatSharp");
-            Assert.True(hasDisCatSharp);
-
-            bool hasDiscord = source.HasSection("DisCatSharp", "Discord");
-            Assert.True(hasDiscord);
-        }
-
-        [Fact]
         public void DiscoverExtensions_Interactivity()
         {
             var source = this.DiscordInteractivityConfiguration();
