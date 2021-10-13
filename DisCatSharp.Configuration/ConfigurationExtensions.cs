@@ -33,6 +33,8 @@ namespace DisCatSharp.Configuration
     {
         private const string FactoryErrorMessage = "Require a function which provides a default entity to work with";
         public const string DefaultRootLib = "DisCatSharp";
+        private const string ConfigSuffix = "Configuration";
+
 
         /// <summary>
         /// Easily piece together paths that will work within <see cref="IConfiguration"/>
@@ -222,6 +224,47 @@ namespace DisCatSharp.Configuration
             }
 
             return current.GetChildren().Any(x=>x.Key == values[^1]);
+        }
+
+        /// <summary>
+        /// Instantiates an instance of <see cref="DiscordClient"/>, then consumes any custom
+        /// configuration from user/developer from <paramref name="config"/>. <br/>
+        /// View remarks for more info
+        /// </summary>
+        /// <remarks>
+        /// This is an example of how your JSON structure should look if you wish
+        /// to override one or more of the default values from <see cref="DiscordConfiguration"/>
+        /// <code>
+        /// {
+        ///   "DisCatSharp": {
+        ///      "Discord": { }
+        ///   }
+        /// }
+        /// </code>
+        /// <br/>
+        /// Alternatively, you can use the type name itself
+        /// <code>
+        /// {
+        ///   "DisCatSharp": {
+        ///      "DiscordConfiguration": { }
+        ///   }
+        /// }
+        /// </code>
+        /// </remarks>
+        /// <param name="config"></param>
+        /// <returns>Instance of <see cref="DiscordClient"/></returns>
+        public static DiscordClient BuildClient(this IConfiguration config)
+        {
+            var section = config.HasSection(DefaultRootLib, "Discord")
+                ? "Discord"
+                : config.HasSection(DefaultRootLib, $"Discord{ConfigSuffix}")
+                    ? $"Discord:{ConfigSuffix}"
+                    : null;
+
+            if (string.IsNullOrEmpty(section))
+                return new DiscordClient(new());
+
+            return new DiscordClient(config.ExtractConfig<DiscordConfiguration>(section));
         }
     }
 }
