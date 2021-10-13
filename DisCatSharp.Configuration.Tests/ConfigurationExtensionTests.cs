@@ -291,7 +291,9 @@ namespace DisCatSharp.Configuration.Tests
 
             Assert.True(source.HasSection("DiscordConfiguration"));
             Assert.False(source.HasSection("Discord"));
+#pragma warning disable 8625
             Assert.False(source.HasSection("DiscordConfiguration", null));
+#pragma warning restore 8625
         }
 
         [Fact]
@@ -301,7 +303,9 @@ namespace DisCatSharp.Configuration.Tests
 
             Assert.True(source.HasSection("Discord"));
             Assert.False(source.HasSection("DiscordConfiguration"));
+#pragma warning disable 8625
             Assert.False(source.HasSection("Discord", null));
+#pragma warning restore 8625
         }
     }
 }

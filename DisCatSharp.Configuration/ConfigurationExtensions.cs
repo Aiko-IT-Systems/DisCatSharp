@@ -208,7 +208,6 @@ namespace DisCatSharp.Configuration
             if (values.Length == 1)
                 return config.GetChildren().Any(x => x.Key == values[0]);
 
-            int index = 0;
             if (config.GetChildren().All(x => x.Key != values[0]))
                 return false;
 
