@@ -55,10 +55,7 @@ namespace DisCatSharp.Hosting.Tests
             .Build();
 
         public IConfiguration DiscordInteractivityAndLavaLinkConfiguration() => new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>(this.DefaultDiscord())
-            {
-                {"DisCatSharp:Using", "[\"DisCatSharp.Interactivity\",\"DisCatSharp.Lavalink\"]"}
-            })
+            .AddJsonFile("interactivity-lavalink.json")
             .Build();
 
         [Fact]
