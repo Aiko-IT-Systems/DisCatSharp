@@ -82,6 +82,11 @@ namespace DisCatSharp
         /// <summary>
         /// The message is an interaction response and the bot is "thinking".
         /// </summary>
-        Loading = 1 << 7
+        Loading = 1 << 7,
+
+        /// <summary>
+        /// The message is warning that some roles failed to mention in thread.
+        /// </summary>
+        FailedToMentionSomeRolesInThread = 1 << 8
     }
 }
