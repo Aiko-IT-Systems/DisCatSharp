@@ -63,17 +63,7 @@ namespace DisCatSharp.Hosting
 
             this._logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
 
-            var section = config.HasSection(Constants.LibName, "Discord")
-                ? "Discord"
-                : config.HasSection(Constants.LibName, $"Discord{Constants.ConfigSuffix}")
-                    ? $"Discord{Constants.ConfigSuffix}"
-                    : null;
-
-            // If not section was provided we'll still just use the default config
-            if (string.IsNullOrEmpty(section))
-                this.Client = new DiscordClient(new());
-            else
-                this.Client = new DiscordClient(config.ExtractConfig<DiscordConfiguration>(section));
+            this.Client = config.BuildClient();
 
             foreach (var typePair in typeMap)
                 try
