@@ -47,11 +47,6 @@ namespace DisCatSharp
         /// </summary>
         Fishington = 814288819477020702,
 
-        /// <summary>
-        /// Represents the embedded application YouTube Together.
-        /// </summary>
-        YouTubeTogether = 755600276941176913,
-
 	    /// <summary>
         /// Represents the embedded application Chess in the park.
         /// Dev?
@@ -67,9 +62,19 @@ namespace DisCatSharp
 
         /// <summary>
         /// Represents the embedded application YouTube Together.
-        /// This is the new (staff only) version.
         /// </summary>
-        YouTubeTogetherV2 = 880218394199220334,
+        YouTubeTogether = 755600276941176913,
+
+        /// <summary>
+        /// Represents the embedded application Watch Together.
+        /// </summary>
+        WatchTogether = 880218394199220334,
+
+        /// <summary>
+        /// Represents the embedded application Watch Together.
+        /// This is the staff version.
+        /// </summary>
+        WatchTogetherDev = 880218832743055411,
 
         /// <summary>
         /// Represents the embedded application Letter Tile.
