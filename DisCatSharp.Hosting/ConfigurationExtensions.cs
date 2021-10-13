@@ -105,47 +105,6 @@ namespace DisCatSharp.Hosting
         }
 
         /// <summary>
-        /// Instantiates an instance of <see cref="DiscordClient"/>, then consumes any custom
-        /// configuration from user/developer from <paramref name="config"/>. <br/>
-        /// View remarks for more info
-        /// </summary>
-        /// <remarks>
-        /// This is an example of how your JSON structure should look if you wish
-        /// to override one or more of the default values from <see cref="DiscordConfiguration"/>
-        /// <code>
-        /// {
-        ///   "DisCatSharp": {
-        ///      "Discord": { }
-        ///   }
-        /// }
-        /// </code>
-        /// <br/>
-        /// Alternatively, you can use the type name itself
-        /// <code>
-        /// {
-        ///   "DisCatSharp": {
-        ///      "DiscordConfiguration": { }
-        ///   }
-        /// }
-        /// </code>
-        /// </remarks>
-        /// <param name="config"></param>
-        /// <returns>Instance of <see cref="DiscordClient"/></returns>
-        public static DiscordClient BuildClient(this IConfiguration config)
-        {
-            var section = config.HasSection(Constants.LibName, "Discord")
-                ? "Discord"
-                : config.HasSection(Constants.LibName, $"Discord{Constants.ConfigSuffix}")
-                    ? $"Discord:{Constants.ConfigSuffix}"
-                    : null;
-
-            if (string.IsNullOrEmpty(section))
-                return new DiscordClient(new());
-
-            return new DiscordClient(config.ExtractConfig<DiscordConfiguration>(section));
-        }
-
-        /// <summary>
         /// Easily identify which configuration types have been added to the <paramref name="configuration"/> <br/>
         /// This way we can dynamically load extensions without explicitly doing so
         /// </summary>

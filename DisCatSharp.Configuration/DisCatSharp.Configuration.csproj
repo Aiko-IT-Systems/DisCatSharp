@@ -33,5 +33,9 @@
         <PackagePath></PackagePath>
       </None>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+    </ItemGroup>
   
 </Project>
