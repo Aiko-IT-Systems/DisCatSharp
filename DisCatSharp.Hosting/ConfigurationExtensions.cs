@@ -32,7 +32,7 @@ namespace DisCatSharp.Hosting
 {
     internal struct ExtensionConfigResult
     {
-        public ConfigSection Section { get; set; }
+        public ConfigSection? Section { get; set; }
         public Type ConfigType { get; set; }
         public Type ImplementationType { get; set; }
     }
@@ -105,6 +105,47 @@ namespace DisCatSharp.Hosting
         }
 
         /// <summary>
+        /// Instantiates an instance of <see cref="DiscordClient"/>, then consumes any custom
+        /// configuration from user/developer from <paramref name="config"/>. <br/>
+        /// View remarks for more info
+        /// </summary>
+        /// <remarks>
+        /// This is an example of how your JSON structure should look if you wish
+        /// to override one or more of the default values from <see cref="DiscordConfiguration"/>
+        /// <code>
+        /// {
+        ///   "DisCatSharp": {
+        ///      "Discord": { }
+        ///   }
+        /// }
+        /// </code>
+        /// <br/>
+        /// Alternatively, you can use the type name itself
+        /// <code>
+        /// {
+        ///   "DisCatSharp": {
+        ///      "DiscordConfiguration": { }
+        ///   }
+        /// }
+        /// </code>
+        /// </remarks>
+        /// <param name="config"></param>
+        /// <returns>Instance of <see cref="DiscordClient"/></returns>
+        public static DiscordClient BuildClient(this IConfiguration config)
+        {
+            var section = config.HasSection(Constants.LibName, "Discord")
+                ? "Discord"
+                : config.HasSection(Constants.LibName, $"Discord{Constants.ConfigSuffix}")
+                    ? $"Discord:{Constants.ConfigSuffix}"
+                    : null;
+
+            if (string.IsNullOrEmpty(section))
+                return new DiscordClient(new());
+
+            return new DiscordClient(config.ExtractConfig<DiscordConfiguration>(section));
+        }
+
+        /// <summary>
         /// Easily identify which configuration types have been added to the <paramref name="configuration"/> <br/>
         /// This way we can dynamically load extensions without explicitly doing so
         /// </summary>
@@ -121,7 +162,7 @@ namespace DisCatSharp.Hosting
             string[]? assemblyNames;
 
             // Has the user defined a using section within the root name?
-            if (!configuration.HasSection("Using", rootName))
+            if (!configuration.HasSection(rootName, "Using"))
                 return results;
 
             /*
@@ -138,7 +179,8 @@ namespace DisCatSharp.Hosting
                     Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(
                         configuration[configuration.ConfigPath(rootName, "Using")]);
 
-            foreach (var assembly in FindAssemblies(assemblyNames))
+            #pragma warning disable 8604
+            foreach (var assembly in FindAssemblies(assemblyNames.Select(x=> x.StartsWith(Constants.LibName) ? x : $"{Constants.LibName}.{x}").ToArray()))
             {
                 ExtensionConfigResult result = new();
 
@@ -151,16 +193,14 @@ namespace DisCatSharp.Hosting
                     result.ConfigType = type;
 
                     // Does a section exist with the classname? (DiscordConfiguration - for instance)
-                    if(configuration.HasSection( sectionName, rootName))
+                    if(configuration.HasSection( rootName, sectionName))
                         result.Section = new ConfigSection(ref configuration, type.Name, rootName);
 
                     // Does a section exist with the classname minus Configuration? (Discord - for Instance)
-                    else if (configuration.HasSection( prefix, rootName))
+                    else if (configuration.HasSection(rootName, prefix))
                         result.Section = new ConfigSection(ref configuration, prefix, rootName);
 
-                    // We require the implemented type to exist so we'll continue onward
-                    else
-                        continue;
+                    // IF THE SECTION IS NOT PROVIDED --> WE WILL USE DEFAULT CONFIG IMPLEMENTATION
 
                     /*
                         Now we need to find the type which should consume our config
@@ -183,8 +223,10 @@ namespace DisCatSharp.Hosting
                     }
                 }
             }
+            #pragma warning restore 8604
 
             return results;
         }
+
     }
 }

@@ -289,9 +289,9 @@ namespace DisCatSharp.Configuration.Tests
         {
             var source = this.HasSectionWithSuffixConfiguration();
 
-            Assert.True(source.HasSection("DiscordConfiguration", null));
+            Assert.True(source.HasSection("DiscordConfiguration"));
             Assert.False(source.HasSection("Discord"));
-            Assert.False(source.HasSection("DiscordConfiguration"));
+            Assert.False(source.HasSection("DiscordConfiguration", null));
         }
 
         [Fact]
@@ -299,9 +299,9 @@ namespace DisCatSharp.Configuration.Tests
         {
             var source = this.HasSectionNoSuffixConfiguration();
 
-            Assert.True(source.HasSection("Discord", null));
+            Assert.True(source.HasSection("Discord"));
             Assert.False(source.HasSection("DiscordConfiguration"));
-            Assert.False(source.HasSection("Discord"));
+            Assert.False(source.HasSection("Discord", null));
         }
     }
 }

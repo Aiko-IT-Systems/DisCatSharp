@@ -198,16 +198,31 @@ namespace DisCatSharp.Configuration
         /// </code>
         /// </remarks>
         /// <param name="config"></param>
-        /// <param name="sectionName"></param>
-        /// <param name="rootSectionName"></param>
+        /// <param name="values"></param>
         /// <returns>True if section exists, otherwise false</returns>
-        public static bool HasSection(this IConfiguration config, string sectionName,
-            string? rootSectionName = DefaultRootLib)
+        public static bool HasSection(this IConfiguration config, params string[] values)
         {
-            if (!string.IsNullOrEmpty(rootSectionName))
-                return config.GetSection(rootSectionName).GetChildren().Any(x => x.Key == sectionName);
+            if (!values.Any())
+                return false;
 
-            return config.GetChildren().Any(x => x.Key == sectionName);
+            if (values.Length == 1)
+                return config.GetChildren().Any(x => x.Key == values[0]);
+
+            int index = 0;
+            if (config.GetChildren().All(x => x.Key != values[0]))
+                return false;
+
+            IConfigurationSection current = config.GetSection(values[0]);
+
+            for (int i = 1; i < values.Length - 1; i++)
+            {
+                if (current.GetChildren().All(x => x.Key != values[i]))
+                    return false;
+
+                current = current.GetSection(values[i]);
+            }
+
+            return current.GetChildren().Any(x=>x.Key == values[^1]);
         }
     }
 }

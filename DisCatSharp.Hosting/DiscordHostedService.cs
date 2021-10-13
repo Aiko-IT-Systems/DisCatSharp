@@ -63,9 +63,9 @@ namespace DisCatSharp.Hosting
 
             this._logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
 
-            var section = config.HasSection("Discord")
+            var section = config.HasSection(Constants.LibName, "Discord")
                 ? "Discord"
-                : config.HasSection($"Discord{Constants.ConfigSuffix}")
+                : config.HasSection(Constants.LibName, $"Discord{Constants.ConfigSuffix}")
                     ? $"Discord{Constants.ConfigSuffix}"
                     : null;
 
@@ -78,9 +78,16 @@ namespace DisCatSharp.Hosting
             foreach (var typePair in typeMap)
                 try
                 {
-                    // First retrieve our configuration!
-                    object configInstance = typePair.Value.Section.ExtractConfig(() =>
-                        ActivatorUtilities.CreateInstance(provider, typePair.Value.ConfigType));
+                    /*
+                        If section is null --> utilize the default constructor
+                        This means the extension was explicitly added in the 'Using' array,
+                        but user did not wish to override any value(s) in the extension's config
+                     */
+
+                    object configInstance = typePair.Value.Section.HasValue
+                        ? typePair.Value.Section.Value.ExtractConfig(() =>
+                            ActivatorUtilities.CreateInstance(provider, typePair.Value.ConfigType))
+                        : ActivatorUtilities.CreateInstance(provider, typePair.Value.ConfigType);
 
                     /*
                         Explanation for bindings
