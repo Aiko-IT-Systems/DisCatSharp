@@ -58,7 +58,6 @@ namespace DisCatSharp.Configuration.Models
         /// Checks if key exists in <see cref="Config"/>
         /// </summary>
         /// <param name="name">Property / Key to search for in section</param>
-        /// <param name="path">Config path to key</param>
         /// <returns>True if key exists, otherwise false. Outputs path to config regardless</returns>
         public bool ContainsKey(string name)
         {
