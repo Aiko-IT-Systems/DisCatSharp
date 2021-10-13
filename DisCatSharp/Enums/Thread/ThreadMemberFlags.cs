@@ -35,7 +35,7 @@ namespace DisCatSharp
         /// <summary>
         /// Indicates that the notification setting is set to all messages.
         /// </summary>
-        AllMessaged = 2,
+        AllMessages = 2,
 
         /// <summary>
         /// Indicates that the notification setting is set to only mentions.
