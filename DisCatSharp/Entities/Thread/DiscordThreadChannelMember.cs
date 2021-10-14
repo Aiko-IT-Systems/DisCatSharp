@@ -71,10 +71,10 @@ namespace DisCatSharp.Entities
         internal string JoinTimeStampRaw { get; set; }
 
         /// <summary>
-        /// Gets flags (Currently only for notification settings).
+        /// Gets the thread member flags.
         /// </summary>
         [JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
-        public ThreadNotificationSetting Flags { get; internal set; }
+        public ThreadMemberFlags Flags { get; internal set; }
 
         /// <summary>
         /// Gets the category that contains this channel. For threads, gets the channel this thread was created in.
