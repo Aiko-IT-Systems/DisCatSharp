@@ -36,6 +36,7 @@ using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 
 namespace DisCatSharp
 {
@@ -2713,7 +2714,16 @@ namespace DisCatSharp
                 return;
 
             var guild = this.InternalGetCachedGuild(guild_id);
-            var cmd = await this.GetGuildApplicationCommandAsync(guild_id, c_id);
+            
+            DiscordApplicationCommand cmd;
+            try 
+            {
+                cmd = await this.GetGuildApplicationCommandAsync(guild_id, c_id);
+            }
+            catch(NotFoundException)
+            {
+                cmd = await this.GetGlobalApplicationCommandAsync(c_id);
+            }
 
             if (guild == null)
             {
