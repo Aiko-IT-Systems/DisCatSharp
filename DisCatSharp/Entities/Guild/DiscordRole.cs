@@ -191,7 +191,7 @@ namespace DisCatSharp.Entities
                 iconb64 = null;
 
             if (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null)
-                emoji = mdl.UnicodeEmoji.Value.Id == 0 ? mdl.UnicodeEmoji.Value.GetDiscordName().Replace(":", "") : throw new ArgumentException("Emoji must be unicode");
+                emoji = mdl.UnicodeEmoji.Value.Id == 0 ? mdl.UnicodeEmoji.Value.Name : throw new ArgumentException("Emoji must be unicode");
             else if (mdl.UnicodeEmoji.HasValue)
                 emoji = null;
 

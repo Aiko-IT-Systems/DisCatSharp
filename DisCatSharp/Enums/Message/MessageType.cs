@@ -93,6 +93,11 @@ namespace DisCatSharp
         ChannelFollowAdd = 12,
 
         /// <summary>
+        /// Message indicating a user is streaming in a guild.
+        /// </summary>
+        GuildStream = 13,
+
+        /// <summary>
         /// Message indicating a guild was removed from guild discovery.
         /// </summary>
         GuildDiscoveryDisqualified = 14,
