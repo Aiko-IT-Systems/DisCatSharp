@@ -64,6 +64,26 @@ namespace DisCatSharp.Entities
         public bool Disabled { get; internal set; }
 
         /// <summary>
+        /// Enables this component if it was disabled before.
+        /// </summary>
+        /// <returns>The current component.</returns>
+        public DiscordSelectComponent Enable()
+        {
+            this.Disabled = false;
+            return this;
+        }
+
+        /// <summary>
+        /// Disables this component.
+        /// </summary>
+        /// <returns>The current component.</returns>
+        public DiscordSelectComponent Disable()
+        {
+            this.Disabled = true;
+            return this;
+        }
+
+        /// <summary>
         /// Constructs a new <see cref="DiscordSelectComponent"/>.
         /// </summary>
         /// <param name="customId">The Id to assign to the button. This is sent back when a user presses it.</param>
