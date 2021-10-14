@@ -11,6 +11,7 @@
         <Nullable>enable</Nullable>
         <RootNamespace>DisCatSharp.Configuration</RootNamespace>
         <AssemblyName>DisCatSharp.Configuration</AssemblyName>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -37,5 +38,5 @@
     <ItemGroup>
       <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
     </ItemGroup>
-  
+
 </Project>
