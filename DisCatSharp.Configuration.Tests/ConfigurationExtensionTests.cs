@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DisCatSharp.Configuration.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -9,64 +10,83 @@ namespace DisCatSharp.Configuration.Tests
 {
     public class ConfigurationExtensionTests
     {
+        #region Test Classes
         class SampleClass
         {
             public int Amount { get; set; }
             public string? Email { get; set; }
         }
 
+        class ClassWithArray
+        {
+            public int[] Values { get; set; } = { 1, 2, 3, 4, 5 };
+            public string[] Strings { get; set; } = { "1", "2", "3", "4", "5" };
+        }
+
+        class ClassWithEnumerable
+        {
+            public IEnumerable<int> Values { get; set; } = new[] { 1, 2, 3, 4, 5 };
+            public IEnumerable<string> Strings { get; set; } = new[] { "1", "2", "3", "4", "5" };
+        }
+
+        class ClassWithList
+        {
+            public List<string> Strings { get; set; } = new List<string>
+            {
+                "1",
+                "2",
+                "3",
+                "4",
+                "5"
+            };
+
+            public List<int> Values { get; set; } = new List<int>
+            {
+                1,
+                2,
+                3,
+                4,
+                5
+            };
+        }
+
         class SampleClass2
         {
             public TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(7);
             public string Name { get; set; } = "Sample";
-
             public string ConstructorValue { get; }
-
             public SampleClass2(string value)
             {
                 this.ConstructorValue = value;
             }
         }
+        #endregion
+
+        private IConfiguration EnumerableTestConfiguration() =>
+            new ConfigurationBuilder()
+                .AddJsonFile("enumerable-test.json")
+                .Build();
+
+        private IConfiguration HasSectionWithSuffixConfiguration() =>
+            new ConfigurationBuilder()
+                .AddJsonFile("section-with-suffix.json")
+                .Build();
+
+        private IConfiguration HasSectionNoSuffixConfiguration() =>
+            new ConfigurationBuilder()
+                .AddJsonFile("section-no-suffix.json")
+                .Build();
 
         private IConfiguration BasicDiscordConfiguration() => new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>()
-            {
-                {"DisCatSharp:Discord:Token", "1234567890"},
-                {"DisCatSharp:Discord:TokenType", "Bot" },
-                {"DisCatSharp:Discord:MinimumLogLevel", "Information"},
-                {"DisCatSharp:Discord:UseRelativeRateLimit", "true"},
-                {"DisCatSharp:Discord:LogTimestampFormat", "yyyy-MM-dd HH:mm:ss zzz"},
-                {"DisCatSharp:Discord:LargeThreshold", "250"},
-                {"DisCatSharp:Discord:AutoReconnect", "true"},
-                {"DisCatSharp:Discord:ShardId", "123123"},
-                {"DisCatSharp:Discord:GatewayCompressionLevel", "Stream"},
-                {"DisCatSharp:Discord:MessageCacheSize", "1024"},
-                {"DisCatSharp:Discord:HttpTimeout", "00:00:20"},
-                {"DisCatSharp:Discord:ReconnectIndefinitely", "false"},
-                {"DisCatSharp:Discord:AlwaysCacheMembers", "true" },
-                {"DisCatSharp:Discord:DiscordIntents", "AllUnprivileged"},
-                {"DisCatSharp:Discord:MobileStatus", "false"},
-                {"DisCatSharp:Discord:UseCanary", "false"},
-                {"DisCatSharp:Discord:AutoRefreshChannelCache", "false"},
-                {"DisCatSharp:Discord:Intents", "AllUnprivileged"}
-            })
+            .AddJsonFile("default-discord.json")
             .Build();
 
         private IConfiguration DiscordIntentsConfig() => new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string>
-                {
-                    {"DisCatSharp:Discord:Intents", "GuildEmojisAndStickers,GuildMembers,GuildInvites,GuildMessageReactions"}
-                })
+                .AddJsonFile("intents-discord.json")
                 .Build();
 
         private IConfiguration DiscordHaphazardConfig() => new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>
-            {
-                { "DisCatSharp:Discord:Intents", "GuildEmojisAndStickers,GuildMembers,Guilds" },
-                { "DisCatSharp:Discord:MobileStatus", "true" },
-                { "DisCatSharp:Discord:LargeThreshold", "1000" },
-                { "DisCatSharp:Discord:HttpTimeout", "10:00:00" }
-            })
+            .AddJsonFile("haphazard-discord.json")
             .Build();
 
         private IConfiguration SampleConfig() => new ConfigurationBuilder()
@@ -89,6 +109,27 @@ namespace DisCatSharp.Configuration.Tests
             .AddInMemoryCollection(new Dictionary<string, string>
             {
                 { "SampleClass:Timeout", "01:30:00" }, { "SampleClass:NotValid", "Something" }
+            })
+            .Build();
+
+        private IConfiguration SampleClass2EnumerableTest() => new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "SampleClass:EnumerableTest", "[\"10\",\"20\",\"30\"]" }
+            })
+            .Build();
+
+        private IConfiguration SampleClass2ArrayTest() => new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "SampleClass:ArrayTest", "[\"10\",\"20\",\"30\"]" }
+            })
+            .Build();
+
+        private IConfiguration SampleClass2ListTest() => new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>
+            {
+                { "SampleClass:ListTest", "[\"10\",\"20\",\"30\"]" }
             })
             .Build();
 
@@ -201,6 +242,70 @@ namespace DisCatSharp.Configuration.Tests
             var span = new TimeSpan(0, 1, 30, 0);
             Assert.Equal(span, config.Timeout);
             Assert.Equal("Sample", config.Name);
+        }
+
+        [Fact]
+        public void TestExtractConfig_Enumerable()
+        {
+            var source = this.EnumerableTestConfiguration();
+            var config =
+                (ClassWithEnumerable)new ConfigSection(ref source, "ClassWithEnumerable", null).ExtractConfig(() =>
+                    new ClassWithEnumerable());
+
+            Assert.NotNull(config.Values);
+            Assert.Equal(3, config.Values.Count());
+            Assert.NotNull(config.Strings);
+            Assert.Equal(3, config.Values.Count());
+        }
+
+        [Fact]
+        public void TestExtractConfig_Array()
+        {
+            var source = this.EnumerableTestConfiguration();
+            var config =
+                (ClassWithArray)new ConfigSection(ref source, "ClassWithArray", null).ExtractConfig(() =>
+                    new ClassWithArray());
+            Assert.NotNull(config.Values);
+            Assert.Equal(3, config.Values.Length);
+            Assert.NotNull(config.Strings);
+            Assert.Equal(3, config.Values.Length);
+        }
+
+        [Fact]
+        public void TestExtractConfig_List()
+        {
+            var source = this.EnumerableTestConfiguration();
+            var config =
+                (ClassWithList)new ConfigSection(ref source, "ClassWithList", null).ExtractConfig(() =>
+                    new ClassWithList());
+            Assert.NotNull(config.Values);
+            Assert.Equal(3, config.Values.Count);
+            Assert.NotNull(config.Strings);
+            Assert.Equal(3, config.Values.Count);
+        }
+
+        [Fact]
+        public void TestHasSectionWithSuffix()
+        {
+            var source = this.HasSectionWithSuffixConfiguration();
+
+            Assert.True(source.HasSection("DiscordConfiguration"));
+            Assert.False(source.HasSection("Discord"));
+#pragma warning disable 8625
+            Assert.False(source.HasSection("DiscordConfiguration", null));
+#pragma warning restore 8625
+        }
+
+        [Fact]
+        public void TestHasSectionNoSuffix()
+        {
+            var source = this.HasSectionNoSuffixConfiguration();
+
+            Assert.True(source.HasSection("Discord"));
+            Assert.False(source.HasSection("DiscordConfiguration"));
+#pragma warning disable 8625
+            Assert.False(source.HasSection("Discord", null));
+#pragma warning restore 8625
         }
     }
 }

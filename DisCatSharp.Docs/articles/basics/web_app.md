@@ -76,12 +76,15 @@ To add the extensions `Interactivity` and `CommandsNext`:
             "DisCatSharp.Interactivity",
             "CommandsNext"
         ],
+
         "Discord": {
             "Token": "YOUR TOKEN HERE"
         },
+
         "Interactivity": {
             "PollBehaviour": "KeepEmojis"
         },
+
         "CommandsNext": {
             "StringPrefixes": [ "!" ]
         }

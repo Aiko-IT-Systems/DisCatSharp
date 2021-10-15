@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
+using System.Linq;
 using System.Reflection;
 using DisCatSharp.Configuration.Models;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +33,8 @@ namespace DisCatSharp.Configuration
     {
         private const string FactoryErrorMessage = "Require a function which provides a default entity to work with";
         public const string DefaultRootLib = "DisCatSharp";
+        private const string ConfigSuffix = "Configuration";
+
 
         /// <summary>
         /// Easily piece together paths that will work within <see cref="IConfiguration"/>
@@ -50,45 +54,71 @@ namespace DisCatSharp.Configuration
             PropertyInfo[] props = config.GetType().GetProperties();
 
             foreach (var prop in props)
-                // If found in the config -- user/dev wants to override default value
-                if (section.ContainsKey(prop.Name, out string path))
+            {
+                // Must have a set method for this to work, otherwise continue on
+                if (prop.SetMethod == null)
+                    continue;
+
+                string entry = section.GetValue(prop.Name);
+                object? value = null;
+
+                if (typeof(string) == prop.PropertyType)
                 {
-                    // Must have a set method for this to work, otherwise continue on
-                    if (prop.SetMethod == null)
+                    // We do NOT want to override value if nothing was provided
+                    if(!string.IsNullOrEmpty(entry))
+                        prop.SetValue(config, entry);
+
+                    continue;
+                }
+
+                // We need to address collections a bit differently
+                // They can come in the form of    "root:section:name" with a string representation OR
+                // "root:section:name:0"  <--- this is not detectable when checking the above path
+                if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
+                {
+                    if (string.IsNullOrEmpty(section.GetValue(prop.Name)))
+                        value = section.Config
+                            .GetSection(section.GetPath(prop.Name)).Get(prop.PropertyType);
+                    else
+                        value = Newtonsoft.Json.JsonConvert.DeserializeObject(entry, prop.PropertyType);
+
+                    if (value == null)
                         continue;
 
-                    string entry = section.GetValue(path);
-
-                    try
-                    {
-                        object? value = null;
-
-                        // Primitive types are simple to convert
-                        if (prop.PropertyType.IsPrimitive)
-                            value = Convert.ChangeType(entry, prop.PropertyType);
-                        else if (prop.PropertyType == typeof(string))
-                            value = entry;
-                        else
-                        {
-                            // The following types require a different approach
-                            if (prop.PropertyType.IsEnum)
-                                value = Enum.Parse(prop.PropertyType, entry);
-                            else if (typeof(TimeSpan) == prop.PropertyType)
-                                value = TimeSpan.Parse(entry);
-                            else if (typeof(DateTime) == prop.PropertyType)
-                                value = DateTime.Parse(entry);
-                            else if (typeof(DateTimeOffset) == prop.PropertyType)
-                                value = DateTimeOffset.Parse(entry);
-                        }
-
-                        // Update value within our config instance
-                        prop.SetValue(config, value);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.Error.WriteLine($"Unable to convert value of '{entry}' to type '{prop.PropertyType.Name}' for prop '{prop.Name}' in config '{config.GetType().Name}'\n\t\t{ex.Message}");
-                    }
+                    prop.SetValue(config, value);
                 }
+
+                // From this point onward we require the 'entry' value to have something useful
+                if (string.IsNullOrEmpty(entry))
+                    continue;
+
+                try
+                {
+                    // Primitive types are simple to convert
+                    if (prop.PropertyType.IsPrimitive)
+                        value = Convert.ChangeType(entry, prop.PropertyType);
+                    else
+                    {
+                        // The following types require a different approach
+                        if (prop.PropertyType.IsEnum)
+                            value = Enum.Parse(prop.PropertyType, entry);
+                        else if (typeof(TimeSpan) == prop.PropertyType)
+                            value = TimeSpan.Parse(entry);
+                        else if (typeof(DateTime) == prop.PropertyType)
+                            value = DateTime.Parse(entry);
+                        else if (typeof(DateTimeOffset) == prop.PropertyType)
+                            value = DateTimeOffset.Parse(entry);
+                    }
+
+                    // Update value within our config instance
+                    prop.SetValue(config, value);
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine(
+                        $"Unable to convert value of '{entry}' to type '{prop.PropertyType.Name}' for prop '{prop.Name}' in config '{config.GetType().Name}'\n\t\t{ex.Message}");
+                }
+            }
         }
 
         /// <summary>
@@ -154,6 +184,87 @@ namespace DisCatSharp.Configuration
             HydrateInstance(ref configInstance, new ConfigSection(ref config, sectionName, rootSectionName));
 
             return (TConfig) configInstance;
+        }
+
+        /// <summary>
+        /// Determines if <paramref name="config"/> contains a particular section/object (not value)
+        /// </summary>
+        /// <remarks>
+        /// <code>
+        /// {
+        ///    "Discord": {  // this is a section/object
+        ///
+        ///    },
+        ///    "Value": "something" // this is not a section/object
+        /// }
+        /// </code>
+        /// </remarks>
+        /// <param name="config"></param>
+        /// <param name="values"></param>
+        /// <returns>True if section exists, otherwise false</returns>
+        public static bool HasSection(this IConfiguration config, params string[] values)
+        {
+            if (!values.Any())
+                return false;
+
+            if (values.Length == 1)
+                return config.GetChildren().Any(x => x.Key == values[0]);
+
+            if (config.GetChildren().All(x => x.Key != values[0]))
+                return false;
+
+            IConfigurationSection current = config.GetSection(values[0]);
+
+            for (int i = 1; i < values.Length - 1; i++)
+            {
+                if (current.GetChildren().All(x => x.Key != values[i]))
+                    return false;
+
+                current = current.GetSection(values[i]);
+            }
+
+            return current.GetChildren().Any(x=>x.Key == values[^1]);
+        }
+
+        /// <summary>
+        /// Instantiates an instance of <see cref="DiscordClient"/>, then consumes any custom
+        /// configuration from user/developer from <paramref name="config"/>. <br/>
+        /// View remarks for more info
+        /// </summary>
+        /// <remarks>
+        /// This is an example of how your JSON structure should look if you wish
+        /// to override one or more of the default values from <see cref="DiscordConfiguration"/>
+        /// <code>
+        /// {
+        ///   "DisCatSharp": {
+        ///      "Discord": { }
+        ///   }
+        /// }
+        /// </code>
+        /// <br/>
+        /// Alternatively, you can use the type name itself
+        /// <code>
+        /// {
+        ///   "DisCatSharp": {
+        ///      "DiscordConfiguration": { }
+        ///   }
+        /// }
+        /// </code>
+        /// </remarks>
+        /// <param name="config"></param>
+        /// <returns>Instance of <see cref="DiscordClient"/></returns>
+        public static DiscordClient BuildClient(this IConfiguration config)
+        {
+            var section = config.HasSection(DefaultRootLib, "Discord")
+                ? "Discord"
+                : config.HasSection(DefaultRootLib, $"Discord{ConfigSuffix}")
+                    ? $"Discord:{ConfigSuffix}"
+                    : null;
+
+            if (string.IsNullOrEmpty(section))
+                return new DiscordClient(new());
+
+            return new DiscordClient(config.ExtractConfig<DiscordConfiguration>(section));
         }
     }
 }
