@@ -3286,6 +3286,11 @@ namespace DisCatSharp.Entities
         public bool CanSetAnimatedBanner { get; }
 
         /// <summary>
+        /// Guild has member profiles.
+        /// </summary>
+        public bool HasMemberProfiles { get; }
+
+        /// <summary>
         /// String of guild features.
         /// </summary>
         public string FeatureString { get; }
@@ -3330,6 +3335,7 @@ namespace DisCatSharp.Entities
             this.TextInVoiceEnabled = guild.RawFeatures.Contains("TEXT_IN_VOICE_ENABLED");
             this.HasDirectoryEntry = guild.RawFeatures.Contains("HAS_DIRECTORY_ENTRY");
             this.IsLinkedToHub = guild.RawFeatures.Contains("LINKED_TO_HUB");
+            this.HasMemberProfiles = guild.RawFeatures.Contains("MEMBER_PROFILES");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach (var feature in guild.RawFeatures)
