@@ -300,3 +300,4 @@ ffmpeg.exe
 *.pcm
 appveyor-test.ps1
 *.diff
+CodeMap1.dgml

@@ -58,11 +58,10 @@ namespace DisCatSharp.Configuration.Models
         /// Checks if key exists in <see cref="Config"/>
         /// </summary>
         /// <param name="name">Property / Key to search for in section</param>
-        /// <param name="path">Config path to key</param>
         /// <returns>True if key exists, otherwise false. Outputs path to config regardless</returns>
-        public bool ContainsKey(string name, out string path)
+        public bool ContainsKey(string name)
         {
-            path = string.IsNullOrEmpty(this.Root)
+            string path = string.IsNullOrEmpty(this.Root)
                 ? this.Config.ConfigPath(this.SectionName, name)
                 : this.Config.ConfigPath(this.Root, this.SectionName, name);
 
@@ -72,10 +71,17 @@ namespace DisCatSharp.Configuration.Models
         /// <summary>
         /// Attempts to get value associated to the config path. <br/> Should be used in unison with <see cref="ContainsKey"/>
         /// </summary>
-        /// <param name="path">Config path to value</param>
-        /// <returns>Value found at <paramref name="path"/></returns>
-        public string GetValue(string path)
-            => this.Config[path];
+        /// <param name="propName">Config path to value</param>
+        /// <returns>Value found at <paramref name="propName"/></returns>
+        public string GetValue(string propName)
+            => this.Config[this.GetPath(propName)];
 
+        public string GetPath(string value)
+        {
+            if (string.IsNullOrEmpty(this.Root))
+                return this.Config.ConfigPath(this.SectionName, value);
+
+            return this.Config.ConfigPath(this.Root, this.SectionName, value);
+        }
     }
 }

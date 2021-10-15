@@ -32,28 +32,13 @@ namespace DisCatSharp.Hosting
 {
     internal struct ExtensionConfigResult
     {
-        public ConfigSection Section { get; set; }
+        public ConfigSection? Section { get; set; }
         public Type ConfigType { get; set; }
         public Type ImplementationType { get; set; }
     }
 
     internal static class ConfigurationExtensions
     {
-        public static bool HasSection(this IConfiguration config, params string[] values)
-        {
-            // We require something to be passed in
-            if (!values.Any())
-                return false;
-
-            Queue<string> queue = new(values);
-            IConfigurationSection section = config.GetSection(queue.Dequeue());
-
-            while (section != null && queue.Any())
-                config.GetSection(queue.Dequeue());
-
-            return section != null;
-        }
-
         /// <summary>
         /// Find assemblies that match the names provided via <paramref name="names"/>.
         /// </summary>
@@ -153,7 +138,8 @@ namespace DisCatSharp.Hosting
                     Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(
                         configuration[configuration.ConfigPath(rootName, "Using")]);
 
-            foreach (var assembly in FindAssemblies(assemblyNames))
+            #pragma warning disable 8604
+            foreach (var assembly in FindAssemblies(assemblyNames.Select(x=> x.StartsWith(Constants.LibName) ? x : $"{Constants.LibName}.{x}").ToArray()))
             {
                 ExtensionConfigResult result = new();
 
@@ -166,16 +152,14 @@ namespace DisCatSharp.Hosting
                     result.ConfigType = type;
 
                     // Does a section exist with the classname? (DiscordConfiguration - for instance)
-                    if(configuration.HasSection(rootName, sectionName))
+                    if(configuration.HasSection( rootName, sectionName))
                         result.Section = new ConfigSection(ref configuration, type.Name, rootName);
 
                     // Does a section exist with the classname minus Configuration? (Discord - for Instance)
                     else if (configuration.HasSection(rootName, prefix))
                         result.Section = new ConfigSection(ref configuration, prefix, rootName);
 
-                    // We require the implemented type to exist so we'll continue onward
-                    else
-                        continue;
+                    // IF THE SECTION IS NOT PROVIDED --> WE WILL USE DEFAULT CONFIG IMPLEMENTATION
 
                     /*
                         Now we need to find the type which should consume our config
@@ -198,8 +182,10 @@ namespace DisCatSharp.Hosting
                     }
                 }
             }
+            #pragma warning restore 8604
 
             return results;
         }
+
     }
 }

@@ -37,7 +37,7 @@ namespace DisCatSharp.Hosting
     /// <summary>
     /// Simple implementation for <see cref="DiscordClient"/> to work as a <see cref="BackgroundService"/>
     /// </summary>
-    public class DiscordHostedService : BackgroundService, IDiscordHostedService
+    public abstract class DiscordHostedService : BackgroundService, IDiscordHostedService
     {
         /// <inheritdoc/>
         public DiscordClient Client { get; private set; }
@@ -45,11 +45,12 @@ namespace DisCatSharp.Hosting
         private readonly ILogger<DiscordHostedService> _logger;
 
         #pragma warning disable 8618
-        public DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider)
+        protected DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider)
         {
             this._logger = logger;
             this.Initialize(config, provider);
         }
+
         #pragma warning restore 8618
 
         /// <summary>
@@ -63,24 +64,21 @@ namespace DisCatSharp.Hosting
 
             this._logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
 
-            var section = config.HasSection(Constants.LibName, "Discord")
-                ? "Discord"
-                : config.HasSection(config.ConfigPath(Constants.LibName, $"Discord{Constants.ConfigSuffix}"))
-                    ? $"Discord{Constants.ConfigSuffix}"
-                    : null;
-
-            // If not section was provided we'll still just use the default config
-            if (string.IsNullOrEmpty(section))
-                this.Client = new DiscordClient(new());
-            else
-                this.Client = new DiscordClient(config.ExtractConfig<DiscordConfiguration>(section));
+            this.Client = config.BuildClient();
 
             foreach (var typePair in typeMap)
                 try
                 {
-                    // First retrieve our configuration!
-                    object configInstance = typePair.Value.Section.ExtractConfig(() =>
-                        ActivatorUtilities.CreateInstance(provider, typePair.Value.ConfigType));
+                    /*
+                        If section is null --> utilize the default constructor
+                        This means the extension was explicitly added in the 'Using' array,
+                        but user did not wish to override any value(s) in the extension's config
+                     */
+
+                    object configInstance = typePair.Value.Section.HasValue
+                        ? typePair.Value.Section.Value.ExtractConfig(() =>
+                            ActivatorUtilities.CreateInstance(provider, typePair.Value.ConfigType))
+                        : ActivatorUtilities.CreateInstance(provider, typePair.Value.ConfigType);
 
                     /*
                         Explanation for bindings

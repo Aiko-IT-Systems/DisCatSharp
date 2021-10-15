@@ -89,6 +89,11 @@ namespace DisCatSharp
         GuildDirectory = 14,
 
         /// <summary>
+        /// Indicates that this is a guild forum channel (Threads only channel).
+        /// </summary>
+        GuildForum = 15,
+
+        /// <summary>
         /// Indicates unknown channel type.
         /// </summary>
         Unknown = int.MaxValue

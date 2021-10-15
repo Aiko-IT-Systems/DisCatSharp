@@ -20,16 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using DisCatSharp.Interactivity;
 using DisCatSharp.Lavalink;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace DisCatSharp.Hosting.Tests
 {
+    public class Bot : DiscordHostedService
+    {
+        public Bot(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider) : base(config, logger, provider)
+        {
+        }
+    }
+
     public class HostTests
     {
         private Dictionary<string, string> DefaultDiscord() =>
@@ -69,7 +78,7 @@ namespace DisCatSharp.Hosting.Tests
             Host.CreateDefaultBuilder()
                 .ConfigureServices(services =>
                 {
-                    services.AddSingleton<IDiscordHostedService, DiscordHostedService>();
+                    services.AddSingleton<IDiscordHostedService, Bot>();
                 })
                 .ConfigureHostConfiguration(builder =>
                 {
