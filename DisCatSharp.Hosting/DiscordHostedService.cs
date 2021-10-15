@@ -37,7 +37,7 @@ namespace DisCatSharp.Hosting
     /// <summary>
     /// Simple implementation for <see cref="DiscordClient"/> to work as a <see cref="BackgroundService"/>
     /// </summary>
-    public class DiscordHostedService : BackgroundService, IDiscordHostedService
+    public abstract class DiscordHostedService : BackgroundService, IDiscordHostedService
     {
         /// <inheritdoc/>
         public DiscordClient Client { get; private set; }
@@ -45,11 +45,12 @@ namespace DisCatSharp.Hosting
         private readonly ILogger<DiscordHostedService> _logger;
 
         #pragma warning disable 8618
-        public DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider)
+        protected DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider)
         {
             this._logger = logger;
             this.Initialize(config, provider);
         }
+
         #pragma warning restore 8618
 
         /// <summary>

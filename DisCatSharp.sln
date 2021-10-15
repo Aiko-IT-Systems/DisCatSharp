@@ -70,6 +70,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Hosting.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Hosting.DependencyInjection", "DisCatSharp.Hosting.DependencyInjection\DisCatSharp.Hosting.DependencyInjection.csproj", "{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B15E40E0-03FD-4852-B19B-2C50BCC67704}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -134,6 +136,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{430C28D8-5F85-4D6E-AA68-211549435245} = {4255B64D-92EC-46B3-BC3B-ED2C3A8073EE}
+		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94} = {B15E40E0-03FD-4852-B19B-2C50BCC67704}
+		{E15E88B4-63AD-42DE-B685-D31697C62194} = {B15E40E0-03FD-4852-B19B-2C50BCC67704}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23F3A981-51B8-4285-A38C-3267F1D25FE7}
