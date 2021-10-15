@@ -61,6 +61,26 @@ namespace DisCatSharp.Entities
         internal int Style { get; } = 5; // Link = 5; Discord throws 400 otherwise //
 
         /// <summary>
+        /// Enables this component if it was disabled before.
+        /// </summary>
+        /// <returns>The current component.</returns>
+        public DiscordLinkButtonComponent Enable()
+        {
+            this.Disabled = false;
+            return this;
+        }
+
+        /// <summary>
+        /// Disables this component.
+        /// </summary>
+        /// <returns>The current component.</returns>
+        public DiscordLinkButtonComponent Disable()
+        {
+            this.Disabled = true;
+            return this;
+        }
+
+        /// <summary>
         /// Constructs a new <see cref="DiscordLinkButtonComponent"/>. This type of button does not send back and interaction when pressed.
         /// </summary>
         /// <param name="url">The url to set the button to.</param>

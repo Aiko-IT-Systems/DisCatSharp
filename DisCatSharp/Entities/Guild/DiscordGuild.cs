@@ -3227,9 +3227,15 @@ namespace DisCatSharp.Entities
         public bool IsHub { get; }
 
         /// <summary>
-        /// Guild has directory channels.
+        /// Guild is in a hub.
+        /// https://github.com/discord/discord-api-docs/pull/3757/commits/4932d92c9d0c783861bc715bf7ebbabb15114e34
         /// </summary>
-        public bool HasDirectoryEntry { get;  }
+        public bool HasDirectoryEntry { get; }
+
+        /// <summary>
+        /// Guild is linked to a hub.
+        /// </summary>
+        public bool IsLinkedToHub { get; }
 
         /// <summary>
         /// Guild has full access to threads.
@@ -3280,6 +3286,11 @@ namespace DisCatSharp.Entities
         public bool CanSetAnimatedBanner { get; }
 
         /// <summary>
+        /// Guild has member profiles.
+        /// </summary>
+        public bool HasMemberProfiles { get; }
+
+        /// <summary>
         /// String of guild features.
         /// </summary>
         public string FeatureString { get; }
@@ -3323,6 +3334,8 @@ namespace DisCatSharp.Entities
             this.CanSetThreadDefaultAutoArchiveDuration = guild.RawFeatures.Contains("THREAD_DEFAULT_AUTO_ARCHIVE_DURATION");
             this.TextInVoiceEnabled = guild.RawFeatures.Contains("TEXT_IN_VOICE_ENABLED");
             this.HasDirectoryEntry = guild.RawFeatures.Contains("HAS_DIRECTORY_ENTRY");
+            this.IsLinkedToHub = guild.RawFeatures.Contains("LINKED_TO_HUB");
+            this.HasMemberProfiles = guild.RawFeatures.Contains("MEMBER_PROFILES");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach (var feature in guild.RawFeatures)
