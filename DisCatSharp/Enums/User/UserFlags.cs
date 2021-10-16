@@ -91,7 +91,7 @@ namespace DisCatSharp
         TeamUser = 1 << 10,
 
         /// <summary>
-        /// Relates to partner/verification applications..
+        /// Relates to partner/verification applications.
         /// </summary>
         PartnerOrVerificationApplication = 1 << 11,
 
