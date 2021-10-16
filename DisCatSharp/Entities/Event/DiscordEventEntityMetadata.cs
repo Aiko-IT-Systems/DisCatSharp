@@ -26,7 +26,7 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities
 {
     /// <summary>
-    /// Represents an sheduled event.
+    /// Represents an scheduled event.
     /// </summary>
     public class DiscordEventEntityMetadata
     {

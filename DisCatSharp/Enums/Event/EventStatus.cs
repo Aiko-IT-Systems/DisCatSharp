@@ -23,14 +23,14 @@
 namespace DisCatSharp
 {
     /// <summary>
-    /// Represents the status for a sheduled event.
+    /// Represents the status for a scheduled event.
     /// </summary>
     public enum EventStatus : int
     {
         /// <summary>
-        /// Indicates that the event is sheduled.
+        /// Indicates that the event is scheduled.
         /// </summary>
-        SHEDULED = 1,
+        SCHEDULED = 1,
 
         /// <summary>
         /// Indicates that the event is active.

@@ -2719,7 +2719,7 @@ namespace DisCatSharp.Net
         /// <param name="invite_code">The invite_code.</param>
         /// <param name="with_counts">If true, with_counts.</param>
         /// <param name="with_expiration">If true, with_expiration.</param>
-        /// <param name="guild_scheduled_event_id">The sheduled event id to get.</param>
+        /// <param name="guild_scheduled_event_id">The scheduled event id to get.</param>
         /// <returns>A Task.</returns>
         internal async Task<DiscordInvite> GetInviteAsync(string invite_code, bool? with_counts, bool? with_expiration, ulong? guild_scheduled_event_id)
         {
