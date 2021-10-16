@@ -25,14 +25,14 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.EventArgs
 {
     /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.GuildSheduledEventDeleted"/> event.
+    /// Represents arguments for <see cref="DiscordClient.GuildScheduledEventUpdated"/> event.
     /// </summary>
-    public class GuildSheduledEventDeleteEventArgs : DiscordEventArgs
+    public class GuildScheduledEventUpdateEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// Gets the stage instance that was created.
         /// </summary>
-        public DiscordEvent SheduledEvent { get; internal set; }
+        public DiscordEvent ScheduledEvent { get; internal set; }
 
         /// <summary>
         /// Gets the guild in which the stage instance was created.
@@ -40,8 +40,8 @@ namespace DisCatSharp.EventArgs
         public DiscordGuild Guild { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GuildSheduledEventDeleteEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="GuildScheduledEventUpdateEventArgs"/> class.
         /// </summary>
-        internal GuildSheduledEventDeleteEventArgs() : base() { }
+        internal GuildScheduledEventUpdateEventArgs() : base() { }
     }
 }

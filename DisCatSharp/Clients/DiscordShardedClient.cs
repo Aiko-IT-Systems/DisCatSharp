@@ -535,9 +535,9 @@ namespace DisCatSharp
             this._threadMembersUpdated = new AsyncEvent<DiscordClient, ThreadMembersUpdateEventArgs>("THREAD_MEMBERS_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._zombied = new AsyncEvent<DiscordClient, ZombiedEventArgs>("ZOMBIED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._payloadReceived = new AsyncEvent<DiscordClient, PayloadReceivedEventArgs>("PAYLOAD_RECEIVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
-            this._guildSheduledEventCreated = new AsyncEvent<DiscordClient, GuildSheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
-            this._guildSheduledEventUpdated = new AsyncEvent<DiscordClient, GuildSheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
-            this._guildSheduledEventDeleted = new AsyncEvent<DiscordClient, GuildSheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventCreated = new AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventUpdated = new AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventDeleted = new AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
         }
 
         /// <summary>
@@ -616,9 +616,9 @@ namespace DisCatSharp
             client.ThreadMembersUpdated += this.Client_ThreadMembersUpdated;
             client.Zombied += this.Client_Zombied;
             client.PayloadReceived += this.Client_PayloadReceived;
-            client.GuildSheduledEventCreated += this.Client_GuildSheduledEventCreated;
-            client.GuildSheduledEventUpdated += this.Client_GuildSheduledEventUpdated;
-            client.GuildSheduledEventDeleted += this.Client_GuildSheduledEventDeleted;
+            client.GuildScheduledEventCreated += this.Client_GuildScheduledEventCreated;
+            client.GuildScheduledEventUpdated += this.Client_GuildScheduledEventUpdated;
+            client.GuildScheduledEventDeleted += this.Client_GuildScheduledEventDeleted;
         }
 
         /// <summary>
@@ -697,9 +697,9 @@ namespace DisCatSharp
             client.ThreadMembersUpdated -= this.Client_ThreadMembersUpdated;
             client.Zombied -= this.Client_Zombied;
             client.PayloadReceived -= this.Client_PayloadReceived;
-            client.GuildSheduledEventCreated -= this.Client_GuildSheduledEventCreated;
-            client.GuildSheduledEventUpdated -= this.Client_GuildSheduledEventUpdated;
-            client.GuildSheduledEventDeleted -= this.Client_GuildSheduledEventDeleted;
+            client.GuildScheduledEventCreated -= this.Client_GuildScheduledEventCreated;
+            client.GuildScheduledEventUpdated -= this.Client_GuildScheduledEventUpdated;
+            client.GuildScheduledEventDeleted -= this.Client_GuildScheduledEventDeleted;
         }
 
         /// <summary>
