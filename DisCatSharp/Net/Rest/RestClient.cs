@@ -134,7 +134,7 @@ namespace DisCatSharp.Net
 
             this.HttpClient = new HttpClient(httphandler)
             {
-                BaseAddress = new Uri(Utilities.GetApiBaseUri()),
+                BaseAddress = new Uri(Utilities.GetApiBaseUri(this.Discord.Configuration)),
                 Timeout = timeout
             };
 

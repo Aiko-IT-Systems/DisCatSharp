@@ -282,7 +282,7 @@ namespace DisCatSharp
         /// <returns>A Task.</returns>
         private async Task<GatewayInfo> GetGatewayInfoAsync()
         {
-            var url = $"{Utilities.GetApiBaseUri()}{Endpoints.GATEWAY}{Endpoints.BOT}";
+            var url = $"{Utilities.GetApiBaseUri(this.Configuration)}{Endpoints.GATEWAY}{Endpoints.BOT}";
             var http = new HttpClient();
 
             http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
