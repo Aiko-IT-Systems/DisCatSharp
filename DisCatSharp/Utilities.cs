@@ -32,7 +32,6 @@ using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Net;
 using Microsoft.Extensions.Logging;
-using static System.Net.WebRequestMethods;
 
 namespace DisCatSharp
 {
@@ -93,37 +92,38 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the api base uri.
         /// </summary>
+        /// <param name="config">The config</param>
         /// <returns>A string.</returns>
-        internal static string GetApiBaseUri(bool canary = false)
-            => canary ? "https://canary.discord.com/api/v9" : Endpoints.BASE_URI;
+        internal static string GetApiBaseUri(DiscordConfiguration config = null)
+            => config == null ? Endpoints.BASE_URI + "9" : config.UseCanary ? Endpoints.CANARY_URI + config.ApiVersion : Endpoints.BASE_URI + config.ApiVersion;
 
         /// <summary>
         /// Gets the api uri for.
         /// </summary>
         /// <param name="path">The path.</param>
-        /// <param name="canary">Use canary</param>
+        /// <param name="config">The config</param>
         /// <returns>An Uri.</returns>
-        internal static Uri GetApiUriFor(string path, bool canary = false)
-            => new($"{GetApiBaseUri(canary)}{path}");
+        internal static Uri GetApiUriFor(string path, DiscordConfiguration config)
+            => new($"{GetApiBaseUri(config)}{path}");
 
         /// <summary>
         /// Gets the api uri for.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="queryString">The query string.</param>
-        /// <param name="canary">Use canary</param>
+        /// <param name="config">The config</param>
         /// <returns>An Uri.</returns>
-        internal static Uri GetApiUriFor(string path, string queryString, bool canary = false)
-            => new($"{GetApiBaseUri(canary)}{path}{queryString}");
+        internal static Uri GetApiUriFor(string path, string queryString, DiscordConfiguration config)
+            => new($"{GetApiBaseUri(config)}{path}{queryString}");
 
         /// <summary>
         /// Gets the api uri builder for.
         /// </summary>
         /// <param name="path">The path.</param>
-        /// <param name="canary">Use canary</param>
+        /// <param name="config">The config</param>
         /// <returns>A QueryUriBuilder.</returns>
-        internal static QueryUriBuilder GetApiUriBuilderFor(string path, bool canary = false)
-            => new($"{GetApiBaseUri(canary)}{path}");
+        internal static QueryUriBuilder GetApiUriBuilderFor(string path, DiscordConfiguration config)
+            => new($"{GetApiBaseUri(config)}{path}");
 
         /// <summary>
         /// Gets the formatted token.
