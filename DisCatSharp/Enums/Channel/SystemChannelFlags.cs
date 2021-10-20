@@ -57,6 +57,11 @@ namespace DisCatSharp
         /// <summary>
         /// Server setup tips are disabled.
         /// </summary>
-        SuppressGuildReminderNotifications = 1 << 2
+        SuppressGuildReminderNotifications = 1 << 2,
+
+        /// <summary>
+        /// Suppress member join sticker replies.
+        /// </summary>
+        SuppressJoinNotificationReplies = 1 << 3
     }
 }
