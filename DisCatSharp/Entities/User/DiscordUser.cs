@@ -344,6 +344,12 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
+        /// Returns a string representing the direct URL to this users profile. 
+        /// </summary>
+        /// <returns>The URL of this users profile.</returns>
+        public string GetProfileUrl() => $"https://discord.com/users/{this.Id}";
+
+        /// <summary>
         /// Returns a string representation of this user.
         /// </summary>
         /// <returns>String representation of this user.</returns>
