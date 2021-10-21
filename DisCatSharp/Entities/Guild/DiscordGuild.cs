@@ -29,7 +29,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
@@ -410,14 +410,14 @@ namespace DisCatSharp.Entities
         internal ConcurrentDictionary<ulong, DiscordStageInstance> _stageInstances = new();
 
         /// <summary>
-        /// Gets a dictionary of all sheduled events.
+        /// Gets a dictionary of all scheduled events.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordEvent> SheduledEvents { get; internal set; }
+        public IReadOnlyDictionary<ulong, DiscordEvent> ScheduledEvents { get; internal set; }
 
         [JsonProperty("events", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordEvent> _sheduledEvents = new();
+        internal ConcurrentDictionary<ulong, DiscordEvent> _scheduledEvents = new();
 
         /// <summary>
         /// Gets the guild member for current user.
@@ -2429,15 +2429,15 @@ namespace DisCatSharp.Entities
                         break;
 
 
-                    case AuditLogActionType.SheduledEventCreate:
-                    case AuditLogActionType.SheduledEventDelete:
-                    case AuditLogActionType.SheduledEventUpdate:
-                        entry = new DiscordAuditLogSheduledEventEntry
+                    case AuditLogActionType.ScheduledEventCreate:
+                    case AuditLogActionType.ScheduledEventDelete:
+                    case AuditLogActionType.ScheduledEventUpdate:
+                        entry = new DiscordAuditLogScheduledEventEntry
                         {
-                            //Target = this._events.TryGetValue(xac.TargetId.Value, out var sheduled_event) ? sheduled_event : new DiscordEvent { Id = xac.TargetId.Value, Discord = this.Discord }
+                            //Target = this._events.TryGetValue(xac.TargetId.Value, out var scheduled_event) ? scheduled_event : new DiscordEvent { Id = xac.TargetId.Value, Discord = this.Discord }
                         };
 
-                        var entryse = entry as DiscordAuditLogSheduledEventEntry;
+                        var entryse = entry as DiscordAuditLogScheduledEventEntry;
                         foreach (var xc in xac.Changes)
                         {
                             switch (xc.Key.ToLowerInvariant())
@@ -2481,7 +2481,7 @@ namespace DisCatSharp.Entities
                                     break;
 
                                 default:
-                                    this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in sheduled event update: {0} - this should be reported to library developers", xc.Key);
+                                    this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in scheduled event update: {0} - this should be reported to library developers", xc.Key);
                                     break;
                             }
                         }
@@ -2497,9 +2497,9 @@ namespace DisCatSharp.Entities
 
                 entry.ActionCategory = xac.ActionType switch
                 {
-                    AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate or AuditLogActionType.SheduledEventCreate => AuditLogActionCategory.Create,
-                    AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete or AuditLogActionType.ThreadDelete or AuditLogActionType.SheduledEventDelete => AuditLogActionCategory.Delete,
-                    AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate or AuditLogActionType.SheduledEventUpdate => AuditLogActionCategory.Update,
+                    AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate or AuditLogActionType.ScheduledEventCreate => AuditLogActionCategory.Create,
+                    AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete or AuditLogActionType.ThreadDelete or AuditLogActionType.ScheduledEventDelete => AuditLogActionCategory.Delete,
+                    AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate or AuditLogActionType.ScheduledEventUpdate => AuditLogActionCategory.Update,
                     _ => AuditLogActionCategory.Other,
                 };
                 entry.Discord = this.Discord;

@@ -204,19 +204,19 @@ namespace DisCatSharp
 
                 #region Guild Event
 
-                case "guild_sheduled_event_create":
+                case "guild_scheduled_event_create":
                     gse = dat.ToObject<DiscordEvent>();
-                    await this.OnGuildSheduledEventCreateEventAsync(gse).ConfigureAwait(false);
+                    await this.OnGuildScheduledEventCreateEventAsync(gse).ConfigureAwait(false);
                     break;
 
-                case "guild_sheduled_event_update":
+                case "guild_scheduled_event_update":
                     gse = dat.ToObject<DiscordEvent>();
-                    await this.OnGuildSheduledEventUpdateEventAsync(gse).ConfigureAwait(false);
+                    await this.OnGuildScheduledEventUpdateEventAsync(gse).ConfigureAwait(false);
                     break;
 
-                case "guild_sheduled_event_delete":
+                case "guild_scheduled_event_delete":
                     gse = dat.ToObject<DiscordEvent>();
-                    await this.OnGuildSheduledEventDeleteEventAsync(gse).ConfigureAwait(false);
+                    await this.OnGuildScheduledEventDeleteEventAsync(gse).ConfigureAwait(false);
                     break;
                 #endregion
 
@@ -1309,43 +1309,43 @@ namespace DisCatSharp
         #region Guild Event
 
         /// <summary>
-        /// Dispatches the <see cref="GuildSheduledEventCreated"/> event.
+        /// Dispatches the <see cref="GuildScheduledEventCreated"/> event.
         /// </summary>
-        /// <param name="sheduled_event">The created event.</param>
-        internal async Task OnGuildSheduledEventCreateEventAsync(DiscordEvent sheduled_event)
+        /// <param name="scheduled_event">The created event.</param>
+        internal async Task OnGuildScheduledEventCreateEventAsync(DiscordEvent scheduled_event)
         {
-            sheduled_event.Discord = this;
+            scheduled_event.Discord = this;
 
-            var guild = this.InternalGetCachedGuild(sheduled_event.GuildId);
-            guild._sheduledEvents[sheduled_event.Id] = sheduled_event;
+            var guild = this.InternalGetCachedGuild(scheduled_event.GuildId);
+            guild._scheduledEvents[scheduled_event.Id] = scheduled_event;
 
-            await this._guildSheduledEventCreated.InvokeAsync(this, new GuildSheduledEventCreateEventArgs { SheduledEvent = sheduled_event, Guild = sheduled_event.Guild }).ConfigureAwait(false);
+            await this._guildScheduledEventCreated.InvokeAsync(this, new GuildScheduledEventCreateEventArgs { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Dispatches the <see cref="GuildSheduledEventUpdated"/> event.
+        /// Dispatches the <see cref="GuildScheduledEventUpdated"/> event.
         /// </summary>
-        /// <param name="sheduled_event">The updated event.</param>
-        internal async Task OnGuildSheduledEventUpdateEventAsync(DiscordEvent sheduled_event)
+        /// <param name="scheduled_event">The updated event.</param>
+        internal async Task OnGuildScheduledEventUpdateEventAsync(DiscordEvent scheduled_event)
         {
-            sheduled_event.Discord = this;
-            var guild = this.InternalGetCachedGuild(sheduled_event.GuildId);
-            guild._sheduledEvents[sheduled_event.Id] = sheduled_event;
+            scheduled_event.Discord = this;
+            var guild = this.InternalGetCachedGuild(scheduled_event.GuildId);
+            guild._scheduledEvents[scheduled_event.Id] = scheduled_event;
 
-            await this._guildSheduledEventUpdated.InvokeAsync(this, new GuildSheduledEventUpdateEventArgs { SheduledEvent = sheduled_event, Guild = sheduled_event.Guild }).ConfigureAwait(false);
+            await this._guildScheduledEventUpdated.InvokeAsync(this, new GuildScheduledEventUpdateEventArgs { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Dispatches the <see cref="GuildSheduledEventDeleted"/> event.
+        /// Dispatches the <see cref="GuildScheduledEventDeleted"/> event.
         /// </summary>
-        /// <param name="sheduled_event">The deleted event.</param>
-        internal async Task OnGuildSheduledEventDeleteEventAsync(DiscordEvent sheduled_event)
+        /// <param name="scheduled_event">The deleted event.</param>
+        internal async Task OnGuildScheduledEventDeleteEventAsync(DiscordEvent scheduled_event)
         {
-            sheduled_event.Discord = this;
-            var guild = this.InternalGetCachedGuild(sheduled_event.GuildId);
-            guild._sheduledEvents[sheduled_event.Id] = sheduled_event;
+            scheduled_event.Discord = this;
+            var guild = this.InternalGetCachedGuild(scheduled_event.GuildId);
+            guild._scheduledEvents[scheduled_event.Id] = scheduled_event;
 
-            await this._guildSheduledEventDeleted.InvokeAsync(this, new GuildSheduledEventDeleteEventArgs { SheduledEvent = sheduled_event, Guild = sheduled_event.Guild }).ConfigureAwait(false);
+            await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
         }
 
         #endregion

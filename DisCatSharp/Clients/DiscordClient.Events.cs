@@ -290,37 +290,37 @@ namespace DisCatSharp
         #region Guild Event
 
         /// <summary>
-        /// Fired when a Sheduled Event is created.
+        /// Fired when a scheduled Event is created.
         /// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
         /// </summary>
-        public event AsyncEventHandler<DiscordClient, GuildSheduledEventCreateEventArgs> GuildSheduledEventCreated
+        public event AsyncEventHandler<DiscordClient, GuildScheduledEventCreateEventArgs> GuildScheduledEventCreated
         {
-            add => this._guildSheduledEventCreated.Register(value);
-            remove => this._guildSheduledEventCreated.Unregister(value);
+            add => this._guildScheduledEventCreated.Register(value);
+            remove => this._guildScheduledEventCreated.Unregister(value);
         }
-        private AsyncEvent<DiscordClient, GuildSheduledEventCreateEventArgs> _guildSheduledEventCreated;
+        private AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs> _guildScheduledEventCreated;
 
         /// <summary>
-        /// Fired when a Sheduled Event is updated.
+        /// Fired when a scheduled Event is updated.
         /// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
         /// </summary>
-        public event AsyncEventHandler<DiscordClient, GuildSheduledEventUpdateEventArgs> GuildSheduledEventUpdated
+        public event AsyncEventHandler<DiscordClient, GuildScheduledEventUpdateEventArgs> GuildScheduledEventUpdated
         {
-            add => this._guildSheduledEventUpdated.Register(value);
-            remove => this._guildSheduledEventUpdated.Unregister(value);
+            add => this._guildScheduledEventUpdated.Register(value);
+            remove => this._guildScheduledEventUpdated.Unregister(value);
         }
-        private AsyncEvent<DiscordClient, GuildSheduledEventUpdateEventArgs> _guildSheduledEventUpdated;
+        private AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs> _guildScheduledEventUpdated;
 
         /// <summary>
-        /// Fired when a Sheduled Event is deleted.
+        /// Fired when a scheduled Event is deleted.
         /// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
         /// </summary>
-        public event AsyncEventHandler<DiscordClient, GuildSheduledEventDeleteEventArgs> GuildSheduledEventDeleted
+        public event AsyncEventHandler<DiscordClient, GuildScheduledEventDeleteEventArgs> GuildScheduledEventDeleted
         {
-            add => this._guildSheduledEventDeleted.Register(value);
-            remove => this._guildSheduledEventDeleted.Unregister(value);
+            add => this._guildScheduledEventDeleted.Register(value);
+            remove => this._guildScheduledEventDeleted.Unregister(value);
         }
-        private AsyncEvent<DiscordClient, GuildSheduledEventDeleteEventArgs> _guildSheduledEventDeleted;
+        private AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs> _guildScheduledEventDeleted;
 
         #endregion
 

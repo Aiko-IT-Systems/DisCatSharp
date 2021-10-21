@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 using System.Globalization;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 using DisCatSharp.Net;
 using Newtonsoft.Json;
 

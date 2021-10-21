@@ -23,7 +23,7 @@
 using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 
 namespace DisCatSharp.Entities
 {
@@ -158,10 +158,10 @@ namespace DisCatSharp.Entities
         public DiscordInviteStage Stage { get; internal set; }
 
         /// <summary>
-        /// Gets the | guild scheduled event data for the invite.
+        /// Gets the guild scheduled event data for the invite.
         /// </summary>
         [JsonProperty("guild_scheduled_event", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordEvent GuildSheduledEvent { get; internal set; }
+        public DiscordEvent GuildScheduledEvent { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordInvite"/> class.

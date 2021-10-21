@@ -19,7 +19,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-using DisCatSharp;
 
 namespace DisCatSharp.Net
 {
@@ -32,7 +31,12 @@ namespace DisCatSharp.Net
         /// <summary>
         /// The base discord api uri.
         /// </summary>
-        public const string BASE_URI = "https://discord.com/api/v9";
+        public const string BASE_URI = "https://discord.com/api/v";
+
+        /// <summary>
+        /// The base discord canary api uri.
+        /// </summary>
+        public const string CANARY_URI = "https://canary.discord.com/api/v";
 
         /// <summary>
         /// The oauth2 endpoint.
@@ -369,7 +373,7 @@ namespace DisCatSharp.Net
         /// <summary>
         /// The activities endpoint.
         /// </summary>
-        public const string ACTIVITIES = "/activities ";
+        public const string ACTIVITIES = "/activities";
         /// <summary>
         /// The config endpoint.
         /// </summary>

@@ -24,7 +24,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -55,9 +54,8 @@ namespace DisCatSharp.Net
         private HttpClient HttpClient { get; }
 
         /// <summary>
-        /// Gets the discord.
+        /// Gets the discord client.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>")]
         private BaseDiscordClient Discord { get; }
 
         /// <summary>
@@ -134,7 +132,7 @@ namespace DisCatSharp.Net
 
             this.HttpClient = new HttpClient(httphandler)
             {
-                BaseAddress = new Uri(Utilities.GetApiBaseUri()),
+                BaseAddress = new Uri(Utilities.GetApiBaseUri(this.Discord?.Configuration)),
                 Timeout = timeout
             };
 
