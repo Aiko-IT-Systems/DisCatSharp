@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
@@ -119,7 +119,18 @@ namespace DisCatSharp.Entities
         public virtual string AvatarHash { get; internal set; }
 
         /// <summary>
-        /// Gets the user's avatar URL.
+        /// Returns a uri to this users profile. 
+        /// </summary>
+        public Uri ProfileUri => new($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.USERS}/{this.Id}");
+
+        /// <summary>
+        /// Returns a string representing the direct URL to this users profile. 
+        /// </summary>
+        /// <returns>The URL of this users profile.</returns>
+        public string ProfileUrl => this.ProfileUri.AbsoluteUri;
+
+        /// <summary>
+        /// Gets the user's avatar URL.s
         /// </summary>
         [JsonIgnore]
         public string AvatarUrl
@@ -342,12 +353,6 @@ namespace DisCatSharp.Entities
                 return $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{type}.{sfmt}?size={ssize}";
             }
         }
-
-        /// <summary>
-        /// Returns a string representing the direct URL to this users profile. 
-        /// </summary>
-        /// <returns>The URL of this users profile.</returns>
-        public string GetProfileUrl() => $"https://discord.com/users/{this.Id}";
 
         /// <summary>
         /// Returns a string representation of this user.

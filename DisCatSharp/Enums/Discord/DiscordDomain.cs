@@ -23,7 +23,7 @@
 using System;
 using System.Linq;
 
-namespace DisCatSharp.Enums.Discord
+namespace DisCatSharp.Enums
 {
     /// <summary>
     /// Core Domains

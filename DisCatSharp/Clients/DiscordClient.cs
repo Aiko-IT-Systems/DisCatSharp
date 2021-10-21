@@ -38,7 +38,7 @@ using DisCatSharp.Net.Serialization;
 using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 using System.Globalization;
 
 namespace DisCatSharp
