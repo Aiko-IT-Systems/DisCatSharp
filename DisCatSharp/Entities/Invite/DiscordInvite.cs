@@ -23,7 +23,7 @@
 using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 
 namespace DisCatSharp.Entities
 {
