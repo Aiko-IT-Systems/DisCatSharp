@@ -24,7 +24,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Models;

@@ -23,7 +23,7 @@
 namespace DisCatSharp
 {
     /// <summary>
-    /// Represents the entity type for a sheduled event.
+    /// Represents the entity type for a scheduled event.
     /// </summary>
     public enum EventEntityType : int
     {

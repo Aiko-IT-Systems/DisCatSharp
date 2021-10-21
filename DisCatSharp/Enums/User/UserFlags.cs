@@ -91,7 +91,7 @@ namespace DisCatSharp
         TeamUser = 1 << 10,
 
         /// <summary>
-        /// Relates to partner/verification applications..
+        /// Relates to partner/verification applications.
         /// </summary>
         PartnerOrVerificationApplication = 1 << 11,
 
@@ -133,6 +133,11 @@ namespace DisCatSharp
         /// <summary>
         /// The user is a bot http interaction.
         /// </summary>
-        BotHttpInteractions = 1 << 19
+        BotHttpInteractions = 1 << 19,
+
+        /// <summary>
+        /// The user is flagged as spammer.
+        /// </summary>
+        Spammer = 1 << 20
     }
 }

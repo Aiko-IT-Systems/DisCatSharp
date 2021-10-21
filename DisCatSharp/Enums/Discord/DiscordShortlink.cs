@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Enums.Discord
+namespace DisCatSharp.Enums
 {
     /// <summary>
     /// Discord short links

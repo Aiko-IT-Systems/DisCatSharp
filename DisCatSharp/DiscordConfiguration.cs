@@ -62,6 +62,12 @@ namespace DisCatSharp
         public LogLevel MinimumLogLevel { internal get; set; } = LogLevel.Information;
 
         /// <summary>
+        /// Overwrites the api version.
+        /// Defaults to 9.
+        /// </summary>
+        public string ApiVersion { internal get; set; } = "9";
+
+        /// <summary>
         /// <para>Sets whether to rely on Discord for NTP (Network Time Protocol) synchronization with the "X-Ratelimit-Reset-After" header.</para>
         /// <para>If the system clock is unsynced, setting this to true will ensure ratelimits are synced with Discord and reduce the risk of hitting one.</para>
         /// <para>This should only be set to false if the system clock is synced with NTP.</para>
@@ -237,6 +243,7 @@ namespace DisCatSharp
             this.MobileStatus = other.MobileStatus;
             this.UseCanary = other.UseCanary;
             this.AutoRefreshChannelCache = other.AutoRefreshChannelCache;
+            this.ApiVersion = other.ApiVersion;
         }
     }
 }

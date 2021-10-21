@@ -38,7 +38,7 @@ using DisCatSharp.Net.Serialization;
 using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 using System.Globalization;
 
 namespace DisCatSharp
@@ -225,9 +225,9 @@ namespace DisCatSharp
             this._threadMembersUpdated = new AsyncEvent<DiscordClient, ThreadMembersUpdateEventArgs>("THREAD_MEMBERS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
             this._zombied = new AsyncEvent<DiscordClient, ZombiedEventArgs>("ZOMBIED", EventExecutionLimit, this.EventErrorHandler);
             this._payloadReceived = new AsyncEvent<DiscordClient, PayloadReceivedEventArgs>("PAYLOAD_RECEIVED", EventExecutionLimit, this.EventErrorHandler);
-            this._guildSheduledEventCreated = new AsyncEvent<DiscordClient, GuildSheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
-            this._guildSheduledEventUpdated = new AsyncEvent<DiscordClient, GuildSheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-            this._guildSheduledEventDeleted = new AsyncEvent<DiscordClient, GuildSheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventCreated = new AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventUpdated = new AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventDeleted = new AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
 
             this._guilds.Clear();
 
