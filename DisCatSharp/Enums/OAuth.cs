@@ -60,56 +60,60 @@ namespace DisCatSharp.Enums
         /// <summary>
         /// The oauth scope.
         /// </summary>
-        public enum Scopes
-        {
-            /// <summary>
-            /// Scopes: bot applications.commands applications.commands.permissions.update
-            /// </summary>
-            BOT_DEFAULT = 0,
-
-            /// <summary>
-            /// Scopes: bot applications.commands
-            /// </summary>
-            BOT_MINIMAL = 1,
-
-            /// <summary>
-            /// Scopes: bot
-            /// </summary>
-            BOT_ONLY = 2,
-
-            /// <summary>
-            /// Scopes: identify email
-            /// </summary>
-            IDENTIFY_BASIC = 3,
-
-            /// <summary>
-            /// Scopes: identify email guilds connections
-            /// </summary>
-            IDENTIFY_EXTENDED = 4,
-
-            /// <summary>
-            /// Scopes: bot applications.commands applications.commands.permissions.update identify email guilds connections
-            /// </summary>
-            ALL = 5
-        }
+        
 
         /// <summary>
         /// Resolves the scopes.
         /// </summary>
         /// <param name="scope">The scope.</param>
         /// <returns>A string representing the scopes.</returns>
-        public static string Resolver(Scopes scope)
+        public static string ResolveScopes(OAuthScopes scope)
         {
             return scope switch
             {
-                Scopes.BOT_DEFAULT => BOT_DEFAULT,
-                Scopes.BOT_MINIMAL => BOT_MINIMAL,
-                Scopes.BOT_ONLY => BOT_ONLY,
-                Scopes.IDENTIFY_BASIC => IDENTIFY_BASIC,
-                Scopes.IDENTIFY_EXTENDED => IDENTIFY_EXTENDED,
-                Scopes.ALL => ALL,
+                OAuthScopes.BOT_DEFAULT => BOT_DEFAULT,
+                OAuthScopes.BOT_MINIMAL => BOT_MINIMAL,
+                OAuthScopes.BOT_ONLY => BOT_ONLY,
+                OAuthScopes.IDENTIFY_BASIC => IDENTIFY_BASIC,
+                OAuthScopes.IDENTIFY_EXTENDED => IDENTIFY_EXTENDED,
+                OAuthScopes.ALL => ALL,
                 _ => BOT_DEFAULT,
             };
         }
+    }
+    /// <summary>
+    /// The oauth scopes.
+    /// </summary>
+    public enum OAuthScopes
+    {
+        /// <summary>
+        /// Scopes: bot applications.commands applications.commands.permissions.update
+        /// </summary>
+        BOT_DEFAULT = 0,
+
+        /// <summary>
+        /// Scopes: bot applications.commands
+        /// </summary>
+        BOT_MINIMAL = 1,
+
+        /// <summary>
+        /// Scopes: bot
+        /// </summary>
+        BOT_ONLY = 2,
+
+        /// <summary>
+        /// Scopes: identify email
+        /// </summary>
+        IDENTIFY_BASIC = 3,
+
+        /// <summary>
+        /// Scopes: identify email guilds connections
+        /// </summary>
+        IDENTIFY_EXTENDED = 4,
+
+        /// <summary>
+        /// Scopes: bot applications.commands applications.commands.permissions.update identify email guilds connections
+        /// </summary>
+        ALL = 5
     }
 }
