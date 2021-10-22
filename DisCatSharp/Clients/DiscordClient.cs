@@ -1037,6 +1037,16 @@ namespace DisCatSharp
                 }
             }
 
+            if (newGuild._scheduledEvents != null && newGuild._scheduledEvents.Count > 0)
+            {
+                foreach (var s_event in newGuild._scheduledEvents.Values)
+                {
+                    if (guild._scheduledEvents.TryGetValue(s_event.Id, out _)) continue;
+
+                    guild._scheduledEvents[s_event.Id] = s_event;
+                }
+            }
+
             foreach (var newEmoji in newGuild._emojis.Values)
                 _ = guild._emojis.GetOrAdd(newEmoji.Id, _ => newEmoji);
 
@@ -1092,6 +1102,7 @@ namespace DisCatSharp
             guild.ExplicitContentFilter = newGuild.ExplicitContentFilter;
             guild.PremiumTier = newGuild.PremiumTier;
             guild.PremiumSubscriptionCount = newGuild.PremiumSubscriptionCount;
+            guild.PremiumProgressBarEnabled = newGuild.PremiumProgressBarEnabled;
             guild.BannerHash = newGuild.BannerHash;
             guild.Description = newGuild.Description;
             guild.VanityUrlCode = newGuild.VanityUrlCode;
@@ -1106,6 +1117,7 @@ namespace DisCatSharp
             guild.PreferredLocale = newGuild.PreferredLocale;
             guild.RulesChannelId = newGuild.RulesChannelId;
             guild.PublicUpdatesChannelId = newGuild.PublicUpdatesChannelId;
+            guild.ApplicationId = newGuild.ApplicationId;
 
             // fields not sent for update:
             // - guild.Channels
