@@ -618,17 +618,17 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the In-App OAuth Url.
         /// </summary>
-        /// <param name="scopes">Defaults to <see cref="OAuth.BOT_DEFAULT"/>.</param>
+        /// <param name="scopes">Defaults to <see cref="OAuthScopes.BOT_DEFAULT"/>.</param>
         /// <param name="redir">Redirect Uri.</param>
         /// <param name="permissions">Defaults to <see cref="Permissions.None"/>.</param>
         /// <returns>The OAuth Url</returns>
-        public Uri GetInAppOAuth(Permissions permissions = Permissions.None, OAuth.Scopes scopes = OAuth.Scopes.BOT_DEFAULT, string redir = null)
+        public Uri GetInAppOAuth(Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string redir = null)
         {
             permissions &= PermissionMethods.FULL_PERMS;
             // hey look, it's not all annoying and blue :P
             return new Uri(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
                 .AddParameter("client_id", this.CurrentApplication.Id.ToString(CultureInfo.InvariantCulture))
-                .AddParameter("scope", OAuth.Resolver(scopes))
+                .AddParameter("scope", OAuth.ResolveScopes(scopes))
                 .AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
                 .AddParameter("state", "")
                 .AddParameter("redirect_uri", redir ?? "")
