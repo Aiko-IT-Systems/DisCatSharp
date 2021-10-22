@@ -28,15 +28,15 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Serialization;
-using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using DisCatSharp.Enums;
-using DisCatSharp.Exceptions;
 
 namespace DisCatSharp
 {
@@ -924,6 +924,8 @@ namespace DisCatSharp
                 guild._voiceStates = new ConcurrentDictionary<ulong, DiscordVoiceState>();
             if (guild._members == null)
                 guild._members = new ConcurrentDictionary<ulong, DiscordMember>();
+            if (guild._scheduledEvents == null)
+                guild._scheduledEvents = new ConcurrentDictionary<ulong, DiscordEvent>();
 
             this.UpdateCachedGuild(eventGuild, rawMembers);
 
@@ -945,6 +947,7 @@ namespace DisCatSharp
             foreach (var kvp in eventGuild._threads) guild._threads[kvp.Key] = kvp.Value;
             foreach (var kvp in eventGuild._stickers) guild._stickers[kvp.Key] = kvp.Value;
             foreach (var kvp in eventGuild._stageInstances) guild._stageInstances[kvp.Key] = kvp.Value;
+            foreach (var kvp in eventGuild._scheduledEvents) guild._scheduledEvents[kvp.Key] = kvp.Value;
 
             foreach (var xc in guild._channels.Values)
             {
@@ -976,6 +979,11 @@ namespace DisCatSharp
             {
                 xr.Discord = this;
                 xr._guild_id = guild.Id;
+            }
+            foreach (var xse in guild._scheduledEvents.Values)
+            {
+                xse.Discord = this;
+                xse.GuildId = guild.Id;
             }
 
             var old = Volatile.Read(ref this._guildDownloadCompleted);
@@ -1016,6 +1024,7 @@ namespace DisCatSharp
                     Name = gld.Name,
                     AfkChannelId = gld.AfkChannelId,
                     AfkTimeout = gld.AfkTimeout,
+                    ApplicationId = gld.ApplicationId,
                     DefaultMessageNotifications = gld.DefaultMessageNotifications,
                     ExplicitContentFilter = gld.ExplicitContentFilter,
                     RawFeatures = gld.RawFeatures,
@@ -1046,6 +1055,9 @@ namespace DisCatSharp
                     PublicUpdatesChannelId = gld.PublicUpdatesChannelId,
                     VoiceRegionId = gld.VoiceRegionId,
                     IsNSFW = gld.IsNSFW,
+                    PremiumProgressBarEnabled = gld.PremiumProgressBarEnabled,
+                    PremiumSubscriptionCount = gld.PremiumSubscriptionCount,
+                    PremiumTier = gld.PremiumTier,
                     _channels = new ConcurrentDictionary<ulong, DiscordChannel>(),
                     _threads = new ConcurrentDictionary<ulong, DiscordThreadChannel>(),
                     _emojis = new ConcurrentDictionary<ulong, DiscordEmoji>(),
@@ -1053,7 +1065,8 @@ namespace DisCatSharp
                     _members = new ConcurrentDictionary<ulong, DiscordMember>(),
                     _roles = new ConcurrentDictionary<ulong, DiscordRole>(),
                     _stageInstances = new ConcurrentDictionary<ulong, DiscordStageInstance>(),
-                    _voiceStates = new ConcurrentDictionary<ulong, DiscordVoiceState>()
+                    _voiceStates = new ConcurrentDictionary<ulong, DiscordVoiceState>(),
+                    _scheduledEvents = new ConcurrentDictionary<ulong, DiscordEvent>()
                 };
 
                 foreach (var kvp in gld._channels) oldGuild._channels[kvp.Key] = kvp.Value;
@@ -1064,6 +1077,7 @@ namespace DisCatSharp
                 foreach (var kvp in gld._voiceStates) oldGuild._voiceStates[kvp.Key] = kvp.Value;
                 foreach (var kvp in gld._members) oldGuild._members[kvp.Key] = kvp.Value;
                 foreach (var kvp in gld._stageInstances) oldGuild._stageInstances[kvp.Key] = kvp.Value;
+                foreach (var kvp in gld._scheduledEvents) oldGuild._scheduledEvents[kvp.Key] = kvp.Value;
             }
 
             guild.Discord = this;
@@ -1087,6 +1101,8 @@ namespace DisCatSharp
                 guild._stageInstances = new ConcurrentDictionary<ulong, DiscordStageInstance>();
             if (guild._members == null)
                 guild._members = new ConcurrentDictionary<ulong, DiscordMember>();
+            if (guild._scheduledEvents == null)
+                guild._scheduledEvents = new ConcurrentDictionary<ulong, DiscordEvent>();
 
             this.UpdateCachedGuild(eventGuild, rawMembers);
 
@@ -1120,6 +1136,11 @@ namespace DisCatSharp
             {
                 xsi.Discord = this;
                 xsi.GuildId = guild.Id;
+            }
+            foreach (var xse in guild._scheduledEvents.Values)
+            {
+                xse.Discord = this;
+                xse.GuildId = guild.Id;
             }
 
             await this._guildUpdated.InvokeAsync(this, new GuildUpdateEventArgs { GuildBefore = oldGuild, GuildAfter = guild }).ConfigureAwait(false);
