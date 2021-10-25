@@ -28,9 +28,8 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
@@ -411,14 +410,14 @@ namespace DisCatSharp.Entities
         internal ConcurrentDictionary<ulong, DiscordStageInstance> _stageInstances = new();
 
         /// <summary>
-        /// Gets a dictionary of all sheduled events.
+        /// Gets a dictionary of all scheduled events.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordEvent> SheduledEvents { get; internal set; }
+        public IReadOnlyDictionary<ulong, DiscordEvent> ScheduledEvents { get; internal set; }
 
         [JsonProperty("events", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordEvent> _sheduledEvents = new();
+        internal ConcurrentDictionary<ulong, DiscordEvent> _scheduledEvents = new();
 
         /// <summary>
         /// Gets the guild member for current user.
@@ -473,7 +472,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public string BannerUrl
-            => !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.png" : null;
+            => !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}" : null;
 
         /// <summary>
         /// Whether this guild has the community feature enabled.
@@ -504,6 +503,12 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("premium_subscription_count", NullValueHandling = NullValueHandling.Ignore)]
         public int? PremiumSubscriptionCount { get; internal set; }
+
+        /// <summary>
+        /// Whether the premium progress bar is enabled.
+        /// </summary>
+        [JsonProperty("premium_progress_bar_enabled", NullValueHandling = NullValueHandling.Ignore)]
+        public bool PremiumProgressBarEnabled { get; internal set; }
 
         /// <summary>
         /// Gets whether this guild is designated as NSFW.
@@ -2430,15 +2435,15 @@ namespace DisCatSharp.Entities
                         break;
 
 
-                    case AuditLogActionType.SheduledEventCreate:
-                    case AuditLogActionType.SheduledEventDelete:
-                    case AuditLogActionType.SheduledEventUpdate:
-                        entry = new DiscordAuditLogSheduledEventEntry
+                    case AuditLogActionType.ScheduledEventCreate:
+                    case AuditLogActionType.ScheduledEventDelete:
+                    case AuditLogActionType.ScheduledEventUpdate:
+                        entry = new DiscordAuditLogScheduledEventEntry
                         {
-                            //Target = this._events.TryGetValue(xac.TargetId.Value, out var sheduled_event) ? sheduled_event : new DiscordEvent { Id = xac.TargetId.Value, Discord = this.Discord }
+                            //Target = this._events.TryGetValue(xac.TargetId.Value, out var scheduled_event) ? scheduled_event : new DiscordEvent { Id = xac.TargetId.Value, Discord = this.Discord }
                         };
 
-                        var entryse = entry as DiscordAuditLogSheduledEventEntry;
+                        var entryse = entry as DiscordAuditLogScheduledEventEntry;
                         foreach (var xc in xac.Changes)
                         {
                             switch (xc.Key.ToLowerInvariant())
@@ -2482,7 +2487,7 @@ namespace DisCatSharp.Entities
                                     break;
 
                                 default:
-                                    this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in sheduled event update: {0} - this should be reported to library developers", xc.Key);
+                                    this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in scheduled event update: {0} - this should be reported to library developers", xc.Key);
                                     break;
                             }
                         }
@@ -2498,9 +2503,9 @@ namespace DisCatSharp.Entities
 
                 entry.ActionCategory = xac.ActionType switch
                 {
-                    AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate or AuditLogActionType.SheduledEventCreate => AuditLogActionCategory.Create,
-                    AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete or AuditLogActionType.ThreadDelete or AuditLogActionType.SheduledEventDelete => AuditLogActionCategory.Delete,
-                    AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate or AuditLogActionType.SheduledEventUpdate => AuditLogActionCategory.Update,
+                    AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate or AuditLogActionType.ScheduledEventCreate => AuditLogActionCategory.Create,
+                    AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete or AuditLogActionType.ThreadDelete or AuditLogActionType.ScheduledEventDelete => AuditLogActionCategory.Delete,
+                    AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate or AuditLogActionType.ScheduledEventUpdate => AuditLogActionCategory.Update,
                     _ => AuditLogActionCategory.Other,
                 };
                 entry.Discord = this.Discord;
@@ -3228,6 +3233,17 @@ namespace DisCatSharp.Entities
         public bool IsHub { get; }
 
         /// <summary>
+        /// Guild is in a hub.
+        /// https://github.com/discord/discord-api-docs/pull/3757/commits/4932d92c9d0c783861bc715bf7ebbabb15114e34
+        /// </summary>
+        public bool HasDirectoryEntry { get; }
+
+        /// <summary>
+        /// Guild is linked to a hub.
+        /// </summary>
+        public bool IsLinkedToHub { get; }
+
+        /// <summary>
         /// Guild has full access to threads.
         /// Old Feature.
         /// </summary>
@@ -3271,6 +3287,16 @@ namespace DisCatSharp.Entities
         public bool TextInVoiceEnabled { get; }
 
         /// <summary>
+        /// Guild can set an animated banner.
+        /// </summary>
+        public bool CanSetAnimatedBanner { get; }
+
+        /// <summary>
+        /// Guild has member profiles.
+        /// </summary>
+        public bool HasMemberProfiles { get; }
+
+        /// <summary>
         /// String of guild features.
         /// </summary>
         public string FeatureString { get; }
@@ -3282,6 +3308,7 @@ namespace DisCatSharp.Entities
         public GuildFeatures(DiscordGuild guild)
         {
             this.CanSetAnimatedIcon = guild.RawFeatures.Contains("ANIMATED_ICON");
+            this.CanSetAnimatedBanner = guild.RawFeatures.Contains("ANIMATED_BANNER");
             this.CanSetBanner = guild.RawFeatures.Contains("BANNER");
             this.CanCreateStoreChannels = guild.RawFeatures.Contains("COMMERCE");
             this.HasCommunityEnabled = guild.RawFeatures.Contains("COMMUNITY");
@@ -3312,6 +3339,9 @@ namespace DisCatSharp.Entities
             this.PremiumTierThreeOverride = guild.RawFeatures.Contains("PREMIUM_TIER_3_OVERRIDE");
             this.CanSetThreadDefaultAutoArchiveDuration = guild.RawFeatures.Contains("THREAD_DEFAULT_AUTO_ARCHIVE_DURATION");
             this.TextInVoiceEnabled = guild.RawFeatures.Contains("TEXT_IN_VOICE_ENABLED");
+            this.HasDirectoryEntry = guild.RawFeatures.Contains("HAS_DIRECTORY_ENTRY");
+            this.IsLinkedToHub = guild.RawFeatures.Contains("LINKED_TO_HUB");
+            this.HasMemberProfiles = guild.RawFeatures.Contains("MEMBER_PROFILES");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach (var feature in guild.RawFeatures)
@@ -3319,6 +3349,7 @@ namespace DisCatSharp.Entities
                 _features += feature + " ";
             }
             this.FeatureString = _features;
+
         }
     }
 }

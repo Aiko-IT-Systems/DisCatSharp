@@ -38,7 +38,7 @@ using DisCatSharp.Net.Serialization;
 using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 using System.Globalization;
 
 namespace DisCatSharp
@@ -225,9 +225,9 @@ namespace DisCatSharp
             this._threadMembersUpdated = new AsyncEvent<DiscordClient, ThreadMembersUpdateEventArgs>("THREAD_MEMBERS_UPDATED", EventExecutionLimit, this.EventErrorHandler);
             this._zombied = new AsyncEvent<DiscordClient, ZombiedEventArgs>("ZOMBIED", EventExecutionLimit, this.EventErrorHandler);
             this._payloadReceived = new AsyncEvent<DiscordClient, PayloadReceivedEventArgs>("PAYLOAD_RECEIVED", EventExecutionLimit, this.EventErrorHandler);
-            this._guildSheduledEventCreated = new AsyncEvent<DiscordClient, GuildSheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
-            this._guildSheduledEventUpdated = new AsyncEvent<DiscordClient, GuildSheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
-            this._guildSheduledEventDeleted = new AsyncEvent<DiscordClient, GuildSheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventCreated = new AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventUpdated = new AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventDeleted = new AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
 
             this._guilds.Clear();
 
@@ -618,18 +618,20 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the In-App OAuth Url.
         /// </summary>
-        /// <param name="scopes">Defaults to 'bot applications.commands'.</param>
+        /// <param name="scopes">Defaults to <see cref="OAuthScopes.BOT_DEFAULT"/>.</param>
+        /// <param name="redir">Redirect Uri.</param>
         /// <param name="permissions">Defaults to <see cref="Permissions.None"/>.</param>
         /// <returns>The OAuth Url</returns>
-        public Uri GetInAppOAuth(Permissions permissions = Permissions.None, string scopes = "bot applications.commands")
+        public Uri GetInAppOAuth(Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string redir = null)
         {
             permissions &= PermissionMethods.FULL_PERMS;
             // hey look, it's not all annoying and blue :P
             return new Uri(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
                 .AddParameter("client_id", this.CurrentApplication.Id.ToString(CultureInfo.InvariantCulture))
-                .AddParameter("scope", scopes.ToLower())
+                .AddParameter("scope", OAuth.ResolveScopes(scopes))
                 .AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
                 .AddParameter("state", "")
+                .AddParameter("redirect_uri", redir ?? "")
                 .ToString());
         }
 
@@ -1035,6 +1037,16 @@ namespace DisCatSharp
                 }
             }
 
+            if (newGuild._scheduledEvents != null && newGuild._scheduledEvents.Count > 0)
+            {
+                foreach (var s_event in newGuild._scheduledEvents.Values)
+                {
+                    if (guild._scheduledEvents.TryGetValue(s_event.Id, out _)) continue;
+
+                    guild._scheduledEvents[s_event.Id] = s_event;
+                }
+            }
+
             foreach (var newEmoji in newGuild._emojis.Values)
                 _ = guild._emojis.GetOrAdd(newEmoji.Id, _ => newEmoji);
 
@@ -1090,6 +1102,7 @@ namespace DisCatSharp
             guild.ExplicitContentFilter = newGuild.ExplicitContentFilter;
             guild.PremiumTier = newGuild.PremiumTier;
             guild.PremiumSubscriptionCount = newGuild.PremiumSubscriptionCount;
+            guild.PremiumProgressBarEnabled = newGuild.PremiumProgressBarEnabled;
             guild.BannerHash = newGuild.BannerHash;
             guild.Description = newGuild.Description;
             guild.VanityUrlCode = newGuild.VanityUrlCode;
@@ -1104,6 +1117,7 @@ namespace DisCatSharp
             guild.PreferredLocale = newGuild.PreferredLocale;
             guild.RulesChannelId = newGuild.RulesChannelId;
             guild.PublicUpdatesChannelId = newGuild.PublicUpdatesChannelId;
+            guild.ApplicationId = newGuild.ApplicationId;
 
             // fields not sent for update:
             // - guild.Channels

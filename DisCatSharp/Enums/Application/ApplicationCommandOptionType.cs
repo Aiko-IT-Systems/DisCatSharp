@@ -75,6 +75,11 @@ namespace DisCatSharp
         /// <summary>
         /// Whether this parameter is a number.
         /// </summary>
-        Number = 10
+        Number = 10,
+
+        /// <summary>
+        /// Whether this parameter is a attachment.
+        /// </summary>
+        Attachment = 11
     }
 }

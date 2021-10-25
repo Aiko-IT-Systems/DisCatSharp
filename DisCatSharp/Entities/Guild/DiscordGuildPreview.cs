@@ -23,7 +23,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Serialization;
 using Newtonsoft.Json;

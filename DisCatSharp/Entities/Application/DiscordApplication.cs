@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 using DisCatSharp.Net;
 using Newtonsoft.Json;
 
