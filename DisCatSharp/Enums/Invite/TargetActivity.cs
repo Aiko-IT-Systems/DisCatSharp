@@ -55,10 +55,10 @@ namespace DisCatSharp
 
         /// <summary>
         /// Represents the embedded application Chess in the park.
-        /// This is another version.
+        /// This is the dev version.
         /// Stable?
         /// </summary>
-        ChessInThePark2 = 832012774040141894,
+        ChessInTheParkDev = 832012774040141894,
 
         /// <summary>
         /// Represents the embedded application YouTube Together.
@@ -72,7 +72,7 @@ namespace DisCatSharp
 
         /// <summary>
         /// Represents the embedded application Watch Together.
-        /// This is the staff version.
+        /// This is the dev version.
         /// </summary>
         WatchTogetherDev = 880218832743055411,
 
