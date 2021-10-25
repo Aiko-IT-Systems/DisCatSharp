@@ -47,11 +47,6 @@ namespace DisCatSharp
         /// </summary>
         Fishington = 814288819477020702,
 
-        /// <summary>
-        /// Represents the embedded application YouTube Together.
-        /// </summary>
-        YouTubeTogether = 755600276941176913,
-
 	    /// <summary>
         /// Represents the embedded application Chess in the park.
         /// Dev?
@@ -60,16 +55,26 @@ namespace DisCatSharp
 
         /// <summary>
         /// Represents the embedded application Chess in the park.
-        /// This is another version.
+        /// This is the dev version.
         /// Stable?
         /// </summary>
-        ChessInThePark2 = 832012774040141894,
+        ChessInTheParkDev = 832012774040141894,
 
         /// <summary>
         /// Represents the embedded application YouTube Together.
-        /// This is the new (staff only) version.
         /// </summary>
-        YouTubeTogetherV2 = 880218394199220334,
+        YouTubeTogether = 755600276941176913,
+
+        /// <summary>
+        /// Represents the embedded application Watch Together.
+        /// </summary>
+        WatchTogether = 880218394199220334,
+
+        /// <summary>
+        /// Represents the embedded application Watch Together.
+        /// This is the dev version.
+        /// </summary>
+        WatchTogetherDev = 880218832743055411,
 
         /// <summary>
         /// Represents the embedded application Letter Tile.
@@ -84,6 +89,11 @@ namespace DisCatSharp
         /// <summary>
         /// Represents the embedded application Doodle Crew.
         /// </summary>
-        DoodleCrew = 878067389634314250
+        DoodleCrew = 878067389634314250,
+
+        /// <summary>
+        /// Represents the embedded application Spell Cast.
+        /// </summary>
+        SpellCast = 852509694341283871
     }
 }

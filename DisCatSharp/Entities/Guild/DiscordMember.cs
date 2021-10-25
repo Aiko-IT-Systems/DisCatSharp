@@ -26,7 +26,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using DisCatSharp.Enums.Discord;
+using DisCatSharp.Enums;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Models;
@@ -190,7 +190,7 @@ namespace DisCatSharp.Entities
         public bool IsMuted { get; internal set; }
 
         /// <summary>
-        /// If the user has passed the guild's Membership Screening requirements
+        /// Whether the user has not passed the guild's Membership Screening requirements yet.
         /// </summary>
         [JsonProperty("pending", NullValueHandling = NullValueHandling.Ignore)]
         public bool? IsPending { get; internal set; }

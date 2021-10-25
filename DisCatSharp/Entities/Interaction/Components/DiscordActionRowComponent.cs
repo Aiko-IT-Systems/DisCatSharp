@@ -35,8 +35,14 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// The components contained within the action row.
         /// </summary>
+        public IReadOnlyCollection<DiscordComponent> Components
+        {
+            get => this._components ?? new List<DiscordComponent>();
+            set => this._components = new List<DiscordComponent>(value);
+        }
+
         [JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-        public IReadOnlyCollection<DiscordComponent> Components { get; internal set; }
+        private List<DiscordComponent> _components;
 
         /// <summary>
         /// Constructs a new <see cref="DiscordActionRowComponent"/>.

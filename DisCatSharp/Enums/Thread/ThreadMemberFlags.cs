@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,28 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using DisCatSharp.Entities;
-
-namespace DisCatSharp.EventArgs
+namespace DisCatSharp
 {
     /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.GuildSheduledEventCreated"/> event.
+    /// Represents notification settings for a thread.
     /// </summary>
-    public class GuildSheduledEventCreateEventArgs : DiscordEventArgs
+    public enum ThreadMemberFlags : int
     {
         /// <summary>
-        /// Gets the stage instance that was created.
+        /// Indicates that the notification setting is set to has interacted.
         /// </summary>
-        public DiscordEvent SheduledEvent { get; internal set; }
+        HasInteracted = 1,
 
         /// <summary>
-        /// Gets the guild in which the stage instance was created.
+        /// Indicates that the notification setting is set to all messages.
         /// </summary>
-        public DiscordGuild Guild { get; internal set; }
+        AllMessages = 2,
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GuildSheduledEventCreateEventArgs"/> class.
+        /// Indicates that the notification setting is set to only mentions.
         /// </summary>
-        internal GuildSheduledEventCreateEventArgs() : base() { }
+        OnlyMentions = 4,
+
+        /// <summary>
+        /// Indicates that the notification setting is set to none.
+        /// </summary>
+        None = 8
     }
 }

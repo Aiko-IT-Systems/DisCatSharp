@@ -684,7 +684,7 @@ namespace DisCatSharp.Entities
     /// <summary>
     /// Represents a audit log event entry.
     /// </summary>
-    public sealed class DiscordAuditLogSheduledEventEntry : DiscordAuditLogEntry
+    public sealed class DiscordAuditLogScheduledEventEntry : DiscordAuditLogEntry
     {
         /// <summary>
         /// Gets the affected thread
@@ -702,9 +702,9 @@ namespace DisCatSharp.Entities
         public PropertyChange<string> DescriptionChange { get; internal set; }
 
         /*
-        public PropertyChange<> SheduledStartTimeChange { get; internal set; }
+        public PropertyChange<> ScheduledStartTimeChange { get; internal set; }
 
-        public PropertyChange<> SheduledEndTimeChange { get; internal set; }
+        public PropertyChange<> ScheduledEndTimeChange { get; internal set; }
         */
 
         /// <summary>
@@ -723,9 +723,9 @@ namespace DisCatSharp.Entities
         public PropertyChange<IReadOnlyList<ulong>> SkuIdsChange { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordAuditLogSheduledEventEntry"/> class.
+        /// Initializes a new instance of the <see cref="DiscordAuditLogScheduledEventEntry"/> class.
         /// </summary>
-        internal DiscordAuditLogSheduledEventEntry() { }
+        internal DiscordAuditLogScheduledEventEntry() { }
     }
 
     /// <summary>
@@ -1016,17 +1016,17 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Indicates that an event was created.
         /// </summary>
-        SheduledEventCreate = 100,
+        ScheduledEventCreate = 100,
 
         /// <summary>
         /// Indicates that an event was updated.
         /// </summary>
-        SheduledEventUpdate = 101,
+        ScheduledEventUpdate = 101,
 
         /// <summary>
         /// Indicates that an event was deleted.
         /// </summary>
-        SheduledEventDelete = 102,
+        ScheduledEventDelete = 102,
         
         /// <summary>
         /// Indicates that an thread was created.

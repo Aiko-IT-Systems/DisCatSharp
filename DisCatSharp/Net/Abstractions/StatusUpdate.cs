@@ -62,6 +62,7 @@ namespace DisCatSharp.Net.Abstractions
                     UserStatus.Idle => "idle",
                     UserStatus.DoNotDisturb => "dnd",
                     UserStatus.Invisible or UserStatus.Offline => "invisible",
+                    UserStatus.Streaming => "streaming",
                     _ => "online",
                 };
             }

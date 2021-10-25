@@ -28,12 +28,12 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities
 {
     /// <summary>
-    /// Represents an sheduled event.
+    /// Represents an scheduled event.
     /// </summary>
     public class DiscordEvent : SnowflakeObject, IEquatable<DiscordEvent>
     {
         /// <summary>
-        /// Gets id of the associated channel.
+        /// Gets the associated channel.
         /// </summary>
         [JsonIgnore]
         public Task<DiscordChannel> Channel
@@ -60,19 +60,19 @@ namespace DisCatSharp.Entities
             => this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
 
         /// <summary>
-        /// Gets the name of the sheduled event.
+        /// Gets the name of the scheduled event.
         /// </summary>
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; internal set; }
 
         /// <summary>
-        /// Gets the description of the sheduled event.
+        /// Gets the description of the scheduled event.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; internal set; }
 
         /// <summary>
-        /// Gets the scheduled start time of the sheduled event.
+        /// Gets the scheduled start time of the scheduled event.
         /// </summary>
         [JsonIgnore]
         public DateTimeOffset? ScheduledStartTime
@@ -80,13 +80,13 @@ namespace DisCatSharp.Entities
                 dto : null;
 
         /// <summary>
-        /// Gets the scheduled start time of the sheduled event as raw string.
+        /// Gets the scheduled start time of the scheduled event as raw string.
         /// </summary>
         [JsonProperty("scheduled_start_time", NullValueHandling = NullValueHandling.Ignore)]
         internal string ScheduledStartTimeRaw { get; set; }
 
         /// <summary>
-        /// Gets the scheduled end time of the sheduled event.
+        /// Gets the scheduled end time of the scheduled event.
         /// </summary>
         [JsonIgnore]
         public DateTimeOffset? ScheduledEndTime
@@ -94,19 +94,19 @@ namespace DisCatSharp.Entities
                 dto : null;
 
         /// <summary>
-        /// Gets the scheduled end time of the sheduled event as raw string.
+        /// Gets the scheduled end time of the scheduled event as raw string.
         /// </summary>
         [JsonProperty("scheduled_end_time", NullValueHandling = NullValueHandling.Ignore)]
         internal string ScheduledEndTimeRaw { get; set; }
 
         /// <summary>
-        /// Gets the privacy level of the sheduled event.
+        /// Gets the privacy level of the scheduled event.
         /// </summary>
         [JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
         public StagePrivacyLevel PrivacyLevel { get; internal set; }
 
         /// <summary>
-        /// Gets the status of the sheduled event.
+        /// Gets the status of the scheduled event.
         /// </summary>
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public EventStatus Status { get; internal set; }
@@ -130,7 +130,7 @@ namespace DisCatSharp.Entities
         public DiscordEventEntityMetadata EntityMetadata { get; internal set; }
 
         /// <summary>
-        /// Gets the total number of users subscribed to the sheduled event.
+        /// Gets the total number of users subscribed to the scheduled event.
         /// </summary>
         [JsonProperty("user_count", NullValueHandling = NullValueHandling.Ignore)]
         public int UserCount { get; internal set; }
@@ -143,7 +143,7 @@ namespace DisCatSharp.Entities
         #region Methods
 
         /// <summary>
-        /// Updates a sheduled event.
+        /// Updates a scheduled event.
         /// </summary>
         /// <param name="channel">New channel of the event.</param>
         /// <param name="name">New name of the event.</param>
@@ -162,7 +162,7 @@ namespace DisCatSharp.Entities
             => throw new NotImplementedException("This method is not implemented yet."); /*await this.Discord.ApiClient.ModifyStageEventAsync(this.Id, channel, name, scheduled_start_time, description, privacy_level, type, reason);*/
 
         /// <summary>
-        /// Deletes a sheduled event.
+        /// Deletes a scheduled event.
         /// </summary>
         /// <param name="reason">Audit log reason</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
