@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <Import Project="../Version.targets" />
+    <Import Project="../DisCatSharp.targets" />
+    <Import Project="../Package.targets" />
+    <Import Project="../NuGet.targets" />
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <RootNamespace>DisCatSharp.Configuration</RootNamespace>
+        <AssemblyName>DisCatSharp.Configuration</AssemblyName>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <PackageId>DisCatSharp.Configuration</PackageId>
+      <Description>Configuration for DisCatSharp.</Description>
+      <PackageTags>discord, discord-api, bots, discord-bots, net-sdk, dcs, discatsharp, csharp, dotnet, vb-net, fsharp</PackageTags>
+      <PackageLicenseExpression />
+      <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\LICENSE.md">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+    </ItemGroup>
+
+</Project>
