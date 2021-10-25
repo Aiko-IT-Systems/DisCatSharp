@@ -1089,9 +1089,11 @@ namespace DisCatSharp.ApplicationCommands
                 ? ApplicationCommandOptionType.Role
                 : type == typeof(SnowflakeObject)
                 ? ApplicationCommandOptionType.Mentionable
+                : type == typeof(DiscordAttachment)
+                ? ApplicationCommandOptionType.Attachment
                 : type.IsEnum
                 ? ApplicationCommandOptionType.String
-                : throw new ArgumentException("Cannot convert type! Argument types must be string, long, bool, double, DiscordChannel, DiscordUser, DiscordRole, SnowflakeObject or an Enum.");
+                : throw new ArgumentException("Cannot convert type! Argument types must be string, long, bool, double, DiscordChannel, DiscordUser, DiscordRole, SnowflakeObject, DiscordAttachment or an Enum.");
             return parametertype;
         }
 
@@ -1122,6 +1124,10 @@ namespace DisCatSharp.ApplicationCommands
                 if (optionattribute == null)
                     throw new ArgumentException("Arguments must have the Option attribute!");
 
+                var minimumValue = parameter.GetCustomAttribute<MinimumAttribute>()?.Value ?? null;
+                var maximumValue = parameter.GetCustomAttribute<MaximumAttribute>()?.Value ?? null;
+
+
                 var autocompleteAttribute = parameter.GetCustomAttribute<AutocompleteAttribute>();
                 if (optionattribute.Autocomplete && autocompleteAttribute == null)
                     throw new ArgumentException("Autocomplete options must have the Autocomplete attribute!");
@@ -1149,7 +1155,7 @@ namespace DisCatSharp.ApplicationCommands
 
                 var channelTypes = parameter.GetCustomAttribute<ChannelTypesAttribute>()?.ChannelTypes ?? null;
 
-                options.Add(new DiscordApplicationCommandOption(optionattribute.Name, optionattribute.Description, parametertype, !parameter.IsOptional, choices, null, channelTypes, optionattribute.Autocomplete));
+                options.Add(new DiscordApplicationCommandOption(optionattribute.Name, optionattribute.Description, parametertype, !parameter.IsOptional, choices, null, channelTypes, optionattribute.Autocomplete, minimumValue, maximumValue));
             }
 
             return options;
