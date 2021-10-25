@@ -89,6 +89,11 @@ namespace DisCatSharp
         /// <summary>
         /// Represents the embedded application Doodle Crew.
         /// </summary>
-        DoodleCrew = 878067389634314250
+        DoodleCrew = 878067389634314250,
+
+        /// <summary>
+        /// Represents the embedded application Spell Cast.
+        /// </summary>
+        SpellCast = 852509694341283871
     }
 }
