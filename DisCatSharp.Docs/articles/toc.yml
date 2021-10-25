@@ -12,6 +12,8 @@
     href: basics/bot_account.md
   - name: Writing Your First Bot
     href: basics/first_bot.md
+  - name: Bot as Hosted Service
+    href: basics/web_app.md
 - name: Beyond Basics
   items:
   - name: Events
