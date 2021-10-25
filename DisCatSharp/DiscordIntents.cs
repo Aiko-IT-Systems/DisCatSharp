@@ -61,8 +61,7 @@ namespace DisCatSharp
         /// </summary>
         /// <param name="intents">The intents.</param>
         internal static bool HasAllPrivilegedIntents(this DiscordIntents intents)
-            => intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences);
-        //    => intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences | DiscordIntents.GuildMessages);
+            => intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences | DiscordIntents.GuildMessages);
     }
 
     /// <summary>
@@ -135,6 +134,8 @@ namespace DisCatSharp
         /// <summary>
         /// Whether to include guild message events.
         /// <para>These include <see cref="DiscordClient.MessageCreated"/>, <see cref="DiscordClient.MessageUpdated"/>, and <see cref="DiscordClient.MessageDeleted"/>.</para>
+        /// <para>This is a privileged intent, and must be enabled on the bot's developer page.</para>
+        /// <para>See https://support-dev.discord.com/hc/en-us/articles/4404772028055</para>
         /// </summary>
         GuildMessages = 1 << 9,
 
@@ -176,19 +177,17 @@ namespace DisCatSharp
 
         /// <summary>
         /// Includes all unprivileged intents.
-        /// <para>These are all intents excluding <see cref="DiscordIntents.GuildMembers"/> and <see cref="DiscordIntents.GuildPresences"/>.</para>
-        /// <para>The <see cref="DiscordIntents.GuildMessages"/> will be excluded as of April 2022.</para>
+        /// <para>These are all intents excluding <see cref="GuildMembers"/> and <see cref="GuildPresences"/>.</para>
+        /// <para>The <see cref="GuildMessages"/> will be excluded as of April 2022.</para>
         /// </summary>
-        AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
-            GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping,
-        // AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates |
-        //      GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping,
+        AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates |
+              GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping,
 
         /// <summary>
         /// Includes all intents.
-        /// <para>The <see cref="DiscordIntents.GuildMembers"/> and <see cref="DiscordIntents.GuildPresences"/> intents are privileged, and must be enabled on the bot's developer page.</para>
-        /// <para>The <see cref="DiscordIntents.GuildMessages"/> will be privileged as of April 2022.</para>
+        /// <para>The <see cref="GuildMembers"/> and <see cref="GuildPresences"/> intents are privileged, and must be enabled on the bot's developer page.</para>
+        /// <para>The <see cref="GuildMessages"/> will be privileged as of April 2022.</para>
         /// </summary>
-        All = AllUnprivileged | GuildMembers | GuildPresences // | DiscordIntents.GuildMessages
+        All = AllUnprivileged | GuildMembers | GuildPresences | GuildMessages
     }
 }
