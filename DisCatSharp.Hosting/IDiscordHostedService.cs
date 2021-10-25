@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,19 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
-[assembly: InternalsVisibleTo("DisCatSharp.ApplicationCommands")]
-[assembly: InternalsVisibleTo("DisCatSharp.CommandsNext")]
-[assembly: InternalsVisibleTo("DisCatSharp.Common")]
-[assembly: InternalsVisibleTo("DisCatSharp.Configuration")]
-[assembly: InternalsVisibleTo("DisCatSharp.Configuration.Tests")]
-[assembly: InternalsVisibleTo("DisCatSharp.Hosting")]
-[assembly: InternalsVisibleTo("DisCatSharp.Test")]
-[assembly: InternalsVisibleTo("DisCatSharp.Interactivity")]
-[assembly: InternalsVisibleTo("DisCatSharp.Lavalink")]
-[assembly: InternalsVisibleTo("DisCatSharp.Phabricator")]
-[assembly: InternalsVisibleTo("DisCatSharp.Support")]
-[assembly: InternalsVisibleTo("DisCatSharp.VoiceNext")]
-[assembly: InternalsVisibleTo("DisCatSharp.VoiceNext.Natives")]
-[assembly: InternalsVisibleTo("Nyaw")]
+namespace DisCatSharp.Hosting
+{
+
+    /// <summary>
+    /// Contract required for <see cref="DiscordClient"/> to work in a web hosting environment
+    /// </summary>
+    public interface IDiscordHostedService : Microsoft.Extensions.Hosting.IHostedService
+    {
+        /// <summary>
+        /// Reference to connected client
+        /// </summary>
+        DiscordClient Client { get; }
+    }
+}
