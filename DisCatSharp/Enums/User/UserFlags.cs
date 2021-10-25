@@ -101,7 +101,7 @@ namespace DisCatSharp
         System = 1 << 12,
 
         /// <summary>
-        /// Whether the user has unread system messages..
+        /// Whether the user has unread system messages.
         /// </summary>
         HasUnreadUrgentMessages = 1 << 13,
 
@@ -131,12 +131,12 @@ namespace DisCatSharp
         DiscordCertifiedModerator = 1 << 18,
 
         /// <summary>
-        /// The user is a bot http interaction.
+        /// The user is a bot and has set an interactions endpoint url.
         /// </summary>
         BotHttpInteractions = 1 << 19,
 
         /// <summary>
-        /// The user is flagged as spammer.
+        /// The user is disabled for being a spammer.
         /// </summary>
         Spammer = 1 << 20
     }
