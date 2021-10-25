@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,19 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("DisCatSharp.ApplicationCommands")]
-[assembly: InternalsVisibleTo("DisCatSharp.CommandsNext")]
-[assembly: InternalsVisibleTo("DisCatSharp.Common")]
-[assembly: InternalsVisibleTo("DisCatSharp.Configuration")]
-[assembly: InternalsVisibleTo("DisCatSharp.Configuration.Tests")]
-[assembly: InternalsVisibleTo("DisCatSharp.Hosting")]
-[assembly: InternalsVisibleTo("DisCatSharp.Test")]
-[assembly: InternalsVisibleTo("DisCatSharp.Interactivity")]
-[assembly: InternalsVisibleTo("DisCatSharp.Lavalink")]
-[assembly: InternalsVisibleTo("DisCatSharp.Phabricator")]
-[assembly: InternalsVisibleTo("DisCatSharp.Support")]
-[assembly: InternalsVisibleTo("DisCatSharp.VoiceNext")]
-[assembly: InternalsVisibleTo("DisCatSharp.VoiceNext.Natives")]
-[assembly: InternalsVisibleTo("Nyaw")]
+namespace DisCatSharp.Hosting
+{
+    internal static class Constants
+    {
+        public static string LibName => Configuration.ConfigurationExtensions.DefaultRootLib;
+        public static string ConfigSuffix => "Configuration";
+        public static string ExtensionSuffix => "Extension";
+    }
+}

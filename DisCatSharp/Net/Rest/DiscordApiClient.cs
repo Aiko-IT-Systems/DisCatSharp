@@ -2915,7 +2915,6 @@ namespace DisCatSharp.Net
             return ret;
         }
 
-        // Auth header not required
         /// <summary>
         /// Gets the webhook with token async.
         /// </summary>
@@ -3107,13 +3106,17 @@ namespace DisCatSharp.Net
         /// <param name="webhook_id">The webhook_id.</param>
         /// <param name="webhook_token">The webhook_token.</param>
         /// <param name="json_payload">The json_payload.</param>
+        /// <param name="thread_id">The thread_id.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordMessage> ExecuteWebhookSlackAsync(ulong webhook_id, string webhook_token, string json_payload)
+        internal async Task<DiscordMessage> ExecuteWebhookSlackAsync(ulong webhook_id, string webhook_token, string json_payload, string thread_id)
         {
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.SLACK}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { webhook_id, webhook_token }, out var path);
 
-            var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
+            var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true");
+            if (thread_id != null)
+                qub.AddParameter("thread_id", thread_id);
+            var url = qub.Build();
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: json_payload).ConfigureAwait(false);
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
             ret.Discord = this.Discord;
@@ -3126,13 +3129,17 @@ namespace DisCatSharp.Net
         /// <param name="webhook_id">The webhook_id.</param>
         /// <param name="webhook_token">The webhook_token.</param>
         /// <param name="json_payload">The json_payload.</param>
+        /// <param name="thread_id">The thread_id.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordMessage> ExecuteWebhookGithubAsync(ulong webhook_id, string webhook_token, string json_payload)
+        internal async Task<DiscordMessage> ExecuteWebhookGithubAsync(ulong webhook_id, string webhook_token, string json_payload, string thread_id)
         {
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.GITHUB}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { webhook_id, webhook_token }, out var path);
 
-            var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
+            var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true");
+            if (thread_id != null)
+                qub.AddParameter("thread_id", thread_id);
+            var url = qub.Build();
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: json_payload).ConfigureAwait(false);
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
             ret.Discord = this.Discord;
@@ -3146,8 +3153,9 @@ namespace DisCatSharp.Net
         /// <param name="webhook_token">The webhook_token.</param>
         /// <param name="message_id">The message_id.</param>
         /// <param name="builder">The builder.</param>
+        /// <param name="thread_id">The thread_id.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordMessage> EditWebhookMessageAsync(ulong webhook_id, string webhook_token, string message_id, DiscordWebhookBuilder builder)
+        internal async Task<DiscordMessage> EditWebhookMessageAsync(ulong webhook_id, string webhook_token, string message_id, DiscordWebhookBuilder builder, string thread_id)
         {
             builder.Validate(true);
 
@@ -3168,7 +3176,10 @@ namespace DisCatSharp.Net
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id, webhook_token, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
+            if (thread_id != null)
+                qub.AddParameter("thread_id", thread_id);
+            var url = qub.Build();
             var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files);
 
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
@@ -3188,9 +3199,10 @@ namespace DisCatSharp.Net
         /// <param name="webhook_token">The webhook_token.</param>
         /// <param name="message_id">The message_id.</param>
         /// <param name="builder">The builder.</param>
+        /// <param name="thread_id">The thread_id.</param>
         /// <returns>A Task.</returns>
-        internal Task<DiscordMessage> EditWebhookMessageAsync(ulong webhook_id, string webhook_token, ulong message_id, DiscordWebhookBuilder builder) =>
-            this.EditWebhookMessageAsync(webhook_id, webhook_token, message_id.ToString(), builder);
+        internal Task<DiscordMessage> EditWebhookMessageAsync(ulong webhook_id, string webhook_token, ulong message_id, DiscordWebhookBuilder builder, ulong thread_id) =>
+            this.EditWebhookMessageAsync(webhook_id, webhook_token, message_id.ToString(), builder, thread_id.ToString());
 
         /// <summary>
         /// Gets the webhook message async.
@@ -3198,13 +3210,17 @@ namespace DisCatSharp.Net
         /// <param name="webhook_id">The webhook_id.</param>
         /// <param name="webhook_token">The webhook_token.</param>
         /// <param name="message_id">The message_id.</param>
+        /// <param name="thread_id">The thread_id.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordMessage> GetWebhookMessageAsync(ulong webhook_id, string webhook_token, string message_id)
+        internal async Task<DiscordMessage> GetWebhookMessageAsync(ulong webhook_id, string webhook_token, string message_id, string thread_id)
         {
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { webhook_id, webhook_token, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
+            if (thread_id != null)
+                qub.AddParameter("thread_id", thread_id);
+            var url = qub.Build();
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
@@ -3220,7 +3236,18 @@ namespace DisCatSharp.Net
         /// <param name="message_id">The message_id.</param>
         /// <returns>A Task.</returns>
         internal Task<DiscordMessage> GetWebhookMessageAsync(ulong webhook_id, string webhook_token, ulong message_id) =>
-            this.GetWebhookMessageAsync(webhook_id, webhook_token, message_id.ToString());
+            this.GetWebhookMessageAsync(webhook_id, webhook_token, message_id.ToString(), null);
+
+        /// <summary>
+        /// Gets the webhook message async.
+        /// </summary>
+        /// <param name="webhook_id">The webhook_id.</param>
+        /// <param name="webhook_token">The webhook_token.</param>
+        /// <param name="message_id">The message_id.</param>
+        /// <param name="thread_id">The thread_id.</param>
+        /// <returns>A Task.</returns>
+        internal Task<DiscordMessage> GetWebhookMessageAsync(ulong webhook_id, string webhook_token, ulong message_id, ulong thread_id) =>
+            this.GetWebhookMessageAsync(webhook_id, webhook_token, message_id.ToString(), thread_id.ToString());
 
         /// <summary>
         /// Deletes the webhook message async.
@@ -3228,15 +3255,20 @@ namespace DisCatSharp.Net
         /// <param name="webhook_id">The webhook_id.</param>
         /// <param name="webhook_token">The webhook_token.</param>
         /// <param name="message_id">The message_id.</param>
+        /// <param name="thread_id">The thread_id.</param>
         /// <returns>A Task.</returns>
-        internal async Task DeleteWebhookMessageAsync(ulong webhook_id, string webhook_token, string message_id)
+        internal async Task DeleteWebhookMessageAsync(ulong webhook_id, string webhook_token, string message_id, string thread_id)
         {
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { webhook_id, webhook_token, message_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
+            if (thread_id != null)
+                qub.AddParameter("thread_id", thread_id);
+            var url = qub.Build();
             await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
         }
+
         /// <summary>
         /// Deletes the webhook message async.
         /// </summary>
@@ -3245,7 +3277,18 @@ namespace DisCatSharp.Net
         /// <param name="message_id">The message_id.</param>
         /// <returns>A Task.</returns>
         internal Task DeleteWebhookMessageAsync(ulong webhook_id, string webhook_token, ulong message_id) =>
-            this.DeleteWebhookMessageAsync(webhook_id, webhook_token, message_id.ToString());
+            this.DeleteWebhookMessageAsync(webhook_id, webhook_token, message_id.ToString(), null);
+
+        /// <summary>
+        /// Deletes the webhook message async.
+        /// </summary>
+        /// <param name="webhook_id">The webhook_id.</param>
+        /// <param name="webhook_token">The webhook_token.</param>
+        /// <param name="message_id">The message_id.</param>
+        /// <param name="thread_id">The thread_id.</param>
+        /// <returns>A Task.</returns>
+        internal Task DeleteWebhookMessageAsync(ulong webhook_id, string webhook_token, ulong message_id, ulong thread_id) =>
+            this.DeleteWebhookMessageAsync(webhook_id, webhook_token, message_id.ToString(), thread_id.ToString());
         #endregion
 
         #region Reactions
@@ -4535,7 +4578,7 @@ namespace DisCatSharp.Net
         /// <param name="interaction_token">The interaction_token.</param>
         /// <returns>A Task.</returns>
         internal Task<DiscordMessage> GetOriginalInteractionResponseAsync(ulong application_id, string interaction_token) =>
-            this.GetWebhookMessageAsync(application_id, interaction_token, Endpoints.ORIGINAL);
+            this.GetWebhookMessageAsync(application_id, interaction_token, Endpoints.ORIGINAL, null);
 
         /// <summary>
         /// Edits the original interaction response async.
@@ -4545,7 +4588,7 @@ namespace DisCatSharp.Net
         /// <param name="builder">The builder.</param>
         /// <returns>A Task.</returns>
         internal Task<DiscordMessage> EditOriginalInteractionResponseAsync(ulong application_id, string interaction_token, DiscordWebhookBuilder builder) =>
-            this.EditWebhookMessageAsync(application_id, interaction_token, Endpoints.ORIGINAL, builder);
+            this.EditWebhookMessageAsync(application_id, interaction_token, Endpoints.ORIGINAL, builder, null);
 
         /// <summary>
         /// Deletes the original interaction response async.
@@ -4554,7 +4597,7 @@ namespace DisCatSharp.Net
         /// <param name="interaction_token">The interaction_token.</param>
         /// <returns>A Task.</returns>
         internal Task DeleteOriginalInteractionResponseAsync(ulong application_id, string interaction_token) =>
-            this.DeleteWebhookMessageAsync(application_id, interaction_token, Endpoints.ORIGINAL);
+            this.DeleteWebhookMessageAsync(application_id, interaction_token, Endpoints.ORIGINAL, null);
 
         /// <summary>
         /// Creates the followup message async.
@@ -4623,7 +4666,7 @@ namespace DisCatSharp.Net
         /// <param name="builder">The builder.</param>
         /// <returns>A Task.</returns>
         internal Task<DiscordMessage> EditFollowupMessageAsync(ulong application_id, string interaction_token, ulong message_id, DiscordWebhookBuilder builder) =>
-            this.EditWebhookMessageAsync(application_id, interaction_token, message_id, builder);
+            this.EditWebhookMessageAsync(application_id, interaction_token, message_id.ToString(), builder, null);
 
         /// <summary>
         /// Deletes the followup message async.
@@ -4634,8 +4677,6 @@ namespace DisCatSharp.Net
         /// <returns>A Task.</returns>
         internal Task DeleteFollowupMessageAsync(ulong application_id, string interaction_token, ulong message_id) =>
             this.DeleteWebhookMessageAsync(application_id, interaction_token, message_id);
-
-        //TODO: edit, delete, follow up
         #endregion
 
         #region Misc
@@ -4714,6 +4755,7 @@ namespace DisCatSharp.Net
         }
         #endregion
 
+        #region DCS Internals
         /// <summary>
         /// Gets the DisCatSharp team.
         /// </summary>>
@@ -4783,5 +4825,6 @@ namespace DisCatSharp.Net
                 return null;
             }
         }
+        #endregion
     }
 }
