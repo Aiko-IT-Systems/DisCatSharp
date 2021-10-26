@@ -301,3 +301,4 @@ ffmpeg.exe
 appveyor-test.ps1
 *.diff
 CodeMap1.dgml
+.vscode/launch.json
