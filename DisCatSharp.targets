@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-    <Authors>Lala Sabathil, Lunar, Auros, Geferon, J_M_Lutra, mortAlice, AITSYS contributors</Authors>
-    <Company>Aiko IT Systems</Company>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-  </PropertyGroup>
+        <Authors>Lala Sabathil, Lunar, Auros, Geferon, J_M_Lutra, Alice, AITSYS contributors</Authors>
+        <Company>Aiko IT Systems</Company>
+        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+        <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
+        <RepositoryType>Git</RepositoryType>
+    </PropertyGroup>
 </Project>

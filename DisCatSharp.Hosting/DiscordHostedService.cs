@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -45,6 +44,12 @@ namespace DisCatSharp.Hosting
         private readonly ILogger<DiscordHostedService> _logger;
 
         #pragma warning disable 8618
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordHostedService"/> class.
+        /// </summary>
+        /// <param name="config">The config.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="provider">The provider.</param>
         protected DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider)
         {
             this._logger = logger;
@@ -75,7 +80,7 @@ namespace DisCatSharp.Hosting
                         but user did not wish to override any value(s) in the extension's config
                      */
 
-                    object configInstance = typePair.Value.Section.HasValue
+                    var configInstance = typePair.Value.Section.HasValue
                         ? typePair.Value.Section.Value.ExtractConfig(() =>
                             ActivatorUtilities.CreateInstance(provider, typePair.Value.ConfigType))
                         : ActivatorUtilities.CreateInstance(provider, typePair.Value.ConfigType);
@@ -88,10 +93,13 @@ namespace DisCatSharp.Hosting
                         Constructors --> Instance
                      */
 
-                    BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+                    var flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
                     var ctors = typePair.Value.ImplementationType.GetConstructors(flags);
 
-                    object? instance;
+                    var instance = ctors.Any(x => x.GetParameters().Length == 1 && x.GetParameters().First().ParameterType == typePair.Value.ConfigType)
+                        ? Activator.CreateInstance(typePair.Value.ImplementationType, flags, null,
+                                                    new[] { configInstance }, null)
+                        : Activator.CreateInstance(typePair.Value.ImplementationType, true);
 
                     /*
                        Certain extensions do not require a configuration argument
@@ -101,11 +109,6 @@ namespace DisCatSharp.Hosting
                        ActivatorUtilities requires a public constructor, anything with internal breaks
                      */
 
-                    if (ctors.Any(x => x.GetParameters().Length == 1 && x.GetParameters().First().ParameterType == typePair.Value.ConfigType))
-                        instance = Activator.CreateInstance(typePair.Value.ImplementationType, flags, null,
-                                                    new[] { configInstance }, null);
-                    else
-                        instance = Activator.CreateInstance(typePair.Value.ImplementationType, true);
 
                     if (instance == null)
                     {
@@ -122,6 +125,11 @@ namespace DisCatSharp.Hosting
                 }
         }
 
+        /// <summary>
+        /// Executes the bot.
+        /// </summary>
+        /// <param name="stoppingToken">The stopping token.</param>
+        /// <returns>A Task.</returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             if (this.Client == null)
