@@ -53,21 +53,19 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev).
 [Snippets for Visual Studio](https://github.com/Aiko-IT-Systems/DisCatSharp.Snippets)
 
 ## Latest NuGet Packages
-Package|NuGet
-|--|--|
-DisCatSharp|[![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp)
-DisCatSharp.ApplicationCommands|[![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ApplicationCommands.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.ApplicationCommands)
-DisCatSharp.CommandsNext|[![NuGet](https://img.shields.io/nuget/v/DisCatSharp.CommandsNext.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.CommandsNext)
-DisCatSharp.Common|[![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Common)
-DisCatSharp.Interactivity|[![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Interactivity.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Interactivity)
-DisCatSharp.Lavalink|[![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Lavalink.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Lavalink)
-DisCatSharp.VoiceNext|[![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.VoiceNext)
-DisCatSharp.VoiceNext.Natives|[![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.Natives.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.VoiceNext.Natives)
-
-## Outdated NuGet Packages
-Package|NuGet
-|--|--|
-DisCatSharp.SlashCommands|[![NuGet](https://img.shields.io/nuget/v/DisCatSharp.SlashCommands.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.SlashCommands)
+| Package                                 | NuGet                                                                                                                                                               |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DisCatSharp                             | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp)                                                         |
+| DisCatSharp.ApplicationCommands         | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ApplicationCommands.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.ApplicationCommands)                 |
+| DisCatSharp.CommandsNext                | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.CommandsNext.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.CommandsNext)                               |
+| DisCatSharp.Common                      | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Common)                                           |
+| DisCatSharp.Configuration               | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Configuration.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Configuration)                             |
+| DisCatSharp.Hosting                     | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Hosting)                                         |
+| DisCatSharp.Hosting.DependencyInjection | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.DependencyInjection.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Hosting.DependencyInjection) |
+| DisCatSharp.Interactivity               | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Interactivity.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Interactivity)                             |
+| DisCatSharp.Lavalink                    | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Lavalink.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Lavalink)                                       |
+| DisCatSharp.VoiceNext                   | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.VoiceNext)                                     |
+| DisCatSharp.VoiceNext.Natives           | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.Natives.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.VoiceNext.Natives)                     |
 
 ## Releasing
 To release a new version do the following steps:
@@ -84,7 +82,4 @@ Big thanks goes to the following people who helps us ♥️
 - [Lunar Starstrum](https://github.com/OoLunar)
 - [Johannes](https://github.com/JMLutra)
 - [Geferon](https://github.com/geferon)
-- [Alice](https://github.com/mortAlice)
-
-## Notice
-Feel free to re-use code in DSharpPlus.
+- [Alice](https://github.com/QuantuChi)

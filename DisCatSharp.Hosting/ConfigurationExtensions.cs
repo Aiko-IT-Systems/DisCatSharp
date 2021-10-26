@@ -32,11 +32,23 @@ namespace DisCatSharp.Hosting
 {
     internal struct ExtensionConfigResult
     {
+        /// <summary>
+        /// Gets or sets the section.
+        /// </summary>
         public ConfigSection? Section { get; set; }
+        /// <summary>
+        /// Gets or sets the config type.
+        /// </summary>
         public Type ConfigType { get; set; }
+        /// <summary>
+        /// Gets or sets the implementation type.
+        /// </summary>
         public Type ImplementationType { get; set; }
     }
 
+    /// <summary>
+    /// The configuration extensions.
+    /// </summary>
     internal static class ConfigurationExtensions
     {
         /// <summary>
@@ -131,11 +143,9 @@ namespace DisCatSharp.Hosting
 
                JSON or as Text.
              */
-            if (string.IsNullOrEmpty(configuration[configuration.ConfigPath(rootName, "Using")]))
-                assemblyNames = configuration.GetSection(configuration.ConfigPath(rootName, "Using")).Get<string[]>();
-            else
-                assemblyNames =
-                    Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(
+            assemblyNames = string.IsNullOrEmpty(configuration[configuration.ConfigPath(rootName, "Using")])
+                ? configuration.GetSection(configuration.ConfigPath(rootName, "Using")).Get<string[]>()
+                : Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(
                         configuration[configuration.ConfigPath(rootName, "Using")]);
 
             #pragma warning disable 8604
