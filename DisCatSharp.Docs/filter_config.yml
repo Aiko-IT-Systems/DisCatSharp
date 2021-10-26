@@ -7,6 +7,10 @@ apiRules:
     uidRegex: ^System\.Runtime\.CompilerServices$
 - exclude:
     uidRegex: ^System\..*$
+- exclude:
+    uidRegex: ^DisCatSharp\.Hosting\.Tests$
+- exclude:
+    uidRegex: ^DisCatSharp\.Configuration\.Tests$
 attributeRules:
 - exclude:
     uidRegex: ^System\.Collections\.Immutable$

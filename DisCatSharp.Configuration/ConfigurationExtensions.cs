@@ -23,16 +23,27 @@
 using System;
 using System.Collections;
 using System.Linq;
-using System.Reflection;
 using DisCatSharp.Configuration.Models;
 using Microsoft.Extensions.Configuration;
 
 namespace DisCatSharp.Configuration
 {
+    /// <summary>
+    /// The configuration extensions.
+    /// </summary>
     internal static class ConfigurationExtensions
     {
+        /// <summary>
+        /// The factory error message.
+        /// </summary>
         private const string FactoryErrorMessage = "Require a function which provides a default entity to work with";
+        /// <summary>
+        /// The default root lib.
+        /// </summary>
         public const string DefaultRootLib = "DisCatSharp";
+        /// <summary>
+        /// The config suffix.
+        /// </summary>
         private const string ConfigSuffix = "Configuration";
 
 
@@ -51,7 +62,7 @@ namespace DisCatSharp.Configuration
         /// <param name="section">Section which contains values for <paramref name="config"/></param>
         private static void HydrateInstance(ref object config, ConfigSection section)
         {
-            PropertyInfo[] props = config.GetType().GetProperties();
+            var props = config.GetType().GetProperties();
 
             foreach (var prop in props)
             {
@@ -59,7 +70,7 @@ namespace DisCatSharp.Configuration
                 if (prop.SetMethod == null)
                     continue;
 
-                string entry = section.GetValue(prop.Name);
+                var entry = section.GetValue(prop.Name);
                 object? value = null;
 
                 if (typeof(string) == prop.PropertyType)
@@ -76,11 +87,10 @@ namespace DisCatSharp.Configuration
                 // "root:section:name:0"  <--- this is not detectable when checking the above path
                 if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
                 {
-                    if (string.IsNullOrEmpty(section.GetValue(prop.Name)))
-                        value = section.Config
-                            .GetSection(section.GetPath(prop.Name)).Get(prop.PropertyType);
-                    else
-                        value = Newtonsoft.Json.JsonConvert.DeserializeObject(entry, prop.PropertyType);
+                    value = string.IsNullOrEmpty(section.GetValue(prop.Name))
+                        ? section.Config
+                            .GetSection(section.GetPath(prop.Name)).Get(prop.PropertyType)
+                        : Newtonsoft.Json.JsonConvert.DeserializeObject(entry, prop.PropertyType);
 
                     if (value == null)
                         continue;
@@ -135,7 +145,7 @@ namespace DisCatSharp.Configuration
                 throw new ArgumentNullException(nameof(factory),FactoryErrorMessage);
 
             // Create default instance
-            object config = factory();
+            var config = factory();
 
             HydrateInstance(ref config, section);
 
@@ -159,7 +169,7 @@ namespace DisCatSharp.Configuration
                 throw new ArgumentNullException(nameof(factory), FactoryErrorMessage);
 
             // create default instance
-            object instance = factory();
+            var instance = factory();
 
             HydrateInstance(ref instance, new ConfigSection(ref config, sectionName, rootSectionName));
 
@@ -213,9 +223,9 @@ namespace DisCatSharp.Configuration
             if (config.GetChildren().All(x => x.Key != values[0]))
                 return false;
 
-            IConfigurationSection current = config.GetSection(values[0]);
+            var current = config.GetSection(values[0]);
 
-            for (int i = 1; i < values.Length - 1; i++)
+            for (var i = 1; i < values.Length - 1; i++)
             {
                 if (current.GetChildren().All(x => x.Key != values[i]))
                     return false;
@@ -261,10 +271,9 @@ namespace DisCatSharp.Configuration
                     ? $"Discord:{ConfigSuffix}"
                     : null;
 
-            if (string.IsNullOrEmpty(section))
-                return new DiscordClient(new());
-
-            return new DiscordClient(config.ExtractConfig<DiscordConfiguration>(section));
+            return string.IsNullOrEmpty(section)
+                ? new DiscordClient(new())
+                : new DiscordClient(config.ExtractConfig<DiscordConfiguration>(section));
         }
     }
 }
