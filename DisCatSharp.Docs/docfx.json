@@ -44,7 +44,8 @@
     "resource": [
       {
         "files": [
-          "images/**"
+          "images/**",
+          "natives/**.zip"
         ],
         "exclude": [
           "obj/**",
