@@ -76,14 +76,8 @@ namespace DisCatSharp.Hosting.Tests
 
         IHostBuilder Create(Dictionary<string, string> configValues) =>
             Host.CreateDefaultBuilder()
-                .ConfigureServices(services =>
-                {
-                    services.AddSingleton<IDiscordHostedService, Bot>();
-                })
-                .ConfigureHostConfiguration(builder =>
-                {
-                    builder.AddInMemoryCollection(configValues);
-                });
+                .ConfigureServices(services => services.AddSingleton<IDiscordHostedService, Bot>())
+                .ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(configValues));
 
         [Fact]
         public void TestNoExtensions()

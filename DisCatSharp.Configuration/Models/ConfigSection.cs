@@ -44,6 +44,9 @@ namespace DisCatSharp.Configuration.Models
         /// </summary>
         public IConfiguration Config { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfigSection"/> class.
+        /// </summary>
         /// <param name="config">Reference to config</param>
         /// <param name="sectionName">Section of interest</param>
         /// <param name="rootName">(Optional) Indicates <paramref name="sectionName"/> is nested within this name. Default value is DisCatSharp</param>
@@ -61,7 +64,7 @@ namespace DisCatSharp.Configuration.Models
         /// <returns>True if key exists, otherwise false. Outputs path to config regardless</returns>
         public bool ContainsKey(string name)
         {
-            string path = string.IsNullOrEmpty(this.Root)
+            var path = string.IsNullOrEmpty(this.Root)
                 ? this.Config.ConfigPath(this.SectionName, name)
                 : this.Config.ConfigPath(this.Root, this.SectionName, name);
 
@@ -76,12 +79,16 @@ namespace DisCatSharp.Configuration.Models
         public string GetValue(string propName)
             => this.Config[this.GetPath(propName)];
 
+        /// <summary>
+        /// Gets the path.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>A string.</returns>
         public string GetPath(string value)
         {
-            if (string.IsNullOrEmpty(this.Root))
-                return this.Config.ConfigPath(this.SectionName, value);
-
-            return this.Config.ConfigPath(this.Root, this.SectionName, value);
+            return string.IsNullOrEmpty(this.Root)
+                ? this.Config.ConfigPath(this.SectionName, value)
+                : this.Config.ConfigPath(this.Root, this.SectionName, value);
         }
     }
 }
