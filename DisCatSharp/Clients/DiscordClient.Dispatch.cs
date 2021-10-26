@@ -2335,9 +2335,9 @@ namespace DisCatSharp
         internal async Task OnThreadMemberUpdateEventAsync(DiscordThreadChannelMember member)
         {
             member.Discord = this;
-            var thread = this.InternalGetCachedThread(member.ThreadId);
+            var thread = this.InternalGetCachedThread(member.Id);
             thread.CurrentMember = member;
-            thread.Guild._threads.AddOrUpdate(member.ThreadId, thread, (oldThread, newThread) => newThread);
+            thread.Guild._threads.AddOrUpdate(member.Id, thread, (oldThread, newThread) => newThread);
 
 
             await this._threadMemberUpdated.InvokeAsync(this, new ThreadMemberUpdateEventArgs { ThreadMember = member, Thread = thread }).ConfigureAwait(false);
