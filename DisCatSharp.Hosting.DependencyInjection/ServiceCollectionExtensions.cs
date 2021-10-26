@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.Hosting.DependencyInjection
 {
+    /// <summary>
+    /// The service collection extensions.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
