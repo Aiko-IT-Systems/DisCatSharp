@@ -199,17 +199,17 @@ namespace DisCatSharp.Entities
             => await this.Discord.ApiClient.GetThreadMembersAsync(this.Id);
 
         /// <summary>
-        /// Adds a member to this thread. Only applicable to private threads.
+        /// Adds a member to this thread.
         /// </summary>
-        /// <param name="member">The member id to be added.</param>
+        /// <param name="member_id">The member id to be added.</param>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task AddMemberAsync(ulong member)
-            => this.Discord.ApiClient.AddThreadMemberAsync(this.Id, member);
+        public Task AddMemberAsync(ulong member_id)
+            => this.Discord.ApiClient.AddThreadMemberAsync(this.Id, member_id);
 
         /// <summary>
-        /// Adds a member to this thread. Only applicable to private threads.
+        /// Adds a member to this thread.
         /// </summary>
         /// <param name="member">The member to be added.</param>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
@@ -219,14 +219,34 @@ namespace DisCatSharp.Entities
             => this.AddMemberAsync(member.Id);
 
         /// <summary>
-        /// Removes a member from this thread. Only applicable to private threads.
+        /// Gets a member in this thread.
         /// </summary>
-        /// <param name="member">The member id to be removed.</param>
+        /// <param name="member_id">The member to be added.</param>
+        /// <exception cref="NotFoundException">Thrown when the member is not part of the thread.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task<DiscordThreadChannelMember> GetMemberAsync(ulong member_id)
+            => this.Discord.ApiClient.GetThreadMemberAsync(this.Id, member_id);
+
+        /// <summary>
+        /// Gets a member in this thread.
+        /// </summary>
+        /// <param name="member">The member to be added.</param>
+        /// <exception cref="NotFoundException">Thrown when the member is not part of the thread.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task<DiscordThreadChannelMember> GetMemberAsync(DiscordMember member)
+            => this.Discord.ApiClient.GetThreadMemberAsync(this.Id, member.Id);
+
+        /// <summary>
+        /// Removes a member from this thread.
+        /// </summary>
+        /// <param name="member_id">The member id to be removed.</param>
         /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task RemoveMemberAsync(ulong member)
-            => this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, member);
+        public Task RemoveMemberAsync(ulong member_id)
+            => this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, member_id);
 
         /// <summary>
         /// Removes a member from this thread. Only applicable to private threads.
