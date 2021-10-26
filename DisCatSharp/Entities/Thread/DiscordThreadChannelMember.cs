@@ -32,12 +32,6 @@ namespace DisCatSharp.Entities
     public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThreadChannelMember>
     {
         /// <summary>
-        /// Gets ID of the thread.
-        /// </summary>
-        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong ThreadId { get; set; }
-
-        /// <summary>
         /// Gets the id of the user.
         /// </summary>
         [JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
@@ -46,9 +40,9 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the member object of the user.
         /// </summary>
-        [JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonIgnore]
         public DiscordMember Member
-            => this.Guild != null ? (this.Guild._members.TryGetValue(this.Id, out var member) ? member : new DiscordMember { Id = this.Id, _guild_id = this._guild_id, Discord = this.Discord }) : null;
+            => this.Guild != null ? (this.Guild._members.TryGetValue(this.UserId, out var member) ? member : this.Discord.ApiClient.GetGuildMemberAsync(this._guild_id, this.UserId).Result ?? new DiscordMember { Id = this.UserId, _guild_id = this._guild_id, Discord = this.Discord }) : null;
 
         /// <summary>
         /// Gets the presence of the user.
@@ -81,7 +75,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public DiscordChannel Thread
-            => this.Guild != null ? (this.Guild._threads.TryGetValue(this.ThreadId, out var thread) ? thread : null) : null;
+            => this.Guild != null ? (this.Guild._threads.TryGetValue(this.Id, out var thread) ? thread : null) : null;
 
         /// <summary>
         /// Gets the guild to which this channel belongs.
@@ -105,13 +99,13 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="e"><see cref="DiscordThreadChannel"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordThreadChannel"/> is equal to this <see cref="DiscordThreadChannelMember"/>.</returns>
-        public bool Equals(DiscordThreadChannelMember e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+        public bool Equals(DiscordThreadChannelMember e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.UserId == e.UserId));
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordThreadChannelMember"/>.
         /// </summary>
         /// <returns>The hash code for this <see cref="DiscordThreadChannelMember"/>.</returns>
-        public override int GetHashCode() => this.Id.GetHashCode();
+        public override int GetHashCode() => HashCode.Combine(this.Id.GetHashCode(), this.UserId.GetHashCode());
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordThreadChannel"/> objects are equal.
@@ -124,7 +118,7 @@ namespace DisCatSharp.Entities
             var o1 = e1 as object;
             var o2 = e2 as object;
 
-            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.UserId == e2.UserId));
         }
 
         /// <summary>
