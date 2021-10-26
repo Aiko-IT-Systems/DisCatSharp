@@ -125,6 +125,15 @@ namespace DisCatSharp
 
         internal Dictionary<ulong, DiscordPresence> _presences = new();
         private Lazy<IReadOnlyDictionary<ulong, DiscordPresence>> _presencesLazy;
+
+        /// <summary>
+        /// Gets the collection of presences held by this client.
+        /// </summary>
+        public IReadOnlyDictionary<string, DiscordActivity> EmbeddedActivities
+            => this._embeddedActivitiesLazy.Value;
+
+        internal Dictionary<string, DiscordActivity> _embeddedActivities = new();
+        private Lazy<IReadOnlyDictionary<string, DiscordActivity>> _embeddedActivitiesLazy;
         #endregion
 
         #region Constructor/Internal Setup
@@ -228,10 +237,12 @@ namespace DisCatSharp
             this._guildScheduledEventCreated = new AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
             this._guildScheduledEventUpdated = new AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
             this._guildScheduledEventDeleted = new AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
+            this._embeddedActivityUpdated = new AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs>("EMBEDDED_ACTIVITY_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 
             this._guilds.Clear();
 
             this._presencesLazy = new Lazy<IReadOnlyDictionary<ulong, DiscordPresence>>(() => new ReadOnlyDictionary<ulong, DiscordPresence>(this._presences));
+            this._embeddedActivitiesLazy = new Lazy<IReadOnlyDictionary<string, DiscordActivity>>(() => new ReadOnlyDictionary<string, DiscordActivity>(this._embeddedActivities));
         }
 
         #endregion

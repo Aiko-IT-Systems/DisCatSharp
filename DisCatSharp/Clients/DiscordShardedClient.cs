@@ -538,6 +538,7 @@ namespace DisCatSharp
             this._guildScheduledEventCreated = new AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._guildScheduledEventUpdated = new AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._guildScheduledEventDeleted = new AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+            this._embeddedActivityUpdated = new AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs>("EMBEDDED_ACTIVITY_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
         }
 
         /// <summary>
@@ -619,6 +620,7 @@ namespace DisCatSharp
             client.GuildScheduledEventCreated += this.Client_GuildScheduledEventCreated;
             client.GuildScheduledEventUpdated += this.Client_GuildScheduledEventUpdated;
             client.GuildScheduledEventDeleted += this.Client_GuildScheduledEventDeleted;
+            client.EmbeddedActivityUpdated += this.Client_EmbeddedActivityUpdated;
         }
 
         /// <summary>
@@ -700,6 +702,7 @@ namespace DisCatSharp
             client.GuildScheduledEventCreated -= this.Client_GuildScheduledEventCreated;
             client.GuildScheduledEventUpdated -= this.Client_GuildScheduledEventUpdated;
             client.GuildScheduledEventDeleted -= this.Client_GuildScheduledEventDeleted;
+            client.EmbeddedActivityUpdated -= this.Client_EmbeddedActivityUpdated;
         }
 
         /// <summary>
