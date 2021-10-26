@@ -32,9 +32,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Items", "Build Items", "{84464D70-687B-40A8-836D-C4F737698969}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
+		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
 		.github\dependabot.yml = .github\dependabot.yml
 		DisCatSharp.targets = DisCatSharp.targets
 		docs-oneclick-rebuild.ps1 = docs-oneclick-rebuild.ps1
+		.github\workflows\docs.yml = .github\workflows\docs.yml
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 		NuGet.targets = NuGet.targets
 		oneclick-rebuild.ps1 = oneclick-rebuild.ps1
 		Package.targets = Package.targets
@@ -47,6 +50,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{430C28D8-5F85-4D6E-AA68-211549435245}"
 	ProjectSection(SolutionItems) = preProject
 		.github\ISSUE_TEMPLATE\bug_report.md = .github\ISSUE_TEMPLATE\bug_report.md
+		.github\CODEOWNERS = .github\CODEOWNERS
 		.github\ISSUE_TEMPLATE\feature_request.md = .github\ISSUE_TEMPLATE\feature_request.md
 		.github\FUNDING.yml = .github\FUNDING.yml
 		.github\pull_request_template.md = .github\pull_request_template.md
@@ -60,15 +64,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Common", "DisCa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.ApplicationCommands", "DisCatSharp.ApplicationCommands\DisCatSharp.ApplicationCommands.csproj", "{AD530FD0-523C-4DE7-9AF6-B9A3785492C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Configuration", "DisCatSharp.Configuration\DisCatSharp.Configuration.csproj", "{603287D3-1EF2-47F1-A611-C7F25869DE14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Configuration", "DisCatSharp.Configuration\DisCatSharp.Configuration.csproj", "{603287D3-1EF2-47F1-A611-C7F25869DE14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Configuration.Tests", "DisCatSharp.Configuration.Tests\DisCatSharp.Configuration.Tests.csproj", "{E15E88B4-63AD-42DE-B685-D31697C62194}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Configuration.Tests", "DisCatSharp.Configuration.Tests\DisCatSharp.Configuration.Tests.csproj", "{E15E88B4-63AD-42DE-B685-D31697C62194}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Hosting", "DisCatSharp.Hosting\DisCatSharp.Hosting.csproj", "{72CCE5D5-926B-432A-876A-065FA2BC9B7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting", "DisCatSharp.Hosting\DisCatSharp.Hosting.csproj", "{72CCE5D5-926B-432A-876A-065FA2BC9B7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Hosting.Tests", "DisCatSharp.Hosting.Tests\DisCatSharp.Hosting.Tests.csproj", "{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting.Tests", "DisCatSharp.Hosting.Tests\DisCatSharp.Hosting.Tests.csproj", "{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.Hosting.DependencyInjection", "DisCatSharp.Hosting.DependencyInjection\DisCatSharp.Hosting.DependencyInjection.csproj", "{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting.DependencyInjection", "DisCatSharp.Hosting.DependencyInjection\DisCatSharp.Hosting.DependencyInjection.csproj", "{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B15E40E0-03FD-4852-B19B-2C50BCC67704}"
 EndProject
@@ -136,8 +140,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{430C28D8-5F85-4D6E-AA68-211549435245} = {4255B64D-92EC-46B3-BC3B-ED2C3A8073EE}
-		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94} = {B15E40E0-03FD-4852-B19B-2C50BCC67704}
 		{E15E88B4-63AD-42DE-B685-D31697C62194} = {B15E40E0-03FD-4852-B19B-2C50BCC67704}
+		{D02B598A-F0C9-4A8C-B8DE-7C0BAC8C9B94} = {B15E40E0-03FD-4852-B19B-2C50BCC67704}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23F3A981-51B8-4285-A38C-3267F1D25FE7}

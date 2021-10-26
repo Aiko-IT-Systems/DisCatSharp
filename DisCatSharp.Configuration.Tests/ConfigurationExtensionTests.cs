@@ -138,7 +138,7 @@ namespace DisCatSharp.Configuration.Tests
         {
             var source = this.DiscordIntentsConfig();
 
-            DiscordConfiguration config = source.ExtractConfig<DiscordConfiguration>("Discord");
+            var config = source.ExtractConfig<DiscordConfiguration>("Discord");
 
             var expected = DiscordIntents.GuildEmojisAndStickers | DiscordIntents.GuildMembers |
                            DiscordIntents.GuildInvites | DiscordIntents.GuildMessageReactions;
@@ -151,7 +151,7 @@ namespace DisCatSharp.Configuration.Tests
         {
             var source = this.DiscordHaphazardConfig();
 
-            DiscordConfiguration config = source.ExtractConfig<DiscordConfiguration>("Discord");
+            var config = source.ExtractConfig<DiscordConfiguration>("Discord");
             var expectedIntents = DiscordIntents.GuildEmojisAndStickers | DiscordIntents.GuildMembers |
                                   DiscordIntents.Guilds;
 
@@ -165,7 +165,7 @@ namespace DisCatSharp.Configuration.Tests
         public void TestExtractDiscordConfig_Default()
         {
             var source = this.BasicDiscordConfiguration();
-            DiscordConfiguration config = source.ExtractConfig<DiscordConfiguration>("Discord");
+            var config = source.ExtractConfig<DiscordConfiguration>("Discord");
 
             Assert.Equal("1234567890", config.Token);
             Assert.Equal(TokenType.Bot, config.TokenType);
@@ -190,7 +190,7 @@ namespace DisCatSharp.Configuration.Tests
         public void TestSection()
         {
             var source = this.SampleConfig();
-            SampleClass config = source.ExtractConfig<SampleClass>("Sample", null);
+            var config = source.ExtractConfig<SampleClass>("Sample", null);
 
             Assert.Equal(200, config.Amount);
             Assert.Equal("test@gmail.com", config.Email);
