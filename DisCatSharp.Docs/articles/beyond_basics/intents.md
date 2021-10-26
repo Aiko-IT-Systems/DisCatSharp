@@ -4,8 +4,7 @@ title: Intents
 ---
 
 ## Intents
-Intents were added to Discord to help the service not have to push so many events to the bots that were not using them.  If you are going to be needing
-to subscribe to any type of event, they are going to have to be defined **BOTH** within the
+Intents were added to Discord to help the service not have to push so many events to the bots that were not using them. If you are going to be needing to subscribe to any type of event, they are going to have to be defined **BOTH** within the
 [Discord Application under the Bot Page](https://discord.com/developers/applications) on Discords Site and also within the @DisCatSharp.DiscordConfiguration.
 
 
@@ -19,6 +18,7 @@ On the [Discord Application under the Bot Page](https://discord.com/developers/a
  >
  > Due to their nature of sensitive data, Discord requires you to go through a verification process once your bot is in a certain amount of servers.
  > Please read this [blog post](https://support.discord.com/hc/en-us/articles/360040720412-Bot-Verification-and-Data-Whitelisting) for more information and how to apply.
+ > Please read [this](https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots) and [this](https://support.discord.com/hc/en-us/articles/4410940809111) blog post for informations about the upcoming message intent in April 2022.
 
 ### Discord Configuration
 Within your `DiscordConfiguration` you will have to specify all the intents you will need. Here is a list of all the
@@ -37,7 +37,7 @@ Here is an example of just specifying one:
 ```csharp
 var config = new DiscordConfiguration()
 {
-    Intents = DiscordIntents.GuildMessages
+    Intents = DiscordIntents.GuildBans
 };
 ```
 

@@ -73,6 +73,16 @@ namespace DisCatSharp
         /// <summary>
         /// The application is embedded.
         /// </summary>
-        Embedded = 1 << 17
+        Embedded = 1 << 17,
+
+        /// <summary>
+        /// The application can track message content.
+        /// </summary>
+        GatewayMessageContent = 1 << 18,
+
+        /// <summary>
+        /// The application can track message content (limited).
+        /// </summary>
+        GatewayMessageContentLimited = 1 << 19
     }
 }
