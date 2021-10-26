@@ -3535,7 +3535,7 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Adds the thread member.
+        /// Adds a thread member.
         /// </summary>
         /// <param name="channel_id">The channel id to add the member to.</param>
         /// <param name="user_id">The user id to add.</param>
@@ -3549,7 +3549,25 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Removes the thread member.
+        /// Gets a thread member.
+        /// </summary>
+        /// <param name="channel_id">The channel id to get the member from.</param>
+        /// <param name="user_id">The user id to get.</param>
+        internal async Task<DiscordThreadChannelMember> GetThreadMemberAsync(ulong channel_id, ulong user_id)
+        {
+            var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}/:user_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id, user_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
+
+            var thread_member = JsonConvert.DeserializeObject<DiscordThreadChannelMember>(res.Response);
+
+            return thread_member;
+        }
+
+        /// <summary>
+        /// Removes a thread member.
         /// </summary>
         /// <param name="channel_id">The channel id to remove the member from.</param>
         /// <param name="user_id">The user id to remove.</param>
