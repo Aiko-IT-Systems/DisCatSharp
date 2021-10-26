@@ -125,12 +125,6 @@ namespace DisCatSharp.Net.Abstractions
         public Optional<string> Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the region id.
-        /// </summary>
-        [JsonProperty("region")]
-        public Optional<string> RegionId { get; set; }
-
-        /// <summary>
         /// Gets or sets the icon base64.
         /// </summary>
         [JsonProperty("icon")]
@@ -232,6 +226,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Include)]
         public Optional<string> Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the region id.
+        /// </summary>
+        [JsonProperty("premium_progress_bar_enabled", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<bool> PremiumProgressBarEnabled { get; set; }
     }
 
     /// <summary>
@@ -282,7 +282,7 @@ namespace DisCatSharp.Net.Abstractions
         public Optional<string> Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the featzres.
+        /// Gets or sets the features.
         /// </summary>
         [JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Features { get; set; }
