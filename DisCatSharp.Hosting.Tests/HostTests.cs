@@ -46,6 +46,21 @@ namespace DisCatSharp.Hosting.Tests
         }
     }
 
+    public interface IBotTwoService : IDiscordHostedService
+    {
+        string GiveMeAResponse();
+    }
+
+
+    public class BotTwoService : DiscordHostedService, IBotTwoService
+    {
+        public BotTwoService(IConfiguration config, ILogger<BotTwoService> logger, IServiceProvider provider) : base(config, logger, provider, "BotTwo")
+        {
+        }
+
+        public string GiveMeAResponse() => "I'm working";
+    }
+
     public class HostTests
     {
         private Dictionary<string, string> DefaultDiscord() =>
@@ -90,6 +105,35 @@ namespace DisCatSharp.Hosting.Tests
             Host.CreateDefaultBuilder()
                 .ConfigureServices(services => services.AddSingleton<IDiscordHostedService, MyCustomBot>())
                 .ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
+
+        IHostBuilder Create<TInterface, TBot>(string filename)
+            where TInterface : class, IDiscordHostedService
+            where TBot : class, TInterface, IDiscordHostedService =>
+            Host.CreateDefaultBuilder()
+                .ConfigureServices(services => services.AddSingleton<TInterface, TBot>())
+                .ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
+
+
+        [Fact]
+        public void TestBotCustomInterface()
+        {
+            IHost? host = null;
+
+            try
+            {
+                host = this.Create<IBotTwoService, BotTwoService>("BotTwo.json").Build();
+                var service = host.Services.GetRequiredService<IBotTwoService>();
+
+                Assert.NotNull(service);
+
+                var response = service.GiveMeAResponse();
+                Assert.Equal("I'm working", response);
+            }
+            finally
+            {
+                host?.Dispose();
+            }
+        }
 
         [Fact]
         public void TestDifferentSection_InteractivityOnly()
