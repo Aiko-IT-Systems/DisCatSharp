@@ -50,10 +50,11 @@ namespace DisCatSharp.Hosting
         /// <param name="config">The config.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="provider">The provider.</param>
-        protected DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider)
+        /// <param name="configBotSection">Name within the configuration which contains the config info for our bot. Default is DisCatSharp</param>
+        protected DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider, string configBotSection = Configuration.ConfigurationExtensions.DefaultRootLib)
         {
             this.Logger = logger;
-            this.Initialize(config, provider);
+            this.Initialize(config, provider, configBotSection);
         }
 
         #pragma warning restore 8618
@@ -63,13 +64,14 @@ namespace DisCatSharp.Hosting
         /// </summary>
         /// <param name="config"></param>
         /// <param name="provider"></param>
-        private void Initialize(IConfiguration config, IServiceProvider provider)
+        /// <param name="configBotSection">Name within the configuration which contains the config info for our bot</param>
+        private void Initialize(IConfiguration config, IServiceProvider provider, string configBotSection)
         {
-            var typeMap = config.FindImplementedExtensions();
+            var typeMap = config.FindImplementedExtensions(configBotSection);
 
             this.Logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
 
-            this.Client = config.BuildClient();
+            this.Client = config.BuildClient(configBotSection);
 
             foreach (var typePair in typeMap)
                 try
