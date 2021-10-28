@@ -34,7 +34,14 @@ namespace DisCatSharp.Hosting.Tests
 {
     public class Bot : DiscordHostedService
     {
-        public Bot(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider) : base(config, logger, provider)
+        public Bot(IConfiguration config, ILogger<Bot> logger, IServiceProvider provider) : base(config, logger, provider)
+        {
+        }
+    }
+
+    public class MyCustomBot : DiscordHostedService
+    {
+        public MyCustomBot(IConfiguration config, ILogger<MyCustomBot> logger, IServiceProvider provider) : base(config, logger, provider, "MyCustomBot")
         {
         }
     }
@@ -78,6 +85,63 @@ namespace DisCatSharp.Hosting.Tests
             Host.CreateDefaultBuilder()
                 .ConfigureServices(services => services.AddSingleton<IDiscordHostedService, Bot>())
                 .ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(configValues));
+
+        IHostBuilder Create(string filename) =>
+            Host.CreateDefaultBuilder()
+                .ConfigureServices(services => services.AddSingleton<IDiscordHostedService, MyCustomBot>())
+                .ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
+
+        [Fact]
+        public void TestDifferentSection_InteractivityOnly()
+        {
+            IHost? host = null;
+
+            try
+            {
+                host = this.Create("interactivity-different-section.json").Build();
+                var service = host.Services.GetRequiredService<IDiscordHostedService>();
+
+                Assert.NotNull(service);
+                Assert.NotNull(service.Client);
+                Assert.Null(service.Client.GetExtension<LavalinkExtension>());
+
+                var intents = DiscordIntents.GuildEmojisAndStickers | DiscordIntents.GuildMembers |
+                              DiscordIntents.Guilds;
+                Assert.Equal(intents, service.Client.Intents);
+
+
+                var interactivity = service.Client.GetExtension<InteractivityExtension>();
+                Assert.NotNull(interactivity);
+            }
+            finally
+            {
+                host?.Dispose();
+            }
+        }
+
+        [Fact]
+        public void TestDifferentSection_LavalinkOnly()
+        {
+            IHost? host = null;
+
+            try
+            {
+                host = this.Create("lavalink-different-section.json").Build();
+                var service = host.Services.GetRequiredService<IDiscordHostedService>();
+
+                Assert.NotNull(service);
+                Assert.NotNull(service.Client);
+                Assert.NotNull(service.Client.GetExtension<LavalinkExtension>());
+                Assert.Null(service.Client.GetExtension<InteractivityExtension>());
+
+                var intents = DiscordIntents.Guilds;
+                Assert.Equal(intents, service.Client.Intents);
+            }
+            finally
+            {
+                host?.Dispose();
+            }
+        }
 
         [Fact]
         public void TestNoExtensions()
