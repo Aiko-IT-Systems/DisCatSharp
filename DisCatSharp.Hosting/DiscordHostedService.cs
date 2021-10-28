@@ -41,7 +41,7 @@ namespace DisCatSharp.Hosting
         /// <inheritdoc/>
         public DiscordClient Client { get; private set; }
 
-        private readonly ILogger<DiscordHostedService> _logger;
+        protected readonly ILogger<DiscordHostedService> Logger;
 
         #pragma warning disable 8618
         /// <summary>
@@ -52,7 +52,7 @@ namespace DisCatSharp.Hosting
         /// <param name="provider">The provider.</param>
         protected DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider)
         {
-            this._logger = logger;
+            this.Logger = logger;
             this.Initialize(config, provider);
         }
 
@@ -67,7 +67,7 @@ namespace DisCatSharp.Hosting
         {
             var typeMap = config.FindImplementedExtensions();
 
-            this._logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
+            this.Logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
 
             this.Client = config.BuildClient();
 
@@ -112,7 +112,7 @@ namespace DisCatSharp.Hosting
 
                     if (instance == null)
                     {
-                        this._logger.LogError($"Unable to instantiate '{typePair.Value.ImplementationType.Name}'");
+                        this.Logger.LogError($"Unable to instantiate '{typePair.Value.ImplementationType.Name}'");
                         continue;
                     }
 
@@ -121,7 +121,7 @@ namespace DisCatSharp.Hosting
                 }
                 catch (Exception ex)
                 {
-                    this._logger.LogError($"Unable to register '{typePair.Value.ImplementationType.Name}': \n\t{ex.Message}");
+                    this.Logger.LogError($"Unable to register '{typePair.Value.ImplementationType.Name}': \n\t{ex.Message}");
                 }
         }
 
