@@ -14,7 +14,7 @@ Create a new class called `Bot` which inherits from `DiscordHostedService`.
 ```cs
 public class Bot : DiscordHostedService
 {
-    public Bot(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider) : base(config,logger,provider)
+    public Bot(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider) : base(config, logger, provider)
     {
     }
 }
