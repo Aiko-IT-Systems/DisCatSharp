@@ -228,7 +228,7 @@ namespace DisCatSharp.Net.Abstractions
         public Optional<string> Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the region id.
+        /// Gets or sets whether the premium progress bar should be enabled.
         /// </summary>
         [JsonProperty("premium_progress_bar_enabled", NullValueHandling = NullValueHandling.Ignore)]
         public Optional<bool> PremiumProgressBarEnabled { get; set; }
