@@ -260,20 +260,28 @@ namespace DisCatSharp.Configuration
         ///   }
         /// }
         /// </code>
+        /// <code>
+        /// {
+        ///   "botSectionName": {
+        ///      "DiscordConfiguration": { }
+        ///   }
+        /// }
+        /// </code>
         /// </remarks>
         /// <param name="config"></param>
+        /// <param name="botSectionName"></param>
         /// <returns>Instance of <see cref="DiscordClient"/></returns>
-        public static DiscordClient BuildClient(this IConfiguration config)
+        public static DiscordClient BuildClient(this IConfiguration config, string botSectionName = DefaultRootLib)
         {
-            var section = config.HasSection(DefaultRootLib, "Discord")
+            var section = config.HasSection(botSectionName, "Discord")
                 ? "Discord"
-                : config.HasSection(DefaultRootLib, $"Discord{ConfigSuffix}")
+                : config.HasSection(botSectionName, $"Discord{ConfigSuffix}")
                     ? $"Discord:{ConfigSuffix}"
                     : null;
 
             return string.IsNullOrEmpty(section)
                 ? new DiscordClient(new())
-                : new DiscordClient(config.ExtractConfig<DiscordConfiguration>(section));
+                : new DiscordClient(config.ExtractConfig<DiscordConfiguration>(section, botSectionName));
         }
     }
 }
