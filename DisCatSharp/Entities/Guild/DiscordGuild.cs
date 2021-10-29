@@ -3297,6 +3297,11 @@ namespace DisCatSharp.Entities
         public bool HasMemberProfiles { get; }
 
         /// <summary>
+        /// Guild is restricted to users with the <see cref="UserFlags.DiscordEmployee"/> badge.
+        /// </summary>
+        public bool IsStaffOnly { get; }
+
+        /// <summary>
         /// String of guild features.
         /// </summary>
         public string FeatureString { get; }
@@ -3342,6 +3347,7 @@ namespace DisCatSharp.Entities
             this.HasDirectoryEntry = guild.RawFeatures.Contains("HAS_DIRECTORY_ENTRY");
             this.IsLinkedToHub = guild.RawFeatures.Contains("LINKED_TO_HUB");
             this.HasMemberProfiles = guild.RawFeatures.Contains("MEMBER_PROFILES");
+            this.IsStaffOnly = guild.RawFeatures.Contains("INTERNAL_EMPLOYEE_ONLY");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach (var feature in guild.RawFeatures)
