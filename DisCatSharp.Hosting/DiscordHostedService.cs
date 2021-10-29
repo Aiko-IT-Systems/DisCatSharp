@@ -41,7 +41,7 @@ namespace DisCatSharp.Hosting
         /// <inheritdoc/>
         public DiscordClient Client { get; private set; }
 
-        private readonly ILogger<DiscordHostedService> _logger;
+        protected readonly ILogger<DiscordHostedService> Logger;
 
         #pragma warning disable 8618
         /// <summary>
@@ -50,10 +50,11 @@ namespace DisCatSharp.Hosting
         /// <param name="config">The config.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="provider">The provider.</param>
-        protected DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider)
+        /// <param name="configBotSection">Name within the configuration which contains the config info for our bot. Default is DisCatSharp</param>
+        protected DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider, string configBotSection = Configuration.ConfigurationExtensions.DefaultRootLib)
         {
-            this._logger = logger;
-            this.Initialize(config, provider);
+            this.Logger = logger;
+            this.Initialize(config, provider, configBotSection);
         }
 
         #pragma warning restore 8618
@@ -63,13 +64,14 @@ namespace DisCatSharp.Hosting
         /// </summary>
         /// <param name="config"></param>
         /// <param name="provider"></param>
-        private void Initialize(IConfiguration config, IServiceProvider provider)
+        /// <param name="configBotSection">Name within the configuration which contains the config info for our bot</param>
+        private void Initialize(IConfiguration config, IServiceProvider provider, string configBotSection)
         {
-            var typeMap = config.FindImplementedExtensions();
+            var typeMap = config.FindImplementedExtensions(configBotSection);
 
-            this._logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
+            this.Logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
 
-            this.Client = config.BuildClient();
+            this.Client = config.BuildClient(configBotSection);
 
             foreach (var typePair in typeMap)
                 try
@@ -112,7 +114,7 @@ namespace DisCatSharp.Hosting
 
                     if (instance == null)
                     {
-                        this._logger.LogError($"Unable to instantiate '{typePair.Value.ImplementationType.Name}'");
+                        this.Logger.LogError($"Unable to instantiate '{typePair.Value.ImplementationType.Name}'");
                         continue;
                     }
 
@@ -121,7 +123,7 @@ namespace DisCatSharp.Hosting
                 }
                 catch (Exception ex)
                 {
-                    this._logger.LogError($"Unable to register '{typePair.Value.ImplementationType.Name}': \n\t{ex.Message}");
+                    this.Logger.LogError($"Unable to register '{typePair.Value.ImplementationType.Name}': \n\t{ex.Message}");
                 }
         }
 
