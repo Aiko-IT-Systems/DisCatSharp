@@ -990,7 +990,7 @@ namespace DisCatSharp.Entities
             return (type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread)
                 ? throw new NotSupportedException("Wrong thread type given.")
                 : (!this.IsThreadHolder())
-                ? throw new NotSupportedException("Parent channel is no channel for threads")
+                ? throw new NotSupportedException("Parent channel can't have threads")
                 : type == ChannelType.PrivateThread
                 ? Utilities.CheckThreadPrivateFeature(this.Guild)
                 ? Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, auto_archive_duration)
