@@ -37,12 +37,6 @@ namespace DisCatSharp.Net.Models
         public Optional<string> Name { internal get; set; }
 
         /// <summary>
-        /// The new guild voice region.
-        /// </summary>
-        [Obsolete("Channels use their own voice regions. Guild region is deprecated. Please use the newer one on the voice channels.", false)]
-        public Optional<DiscordVoiceRegion> Region { internal get; set; }
-
-        /// <summary>
         /// The new guild icon.
         /// </summary>
         public Optional<Stream> Icon { internal get; set; }
@@ -126,6 +120,11 @@ namespace DisCatSharp.Net.Models
         /// The new discorvery splash image of the guild
         /// </summary>
         public Optional<Stream> DiscoverySplash { get; set; }
+
+        /// <summary>
+        /// Whether the premium progress bar should be enabled
+        /// </summary>
+        public Optional<bool> PremiumProgressBarEnabled { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GuildEditModel"/> class.
