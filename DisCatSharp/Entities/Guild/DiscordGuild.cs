@@ -756,11 +756,11 @@ namespace DisCatSharp.Entities
             else if (mdl.Description.HasValue)
                 description = null;
 
-            return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name, mdl.Region.IfPresent(e => e.Id),
+            return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name,
                 mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
                 afkChannelId, mdl.AfkTimeout, iconb64, mdl.Owner.IfPresent(e => e.Id), splashb64,
                 systemChannelId, mdl.SystemChannelFlags, publicUpdatesChannelId, rulesChannelId,
-                description, bannerb64, discoverySplash64, mdl.PreferredLocale, mdl.AuditLogReason).ConfigureAwait(false);
+                description, bannerb64, discoverySplash64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -3297,6 +3297,11 @@ namespace DisCatSharp.Entities
         public bool HasMemberProfiles { get; }
 
         /// <summary>
+        /// Guild is restricted to users with the <see cref="UserFlags.DiscordEmployee"/> badge.
+        /// </summary>
+        public bool IsStaffOnly { get; }
+
+        /// <summary>
         /// String of guild features.
         /// </summary>
         public string FeatureString { get; }
@@ -3342,6 +3347,7 @@ namespace DisCatSharp.Entities
             this.HasDirectoryEntry = guild.RawFeatures.Contains("HAS_DIRECTORY_ENTRY");
             this.IsLinkedToHub = guild.RawFeatures.Contains("LINKED_TO_HUB");
             this.HasMemberProfiles = guild.RawFeatures.Contains("MEMBER_PROFILES");
+            this.IsStaffOnly = guild.RawFeatures.Contains("INTERNAL_EMPLOYEE_ONLY");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach (var feature in guild.RawFeatures)
