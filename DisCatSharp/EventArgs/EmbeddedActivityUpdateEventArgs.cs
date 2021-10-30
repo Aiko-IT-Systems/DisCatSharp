@@ -20,17 +20,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Hosting
-{
+using System;
+using System.Collections.Generic;
+using System.Text;
+using DisCatSharp.Entities;
 
+namespace DisCatSharp.EventArgs
+{
     /// <summary>
-    /// Contract required for <see cref="DiscordClient"/> to work in a web hosting environment
+    /// Represents arguments for <see cref="DiscordClient.EmbeddedActivityUpdated"/> event.
     /// </summary>
-    public interface IDiscordHostedService : Microsoft.Extensions.Hosting.IHostedService
+    public class EmbeddedActivityUpdateEventArgs : DiscordEventArgs
     {
         /// <summary>
-        /// Reference to connected client
+        /// Gets the guild.
         /// </summary>
-        DiscordClient Client { get; }
+        public DiscordGuild Guild { get; internal set; }
+
+        /// <summary>
+        /// Gets the channel.
+        /// </summary>
+        public DiscordChannel Channel { get; internal set; }
+
+        /// <summary>
+        /// Gets the embedded activity.
+        /// </summary>
+        public DiscordActivity EmbeddedActivityBefore { get; internal set; }
+
+        /// <summary>
+        /// Gets the embedded activity.
+        /// </summary>
+        public DiscordActivity EmbeddedActivityAfter { get; internal set; }
+
+        /// <summary>
+        /// Gets the users in the activity.
+        /// </summary>
+        public IReadOnlyList<DiscordMember> Users { get; internal set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmbeddedActivityUpdateEventArgs"/> class.
+        /// </summary>
+        internal EmbeddedActivityUpdateEventArgs() : base() { }
     }
 }

@@ -578,6 +578,20 @@ namespace DisCatSharp
 
         #endregion
 
+        #region Activities
+
+        /// <summary>
+        /// Fired when a embedded activity has been updated.
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, EmbeddedActivityUpdateEventArgs> EmbeddedActivityUpdated
+        {
+            add => this._embeddedActivityUpdated.Register(value);
+            remove => this._embeddedActivityUpdated.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs> _embeddedActivityUpdated;
+
+        #endregion
+
         #region Presence/User Update
 
         /// <summary>

@@ -411,7 +411,6 @@ namespace DisCatSharp.Net
         /// </summary>
         /// <param name="guildId">The guild id.</param>
         /// <param name="name">The name.</param>
-        /// <param name="region">The region.</param>
         /// <param name="verificationLevel">The verification level.</param>
         /// <param name="defaultMessageNotifications">The default message notifications.</param>
         /// <param name="mfaLevel">The mfa level.</param>
@@ -429,20 +428,19 @@ namespace DisCatSharp.Net
         /// <param name="bannerb64">The banner base64.</param>
         /// <param name="discorverySplashb64">The discovery base64.</param>
         /// <param name="preferredLocale">The preferred locale.</param>
+        /// <param name="premiumProgressBarEnabled">Whether the premium progress bar should be enabled.</param>
         /// <param name="reason">The reason.</param>
-        internal async Task<DiscordGuild> ModifyGuildAsync(ulong guildId, Optional<string> name,
-            Optional<string> region, Optional<VerificationLevel> verificationLevel,
+        internal async Task<DiscordGuild> ModifyGuildAsync(ulong guildId, Optional<string> name, Optional<VerificationLevel> verificationLevel,
             Optional<DefaultMessageNotifications> defaultMessageNotifications, Optional<MfaLevel> mfaLevel,
             Optional<ExplicitContentFilter> explicitContentFilter, Optional<ulong?> afkChannelId,
             Optional<int> afkTimeout, Optional<string> iconb64, Optional<ulong> ownerId, Optional<string> splashb64,
             Optional<ulong?> systemChannelId, Optional<SystemChannelFlags> systemChannelFlags,
             Optional<ulong?> publicUpdatesChannelId, Optional<ulong?> rulesChannelId, Optional<string> description,
-            Optional<string> bannerb64, Optional<string> discorverySplashb64, Optional<string> preferredLocale, string reason)
+            Optional<string> bannerb64, Optional<string> discorverySplashb64, Optional<string> preferredLocale, Optional<bool> premiumProgressBarEnabled, string reason)
         {
             var pld = new RestGuildModifyPayload
             {
                 Name = name,
-                RegionId = region,
                 VerificationLevel = verificationLevel,
                 DefaultMessageNotifications = defaultMessageNotifications,
                 MfaLevel = mfaLevel,
@@ -459,7 +457,8 @@ namespace DisCatSharp.Net
                 RulesChannelId = rulesChannelId,
                 PublicUpdatesChannelId = publicUpdatesChannelId,
                 PreferredLocale = preferredLocale,
-                Description = description
+                Description = description,
+                PremiumProgressBarEnabled = premiumProgressBarEnabled
             };
 
             var headers = Utilities.GetBaseHeaders();
@@ -3535,7 +3534,7 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Adds the thread member.
+        /// Adds a thread member.
         /// </summary>
         /// <param name="channel_id">The channel id to add the member to.</param>
         /// <param name="user_id">The user id to add.</param>
@@ -3549,7 +3548,25 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Removes the thread member.
+        /// Gets a thread member.
+        /// </summary>
+        /// <param name="channel_id">The channel id to get the member from.</param>
+        /// <param name="user_id">The user id to get.</param>
+        internal async Task<DiscordThreadChannelMember> GetThreadMemberAsync(ulong channel_id, ulong user_id)
+        {
+            var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREAD_MEMBERS}/:user_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { channel_id, user_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
+
+            var thread_member = JsonConvert.DeserializeObject<DiscordThreadChannelMember>(res.Response);
+
+            return thread_member;
+        }
+
+        /// <summary>
+        /// Removes a thread member.
         /// </summary>
         /// <param name="channel_id">The channel id to remove the member from.</param>
         /// <param name="user_id">The user id to remove.</param>

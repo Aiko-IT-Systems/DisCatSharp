@@ -76,11 +76,11 @@ namespace DisCatSharp
             DiscordChannel chn;
             ulong gid;
             ulong cid;
-            DiscordStageInstance stg;
-            DiscordIntegration itg;
-            DiscordThreadChannel trd;
-            DiscordThreadChannelMember trdm;
-            DiscordEvent gse;
+            DiscordStageInstance stg = default;
+            DiscordIntegration itg = default;
+            DiscordThreadChannel trd = default;
+            DiscordThreadChannelMember trdm = default;
+            DiscordEvent gse = default;
             TransportUser usr = default;
             TransportMember mbr = default;
             TransportUser refUsr = default;
@@ -465,6 +465,14 @@ namespace DisCatSharp
 
                 #endregion
 
+                #region Activities
+                case "embedded_activity_update":
+                    gid = (ulong)dat["guild_id"];
+                    cid = (ulong)dat["channel_id"];
+                    await this.OnEmbeddedActivityUpdateAsync((JObject)dat["embedded_activity"], this._guilds[gid], cid, (JObject)dat["users"], (ulong)dat["embedded_activity"]["application_id"]).ConfigureAwait(false);
+                    break;
+                #endregion
+
                 #region User/Presence Update
 
                 case "presence_update":
@@ -775,7 +783,7 @@ namespace DisCatSharp
                 }
 
                 channel_new._permissionOverwrites.AddRange(channel._permissionOverwrites);
-                
+
                 if (this.Configuration.AutoRefreshChannelCache && gld != null)
                 {
                     await this.RefreshChannelsAsync(channel.Guild.Id);
@@ -2327,9 +2335,9 @@ namespace DisCatSharp
         internal async Task OnThreadMemberUpdateEventAsync(DiscordThreadChannelMember member)
         {
             member.Discord = this;
-            var thread = this.InternalGetCachedThread(member.ThreadId);
+            var thread = this.InternalGetCachedThread(member.Id);
             thread.CurrentMember = member;
-            thread.Guild._threads.AddOrUpdate(member.ThreadId, thread, (oldThread, newThread) => newThread);
+            thread.Guild._threads.AddOrUpdate(member.Id, thread, (oldThread, newThread) => newThread);
 
 
             await this._threadMemberUpdated.InvokeAsync(this, new ThreadMemberUpdateEventArgs { ThreadMember = member, Thread = thread }).ConfigureAwait(false);
@@ -2389,6 +2397,68 @@ namespace DisCatSharp
             await this._threadMembersUpdated.InvokeAsync(this, threadMembersUpdateArg).ConfigureAwait(false);
         }
 
+        #endregion
+
+        #region Activities
+        /// <summary>
+        /// Dispatches the <see cref="EmbeddedActivityUpdated"/> event.
+        /// </summary>
+        /// <param name="tr_activity">The transport activity.</param>
+        /// <param name="guild">The guild.</param>
+        /// <param name="channel_id">The channel id.</param>
+        /// <param name="j_users">The users in the activity.</param>
+        /// <param name="app_id">The application id.</param>
+        /// <returns>A Task.</returns>
+        internal async Task OnEmbeddedActivityUpdateAsync(JObject tr_activity, DiscordGuild guild, ulong channel_id, JObject j_users, ulong app_id)
+        {
+            try
+            {
+                var users = j_users?.ToObject<List<ulong>>();
+
+                DiscordActivity old = null;
+                var uid = $"{guild.Id}_{channel_id}_{app_id}";
+
+                if (this._embeddedActivities.TryGetValue(uid, out var activity))
+                {
+                    old = new DiscordActivity(activity);
+                    DiscordJson.PopulateObject(tr_activity, activity);
+                }
+                else
+                {
+                    activity = tr_activity.ToObject<DiscordActivity>();
+                    this._embeddedActivities[uid] = activity;
+                }
+
+                var activity_users = new List<DiscordMember>();
+
+                var channel = this.InternalGetCachedChannel(channel_id) ?? await this.ApiClient.GetChannelAsync(channel_id);
+
+                if (users != null)
+                {
+                    foreach (var user in users)
+                    {
+                        var activity_user = guild._members.TryGetValue(user, out var member) ? member : new DiscordMember { Id = user, _guild_id = guild.Id, Discord = this };
+                        activity_users.Add(activity_user);
+                    }
+                }
+                else
+                    activity_users = null;
+
+                var ea = new EmbeddedActivityUpdateEventArgs
+                {
+                    Guild = guild,
+                    EmbeddedActivityBefore = old,
+                    EmbeddedActivityAfter = activity,
+                    Users = activity_users,
+                    Channel = channel
+
+                };
+                await this._embeddedActivityUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+            } catch (Exception ex)
+            {
+                this.Logger.LogError(ex, ex.Message);
+            }
+        }
         #endregion
 
         #region User/Presence Update
@@ -2735,9 +2805,9 @@ namespace DisCatSharp
                 return;
 
             var guild = this.InternalGetCachedGuild(guild_id);
-            
+
             DiscordApplicationCommand cmd;
-            try 
+            try
             {
                 cmd = await this.GetGuildApplicationCommandAsync(guild_id, c_id);
             }

@@ -669,6 +669,20 @@ namespace DisCatSharp
 
         #endregion
 
+        #region Activities
+
+        /// <summary>
+        /// Fired when a embedded activity has been updated.
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, EmbeddedActivityUpdateEventArgs> EmbeddedActivityUpdated
+        {
+            add => this._embeddedActivityUpdated.Register(value);
+            remove => this._embeddedActivityUpdated.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs> _embeddedActivityUpdated;
+
+        #endregion
+
         #region User/Presence Update
 
         /// <summary>
@@ -934,6 +948,15 @@ namespace DisCatSharp
         /// <returns>A Task.</returns>
         private Task Client_Zombied(DiscordClient client, ZombiedEventArgs e)
             => this._zombied.InvokeAsync(client, e);
+
+        /// <summary>
+        /// Client_S the embedded activity updated.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The events.</param>
+        /// <returns>A Task.</returns>
+        private Task Client_EmbeddedActivityUpdated(DiscordClient client, EmbeddedActivityUpdateEventArgs e)
+            => this._embeddedActivityUpdated.InvokeAsync(client, e);
 
         /// <summary>
         /// Payload_S the received.
