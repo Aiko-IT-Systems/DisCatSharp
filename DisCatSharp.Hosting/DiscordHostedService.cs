@@ -89,7 +89,7 @@ namespace DisCatSharp.Hosting
             }
             catch (Exception ex)
             {
-                this.Logger.LogError(ex, $"Was unable to build {nameof(DiscordClient)} for {this.GetType().Name}");
+                this.Logger.LogError($"Was unable to build {nameof(DiscordClient)} for {this.GetType().Name}");
                 this.OnInitializationError(ex);
             }
 
@@ -172,7 +172,7 @@ namespace DisCatSharp.Hosting
                  * So to overcome this obstacle we need to log what happened and manually exit
                  */
 
-                this.Logger.LogError(ex, $"Was unable to start {this.GetType().Name} Bot as a hosted service.");
+                this.Logger.LogError($"Was unable to start {this.GetType().Name} Bot as a hosted service.");
                 this.OnInitializationError(ex);
             }
 
