@@ -37,6 +37,11 @@ namespace DisCatSharp
         /// <summary>
         /// The permission is bound to a user.
         /// </summary>
-        User = 2
+        User = 2,
+
+        /// <summary>
+        /// The permission is bound to a channel.
+        /// </summary>
+        Channel = 3
     }
 }
