@@ -42,7 +42,7 @@ namespace DisCatSharp.Hosting
         public DiscordClient Client { get; private set; }
 
         protected readonly ILogger<DiscordHostedService> Logger;
-        protected readonly IHostApplicationLifetime  ApplicationLifetime;
+        protected readonly IHostApplicationLifetime ApplicationLifetime;
 
         #pragma warning disable 8618
         /// <summary>
@@ -63,6 +63,15 @@ namespace DisCatSharp.Hosting
         #pragma warning restore 8618
 
         /// <summary>
+        /// When the bot fails to start, this method will be invoked. (Default behavior is to shutdown)
+        /// </summary>
+        /// <param name="ex">The exception/reason the bot couldn't start</param>
+        protected virtual void OnInitializationError(Exception ex)
+        {
+            this.ApplicationLifetime.StopApplication();
+        }
+
+        /// <summary>
         /// Automatically search for and configure <see cref="Client"/>
         /// </summary>
         /// <param name="config"></param>
@@ -81,7 +90,7 @@ namespace DisCatSharp.Hosting
             catch (Exception ex)
             {
                 this.Logger.LogError(ex, $"Was unable to build {nameof(DiscordClient)} for {this.GetType().Name}");
-                this.ApplicationLifetime.StopApplication();
+                this.OnInitializationError(ex);
             }
 
             foreach (var typePair in typeMap)
@@ -135,7 +144,7 @@ namespace DisCatSharp.Hosting
                 catch (Exception ex)
                 {
                     this.Logger.LogError($"Unable to register '{typePair.Value.ImplementationType.Name}': \n\t{ex.Message}");
-                    this.ApplicationLifetime.StopApplication();
+                    this.OnInitializationError(ex);
                 }
         }
 
@@ -163,8 +172,8 @@ namespace DisCatSharp.Hosting
                  * So to overcome this obstacle we need to log what happened and manually exit
                  */
 
-                this.Logger.LogError(ex, $"Was unable to start {this.GetType().Name} Bot as a hosted service.\n\tShutting down application...");
-                this.ApplicationLifetime.StopApplication();
+                this.Logger.LogError(ex, $"Was unable to start {this.GetType().Name} Bot as a hosted service.");
+                this.OnInitializationError(ex);
             }
 
             // Wait indefinitely -- but use stopping token so we can properly cancel if needed
