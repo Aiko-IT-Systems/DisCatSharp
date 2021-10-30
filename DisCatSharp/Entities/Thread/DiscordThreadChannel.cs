@@ -346,7 +346,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public new Task<DiscordMessage> SendMessageAsync(string content)
         {
-            return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
+            return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
                 : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
@@ -362,7 +362,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public new Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
         {
-            return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
+            return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
                 : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] {embed}, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
@@ -379,7 +379,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public new Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
         {
-            return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
+            return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
                 : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, new[] {embed}, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
@@ -410,7 +410,9 @@ namespace DisCatSharp.Entities
             var builder = new DiscordMessageBuilder();
             action(builder);
 
-            return this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
+            return !this.IsWriteable()
+                ? throw new ArgumentException("Cannot send a text message to a non-text channel.")
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
         }
 
         /// <summary>

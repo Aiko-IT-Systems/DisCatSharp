@@ -163,13 +163,7 @@ namespace DisCatSharp.Entities
         /// Gets a hash code of this team member.
         /// </summary>
         /// <returns>Hash code of this team member.</returns>
-        public override int GetHashCode()
-        {
-            var hash = 13;
-            hash = (hash * 7) + this.User.GetHashCode();
-            hash = (hash * 7) + this.Team.GetHashCode();
-            return hash;
-        }
+        public override int GetHashCode() => HashCode.Combine(this.User, this.Team);
 
         /// <summary>
         /// Converts this team member to their string representation.
