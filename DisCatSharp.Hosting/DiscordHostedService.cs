@@ -42,6 +42,7 @@ namespace DisCatSharp.Hosting
         public DiscordClient Client { get; private set; }
 
         protected readonly ILogger<DiscordHostedService> Logger;
+        protected readonly IHostApplicationLifetime ApplicationLifetime;
 
         #pragma warning disable 8618
         /// <summary>
@@ -50,14 +51,25 @@ namespace DisCatSharp.Hosting
         /// <param name="config">The config.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="provider">The provider.</param>
+        /// <param name="applicationLifetime">Current hosting environment. This will be used for shutting down the application on error</param>
         /// <param name="configBotSection">Name within the configuration which contains the config info for our bot. Default is DisCatSharp</param>
-        protected DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider, string configBotSection = Configuration.ConfigurationExtensions.DefaultRootLib)
+        protected DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider, IHostApplicationLifetime applicationLifetime, string configBotSection = Configuration.ConfigurationExtensions.DefaultRootLib)
         {
             this.Logger = logger;
+            this.ApplicationLifetime = applicationLifetime;
             this.Initialize(config, provider, configBotSection);
         }
 
         #pragma warning restore 8618
+
+        /// <summary>
+        /// When the bot fails to start, this method will be invoked. (Default behavior is to shutdown)
+        /// </summary>
+        /// <param name="ex">The exception/reason the bot couldn't start</param>
+        protected virtual void OnInitializationError(Exception ex)
+        {
+            this.ApplicationLifetime.StopApplication();
+        }
 
         /// <summary>
         /// Automatically search for and configure <see cref="Client"/>
@@ -71,7 +83,15 @@ namespace DisCatSharp.Hosting
 
             this.Logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
 
-            this.Client = config.BuildClient(configBotSection);
+            try
+            {
+                this.Client = config.BuildClient(configBotSection);
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError($"Was unable to build {nameof(DiscordClient)} for {this.GetType().Name}");
+                this.OnInitializationError(ex);
+            }
 
             foreach (var typePair in typeMap)
                 try
@@ -124,6 +144,7 @@ namespace DisCatSharp.Hosting
                 catch (Exception ex)
                 {
                     this.Logger.LogError($"Unable to register '{typePair.Value.ImplementationType.Name}': \n\t{ex.Message}");
+                    this.OnInitializationError(ex);
                 }
         }
 
@@ -134,12 +155,26 @@ namespace DisCatSharp.Hosting
         /// <returns>A Task.</returns>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (this.Client == null)
-                throw new NullReferenceException("Discord Client cannot be null");
+            try
+            {
+                if (this.Client == null)
+                    throw new NullReferenceException("Discord Client cannot be null");
 
-            await this.PreConnect();
-            await this.Client.ConnectAsync();
-            await this.PostConnect();
+                await this.PreConnect();
+                await this.Client.ConnectAsync();
+                await this.PostConnect();
+            }
+            catch (Exception ex)
+            {
+                /*
+                 * Anything before DOTNET 6 will
+                 * fail silently despite throwing an exception in this method
+                 * So to overcome this obstacle we need to log what happened and manually exit
+                 */
+
+                this.Logger.LogError($"Was unable to start {this.GetType().Name} Bot as a hosted service.");
+                this.OnInitializationError(ex);
+            }
 
             // Wait indefinitely -- but use stopping token so we can properly cancel if needed
             await Task.Delay(-1, stoppingToken);
