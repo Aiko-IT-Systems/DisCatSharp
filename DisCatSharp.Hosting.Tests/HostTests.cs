@@ -34,14 +34,14 @@ namespace DisCatSharp.Hosting.Tests
 {
     public class Bot : DiscordHostedService
     {
-        public Bot(IConfiguration config, ILogger<Bot> logger, IServiceProvider provider) : base(config, logger, provider)
+        public Bot(IConfiguration config, ILogger<Bot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime)
         {
         }
     }
 
     public class MyCustomBot : DiscordHostedService
     {
-        public MyCustomBot(IConfiguration config, ILogger<MyCustomBot> logger, IServiceProvider provider) : base(config, logger, provider, "MyCustomBot")
+        public MyCustomBot(IConfiguration config, ILogger<MyCustomBot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "MyCustomBot")
         {
         }
     }
@@ -54,7 +54,7 @@ namespace DisCatSharp.Hosting.Tests
 
     public class BotTwoService : DiscordHostedService, IBotTwoService
     {
-        public BotTwoService(IConfiguration config, ILogger<BotTwoService> logger, IServiceProvider provider) : base(config, logger, provider, "BotTwo")
+        public BotTwoService(IConfiguration config, ILogger<BotTwoService> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "BotTwo")
         {
         }
 
