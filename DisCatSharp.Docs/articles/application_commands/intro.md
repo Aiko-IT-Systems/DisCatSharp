@@ -30,7 +30,7 @@ Simple slash command:
 public class MyCommand : ApplicationCommandsModule
 {
     [SlashCommand("my_command", "This is decription of the command.")]
-    public static async Task MySlashCommand(InteractionContext context)
+    public async Task MySlashCommand(InteractionContext context)
     {
 
     }
@@ -42,7 +42,7 @@ Simple context menu command:
 public class MySecondCommand : ApplicationCommandsModule
 {
     [ContextMenu(ApplicationCommandType.User, "My Command")]
-    public static async Task MyContextMenuCommand(ContextMenuContext context)
+    public async Task MyContextMenuCommand(ContextMenuContext context)
     {
 
     }
@@ -68,6 +68,10 @@ await ctx.EditResponseAsync(new DiscordWebhookBuilder()
     Content = "Hello :3"
 });
 ```
+
+>[!NOTE]
+> Note that you can make your commands static, but then you cannot use [Dependency Injection](xref:commands_dependency_injection) in them.
+
 
 ### Registration of commands
 
@@ -106,7 +110,7 @@ public class MyCommand : ApplicationCommandsModule
     public class MyCommandGroup : ApplicationCommandsModule
     {
         [SlashCommand("first", "This is decription of the command.")]
-        public static async Task MySlashCommand(InteractionContext context)
+        public async Task MySlashCommand(InteractionContext context)
         {
             await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
             {
@@ -114,7 +118,7 @@ public class MyCommand : ApplicationCommandsModule
             });
         }
         [SlashCommand("second", "This is decription of the command.")]
-        public static async Task MySecondCommand(InteractionContext context)
+        public async Task MySecondCommand(InteractionContext context)
         {
             await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
             {
