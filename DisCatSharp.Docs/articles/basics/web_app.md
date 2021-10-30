@@ -8,6 +8,12 @@ Install the following packages:
  - DisCatSharp
  - DisCatSharp.Hosting
 
+>[!IMPORTANT]
+> This requires .NET 5.0.
+>
+> But, unfortunately, in this version, exception handling does not work during the initialization of bots. In case, for example, an invalid token, the application will be shut down.
+> If you need to customize specific actions on initialization exception, you need to use .NET 6.0.
+
 # Bot.cs
 Create a new class called `Bot` which inherits from `DiscordHostedService`.
 
@@ -102,6 +108,8 @@ For more info on which values are available checkout the following classes:
  - `InteractivityConfiguration`
  - `LavalinkConfiguration`
  - `VoiceNextConfiguration`
+
+For more information, you can also see the [example](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples/tree/main/Hosting).
 
 ____
 ## Values
