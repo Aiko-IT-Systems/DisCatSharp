@@ -30,6 +30,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Net;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp
@@ -90,6 +91,13 @@ namespace DisCatSharp
         protected internal ConcurrentDictionary<ulong, DiscordUser> UserCache { get; }
 
         /// <summary>
+        /// <para>Gets the service provider.</para>
+        /// <para>This allows passing data around without resorting to static members.</para>
+        /// <para>Defaults to null.</para>
+        /// </summary>
+        public IServiceProvider Services { get; set; } = new ServiceCollection().BuildServiceProvider(true);
+
+        /// <summary>
         /// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
         /// </summary>
         public IReadOnlyDictionary<string, DiscordVoiceRegion> VoiceRegions
@@ -138,6 +146,8 @@ namespace DisCatSharp
             }
 
             this.BotLibrary = "DisCatSharp";
+
+            this.Services = config.Services;
         }
 
         /// <summary>

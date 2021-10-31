@@ -24,6 +24,7 @@ using System;
 using System.Net;
 using DisCatSharp.Net.Udp;
 using DisCatSharp.Net.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp
@@ -211,6 +212,13 @@ namespace DisCatSharp
         public bool AutoRefreshChannelCache { internal get; set; } = false;
 
         /// <summary>
+        /// <para>Sets the service provider.</para>
+        /// <para>This allows passing data around without resorting to static members.</para>
+        /// <para>Defaults to null.</para>
+        /// </summary>
+        public IServiceProvider Services { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
+
+        /// <summary>
         /// Creates a new configuration with default values.
         /// </summary>
         public DiscordConfiguration()
@@ -244,6 +252,7 @@ namespace DisCatSharp
             this.UseCanary = other.UseCanary;
             this.AutoRefreshChannelCache = other.AutoRefreshChannelCache;
             this.ApiVersion = other.ApiVersion;
+            this.Services = other.Services;
         }
     }
 }
