@@ -20,15 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Common.Utilities;
+using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.Lavalink.EventArgs
 {
     /// <summary>
     /// Represents arguments for Lavalink statistics received.
     /// </summary>
-    public sealed class StatisticsReceivedEventArgs : AsyncEventArgs
+    public sealed class StatisticsReceivedEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// Gets the Lavalink statistics received.
@@ -39,8 +41,9 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="StatisticsReceivedEventArgs"/> class.
         /// </summary>
+        /// <param name="provider">Service provider.</param>
         /// <param name="stats">The stats.</param>
-        internal StatisticsReceivedEventArgs(LavalinkStatistics stats)
+        internal StatisticsReceivedEventArgs(IServiceProvider provider, LavalinkStatistics stats) : base(provider)
         {
             this.Statistics = stats;
         }

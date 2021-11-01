@@ -40,7 +40,7 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.CommandsNext
 {
     /// <summary>
-    /// This is the class which handles command registration, management, and execution. 
+    /// This is the class which handles command registration, management, and execution.
     /// </summary>
     public class CommandsNextExtension : BaseExtension
     {
@@ -258,7 +258,7 @@ namespace DisCatSharp.CommandsNext
             var ctx = this.CreateContext(e.Message, pfx, cmd, args);
             if (cmd == null)
             {
-                await this._error.InvokeAsync(this, new CommandErrorEventArgs { Context = ctx, Exception = new CommandNotFoundException(fname) }).ConfigureAwait(false);
+                await this._error.InvokeAsync(this, new CommandErrorEventArgs(this.Client.Services) { Context = ctx, Exception = new CommandNotFoundException(fname) }).ConfigureAwait(false);
                 return;
             }
 
@@ -377,13 +377,13 @@ namespace DisCatSharp.CommandsNext
                 var res = await cmd.ExecuteAsync(ctx).ConfigureAwait(false);
 
                 if (res.IsSuccessful)
-                    await this._executed.InvokeAsync(this, new CommandExecutionEventArgs { Context = res.Context }).ConfigureAwait(false);
+                    await this._executed.InvokeAsync(this, new CommandExecutionEventArgs(this.Client.Services) { Context = res.Context }).ConfigureAwait(false);
                 else
-                    await this._error.InvokeAsync(this, new CommandErrorEventArgs { Context = res.Context, Exception = res.Exception }).ConfigureAwait(false);
+                    await this._error.InvokeAsync(this, new CommandErrorEventArgs(this.Client.Services) { Context = res.Context, Exception = res.Exception }).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                await this._error.InvokeAsync(this, new CommandErrorEventArgs { Context = ctx, Exception = ex }).ConfigureAwait(false);
+                await this._error.InvokeAsync(this, new CommandErrorEventArgs(this.Client.Services) { Context = ctx, Exception = ex }).ConfigureAwait(false);
             }
             finally
             {
@@ -1032,7 +1032,7 @@ namespace DisCatSharp.CommandsNext
 
         #region Helpers
         /// <summary>
-        /// Gets the configuration-specific string comparer. This returns <see cref="StringComparer.Ordinal"/> or <see cref="StringComparer.OrdinalIgnoreCase"/>, 
+        /// Gets the configuration-specific string comparer. This returns <see cref="StringComparer.Ordinal"/> or <see cref="StringComparer.OrdinalIgnoreCase"/>,
         /// depending on whether <see cref="CommandsNextConfiguration.CaseSensitive"/> is set to <see langword="true"/> or <see langword="false"/>.
         /// </summary>
         /// <returns>A string comparer.</returns>
