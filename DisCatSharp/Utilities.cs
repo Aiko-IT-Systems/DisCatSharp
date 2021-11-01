@@ -43,12 +43,12 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the version of the library
         /// </summary>
-        private static string VersionHeader { get; set; }
+        internal static string VersionHeader { get; set; }
 
         /// <summary>
         /// Gets or sets the permission strings.
         /// </summary>
-        private static Dictionary<Permissions, string> PermissionStrings { get; set; }
+        internal static Dictionary<Permissions, string> PermissionStrings { get; set; }
 
         /// <summary>
         /// Gets the utf8 encoding
