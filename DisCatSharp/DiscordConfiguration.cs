@@ -216,13 +216,23 @@ namespace DisCatSharp
         /// <para>This allows passing data around without resorting to static members.</para>
         /// <para>Defaults to null.</para>
         /// </summary>
-        public IServiceProvider Services { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
+        public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
 
         /// <summary>
         /// Creates a new configuration with default values.
         /// </summary>
         public DiscordConfiguration()
         { }
+
+        /// <summary>
+        /// Utilized via Dependency Injection Pipeline
+        /// </summary>
+        /// <param name="provider"></param>
+        [ActivatorUtilitiesConstructor]
+        public DiscordConfiguration(IServiceProvider provider)
+        {
+            this.ServiceProvider = provider;
+        }
 
         /// <summary>
         /// Creates a clone of another discord configuration.
@@ -252,7 +262,7 @@ namespace DisCatSharp
             this.UseCanary = other.UseCanary;
             this.AutoRefreshChannelCache = other.AutoRefreshChannelCache;
             this.ApiVersion = other.ApiVersion;
-            this.Services = other.Services;
+            this.ServiceProvider = other.ServiceProvider;
         }
     }
 }
