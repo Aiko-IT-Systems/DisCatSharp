@@ -30,6 +30,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Common.Utilities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.Net.WebSocket
 {
@@ -296,7 +297,7 @@ namespace DisCatSharp.Net.WebSocket
                     if (!this._isConnected && result.MessageType != WebSocketMessageType.Close)
                     {
                         this._isConnected = true;
-                        await this._connected.InvokeAsync(this, new SocketEventArgs()).ConfigureAwait(false);
+                        await this._connected.InvokeAsync(this, new SocketEventArgs(new ServiceCollection().BuildServiceProvider())).ConfigureAwait(false);
                     }
 
                     if (result.MessageType == WebSocketMessageType.Binary)
@@ -319,15 +320,15 @@ namespace DisCatSharp.Net.WebSocket
                             await this._ws.CloseOutputAsync(code, result.CloseStatusDescription, CancellationToken.None).ConfigureAwait(false);
                         }
 
-                        await this._disconnected.InvokeAsync(this, new SocketCloseEventArgs() { CloseCode = (int)result.CloseStatus, CloseMessage = result.CloseStatusDescription }).ConfigureAwait(false);
+                        await this._disconnected.InvokeAsync(this, new SocketCloseEventArgs(new ServiceCollection().BuildServiceProvider()) { CloseCode = (int)result.CloseStatus, CloseMessage = result.CloseStatusDescription }).ConfigureAwait(false);
                         break;
                     }
                 }
             }
             catch (Exception ex)
             {
-                await this._exceptionThrown.InvokeAsync(this, new SocketErrorEventArgs() { Exception = ex }).ConfigureAwait(false);
-                await this._disconnected.InvokeAsync(this, new SocketCloseEventArgs() { CloseCode = -1, CloseMessage = "" }).ConfigureAwait(false);
+                await this._exceptionThrown.InvokeAsync(this, new SocketErrorEventArgs(new ServiceCollection().BuildServiceProvider()) { Exception = ex }).ConfigureAwait(false);
+                await this._disconnected.InvokeAsync(this, new SocketCloseEventArgs(new ServiceCollection().BuildServiceProvider()) { CloseCode = -1, CloseMessage = "" }).ConfigureAwait(false);
             }
 
             // Don't await or you deadlock
@@ -394,7 +395,7 @@ namespace DisCatSharp.Net.WebSocket
         /// <param name="eventArgs">The event args.</param>
         private void EventErrorHandler<TArgs>(AsyncEvent<WebSocketClient, TArgs> asyncEvent, Exception ex, AsyncEventHandler<WebSocketClient, TArgs> handler, WebSocketClient sender, TArgs eventArgs)
             where TArgs : AsyncEventArgs
-            => this._exceptionThrown.InvokeAsync(this, new SocketErrorEventArgs() { Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
+            => this._exceptionThrown.InvokeAsync(this, new SocketErrorEventArgs(new ServiceCollection().BuildServiceProvider()) { Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
         #endregion
     }
 }

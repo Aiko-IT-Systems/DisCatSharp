@@ -374,7 +374,7 @@ namespace DisCatSharp
 
             Volatile.Write(ref this._ping, ping);
 
-            var args = new HeartbeatEventArgs
+            var args = new HeartbeatEventArgs(this.Services)
             {
                 Ping = this.Ping,
                 Timestamp = DateTimeOffset.Now
@@ -473,7 +473,7 @@ namespace DisCatSharp
             {
                 this.Logger.LogCritical(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats - connection is zombie");
 
-                var args = new ZombiedEventArgs
+                var args = new ZombiedEventArgs(this.Services)
                 {
                     Failures = Volatile.Read(ref this._skippedHeartbeats),
                     GuildDownloadCompleted = true
@@ -485,7 +485,7 @@ namespace DisCatSharp
             }
             else if (!guilds_comp && more_than_5)
             {
-                var args = new ZombiedEventArgs
+                var args = new ZombiedEventArgs(this.Services)
                 {
                     Failures = Volatile.Read(ref this._skippedHeartbeats),
                     GuildDownloadCompleted = false

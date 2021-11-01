@@ -95,7 +95,7 @@ namespace DisCatSharp
         /// <para>This allows passing data around without resorting to static members.</para>
         /// <para>Defaults to null.</para>
         /// </summary>
-        public IServiceProvider Services { get; set; } = new ServiceCollection().BuildServiceProvider(true);
+        internal IServiceProvider Services { get; set; } = new ServiceCollection().BuildServiceProvider(true);
 
         /// <summary>
         /// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.

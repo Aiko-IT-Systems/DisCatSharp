@@ -34,6 +34,7 @@ using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Lavalink.EventArgs;
 using DisCatSharp.Net;
 using DisCatSharp.Net.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -467,7 +468,7 @@ namespace DisCatSharp.Lavalink
         /// <param name="client">The client.</param>
         /// <param name="e">the event.</param>
         private Task WebSocket_OnException(IWebSocketClient client, SocketErrorEventArgs e)
-            => this._lavalinkSocketError.InvokeAsync(this, new SocketErrorEventArgs { Exception = e.Exception });
+            => this._lavalinkSocketError.InvokeAsync(this, new SocketErrorEventArgs(new ServiceCollection().BuildServiceProvider()) { Exception = e.Exception });
 
         /// <summary>
         /// Webs the socket_ on disconnect.
@@ -592,7 +593,8 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Ws the send async.
         /// </summary>
-        /// <param name="payload">The payload.</param>
+        /// <param name="payload">The payload.</param>
+
         private async Task WsSendAsync(string payload)
         {
             this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsTx, payload);
