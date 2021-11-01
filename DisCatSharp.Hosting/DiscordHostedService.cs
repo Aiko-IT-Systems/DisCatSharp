@@ -145,9 +145,6 @@ namespace DisCatSharp.Hosting
         /// <summary>
         /// Automatically search for and configure <see cref="Client"/>
         /// </summary>
-        /// <param name="Configuration"></param>
-        /// <param name="provider"></param>
-        /// <param name="_botSection">Name within the configuration which contains the config info for our bot</param>
         private void Initialize()
         {
             try
