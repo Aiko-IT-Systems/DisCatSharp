@@ -43,6 +43,9 @@ namespace DisCatSharp.Hosting
 
         protected readonly ILogger<DiscordHostedService> Logger;
         protected readonly IHostApplicationLifetime ApplicationLifetime;
+        protected readonly IConfiguration Configuration;
+        protected readonly IServiceProvider ServiceProvider;
+        private readonly string _botSection;
 
         #pragma warning disable 8618
         /// <summary>
@@ -53,11 +56,13 @@ namespace DisCatSharp.Hosting
         /// <param name="provider">The provider.</param>
         /// <param name="applicationLifetime">Current hosting environment. This will be used for shutting down the application on error</param>
         /// <param name="configBotSection">Name within the configuration which contains the config info for our bot. Default is DisCatSharp</param>
-        protected DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider, IHostApplicationLifetime applicationLifetime, string configBotSection = Configuration.ConfigurationExtensions.DefaultRootLib)
+        protected DiscordHostedService(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider, IHostApplicationLifetime applicationLifetime, string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
         {
             this.Logger = logger;
             this.ApplicationLifetime = applicationLifetime;
-            this.Initialize(config, provider, configBotSection);
+            this.Configuration = config;
+            this.ServiceProvider = provider;
+            this._botSection = configBotSection;
         }
 
         #pragma warning restore 8618
@@ -74,19 +79,19 @@ namespace DisCatSharp.Hosting
         /// <summary>
         /// Automatically search for and configure <see cref="Client"/>
         /// </summary>
-        /// <param name="config"></param>
+        /// <param name="Configuration"></param>
         /// <param name="provider"></param>
-        /// <param name="configBotSection">Name within the configuration which contains the config info for our bot</param>
-        private void Initialize(IConfiguration config, IServiceProvider provider, string configBotSection)
+        /// <param name="_botSection">Name within the configuration which contains the config info for our bot</param>
+        private void Initialize()
         {
-            var typeMap = config.FindImplementedExtensions(configBotSection);
+            var typeMap = this.Configuration.FindImplementedExtensions(this._botSection);
 
             this.Logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
 
             try
             {
-                this.Client = config.BuildClient(configBotSection);
-                this.Client.Services = provider;
+                this.Client = this.Configuration.BuildClient(this._botSection);
+                this.Client.Services = this.ServiceProvider;
             }
             catch (Exception ex)
             {
@@ -105,8 +110,8 @@ namespace DisCatSharp.Hosting
 
                     var configInstance = typePair.Value.Section.HasValue
                         ? typePair.Value.Section.Value.ExtractConfig(() =>
-                            ActivatorUtilities.CreateInstance(provider, typePair.Value.ConfigType))
-                        : ActivatorUtilities.CreateInstance(provider, typePair.Value.ConfigType);
+                            ActivatorUtilities.CreateInstance(this.ServiceProvider, typePair.Value.ConfigType))
+                        : ActivatorUtilities.CreateInstance(this.ServiceProvider, typePair.Value.ConfigType);
 
                     /*
                         Explanation for bindings
@@ -163,6 +168,7 @@ namespace DisCatSharp.Hosting
 
                 await this.PreConnect();
                 await this.Client.ConnectAsync();
+                this.Initialize();
                 await this.PostConnect();
             }
             catch (Exception ex)
