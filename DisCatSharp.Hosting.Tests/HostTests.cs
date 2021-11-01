@@ -32,17 +32,19 @@ using Xunit;
 
 namespace DisCatSharp.Hosting.Tests
 {
-    public class Bot : DiscordHostedService
+    public sealed class Bot : DiscordHostedService
     {
         public Bot(IConfiguration config, ILogger<Bot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime)
         {
+            this.InitializeExtensions();
         }
     }
 
-    public class MyCustomBot : DiscordHostedService
+    public sealed class MyCustomBot : DiscordHostedService
     {
         public MyCustomBot(IConfiguration config, ILogger<MyCustomBot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "MyCustomBot")
         {
+            this.InitializeExtensions();
         }
     }
 
@@ -52,10 +54,11 @@ namespace DisCatSharp.Hosting.Tests
     }
 
 
-    public class BotTwoService : DiscordHostedService, IBotTwoService
+    public sealed class BotTwoService : DiscordHostedService, IBotTwoService
     {
         public BotTwoService(IConfiguration config, ILogger<BotTwoService> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "BotTwo")
         {
+            this.InitializeExtensions();
         }
 
         public string GiveMeAResponse() => "I'm working";
