@@ -63,6 +63,19 @@ Add the following to `appsettings.json`
 }
 ```
 
+## Dependency Injection
+The ServiceProvider where you register the `DiscordHostedService` is automatically copied to the DiscordClient.
+Therefore, if you want to use any services in your [event handlers](xref:beyond_basics_events), you can simply register them before the `DiscordHostedService`:
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddSingleton<YourService>();
+    
+    services.AddDiscordHostedService<Bot>();
+}
+```
+In this case, `YourService` will be available in all your Discord event handlers.
+
 ## Initialization errors handling
 During the initialization of bots, various exceptions can be thrown. For example: invalid token.
 By default, the exception will be displayed in the console, after which the application will shutdown.
