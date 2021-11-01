@@ -75,7 +75,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Adds a channel to the permission system.
         /// </summary>
-        /// <param name="roleId">The Id of the channel to give this permission.</param>
+        /// <param name="channelId">The Id of the channel to give this permission.</param>
         /// <param name="permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
         public void AddChannel(ulong channelId, bool permission) => _permissions.Add(new DiscordApplicationCommandPermission(channelId, ApplicationCommandPermissionType.Channel, permission));
     }

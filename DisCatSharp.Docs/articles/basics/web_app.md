@@ -8,19 +8,13 @@ Install the following packages:
  - DisCatSharp
  - DisCatSharp.Hosting
 
->[!IMPORTANT]
-> This requires .NET 5.0.
->
-> But, unfortunately, in this version, exception handling does not work during the initialization of bots. In case, for example, an invalid token, the application will be shut down.
-> If you need to customize specific actions on initialization exception, you need to use .NET 6.0.
-
 # Bot.cs
 Create a new class called `Bot` which inherits from `DiscordHostedService`.
 
 ```cs
 public class Bot : DiscordHostedService
 {
-    public Bot(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider) : base(config, logger, provider)
+    public Bot(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider, IHostApplicationLifetime appLifetime) : base(config, logger, provider, appLifetime)
     {
     }
 }
@@ -69,6 +63,20 @@ Add the following to `appsettings.json`
 }
 ```
 
+## Initialization errors handling
+During the initialization of bots, various exceptions can be thrown. For example: invalid token.
+By default, the exception will be displayed in the console, after which the application will shutdown.
+You can handle exceptions by overriding method `OnInitializationError` in your `DiscordHostedService`.
+
+```cs
+protected override void OnInitializationError(Exception ex)
+{
+    // your code here
+
+    base.OnInitializationError(ex);
+}
+```
+
 ## Extensions
 If you wish to add additional modules/extensions you can do so one of two ways.
 1. Use the full namespace name
@@ -110,6 +118,53 @@ For more info on which values are available checkout the following classes:
  - `VoiceNextConfiguration`
 
 For more information, you can also see the [example](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples/tree/main/Hosting).
+
+## Multiple bots
+In case you need to use multiple bots in one application, you need to use different names for them in the `appsettings.json`:
+```json
+{
+    "BotOne": {
+        "Discord": {
+            "Token": "YOUR TOKEN HERE"
+        }
+    },
+    "BotTwo": {
+        "Discord": {
+            "Token": "YOUR TOKEN HERE"
+        }
+    }
+}
+```
+
+Next, you need to create a new `DiscordHostedService` for each of the bots.
+```cs
+public class BotOne : DiscordHostedService
+{
+    public BotOne(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider,
+        IHostApplicationLifetime appLifetime) : base(config, logger, provider, appLifetime, "BotOne")
+    {
+    }
+}
+
+public class BotTwo : DiscordHostedService
+{
+    public BotTwo(IConfiguration config, ILogger<DiscordHostedService> logger, IServiceProvider provider,
+        IHostApplicationLifetime appLifetime) : base(config, logger, provider, appLifetime, "BotTwo")
+    {
+    }
+}
+```
+
+Note: you must also specify the name of the bot in the constructor, which must match the one specified in the config.
+
+Now, you can simply register them in the usual way:
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddDiscordHostedService<BotOne>();
+    services.AddDiscordHostedService<BotTwo>();
+}
+```
 
 ____
 ## Values
