@@ -20,14 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using DisCatSharp.Common.Utilities;
+using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.Lavalink.EventArgs
 {
     /// <summary>
     /// Represents event arguments for Lavalink node disconnection.
     /// </summary>
-    public sealed class NodeDisconnectedEventArgs : AsyncEventArgs
+    public sealed class NodeDisconnectedEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// Gets the node that was disconnected.
@@ -44,7 +46,7 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="isClean">If true, is clean.</param>
-        internal NodeDisconnectedEventArgs(LavalinkNodeConnection node, bool isClean)
+        internal NodeDisconnectedEventArgs(LavalinkNodeConnection node, bool isClean) : base(node.Discord.Services)
         {
             this.LavalinkNode = node;
             this.IsCleanClose = isClean;

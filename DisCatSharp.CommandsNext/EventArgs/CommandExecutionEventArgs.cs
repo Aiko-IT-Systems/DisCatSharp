@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 namespace DisCatSharp.CommandsNext
 {
     /// <summary>
@@ -27,5 +29,7 @@ namespace DisCatSharp.CommandsNext
     /// </summary>
     public class CommandExecutionEventArgs : CommandEventArgs
     {
+        public CommandExecutionEventArgs(IServiceProvider provider) : base(provider)
+        { }
     }
 }
