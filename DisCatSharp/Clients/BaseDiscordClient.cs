@@ -147,7 +147,7 @@ namespace DisCatSharp
 
             this.BotLibrary = "DisCatSharp";
 
-            this.Services = config.Services;
+            this.Services = config.ServiceProvider;
         }
 
         /// <summary>
