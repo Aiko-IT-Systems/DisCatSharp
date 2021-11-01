@@ -3288,6 +3288,7 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Guild can set an animated banner.
+        /// Needs Premium Tier 1 (<see cref="PremiumTier.Tier_3"/>).
         /// </summary>
         public bool CanSetAnimatedBanner { get; }
 

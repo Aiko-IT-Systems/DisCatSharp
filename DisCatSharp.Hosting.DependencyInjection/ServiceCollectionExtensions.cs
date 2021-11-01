@@ -8,7 +8,7 @@ namespace DisCatSharp.Hosting.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Add <see cref="IDiscordHostedService"/> as a background service
+        /// Adds your bot as a BackgroundService, registered in Dependency Injection as <typeparamref name="TService"/>
         /// </summary>
         /// <remarks>
         /// <see cref="IDiscordHostedService"/> is scoped to ServiceLifetime.Singleton. <br/>
@@ -20,8 +20,8 @@ namespace DisCatSharp.Hosting.DependencyInjection
         public static IServiceCollection AddDiscordHostedService<TService>(this IServiceCollection services)
             where TService : class, IDiscordHostedService
         {
-            services.AddSingleton<IDiscordHostedService, TService>();
-            services.AddHostedService(provider => provider.GetRequiredService<IDiscordHostedService>());
+            services.AddSingleton<TService>();
+            services.AddHostedService(provider => provider.GetRequiredService<TService>());
             return services;
         }
 
@@ -29,6 +29,9 @@ namespace DisCatSharp.Hosting.DependencyInjection
         /// Add <typeparamref name="TService"/> as a background service which derives from
         /// <typeparamref name="TInterface"/> and <see cref="IDiscordHostedService"/>
         /// </summary>
+        /// <remarks>
+        /// To retrieve your bot via Dependency Injection you can reference it via <typeparamref name="TInterface"/>
+        /// </remarks>
         /// <param name="services"></param>
         /// <typeparam name="TInterface">Interface which <typeparamref name="TService"/> inherits from</typeparam>
         /// <typeparam name="TService">Your custom bot</typeparam>
