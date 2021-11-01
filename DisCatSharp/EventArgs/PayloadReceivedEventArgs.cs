@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.EventArgs
@@ -56,6 +57,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="PayloadReceivedEventArgs"/> class.
         /// </summary>
-        internal PayloadReceivedEventArgs() { }
+        internal PayloadReceivedEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }
