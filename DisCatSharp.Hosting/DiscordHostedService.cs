@@ -86,6 +86,7 @@ namespace DisCatSharp.Hosting
             try
             {
                 this.Client = config.BuildClient(configBotSection);
+                this.Client.Services = provider;
             }
             catch (Exception ex)
             {
