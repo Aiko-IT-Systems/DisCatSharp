@@ -235,7 +235,7 @@ namespace DisCatSharp.Entities
             {
                 return this.Guild == null
                     ? throw new InvalidOperationException("Cannot query users outside of guild channels.")
-                    : this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
+                    : this.IsVoiceJoinable()
                     ? this.Guild.Members.Values.Where(x => x.VoiceState?.ChannelId == this.Id).ToList()
                     : this.Guild.Members.Values.Where(x => (this.PermissionsFor(x) & Permissions.AccessChannels) == Permissions.AccessChannels).ToList();
             }
@@ -288,7 +288,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> SendMessageAsync(string content)
         {
-            return this.Type != ChannelType.Text && this.Type != ChannelType.Private && this.Type != ChannelType.Group && this.Type != ChannelType.News
+            return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot send a text message to a non-text channel.")
                 : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
@@ -304,7 +304,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
         {
-            return this.Type != ChannelType.Text && this.Type != ChannelType.Private && this.Type != ChannelType.Group && this.Type != ChannelType.News
+            return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot send a text message to a non-text channel.")
                 : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
@@ -321,7 +321,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
         {
-            return this.Type != ChannelType.Text && this.Type != ChannelType.Private && this.Type != ChannelType.Group && this.Type != ChannelType.News
+            return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot send a text message to a non-text channel.")
                 : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
@@ -353,7 +353,9 @@ namespace DisCatSharp.Entities
             action(builder);
 
 
-            return this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
+            return !this.IsWriteable()
+                ? throw new ArgumentException("Cannot send a text message to a non-text channel.")
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
         }
 
         /// <summary>
@@ -392,12 +394,17 @@ namespace DisCatSharp.Entities
             var userLimit = this.UserLimit;
             Optional<int?> perUserRateLimit = this.PerUserRateLimit;
 
-            if (this.Type != ChannelType.Voice)
+            if(!this.IsVoiceJoinable())
             {
                 bitrate = null;
                 userLimit = null;
             }
-            if (this.Type != ChannelType.Text)
+
+            if (this.Type == ChannelType.Stage)
+            {
+                userLimit = null;
+            }
+            if (!this.IsWriteable())
             {
                 perUserRateLimit = Optional.FromNoValue<int?>();
             }
@@ -468,6 +475,8 @@ namespace DisCatSharp.Entities
         {
             if (this.Guild == null)
                 throw new ArgumentException("Cannot modify order of non-guild channels.");
+            if (!this.IsMovable())
+                throw new NotSupportedException("You can't move this type of channel in categories.");
             if (this.ParentId != null)
                 throw new ArgumentException("Cannot modify order of channels within a category. Use ModifyPositionInCategoryAsync instead.");
 
@@ -505,6 +514,9 @@ namespace DisCatSharp.Entities
         {
             //if (this.ParentId == null)
             //    throw new ArgumentException("You can call this function only on channels in categories.");
+
+            if (!this.IsMovableInParent())
+                throw new NotSupportedException("You can't move this type of channel in categories.");
 
             var isUp = position > this.Position;
 
@@ -618,6 +630,9 @@ namespace DisCatSharp.Entities
         /// <exception cref="ArgumentException">Thrown when function is called on a channel without a parent channel, a wrong mode is givven or given position is zero.</exception>
         public Task ModifyPositionInCategorySmartAsync(string mode, int position, string reason = null)
         {
+            if (!this.IsMovableInParent())
+                throw new NotSupportedException("You can't move this type of channel in categories.");
+
             if (mode != "+" && mode != "-" && mode != "down" && mode != "up")
                 throw new ArgumentException("Error with the selected mode: Valid is '+' or 'down' to move a channel down and '-' or 'up' to move a channel up");
 
@@ -650,8 +665,8 @@ namespace DisCatSharp.Entities
         {
             if (this.Guild == null)
                 throw new ArgumentException("Cannot modify parent of non-guild channels.");
-            if (this.IsCategory)
-                throw new ArgumentException("Cannot modify parent of category channels.");
+            if (!this.IsMovableInParent())
+                throw new NotSupportedException("You can't move this type of channel in categories.");
             if (newParent.Type is not ChannelType.Category)
                 throw new ArgumentException("Only category type channels can be parents.");
 
@@ -695,8 +710,8 @@ namespace DisCatSharp.Entities
         {
             if (this.Guild == null)
                 throw new ArgumentException("Cannot modify parent of non-guild channels.");
-            if (this.IsCategory)
-                throw new ArgumentException("Cannot modify parent of category channels.");
+            if (!this.IsMovableInParent())
+                throw new NotSupportedException("You can't move this type of channel in categories.");
 
             var position = this.Guild._channels.Values.Where(xc => xc.Type == this.Type && xc.Parent is null) //gets list of same type channels with no parent
                             .Select(xc => xc.Position).DefaultIfEmpty(-1).Max() + 1; // returns highest position of list +1, default val: 0
@@ -782,7 +797,7 @@ namespace DisCatSharp.Entities
         /// <param name="around">Get messages around snowflake.</param>
         private async Task<IReadOnlyList<DiscordMessage>> GetMessagesInternalAsync(int limit = 100, ulong? before = null, ulong? after = null, ulong? around = null)
         {
-            if (this.Type != ChannelType.Text && this.Type != ChannelType.Private && this.Type != ChannelType.Group && this.Type != ChannelType.News)
+            if (!this.IsWriteable())
                 throw new ArgumentException("Cannot get the messages of a non-text channel.");
 
             if (limit < 0)
@@ -974,8 +989,8 @@ namespace DisCatSharp.Entities
         {
             return (type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread)
                 ? throw new NotSupportedException("Wrong thread type given.")
-                : (this.Type != ChannelType.News && this.Type != ChannelType.Text)
-                ? throw new NotSupportedException("Parent channel is no text or news channel")
+                : (!this.IsThreadHolder())
+                ? throw new NotSupportedException("Parent channel can't have threads")
                 : type == ChannelType.PrivateThread
                 ? Utilities.CheckThreadPrivateFeature(this.Guild)
                 ? Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, auto_archive_duration)
@@ -1095,7 +1110,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task TriggerTypingAsync()
         {
-            return this.Type != ChannelType.Text && this.Type != ChannelType.Private && this.Type != ChannelType.Group && this.Type != ChannelType.News
+            return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot start typing in a non-text channel.")
                 : this.Discord.ApiClient.TriggerTypingAsync(this.Id);
         }
@@ -1110,7 +1125,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync()
         {
-            return this.Type != ChannelType.Text && this.Type != ChannelType.Private && this.Type != ChannelType.Group && this.Type != ChannelType.News
+            return !this.IsWriteable()
                 ? throw new ArgumentException("A non-text channel does not have pinned messages.")
                 : this.Discord.ApiClient.GetPinnedMessagesAsync(this.Id);
         }
@@ -1159,8 +1174,8 @@ namespace DisCatSharp.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task PlaceMemberAsync(DiscordMember member)
         {
-            if (this.Type != ChannelType.Voice && this.Type != ChannelType.Stage)
-                throw new ArgumentException("Cannot place a member in a non-voice channel!"); // be a little more angry, let em learn!!1
+            if (!this.IsVoiceJoinable())
+                throw new ArgumentException("Cannot place a member in a non-voice channel.");
 
             await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, member.Id, default, default, default,
                 default, this.Id, null).ConfigureAwait(false);
@@ -1287,8 +1302,10 @@ namespace DisCatSharp.Entities
         {
             return this.Type == ChannelType.Category
                 ? $"Channel Category {this.Name} ({this.Id})"
-                : this.Type == ChannelType.Text || this.Type == ChannelType.News
+                : this.Type == ChannelType.Text || this.Type == ChannelType.News || this.IsThread()
                 ? $"Channel #{this.Name} ({this.Id})"
+                : this.IsVoiceJoinable()
+                ? $"Channel #!{this.Name} ({this.Id})"
                 : !string.IsNullOrWhiteSpace(this.Name) ? $"Channel {this.Name} ({this.Id})" : $"Channel {this.Id}";
         }
         #endregion

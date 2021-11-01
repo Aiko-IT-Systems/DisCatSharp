@@ -295,16 +295,7 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// Gets the hash code for this <see cref="CommandCooldownBucket"/>.
         /// </summary>
         /// <returns>The hash code for this <see cref="CommandCooldownBucket"/>.</returns>
-        public override int GetHashCode()
-        {
-            var hash = 13;
-
-            hash = (hash * 7) + this.UserId.GetHashCode();
-            hash = (hash * 7) + this.ChannelId.GetHashCode();
-            hash = (hash * 7) + this.GuildId.GetHashCode();
-
-            return hash;
-        }
+        public override int GetHashCode() => HashCode.Combine(this.UserId, this.ChannelId, this.GuildId);
 
         /// <summary>
         /// Gets whether the two <see cref="CommandCooldownBucket"/> objects are equal.
