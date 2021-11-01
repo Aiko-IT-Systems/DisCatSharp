@@ -61,8 +61,9 @@ namespace DisCatSharp.Hosting
             this.Logger = logger;
             this.ApplicationLifetime = applicationLifetime;
             this.Configuration = config;
-            this.ServiceProvider = provider;
             this._botSection = configBotSection;
+            this.ServiceProvider = provider;
+            this.Initialize();
         }
 
         #pragma warning restore 8618
@@ -77,29 +78,16 @@ namespace DisCatSharp.Hosting
         }
 
         /// <summary>
-        /// Automatically search for and configure <see cref="Client"/>
+        /// Dynamically loads extensions by using <see cref="Configuration"/>, and
+        /// <see cref="ServiceProvider"/>
         /// </summary>
-        /// <param name="Configuration"></param>
-        /// <param name="provider"></param>
-        /// <param name="_botSection">Name within the configuration which contains the config info for our bot</param>
-        private void Initialize()
+        protected virtual void InitializeExtensions()
         {
             var typeMap = this.Configuration.FindImplementedExtensions(this._botSection);
 
             this.Logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
 
-            try
-            {
-                this.Client = this.Configuration.BuildClient(this._botSection);
-                this.Client.Services = this.ServiceProvider;
-            }
-            catch (Exception ex)
-            {
-                this.Logger.LogError($"Was unable to build {nameof(DiscordClient)} for {this.GetType().Name}");
-                this.OnInitializationError(ex);
-            }
-
-            foreach (var typePair in typeMap)
+             foreach (var typePair in typeMap)
                 try
                 {
                     /*
@@ -155,6 +143,26 @@ namespace DisCatSharp.Hosting
         }
 
         /// <summary>
+        /// Automatically search for and configure <see cref="Client"/>
+        /// </summary>
+        /// <param name="Configuration"></param>
+        /// <param name="provider"></param>
+        /// <param name="_botSection">Name within the configuration which contains the config info for our bot</param>
+        private void Initialize()
+        {
+            try
+            {
+                this.Client = this.Configuration.BuildClient(this._botSection);
+                this.Client.Services = this.ServiceProvider;
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError($"Was unable to build {nameof(DiscordClient)} for {this.GetType().Name}");
+                this.OnInitializationError(ex);
+            }
+        }
+
+        /// <summary>
         /// Executes the bot.
         /// </summary>
         /// <param name="stoppingToken">The stopping token.</param>
@@ -168,7 +176,7 @@ namespace DisCatSharp.Hosting
 
                 await this.PreConnect();
                 await this.Client.ConnectAsync();
-                this.Initialize();
+                this.InitializeExtensions();
                 await this.PostConnect();
             }
             catch (Exception ex)
