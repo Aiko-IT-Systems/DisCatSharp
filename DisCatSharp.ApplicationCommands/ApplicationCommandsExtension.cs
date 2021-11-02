@@ -591,11 +591,11 @@ namespace DisCatSharp.ApplicationCommands
                             await this.RunCommandAsync(context, method, args);
                         }
 
-                        await this._slashExecuted.InvokeAsync(this, new SlashCommandExecutedEventArgs(this.Client.Services) { Context = context });
+                        await this._slashExecuted.InvokeAsync(this, new SlashCommandExecutedEventArgs(this.Client.ServiceProvider) { Context = context });
                     }
                     catch (Exception ex)
                     {
-                        await this._slashError.InvokeAsync(this, new SlashCommandErrorEventArgs(this.Client.Services) { Context = context, Exception = ex });
+                        await this._slashError.InvokeAsync(this, new SlashCommandErrorEventArgs(this.Client.ServiceProvider) { Context = context, Exception = ex });
                     }
                 }
                 else if (e.Interaction.Type == InteractionType.AutoComplete)
@@ -726,11 +726,11 @@ namespace DisCatSharp.ApplicationCommands
 
                     await this.RunCommandAsync(context, method.Method, new[] { context });
 
-                    await this._contextMenuExecuted.InvokeAsync(this, new ContextMenuExecutedEventArgs(this.Client.Services) { Context = context });
+                    await this._contextMenuExecuted.InvokeAsync(this, new ContextMenuExecutedEventArgs(this.Client.ServiceProvider) { Context = context });
                 }
                 catch (Exception ex)
                 {
-                    await this._contextMenuErrored.InvokeAsync(this, new ContextMenuErrorEventArgs(this.Client.Services) { Context = context, Exception = ex });
+                    await this._contextMenuErrored.InvokeAsync(this, new ContextMenuErrorEventArgs(this.Client.ServiceProvider) { Context = context, Exception = ex });
                 }
             });
 

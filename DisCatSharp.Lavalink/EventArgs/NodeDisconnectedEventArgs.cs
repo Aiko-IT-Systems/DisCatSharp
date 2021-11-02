@@ -46,7 +46,7 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="isClean">If true, is clean.</param>
-        internal NodeDisconnectedEventArgs(LavalinkNodeConnection node, bool isClean) : base(node.Discord.Services)
+        internal NodeDisconnectedEventArgs(LavalinkNodeConnection node, bool isClean) : base(node.Discord.ServiceProvider)
         {
             this.LavalinkNode = node;
             this.IsCleanClose = isClean;

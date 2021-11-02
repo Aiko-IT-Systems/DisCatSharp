@@ -403,7 +403,7 @@ namespace DisCatSharp.Lavalink
                 case "stats":
                     var statsRaw = jsonData.ToObject<LavalinkStats>();
                     this.Statistics.Update(statsRaw);
-                    await this._statsReceived.InvokeAsync(this, new StatisticsReceivedEventArgs(this.Discord.Services, this.Statistics)).ConfigureAwait(false);
+                    await this._statsReceived.InvokeAsync(this, new StatisticsReceivedEventArgs(this.Discord.ServiceProvider, this.Statistics)).ConfigureAwait(false);
                     break;
 
                 case "event":
@@ -454,7 +454,7 @@ namespace DisCatSharp.Lavalink
                             if (this._connectedGuilds.TryGetValue(guildId, out var lvl_ewsce))
                             {
                                 lvl_ewsce.VoiceWsDisconnectTcs.SetResult(true);
-                                await lvl_ewsce.InternalWebSocketClosedAsync(new WebSocketCloseEventArgs(jsonData["code"].ToObject<int>(), jsonData["reason"].ToString(), jsonData["byRemote"].ToObject<bool>(), this.Discord.Services)).ConfigureAwait(false);
+                                await lvl_ewsce.InternalWebSocketClosedAsync(new WebSocketCloseEventArgs(jsonData["code"].ToObject<int>(), jsonData["reason"].ToString(), jsonData["byRemote"].ToObject<bool>(), this.Discord.ServiceProvider)).ConfigureAwait(false);
                             }
                             break;
                     }

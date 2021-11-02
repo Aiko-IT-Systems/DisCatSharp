@@ -916,7 +916,7 @@ namespace DisCatSharp
             }
 
             this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Event handler exception for event {0} thrown from {1} (defined in {2})", asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
-            this._clientErrored.InvokeAsync(this, new ClientErrorEventArgs(this.Services) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
+            this._clientErrored.InvokeAsync(this, new ClientErrorEventArgs(this.ServiceProvider) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         /// <summary>

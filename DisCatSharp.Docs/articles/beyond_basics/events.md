@@ -64,7 +64,7 @@ var config = new DiscordConfiguration()
 {
     Token = "Token here",
     TokenType = TokenType.Bot,
-    Services = new ServiceCollection()
+    ServiceProvider = new ServiceCollection()
         .AddScoped<YourService>()
         .AddSingleton<YourSecondService>()
         .BuildServiceProvider()
@@ -76,8 +76,8 @@ Now you can use them in your event handlers.
 ```cs
 private async Task MessageCreatedHandler(DiscordClient s, MessageCreateEventArgs e)
 {
-    var service = e.Services.GetRequiredService<YourService>();
-    var secondService = e.Services.GetRequiredService<YourSecondService>();
+    var service = e.ServiceProvider.GetRequiredService<YourService>();
+    var secondService = e.ServiceProvider.GetRequiredService<YourSecondService>();
 }
 ```
 
