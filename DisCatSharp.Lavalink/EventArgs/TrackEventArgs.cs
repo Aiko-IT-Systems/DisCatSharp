@@ -76,7 +76,7 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// </summary>
         /// <param name="lvl">The lvl.</param>
         /// <param name="track">The track.</param>
-        internal TrackStartEventArgs(LavalinkGuildConnection lvl, LavalinkTrack track) : base(lvl.Node.Discord.Services)
+        internal TrackStartEventArgs(LavalinkGuildConnection lvl, LavalinkTrack track) : base(lvl.Node.Discord.ServiceProvider)
         {
             this.Track = track;
             this.Player = lvl;
@@ -124,7 +124,7 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <param name="lvl">The lvl.</param>
         /// <param name="track">The track.</param>
         /// <param name="reason">The reason.</param>
-        internal TrackFinishEventArgs(LavalinkGuildConnection lvl, LavalinkTrack track, TrackEndReason reason) : base(lvl.Node.Discord.Services)
+        internal TrackFinishEventArgs(LavalinkGuildConnection lvl, LavalinkTrack track, TrackEndReason reason) : base(lvl.Node.Discord.ServiceProvider)
         {
             this.Track = track;
             this.Reason = reason;
@@ -204,7 +204,7 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <param name="lvl">The lvl.</param>
         /// <param name="thresholdMs">The threshold ms.</param>
         /// <param name="track">The track.</param>
-        internal TrackStuckEventArgs(LavalinkGuildConnection lvl, long thresholdMs, LavalinkTrack track) : base(lvl.Node.Discord.Services)
+        internal TrackStuckEventArgs(LavalinkGuildConnection lvl, long thresholdMs, LavalinkTrack track) : base(lvl.Node.Discord.ServiceProvider)
         {
             this.ThresholdMilliseconds = thresholdMs;
             this.Track = track;
@@ -253,7 +253,7 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <param name="lvl">The lvl.</param>
         /// <param name="error">The error.</param>
         /// <param name="track">The track.</param>
-        internal TrackExceptionEventArgs(LavalinkGuildConnection lvl, string error, LavalinkTrack track) : base(lvl.Node.Discord.Services)
+        internal TrackExceptionEventArgs(LavalinkGuildConnection lvl, string error, LavalinkTrack track) : base(lvl.Node.Discord.ServiceProvider)
         {
             this.Error = error;
             this.Track = track;

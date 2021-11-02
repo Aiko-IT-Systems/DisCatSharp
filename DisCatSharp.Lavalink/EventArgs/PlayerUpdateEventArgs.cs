@@ -53,7 +53,7 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <param name="timestamp">The timestamp.</param>
         /// <param name="position">The position.</param>
         internal PlayerUpdateEventArgs(LavalinkGuildConnection lvl, DateTimeOffset timestamp,
-            TimeSpan position) : base(lvl.Node.Discord.Services)
+            TimeSpan position) : base(lvl.Node.Discord.ServiceProvider)
         {
             this.Player = lvl;
             this.Timestamp = timestamp;

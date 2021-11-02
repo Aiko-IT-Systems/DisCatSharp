@@ -258,7 +258,7 @@ namespace DisCatSharp.CommandsNext
             var ctx = this.CreateContext(e.Message, pfx, cmd, args);
             if (cmd == null)
             {
-                await this._error.InvokeAsync(this, new CommandErrorEventArgs(this.Client.Services) { Context = ctx, Exception = new CommandNotFoundException(fname) }).ConfigureAwait(false);
+                await this._error.InvokeAsync(this, new CommandErrorEventArgs(this.Client.ServiceProvider) { Context = ctx, Exception = new CommandNotFoundException(fname) }).ConfigureAwait(false);
                 return;
             }
 
@@ -377,13 +377,13 @@ namespace DisCatSharp.CommandsNext
                 var res = await cmd.ExecuteAsync(ctx).ConfigureAwait(false);
 
                 if (res.IsSuccessful)
-                    await this._executed.InvokeAsync(this, new CommandExecutionEventArgs(this.Client.Services) { Context = res.Context }).ConfigureAwait(false);
+                    await this._executed.InvokeAsync(this, new CommandExecutionEventArgs(this.Client.ServiceProvider) { Context = res.Context }).ConfigureAwait(false);
                 else
-                    await this._error.InvokeAsync(this, new CommandErrorEventArgs(this.Client.Services) { Context = res.Context, Exception = res.Exception }).ConfigureAwait(false);
+                    await this._error.InvokeAsync(this, new CommandErrorEventArgs(this.Client.ServiceProvider) { Context = res.Context, Exception = res.Exception }).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                await this._error.InvokeAsync(this, new CommandErrorEventArgs(this.Client.Services) { Context = ctx, Exception = ex }).ConfigureAwait(false);
+                await this._error.InvokeAsync(this, new CommandErrorEventArgs(this.Client.ServiceProvider) { Context = ctx, Exception = ex }).ConfigureAwait(false);
             }
             finally
             {

@@ -39,7 +39,7 @@ namespace DisCatSharp.EventArgs
         /// <para>This allows passing data around without resorting to static members.</para>
         /// <para>Defaults to null.</para>
         /// </summary>
-        public IServiceProvider Services { get; internal set; } = new ServiceCollection().BuildServiceProvider(true);
+        public IServiceProvider ServiceProvider { get; internal set; } = new ServiceCollection().BuildServiceProvider(true);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordEventArgs"/> class.
@@ -47,7 +47,7 @@ namespace DisCatSharp.EventArgs
         protected DiscordEventArgs(IServiceProvider provider)
         {
             if (provider != null)
-                this.Services = provider.CreateScope().ServiceProvider;
+                this.ServiceProvider = provider.CreateScope().ServiceProvider;
         }
     }
 }
