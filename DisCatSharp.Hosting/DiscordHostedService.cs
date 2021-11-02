@@ -150,6 +150,7 @@ namespace DisCatSharp.Hosting
             try
             {
                 this.Client = this.Configuration.BuildClient(this._botSection);
+                this.Client.ServiceProvider = this.ServiceProvider;
             }
             catch (Exception ex)
             {
