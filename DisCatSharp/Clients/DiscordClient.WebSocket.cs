@@ -141,7 +141,7 @@ namespace DisCatSharp
 
             Volatile.Write(ref this._skippedHeartbeats, 0);
 
-            this._webSocketClient = this.Configuration.WebSocketClientFactory(this.Configuration.Proxy);
+            this._webSocketClient = this.Configuration.WebSocketClientFactory(this.Configuration.Proxy, this.ServiceProvider);
             this._payloadDecompressor = this.Configuration.GatewayCompressionLevel != GatewayCompressionLevel.None
                 ? new PayloadDecompressor(this.Configuration.GatewayCompressionLevel)
                 : null;
