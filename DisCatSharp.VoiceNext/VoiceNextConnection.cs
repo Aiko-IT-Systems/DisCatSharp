@@ -389,7 +389,7 @@ namespace DisCatSharp.VoiceNext
             this.PauseEvent = new AsyncManualResetEvent(true);
 
             this.UdpClient = this.Discord.Configuration.UdpClientFactory();
-            this.VoiceWs = this.Discord.Configuration.WebSocketClientFactory(this.Discord.Configuration.Proxy);
+            this.VoiceWs = this.Discord.Configuration.WebSocketClientFactory(this.Discord.Configuration.Proxy, this.Discord.ServiceProvider);
             this.VoiceWs.Disconnected += this.VoiceWS_SocketClosed;
             this.VoiceWs.MessageReceived += this.VoiceWS_SocketMessage;
             this.VoiceWs.Connected += this.VoiceWS_SocketOpened;
@@ -1258,7 +1258,7 @@ namespace DisCatSharp.VoiceNext
             {
                 this.TokenSource.Cancel();
                 this.TokenSource = new CancellationTokenSource();
-                this.VoiceWs = this.Discord.Configuration.WebSocketClientFactory(this.Discord.Configuration.Proxy);
+                this.VoiceWs = this.Discord.Configuration.WebSocketClientFactory(this.Discord.Configuration.Proxy, this.Discord.ServiceProvider);
                 this.VoiceWs.Disconnected += this.VoiceWS_SocketClosed;
                 this.VoiceWs.MessageReceived += this.VoiceWS_SocketMessage;
                 this.VoiceWs.Connected += this.VoiceWS_SocketOpened;

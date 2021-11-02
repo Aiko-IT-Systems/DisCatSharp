@@ -244,7 +244,7 @@ namespace DisCatSharp.Lavalink
             if (this.Discord?.CurrentUser?.Id == null || this.Discord?.ShardCount == null)
                 throw new InvalidOperationException("This operation requires the Discord client to be fully initialized.");
 
-            this.WebSocket = this.Discord.Configuration.WebSocketClientFactory(this.Discord.Configuration.Proxy);
+            this.WebSocket = this.Discord.Configuration.WebSocketClientFactory(this.Discord.Configuration.Proxy, this.Discord.ServiceProvider);
             this.WebSocket.Connected += this.WebSocket_OnConnect;
             this.WebSocket.Disconnected += this.WebSocket_OnDisconnect;
             this.WebSocket.ExceptionThrown += this.WebSocket_OnException;
@@ -468,7 +468,7 @@ namespace DisCatSharp.Lavalink
         /// <param name="client">The client.</param>
         /// <param name="e">the event.</param>
         private Task WebSocket_OnException(IWebSocketClient client, SocketErrorEventArgs e)
-            => this._lavalinkSocketError.InvokeAsync(this, new SocketErrorEventArgs(new ServiceCollection().BuildServiceProvider()) { Exception = e.Exception });
+            => this._lavalinkSocketError.InvokeAsync(this, new SocketErrorEventArgs(client.ServiceProvider) { Exception = e.Exception });
 
         /// <summary>
         /// Webs the socket_ on disconnect.
