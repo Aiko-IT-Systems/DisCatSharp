@@ -34,6 +34,7 @@ namespace DisCatSharp.Net.WebSocket
     /// Creates an instance of a WebSocket client implementation.
     /// </summary>
     /// <param name="proxy">Proxy settings to use for the new WebSocket client instance.</param>
+    /// <param name="provider">Service provider.</param>
     /// <returns>Constructed WebSocket client implementation.</returns>
     public delegate IWebSocketClient WebSocketClientFactoryDelegate(IWebProxy proxy, IServiceProvider provider);
 
