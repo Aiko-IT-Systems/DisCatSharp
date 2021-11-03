@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using DisCatSharp.Common.Utilities;
+using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.Lavalink.EventArgs
 {
@@ -58,7 +59,7 @@ namespace DisCatSharp.Lavalink.EventArgs
     /// <summary>
     /// Represents arguments for a track playback start event.
     /// </summary>
-    public sealed class TrackStartEventArgs : AsyncEventArgs
+    public sealed class TrackStartEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// Gets the track that started playing.
@@ -75,7 +76,7 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// </summary>
         /// <param name="lvl">The lvl.</param>
         /// <param name="track">The track.</param>
-        internal TrackStartEventArgs(LavalinkGuildConnection lvl, LavalinkTrack track)
+        internal TrackStartEventArgs(LavalinkGuildConnection lvl, LavalinkTrack track) : base(lvl.Node.Discord.ServiceProvider)
         {
             this.Track = track;
             this.Player = lvl;
@@ -100,7 +101,7 @@ namespace DisCatSharp.Lavalink.EventArgs
     /// <summary>
     /// Represents arguments for a track playback finish event.
     /// </summary>
-    public sealed class TrackFinishEventArgs : AsyncEventArgs
+    public sealed class TrackFinishEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// Gets the track that finished playing.
@@ -123,7 +124,7 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <param name="lvl">The lvl.</param>
         /// <param name="track">The track.</param>
         /// <param name="reason">The reason.</param>
-        internal TrackFinishEventArgs(LavalinkGuildConnection lvl, LavalinkTrack track, TrackEndReason reason)
+        internal TrackFinishEventArgs(LavalinkGuildConnection lvl, LavalinkTrack track, TrackEndReason reason) : base(lvl.Node.Discord.ServiceProvider)
         {
             this.Track = track;
             this.Reason = reason;
@@ -180,7 +181,7 @@ namespace DisCatSharp.Lavalink.EventArgs
     /// <summary>
     /// Represents event arguments for a track stuck event.
     /// </summary>
-    public sealed class TrackStuckEventArgs : AsyncEventArgs
+    public sealed class TrackStuckEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// Gets the millisecond threshold for the stuck event.
@@ -203,7 +204,7 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <param name="lvl">The lvl.</param>
         /// <param name="thresholdMs">The threshold ms.</param>
         /// <param name="track">The track.</param>
-        internal TrackStuckEventArgs(LavalinkGuildConnection lvl, long thresholdMs, LavalinkTrack track)
+        internal TrackStuckEventArgs(LavalinkGuildConnection lvl, long thresholdMs, LavalinkTrack track) : base(lvl.Node.Discord.ServiceProvider)
         {
             this.ThresholdMilliseconds = thresholdMs;
             this.Track = track;
@@ -229,7 +230,7 @@ namespace DisCatSharp.Lavalink.EventArgs
     /// <summary>
     /// Represents event arguments for a track exception event.
     /// </summary>
-    public sealed class TrackExceptionEventArgs : AsyncEventArgs
+    public sealed class TrackExceptionEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// Gets the error that occurred during playback.
@@ -252,7 +253,7 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <param name="lvl">The lvl.</param>
         /// <param name="error">The error.</param>
         /// <param name="track">The track.</param>
-        internal TrackExceptionEventArgs(LavalinkGuildConnection lvl, string error, LavalinkTrack track)
+        internal TrackExceptionEventArgs(LavalinkGuildConnection lvl, string error, LavalinkTrack track) : base(lvl.Node.Discord.ServiceProvider)
         {
             this.Error = error;
             this.Track = track;

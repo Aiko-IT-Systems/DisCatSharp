@@ -22,6 +22,7 @@
 
 using DisCatSharp.Common.Utilities;
 using System;
+using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.ApplicationCommands.EventArgs
 {
@@ -29,7 +30,7 @@ namespace DisCatSharp.ApplicationCommands.EventArgs
     /// <summary>
     /// Represents arguments for a <see cref="ApplicationCommandsExtension.ContextMenuErrored"/>
     /// </summary>
-    public class ContextMenuErrorEventArgs : AsyncEventArgs
+    public class ContextMenuErrorEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// The context of the command.
@@ -40,5 +41,8 @@ namespace DisCatSharp.ApplicationCommands.EventArgs
         /// The exception thrown.
         /// </summary>
         public Exception Exception { get; internal set; }
+
+        public ContextMenuErrorEventArgs(IServiceProvider provider) : base(provider)
+        { }
     }
 }
