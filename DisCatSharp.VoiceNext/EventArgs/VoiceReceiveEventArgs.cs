@@ -71,6 +71,6 @@ namespace DisCatSharp.VoiceNext.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="VoiceReceiveEventArgs"/> class.
         /// </summary>
-        internal VoiceReceiveEventArgs() : base() { }
+        internal VoiceReceiveEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }

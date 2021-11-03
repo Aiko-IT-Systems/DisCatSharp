@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
@@ -33,5 +34,8 @@ namespace DisCatSharp.EventArgs
         /// Gets the interaction data that was invoked.
         /// </summary>
         public DiscordInteraction Interaction { get; internal set; }
+
+        public InteractionCreateEventArgs(IServiceProvider provider) : base(provider)
+        { }
     }
 }

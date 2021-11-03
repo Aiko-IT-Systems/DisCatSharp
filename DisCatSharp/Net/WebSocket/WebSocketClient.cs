@@ -30,6 +30,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Common.Utilities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.Net.WebSocket
 {
@@ -59,6 +60,13 @@ namespace DisCatSharp.Net.WebSocket
         /// Gets the collection of default headers to send when connecting to the remote endpoint.
         /// </summary>
         public IReadOnlyDictionary<string, string> DefaultHeaders { get; }
+
+        IServiceProvider IWebSocketClient.ServiceProvider
+        {
+            get => this._serviceProvider;
+            set => this._serviceProvider = value;
+        }
+
         private readonly Dictionary<string, string> _defaultHeaders;
 
         private Task _receiverTask;
@@ -78,7 +86,8 @@ namespace DisCatSharp.Net.WebSocket
         /// Instantiates a new WebSocket client with specified proxy settings.
         /// </summary>
         /// <param name="proxy">Proxy settings for the client.</param>
-        private WebSocketClient(IWebProxy proxy)
+        /// <param name="provider">Service provider.</param>
+        private WebSocketClient(IWebProxy proxy, IServiceProvider provider)
         {
             this._connected = new AsyncEvent<WebSocketClient, SocketEventArgs>("WS_CONNECT", TimeSpan.Zero, this.EventErrorHandler);
             this._disconnected = new AsyncEvent<WebSocketClient, SocketCloseEventArgs>("WS_DISCONNECT", TimeSpan.Zero, this.EventErrorHandler);
@@ -95,6 +104,8 @@ namespace DisCatSharp.Net.WebSocket
 
             this._socketTokenSource = null;
             this._socketToken = CancellationToken.None;
+
+            this._serviceProvider = provider;
         }
 
         /// <summary>
@@ -296,7 +307,7 @@ namespace DisCatSharp.Net.WebSocket
                     if (!this._isConnected && result.MessageType != WebSocketMessageType.Close)
                     {
                         this._isConnected = true;
-                        await this._connected.InvokeAsync(this, new SocketEventArgs()).ConfigureAwait(false);
+                        await this._connected.InvokeAsync(this, new SocketEventArgs(this._serviceProvider)).ConfigureAwait(false);
                     }
 
                     if (result.MessageType == WebSocketMessageType.Binary)
@@ -319,15 +330,15 @@ namespace DisCatSharp.Net.WebSocket
                             await this._ws.CloseOutputAsync(code, result.CloseStatusDescription, CancellationToken.None).ConfigureAwait(false);
                         }
 
-                        await this._disconnected.InvokeAsync(this, new SocketCloseEventArgs() { CloseCode = (int)result.CloseStatus, CloseMessage = result.CloseStatusDescription }).ConfigureAwait(false);
+                        await this._disconnected.InvokeAsync(this, new SocketCloseEventArgs(this._serviceProvider) { CloseCode = (int)result.CloseStatus, CloseMessage = result.CloseStatusDescription }).ConfigureAwait(false);
                         break;
                     }
                 }
             }
             catch (Exception ex)
             {
-                await this._exceptionThrown.InvokeAsync(this, new SocketErrorEventArgs() { Exception = ex }).ConfigureAwait(false);
-                await this._disconnected.InvokeAsync(this, new SocketCloseEventArgs() { CloseCode = -1, CloseMessage = "" }).ConfigureAwait(false);
+                await this._exceptionThrown.InvokeAsync(this, new SocketErrorEventArgs(this._serviceProvider) { Exception = ex }).ConfigureAwait(false);
+                await this._disconnected.InvokeAsync(this, new SocketCloseEventArgs(this._serviceProvider) { CloseCode = -1, CloseMessage = "" }).ConfigureAwait(false);
             }
 
             // Don't await or you deadlock
@@ -339,9 +350,10 @@ namespace DisCatSharp.Net.WebSocket
         /// Creates a new instance of <see cref="WebSocketClient"/>.
         /// </summary>
         /// <param name="proxy">Proxy to use for this client instance.</param>
+        /// <param name="provider">Service provider.</param>
         /// <returns>An instance of <see cref="WebSocketClient"/>.</returns>
-        public static IWebSocketClient CreateNew(IWebProxy proxy)
-            => new WebSocketClient(proxy);
+        public static IWebSocketClient CreateNew(IWebProxy proxy, IServiceProvider provider)
+            => new WebSocketClient(proxy, provider);
 
         #region Events
         /// <summary>
@@ -383,6 +395,7 @@ namespace DisCatSharp.Net.WebSocket
             remove => this._exceptionThrown.Unregister(value);
         }
         private readonly AsyncEvent<WebSocketClient, SocketErrorEventArgs> _exceptionThrown;
+        private IServiceProvider _serviceProvider;
 
         /// <summary>
         /// Events the error handler.
@@ -394,7 +407,7 @@ namespace DisCatSharp.Net.WebSocket
         /// <param name="eventArgs">The event args.</param>
         private void EventErrorHandler<TArgs>(AsyncEvent<WebSocketClient, TArgs> asyncEvent, Exception ex, AsyncEventHandler<WebSocketClient, TArgs> handler, WebSocketClient sender, TArgs eventArgs)
             where TArgs : AsyncEventArgs
-            => this._exceptionThrown.InvokeAsync(this, new SocketErrorEventArgs() { Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
+            => this._exceptionThrown.InvokeAsync(this, new SocketErrorEventArgs(this._serviceProvider) { Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
         #endregion
     }
 }
