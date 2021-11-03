@@ -20,18 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using DisCatSharp.Common.Utilities;
+using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.ApplicationCommands.EventArgs
 {
     /// <summary>
     /// Represents the arguments for a <see cref="ApplicationCommandsExtension.ContextMenuExecuted"/> event
     /// </summary>
-    public sealed class ContextMenuExecutedEventArgs : AsyncEventArgs
+    public sealed class ContextMenuExecutedEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// The context of the command.
         /// </summary>
         public ContextMenuContext Context { get; internal set; }
+
+        public ContextMenuExecutedEventArgs(IServiceProvider provider) : base(provider)
+        { }
     }
 }

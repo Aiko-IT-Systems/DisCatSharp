@@ -20,14 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using DisCatSharp.Common.Utilities;
+using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.Lavalink.EventArgs
 {
     /// <summary>
     /// Represents arguments for <see cref="LavalinkGuildConnection.DiscordWebSocketClosed"/> event.
     /// </summary>
-    public sealed class WebSocketCloseEventArgs : AsyncEventArgs
+    public sealed class WebSocketCloseEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// Gets the WebSocket close code.
@@ -50,7 +52,8 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <param name="code">The code.</param>
         /// <param name="reason">The reason.</param>
         /// <param name="remote">If true, remote.</param>
-        internal WebSocketCloseEventArgs(int code, string reason, bool remote)
+        /// <param name="provider">Service provider.</param>
+        internal WebSocketCloseEventArgs(int code, string reason, bool remote, IServiceProvider provider) : base(provider)
         {
             this.Code = code;
             this.Reason = reason;

@@ -22,13 +22,14 @@
 
 using System;
 using DisCatSharp.Common.Utilities;
+using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.Lavalink.EventArgs
 {
     /// <summary>
     /// Represents arguments for player update event.
     /// </summary>
-    public sealed class PlayerUpdateEventArgs : AsyncEventArgs
+    public sealed class PlayerUpdateEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// Gets the timestamp at which this event was emitted.
@@ -51,7 +52,8 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <param name="lvl">The lvl.</param>
         /// <param name="timestamp">The timestamp.</param>
         /// <param name="position">The position.</param>
-        internal PlayerUpdateEventArgs(LavalinkGuildConnection lvl, DateTimeOffset timestamp, TimeSpan position)
+        internal PlayerUpdateEventArgs(LavalinkGuildConnection lvl, DateTimeOffset timestamp,
+            TimeSpan position) : base(lvl.Node.Discord.ServiceProvider)
         {
             this.Player = lvl;
             this.Timestamp = timestamp;
