@@ -42,6 +42,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="HeartbeatEventArgs"/> class.
         /// </summary>
-        internal HeartbeatEventArgs() : base() { }
+        internal HeartbeatEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }

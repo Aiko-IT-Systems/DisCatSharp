@@ -141,7 +141,7 @@ namespace DisCatSharp
 
             Volatile.Write(ref this._skippedHeartbeats, 0);
 
-            this._webSocketClient = this.Configuration.WebSocketClientFactory(this.Configuration.Proxy);
+            this._webSocketClient = this.Configuration.WebSocketClientFactory(this.Configuration.Proxy, this.ServiceProvider);
             this._payloadDecompressor = this.Configuration.GatewayCompressionLevel != GatewayCompressionLevel.None
                 ? new PayloadDecompressor(this.Configuration.GatewayCompressionLevel)
                 : null;
@@ -374,7 +374,7 @@ namespace DisCatSharp
 
             Volatile.Write(ref this._ping, ping);
 
-            var args = new HeartbeatEventArgs
+            var args = new HeartbeatEventArgs(this.ServiceProvider)
             {
                 Ping = this.Ping,
                 Timestamp = DateTimeOffset.Now
@@ -473,7 +473,7 @@ namespace DisCatSharp
             {
                 this.Logger.LogCritical(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats - connection is zombie");
 
-                var args = new ZombiedEventArgs
+                var args = new ZombiedEventArgs(this.ServiceProvider)
                 {
                     Failures = Volatile.Read(ref this._skippedHeartbeats),
                     GuildDownloadCompleted = true
@@ -485,7 +485,7 @@ namespace DisCatSharp
             }
             else if (!guilds_comp && more_than_5)
             {
-                var args = new ZombiedEventArgs
+                var args = new ZombiedEventArgs(this.ServiceProvider)
                 {
                     Failures = Volatile.Read(ref this._skippedHeartbeats),
                     GuildDownloadCompleted = false

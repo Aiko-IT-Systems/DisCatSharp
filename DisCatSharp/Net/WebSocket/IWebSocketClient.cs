@@ -26,6 +26,7 @@ using System.Net;
 using System.Threading.Tasks;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Common.Utilities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.Net.WebSocket
 {
@@ -34,7 +35,7 @@ namespace DisCatSharp.Net.WebSocket
     /// </summary>
     /// <param name="proxy">Proxy settings to use for the new WebSocket client instance.</param>
     /// <returns>Constructed WebSocket client implementation.</returns>
-    public delegate IWebSocketClient WebSocketClientFactoryDelegate(IWebProxy proxy);
+    public delegate IWebSocketClient WebSocketClientFactoryDelegate(IWebProxy proxy, IServiceProvider provider);
 
     /// <summary>
     /// Represents a base abstraction for all WebSocket client implementations.
@@ -50,6 +51,11 @@ namespace DisCatSharp.Net.WebSocket
         /// Gets the collection of default headers to send when connecting to the remote endpoint.
         /// </summary>
         IReadOnlyDictionary<string, string> DefaultHeaders { get; }
+
+        /// <summary>
+        /// <para>Gets the service provider.</para>
+        /// </summary>
+        internal IServiceProvider ServiceProvider { get; set; }
 
         /// <summary>
         /// Connects to a specified remote WebSocket endpoint.

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 
@@ -43,6 +44,6 @@ namespace DisCatSharp.VoiceNext.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="VoiceUserJoinEventArgs"/> class.
         /// </summary>
-        internal VoiceUserJoinEventArgs() : base() { }
+        internal VoiceUserJoinEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }

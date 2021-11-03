@@ -3275,7 +3275,12 @@ namespace DisCatSharp.Entities
         /// Guild has enabled role subsriptions.
         /// </summary>
         public bool HasRoleSubscriptionsEnabled { get; }
-        
+
+        /// <summary>
+        /// Guild role subsriptions as purchaseable.
+        /// </summary>
+        public bool RoleSubscriptionsIsAvaiableForPurchase { get; }
+
         /// <summary>
         /// Guild has premium tier 3 override.
         /// </summary>
@@ -3349,6 +3354,7 @@ namespace DisCatSharp.Entities
             this.IsLinkedToHub = guild.RawFeatures.Contains("LINKED_TO_HUB");
             this.HasMemberProfiles = guild.RawFeatures.Contains("MEMBER_PROFILES");
             this.IsStaffOnly = guild.RawFeatures.Contains("INTERNAL_EMPLOYEE_ONLY");
+            this.RoleSubscriptionsIsAvaiableForPurchase = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE");
 
             var _features = guild.RawFeatures.Any() ? "" : "NONE";
             foreach (var feature in guild.RawFeatures)
