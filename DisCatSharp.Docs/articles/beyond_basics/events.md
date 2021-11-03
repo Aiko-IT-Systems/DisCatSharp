@@ -53,6 +53,41 @@ private Task MemberAddedHandler(DiscordClient s, GuildMemberAddEventArgs e)
 }
 ```
 
+# Dependency Injection
+Often, you need a way to get data in and out of your event handlers.
+Although you *could* use `static` fields to accomplish this, the preferred solution would be *dependency injection*.
+
+First, you need to register the services that you can use in the event handlers in the future.
+You can do this in DiscordConfiguration:
+```cs
+var config = new DiscordConfiguration()
+{
+    Token = "Token here",
+    TokenType = TokenType.Bot,
+    ServiceProvider = new ServiceCollection()
+        .AddScoped<YourService>()
+        .AddSingleton<YourSecondService>()
+        .BuildServiceProvider()
+};
+```
+In this case, we have registered two services: `YourService` as Scoped and` YourSecondService` as Singleton.
+
+Now you can use them in your event handlers.
+```cs
+private async Task MessageCreatedHandler(DiscordClient s, MessageCreateEventArgs e)
+{
+    var service = e.ServiceProvider.GetRequiredService<YourService>();
+    var secondService = e.ServiceProvider.GetRequiredService<YourSecondService>();
+}
+```
+
+### Services
+Lifespan|Instantiated
+:---:|:---
+Singleton|One time when added to the collection.
+Scoped|Once for each event handler.
+Transient|Every request to the ServiceProvider.
+
 # Avoiding Deadlocks
 Despite the fact that your event handlers are executed asynchronously, they are also executed one at a time on the gateway thread for consistency. 
 This means that each handler must complete its execution before others can be dispatched. 

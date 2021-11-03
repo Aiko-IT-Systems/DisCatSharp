@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 namespace DisCatSharp.EventArgs
 {
     /// <summary>
@@ -40,6 +42,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="UnknownEventArgs"/> class.
         /// </summary>
-        internal UnknownEventArgs() : base() { }
+        internal UnknownEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }

@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 namespace DisCatSharp.EventArgs
 {
     /// <summary>
@@ -30,6 +32,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Creates a new event argument container.
         /// </summary>
-        public SocketEventArgs() : base() { }
+        public SocketEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }

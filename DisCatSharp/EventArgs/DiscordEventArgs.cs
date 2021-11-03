@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using DisCatSharp.Common.Utilities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.EventArgs
 {
@@ -33,9 +35,19 @@ namespace DisCatSharp.EventArgs
     public abstract class DiscordEventArgs : AsyncEventArgs
     {
         /// <summary>
+        /// <para>Gets the service provider.</para>
+        /// <para>This allows passing data around without resorting to static members.</para>
+        /// <para>Defaults to null.</para>
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; internal set; } = new ServiceCollection().BuildServiceProvider(true);
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DiscordEventArgs"/> class.
         /// </summary>
-        protected DiscordEventArgs()
-        { }
+        protected DiscordEventArgs(IServiceProvider provider)
+        {
+            if (provider != null)
+                this.ServiceProvider = provider.CreateScope().ServiceProvider;
+        }
     }
 }
