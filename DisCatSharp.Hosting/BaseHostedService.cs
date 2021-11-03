@@ -78,7 +78,7 @@ namespace DisCatSharp.Hosting
         /// <returns>Task</returns>
         protected virtual Task InitializeExtensions(DiscordClient client)
         {
-         var typeMap = this.Configuration.FindImplementedExtensions(this.BotSection);
+            var typeMap = this.Configuration.FindImplementedExtensions(this.BotSection);
 
             this.Logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
 
