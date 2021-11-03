@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
@@ -38,5 +39,8 @@ namespace DisCatSharp.EventArgs
         /// Gets the optional guild of the command.
         /// </summary>
         public DiscordGuild Guild { get; internal set; }
+
+        public ApplicationCommandEventArgs(IServiceProvider provider) : base(provider)
+        { }
     }
 }

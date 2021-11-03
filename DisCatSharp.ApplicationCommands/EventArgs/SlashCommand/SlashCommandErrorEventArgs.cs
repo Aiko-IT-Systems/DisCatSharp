@@ -22,13 +22,14 @@
 
 using DisCatSharp.Common.Utilities;
 using System;
+using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.ApplicationCommands.EventArgs
 {
     /// <summary>
     /// Represents arguments for a <see cref="ApplicationCommandsExtension.SlashCommandErrored"/> event
     /// </summary>
-    public class SlashCommandErrorEventArgs : AsyncEventArgs
+    public class SlashCommandErrorEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// The context of the command.
@@ -39,5 +40,8 @@ namespace DisCatSharp.ApplicationCommands.EventArgs
         /// The exception thrown.
         /// </summary>
         public Exception Exception { get; internal set; }
+
+        public SlashCommandErrorEventArgs(IServiceProvider provider) : base(provider)
+        { }
     }
 }

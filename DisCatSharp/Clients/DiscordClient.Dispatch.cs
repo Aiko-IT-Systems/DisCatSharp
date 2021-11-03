@@ -67,7 +67,7 @@ namespace DisCatSharp
                 return;
             }
 
-            await this._payloadReceived.InvokeAsync(this, new()
+            await this._payloadReceived.InvokeAsync(this, new(this.ServiceProvider)
             {
                 EventName = payload.EventName,
                 PayloadObject = dat
@@ -679,7 +679,7 @@ namespace DisCatSharp
                 this._guilds[guild.Id] = guild;
             }
 
-            await this._ready.InvokeAsync(this, new ReadyEventArgs()).ConfigureAwait(false);
+            await this._ready.InvokeAsync(this, new ReadyEventArgs(this.ServiceProvider)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -689,7 +689,7 @@ namespace DisCatSharp
         internal Task OnResumedAsync()
         {
             this.Logger.LogInformation(LoggerEvents.SessionUpdate, "Session resumed");
-            return this._resumed.InvokeAsync(this, new ReadyEventArgs());
+            return this._resumed.InvokeAsync(this, new ReadyEventArgs(this.ServiceProvider));
         }
 
         #endregion
@@ -717,7 +717,7 @@ namespace DisCatSharp
                 await this.RefreshChannelsAsync(channel.Guild.Id);
             }*/
 
-            await this._channelCreated.InvokeAsync(this, new ChannelCreateEventArgs { Channel = channel, Guild = channel.Guild }).ConfigureAwait(false);
+            await this._channelCreated.InvokeAsync(this, new ChannelCreateEventArgs(this.ServiceProvider) { Channel = channel, Guild = channel.Guild }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -799,7 +799,7 @@ namespace DisCatSharp
                 }
             }
 
-            await this._channelUpdated.InvokeAsync(this, new ChannelUpdateEventArgs { ChannelAfter = channel_new, Guild = gld, ChannelBefore = channel_old }).ConfigureAwait(false);
+            await this._channelUpdated.InvokeAsync(this, new ChannelUpdateEventArgs(this.ServiceProvider) { ChannelAfter = channel_new, Guild = gld, ChannelBefore = channel_old }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -819,7 +819,7 @@ namespace DisCatSharp
             {
                 var dmChannel = channel as DiscordDmChannel;
 
-                await this._dmChannelDeleted.InvokeAsync(this, new DmChannelDeleteEventArgs { Channel = dmChannel }).ConfigureAwait(false);
+                await this._dmChannelDeleted.InvokeAsync(this, new DmChannelDeleteEventArgs(this.ServiceProvider) { Channel = dmChannel }).ConfigureAwait(false);
             }
             else
             {
@@ -832,7 +832,7 @@ namespace DisCatSharp
                     await this.RefreshChannelsAsync(channel.Guild.Id);
                 }
 
-                await this._channelDeleted.InvokeAsync(this, new ChannelDeleteEventArgs { Channel = channel, Guild = gld }).ConfigureAwait(false);
+                await this._channelDeleted.InvokeAsync(this, new ChannelDeleteEventArgs(this.ServiceProvider) { Channel = channel, Guild = gld }).ConfigureAwait(false);
             }
         }
 
@@ -869,7 +869,7 @@ namespace DisCatSharp
             var guild = this.InternalGetCachedGuild(guildId);
             var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
 
-            var ea = new ChannelPinsUpdateEventArgs
+            var ea = new ChannelPinsUpdateEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Channel = channel,
@@ -999,12 +999,12 @@ namespace DisCatSharp
             Volatile.Write(ref this._guildDownloadCompleted, dcompl);
 
             if (exists)
-                await this._guildAvailable.InvokeAsync(this, new GuildCreateEventArgs { Guild = guild }).ConfigureAwait(false);
+                await this._guildAvailable.InvokeAsync(this, new GuildCreateEventArgs(this.ServiceProvider) { Guild = guild }).ConfigureAwait(false);
             else
-                await this._guildCreated.InvokeAsync(this, new GuildCreateEventArgs { Guild = guild }).ConfigureAwait(false);
+                await this._guildCreated.InvokeAsync(this, new GuildCreateEventArgs(this.ServiceProvider) { Guild = guild }).ConfigureAwait(false);
 
             if (dcompl && !old)
-                await this._guildDownloadCompletedEv.InvokeAsync(this, new GuildDownloadCompletedEventArgs(this.Guilds)).ConfigureAwait(false);
+                await this._guildDownloadCompletedEv.InvokeAsync(this, new GuildDownloadCompletedEventArgs(this.Guilds, this.ServiceProvider)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1151,7 +1151,7 @@ namespace DisCatSharp
                 xse.GuildId = guild.Id;
             }
 
-            await this._guildUpdated.InvokeAsync(this, new GuildUpdateEventArgs { GuildBefore = oldGuild, GuildAfter = guild }).ConfigureAwait(false);
+            await this._guildUpdated.InvokeAsync(this, new GuildUpdateEventArgs(this.ServiceProvider) { GuildBefore = oldGuild, GuildAfter = guild }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1168,14 +1168,14 @@ namespace DisCatSharp
 
                 gld.IsUnavailable = true;
 
-                await this._guildUnavailable.InvokeAsync(this, new GuildDeleteEventArgs { Guild = guild, Unavailable = true }).ConfigureAwait(false);
+                await this._guildUnavailable.InvokeAsync(this, new GuildDeleteEventArgs(this.ServiceProvider) { Guild = guild, Unavailable = true }).ConfigureAwait(false);
             }
             else
             {
                 if (!this._guilds.TryRemove(guild.Id, out var gld))
                     return;
 
-                await this._guildDeleted.InvokeAsync(this, new GuildDeleteEventArgs { Guild = gld }).ConfigureAwait(false);
+                await this._guildDeleted.InvokeAsync(this, new GuildDeleteEventArgs(this.ServiceProvider) { Guild = gld }).ConfigureAwait(false);
             }
         }
 
@@ -1198,7 +1198,7 @@ namespace DisCatSharp
 
             this.UpdateCachedGuild(guild, rawMembers);
 
-            await this._guildAvailable.InvokeAsync(this, new GuildCreateEventArgs { Guild = guild }).ConfigureAwait(false);
+            await this._guildAvailable.InvokeAsync(this, new GuildCreateEventArgs(this.ServiceProvider) { Guild = guild }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1218,7 +1218,7 @@ namespace DisCatSharp
                 guild._emojis[emoji.Id] = emoji;
             }
 
-            var ea = new GuildEmojisUpdateEventArgs
+            var ea = new GuildEmojisUpdateEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 EmojisAfter = guild.Emojis,
@@ -1251,7 +1251,7 @@ namespace DisCatSharp
                 guild._stickers[nst.Id] = nst;
             }
 
-            var sea = new GuildStickersUpdateEventArgs
+            var sea = new GuildStickersUpdateEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 StickersBefore = oldStickers,
@@ -1268,7 +1268,7 @@ namespace DisCatSharp
 
         internal async Task OnGuildIntegrationsUpdateEventAsync(DiscordGuild guild)
         {
-            var ea = new GuildIntegrationsUpdateEventArgs
+            var ea = new GuildIntegrationsUpdateEventArgs(this.ServiceProvider)
             {
                 Guild = guild
             };
@@ -1298,7 +1298,7 @@ namespace DisCatSharp
 
             if (!guild.Members.TryGetValue(user.Id, out var mbr))
                 mbr = new DiscordMember(usr) { Discord = this, _guild_id = guild.Id };
-            var ea = new GuildBanAddEventArgs
+            var ea = new GuildBanAddEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Member = mbr
@@ -1325,7 +1325,7 @@ namespace DisCatSharp
 
             if (!guild.Members.TryGetValue(user.Id, out var mbr))
                 mbr = new DiscordMember(usr) { Discord = this, _guild_id = guild.Id };
-            var ea = new GuildBanRemoveEventArgs
+            var ea = new GuildBanRemoveEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Member = mbr
@@ -1348,7 +1348,7 @@ namespace DisCatSharp
             var guild = this.InternalGetCachedGuild(scheduled_event.GuildId);
             guild._scheduledEvents[scheduled_event.Id] = scheduled_event;
 
-            await this._guildScheduledEventCreated.InvokeAsync(this, new GuildScheduledEventCreateEventArgs { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
+            await this._guildScheduledEventCreated.InvokeAsync(this, new GuildScheduledEventCreateEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1361,7 +1361,7 @@ namespace DisCatSharp
             var guild = this.InternalGetCachedGuild(scheduled_event.GuildId);
             guild._scheduledEvents[scheduled_event.Id] = scheduled_event;
 
-            await this._guildScheduledEventUpdated.InvokeAsync(this, new GuildScheduledEventUpdateEventArgs { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
+            await this._guildScheduledEventUpdated.InvokeAsync(this, new GuildScheduledEventUpdateEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1374,7 +1374,7 @@ namespace DisCatSharp
             var guild = this.InternalGetCachedGuild(scheduled_event.GuildId);
             guild._scheduledEvents[scheduled_event.Id] = scheduled_event;
 
-            await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
+            await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
         }
 
         #endregion
@@ -1391,7 +1391,7 @@ namespace DisCatSharp
         {
             integration.Discord = this;
 
-            await this._guildIntegrationCreated.InvokeAsync(this, new GuildIntegrationCreateEventArgs { Integration = integration, Guild = guild }).ConfigureAwait(false);
+            await this._guildIntegrationCreated.InvokeAsync(this, new GuildIntegrationCreateEventArgs(this.ServiceProvider) { Integration = integration, Guild = guild }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1404,7 +1404,7 @@ namespace DisCatSharp
         {
             integration.Discord = this;
 
-            await this._guildIntegrationUpdated.InvokeAsync(this, new GuildIntegrationUpdateEventArgs { Integration = integration, Guild = guild }).ConfigureAwait(false);
+            await this._guildIntegrationUpdated.InvokeAsync(this, new GuildIntegrationUpdateEventArgs(this.ServiceProvider) { Integration = integration, Guild = guild }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1415,7 +1415,7 @@ namespace DisCatSharp
         /// <param name="application_id">The application_id.</param>
 
         internal async Task OnGuildIntegrationDeleteEventAsync(DiscordGuild guild, ulong integration_id, ulong? application_id)
-            => await this._guildIntegrationDeleted.InvokeAsync(this, new GuildIntegrationDeleteEventArgs { Guild = guild, IntegrationId = integration_id, ApplicationId = application_id }).ConfigureAwait(false);
+            => await this._guildIntegrationDeleted.InvokeAsync(this, new GuildIntegrationDeleteEventArgs(this.ServiceProvider) { Guild = guild, IntegrationId = integration_id, ApplicationId = application_id }).ConfigureAwait(false);
 
         #endregion
 
@@ -1447,7 +1447,7 @@ namespace DisCatSharp
             guild._members[mbr.Id] = mbr;
             guild.MemberCount++;
 
-            var ea = new GuildMemberAddEventArgs
+            var ea = new GuildMemberAddEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Member = mbr
@@ -1471,7 +1471,7 @@ namespace DisCatSharp
 
             _ = this.UserCache.AddOrUpdate(user.Id, usr, (old, @new) => @new);
 
-            var ea = new GuildMemberRemoveEventArgs
+            var ea = new GuildMemberRemoveEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Member = mbr
@@ -1513,7 +1513,7 @@ namespace DisCatSharp
             mbr._role_ids.Clear();
             mbr._role_ids.AddRange(roles);
 
-            var ea = new GuildMemberUpdateEventArgs
+            var ea = new GuildMemberUpdateEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Member = mbr,
@@ -1561,7 +1561,7 @@ namespace DisCatSharp
 
             guild.MemberCount = guild._members.Count;
 
-            var ea = new GuildMembersChunkEventArgs
+            var ea = new GuildMembersChunkEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Members = new ReadOnlySet<DiscordMember>(mbrs),
@@ -1620,7 +1620,7 @@ namespace DisCatSharp
 
             guild._roles[role.Id] = role;
 
-            var ea = new GuildRoleCreateEventArgs
+            var ea = new GuildRoleCreateEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Role = role
@@ -1660,7 +1660,7 @@ namespace DisCatSharp
             newRole.Permissions = role.Permissions;
             newRole.Position = role.Position;
 
-            var ea = new GuildRoleUpdateEventArgs
+            var ea = new GuildRoleUpdateEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 RoleAfter = newRole,
@@ -1680,7 +1680,7 @@ namespace DisCatSharp
             if (!guild._roles.TryRemove(roleId, out var role))
                 this.Logger.LogWarning($"Attempted to delete a nonexistent role ({roleId}) from guild ({guild}).");
 
-            var ea = new GuildRoleDeleteEventArgs
+            var ea = new GuildRoleDeleteEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Role = role
@@ -1714,7 +1714,7 @@ namespace DisCatSharp
 
             guild._invites[invite.Code] = invite;
 
-            var ea = new InviteCreateEventArgs
+            var ea = new InviteCreateEventArgs(this.ServiceProvider)
             {
                 Channel = channel,
                 Guild = guild,
@@ -1743,7 +1743,7 @@ namespace DisCatSharp
 
             invite.IsRevoked = true;
 
-            var ea = new InviteDeleteEventArgs
+            var ea = new InviteDeleteEventArgs(this.ServiceProvider)
             {
                 Channel = channel,
                 Guild = guild,
@@ -1774,7 +1774,7 @@ namespace DisCatSharp
                 };
             }
 
-            await this._messageAcknowledged.InvokeAsync(this, new MessageAcknowledgeEventArgs { Message = msg }).ConfigureAwait(false);
+            await this._messageAcknowledged.InvokeAsync(this, new MessageAcknowledgeEventArgs(this.ServiceProvider) { Message = msg }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1805,7 +1805,7 @@ namespace DisCatSharp
             foreach (var sticker in message.Stickers)
                 sticker.Discord = this;
 
-            var ea = new MessageCreateEventArgs
+            var ea = new MessageCreateEventArgs(this.ServiceProvider)
             {
                 Message = message,
 
@@ -1864,7 +1864,7 @@ namespace DisCatSharp
 
             message.PopulateMentions();
 
-            var ea = new MessageUpdateEventArgs
+            var ea = new MessageUpdateEventArgs(this.ServiceProvider)
             {
                 Message = message,
                 MessageBefore = oldmsg,
@@ -1904,7 +1904,7 @@ namespace DisCatSharp
             if (this.Configuration.MessageCacheSize > 0)
                 this.MessageCache?.Remove(xm => xm.Id == msg.Id && xm.ChannelId == channelId);
 
-            var ea = new MessageDeleteEventArgs
+            var ea = new MessageDeleteEventArgs(this.ServiceProvider)
             {
                 Channel = channel,
                 Message = msg,
@@ -1946,7 +1946,7 @@ namespace DisCatSharp
 
             var guild = this.InternalGetCachedGuild(guildId);
 
-            var ea = new MessageBulkDeleteEventArgs
+            var ea = new MessageBulkDeleteEventArgs(this.ServiceProvider)
             {
                 Channel = channel,
                 Messages = new ReadOnlyCollection<DiscordMessage>(msgs),
@@ -2007,7 +2007,7 @@ namespace DisCatSharp
                 react.IsMe |= this.CurrentUser.Id == userId;
             }
 
-            var ea = new MessageReactionAddEventArgs
+            var ea = new MessageReactionAddEventArgs(this.ServiceProvider)
             {
                 Message = msg,
                 User = usr,
@@ -2070,7 +2070,7 @@ namespace DisCatSharp
 
             var guild = this.InternalGetCachedGuild(guildId);
 
-            var ea = new MessageReactionRemoveEventArgs
+            var ea = new MessageReactionRemoveEventArgs(this.ServiceProvider)
             {
                 Message = msg,
                 User = usr,
@@ -2108,7 +2108,7 @@ namespace DisCatSharp
 
             var guild = this.InternalGetCachedGuild(guildId);
 
-            var ea = new MessageReactionsClearEventArgs
+            var ea = new MessageReactionsClearEventArgs(this.ServiceProvider)
             {
                 Message = msg
             };
@@ -2152,7 +2152,7 @@ namespace DisCatSharp
 
             msg._reactions?.RemoveAll(r => r.Emoji.Equals(emoji));
 
-            var ea = new MessageReactionRemoveEmojiEventArgs
+            var ea = new MessageReactionRemoveEmojiEventArgs(this.ServiceProvider)
             {
                 Channel = channel,
                 Guild = guild,
@@ -2178,7 +2178,7 @@ namespace DisCatSharp
             var guild = this.InternalGetCachedGuild(stage.GuildId);
             guild._stageInstances[stage.Id] = stage;
 
-            await this._stageInstanceCreated.InvokeAsync(this, new StageInstanceCreateEventArgs { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
+            await this._stageInstanceCreated.InvokeAsync(this, new StageInstanceCreateEventArgs(this.ServiceProvider) { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -2191,7 +2191,7 @@ namespace DisCatSharp
             var guild = this.InternalGetCachedGuild(stage.GuildId);
             guild._stageInstances[stage.Id] = stage;
 
-            await this._stageInstanceUpdated.InvokeAsync(this, new StageInstanceUpdateEventArgs { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
+            await this._stageInstanceUpdated.InvokeAsync(this, new StageInstanceUpdateEventArgs(this.ServiceProvider) { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -2204,7 +2204,7 @@ namespace DisCatSharp
             var guild = this.InternalGetCachedGuild(stage.GuildId);
             guild._stageInstances[stage.Id] = stage;
 
-            await this._stageInstanceDeleted.InvokeAsync(this, new StageInstanceDeleteEventArgs { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
+            await this._stageInstanceDeleted.InvokeAsync(this, new StageInstanceDeleteEventArgs(this.ServiceProvider) { StageInstance = stage, Guild = stage.Guild }).ConfigureAwait(false);
         }
 
         #endregion
@@ -2220,7 +2220,7 @@ namespace DisCatSharp
             thread.Discord = this;
             this.InternalGetCachedGuild(thread.GuildId)._threads.AddOrUpdate(thread.Id, thread, (oldThread, newThread) => newThread);
 
-            await this._threadCreated.InvokeAsync(this, new ThreadCreateEventArgs { Thread = thread, Guild = thread.Guild, Parent = thread.Parent }).ConfigureAwait(false);
+            await this._threadCreated.InvokeAsync(this, new ThreadCreateEventArgs(this.ServiceProvider) { Thread = thread, Guild = thread.Guild, Parent = thread.Parent }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -2268,7 +2268,7 @@ namespace DisCatSharp
                 threadNew.MemberCount = thread.MemberCount;
                 threadNew.GuildId = thread.GuildId;
 
-                updateEvent = new ThreadUpdateEventArgs
+                updateEvent = new ThreadUpdateEventArgs(this.ServiceProvider)
                 {
                     ThreadAfter = thread,
                     ThreadBefore = threadOld,
@@ -2278,7 +2278,7 @@ namespace DisCatSharp
             }
             else
             {
-                updateEvent = new ThreadUpdateEventArgs
+                updateEvent = new ThreadUpdateEventArgs(this.ServiceProvider)
                 {
                     ThreadAfter = thread,
                     Guild = thread.Guild,
@@ -2305,7 +2305,7 @@ namespace DisCatSharp
             if (gld._threads.TryRemove(thread.Id, out var cachedThread))
                 thread = cachedThread;
 
-            await this._threadDeleted.InvokeAsync(this, new ThreadDeleteEventArgs { Thread = thread, Guild = thread.Guild, Parent = thread.Parent, Type = thread.Type }).ConfigureAwait(false);
+            await this._threadDeleted.InvokeAsync(this, new ThreadDeleteEventArgs(this.ServiceProvider) { Thread = thread, Guild = thread.Guild, Parent = thread.Parent, Type = thread.Type }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -2325,7 +2325,7 @@ namespace DisCatSharp
                 chan.Discord = this;
             }
 
-            await this._threadListSynced.InvokeAsync(this, new ThreadListSyncEventArgs { Guild = guild, Channels = channels.ToList().AsReadOnly(), Threads = threads, Members = members.ToList().AsReadOnly() }).ConfigureAwait(false);
+            await this._threadListSynced.InvokeAsync(this, new ThreadListSyncEventArgs(this.ServiceProvider) { Guild = guild, Channels = channels.ToList().AsReadOnly(), Threads = threads, Members = members.ToList().AsReadOnly() }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -2340,7 +2340,7 @@ namespace DisCatSharp
             thread.Guild._threads.AddOrUpdate(member.Id, thread, (oldThread, newThread) => newThread);
 
 
-            await this._threadMemberUpdated.InvokeAsync(this, new ThreadMemberUpdateEventArgs { ThreadMember = member, Thread = thread }).ConfigureAwait(false);
+            await this._threadMemberUpdated.InvokeAsync(this, new ThreadMemberUpdateEventArgs(this.ServiceProvider) { ThreadMember = member, Thread = thread }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -2385,7 +2385,7 @@ namespace DisCatSharp
                 thread.CurrentMember = null;
             thread.MemberCount = member_count;
 
-            var threadMembersUpdateArg = new ThreadMembersUpdateEventArgs
+            var threadMembersUpdateArg = new ThreadMembersUpdateEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Thread = thread,
@@ -2444,7 +2444,7 @@ namespace DisCatSharp
                 else
                     activity_users = null;
 
-                var ea = new EmbeddedActivityUpdateEventArgs
+                var ea = new EmbeddedActivityUpdateEventArgs(this.ServiceProvider)
                 {
                     Guild = guild,
                     EmbeddedActivityBefore = old,
@@ -2533,7 +2533,7 @@ namespace DisCatSharp
             }
 
             var usrafter = usr ?? new DiscordUser(presence.InternalUser);
-            var ea = new PresenceUpdateEventArgs
+            var ea = new PresenceUpdateEventArgs(this.ServiceProvider)
             {
                 Status = presence.Status,
                 Activity = presence.Activity,
@@ -2555,7 +2555,7 @@ namespace DisCatSharp
         {
             var usr = new DiscordUser(user) { Discord = this };
 
-            var ea = new UserSettingsUpdateEventArgs
+            var ea = new UserSettingsUpdateEventArgs(this.ServiceProvider)
             {
                 User = usr
             };
@@ -2591,7 +2591,7 @@ namespace DisCatSharp
             this.CurrentUser.Username = user.Username;
             this.CurrentUser.Verified = user.Verified;
 
-            var ea = new UserUpdateEventArgs
+            var ea = new UserUpdateEventArgs(this.ServiceProvider)
             {
                 UserAfter = this.CurrentUser,
                 UserBefore = usr_old
@@ -2635,7 +2635,7 @@ namespace DisCatSharp
                 this.UpdateUser(new DiscordUser(transportMbr.User) { Discord = this }, gid, gld, transportMbr);
             }
 
-            var ea = new VoiceStateUpdateEventArgs
+            var ea = new VoiceStateUpdateEventArgs(this.ServiceProvider)
             {
                 Guild = vstateNew.Guild,
                 Channel = vstateNew.Channel,
@@ -2657,7 +2657,7 @@ namespace DisCatSharp
 
         internal async Task OnVoiceServerUpdateEventAsync(string endpoint, string token, DiscordGuild guild)
         {
-            var ea = new VoiceServerUpdateEventArgs
+            var ea = new VoiceServerUpdateEventArgs(this.ServiceProvider)
             {
                 Endpoint = endpoint,
                 VoiceToken = token,
@@ -2691,7 +2691,7 @@ namespace DisCatSharp
                 };
             }
 
-            var ea = new ApplicationCommandEventArgs
+            var ea = new ApplicationCommandEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Command = cmd
@@ -2721,7 +2721,7 @@ namespace DisCatSharp
                 };
             }
 
-            var ea = new ApplicationCommandEventArgs
+            var ea = new ApplicationCommandEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Command = cmd
@@ -2751,7 +2751,7 @@ namespace DisCatSharp
                 };
             }
 
-            var ea = new ApplicationCommandEventArgs
+            var ea = new ApplicationCommandEventArgs(this.ServiceProvider)
             {
                 Guild = guild,
                 Command = cmd
@@ -2781,7 +2781,7 @@ namespace DisCatSharp
                 };
             }
 
-            var ea = new GuildApplicationCommandCountEventArgs
+            var ea = new GuildApplicationCommandCountEventArgs(this.ServiceProvider)
             {
                 SlashCommands = sc,
                 UserContextMenuCommands = ucmc,
@@ -2825,7 +2825,7 @@ namespace DisCatSharp
                 };
             }
 
-            var ea = new ApplicationCommandPermissionsUpdateEventArgs
+            var ea = new ApplicationCommandPermissionsUpdateEventArgs(this.ServiceProvider)
             {
                 Permissions = perms.ToList(),
                 Command = cmd,
@@ -2934,7 +2934,7 @@ namespace DisCatSharp
 
                 interaction.Message.Discord = this;
                 interaction.Message.ChannelId = interaction.ChannelId;
-                var cea = new ComponentInteractionCreateEventArgs
+                var cea = new ComponentInteractionCreateEventArgs(this.ServiceProvider)
                 {
                     Message = interaction.Message,
                     Interaction = interaction
@@ -2955,7 +2955,7 @@ namespace DisCatSharp
                     interaction.Data.Resolved.Members?.TryGetValue(targetId, out targetMember);
                     interaction.Data.Resolved.Users?.TryGetValue(targetId, out targetUser);
 
-                    var ctea = new ContextMenuInteractionCreateEventArgs
+                    var ctea = new ContextMenuInteractionCreateEventArgs(this.ServiceProvider)
                     {
                         Interaction = interaction,
                         TargetUser = targetMember ?? targetUser,
@@ -2966,7 +2966,7 @@ namespace DisCatSharp
                 }
                 else
                 {
-                    var ea = new InteractionCreateEventArgs
+                    var ea = new InteractionCreateEventArgs(this.ServiceProvider)
                     {
                         Interaction = interaction
                     };
@@ -3005,7 +3005,7 @@ namespace DisCatSharp
             var guild = this.InternalGetCachedGuild(guildId);
             var usr = this.UpdateUser(new DiscordUser { Id = userId, Discord = this }, guildId, guild, mbr);
 
-            var ea = new TypingStartEventArgs
+            var ea = new TypingStartEventArgs(this.ServiceProvider)
             {
                 Channel = channel,
                 User = usr,
@@ -3023,7 +3023,7 @@ namespace DisCatSharp
 
         internal async Task OnWebhooksUpdateAsync(DiscordChannel channel, DiscordGuild guild)
         {
-            var ea = new WebhooksUpdateEventArgs
+            var ea = new WebhooksUpdateEventArgs(this.ServiceProvider)
             {
                 Channel = channel,
                 Guild = guild
@@ -3038,7 +3038,7 @@ namespace DisCatSharp
 
         internal async Task OnUnknownEventAsync(GatewayPayload payload)
         {
-            var ea = new UnknownEventArgs { EventName = payload.EventName, Json = (payload.Data as JObject)?.ToString() };
+            var ea = new UnknownEventArgs(this.ServiceProvider) { EventName = payload.EventName, Json = (payload.Data as JObject)?.ToString() };
             await this._unknownEvent.InvokeAsync(this, ea).ConfigureAwait(false);
         }
 

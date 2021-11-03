@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using DisCatSharp.Entities;
 
@@ -39,8 +40,9 @@ namespace DisCatSharp.EventArgs
         /// Initializes a new instance of the <see cref="GuildDownloadCompletedEventArgs"/> class.
         /// </summary>
         /// <param name="guilds">The guilds.</param>
-        internal GuildDownloadCompletedEventArgs(IReadOnlyDictionary<ulong, DiscordGuild> guilds)
-            : base()
+        /// <param name="provider">Service provider.</param>
+        internal GuildDownloadCompletedEventArgs(IReadOnlyDictionary<ulong, DiscordGuild> guilds, IServiceProvider provider)
+            : base(provider)
         {
             this.Guilds = guilds;
         }
