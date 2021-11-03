@@ -36,7 +36,8 @@ namespace DisCatSharp.Hosting.Tests
     {
         public Bot(IConfiguration config, ILogger<Bot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime)
         {
-            this.InitializeExtensions();
+            this.PreConnectAsync().GetAwaiter().GetResult();
+            this.PostConnectAsync().GetAwaiter().GetResult();
         }
     }
 
@@ -44,7 +45,8 @@ namespace DisCatSharp.Hosting.Tests
     {
         public MyCustomBot(IConfiguration config, ILogger<MyCustomBot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "MyCustomBot")
         {
-            this.InitializeExtensions();
+            this.PreConnectAsync().GetAwaiter().GetResult();
+            this.PostConnectAsync().GetAwaiter().GetResult();
         }
     }
 
@@ -58,7 +60,7 @@ namespace DisCatSharp.Hosting.Tests
     {
         public BotTwoService(IConfiguration config, ILogger<BotTwoService> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "BotTwo")
         {
-            this.InitializeExtensions();
+            this.PreConnectAsync().Wait();
         }
 
         public string GiveMeAResponse() => "I'm working";
