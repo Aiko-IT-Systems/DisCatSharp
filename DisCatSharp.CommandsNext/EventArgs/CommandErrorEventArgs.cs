@@ -33,5 +33,8 @@ namespace DisCatSharp.CommandsNext
         /// Gets the exception.
         /// </summary>
         public Exception Exception { get; internal set; }
+
+        public CommandErrorEventArgs(IServiceProvider provider) : base(provider)
+        { }
     }
 }

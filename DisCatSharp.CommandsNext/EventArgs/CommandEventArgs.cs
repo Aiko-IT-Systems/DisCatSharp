@@ -20,14 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using DisCatSharp.Common.Utilities;
+using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.CommandsNext
 {
     /// <summary>
     /// Base class for all CNext-related events.
     /// </summary>
-    public class CommandEventArgs : AsyncEventArgs
+    public class CommandEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// Gets the context in which the command was executed.
@@ -39,5 +41,8 @@ namespace DisCatSharp.CommandsNext
         /// </summary>
         public Command Command
             => this.Context.Command;
+
+        public CommandEventArgs(IServiceProvider provider) : base(provider)
+        { }
     }
 }

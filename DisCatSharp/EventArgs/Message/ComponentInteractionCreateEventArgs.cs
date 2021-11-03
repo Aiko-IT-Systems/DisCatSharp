@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using DisCatSharp.Entities;
 using Newtonsoft.Json;
 
@@ -64,6 +65,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentInteractionCreateEventArgs"/> class.
         /// </summary>
-        internal ComponentInteractionCreateEventArgs() { }
+        internal ComponentInteractionCreateEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }

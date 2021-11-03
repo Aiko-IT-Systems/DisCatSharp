@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
@@ -53,6 +54,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageReactionsClearEventArgs"/> class.
         /// </summary>
-        internal MessageReactionsClearEventArgs() : base() { }
+        internal MessageReactionsClearEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }
