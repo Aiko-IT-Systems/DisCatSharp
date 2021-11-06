@@ -53,7 +53,7 @@ namespace DisCatSharp.Hosting
 
         }
 
-        protected sealed override Task ConfigureAsync()
+        protected override Task ConfigureAsync()
         {
             try
             {
@@ -69,7 +69,7 @@ namespace DisCatSharp.Hosting
         }
         protected sealed override async Task ConnectAsync() => await this.Client.ConnectAsync();
 
-        protected sealed override Task ConfigureExtensionsAsync()
+        protected override Task ConfigureExtensionsAsync()
         {
             this.InitializeExtensions(this.Client);
             return Task.CompletedTask;
