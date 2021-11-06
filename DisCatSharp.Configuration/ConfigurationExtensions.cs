@@ -25,6 +25,7 @@ using System.Collections;
 using System.Linq;
 using DisCatSharp.Configuration.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.Configuration
 {
@@ -181,6 +182,27 @@ namespace DisCatSharp.Configuration
         /// in <paramref name="config"/>. Translate user-defined config values to the <typeparamref name="TConfig"/> instance.
         /// </summary>
         /// <param name="config">Loaded App Configuration</param>
+        /// <param name="serviceProvider"></param>
+        /// <param name="sectionName">Name of section to load</param>
+        /// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DefaultRootLib"/></param>
+        /// <typeparam name="TConfig">Type of instance that <paramref name="sectionName"/> represents</typeparam>
+        /// <returns>Hydrated instance of <typeparamref name="TConfig"/> which contains the user-defined values (if any).</returns>
+        public static TConfig ExtractConfig<TConfig>(this IConfiguration config, IServiceProvider serviceProvider, string sectionName, string? rootSectionName = DefaultRootLib)
+            where TConfig : new()
+        {
+            // Default values should hopefully be provided from the constructor
+            object configInstance = ActivatorUtilities.CreateInstance(serviceProvider, typeof(TConfig));
+
+            HydrateInstance(ref configInstance, new ConfigSection(ref config, sectionName, rootSectionName));
+
+            return (TConfig) configInstance;
+        }
+
+        /// <summary>
+        /// Instantiate a new instance of <typeparamref name="TConfig"/>, then walk through the specified <paramref name="sectionName"/>
+        /// in <paramref name="config"/>. Translate user-defined config values to the <typeparamref name="TConfig"/> instance.
+        /// </summary>
+        /// <param name="config">Loaded App Configuration</param>
         /// <param name="sectionName">Name of section to load</param>
         /// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DefaultRootLib"/></param>
         /// <typeparam name="TConfig">Type of instance that <paramref name="sectionName"/> represents</typeparam>
@@ -269,9 +291,11 @@ namespace DisCatSharp.Configuration
         /// </code>
         /// </remarks>
         /// <param name="config"></param>
+        /// <param name="serviceProvider"></param>
         /// <param name="botSectionName"></param>
         /// <returns>Instance of <see cref="DiscordClient"/></returns>
-        public static DiscordClient BuildClient(this IConfiguration config, string botSectionName = DefaultRootLib)
+        public static DiscordClient BuildClient(this IConfiguration config, IServiceProvider serviceProvider,
+            string botSectionName = DefaultRootLib)
         {
             var section = config.HasSection(botSectionName, "Discord")
                 ? "Discord"
@@ -280,8 +304,8 @@ namespace DisCatSharp.Configuration
                     : null;
 
             return string.IsNullOrEmpty(section)
-                ? new DiscordClient(new())
-                : new DiscordClient(config.ExtractConfig<DiscordConfiguration>(section, botSectionName));
+                ? new DiscordClient(new(serviceProvider))
+                : new DiscordClient(config.ExtractConfig<DiscordConfiguration>(serviceProvider, section, botSectionName));
         }
     }
 }

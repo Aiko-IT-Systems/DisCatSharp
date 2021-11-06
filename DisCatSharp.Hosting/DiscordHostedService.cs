@@ -53,12 +53,11 @@ namespace DisCatSharp.Hosting
 
         }
 
-        protected override Task PreConnectAsync()
+        protected sealed override Task ConfigureAsync()
         {
             try
             {
-                this.Client = this.Configuration.BuildClient(this.BotSection);
-                this.Client.ServiceProvider = this.ServiceProvider;
+                this.Client = this.Configuration.BuildClient(this.ServiceProvider, this.BotSection);
             }
             catch (Exception ex)
             {
@@ -68,10 +67,9 @@ namespace DisCatSharp.Hosting
 
             return Task.CompletedTask;
         }
+        protected sealed override async Task ConnectAsync() => await this.Client.ConnectAsync();
 
-        protected override async Task ConnectAsync() => await this.Client.ConnectAsync();
-
-        protected override Task PostConnectAsync()
+        protected sealed override Task ConfigureExtensionsAsync()
         {
             this.InitializeExtensions(this.Client);
             return Task.CompletedTask;

@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace DisCatSharp.VoiceNext
 {
     /// <summary>
@@ -48,6 +50,7 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Creates a new instance of <see cref="VoiceNextConfiguration"/>.
         /// </summary>
+        [ActivatorUtilitiesConstructor]
         public VoiceNextConfiguration() { }
 
         /// <summary>

@@ -76,7 +76,7 @@ namespace DisCatSharp.Hosting
         /// </summary>
         /// <param name="client">Client to add extension method(s) to</param>
         /// <returns>Task</returns>
-        protected virtual Task InitializeExtensions(DiscordClient client)
+        protected Task InitializeExtensions(DiscordClient client)
         {
             var typeMap = this.Configuration.FindImplementedExtensions(this.BotSection);
 
@@ -140,25 +140,39 @@ namespace DisCatSharp.Hosting
         }
 
         /// <summary>
-        /// Runs just prior to <see cref="ConnectAsync"/>. Should initialize your
-        /// <see cref="DiscordClient"/> or <see cref="DiscordShardedClient"/> here
+        /// Configure / Initialize the <see cref="DiscordClient"/> or
+        /// <see cref="DiscordShardedClient"/>
         /// </summary>
         /// <returns></returns>
-        protected abstract Task PreConnectAsync();
+        protected abstract Task ConfigureAsync();
+
+        /// <summary>
+        /// Configure the extensions for your <see cref="DiscordShardedClient"/> or
+        /// <see cref="DiscordClient"/>
+        /// </summary>
+        /// <returns></returns>
+        protected abstract Task ConfigureExtensionsAsync();
+
+        /// <summary>
+        /// Runs just prior to <see cref="ConnectAsync"/>.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Task PreConnectAsync() => Task.CompletedTask;
 
         /// <summary>
         /// Runs immediately after <see cref="ConnectAsync"/>.
-        /// Recommended to initialize your extensions here
         /// </summary>
         /// <returns>Task</returns>
-        protected abstract Task PostConnectAsync();
+        protected virtual Task PostConnectAsync() => Task.CompletedTask;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             try
             {
+                await this.ConfigureAsync();
                 await this.PreConnectAsync();
                 await this.ConnectAsync();
+                await this.ConfigureExtensionsAsync();
                 await this.PostConnectAsync();
             }
             catch (Exception ex)

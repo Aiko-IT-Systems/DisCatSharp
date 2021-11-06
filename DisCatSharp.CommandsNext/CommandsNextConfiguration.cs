@@ -76,7 +76,7 @@ namespace DisCatSharp.CommandsNext
         /// <para>Sets whether to enable default help command.</para>
         /// <para>Disabling this will allow you to make your own help command.</para>
         /// <para>
-        /// Modifying default help can be achieved via custom help formatters (see <see cref="BaseHelpFormatter"/> and <see cref="CommandsNextExtension.SetHelpFormatter{T}()"/> for more details). 
+        /// Modifying default help can be achieved via custom help formatters (see <see cref="BaseHelpFormatter"/> and <see cref="CommandsNextExtension.SetHelpFormatter{T}()"/> for more details).
         /// It is recommended to use help formatter instead of disabling help.
         /// </para>
         /// <para>Defaults to true.</para>
@@ -108,7 +108,7 @@ namespace DisCatSharp.CommandsNext
         /// <para>Objects in this provider are used when instantiating command modules. This allows passing data around without resorting to static members.</para>
         /// <para>Defaults to null.</para>
         /// </summary>
-        public IServiceProvider Services { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
+        public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
 
         /// <summary>
         /// <para>Gets whether any extra arguments passed to commands should be ignored or not. If this is set to false, extra arguments will throw, otherwise they will be ignored.</para>
@@ -128,6 +128,12 @@ namespace DisCatSharp.CommandsNext
         /// </summary>
         public CommandsNextConfiguration() { }
 
+        [ActivatorUtilitiesConstructor]
+        public CommandsNextConfiguration(IServiceProvider provider)
+        {
+            this.ServiceProvider = provider;
+        }
+
         /// <summary>
         /// Creates a new instance of <see cref="CommandsNextConfiguration"/>, copying the properties of another configuration.
         /// </summary>
@@ -142,7 +148,7 @@ namespace DisCatSharp.CommandsNext
             this.EnableMentionPrefix = other.EnableMentionPrefix;
             this.IgnoreExtraArguments = other.IgnoreExtraArguments;
             this.UseDefaultCommandHandler = other.UseDefaultCommandHandler;
-            this.Services = other.Services;
+            this.ServiceProvider = other.ServiceProvider;
             this.StringPrefixes = other.StringPrefixes?.ToArray();
             this.DmHelp = other.DmHelp;
         }
