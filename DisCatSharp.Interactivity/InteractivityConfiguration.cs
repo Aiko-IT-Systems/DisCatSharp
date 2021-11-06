@@ -23,6 +23,7 @@
 using System;
 using DisCatSharp.Interactivity.Enums;
 using DisCatSharp.Interactivity.EventHandling;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.Interactivity
 {
@@ -85,6 +86,7 @@ namespace DisCatSharp.Interactivity
         /// <summary>
         /// Creates a new instance of <see cref="InteractivityConfiguration"/>.
         /// </summary>
+        [ActivatorUtilitiesConstructor]
         public InteractivityConfiguration()
         {
         }

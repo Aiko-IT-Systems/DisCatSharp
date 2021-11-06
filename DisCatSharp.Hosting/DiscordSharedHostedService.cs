@@ -48,11 +48,11 @@ namespace DisCatSharp.Hosting
         }
 #pragma warning restore 8618
 
-        protected override Task PreConnectAsync()
+        protected sealed override Task ConfigureAsync()
         {
             try
             {
-                var config = this.Configuration.ExtractConfig<DiscordConfiguration>("Discord", this.BotSection);
+                var config = this.Configuration.ExtractConfig<DiscordConfiguration>(this.ServiceProvider, "Discord", this.BotSection);
                 this.ShardedClient = new DiscordShardedClient(config);
             }
             catch (Exception ex)
@@ -64,17 +64,16 @@ namespace DisCatSharp.Hosting
             return Task.CompletedTask;
         }
 
-        protected override async Task ConnectAsync()
+        protected sealed override async Task ConnectAsync()
         {
             await this.ShardedClient.InitializeShardsAsync();
             await this.ShardedClient.StartAsync();
         }
 
-        protected override Task PostConnectAsync()
+        protected sealed override Task ConfigureExtensionsAsync()
         {
             foreach (var client in this.ShardedClient.ShardClients.Values)
             {
-                client.ServiceProvider = this.ServiceProvider;
                 this.InitializeExtensions(client);
             }
 

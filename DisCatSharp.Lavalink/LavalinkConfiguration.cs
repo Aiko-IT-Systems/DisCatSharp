@@ -22,6 +22,7 @@
 
 using DisCatSharp.Entities;
 using DisCatSharp.Net;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.Lavalink
 {
@@ -82,6 +83,7 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Creates a new instance of <see cref="LavalinkConfiguration"/>.
         /// </summary>
+        [ActivatorUtilitiesConstructor]
         public LavalinkConfiguration() { }
 
         /// <summary>

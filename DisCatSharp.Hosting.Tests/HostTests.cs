@@ -36,8 +36,8 @@ namespace DisCatSharp.Hosting.Tests
     {
         public Bot(IConfiguration config, ILogger<Bot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime)
         {
-            this.PreConnectAsync().GetAwaiter().GetResult();
-            this.PostConnectAsync().GetAwaiter().GetResult();
+            this.ConfigureAsync().GetAwaiter().GetResult();
+            this.ConfigureExtensionsAsync().GetAwaiter().GetResult();
         }
     }
 
@@ -45,8 +45,8 @@ namespace DisCatSharp.Hosting.Tests
     {
         public MyCustomBot(IConfiguration config, ILogger<MyCustomBot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "MyCustomBot")
         {
-            this.PreConnectAsync().GetAwaiter().GetResult();
-            this.PostConnectAsync().GetAwaiter().GetResult();
+            this.ConfigureAsync().GetAwaiter().GetResult();
+            this.ConfigureExtensionsAsync().GetAwaiter().GetResult();
         }
     }
 
@@ -60,7 +60,8 @@ namespace DisCatSharp.Hosting.Tests
     {
         public BotTwoService(IConfiguration config, ILogger<BotTwoService> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "BotTwo")
         {
-            this.PreConnectAsync().Wait();
+            this.ConfigureAsync().GetAwaiter().GetResult();
+            this.ConfigureExtensionsAsync().GetAwaiter().GetResult();
         }
 
         public string GiveMeAResponse() => "I'm working";
@@ -161,6 +162,9 @@ namespace DisCatSharp.Hosting.Tests
 
                 var interactivity = service.Client.GetExtension<InteractivityExtension>();
                 Assert.NotNull(interactivity);
+
+                Assert.NotNull(host.Services);
+                Assert.NotNull(service.Client.ServiceProvider);
             }
             finally
             {
@@ -185,6 +189,7 @@ namespace DisCatSharp.Hosting.Tests
 
                 var intents = DiscordIntents.Guilds;
                 Assert.Equal(intents, service.Client.Intents);
+                Assert.NotNull(service.Client.ServiceProvider);
             }
             finally
             {
@@ -204,6 +209,7 @@ namespace DisCatSharp.Hosting.Tests
                 var service = host.Services.GetRequiredService<IDiscordHostedService>();
                 Assert.NotNull(service);
                 Assert.NotNull(service.Client);
+                Assert.NotNull(service.Client.ServiceProvider);
             }
             finally
             {
@@ -224,6 +230,7 @@ namespace DisCatSharp.Hosting.Tests
                 Assert.NotNull(service);
                 Assert.NotNull(service.Client);
                 Assert.NotNull(service.Client.GetExtension<InteractivityExtension>());
+                Assert.NotNull(service.Client.ServiceProvider);
             }
             finally
             {
@@ -246,6 +253,7 @@ namespace DisCatSharp.Hosting.Tests
                 Assert.NotNull(service.Client);
                 Assert.NotNull(service.Client.GetExtension<InteractivityExtension>());
                 Assert.NotNull(service.Client.GetExtension<LavalinkExtension>());
+                Assert.NotNull(service.Client.ServiceProvider);
             }
             finally
             {

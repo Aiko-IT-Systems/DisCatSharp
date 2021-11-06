@@ -341,7 +341,7 @@ namespace DisCatSharp.ApplicationCommands
                                 {
                                     if (subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
                                     {
-                                        _singletonModules.Add(this.CreateInstance(subclass, this._configuration?.Services));
+                                        _singletonModules.Add(this.CreateInstance(subclass, this._configuration?.ServiceProvider));
                                     }
                                 }
                             }
@@ -353,7 +353,7 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 if (subclassinfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
                                 {
-                                    _singletonModules.Add(this.CreateInstance(subclassinfo, this._configuration?.Services));
+                                    _singletonModules.Add(this.CreateInstance(subclassinfo, this._configuration?.ServiceProvider));
                                 }
                             }
                         }
@@ -404,7 +404,7 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
                                 {
-                                    _singletonModules.Add(this.CreateInstance(module, this._configuration?.Services));
+                                    _singletonModules.Add(this.CreateInstance(module, this._configuration?.ServiceProvider));
                                 }
                             }
                         }
@@ -544,7 +544,7 @@ namespace DisCatSharp.ApplicationCommands
                         CommandName = e.Interaction.Data.Name,
                         InteractionId = e.Interaction.Id,
                         Token = e.Interaction.Token,
-                        Services = this._configuration?.Services,
+                        Services = this._configuration?.ServiceProvider,
                         ResolvedUserMentions = e.Interaction.Data.Resolved?.Users?.Values.ToList(),
                         ResolvedRoleMentions = e.Interaction.Data.Resolved?.Roles?.Values.ToList(),
                         ResolvedChannelMentions = e.Interaction.Data.Resolved?.Channels?.Values.ToList(),
@@ -701,7 +701,7 @@ namespace DisCatSharp.ApplicationCommands
                     Interaction = e.Interaction,
                     Channel = e.Interaction.Channel,
                     Client = client,
-                    Services = this._configuration?.Services,
+                    Services = this._configuration?.ServiceProvider,
                     CommandName = e.Interaction.Data.Name,
                     ApplicationCommandsExtension = this,
                     Guild = e.Interaction.Guild,
@@ -754,12 +754,12 @@ namespace DisCatSharp.ApplicationCommands
             {
                 case ApplicationCommandModuleLifespan.Scoped:
                     //Accounts for static methods and adds DI
-                    classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(this._configuration?.Services.CreateScope().ServiceProvider, method.DeclaringType) : this.CreateInstance(method.DeclaringType, this._configuration?.Services.CreateScope().ServiceProvider);
+                    classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(this._configuration?.ServiceProvider.CreateScope().ServiceProvider, method.DeclaringType) : this.CreateInstance(method.DeclaringType, this._configuration?.ServiceProvider.CreateScope().ServiceProvider);
                     break;
 
                 case ApplicationCommandModuleLifespan.Transient:
                     //Accounts for static methods and adds DI
-                    classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(this._configuration?.Services, method.DeclaringType) : this.CreateInstance(method.DeclaringType, this._configuration?.Services);
+                    classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(this._configuration?.ServiceProvider, method.DeclaringType) : this.CreateInstance(method.DeclaringType, this._configuration?.ServiceProvider);
                     break;
 
                 //If singleton, gets it from the singleton list
@@ -1038,7 +1038,7 @@ namespace DisCatSharp.ApplicationCommands
                             ?.SetValue(instance, guildId);
 
                         choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.Services))
-                            ?.SetValue(instance, _configuration.Services);
+                            ?.SetValue(instance, _configuration.ServiceProvider);
                     }
 
                     //Gets the choices from the method
