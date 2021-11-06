@@ -51,6 +51,10 @@ namespace DisCatSharp.EventArgs
         /// </summary>
         public DiscordMessage TargetMessage { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContextMenuInteractionCreateEventArgs"/> class.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
         public ContextMenuInteractionCreateEventArgs(IServiceProvider provider) : base(provider)
         { }
     }
