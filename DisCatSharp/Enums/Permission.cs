@@ -333,11 +333,11 @@ namespace DisCatSharp
         [PermissionString("Start Embedded Activities")]
         StartEmbeddedActivities = 0x0000008000000000//,
 
-        /// <summary>
+        /*/// <summary>
         /// Allows to time-out a member.     
         /// </summary>
-        //[PermissionString("Time-out Members")]
-        //TimeOutMembers = 0x0000010000000000
+        [PermissionString("Time-out Members")]
+        TimeOutMembers = 0x0000010000000000*/
     }
     
     /// <summary>

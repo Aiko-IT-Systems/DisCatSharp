@@ -65,17 +65,13 @@ namespace DisCatSharp.Hosting
             this.ServiceProvider = provider;
             this.Initialize();
         }
-
         #pragma warning restore 8618
 
         /// <summary>
         /// When the bot fails to start, this method will be invoked. (Default behavior is to shutdown)
         /// </summary>
         /// <param name="ex">The exception/reason the bot couldn't start</param>
-        protected virtual void OnInitializationError(Exception ex)
-        {
-            this.ApplicationLifetime.StopApplication();
-        }
+        protected virtual void OnInitializationError(Exception ex) => this.ApplicationLifetime.StopApplication();
 
         /// <summary>
         /// Dynamically loads extensions by using <see cref="Configuration"/>, and
