@@ -32,7 +32,7 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the full permissions enum (long).
         /// </summary>
-        internal static Permissions FULL_PERMS { get; } = (Permissions)1099511627775L;
+        internal static Permissions FULL_PERMS { get; } = (Permissions)1099511627775L; // 2199023255551L
 
         /// <summary>
         /// Calculates whether this permission set contains the given permission.
@@ -97,7 +97,7 @@ namespace DisCatSharp
         /// Indicates all permissions are granted
         /// </summary>
         [PermissionString("All permissions")]
-        All = 1099511627775,
+        All = 1099511627775, // 2199023255551
 
         /// <summary>
         /// Allows creation of instant channel invites.
@@ -331,7 +331,13 @@ namespace DisCatSharp
         /// Allows for launching activities (applications with the `EMBEDDED` flag) in a voice channel.     
         /// </summary>
         [PermissionString("Start Embedded Activities")]
-        StartEmbeddedActivities = 0x0000008000000000
+        StartEmbeddedActivities = 0x0000008000000000//,
+
+        /// <summary>
+        /// Allows to time-out a member.     
+        /// </summary>
+        //[PermissionString("Time-out Members")]
+        //TimeOutMembers = 0x0000010000000000
     }
     
     /// <summary>
