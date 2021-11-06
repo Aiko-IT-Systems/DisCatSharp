@@ -39,7 +39,7 @@ exports.preTransform = function (model) {
 exports.postTransform = function (model) {
   try {
     //console.log('hi model: ' + model.type);
-    
+
     model.aliases = [];
     //handleItem(model, model.aliases);  // type
     if (model.children) {
@@ -53,9 +53,9 @@ exports.postTransform = function (model) {
         }
       });
     }
-    
+
     model.hasAliases = model.aliases.length > 0;
-    
+
   } catch (e) {
     console.log(Bright + FgRed + '\nFail: ' + e + ',' + Object.keys(e) + Reset);
   }
@@ -66,18 +66,18 @@ exports.postTransform = function (model) {
 function handleItem(item, aliases) {
   //console.log('item: ' + JSON.stringify(item));
   if (item.remarks) {
-    console.log('Remarks: ' + item.remarks);
+    //console.log('Remarks: ' + item.remarks);
     var itemAliases = [];
     item.remarks = item.remarks.replace(/\[alias=(['"]|&quot;)(.*?)\1]/g, function($$, $quot, $aliasName) {
-      console.log($$);
-      console.log($quot);
-      console.log($aliasName);
+      //console.log($$);
+      //console.log($quot);
+      //console.log($aliasName);
       var alias = {
         isAlias: true,
         name: item.name[0].value.replace(/^.*?(\(|$)/, $aliasName + '$1'),
         id: $aliasName,
         aliasTo: item.uid,
-        
+
         targetXref: item.specName[0].value
         //targetName: item.name[0].value,
         //targetFullName: item.fullName[0].value
@@ -89,7 +89,7 @@ function handleItem(item, aliases) {
     //item.itemHasAliases = item.aliases.length > 0;
     item.aliasesString = itemAliases.join(', ');
     itemAliases = null;
-    
+
     item.remarks = item.remarks.trim().replace(/^<p sourcefile=".+?" sourcestartlinenumber="[0-9]+" sourceendlinenumber="[0-9]+">\s*<\/p>$/, '');
     if (item.remarks.length == 0) item.remarks = null;
     //console.log('item: ' + JSON.stringify(item));
