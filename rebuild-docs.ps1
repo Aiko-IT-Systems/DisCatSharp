@@ -94,8 +94,8 @@ function Install-DocFX([string] $target_dir_path)
     {
         # Prepare the assets
         $release = $release_json[$tries]        # Pick the next available release
-        #$release_version = $release.ToString()  # Convert to string
-        $release_version = "2.58.5"
+        $release_version = $release.ToString()  # Convert to string
+        #$release_version = "2.58.5"
         $release_asset = "https://github.com/dotnet/docfx/releases/download/v$release_version/docfx.zip"
 
         # increment try counter

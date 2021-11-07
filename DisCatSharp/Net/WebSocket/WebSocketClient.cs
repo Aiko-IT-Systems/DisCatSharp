@@ -61,6 +61,9 @@ namespace DisCatSharp.Net.WebSocket
         /// </summary>
         public IReadOnlyDictionary<string, string> DefaultHeaders { get; }
 
+        /// <summary>
+        /// Gets or sets the service provider.
+        /// </summary>
         IServiceProvider IWebSocketClient.ServiceProvider
         {
             get => this._serviceProvider;

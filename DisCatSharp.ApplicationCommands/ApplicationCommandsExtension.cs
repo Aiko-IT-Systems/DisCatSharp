@@ -624,6 +624,12 @@ namespace DisCatSharp.ApplicationCommands
                             var context = new AutocompleteContext
                             {
                                 Interaction = e.Interaction,
+                                Client = this.Client,
+                                Services = this._configuration?.Services,
+                                ApplicationCommandsExtension = this,
+                                Guild = e.Interaction.Guild,
+                                Channel = e.Interaction.Channel,
+                                User = e.Interaction.User,
                                 Options = e.Interaction.Data.Options.ToList(),
                                 FocusedOption = focusedOption
                             };
@@ -645,6 +651,11 @@ namespace DisCatSharp.ApplicationCommands
                             var context = new AutocompleteContext
                             {
                                 Interaction = e.Interaction,
+                                Services = this._configuration?.Services,
+                                ApplicationCommandsExtension = this,
+                                Guild = e.Interaction.Guild,
+                                Channel = e.Interaction.Channel,
+                                User = e.Interaction.User,
                                 Options = command.Options.ToList(),
                                 FocusedOption = focusedOption
                             };
@@ -669,6 +680,11 @@ namespace DisCatSharp.ApplicationCommands
                             var context = new AutocompleteContext
                             {
                                 Interaction = e.Interaction,
+                                Services = this._configuration?.Services,
+                                ApplicationCommandsExtension = this,
+                                Guild = e.Interaction.Guild,
+                                Channel = e.Interaction.Channel,
+                                User = e.Interaction.User,
                                 Options = command.Options.First(x => x.Name == group.Name).Options.ToList(),
                                 FocusedOption = focusedOption
                             };
