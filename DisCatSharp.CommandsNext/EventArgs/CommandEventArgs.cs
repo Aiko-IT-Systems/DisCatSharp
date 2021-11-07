@@ -42,6 +42,10 @@ namespace DisCatSharp.CommandsNext
         public Command Command
             => this.Context.Command;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandEventArgs"/> class.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
         public CommandEventArgs(IServiceProvider provider) : base(provider)
         { }
     }

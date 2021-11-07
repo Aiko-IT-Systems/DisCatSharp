@@ -28,16 +28,18 @@
       },
       {
         "files": [
-          "articles/**.md",
-          "articles/**/toc.yml",
-          "natives/**.md",
-          "faq/**.md",
-          "toc.yml",
-          "*.md"
+            "articles/**.md",
+            "articles/**/toc.yml",
+            "natives/**.md",
+            "faq/**.md",
+            "toc.yml",
+            "*.md"
         ],
         "exclude": [
-          "obj/**",
-          "_site/**"
+            "**/bin/**",
+            "**/obj/**",
+            "_site/**",
+            "_site_pdf/**"
         ]
       }
     ],
@@ -48,26 +50,31 @@
           "natives/**.zip"
         ],
         "exclude": [
-          "obj/**",
-          "_site/**"
+            "**/bin/**",
+            "**/obj/**",
+            "_site/**",
+            "_site_pdf/**"
         ]
       }
     ],
     "overwrite": [
       {
         "files": [
-          "apidoc/**.md"
         ],
         "exclude": [
-          "obj/**",
-          "_site/**"
+          "**/bin/**",
+          "**/obj/**",
+          "_site/**",
+          "_site_pdf/**"
         ]
       }
     ],
     "dest": "_site",
     "globalMetadata": {
       "_appFooter": "© 2021 Aiko IT Systems",
-      "_enableSearch": "true"
+      "_enableSearch": true,
+      "_enableNewTab": true,
+      "_appTitle": "DisCatSharp Docs"
     },
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],

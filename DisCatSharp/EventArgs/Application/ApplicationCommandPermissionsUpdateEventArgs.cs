@@ -51,6 +51,10 @@ namespace DisCatSharp.EventArgs
         /// </summary>
         public DiscordGuild Guild { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplicationCommandPermissionsUpdateEventArgs"/> class.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
         public ApplicationCommandPermissionsUpdateEventArgs(IServiceProvider provider) : base(provider)
         { }
     }
