@@ -18,7 +18,7 @@ jobs:
         with:
           script: ci_oneclick-rebuild-docs.ps1 
       
-      - run: echo '${{ stepsdocs.outputs.result }}'
+      - run: echo '${{ steps.docs.outputs.result }}'
 
       - name: Archive Docs
         uses: actions/upload-artifact@v2
