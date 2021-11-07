@@ -550,13 +550,13 @@ namespace DisCatSharp
         }
 
         /// <summary>
-        /// Executes a raw request and returns the <see cref="RestResponse"/>.
+        /// Executes a raw request.
         /// </summary>
         /// <example>
-        /// <code>
-        /// var request = await this.ExecuteRawRequestAsync(RestRequestMethod.GET, $"{Endpoints.CHANNELS}/243184972190742178964/{Endpoints.INVITES}");
+        /// <c>
+        /// var request = await Client.ExecuteRawRequestAsync(RestRequestMethod.GET, $"{Endpoints.CHANNELS}/243184972190742178964/{Endpoints.INVITES}");
         /// List&lt;DiscordInvite&gt; invites = DiscordJson.ToDiscordObject&lt;List&lt;DiscordInvite&gt;&gt;(request.Response);
-        /// </code>
+        /// </c>
         /// </example>
         /// <param name="method">The method.</param>
         /// <param name="route">The route.</param>
@@ -565,6 +565,7 @@ namespace DisCatSharp
         /// <exception cref="NotFoundException">Thrown when the ressource does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <returns>A awaitable RestResponse</returns>
         public async Task<RestResponse> ExecuteRawRequestAsync(RestRequestMethod method, string route, string jsonBody = null, Dictionary<string, string> additionalHeaders = null)
         {
 
