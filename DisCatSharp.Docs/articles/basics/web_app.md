@@ -8,12 +8,19 @@ Install the following packages:
  - DisCatSharp
  - DisCatSharp.Hosting
 
-## Notes
-Please be aware that this approach relies on Dependency Injection. You can either use one of Microsoft's default project templates for .Net Core Web App, or get a head start by using the
-`DisCatSharp.Hosting.ProjectTemplates` pack which contains a Bot Template to jumpstart your development. If you do the latter, majority of this is done for you.
+> [!IMPORTANT]
+ > Please be aware that this approach relies on Dependency Injection. You can either use one of Microsoft's default project templates for .Net Core Web App, or get a head start by using the
+ > `DisCatSharp.Hosting.ProjectTemplates` pack which contains a Bot Template to jumpstart your development. If you do the latter, majority of this is done for you.
 
 # Bot.cs
 For the sake of example, create a new class called `Bot` which inherits from `DiscordHostedService`. You're welcome to replace `Bot` with whatever you want.
+
+> [!NOTE]
+ > If you want to host a variety of bots it is important to provide a custom name into the `base` constructor. This indicates the `Key` within `IConfiguration` that will be used for
+ > configuring your bot.
+
+### Default
+`DisCatSharp` is the default key used when configuring the bot.
 
 ```cs
 public class Bot : DiscordHostedService
@@ -27,8 +34,9 @@ public class Bot : DiscordHostedService
 }
 ```
 
-If you want to host a variety of bots it is important to provide a custom name into the `base` constructor. This indicates the JSON / Key within `IConfiguration` that will be used for
-configuring your bot.
+### Custom
+
+For example’s sake the custom bot name is "Bot", so replace it with whatever you want.
 
 ```cs
 public class Bot : DiscordHostedService
@@ -41,9 +49,10 @@ public class Bot : DiscordHostedService
     }
 }
 ```
-Note... the only difference is `"Bot"` being added, the default value for this is `"DisCatSharp"`
 
 # Startup.cs
+
+### DisCatSharp.Hosting.DependencyInjection
 By using the `DisCatSharp.Hosting.DependencyInjection` module, this 1 line is enough to get
 your basic bot running...
 
@@ -53,6 +62,8 @@ public void ConfigureServices(IServiceCollection services)
     services.AddDiscordHostedService<Bot>();
 }
 ```
+
+### Manual Registration
 
 If you prefer another DI approach / the manual route -- the following two
 lines are all you need! For example sake, this bot doesn't have anything fancy going on.
@@ -66,7 +77,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-Singleton - we only want 1 instance of Bot to ever run during runtime. <br/>
+Singleton - we only want 1 instance of Bot to ever run during runtime. <br>
 Then we take the registered singleton to run as a `HostedService`.
 
 # How to reference
@@ -96,12 +107,9 @@ IBot bot = provider.GetRequiredService<IBot>();
 If you go down this path of mapping interface to implementation you shouldn't be casting your interface to Bot, or whatever. You'd be better off just using the explicitly registered type.
 The reasoning behind this approach is to allow you to swap out the implementation type in **ONE** place, and **NOT** have to update any other code.
 
-For instance, logging... there are SO many ways to do logging. You might notice, or be familiar with `ILogger`. So long as something implements this interface it doesn't matter. It could be Serilog,
+For instance, logging... there are SO many ways to do logging. You might be familiar with `ILogger`. So long as something implements this interface it doesn't matter. It could be Serilog,
 or a custom logger you created, or another package from the internet. If later in a project you are dissatisfied with your custom-built logger (which inherits from `ILogger`) you could
 easily swap it out with `Serilog` in one place. This makes swapping between packages extremely easy - a simple 1 to 2 line change compared to a project-wide impact.
-
-Within a DI environment, when you want to reference your `Bot` all you have to do is add `IDiscordHostedService`
-as a parameter in the constructor.
 
 # How to Configure
 You must provide a token in order for the bot to work.
@@ -173,18 +181,17 @@ To add the extensions `Interactivity` and `CommandsNext`:
 }
 ```
 
-Note: to configure an extension, you simply add a section for it under `DisCatSharp` in `appsettings.json`. You only have
-to include values you **WISH TO OVERRIDE**. There is no need to include all config options if you only need to change 1 value.
-
-For more info on which values are available checkout the following classes:
- - `ApplicationCommandsConfiguration`
- - `CommandsNextConfiguration`
- - `DiscordConfiguration`
- - `InteractivityConfiguration`
- - `LavalinkConfiguration`
- - `VoiceNextConfiguration`
-
-For more information, you can also see the [example](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples/tree/main/Hosting).
+>[!NOTE]
+ > To configure an extension, you simply add a section for it under `DisCatSharp` in `appsettings.json`. You only have
+ > to include values you **WISH TO OVERRIDE**. There is no need to include all config options if you only need to change 1 value.
+ > For more info on which values are available checkout the following classes:
+ > - `ApplicationCommandsConfiguration`
+ > - `CommandsNextConfiguration`
+ > - `DiscordConfiguration`
+ > - `InteractivityConfiguration`
+ > - `LavalinkConfiguration`
+ > - `VoiceNextConfiguration`
+ > For more information, you can also see the [example](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples/tree/main/Hosting).
 
 ## Multiple bots
 In case you need to use multiple bots in one application, you need to use different names for them in the `appsettings.json`:
