@@ -16,7 +16,7 @@ jobs:
         uses: Amadevus/pwsh-script@v2.0.1
         id: docs
         with:
-          script: ci_oneclick-rebuild-docs.ps1 
+          script: .\ci_oneclick-rebuild-docs.ps1
       
       - run: echo '${{ steps.docs.outputs.result }}'
 
