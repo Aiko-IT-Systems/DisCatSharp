@@ -12,6 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          path: DisCatSharp
+          
+      - uses: actions/checkout@v2
+        with:
           repository: Aiko-IT-Systems/DisCatSharp.Docs.Preview
           path: DisCatSharp.Docs.Preview
           token: ${{ secrets.DOCS_TOKEN }}
