@@ -13,8 +13,6 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      wdir: .\DisCatSharp.Docs
 
     steps:
       - uses: actions/checkout@v2
@@ -23,3 +21,4 @@ jobs:
         name: Build Documentation
         with:
           args: docfx.json
+      - run: dir
