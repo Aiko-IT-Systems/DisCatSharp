@@ -81,7 +81,10 @@ Just visit [this](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflo
 
 The workflow generates a docs artifact and deploys on Cloudflare Pages.
 
-Visit the channel [#github-feed](https://discord.com/channels/858089281214087179/861507952509976607) on discord and watch for 
+Visit the channel [#github-feed](https://discord.com/channels/858089281214087179/861507952509976607) on discord and watch for this message:
+![Deploy](./cf-deploy.png)
+
+If you can't see it, take a look into the selfroles channel.
 
 
 ## Thanks
