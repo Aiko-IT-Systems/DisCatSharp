@@ -36,6 +36,10 @@ namespace DisCatSharp.ApplicationCommands.EventArgs
         /// </summary>
         public ContextMenuContext Context { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContextMenuExecutedEventArgs"/> class.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
         public ContextMenuExecutedEventArgs(IServiceProvider provider) : base(provider)
         { }
     }

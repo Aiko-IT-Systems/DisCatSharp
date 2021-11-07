@@ -44,6 +44,19 @@ namespace DisCatSharp.Net.Abstractions
         public string GuildAvatarHash { get; internal set; }
 
         /// <summary>
+        /// Gets the guild banner hash.
+        /// </summary>
+        [JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
+        public string GuildBannerHash { get; internal set; }
+
+        /// <summary>
+        /// Gets the guild bio.
+        /// This is not available to bots tho.
+        /// </summary>
+        [JsonProperty("bio", NullValueHandling = NullValueHandling.Ignore)]
+        public string GuildBio { get; internal set; }
+
+        /// <summary>
         /// Gets the user.
         /// </summary>
         [JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
@@ -90,5 +103,11 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("pending", NullValueHandling = NullValueHandling.Ignore)]
         public bool? IsPending { get; internal set; }
+
+        /// <summary>
+        /// Gets the timeout time.
+        /// </summary>
+        [JsonProperty("communication_disabled_until", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? CommunicationDisabledUntil { get; internal set; }
     }
 }
