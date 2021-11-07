@@ -50,12 +50,7 @@ namespace DisCatSharp.Hosting
             string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
             : base(config, logger, serviceProvider, applicationLifetime, configBotSection)
         {
-            this.Logger = logger;
-            this.ApplicationLifetime = applicationLifetime;
-            this.Configuration = config;
-            this._botSection = configBotSection;
-            this.ServiceProvider = provider;
-            this.Initialize();
+            
         }
         #pragma warning restore 8618
 
