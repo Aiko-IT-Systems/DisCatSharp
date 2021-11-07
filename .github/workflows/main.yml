@@ -1,0 +1,23 @@
+name: Docs Preview
+
+on:
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Build docs
+        uses: Amadevus/pwsh-script@v2.0.1
+        id: docs
+        with:
+          script: ci_oneclick-rebuild-docs.ps1 
+      
+      - run: echo '${{ stepsdocs.outputs.result }}'
