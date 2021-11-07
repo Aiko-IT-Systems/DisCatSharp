@@ -625,7 +625,7 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 Interaction = e.Interaction,
                                 Client = this.Client,
-                                Services = this._configuration?.Services,
+                                Services = this._configuration?.ServiceProvider,
                                 ApplicationCommandsExtension = this,
                                 Guild = e.Interaction.Guild,
                                 Channel = e.Interaction.Channel,
@@ -651,7 +651,7 @@ namespace DisCatSharp.ApplicationCommands
                             var context = new AutocompleteContext
                             {
                                 Interaction = e.Interaction,
-                                Services = this._configuration?.Services,
+                                Services = this._configuration?.ServiceProvider,
                                 ApplicationCommandsExtension = this,
                                 Guild = e.Interaction.Guild,
                                 Channel = e.Interaction.Channel,
