@@ -550,6 +550,34 @@ namespace DisCatSharp
         }
 
         /// <summary>
+        /// Executes a raw request.
+        /// </summary>
+        /// <example>
+        /// <c>
+        /// var request = await Client.ExecuteRawRequestAsync(RestRequestMethod.GET, $"{Endpoints.CHANNELS}/243184972190742178964/{Endpoints.INVITES}");
+        /// List&lt;DiscordInvite&gt; invites = DiscordJson.ToDiscordObject&lt;List&lt;DiscordInvite&gt;&gt;(request.Response);
+        /// </c>
+        /// </example>
+        /// <param name="method">The method.</param>
+        /// <param name="route">The route.</param>
+        /// <param name="jsonBody">The json body.</param>
+        /// <param name="additionalHeaders">The addditional headers.</param>
+        /// <exception cref="NotFoundException">Thrown when the ressource does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <returns>A awaitable RestResponse</returns>
+        public async Task<RestResponse> ExecuteRawRequestAsync(RestRequestMethod method, string route, string jsonBody = null, Dictionary<string, string> additionalHeaders = null)
+        {
+
+            var bucket = this.ApiClient.Rest.GetBucket(method, route, null, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Configuration);
+            var res = await this.ApiClient.DoRequestAsync(this, bucket, url, method, route, additionalHeaders, DiscordJson.SerializeObject(jsonBody));
+
+            return res;
+        }
+
+        /// <summary>
         /// Gets a guild.
         /// <para>Setting <paramref name="withCounts"/> to true will make a REST request.</para>
         /// </summary>
