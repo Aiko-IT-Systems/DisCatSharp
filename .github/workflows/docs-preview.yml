@@ -1,0 +1,56 @@
+name: Docs Preview
+
+on:
+  pull_request:
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: DisCatSharp
+          
+      - uses: actions/checkout@v2
+        with:
+          repository: Aiko-IT-Systems/DisCatSharp.Docs.Preview
+          path: DisCatSharp.Docs.Preview
+          token: ${{ secrets.DOCS_TOKEN }}
+          
+      - name: Show Dir
+        run: dir
+        
+      - name: Build Docs
+        working-directory: ./DisCatSharp
+        shell: pwsh
+        run: |
+          ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output ".." -PackageName "dcs-docs-preview"
+
+      - name: Archive Docs
+        uses: actions/upload-artifact@v2
+        with:
+          name: preview-docs
+          path: dcs-docs-preview.tar.xz
+          
+      - name: Purge old docs
+        working-directory: ./DisCatSharp.Docs.Preview
+        run: |
+          shopt -s extglob
+          rm -rf !(.git|.gitignore)
+          
+      - name: Extract new docs
+        run: |
+          tar -xf dcs-docs-preview.tar.xz -C ./DisCatSharp.Docs.Preview
+
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@master
+        with:
+          cwd: ./DisCatSharp.Docs.Preview
+          default_author: github_actions
+          author_name: DisCatSharp
+          author_email: discatsharp@aitsys.dev
+          message: 'Preview docs (${{ github.sha }})'
+          pull: 'NO-PULL'
