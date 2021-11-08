@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.IO;
 using DisCatSharp.Entities;
 using Newtonsoft.Json;
 
@@ -101,6 +102,11 @@ namespace DisCatSharp.Net.Models
         /// Sets the channel's permission overwrites.
         /// </summary>
         public IEnumerable<DiscordOverwriteBuilder> PermissionOverwrites { internal get; set; }
+
+        /// <summary>
+        /// The new banner of the channel
+        /// </summary>
+        public Optional<Stream> Banner { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChannelEditModel"/> class.

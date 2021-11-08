@@ -155,7 +155,7 @@ namespace DisCatSharp.Net.Abstractions
         public Optional<string> SplashBase64 { get; set; }
 
         /// <summary>
-        /// Gets or sets the icon base64.
+        /// Gets or sets the banner base64.
         /// </summary>
         [JsonProperty("banner")]
         public Optional<string> BannerBase64 { get; set; }

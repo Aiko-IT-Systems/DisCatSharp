@@ -26,7 +26,7 @@ namespace DisCatSharp.Net
     /// <summary>
     /// The discord endpoints.
     /// </summary>
-    internal static class Endpoints
+    public static class Endpoints
     {
         /// <summary>
         /// The base discord api uri.
