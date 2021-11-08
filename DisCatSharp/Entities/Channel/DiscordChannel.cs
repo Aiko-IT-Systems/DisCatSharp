@@ -27,7 +27,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DisCatSharp.Enums;
 using DisCatSharp.Exceptions;
+using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Models;
 using Newtonsoft.Json;
@@ -69,6 +71,19 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
         public ChannelType Type { get; internal set; }
+
+        /// <summary>
+        /// Gets this channels's banner hash, when applicable.
+        /// </summary>
+        [JsonProperty("banner")]
+        public string BannerHash { get; internal set; }
+
+        /// <summary>
+        /// Gets this channels's banner in url form.
+        /// </summary>
+        [JsonIgnore]
+        public string BannerUrl
+            => !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}" : null;
 
         /// <summary>
         /// Gets the position of this channel.
@@ -451,10 +466,22 @@ namespace DisCatSharp.Entities
                 if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value))
                     throw new NotSupportedException($"Cannot modify DefaultAutoArchiveDuration. Guild needs boost tier {(mdl.DefaultAutoArchiveDuration.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
             }
+            if (mdl.Banner.HasValue)
+            {
+                if (!this.Guild.Features.CanSetChannelBanner)
+                    throw new NotSupportedException($"Cannot modify Banner. Guild needs boost tier three.");
+            }
+
+            var bannerb64 = Optional.FromNoValue<string>();
+            if (mdl.Banner.HasValue && mdl.Banner.Value != null)
+                using (var imgtool = new ImageTool(mdl.Banner.Value))
+                    bannerb64 = imgtool.GetBase64();
+            else if (mdl.Banner.HasValue)
+                bannerb64 = null;
 
             return this.Discord.ApiClient.ModifyChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Nsfw,
                 mdl.Parent.HasValue ? mdl.Parent.Value?.Id : default(Optional<ulong?>), mdl.Bitrate, mdl.Userlimit, mdl.PerUserRateLimit, mdl.RtcRegion.IfPresent(r => r?.Id),
-                mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, mdl.AuditLogReason);
+                mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, bannerb64, mdl.AuditLogReason);
         }
 
         /// <summary>

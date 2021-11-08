@@ -181,6 +181,11 @@ namespace DisCatSharp.Net.Abstractions
         [JsonProperty("permission_overwrites", NullValueHandling = NullValueHandling.Ignore)]
         public IEnumerable<DiscordRestOverwrite> PermissionOverwrites { get; set; }
 
+        /// <summary>
+        /// Gets or sets the banner base64.
+        /// </summary>
+        [JsonProperty("banner")]
+        public Optional<string> BannerBase64 { get; set; }
     }
 
     /// <summary>

@@ -1274,9 +1274,10 @@ namespace DisCatSharp.Net
         /// <param name="qualityMode">The quality mode.</param>
         /// <param name="autoArchiveDuration">The default auto archive duration.</param>
         /// <param name="type">The type.</param>
-        /// <param name="permissionOverwrites">The permission overwrites</param>
+        /// <param name="permissionOverwrites">The permission overwrites.</param>
+        /// <param name="bannerb64">The banner.</param>
         /// <param name="reason">The reason.</param>
-        internal Task ModifyChannelAsync(ulong channel_id, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? user_limit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, string reason)
+        internal Task ModifyChannelAsync(ulong channel_id, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? user_limit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<string> bannerb64, string reason)
         {
 
             List<DiscordRestOverwrite> restoverwrites = null;
@@ -1301,7 +1302,8 @@ namespace DisCatSharp.Net
                 QualityMode = qualityMode,
                 DefaultAutoArchiveDuration = autoArchiveDuration,
                 Type = type,
-                PermissionOverwrites = restoverwrites
+                PermissionOverwrites = restoverwrites,
+                BannerBase64 = bannerb64
             };
 
             var headers = Utilities.GetBaseHeaders();

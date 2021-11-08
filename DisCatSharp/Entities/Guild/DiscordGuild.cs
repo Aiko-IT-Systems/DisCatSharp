@@ -3293,9 +3293,15 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Guild can set an animated banner.
-        /// Needs Premium Tier 1 (<see cref="PremiumTier.Tier_3"/>).
+        /// Needs Premium Tier 3 (<see cref="PremiumTier.Tier_3"/>).
         /// </summary>
         public bool CanSetAnimatedBanner { get; }
+
+        /// <summary>
+        /// Guild can set an animated banner.
+        /// Needs Premium Tier 3 (<see cref="PremiumTier.Tier_3"/>).
+        /// </summary>
+        public bool CanSetChannelBanner { get; }
 
         /// <summary>
         /// Guild has member profiles.
@@ -3321,6 +3327,7 @@ namespace DisCatSharp.Entities
             this.CanSetAnimatedIcon = guild.RawFeatures.Contains("ANIMATED_ICON");
             this.CanSetAnimatedBanner = guild.RawFeatures.Contains("ANIMATED_BANNER");
             this.CanSetBanner = guild.RawFeatures.Contains("BANNER");
+            this.CanSetChannelBanner = guild.RawFeatures.Contains("CHANNEL_BANNER");
             this.CanCreateStoreChannels = guild.RawFeatures.Contains("COMMERCE");
             this.HasCommunityEnabled = guild.RawFeatures.Contains("COMMUNITY");
             this.IsDiscoverable = !guild.RawFeatures.Contains("DISCOVERABLE_DISABLED") && guild.RawFeatures.Contains("DISCOVERABLE");
