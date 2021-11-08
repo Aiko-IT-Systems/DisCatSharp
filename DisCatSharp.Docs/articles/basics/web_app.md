@@ -107,7 +107,7 @@ IBot bot = provider.GetRequiredService<IBot>();
 If you go down this path of mapping interface to implementation you shouldn't be casting your interface to Bot, or whatever. You'd be better off just using the explicitly registered type.
 The reasoning behind this approach is to allow you to swap out the implementation type in **ONE** place, and **NOT** have to update any other code.
 
-For instance, logging... there are SO many ways to do logging. You might be familiar with `ILogger`. So long as something implements this interface it doesn't matter. It could be Serilog,
+For instance, logging... there are SO many ways to do logging. You might be familiar with [ILogger](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.logging.ilogger). So long as something implements this interface it doesn't matter. It could be Serilog,
 or a custom logger you created, or another package from the internet. If later in a project you are dissatisfied with your custom-built logger (which inherits from `ILogger`) you could
 easily swap it out with `Serilog` in one place. This makes swapping between packages extremely easy - a simple 1 to 2 line change compared to a project-wide impact.
 
