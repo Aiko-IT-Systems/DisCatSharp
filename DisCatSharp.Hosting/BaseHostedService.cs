@@ -71,7 +71,7 @@ namespace DisCatSharp.Hosting
         protected abstract Task ConnectAsync();
 
         /// <summary>
-        /// Default behavior is to dynamically load extensions by using <see cref="Configuration"/> and
+        /// Dynamically load extensions by using <see cref="Configuration"/> and
         /// <see cref="ServiceProvider"/>
         /// </summary>
         /// <param name="client">Client to add extension method(s) to</param>
