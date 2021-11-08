@@ -191,6 +191,7 @@ To add the extensions `Interactivity` and `CommandsNext`:
  > - `InteractivityConfiguration`
  > - `LavalinkConfiguration`
  > - `VoiceNextConfiguration`
+ >
  > For more information, you can also see the [example](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples/tree/main/Hosting).
 
 ## Multiple bots
