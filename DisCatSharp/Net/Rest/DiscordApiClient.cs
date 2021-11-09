@@ -1794,11 +1794,12 @@ namespace DisCatSharp.Net
         /// <param name="max_uses">The max_uses.</param>
         /// <param name="target_type">The target_type.</param>
         /// <param name="target_application">The target_application.</param>
+        /// <param name="target_user">The target_user.</param>
         /// <param name="temporary">If true, temporary.</param>
         /// <param name="unique">If true, unique.</param>
         /// <param name="reason">The reason.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channel_id, int max_age, int max_uses, TargetType? target_type, TargetActivity? target_application, bool temporary, bool unique, string reason)
+        internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channel_id, int max_age, int max_uses, TargetType? target_type, TargetActivity? target_application, ulong? target_user, bool temporary, bool unique, string reason)
         {
             var pld = new RestChannelInviteCreatePayload
             {
@@ -1806,6 +1807,7 @@ namespace DisCatSharp.Net
                 MaxUses = max_uses,
                 TargetType = target_type,
                 TargetApplication = target_application,
+                TargetUserId = target_user,
                 Temporary = temporary,
                 Unique = unique
             };

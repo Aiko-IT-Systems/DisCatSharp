@@ -180,18 +180,6 @@ namespace DisCatSharp.Entities
         public Task<DiscordInvite> DeleteAsync(string reason = null)
             => this.Discord.ApiClient.DeleteInviteAsync(this.Code, reason);
 
-        /*
-         * Disabled due to API restrictions.
-         *
-         * /// <summary>
-         * /// Accepts an invite. Not available to bot accounts. Requires "guilds.join" scope or user token. Please note that accepting these via the API will get your account unverified.
-         * /// </summary>
-         * /// <returns></returns>
-         * [Obsolete("Using this method will get your account unverified.")]
-         * public Task<DiscordInvite> AcceptAsync()
-         *     => this.Discord._rest_client.InternalAcceptInvite(Code);
-         */
-
         /// <summary>
         /// Converts this invite into an invite link.
         /// </summary>
