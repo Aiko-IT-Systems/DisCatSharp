@@ -3304,7 +3304,7 @@ namespace DisCatSharp.Entities
         public bool CanSetChannelBanner { get; }
 
         /// <summary>
-        /// Guild has member profiles.
+        /// Allows members to customize their avatar, banner and bio for that server.
         /// </summary>
         public bool HasMemberProfiles { get; }
 
