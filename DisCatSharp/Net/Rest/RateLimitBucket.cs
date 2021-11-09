@@ -108,6 +108,16 @@ namespace DisCatSharp.Net
         public TimeSpan? ResetAfter { get; internal set; } = null;
 
         /// <summary>
+        /// Gets a value indicating whether the ratelimit global.
+        /// </summary>
+        public bool IsGlobal { get; internal set; } = false;
+
+        /// <summary>
+        /// Gets the ratelimit scope.
+        /// </summary>
+        public string Scope { get; internal set; } = "user";
+
+        /// <summary>
         /// Gets the time interval to wait before the rate limit resets as offset
         /// </summary>
         internal DateTimeOffset ResetAfterOffset { get; set; }
@@ -208,7 +218,7 @@ namespace DisCatSharp.Net
             var channelId = this.ChannelId != string.Empty ? this.ChannelId : "channel_id";
             var webhookId = this.WebhookId != string.Empty ? this.WebhookId : "webhook_id";
 
-            return $"rate limit bucket [{this.Hash}:{guildId}:{channelId}:{webhookId}] [{this.Remaining}/{this.Maximum}] {(this.ResetAfter.HasValue ? this.ResetAfterOffset : this.Reset)}";
+            return $"{this.Scope} rate limit bucket [{this.Hash}:{guildId}:{channelId}:{webhookId}] [{this.Remaining}/{this.Maximum}] {(this.ResetAfter.HasValue ? this.ResetAfterOffset : this.Reset)}";
         }
 
         /// <summary>
@@ -249,7 +259,7 @@ namespace DisCatSharp.Net
                 return;
 
             while (Interlocked.CompareExchange(ref this._limitResetting, 1, 0) != 0)
-#pragma warning restore 420
+            #pragma warning restore 420
                 await Task.Yield();
 
             if (this._nextReset != 0)
