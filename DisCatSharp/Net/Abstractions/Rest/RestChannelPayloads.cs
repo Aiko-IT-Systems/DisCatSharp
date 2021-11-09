@@ -357,6 +357,12 @@ namespace DisCatSharp.Net.Abstractions
         public TargetActivity? TargetApplication { get; set; }
 
         /// <summary>
+        /// Gets or sets the target user id.
+        /// </summary>
+        [JsonProperty("target_user_id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong? TargetUserId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether temporary.
         /// </summary>
         [JsonProperty("temporary", NullValueHandling = NullValueHandling.Ignore)]
