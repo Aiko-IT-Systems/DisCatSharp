@@ -83,6 +83,11 @@ namespace DisCatSharp
         /// <summary>
         /// The application can track message content (limited).
         /// </summary>
-        GatewayMessageContentLimited = 1 << 19
+        GatewayMessageContentLimited = 1 << 19,
+
+        /// <summary>
+        /// Unknown description.
+        /// </summary>
+        EmbeddedFirstParty = 1 << 20
     }
 }
