@@ -2414,7 +2414,7 @@ namespace DisCatSharp
         /// <returns>A Task.</returns>
         internal async Task OnEmbeddedActivityUpdateAsync(JObject tr_activity, DiscordGuild guild, ulong channel_id, JArray j_users, ulong app_id)
         {
-            try
+            /*try
             {
                 var users = j_users?.ToObject<List<ulong>>();
 
@@ -2431,7 +2431,7 @@ namespace DisCatSharp
                     activity = tr_activity.ToObject<DiscordActivity>();
                     this._embeddedActivities[uid] = activity;
                 }*/
-
+            /*
                 var activity_users = new List<DiscordMember>();
 
                 var channel = this.InternalGetCachedChannel(channel_id) ?? await this.ApiClient.GetChannelAsync(channel_id);
@@ -2458,7 +2458,8 @@ namespace DisCatSharp
             } catch (Exception ex)
             {
                 this.Logger.LogError(ex, ex.Message);
-            }
+            }*/
+            await Task.Delay(20);
         }
         #endregion
 
