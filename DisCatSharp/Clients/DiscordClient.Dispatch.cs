@@ -460,7 +460,7 @@ namespace DisCatSharp
                 case "thread_members_update":
                     gid = (ulong)dat["guild_id"];
 
-                    await this.OnThreadMembersUpdateEventAsync(this._guilds[gid], (ulong)dat["id"], dat["added_members"]?.ToObject<IReadOnlyList<DiscordThreadChannelMember>>(), dat["removed_member_ids"]?.ToObject<IReadOnlyList<ulong?>>(), (int)dat["member_count"]).ConfigureAwait(false);
+                    await this.OnThreadMembersUpdateEventAsync(this._guilds[gid], (ulong)dat["id"], (JArray)dat["added_members"], (JArray)dat["removed_member_ids"], (int)dat["member_count"]).ConfigureAwait(false);
                     break;
 
                 #endregion
@@ -469,7 +469,7 @@ namespace DisCatSharp
                 case "embedded_activity_update":
                     gid = (ulong)dat["guild_id"];
                     cid = (ulong)dat["channel_id"];
-                    await this.OnEmbeddedActivityUpdateAsync((JObject)dat["embedded_activity"], this._guilds[gid], cid, (JObject)dat["users"], (ulong)dat["embedded_activity"]["application_id"]).ConfigureAwait(false);
+                    await this.OnEmbeddedActivityUpdateAsync((JObject)dat["embedded_activity"], this._guilds[gid], cid, (JArray)dat["users"], (ulong)dat["embedded_activity"]["application_id"]).ConfigureAwait(false);
                     break;
                 #endregion
 
@@ -2348,41 +2348,44 @@ namespace DisCatSharp
         /// </summary>
         /// <param name="guild">The target guild.</param>
         /// <param name="thread_id">The thread id of the target thread this update belongs to.</param>
-        /// <param name="addedMembers">The added members.</param>
-        /// <param name="removed_member_ids">The ids of the removed members.</param>
+        /// <param name="added_members">The added members.</param>
+        /// <param name="removed_members">The ids of the removed members.</param>
         /// <param name="member_count">The new member count.</param>
-        internal async Task OnThreadMembersUpdateEventAsync(DiscordGuild guild, ulong thread_id, IReadOnlyList<DiscordThreadChannelMember> addedMembers, IReadOnlyList<ulong?> removed_member_ids, int member_count)
+        internal async Task OnThreadMembersUpdateEventAsync(DiscordGuild guild, ulong thread_id, JArray added_members, JArray removed_members, int member_count)
         {
             var thread = this.InternalGetCachedThread(thread_id);
             thread.Discord = this;
             guild.Discord = this;
+            List<DiscordThreadChannelMember> addedMembers = null;
+            List<ulong> removed_member_ids = null;
+
+            if (added_members != null)
+            {
+                foreach (var xj in added_members)
+                {
+                    var xtm = xj.ToDiscordObject<DiscordThreadChannelMember>();
+                    xtm.Discord = this;
+                    xtm._guild_id = guild.Id;
+                    xtm.Member = guild._members.TryGetValue(xtm.Id, out var member) ? member : new DiscordMember { Id = xtm.Id, _guild_id = guild.Id, Discord = this };
+                    addedMembers.Add(xtm);
+
+                    if (xtm.Id == this.CurrentUser.Id)
+                        thread.CurrentMember = xtm;
+                }
+            }
 
             var removedMembers = new List<DiscordMember>();
-            if (removed_member_ids != null)
+            if (removed_members != null)
             {
-                foreach (var removedId in removed_member_ids)
+                foreach (var removedId in removed_members)
                 {
-                    removedMembers.Add(guild._members.TryGetValue(removedId.Value, out var member) ? member : new DiscordMember { Id = removedId.Value, _guild_id = guild.Id, Discord = this });
+                    removedMembers.Add(guild._members.TryGetValue((ulong)removedId, out var member) ? member : new DiscordMember { Id = (ulong)removedId, _guild_id = guild.Id, Discord = this });
                 }
             }
-            else
-                removed_member_ids = Array.Empty<ulong?>();
-            if (addedMembers != null)
-            {
-                foreach (var threadMember in addedMembers)
-                {
-                    threadMember.Discord = this;
-                    threadMember._guild_id = guild.Id;
-
-                    if (threadMember.Id == this.CurrentUser.Id)
-                        thread.CurrentMember = threadMember;
-                }
-            }
-            else
-                addedMembers = Array.Empty<DiscordThreadChannelMember>();
 
             if (removed_member_ids.Contains(this.CurrentUser.Id)) //indicates the bot was removed from the thread
                 thread.CurrentMember = null;
+
             thread.MemberCount = member_count;
 
             var threadMembersUpdateArg = new ThreadMembersUpdateEventArgs(this.ServiceProvider)
@@ -2409,15 +2412,15 @@ namespace DisCatSharp
         /// <param name="j_users">The users in the activity.</param>
         /// <param name="app_id">The application id.</param>
         /// <returns>A Task.</returns>
-        internal async Task OnEmbeddedActivityUpdateAsync(JObject tr_activity, DiscordGuild guild, ulong channel_id, JObject j_users, ulong app_id)
+        internal async Task OnEmbeddedActivityUpdateAsync(JObject tr_activity, DiscordGuild guild, ulong channel_id, JArray j_users, ulong app_id)
         {
-            try
+            /*try
             {
                 var users = j_users?.ToObject<List<ulong>>();
 
                 DiscordActivity old = null;
                 var uid = $"{guild.Id}_{channel_id}_{app_id}";
-
+                /*
                 if (this._embeddedActivities.TryGetValue(uid, out var activity))
                 {
                     old = new DiscordActivity(activity);
@@ -2427,8 +2430,8 @@ namespace DisCatSharp
                 {
                     activity = tr_activity.ToObject<DiscordActivity>();
                     this._embeddedActivities[uid] = activity;
-                }
-
+                }*/
+            /*
                 var activity_users = new List<DiscordMember>();
 
                 var channel = this.InternalGetCachedChannel(channel_id) ?? await this.ApiClient.GetChannelAsync(channel_id);
@@ -2447,8 +2450,6 @@ namespace DisCatSharp
                 var ea = new EmbeddedActivityUpdateEventArgs(this.ServiceProvider)
                 {
                     Guild = guild,
-                    EmbeddedActivityBefore = old,
-                    EmbeddedActivityAfter = activity,
                     Users = activity_users,
                     Channel = channel
 
@@ -2457,7 +2458,8 @@ namespace DisCatSharp
             } catch (Exception ex)
             {
                 this.Logger.LogError(ex, ex.Message);
-            }
+            }*/
+            await Task.Delay(20);
         }
         #endregion
 
