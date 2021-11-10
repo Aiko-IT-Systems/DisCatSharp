@@ -35,7 +35,7 @@ If your local network has no issues, the problem could be with either Discord or
 
 #### Complex, long-running code in an event handler.
 Any event handlers that have the potential to run for more than a few seconds could cause a deadlock, and cause several heartbeats to be skipped.
-Please take a look at our short article on [handling DSharpPlus exceptions](xref:beyond_basics_events) to learn how to avoid this.
+Please take a look at our short article on [handling exceptions](xref:beyond_basics_events) to learn how to avoid this.
 
 
 ### Why am I getting a 4XX error and how can I fix it?
