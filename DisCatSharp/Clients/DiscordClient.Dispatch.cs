@@ -2420,7 +2420,7 @@ namespace DisCatSharp
 
                 DiscordActivity old = null;
                 var uid = $"{guild.Id}_{channel_id}_{app_id}";
-
+                /*
                 if (this._embeddedActivities.TryGetValue(uid, out var activity))
                 {
                     old = new DiscordActivity(activity);
@@ -2430,7 +2430,7 @@ namespace DisCatSharp
                 {
                     activity = tr_activity.ToObject<DiscordActivity>();
                     this._embeddedActivities[uid] = activity;
-                }
+                }*/
 
                 var activity_users = new List<DiscordMember>();
 
@@ -2450,8 +2450,6 @@ namespace DisCatSharp
                 var ea = new EmbeddedActivityUpdateEventArgs(this.ServiceProvider)
                 {
                     Guild = guild,
-                    EmbeddedActivityBefore = old,
-                    EmbeddedActivityAfter = activity,
                     Users = activity_users,
                     Channel = channel
 
