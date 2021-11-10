@@ -181,6 +181,11 @@ namespace DisCatSharp.Net.Abstractions
         [JsonProperty("permission_overwrites", NullValueHandling = NullValueHandling.Ignore)]
         public IEnumerable<DiscordRestOverwrite> PermissionOverwrites { get; set; }
 
+        /// <summary>
+        /// Gets or sets the banner base64.
+        /// </summary>
+        [JsonProperty("banner")]
+        public Optional<string> BannerBase64 { get; set; }
     }
 
     /// <summary>
@@ -350,6 +355,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("target_application_id", NullValueHandling = NullValueHandling.Ignore)]
         public TargetActivity? TargetApplication { get; set; }
+
+        /// <summary>
+        /// Gets or sets the target user id.
+        /// </summary>
+        [JsonProperty("target_user_id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong? TargetUserId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether temporary.

@@ -120,6 +120,13 @@ namespace DisCatSharp.Net.Abstractions
         public UserFlags? Flags { get; internal set; }
 
         /// <summary>
+        /// Gets the users bio.
+        /// This is not available to bots tho.
+        /// </summary>
+        [JsonProperty("bio", NullValueHandling = NullValueHandling.Ignore)]
+        public string Bio { get; internal set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TransportUser"/> class.
         /// </summary>
         internal TransportUser() { }
@@ -144,6 +151,7 @@ namespace DisCatSharp.Net.Abstractions
             this.Locale = other.Locale;
             this.Flags = other.Flags;
             this.OAuthFlags = other.OAuthFlags;
+            this.Bio = other.Bio;
         }
     }
 }

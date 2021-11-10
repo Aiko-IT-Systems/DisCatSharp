@@ -61,6 +61,7 @@ namespace DisCatSharp.Entities
             this.Locale = transport.Locale;
             this.Flags = transport.Flags;
             this.OAuthFlags = transport.OAuthFlags;
+            this.Bio = transport.Bio;
         }
 
         /// <summary>
@@ -111,6 +112,13 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
         public virtual string BannerHash { get; internal set; }
+
+        /// <summary>
+        /// Gets the users bio.
+        /// This is not available to bots tho.
+        /// </summary>
+        [JsonProperty("bio", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual string Bio { get; internal set; }
 
         /// <summary>
         /// Gets the user's avatar hash.
