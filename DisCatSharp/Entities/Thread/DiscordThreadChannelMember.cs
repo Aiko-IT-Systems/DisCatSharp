@@ -41,8 +41,7 @@ namespace DisCatSharp.Entities
         /// Gets the member object of the user.
         /// </summary>
         [JsonIgnore]
-        public DiscordMember Member
-            => this.Guild != null ? (this.Guild._members.TryGetValue(this.UserId, out var member) ? member : this.Discord.ApiClient.GetGuildMemberAsync(this._guild_id, this.UserId).Result ?? new DiscordMember { Id = this.UserId, _guild_id = this._guild_id, Discord = this.Discord }) : null;
+        public DiscordMember Member { get; internal set; }
 
         /// <summary>
         /// Gets the presence of the user.
