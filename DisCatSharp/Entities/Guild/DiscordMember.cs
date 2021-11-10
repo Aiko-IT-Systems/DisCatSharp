@@ -75,6 +75,9 @@ namespace DisCatSharp.Entities
             this.PremiumSince = mbr.PremiumSince;
             this.IsPending = mbr.IsPending;
             this.GuildAvatarHash = mbr.GuildAvatarHash;
+            this.GuildBannerHash = mbr.GuildBannerHash;
+            this.GuildBio = mbr.GuildBio;
+            this.CommunicationDisabledUntil = mbr.CommunicationDisabledUntil;
             this._avatarHash = mbr.AvatarHash;
             this._role_ids = mbr.Roles ?? new List<ulong>();
             this._role_ids_lazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._role_ids));
@@ -91,7 +94,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public string GuildAvatarUrl
-            => string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? this.User.AvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this._guild_id.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/avatars/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+            => string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? this.User.AvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this._guild_id.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.AVATARS}/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
         /// <summary>
         /// Gets this member's banner url.
@@ -112,6 +115,19 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
+        /// Gets the members banner hash.
+        /// </summary>
+        [JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
+        public virtual string GuildBannerHash { get; internal set; }
+
+        /// <summary>
+        /// Gets the members banner URL.
+        /// </summary>
+        [JsonIgnore]
+        public string GuildBannerUrl
+            => string.IsNullOrWhiteSpace(this.GuildBannerHash) ? this.User.BannerUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this._guild_id.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.BANNERS}/{this.GuildBannerHash}.{(this.GuildBannerHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+
+        /// <summary>
         /// The color of this member's banner. Mutually exclusive with <see cref="BannerHash"/>.
         /// </summary>
         [JsonIgnore]
@@ -122,6 +138,13 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("nick", NullValueHandling = NullValueHandling.Ignore)]
         public string Nickname { get; internal set; }
+
+        /// <summary>
+        /// Gets the members guild bio.
+        /// This is not available to bots tho.
+        /// </summary>
+        [JsonProperty("bio", NullValueHandling = NullValueHandling.Ignore)]
+        public string GuildBio { get; internal set; }
 
         [JsonIgnore]
         internal string _avatarHash;
@@ -176,6 +199,12 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("premium_since", NullValueHandling = NullValueHandling.Ignore)]
         public DateTimeOffset? PremiumSince { get; internal set; }
+
+        /// <summary>
+        /// Date until the can communicate again.
+        /// </summary>
+        [JsonProperty("communication_disabled_until", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTimeOffset? CommunicationDisabledUntil { get; internal set; }
 
         /// <summary>
         /// If the user is deafened

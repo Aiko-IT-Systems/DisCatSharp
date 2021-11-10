@@ -158,8 +158,8 @@ namespace DisCatSharp
 
         /// <summary>
         /// <para>Sets the factory method used to create instances of WebSocket clients.</para>
-        /// <para>Use <see cref="WebSocketClient.CreateNew(IWebProxy)"/> and equivalents on other implementations to switch out client implementations.</para>
-        /// <para>Defaults to <see cref="WebSocketClient.CreateNew(IWebProxy)"/>.</para>
+        /// <para>Use <see cref="WebSocketClient.CreateNew(IWebProxy, IServiceProvider)"/> and equivalents on other implementations to switch out client implementations.</para>
+        /// <para>Defaults to <see cref="WebSocketClient.CreateNew(IWebProxy, IServiceProvider)"/>.</para>
         /// </summary>
         public WebSocketClientFactoryDelegate WebSocketClientFactory
         {
