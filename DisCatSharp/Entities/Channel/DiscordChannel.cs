@@ -83,7 +83,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public string BannerUrl
-            => !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}" : null;
+            => !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.CHANNELS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.BANNERS}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}" : null;
 
         /// <summary>
         /// Gets the position of this channel.
@@ -926,20 +926,19 @@ namespace DisCatSharp.Entities
         /// Create a new invite object
         /// </summary>
         /// <param name="max_age">Duration of invite in seconds before expiry, or 0 for never.  Defaults to 86400.</param>
-        /// <param name="max_uses">Max number of uses or 0 for unlimited.  Defaults to 0</param>
-
-        /// <param name="temporary">Whether this invite only grants temporary membership.  Defaults to false.</param>
-        /// <param name="unique">If true, don't try to reuse a similar invite (useful for creating many unique one time use invites)</param>
-        /// <param name="target_type">Target type of invite for the channel.  Defaults to Streaming</param>
-        /// <param name="target_application">Target application of invite for the channel.  Defaults to None</param>
-        /// <param name="reason">Reason for audit logs.</param>
-
+        /// <param name="max_uses">Max number of uses or 0 for unlimited. Defaults to 0</param>
+        /// <param name="temporary">Whether this invite should be temporary. Defaults to false.</param>
+        /// <param name="unique">Whether this invite should be unique. Defaults to false.</param>
+        /// <param name="target_type">The target type. Defaults to null.</param>
+        /// <param name="target_application">The target activity. Defaults to null.</param>
+        /// <param name="target_user">The target user id. Defaults to null.</param>
+        /// <param name="reason">The audit log reason.</param>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordInvite> CreateInviteAsync(int max_age = 86400, int max_uses = 0, bool temporary = false, bool unique = false, TargetType? target_type = null, TargetActivity? target_application = null, string reason = null)
-            => this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, max_age, max_uses, target_type, target_application, temporary, unique, reason);
+        public Task<DiscordInvite> CreateInviteAsync(int max_age = 86400, int max_uses = 0, bool temporary = false, bool unique = false, TargetType? target_type = null, TargetActivity? target_application = null, ulong? target_user = null, string reason = null)
+            => this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, max_age, max_uses, target_type, target_application, target_user, temporary, unique, reason);
 
         #region Stage
 
