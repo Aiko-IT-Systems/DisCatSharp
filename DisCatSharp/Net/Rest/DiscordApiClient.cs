@@ -192,7 +192,7 @@ namespace DisCatSharp.Net
         /// <param name="payload">The payload.</param>
         /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
         /// <returns>A Task.</returns>
-        private Task<RestResponse> DoRequestAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, string payload = null, double? ratelimitWaitOverride = null)
+        internal Task<RestResponse> DoRequestAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, string payload = null, double? ratelimitWaitOverride = null)
         {
             var req = new RestRequest(client, bucket, url, method, route, headers, payload, ratelimitWaitOverride);
 
@@ -1274,9 +1274,10 @@ namespace DisCatSharp.Net
         /// <param name="qualityMode">The quality mode.</param>
         /// <param name="autoArchiveDuration">The default auto archive duration.</param>
         /// <param name="type">The type.</param>
-        /// <param name="permissionOverwrites">The permission overwrites</param>
+        /// <param name="permissionOverwrites">The permission overwrites.</param>
+        /// <param name="bannerb64">The banner.</param>
         /// <param name="reason">The reason.</param>
-        internal Task ModifyChannelAsync(ulong channel_id, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? user_limit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, string reason)
+        internal Task ModifyChannelAsync(ulong channel_id, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? user_limit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<string> bannerb64, string reason)
         {
 
             List<DiscordRestOverwrite> restoverwrites = null;
@@ -1301,7 +1302,8 @@ namespace DisCatSharp.Net
                 QualityMode = qualityMode,
                 DefaultAutoArchiveDuration = autoArchiveDuration,
                 Type = type,
-                PermissionOverwrites = restoverwrites
+                PermissionOverwrites = restoverwrites,
+                BannerBase64 = bannerb64
             };
 
             var headers = Utilities.GetBaseHeaders();
@@ -1792,11 +1794,12 @@ namespace DisCatSharp.Net
         /// <param name="max_uses">The max_uses.</param>
         /// <param name="target_type">The target_type.</param>
         /// <param name="target_application">The target_application.</param>
+        /// <param name="target_user">The target_user.</param>
         /// <param name="temporary">If true, temporary.</param>
         /// <param name="unique">If true, unique.</param>
         /// <param name="reason">The reason.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channel_id, int max_age, int max_uses, TargetType? target_type, TargetActivity? target_application, bool temporary, bool unique, string reason)
+        internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channel_id, int max_age, int max_uses, TargetType? target_type, TargetActivity? target_application, ulong? target_user, bool temporary, bool unique, string reason)
         {
             var pld = new RestChannelInviteCreatePayload
             {
@@ -1804,6 +1807,7 @@ namespace DisCatSharp.Net
                 MaxUses = max_uses,
                 TargetType = target_type,
                 TargetApplication = target_application,
+                TargetUserId = target_user,
                 Temporary = temporary,
                 Unique = unique
             };
