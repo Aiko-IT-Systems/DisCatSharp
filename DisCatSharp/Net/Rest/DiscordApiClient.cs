@@ -27,6 +27,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Net.Abstractions;
@@ -2246,6 +2247,32 @@ namespace DisCatSharp.Net
                 Deafen = deaf,
                 Mute = mute,
                 VoiceChannelId = voice_channel_id
+            };
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id, user_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: DiscordJson.SerializeObject(pld));
+        }
+
+        /// <summary>
+        /// Modifies the time out of a guild member.
+        /// </summary>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <param name="user_id">The user_id.</param>
+        /// <param name="until">Datetime offset.</param>
+        /// <param name="reason">The reason.</param>
+        /// <returns>A Task.</returns>
+        internal Task ModifyTimeOutAsync(ulong guild_id, ulong user_id, Optional<DateTimeOffset?> until, string reason)
+        {
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers[REASON_HEADER_NAME] = reason;
+
+            var pld = new RestGuildMemberModifyPayload
+            {
+                CommunicationDisabledUntil = until
             };
 
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
