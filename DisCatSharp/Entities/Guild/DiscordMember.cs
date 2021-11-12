@@ -203,7 +203,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Date until the can communicate again.
         /// </summary>
-        [JsonProperty("communication_disabled_until", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("communication_disabled_until", NullValueHandling = NullValueHandling.Include)]
         public DateTimeOffset? CommunicationDisabledUntil { get; internal set; }
 
         /// <summary>
@@ -506,6 +506,53 @@ namespace DisCatSharp.Entities
                     mdl.VoiceChannel.IfPresent(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
             }
         }
+
+        /// <summary>
+        /// Adds a timeout to a member.
+        /// </summary>
+        /// <param name="until">The datetime offset to time out the user.</param>
+        /// <param name="reason">Reason for audit logs.</param>
+        /// <returns></returns>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the correct permission.</exception>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task TimeOutAsync(DateTimeOffset until, string reason = null) => this.Discord.ApiClient.ModifyTimeOutAsync(this.Guild.Id, this.Id, until, reason);
+
+        /// <summary>
+        /// Adds a timeout to a member.
+        /// </summary>
+        /// <param name="until">The timespan to time out the user.</param>
+        /// <param name="reason">Reason for audit logs.</param>
+        /// <returns></returns>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the correct permission.</exception>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task TimeOutAsync(TimeSpan until, string reason = null) => this.TimeOutAsync(DateTimeOffset.UtcNow + until, reason);
+
+        /// <summary>
+        /// Adds a timeout to a member.
+        /// </summary>
+        /// <param name="until">The datetime to time out the user.</param>
+        /// <param name="reason">Reason for audit logs.</param>
+        /// <returns></returns>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the correct permission.</exception>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task TimeOutAsync(DateTime until, string reason = null) => this.TimeOutAsync(until.ToUniversalTime() - DateTime.UtcNow, reason);
+
+        /// <summary>
+        /// Removes the timeout from a member.
+        /// </summary>
+        /// <param name="reason">Reason for audit logs.</param>
+        /// <returns></returns>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the correct permission.</exception>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task RemoveTimeOutAsync(string reason = null) => this.Discord.ApiClient.ModifyTimeOutAsync(this.Guild.Id, this.Id, null, reason);
 
         /// <summary>
         /// Grants a role to the member.
