@@ -448,6 +448,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("channel_id")]
         public Optional<ulong?> VoiceChannelId { get; set; }
+
+        /// <summary>
+        /// Date until the can communicate again.
+        /// </summary>
+        [JsonProperty("communication_disabled_until")]
+        public Optional<DateTimeOffset?> CommunicationDisabledUntil { get; internal set; }
     }
 
     /// <summary>
