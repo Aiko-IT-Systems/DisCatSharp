@@ -915,6 +915,43 @@ namespace DisCatSharp.Entities
         public Task<DiscordBan> GetBanAsync(DiscordUser user)
             => this.GetBanAsync(user.Id);
 
+        #region Sheduled Events
+
+        // TODO: create sheduled event
+
+        /// <summary>
+        /// Gets a specific sheduled events.
+        /// </summary>
+        /// <param name="sheduled_event_id">The Id of the event to get.</param>
+        /// <returns>A sheduled event.</returns>
+        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordSheduledEvent> GetSheduledEventAsync(ulong sheduled_event_id)
+            => await this.Discord.ApiClient.GetGuildSheduledEventAsync(this.Id, sheduled_event_id);
+
+        /// <summary>
+        /// Gets a specific sheduled events.
+        /// </summary>
+        /// <param name="sheduled_event">The event to get.</param>
+        /// <returns>A sheduled event.</returns>
+        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordSheduledEvent> GetSheduledEventAsync(DiscordSheduledEvent sheduled_event)
+            => await this.GetSheduledEventAsync(sheduled_event.Id);
+
+        /// <summary>
+        /// Gets the guilds sheduled events.
+        /// </summary>
+        /// <returns>A list of the guilds sheduled events.</returns>
+        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<IReadOnlyDictionary<ulong, DiscordSheduledEvent>> GetSheduledEventsAsync(bool? with_user_count = null)
+            => await this.Discord.ApiClient.ListGuildSheduledEventsAsync(this.Id, with_user_count);
+        #endregion
+
         /// <summary>
         /// Creates a new text channel in this guild.
         /// </summary>
