@@ -1200,6 +1200,73 @@ namespace DisCatSharp.Net
         }
         #endregion
 
+        #region Guild Sheduled Events
+
+
+        /// <summary>
+        /// Deletes a guild sheduled event.
+        /// </summary>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <param name="sheduled_event_id">The sheduled event id.</param>
+        /// <param name="reason">The reason.</param>
+        internal Task DeleteGuildSheduledEventAsync(ulong guild_id, ulong sheduled_event_id, string reason)
+        {
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers.Add(REASON_HEADER_NAME, reason);
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SHEDULED_EVENTS}/:sheduled_event_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, sheduled_event_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
+        }
+
+        // TODO: Add method to extract discord member if with_members = true
+        /// <summary>
+        /// Gets the users who RSVP'd to a sheduled event.
+        /// Optional with member objects.
+        /// </summary>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <param name="sheduled_event_id">The sheduled event id.</param>
+        /// <param name="limit">The limit how many users to receive from the event.</param>
+        /// <param name="with_members">Wether to include guild member data. attaches guild_member property to the user object.</param>
+        internal async Task<IReadOnlyDictionary<ulong, DiscordUser>> GetGuildSheduledEventRSPVUsersAsync(ulong guild_id, ulong sheduled_event_id, int? limit, bool? with_members)
+        {
+            var urlparams = new Dictionary<string, string>();
+            if (limit != null && limit > 0)
+                urlparams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
+            if (with_members != null)
+                urlparams["with_members"] = with_members.Value.ToString(CultureInfo.InvariantCulture);
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SHEDULED_EVENTS}/:sheduled_event_id{Endpoints.USERS}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, sheduled_event_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+            var users_raw = JsonConvert.DeserializeObject<List<TransportUser>>(res.Response);
+            var rspv_users = new Dictionary<ulong, DiscordUser>();
+            foreach (var xr in users_raw)
+            {
+                var usr = new DiscordUser(xr) { Discord = this.Discord };
+                usr = this.Discord.UserCache.AddOrUpdate(xr.Id, usr, (id, old) =>
+                {
+                    old.Username = usr.Username;
+                    old.Discriminator = usr.Discriminator;
+                    old.AvatarHash = usr.AvatarHash;
+                    old.BannerHash = usr.BannerHash;
+                    old._bannerColor = usr._bannerColor;
+                    return old;
+                });
+
+                rspv_users.Add(usr.Id, usr);
+            }
+
+            return new ReadOnlyDictionary<ulong, DiscordUser>(new Dictionary<ulong, DiscordUser>(rspv_users));
+        }
+        #endregion
+
         #region Channel
         /// <summary>
         /// Creates the guild channel async.
