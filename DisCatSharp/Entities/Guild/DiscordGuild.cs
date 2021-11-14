@@ -106,12 +106,6 @@ namespace DisCatSharp.Entities
         public ulong OwnerId { get; internal set; }
 
         /// <summary>
-        /// Gets permissions for the user in the guild (does not include channel overrides)
-        /// </summary>
-        [JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
-        public Permissions? Permissions { get; set; }
-
-        /// <summary>
         /// Gets the guild's owner.
         /// </summary>
         [JsonIgnore]
@@ -119,6 +113,12 @@ namespace DisCatSharp.Entities
             => this.Members.TryGetValue(this.OwnerId, out var owner)
                 ? owner
                 : this.Discord.ApiClient.GetGuildMemberAsync(this.Id, this.OwnerId).ConfigureAwait(false).GetAwaiter().GetResult();
+
+        /// <summary>
+        /// Gets permissions for the user in the guild (does not include channel overrides)
+        /// </summary>
+        [JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
+        public Permissions? Permissions { get; set; }
 
         /// <summary>
         /// Gets the guild's voice region ID.
@@ -413,11 +413,11 @@ namespace DisCatSharp.Entities
         /// Gets a dictionary of all scheduled events.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordEvent> ScheduledEvents { get; internal set; }
+        public IReadOnlyDictionary<ulong, DiscordSheduledEvent> ScheduledEvents { get; internal set; }
 
         [JsonProperty("events", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordEvent> _scheduledEvents = new();
+        internal ConcurrentDictionary<ulong, DiscordSheduledEvent> _scheduledEvents = new();
 
         /// <summary>
         /// Gets the guild member for current user.
@@ -2479,10 +2479,10 @@ namespace DisCatSharp.Entities
                                     p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
                                     p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 
-                                    entryse.StatusChange = new PropertyChange<EventStatus?>
+                                    entryse.StatusChange = new PropertyChange<SheduledEventStatus?>
                                     {
-                                        Before = p1 ? (EventStatus?)t5 : null,
-                                        After = p2 ? (EventStatus?)t6 : null
+                                        Before = p1 ? (SheduledEventStatus?)t5 : null,
+                                        After = p2 ? (SheduledEventStatus?)t6 : null
                                     };
                                     break;
 

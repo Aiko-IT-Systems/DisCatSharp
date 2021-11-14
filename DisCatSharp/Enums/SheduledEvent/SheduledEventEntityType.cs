@@ -25,7 +25,7 @@ namespace DisCatSharp
     /// <summary>
     /// Represents the entity type for a scheduled event.
     /// </summary>
-    public enum EventEntityType : int
+    public enum SheduledEventEntityType : int
     {
         /// <summary>
         /// Indicates that the events is not hold anywhere.
@@ -45,6 +45,6 @@ namespace DisCatSharp
         /// <summary>
         /// Indicates that the events is hold external.
         /// </summary>
-        EXTERNAL = 3
+        LOCATION = 3
     }
 }

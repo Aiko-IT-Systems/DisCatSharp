@@ -1,4 +1,4 @@
-    // This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,31 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using DisCatSharp.Net.Serialization;
+using Newtonsoft.Json;
+
+namespace DisCatSharp.Entities
 {
     /// <summary>
-    /// Represents the status for a scheduled event.
+    /// Represents an scheduled event.
     /// </summary>
-    public enum EventStatus : int
+    public class DiscordSheduledEventEntityMetadata
     {
         /// <summary>
-        /// Indicates that the event is scheduled.
+        /// Gets the the speakers of the sheduled event.
         /// </summary>
-        SCHEDULED = 1,
+        [JsonIgnore]
+        public IReadOnlyDictionary<ulong, DiscordUser> Speakers => new ReadOnlyConcurrentDictionary<ulong, DiscordUser>(this._speakerIds);
+
+        [JsonProperty("speaker_ids", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
+        internal ConcurrentDictionary<ulong, DiscordUser> _speakerIds;
 
         /// <summary>
-        /// Indicates that the event is active.
+        /// Gets the the location of the sheduled event.
         /// </summary>
-        ACTIVE = 2,
-
-        /// <summary>
-        /// Indicates that the event is completed.
-        /// </summary>
-        COMPLETED = 3,
-
-        /// <summary>
-        /// Indicates that the event is canceled.
-        /// </summary>
-        CANCELED = 4
+        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
+        public string Location { get; internal set; }
     }
 }

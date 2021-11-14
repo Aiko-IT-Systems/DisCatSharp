@@ -21,8 +21,11 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using DisCatSharp.Enums;
+using DisCatSharp.Net;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
@@ -30,8 +33,21 @@ namespace DisCatSharp.Entities
     /// <summary>
     /// Represents an scheduled event.
     /// </summary>
-    public class DiscordEvent : SnowflakeObject, IEquatable<DiscordEvent>
+    public class DiscordSheduledEvent : SnowflakeObject, IEquatable<DiscordSheduledEvent>
     {
+        /// <summary>
+        /// Gets the guild id of the associated sheduled event.
+        /// </summary>
+        [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong GuildId { get; internal set; }
+
+        /// <summary>
+        /// Gets the guild to which this sheduled event belongs.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordGuild Guild
+            => this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
+
         /// <summary>
         /// Gets the associated channel.
         /// </summary>
@@ -45,19 +61,20 @@ namespace DisCatSharp.Entities
         [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
         public ulong? ChannelId { get; internal set; }
 
-
         /// <summary>
-        /// Gets the guild id of the associated Stage channel.
+        /// Gets the ID of the user that created the sheduled event.
         /// </summary>
-        [JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong GuildId { get; internal set; }
+        [JsonProperty("creator_id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong CreatorId { get; internal set; }
 
         /// <summary>
-        /// Gets the guild to which this channel belongs.
+        /// Gets the member that created the sheduled event.
         /// </summary>
         [JsonIgnore]
-        public DiscordGuild Guild
-            => this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
+        public DiscordMember CreatorMember
+            => this.Guild._members.TryGetValue(this.CreatorId, out var owner)
+                ? owner
+                : this.Discord.ApiClient.GetGuildMemberAsync(this.GuildId, this.CreatorId).Result;
 
         /// <summary>
         /// Gets the name of the scheduled event.
@@ -70,7 +87,20 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; internal set; }
+        /*
+        /// <summary>
+        /// Gets this channels's banner hash, when applicable.
+        /// </summary>
+        [JsonProperty("image", NullValueHandling = NullValueHandling.Ignore)]
+        public string ImageHash { get; internal set; }
 
+        /// <summary>
+        /// Gets this channels's banner in url form.
+        /// </summary>
+        [JsonIgnore]
+        public string ImageUrl
+            => !string.IsNullOrWhiteSpace(this.ImageHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.EVENTS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}/images/{this.ImageHash}.{(this.ImageHash.StartsWith("a_") ? "gif" : "png")}" : null;
+        */
         /// <summary>
         /// Gets the scheduled start time of the scheduled event.
         /// </summary>
@@ -103,19 +133,19 @@ namespace DisCatSharp.Entities
         /// Gets the privacy level of the scheduled event.
         /// </summary>
         [JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
-        public StagePrivacyLevel PrivacyLevel { get; internal set; }
+        public SheduledEventPrivacyLevel PrivacyLevel { get; internal set; }
 
         /// <summary>
         /// Gets the status of the scheduled event.
         /// </summary>
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
-        public EventStatus Status { get; internal set; }
+        public SheduledEventStatus Status { get; internal set; }
 
         /// <summary>
         /// Gets the entity type.
         /// </summary>
         [JsonProperty("entity_type", NullValueHandling = NullValueHandling.Ignore)]
-        public EventEntityType EntityType { get; internal set; }
+        public SheduledEventEntityType EntityType { get; internal set; }
 
         /// <summary>
         /// Gets id of the entity.
@@ -127,7 +157,21 @@ namespace DisCatSharp.Entities
         /// Gets metadata of the entity.
         /// </summary>
         [JsonProperty("entity_metadata", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordEventEntityMetadata EntityMetadata { get; internal set; }
+        public DiscordSheduledEventEntityMetadata EntityMetadata { get; internal set; }
+
+        /// <summary>
+        /// Gets the total number of users subscribed to the scheduled event.
+        /// </summary>
+        [JsonProperty("sku_ids", NullValueHandling = NullValueHandling.Ignore)]
+        public IReadOnlyList<ulong> SkuIds { get; internal set; }
+
+        /// <summary>
+        /// Gets the user that created the sheduled event.
+        /// </summary>
+        [JsonProperty("creator", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordUser Creator { get; internal set; }
+
+        // TODO: Skus
 
         /// <summary>
         /// Gets the total number of users subscribed to the scheduled event.
@@ -136,9 +180,9 @@ namespace DisCatSharp.Entities
         public int UserCount { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordEvent"/> class.
+        /// Initializes a new instance of the <see cref="DiscordSheduledEvent"/> class.
         /// </summary>
-        internal DiscordEvent() { }
+        internal DiscordSheduledEvent() { }
 
         #region Methods
 
@@ -150,14 +194,14 @@ namespace DisCatSharp.Entities
         /// <param name="scheduled_start_time">New DateTime when the event should start.</param>
         /// <param name="description">New description of the event.</param>
         /// <param name="privacy_level">New Privacy Level of the stage instance.</param>
-        /// <param name="type">New <see cref="EventEntityType"/> of the event.</param>
+        /// <param name="type">New <see cref="SheduledEventEntityType"/> of the event.</param>
         /// <param name="reason">Audit log reason</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task ModifyAsync(Optional<DiscordChannel> channel, Optional<string> name, Optional<string> description, Optional<DateTime> scheduled_start_time, Optional<StagePrivacyLevel> privacy_level, Optional<EventEntityType> type, string reason = null)
+        public async Task ModifyAsync(Optional<DiscordChannel> channel, Optional<string> name, Optional<string> description, Optional<DateTime> scheduled_start_time, Optional<StagePrivacyLevel> privacy_level, Optional<SheduledEventEntityType> type, string reason = null)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
             => throw new NotImplementedException("This method is not implemented yet."); /*await this.Discord.ApiClient.ModifyStageEventAsync(this.Id, channel, name, scheduled_start_time, description, privacy_level, type, reason);*/
 
@@ -172,39 +216,39 @@ namespace DisCatSharp.Entities
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task DeleteAsync(string reason = null)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
-            => throw new NotImplementedException("This method is not implemented yet."); /*await this.Discord.ApiClient.DeleteStageEventAsync(this.Id, reason);*/
+            => await this.Discord.ApiClient.DeleteGuildSheduledEventAsync(this.GuildId ,this.Id, reason);
 
         #endregion
 
         /// <summary>
-        /// Checks whether this <see cref="DiscordEvent"/> is equal to another object.
+        /// Checks whether this <see cref="DiscordSheduledEvent"/> is equal to another object.
         /// </summary>
         /// <param name="obj">Object to compare to.</param>
-        /// <returns>Whether the object is equal to this <see cref="DiscordEvent"/>.</returns>
+        /// <returns>Whether the object is equal to this <see cref="DiscordSheduledEvent"/>.</returns>
         public override bool Equals(object obj)
-            => this.Equals(obj as DiscordEvent);
+            => this.Equals(obj as DiscordSheduledEvent);
 
         /// <summary>
-        /// Checks whether this <see cref="DiscordEvent"/> is equal to another <see cref="DiscordEvent"/>.
+        /// Checks whether this <see cref="DiscordSheduledEvent"/> is equal to another <see cref="DiscordSheduledEvent"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordEvent"/> to compare to.</param>
-        /// <returns>Whether the <see cref="DiscordEvent"/> is equal to this <see cref="DiscordEvent"/>.</returns>
-        public bool Equals(DiscordEvent e)
+        /// <param name="e"><see cref="DiscordSheduledEvent"/> to compare to.</param>
+        /// <returns>Whether the <see cref="DiscordSheduledEvent"/> is equal to this <see cref="DiscordSheduledEvent"/>.</returns>
+        public bool Equals(DiscordSheduledEvent e)
             => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
         /// <summary>
-        /// Gets the hash code for this <see cref="DiscordEvent"/>.
+        /// Gets the hash code for this <see cref="DiscordSheduledEvent"/>.
         /// </summary>
-        /// <returns>The hash code for this <see cref="DiscordEvent"/>.</returns>
+        /// <returns>The hash code for this <see cref="DiscordSheduledEvent"/>.</returns>
         public override int GetHashCode() => this.Id.GetHashCode();
 
         /// <summary>
-        /// Gets whether the two <see cref="DiscordEvent"/> objects are equal.
+        /// Gets whether the two <see cref="DiscordSheduledEvent"/> objects are equal.
         /// </summary>
         /// <param name="e1">First event to compare.</param>
         /// <param name="e2">Second ecent to compare.</param>
         /// <returns>Whether the two events are equal.</returns>
-        public static bool operator ==(DiscordEvent e1, DiscordEvent e2)
+        public static bool operator ==(DiscordSheduledEvent e1, DiscordSheduledEvent e2)
         {
             var o1 = e1 as object;
             var o2 = e2 as object;
@@ -213,12 +257,12 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Gets whether the two <see cref="DiscordEvent"/> objects are not equal.
+        /// Gets whether the two <see cref="DiscordSheduledEvent"/> objects are not equal.
         /// </summary>
         /// <param name="e1">First event to compare.</param>
         /// <param name="e2">Second event to compare.</param>
         /// <returns>Whether the two events are not equal.</returns>
-        public static bool operator !=(DiscordEvent e1, DiscordEvent e2)
+        public static bool operator !=(DiscordSheduledEvent e1, DiscordSheduledEvent e2)
             => !(e1 == e2);
     }
 }

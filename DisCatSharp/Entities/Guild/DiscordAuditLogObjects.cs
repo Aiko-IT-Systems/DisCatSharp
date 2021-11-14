@@ -689,7 +689,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the affected thread
         /// </summary>
-        public DiscordEvent Target { get; internal set; }
+        public DiscordSheduledEvent Target { get; internal set; }
 
         /// <summary>
         /// Gets the channel change.
@@ -715,7 +715,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the status change.
         /// </summary>
-        public PropertyChange<EventStatus?> StatusChange { get; internal set; }
+        public PropertyChange<SheduledEventStatus?> StatusChange { get; internal set; }
 
         /// <summary>
         /// Gets the sku ids change.
