@@ -30,49 +30,49 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Hosting
 {
     /// <summary>
-    /// Simple implementation for <see cref="DiscordClient"/> to work as a <see cref="BackgroundService"/>
+    /// Simple Implementation for <see cref="DiscordShardedClient"/> to work as a <see cref="BackgroundService"/>
     /// </summary>
-    public abstract class DiscordHostedService : BaseHostedService, IDiscordHostedService
+    public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordHostedShardService
     {
-        /// <inheritdoc/>
-        public DiscordClient Client { get; protected set; }
+        public DiscordShardedClient ShardedClient { get; protected set; }
 
-        #pragma warning disable 8618
-        /// <param name="config">IConfiguration provided via Dependency Injection. Aggregate method to access configuration files </param>
-        /// <param name="logger">An ILogger to work with, provided via Dependency Injection</param>
-        /// <param name="serviceProvider">ServiceProvider reference which contains all items currently registered for Dependency Injection</param>
-        /// <param name="applicationLifetime">Contains the appropriate methods for disposing / stopping BackgroundServices during runtime</param>
-        /// <param name="configBotSection">The name of the JSON/Config Key which contains the configuration for this Discord Service</param>
-        protected DiscordHostedService(IConfiguration config,
-            ILogger<DiscordHostedService> logger,
+#pragma warning disable 8618
+        protected DiscordShardedHostedService(IConfiguration config,
+            ILogger<DiscordShardedHostedService> logger,
             IServiceProvider serviceProvider,
             IHostApplicationLifetime applicationLifetime,
             string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
             : base(config, logger, serviceProvider, applicationLifetime, configBotSection)
         {
-            
+
         }
-        #pragma warning restore 8618
+#pragma warning restore 8618
 
         protected override Task ConfigureAsync()
         {
             try
             {
-                this.Client = this.Configuration.BuildClient(this.ServiceProvider, this.BotSection);
+                var config = this.Configuration.ExtractConfig<DiscordConfiguration>(this.ServiceProvider, "Discord", this.BotSection);
+                this.ShardedClient = new DiscordShardedClient(config);
             }
             catch (Exception ex)
             {
-                this.Logger.LogError($"Was unable to build {nameof(DiscordClient)} for {this.GetType().Name}");
+                this.Logger.LogError($"Was unable to build {nameof(DiscordShardedClient)} for {this.GetType().Name}");
                 this.OnInitializationError(ex);
             }
 
             return Task.CompletedTask;
         }
-        protected sealed override async Task ConnectAsync() => await this.Client.ConnectAsync();
+
+        protected sealed override async Task ConnectAsync() => await this.ShardedClient.StartAsync();
 
         protected override Task ConfigureExtensionsAsync()
         {
-            this.InitializeExtensions(this.Client);
+            foreach (var client in this.ShardedClient.ShardClients.Values)
+            {
+                this.InitializeExtensions(client);
+            }
+
             return Task.CompletedTask;
         }
     }
