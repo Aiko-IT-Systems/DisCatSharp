@@ -31,12 +31,17 @@ namespace DisCatSharp.EventArgs
     public class GuildScheduledEventUpdateEventArgs : DiscordEventArgs
     {
         /// <summary>
-        /// Gets the stage instance that was created.
+        /// Gets the sheduled event that was updated.
         /// </summary>
-        public DiscordSheduledEvent ScheduledEvent { get; internal set; }
+        public DiscordSheduledEvent ScheduledEventAfter { get; internal set; }
 
         /// <summary>
-        /// Gets the guild in which the stage instance was created.
+        /// Gets the old sheduled event that was updated.
+        /// </summary>
+        public DiscordSheduledEvent ScheduledEventBefore { get; internal set; }
+
+        /// <summary>
+        /// Gets the guild in which the sheduled event was updated.
         /// </summary>
         public DiscordGuild Guild { get; internal set; }
 
