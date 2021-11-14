@@ -80,7 +80,7 @@ namespace DisCatSharp
             DiscordIntegration itg = default;
             DiscordThreadChannel trd = default;
             DiscordThreadChannelMember trdm = default;
-            DiscordSheduledEvent gse = default;
+            DiscordScheduledEvent gse = default;
             TransportUser usr = default;
             TransportMember mbr = default;
             TransportUser refUsr = default;
@@ -205,17 +205,17 @@ namespace DisCatSharp
                 #region Guild Event
 
                 case "guild_scheduled_event_create":
-                    gse = dat.ToObject<DiscordSheduledEvent>();
+                    gse = dat.ToObject<DiscordScheduledEvent>();
                     await this.OnGuildScheduledEventCreateEventAsync(gse).ConfigureAwait(false);
                     break;
 
                 case "guild_scheduled_event_update":
-                    gse = dat.ToObject<DiscordSheduledEvent>();
+                    gse = dat.ToObject<DiscordScheduledEvent>();
                     await this.OnGuildScheduledEventUpdateEventAsync(gse).ConfigureAwait(false);
                     break;
 
                 case "guild_scheduled_event_delete":
-                    gse = dat.ToObject<DiscordSheduledEvent>();
+                    gse = dat.ToObject<DiscordScheduledEvent>();
                     await this.OnGuildScheduledEventDeleteEventAsync(gse).ConfigureAwait(false);
                     break;
                 #endregion
@@ -933,7 +933,7 @@ namespace DisCatSharp
             if (guild._members == null)
                 guild._members = new ConcurrentDictionary<ulong, DiscordMember>();
             if (guild._scheduledEvents == null)
-                guild._scheduledEvents = new ConcurrentDictionary<ulong, DiscordSheduledEvent>();
+                guild._scheduledEvents = new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
 
             this.UpdateCachedGuild(eventGuild, rawMembers);
 
@@ -1074,7 +1074,7 @@ namespace DisCatSharp
                     _roles = new ConcurrentDictionary<ulong, DiscordRole>(),
                     _stageInstances = new ConcurrentDictionary<ulong, DiscordStageInstance>(),
                     _voiceStates = new ConcurrentDictionary<ulong, DiscordVoiceState>(),
-                    _scheduledEvents = new ConcurrentDictionary<ulong, DiscordSheduledEvent>()
+                    _scheduledEvents = new ConcurrentDictionary<ulong, DiscordScheduledEvent>()
                 };
 
                 foreach (var kvp in gld._channels) oldGuild._channels[kvp.Key] = kvp.Value;
@@ -1110,7 +1110,7 @@ namespace DisCatSharp
             if (guild._members == null)
                 guild._members = new ConcurrentDictionary<ulong, DiscordMember>();
             if (guild._scheduledEvents == null)
-                guild._scheduledEvents = new ConcurrentDictionary<ulong, DiscordSheduledEvent>();
+                guild._scheduledEvents = new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
 
             this.UpdateCachedGuild(eventGuild, rawMembers);
 
@@ -1341,7 +1341,7 @@ namespace DisCatSharp
         /// Dispatches the <see cref="GuildScheduledEventCreated"/> event.
         /// </summary>
         /// <param name="scheduled_event">The created event.</param>
-        internal async Task OnGuildScheduledEventCreateEventAsync(DiscordSheduledEvent scheduled_event)
+        internal async Task OnGuildScheduledEventCreateEventAsync(DiscordScheduledEvent scheduled_event)
         {
             scheduled_event.Discord = this;
 
@@ -1355,7 +1355,7 @@ namespace DisCatSharp
         /// Dispatches the <see cref="GuildScheduledEventUpdated"/> event.
         /// </summary>
         /// <param name="scheduled_event">The updated event.</param>
-        internal async Task OnGuildScheduledEventUpdateEventAsync(DiscordSheduledEvent scheduled_event)
+        internal async Task OnGuildScheduledEventUpdateEventAsync(DiscordScheduledEvent scheduled_event)
         {
             scheduled_event.Discord = this;
             var guild = this.InternalGetCachedGuild(scheduled_event.GuildId);
@@ -1370,7 +1370,7 @@ namespace DisCatSharp
         /// Dispatches the <see cref="GuildScheduledEventDeleted"/> event.
         /// </summary>
         /// <param name="scheduled_event">The deleted event.</param>
-        internal async Task OnGuildScheduledEventDeleteEventAsync(DiscordSheduledEvent scheduled_event)
+        internal async Task OnGuildScheduledEventDeleteEventAsync(DiscordScheduledEvent scheduled_event)
         {
             scheduled_event.Discord = this;
             var guild = this.InternalGetCachedGuild(scheduled_event.GuildId);

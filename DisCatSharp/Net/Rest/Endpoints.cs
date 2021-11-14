@@ -302,7 +302,7 @@ namespace DisCatSharp.Net
         /// <summary>
         /// The guild sheduled events endpoint.
         /// </summary>
-        public const string SHEDULED_EVENTS = "/sheduled-events";
+        public const string SCHEDULED_EVENTS = "/scheduled-events";
         /// <summary>
         /// The stickers endpoint.
         /// </summary>

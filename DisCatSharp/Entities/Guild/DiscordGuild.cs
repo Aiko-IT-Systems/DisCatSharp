@@ -413,11 +413,11 @@ namespace DisCatSharp.Entities
         /// Gets a dictionary of all scheduled events.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordSheduledEvent> ScheduledEvents { get; internal set; }
+        public IReadOnlyDictionary<ulong, DiscordScheduledEvent> ScheduledEvents { get; internal set; }
 
         [JsonProperty("events", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordSheduledEvent> _scheduledEvents = new();
+        internal ConcurrentDictionary<ulong, DiscordScheduledEvent> _scheduledEvents = new();
 
         /// <summary>
         /// Gets the guild member for current user.
@@ -917,39 +917,39 @@ namespace DisCatSharp.Entities
 
         #region Sheduled Events
 
-        // TODO: create sheduled event
+        // TODO: create scheduled event
 
         /// <summary>
-        /// Gets a specific sheduled events.
+        /// Gets a specific scheduled events.
         /// </summary>
         /// <param name="sheduled_event_id">The Id of the event to get.</param>
         /// <returns>A sheduled event.</returns>
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordSheduledEvent> GetSheduledEventAsync(ulong sheduled_event_id)
-            => await this.Discord.ApiClient.GetGuildSheduledEventAsync(this.Id, sheduled_event_id);
+        public async Task<DiscordScheduledEvent> GetScheduledEventAsync(ulong sheduled_event_id)
+            => await this.Discord.ApiClient.GetGuildScheduledEventAsync(this.Id, sheduled_event_id);
 
         /// <summary>
-        /// Gets a specific sheduled events.
+        /// Gets a specific scheduled events.
         /// </summary>
         /// <param name="sheduled_event">The event to get.</param>
         /// <returns>A sheduled event.</returns>
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordSheduledEvent> GetSheduledEventAsync(DiscordSheduledEvent sheduled_event)
-            => await this.GetSheduledEventAsync(sheduled_event.Id);
+        public async Task<DiscordScheduledEvent> GetScheduledEventAsync(DiscordScheduledEvent sheduled_event)
+            => await this.GetScheduledEventAsync(sheduled_event.Id);
 
         /// <summary>
-        /// Gets the guilds sheduled events.
+        /// Gets the guilds scheduled events.
         /// </summary>
-        /// <returns>A list of the guilds sheduled events.</returns>
+        /// <returns>A list of the guilds scheduled events.</returns>
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<IReadOnlyDictionary<ulong, DiscordSheduledEvent>> GetSheduledEventsAsync(bool? with_user_count = null)
-            => await this.Discord.ApiClient.ListGuildSheduledEventsAsync(this.Id, with_user_count);
+        public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEvent>> GetScheduledEventsAsync(bool? with_user_count = null)
+            => await this.Discord.ApiClient.ListGuildScheduledEventsAsync(this.Id, with_user_count);
         #endregion
 
         /// <summary>
@@ -2477,7 +2477,7 @@ namespace DisCatSharp.Entities
                     case AuditLogActionType.GuildScheduledEventUpdate:
                         entry = new DiscordAuditLogGuildScheduledEventEntry
                         {
-                            Target = this._scheduledEvents.TryGetValue(xac.TargetId.Value, out var scheduled_event) ? scheduled_event : new DiscordSheduledEvent { Id = xac.TargetId.Value, Discord = this.Discord }
+                            Target = this._scheduledEvents.TryGetValue(xac.TargetId.Value, out var scheduled_event) ? scheduled_event : new DiscordScheduledEvent { Id = xac.TargetId.Value, Discord = this.Discord }
                         };
 
                         var entryse = entry as DiscordAuditLogGuildScheduledEventEntry;
@@ -2505,10 +2505,10 @@ namespace DisCatSharp.Entities
                                     p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
                                     p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 
-                                    entryse.PrivacyLevelChange = new PropertyChange<SheduledEventPrivacyLevel?>
+                                    entryse.PrivacyLevelChange = new PropertyChange<ScheduledEventPrivacyLevel?>
                                     {
-                                        Before = p1 ? (SheduledEventPrivacyLevel?)t5 : null,
-                                        After = p2 ? (SheduledEventPrivacyLevel?)t6 : null
+                                        Before = p1 ? (ScheduledEventPrivacyLevel?)t5 : null,
+                                        After = p2 ? (ScheduledEventPrivacyLevel?)t6 : null
                                     };
                                     break;
 
@@ -2516,10 +2516,10 @@ namespace DisCatSharp.Entities
                                     p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
                                     p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 
-                                    entryse.StatusChange = new PropertyChange<SheduledEventStatus?>
+                                    entryse.StatusChange = new PropertyChange<ScheduledEventStatus?>
                                     {
-                                        Before = p1 ? (SheduledEventStatus?)t5 : null,
-                                        After = p2 ? (SheduledEventStatus?)t6 : null
+                                        Before = p1 ? (ScheduledEventStatus?)t5 : null,
+                                        After = p2 ? (ScheduledEventStatus?)t6 : null
                                     };
                                     break;
 

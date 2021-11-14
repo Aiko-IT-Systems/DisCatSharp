@@ -27,7 +27,6 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Net.Abstractions;
@@ -1200,7 +1199,7 @@ namespace DisCatSharp.Net
         }
         #endregion
 
-        #region Guild Sheduled Events
+        #region Guild Scheduled Events
 
         // TODO: Create & Modify method
 
@@ -1208,16 +1207,16 @@ namespace DisCatSharp.Net
         /// Gets a sheduled event.
         /// </summary>
         /// <param name="guild_id">The guild_id.</param>
-        /// <param name="sheduled_event_id">The event id.</param>
-        internal async Task<DiscordSheduledEvent> GetGuildSheduledEventAsync(ulong guild_id, ulong sheduled_event_id)
+        /// <param name="scheduled_event_id">The event id.</param>
+        internal async Task<DiscordScheduledEvent> GetGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id)
         {
-            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SHEDULED_EVENTS}/:sheduled_event_id";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, sheduled_event_id }, out var path);
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, scheduled_event_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-            var event_raw = JsonConvert.DeserializeObject<DiscordSheduledEvent>(res.Response);
+            var event_raw = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
             var guild = this.Discord.Guilds[guild_id];
 
             event_raw.Discord = this.Discord;
@@ -1231,24 +1230,24 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
-        /// Gets the guilds sheduled events.
+        /// Gets the guilds scheduled events.
         /// </summary>
         /// <param name="guild_id">The guild_id.</param>
-        /// <param name="with_user_count">Whether to include the count of users subscribed to the sheduled event.</param>
-        internal async Task<IReadOnlyDictionary<ulong, DiscordSheduledEvent>> ListGuildSheduledEventsAsync(ulong guild_id, bool? with_user_count)
+        /// <param name="with_user_count">Whether to include the count of users subscribed to the scheduled event.</param>
+        internal async Task<IReadOnlyDictionary<ulong, DiscordScheduledEvent>> ListGuildScheduledEventsAsync(ulong guild_id, bool? with_user_count)
         {
             var urlparams = new Dictionary<string, string>();
             if (with_user_count != null)
                 urlparams["with_user_count"] = with_user_count.Value.ToString(CultureInfo.InvariantCulture);
 
-            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SHEDULED_EVENTS}";
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-            var events = new Dictionary<ulong, DiscordSheduledEvent>();
-            var events_raw = JsonConvert.DeserializeObject<List<DiscordSheduledEvent>>(res.Response);
+            var events = new Dictionary<ulong, DiscordScheduledEvent>();
+            var events_raw = JsonConvert.DeserializeObject<List<DiscordScheduledEvent>>(res.Response);
             var guild = this.Discord.Guilds[guild_id];
 
             foreach (var ev in events_raw)
@@ -1262,23 +1261,23 @@ namespace DisCatSharp.Net
                 }
             }
 
-            return new ReadOnlyDictionary<ulong, DiscordSheduledEvent>(new Dictionary<ulong, DiscordSheduledEvent>(events));
+            return new ReadOnlyDictionary<ulong, DiscordScheduledEvent>(new Dictionary<ulong, DiscordScheduledEvent>(events));
         }
 
         /// <summary>
         /// Deletes a guild sheduled event.
         /// </summary>
         /// <param name="guild_id">The guild_id.</param>
-        /// <param name="sheduled_event_id">The sheduled event id.</param>
+        /// <param name="scheduled_event_id">The sheduled event id.</param>
         /// <param name="reason">The reason.</param>
-        internal Task DeleteGuildSheduledEventAsync(ulong guild_id, ulong sheduled_event_id, string reason)
+        internal Task DeleteGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id, string reason)
         {
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
                 headers.Add(REASON_HEADER_NAME, reason);
 
-            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SHEDULED_EVENTS}/:sheduled_event_id";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, sheduled_event_id }, out var path);
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, scheduled_event_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
@@ -1290,10 +1289,10 @@ namespace DisCatSharp.Net
         /// Optional with member objects.
         /// </summary>
         /// <param name="guild_id">The guild_id.</param>
-        /// <param name="sheduled_event_id">The sheduled event id.</param>
+        /// <param name="scheduled_event_id">The sheduled event id.</param>
         /// <param name="limit">The limit how many users to receive from the event.</param>
         /// <param name="with_members">Wether to include guild member data. attaches guild_member property to the user object.</param>
-        internal async Task<IReadOnlyDictionary<ulong, DiscordUser>> GetGuildSheduledEventRSPVUsersAsync(ulong guild_id, ulong sheduled_event_id, int? limit, bool? with_members)
+        internal async Task<IReadOnlyDictionary<ulong, DiscordUser>> GetGuildScheduledEventRSPVUsersAsync(ulong guild_id, ulong scheduled_event_id, int? limit, bool? with_members)
         {
             var urlparams = new Dictionary<string, string>();
             if (limit != null && limit > 0)
@@ -1301,8 +1300,8 @@ namespace DisCatSharp.Net
             if (with_members != null)
                 urlparams["with_members"] = with_members.Value.ToString(CultureInfo.InvariantCulture);
 
-            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SHEDULED_EVENTS}/:sheduled_event_id{Endpoints.USERS}";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, sheduled_event_id }, out var path);
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id{Endpoints.USERS}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, scheduled_event_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);

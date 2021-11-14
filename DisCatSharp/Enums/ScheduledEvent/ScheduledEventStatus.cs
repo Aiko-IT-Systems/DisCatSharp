@@ -1,4 +1,4 @@
-  // This file is part of the DisCatSharp project.
+    // This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,28 +23,28 @@
 namespace DisCatSharp
 {
     /// <summary>
-    /// Represents the entity type for a scheduled event.
+    /// Represents the status for a scheduled event.
     /// </summary>
-    public enum SheduledEventEntityType : int
+    public enum ScheduledEventStatus : int
     {
         /// <summary>
-        /// Indicates that the events is not hold anywhere.
+        /// Indicates that the event is scheduled.
         /// </summary>
-        NONE = 0,
+        SCHEDULED = 1,
 
         /// <summary>
-        /// Indicates that the events is hold in a stage instance.
+        /// Indicates that the event is active.
         /// </summary>
-        STAGE_INSTANCE = 1,
+        ACTIVE = 2,
 
         /// <summary>
-        /// Indicates that the events is hold in a voice channel.
+        /// Indicates that the event is completed.
         /// </summary>
-        VOICE = 2,
+        COMPLETED = 3,
 
         /// <summary>
-        /// Indicates that the events is hold external.
+        /// Indicates that the event is canceled.
         /// </summary>
-        LOCATION = 3
+        CANCELED = 4
     }
 }

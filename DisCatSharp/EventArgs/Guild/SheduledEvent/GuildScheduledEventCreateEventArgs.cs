@@ -33,7 +33,7 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Gets the sheduled event that was created.
         /// </summary>
-        public DiscordSheduledEvent ScheduledEvent { get; internal set; }
+        public DiscordScheduledEvent ScheduledEvent { get; internal set; }
 
         /// <summary>
         /// Gets the guild in which the sheduled event was created.
