@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+    // This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,26 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
-namespace DisCatSharp.Entities
+namespace DisCatSharp
 {
     /// <summary>
-    /// Represents an scheduled event.
+    /// Represents the status for a scheduled event.
     /// </summary>
-    public class DiscordEventEntityMetadata
+    public enum EventStatus : int
     {
         /// <summary>
-        /// Gets the the speakers of the stage channel.
+        /// Indicates that the event is scheduled.
         /// </summary>
-        [JsonProperty("speaker_ids", NullValueHandling = NullValueHandling.Ignore)]
-        public List<DiscordMember> Speakers { get; internal set; }
+        SCHEDULED = 1,
 
         /// <summary>
-        /// Gets the the location of the event.
+        /// Indicates that the event is active.
         /// </summary>
-        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
-        public string Location { get; internal set; }
+        ACTIVE = 2,
+
+        /// <summary>
+        /// Indicates that the event is completed.
+        /// </summary>
+        COMPLETED = 3,
+
+        /// <summary>
+        /// Indicates that the event is canceled.
+        /// </summary>
+        CANCELED = 4
     }
 }
