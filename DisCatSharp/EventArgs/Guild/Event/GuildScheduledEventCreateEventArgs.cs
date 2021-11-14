@@ -33,7 +33,7 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Gets the stage instance that was created.
         /// </summary>
-        public DiscordEvent ScheduledEvent { get; internal set; }
+        public DiscordSheduledEvent ScheduledEvent { get; internal set; }
 
         /// <summary>
         /// Gets the guild in which the stage instance was created.

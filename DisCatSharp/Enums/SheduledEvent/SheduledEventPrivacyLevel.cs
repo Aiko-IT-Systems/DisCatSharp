@@ -1,4 +1,4 @@
-            // This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,26 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
-namespace DisCatSharp.Entities
+namespace DisCatSharp
 {
     /// <summary>
-    /// Represents an scheduled event.
+    /// Represents the privacy level for a guild scheduled event.
     /// </summary>
-    public class DiscordEventEntityMetadata
+    public enum SheduledEventPrivacyLevel : int
     {
         /// <summary>
-        /// Gets the the speakers of the stage channel.
+        /// Indicates that the guild scheduled event is public and available in discovery.
         /// </summary>
-        [JsonProperty("speaker_ids", NullValueHandling = NullValueHandling.Ignore)]
-        public List<DiscordMember> Speakers { get; internal set; }
+        PUBLIC = 1,
 
         /// <summary>
-        /// Gets the the location of the event.
+        /// Indicates that the the guild scheduled event is only accessable to guild members.
         /// </summary>
-        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
-        public string Location { get; internal set; }
+        GUILD_ONLY = 2
     }
 }
