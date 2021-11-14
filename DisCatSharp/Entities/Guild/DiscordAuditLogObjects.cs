@@ -684,7 +684,7 @@ namespace DisCatSharp.Entities
     /// <summary>
     /// Represents a audit log event entry.
     /// </summary>
-    public sealed class DiscordAuditLogScheduledEventEntry : DiscordAuditLogEntry
+    public sealed class DiscordAuditLogGuildScheduledEventEntry : DiscordAuditLogEntry
     {
         /// <summary>
         /// Gets the affected thread
@@ -723,9 +723,9 @@ namespace DisCatSharp.Entities
         public PropertyChange<IReadOnlyList<ulong>> SkuIdsChange { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordAuditLogScheduledEventEntry"/> class.
+        /// Initializes a new instance of the <see cref="DiscordAuditLogGuildScheduledEventEntry"/> class.
         /// </summary>
-        internal DiscordAuditLogScheduledEventEntry() { }
+        internal DiscordAuditLogGuildScheduledEventEntry() { }
     }
 
     /// <summary>
@@ -1016,17 +1016,17 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Indicates that an event was created.
         /// </summary>
-        ScheduledEventCreate = 100,
+        GuildScheduledEventCreate = 100,
 
         /// <summary>
         /// Indicates that an event was updated.
         /// </summary>
-        ScheduledEventUpdate = 101,
+        GuildScheduledEventUpdate = 101,
 
         /// <summary>
         /// Indicates that an event was deleted.
         /// </summary>
-        ScheduledEventDelete = 102,
+        GuildScheduledEventDelete = 102,
         
         /// <summary>
         /// Indicates that an thread was created.
