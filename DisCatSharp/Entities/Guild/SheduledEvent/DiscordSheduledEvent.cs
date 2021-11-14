@@ -87,7 +87,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; internal set; }
-        /*
+        /* TODO|INFO: Is not available yet to users / clients / bots.
         /// <summary>
         /// Gets this channels's banner hash, when applicable.
         /// </summary>
@@ -185,25 +185,39 @@ namespace DisCatSharp.Entities
         internal DiscordSheduledEvent() { }
 
         #region Methods
-
+        // TODO: Later
         /// <summary>
         /// Updates a scheduled event.
         /// </summary>
-        /// <param name="channel">New channel of the event.</param>
-        /// <param name="name">New name of the event.</param>
-        /// <param name="scheduled_start_time">New DateTime when the event should start.</param>
-        /// <param name="description">New description of the event.</param>
-        /// <param name="privacy_level">New Privacy Level of the stage instance.</param>
-        /// <param name="type">New <see cref="SheduledEventEntityType"/> of the event.</param>
+        /// <param name="channel">New channel of the sheduled event.</param>
+        /// <param name="metadata">New <see cref="EntityMetadata"/> of the sheduled event.</param>
+        /// <param name="name">New name of the sheduled event.</param>
+        /// <param name="privacy_level">New <see cref="SheduledEventPrivacyLevel"/> of the sheduled event.</param>
+        /// <param name="scheduled_start_time">New DateTime when the sheduled event should start.</param>
+        /// <param name="scheduled_end_time">New DateTime when the sheduled event should end.</param>
+        /// <param name="description">New description of the sheduled event.</param>
+        /// <param name="type">New <see cref="SheduledEventEntityType"/> of the sheduled event.</param>
         /// <param name="reason">Audit log reason</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task ModifyAsync(Optional<DiscordChannel> channel, Optional<string> name, Optional<string> description, Optional<DateTime> scheduled_start_time, Optional<StagePrivacyLevel> privacy_level, Optional<SheduledEventEntityType> type, string reason = null)
+        public async Task ModifyAsync(Optional<DiscordChannel> channel, Optional<DiscordSheduledEventEntityMetadata> metadata, Optional<string> name, Optional<StagePrivacyLevel> privacy_level, Optional<DateTime> scheduled_start_time, Optional<DateTime> scheduled_end_time, Optional<string> description, Optional<SheduledEventEntityType> type, string reason = null)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
             => throw new NotImplementedException("This method is not implemented yet."); /*await this.Discord.ApiClient.ModifyStageEventAsync(this.Id, channel, name, scheduled_start_time, description, privacy_level, type, reason);*/
+
+        /// <summary>
+        /// Gets a list of users RSVP'd to the sheduled event.
+        /// </summary>
+        /// <param name="limit">The limit how many users to receive from the event.</param>
+        /// <param name="with_members">Wether to include guild member data.</param>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<IReadOnlyDictionary<ulong, DiscordUser>> GetUsersAsync(int? limit = null, bool? with_members = null)
+            => await this.Discord.ApiClient.GetGuildSheduledEventRSPVUsersAsync(this.GuildId, this.Id, limit, with_members);
 
         /// <summary>
         /// Deletes a scheduled event.
@@ -213,9 +227,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task DeleteAsync(string reason = null)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
             => await this.Discord.ApiClient.DeleteGuildSheduledEventAsync(this.GuildId ,this.Id, reason);
 
         #endregion
