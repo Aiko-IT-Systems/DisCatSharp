@@ -710,7 +710,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the privacy level change.
         /// </summary>
-        public PropertyChange<StagePrivacyLevel?> PrivacyLevelChange { get; internal set; }
+        public PropertyChange<SheduledEventPrivacyLevel?> PrivacyLevelChange { get; internal set; }
 
         /// <summary>
         /// Gets the status change.

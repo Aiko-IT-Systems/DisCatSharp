@@ -2477,7 +2477,7 @@ namespace DisCatSharp.Entities
                     case AuditLogActionType.GuildScheduledEventUpdate:
                         entry = new DiscordAuditLogGuildScheduledEventEntry
                         {
-                            //Target = this._events.TryGetValue(xac.TargetId.Value, out var scheduled_event) ? scheduled_event : new DiscordEvent { Id = xac.TargetId.Value, Discord = this.Discord }
+                            Target = this._scheduledEvents.TryGetValue(xac.TargetId.Value, out var scheduled_event) ? scheduled_event : new DiscordSheduledEvent { Id = xac.TargetId.Value, Discord = this.Discord }
                         };
 
                         var entryse = entry as DiscordAuditLogGuildScheduledEventEntry;
@@ -2505,10 +2505,10 @@ namespace DisCatSharp.Entities
                                     p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
                                     p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 
-                                    entryse.PrivacyLevelChange = new PropertyChange<StagePrivacyLevel?>
+                                    entryse.PrivacyLevelChange = new PropertyChange<SheduledEventPrivacyLevel?>
                                     {
-                                        Before = p1 ? (StagePrivacyLevel?)t5 : null,
-                                        After = p2 ? (StagePrivacyLevel?)t6 : null
+                                        Before = p1 ? (SheduledEventPrivacyLevel?)t5 : null,
+                                        After = p2 ? (SheduledEventPrivacyLevel?)t6 : null
                                     };
                                     break;
 
