@@ -33,4 +33,12 @@ namespace DisCatSharp.Hosting
         /// </summary>
         DiscordClient Client { get; }
     }
+
+    /// <summary>
+    /// Contract required for <see cref="DiscordShardedClient"/> to work in a web hosting environment
+    /// </summary>
+    public interface IDiscordHostedShardService : Microsoft.Extensions.Hosting.IHostedService
+    {
+        DiscordShardedClient ShardedClient { get; }
+    }
 }

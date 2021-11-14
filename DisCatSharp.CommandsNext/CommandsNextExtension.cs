@@ -70,7 +70,7 @@ namespace DisCatSharp.CommandsNext
         /// Gets the service provider this CommandsNext module was configured with.
         /// </summary>
         public IServiceProvider Services
-            => this.Config.Services;
+            => this.Config.ServiceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandsNextExtension"/> class.
