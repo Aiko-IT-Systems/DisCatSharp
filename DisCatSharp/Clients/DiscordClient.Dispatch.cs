@@ -1505,11 +1505,12 @@ namespace DisCatSharp
             var nick_old = mbr.Nickname;
             var pending_old = mbr.IsPending;
             var roles_old = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles));
-
+            var cdu_old = mbr.CommunicationDisabledUntil;
             mbr._avatarHash = member.AvatarHash;
             mbr.GuildAvatarHash = member.GuildAvatarHash;
             mbr.Nickname = nick;
             mbr.IsPending = pending;
+            mbr.CommunicationDisabledUntil = member.CommunicationDisabledUntil;
             mbr._role_ids.Clear();
             mbr._role_ids.AddRange(roles);
 
@@ -1521,10 +1522,12 @@ namespace DisCatSharp
                 NicknameAfter = mbr.Nickname,
                 RolesAfter = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles)),
                 PendingAfter = mbr.IsPending,
+                TimeoutAfter = mbr.CommunicationDisabledUntil,
 
                 NicknameBefore = nick_old,
                 RolesBefore = roles_old,
                 PendingBefore = pending_old,
+                TimeoutBefore = cdu_old
             };
             await this._guildMemberUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
         }
