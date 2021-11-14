@@ -29,7 +29,7 @@ namespace DisCatSharp.Net.Abstractions
     /// <summary>
     /// The rest guild sheduled event create payload.
     /// </summary>
-    internal class RestGuildSheduledEventCreatePayload
+    internal class RestGuildScheduledEventCreatePayload
     {
         /// <summary>
         /// Gets or sets the channel id.
@@ -41,7 +41,7 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets the entity metadata.
         /// </summary>
         [JsonProperty("entity_metadata")]
-        public DiscordSheduledEventEntityMetadata EntityMetadata { get; set; }
+        public DiscordScheduledEventEntityMetadata EntityMetadata { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -59,25 +59,25 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets the privacy level of the scheduled event.
         /// </summary>
         [JsonProperty("privacy_level")]
-        public SheduledEventPrivacyLevel PrivacyLevel { get; set; }
+        public ScheduledEventPrivacyLevel PrivacyLevel { get; set; }
 
         /// <summary>
         /// Gets or sets the time to schedule the scheduled event.
         /// </summary>
         [JsonProperty("scheduled_start_time")]
-        public DateTimeOffset SheduledStartTime { get; internal set; }
+        public DateTimeOffset ScheduledStartTime { get; internal set; }
 
         /// <summary>
         /// Gets or sets the time when the scheduled event is scheduled to end.
         /// </summary>
         [JsonProperty("scheduled_end_time")]
-        public DateTimeOffset? SheduledEndTime { get; internal set; }
+        public DateTimeOffset? ScheduledEndTime { get; internal set; }
 
         /// <summary>
         /// Gets or sets the entity type of the scheduled event.
         /// </summary>
         [JsonProperty("privacy_level")]
-        public SheduledEventEntityType EntityType { get; set; }
+        public ScheduledEventEntityType EntityType { get; set; }
 
         /// <summary>
         /// Gets or sets the image as base64.
@@ -101,7 +101,7 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets the entity metadata.
         /// </summary>
         [JsonProperty("entity_metadata")]
-        public Optional<DiscordSheduledEventEntityMetadata> EntityMetadata { get; set; }
+        public Optional<DiscordScheduledEventEntityMetadata> EntityMetadata { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -119,25 +119,25 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets the privacy level of the scheduled event.
         /// </summary>
         [JsonProperty("privacy_level")]
-        public Optional<SheduledEventPrivacyLevel> PrivacyLevel { get; set; }
+        public Optional<ScheduledEventPrivacyLevel> PrivacyLevel { get; set; }
 
         /// <summary>
         /// Gets or sets the time to schedule the scheduled event.
         /// </summary>
         [JsonProperty("scheduled_start_time")]
-        public Optional<DateTimeOffset> SheduledStartTime { get; internal set; }
+        public Optional<DateTimeOffset> ScheduledStartTime { get; internal set; }
 
         /// <summary>
         /// Gets or sets the time when the scheduled event is scheduled to end.
         /// </summary>
         [JsonProperty("scheduled_end_time")]
-        public Optional<DateTimeOffset?> SheduledEndTime { get; internal set; }
+        public Optional<DateTimeOffset?> ScheduledEndTime { get; internal set; }
 
         /// <summary>
         /// Gets or sets the entity type of the scheduled event.
         /// </summary>
         [JsonProperty("privacy_level")]
-        public Optional<SheduledEventEntityType> EntityType { get; set; }
+        public Optional<ScheduledEventEntityType> EntityType { get; set; }
 
         /// <summary>
         /// Gets or sets the image as base64.

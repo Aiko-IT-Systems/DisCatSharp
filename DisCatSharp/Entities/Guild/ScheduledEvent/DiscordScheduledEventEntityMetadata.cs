@@ -30,10 +30,10 @@ namespace DisCatSharp.Entities
     /// <summary>
     /// Represents an scheduled event.
     /// </summary>
-    public class DiscordSheduledEventEntityMetadata
+    public class DiscordScheduledEventEntityMetadata
     {
         /// <summary>
-        /// Gets the the speakers of the sheduled event.
+        /// Gets the the speakers of the scheduled event.
         /// </summary>
         [JsonIgnore]
         public IReadOnlyDictionary<ulong, DiscordUser> Speakers => new ReadOnlyConcurrentDictionary<ulong, DiscordUser>(this._speakerIds);
@@ -43,7 +43,7 @@ namespace DisCatSharp.Entities
         internal ConcurrentDictionary<ulong, DiscordUser> _speakerIds;
 
         /// <summary>
-        /// Gets the the location of the sheduled event.
+        /// Gets the the location of the scheduled event.
         /// </summary>
         [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
         public string Location { get; internal set; }

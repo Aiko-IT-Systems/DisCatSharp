@@ -33,12 +33,12 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Gets the sheduled event that was updated.
         /// </summary>
-        public DiscordSheduledEvent ScheduledEventAfter { get; internal set; }
+        public DiscordScheduledEvent ScheduledEventAfter { get; internal set; }
 
         /// <summary>
         /// Gets the old sheduled event that was updated.
         /// </summary>
-        public DiscordSheduledEvent ScheduledEventBefore { get; internal set; }
+        public DiscordScheduledEvent ScheduledEventBefore { get; internal set; }
 
         /// <summary>
         /// Gets the guild in which the sheduled event was updated.
