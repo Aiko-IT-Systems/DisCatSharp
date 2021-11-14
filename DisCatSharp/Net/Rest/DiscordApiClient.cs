@@ -1202,6 +1202,68 @@ namespace DisCatSharp.Net
 
         #region Guild Sheduled Events
 
+        // TODO: Create & Modify method
+
+        /// <summary>
+        /// Gets a sheduled event.
+        /// </summary>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <param name="sheduled_event_id">The event id.</param>
+        internal async Task<DiscordSheduledEvent> GetGuildSheduledEventAsync(ulong guild_id, ulong sheduled_event_id)
+        {
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SHEDULED_EVENTS}/:sheduled_event_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, sheduled_event_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
+
+            var event_raw = JsonConvert.DeserializeObject<DiscordSheduledEvent>(res.Response);
+            var guild = this.Discord.Guilds[guild_id];
+
+            event_raw.Discord = this.Discord;
+            if (!guild._scheduledEvents.TryAdd(event_raw.Id, event_raw))
+            {
+                if (guild._scheduledEvents.TryGetValue(event_raw.Id, out var old))
+                    guild._scheduledEvents.TryUpdate(event_raw.Id, event_raw, old);
+            }
+
+            return event_raw;
+        }
+
+        /// <summary>
+        /// Gets the guilds sheduled events.
+        /// </summary>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <param name="with_user_count">Whether to include the count of users subscribed to the sheduled event.</param>
+        internal async Task<IReadOnlyDictionary<ulong, DiscordSheduledEvent>> ListGuildSheduledEventsAsync(ulong guild_id, bool? with_user_count)
+        {
+            var urlparams = new Dictionary<string, string>();
+            if (with_user_count != null)
+                urlparams["with_user_count"] = with_user_count.Value.ToString(CultureInfo.InvariantCulture);
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SHEDULED_EVENTS}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
+
+            var events = new Dictionary<ulong, DiscordSheduledEvent>();
+            var events_raw = JsonConvert.DeserializeObject<List<DiscordSheduledEvent>>(res.Response);
+            var guild = this.Discord.Guilds[guild_id];
+
+            foreach (var ev in events_raw)
+            {
+                ev.Discord = this.Discord;
+                events.Add(ev.Id, ev);
+                if (!guild._scheduledEvents.TryAdd(ev.Id, ev))
+                {
+                    if (guild._scheduledEvents.TryGetValue(ev.Id, out var old))
+                        guild._scheduledEvents.TryUpdate(ev.Id, ev, old);
+                }
+            }
+
+            return new ReadOnlyDictionary<ulong, DiscordSheduledEvent>(new Dictionary<ulong, DiscordSheduledEvent>(events));
+        }
 
         /// <summary>
         /// Deletes a guild sheduled event.
