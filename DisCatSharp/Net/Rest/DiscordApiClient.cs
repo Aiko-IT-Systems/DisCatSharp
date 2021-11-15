@@ -1306,10 +1306,35 @@ namespace DisCatSharp.Net
             var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-            var users_raw = JsonConvert.DeserializeObject<List<TransportUser>>(res.Response);
+            var json = JObject.Parse(res.Response);
+            var users_raw = (JArray)json["users"];
             var rspv_users = new Dictionary<ulong, DiscordUser>();
-            foreach (var xr in users_raw)
+            var rspv_members = new Dictionary<ulong, DiscordMember>();
+            foreach (var raw_user in users_raw)
             {
+                var uid = (ulong)raw_user["id"];
+                if (with_members.HasValue && with_members.Value)
+                {
+                    var raw_member = raw_user["guild_member"];
+                    var xm = raw_user.ToDiscordObject<TransportMember>();
+                    var mbr = new DiscordMember(xm) { Discord = this.Discord };
+                    mbr = this.Discord.Guilds[guild_id]._members.AddOrUpdate(uid, mbr, (id, old) =>
+                    {
+                        old.Username = mbr.Username;
+                        old.Nickname = mbr.Nickname;
+                        old.Discriminator = mbr.Discriminator;
+                        old.GuildAvatarHash = mbr.GuildAvatarHash;
+                        old.GuildBannerHash = mbr.GuildBannerHash;
+                        old.GuildBio = mbr.GuildBio;
+                        old._bannerColor = mbr._bannerColor;
+                        return old;
+                    });
+
+                    rspv_members.Add(mbr.Id, mbr);
+                    raw_member.Remove();
+                }
+
+                var xr = raw_user.ToDiscordObject<TransportUser>();
                 var usr = new DiscordUser(xr) { Discord = this.Discord };
                 usr = this.Discord.UserCache.AddOrUpdate(xr.Id, usr, (id, old) =>
                 {
