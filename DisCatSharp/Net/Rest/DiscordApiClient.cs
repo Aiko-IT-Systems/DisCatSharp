@@ -1208,7 +1208,14 @@ namespace DisCatSharp.Net
         {
             var pld = new RestGuildScheduledEventCreatePayload
             {
-                // Add stuff
+                /*ChannelId = channel_id,
+                EntityMetadata = metadata,
+                Name = name,
+                PrivacyLevel = privacy_level,
+                ScheduledStartTime = scheduled_start_time,
+                ScheduledEndTime = scheduled_end_time,
+                Description = description,
+                EntityType = type*/
             };
 
             var headers = Utilities.GetBaseHeaders();
@@ -1233,11 +1240,18 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Modifies a scheduled event.
         /// </summary>
-        internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id, string reason)
+        internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id, Optional<ulong?> channel_id, Optional<DiscordScheduledEventEntityMetadata> metadata, Optional<string> name, Optional<ScheduledEventPrivacyLevel> privacy_level, Optional<DateTimeOffset> scheduled_start_time, Optional<DateTimeOffset?> scheduled_end_time, Optional<string> description, Optional<ScheduledEventEntityType> type, string reason = null)
         {
             var pld = new RestGuildSheduledEventModifyPayload
             {
-                // Add stuff
+                ChannelId = channel_id,
+                EntityMetadata = metadata,
+                Name = name,
+                PrivacyLevel = privacy_level,
+                ScheduledStartTime = scheduled_start_time,
+                ScheduledEndTime = scheduled_end_time,
+                Description = description,
+                EntityType = type
             };
 
             var headers = Utilities.GetBaseHeaders();

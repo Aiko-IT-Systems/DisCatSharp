@@ -26,6 +26,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
+using DisCatSharp.Net.Models;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
@@ -188,27 +189,39 @@ namespace DisCatSharp.Entities
         internal DiscordScheduledEvent() { }
 
         #region Methods
-        // TODO: Later
         /// <summary>
-        /// Updates a scheduled event.
+        /// Modifies the current scheduled event.
         /// </summary>
-        /// <param name="channel">New channel of the scheduled event.</param>
-        /// <param name="metadata">New <see cref="EntityMetadata"/> of the scheduled event.</param>
-        /// <param name="name">New name of the scheduled event.</param>
-        /// <param name="privacy_level">New <see cref="ScheduledEventPrivacyLevel"/> of the scheduled event.</param>
-        /// <param name="scheduled_start_time">New DateTime when the scheduled event should start.</param>
-        /// <param name="scheduled_end_time">New DateTime when the scheduled event should end.</param>
-        /// <param name="description">New description of the scheduled event.</param>
-        /// <param name="type">New <see cref="ScheduledEventEntityType"/> of the scheduled event.</param>
-        /// <param name="reason">Audit log reason</param>
+        /// <param name="action">Action to perform on this thread</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task ModifyAsync(Optional<DiscordChannel> channel, Optional<DiscordScheduledEventEntityMetadata> metadata, Optional<string> name, Optional<StagePrivacyLevel> privacy_level, Optional<DateTime> scheduled_start_time, Optional<DateTime> scheduled_end_time, Optional<string> description, Optional<ScheduledEventEntityType> type, string reason = null)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
-            => throw new NotImplementedException("This method is not implemented yet."); /*await this.Discord.ApiClient.ModifyStageEventAsync(this.Id, channel, name, scheduled_start_time, description, privacy_level, type, reason);*/
+        public async Task ModifyAsync(Action<ScheduledEventEditModel> action)
+        {
+            var mdl = new ScheduledEventEditModel();
+            action(mdl);
+
+            var channelId = Optional.FromNoValue<ulong?>();
+            if (mdl.Channel.HasValue && (mdl.Channel.Value.Type != ChannelType.Voice || mdl.Channel.Value.Type != ChannelType.Stage) && mdl.Channel.Value != null)
+                throw new ArgumentException("AFK channel needs to be a voice or stage channel.");
+            else if (mdl.Channel.HasValue && mdl.Channel.Value != null)
+                channelId = mdl.Channel.Value.Id;
+            else if (mdl.Channel.HasValue)
+                channelId = null;
+
+            var description = Optional.FromNoValue<string>();
+            if (mdl.Description.HasValue && mdl.Description.Value != null)
+                description = mdl.Description;
+            else if (mdl.Description.HasValue)
+                description = null;
+
+            var scheduledEndTime = Optional.FromNoValue<DateTimeOffset?>();
+            if (mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.LOCATION : this.EntityType == ScheduledEventEntityType.LOCATION)
+                scheduledEndTime = mdl.ScheduledEndTime;
+
+            await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, mdl.EntityMetadata, mdl.Name, mdl.PrivacyLevel, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.AuditLogReason);
+        }
 
         /// <summary>
         /// Gets a list of users RSVP'd to the scheduled event.
