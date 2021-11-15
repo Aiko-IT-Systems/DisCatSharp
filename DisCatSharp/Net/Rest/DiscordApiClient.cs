@@ -1201,10 +1201,80 @@ namespace DisCatSharp.Net
 
         #region Guild Scheduled Events
 
-        // TODO: Create & Modify method
+        /// <summary>
+        /// Creates a scheduled event.
+        /// </summary>
+        internal async Task<DiscordScheduledEvent> CreateGuildScheduledEventAsync(ulong guild_id, string reason)
+        {
+            var pld = new RestGuildScheduledEventCreatePayload
+            {
+                // Add stuff
+            };
+
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers[REASON_HEADER_NAME] = reason;
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
+
+            var scheduled_event = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
+            var guild = this.Discord.Guilds[guild_id];
+
+            scheduled_event.Discord = this.Discord;
+            guild._scheduledEvents.TryAdd(scheduled_event.Id, scheduled_event);
+
+            return scheduled_event;
+        }
 
         /// <summary>
-        /// Gets a sheduled event.
+        /// Modifies a scheduled event.
+        /// </summary>
+        internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id, string reason)
+        {
+            var pld = new RestGuildSheduledEventModifyPayload
+            {
+                // Add stuff
+            };
+
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers[REASON_HEADER_NAME] = reason;
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id, scheduled_event_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+
+            var scheduled_event = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
+            var guild = this.Discord.Guilds[guild_id];
+
+            scheduled_event.Discord = this.Discord;
+            guild._scheduledEvents.AddOrUpdate(scheduled_event.Id, scheduled_event, (id, old) =>
+            {
+                old.Name = scheduled_event.Name;
+                old.Description = scheduled_event.Description;
+                old.ChannelId = scheduled_event.ChannelId;
+                old.EntityMetadata = scheduled_event.EntityMetadata;
+                old.EntityType = scheduled_event.EntityType;
+                old.Status = scheduled_event.Status;
+                old.ScheduledStartTimeRaw = scheduled_event.ScheduledStartTimeRaw;
+                old.ScheduledEndTimeRaw = scheduled_event.ScheduledEndTimeRaw;
+                old.PrivacyLevel = scheduled_event.PrivacyLevel;
+                old.UserCount = scheduled_event.UserCount;
+                old.SkuIds = scheduled_event.SkuIds;
+                return old;
+            });
+
+            return scheduled_event;
+        }
+
+        /// <summary>
+        /// Gets a scheduled event.
         /// </summary>
         /// <param name="guild_id">The guild_id.</param>
         /// <param name="scheduled_event_id">The event id.</param>
@@ -1220,11 +1290,21 @@ namespace DisCatSharp.Net
             var guild = this.Discord.Guilds[guild_id];
 
             event_raw.Discord = this.Discord;
-            if (!guild._scheduledEvents.TryAdd(event_raw.Id, event_raw))
+            guild._scheduledEvents.AddOrUpdate(event_raw.Id, event_raw, (id, old) =>
             {
-                if (guild._scheduledEvents.TryGetValue(event_raw.Id, out var old))
-                    guild._scheduledEvents.TryUpdate(event_raw.Id, event_raw, old);
-            }
+                old.Name = event_raw.Name;
+                old.Description = event_raw.Description;
+                old.ChannelId = event_raw.ChannelId;
+                old.EntityMetadata = event_raw.EntityMetadata;
+                old.EntityType = event_raw.EntityType;
+                old.Status = event_raw.Status;
+                old.ScheduledStartTimeRaw = event_raw.ScheduledStartTimeRaw;
+                old.ScheduledEndTimeRaw = event_raw.ScheduledEndTimeRaw;
+                old.PrivacyLevel = event_raw.PrivacyLevel;
+                old.UserCount = event_raw.UserCount;
+                old.SkuIds = event_raw.SkuIds;
+                return old;
+            });
 
             return event_raw;
         }
@@ -1254,11 +1334,21 @@ namespace DisCatSharp.Net
             {
                 ev.Discord = this.Discord;
                 events.Add(ev.Id, ev);
-                if (!guild._scheduledEvents.TryAdd(ev.Id, ev))
+                guild._scheduledEvents.AddOrUpdate(ev.Id, ev, (id, old) =>
                 {
-                    if (guild._scheduledEvents.TryGetValue(ev.Id, out var old))
-                        guild._scheduledEvents.TryUpdate(ev.Id, ev, old);
-                }
+                    old.Name = ev.Name;
+                    old.Description = ev.Description;
+                    old.ChannelId = ev.ChannelId;
+                    old.EntityMetadata = ev.EntityMetadata;
+                    old.EntityType = ev.EntityType;
+                    old.Status = ev.Status;
+                    old.ScheduledStartTimeRaw = ev.ScheduledStartTimeRaw;
+                    old.ScheduledEndTimeRaw = ev.ScheduledEndTimeRaw;
+                    old.PrivacyLevel = ev.PrivacyLevel;
+                    old.UserCount = ev.UserCount;
+                    old.SkuIds = ev.SkuIds;
+                    return old;
+                });
             }
 
             return new ReadOnlyDictionary<ulong, DiscordScheduledEvent>(new Dictionary<ulong, DiscordScheduledEvent>(events));

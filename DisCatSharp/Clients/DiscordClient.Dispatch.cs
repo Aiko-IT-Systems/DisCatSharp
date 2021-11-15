@@ -1374,9 +1374,22 @@ namespace DisCatSharp
         {
             scheduled_event.Discord = this;
             var guild = this.InternalGetCachedGuild(scheduled_event.GuildId);
-            guild._scheduledEvents.TryGetValue(scheduled_event.Id, out var old_event);
-
-            guild._scheduledEvents.TryUpdate(scheduled_event.Id, scheduled_event, old_event);
+            var old_event = guild._scheduledEvents[scheduled_event.Id] ?? null;
+            guild._scheduledEvents.AddOrUpdate(scheduled_event.Id, scheduled_event, (id, old) =>
+            {
+                old.Name = scheduled_event.Name;
+                old.Description = scheduled_event.Description;
+                old.ChannelId = scheduled_event.ChannelId;
+                old.EntityMetadata = scheduled_event.EntityMetadata;
+                old.EntityType = scheduled_event.EntityType;
+                old.Status = scheduled_event.Status;
+                old.ScheduledStartTimeRaw = scheduled_event.ScheduledStartTimeRaw;
+                old.ScheduledEndTimeRaw = scheduled_event.ScheduledEndTimeRaw;
+                old.PrivacyLevel = scheduled_event.PrivacyLevel;
+                old.UserCount = scheduled_event.UserCount;
+                old.SkuIds = scheduled_event.SkuIds;
+                return old;
+            });
 
             await this._guildScheduledEventUpdated.InvokeAsync(this, new GuildScheduledEventUpdateEventArgs(this.ServiceProvider) { ScheduledEventBefore = old_event, ScheduledEventAfter = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
         }
