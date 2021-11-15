@@ -67,6 +67,16 @@ namespace DisCatSharp.EventArgs
         public bool? PendingAfter { get; internal set; }
 
         /// <summary>
+        /// Gets whether the member is timeouted before the update
+        /// </summary>
+        public DateTimeOffset? TimeoutBefore { get; internal set; }
+
+        /// <summary>
+        /// Gets whether the member is timeouted after the update
+        /// </summary>
+        public DateTimeOffset? TimeoutAfter { get; internal set; }
+
+        /// <summary>
         /// Gets the member that was updated.
         /// </summary>
         public DiscordMember Member { get; internal set; }
