@@ -27,6 +27,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Net.Abstractions;
@@ -2256,6 +2257,32 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
+        /// Modifies the time out of a guild member.
+        /// </summary>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <param name="user_id">The user_id.</param>
+        /// <param name="until">Datetime offset.</param>
+        /// <param name="reason">The reason.</param>
+        /// <returns>A Task.</returns>
+        internal Task ModifyTimeOutAsync(ulong guild_id, ulong user_id, Optional<DateTimeOffset?> until, string reason)
+        {
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers[REASON_HEADER_NAME] = reason;
+
+            var pld = new RestGuildMemberModifyPayload
+            {
+                CommunicationDisabledUntil = until
+            };
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id, user_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: DiscordJson.SerializeObject(pld));
+        }
+
+        /// <summary>
         /// Modifies the current member nickname async.
         /// </summary>
         /// <param name="guild_id">The guild_id.</param>
@@ -3437,13 +3464,15 @@ namespace DisCatSharp.Net
         /// <param name="message_id">The message id to create the thread from.</param>
         /// <param name="name">The name of the thread.</param>
         /// <param name="auto_archive_duration">The auto_archive_duration for the thread.</param>
+        /// <param name="rate_limit_per_user">The rate limit per user.</param>
         /// <param name="reason">The reason.</param>
-        internal async Task<DiscordThreadChannel> CreateThreadWithMessageAsync(ulong channel_id, ulong message_id, string name, ThreadAutoArchiveDuration auto_archive_duration, string reason = null)
+        internal async Task<DiscordThreadChannel> CreateThreadWithMessageAsync(ulong channel_id, ulong message_id, string name, ThreadAutoArchiveDuration auto_archive_duration, int? rate_limit_per_user, string reason = null)
         {
             var pld = new RestThreadChannelCreatePayload
             {
                 Name = name,
-                AutoArchiveDuration = auto_archive_duration
+                AutoArchiveDuration = auto_archive_duration,
+                PerUserRateLimit = rate_limit_per_user
             };
 
             var headers = Utilities.GetBaseHeaders();
@@ -3468,13 +3497,15 @@ namespace DisCatSharp.Net
         /// <param name="name">The name of the thread.</param>
         /// <param name="auto_archive_duration">The auto_archive_duration for the thread.</param>
         /// <param name="type">Can be either <see cref="ChannelType.PublicThread"/> or <see cref="ChannelType.PrivateThread"/>.</param>
+        /// <param name="rate_limit_per_user">The rate limit per user.</param>
         /// <param name="reason">The reason.</param>
-        internal async Task<DiscordThreadChannel> CreateThreadWithoutMessageAsync(ulong channel_id, string name, ThreadAutoArchiveDuration auto_archive_duration, ChannelType type = ChannelType.PublicThread, string reason = null)
+        internal async Task<DiscordThreadChannel> CreateThreadWithoutMessageAsync(ulong channel_id, string name, ThreadAutoArchiveDuration auto_archive_duration, ChannelType type = ChannelType.PublicThread, int? rate_limit_per_user = null, string reason = null)
         {
             var pld = new RestThreadChannelCreatePayload
             {
                 Name = name,
                 AutoArchiveDuration = auto_archive_duration,
+                PerUserRateLimit = rate_limit_per_user,
                 Type = type
             };
 
