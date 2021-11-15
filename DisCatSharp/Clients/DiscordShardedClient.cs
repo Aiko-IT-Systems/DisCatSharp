@@ -538,6 +538,8 @@ namespace DisCatSharp
             this._guildScheduledEventCreated = new AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._guildScheduledEventUpdated = new AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._guildScheduledEventDeleted = new AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventUserAdded = new AsyncEvent<DiscordClient, GuildScheduledEventUserAddEventArgs>("GUILD_SCHEDULED_EVENT_USER_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventUserRemoved = new AsyncEvent<DiscordClient, GuildScheduledEventUserRemoveEventArgs>("GUILD_SCHEDULED_EVENT_USER_REMOVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._embeddedActivityUpdated = new AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs>("EMBEDDED_ACTIVITY_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
         }
 
@@ -620,6 +622,8 @@ namespace DisCatSharp
             client.GuildScheduledEventCreated += this.Client_GuildScheduledEventCreated;
             client.GuildScheduledEventUpdated += this.Client_GuildScheduledEventUpdated;
             client.GuildScheduledEventDeleted += this.Client_GuildScheduledEventDeleted;
+            client.GuildScheduledEventUserAdded += this.Client_GuildScheduledEventUserAdded; ;
+            client.GuildScheduledEventUserRemoved += this.Client_GuildScheduledEventUserRemoved;
             client.EmbeddedActivityUpdated += this.Client_EmbeddedActivityUpdated;
         }
 
@@ -702,6 +706,8 @@ namespace DisCatSharp
             client.GuildScheduledEventCreated -= this.Client_GuildScheduledEventCreated;
             client.GuildScheduledEventUpdated -= this.Client_GuildScheduledEventUpdated;
             client.GuildScheduledEventDeleted -= this.Client_GuildScheduledEventDeleted;
+            client.GuildScheduledEventUserAdded -= this.Client_GuildScheduledEventUserAdded; ;
+            client.GuildScheduledEventUserRemoved -= this.Client_GuildScheduledEventUserRemoved;
             client.EmbeddedActivityUpdated -= this.Client_EmbeddedActivityUpdated;
         }
 

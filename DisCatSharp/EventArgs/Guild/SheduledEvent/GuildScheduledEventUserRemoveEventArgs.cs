@@ -26,29 +26,34 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.EventArgs
 {
     /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.GuildScheduledEventDeleted"/> event.
+    /// Represents arguments for <see cref="DiscordClient.GuildScheduledEventUserRemoved"/> event.
     /// </summary>
-    public class GuildScheduledEventDeleteEventArgs : DiscordEventArgs
+    public class GuildScheduledEventUserRemoveEventArgs : DiscordEventArgs
     {
         /// <summary>
-        /// Gets the scheduled event that was deleted.
+        /// Gets the scheduled event.
         /// </summary>
         public DiscordScheduledEvent ScheduledEvent { get; internal set; }
 
         /// <summary>
-        /// Gets the status of the scheduled event.
-        /// Important to determine why and how it is deleted.
-        /// </summary>
-        public ScheduledEventStatus Status { get; internal set; }
-
-        /// <summary>
-        /// Gets the guild in which the scheduled event was deleted.
+        /// Gets the guild.
         /// </summary>
         public DiscordGuild Guild { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GuildScheduledEventDeleteEventArgs"/> class.
+        /// Gets the user which has unsubscribed from this scheduled event.
         /// </summary>
-        internal GuildScheduledEventDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+        public DiscordUser User { get; internal set; }
+
+        /// <summary>
+        /// Gets the member which has unsubscribed from this scheduled event.
+        /// </summary>
+        public DiscordMember Member
+            => this.User != null ? this.Guild._members.TryGetValue(this.User.Id, out var member) ? member : new DiscordMember { Id = this.User.Id, _guild_id = this.Guild.Id } : null;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GuildScheduledEventUserRemoveEventArgs"/> class.
+        /// </summary>
+        internal GuildScheduledEventUserRemoveEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }

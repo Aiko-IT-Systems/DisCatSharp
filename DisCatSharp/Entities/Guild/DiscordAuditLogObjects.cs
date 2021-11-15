@@ -689,7 +689,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the affected thread
         /// </summary>
-        public DiscordSheduledEvent Target { get; internal set; }
+        public DiscordScheduledEvent Target { get; internal set; }
 
         /// <summary>
         /// Gets the channel change.
@@ -710,12 +710,12 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the privacy level change.
         /// </summary>
-        public PropertyChange<SheduledEventPrivacyLevel?> PrivacyLevelChange { get; internal set; }
+        public PropertyChange<ScheduledEventPrivacyLevel?> PrivacyLevelChange { get; internal set; }
 
         /// <summary>
         /// Gets the status change.
         /// </summary>
-        public PropertyChange<SheduledEventStatus?> StatusChange { get; internal set; }
+        public PropertyChange<ScheduledEventStatus?> StatusChange { get; internal set; }
 
         /// <summary>
         /// Gets the sku ids change.
