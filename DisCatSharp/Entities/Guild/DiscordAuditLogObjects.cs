@@ -701,7 +701,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         public PropertyChange<string> DescriptionChange { get; internal set; }
 
-        /*
+        /* Will be added https://github.com/discord/discord-api-docs/pull/3586#issuecomment-969137241
         public PropertyChange<> ScheduledStartTimeChange { get; internal set; }
 
         public PropertyChange<> ScheduledEndTimeChange { get; internal set; }
@@ -725,7 +725,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the sku ids change.
         /// </summary>
-        public PropertyChange<IReadOnlyList<ulong>> SkuIdsChange { get; internal set; }
+        //public PropertyChange<IReadOnlyList<ulong>> SkuIdsChange { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordAuditLogGuildScheduledEventEntry"/> class.

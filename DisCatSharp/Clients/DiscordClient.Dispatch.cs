@@ -1387,7 +1387,7 @@ namespace DisCatSharp
                 old.ScheduledEndTimeRaw = scheduled_event.ScheduledEndTimeRaw;
                 old.PrivacyLevel = scheduled_event.PrivacyLevel;
                 old.UserCount = scheduled_event.UserCount;
-                old.SkuIds = scheduled_event.SkuIds;
+                //old.SkuIds = scheduled_event.SkuIds;
                 return old;
             });
 

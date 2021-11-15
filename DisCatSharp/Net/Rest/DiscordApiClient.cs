@@ -1266,7 +1266,7 @@ namespace DisCatSharp.Net
                 old.ScheduledEndTimeRaw = scheduled_event.ScheduledEndTimeRaw;
                 old.PrivacyLevel = scheduled_event.PrivacyLevel;
                 old.UserCount = scheduled_event.UserCount;
-                old.SkuIds = scheduled_event.SkuIds;
+                //old.SkuIds = scheduled_event.SkuIds;
                 return old;
             });
 
@@ -1302,7 +1302,7 @@ namespace DisCatSharp.Net
                 old.ScheduledEndTimeRaw = event_raw.ScheduledEndTimeRaw;
                 old.PrivacyLevel = event_raw.PrivacyLevel;
                 old.UserCount = event_raw.UserCount;
-                old.SkuIds = event_raw.SkuIds;
+                //old.SkuIds = event_raw.SkuIds;
                 return old;
             });
 
@@ -1346,7 +1346,7 @@ namespace DisCatSharp.Net
                     old.ScheduledEndTimeRaw = ev.ScheduledEndTimeRaw;
                     old.PrivacyLevel = ev.PrivacyLevel;
                     old.UserCount = ev.UserCount;
-                    old.SkuIds = ev.SkuIds;
+                    //old.SkuIds = ev.SkuIds;
                     return old;
                 });
             }
