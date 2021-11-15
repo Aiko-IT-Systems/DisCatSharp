@@ -723,9 +723,14 @@ namespace DisCatSharp.Entities
         public PropertyChange<ScheduledEventStatus?> StatusChange { get; internal set; }
 
         /// <summary>
+        /// Gets the entity type change.
+        /// </summary>
+        public PropertyChange<ScheduledEventEntityType?> EntityTypeChange { get; internal set; }
+
+        /*/// <summary>
         /// Gets the sku ids change.
         /// </summary>
-        //public PropertyChange<IReadOnlyList<ulong>> SkuIdsChange { get; internal set; }
+        public PropertyChange<IReadOnlyList<ulong>> SkuIdsChange { get; internal set; }*/
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordAuditLogGuildScheduledEventEntry"/> class.

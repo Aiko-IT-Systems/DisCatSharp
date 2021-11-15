@@ -2520,6 +2520,17 @@ namespace DisCatSharp.Entities
                                     };
                                     break;
 
+                                case "entity_type":
+                                    p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
+                                    p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
+
+                                    entryse.EntityTypeChange = new PropertyChange<ScheduledEventEntityType?>
+                                    {
+                                        Before = p1 ? (ScheduledEventEntityType?)t5 : null,
+                                        After = p2 ? (ScheduledEventEntityType?)t6 : null
+                                    };
+                                    break;
+
                                 case "status":
                                     p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
                                     p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
