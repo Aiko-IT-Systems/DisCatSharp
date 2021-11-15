@@ -35,13 +35,13 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets the channel id.
         /// </summary>
         [JsonProperty("channel_id")]
-        public ulong? ChannelId { get; set; }
+        public Optional<ulong?> ChannelId { get; set; }
 
         /// <summary>
         /// Gets or sets the entity metadata.
         /// </summary>
         [JsonProperty("entity_metadata")]
-        public DiscordScheduledEventEntityMetadata EntityMetadata { get; set; }
+        public Optional<DiscordScheduledEventEntityMetadata> EntityMetadata { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -53,7 +53,7 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets the description.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-        public string Description { get; set; }
+        public Optional<string> Description { get; set; }
 
         /// <summary>
         /// Gets or sets the privacy level of the scheduled event.
@@ -71,7 +71,7 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets the time when the scheduled event is scheduled to end.
         /// </summary>
         [JsonProperty("scheduled_end_time")]
-        public DateTimeOffset? ScheduledEndTime { get; internal set; }
+        public Optional<DateTimeOffset?> ScheduledEndTime { get; internal set; }
 
         /// <summary>
         /// Gets or sets the entity type of the scheduled event.

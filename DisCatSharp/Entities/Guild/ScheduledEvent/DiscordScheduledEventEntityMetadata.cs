@@ -47,5 +47,13 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
         public string Location { get; internal set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
+        /// </summary>
+        public DiscordScheduledEventEntityMetadata(string location = null)
+        {
+            this.Location = location;
+        }
     }
 }

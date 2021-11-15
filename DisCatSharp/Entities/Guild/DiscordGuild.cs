@@ -28,6 +28,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
@@ -920,14 +921,28 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Creates a scheduled event.
         /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="privacy_level">The privacy level.</param>
+        /// <param name="scheduled_start_time">The scheduled start time.</param>
+        /// <param name="scheduled_end_time">The scheduled end time.</param>
+        /// <param name="channel">The channel.</param>
+        /// <param name="metadata">The event metadata.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="reason">The reason.</param>
         /// <returns>A scheduled event.</returns>
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string reason = null)
+        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, Optional<DateTimeOffset?> scheduled_end_time, Optional<DiscordChannel> channel = default, Optional<DiscordScheduledEventEntityMetadata> metadata = default, Optional<string> description = default, ScheduledEventEntityType type = ScheduledEventEntityType.STAGE_INSTANCE, string reason = null)
         {
+            var desc = Optional.FromNoValue<string>();
+            if (description.HasValue && description.Value != null)
+                desc = description.Value;
+            else if (description.HasValue)
+                desc = null;
 
-            this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, reason);
+            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, channel.HasValue && (type == ScheduledEventEntityType.STAGE_INSTANCE || type == ScheduledEventEntityType.VOICE) ? channel.Value.Id : null, metadata, name, privacy_level, scheduled_start_time, scheduled_end_time.HasValue && type == ScheduledEventEntityType.LOCATION ? scheduled_end_time.Value : null, desc, type, reason);
         }
 
         /// <summary>
