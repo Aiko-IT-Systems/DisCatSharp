@@ -447,6 +447,12 @@ namespace DisCatSharp.Net.Abstractions
         public ThreadAutoArchiveDuration AutoArchiveDuration { get; set; }
 
         /// <summary>
+        /// Gets or sets the rate limit per user.
+        /// </summary>
+        [JsonProperty("rate_limit_per_user")]
+        public int? PerUserRateLimit { get; set; }
+
+        /// <summary>
         /// Gets or sets the thread type.
         /// </summary>
         [JsonProperty("type")]
