@@ -140,9 +140,15 @@ namespace DisCatSharp.Net.Abstractions
         public Optional<ScheduledEventEntityType> EntityType { get; set; }
 
         /// <summary>
-        /// Gets or sets the image as base64.
+        /// Gets or sets the cover image as base64.
         /// </summary>
         [JsonProperty("image")]
         public Optional<string> ImageBase64 { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status of the scheduled event.
+        /// </summary>
+        [JsonProperty("status")]
+        public Optional<ScheduledEventStatus> Status { get; set; }
     }
 }
