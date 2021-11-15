@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using DisCatSharp.Common.Utilities;
@@ -76,6 +77,7 @@ namespace DisCatSharp
             DiscordChannel chn;
             ulong gid;
             ulong cid;
+            ulong uid;
             DiscordStageInstance stg = default;
             DiscordIntegration itg = default;
             DiscordThreadChannel trd = default;
@@ -218,6 +220,19 @@ namespace DisCatSharp
                     gse = dat.ToObject<DiscordScheduledEvent>();
                     await this.OnGuildScheduledEventDeleteEventAsync(gse).ConfigureAwait(false);
                     break;
+
+                case "guild_scheduled_event_user_add":
+                    gid = (ulong)dat["guild_id"];
+                    uid = (ulong)dat["user_id"];
+                    await this.OnGuildScheduledEventUserAddedEventAsync((ulong)dat["guild_scheduled_event_id"], uid, gid).ConfigureAwait(false);
+                    break;
+
+                case "guild_scheduled_event_user_remove":
+                    gid = (ulong)dat["guild_id"];
+                    uid = (ulong)dat["user_id"];
+                    await this.OnGuildScheduledEventUserRemovedEventAsync((ulong)dat["guild_scheduled_event_id"], uid, gid).ConfigureAwait(false);
+                    break;
+
                 #endregion
 
                 #region Guild Integration
@@ -1378,6 +1393,32 @@ namespace DisCatSharp
             guild._scheduledEvents.TryRemove(scheduled_event.Id, out var deleted_event);
 
             await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild, Status = scheduled_event.Status }).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Dispatches the <see cref="GuildScheduledEventUserAdded"/> event.
+        /// </summary>
+        internal async Task OnGuildScheduledEventUserAddedEventAsync(ulong guild_scheduled_event_id, ulong user_id, ulong guild_id)
+        {
+            var guild = this.InternalGetCachedGuild(guild_id);
+            guild._scheduledEvents.TryGetValue(guild_scheduled_event_id, out var scheduled_event);
+
+            var user = this.UserCache.TryGetValue(user_id, out var usr) ? usr : await this.GetUserAsync(user_id, true) ?? new DiscordUser{ Id = user_id, Discord = this };
+
+            await this._guildScheduledEventUserAdded.InvokeAsync(this, new GuildScheduledEventUserAddEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, User = user }).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Dispatches the <see cref="GuildScheduledEventUserRemoved"/> event.
+        /// </summary>
+        internal async Task OnGuildScheduledEventUserRemovedEventAsync(ulong guild_scheduled_event_id, ulong user_id, ulong guild_id)
+        {
+            var guild = this.InternalGetCachedGuild(guild_id);
+            guild._scheduledEvents.TryGetValue(guild_scheduled_event_id, out var scheduled_event);
+
+            var user = this.UserCache.TryGetValue(user_id, out var usr) ? usr : await this.GetUserAsync(user_id, true) ?? new DiscordUser{ Id = user_id, Discord = this };
+
+            await this._guildScheduledEventUserRemoved.InvokeAsync(this, new GuildScheduledEventUserRemoveEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, User = user }).ConfigureAwait(false);
         }
 
         #endregion
