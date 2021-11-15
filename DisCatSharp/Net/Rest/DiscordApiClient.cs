@@ -3707,13 +3707,15 @@ namespace DisCatSharp.Net
         /// <param name="message_id">The message id to create the thread from.</param>
         /// <param name="name">The name of the thread.</param>
         /// <param name="auto_archive_duration">The auto_archive_duration for the thread.</param>
+        /// <param name="rate_limit_per_user">The rate limit per user.</param>
         /// <param name="reason">The reason.</param>
-        internal async Task<DiscordThreadChannel> CreateThreadWithMessageAsync(ulong channel_id, ulong message_id, string name, ThreadAutoArchiveDuration auto_archive_duration, string reason = null)
+        internal async Task<DiscordThreadChannel> CreateThreadWithMessageAsync(ulong channel_id, ulong message_id, string name, ThreadAutoArchiveDuration auto_archive_duration, int? rate_limit_per_user, string reason = null)
         {
             var pld = new RestThreadChannelCreatePayload
             {
                 Name = name,
-                AutoArchiveDuration = auto_archive_duration
+                AutoArchiveDuration = auto_archive_duration,
+                PerUserRateLimit = rate_limit_per_user
             };
 
             var headers = Utilities.GetBaseHeaders();
@@ -3738,13 +3740,15 @@ namespace DisCatSharp.Net
         /// <param name="name">The name of the thread.</param>
         /// <param name="auto_archive_duration">The auto_archive_duration for the thread.</param>
         /// <param name="type">Can be either <see cref="ChannelType.PublicThread"/> or <see cref="ChannelType.PrivateThread"/>.</param>
+        /// <param name="rate_limit_per_user">The rate limit per user.</param>
         /// <param name="reason">The reason.</param>
-        internal async Task<DiscordThreadChannel> CreateThreadWithoutMessageAsync(ulong channel_id, string name, ThreadAutoArchiveDuration auto_archive_duration, ChannelType type = ChannelType.PublicThread, string reason = null)
+        internal async Task<DiscordThreadChannel> CreateThreadWithoutMessageAsync(ulong channel_id, string name, ThreadAutoArchiveDuration auto_archive_duration, ChannelType type = ChannelType.PublicThread, int? rate_limit_per_user = null, string reason = null)
         {
             var pld = new RestThreadChannelCreatePayload
             {
                 Name = name,
                 AutoArchiveDuration = auto_archive_duration,
+                PerUserRateLimit = rate_limit_per_user,
                 Type = type
             };
 
