@@ -220,8 +220,38 @@ namespace DisCatSharp.Entities
             if (mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.LOCATION : this.EntityType == ScheduledEventEntityType.LOCATION)
                 scheduledEndTime = mdl.ScheduledEndTime;
 
-            await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, mdl.EntityMetadata, mdl.Name, mdl.PrivacyLevel, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.AuditLogReason);
+            await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, mdl.EntityMetadata, mdl.Name, mdl.PrivacyLevel, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.Status, mdl.AuditLogReason);
         }
+
+        /// <summary>
+        /// Starts the current scheduled event.
+        /// </summary>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordScheduledEvent> StartAsync(string reason = null)
+            => await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, null, null, null, this.PrivacyLevel, this.ScheduledStartTime.Value, null, null, this.EntityType, ScheduledEventStatus.ACTIVE, reason);
+
+        /// <summary>
+        /// Cancels the current scheduled event.
+        /// </summary>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordScheduledEvent> CancelAsync(string reason = null)
+            => await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, null, null, null, this.PrivacyLevel, this.ScheduledStartTime.Value, null, null, this.EntityType, ScheduledEventStatus.CANCELED, reason);
+
+        /// <summary>
+        /// Ends the current scheduled event.
+        /// </summary>
+        /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
+        /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
+        /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordScheduledEvent> EndAsync(string reason = null)
+            => await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, null, null, null, this.PrivacyLevel, this.ScheduledStartTime.Value, null, null, this.EntityType, ScheduledEventStatus.COMPLETED, reason);
 
         /// <summary>
         /// Gets a list of users RSVP'd to the scheduled event.

@@ -128,6 +128,10 @@ namespace DisCatSharp.CommandsNext
         /// </summary>
         public CommandsNextConfiguration() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommandsNextConfiguration"/> class.
+        /// </summary>
+        /// <param name="provider">The service provider.</param>
         [ActivatorUtilitiesConstructor]
         public CommandsNextConfiguration(IServiceProvider provider)
         {
