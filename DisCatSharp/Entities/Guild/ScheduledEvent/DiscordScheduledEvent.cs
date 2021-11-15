@@ -159,11 +159,14 @@ namespace DisCatSharp.Entities
         [JsonProperty("entity_metadata", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordScheduledEventEntityMetadata EntityMetadata { get; internal set; }
 
+        /* This isn't used.
+         * See https://github.com/discord/discord-api-docs/pull/3586#issuecomment-969066061.
+         * Was originally for paid stages.
         /// <summary>
         /// Gets the total number of users subscribed to the scheduled event.
         /// </summary>
         [JsonProperty("sku_ids", NullValueHandling = NullValueHandling.Ignore)]
-        public IReadOnlyList<ulong> SkuIds { get; internal set; }
+        public IReadOnlyList<ulong> SkuIds { get; internal set; }*/
 
         /// <summary>
         /// Gets the user that created the scheduled event.

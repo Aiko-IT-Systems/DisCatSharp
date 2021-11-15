@@ -287,7 +287,7 @@ namespace DisCatSharp
 
         #endregion
 
-        #region Guild Event
+        #region Guild Scheduled Event
 
         /// <summary>
         /// Fired when a scheduled Event is created.
