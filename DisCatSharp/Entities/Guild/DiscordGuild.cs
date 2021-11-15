@@ -917,13 +917,24 @@ namespace DisCatSharp.Entities
 
         #region Sheduled Events
 
-        // TODO: create scheduled event
+        /// <summary>
+        /// Creates a scheduled event.
+        /// </summary>
+        /// <returns>A scheduled event.</returns>
+        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string reason = null)
+        {
+
+            this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, reason);
+        }
 
         /// <summary>
         /// Gets a specific scheduled events.
         /// </summary>
         /// <param name="sheduled_event_id">The Id of the event to get.</param>
-        /// <returns>A sheduled event.</returns>
+        /// <returns>A scheduled event.</returns>
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
