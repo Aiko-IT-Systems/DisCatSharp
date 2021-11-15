@@ -708,6 +708,11 @@ namespace DisCatSharp.Entities
         */
 
         /// <summary>
+        /// Gets the location change.
+        /// </summary>
+        public PropertyChange<string> LocationChange { get; internal set; }
+
+        /// <summary>
         /// Gets the privacy level change.
         /// </summary>
         public PropertyChange<ScheduledEventPrivacyLevel?> PrivacyLevelChange { get; internal set; }

@@ -2501,6 +2501,14 @@ namespace DisCatSharp.Entities
                                     };
                                     break;
 
+                                case "location":
+                                    entryse.LocationChange = new PropertyChange<string>
+                                    {
+                                        Before = xc.OldValue != null ? xc.OldValueString : null,
+                                        After = xc.NewValue != null ? xc.NewValueString : null
+                                    };
+                                    break;
+
                                 case "privacy_level":
                                     p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
                                     p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
