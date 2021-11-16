@@ -942,7 +942,7 @@ namespace DisCatSharp.Entities
             else if (description.HasValue)
                 desc = null;
 
-            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, channel.HasValue && (type == ScheduledEventEntityType.StageInstance || type == ScheduledEventEntityType.Voice) ? channel.Value.Id : null, type == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(location): null, name, privacy_level, scheduled_start_time, scheduled_end_time.HasValue && type == ScheduledEventEntityType.External ? scheduled_end_time.Value : null, desc, type, reason);
+            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, channel.HasValue && (type == ScheduledEventEntityType.StageInstance || type == ScheduledEventEntityType.Voice) ? channel.Value.Id : null, type == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(null, location): null, name, privacy_level, scheduled_start_time, scheduled_end_time.HasValue && type == ScheduledEventEntityType.External ? scheduled_end_time.Value : null, desc, type, reason);
         }
 
         /// <summary>
@@ -967,7 +967,7 @@ namespace DisCatSharp.Entities
             else if (description.HasValue)
                 desc = null;
 
-            var metadata = new DiscordScheduledEventEntityMetadata(location);
+            var metadata = new DiscordScheduledEventEntityMetadata(null, location);
 
             return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, metadata, name, privacy_level, scheduled_start_time, scheduled_end_time, desc, ScheduledEventEntityType.External, reason);
         }
