@@ -1255,6 +1255,8 @@ namespace DisCatSharp.Net
                 Status = status
             };
 
+            this.Discord.Logger.LogInformation(DiscordJson.SerializeObject(pld));
+
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
                 headers[REASON_HEADER_NAME] = reason;
@@ -1431,7 +1433,6 @@ namespace DisCatSharp.Net
             return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
         }
 
-        // TODO: Add method to extract discord member if with_members = true
         /// <summary>
         /// Gets the users who RSVP'd to a sheduled event.
         /// Optional with member objects.
