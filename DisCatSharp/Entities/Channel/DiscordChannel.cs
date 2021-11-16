@@ -497,7 +497,6 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        [Obsolete("This will be replaced by ModifyPositionInCategoryAsync. Use it instead.")]
         public Task ModifyPositionAsync(int position, string reason = null)
         {
             if (this.Guild == null)
@@ -1027,6 +1026,28 @@ namespace DisCatSharp.Entities
                 : Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, auto_archive_duration)
                     ? await this.Discord.ApiClient.CreateThreadWithoutMessageAsync(this.Id, name, auto_archive_duration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rate_limit_per_user, reason)
                 : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(auto_archive_duration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+        }
+
+        /// <summary>
+        /// Creates a scheduled event based on the channel type.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="privacy_level">The privacy level.</param>
+        /// <param name="scheduled_start_time">The scheduled start time.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="reason">The reason.</param>
+        /// <returns>A scheduled event.</returns>
+        /// <exception cref="NotFoundException">Thrown when the ressource does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, Optional<string> description = default, string reason = null)
+        {
+            if (this.Type != ChannelType.Voice && this.Type != ChannelType.Stage)
+                throw new NotSupportedException("Cannot create a scheduled event for this type of channel. Channel type must be either voice or stage.");
+
+            var type = this.Type == ChannelType.Voice ? ScheduledEventEntityType.VOICE : ScheduledEventEntityType.STAGE_INSTANCE;
+
+            return await this.Guild.CreateScheduledEventAsync(name, privacy_level, scheduled_start_time, null, this, null, description, type, reason);
         }
 
 

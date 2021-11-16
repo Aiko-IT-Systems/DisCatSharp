@@ -36,9 +36,9 @@ namespace DisCatSharp.Net.Models
         public Optional<DiscordChannel> Channel { get; set; }
 
         /// <summary>
-        /// Gets or sets the entity metadata.
+        /// Gets or sets the location.
         /// </summary>
-        public Optional<DiscordScheduledEventEntityMetadata> EntityMetadata { get; set; }
+        public Optional<string> Location { get; set; }
 
         /// <summary>
         /// Gets or sets the name.

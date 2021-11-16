@@ -925,7 +925,7 @@ namespace DisCatSharp.Entities
         /// <param name="scheduled_start_time">The scheduled start time.</param>
         /// <param name="scheduled_end_time">The scheduled end time.</param>
         /// <param name="channel">The channel.</param>
-        /// <param name="metadata">The event metadata.</param>
+        /// <param name="location">The event's location.</param>
         /// <param name="description">The description.</param>
         /// <param name="type">The type.</param>
         /// <param name="reason">The reason.</param>
@@ -933,7 +933,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, Optional<DateTimeOffset?> scheduled_end_time, Optional<DiscordChannel> channel = default, Optional<DiscordScheduledEventEntityMetadata> metadata = default, Optional<string> description = default, ScheduledEventEntityType type = ScheduledEventEntityType.STAGE_INSTANCE, string reason = null)
+        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, Optional<DateTimeOffset?> scheduled_end_time, Optional<DiscordChannel> channel = default, string location = null, Optional<string> description = default, ScheduledEventEntityType type = ScheduledEventEntityType.STAGE_INSTANCE, string reason = null)
         {
             var desc = Optional.FromNoValue<string>();
             if (description.HasValue && description.Value != null)
@@ -941,8 +941,36 @@ namespace DisCatSharp.Entities
             else if (description.HasValue)
                 desc = null;
 
-            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, channel.HasValue && (type == ScheduledEventEntityType.STAGE_INSTANCE || type == ScheduledEventEntityType.VOICE) ? channel.Value.Id : null, metadata, name, privacy_level, scheduled_start_time, scheduled_end_time.HasValue && type == ScheduledEventEntityType.EXTERNAL ? scheduled_end_time.Value : null, desc, type, reason);
+            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, channel.HasValue && (type == ScheduledEventEntityType.STAGE_INSTANCE || type == ScheduledEventEntityType.VOICE) ? channel.Value.Id : null, type == ScheduledEventEntityType.EXTERNAL ? new DiscordScheduledEventEntityMetadata(location): null, name, privacy_level, scheduled_start_time, scheduled_end_time.HasValue && type == ScheduledEventEntityType.EXTERNAL ? scheduled_end_time.Value : null, desc, type, reason);
         }
+
+        /// <summary>
+        /// Creates a scheduled event with type <see cref="ScheduledEventEntityType.EXTERNAL"/>.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="privacy_level">The privacy level.</param>
+        /// <param name="scheduled_start_time">The scheduled start time.</param>
+        /// <param name="scheduled_end_time">The scheduled end time.</param>
+        /// <param name="location">The location of the external event.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="reason">The reason.</param>
+        /// <returns>A scheduled event.</returns>
+        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, DateTimeOffset scheduled_end_time, string location, Optional<string> description = default, string reason = null)
+        {
+            var desc = Optional.FromNoValue<string>();
+            if (description.HasValue && description.Value != null)
+                desc = description.Value;
+            else if (description.HasValue)
+                desc = null;
+
+            var metadata = new DiscordScheduledEventEntityMetadata(location);
+
+            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, metadata, name, privacy_level, scheduled_start_time, scheduled_end_time, desc, ScheduledEventEntityType.EXTERNAL, reason);
+        }
+
 
         /// <summary>
         /// Gets a specific scheduled events.
