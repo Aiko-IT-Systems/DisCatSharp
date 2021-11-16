@@ -2414,7 +2414,7 @@ namespace DisCatSharp
             var thread = this.InternalGetCachedThread(thread_id);
             thread.Discord = this;
             guild.Discord = this;
-            List<DiscordThreadChannelMember> addedMembers = null;
+            List<DiscordThreadChannelMember> addedMembers = new();
             List<ulong> removed_member_ids = null;
 
             if (added_members != null)
