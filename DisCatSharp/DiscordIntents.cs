@@ -180,7 +180,7 @@ namespace DisCatSharp
         /// <para><see cref="DiscordClient.GuildScheduledEventUserAdded"/> and <see cref="DiscordClient.GuildScheduledEventUserRemoved"/>.</para>
         /// The events <see cref="DiscordClient.GuildScheduledEventUserAdded"/> and <see cref="DiscordClient.GuildScheduledEventUserRemoved"/> are in experiment and not officially supported.
         /// </summary>
-        //GuildScheduledEvents = 1 << 16,
+        GuildScheduledEvents = 1 << 16,
 
         /// <summary>
         /// Includes all unprivileged intents.
@@ -188,7 +188,7 @@ namespace DisCatSharp
         /// <para>The <see cref="DiscordIntents.GuildMessages"/> will be excluded as of April 2022.</para>
         /// </summary>
         AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
-            GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping,// | GuildScheduledEvents,
+            GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents,
         // AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates |
         //      GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping,
 
