@@ -173,8 +173,6 @@ namespace DisCatSharp.Entities
         [JsonProperty("creator", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordUser Creator { get; internal set; }
 
-        // TODO: Skus
-
         /// <summary>
         /// Gets the total number of users subscribed to the scheduled event.
         /// </summary>
