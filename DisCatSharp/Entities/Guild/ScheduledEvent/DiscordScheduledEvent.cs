@@ -200,13 +200,11 @@ namespace DisCatSharp.Entities
             var mdl = new ScheduledEventEditModel();
             action(mdl);
 
-            var channelId = Optional.FromNoValue<ulong?>();
+            var channelId = Optional.FromNoValue<ulong>();
             if (mdl.Channel.HasValue && (mdl.Channel.Value.Type != ChannelType.Voice || mdl.Channel.Value.Type != ChannelType.Stage) && mdl.Channel.Value != null)
                 throw new ArgumentException("Channel needs to be a voice or stage channel.");
             else if (mdl.Channel.HasValue && mdl.Channel.Value != null)
                 channelId = mdl.Channel.Value.Id;
-            else if (mdl.Channel.HasValue)
-                channelId = null;
 
             var description = Optional.FromNoValue<string>();
             if (mdl.Description.HasValue && mdl.Description.Value != null)
@@ -214,9 +212,9 @@ namespace DisCatSharp.Entities
             else if (mdl.Description.HasValue)
                 description = null;
 
-            var scheduledEndTime = Optional.FromNoValue<DateTimeOffset?>();
+            var scheduledEndTime = Optional.FromNoValue<DateTimeOffset>();
             if (mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
-                scheduledEndTime = mdl.ScheduledEndTime;
+                scheduledEndTime = mdl.ScheduledEndTime.Value;
 
             await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, scheduledEndTime.HasValue ? new DiscordScheduledEventEntityMetadata(null, mdl.Location.Value) : null, mdl.Name, mdl.PrivacyLevel, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.Status, mdl.AuditLogReason);
         }

@@ -1204,7 +1204,7 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Creates a scheduled event.
         /// </summary>
-        internal async Task<DiscordScheduledEvent> CreateGuildScheduledEventAsync(ulong guild_id, Optional<ulong?> channel_id, Optional<DiscordScheduledEventEntityMetadata> metadata, string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, Optional<DateTimeOffset?> scheduled_end_time, Optional<string> description, ScheduledEventEntityType type, string reason = null)
+        internal async Task<DiscordScheduledEvent> CreateGuildScheduledEventAsync(ulong guild_id, ulong? channel_id, DiscordScheduledEventEntityMetadata metadata, string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, DateTimeOffset? scheduled_end_time, string description, ScheduledEventEntityType type, string reason = null)
         {
             var pld = new RestGuildScheduledEventCreatePayload
             {
@@ -1240,7 +1240,7 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Modifies a scheduled event.
         /// </summary>
-        internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id, Optional<ulong?> channel_id, Optional<DiscordScheduledEventEntityMetadata> metadata, Optional<string> name, Optional<ScheduledEventPrivacyLevel> privacy_level, Optional<DateTimeOffset> scheduled_start_time, Optional<DateTimeOffset?> scheduled_end_time, Optional<string> description, Optional<ScheduledEventEntityType> type, Optional<ScheduledEventStatus> status, string reason = null)
+        internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id, Optional<ulong> channel_id, Optional<DiscordScheduledEventEntityMetadata> metadata, Optional<string> name, Optional<ScheduledEventPrivacyLevel> privacy_level, Optional<DateTimeOffset> scheduled_start_time, Optional<DateTimeOffset> scheduled_end_time, Optional<string> description, Optional<ScheduledEventEntityType> type, Optional<ScheduledEventStatus> status, string reason = null)
         {
             var pld = new RestGuildSheduledEventModifyPayload
             {
