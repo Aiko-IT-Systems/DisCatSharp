@@ -45,6 +45,6 @@ namespace DisCatSharp
         /// <summary>
         /// Indicates that the events is hold external.
         /// </summary>
-        LOCATION = 3
+        EXTERNAL = 3
     }
 }
