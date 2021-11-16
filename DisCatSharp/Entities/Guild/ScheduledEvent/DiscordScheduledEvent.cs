@@ -204,7 +204,7 @@ namespace DisCatSharp.Entities
 
             var channelId = Optional.FromNoValue<ulong?>();
             if (mdl.Channel.HasValue && (mdl.Channel.Value.Type != ChannelType.Voice || mdl.Channel.Value.Type != ChannelType.Stage) && mdl.Channel.Value != null)
-                throw new ArgumentException("AFK channel needs to be a voice or stage channel.");
+                throw new ArgumentException("Channel needs to be a voice or stage channel.");
             else if (mdl.Channel.HasValue && mdl.Channel.Value != null)
                 channelId = mdl.Channel.Value.Id;
             else if (mdl.Channel.HasValue)
@@ -217,7 +217,7 @@ namespace DisCatSharp.Entities
                 description = null;
 
             var scheduledEndTime = Optional.FromNoValue<DateTimeOffset?>();
-            if (mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.LOCATION : this.EntityType == ScheduledEventEntityType.LOCATION)
+            if (mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.EXTERNAL : this.EntityType == ScheduledEventEntityType.EXTERNAL)
                 scheduledEndTime = mdl.ScheduledEndTime;
 
             await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, mdl.EntityMetadata, mdl.Name, mdl.PrivacyLevel, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.Status, mdl.AuditLogReason);
