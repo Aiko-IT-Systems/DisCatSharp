@@ -942,7 +942,7 @@ namespace DisCatSharp.Entities
             else if (description.HasValue)
                 desc = null;
 
-            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, channel.HasValue && (type == ScheduledEventEntityType.STAGE_INSTANCE || type == ScheduledEventEntityType.VOICE) ? channel.Value.Id : null, metadata, name, privacy_level, scheduled_start_time, scheduled_end_time.HasValue && type == ScheduledEventEntityType.LOCATION ? scheduled_end_time.Value : null, desc, type, reason);
+            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, channel.HasValue && (type == ScheduledEventEntityType.STAGE_INSTANCE || type == ScheduledEventEntityType.VOICE) ? channel.Value.Id : null, metadata, name, privacy_level, scheduled_start_time, scheduled_end_time.HasValue && type == ScheduledEventEntityType.EXTERNAL ? scheduled_end_time.Value : null, desc, type, reason);
         }
 
         /// <summary>
