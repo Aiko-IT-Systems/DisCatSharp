@@ -2415,7 +2415,7 @@ namespace DisCatSharp
             thread.Discord = this;
             guild.Discord = this;
             List<DiscordThreadChannelMember> addedMembers = new();
-            List<ulong> removed_member_ids = null;
+            List<ulong> removed_member_ids = new();
 
             if (added_members != null)
             {
@@ -2424,7 +2424,6 @@ namespace DisCatSharp
                     var xtm = xj.ToDiscordObject<DiscordThreadChannelMember>();
                     xtm.Discord = this;
                     xtm._guild_id = guild.Id;
-                    xtm.Member = guild._members.TryGetValue(xtm.Id, out var member) ? member : new DiscordMember { Id = xtm.Id, _guild_id = guild.Id, Discord = this };
                     if(xtm != null)
                         addedMembers.Add(xtm);
 
