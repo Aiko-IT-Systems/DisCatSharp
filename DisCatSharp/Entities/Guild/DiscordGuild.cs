@@ -934,7 +934,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, Optional<DateTimeOffset?> scheduled_end_time, Optional<DiscordChannel> channel = default, string location = null, Optional<string> description = default, ScheduledEventEntityType type = ScheduledEventEntityType.STAGE_INSTANCE, string reason = null)
+        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, Optional<DateTimeOffset?> scheduled_end_time, Optional<DiscordChannel> channel = default, string location = null, Optional<string> description = default, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, string reason = null)
         {
             var desc = Optional.FromNoValue<string>();
             if (description.HasValue && description.Value != null)
@@ -942,7 +942,7 @@ namespace DisCatSharp.Entities
             else if (description.HasValue)
                 desc = null;
 
-            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, channel.HasValue && (type == ScheduledEventEntityType.STAGE_INSTANCE || type == ScheduledEventEntityType.VOICE) ? channel.Value.Id : null, type == ScheduledEventEntityType.EXTERNAL ? new DiscordScheduledEventEntityMetadata(location): null, name, privacy_level, scheduled_start_time, scheduled_end_time.HasValue && type == ScheduledEventEntityType.EXTERNAL ? scheduled_end_time.Value : null, desc, type, reason);
+            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, channel.HasValue && (type == ScheduledEventEntityType.StageInstance || type == ScheduledEventEntityType.Voice) ? channel.Value.Id : null, type == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(location): null, name, privacy_level, scheduled_start_time, scheduled_end_time.HasValue && type == ScheduledEventEntityType.External ? scheduled_end_time.Value : null, desc, type, reason);
         }
 
         /// <summary>
@@ -969,7 +969,7 @@ namespace DisCatSharp.Entities
 
             var metadata = new DiscordScheduledEventEntityMetadata(location);
 
-            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, metadata, name, privacy_level, scheduled_start_time, scheduled_end_time, desc, ScheduledEventEntityType.EXTERNAL, reason);
+            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, metadata, name, privacy_level, scheduled_start_time, scheduled_end_time, desc, ScheduledEventEntityType.External, reason);
         }
 
 
@@ -3473,7 +3473,7 @@ namespace DisCatSharp.Entities
             this.IsStaffOnly = guild.RawFeatures.Contains("INTERNAL_EMPLOYEE_ONLY");
             this.RoleSubscriptionsIsAvaiableForPurchase = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE");
 
-            var _features = guild.RawFeatures.Any() ? "" : "NONE";
+            var _features = guild.RawFeatures.Any() ? "" : "None";
             foreach (var feature in guild.RawFeatures)
             {
                 _features += feature + " ";
