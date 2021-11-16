@@ -946,7 +946,7 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Creates a scheduled event with type <see cref="ScheduledEventEntityType.EXTERNAL"/>.
+        /// Creates a scheduled event with type <see cref="ScheduledEventEntityType.External"/>.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="privacy_level">The privacy level.</param>
@@ -3320,19 +3320,19 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Guild has access to the three day archive time for threads.
-        /// Needs Premium Tier 1 (<see cref="PremiumTier.Tier_1"/>).
+        /// Needs Premium Tier 1 (<see cref="PremiumTier.Tier1"/>).
         /// </summary>
         public bool CanSetThreadArchiveDurationThreeDays { get; }
 
         /// <summary>
         /// Guild has access to the seven day archive time for threads.
-        /// Needs Premium Tier 2 (<see cref="PremiumTier.Tier_2"/>).
+        /// Needs Premium Tier 2 (<see cref="PremiumTier.Tier2"/>).
         /// </summary>
         public bool CanSetThreadArchiveDurationSevenDays { get; }
 
         /// <summary>
         /// Guild has access to create private threads.
-        /// Needs Premium Tier 2 (<see cref="PremiumTier.Tier_2"/>).
+        /// Needs Premium Tier 2 (<see cref="PremiumTier.Tier2"/>).
         /// </summary>
         public bool CanCreatePrivateThreads { get; }
 
@@ -3398,18 +3398,19 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Guild has access to text in voice.
+        /// Restricted to <see cref="IsStaffOnly"/>.
         /// </summary>
         public bool TextInVoiceEnabled { get; }
 
         /// <summary>
         /// Guild can set an animated banner.
-        /// Needs Premium Tier 3 (<see cref="PremiumTier.Tier_3"/>).
+        /// Needs Premium Tier 3 (<see cref="PremiumTier.Tier3"/>).
         /// </summary>
         public bool CanSetAnimatedBanner { get; }
 
         /// <summary>
         /// Guild can set an animated banner.
-        /// Needs Premium Tier 3 (<see cref="PremiumTier.Tier_3"/>).
+        /// Needs Premium Tier 3 (<see cref="PremiumTier.Tier3"/>).
         /// </summary>
         public bool CanSetChannelBanner { get; }
 

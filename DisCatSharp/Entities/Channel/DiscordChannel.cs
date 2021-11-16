@@ -946,7 +946,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="topic">Topic of the stage.</param>
         /// <param name="send_start_notification">Whether @everyone should be notified.</param>
-        /// <param name="privacy_level">Privacy level of the stage (Defaults to <see cref="StagePrivacyLevel.GUILD_ONLY"/>.</param>
+        /// <param name="privacy_level">Privacy level of the stage (Defaults to <see cref="StagePrivacyLevel.GuildOnly"/>.</param>
         /// <param name="reason">Audit log reason.</param>
         /// <returns>Stage instance</returns>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
@@ -1010,7 +1010,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        /// <exception cref="NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>. Or if <see cref="GuildFeatures.CanCreatePrivateThreads"/> is not enabled for guild. This happens, if the guild does not have <see cref="PremiumTier.Tier_2"/></exception>
+        /// <exception cref="NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>. Or if <see cref="GuildFeatures.CanCreatePrivateThreads"/> is not enabled for guild. This happens, if the guild does not have <see cref="PremiumTier.Tier2"/></exception>
         public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration auto_archive_duration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, int? rate_limit_per_user = null, string reason = null)
         {
             return (type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread)
