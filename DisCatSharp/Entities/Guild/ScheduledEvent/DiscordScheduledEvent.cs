@@ -257,13 +257,13 @@ namespace DisCatSharp.Entities
         /// Gets a list of users RSVP'd to the scheduled event.
         /// </summary>
         /// <param name="limit">The limit how many users to receive from the event.</param>
-        /// <param name="with_members">Wether to include guild member data.</param>
+        /// <param name="with_member">Wether to include guild member data.</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<IReadOnlyDictionary<ulong, DiscordUser>> GetUsersAsync(int? limit = null, bool? with_members = null)
-            => await this.Discord.ApiClient.GetGuildScheduledEventRSPVUsersAsync(this.GuildId, this.Id, limit, with_members);
+        public async Task<IReadOnlyDictionary<ulong, DiscordUser>> GetUsersAsync(int? limit = null, bool? with_member = null)
+            => await this.Discord.ApiClient.GetGuildScheduledEventRSPVUsersAsync(this.GuildId, this.Id, limit, with_member);
 
         /// <summary>
         /// Deletes a scheduled event.
