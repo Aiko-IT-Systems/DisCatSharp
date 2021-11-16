@@ -1439,14 +1439,14 @@ namespace DisCatSharp.Net
         /// <param name="guild_id">The guild_id.</param>
         /// <param name="scheduled_event_id">The sheduled event id.</param>
         /// <param name="limit">The limit how many users to receive from the event.</param>
-        /// <param name="with_members">Wether to include guild member data. attaches guild_member property to the user object.</param>
-        internal async Task<IReadOnlyDictionary<ulong, DiscordUser>> GetGuildScheduledEventRSPVUsersAsync(ulong guild_id, ulong scheduled_event_id, int? limit, bool? with_members)
+        /// <param name="with_member">Wether to include guild member data. attaches guild_member property to the user object.</param>
+        internal async Task<IReadOnlyDictionary<ulong, DiscordUser>> GetGuildScheduledEventRSPVUsersAsync(ulong guild_id, ulong scheduled_event_id, int? limit, bool? with_member)
         {
             var urlparams = new Dictionary<string, string>();
             if (limit != null && limit > 0)
                 urlparams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
-            if (with_members != null)
-                urlparams["with_members"] = with_members.Value.ToString(CultureInfo.InvariantCulture);
+            if (with_member != null)
+                urlparams["with_member"] = with_member.Value.ToString(CultureInfo.InvariantCulture);
 
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id{Endpoints.USERS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, scheduled_event_id }, out var path);
@@ -1461,7 +1461,7 @@ namespace DisCatSharp.Net
             foreach (var raw_user in users_raw)
             {
                 var uid = (ulong)raw_user["id"];
-                if (with_members.HasValue && with_members.Value)
+                if (with_member.HasValue && with_member.Value)
                 {
                     var raw_member = raw_user["guild_member"];
                     var xm = raw_user.ToDiscordObject<TransportMember>();
