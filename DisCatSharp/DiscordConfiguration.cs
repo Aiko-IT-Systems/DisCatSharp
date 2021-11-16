@@ -212,6 +212,12 @@ namespace DisCatSharp
         public bool AutoRefreshChannelCache { internal get; set; } = false;
 
         /// <summary>
+        /// <para>Do not use, this is meant for DisCatSharp Devs.</para>
+        /// <para>Defaults to null.</para>
+        /// </summary>
+        public string Override { internal get; set; } = null;
+
+        /// <summary>
         /// <para>Sets the service provider.</para>
         /// <para>This allows passing data around without resorting to static members.</para>
         /// <para>Defaults to null.</para>
@@ -263,6 +269,7 @@ namespace DisCatSharp
             this.AutoRefreshChannelCache = other.AutoRefreshChannelCache;
             this.ApiVersion = other.ApiVersion;
             this.ServiceProvider = other.ServiceProvider;
+            this.Override = other.Override;
         }
     }
 }
