@@ -180,22 +180,22 @@ namespace DisCatSharp
         /// <para><see cref="DiscordClient.GuildScheduledEventUserAdded"/> and <see cref="DiscordClient.GuildScheduledEventUserRemoved"/>.</para>
         /// The events <see cref="DiscordClient.GuildScheduledEventUserAdded"/> and <see cref="DiscordClient.GuildScheduledEventUserRemoved"/> are in experiment and not officially supported.
         /// </summary>
-        GuildScheduledEvents = 1 << 16,
+        //GuildScheduledEvents = 1 << 16,
 
         /// <summary>
         /// Includes all unprivileged intents.
-        /// <para>These are all intents excluding <see cref="DiscordIntents.GuildMembers"/> and <see cref="DiscordIntents.GuildPresences"/>.</para>
+        /// <para>These are all intents excluding <see cref="GuildMembers"/> and <see cref="GuildPresences"/>.</para>
         /// <para>The <see cref="DiscordIntents.GuildMessages"/> will be excluded as of April 2022.</para>
         /// </summary>
         AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
-            GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents,
+            GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping,// | GuildScheduledEvents,
         // AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates |
         //      GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping,
 
         /// <summary>
         /// Includes all intents.
-        /// <para>The <see cref="DiscordIntents.GuildMembers"/> and <see cref="DiscordIntents.GuildPresences"/> intents are privileged, and must be enabled on the bot's developer page.</para>
-        /// <para>The <see cref="DiscordIntents.GuildMessages"/> will be privileged as of April 2022.</para>
+        /// <para>The <see cref="GuildMembers"/> and <see cref="GuildPresences"/> intents are privileged, and must be enabled on the bot's developer page.</para>
+        /// <para>The <see cref="GuildMessages"/> will be privileged as of April 2022.</para>
         /// </summary>
         All = AllUnprivileged | GuildMembers | GuildPresences // | DiscordIntents.GuildMessages
     }
