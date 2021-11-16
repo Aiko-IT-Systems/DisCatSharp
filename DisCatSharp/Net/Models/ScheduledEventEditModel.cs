@@ -31,7 +31,7 @@ namespace DisCatSharp.Net.Models
     public class ScheduledEventEditModel : BaseEditModel
     {
         /// <summary>
-        /// Gets or sets the channel id.
+        /// Gets or sets the channel.
         /// </summary>
         public Optional<DiscordChannel> Channel { get; set; }
 
