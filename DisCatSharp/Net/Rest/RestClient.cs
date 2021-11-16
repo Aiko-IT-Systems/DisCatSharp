@@ -137,6 +137,10 @@ namespace DisCatSharp.Net
             };
 
             this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
+            if (this.Discord.Configuration.Override != null)
+            {
+                this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this.Discord.Configuration.Override);
+            }
 
             this.RoutesToHashes = new ConcurrentDictionary<string, string>();
             this.HashesToBuckets = new ConcurrentDictionary<string, RateLimitBucket>();
