@@ -1348,7 +1348,7 @@ namespace DisCatSharp
 
         #endregion
 
-        #region Guild Sheduled Event
+        #region Guild Scheduled Event
 
         /// <summary>
         /// Dispatches the <see cref="GuildScheduledEventCreated"/> event.
