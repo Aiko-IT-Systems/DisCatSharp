@@ -2475,8 +2475,9 @@ namespace DisCatSharp
         /// <param name="app_id">The application id.</param>
         /// <returns>A Task.</returns>
         internal async Task OnEmbeddedActivityUpdateAsync(JObject tr_activity, DiscordGuild guild, ulong channel_id, JArray j_users, ulong app_id)
-        {
-            /*try
+            => await Task.Delay(20);
+        /*{
+            try
             {
                 var users = j_users?.ToObject<List<ulong>>();
 
@@ -2493,36 +2494,35 @@ namespace DisCatSharp
                     activity = tr_activity.ToObject<DiscordActivity>();
                     this._embeddedActivities[uid] = activity;
                 }*/
-            /*
-                var activity_users = new List<DiscordMember>();
+        /*
+            var activity_users = new List<DiscordMember>();
 
-                var channel = this.InternalGetCachedChannel(channel_id) ?? await this.ApiClient.GetChannelAsync(channel_id);
+            var channel = this.InternalGetCachedChannel(channel_id) ?? await this.ApiClient.GetChannelAsync(channel_id);
 
-                if (users != null)
-                {
-                    foreach (var user in users)
-                    {
-                        var activity_user = guild._members.TryGetValue(user, out var member) ? member : new DiscordMember { Id = user, _guild_id = guild.Id, Discord = this };
-                        activity_users.Add(activity_user);
-                    }
-                }
-                else
-                    activity_users = null;
-
-                var ea = new EmbeddedActivityUpdateEventArgs(this.ServiceProvider)
-                {
-                    Guild = guild,
-                    Users = activity_users,
-                    Channel = channel
-
-                };
-                await this._embeddedActivityUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
-            } catch (Exception ex)
+            if (users != null)
             {
-                this.Logger.LogError(ex, ex.Message);
-            }*/
-            await Task.Delay(20);
+                foreach (var user in users)
+                {
+                    var activity_user = guild._members.TryGetValue(user, out var member) ? member : new DiscordMember { Id = user, _guild_id = guild.Id, Discord = this };
+                    activity_users.Add(activity_user);
+                }
+            }
+            else
+                activity_users = null;
+
+            var ea = new EmbeddedActivityUpdateEventArgs(this.ServiceProvider)
+            {
+                Guild = guild,
+                Users = activity_users,
+                Channel = channel
+
+            };
+            await this._embeddedActivityUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+        } catch (Exception ex)
+        {
+            this.Logger.LogError(ex, ex.Message);
         }
+    }*/
         #endregion
 
         #region User/Presence Update

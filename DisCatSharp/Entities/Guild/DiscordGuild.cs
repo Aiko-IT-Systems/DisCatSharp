@@ -934,16 +934,8 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, Optional<DateTimeOffset?> scheduled_end_time, Optional<DiscordChannel> channel = default, string location = null, Optional<string> description = default, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, string reason = null)
-        {
-            var desc = Optional.FromNoValue<string>();
-            if (description.HasValue && description.Value != null)
-                desc = description.Value;
-            else if (description.HasValue)
-                desc = null;
-
-            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, channel.HasValue && (type == ScheduledEventEntityType.StageInstance || type == ScheduledEventEntityType.Voice) ? channel.Value.Id : null, type == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(null, location): null, name, privacy_level, scheduled_start_time, scheduled_end_time.HasValue && type == ScheduledEventEntityType.External ? scheduled_end_time.Value : null, desc, type, reason);
-        }
+        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, DateTimeOffset? scheduled_end_time = null, DiscordChannel channel = null, string location = null, string description = null, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, string reason = null)
+            => await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, channel?.Id, new DiscordScheduledEventEntityMetadata(null, location), name, privacy_level, scheduled_start_time, scheduled_end_time.HasValue && type == ScheduledEventEntityType.External ? scheduled_end_time.Value : null, description, type, reason);
 
         /// <summary>
         /// Creates a scheduled event with type <see cref="ScheduledEventEntityType.External"/>.
@@ -959,17 +951,11 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, DateTimeOffset scheduled_end_time, string location, Optional<string> description = default, string reason = null)
+        public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, DateTimeOffset scheduled_end_time, string location, string description = null, string reason = null)
         {
-            var desc = Optional.FromNoValue<string>();
-            if (description.HasValue && description.Value != null)
-                desc = description.Value;
-            else if (description.HasValue)
-                desc = null;
-
             var metadata = new DiscordScheduledEventEntityMetadata(null, location);
 
-            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, metadata, name, privacy_level, scheduled_start_time, scheduled_end_time, desc, ScheduledEventEntityType.External, reason);
+            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, metadata, name, privacy_level, scheduled_start_time, scheduled_end_time, description, ScheduledEventEntityType.External, reason);
         }
 
 

@@ -63,7 +63,7 @@ namespace DisCatSharp.Net.Models
         /// <summary>
         /// Gets or sets the time when the scheduled event is scheduled to end.
         /// </summary>
-        public Optional<DateTimeOffset?> ScheduledEndTime { get; internal set; }
+        public Optional<DateTimeOffset> ScheduledEndTime { get; internal set; }
 
         /// <summary>
         /// Gets or sets the entity type of the scheduled event.
