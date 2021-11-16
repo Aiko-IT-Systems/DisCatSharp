@@ -50,7 +50,7 @@ Building through Visual Studio yields just binaries you can use in your projects
 1. Open the solution in Visual Studio.
 2. Set the configuration to Release.
 3. Select Build > Build Solution to build the project.
-4. Select Build > Publish DSharpPlus to publish the binaries.
+4. Select Build > Publish DisCatSharp to publish the binaries.
 
 #### Building with the build script
 Building this way outputs NuGet packages, and a documentation package. Ensure you have an internet connection available, as the script will install programs necessary to build the documentation.

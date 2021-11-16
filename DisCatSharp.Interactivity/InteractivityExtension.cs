@@ -37,7 +37,7 @@ using System.Globalization;
 namespace DisCatSharp.Interactivity
 {
     /// <summary>
-    /// Extension class for DSharpPlus.Interactivity
+    /// Extension class for DisCatSharp.Interactivity
     /// </summary>
     public class InteractivityExtension : BaseExtension
     {
