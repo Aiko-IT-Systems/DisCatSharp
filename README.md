@@ -32,22 +32,22 @@ On our guild! You find it in [this channel](https://discord.com/channels/8580892
 ## Installing
 You can install the library from following source:
 
-The latest release is always available on [NuGet](https://www.nuget.org/profiles/Aiko-IT-Systems).
+The latest release is always available on [NuGet](https://nuget.dcs.aitsys.dev).
 
 ## Documentation
-~~The documentation for the latest stable version is available at [docs.dcs.aitsys.dev/lts](https://docs.dcs.aitsys.dev/lts).~~ *Outage*
+The documentation for the latest stable version is available at [docs.dcs.aitsys.dev/lts](https://docs.dcs.aitsys.dev/lts).
 
-The documentation of the latest nightly versions is available at [aiko-it-systems.github.io/DisCatSharp.Docs](https://aiko-it-systems.github.io/DisCatSharp.Docs).
+The documentation of the latest nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
 Either join our [support guild](https://discord.gg/discatsharp) and open a support ticket.
-~~Or write a mail to dcs@aitsys.dev.~~ *Outage*
+Or write a mail to dcs@aitsys.dev.
 
-~~All requests are tracked at [aitsys.dev](https://aitsys.dev).~~ *Outage*
+All requests are tracked at [aitsys.dev](https://aitsys.dev).
 
 ## Tutorials
-* [Howto](https://aiko-it-systems.github.io/DisCatSharp.Docs/articles/basics/bot_account.html)
-* [Examples](https://github.com/Aiko-IT-Systems/DisCatSharp.Examples)
+* [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
+* [Examples](https://examples.dcs.aitsys.dev)
 
 ## Snippts
 [Snippets for Visual Studio](https://github.com/Aiko-IT-Systems/DisCatSharp.Snippets)
