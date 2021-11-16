@@ -136,7 +136,7 @@ namespace DisCatSharp.Net.Abstractions
         /// <summary>
         /// Gets or sets the entity type of the scheduled event.
         /// </summary>
-        [JsonProperty("privacy_level")]
+        [JsonProperty("entity_type")]
         public Optional<ScheduledEventEntityType> EntityType { get; set; }
 
         /// <summary>
