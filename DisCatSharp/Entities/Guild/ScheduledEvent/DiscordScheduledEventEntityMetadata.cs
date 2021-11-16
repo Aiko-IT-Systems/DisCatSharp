@@ -33,17 +33,16 @@ namespace DisCatSharp.Entities
     public class DiscordScheduledEventEntityMetadata
     {
         /// <summary>
-        /// Gets the the speakers of the scheduled event.
+        /// List of speakers if event type is <see cref="ScheduledEventEntityType.StageInstance"/>.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordUser> Speakers => new ReadOnlyConcurrentDictionary<ulong, DiscordUser>(this._speakerIds);
+        public IReadOnlyList<DiscordUser> Speakers { get; internal set; }
 
         [JsonProperty("speaker_ids", NullValueHandling = NullValueHandling.Ignore)]
-        [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordUser> _speakerIds;
+        internal ulong[] _speakerIds;
 
         /// <summary>
-        /// Gets the the location of the scheduled event.
+        /// External location if event type is <see cref="ScheduledEventEntityType.External"/>.
         /// </summary>
         [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
         public string Location { get; internal set; }
@@ -51,8 +50,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
         /// </summary>
-        public DiscordScheduledEventEntityMetadata(string location = null)
+        internal DiscordScheduledEventEntityMetadata() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
+        /// </summary>
+        /// <param name="speakerIds">The speaker ids.</param>
+        /// <param name="location">The location.</param>
+        public DiscordScheduledEventEntityMetadata(ulong[] speakerIds, string location)
         {
+            this._speakerIds = speakerIds;
             this.Location = location;
         }
     }
