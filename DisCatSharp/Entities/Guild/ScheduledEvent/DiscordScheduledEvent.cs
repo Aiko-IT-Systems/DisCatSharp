@@ -215,8 +215,9 @@ namespace DisCatSharp.Entities
                 description = null;
 
             var scheduledEndTime = Optional.FromNoValue<DateTimeOffset?>();
-            if (mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.EXTERNAL : this.EntityType == ScheduledEventEntityType.EXTERNAL)
-                scheduledEndTime = mdl.ScheduledEndTime;
+            scheduledEndTime = mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.EXTERNAL : this.EntityType == ScheduledEventEntityType.EXTERNAL
+                ? mdl.ScheduledEndTime
+                : null;
 
             await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, scheduledEndTime.HasValue ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.PrivacyLevel, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.Status, mdl.AuditLogReason);
         }
