@@ -1289,6 +1289,49 @@ namespace DisCatSharp.Net
         }
 
         /// <summary>
+        /// Modifies a scheduled event.
+        /// </summary>
+        internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventStatusAsync(ulong guild_id, ulong scheduled_event_id, ScheduledEventStatus status, string reason = null)
+        {
+            var pld = new RestGuildSheduledEventModifyPayload
+            {
+                Status = status
+            };
+
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers[REASON_HEADER_NAME] = reason;
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id, scheduled_event_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+
+            var scheduled_event = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
+            var guild = this.Discord.Guilds[guild_id];
+
+            scheduled_event.Discord = this.Discord;
+            guild._scheduledEvents.AddOrUpdate(scheduled_event.Id, scheduled_event, (id, old) =>
+            {
+                old.Name = scheduled_event.Name;
+                old.Description = scheduled_event.Description;
+                old.ChannelId = scheduled_event.ChannelId;
+                old.EntityMetadata = scheduled_event.EntityMetadata;
+                old.EntityType = scheduled_event.EntityType;
+                old.Status = scheduled_event.Status;
+                old.ScheduledStartTimeRaw = scheduled_event.ScheduledStartTimeRaw;
+                old.ScheduledEndTimeRaw = scheduled_event.ScheduledEndTimeRaw;
+                old.PrivacyLevel = scheduled_event.PrivacyLevel;
+                old.UserCount = scheduled_event.UserCount;
+                //old.SkuIds = scheduled_event.SkuIds;
+                return old;
+            });
+
+            return scheduled_event;
+        }
+
+        /// <summary>
         /// Gets a scheduled event.
         /// </summary>
         /// <param name="guild_id">The guild_id.</param>
