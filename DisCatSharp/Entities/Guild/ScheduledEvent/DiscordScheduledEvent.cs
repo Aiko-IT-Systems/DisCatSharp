@@ -24,8 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using DisCatSharp.Enums;
-using DisCatSharp.Net;
 using DisCatSharp.Net.Models;
 using Newtonsoft.Json;
 
@@ -164,7 +162,7 @@ namespace DisCatSharp.Entities
          * See https://github.com/discord/discord-api-docs/pull/3586#issuecomment-969066061.
          * Was originally for paid stages.
         /// <summary>
-        /// Gets the total number of users subscribed to the scheduled event.
+        /// Gets the sku ids of the scheduled event.
         /// </summary>
         [JsonProperty("sku_ids", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyList<ulong> SkuIds { get; internal set; }*/

@@ -2425,7 +2425,8 @@ namespace DisCatSharp
                     xtm.Discord = this;
                     xtm._guild_id = guild.Id;
                     xtm.Member = guild._members.TryGetValue(xtm.Id, out var member) ? member : new DiscordMember { Id = xtm.Id, _guild_id = guild.Id, Discord = this };
-                    addedMembers.Add(xtm);
+                    if(xtm != null)
+                        addedMembers.Add(xtm);
 
                     if (xtm.Id == this.CurrentUser.Id)
                         thread.CurrentMember = xtm;
