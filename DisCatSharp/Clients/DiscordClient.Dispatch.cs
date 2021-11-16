@@ -173,8 +173,6 @@ namespace DisCatSharp
                  Ok soooo.. this isn't documented yet
                  It seems to be part of the next version of membership screening (https://discord.com/channels/641574644578648068/689591708962652289/845836910991507486)
 
-                 Previews: https://github.com/DSharpPlus/DSharpPlus/pull/890#issuecomment-846464105
-
                  advaith said the following (https://discord.com/channels/641574644578648068/689591708962652289/845838160047112202):
                  > iirc it happens when a user leaves a server where they havent completed screening yet
 

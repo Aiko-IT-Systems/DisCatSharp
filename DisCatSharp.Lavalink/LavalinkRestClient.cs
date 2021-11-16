@@ -50,7 +50,7 @@ namespace DisCatSharp.Lavalink
 
         private readonly ILogger _logger;
 
-        private readonly Lazy<string> _dsharpplusVersionString = new(() =>
+        private readonly Lazy<string> _dcsVersionString = new(() =>
         {
             var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 
@@ -416,7 +416,8 @@ namespace DisCatSharp.Lavalink
 
             this._http = new HttpClient(httphandler);
 
-            this._http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"DisCatSharp.LavaLink/{this._dsharpplusVersionString}");
+            this._http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", $"DisCatSharp.LavaLink/{this._dcsVersionString}");
+            this._http.DefaultRequestHeaders.TryAddWithoutValidation("Client-Name", $"DisCatSharp");
             this._http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", password);
         }
     }

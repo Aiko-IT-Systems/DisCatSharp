@@ -23,7 +23,7 @@
 namespace DisCatSharp
 {
     /// <summary>
-    /// Represents base for all DSharpPlus extensions. To implement your own extension, extend this class, and implement its abstract members.
+    /// Represents base for all DisCatSharp extensions. To implement your own extension, extend this class, and implement its abstract members.
     /// </summary>
     public abstract class BaseExtension
     {
