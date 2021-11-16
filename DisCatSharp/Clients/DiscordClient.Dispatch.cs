@@ -1412,7 +1412,9 @@ namespace DisCatSharp
         internal async Task OnGuildScheduledEventUserAddedEventAsync(ulong guild_scheduled_event_id, ulong user_id, ulong guild_id)
         {
             var guild = this.InternalGetCachedGuild(guild_id);
-            guild._scheduledEvents.TryGetValue(guild_scheduled_event_id, out var scheduled_event);
+            var success = guild._scheduledEvents.TryGetValue(guild_scheduled_event_id, out var scheduled_event);
+            if (!success)
+                scheduled_event = await this.ApiClient.GetGuildScheduledEventAsync(guild_id, guild_scheduled_event_id);
 
             var user = this.UserCache.TryGetValue(user_id, out var usr) ? usr : await this.GetUserAsync(user_id, true) ?? new DiscordUser{ Id = user_id, Discord = this };
 
@@ -1425,7 +1427,9 @@ namespace DisCatSharp
         internal async Task OnGuildScheduledEventUserRemovedEventAsync(ulong guild_scheduled_event_id, ulong user_id, ulong guild_id)
         {
             var guild = this.InternalGetCachedGuild(guild_id);
-            guild._scheduledEvents.TryGetValue(guild_scheduled_event_id, out var scheduled_event);
+            var success = guild._scheduledEvents.TryGetValue(guild_scheduled_event_id, out var scheduled_event);
+            if (!success)
+                scheduled_event = await this.ApiClient.GetGuildScheduledEventAsync(guild_id, guild_scheduled_event_id);
 
             var user = this.UserCache.TryGetValue(user_id, out var usr) ? usr : await this.GetUserAsync(user_id, true) ?? new DiscordUser{ Id = user_id, Discord = this };
 

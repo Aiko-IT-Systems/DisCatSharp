@@ -415,7 +415,7 @@ namespace DisCatSharp.Entities
         [JsonIgnore]
         public IReadOnlyDictionary<ulong, DiscordScheduledEvent> ScheduledEvents { get; internal set; }
 
-        [JsonProperty("events", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("guild_scheduled_events", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
         internal ConcurrentDictionary<ulong, DiscordScheduledEvent> _scheduledEvents = new();
 
@@ -636,6 +636,7 @@ namespace DisCatSharp.Entities
             this._invites = new ConcurrentDictionary<string, DiscordInvite>();
             this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this._threads);
             this.StageInstances = new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this._stageInstances);
+            this.ScheduledEvents = new ReadOnlyConcurrentDictionary<ulong, DiscordScheduledEvent>(this._scheduledEvents);
         }
 
         #region Guild Methods
