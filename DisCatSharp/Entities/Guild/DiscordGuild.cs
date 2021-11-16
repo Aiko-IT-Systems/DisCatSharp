@@ -952,11 +952,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, DateTimeOffset scheduled_end_time, string location, string description = null, string reason = null)
-        {
-            var metadata = new DiscordScheduledEventEntityMetadata(null, location);
-
-            return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, metadata, name, privacy_level, scheduled_start_time, scheduled_end_time, description, ScheduledEventEntityType.External, reason);
-        }
+            => await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new DiscordScheduledEventEntityMetadata(location), name, privacy_level, scheduled_start_time, scheduled_end_time, description, ScheduledEventEntityType.External, reason);
 
 
         /// <summary>
