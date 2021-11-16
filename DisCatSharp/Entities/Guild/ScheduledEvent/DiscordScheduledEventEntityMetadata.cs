@@ -33,15 +33,6 @@ namespace DisCatSharp.Entities
     public class DiscordScheduledEventEntityMetadata
     {
         /// <summary>
-        /// List of speakers if event type is <see cref="ScheduledEventEntityType.StageInstance"/>.
-        /// </summary>
-        [JsonIgnore]
-        public IReadOnlyList<DiscordUser> Speakers { get; internal set; }
-
-        [JsonProperty("speaker_ids", NullValueHandling = NullValueHandling.Ignore)]
-        internal ulong[] _speakerIds;
-
-        /// <summary>
         /// External location if event type is <see cref="ScheduledEventEntityType.External"/>.
         /// </summary>
         [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
@@ -55,11 +46,9 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
         /// </summary>
-        /// <param name="speakerIds">The speaker ids.</param>
         /// <param name="location">The location.</param>
-        public DiscordScheduledEventEntityMetadata(ulong[] speakerIds, string location)
+        public DiscordScheduledEventEntityMetadata(string location)
         {
-            this._speakerIds = speakerIds;
             this.Location = location;
         }
     }
