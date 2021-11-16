@@ -1016,7 +1016,7 @@ namespace DisCatSharp.Entities
             return (type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread)
                 ? throw new NotSupportedException("Wrong thread type given.")
                 : (!this.IsThreadHolder())
-                ? throw new NotSupportedException("Parent channel can't have threads")
+                ? throw new NotSupportedException("Parent channel can't have threads.")
                 : type == ChannelType.PrivateThread
                 ? Utilities.CheckThreadPrivateFeature(this.Guild)
                 ? Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, auto_archive_duration)
@@ -1043,7 +1043,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, ScheduledEventPrivacyLevel privacy_level, DateTimeOffset scheduled_start_time, string description = null, DiscordScheduledEventEntityMetadata metadata = null, string reason = null)
         {
-            if (this.Type != ChannelType.Voice && this.Type != ChannelType.Stage)
+            if (!this.IsVoiceJoinable())
                 throw new NotSupportedException("Cannot create a scheduled event for this type of channel. Channel type must be either voice or stage.");
 
             var type = this.Type == ChannelType.Voice ? ScheduledEventEntityType.Voice : ScheduledEventEntityType.StageInstance;
