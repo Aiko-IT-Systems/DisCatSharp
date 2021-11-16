@@ -1255,8 +1255,6 @@ namespace DisCatSharp.Net
                 Status = status
             };
 
-            this.Discord.Logger.LogInformation(DiscordJson.SerializeObject(pld));
-
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
                 headers[REASON_HEADER_NAME] = reason;
