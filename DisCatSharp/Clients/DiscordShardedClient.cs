@@ -287,7 +287,7 @@ namespace DisCatSharp
 
             http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
             http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(this.Configuration));
-            if (this.Configuration.Override != null)
+            if (this.Configuration != null && this.Configuration.Override != null)
             {
                 http.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this.Configuration.Override);
             }
