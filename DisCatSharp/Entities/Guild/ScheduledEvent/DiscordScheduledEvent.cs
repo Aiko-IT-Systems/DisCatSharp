@@ -231,7 +231,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordScheduledEvent> StartAsync(string reason = null)
-            => await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, null, null, null, this.PrivacyLevel, this.ScheduledStartTime.Value, null, null, this.EntityType, ScheduledEventStatus.ACTIVE, reason);
+            => await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.ACTIVE, reason);
 
         /// <summary>
         /// Cancels the current scheduled event.
@@ -241,7 +241,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordScheduledEvent> CancelAsync(string reason = null)
-            => await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, null, null, null, this.PrivacyLevel, this.ScheduledStartTime.Value, null, null, this.EntityType, ScheduledEventStatus.CANCELED, reason);
+            => await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.CANCELED, reason);
 
         /// <summary>
         /// Ends the current scheduled event.
@@ -251,7 +251,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordScheduledEvent> EndAsync(string reason = null)
-            => await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, null, null, null, this.PrivacyLevel, this.ScheduledStartTime.Value, null, null, this.EntityType, ScheduledEventStatus.COMPLETED, reason);
+            => await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.COMPLETED, reason);
 
         /// <summary>
         /// Gets a list of users RSVP'd to the scheduled event.
