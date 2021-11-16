@@ -30,11 +30,11 @@ namespace DisCatSharp
         /// <summary>
         /// Indicates that the stage is public visible, i.e. on stage discovery.
         /// </summary>
-        PUBLIC = 1,
+        Public = 1,
 
         /// <summary>
         /// Indicates that the stage is only visible to guild members.
         /// </summary>
-        GUILD_ONLY = 2
+        GuildOnly = 2
     }
 }

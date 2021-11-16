@@ -953,7 +953,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool send_start_notification = false, StagePrivacyLevel privacy_level = StagePrivacyLevel.GUILD_ONLY, string reason = null)
+        public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool send_start_notification = false, StagePrivacyLevel privacy_level = StagePrivacyLevel.GuildOnly, string reason = null)
             => await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, send_start_notification, privacy_level, reason);
 
         /// <summary>
@@ -1045,7 +1045,7 @@ namespace DisCatSharp.Entities
             if (this.Type != ChannelType.Voice && this.Type != ChannelType.Stage)
                 throw new NotSupportedException("Cannot create a scheduled event for this type of channel. Channel type must be either voice or stage.");
 
-            var type = this.Type == ChannelType.Voice ? ScheduledEventEntityType.VOICE : ScheduledEventEntityType.STAGE_INSTANCE;
+            var type = this.Type == ChannelType.Voice ? ScheduledEventEntityType.Voice : ScheduledEventEntityType.StageInstance;
 
             return await this.Guild.CreateScheduledEventAsync(name, privacy_level, scheduled_start_time, null, this, null, description, type, reason);
         }

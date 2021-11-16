@@ -30,21 +30,21 @@ namespace DisCatSharp
         /// <summary>
         /// Indicates that the event is scheduled.
         /// </summary>
-        SCHEDULED = 1,
+        Scheduled = 1,
 
         /// <summary>
         /// Indicates that the event is active.
         /// </summary>
-        ACTIVE = 2,
+        Active = 2,
 
         /// <summary>
         /// Indicates that the event is completed.
         /// </summary>
-        COMPLETED = 3,
+        Completed = 3,
 
         /// <summary>
         /// Indicates that the event is canceled.
         /// </summary>
-        CANCELED = 4
+        Canceled = 4
     }
 }

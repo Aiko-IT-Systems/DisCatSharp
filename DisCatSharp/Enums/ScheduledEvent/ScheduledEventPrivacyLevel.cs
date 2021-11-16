@@ -30,11 +30,11 @@ namespace DisCatSharp
         /// <summary>
         /// Indicates that the guild scheduled event is public and available in discovery.
         /// </summary>
-        PUBLIC = 1,
+        Public = 1,
 
         /// <summary>
         /// Indicates that the the guild scheduled event is only accessable to guild members.
         /// </summary>
-        GUILD_ONLY = 2
+        GuildOnly = 2
     }
 }

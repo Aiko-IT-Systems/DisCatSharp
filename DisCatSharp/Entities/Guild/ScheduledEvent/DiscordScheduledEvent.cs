@@ -215,7 +215,7 @@ namespace DisCatSharp.Entities
                 description = null;
 
             var scheduledEndTime = Optional.FromNoValue<DateTimeOffset?>();
-            if (mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.EXTERNAL : this.EntityType == ScheduledEventEntityType.EXTERNAL)
+            if (mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
                 scheduledEndTime = mdl.ScheduledEndTime;
 
             await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, scheduledEndTime.HasValue ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.PrivacyLevel, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.Status, mdl.AuditLogReason);
@@ -229,7 +229,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordScheduledEvent> StartAsync(string reason = null)
-            => await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.ACTIVE, reason);
+            => await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Active, reason);
 
         /// <summary>
         /// Cancels the current scheduled event.
@@ -239,7 +239,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordScheduledEvent> CancelAsync(string reason = null)
-            => await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.CANCELED, reason);
+            => await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Canceled, reason);
 
         /// <summary>
         /// Ends the current scheduled event.
@@ -249,7 +249,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordScheduledEvent> EndAsync(string reason = null)
-            => await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.COMPLETED, reason);
+            => await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Completed, reason);
 
         /// <summary>
         /// Gets a list of users RSVP'd to the scheduled event.
