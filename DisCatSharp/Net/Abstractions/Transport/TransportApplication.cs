@@ -141,6 +141,24 @@ namespace DisCatSharp.Net.Abstractions
         public Optional<string> CoverImageHash { get; set; }
 
         /// <summary>
+        /// Gets or sets the custom install url.
+        /// </summary>
+        [JsonProperty("custom_install_url")]
+        public string CustomInstallUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the install params.
+        /// </summary>
+        [JsonProperty("install_params", NullValueHandling = NullValueHandling.Include)]
+        public DiscordApplicationInstallParams InstallParams { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tags.
+        /// </summary>
+        [JsonProperty("tags", NullValueHandling = NullValueHandling.Include)]
+        public IEnumerable<string> Tags { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TransportApplication"/> class.
         /// </summary>
         internal TransportApplication() { }
