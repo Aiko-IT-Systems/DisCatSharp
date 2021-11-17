@@ -96,4 +96,4 @@ Big thanks goes to the following people who helps us ♥️
 - [Alice](https://github.com/QuantuChi)
 
 ## Special Thanks
-The special thanks goes to . Make sure to check out her [instagram](https://www.instagram.com/nagisaarts_/) ♥️♥️
+The special thanks goes to Nagisa. Make sure to check out her [instagram](https://www.instagram.com/nagisaarts_/) ♥️♥️
