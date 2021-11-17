@@ -7,5 +7,6 @@
         <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
+        <PackageIconUrl>https://raw.githubusercontent.com/Aiko-IT-Systems/DisCatSharp/main/DisCatSharp.Logos/logobig.png</PackageIconUrl>
     </PropertyGroup>
 </Project>

@@ -1,8 +1,8 @@
 # DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/discatsharp)
 
-![oie_u4NkggjBd6fc](https://user-images.githubusercontent.com/14029133/133850667-11872a7b-1dad-4a47-baab-aad2ecfc29d5.jpg)
+![Logo](DisCatSharp.Logos/logobig.png#64x64)
 
-Discord Bot Library written in C# for .NET. https://discord.gg/discatsharp
+[Discord Bot Library](https://discord.gg/discatsharp) written in C# for .NET.
 
 #### Status
 [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=NuGet%20Overall%20Version)](https://nuget.dcs.aitsys.dev)
@@ -94,3 +94,6 @@ Big thanks goes to the following people who helps us ♥️
 - [Johannes](https://github.com/JMLutra)
 - [Geferon](https://github.com/geferon)
 - [Alice](https://github.com/QuantuChi)
+
+## Special Thanks
+The special thanks goes to . Make sure to check out her [instagram](https://www.instagram.com/nagisaarts_/) ♥️♥️
