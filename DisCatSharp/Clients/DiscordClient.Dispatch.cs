@@ -1395,12 +1395,12 @@ namespace DisCatSharp
 
             if (new_event.Status == ScheduledEventStatus.Completed)
             {
-                await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = new_event, Guild = guild, Status = ScheduledEventStatus.Completed }).ConfigureAwait(false);
+                await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = new_event, Guild = guild, Reason = ScheduledEventStatus.Completed }).ConfigureAwait(false);
                 guild._scheduledEvents.TryRemove(new_event.Id, out var deleted_event);
             }
             else if (new_event.Status == ScheduledEventStatus.Canceled)
             {
-                await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = new_event, Guild = guild, Status = ScheduledEventStatus.Canceled }).ConfigureAwait(false);
+                await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = new_event, Guild = guild, Reason = ScheduledEventStatus.Canceled }).ConfigureAwait(false);
                 guild._scheduledEvents.TryRemove(new_event.Id, out var deleted_event);
             }
             else
@@ -1419,9 +1419,13 @@ namespace DisCatSharp
         {
             scheduled_event.Discord = this;
 
-            guild._scheduledEvents.TryRemove(scheduled_event.Id, out var deleted_event);
+            if (scheduled_event.Creator != null)
+            {
+                scheduled_event.Creator.Discord = this;
+            }
 
-            await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild, Status = scheduled_event.Status }).ConfigureAwait(false);
+            await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild, Reason = scheduled_event.Status }).ConfigureAwait(false);
+            guild._scheduledEvents.TryRemove(scheduled_event.Id, out var deleted_event);
         }
 
         /// <summary>
@@ -1441,7 +1445,7 @@ namespace DisCatSharp
 
             scheduled_event.UserCount++;
 
-            var user = this.GetCachedOrEmptyUserInternal(user_id) ?? new DiscordUser{ Id = user_id, Discord = this };
+            var user = this.GetCachedOrEmptyUserInternal(user_id) ?? await this.GetUserAsync(user_id, true);
 
             await this._guildScheduledEventUserAdded.InvokeAsync(this, new GuildScheduledEventUserAddEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, User = user }).ConfigureAwait(false);
         }
@@ -1464,7 +1468,7 @@ namespace DisCatSharp
 
             scheduled_event.UserCount = scheduled_event.UserCount == 0 ? 0 : scheduled_event.UserCount - 1;
 
-            var user = this.GetCachedOrEmptyUserInternal(user_id) ?? new DiscordUser{ Id = user_id, Discord = this };
+            var user = this.GetCachedOrEmptyUserInternal(user_id) ?? await this.GetUserAsync(user_id, true);
 
             await this._guildScheduledEventUserRemoved.InvokeAsync(this, new GuildScheduledEventUserRemoveEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, User = user }).ConfigureAwait(false);
         }
