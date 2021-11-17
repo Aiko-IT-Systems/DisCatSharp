@@ -1433,9 +1433,7 @@ namespace DisCatSharp
 
             scheduled_event.UserCount++;
 
-            var user =
-                guild.Members.TryGetValue(user_id, out var mbr) ? mbr :
-                this.GetCachedOrEmptyUserInternal(user_id) ?? new DiscordUser{ Id = user_id, Discord = this };
+            var user = this.GetCachedOrEmptyUserInternal(user_id) ?? new DiscordUser{ Id = user_id, Discord = this };
 
             await this._guildScheduledEventUserAdded.InvokeAsync(this, new GuildScheduledEventUserAddEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, User = user }).ConfigureAwait(false);
         }
@@ -1458,9 +1456,7 @@ namespace DisCatSharp
 
             scheduled_event.UserCount = scheduled_event.UserCount == 0 ? 0 : scheduled_event.UserCount - 1;
 
-            var user =
-                guild.Members.TryGetValue(user_id, out var mbr) ? mbr :
-                this.GetCachedOrEmptyUserInternal(user_id) ?? new DiscordUser{ Id = user_id, Discord = this };
+            var user = this.GetCachedOrEmptyUserInternal(user_id) ?? new DiscordUser{ Id = user_id, Discord = this };
 
             await this._guildScheduledEventUserRemoved.InvokeAsync(this, new GuildScheduledEventUserRemoveEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, User = user }).ConfigureAwait(false);
         }
