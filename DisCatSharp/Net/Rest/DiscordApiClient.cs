@@ -1232,6 +1232,10 @@ namespace DisCatSharp.Net
             var guild = this.Discord.Guilds[guild_id];
 
             scheduled_event.Discord = this.Discord;
+
+            if (scheduled_event.Creator != null)
+                scheduled_event.Creator.Discord = this.Discord;
+
             guild._scheduledEvents.TryAdd(scheduled_event.Id, scheduled_event);
 
             return scheduled_event;
