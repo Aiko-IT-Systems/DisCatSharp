@@ -206,29 +206,32 @@ namespace DisCatSharp
 
                 case "guild_scheduled_event_create":
                     gse = dat.ToObject<DiscordScheduledEvent>();
-                    await this.OnGuildScheduledEventCreateEventAsync(gse).ConfigureAwait(false);
+                    gid = (ulong)dat["guild_id"];
+                    await this.OnGuildScheduledEventCreateEventAsync(gse, this._guilds[gid]).ConfigureAwait(false);
                     break;
 
                 case "guild_scheduled_event_update":
                     gse = dat.ToObject<DiscordScheduledEvent>();
-                    await this.OnGuildScheduledEventUpdateEventAsync(gse).ConfigureAwait(false);
+                    gid = (ulong)dat["guild_id"];
+                    await this.OnGuildScheduledEventUpdateEventAsync(gse, this._guilds[gid]).ConfigureAwait(false);
                     break;
 
                 case "guild_scheduled_event_delete":
                     gse = dat.ToObject<DiscordScheduledEvent>();
-                    await this.OnGuildScheduledEventDeleteEventAsync(gse).ConfigureAwait(false);
+                    gid = (ulong)dat["guild_id"];
+                    await this.OnGuildScheduledEventDeleteEventAsync(gse, this._guilds[gid]).ConfigureAwait(false);
                     break;
 
                 case "guild_scheduled_event_user_add":
                     gid = (ulong)dat["guild_id"];
                     uid = (ulong)dat["user_id"];
-                    await this.OnGuildScheduledEventUserAddedEventAsync((ulong)dat["guild_scheduled_event_id"], uid, gid).ConfigureAwait(false);
+                    await this.OnGuildScheduledEventUserAddedEventAsync((ulong)dat["guild_scheduled_event_id"], uid, this._guilds[gid]).ConfigureAwait(false);
                     break;
 
                 case "guild_scheduled_event_user_remove":
                     gid = (ulong)dat["guild_id"];
                     uid = (ulong)dat["user_id"];
-                    await this.OnGuildScheduledEventUserRemovedEventAsync((ulong)dat["guild_scheduled_event_id"], uid, gid).ConfigureAwait(false);
+                    await this.OnGuildScheduledEventUserRemovedEventAsync((ulong)dat["guild_scheduled_event_id"], uid, this._guilds[gid]).ConfigureAwait(false);
                     break;
 
                 #endregion
@@ -1005,6 +1008,8 @@ namespace DisCatSharp
             {
                 xse.Discord = this;
                 xse.GuildId = guild.Id;
+                if (xse.Creator != null)
+                    xse.Creator.Discord = this;
             }
 
             var old = Volatile.Read(ref this._guildDownloadCompleted);
@@ -1162,6 +1167,8 @@ namespace DisCatSharp
             {
                 xse.Discord = this;
                 xse.GuildId = guild.Id;
+                if (xse.Creator != null)
+                    xse.Creator.Discord = this;
             }
 
             await this._guildUpdated.InvokeAsync(this, new GuildUpdateEventArgs(this.ServiceProvider) { GuildBefore = oldGuild, GuildAfter = guild }).ConfigureAwait(false);
@@ -1354,12 +1361,17 @@ namespace DisCatSharp
         /// Dispatches the <see cref="GuildScheduledEventCreated"/> event.
         /// </summary>
         /// <param name="scheduled_event">The created event.</param>
-        internal async Task OnGuildScheduledEventCreateEventAsync(DiscordScheduledEvent scheduled_event)
+        /// <param name="guild">The target guild.</param>
+        internal async Task OnGuildScheduledEventCreateEventAsync(DiscordScheduledEvent scheduled_event, DiscordGuild guild)
         {
             scheduled_event.Discord = this;
 
-            var guild = this.InternalGetCachedGuild(scheduled_event.GuildId);
-            guild._scheduledEvents[scheduled_event.Id] = scheduled_event;
+            guild._scheduledEvents.AddOrUpdate(scheduled_event.Id, scheduled_event, (old, newScheduledEvent) => newScheduledEvent);
+
+            if (scheduled_event.Creator != null)
+            {
+                scheduled_event.Creator.Discord = this;
+            }
 
             await this._guildScheduledEventCreated.InvokeAsync(this, new GuildScheduledEventCreateEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
         }
@@ -1368,38 +1380,36 @@ namespace DisCatSharp
         /// Dispatches the <see cref="GuildScheduledEventUpdated"/> event.
         /// </summary>
         /// <param name="scheduled_event">The updated event.</param>
-        internal async Task OnGuildScheduledEventUpdateEventAsync(DiscordScheduledEvent scheduled_event)
+        /// <param name="guild">The target guild.</param>
+        internal async Task OnGuildScheduledEventUpdateEventAsync(DiscordScheduledEvent scheduled_event, DiscordGuild guild)
         {
-            scheduled_event.Discord = this;
-            var guild = this.InternalGetCachedGuild(scheduled_event.GuildId);
-            var old_event = guild._scheduledEvents[scheduled_event.Id] ?? null;
-            guild._scheduledEvents.AddOrUpdate(scheduled_event.Id, scheduled_event, (id, old) =>
-            {
-                old.Name = scheduled_event.Name;
-                old.Description = scheduled_event.Description;
-                old.ChannelId = scheduled_event.ChannelId;
-                old.EntityMetadata = scheduled_event.EntityMetadata;
-                old.EntityType = scheduled_event.EntityType;
-                old.Status = scheduled_event.Status;
-                old.ScheduledStartTimeRaw = scheduled_event.ScheduledStartTimeRaw;
-                old.ScheduledEndTimeRaw = scheduled_event.ScheduledEndTimeRaw;
-                old.PrivacyLevel = scheduled_event.PrivacyLevel;
-                old.UserCount = scheduled_event.UserCount;
-                //old.SkuIds = scheduled_event.SkuIds;
-                return old;
-            });
+            if (guild == null)
+                return;
 
-            await this._guildScheduledEventUpdated.InvokeAsync(this, new GuildScheduledEventUpdateEventArgs(this.ServiceProvider) { ScheduledEventBefore = old_event, ScheduledEventAfter = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
+            var old_event = guild._scheduledEvents[scheduled_event.Id] ?? new DiscordScheduledEvent { Id = scheduled_event.Id, Name = scheduled_event.Name, EntityType = scheduled_event.EntityType, GuildId = scheduled_event.GuildId, ScheduledStartTimeRaw = scheduled_event.ScheduledStartTimeRaw, Discord = this };
+            var new_event = this.UpdateScheduledEvent(scheduled_event, guild);
+
+            if (scheduled_event.Creator != null)
+            {
+                scheduled_event.Creator.Discord = this;
+            }
+
+            if (new_event.Status == ScheduledEventStatus.Completed)
+                await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = new_event, Guild = scheduled_event.Guild, Status = ScheduledEventStatus.Completed }).ConfigureAwait(false);
+            else if (new_event.Status == ScheduledEventStatus.Canceled)
+                await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = new_event, Guild = scheduled_event.Guild, Status = ScheduledEventStatus.Canceled }).ConfigureAwait(false);
+            else
+                await this._guildScheduledEventUpdated.InvokeAsync(this, new GuildScheduledEventUpdateEventArgs(this.ServiceProvider) { ScheduledEventBefore = old_event, ScheduledEventAfter = new_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Dispatches the <see cref="GuildScheduledEventDeleted"/> event.
         /// </summary>
         /// <param name="scheduled_event">The deleted event.</param>
-        internal async Task OnGuildScheduledEventDeleteEventAsync(DiscordScheduledEvent scheduled_event)
+        /// <param name="guild">The target guild.</param>
+        internal async Task OnGuildScheduledEventDeleteEventAsync(DiscordScheduledEvent scheduled_event, DiscordGuild guild)
         {
             scheduled_event.Discord = this;
-            var guild = this.InternalGetCachedGuild(scheduled_event.GuildId);
 
             guild._scheduledEvents.TryRemove(scheduled_event.Id, out var deleted_event);
 
@@ -1408,30 +1418,49 @@ namespace DisCatSharp
 
         /// <summary>
         /// Dispatches the <see cref="GuildScheduledEventUserAdded"/> event.
+        /// <param name="guild_scheduled_event_id">The target event.</param>
+        /// <param name="user_id">The added user id.</param>
+        /// <param name="guild">The target guild.</param>
         /// </summary>
-        internal async Task OnGuildScheduledEventUserAddedEventAsync(ulong guild_scheduled_event_id, ulong user_id, ulong guild_id)
+        internal async Task OnGuildScheduledEventUserAddedEventAsync(ulong guild_scheduled_event_id, ulong user_id, DiscordGuild guild)
         {
-            var guild = this.InternalGetCachedGuild(guild_id);
-            var success = guild._scheduledEvents.TryGetValue(guild_scheduled_event_id, out var scheduled_event);
-            if (!success)
-                scheduled_event = await this.ApiClient.GetGuildScheduledEventAsync(guild_id, guild_scheduled_event_id);
+            var scheduled_event = this.InternalGetCachedScheduledEvent(guild_scheduled_event_id) ?? this.UpdateScheduledEvent(new DiscordScheduledEvent {
+                Id = guild_scheduled_event_id,
+                GuildId = guild.Id,
+                Discord = this,
+                UserCount = 0
+            }, guild);
 
-            var user = this.UserCache.TryGetValue(user_id, out var usr) ? usr : await this.GetUserAsync(user_id, true) ?? new DiscordUser{ Id = user_id, Discord = this };
+            scheduled_event.UserCount++;
+
+            var user =
+                guild.Members.TryGetValue(user_id, out var mbr) ? mbr :
+                this.GetCachedOrEmptyUserInternal(user_id) ?? new DiscordUser{ Id = user_id, Discord = this };
 
             await this._guildScheduledEventUserAdded.InvokeAsync(this, new GuildScheduledEventUserAddEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, User = user }).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Dispatches the <see cref="GuildScheduledEventUserRemoved"/> event.
+        /// <param name="guild_scheduled_event_id">The target event.</param>
+        /// <param name="user_id">The removed user id.</param>
+        /// <param name="guild">The target guild.</param>
         /// </summary>
-        internal async Task OnGuildScheduledEventUserRemovedEventAsync(ulong guild_scheduled_event_id, ulong user_id, ulong guild_id)
+        internal async Task OnGuildScheduledEventUserRemovedEventAsync(ulong guild_scheduled_event_id, ulong user_id, DiscordGuild guild)
         {
-            var guild = this.InternalGetCachedGuild(guild_id);
-            var success = guild._scheduledEvents.TryGetValue(guild_scheduled_event_id, out var scheduled_event);
-            if (!success)
-                scheduled_event = await this.ApiClient.GetGuildScheduledEventAsync(guild_id, guild_scheduled_event_id);
+            var scheduled_event = this.InternalGetCachedScheduledEvent(guild_scheduled_event_id) ?? this.UpdateScheduledEvent(new DiscordScheduledEvent
+            {
+                Id = guild_scheduled_event_id,
+                GuildId = guild.Id,
+                Discord = this,
+                UserCount = 0
+            }, guild);
 
-            var user = this.UserCache.TryGetValue(user_id, out var usr) ? usr : await this.GetUserAsync(user_id, true) ?? new DiscordUser{ Id = user_id, Discord = this };
+            scheduled_event.UserCount = scheduled_event.UserCount == 0 ? 0 : scheduled_event.UserCount - 1;
+
+            var user =
+                guild.Members.TryGetValue(user_id, out var mbr) ? mbr :
+                this.GetCachedOrEmptyUserInternal(user_id) ?? new DiscordUser{ Id = user_id, Discord = this };
 
             await this._guildScheduledEventUserRemoved.InvokeAsync(this, new GuildScheduledEventUserRemoveEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, User = user }).ConfigureAwait(false);
         }
