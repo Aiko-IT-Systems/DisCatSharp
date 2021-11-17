@@ -170,7 +170,10 @@ namespace DisCatSharp
                 RequiresCodeGrant = tapp.BotRequiresCodeGrant,
                 IsPublic = tapp.IsPublicBot,
                 PrivacyPolicyUrl = tapp.PrivacyPolicyUrl,
-                TermsOfServiceUrl = tapp.TermsOfServiceUrl
+                TermsOfServiceUrl = tapp.TermsOfServiceUrl,
+                CustomInstallUrl = tapp.CustomInstallUrl,
+                InstallParams = tapp.InstallParams,
+                Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray()
             };
 
             // do team and owners
