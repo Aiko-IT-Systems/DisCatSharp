@@ -138,6 +138,11 @@ namespace DisCatSharp.Entities
         public PropertyChange<string> RegionChange { get; internal set; }
 
         /// <summary>
+        /// Gets the description of the guild's premium progress bar enabled state.
+        /// </summary>
+        public PropertyChange<bool> PremiumProgressBarChange { get; internal set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DiscordAuditLogGuildEntry"/> class.
         /// </summary>
         internal DiscordAuditLogGuildEntry() { }

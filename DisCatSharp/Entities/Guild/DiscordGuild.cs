@@ -1605,6 +1605,14 @@ namespace DisCatSharp.Entities
                                     };
                                     break;
 
+                                case "premium_progress_bar_enabled":
+                                    entrygld.PremiumProgressBarChange = new PropertyChange<bool>
+                                    {
+                                        Before = (bool)xc.OldValue,
+                                        After = (bool)xc.NewValue
+                                    };
+                                    break;
+
                                 default:
                                     this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in guild update: {0} - this should be reported to library developers", xc.Key);
                                     break;
