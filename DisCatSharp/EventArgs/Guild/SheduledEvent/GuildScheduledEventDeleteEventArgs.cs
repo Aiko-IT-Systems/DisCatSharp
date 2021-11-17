@@ -36,10 +36,10 @@ namespace DisCatSharp.EventArgs
         public DiscordScheduledEvent ScheduledEvent { get; internal set; }
 
         /// <summary>
-        /// Gets the status of the scheduled event.
+        /// Gets the reason of deletion for the scheduled event.
         /// Important to determine why and how it was deleted.
         /// </summary>
-        public ScheduledEventStatus Status { get; internal set; }
+        public ScheduledEventStatus Reason { get; internal set; }
 
         /// <summary>
         /// Gets the guild in which the scheduled event was deleted.

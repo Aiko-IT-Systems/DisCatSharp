@@ -394,8 +394,10 @@ namespace DisCatSharp
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordUser> GetUserAsync(ulong userId, bool fetch = false)
         {
-            if (!fetch && this.TryGetCachedUserInternal(userId, out var usr))
+            if (this.TryGetCachedUserInternal(userId, out var usr))
                 return usr;
+            else if (!fetch)
+                return new DiscordUser { Id = userId, Discord = this };
 
             usr = await this.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
             usr = this.UserCache.AddOrUpdate(userId, usr, (id, old) =>
