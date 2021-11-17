@@ -909,7 +909,7 @@ namespace DisCatSharp
 
 
         /// <summary>
-        /// Gets the internal chached threads.
+        /// Gets the internal chached scheduled event.
         /// </summary>
         /// <param name="scheduledEventId">The target scheduled event id.</param>
         /// <returns>The requested scheduled event.</returns>
