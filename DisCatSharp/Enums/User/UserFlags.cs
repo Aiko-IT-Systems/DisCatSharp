@@ -86,9 +86,9 @@ namespace DisCatSharp
         EarlySupporter = 1 << 9,
 
         /// <summary>
-        /// Whether the user is apart of a Discord developer team.
+        /// User is a <see cref="Entities.DiscordTeam"/>.
         /// </summary>
-        TeamUser = 1 << 10,
+        TeamPseudoUser = 1 << 10,
 
         /// <summary>
         /// Relates to partner/verification applications.
