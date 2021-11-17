@@ -2,7 +2,7 @@
 
 ![Logo](DisCatSharp.Logos/logobig.png#64x64)
 
-Discord Bot Library written in C# for .NET. https://discord.gg/discatsharp
+[Discord Bot Library](https://discord.gg/discatsharp) written in C# for .NET.
 
 #### Status
 [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=NuGet%20Overall%20Version)](https://nuget.dcs.aitsys.dev)
