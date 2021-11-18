@@ -126,7 +126,7 @@ namespace DisCatSharp.Net
                 return val == null
                     ? null
                     : val is not string s
-                    ? throw new JsonReaderException("DiscordUri value invalid format! This is a bug in DSharpPlus. " +
+                    ? throw new JsonReaderException("DiscordUri value invalid format! This is a bug in DisCatSharp. " +
                                                   $"Include the type in your bug report: [[{reader.TokenType}]]")
                     : IsStandard(s)
                     ? new DiscordUri(new Uri(s))
