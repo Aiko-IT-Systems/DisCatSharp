@@ -1396,7 +1396,7 @@ namespace DisCatSharp.Net
         /// <param name="scheduled_event_id">The sheduled event id.</param>
         /// <param name="limit">The limit how many users to receive from the event.</param>
         /// <param name="with_member">Wether to include guild member data. attaches guild_member property to the user object.</param>
-        internal async Task<IReadOnlyDictionary<ulong, DiscordUser>> GetGuildScheduledEventRSPVUsersAsync(ulong guild_id, ulong scheduled_event_id, int? limit, bool? with_member)
+        internal async Task<IReadOnlyDictionary<int, DiscordScheduledEventUser>> GetGuildScheduledEventRSPVUsersAsync(ulong guild_id, ulong scheduled_event_id, int? limit, bool? with_member)
         {
             var urlparams = new Dictionary<string, string>();
             if (limit != null && limit > 0)
@@ -1410,50 +1410,39 @@ namespace DisCatSharp.Net
             var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-            var json = JObject.Parse(res.Response);
-            var users_raw = (JArray)json["users"];
-            var rspv_users = new Dictionary<ulong, DiscordUser>();
-            var rspv_members = new Dictionary<ulong, DiscordMember>();
-            foreach (var raw_user in users_raw)
+            var rspv_users = DiscordJson.ToDiscordObject<List<DiscordScheduledEventUser>>(res.Response);
+            Dictionary<int, DiscordScheduledEventUser> rspv = new();
+
+            foreach (var rspv_user in rspv_users)
             {
-                var uid = (ulong)raw_user["id"];
                 if (with_member.HasValue && with_member.Value)
                 {
-                    var raw_member = raw_user["guild_member"];
-                    var xm = raw_user.ToDiscordObject<TransportMember>();
-                    var mbr = new DiscordMember(xm) { Discord = this.Discord };
-                    mbr = this.Discord.Guilds[guild_id]._members.AddOrUpdate(uid, mbr, (id, old) =>
+                    rspv_user.Member.Discord = this.Discord;
+                    rspv_user.Member = this.Discord.Guilds[guild_id]._members.AddOrUpdate(rspv_user.Member.Id, rspv_user.Member, (id, old) =>
                     {
-                        old.Username = mbr.Username;
-                        old.Nickname = mbr.Nickname;
-                        old.Discriminator = mbr.Discriminator;
-                        old.GuildAvatarHash = mbr.GuildAvatarHash;
-                        old.GuildBannerHash = mbr.GuildBannerHash;
-                        old.GuildBio = mbr.GuildBio;
-                        old._bannerColor = mbr._bannerColor;
+                        old.Nickname = rspv_user.Member.Nickname;
+                        old._role_ids = rspv_user.Member._role_ids;
+                        old.GuildAvatarHash = rspv_user.Member.GuildAvatarHash;
+                        old.GuildBannerHash = rspv_user.Member.GuildBannerHash;
+                        old.GuildBio = rspv_user.Member.GuildBio;
                         return old;
                     });
-
-                    rspv_members.Add(mbr.Id, mbr);
-                    raw_member.Remove();
                 }
 
-                var xr = raw_user.ToDiscordObject<TransportUser>();
-                var usr = new DiscordUser(xr) { Discord = this.Discord };
-                usr = this.Discord.UserCache.AddOrUpdate(xr.Id, usr, (id, old) =>
+                rspv_user.User.Discord = this.Discord;
+                rspv_user.User = this.Discord.UserCache.AddOrUpdate(rspv_user.User.Id, rspv_user.User, (id, old) =>
                 {
-                    old.Username = usr.Username;
-                    old.Discriminator = usr.Discriminator;
-                    old.AvatarHash = usr.AvatarHash;
-                    old.BannerHash = usr.BannerHash;
-                    old._bannerColor = usr._bannerColor;
+                    old.Username = rspv_user.User.Username;
+                    old.Discriminator = rspv_user.User.Discriminator;
+                    old.AvatarHash = rspv_user.User.AvatarHash;
+                    old.BannerHash = rspv_user.User.BannerHash;
+                    old._bannerColor = rspv_user.User._bannerColor;
                     return old;
                 });
-
-                rspv_users.Add(usr.Id, usr);
+                rspv.Add(rspv.GetHashCode(), rspv_user);
             }
 
-            return new ReadOnlyDictionary<ulong, DiscordUser>(new Dictionary<ulong, DiscordUser>(rspv_users));
+            return new ReadOnlyDictionary<int, DiscordScheduledEventUser>(new Dictionary<int, DiscordScheduledEventUser>(rspv));
         }
         #endregion
 
