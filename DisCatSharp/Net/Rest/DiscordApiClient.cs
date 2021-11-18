@@ -1420,7 +1420,7 @@ namespace DisCatSharp.Net
             var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-            var rspv_users = DiscordJson.ToDiscordObject<List<DiscordScheduledEventUser>>(res.Response);
+            var rspv_users = DiscordJson.ToDiscordObject<IEnumerable<DiscordScheduledEventUser>>(res.Response);
             Dictionary<int, DiscordScheduledEventUser> rspv = new();
 
             foreach (var rspv_user in rspv_users)
@@ -1453,7 +1453,7 @@ namespace DisCatSharp.Net
                     old._bannerColor = rspv_user.User._bannerColor;
                     return old;
                 });
-                rspv.Add(rspv.GetHashCode(), rspv_user);
+                rspv.Add(rspv_user.GetHashCode(), rspv_user);
             }
 
             return new ReadOnlyDictionary<int, DiscordScheduledEventUser>(new Dictionary<int, DiscordScheduledEventUser>(rspv));
