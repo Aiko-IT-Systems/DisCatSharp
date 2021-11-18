@@ -30,6 +30,11 @@ namespace DisCatSharp.Entities
     /// </summary>
     public class DiscordScheduledEventUser : IEquatable<DiscordScheduledEventUser>
     {
+        /// <summary>
+        /// Gets the client instance this object is tied to.
+        /// </summary>
+        [JsonIgnore]
+        internal BaseDiscordClient Discord { get; set; }
 
         /// <summary>
         /// Gets the user.
@@ -48,13 +53,20 @@ namespace DisCatSharp.Entities
         /// Gets the scheduled event.
         /// </summary>
         [JsonIgnore]
-        public DiscordScheduledEvent ScheduledEvent { get; internal set; }
+        public DiscordScheduledEvent ScheduledEvent
+            => this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild.ScheduledEvents.TryGetValue(this.EventId, out var scheduledEvent) ? scheduledEvent : null : null;
 
         /// <summary>
         /// Gets or sets the event id.
         /// </summary>
         [JsonProperty("guild_scheduled_event_id")]
-        private ulong EventId { get; set; }
+        internal ulong EventId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the guild id.
+        /// </summary>
+        [JsonIgnore]
+        internal ulong GuildId { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordScheduledEventUser"/> class.
