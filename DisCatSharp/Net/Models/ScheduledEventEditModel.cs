@@ -51,11 +51,6 @@ namespace DisCatSharp.Net.Models
         public Optional<string> Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the privacy level of the scheduled event.
-        /// </summary>
-        public Optional<ScheduledEventPrivacyLevel> PrivacyLevel { get; set; }
-
-        /// <summary>
         /// Gets or sets the time to schedule the scheduled event.
         /// </summary>
         public Optional<DateTimeOffset> ScheduledStartTime { get; internal set; }
