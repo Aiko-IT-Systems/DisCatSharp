@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,22 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace DisCatSharp.Entities
 {
     /// <summary>
-    /// Represents base for all DisCatSharp extensions. To implement your own extension, extend this class, and implement its abstract members.
+    /// The application install params.
     /// </summary>
-    public abstract class BaseExtension
+    public sealed class DiscordApplicationInstallParams
     {
         /// <summary>
-        /// Gets the instance of <see cref="DiscordClient"/> this extension is attached to.
+        /// Gets the scopes.
         /// </summary>
-        public DiscordClient Client { get; protected set; }
+        [JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
+        public IReadOnlyList<string> Scopes { get; internal set; }
 
         /// <summary>
-        /// Initializes this extension for given <see cref="DiscordClient"/> instance.
+        /// Gets or sets the permissions.
         /// </summary>
-        /// <param name="client">Discord client to initialize for.</param>
-        protected internal abstract void Setup(DiscordClient client);
+        [JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
+        public Permissions? Permissions { get; internal set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordApplicationInstallParams"/> class.
+        /// </summary>
+        internal DiscordApplicationInstallParams() { }
     }
 }

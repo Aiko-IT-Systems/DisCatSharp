@@ -5,7 +5,7 @@ title: Reporting Issues
 
 # I broke something, and I need it fixed!
 
-We always try to fix bugs, and make sure that when we release the next version of DSharpPlus-NextGen, everything is polished and
+We always try to fix bugs, and make sure that when we release the next version of DisCatSharp, everything is polished and
 working. However, DisCatSharp is a large codebase, and we can't always catch all the bugs, or notice all the regressions
 that happen while we fix bugs or implement new issues.
 
