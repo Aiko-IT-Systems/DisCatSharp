@@ -1317,12 +1317,17 @@ namespace DisCatSharp.Net
         /// </summary>
         /// <param name="guild_id">The guild_id.</param>
         /// <param name="scheduled_event_id">The event id.</param>
-        internal async Task<DiscordScheduledEvent> GetGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id)
+        /// <param name="with_user_count">Whether to include user count.</param>
+        internal async Task<DiscordScheduledEvent> GetGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id, bool? with_user_count)
         {
+            var urlparams = new Dictionary<string, string>();
+            if (with_user_count != null)
+                urlparams["with_user_count"] = with_user_count.Value.ToString(CultureInfo.InvariantCulture);
+
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, scheduled_event_id }, out var path);
 
-            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var scheduled_event = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
