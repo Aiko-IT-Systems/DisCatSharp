@@ -28,11 +28,6 @@ namespace DisCatSharp
     public enum ScheduledEventEntityType : int
     {
         /// <summary>
-        /// Indicates that the events is not hold anywhere.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
         /// Indicates that the events is hold in a stage instance.
         /// </summary>
         StageInstance = 1,

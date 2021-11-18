@@ -95,7 +95,7 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets the channel id.
         /// </summary>
         [JsonProperty("channel_id")]
-        public Optional<ulong> ChannelId { get; set; }
+        public Optional<ulong?> ChannelId { get; set; }
 
         /// <summary>
         /// Gets or sets the entity metadata.
@@ -114,12 +114,6 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("description")]
         public Optional<string> Description { get; set; }
-
-        /// <summary>
-        /// Gets or sets the privacy level of the scheduled event.
-        /// </summary>
-        [JsonProperty("privacy_level")]
-        public Optional<ScheduledEventPrivacyLevel> PrivacyLevel { get; set; }
 
         /// <summary>
         /// Gets or sets the time to schedule the scheduled event.

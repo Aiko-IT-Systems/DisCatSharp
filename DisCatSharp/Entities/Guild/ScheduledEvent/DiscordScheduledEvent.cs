@@ -198,11 +198,14 @@ namespace DisCatSharp.Entities
             var mdl = new ScheduledEventEditModel();
             action(mdl);
 
-            var channelId = Optional.FromNoValue<ulong>();
+            var channelId = Optional.FromNoValue<ulong?>();
             if (mdl.Channel.HasValue && (mdl.Channel.Value.Type != ChannelType.Voice || mdl.Channel.Value.Type != ChannelType.Stage) && mdl.Channel.Value != null)
                 throw new ArgumentException("Channel needs to be a voice or stage channel.");
             else if (mdl.Channel.HasValue && mdl.Channel.Value != null)
                 channelId = mdl.Channel.Value.Id;
+
+            if (this.EntityType != ScheduledEventEntityType.External && mdl.EntityType == ScheduledEventEntityType.External)
+                channelId = null;
 
             var description = Optional.FromNoValue<string>();
             if (mdl.Description.HasValue && mdl.Description.Value != null)
@@ -214,7 +217,7 @@ namespace DisCatSharp.Entities
             if (mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
                 scheduledEndTime = mdl.ScheduledEndTime.Value;
 
-            await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, scheduledEndTime.HasValue ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.PrivacyLevel, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.Status, mdl.AuditLogReason);
+            await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.Status, mdl.AuditLogReason);
         }
 
         /// <summary>
@@ -225,7 +228,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordScheduledEvent> StartAsync(string reason = null)
-            => await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Active, reason);
+            => this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Active, reason) : throw new InvalidOperationException("You can only start scheduled events");
 
         /// <summary>
         /// Cancels the current scheduled event.
@@ -235,7 +238,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordScheduledEvent> CancelAsync(string reason = null)
-            => await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Canceled, reason);
+            => this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Canceled, reason) : throw new InvalidOperationException("You can only cancel scheduled events");
 
         /// <summary>
         /// Ends the current scheduled event.
@@ -245,7 +248,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordScheduledEvent> EndAsync(string reason = null)
-            => await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Completed, reason);
+            => this.Status == ScheduledEventStatus.Active ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Completed, reason) : throw new InvalidOperationException("You can only stop active events");
 
         /// <summary>
         /// Gets a list of users RSVP'd to the scheduled event.
