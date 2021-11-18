@@ -1415,6 +1415,10 @@ namespace DisCatSharp.Net
 
             foreach (var rspv_user in rspv_users)
             {
+
+                rspv_user.Discord = this.Discord;
+                rspv_user.GuildId = guild_id;
+
                 if (with_member.HasValue && with_member.Value)
                 {
                     rspv_user.Member.Discord = this.Discord;
