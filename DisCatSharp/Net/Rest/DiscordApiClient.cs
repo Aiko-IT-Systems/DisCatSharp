@@ -1472,7 +1472,7 @@ namespace DisCatSharp.Net
             var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-            var rspv_users = DiscordJson.ToDiscordObject<IEnumerable<DiscordScheduledEventUser>>(res.Response);
+            var rspv_users = JsonConvert.DeserializeObject<IEnumerable<DiscordScheduledEventUser>>(res.Response);
             Dictionary<int, DiscordScheduledEventUser> rspv = new();
 
             foreach (var rspv_user in rspv_users)
