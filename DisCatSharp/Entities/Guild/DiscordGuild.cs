@@ -922,8 +922,8 @@ namespace DisCatSharp.Entities
         /// Creates a scheduled event.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="scheduled_start_time">The scheduled start time.</param>
-        /// <param name="scheduled_end_time">The scheduled end time.</param>
+        /// <param name="scheduledStartTime">The scheduled start time.</param>
+        /// <param name="scheduledEndTime">The scheduled end time.</param>
         /// <param name="channel">The channel.</param>
         /// <param name="metadata">The metadata.</param>
         /// <param name="description">The description.</param>
@@ -933,15 +933,15 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduled_start_time, DateTimeOffset? scheduled_end_time = null, DiscordChannel channel = null, DiscordScheduledEventEntityMetadata metadata = null, string description = null, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, string reason = null)
-            => await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, type == ScheduledEventEntityType.External ? null : channel?.Id, type == ScheduledEventEntityType.External ? metadata : null, name, scheduled_start_time, scheduled_end_time.HasValue && type == ScheduledEventEntityType.External ? scheduled_end_time.Value : null, description, type, reason);
+        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime = null, DiscordChannel channel = null, DiscordScheduledEventEntityMetadata metadata = null, string description = null, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, string reason = null)
+            => await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, type == ScheduledEventEntityType.External ? null : channel?.Id, type == ScheduledEventEntityType.External ? metadata : null, name, scheduledStartTime, scheduledEndTime.HasValue && type == ScheduledEventEntityType.External ? scheduledEndTime.Value : null, description, type, reason);
 
         /// <summary>
         /// Creates a scheduled event with type <see cref="ScheduledEventEntityType.External"/>.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="scheduled_start_time">The scheduled start time.</param>
-        /// <param name="scheduled_end_time">The scheduled end time.</param>
+        /// <param name="scheduledStartTime">The scheduled start time.</param>
+        /// <param name="scheduledEndTime">The scheduled end time.</param>
         /// <param name="location">The location of the external event.</param>
         /// <param name="description">The description.</param>
         /// <param name="reason">The reason.</param>
@@ -949,44 +949,44 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, DateTimeOffset scheduled_start_time, DateTimeOffset scheduled_end_time, string location, string description = null, string reason = null)
-            => await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new DiscordScheduledEventEntityMetadata(location), name, scheduled_start_time, scheduled_end_time, description, ScheduledEventEntityType.External, reason);
+        public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset scheduledEndTime, string location, string description = null, string reason = null)
+            => await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new DiscordScheduledEventEntityMetadata(location), name, scheduledStartTime, scheduledEndTime, description, ScheduledEventEntityType.External, reason);
 
 
         /// <summary>
         /// Gets a specific scheduled events.
         /// </summary>
-        /// <param name="sheduled_event_id">The Id of the event to get.</param>
-        /// <param name="with_user_count">Whether to include user count.</param>
+        /// <param name="scheduledEventId">The Id of the event to get.</param>
+        /// <param name="withUserCount">Whether to include user count.</param>
         /// <returns>A scheduled event.</returns>
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> GetScheduledEventAsync(ulong sheduled_event_id, bool? with_user_count = null)
-            => await this.Discord.ApiClient.GetGuildScheduledEventAsync(this.Id, sheduled_event_id, with_user_count);
+        public async Task<DiscordScheduledEvent> GetScheduledEventAsync(ulong scheduledEventId, bool? withUserCount = null)
+            => await this.Discord.ApiClient.GetGuildScheduledEventAsync(this.Id, scheduledEventId, withUserCount);
 
         /// <summary>
         /// Gets a specific scheduled events.
         /// </summary>
-        /// <param name="sheduled_event">The event to get.</param>
-        /// <param name="with_user_count">Whether to include user count.</param>
+        /// <param name="scheduledEvent">The event to get.</param>
+        /// <param name="withUserCount">Whether to include user count.</param>
         /// <returns>A sheduled event.</returns>
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> GetScheduledEventAsync(DiscordScheduledEvent sheduled_event, bool? with_user_count = null)
-            => await this.GetScheduledEventAsync(sheduled_event.Id, with_user_count);
+        public async Task<DiscordScheduledEvent> GetScheduledEventAsync(DiscordScheduledEvent scheduledEvent, bool? withUserCount = null)
+            => await this.GetScheduledEventAsync(scheduledEvent.Id, withUserCount);
 
         /// <summary>
         /// Gets the guilds scheduled events.
         /// </summary>
-        /// <param name="with_user_count">Whether to include user count.</param>
+        /// <param name="withUserCount">Whether to include user count.</param>
         /// <returns>A list of the guilds scheduled events.</returns>
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEvent>> GetScheduledEventsAsync(bool? with_user_count = null)
-            => await this.Discord.ApiClient.ListGuildScheduledEventsAsync(this.Id, with_user_count);
+        public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEvent>> GetScheduledEventsAsync(bool? withUserCount = null)
+            => await this.Discord.ApiClient.ListGuildScheduledEventsAsync(this.Id, withUserCount);
         #endregion
 
         /// <summary>
