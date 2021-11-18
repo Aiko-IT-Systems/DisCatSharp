@@ -1211,7 +1211,6 @@ namespace DisCatSharp.Net
                 ChannelId = channel_id,
                 EntityMetadata = metadata,
                 Name = name,
-                PrivacyLevel = ScheduledEventPrivacyLevel.GuildOnly,
                 ScheduledStartTime = scheduled_start_time,
                 ScheduledEndTime = scheduled_end_time,
                 Description = description,

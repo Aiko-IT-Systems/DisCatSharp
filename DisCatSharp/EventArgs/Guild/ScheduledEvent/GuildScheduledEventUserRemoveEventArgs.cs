@@ -26,9 +26,9 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.EventArgs
 {
     /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.GuildScheduledEventUserAdded"/> event.
+    /// Represents arguments for <see cref="DiscordClient.GuildScheduledEventUserRemoved"/> event.
     /// </summary>
-    public class GuildScheduledEventUserAddEventArgs : DiscordEventArgs
+    public class GuildScheduledEventUserRemoveEventArgs : DiscordEventArgs
     {
         /// <summary>
         /// Gets the scheduled event.
@@ -41,19 +41,18 @@ namespace DisCatSharp.EventArgs
         public DiscordGuild Guild { get; internal set; }
 
         /// <summary>
-        /// Gets the user which has subscribed to this scheduled event.
+        /// Gets the user which has unsubscribed from this scheduled event.
         /// </summary>
         public DiscordUser User { get; internal set; }
 
         /// <summary>
-        /// Gets the member which has subscribed to this scheduled event.
+        /// Gets the member which has unsubscribed from this scheduled event.
         /// </summary>
-        public DiscordMember Member
-            => this.User != null ? this.Guild.Members.TryGetValue(this.User.Id, out var member) ? member : new DiscordMember { Id = this.User.Id, Discord = this.Guild.Discord, _guild_id = this.Guild.Id } : null;
+        public DiscordMember Member { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GuildScheduledEventUserAddEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="GuildScheduledEventUserRemoveEventArgs"/> class.
         /// </summary>
-        internal GuildScheduledEventUserAddEventArgs(IServiceProvider provider) : base(provider) { }
+        internal GuildScheduledEventUserRemoveEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }

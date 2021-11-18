@@ -132,7 +132,7 @@ namespace DisCatSharp.Entities
         /// Gets the privacy level of the scheduled event.
         /// </summary>
         [JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
-        public ScheduledEventPrivacyLevel PrivacyLevel { get; internal set; }
+        internal ScheduledEventPrivacyLevel PrivacyLevel { get; set; }
 
         /// <summary>
         /// Gets the status of the scheduled event.
