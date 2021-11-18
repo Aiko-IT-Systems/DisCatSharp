@@ -1394,16 +1394,23 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Gets the users who RSVP'd to a sheduled event.
         /// Optional with member objects.
+        /// This endpoint is paginated.
         /// </summary>
         /// <param name="guild_id">The guild_id.</param>
         /// <param name="scheduled_event_id">The sheduled event id.</param>
         /// <param name="limit">The limit how many users to receive from the event.</param>
+        /// <param name="before">Get results before the given id.</param>
+        /// <param name="after">Get results after the given id.</param>
         /// <param name="with_member">Wether to include guild member data. attaches guild_member property to the user object.</param>
-        internal async Task<IReadOnlyDictionary<int, DiscordScheduledEventUser>> GetGuildScheduledEventRSPVUsersAsync(ulong guild_id, ulong scheduled_event_id, int? limit, bool? with_member)
+        internal async Task<IReadOnlyDictionary<int, DiscordScheduledEventUser>> GetGuildScheduledEventRSPVUsersAsync(ulong guild_id, ulong scheduled_event_id, int? limit, ulong? before, ulong? after, bool? with_member)
         {
             var urlparams = new Dictionary<string, string>();
             if (limit != null && limit > 0)
                 urlparams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
+            if (before != null)
+                urlparams["before"] = before.Value.ToString(CultureInfo.InvariantCulture);
+            if (after != null)
+                urlparams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);
             if (with_member != null)
                 urlparams["with_member"] = with_member.Value.ToString(CultureInfo.InvariantCulture);
 

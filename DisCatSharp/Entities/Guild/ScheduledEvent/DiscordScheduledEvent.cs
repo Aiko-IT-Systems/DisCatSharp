@@ -86,6 +86,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; internal set; }
+
         /* TODO|INFO: Is not available yet to users / clients / bots.
         /// <summary>
         /// Gets this event's cover hash, when applicable.
@@ -233,6 +234,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Cancels the current scheduled event.
         /// </summary>
+        /// <param name="reason">The audit log reason.</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -243,6 +245,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Ends the current scheduled event.
         /// </summary>
+        /// <param name="reason">The audit log reason.</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -254,18 +257,20 @@ namespace DisCatSharp.Entities
         /// Gets a list of users RSVP'd to the scheduled event.
         /// </summary>
         /// <param name="limit">The limit how many users to receive from the event.</param>
-        /// <param name="with_member">Wether to include guild member data.</param>
+        /// <param name="before">Get results of <see cref="DiscordScheduledEventUser"/> before the given snowflake.</param>
+        /// <param name="after">Get results of <see cref="DiscordScheduledEventUser"/> after the given snowflake.</param>
+        /// <param name="withMember">Wether to include guild member data.</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<IReadOnlyDictionary<int, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, bool? with_member = null)
-            => await this.Discord.ApiClient.GetGuildScheduledEventRSPVUsersAsync(this.GuildId, this.Id, limit, with_member);
+        public async Task<IReadOnlyDictionary<int, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null)
+            => await this.Discord.ApiClient.GetGuildScheduledEventRSPVUsersAsync(this.GuildId, this.Id, limit, before, after, withMember);
 
         /// <summary>
         /// Deletes a scheduled event.
         /// </summary>
-        /// <param name="reason">Audit log reason</param>
+        /// <param name="reason">The audit log reason.</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>

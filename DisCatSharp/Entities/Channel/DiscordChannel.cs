@@ -1032,21 +1032,21 @@ namespace DisCatSharp.Entities
         /// Creates a scheduled event based on the channel type.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="scheduled_start_time">The scheduled start time.</param>
+        /// <param name="scheduledStartTime">The scheduled start time.</param>
         /// <param name="description">The description.</param>
         /// <param name="reason">The reason.</param>
         /// <returns>A scheduled event.</returns>
         /// <exception cref="NotFoundException">Thrown when the ressource does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduled_start_time, string description = null, string reason = null)
+        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, string description = null, string reason = null)
         {
             if (!this.IsVoiceJoinable())
                 throw new NotSupportedException("Cannot create a scheduled event for this type of channel. Channel type must be either voice or stage.");
 
             var type = this.Type == ChannelType.Voice ? ScheduledEventEntityType.Voice : ScheduledEventEntityType.StageInstance;
 
-            return await this.Guild.CreateScheduledEventAsync(name, scheduled_start_time, null, this, null, description, type, reason);
+            return await this.Guild.CreateScheduledEventAsync(name, scheduledStartTime, null, this, null, description, type, reason);
         }
 
 
