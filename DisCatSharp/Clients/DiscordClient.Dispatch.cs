@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using DisCatSharp.Common.Utilities;
@@ -1444,10 +1443,15 @@ namespace DisCatSharp
             }, guild);
 
             scheduled_event.UserCount++;
+            scheduled_event.Discord = this;
+            guild.Discord = this;
 
-            var user = this.GetCachedOrEmptyUserInternal(user_id) ?? await this.GetUserAsync(user_id, true);
+            var user = this.GetUserAsync(user_id, true).Result;
+            user.Discord = this;
+            var member = guild.Members.TryGetValue(user_id, out var mem) ? mem : guild.GetMemberAsync(user_id).Result;
+            member.Discord = this;
 
-            await this._guildScheduledEventUserAdded.InvokeAsync(this, new GuildScheduledEventUserAddEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, User = user }).ConfigureAwait(false);
+            await this._guildScheduledEventUserAdded.InvokeAsync(this, new GuildScheduledEventUserAddEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, User = user, Member = member }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1467,10 +1471,15 @@ namespace DisCatSharp
             }, guild);
 
             scheduled_event.UserCount = scheduled_event.UserCount == 0 ? 0 : scheduled_event.UserCount - 1;
+            scheduled_event.Discord = this;
+            guild.Discord = this;
 
-            var user = this.GetCachedOrEmptyUserInternal(user_id) ?? await this.GetUserAsync(user_id, true);
+            var user = this.GetUserAsync(user_id, true).Result;
+            user.Discord = this;
+            var member = guild.Members.TryGetValue(user_id, out var mem) ? mem : guild.GetMemberAsync(user_id).Result;
+            member.Discord = this;
 
-            await this._guildScheduledEventUserRemoved.InvokeAsync(this, new GuildScheduledEventUserRemoveEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, User = user }).ConfigureAwait(false);
+            await this._guildScheduledEventUserRemoved.InvokeAsync(this, new GuildScheduledEventUserRemoveEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, User = user, Member = member }).ConfigureAwait(false);
         }
 
         #endregion
