@@ -256,7 +256,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<IReadOnlyDictionary<ulong, DiscordUser>> GetUsersAsync(int? limit = null, bool? with_member = null)
+        public async Task<IReadOnlyDictionary<int, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, bool? with_member = null)
             => await this.Discord.ApiClient.GetGuildScheduledEventRSPVUsersAsync(this.GuildId, this.Id, limit, with_member);
 
         /// <summary>
