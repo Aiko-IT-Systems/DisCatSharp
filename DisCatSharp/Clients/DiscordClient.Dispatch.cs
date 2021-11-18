@@ -1370,6 +1370,14 @@ namespace DisCatSharp
             if (scheduled_event.Creator != null)
             {
                 scheduled_event.Creator.Discord = this;
+                this.UserCache.AddOrUpdate(scheduled_event.Creator.Id, scheduled_event.Creator, (id, old) =>
+                {
+                    old.Username = scheduled_event.Creator.Username;
+                    old.Discriminator = scheduled_event.Creator.Discriminator;
+                    old.AvatarHash = scheduled_event.Creator.AvatarHash;
+                    old.Flags = scheduled_event.Creator.Flags;
+                    return old;
+                });
             }
 
             await this._guildScheduledEventCreated.InvokeAsync(this, new GuildScheduledEventCreateEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild }).ConfigureAwait(false);
@@ -1390,6 +1398,14 @@ namespace DisCatSharp
             if (new_event.Creator != null)
             {
                 new_event.Creator.Discord = this;
+                this.UserCache.AddOrUpdate(new_event.Creator.Id, new_event.Creator, (id, old) =>
+                {
+                    old.Username = new_event.Creator.Username;
+                    old.Discriminator = new_event.Creator.Discriminator;
+                    old.AvatarHash = new_event.Creator.AvatarHash;
+                    old.Flags = new_event.Creator.Flags;
+                    return old;
+                });
             }
 
             if (new_event.Status == ScheduledEventStatus.Completed)
@@ -1421,6 +1437,14 @@ namespace DisCatSharp
             if (scheduled_event.Creator != null)
             {
                 scheduled_event.Creator.Discord = this;
+                this.UserCache.AddOrUpdate(scheduled_event.Creator.Id, scheduled_event.Creator, (id, old) =>
+                {
+                    old.Username = scheduled_event.Creator.Username;
+                    old.Discriminator = scheduled_event.Creator.Discriminator;
+                    old.AvatarHash = scheduled_event.Creator.AvatarHash;
+                    old.Flags = scheduled_event.Creator.Flags;
+                    return old;
+                });
             }
 
             await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = scheduled_event.Guild, Reason = scheduled_event.Status }).ConfigureAwait(false);

@@ -63,8 +63,14 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the ID of the user that created the scheduled event.
         /// </summary>
-        [JsonProperty("creator_id", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("creator_id")]
         public ulong CreatorId { get; internal set; }
+
+        /// <summary>
+        /// Gets the user that created the scheduled event.
+        /// </summary>
+        [JsonProperty("creator")]
+        public DiscordUser Creator { get; internal set; }
 
         /// <summary>
         /// Gets the member that created the scheduled event.
@@ -167,12 +173,6 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("sku_ids", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyList<ulong> SkuIds { get; internal set; }*/
-
-        /// <summary>
-        /// Gets the user that created the scheduled event.
-        /// </summary>
-        [JsonProperty("creator", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordUser Creator { get; internal set; }
 
         /// <summary>
         /// Gets the total number of users subscribed to the scheduled event.

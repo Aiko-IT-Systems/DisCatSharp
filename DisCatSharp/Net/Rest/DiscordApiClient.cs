@@ -1273,6 +1273,19 @@ namespace DisCatSharp.Net
 
             scheduled_event.Discord = this.Discord;
 
+            if (scheduled_event.Creator != null)
+            {
+                scheduled_event.Creator.Discord = this.Discord;
+                this.Discord.UserCache.AddOrUpdate(scheduled_event.Creator.Id, scheduled_event.Creator, (id, old) =>
+                {
+                    old.Username = scheduled_event.Creator.Username;
+                    old.Discriminator = scheduled_event.Creator.Discriminator;
+                    old.AvatarHash = scheduled_event.Creator.AvatarHash;
+                    old.Flags = scheduled_event.Creator.Flags;
+                    return old;
+                });
+            }
+
             if (this.Discord is DiscordClient dc)
                 await dc.OnGuildScheduledEventUpdateEventAsync(scheduled_event, guild);
 
@@ -1304,6 +1317,19 @@ namespace DisCatSharp.Net
 
             scheduled_event.Discord = this.Discord;
 
+            if (scheduled_event.Creator != null)
+            {
+                scheduled_event.Creator.Discord = this.Discord;
+                this.Discord.UserCache.AddOrUpdate(scheduled_event.Creator.Id, scheduled_event.Creator, (id, old) =>
+                {
+                    old.Username = scheduled_event.Creator.Username;
+                    old.Discriminator = scheduled_event.Creator.Discriminator;
+                    old.AvatarHash = scheduled_event.Creator.AvatarHash;
+                    old.Flags = scheduled_event.Creator.Flags;
+                    return old;
+                });
+            }
+
             if (this.Discord is DiscordClient dc)
                 await dc.OnGuildScheduledEventUpdateEventAsync(scheduled_event, guild);
 
@@ -1332,6 +1358,19 @@ namespace DisCatSharp.Net
             var guild = this.Discord.Guilds[guild_id];
 
             scheduled_event.Discord = this.Discord;
+
+            if (scheduled_event.Creator != null)
+            {
+                scheduled_event.Creator.Discord = this.Discord;
+                this.Discord.UserCache.AddOrUpdate(scheduled_event.Creator.Id, scheduled_event.Creator, (id, old) =>
+                {
+                    old.Username = scheduled_event.Creator.Username;
+                    old.Discriminator = scheduled_event.Creator.Discriminator;
+                    old.AvatarHash = scheduled_event.Creator.AvatarHash;
+                    old.Flags = scheduled_event.Creator.Flags;
+                    return old;
+                });
+            }
 
             if (this.Discord is DiscordClient dc)
                 await dc.OnGuildScheduledEventUpdateEventAsync(scheduled_event, guild);
@@ -1363,6 +1402,19 @@ namespace DisCatSharp.Net
             foreach (var ev in events_raw)
             {
                 ev.Discord = this.Discord;
+                if(ev.Creator != null)
+                {
+                    ev.Creator.Discord = this.Discord;
+                    this.Discord.UserCache.AddOrUpdate(ev.Creator.Id, ev.Creator, (id, old) =>
+                    {
+                        old.Username = ev.Creator.Username;
+                        old.Discriminator = ev.Creator.Discriminator;
+                        old.AvatarHash = ev.Creator.AvatarHash;
+                        old.Flags = ev.Creator.Flags;
+                        return old;
+                    });
+                }
+
                 events.Add(ev.Id, ev);
 
                 if (this.Discord is DiscordClient dc)
