@@ -959,27 +959,30 @@ namespace DisCatSharp.Entities
         /// Gets a specific scheduled events.
         /// </summary>
         /// <param name="sheduled_event_id">The Id of the event to get.</param>
+        /// <param name="with_user_count">Whether to include user count.</param>
         /// <returns>A scheduled event.</returns>
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> GetScheduledEventAsync(ulong sheduled_event_id)
-            => await this.Discord.ApiClient.GetGuildScheduledEventAsync(this.Id, sheduled_event_id);
+        public async Task<DiscordScheduledEvent> GetScheduledEventAsync(ulong sheduled_event_id, bool? with_user_count = null)
+            => await this.Discord.ApiClient.GetGuildScheduledEventAsync(this.Id, sheduled_event_id, with_user_count);
 
         /// <summary>
         /// Gets a specific scheduled events.
         /// </summary>
         /// <param name="sheduled_event">The event to get.</param>
+        /// <param name="with_user_count">Whether to include user count.</param>
         /// <returns>A sheduled event.</returns>
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> GetScheduledEventAsync(DiscordScheduledEvent sheduled_event)
-            => await this.GetScheduledEventAsync(sheduled_event.Id);
+        public async Task<DiscordScheduledEvent> GetScheduledEventAsync(DiscordScheduledEvent sheduled_event, bool? with_user_count = null)
+            => await this.GetScheduledEventAsync(sheduled_event.Id, with_user_count);
 
         /// <summary>
         /// Gets the guilds scheduled events.
         /// </summary>
+        /// <param name="with_user_count">Whether to include user count.</param>
         /// <returns>A list of the guilds scheduled events.</returns>
         /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
