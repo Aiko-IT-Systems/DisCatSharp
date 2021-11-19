@@ -2481,6 +2481,7 @@ namespace DisCatSharp
             {
                 chan.Discord = this;
             }
+            threads.Select(x => x.Discord = this);
 
             await this._threadListSynced.InvokeAsync(this, new ThreadListSyncEventArgs(this.ServiceProvider) { Guild = guild, Channels = channels.ToList().AsReadOnly(), Threads = threads, Members = members.ToList().AsReadOnly() }).ConfigureAwait(false);
         }
@@ -2493,6 +2494,12 @@ namespace DisCatSharp
         {
             member.Discord = this;
             var thread = this.InternalGetCachedThread(member.Id);
+            if (thread == null)
+            {
+                var tempThread = await this.ApiClient.GetThreadAsync(member.Id);
+                thread = this._guilds[member._guild_id]._threads.AddOrUpdate(member.Id, tempThread, (old, newThread) => newThread);
+            }
+
             thread.CurrentMember = member;
             thread.Guild._threads.AddOrUpdate(member.Id, thread, (oldThread, newThread) => newThread);
 
@@ -2512,7 +2519,10 @@ namespace DisCatSharp
         {
             var thread = this.InternalGetCachedThread(thread_id);
             if (thread == null)
-                thread = await this.ApiClient.GetThreadAsync(guild.Id, thread_id);
+            {
+                var tempThread = await this.ApiClient.GetThreadAsync(thread_id);
+                thread = guild._threads.AddOrUpdate(thread_id, tempThread, (old, newThread) => newThread);
+            }
 
             thread.Discord = this;
             guild.Discord = this;
