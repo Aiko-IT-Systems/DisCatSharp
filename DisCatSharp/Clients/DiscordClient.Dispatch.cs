@@ -2511,6 +2511,9 @@ namespace DisCatSharp
         internal async Task OnThreadMembersUpdateEventAsync(DiscordGuild guild, ulong thread_id, JArray added_members, JArray removed_members, int member_count)
         {
             var thread = this.InternalGetCachedThread(thread_id);
+            if (thread == null)
+                thread = await this.ApiClient.GetThreadAsync(guild.Id, thread_id);
+
             thread.Discord = this;
             guild.Discord = this;
             List<DiscordThreadChannelMember> addedMembers = new();
