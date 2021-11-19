@@ -1236,7 +1236,7 @@ namespace DisCatSharp.Net
                 scheduled_event.Creator.Discord = this.Discord;
 
             if (this.Discord is DiscordClient dc)
-                await dc.OnGuildScheduledEventUpdateEventAsync(scheduled_event, guild);
+                await dc.OnGuildScheduledEventCreateEventAsync(scheduled_event, guild);
 
             return scheduled_event;
         }
@@ -1345,13 +1345,14 @@ namespace DisCatSharp.Net
         internal async Task<DiscordScheduledEvent> GetGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id, bool? with_user_count)
         {
             var urlparams = new Dictionary<string, string>();
-            if (with_user_count != null)
-                urlparams["with_user_count"] = with_user_count.Value.ToString(CultureInfo.InvariantCulture);
+            if (with_user_count.HasValue)
+                urlparams["with_user_count"] = with_user_count?.ToString();
 
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, scheduled_event_id }, out var path);
 
             var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
+
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
             var scheduled_event = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
@@ -1372,9 +1373,6 @@ namespace DisCatSharp.Net
                 });
             }
 
-            if (this.Discord is DiscordClient dc)
-                await dc.OnGuildScheduledEventUpdateEventAsync(scheduled_event, guild);
-
             return scheduled_event;
         }
 
@@ -1386,8 +1384,8 @@ namespace DisCatSharp.Net
         internal async Task<IReadOnlyDictionary<ulong, DiscordScheduledEvent>> ListGuildScheduledEventsAsync(ulong guild_id, bool? with_user_count)
         {
             var urlparams = new Dictionary<string, string>();
-            if (with_user_count != null)
-                urlparams["with_user_count"] = with_user_count.Value.ToString(CultureInfo.InvariantCulture);
+            if (with_user_count.HasValue)
+                urlparams["with_user_count"] = with_user_count?.ToString();
 
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
@@ -1416,9 +1414,6 @@ namespace DisCatSharp.Net
                 }
 
                 events.Add(ev.Id, ev);
-
-                if (this.Discord is DiscordClient dc)
-                    await dc.OnGuildScheduledEventUpdateEventAsync(ev, guild);
             }
 
             return new ReadOnlyDictionary<ulong, DiscordScheduledEvent>(new Dictionary<ulong, DiscordScheduledEvent>(events));
@@ -1454,7 +1449,7 @@ namespace DisCatSharp.Net
         /// <param name="before">Get results before the given id.</param>
         /// <param name="after">Get results after the given id.</param>
         /// <param name="with_member">Wether to include guild member data. attaches guild_member property to the user object.</param>
-        internal async Task<IReadOnlyDictionary<int, DiscordScheduledEventUser>> GetGuildScheduledEventRSPVUsersAsync(ulong guild_id, ulong scheduled_event_id, int? limit, ulong? before, ulong? after, bool? with_member)
+        internal async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetGuildScheduledEventRSPVUsersAsync(ulong guild_id, ulong scheduled_event_id, int? limit, ulong? before, ulong? after, bool? with_member)
         {
             var urlparams = new Dictionary<string, string>();
             if (limit != null && limit > 0)
@@ -1473,27 +1468,13 @@ namespace DisCatSharp.Net
             var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
             var rspv_users = JsonConvert.DeserializeObject<IEnumerable<DiscordScheduledEventUser>>(res.Response);
-            Dictionary<int, DiscordScheduledEventUser> rspv = new();
+            Dictionary<ulong, DiscordScheduledEventUser> rspv = new();
 
             foreach (var rspv_user in rspv_users)
             {
 
                 rspv_user.Discord = this.Discord;
                 rspv_user.GuildId = guild_id;
-
-                if (with_member.HasValue && with_member.Value)
-                {
-                    rspv_user.Member.Discord = this.Discord;
-                    rspv_user.Member = this.Discord.Guilds[guild_id]._members.AddOrUpdate(rspv_user.Member.Id, rspv_user.Member, (id, old) =>
-                    {
-                        old.Nickname = rspv_user.Member.Nickname;
-                        old._role_ids = rspv_user.Member._role_ids;
-                        old.GuildAvatarHash = rspv_user.Member.GuildAvatarHash;
-                        old.GuildBannerHash = rspv_user.Member.GuildBannerHash;
-                        old.GuildBio = rspv_user.Member.GuildBio;
-                        return old;
-                    });
-                }
 
                 rspv_user.User.Discord = this.Discord;
                 rspv_user.User = this.Discord.UserCache.AddOrUpdate(rspv_user.User.Id, rspv_user.User, (id, old) =>
@@ -1505,10 +1486,16 @@ namespace DisCatSharp.Net
                     old._bannerColor = rspv_user.User._bannerColor;
                     return old;
                 });
-                rspv.Add(rspv_user.GetHashCode(), rspv_user);
+
+                /*if (with_member.HasValue && with_member.Value && rspv_user.Member != null)
+                {
+                    rspv_user.Member.Discord = this.Discord;
+                }*/
+
+                rspv.Add(rspv_user.User.Id, rspv_user);
             }
 
-            return new ReadOnlyDictionary<int, DiscordScheduledEventUser>(new Dictionary<int, DiscordScheduledEventUser>(rspv));
+            return new ReadOnlyDictionary<ulong, DiscordScheduledEventUser>(new Dictionary<ulong, DiscordScheduledEventUser>(rspv));
         }
         #endregion
 

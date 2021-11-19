@@ -47,7 +47,7 @@ namespace DisCatSharp.Entities
         /// Only applicable when requested with `with_member`.
         /// </summary>
         [JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordMember Member { get; internal set; }
+        internal DiscordMember Member { get; set; }
 
         /// <summary>
         /// Gets the scheduled event.

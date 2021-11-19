@@ -1393,35 +1393,60 @@ namespace DisCatSharp
             if (guild == null)
                 return;
 
-            var new_event = this.UpdateScheduledEvent(scheduled_event, guild);
-
-            if (new_event.Creator != null)
+            DiscordScheduledEvent old_event;
+            if (!guild._scheduledEvents.ContainsKey(scheduled_event.Id))
             {
-                new_event.Creator.Discord = this;
-                this.UserCache.AddOrUpdate(new_event.Creator.Id, new_event.Creator, (id, old) =>
+                old_event = null;
+            } else {
+                var ev = guild._scheduledEvents[scheduled_event.Id];
+                old_event = new DiscordScheduledEvent
                 {
-                    old.Username = new_event.Creator.Username;
-                    old.Discriminator = new_event.Creator.Discriminator;
-                    old.AvatarHash = new_event.Creator.AvatarHash;
-                    old.Flags = new_event.Creator.Flags;
+                    Id = ev.Id,
+                    ChannelId = ev.ChannelId,
+                    EntityId = ev.EntityId,
+                    EntityMetadata = ev.EntityMetadata,
+                    CreatorId = ev.CreatorId,
+                    Creator = ev.Creator,
+                    Discord = this,
+                    Description = ev.Description,
+                    EntityType = ev.EntityType,
+                    ScheduledStartTimeRaw = ev.ScheduledStartTimeRaw,
+                    ScheduledEndTimeRaw = ev.ScheduledEndTimeRaw,
+                    GuildId = ev.GuildId,
+                    Status = ev.Status,
+                    Name = ev.Name,
+                    UserCount = ev.UserCount
+                };
+
+            }
+            if (scheduled_event.Creator != null)
+            {
+                scheduled_event.Creator.Discord = this;
+                this.UserCache.AddOrUpdate(scheduled_event.Creator.Id, scheduled_event.Creator, (id, old) =>
+                {
+                    old.Username = scheduled_event.Creator.Username;
+                    old.Discriminator = scheduled_event.Creator.Discriminator;
+                    old.AvatarHash = scheduled_event.Creator.AvatarHash;
+                    old.Flags = scheduled_event.Creator.Flags;
                     return old;
                 });
             }
 
-            if (new_event.Status == ScheduledEventStatus.Completed)
+            if (scheduled_event.Status == ScheduledEventStatus.Completed)
             {
-                await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = new_event, Guild = guild, Reason = ScheduledEventStatus.Completed }).ConfigureAwait(false);
-                guild._scheduledEvents.TryRemove(new_event.Id, out var deleted_event);
+                guild._scheduledEvents.TryRemove(scheduled_event.Id, out var deleted_event);
+                await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, Reason = ScheduledEventStatus.Completed }).ConfigureAwait(false);
             }
-            else if (new_event.Status == ScheduledEventStatus.Canceled)
+            else if (scheduled_event.Status == ScheduledEventStatus.Canceled)
             {
-                await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = new_event, Guild = guild, Reason = ScheduledEventStatus.Canceled }).ConfigureAwait(false);
-                guild._scheduledEvents.TryRemove(new_event.Id, out var deleted_event);
+                guild._scheduledEvents.TryRemove(scheduled_event.Id, out var deleted_event);
+                scheduled_event.Status = ScheduledEventStatus.Canceled;
+                await this._guildScheduledEventDeleted.InvokeAsync(this, new GuildScheduledEventDeleteEventArgs(this.ServiceProvider) { ScheduledEvent = scheduled_event, Guild = guild, Reason = ScheduledEventStatus.Canceled }).ConfigureAwait(false);
             }
             else
             {
-                var old_event = this.InternalGetCachedScheduledEvent(scheduled_event.Id) ?? new DiscordScheduledEvent { Id = scheduled_event.Id, Name = scheduled_event.Name, EntityType = scheduled_event.EntityType, GuildId = guild.Id, ScheduledStartTimeRaw = scheduled_event.ScheduledStartTimeRaw, Discord = this };
-                await this._guildScheduledEventUpdated.InvokeAsync(this, new GuildScheduledEventUpdateEventArgs(this.ServiceProvider) { ScheduledEventBefore = old_event, ScheduledEventAfter = new_event, Guild = guild }).ConfigureAwait(false);
+                this.UpdateScheduledEvent(scheduled_event, guild);
+                await this._guildScheduledEventUpdated.InvokeAsync(this, new GuildScheduledEventUpdateEventArgs(this.ServiceProvider) { ScheduledEventBefore = old_event, ScheduledEventAfter = scheduled_event, Guild = guild }).ConfigureAwait(false);
             }
         }
 
