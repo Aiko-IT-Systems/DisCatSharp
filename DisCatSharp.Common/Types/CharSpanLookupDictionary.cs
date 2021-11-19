@@ -484,7 +484,7 @@ namespace DisCatSharp.Common
                 return;
             }
 
-            if (!(array is object[]))
+            if (array is not object[])
                 throw new ArgumentException($"Array needs to be an instance of {typeof(TValue[])} or object[].");
 
             var i = arrayIndex;
