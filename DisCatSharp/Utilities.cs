@@ -293,8 +293,8 @@ namespace DisCatSharp
         internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
         {
             return taad == ThreadAutoArchiveDuration.ThreeDays
-                ? (guild.PremiumTier.HasFlag(PremiumTier.Tier1) || guild.Features.CanSetThreadArchiveDurationThreeDays)
-                : taad != ThreadAutoArchiveDuration.OneWeek || guild.PremiumTier.HasFlag(PremiumTier.Tier2) || guild.Features.CanSetThreadArchiveDurationSevenDays;
+                ? (guild.PremiumTier.HasFlag(PremiumTier.TierOne) || guild.Features.CanSetThreadArchiveDurationThreeDays)
+                : taad != ThreadAutoArchiveDuration.OneWeek || guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || guild.Features.CanSetThreadArchiveDurationSevenDays;
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace DisCatSharp
         /// </summary>
         /// <param name="guild">The guild.</param>
         /// <returns>A bool.</returns>
-        internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.PremiumTier.HasFlag(PremiumTier.Tier2) || guild.Features.CanCreatePrivateThreads;
+        internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || guild.Features.CanCreatePrivateThreads;
 
         /// <summary>
         /// Have the message intents.

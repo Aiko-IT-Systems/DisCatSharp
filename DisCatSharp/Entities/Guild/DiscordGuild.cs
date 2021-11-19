@@ -3311,19 +3311,19 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Guild has access to the three day archive time for threads.
-        /// Needs Premium Tier 1 (<see cref="PremiumTier.Tier1"/>).
+        /// Needs Premium Tier 1 (<see cref="PremiumTier.TierOne"/>).
         /// </summary>
         public bool CanSetThreadArchiveDurationThreeDays { get; }
 
         /// <summary>
         /// Guild has access to the seven day archive time for threads.
-        /// Needs Premium Tier 2 (<see cref="PremiumTier.Tier2"/>).
+        /// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
         /// </summary>
         public bool CanSetThreadArchiveDurationSevenDays { get; }
 
         /// <summary>
         /// Guild has access to create private threads.
-        /// Needs Premium Tier 2 (<see cref="PremiumTier.Tier2"/>).
+        /// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
         /// </summary>
         public bool CanCreatePrivateThreads { get; }
 
@@ -3395,13 +3395,13 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Guild can set an animated banner.
-        /// Needs Premium Tier 3 (<see cref="PremiumTier.Tier3"/>).
+        /// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
         /// </summary>
         public bool CanSetAnimatedBanner { get; }
 
         /// <summary>
         /// Guild can set an animated banner.
-        /// Needs Premium Tier 3 (<see cref="PremiumTier.Tier3"/>).
+        /// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
         /// </summary>
         public bool CanSetChannelBanner { get; }
 
@@ -3411,7 +3411,7 @@ namespace DisCatSharp.Entities
         public bool HasMemberProfiles { get; }
 
         /// <summary>
-        /// Guild is restricted to users with the <see cref="UserFlags.DiscordEmployee"/> badge.
+        /// Guild is restricted to users with the <see cref="UserFlags.Staff"/> badge.
         /// </summary>
         public bool IsStaffOnly { get; }
 
