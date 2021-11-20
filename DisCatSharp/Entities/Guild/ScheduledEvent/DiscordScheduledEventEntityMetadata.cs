@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,31 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using DisCatSharp.Net.Serialization;
+using Newtonsoft.Json;
+
+namespace DisCatSharp.Entities
 {
     /// <summary>
-    /// Represents the status for a scheduled event.
+    /// Represents an scheduled event.
     /// </summary>
-    public enum EventStatus : int
+    public class DiscordScheduledEventEntityMetadata
     {
         /// <summary>
-        /// Indicates that the event is scheduled.
+        /// External location if event type is <see cref="ScheduledEventEntityType.External"/>.
         /// </summary>
-        SCHEDULED = 1,
+        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
+        public string Location { get; internal set; }
 
         /// <summary>
-        /// Indicates that the event is active.
+        /// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
         /// </summary>
-        ACTIVE = 2,
+        internal DiscordScheduledEventEntityMetadata() { }
 
         /// <summary>
-        /// Indicates that the event is completed.
+        /// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
         /// </summary>
-        COMPLETED = 3,
-
-        /// <summary>
-        /// Indicates that the event is canceled.
-        /// </summary>
-        CANCELED = 4
+        /// <param name="location">The location.</param>
+        public DiscordScheduledEventEntityMetadata(string location)
+        {
+            this.Location = location;
+        }
     }
 }

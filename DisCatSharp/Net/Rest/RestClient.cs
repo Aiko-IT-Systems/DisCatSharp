@@ -108,6 +108,10 @@ namespace DisCatSharp.Net
         {
             this.Discord = client;
             this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(client));
+            if (client.Configuration.Override != null)
+            {
+                this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", client.Configuration.Override);
+            }
         }
 
         /// <summary>
@@ -137,6 +141,10 @@ namespace DisCatSharp.Net
             };
 
             this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
+            if (this.Discord != null && this.Discord.Configuration != null && this.Discord.Configuration.Override != null)
+            {
+                this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this.Discord.Configuration.Override);
+            }
 
             this.RoutesToHashes = new ConcurrentDictionary<string, string>();
             this.HashesToBuckets = new ConcurrentDictionary<string, RateLimitBucket>();

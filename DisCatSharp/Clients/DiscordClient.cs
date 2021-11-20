@@ -237,6 +237,8 @@ namespace DisCatSharp
             this._guildScheduledEventCreated = new AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
             this._guildScheduledEventUpdated = new AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
             this._guildScheduledEventDeleted = new AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventUserAdded = new AsyncEvent<DiscordClient, GuildScheduledEventUserAddEventArgs>("GUILD_SCHEDULED_EVENT_USER_ADDED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventUserRemoved = new AsyncEvent<DiscordClient, GuildScheduledEventUserRemoveEventArgs>("GUILD_SCHEDULED_EVENT_USER_REMOVED", EventExecutionLimit, this.EventErrorHandler);
             this._embeddedActivityUpdated = new AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs>("EMBEDDED_ACTIVITY_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 
             this._guilds.Clear();
@@ -392,8 +394,10 @@ namespace DisCatSharp
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordUser> GetUserAsync(ulong userId, bool fetch = false)
         {
-            if (!fetch && this.TryGetCachedUserInternal(userId, out var usr))
+            if (this.TryGetCachedUserInternal(userId, out var usr))
                 return usr;
+            else if (!fetch)
+                return new DiscordUser { Id = userId, Discord = this };
 
             usr = await this.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
             usr = this.UserCache.AddOrUpdate(userId, usr, (id, old) =>
@@ -560,19 +564,21 @@ namespace DisCatSharp
         /// </example>
         /// <param name="method">The method.</param>
         /// <param name="route">The route.</param>
+        /// <param name="routeParams">The route parameters.</param>
         /// <param name="jsonBody">The json body.</param>
         /// <param name="additionalHeaders">The addditional headers.</param>
+        /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
         /// <exception cref="NotFoundException">Thrown when the ressource does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         /// <returns>A awaitable RestResponse</returns>
-        public async Task<RestResponse> ExecuteRawRequestAsync(RestRequestMethod method, string route, string jsonBody = null, Dictionary<string, string> additionalHeaders = null)
+        public async Task<RestResponse> ExecuteRawRequestAsync(RestRequestMethod method, string route, object routeParams, string jsonBody = null, Dictionary<string, string> additionalHeaders = null, double? ratelimitWaitOverride = null)
         {
 
-            var bucket = this.ApiClient.Rest.GetBucket(method, route, null, out var path);
+            var bucket = this.ApiClient.Rest.GetBucket(method, route, routeParams, out var path);
 
             var url = Utilities.GetApiUriFor(path, this.Configuration);
-            var res = await this.ApiClient.DoRequestAsync(this, bucket, url, method, route, additionalHeaders, DiscordJson.SerializeObject(jsonBody));
+            var res = await this.ApiClient.DoRequestAsync(this, bucket, url, method, route, additionalHeaders, DiscordJson.SerializeObject(jsonBody), ratelimitWaitOverride);
 
             return res;
         }
@@ -903,6 +909,21 @@ namespace DisCatSharp
             return null;
         }
 
+
+        /// <summary>
+        /// Gets the internal chached scheduled event.
+        /// </summary>
+        /// <param name="scheduledEventId">The target scheduled event id.</param>
+        /// <returns>The requested scheduled event.</returns>
+        internal DiscordScheduledEvent InternalGetCachedScheduledEvent(ulong scheduledEventId)
+        {
+            foreach (var guild in this.Guilds.Values)
+                if (guild.ScheduledEvents.TryGetValue(scheduledEventId, out var foundScheduledEvent))
+                    return foundScheduledEvent;
+
+            return null;
+        }
+
         /// <summary>
         /// Gets the internal chached channel.
         /// </summary>
@@ -973,6 +994,37 @@ namespace DisCatSharp
         }
 
         /// <summary>
+        /// Updates a scheduled event.
+        /// </summary>
+        /// <param name="scheduledEvent">The scheduled event to update.</param>
+        /// <param name="guild">The guild to update.</param>
+        /// <returns>The updated scheduled event.</returns>
+        private DiscordScheduledEvent UpdateScheduledEvent(DiscordScheduledEvent scheduledEvent, DiscordGuild guild)
+        {
+            if (scheduledEvent != null)
+            {
+                _ = guild._scheduledEvents.AddOrUpdate(scheduledEvent.Id, scheduledEvent, (id, old) =>
+                {
+                    old.Discord = this;
+                    old.Description = scheduledEvent.Description;
+                    old.ChannelId = scheduledEvent.ChannelId;
+                    old.EntityId = scheduledEvent.EntityId;
+                    old.EntityType = scheduledEvent.EntityType;
+                    old.EntityMetadata = scheduledEvent.EntityMetadata;
+                    old.PrivacyLevel = scheduledEvent.PrivacyLevel;
+                    old.Name = scheduledEvent.Name;
+                    old.Status = scheduledEvent.Status;
+                    old.UserCount = scheduledEvent.UserCount;
+                    old.ScheduledStartTimeRaw = scheduledEvent.ScheduledStartTimeRaw;
+                    old.ScheduledEndTimeRaw = scheduledEvent.ScheduledEndTimeRaw;
+                    return old;
+                });
+            }
+
+            return scheduledEvent;
+        }
+
+        /// <summary>
         /// Updates a user.
         /// </summary>
         /// <param name="usr">The user to update.</param>
@@ -1033,6 +1085,31 @@ namespace DisCatSharp
             }
 
             return usr;
+        }
+
+        /// <summary>
+        /// Updates the cached events in a guild.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <param name="rawEvents">The raw events.</param>
+        private void UpdateCachedScheduledEvent(DiscordGuild guild, JArray rawEvents)
+        {
+            if (this._disposed)
+                return;
+
+            if (rawEvents != null)
+            {
+                guild._scheduledEvents.Clear();
+
+                foreach (var xj in rawEvents)
+                {
+                    var xtm = xj.ToDiscordObject<DiscordScheduledEvent>();
+
+                    xtm.Discord = this;
+
+                    guild._scheduledEvents[xtm.Id] = xtm;
+                }
+            }
         }
 
         /// <summary>

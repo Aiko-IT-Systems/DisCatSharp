@@ -45,6 +45,14 @@ namespace DisCatSharp.Hosting
         protected readonly IServiceProvider ServiceProvider;
         protected readonly string BotSection;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseHostedService"/> class.
+        /// </summary>
+        /// <param name="config">The config.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="applicationLifetime">The application lifetime.</param>
+        /// <param name="configBotSection">The config bot section.</param>
         internal BaseHostedService(IConfiguration config,
             ILogger<BaseHostedService> logger,
             IServiceProvider serviceProvider,
@@ -183,7 +191,7 @@ namespace DisCatSharp.Hosting
                  * So to overcome this obstacle we need to log what happens and
                  * manually exit
                  */
-                this.Logger.LogError(($"Was unable to start {this.GetType().Name} Bot as a Hosted Service"));
+                this.Logger.LogError($"Was unable to start {this.GetType().Name} Bot as a Hosted Service");
 
                 // Power given to developer for handling exception
                 this.OnInitializationError(ex);

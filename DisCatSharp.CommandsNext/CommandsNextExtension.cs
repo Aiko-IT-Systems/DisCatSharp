@@ -294,7 +294,7 @@ namespace DisCatSharp.CommandsNext
                 cmd = cmdKvp.Value;
             }
 
-            if (!(cmd is CommandGroup))
+            if (cmd is not CommandGroup)
             {
                 rawArguments = commandString.Substring(pos).Trim();
                 return cmd;

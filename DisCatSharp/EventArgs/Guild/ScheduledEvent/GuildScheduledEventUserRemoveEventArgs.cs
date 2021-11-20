@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,21 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+using System;
+using DisCatSharp.Entities;
+
+namespace DisCatSharp.EventArgs
 {
     /// <summary>
-    /// Represents the privacy level for a stage.
+    /// Represents arguments for <see cref="DiscordClient.GuildScheduledEventUserRemoved"/> event.
     /// </summary>
-    public enum StagePrivacyLevel : int
+    public class GuildScheduledEventUserRemoveEventArgs : DiscordEventArgs
     {
         /// <summary>
-        /// Indicates that the stage is public visible, i.e. on stage discovery.
+        /// Gets the scheduled event.
         /// </summary>
-        Public = 1,
+        public DiscordScheduledEvent ScheduledEvent { get; internal set; }
 
         /// <summary>
-        /// Indicates that the stage is only visible to guild members.
+        /// Gets the guild.
         /// </summary>
-        GuildOnly = 2
+        public DiscordGuild Guild { get; internal set; }
+
+        /// <summary>
+        /// Gets the user which has unsubscribed from this scheduled event.
+        /// </summary>
+        public DiscordUser User { get; internal set; }
+
+        /// <summary>
+        /// Gets the member which has unsubscribed from this scheduled event.
+        /// </summary>
+        public DiscordMember Member { get; internal set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GuildScheduledEventUserRemoveEventArgs"/> class.
+        /// </summary>
+        internal GuildScheduledEventUserRemoveEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }

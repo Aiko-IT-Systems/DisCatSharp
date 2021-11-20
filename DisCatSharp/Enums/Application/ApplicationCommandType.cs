@@ -33,10 +33,12 @@ namespace DisCatSharp.Enums
         /// This command is registered as a slash-command, aka "Chat Input".
         /// </summary>
         ChatInput = 1,
+
         /// <summary>
         /// This command is registered as a user context menu, and is applicable when interacting a user.
         /// </summary>
         User = 2,
+
         /// <summary>
         /// This command is registered as a message context menu, and is applicable when interacting with a message.
         /// </summary>
@@ -45,6 +47,11 @@ namespace DisCatSharp.Enums
         /// <summary>
         /// Inbound only: An auto-complete option is being interacted with.
         /// </summary>
-        AutoCompleteRequest = 4
+        AutoCompleteRequest = 4,
+
+        /// <summary>
+        /// Inbound only: A modal was submitted.
+        /// </summary>
+        ModalSubmit = 5
     }
 }

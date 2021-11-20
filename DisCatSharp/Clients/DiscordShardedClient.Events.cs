@@ -285,8 +285,8 @@ namespace DisCatSharp
         #region Guild Event
 
         /// <summary>
-        /// Fired when a scheduled Event is created.
-        /// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// Fired when a scheduled event is created.
+        /// For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
         /// </summary>
         public event AsyncEventHandler<DiscordClient, GuildScheduledEventCreateEventArgs> GuildScheduledEventCreated
         {
@@ -296,8 +296,8 @@ namespace DisCatSharp
         private AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs> _guildScheduledEventCreated;
 
         /// <summary>
-        /// Fired when a scheduled Event is updated.
-        /// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// Fired when a scheduled event is updated.
+        /// For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
         /// </summary>
         public event AsyncEventHandler<DiscordClient, GuildScheduledEventUpdateEventArgs> GuildScheduledEventUpdated
         {
@@ -307,8 +307,8 @@ namespace DisCatSharp
         private AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs> _guildScheduledEventUpdated;
 
         /// <summary>
-        /// Fired when a scheduled Event is deleted.
-        /// For this Event you need the <see cref="DiscordIntents.Guilds"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// Fired when a scheduled event is deleted.
+        /// For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
         /// </summary>
         public event AsyncEventHandler<DiscordClient, GuildScheduledEventDeleteEventArgs> GuildScheduledEventDeleted
         {
@@ -316,6 +316,28 @@ namespace DisCatSharp
             remove => this._guildScheduledEventDeleted.Unregister(value);
         }
         private AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs> _guildScheduledEventDeleted;
+
+        /// <summary>
+        /// Fired when a user subscribes to a scheduled event.
+        /// For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, GuildScheduledEventUserAddEventArgs> GuildScheduledEventUserAdded
+        {
+            add => this._guildScheduledEventUserAdded.Register(value);
+            remove => this._guildScheduledEventUserAdded.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, GuildScheduledEventUserAddEventArgs> _guildScheduledEventUserAdded;
+
+        /// <summary>
+        /// Fired when a user unsubscribes from a scheduled event.
+        /// For this Event you need the <see cref="DiscordIntents.GuildScheduledEvents"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+        /// </summary>
+        public event AsyncEventHandler<DiscordClient, GuildScheduledEventUserRemoveEventArgs> GuildScheduledEventUserRemoved
+        {
+            add => this._guildScheduledEventUserRemoved.Register(value);
+            remove => this._guildScheduledEventUserRemoved.Unregister(value);
+        }
+        private AsyncEvent<DiscordClient, GuildScheduledEventUserRemoveEventArgs> _guildScheduledEventUserRemoved;
 
         #endregion
 
@@ -1604,6 +1626,24 @@ namespace DisCatSharp
         /// <returns>A Task.</returns>
         private Task Client_GuildScheduledEventDeleted(DiscordClient client, GuildScheduledEventDeleteEventArgs e)
             => this._guildScheduledEventDeleted.InvokeAsync(client, e);
+
+        /// <summary>
+        /// Handles the scheduled event user added.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The events.</param>
+        /// <returns>A Task.</returns>
+        private Task Client_GuildScheduledEventUserAdded(DiscordClient client, GuildScheduledEventUserAddEventArgs e)
+        => this._guildScheduledEventUserAdded.InvokeAsync(client, e);
+
+        /// <summary>
+        /// Handles the scheduled event user removed.
+        /// </summary>
+        /// <param name="client">The client.</param>
+        /// <param name="e">The events.</param>
+        /// <returns>A Task.</returns>
+        private Task Client_GuildScheduledEventUserRemoved(DiscordClient client, GuildScheduledEventUserRemoveEventArgs e)
+        => this._guildScheduledEventUserRemoved.InvokeAsync(client, e);
 
         #endregion
     }

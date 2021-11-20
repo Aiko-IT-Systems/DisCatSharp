@@ -20,21 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace DisCatSharp.CommandsNext.Attributes
 {
     /// <summary>
-    /// Represents the privacy level for a stage.
+    /// Defines that usage of this command is restricted to discord employees.
     /// </summary>
-    public enum StagePrivacyLevel : int
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public sealed class RequireStaffAttribute : CheckBaseAttribute
     {
         /// <summary>
-        /// Indicates that the stage is public visible, i.e. on stage discovery.
+        /// Executes the a check.
         /// </summary>
-        Public = 1,
-
-        /// <summary>
-        /// Indicates that the stage is only visible to guild members.
-        /// </summary>
-        GuildOnly = 2
+        /// <param name="ctx">The command context.</param>
+        /// <param name="help">If true, help - returns true.</param>
+        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => ctx.User.Flags.HasValue ? Task.FromResult(ctx.User.Flags.Value.HasFlag(UserFlags.Staff)) : Task.FromResult(false);
     }
 }
