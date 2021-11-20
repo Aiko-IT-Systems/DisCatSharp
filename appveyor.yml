@@ -2,7 +2,7 @@
   branches:
     only:
     - main
-  version: 9.8.4-nightly-{build}
+  version: 9.8.5-nightly-{build}
   pull_requests:
     do_not_increment_build_number: true
   skip_tags: true
@@ -73,7 +73,7 @@
   branches:
     only:
     - /release/
-  version: 9.8.3
+  version: 9.8.4
   pull_requests:
     do_not_increment_build_number: true
   skip_tags: true
