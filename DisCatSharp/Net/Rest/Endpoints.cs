@@ -300,10 +300,9 @@ namespace DisCatSharp.Net
         /// </summary>
         public const string THREAD_MEMBERS = "/thread-members";
         /// <summary>
-        /// The guild events endpoint.
-        /// Used for stage events.
+        /// The guild sheduled events endpoint.
         /// </summary>
-        public const string EVENTS = "/events";
+        public const string SCHEDULED_EVENTS = "/scheduled-events";
         /// <summary>
         /// The stickers endpoint.
         /// </summary>

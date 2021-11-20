@@ -38,6 +38,9 @@ namespace DisCatSharp.Hosting
         public DiscordClient Client { get; protected set; }
 
         #pragma warning disable 8618
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordHostedService"/> class.
+        /// </summary>
         /// <param name="config">IConfiguration provided via Dependency Injection. Aggregate method to access configuration files </param>
         /// <param name="logger">An ILogger to work with, provided via Dependency Injection</param>
         /// <param name="serviceProvider">ServiceProvider reference which contains all items currently registered for Dependency Injection</param>

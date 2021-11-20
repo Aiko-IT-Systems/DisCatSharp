@@ -224,20 +224,20 @@ namespace DisCatSharp.Entities
         #region Extension of DiscordUser
 
         /// <summary>
-        /// Whether this member is a <see cref="UserFlags.DiscordCertifiedModerator"/>
+        /// Whether this member is a <see cref="UserFlags.CertifiedModerator"/>
         /// </summary>
         /// <returns><see cref="bool"/></returns>
         [JsonIgnore]
         public bool IsMod
-                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.DiscordCertifiedModerator);
+                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.CertifiedModerator);
 
         /// <summary>
-        /// Whether this member is a <see cref="UserFlags.DiscordPartner"/>
+        /// Whether this member is a <see cref="UserFlags.Partner"/>
         /// </summary>
         /// <returns><see cref="bool"/></returns>
         [JsonIgnore]
         public bool IsPartner
-                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.DiscordPartner);
+                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.Partner);
 
         /// <summary>
         /// Whether this member is a <see cref="UserFlags.VerifiedBot"/>
@@ -248,20 +248,20 @@ namespace DisCatSharp.Entities
                 => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.VerifiedBot);
 
         /// <summary>
-        /// Whether this member is a <see cref="UserFlags.VerifiedBotDeveloper"/>
+        /// Whether this member is a <see cref="UserFlags.VerifiedDeveloper"/>
         /// </summary>
         /// <returns><see cref="bool"/></returns>
         [JsonIgnore]
         public bool IsBotDev
-                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.VerifiedBotDeveloper);
+                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.VerifiedDeveloper);
 
         /// <summary>
-        /// Whether this member is a <see cref="UserFlags.DiscordEmployee"/>
+        /// Whether this member is a <see cref="UserFlags.Staff"/>
         /// </summary>
         /// <returns><see cref="bool"/></returns>
         [JsonIgnore]
         public bool IsStaff
-                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.DiscordEmployee);
+                => this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.Staff);
 
         #endregion
 

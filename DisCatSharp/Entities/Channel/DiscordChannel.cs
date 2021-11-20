@@ -497,7 +497,6 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        [Obsolete("This will be replaced by ModifyPositionInCategoryAsync. Use it instead.")]
         public Task ModifyPositionAsync(int position, string reason = null)
         {
             if (this.Guild == null)
@@ -947,14 +946,14 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="topic">Topic of the stage.</param>
         /// <param name="send_start_notification">Whether @everyone should be notified.</param>
-        /// <param name="privacy_level">Privacy level of the stage (Defaults to <see cref="StagePrivacyLevel.GUILD_ONLY"/>.</param>
+        /// <param name="privacy_level">Privacy level of the stage (Defaults to <see cref="StagePrivacyLevel.GuildOnly"/>.</param>
         /// <param name="reason">Audit log reason.</param>
         /// <returns>Stage instance</returns>
         /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool send_start_notification = false, StagePrivacyLevel privacy_level = StagePrivacyLevel.GUILD_ONLY, string reason = null)
+        public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool send_start_notification = false, StagePrivacyLevel privacy_level = StagePrivacyLevel.GuildOnly, string reason = null)
             => await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, send_start_notification, privacy_level, reason);
 
         /// <summary>
@@ -1011,13 +1010,13 @@ namespace DisCatSharp.Entities
         /// <exception cref="NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
         /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        /// <exception cref="NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>. Or if <see cref="GuildFeatures.CanCreatePrivateThreads"/> is not enabled for guild. This happens, if the guild does not have <see cref="PremiumTier.Tier_2"/></exception>
+        /// <exception cref="NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>. Or if <see cref="GuildFeatures.CanCreatePrivateThreads"/> is not enabled for guild. This happens, if the guild does not have <see cref="PremiumTier.TierTwo"/></exception>
         public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration auto_archive_duration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, int? rate_limit_per_user = null, string reason = null)
         {
             return (type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread)
                 ? throw new NotSupportedException("Wrong thread type given.")
                 : (!this.IsThreadHolder())
-                ? throw new NotSupportedException("Parent channel can't have threads")
+                ? throw new NotSupportedException("Parent channel can't have threads.")
                 : type == ChannelType.PrivateThread
                 ? Utilities.CheckThreadPrivateFeature(this.Guild)
                 ? Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, auto_archive_duration)
@@ -1027,6 +1026,27 @@ namespace DisCatSharp.Entities
                 : Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, auto_archive_duration)
                     ? await this.Discord.ApiClient.CreateThreadWithoutMessageAsync(this.Id, name, auto_archive_duration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rate_limit_per_user, reason)
                 : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(auto_archive_duration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+        }
+
+        /// <summary>
+        /// Creates a scheduled event based on the channel type.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="scheduledStartTime">The scheduled start time.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="reason">The reason.</param>
+        /// <returns>A scheduled event.</returns>
+        /// <exception cref="NotFoundException">Thrown when the ressource does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, string description = null, string reason = null)
+        {
+            if (!this.IsVoiceJoinable())
+                throw new NotSupportedException("Cannot create a scheduled event for this type of channel. Channel type must be either voice or stage.");
+
+            var type = this.Type == ChannelType.Voice ? ScheduledEventEntityType.Voice : ScheduledEventEntityType.StageInstance;
+
+            return await this.Guild.CreateScheduledEventAsync(name, scheduledStartTime, null, this, null, description, type, reason);
         }
 
 

@@ -36,7 +36,15 @@ namespace DisCatSharp.Hosting
     {
         public DiscordShardedClient ShardedClient { get; protected set; }
 
-#pragma warning disable 8618
+        #pragma warning disable 8618
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordShardedHostedService"/> class.
+        /// </summary>
+        /// <param name="config">The config.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="applicationLifetime">The application lifetime.</param>
+        /// <param name="configBotSection">The config bot section.</param>
         protected DiscordShardedHostedService(IConfiguration config,
             ILogger<DiscordShardedHostedService> logger,
             IServiceProvider serviceProvider,
@@ -46,7 +54,7 @@ namespace DisCatSharp.Hosting
         {
 
         }
-#pragma warning restore 8618
+        #pragma warning restore 8618
 
         protected override Task ConfigureAsync()
         {

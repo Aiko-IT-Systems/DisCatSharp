@@ -106,12 +106,6 @@ namespace DisCatSharp.Entities
         public ulong OwnerId { get; internal set; }
 
         /// <summary>
-        /// Gets permissions for the user in the guild (does not include channel overrides)
-        /// </summary>
-        [JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
-        public Permissions? Permissions { get; set; }
-
-        /// <summary>
         /// Gets the guild's owner.
         /// </summary>
         [JsonIgnore]
@@ -119,6 +113,12 @@ namespace DisCatSharp.Entities
             => this.Members.TryGetValue(this.OwnerId, out var owner)
                 ? owner
                 : this.Discord.ApiClient.GetGuildMemberAsync(this.Id, this.OwnerId).ConfigureAwait(false).GetAwaiter().GetResult();
+
+        /// <summary>
+        /// Gets permissions for the user in the guild (does not include channel overrides)
+        /// </summary>
+        [JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
+        public Permissions? Permissions { get; set; }
 
         /// <summary>
         /// Gets the guild's voice region ID.
@@ -413,11 +413,11 @@ namespace DisCatSharp.Entities
         /// Gets a dictionary of all scheduled events.
         /// </summary>
         [JsonIgnore]
-        public IReadOnlyDictionary<ulong, DiscordEvent> ScheduledEvents { get; internal set; }
+        public IReadOnlyDictionary<ulong, DiscordScheduledEvent> ScheduledEvents { get; internal set; }
 
-        [JsonProperty("events", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("guild_scheduled_events", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-        internal ConcurrentDictionary<ulong, DiscordEvent> _scheduledEvents = new();
+        internal ConcurrentDictionary<ulong, DiscordScheduledEvent> _scheduledEvents = new();
 
         /// <summary>
         /// Gets the guild member for current user.
@@ -636,6 +636,7 @@ namespace DisCatSharp.Entities
             this._invites = new ConcurrentDictionary<string, DiscordInvite>();
             this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this._threads);
             this.StageInstances = new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this._stageInstances);
+            this.ScheduledEvents = new ReadOnlyConcurrentDictionary<ulong, DiscordScheduledEvent>(this._scheduledEvents);
         }
 
         #region Guild Methods
@@ -914,6 +915,79 @@ namespace DisCatSharp.Entities
         /// <returns>The requested ban object.</returns>
         public Task<DiscordBan> GetBanAsync(DiscordUser user)
             => this.GetBanAsync(user.Id);
+
+        #region Sheduled Events
+
+        /// <summary>
+        /// Creates a scheduled event.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="scheduledStartTime">The scheduled start time.</param>
+        /// <param name="scheduledEndTime">The scheduled end time.</param>
+        /// <param name="channel">The channel.</param>
+        /// <param name="metadata">The metadata.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="reason">The reason.</param>
+        /// <returns>A scheduled event.</returns>
+        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime = null, DiscordChannel channel = null, DiscordScheduledEventEntityMetadata metadata = null, string description = null, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, string reason = null)
+            => await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, type == ScheduledEventEntityType.External ? null : channel?.Id, type == ScheduledEventEntityType.External ? metadata : null, name, scheduledStartTime, scheduledEndTime.HasValue && type == ScheduledEventEntityType.External ? scheduledEndTime.Value : null, description, type, reason);
+
+        /// <summary>
+        /// Creates a scheduled event with type <see cref="ScheduledEventEntityType.External"/>.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="scheduledStartTime">The scheduled start time.</param>
+        /// <param name="scheduledEndTime">The scheduled end time.</param>
+        /// <param name="location">The location of the external event.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="reason">The reason.</param>
+        /// <returns>A scheduled event.</returns>
+        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset scheduledEndTime, string location, string description = null, string reason = null)
+            => await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new DiscordScheduledEventEntityMetadata(location), name, scheduledStartTime, scheduledEndTime, description, ScheduledEventEntityType.External, reason);
+
+
+        /// <summary>
+        /// Gets a specific scheduled events.
+        /// </summary>
+        /// <param name="scheduledEventId">The Id of the event to get.</param>
+        /// <param name="withUserCount">Whether to include user count.</param>
+        /// <returns>A scheduled event.</returns>
+        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordScheduledEvent> GetScheduledEventAsync(ulong scheduledEventId, bool? withUserCount = null)
+            => this._scheduledEvents.TryGetValue(scheduledEventId, out var ev) ? ev : await this.Discord.ApiClient.GetGuildScheduledEventAsync(this.Id, scheduledEventId, withUserCount);
+
+        /// <summary>
+        /// Gets a specific scheduled events.
+        /// </summary>
+        /// <param name="scheduledEvent">The event to get.</param>
+        /// <param name="withUserCount">Whether to include user count.</param>
+        /// <returns>A sheduled event.</returns>
+        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<DiscordScheduledEvent> GetScheduledEventAsync(DiscordScheduledEvent scheduledEvent, bool? withUserCount = null)
+            => await this.GetScheduledEventAsync(scheduledEvent.Id, withUserCount);
+
+        /// <summary>
+        /// Gets the guilds scheduled events.
+        /// </summary>
+        /// <param name="withUserCount">Whether to include user count.</param>
+        /// <returns>A list of the guilds scheduled events.</returns>
+        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEvent>> GetScheduledEventsAsync(bool? withUserCount = null)
+            => await this.Discord.ApiClient.ListGuildScheduledEventsAsync(this.Id, withUserCount);
+        #endregion
 
         /// <summary>
         /// Creates a new text channel in this guild.
@@ -2443,15 +2517,15 @@ namespace DisCatSharp.Entities
                         break;
 
 
-                    case AuditLogActionType.ScheduledEventCreate:
-                    case AuditLogActionType.ScheduledEventDelete:
-                    case AuditLogActionType.ScheduledEventUpdate:
-                        entry = new DiscordAuditLogScheduledEventEntry
+                    case AuditLogActionType.GuildScheduledEventCreate:
+                    case AuditLogActionType.GuildScheduledEventDelete:
+                    case AuditLogActionType.GuildScheduledEventUpdate:
+                        entry = new DiscordAuditLogGuildScheduledEventEntry
                         {
-                            //Target = this._events.TryGetValue(xac.TargetId.Value, out var scheduled_event) ? scheduled_event : new DiscordEvent { Id = xac.TargetId.Value, Discord = this.Discord }
+                            Target = this._scheduledEvents.TryGetValue(xac.TargetId.Value, out var scheduled_event) ? scheduled_event : new DiscordScheduledEvent { Id = xac.TargetId.Value, Discord = this.Discord }
                         };
 
-                        var entryse = entry as DiscordAuditLogScheduledEventEntry;
+                        var entryse = entry as DiscordAuditLogGuildScheduledEventEntry;
                         foreach (var xc in xac.Changes)
                         {
                             switch (xc.Key.ToLowerInvariant())
@@ -2472,14 +2546,33 @@ namespace DisCatSharp.Entities
                                     };
                                     break;
 
+                                case "location":
+                                    entryse.LocationChange = new PropertyChange<string>
+                                    {
+                                        Before = xc.OldValue != null ? xc.OldValueString : null,
+                                        After = xc.NewValue != null ? xc.NewValueString : null
+                                    };
+                                    break;
+
                                 case "privacy_level":
                                     p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
                                     p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 
-                                    entryse.PrivacyLevelChange = new PropertyChange<StagePrivacyLevel?>
+                                    entryse.PrivacyLevelChange = new PropertyChange<ScheduledEventPrivacyLevel?>
                                     {
-                                        Before = p1 ? (StagePrivacyLevel?)t5 : null,
-                                        After = p2 ? (StagePrivacyLevel?)t6 : null
+                                        Before = p1 ? (ScheduledEventPrivacyLevel?)t5 : null,
+                                        After = p2 ? (ScheduledEventPrivacyLevel?)t6 : null
+                                    };
+                                    break;
+
+                                case "entity_type":
+                                    p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
+                                    p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
+
+                                    entryse.EntityTypeChange = new PropertyChange<ScheduledEventEntityType?>
+                                    {
+                                        Before = p1 ? (ScheduledEventEntityType?)t5 : null,
+                                        After = p2 ? (ScheduledEventEntityType?)t6 : null
                                     };
                                     break;
 
@@ -2487,10 +2580,10 @@ namespace DisCatSharp.Entities
                                     p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
                                     p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
 
-                                    entryse.StatusChange = new PropertyChange<EventStatus?>
+                                    entryse.StatusChange = new PropertyChange<ScheduledEventStatus?>
                                     {
-                                        Before = p1 ? (EventStatus?)t5 : null,
-                                        After = p2 ? (EventStatus?)t6 : null
+                                        Before = p1 ? (ScheduledEventStatus?)t5 : null,
+                                        After = p2 ? (ScheduledEventStatus?)t6 : null
                                     };
                                     break;
 
@@ -2511,9 +2604,9 @@ namespace DisCatSharp.Entities
 
                 entry.ActionCategory = xac.ActionType switch
                 {
-                    AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate or AuditLogActionType.ScheduledEventCreate => AuditLogActionCategory.Create,
-                    AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete or AuditLogActionType.ThreadDelete or AuditLogActionType.ScheduledEventDelete => AuditLogActionCategory.Delete,
-                    AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate or AuditLogActionType.ScheduledEventUpdate => AuditLogActionCategory.Update,
+                    AuditLogActionType.ChannelCreate or AuditLogActionType.EmojiCreate or AuditLogActionType.InviteCreate or AuditLogActionType.OverwriteCreate or AuditLogActionType.RoleCreate or AuditLogActionType.WebhookCreate or AuditLogActionType.IntegrationCreate or AuditLogActionType.StickerCreate or AuditLogActionType.StageInstanceCreate or AuditLogActionType.ThreadCreate or AuditLogActionType.GuildScheduledEventCreate => AuditLogActionCategory.Create,
+                    AuditLogActionType.ChannelDelete or AuditLogActionType.EmojiDelete or AuditLogActionType.InviteDelete or AuditLogActionType.MessageDelete or AuditLogActionType.MessageBulkDelete or AuditLogActionType.OverwriteDelete or AuditLogActionType.RoleDelete or AuditLogActionType.WebhookDelete or AuditLogActionType.IntegrationDelete or AuditLogActionType.StickerDelete or AuditLogActionType.StageInstanceDelete or AuditLogActionType.ThreadDelete or AuditLogActionType.GuildScheduledEventDelete => AuditLogActionCategory.Delete,
+                    AuditLogActionType.ChannelUpdate or AuditLogActionType.EmojiUpdate or AuditLogActionType.InviteUpdate or AuditLogActionType.MemberRoleUpdate or AuditLogActionType.MemberUpdate or AuditLogActionType.OverwriteUpdate or AuditLogActionType.RoleUpdate or AuditLogActionType.WebhookUpdate or AuditLogActionType.IntegrationUpdate or AuditLogActionType.StickerUpdate or AuditLogActionType.StageInstanceUpdate or AuditLogActionType.ThreadUpdate or AuditLogActionType.GuildScheduledEventUpdate => AuditLogActionCategory.Update,
                     _ => AuditLogActionCategory.Other,
                 };
                 entry.Discord = this.Discord;
@@ -3218,19 +3311,19 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Guild has access to the three day archive time for threads.
-        /// Needs Premium Tier 1 (<see cref="PremiumTier.Tier_1"/>).
+        /// Needs Premium Tier 1 (<see cref="PremiumTier.TierOne"/>).
         /// </summary>
         public bool CanSetThreadArchiveDurationThreeDays { get; }
 
         /// <summary>
         /// Guild has access to the seven day archive time for threads.
-        /// Needs Premium Tier 2 (<see cref="PremiumTier.Tier_2"/>).
+        /// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
         /// </summary>
         public bool CanSetThreadArchiveDurationSevenDays { get; }
 
         /// <summary>
         /// Guild has access to create private threads.
-        /// Needs Premium Tier 2 (<see cref="PremiumTier.Tier_2"/>).
+        /// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
         /// </summary>
         public bool CanCreatePrivateThreads { get; }
 
@@ -3296,18 +3389,19 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Guild has access to text in voice.
+        /// Restricted to <see cref="IsStaffOnly"/>.
         /// </summary>
         public bool TextInVoiceEnabled { get; }
 
         /// <summary>
         /// Guild can set an animated banner.
-        /// Needs Premium Tier 3 (<see cref="PremiumTier.Tier_3"/>).
+        /// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
         /// </summary>
         public bool CanSetAnimatedBanner { get; }
 
         /// <summary>
         /// Guild can set an animated banner.
-        /// Needs Premium Tier 3 (<see cref="PremiumTier.Tier_3"/>).
+        /// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
         /// </summary>
         public bool CanSetChannelBanner { get; }
 
@@ -3317,7 +3411,7 @@ namespace DisCatSharp.Entities
         public bool HasMemberProfiles { get; }
 
         /// <summary>
-        /// Guild is restricted to users with the <see cref="UserFlags.DiscordEmployee"/> badge.
+        /// Guild is restricted to users with the <see cref="UserFlags.Staff"/> badge.
         /// </summary>
         public bool IsStaffOnly { get; }
 
@@ -3371,7 +3465,7 @@ namespace DisCatSharp.Entities
             this.IsStaffOnly = guild.RawFeatures.Contains("INTERNAL_EMPLOYEE_ONLY");
             this.RoleSubscriptionsIsAvaiableForPurchase = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE");
 
-            var _features = guild.RawFeatures.Any() ? "" : "NONE";
+            var _features = guild.RawFeatures.Any() ? "" : "None";
             foreach (var feature in guild.RawFeatures)
             {
                 _features += feature + " ";
