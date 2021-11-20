@@ -112,6 +112,24 @@ namespace DisCatSharp.Net.Abstractions
     }
 
     /// <summary>
+    /// Represents a interaction response payload.
+    /// </summary>
+    internal class RestInteractionModalResponsePayload
+    {
+        /// <summary>
+        /// Gets the type.
+        /// </summary>
+        [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+        public InteractionResponseType Type { get; set; }
+
+        /// <summary>
+        /// Gets the data.
+        /// </summary>
+        [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordInteractionApplicationCommandModalCallbackData Data { get; set; }
+    }
+
+    /// <summary>
     /// Represents a followup message create payload.
     /// </summary>
     internal class RestFollowupMessageCreatePayload
