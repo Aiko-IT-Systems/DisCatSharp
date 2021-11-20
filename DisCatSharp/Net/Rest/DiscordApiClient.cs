@@ -4913,9 +4913,12 @@ namespace DisCatSharp.Net
                 };
                 var values = new Dictionary<string, string>();
 
+                if (type == InteractionResponseType.Modal)
+                    this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld)+"}");
+
                 if (builder != null)
-                    if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTTS == true || builder.Mentions != null)
-                        values["payload_json"] = DiscordJson.SerializeObject(pld);
+                    if (!string.IsNullOrEmpty(builder.Content) || !string.IsNullOrEmpty(builder.Title) || builder.Embeds?.Count() > 0 || builder.IsTTS == true || builder.Mentions != null)
+                        values["payload_json"] = DiscordJson.SerializeObject(pld) + "}";
 
                 var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
                 var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
@@ -4932,7 +4935,7 @@ namespace DisCatSharp.Net
                 }
                 else
                 {
-                    await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
+                    await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld) + "}");
                 }
             } catch(Exception ex)
             {

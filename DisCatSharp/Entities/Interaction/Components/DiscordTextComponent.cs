@@ -35,7 +35,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// The style of the text component.
         /// </summary>
-        [JsonProperty("text_style", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("style", NullValueHandling = NullValueHandling.Ignore)]
         public TextComponentStyle Style { get; internal set; }
 
         /// <summary>
