@@ -108,6 +108,13 @@ namespace DisCatSharp.Entities
             this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
 
         /// <summary>
+        /// Creates a modal response to this interaction.
+        /// </summary>
+        /// <param name="builder">The data to send.</param>
+        public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder) =>
+            this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder);
+
+        /// <summary>
         /// Gets the original interaction response.
         /// </summary>
         /// <returns>The origingal message that was sent. This <b>does not work on ephemeral messages.</b></returns>
