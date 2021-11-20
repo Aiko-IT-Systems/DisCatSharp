@@ -58,6 +58,21 @@ namespace DisCatSharp.Entities
         private string _content;
 
         /// <summary>
+        /// Title of form, if applicable.
+        /// </summary>
+        public string Title
+        {
+            get => this._title;
+            set
+            {
+                if (value != null && value.Length > 128)
+                    throw new ArgumentException("Title length cannot exceed 128 characters.", nameof(value));
+                this._title = value;
+            }
+        }
+        private string _title;
+
+        /// <summary>
         /// Embeds to send on this interaction response.
         /// </summary>
         public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
@@ -346,6 +361,7 @@ namespace DisCatSharp.Entities
             this._components.Clear();
             this._choices.Clear();
             this._files.Clear();
+            this.Title = null;
         }
     }
 }

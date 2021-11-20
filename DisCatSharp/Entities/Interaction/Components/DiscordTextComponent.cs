@@ -28,33 +28,27 @@ namespace DisCatSharp.Entities
 {
 
     /// <summary>
-    /// Represents a text that can be submitted. Fires <see cref="ComponentInteractionCreateEventArgs"/> when submitted.
+    /// Represents a text component that can be submitted. Fires <see cref="ComponentInteractionCreateEventArgs"/> when submitted.
     /// </summary>
     public sealed class DiscordTextComponent : DiscordComponent
     {
         /// <summary>
-        /// The style of the text.
+        /// The style of the text component.
         /// </summary>
         [JsonProperty("text_style", NullValueHandling = NullValueHandling.Ignore)]
         public TextComponentStyle Style { get; internal set; }
 
         /// <summary>
-        /// The text to apply to the button. If this is not specified <see cref="Emoji"/> becomes required.
+        /// The text to apply to the text component.
         /// </summary>
         [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
         public string Label { get; internal set; }
 
         /// <summary>
-        /// Whether this button can be pressed.
+        /// Whether this text component can be used.
         /// </summary>
         [JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool Disabled { get; internal set; }
-
-        /// <summary>
-        /// The emoji to add to the button. Can be used in conjunction with a label, or as standalone. Must be added if label is not specified.
-        /// </summary>
-        [JsonProperty("emoji", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordComponentEmoji Emoji { get; internal set; }
 
         /// <summary>
         /// Enables this component if it was disabled before.
@@ -77,7 +71,7 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Constructs a new <see cref="DiscordButtonComponent"/>.
+        /// Constructs a new <see cref="DiscordTextComponent"/>.
         /// </summary>
         internal DiscordTextComponent()
         {
@@ -85,7 +79,7 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Constucts a new button based on another button.
+        /// Constucts a new text component based on another text component.
         /// </summary>
         /// <param name="other">The button to copy.</param>
         public DiscordTextComponent(DiscordTextComponent other) : this()
@@ -94,24 +88,21 @@ namespace DisCatSharp.Entities
             this.Style = other.Style;
             this.Label = other.Label;
             this.Disabled = other.Disabled;
-            this.Emoji = other.Emoji;
         }
 
         /// <summary>
-        /// Constructs a new button with the specified options.
+        /// Constructs a new text component field with the specified options.
         /// </summary>
-        /// <param name="style">The style/color of the button.</param>
-        /// <param name="customId">The Id to assign to the button. This is sent back when a user presses it.</param>
-        /// <param name="label">The text to display on the button, up to 80 characters. Can be left blank if <paramref name="emoji"/>is set.</param>
-        /// <param name="disabled">Whether this button should be initialized as being disabled. User sees a greyed out button that cannot be interacted with.</param>
-        /// <param name="emoji">The emoji to add to the button. This is required if <paramref name="label"/> is empty or null.</param>
-        public DiscordTextComponent(TextComponentStyle style, string customId, string label, bool disabled = false, DiscordComponentEmoji emoji = null)
+        /// <param name="style">The style of the text component.</param>
+        /// <param name="customId">The Id to assign to the text component. This is sent back when a user presses it.</param>
+        /// <param name="label">The text to display before the text component, up to 80 characters.</param>
+        /// <param name="disabled">Whether this text component should be initialized as being disabled.</param>
+        public DiscordTextComponent(TextComponentStyle style, string customId, string label, bool disabled = false)
         {
             this.Style = style;
             this.Label = label;
             this.CustomId = customId;
             this.Disabled = disabled;
-            this.Emoji = emoji;
             this.Type = ComponentType.InputText;
         }
     }

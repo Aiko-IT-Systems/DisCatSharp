@@ -4876,8 +4876,25 @@ namespace DisCatSharp.Net
                         Mentions = null,
                         Flags = null,
                         Components = null,
-                        Choices = builder.Choices
+                        Choices = builder.Choices,
+                        Title = null
                     }
+                }
+                : type == InteractionResponseType.Modal
+                ? new RestInteractionResponsePayload
+                {
+                    Type = type,
+                    Data = builder != null ? new DiscordInteractionApplicationCommandCallbackData
+                    {
+                        Content = null,
+                        Embeds = null,
+                        IsTTS = null,
+                        Mentions = null,
+                        Flags = null,
+                        Components = builder.Components,
+                        Choices = null,
+                        Title = builder.Title
+                    } : null
                 }
                 : new RestInteractionResponsePayload
                 {
@@ -4890,7 +4907,8 @@ namespace DisCatSharp.Net
                         Mentions = builder.Mentions,
                         Flags = builder.IsEphemeral ? MessageFlags.Ephemeral : 0,
                         Components = builder.Components,
-                        Choices = null
+                        Choices = null,
+                        Title = null
                     } : null
                 };
                 var values = new Dictionary<string, string>();
