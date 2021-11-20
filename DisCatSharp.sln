@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp", "DisCatSharp\DisCatSharp.csproj", "{EB3D8310-DFAD-4295-97F9-82E253647583}"
 EndProject
@@ -51,6 +51,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{430C
 	ProjectSection(SolutionItems) = preProject
 		.github\ISSUE_TEMPLATE\bug_report.md = .github\ISSUE_TEMPLATE\bug_report.md
 		.github\CODEOWNERS = .github\CODEOWNERS
+		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
+		.github\workflows\docs-preview.yml = .github\workflows\docs-preview.yml
+		.github\workflows\docs.yml = .github\workflows\docs.yml
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 		.github\ISSUE_TEMPLATE\feature_request.md = .github\ISSUE_TEMPLATE\feature_request.md
 		.github\FUNDING.yml = .github\FUNDING.yml
 		.github\pull_request_template.md = .github\pull_request_template.md

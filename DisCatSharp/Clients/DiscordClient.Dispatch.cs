@@ -1460,7 +1460,7 @@ namespace DisCatSharp
             scheduled_event.Discord = this;
 
             if (scheduled_event.Status == ScheduledEventStatus.Scheduled)
-                scheduled_event.Status == ScheduledEventStatus.Canceled;
+                scheduled_event.Status = ScheduledEventStatus.Canceled;
 
             if (scheduled_event.Creator != null)
             {
