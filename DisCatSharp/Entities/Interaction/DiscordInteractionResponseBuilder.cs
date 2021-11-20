@@ -58,27 +58,6 @@ namespace DisCatSharp.Entities
         private string _content;
 
         /// <summary>
-        /// Title of form, if applicable.
-        /// </summary>
-        public string Title
-        {
-            get => this._title;
-            set
-            {
-                if (value != null && value.Length > 128)
-                    throw new ArgumentException("Title length cannot exceed 128 characters.", nameof(value));
-                this._title = value;
-            }
-        }
-        private string _title;
-
-
-        /// <summary>
-        /// Custom id of modal.
-        /// </summary>
-        public string CustomId { get; set; }
-
-        /// <summary>
         /// Embeds to send on this interaction response.
         /// </summary>
         public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
@@ -96,12 +75,6 @@ namespace DisCatSharp.Entities
         /// </summary>
         public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
         private readonly List<DiscordActionRowComponent> _components = new();
-
-        /// <summary>
-        /// Modal components to send on this interaction response.
-        /// </summary>
-        public IReadOnlyList<DiscordComponent> ModalComponents => this._modalComponents;
-        private readonly List<DiscordComponent> _modalComponents = new();
 
         /// <summary>
         /// The choices to send on this interaction response.
@@ -179,20 +152,6 @@ namespace DisCatSharp.Entities
 
             var arc = new DiscordActionRowComponent(compArr);
             this._components.Add(arc);
-            return this;
-        }
-
-        /// <summary>
-        /// Appends a collection of modal components to the builder.
-        /// Cannot be used with other properties except <see cref="Title"></see> and <see cref="CustomId"></see>
-        /// </summary>
-        /// <param name="components">The components to append.</param>
-        /// <returns>The current builder to chain calls with.</returns>
-        public DiscordInteractionResponseBuilder AddModalComponents(IEnumerable<DiscordComponent> components)
-        {
-            var compArr = components.ToArray();
-            
-            this._modalComponents.AddRange(compArr);
             return this;
         }
 
@@ -387,9 +346,6 @@ namespace DisCatSharp.Entities
             this._components.Clear();
             this._choices.Clear();
             this._files.Clear();
-            this.Title = null;
-            this._modalComponents.Clear();
-            this.CustomId = null;
         }
     }
 }

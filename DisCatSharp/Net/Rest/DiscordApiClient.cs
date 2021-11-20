@@ -4865,64 +4865,41 @@ namespace DisCatSharp.Net
                         if (embed.Timestamp != null)
                             embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
-                RestInteractionResponsePayload pld = null;
-                RestInteractionModalResponsePayload mpld = null;
-
-                if (type == InteractionResponseType.Modal)
+                var pld = type == InteractionResponseType.AutoCompleteResult
+                ? new RestInteractionResponsePayload
                 {
-                    mpld = new RestInteractionModalResponsePayload
+                    Type = type,
+                    Data = new DiscordInteractionApplicationCommandCallbackData
                     {
-                        Type = type,
-                        Data = new DiscordInteractionApplicationCommandModalCallbackData
-                        {
-                            Title = builder.Title,
-                            CustomId = builder.CustomId,
-                            ModalComponents = builder.ModalComponents
-                        }
-                    };
-                } else
-                {
-                    pld = type == InteractionResponseType.AutoCompleteResult
-                    ? new RestInteractionResponsePayload
-                    {
-                        Type = type,
-                        Data = new DiscordInteractionApplicationCommandCallbackData
-                        {
-                            Content = null,
-                            Embeds = null,
-                            IsTTS = null,
-                            Mentions = null,
-                            Flags = null,
-                            Components = null,
-                            Choices = builder.Choices,
-                            Title = null
-                        }
+                        Content = null,
+                        Embeds = null,
+                        IsTTS = null,
+                        Mentions = null,
+                        Flags = null,
+                        Components = null,
+                        Choices = builder.Choices
                     }
-                    : new RestInteractionResponsePayload
-                    {
-                        Type = type,
-                        Data = builder != null ? new DiscordInteractionApplicationCommandCallbackData
-                        {
-                            Content = builder.Content,
-                            Embeds = builder.Embeds,
-                            IsTTS = builder.IsTTS,
-                            Mentions = builder.Mentions,
-                            Flags = builder.IsEphemeral ? MessageFlags.Ephemeral : 0,
-                            Components = builder.Components,
-                            Choices = null,
-                            Title = null
-                        } : null
-                    };
                 }
+                : new RestInteractionResponsePayload
+                {
+                    Type = type,
+                    Data = builder != null ? new DiscordInteractionApplicationCommandCallbackData
+                    {
+                        Content = builder.Content,
+                        Embeds = builder.Embeds,
+                        IsTTS = builder.IsTTS,
+                        Mentions = builder.Mentions,
+                        Flags = builder.IsEphemeral ? MessageFlags.Ephemeral : 0,
+                        Components = builder.Components,
+                        Choices = null
+                    } : null
+                };
 
                 var values = new Dictionary<string, string>();
 
-                if (type == InteractionResponseType.Modal)
-                    this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(mpld)+"}");
-
                 if (builder != null)
-                    if (!string.IsNullOrEmpty(builder.Content) || !string.IsNullOrEmpty(builder.Title) || builder.Embeds?.Count() > 0 || builder.IsTTS == true || builder.Mentions != null)
-                        values["payload_json"] = type == InteractionResponseType.Modal ? DiscordJson.SerializeObject(mpld) : DiscordJson.SerializeObject(pld);
+                    if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTTS == true || builder.Mentions != null)
+                        values["payload_json"] = DiscordJson.SerializeObject(pld);
 
                 var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
                 var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
@@ -4939,17 +4916,54 @@ namespace DisCatSharp.Net
                 }
                 else
                 {
-                    if (type == InteractionResponseType.Modal)
-                        await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(mpld));
-                    else
-                        await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
+                    await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
                 }
             }
-            catch(BadRequestException ex)
+            catch(Exception ex)
+            {
+                this.Discord.Logger.LogDebug(ex, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Creates the interaction response async.
+        /// </summary>
+        /// <param name="interaction_id">The interaction_id.</param>
+        /// <param name="interaction_token">The interaction_token.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="builder">The builder.</param>
+        /// <returns>A Task.</returns>
+        internal async Task CreateInteractionModalResponseAsync(ulong interaction_id, string interaction_token, InteractionResponseType type, DiscordInteractionModalBuilder builder)
+        {
+            try
+            {
+                var pld = new RestInteractionModalResponsePayload
+                {
+                    Type = type,
+                    Data = new DiscordInteractionApplicationCommandModalCallbackData
+                    {
+                        Title = builder.Title,
+                        CustomId = builder.CustomId,
+                        ModalComponents = builder.ModalComponents
+                    }
+                };
+
+                var values = new Dictionary<string, string>();
+
+                if (type == InteractionResponseType.Modal)
+                    this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
+
+                var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
+                var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
+
+                var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
+                await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
+            }
+            catch (BadRequestException ex)
             {
                 this.Discord.Logger.LogError(ex.WebResponse.Response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 this.Discord.Logger.LogDebug(ex, ex.Message);
             }
