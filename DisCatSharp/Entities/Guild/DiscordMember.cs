@@ -510,7 +510,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds a timeout to a member.
         /// </summary>
-        /// <param name="until">The datetime offset to time out the user.</param>
+        /// <param name="until">The datetime offset to time out the user. Up to 28 days.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
@@ -522,7 +522,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds a timeout to a member.
         /// </summary>
-        /// <param name="until">The timespan to time out the user.</param>
+        /// <param name="until">The timespan to time out the user. Up to 28 days.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
@@ -534,7 +534,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds a timeout to a member.
         /// </summary>
-        /// <param name="until">The datetime to time out the user.</param>
+        /// <param name="until">The datetime to time out the user. Up to 28 days.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
