@@ -2565,16 +2565,6 @@ namespace DisCatSharp.Net
         /// <returns>A Task.</returns>
         internal Task ModifyTimeOutAsync(ulong guild_id, ulong user_id, DateTimeOffset? until, string reason)
         {
-            if (until.HasValue && until.Value != null)
-            {
-                var now = DateTimeOffset.UtcNow;
-
-                var diff = until.Value.Subtract(now);
-
-                if (diff.Days > 28)
-                    throw new ArgumentException("Timeout can not be longer as 28 days");
-            }
-
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
                 headers[REASON_HEADER_NAME] = reason;
