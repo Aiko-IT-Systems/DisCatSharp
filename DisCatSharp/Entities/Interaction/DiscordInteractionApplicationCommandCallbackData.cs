@@ -43,6 +43,12 @@ namespace DisCatSharp.Entities
         public string Content { get; internal set; }
 
         /// <summary>
+        /// Gets the content.
+        /// </summary>
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+        public string Title { get; internal set; }
+
+        /// <summary>
         /// Gets the embeds.
         /// </summary>
         [JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
