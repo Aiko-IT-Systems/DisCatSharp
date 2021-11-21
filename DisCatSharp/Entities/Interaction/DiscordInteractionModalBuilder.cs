@@ -79,7 +79,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="components">The components to append. Up to five.</param>
         /// <returns>The current builder to chain calls with.</returns>
-        /// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
         public DiscordInteractionModalBuilder AddModalComponents(params DiscordComponent[] components)
             => this.AddModalComponents((IEnumerable<DiscordComponent>)components);
 
@@ -106,7 +106,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="components">The components to append. Up to five.</param>
         /// <returns>The current builder to chain calls with.</returns>
-        /// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
         public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordComponent> components)
         {
             var compArr = components.ToArray();

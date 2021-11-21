@@ -660,7 +660,7 @@ namespace DisCatSharp.Entities
         /// <param name="muted">whether this user has to be muted</param>
         /// <param name="deaf">whether this user has to be deafened</param>
         /// <returns></returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite" /> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite" /> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the <paramref name="user"/> or <paramref name="access_token"/> is not found.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -672,7 +672,7 @@ namespace DisCatSharp.Entities
         /// Deletes this guild. Requires the caller to be the owner of the guild.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client is not the owner of the guild.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client is not the owner of the guild.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task DeleteAsync()
             => this.Discord.ApiClient.DeleteGuildAsync(this.Id);
@@ -682,7 +682,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="action">Action to perform on this guild..</param>
         /// <returns>The modified guild object.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -775,7 +775,7 @@ namespace DisCatSharp.Entities
         /// <param name="description">The description.</param>
         /// <param name="defaultMessageNotifications">The default message notifications. Defaults to <see cref="DefaultMessageNotifications.MentionsOnly"/></param>
         /// <param name="reason">The auditlog reason.</param>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -834,7 +834,7 @@ namespace DisCatSharp.Entities
         /// <param name="delete_message_days">How many days to remove messages from.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns></returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -848,7 +848,7 @@ namespace DisCatSharp.Entities
         /// <param name="delete_message_days">How many days to remove messages from.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns></returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -861,7 +861,7 @@ namespace DisCatSharp.Entities
         /// <param name="user">User to unban.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns></returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the user does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -874,7 +874,7 @@ namespace DisCatSharp.Entities
         /// <param name="user_id">ID of the user to unban.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns></returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the user does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -893,7 +893,7 @@ namespace DisCatSharp.Entities
         /// Gets the bans for this guild.
         /// </summary>
         /// <returns>Collection of bans in this guild.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<IReadOnlyList<DiscordBan>> GetBansAsync()
             => this.Discord.ApiClient.GetGuildBansAsync(this.Id);
@@ -1000,7 +1000,7 @@ namespace DisCatSharp.Entities
         /// <param name="reason">Reason for audit logs.</param>
         /// <param name="perUserRateLimit">Slow mode timeout for users.</param>
         /// <returns>The newly-created channel.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1014,7 +1014,7 @@ namespace DisCatSharp.Entities
         /// <param name="overwrites">Permission overwrites for this category.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns>The newly-created channel category.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1028,11 +1028,11 @@ namespace DisCatSharp.Entities
         /// <param name="overwrites">Permission overwrites for this stage channel.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns>The newly-created stage channel.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        /// <exception cref="NotSupportedException">Thrown when the guilds has not enabled community.</exception>
+        /// <exception cref="System.NotSupportedException">Thrown when the guilds has not enabled community.</exception>
         public Task<DiscordChannel> CreateStageChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
             => this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
 
@@ -1043,11 +1043,11 @@ namespace DisCatSharp.Entities
         /// <param name="overwrites">Permission overwrites for this news channel.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns>The newly-created news channel.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        /// <exception cref="NotSupportedException">Thrown when the guilds has not enabled community.</exception>
+        /// <exception cref="System.NotSupportedException">Thrown when the guilds has not enabled community.</exception>
         public Task<DiscordChannel> CreateNewsChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
             => this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
 
@@ -1062,7 +1062,7 @@ namespace DisCatSharp.Entities
         /// <param name="qualityMode">Video quality mode of the channel.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns>The newly-created channel.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1084,7 +1084,7 @@ namespace DisCatSharp.Entities
         /// <param name="qualityMode">Video quality mode of the channel. Applies to voice only.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns>The newly-created channel.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1126,7 +1126,7 @@ namespace DisCatSharp.Entities
         /// <param name="days">Minimum number of inactivity days required for users to be pruned. Defaults to 7.</param>
         /// <param name="includedRoles">The roles to be included in the prune.</param>
         /// <returns>Number of users that will be pruned.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1159,7 +1159,7 @@ namespace DisCatSharp.Entities
         /// <param name="includedRoles">The roles to be included in the prune.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns>Number of users pruned.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1188,7 +1188,7 @@ namespace DisCatSharp.Entities
         /// Gets integrations attached to this guild.
         /// </summary>
         /// <returns>Collection of integrations attached to this guild.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1200,7 +1200,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="integration">Integration to attach.</param>
         /// <returns>The integration after being attached to the guild.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1215,7 +1215,7 @@ namespace DisCatSharp.Entities
         /// <param name="expire_grace_period">Length of grace period which allows for renewing the integration.</param>
         /// <param name="enable_emoticons">Whether emotes should be synced from this integration.</param>
         /// <returns>The modified integration.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1227,7 +1227,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="integration">Integration to remove.</param>
         /// <returns></returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1239,7 +1239,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="integration">Integration to synchronize.</param>
         /// <returns></returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1292,7 +1292,7 @@ namespace DisCatSharp.Entities
         /// Gets the vanity invite for this guild.
         /// </summary>
         /// <returns>A partial vanity invite.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordInvite> GetVanityInviteAsync()
             => this.Discord.ApiClient.GetGuildVanityUrlAsync(this.Id);
@@ -1301,7 +1301,7 @@ namespace DisCatSharp.Entities
         /// Gets all the webhooks created for all the channels in this guild.
         /// </summary>
         /// <returns>A collection of webhooks this guild has.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageWebhooks"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageWebhooks"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<IReadOnlyList<DiscordWebhook>> GetWebhooksAsync()
             => this.Discord.ApiClient.GetGuildWebhooksAsync(this.Id);
@@ -1396,7 +1396,7 @@ namespace DisCatSharp.Entities
         /// <param name="query">Filters the returned members based on what the username starts with. Either this or <paramref name="userIds"/> must not be null.
         /// The <paramref name="limit"/> must also be greater than 0 if this is specified.</param>
         /// <param name="limit">Total number of members to request. This must be greater than 0 if <paramref name="query"/> is specified.</param>
-        /// <param name="presences">Whether to include the <see cref="GuildMembersChunkEventArgs.Presences"/> associated with the fetched members.</param>
+        /// <param name="presences">Whether to include the <see cref="DisCatSharp.EventArgs.GuildMembersChunkEventArgs.Presences"/> associated with the fetched members.</param>
         /// <param name="userIds">Whether to limit the request to the specified user ids. Either this or <paramref name="query"/> must not be null.</param>
         /// <param name="nonce">The unique string to identify the response.</param>
         public async Task RequestMembersAsync(string query = "", int limit = 0, bool? presences = null, IEnumerable<ulong> userIds = null, string nonce = null)
@@ -1447,7 +1447,7 @@ namespace DisCatSharp.Entities
         /// <param name="mentionable">Whether the role is to be mentionable.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns>The newly-created role.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordRole> CreateRoleAsync(string name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string reason = null)
             => this.Discord.ApiClient.CreateGuildRoleAsync(this.Id, name, permissions, color?.Value, hoist, mentionable, reason);
@@ -1486,7 +1486,7 @@ namespace DisCatSharp.Entities
         /// <param name="by_member">Filter by member responsible.</param>
         /// <param name="action_type">Filter by action type.</param>
         /// <returns>A collection of requested audit log entries.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ViewAuditLog"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ViewAuditLog"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<IReadOnlyList<DiscordAuditLogEntry>> GetAuditLogsAsync(int? limit = null, DiscordMember by_member = null, AuditLogActionType? action_type = null)
         {
@@ -2645,7 +2645,7 @@ namespace DisCatSharp.Entities
         /// <param name="roles">Roles for which the emoji will be available. This works only if your application is whitelisted as integration.</param>
         /// <param name="reason">Reason for audit log.</param>
         /// <returns>The newly-created emoji.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordGuildEmoji> CreateEmojiAsync(string name, Stream image, IEnumerable<DiscordRole> roles = null, string reason = null)
         {
@@ -2674,7 +2674,7 @@ namespace DisCatSharp.Entities
         /// <param name="roles">Roles for which the emoji will be available. This works only if your application is whitelisted as integration.</param>
         /// <param name="reason">Reason for audit log.</param>
         /// <returns>The modified emoji.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordGuildEmoji> ModifyEmojiAsync(DiscordGuildEmoji emoji, string name, IEnumerable<DiscordRole> roles = null, string reason = null)
         {
@@ -2699,7 +2699,7 @@ namespace DisCatSharp.Entities
         /// <param name="emoji">Emoji to delete.</param>
         /// <param name="reason">Reason for audit log.</param>
         /// <returns></returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task DeleteEmojiAsync(DiscordGuildEmoji emoji, string reason = null)
         {
@@ -2736,10 +2736,10 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets a sticker
         /// </summary>
-        /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the sticker could not be found.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
+        /// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
         public Task<DiscordSticker> GetStickerAsync(ulong sticker_id)
             => this.Discord.ApiClient.GetGuildStickerAsync(this.Id, sticker_id);
 
@@ -2752,7 +2752,7 @@ namespace DisCatSharp.Entities
         /// <param name="format">The file format the sticker is written in.</param>
         /// <param name="file">The sticker.</param>
         /// <param name="reason">Audit log reason</param>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordSticker> CreateStickerAsync(string name, string description, DiscordEmoji emoji, Stream file, StickerFormat format, string reason = null)
         {
@@ -2790,10 +2790,10 @@ namespace DisCatSharp.Entities
         /// <param name="emoji">The emoji to associate with this sticker.</param>
         /// <param name="reason">Audit log reason</param>
         /// <returns>A sticker object</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the sticker could not be found.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
+        /// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
         public async Task<DiscordSticker> ModifyStickerAsync(ulong sticker, Optional<string> name, Optional<string> description, Optional<DiscordEmoji> emoji, string reason = null)
         {
 
@@ -2828,10 +2828,10 @@ namespace DisCatSharp.Entities
         /// <param name="emoji">The emoji to associate with this sticker.</param>
         /// <param name="reason">Audit log reason</param>
         /// <returns>A sticker object</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the sticker could not be found.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
+        /// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
         public Task<DiscordSticker> ModifyStickerAsync(DiscordSticker sticker, Optional<string> name, Optional<string> description, Optional<DiscordEmoji> emoji, string reason = null)
             => this.ModifyStickerAsync(sticker.Id, name, description, emoji, reason);
 
@@ -2840,10 +2840,10 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="sticker">Id of sticker to delete</param>
         /// <param name="reason">Audit log reason</param>
-        /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the sticker could not be found.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
+        /// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
         public Task DeleteStickerAsync(ulong sticker, string reason = null)
         {
             return !this._stickers.TryGetValue(sticker, out var stickerobj)
@@ -2858,10 +2858,10 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="sticker">Sticker to delete</param>
         /// <param name="reason">Audit log reason</param>
-        /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the sticker could not be found.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
+        /// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
         public Task DeleteStickerAsync(DiscordSticker sticker, string reason = null)
             => this.DeleteStickerAsync(sticker.Id, reason);
 
@@ -2906,7 +2906,7 @@ namespace DisCatSharp.Entities
         /// Gets all of this guild's templates.
         /// </summary>
         /// <returns>All of the guild's templates.</returns>
-        /// <exception cref="UnauthorizedException">Throws when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Throws when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<IReadOnlyList<DiscordGuildTemplate>> GetTemplatesAsync()
             => this.Discord.ApiClient.GetGuildTemplatesAsync(this.Id);
@@ -2918,7 +2918,7 @@ namespace DisCatSharp.Entities
         /// <param name="description">Description of the template.</param>
         /// <returns>The template created.</returns>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Throws when a template already exists for the guild or a null parameter is provided for the name.</exception>
-        /// <exception cref="UnauthorizedException">Throws when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Throws when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordGuildTemplate> CreateTemplateAsync(string name, string description = null)
             => this.Discord.ApiClient.CreateGuildTemplateAsync(this.Id, name, description);
@@ -2929,7 +2929,7 @@ namespace DisCatSharp.Entities
         /// <param name="code">The code of the template to sync.</param>
         /// <returns>The template synced.</returns>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Throws when the template for the code cannot be found</exception>
-        /// <exception cref="UnauthorizedException">Throws when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Throws when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordGuildTemplate> SyncTemplateAsync(string code)
             => this.Discord.ApiClient.SyncGuildTemplateAsync(this.Id, code);
@@ -2942,7 +2942,7 @@ namespace DisCatSharp.Entities
         /// <param name="description">Description of the template.</param>
         /// <returns>The template modified.</returns>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Throws when the template for the code cannot be found</exception>
-        /// <exception cref="UnauthorizedException">Throws when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Throws when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordGuildTemplate> ModifyTemplateAsync(string code, string name = null, string description = null)
             => this.Discord.ApiClient.ModifyGuildTemplateAsync(this.Id, code, name, description);
@@ -2953,7 +2953,7 @@ namespace DisCatSharp.Entities
         /// <param name="code">The code of the template to delete.</param>
         /// <returns>The deleted template.</returns>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Throws when the template for the code cannot be found</exception>
-        /// <exception cref="UnauthorizedException">Throws when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Throws when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordGuildTemplate> DeleteTemplateAsync(string code)
             => this.Discord.ApiClient.DeleteGuildTemplateAsync(this.Id, code);
@@ -2971,7 +2971,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="action">Action to perform</param>
         /// <returns>The modified screening form.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client doesn't have the <see cref="Permissions.ManageGuild"/> permission, or community is not enabled on this guild.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client doesn't have the <see cref="Permissions.ManageGuild"/> permission, or community is not enabled on this guild.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordGuildMembershipScreening> ModifyMembershipScreeningFormAsync(Action<MembershipScreeningEditModel> action)
         {
@@ -3029,7 +3029,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="action">Action to perform.</param>
         /// <returns>The modified welcome screen.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client doesn't have the <see cref="Permissions.ManageGuild"/> permission, or community is not enabled on this guild.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client doesn't have the <see cref="Permissions.ManageGuild"/> permission, or community is not enabled on this guild.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordGuildWelcomeScreen> ModifyWelcomeScreenAsync(Action<WelcomeScreenEditModel> action)
         {

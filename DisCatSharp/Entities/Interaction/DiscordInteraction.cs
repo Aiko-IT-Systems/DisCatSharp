@@ -70,7 +70,7 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Gets the user that invoked this interaction.
-        /// <para>This can be cast to a <see cref="DiscordMember"/> if created in a guild.</para>
+        /// <para>This can be cast to a <see cref="DisCatSharp.Entities.DiscordMember"/> if created in a guild.</para>
         /// </summary>
         [JsonIgnore]
         public DiscordUser User { get; internal set; }

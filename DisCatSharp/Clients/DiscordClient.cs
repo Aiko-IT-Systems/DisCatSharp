@@ -276,7 +276,7 @@ namespace DisCatSharp
         /// <summary>
         /// Connects to the gateway.
         /// </summary>
-        /// <exception cref="UnauthorizedException">Thrown when an invalid token was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when an invalid token was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task ConnectAsync(DiscordActivity activity = null, UserStatus? status = null, DateTimeOffset? idlesince = null)
@@ -441,7 +441,7 @@ namespace DisCatSharp
         /// <param name="channel">Channel to send to.</param>
         /// <param name="content">Message content to send.</param>
         /// <returns>The message that was sent.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -454,7 +454,7 @@ namespace DisCatSharp
         /// <param name="channel">Channel to send to.</param>
         /// <param name="embed">Embed to attach to the message.</param>
         /// <returns>The message that was sent.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -468,7 +468,7 @@ namespace DisCatSharp
         /// <param name="content">Message content to send.</param>
         /// <param name="embed">Embed to attach to the message.</param>
         /// <returns>The message that was sent.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -476,12 +476,12 @@ namespace DisCatSharp
             => this.ApiClient.CreateMessageAsync(channel.Id, content, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
         /// <summary>
-        /// Sends a message with the <see cref="DiscordMessageBuilder"/>.
+        /// Sends a message with the <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
         /// </summary>
         /// <param name="channel">Channel to send the message to.</param>
         /// <param name="builder">The message builder.</param>
         /// <returns>The message that was sent.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is false and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is false and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -489,12 +489,12 @@ namespace DisCatSharp
             => this.ApiClient.CreateMessageAsync(channel.Id, builder);
 
         /// <summary>
-        /// Sends a message with an <see cref="Action{DiscordMessageBuilder}"/>.
+        /// Sends a message with an <see cref="System.Action{DiscordMessageBuilder}"/>.
         /// </summary>
         /// <param name="channel">Channel to send the message to.</param>
         /// <param name="action">The message builder.</param>
         /// <returns>The message that was sent.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is false and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is false and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -663,7 +663,7 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the In-App OAuth Url.
         /// </summary>
-        /// <param name="scopes">Defaults to <see cref="OAuthScopes.BOT_DEFAULT"/>.</param>
+        /// <param name="scopes">Defaults to <see cref="DisCatSharp.Enums.OAuthScopes.BOT_DEFAULT"/>.</param>
         /// <param name="redir">Redirect Uri.</param>
         /// <param name="permissions">Defaults to <see cref="Permissions.None"/>.</param>
         /// <returns>The OAuth Url</returns>

@@ -134,7 +134,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// <param name="message">The message to wait for.</param>
         /// <param name="predicate">A filter predicate.</param>
         /// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
-        /// <exception cref="ArgumentException">Thrown when the message doesn't contain any dropdowns</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the message doesn't contain any dropdowns</exception>
         public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, TimeSpan? timeoutOverride = null)
             => GetInteractivity(message).WaitForSelectAsync(message, predicate, timeoutOverride);
 
@@ -145,7 +145,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// <param name="message">The message to wait for.</param>
         /// <param name="predicate">A filter predicate.</param>
         /// <param name="token">A token that can be used to cancel interactivity. Pass <see cref="CancellationToken.None"/> to wait indefinitely.</param>
-        /// <exception cref="ArgumentException">Thrown when the message doesn't contain any dropdowns</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the message doesn't contain any dropdowns</exception>
         public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken token)
             => GetInteractivity(message).WaitForSelectAsync(message, predicate, token);
 
