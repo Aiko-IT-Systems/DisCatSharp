@@ -64,6 +64,12 @@ attributeRules:
     uidRegex: ^System\.EnterpriseServices$
     type: Namespace
 - exclude:
+    uidRegex: ^System\.Numerics$
+    type: Namespace
+- exclude:
+    uidRegex: ^System\.Numerics\.Complex$
+    type: Namespace
+- exclude:
     uidRegex: ^System\.Diagnostics\.CodeAnalysis$
     type: Namespace
 - include:
@@ -83,6 +89,21 @@ attributeRules:
     type: Type
 - exclude:
     uidRegex: ^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$
+    type: Type
+- exclude:
+    uidRegex: ^Microsoft\.Extensions\.Hosting\.BackgroundService$
+    type: Type
+- exclude:
+    uidRegex: ^Microsoft\.Extensions\.Logging\.LogLevel\.Information$
+    type: Type
+- exclude:
+    uidRegex: ^Microsoft\.Extensions\.Logging\.ILoggerFactory$
+    type: Type
+- exclude:
+    uidRegex: ^Newtonsoft\.Json\.JsonConverter$
+    type: Type
+- exclude:
+    uidRegex: ^System\.Numerics\.Complex$
     type: Type
 - exclude:
     uidRegex: '^System\.Runtime\.CompilerServices\.[^.]+$'
