@@ -307,7 +307,7 @@ namespace DisCatSharp.Interactivity
         /// </summary>
         /// <param name="message">The message to wait on.</param>
         /// <param name="predicate">The predicate to filter interactions by.</param>
-        /// <param name="token">A token to cancel interactivity with at any time. Pass <see cref="CancellationToken.None"/> to wait indefinitely.</param>
+        /// <param name="token">A token to cancel interactivity with at any time. Pass <see cref="System.Threading.CancellationToken.None"/> to wait indefinitely.</param>
         public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken token)
         {
             if (message.Author != this.Client.CurrentUser)
@@ -343,7 +343,7 @@ namespace DisCatSharp.Interactivity
         /// </summary>
         /// <param name="message">The message to wait for.</param>
         /// <param name="predicate">A filter predicate.</param>
-        /// <param name="token">A token that can be used to cancel interactivity. Pass <see cref="CancellationToken.None"/> to wait indefinitely.</param>
+        /// <param name="token">A token that can be used to cancel interactivity. Pass <see cref="System.Threading.CancellationToken.None"/> to wait indefinitely.</param>
         /// <exception cref="System.ArgumentException">Thrown when the Provided message does not contain any dropdowns</exception>
         public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken token)
         {
