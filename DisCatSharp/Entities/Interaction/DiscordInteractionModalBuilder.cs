@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace DisCatSharp.Entities
@@ -59,10 +58,21 @@ namespace DisCatSharp.Entities
         private readonly List<DiscordActionRowComponent> _components = new();
 
         /// <summary>
-        /// Constructs a new empty interaction response builder.
+        /// Constructs a new empty interaction modal builder.
         /// </summary>
         public DiscordInteractionModalBuilder() { }
 
+        public DiscordInteractionModalBuilder WithTitle(string title)
+        {
+            this.Title = title;
+            return this;
+        }
+
+        public DiscordInteractionModalBuilder WithCustomId(string customId)
+        {
+            this.CustomId = customId;
+            return this;
+        }
 
         /// <summary>
         /// Appends a collection of components to the builder. Each call will append to a new row.
