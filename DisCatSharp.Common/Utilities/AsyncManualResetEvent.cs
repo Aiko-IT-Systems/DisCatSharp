@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 namespace DisCatSharp.Common.Utilities
 {
     /// <summary>
-    /// Represents a thread synchronization event that, when signaled, must be reset manually. Unlike <see cref="ManualResetEventSlim"/>, this event is asynchronous.
+    /// Represents a thread synchronization event that, when signaled, must be reset manually. Unlike <see cref="System.Threading.ManualResetEventSlim"/>, this event is asynchronous.
     /// </summary>
     public sealed class AsyncManualResetEvent
     {

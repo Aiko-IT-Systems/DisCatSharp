@@ -76,7 +76,7 @@ namespace DisCatSharp.CommandsNext
         /// <para>Sets whether to enable default help command.</para>
         /// <para>Disabling this will allow you to make your own help command.</para>
         /// <para>
-        /// Modifying default help can be achieved via custom help formatters (see <see cref="BaseHelpFormatter"/> and <see cref="CommandsNextExtension.SetHelpFormatter{T}()"/> for more details).
+        /// Modifying default help can be achieved via custom help formatters (see <see cref="DisCatSharp.CommandsNext.Converters.BaseHelpFormatter"/> and <see cref="CommandsNextExtension.SetHelpFormatter{T}()"/> for more details).
         /// It is recommended to use help formatter instead of disabling help.
         /// </para>
         /// <para>Defaults to true.</para>

@@ -16,6 +16,15 @@ attributeRules:
     uidRegex: ^System\.Collections\.Immutable$
     type: Namespace
 - exclude:
+    uidRegex: ^Microsoft\.Extensions\.Logging$
+    type: Namespace
+- exclude:
+    uidRegex: ^Microsoft\.Extensions\.Hosting\.BackgroundService$
+    type: Namespace
+- exclude:
+    uidRegex: ^Newtonsoft\.Json$
+    type: Namespace
+- exclude:
     uidRegex: ^System\.Runtime\.CompilerServices\.Unsafe$
     type: Namespace
 - exclude:
