@@ -135,7 +135,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Registers a command class.
         /// </summary>
-        /// <param name="type">The <see cref="Type"/> of the command class to register.</param>
+        /// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
         /// <param name="guildId">The guild id to register it on. If you want global commands, leave it null.</param>
         public void RegisterCommands(Type type, ulong? guildId = null)
         {
@@ -161,7 +161,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Registers a command class with permission setup.
         /// </summary>
-        /// <param name="type">The <see cref="Type"/> of the command class to register.</param>
+        /// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
         /// <param name="guildId">The guild id to register it on.</param>
         /// <param name="permissionSetup">A callback to setup permissions with.</param>
         public void RegisterCommands(Type type, ulong guildId, Action<ApplicationCommandsPermissionContext> permissionSetup = null)
@@ -187,7 +187,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Registers a command class with permission setup but without a guild id.
         /// </summary>
-        /// <param name="type">The <see cref="Type"/> of the command class to register.</param>
+        /// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
         /// <param name="permissionSetup">A callback to setup permissions with.</param>
         public void RegisterCommands(Type type, Action<ApplicationCommandsPermissionContext> permissionSetup = null)
         {

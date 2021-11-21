@@ -649,7 +649,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="channel">The channel the member is currently in.</param>
         /// <param name="suppress">Toggles the member's suppress state.</param>
-        /// <exception cref="ArgumentException">Thrown when the channel in not a voice channel.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the channel in not a voice channel.</exception>
         public async Task UpdateVoiceStateAsync(DiscordChannel channel, bool? suppress)
         {
             if (channel.Type != ChannelType.Stage)
@@ -661,7 +661,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Makes the user a speaker.
         /// </summary>
-        /// <exception cref="ArgumentException">Thrown when the user is not inside an stage channel.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the user is not inside an stage channel.</exception>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -678,7 +678,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Moves the user to audience.
         /// </summary>
-        /// <exception cref="ArgumentException">Thrown when the user is not inside an stage channel.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the user is not inside an stage channel.</exception>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>

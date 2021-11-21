@@ -97,7 +97,7 @@ namespace DisCatSharp.Entities
 
 
         /// <summary>
-        /// Constructs a new <see cref="DiscordInteractionResponseBuilder"/> based on an existing <see cref="DiscordMessageBuilder"/>.
+        /// Constructs a new <see cref="DiscordInteractionResponseBuilder"/> based on an existing <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
         /// </summary>
         /// <param name="builder">The builder to copy.</param>
         public DiscordInteractionResponseBuilder(DiscordMessageBuilder builder)
@@ -114,7 +114,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="components">The components to append. Up to five.</param>
         /// <returns>The current builder to chain calls with.</returns>
-        /// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
         public DiscordInteractionResponseBuilder AddComponents(params DiscordComponent[] components)
             => this.AddComponents((IEnumerable<DiscordComponent>)components);
 
@@ -141,7 +141,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="components">The components to append. Up to five.</param>
         /// <returns>The current builder to chain calls with.</returns>
-        /// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
         public DiscordInteractionResponseBuilder AddComponents(IEnumerable<DiscordComponent> components)
         {
             var compArr = components.ToArray();

@@ -97,7 +97,7 @@ namespace DisCatSharp.ApplicationCommands
         /// Registers a command class.
         /// </summary>
         /// <param name="modules">The modules to register it on.</param>
-        /// <param name="type">The <see cref="Type"/> of the command class to register.</param>
+        /// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
         /// <param name="guildId">The guild id to register it on. If you want global commands, leave it null.</param>
         public static void RegisterCommands(this IReadOnlyDictionary<int, ApplicationCommandsExtension> modules, Type type, ulong? guildId = null)
         {

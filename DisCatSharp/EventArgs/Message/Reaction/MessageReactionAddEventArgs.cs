@@ -47,7 +47,7 @@ namespace DisCatSharp.EventArgs
 
         /// <summary>
         /// Gets the user who created the reaction.
-        /// <para>This can be cast to a <see cref="DiscordMember"/> if the reaction was in a guild.</para>
+        /// <para>This can be cast to a <see cref="DisCatSharp.Entities.DiscordMember"/> if the reaction was in a guild.</para>
         /// </summary>
         public DiscordUser User { get; internal set; }
 

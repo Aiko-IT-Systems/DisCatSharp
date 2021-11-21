@@ -80,7 +80,7 @@ namespace DisCatSharp
         /// Creates a new ring buffer, filled with specified elements.
         /// </summary>
         /// <param name="elements">Elements to fill the buffer with.</param>
-        /// <exception cref="ArgumentException" />
+        /// <exception cref="System.ArgumentException" />
         /// <exception cref="System.ArgumentOutOfRangeException" />
         public RingBuffer(IEnumerable<T> elements)
             : this(elements, 0)
@@ -91,7 +91,7 @@ namespace DisCatSharp
         /// </summary>
         /// <param name="elements">Elements to fill the buffer with.</param>
         /// <param name="index">Starting element index.</param>
-        /// <exception cref="ArgumentException" />
+        /// <exception cref="System.ArgumentException" />
         /// <exception cref="System.ArgumentOutOfRangeException" />
         public RingBuffer(IEnumerable<T> elements, int index)
         {

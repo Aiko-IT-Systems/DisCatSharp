@@ -137,7 +137,7 @@ namespace DisCatSharp.Entities
         /// Deletes a thread.
         /// </summary>
         /// <param name="reason">Reason for audit logs.</param>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -149,11 +149,11 @@ namespace DisCatSharp.Entities
         /// Modifies the current thread.
         /// </summary>
         /// <param name="action">Action to perform on this thread</param>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        /// <exception cref="NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>.</exception>
+        /// <exception cref="System.NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>.</exception>
         public Task ModifyAsync(Action<ThreadEditModel> action)
         {
             var mdl = new ThreadEditModel();
@@ -172,7 +172,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="locked">Whether the thread should be locked.</param>
         /// <param name="reason">Reason for audit logs.</param>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -317,7 +317,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Joins a thread.
         /// </summary>
-        /// <exception cref="UnauthorizedException">Thrown when the client has no access to this thread.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client has no access to this thread.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -327,7 +327,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Leaves a thread.
         /// </summary>
-        /// <exception cref="UnauthorizedException">Thrown when the client has no access to this thread.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client has no access to this thread.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -340,7 +340,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="content">Content of the message to send.</param>
         /// <returns>The sent message.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -356,7 +356,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="embed">Embed to attach to the message.</param>
         /// <returns>The sent message.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -373,7 +373,7 @@ namespace DisCatSharp.Entities
         /// <param name="content">Content of the message to send.</param>
         /// <param name="embed">Embed to attach to the message.</param>
         /// <returns>The sent message.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -389,7 +389,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="builder">The builder with all the items to thread.</param>
         /// <returns>The sent message.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -401,7 +401,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="action">The builder with all the items to send.</param>
         /// <returns>The sent message.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -419,7 +419,7 @@ namespace DisCatSharp.Entities
         /// Returns a specific message
         /// </summary>
         /// <param name="id">The id of the message</param>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -438,7 +438,7 @@ namespace DisCatSharp.Entities
         /// <param name="limit">The amount of messages to fetch.</param>
         /// <param name="before">Message to fetch before from.</param>
         /// </summary>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -450,7 +450,7 @@ namespace DisCatSharp.Entities
         /// <param name="limit">The amount of messages to fetch.</param>
         /// <param name="after">Message to fetch after from.</param>
         /// </summary>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -462,7 +462,7 @@ namespace DisCatSharp.Entities
         /// <param name="limit">The amount of messages to fetch.</param>
         /// <param name="around">Message to fetch around from.</param>
         /// </summary>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -473,7 +473,7 @@ namespace DisCatSharp.Entities
         /// Returns a list of messages from the last message in the thread.
         /// <param name="limit">The amount of messages to fetch.</param>
         /// </summary>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -537,7 +537,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="messages">A collection of messages to delete.</param>
         /// <param name="reason">Reason for audit logs.</param>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -563,7 +563,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="message">The message to be deleted.</param>
         /// <param name="reason">Reason for audit logs.</param>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -587,7 +587,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Returns all pinned messages
         /// </summary>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission or the client is missing <see cref="Permissions.ReadMessageHistory"/>.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission or the client is missing <see cref="Permissions.ReadMessageHistory"/>.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>

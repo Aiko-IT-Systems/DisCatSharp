@@ -30,7 +30,7 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Hosting
 {
     /// <summary>
-    /// Simple Implementation for <see cref="DiscordShardedClient"/> to work as a <see cref="BackgroundService"/>
+    /// Simple Implementation for <see cref="DiscordShardedClient"/> to work as a <see cref="Microsoft.Extensions.Hosting.BackgroundService"/>
     /// </summary>
     public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordHostedShardService
     {
