@@ -775,7 +775,7 @@ namespace DisCatSharp.Interactivity
         /// <summary>
         /// Waits for custom button-based pagination request to finish.
         /// <br/>
-        /// This does <i><b>not</b></i> invoke <see cref="IPaginationRequest.DoCleanupAsync"/>.
+        /// This does <i><b>not</b></i> invoke <see cref="DisCatSharp.Interactivity.EventHandling.IPaginationRequest.DoCleanupAsync"/>.
         /// </summary>
         /// <param name="request">The request to wait for.</param>
         public async Task WaitForCustomComponentPaginationAsync(IPaginationRequest request) => await this._compPaginator.DoPaginationAsync(request).ConfigureAwait(false);
