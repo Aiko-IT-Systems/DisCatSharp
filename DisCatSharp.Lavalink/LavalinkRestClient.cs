@@ -187,7 +187,7 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Retrieves statistics from the route planner.
         /// </summary>
-        /// <returns>The status (<see cref="LavalinkRouteStatus"/>) details.</returns>
+        /// <returns>The status (<see cref="DisCatSharp.Lavalink.Entities.LavalinkRouteStatus"/>) details.</returns>
         public Task<LavalinkRouteStatus> GetRoutePlannerStatusAsync()
         {
             var routeStatusUri = new Uri($"{this.RestEndpoint.ToHttpString()}{Endpoints.ROUTE_PLANNER}{Endpoints.STATUS}");

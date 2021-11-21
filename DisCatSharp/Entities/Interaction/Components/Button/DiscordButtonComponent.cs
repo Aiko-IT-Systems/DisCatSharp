@@ -21,14 +21,13 @@
 // SOFTWARE.
 
 using DisCatSharp.Enums;
-using DisCatSharp.EventArgs;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
 
     /// <summary>
-    /// Represents a button that can be pressed. Fires <see cref="ComponentInteractionCreateEventArgs"/> when pressed.
+    /// Represents a button that can be pressed. Fires <see cref="DisCatSharp.DiscordClient.ComponentInteractionCreated"/> event when pressed.
     /// </summary>
     public sealed class DiscordButtonComponent : DiscordComponent
     {

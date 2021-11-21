@@ -21,14 +21,13 @@
 // SOFTWARE.
 
 using DisCatSharp.Enums;
-using DisCatSharp.EventArgs;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
 
     /// <summary>
-    /// Represents a text component that can be submitted. Fires <see cref="ComponentInteractionCreateEventArgs"/> when submitted.
+    /// Represents a text component that can be submitted. Fires <see cref="DisCatSharp.DiscordClient.ComponentInteractionCreated"/> event when submitted.
     /// </summary>
     public sealed class DiscordTextComponent : DiscordComponent
     {

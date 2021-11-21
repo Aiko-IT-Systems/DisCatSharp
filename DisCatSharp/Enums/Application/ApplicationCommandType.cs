@@ -19,13 +19,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
-using DisCatSharp.Entities;
-
 namespace DisCatSharp.Enums
 {
     /// <summary>
-    /// Represents the type of an <see cref="DiscordApplicationCommand"/>.
+    /// Represents the type of an <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/>.
     /// </summary>
     public enum ApplicationCommandType
     {

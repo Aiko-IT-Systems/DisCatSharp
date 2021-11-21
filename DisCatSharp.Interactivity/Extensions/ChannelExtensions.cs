@@ -32,7 +32,7 @@ using DisCatSharp.Interactivity.EventHandling;
 namespace DisCatSharp.Interactivity.Extensions
 {
     /// <summary>
-    /// Interactivity extension methods for <see cref="DiscordChannel"/>.
+    /// Interactivity extension methods for <see cref="DisCatSharp.Entities.DiscordChannel"/>.
     /// </summary>
     public static class ChannelExtensions
     {
