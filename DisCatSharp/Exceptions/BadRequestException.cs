@@ -57,7 +57,7 @@ namespace DisCatSharp.Exceptions
         public string Errors { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BadRequestException"/> class.
+        /// Initializes a new instance of the <see cref="DisCatSharp.Exceptions.BadRequestException"/> class.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="response">The response.</param>

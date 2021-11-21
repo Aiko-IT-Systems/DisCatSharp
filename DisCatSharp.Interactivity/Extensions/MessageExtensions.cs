@@ -193,7 +193,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// <param name="message">Target message.</param>
         /// <param name="user">The target user.</param>
         /// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout"/></param>
-        /// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the message.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the message.</exception>
         public static Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(this DiscordMessage message, DiscordUser user, TimeSpan? timeoutOverride = null)
             => GetInteractivity(message).WaitForReactionAsync(message, user, timeoutOverride);
 
@@ -204,7 +204,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// <param name="user">The target user.</param>
         /// <param name="emoji">The target emoji.</param>
         /// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout"/></param>
-        /// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the message.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the message.</exception>
         public static Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(this DiscordMessage message, DiscordUser user, DiscordEmoji emoji, TimeSpan? timeoutOverride = null)
             => GetInteractivity(message).WaitForReactionAsync(e => e.Emoji == emoji, message, user, timeoutOverride);
 
@@ -213,7 +213,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// </summary>
         /// <param name="message">The message to collect reactions from.</param>
         /// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout"/></param>
-        /// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the message.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the message.</exception>
         public static Task<ReadOnlyCollection<Reaction>> CollectReactionsAsync(this DiscordMessage message, TimeSpan? timeoutOverride = null)
             => GetInteractivity(message).CollectReactionsAsync(message, timeoutOverride);
 
@@ -225,7 +225,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// <param name="emojis">Options for this poll.</param>
         /// <param name="behaviorOverride">Overrides the action set in <see cref="InteractivityConfiguration.PaginationBehaviour"/></param>
         /// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout"/></param>
-        /// <exception cref="InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the message.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if interactivity is not enabled for the client associated with the message.</exception>
         public static Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(this DiscordMessage message, IEnumerable<DiscordEmoji> emojis, PollBehaviour? behaviorOverride = null, TimeSpan? timeoutOverride = null)
             => GetInteractivity(message).DoPollAsync(message, emojis, behaviorOverride, timeoutOverride);
 

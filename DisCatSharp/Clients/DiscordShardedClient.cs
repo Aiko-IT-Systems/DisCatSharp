@@ -136,8 +136,8 @@ namespace DisCatSharp
         /// <summary>
         /// Initializes and connects all shards.
         /// </summary>
-        /// <exception cref="AggregateException"></exception>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="System.AggregateException"></exception>
+        /// <exception cref="System.InvalidOperationException"></exception>
         /// <returns></returns>
         public async Task StartAsync()
         {
@@ -191,7 +191,7 @@ namespace DisCatSharp
         /// Disconnects and disposes of all shards.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="System.InvalidOperationException"></exception>
         public Task StopAsync()
             => this.InternalStopAsync();
 

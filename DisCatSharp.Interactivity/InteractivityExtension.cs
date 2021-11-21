@@ -132,7 +132,7 @@ namespace DisCatSharp.Interactivity
         /// <param name="buttons">A collection of buttons to listen for.</param>
         /// <param name="timeoutOverride">Override the timeout period in <see cref="InteractivityConfiguration"/>.</param>
         /// <returns>A <see cref="InteractivityResult{T}"/> with the result of button that was pressed, if any.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
         public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, IEnumerable<DiscordButtonComponent> buttons, TimeSpan? timeoutOverride = null)
             => this.WaitForButtonAsync(message, buttons, this.GetCancellationToken(timeoutOverride));
@@ -144,7 +144,7 @@ namespace DisCatSharp.Interactivity
         /// <param name="buttons">A collection of buttons to listen for.</param>
         /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
         /// <returns>A <see cref="InteractivityResult{T}"/> with the result of button that was pressed, if any.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
         public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, IEnumerable<DiscordButtonComponent> buttons, CancellationToken token)
         {
@@ -175,7 +175,7 @@ namespace DisCatSharp.Interactivity
         /// <param name="message">The message to wait for the button on.</param>
         /// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
         /// <returns>A <see cref="InteractivityResult{T}"/> with the result of button that was pressed, if any.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
         public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, TimeSpan? timeoutOverride = null)
             => this.WaitForButtonAsync(message, this.GetCancellationToken(timeoutOverride));
@@ -186,7 +186,7 @@ namespace DisCatSharp.Interactivity
         /// <param name="message">The message to wait for the button on.</param>
         /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
         /// <returns>A <see cref="InteractivityResult{T}"/> with the result of button that was pressed, if any.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
         public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, CancellationToken token)
         {
@@ -217,7 +217,7 @@ namespace DisCatSharp.Interactivity
         /// <param name="user">The user to wait for the button press from.</param>
         /// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
         /// <returns>A <see cref="InteractivityResult{T}"/> with the result of button that was pressed, if any.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
         public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, DiscordUser user, TimeSpan? timeoutOverride = null)
             => this.WaitForButtonAsync(message, user, this.GetCancellationToken(timeoutOverride));
@@ -229,7 +229,7 @@ namespace DisCatSharp.Interactivity
         /// <param name="user">The user to wait for the button press from.</param>
         /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
         /// <returns>A <see cref="InteractivityResult{T}"/> with the result of button that was pressed, if any.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
         public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, DiscordUser user, CancellationToken token)
         {
@@ -258,7 +258,7 @@ namespace DisCatSharp.Interactivity
         /// <param name="id">The Id of the button to wait for.</param>
         /// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
         /// <returns>A <see cref="InteractivityResult{T}"/> with the result of the operation.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
         public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, string id, TimeSpan? timeoutOverride = null)
             => this.WaitForButtonAsync(message, id, this.GetCancellationToken(timeoutOverride));
@@ -270,7 +270,7 @@ namespace DisCatSharp.Interactivity
         /// <param name="id">The Id of the button to wait for.</param>
         /// <param name="token">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
         /// <returns>A <see cref="InteractivityResult{T}"/> with the result of the operation.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown when attempting to wait for a message that is not authored by the current user.</exception>
         /// <exception cref="ArgumentException">Thrown when the message does not contain a button with the specified Id, or any buttons at all.</exception>
         public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForButtonAsync(DiscordMessage message, string id, CancellationToken token)
         {
