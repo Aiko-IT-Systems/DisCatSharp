@@ -75,7 +75,7 @@ namespace DisCatSharp.CommandsNext.Converters
         private static Regex TimeSpanRegex { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="System.TimeSpanConverter"/> class.
+        /// Initializes a new instance of the <see cref="TimeSpanConverter"/> class.
         /// </summary>
         static TimeSpanConverter()
         {
