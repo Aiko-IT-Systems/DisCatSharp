@@ -176,8 +176,8 @@ namespace DisCatSharp
 
         /// <summary>
         /// <para>Sets the factory method used to create instances of UDP clients.</para>
-        /// <para>Use <see cref="DCSUdpClient.CreateNew"/> and equivalents on other implementations to switch out client implementations.</para>
-        /// <para>Defaults to <see cref="DCSUdpClient.CreateNew"/>.</para>
+        /// <para>Use <see cref="DisCatSharp.Net.Udp.DCSUdpClient.CreateNew"/> and equivalents on other implementations to switch out client implementations.</para>
+        /// <para>Defaults to <see cref="DisCatSharp.Net.Udp.DCSUdpClient.CreateNew"/>.</para>
         /// </summary>
         public UdpClientFactoryDelegate UdpClientFactory
         {
@@ -188,7 +188,7 @@ namespace DisCatSharp
 
         /// <summary>
         /// <para>Sets the logger implementation to use.</para>
-        /// <para>To create your own logger, implement the <see cref="ILoggerFactory"/> instance.</para>
+        /// <para>To create your own logger, implement the <see cref="Microsoft.Extensions.Logging.ILoggerFactory"/> instance.</para>
         /// <para>Defaults to built-in implementation.</para>
         /// </summary>
         public ILoggerFactory LoggerFactory { internal get; set; } = null;
@@ -198,7 +198,7 @@ namespace DisCatSharp
         /// <para>Defaults to false.</para>
         /// </summary>
         public bool MobileStatus { internal get; set; } = false;
-
+        
         /// <summary>
         /// <para>Use canary.</para>
         /// <para>Defaults to false.</para>
