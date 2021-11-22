@@ -38,10 +38,28 @@ namespace DisCatSharp.Entities
         public TextComponentStyle Style { get; internal set; }
 
         /// <summary>
-        /// The text to apply to the text component.
+        /// The text description to apply to the text component.
         /// </summary>
         [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
         public string Label { get; internal set; }
+
+        /// <summary>
+        /// The placeholder for the text component.
+        /// </summary>
+        [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
+        public string Placeholder { get; internal set; }
+
+        /// <summary>
+        /// The minimal length of text input.
+        /// </summary>
+        [JsonProperty("min_length", NullValueHandling = NullValueHandling.Ignore)]
+        public int? MinLength { get; internal set; }
+
+        /// <summary>
+        /// The maximal length of text input.
+        /// </summary>
+        [JsonProperty("max_length", NullValueHandling = NullValueHandling.Ignore)]
+        public int? MaxLength { get; internal set; }
 
         /// <summary>
         /// Whether this text component can be used.
@@ -87,6 +105,9 @@ namespace DisCatSharp.Entities
             this.Style = other.Style;
             this.Label = other.Label;
             this.Disabled = other.Disabled;
+            this.MinLength = other.MinLength;
+            this.MaxLength = other.MaxLength;
+            this.Placeholder = other.Placeholder;
         }
 
         /// <summary>
@@ -95,12 +116,18 @@ namespace DisCatSharp.Entities
         /// <param name="style">The style of the text component.</param>
         /// <param name="customId">The Id to assign to the text component. This is sent back when a user presses it.</param>
         /// <param name="label">The text to display before the text component, up to 80 characters.</param>
+        /// <param name="placeholder">The placeholder for the text input.</param>
+        /// <param name="minLength">The minimal length of text input.</param>
+        /// <param name="maxLength">The maximal length of text input.</param>
         /// <param name="disabled">Whether this text component should be initialized as being disabled.</param>
-        public DiscordTextComponent(TextComponentStyle style, string customId, string label, bool disabled = false)
+        public DiscordTextComponent(TextComponentStyle style, string customId, string label, string placeholder = null, int? minLength = null, int? maxLength = null, bool disabled = false)
         {
             this.Style = style;
             this.Label = label;
             this.CustomId = customId;
+            this.MinLength = minLength;
+            this.MaxLength = maxLength;
+            this.Placeholder = placeholder;
             this.Disabled = disabled;
             this.Type = ComponentType.InputText;
         }
