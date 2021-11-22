@@ -4935,38 +4935,27 @@ namespace DisCatSharp.Net
         /// <returns>A Task.</returns>
         internal async Task CreateInteractionModalResponseAsync(ulong interaction_id, string interaction_token, InteractionResponseType type, DiscordInteractionModalBuilder builder)
         {
-            try
+            var pld = new RestInteractionModalResponsePayload
             {
-                var pld = new RestInteractionModalResponsePayload
+                Type = type,
+                Data = new DiscordInteractionApplicationCommandModalCallbackData
                 {
-                    Type = type,
-                    Data = new DiscordInteractionApplicationCommandModalCallbackData
-                    {
-                        Title = builder.Title,
-                        CustomId = builder.CustomId,
-                        ModalComponents = builder.ModalComponents
-                    }
-                };
+                    Title = builder.Title,
+                    CustomId = builder.CustomId,
+                    ModalComponents = builder.ModalComponents
+                }
+            };
 
-                var values = new Dictionary<string, string>();
+            var values = new Dictionary<string, string>();
 
-                if (type == InteractionResponseType.Modal)
-                    this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
+            if (type == InteractionResponseType.Modal)
+                this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
 
-                var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
-                var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
+            var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
 
-                var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
-                await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
-            }
-            catch (BadRequestException ex)
-            {
-                this.Discord.Logger.LogError(ex.WebResponse.Response);
-            }
-            catch (Exception ex)
-            {
-                this.Discord.Logger.LogDebug(ex, ex.Message);
-            }
+            var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
+            await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
         }
 
         /// <summary>
