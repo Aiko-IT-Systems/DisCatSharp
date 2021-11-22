@@ -129,7 +129,7 @@ namespace DisCatSharp.Entities
             if (count > 5)
                 throw new ArgumentException("Cannot add more than 5 components per action row!");
 
-            if (components.Where(c => c.Type == Enums.ComponentType.InputText).Any())
+            if (components.Where(c => c.Type == Enums.ComponentType.InputText).Any() && count < 1)
                 throw new ArgumentException("Cannot add more than 1 text components per action row!");
 
             var arc = new DiscordActionRowComponent(compArr);
