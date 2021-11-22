@@ -81,7 +81,7 @@ namespace DisCatSharp.Entities
         /// <returns>The current builder to chain calls with.</returns>
         /// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
         public DiscordInteractionModalBuilder AddModalComponent(params DiscordComponent[] components)
-            => this.AddModalComponents(components);
+            => this.AddModalComponents((IEnumerable<DiscordComponent>)components);
 
         /// <summary>
         /// Appends a text component to the builder.
