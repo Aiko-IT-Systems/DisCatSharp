@@ -36,16 +36,22 @@ namespace DisCatSharp.Entities
         public string FileName { get; internal set; }
 
         /// <summary>
-        /// Gets the file size in bytes.
+        /// Gets the description of the file.
         /// </summary>
-        [JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
-        public int FileSize { get; internal set; }
+        [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+        public string Description { get; internal set; }
 
         /// <summary>
         /// Gets the media, or MIME, type of the file.
         /// </summary>
         [JsonProperty("content_type", NullValueHandling = NullValueHandling.Ignore)]
         public string MediaType { get; internal set; }
+
+        /// <summary>
+        /// Gets the file size in bytes.
+        /// </summary>
+        [JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
+        public int FileSize { get; internal set; }
 
         /// <summary>
         /// Gets the URL of the file.

@@ -402,6 +402,7 @@ namespace DisCatSharp.Entities
             this._components.Clear();
             this.Suppressed = false;
             this.Sticker = null;
+            this.Attachments.Clear();
         }
 
         /// <summary>
