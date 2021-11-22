@@ -16,6 +16,8 @@
     href: basics/first_bot.md
   - name: Bot as Hosted Service
     href: basics/web_app.md
+  - name: Project Templates
+    href: basics/templates.md
 - name: Beyond Basics
   items:
   - name: Events
