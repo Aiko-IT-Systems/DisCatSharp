@@ -334,10 +334,10 @@ namespace DisCatSharp
         StartEmbeddedActivities = 0x0000008000000000,
 
         /// <summary>
-        /// Allows to moderate member.     
+        /// Allows to perform limited moderation actions (timeout).     
         /// </summary>
         [PermissionString("Moderate Members")]
-        TimeOutMembers = 0x0000010000000000
+        ModerateMembers = 0x0000010000000000
     }
     
     /// <summary>
