@@ -46,7 +46,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// The placeholder for the text component.
         /// </summary>
-        [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("placeholder", NullValueHandling = NullValueHandling.Ignore)]
         public string Placeholder { get; internal set; }
 
         /// <summary>
