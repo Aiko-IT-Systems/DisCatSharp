@@ -66,6 +66,7 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev).
 | DisCatSharp.Lavalink                    | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Lavalink.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Lavalink)                                       |
 | DisCatSharp.VoiceNext                   | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.VoiceNext)                                     |
 | DisCatSharp.VoiceNext.Natives           | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.Natives.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.VoiceNext.Natives)                     |
+| DisCatSharp.ProjectTemplates           | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ProjectTemplates.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.ProjectTemplates)                     |
 
 ## Releasing
 To release a new version do the following steps:
