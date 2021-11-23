@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,28 +21,22 @@
 // SOFTWARE.
 
 using System;
-using DisCatSharp.Entities;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace DisCatSharp.EventArgs
+namespace DisCatSharp.CommandsNext.Attributes
 {
     /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.GuildScheduledEventCreated"/> event.
+    /// Defines that usage of this command is restricted to discord certified moderators.
     /// </summary>
-    public class GuildScheduledEventCreateEventArgs : DiscordEventArgs
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public sealed class RequireCertifiedModeratorAttribute : CheckBaseAttribute
     {
         /// <summary>
-        /// Gets the stage instance that was created.
+        /// Executes the a check.
         /// </summary>
-        public DiscordEvent ScheduledEvent { get; internal set; }
-
-        /// <summary>
-        /// Gets the guild in which the stage instance was created.
-        /// </summary>
-        public DiscordGuild Guild { get; internal set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GuildScheduledEventCreateEventArgs"/> class.
-        /// </summary>
-        internal GuildScheduledEventCreateEventArgs(IServiceProvider provider) : base(provider) { }
+        /// <param name="ctx">The command context.</param>
+        /// <param name="help">If true, help - returns true.</param>
+        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => ctx.User.Flags.HasValue ? Task.FromResult(ctx.User.Flags.Value.HasFlag(UserFlags.CertifiedModerator)) : Task.FromResult(false);
     }
 }

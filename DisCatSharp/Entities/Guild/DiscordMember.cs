@@ -510,38 +510,41 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds a timeout to a member.
         /// </summary>
-        /// <param name="until">The datetime offset to time out the user.</param>
+        /// <param name="until">The datetime offset to time out the user. Up to 28 days.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task TimeOutAsync(DateTimeOffset until, string reason = null) => this.Discord.ApiClient.ModifyTimeOutAsync(this.Guild.Id, this.Id, until, reason);
+        public Task TimeOutAsync(DateTimeOffset until, string reason = null)
+            => until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeOutAsync(this.Guild.Id, this.Id, until, reason);
 
         /// <summary>
         /// Adds a timeout to a member.
         /// </summary>
-        /// <param name="until">The timespan to time out the user.</param>
+        /// <param name="until">The timespan to time out the user. Up to 28 days.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task TimeOutAsync(TimeSpan until, string reason = null) => this.TimeOutAsync(DateTimeOffset.UtcNow + until, reason);
+        public Task TimeOutAsync(TimeSpan until, string reason = null)
+            => this.TimeOutAsync(DateTimeOffset.UtcNow + until, reason);
 
         /// <summary>
         /// Adds a timeout to a member.
         /// </summary>
-        /// <param name="until">The datetime to time out the user.</param>
+        /// <param name="until">The datetime to time out the user. Up to 28 days.</param>
         /// <param name="reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task TimeOutAsync(DateTime until, string reason = null) => this.TimeOutAsync(until.ToUniversalTime() - DateTime.UtcNow, reason);
+        public Task TimeOutAsync(DateTime until, string reason = null)
+            => this.TimeOutAsync(until.ToUniversalTime() - DateTime.UtcNow, reason);
 
         /// <summary>
         /// Removes the timeout from a member.
@@ -646,7 +649,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="channel">The channel the member is currently in.</param>
         /// <param name="suppress">Toggles the member's suppress state.</param>
-        /// <exception cref="ArgumentException">Thrown when the channel in not a voice channel.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the channel in not a voice channel.</exception>
         public async Task UpdateVoiceStateAsync(DiscordChannel channel, bool? suppress)
         {
             if (channel.Type != ChannelType.Stage)
@@ -658,7 +661,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Makes the user a speaker.
         /// </summary>
-        /// <exception cref="ArgumentException">Thrown when the user is not inside an stage channel.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the user is not inside an stage channel.</exception>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -675,7 +678,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Moves the user to audience.
         /// </summary>
-        /// <exception cref="ArgumentException">Thrown when the user is not inside an stage channel.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the user is not inside an stage channel.</exception>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>

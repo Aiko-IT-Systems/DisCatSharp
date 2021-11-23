@@ -27,9 +27,9 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Serialization;
 using Microsoft.Extensions.Logging;
@@ -1200,6 +1200,306 @@ namespace DisCatSharp.Net
         }
         #endregion
 
+        #region Guild Scheduled Events
+
+        /// <summary>
+        /// Creates a scheduled event.
+        /// </summary>
+        internal async Task<DiscordScheduledEvent> CreateGuildScheduledEventAsync(ulong guild_id, ulong? channel_id, DiscordScheduledEventEntityMetadata metadata, string name, DateTimeOffset scheduled_start_time, DateTimeOffset? scheduled_end_time, string description, ScheduledEventEntityType type, string reason = null)
+        {
+            var pld = new RestGuildScheduledEventCreatePayload
+            {
+                ChannelId = channel_id,
+                EntityMetadata = metadata,
+                Name = name,
+                ScheduledStartTime = scheduled_start_time,
+                ScheduledEndTime = scheduled_end_time,
+                Description = description,
+                EntityType = type
+            };
+
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers[REASON_HEADER_NAME] = reason;
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
+
+            var scheduled_event = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
+            var guild = this.Discord.Guilds[guild_id];
+
+            scheduled_event.Discord = this.Discord;
+
+            if (scheduled_event.Creator != null)
+                scheduled_event.Creator.Discord = this.Discord;
+
+            if (this.Discord is DiscordClient dc)
+                await dc.OnGuildScheduledEventCreateEventAsync(scheduled_event, guild);
+
+            return scheduled_event;
+        }
+
+        /// <summary>
+        /// Modifies a scheduled event.
+        /// </summary>
+        internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id, Optional<ulong?> channel_id, Optional<DiscordScheduledEventEntityMetadata> metadata, Optional<string> name, Optional<DateTimeOffset> scheduled_start_time, Optional<DateTimeOffset> scheduled_end_time, Optional<string> description, Optional<ScheduledEventEntityType> type, Optional<ScheduledEventStatus> status, string reason = null)
+        {
+            var pld = new RestGuildSheduledEventModifyPayload
+            {
+                ChannelId = channel_id,
+                EntityMetadata = metadata,
+                Name = name,
+                ScheduledStartTime = scheduled_start_time,
+                ScheduledEndTime = scheduled_end_time,
+                Description = description,
+                EntityType = type,
+                Status = status
+            };
+
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers[REASON_HEADER_NAME] = reason;
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id, scheduled_event_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+
+            var scheduled_event = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
+            var guild = this.Discord.Guilds[guild_id];
+
+            scheduled_event.Discord = this.Discord;
+
+            if (scheduled_event.Creator != null)
+            {
+                scheduled_event.Creator.Discord = this.Discord;
+                this.Discord.UserCache.AddOrUpdate(scheduled_event.Creator.Id, scheduled_event.Creator, (id, old) =>
+                {
+                    old.Username = scheduled_event.Creator.Username;
+                    old.Discriminator = scheduled_event.Creator.Discriminator;
+                    old.AvatarHash = scheduled_event.Creator.AvatarHash;
+                    old.Flags = scheduled_event.Creator.Flags;
+                    return old;
+                });
+            }
+
+            if (this.Discord is DiscordClient dc)
+                await dc.OnGuildScheduledEventUpdateEventAsync(scheduled_event, guild);
+
+            return scheduled_event;
+        }
+
+        /// <summary>
+        /// Modifies a scheduled event.
+        /// </summary>
+        internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventStatusAsync(ulong guild_id, ulong scheduled_event_id, ScheduledEventStatus status, string reason = null)
+        {
+            var pld = new RestGuildSheduledEventModifyPayload
+            {
+                Status = status
+            };
+
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers[REASON_HEADER_NAME] = reason;
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id, scheduled_event_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+
+            var scheduled_event = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
+            var guild = this.Discord.Guilds[guild_id];
+
+            scheduled_event.Discord = this.Discord;
+
+            if (scheduled_event.Creator != null)
+            {
+                scheduled_event.Creator.Discord = this.Discord;
+                this.Discord.UserCache.AddOrUpdate(scheduled_event.Creator.Id, scheduled_event.Creator, (id, old) =>
+                {
+                    old.Username = scheduled_event.Creator.Username;
+                    old.Discriminator = scheduled_event.Creator.Discriminator;
+                    old.AvatarHash = scheduled_event.Creator.AvatarHash;
+                    old.Flags = scheduled_event.Creator.Flags;
+                    return old;
+                });
+            }
+
+            if (this.Discord is DiscordClient dc)
+                await dc.OnGuildScheduledEventUpdateEventAsync(scheduled_event, guild);
+
+            return scheduled_event;
+        }
+
+        /// <summary>
+        /// Gets a scheduled event.
+        /// </summary>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <param name="scheduled_event_id">The event id.</param>
+        /// <param name="with_user_count">Whether to include user count.</param>
+        internal async Task<DiscordScheduledEvent> GetGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id, bool? with_user_count)
+        {
+            var urlparams = new Dictionary<string, string>();
+            if (with_user_count.HasValue)
+                urlparams["with_user_count"] = with_user_count?.ToString();
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, scheduled_event_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
+
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
+
+            var scheduled_event = JsonConvert.DeserializeObject<DiscordScheduledEvent>(res.Response);
+            var guild = this.Discord.Guilds[guild_id];
+
+            scheduled_event.Discord = this.Discord;
+
+            if (scheduled_event.Creator != null)
+            {
+                scheduled_event.Creator.Discord = this.Discord;
+                this.Discord.UserCache.AddOrUpdate(scheduled_event.Creator.Id, scheduled_event.Creator, (id, old) =>
+                {
+                    old.Username = scheduled_event.Creator.Username;
+                    old.Discriminator = scheduled_event.Creator.Discriminator;
+                    old.AvatarHash = scheduled_event.Creator.AvatarHash;
+                    old.Flags = scheduled_event.Creator.Flags;
+                    return old;
+                });
+            }
+
+            return scheduled_event;
+        }
+
+        /// <summary>
+        /// Gets the guilds scheduled events.
+        /// </summary>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <param name="with_user_count">Whether to include the count of users subscribed to the scheduled event.</param>
+        internal async Task<IReadOnlyDictionary<ulong, DiscordScheduledEvent>> ListGuildScheduledEventsAsync(ulong guild_id, bool? with_user_count)
+        {
+            var urlparams = new Dictionary<string, string>();
+            if (with_user_count.HasValue)
+                urlparams["with_user_count"] = with_user_count?.ToString();
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
+
+            var events = new Dictionary<ulong, DiscordScheduledEvent>();
+            var events_raw = JsonConvert.DeserializeObject<List<DiscordScheduledEvent>>(res.Response);
+            var guild = this.Discord.Guilds[guild_id];
+
+            foreach (var ev in events_raw)
+            {
+                ev.Discord = this.Discord;
+                if(ev.Creator != null)
+                {
+                    ev.Creator.Discord = this.Discord;
+                    this.Discord.UserCache.AddOrUpdate(ev.Creator.Id, ev.Creator, (id, old) =>
+                    {
+                        old.Username = ev.Creator.Username;
+                        old.Discriminator = ev.Creator.Discriminator;
+                        old.AvatarHash = ev.Creator.AvatarHash;
+                        old.Flags = ev.Creator.Flags;
+                        return old;
+                    });
+                }
+
+                events.Add(ev.Id, ev);
+            }
+
+            return new ReadOnlyDictionary<ulong, DiscordScheduledEvent>(new Dictionary<ulong, DiscordScheduledEvent>(events));
+        }
+
+        /// <summary>
+        /// Deletes a guild sheduled event.
+        /// </summary>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <param name="scheduled_event_id">The sheduled event id.</param>
+        /// <param name="reason">The reason.</param>
+        internal Task DeleteGuildScheduledEventAsync(ulong guild_id, ulong scheduled_event_id, string reason)
+        {
+            var headers = Utilities.GetBaseHeaders();
+            if (!string.IsNullOrWhiteSpace(reason))
+                headers.Add(REASON_HEADER_NAME, reason);
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id, scheduled_event_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+            return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
+        }
+
+        /// <summary>
+        /// Gets the users who RSVP'd to a sheduled event.
+        /// Optional with member objects.
+        /// This endpoint is paginated.
+        /// </summary>
+        /// <param name="guild_id">The guild_id.</param>
+        /// <param name="scheduled_event_id">The sheduled event id.</param>
+        /// <param name="limit">The limit how many users to receive from the event.</param>
+        /// <param name="before">Get results before the given id.</param>
+        /// <param name="after">Get results after the given id.</param>
+        /// <param name="with_member">Wether to include guild member data. attaches guild_member property to the user object.</param>
+        internal async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetGuildScheduledEventRSPVUsersAsync(ulong guild_id, ulong scheduled_event_id, int? limit, ulong? before, ulong? after, bool? with_member)
+        {
+            var urlparams = new Dictionary<string, string>();
+            if (limit != null && limit > 0)
+                urlparams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
+            if (before != null)
+                urlparams["before"] = before.Value.ToString(CultureInfo.InvariantCulture);
+            if (after != null)
+                urlparams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);
+            if (with_member != null)
+                urlparams["with_member"] = with_member.Value.ToString(CultureInfo.InvariantCulture);
+
+            var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.SCHEDULED_EVENTS}/:scheduled_event_id{Endpoints.USERS}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id, scheduled_event_id }, out var path);
+
+            var url = Utilities.GetApiUriFor(path, urlparams.Any() ? BuildQueryString(urlparams) : "", this.Discord.Configuration);
+            var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+            var rspv_users = JsonConvert.DeserializeObject<IEnumerable<DiscordScheduledEventUser>>(res.Response);
+            Dictionary<ulong, DiscordScheduledEventUser> rspv = new();
+
+            foreach (var rspv_user in rspv_users)
+            {
+
+                rspv_user.Discord = this.Discord;
+                rspv_user.GuildId = guild_id;
+
+                rspv_user.User.Discord = this.Discord;
+                rspv_user.User = this.Discord.UserCache.AddOrUpdate(rspv_user.User.Id, rspv_user.User, (id, old) =>
+                {
+                    old.Username = rspv_user.User.Username;
+                    old.Discriminator = rspv_user.User.Discriminator;
+                    old.AvatarHash = rspv_user.User.AvatarHash;
+                    old.BannerHash = rspv_user.User.BannerHash;
+                    old._bannerColor = rspv_user.User._bannerColor;
+                    return old;
+                });
+
+                /*if (with_member.HasValue && with_member.Value && rspv_user.Member != null)
+                {
+                    rspv_user.Member.Discord = this.Discord;
+                }*/
+
+                rspv.Add(rspv_user.User.Id, rspv_user);
+            }
+
+            return new ReadOnlyDictionary<ulong, DiscordScheduledEventUser>(new Dictionary<ulong, DiscordScheduledEventUser>(rspv));
+        }
+        #endregion
+
         #region Channel
         /// <summary>
         /// Creates the guild channel async.
@@ -2264,13 +2564,13 @@ namespace DisCatSharp.Net
         /// <param name="until">Datetime offset.</param>
         /// <param name="reason">The reason.</param>
         /// <returns>A Task.</returns>
-        internal Task ModifyTimeOutAsync(ulong guild_id, ulong user_id, Optional<DateTimeOffset?> until, string reason)
+        internal Task ModifyTimeOutAsync(ulong guild_id, ulong user_id, DateTimeOffset? until, string reason)
         {
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
                 headers[REASON_HEADER_NAME] = reason;
 
-            var pld = new RestGuildMemberModifyPayload
+            var pld = new RestGuildMemberTimeoutModifyPayload
             {
                 CommunicationDisabledUntil = until
             };
@@ -4594,6 +4894,7 @@ namespace DisCatSharp.Net
                         Choices = null
                     } : null
                 };
+
                 var values = new Dictionary<string, string>();
 
                 if (builder != null)
@@ -4617,10 +4918,44 @@ namespace DisCatSharp.Net
                 {
                     await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
                 }
-            } catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 this.Discord.Logger.LogDebug(ex, ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Creates the interaction response async.
+        /// </summary>
+        /// <param name="interaction_id">The interaction_id.</param>
+        /// <param name="interaction_token">The interaction_token.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="builder">The builder.</param>
+        /// <returns>A Task.</returns>
+        internal async Task CreateInteractionModalResponseAsync(ulong interaction_id, string interaction_token, InteractionResponseType type, DiscordInteractionModalBuilder builder)
+        {
+            var pld = new RestInteractionModalResponsePayload
+            {
+                Type = type,
+                Data = new DiscordInteractionApplicationCommandModalCallbackData
+                {
+                    Title = builder.Title,
+                    CustomId = builder.CustomId,
+                    ModalComponents = builder.ModalComponents
+                }
+            };
+
+            var values = new Dictionary<string, string>();
+
+            if (type == InteractionResponseType.Modal)
+                this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
+
+            var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
+
+            var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
+            await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
         }
 
         /// <summary>

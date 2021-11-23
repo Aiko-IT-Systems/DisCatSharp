@@ -55,6 +55,11 @@ namespace DisCatSharp
         /// <summary>
         /// Responds to an auto-complete request.
         /// </summary>
-        AutoCompleteResult = 8
+        AutoCompleteResult = 8,
+
+        /// <summary>
+        /// Responds to the interaction with a modal.
+        /// </summary>
+        Modal = 9
     }
 }

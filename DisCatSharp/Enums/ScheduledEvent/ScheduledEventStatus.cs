@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+    // This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,29 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using DisCatSharp.Entities;
-
-namespace DisCatSharp.EventArgs
+namespace DisCatSharp
 {
     /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.GuildScheduledEventDeleted"/> event.
+    /// Represents the status for a scheduled event.
     /// </summary>
-    public class GuildScheduledEventDeleteEventArgs : DiscordEventArgs
+    public enum ScheduledEventStatus : int
     {
         /// <summary>
-        /// Gets the stage instance that was created.
+        /// Indicates that the event is scheduled.
         /// </summary>
-        public DiscordEvent ScheduledEvent { get; internal set; }
+        Scheduled = 1,
 
         /// <summary>
-        /// Gets the guild in which the stage instance was created.
+        /// Indicates that the event is active.
         /// </summary>
-        public DiscordGuild Guild { get; internal set; }
+        Active = 2,
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GuildScheduledEventDeleteEventArgs"/> class.
+        /// Indicates that the event is completed.
         /// </summary>
-        internal GuildScheduledEventDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+        Completed = 3,
+
+        /// <summary>
+        /// Indicates that the event is canceled.
+        /// </summary>
+        Canceled = 4
     }
 }

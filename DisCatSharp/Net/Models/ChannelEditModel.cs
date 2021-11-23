@@ -60,7 +60,7 @@ namespace DisCatSharp.Net.Models
 
         /// <summary>
         /// <para>Sets the parent of this channel.</para>
-        /// <para>This should be channel with <see cref="DiscordChannel.Type"/> set to <see cref="ChannelType.Category"/>.</para>
+        /// <para>This should be channel with <see cref="DisCatSharp.Entities.DiscordChannel.Type"/> set to <see cref="ChannelType.Category"/>.</para>
         /// </summary>
         public Optional<DiscordChannel> Parent { internal get; set; }
 

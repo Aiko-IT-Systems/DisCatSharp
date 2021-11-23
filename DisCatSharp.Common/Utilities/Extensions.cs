@@ -32,8 +32,8 @@ namespace DisCatSharp.Common
     public static class Extensions
     {
         /// <summary>
-        /// <para>Deconstructs a <see cref="Dictionary{TKey, TValue}"/> key-value pair item (<see cref="KeyValuePair{TKey, TValue}"/>) into 2 separate variables.</para>
-        /// <para>This allows for enumerating over dictionaries in foreach blocks by using a (k, v) tuple as the enumerator variable, instead of having to use a <see cref="KeyValuePair{TKey, TValue}"/> directly.</para>
+        /// <para>Deconstructs a <see cref="System.Collections.Generic.Dictionary{TKey, TValue}"/> key-value pair item (<see cref="System.Collections.Generic.KeyValuePair{TKey, TValue}"/>) into 2 separate variables.</para>
+        /// <para>This allows for enumerating over dictionaries in foreach blocks by using a (k, v) tuple as the enumerator variable, instead of having to use a <see cref="System.Collections.Generic.KeyValuePair{TKey, TValue}"/> directly.</para>
         /// </summary>
         /// <typeparam name="TKey">Type of dictionary item key.</typeparam>
         /// <typeparam name="TValue">Type of dictionary item value.</typeparam>

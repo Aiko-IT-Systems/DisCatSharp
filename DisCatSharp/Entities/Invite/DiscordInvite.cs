@@ -161,7 +161,7 @@ namespace DisCatSharp.Entities
         /// Gets the guild scheduled event data for the invite.
         /// </summary>
         [JsonProperty("guild_scheduled_event", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordEvent GuildScheduledEvent { get; internal set; }
+        public DiscordScheduledEvent GuildScheduledEvent { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordInvite"/> class.

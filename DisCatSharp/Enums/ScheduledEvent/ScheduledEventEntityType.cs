@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+  // This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,23 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DisCatSharp.CommandsNext.Attributes
+namespace DisCatSharp
 {
     /// <summary>
-    /// Defines that usage of this command is restricted to discord certified moderators.
+    /// Represents the entity type for a scheduled event.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class RequireDiscordCertifiedModeratorAttribute : CheckBaseAttribute
+    public enum ScheduledEventEntityType : int
     {
         /// <summary>
-        /// Executes the a check.
+        /// Indicates that the events is hold in a stage instance.
         /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => ctx.User.Flags.HasValue ? Task.FromResult(ctx.User.Flags.Value.HasFlag(UserFlags.DiscordCertifiedModerator)) : Task.FromResult(false);
+        StageInstance = 1,
+
+        /// <summary>
+        /// Indicates that the events is hold in a voice channel.
+        /// </summary>
+        Voice = 2,
+
+        /// <summary>
+        /// Indicates that the events is hold external.
+        /// </summary>
+        External = 3
     }
 }

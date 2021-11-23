@@ -69,7 +69,7 @@ namespace DisCatSharp.Common.Utilities
         /// Creates a new asynchronous event with specified name and exception handler.
         /// </summary>
         /// <param name="name">Name of this event.</param>
-        /// <param name="maxExecutionTime">Maximum handler execution time. A value of <see cref="TimeSpan.Zero"/> means infinite.</param>
+        /// <param name="maxExecutionTime">Maximum handler execution time. A value of <see cref="System.TimeSpan.Zero"/> means infinite.</param>
         /// <param name="exceptionHandler">Delegate which handles exceptions caused by this event.</param>
         public AsyncEvent(string name, TimeSpan maxExecutionTime, AsyncEventExceptionHandler<TSender, TArgs> exceptionHandler)
             : base(name)

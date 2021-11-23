@@ -40,6 +40,11 @@ namespace DisCatSharp.Enums
         /// <summary>
         /// A select menu.
         /// </summary>
-        Select = 3
+        Select = 3,
+
+        /// <summary>
+        /// A input text.
+        /// </summary>
+        InputText = 4
     }
 }

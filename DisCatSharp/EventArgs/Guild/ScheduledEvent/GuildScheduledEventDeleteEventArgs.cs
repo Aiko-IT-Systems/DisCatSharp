@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,22 +21,34 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
-using System.Threading.Tasks;
+using DisCatSharp.Entities;
 
-namespace DisCatSharp.CommandsNext.Attributes
+namespace DisCatSharp.EventArgs
 {
     /// <summary>
-    /// Defines that usage of this command is restricted to discord employees.
+    /// Represents arguments for <see cref="DiscordClient.GuildScheduledEventDeleted"/> event.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class RequireDiscordEmployeeAttribute : CheckBaseAttribute
+    public class GuildScheduledEventDeleteEventArgs : DiscordEventArgs
     {
         /// <summary>
-        /// Executes the a check.
+        /// Gets the scheduled event that was deleted.
         /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => ctx.User.Flags.HasValue ? Task.FromResult(ctx.User.Flags.Value.HasFlag(UserFlags.DiscordEmployee)) : Task.FromResult(false);
+        public DiscordScheduledEvent ScheduledEvent { get; internal set; }
+
+        /// <summary>
+        /// Gets the reason of deletion for the scheduled event.
+        /// Important to determine why and how it was deleted.
+        /// </summary>
+        public ScheduledEventStatus Reason { get; internal set; }
+
+        /// <summary>
+        /// Gets the guild in which the scheduled event was deleted.
+        /// </summary>
+        public DiscordGuild Guild { get; internal set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GuildScheduledEventDeleteEventArgs"/> class.
+        /// </summary>
+        internal GuildScheduledEventDeleteEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }

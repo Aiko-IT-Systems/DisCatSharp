@@ -40,7 +40,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the member object of the user.
         /// </summary>
-        [JsonIgnore]
+        [JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordMember Member { get; internal set; }
 
         /// <summary>

@@ -39,7 +39,7 @@ namespace DisCatSharp.Interactivity.Extensions
         /// <param name="client">The client to enable interactivity for.</param>
         /// <param name="configuration">A configuration instance. Default configuration values will be used if none is provided.</param>
         /// <returns>A brand new <see cref="InteractivityExtension"/> instance.</returns>
-        /// <exception cref="InvalidOperationException">Thrown if interactivity has already been enabled for the client instance.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown if interactivity has already been enabled for the client instance.</exception>
         public static InteractivityExtension UseInteractivity(this DiscordClient client, InteractivityConfiguration configuration = null)
         {
             if (client.GetExtension<InteractivityExtension>() != null) throw new InvalidOperationException($"Interactivity is already enabled for this {(client._isShard ? "shard" : "client")}.");

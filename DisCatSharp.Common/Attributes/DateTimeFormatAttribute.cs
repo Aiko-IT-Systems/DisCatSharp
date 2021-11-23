@@ -26,7 +26,7 @@ using System.Globalization;
 namespace DisCatSharp.Common.Serialization
 {
     /// <summary>
-    /// Defines the format for string-serialized <see cref="DateTime"/> and <see cref="DateTimeOffset"/> objects.
+    /// Defines the format for string-serialized <see cref="System.DateTime"/> and <see cref="System.DateTimeOffset"/> objects.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public sealed class DateTimeFormatAttribute : SerializationAttribute
@@ -90,7 +90,7 @@ namespace DisCatSharp.Common.Serialization
     }
 
     /// <summary>
-    /// <para>Defines which built-in format to use for for <see cref="DateTime"/> and <see cref="DateTimeOffset"/> serialization.</para>
+    /// <para>Defines which built-in format to use for for <see cref="System.DateTime"/> and <see cref="System.DateTimeOffset"/> serialization.</para>
     /// <para>See https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings and https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings for more details.</para>
     /// </summary>
     public enum DateTimeFormatKind : int
@@ -106,22 +106,22 @@ namespace DisCatSharp.Common.Serialization
         RFC1123 = 1,
 
         /// <summary>
-        /// Specifies a format defined by <see cref="CultureInfo.CurrentCulture"/>, with a format string of "G". This format is not recommended for portability reasons.
+        /// Specifies a format defined by <see cref="System.Globalization.CultureInfo.CurrentCulture"/>, with a format string of "G". This format is not recommended for portability reasons.
         /// </summary>
         CurrentLocaleLong = 2,
 
         /// <summary>
-        /// Specifies a format defined by <see cref="CultureInfo.CurrentCulture"/>, with a format string of "g". This format is not recommended for portability reasons.
+        /// Specifies a format defined by <see cref="System.Globalization.CultureInfo.CurrentCulture"/>, with a format string of "g". This format is not recommended for portability reasons.
         /// </summary>
         CurrentLocaleShort = 3,
 
         /// <summary>
-        /// Specifies a format defined by <see cref="CultureInfo.InvariantCulture"/>, with a format string of "G".
+        /// Specifies a format defined by <see cref="System.Globalization.CultureInfo.InvariantCulture"/>, with a format string of "G".
         /// </summary>
         InvariantLocaleLong = 4,
 
         /// <summary>
-        /// Specifies a format defined by <see cref="CultureInfo.InvariantCulture"/>, with a format string of "g".
+        /// Specifies a format defined by <see cref="System.Globalization.CultureInfo.InvariantCulture"/>, with a format string of "g".
         /// </summary>
         InvariantLocaleShort = 5,
 

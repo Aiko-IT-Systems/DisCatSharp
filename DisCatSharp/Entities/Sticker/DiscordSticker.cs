@@ -151,10 +151,10 @@ namespace DisCatSharp.Entities
         /// <param name="tags">The name of a unicode emoji representing the sticker's expression</param>
         /// <param name="reason">Audit log reason</param>
         /// <returns>A sticker object</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the sticker could not be found.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
         public Task<DiscordSticker> ModifyAsync(Optional<string> name, Optional<string> description, Optional<string> tags, string reason = null)
         {
             return !this.GuildId.HasValue
@@ -172,10 +172,10 @@ namespace DisCatSharp.Entities
         /// Deletes the sticker
         /// </summary>
         /// <param name="reason">Audit log reason</param>
-        /// <exception cref="UnauthorizedException">Thrown when the sticker could not be found.</exception>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        /// <exception cref="ArgumentException">Sticker does not belong to a guild.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the sticker could not be found.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
         public Task DeleteAsync(string reason = null)
             => this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildStickerAsync(this.GuildId.Value, this.Id, reason) : throw new ArgumentException("The requested sticker is no guild sticker.");
     }

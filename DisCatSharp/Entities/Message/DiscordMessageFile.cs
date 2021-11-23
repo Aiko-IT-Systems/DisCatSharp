@@ -25,7 +25,7 @@ using System.IO;
 namespace DisCatSharp.Entities
 {
     /// <summary>
-    /// Represents the File that should be sent to Discord from the <see cref="DiscordMessageBuilder"/>.
+    /// Represents the File that should be sent to Discord from the <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
     /// </summary>
     public class DiscordMessageFile
     {

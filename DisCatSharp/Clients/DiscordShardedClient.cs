@@ -31,10 +31,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Net;
-using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
@@ -136,8 +136,8 @@ namespace DisCatSharp
         /// <summary>
         /// Initializes and connects all shards.
         /// </summary>
-        /// <exception cref="AggregateException"></exception>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="System.AggregateException"></exception>
+        /// <exception cref="System.InvalidOperationException"></exception>
         /// <returns></returns>
         public async Task StartAsync()
         {
@@ -191,7 +191,7 @@ namespace DisCatSharp
         /// Disconnects and disposes of all shards.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="System.InvalidOperationException"></exception>
         public Task StopAsync()
             => this.InternalStopAsync();
 
@@ -287,6 +287,10 @@ namespace DisCatSharp
 
             http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
             http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(this.Configuration));
+            if (this.Configuration != null && this.Configuration.Override != null)
+            {
+                http.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this.Configuration.Override);
+            }
 
             this.Logger.LogDebug(LoggerEvents.ShardRest, $"Obtaining gateway information from GET {Endpoints.GATEWAY}{Endpoints.BOT}...");
             var resp = await http.GetAsync(url).ConfigureAwait(false);
@@ -538,6 +542,8 @@ namespace DisCatSharp
             this._guildScheduledEventCreated = new AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._guildScheduledEventUpdated = new AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._guildScheduledEventDeleted = new AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventUserAdded = new AsyncEvent<DiscordClient, GuildScheduledEventUserAddEventArgs>("GUILD_SCHEDULED_EVENT_USER_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventUserRemoved = new AsyncEvent<DiscordClient, GuildScheduledEventUserRemoveEventArgs>("GUILD_SCHEDULED_EVENT_USER_REMOVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
             this._embeddedActivityUpdated = new AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs>("EMBEDDED_ACTIVITY_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
         }
 
@@ -620,6 +626,8 @@ namespace DisCatSharp
             client.GuildScheduledEventCreated += this.Client_GuildScheduledEventCreated;
             client.GuildScheduledEventUpdated += this.Client_GuildScheduledEventUpdated;
             client.GuildScheduledEventDeleted += this.Client_GuildScheduledEventDeleted;
+            client.GuildScheduledEventUserAdded += this.Client_GuildScheduledEventUserAdded; ;
+            client.GuildScheduledEventUserRemoved += this.Client_GuildScheduledEventUserRemoved;
             client.EmbeddedActivityUpdated += this.Client_EmbeddedActivityUpdated;
         }
 
@@ -702,6 +710,8 @@ namespace DisCatSharp
             client.GuildScheduledEventCreated -= this.Client_GuildScheduledEventCreated;
             client.GuildScheduledEventUpdated -= this.Client_GuildScheduledEventUpdated;
             client.GuildScheduledEventDeleted -= this.Client_GuildScheduledEventDeleted;
+            client.GuildScheduledEventUserAdded -= this.Client_GuildScheduledEventUserAdded; ;
+            client.GuildScheduledEventUserRemoved -= this.Client_GuildScheduledEventUserRemoved;
             client.EmbeddedActivityUpdated -= this.Client_EmbeddedActivityUpdated;
         }
 

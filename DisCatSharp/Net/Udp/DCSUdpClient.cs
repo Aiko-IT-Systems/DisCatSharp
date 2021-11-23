@@ -133,7 +133,7 @@ namespace DisCatSharp.Net.Udp
         }
 
         /// <summary>
-        /// Creates a new instance of <see cref="DCSUdpClient"/>.
+        /// Creates a new instance of <see cref="BaseUdpClient"/>.
         /// </summary>
         public static BaseUdpClient CreateNew()
             => new DCSUdpClient();

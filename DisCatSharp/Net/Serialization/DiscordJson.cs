@@ -55,8 +55,7 @@ namespace DisCatSharp.Net.Serialization
         }
 
         /// <summary>
-        /// Converts this token into an object, passing any properties through extra <see cref="JsonConverter"/>s if
-        /// needed.
+        /// Converts this token into an object, passing any properties through extra <see cref="Newtonsoft.Json.JsonConverter"/>s if needed.
         /// </summary>
         /// <param name="token">The token to convert</param>
         /// <typeparam name="T">Type to convert to</typeparam>

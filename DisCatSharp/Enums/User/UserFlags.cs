@@ -38,17 +38,17 @@ namespace DisCatSharp
         /// <summary>
         /// The user is a Discord employee.
         /// </summary>
-        DiscordEmployee = 1 << 0,
+        Staff = 1 << 0,
 
         /// <summary>
         /// The user is a Discord partner.
         /// </summary>
-        DiscordPartner = 1 << 1,
+        Partner = 1 << 1,
 
         /// <summary>
         /// The user has the HypeSquad badge.
         /// </summary>
-        HypeSquadEvents = 1 << 2,
+        HypeSquad = 1 << 2,
 
         /// <summary>
         /// The user reached the first bug hunter tier.
@@ -83,7 +83,7 @@ namespace DisCatSharp
         /// <summary>
         /// The user has the early supporter badge.
         /// </summary>
-        EarlySupporter = 1 << 9,
+        PremiumEarlySupporter = 1 << 9,
 
         /// <summary>
         /// User is a <see cref="Entities.DiscordTeam"/>.
@@ -123,12 +123,12 @@ namespace DisCatSharp
         /// <summary>
         /// The user is a verified bot developer.
         /// </summary>
-        VerifiedBotDeveloper = 1 << 17,
+        VerifiedDeveloper = 1 << 17,
 
         /// <summary>
         /// The user is a discord certified moderator.
         /// </summary>
-        DiscordCertifiedModerator = 1 << 18,
+        CertifiedModerator = 1 << 18,
 
         /// <summary>
         /// The user is a bot and has set an interactions endpoint url.

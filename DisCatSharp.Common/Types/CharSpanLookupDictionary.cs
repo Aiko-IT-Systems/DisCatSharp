@@ -28,7 +28,7 @@ using System.Collections.Immutable;
 namespace DisCatSharp.Common
 {
     /// <summary>
-    /// Represents collection of string keys and <typeparamref name="TValue"/> values, allowing the use of <see cref="ReadOnlySpan{T}"/> for dictionary operations.
+    /// Represents collection of string keys and <typeparamref name="TValue"/> values, allowing the use of <see cref="System.ReadOnlySpan{T}"/> for dictionary operations.
     /// </summary>
     /// <typeparam name="TValue">Type of items in this dictionary.</typeparam>
     public sealed class CharSpanLookupDictionary<TValue> : 
@@ -484,7 +484,7 @@ namespace DisCatSharp.Common
                 return;
             }
 
-            if (!(array is object[]))
+            if (array is not object[])
                 throw new ArgumentException($"Array needs to be an instance of {typeof(TValue[])} or object[].");
 
             var i = arrayIndex;

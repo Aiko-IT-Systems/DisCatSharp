@@ -45,6 +45,11 @@ namespace DisCatSharp
         /// <summary>
         /// An autocomplete field.
         /// </summary>
-        AutoComplete = 4
+        AutoComplete = 4,
+
+        /// <summary>
+        /// A modal component.
+        /// </summary>
+        ModalSubmit = 5
     }
 }
