@@ -7,7 +7,7 @@
     do_not_increment_build_number: true
   skip_tags: true
   max_jobs: 1
-  image: Visual Studio 2019
+  image: Visual Studio 2022
   clone_depth: 1
   build_script:
   - ps: |-
@@ -78,7 +78,7 @@
     do_not_increment_build_number: true
   skip_tags: true
   max_jobs: 1
-  image: Visual Studio 2019
+  image: Visual Studio 2022
   clone_depth: 1
   build_script:
   - ps: |-

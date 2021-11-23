@@ -53,4 +53,3 @@ jobs:
           author_name: DisCatSharp
           author_email: discatsharp@aitsys.dev
           message: 'Preview docs (${{ github.sha }})'
-          pull: 'NO-PULL'
