@@ -79,7 +79,7 @@ namespace DisCatSharp.Interactivity
         public InteractionResponseBehavior ResponseBehavior { internal get; set; } = InteractionResponseBehavior.Ignore;
 
         /// <summary>
-        /// The message to send to the user when processing invalid interactions. Ignored if <see cref="ResponseBehavior"/> is not set to <see cref="InteractionResponseBehavior.Respond"/>.
+        /// The message to send to the user when processing invalid interactions. Ignored if <see cref="ResponseBehavior"/> is not set to <see cref="DisCatSharp.Interactivity.Enums.InteractionResponseBehavior.Respond"/>.
         /// </summary>
         public string ResponseMessage { internal get; set; }
 

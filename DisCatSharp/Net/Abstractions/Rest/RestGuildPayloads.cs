@@ -448,17 +448,23 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("channel_id")]
         public Optional<ulong?> VoiceChannelId { get; set; }
+    }
 
+    /// <summary>
+    /// Represents a guild member timeout modify payload.
+    /// </summary>
+    internal sealed class RestGuildMemberTimeoutModifyPayload
+    {
         /// <summary>
         /// Date until the can communicate again.
         /// </summary>
         [JsonProperty("communication_disabled_until")]
-        public Optional<DateTimeOffset?> CommunicationDisabledUntil { get; internal set; }
+        public DateTimeOffset? CommunicationDisabledUntil { get; internal set; }
     }
 
-    /// <summary>
-    /// Represents a guild role payload.
-    /// </summary>
+        /// <summary>
+        /// Represents a guild role payload.
+        /// </summary>
     internal sealed class RestGuildRolePayload
     {
         /// <summary>

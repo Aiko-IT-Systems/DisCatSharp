@@ -293,8 +293,8 @@ namespace DisCatSharp
         internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
         {
             return taad == ThreadAutoArchiveDuration.ThreeDays
-                ? (guild.PremiumTier.HasFlag(PremiumTier.Tier_1) || guild.Features.CanSetThreadArchiveDurationThreeDays)
-                : taad != ThreadAutoArchiveDuration.OneWeek || guild.PremiumTier.HasFlag(PremiumTier.Tier_2) || guild.Features.CanSetThreadArchiveDurationSevenDays;
+                ? (guild.PremiumTier.HasFlag(PremiumTier.TierOne) || guild.Features.CanSetThreadArchiveDurationThreeDays)
+                : taad != ThreadAutoArchiveDuration.OneWeek || guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || guild.Features.CanSetThreadArchiveDurationSevenDays;
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace DisCatSharp
         /// </summary>
         /// <param name="guild">The guild.</param>
         /// <returns>A bool.</returns>
-        internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.PremiumTier.HasFlag(PremiumTier.Tier_2) || guild.Features.CanCreatePrivateThreads;
+        internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || guild.Features.CanCreatePrivateThreads;
 
         /// <summary>
         /// Have the message intents.
@@ -339,11 +339,11 @@ namespace DisCatSharp
             => (int)(guildId >> 22) % shardCount;
 
         /// <summary>
-        /// Helper method to create a <see cref="DateTimeOffset"/> from Unix time seconds for targets that do not support this natively.
+        /// Helper method to create a <see cref="System.DateTimeOffset"/> from Unix time seconds for targets that do not support this natively.
         /// </summary>
         /// <param name="unixTime">Unix time seconds to convert.</param>
         /// <param name="shouldThrow">Whether the method should throw on failure. Defaults to true.</param>
-        /// <returns>Calculated <see cref="DateTimeOffset"/>.</returns>
+        /// <returns>Calculated <see cref="System.DateTimeOffset"/>.</returns>
         public static DateTimeOffset GetDateTimeOffset(long unixTime, bool shouldThrow = true)
         {
             try
@@ -360,11 +360,11 @@ namespace DisCatSharp
         }
 
         /// <summary>
-        /// Helper method to create a <see cref="DateTimeOffset"/> from Unix time milliseconds for targets that do not support this natively.
+        /// Helper method to create a <see cref="System.DateTimeOffset"/> from Unix time milliseconds for targets that do not support this natively.
         /// </summary>
         /// <param name="unixTime">Unix time milliseconds to convert.</param>
         /// <param name="shouldThrow">Whether the method should throw on failure. Defaults to true.</param>
-        /// <returns>Calculated <see cref="DateTimeOffset"/>.</returns>
+        /// <returns>Calculated <see cref="System.DateTimeOffset"/>.</returns>
         public static DateTimeOffset GetDateTimeOffsetFromMilliseconds(long unixTime, bool shouldThrow = true)
         {
             try
@@ -381,9 +381,9 @@ namespace DisCatSharp
         }
 
         /// <summary>
-        /// Helper method to calculate Unix time seconds from a <see cref="DateTimeOffset"/> for targets that do not support this natively.
+        /// Helper method to calculate Unix time seconds from a <see cref="System.DateTimeOffset"/> for targets that do not support this natively.
         /// </summary>
-        /// <param name="dto"><see cref="DateTimeOffset"/> to calculate Unix time for.</param>
+        /// <param name="dto"><see cref="System.DateTimeOffset"/> to calculate Unix time for.</param>
         /// <returns>Calculated Unix time.</returns>
         public static long GetUnixTime(DateTimeOffset dto)
             => dto.ToUnixTimeMilliseconds();

@@ -182,7 +182,7 @@ namespace DisCatSharp.CommandsNext
         /// DO NOT USE THIS MANUALLY.
         /// </summary>
         /// <param name="client">DO NOT USE THIS MANUALLY.</param>
-        /// <exception cref="InvalidOperationException"/>
+        /// <exception cref="System.InvalidOperationException"/>
         protected internal override void Setup(DiscordClient client)
         {
             if (this.Client != null)
@@ -294,7 +294,7 @@ namespace DisCatSharp.CommandsNext
                 cmd = cmdKvp.Value;
             }
 
-            if (!(cmd is CommandGroup))
+            if (cmd is not CommandGroup)
             {
                 rawArguments = commandString.Substring(pos).Trim();
                 return cmd;

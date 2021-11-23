@@ -20,31 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+namespace DisCatSharp.Enums
 {
     /// <summary>
-    /// Represents the entity type for a scheduled event.
+    /// Represents a button's style/color.
     /// </summary>
-    public enum EventEntityType : int
+    public enum TextComponentStyle : int
     {
         /// <summary>
-        /// Indicates that the events is not hold anywhere.
+        /// A small text input.
         /// </summary>
-        NONE = 0,
+        Small = 1,
 
         /// <summary>
-        /// Indicates that the events is hold in a stage instance.
+        /// A paragraph text input.
         /// </summary>
-        STAGE_INSTANCE = 1,
-
-        /// <summary>
-        /// Indicates that the events is hold in a voice channel.
-        /// </summary>
-        VOICE = 2,
-
-        /// <summary>
-        /// Indicates that the events is hold external.
-        /// </summary>
-        EXTERNAL = 3
+        Paragraph = 2
     }
 }

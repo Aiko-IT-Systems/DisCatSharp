@@ -37,6 +37,10 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
+        /// </summary>
+        /// <param name="provider">The service provider.</param>
         [ActivatorUtilitiesConstructor]
         public ApplicationCommandsConfiguration(IServiceProvider provider)
         {

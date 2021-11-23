@@ -71,7 +71,7 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Gets the user associated with this voice state.
-        /// <para>This can be cast to a <see cref="DiscordMember"/> if this voice state was in a guild.</para>
+        /// <para>This can be cast to a <see cref="DisCatSharp.Entities.DiscordMember"/> if this voice state was in a guild.</para>
         /// </summary>
         [JsonIgnore]
         public DiscordUser User

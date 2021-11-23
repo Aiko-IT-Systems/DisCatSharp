@@ -65,7 +65,7 @@ namespace DisCatSharp
         /// Creates a new ring buffer with specified size.
         /// </summary>
         /// <param name="size">Size of the buffer to create.</param>
-        /// <exception cref="ArgumentOutOfRangeException" />
+        /// <exception cref="System.ArgumentOutOfRangeException" />
         public RingBuffer(int size)
         {
             if (size <= 0)
@@ -80,8 +80,8 @@ namespace DisCatSharp
         /// Creates a new ring buffer, filled with specified elements.
         /// </summary>
         /// <param name="elements">Elements to fill the buffer with.</param>
-        /// <exception cref="ArgumentException" />
-        /// <exception cref="ArgumentOutOfRangeException" />
+        /// <exception cref="System.ArgumentException" />
+        /// <exception cref="System.ArgumentOutOfRangeException" />
         public RingBuffer(IEnumerable<T> elements)
             : this(elements, 0)
         { }
@@ -91,8 +91,8 @@ namespace DisCatSharp
         /// </summary>
         /// <param name="elements">Elements to fill the buffer with.</param>
         /// <param name="index">Starting element index.</param>
-        /// <exception cref="ArgumentException" />
-        /// <exception cref="ArgumentOutOfRangeException" />
+        /// <exception cref="System.ArgumentException" />
+        /// <exception cref="System.ArgumentOutOfRangeException" />
         public RingBuffer(IEnumerable<T> elements, int index)
         {
             if (elements == null || !elements.Any())
@@ -166,7 +166,7 @@ namespace DisCatSharp
         /// </summary>
         /// <param name="item">Item to check for.</param>
         /// <returns>Whether the buffer contains the item.</returns>
-        /// <exception cref="NotImplementedException" />
+        /// <exception cref="System.NotImplementedException" />
         public bool Contains(T item) => throw new NotImplementedException("This method is not implemented. Use .Contains(predicate) instead.");
 
         /// <summary>

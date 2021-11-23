@@ -689,12 +689,12 @@ namespace DisCatSharp.Entities
     /// <summary>
     /// Represents a audit log event entry.
     /// </summary>
-    public sealed class DiscordAuditLogScheduledEventEntry : DiscordAuditLogEntry
+    public sealed class DiscordAuditLogGuildScheduledEventEntry : DiscordAuditLogEntry
     {
         /// <summary>
         /// Gets the affected thread
         /// </summary>
-        public DiscordEvent Target { get; internal set; }
+        public DiscordScheduledEvent Target { get; internal set; }
 
         /// <summary>
         /// Gets the channel change.
@@ -706,31 +706,41 @@ namespace DisCatSharp.Entities
         /// </summary>
         public PropertyChange<string> DescriptionChange { get; internal set; }
 
-        /*
+        /* Will be added https://github.com/discord/discord-api-docs/pull/3586#issuecomment-969137241
         public PropertyChange<> ScheduledStartTimeChange { get; internal set; }
 
         public PropertyChange<> ScheduledEndTimeChange { get; internal set; }
         */
 
         /// <summary>
+        /// Gets the location change.
+        /// </summary>
+        public PropertyChange<string> LocationChange { get; internal set; }
+
+        /// <summary>
         /// Gets the privacy level change.
         /// </summary>
-        public PropertyChange<StagePrivacyLevel?> PrivacyLevelChange { get; internal set; }
+        public PropertyChange<ScheduledEventPrivacyLevel?> PrivacyLevelChange { get; internal set; }
 
         /// <summary>
         /// Gets the status change.
         /// </summary>
-        public PropertyChange<EventStatus?> StatusChange { get; internal set; }
+        public PropertyChange<ScheduledEventStatus?> StatusChange { get; internal set; }
 
         /// <summary>
+        /// Gets the entity type change.
+        /// </summary>
+        public PropertyChange<ScheduledEventEntityType?> EntityTypeChange { get; internal set; }
+
+        /*/// <summary>
         /// Gets the sku ids change.
         /// </summary>
-        public PropertyChange<IReadOnlyList<ulong>> SkuIdsChange { get; internal set; }
+        public PropertyChange<IReadOnlyList<ulong>> SkuIdsChange { get; internal set; }*/
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordAuditLogScheduledEventEntry"/> class.
+        /// Initializes a new instance of the <see cref="DiscordAuditLogGuildScheduledEventEntry"/> class.
         /// </summary>
-        internal DiscordAuditLogScheduledEventEntry() { }
+        internal DiscordAuditLogGuildScheduledEventEntry() { }
     }
 
     /// <summary>
@@ -1021,17 +1031,17 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Indicates that an event was created.
         /// </summary>
-        ScheduledEventCreate = 100,
+        GuildScheduledEventCreate = 100,
 
         /// <summary>
         /// Indicates that an event was updated.
         /// </summary>
-        ScheduledEventUpdate = 101,
+        GuildScheduledEventUpdate = 101,
 
         /// <summary>
         /// Indicates that an event was deleted.
         /// </summary>
-        ScheduledEventDelete = 102,
+        GuildScheduledEventDelete = 102,
         
         /// <summary>
         /// Indicates that an thread was created.

@@ -35,17 +35,17 @@ namespace DisCatSharp
         /// <summary>
         /// Indicates that this server was boosted two times.
         /// </summary>
-        Tier_1 = 1,
+        TierOne = 1,
 
         /// <summary>
         /// Indicates that this server was boosted seven times.
         /// </summary>
-        Tier_2 = 2,
+        TierTwo = 2,
 
         /// <summary>
         /// Indicates that this server was boosted fourteen times.
         /// </summary>
-        Tier_3 = 3,
+        TierThree = 3,
 
         /// <summary>
         /// Indicates an unknown premium tier.

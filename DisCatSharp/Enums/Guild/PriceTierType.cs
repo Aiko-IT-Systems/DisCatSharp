@@ -30,6 +30,6 @@ namespace DisCatSharp
         /// <summary>
         /// Indicates that this is a role subscriotion.
         /// </summary>
-        GUILD_ROLE_SUBSCRIPTIONS = 1
+        GuildRoleSubscriptions = 1
     }
 }

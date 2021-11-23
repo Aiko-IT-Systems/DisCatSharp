@@ -93,7 +93,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="components">The collection of components to add.</param>
         /// <returns>The builder to chain calls with.</returns>
-        /// <exception cref="ArgumentException"><paramref name="components"/> contained more than 5 components.</exception>
+        /// <exception cref="System.ArgumentException"><paramref name="components"/> contained more than 5 components.</exception>
         public DiscordFollowupMessageBuilder AddComponents(params DiscordComponent[] components)
             => this.AddComponents((IEnumerable<DiscordComponent>)components);
 
@@ -120,7 +120,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="components">The collection of components to add.</param>
         /// <returns>The builder to chain calls with.</returns>
-        /// <exception cref="ArgumentException"><paramref name="components"/> contained more than 5 components.</exception>
+        /// <exception cref="System.ArgumentException"><paramref name="components"/> contained more than 5 components.</exception>
         public DiscordFollowupMessageBuilder AddComponents(IEnumerable<DiscordComponent> components)
         {
             var compArr = components.ToArray();

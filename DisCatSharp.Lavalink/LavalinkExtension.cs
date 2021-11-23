@@ -65,7 +65,7 @@ namespace DisCatSharp.Lavalink
         /// DO NOT USE THIS MANUALLY.
         /// </summary>
         /// <param name="client">DO NOT USE THIS MANUALLY.</param>
-        /// <exception cref="InvalidOperationException"/>
+        /// <exception cref="System.InvalidOperationException"/>
         protected internal override void Setup(DiscordClient client)
         {
             if (this.Client != null)
@@ -138,7 +138,7 @@ namespace DisCatSharp.Lavalink
         }
 
         /// <summary>
-        /// Gets a Lavalink guild connection from a <see cref="DiscordGuild"/>.
+        /// Gets a Lavalink guild connection from a <see cref="DisCatSharp.Entities.DiscordGuild"/>.
         /// </summary>
         /// <param name="guild">The guild the connection is on.</param>
         /// <returns>The found guild connection, or null if one could not be found.</returns>
