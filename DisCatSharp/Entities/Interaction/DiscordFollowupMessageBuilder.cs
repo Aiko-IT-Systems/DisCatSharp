@@ -183,8 +183,9 @@ namespace DisCatSharp.Entities
         /// <param name="filename">Name of the file.</param>
         /// <param name="data">File data.</param>
         /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="description">Description of the file.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordFollowupMessageBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false)
+        public DiscordFollowupMessageBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
         {
             if (this.Files.Count >= 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -193,9 +194,9 @@ namespace DisCatSharp.Entities
                 throw new ArgumentException("A File with that filename already exists");
 
             if (resetStreamPosition)
-                this._files.Add(new DiscordMessageFile(filename, data, data.Position));
+                this._files.Add(new DiscordMessageFile(filename, data, data.Position, description: description));
             else
-                this._files.Add(new DiscordMessageFile(filename, data, null));
+                this._files.Add(new DiscordMessageFile(filename, data, null, description: description));
 
             return this;
         }
@@ -205,8 +206,9 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="stream">The Stream to the file.</param>
         /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="description">Description of the file.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordFollowupMessageBuilder AddFile(FileStream stream, bool resetStreamPosition = false)
+        public DiscordFollowupMessageBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
         {
             if (this.Files.Count >= 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -215,9 +217,9 @@ namespace DisCatSharp.Entities
                 throw new ArgumentException("A File with that filename already exists");
 
             if (resetStreamPosition)
-                this._files.Add(new DiscordMessageFile(stream.Name, stream, stream.Position));
+                this._files.Add(new DiscordMessageFile(stream.Name, stream, stream.Position, description: description));
             else
-                this._files.Add(new DiscordMessageFile(stream.Name, stream, null));
+                this._files.Add(new DiscordMessageFile(stream.Name, stream, null, description: description));
 
             return this;
         }
