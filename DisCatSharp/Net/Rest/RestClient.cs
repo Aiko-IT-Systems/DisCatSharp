@@ -535,9 +535,13 @@ namespace DisCatSharp.Net
 
                 if (mprequest.Files != null && mprequest.Files.Any())
                 {
-                    var i = 1;
+                    var i = 0;
                     foreach (var f in mprequest.Files)
-                        content.Add(new StreamContent(f.Value), $"file{i++.ToString(CultureInfo.InvariantCulture)}", f.Key);
+                    {
+                        var name = $"files[{i.ToString(CultureInfo.InvariantCulture)}]";
+                        content.Add(new StreamContent(f.Value), name, f.Key);
+                        i++;
+                    }
                 }
 
                 req.Content = content;
