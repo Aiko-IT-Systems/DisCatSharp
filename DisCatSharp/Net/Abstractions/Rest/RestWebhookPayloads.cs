@@ -102,6 +102,18 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordMentions Mentions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the components.
+        /// </summary>
+        [JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+        public IEnumerable<DiscordActionRowComponent> Components { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attachments.
+        /// </summary>
+        [JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DiscordAttachment> Attachments { get; set; }
     }
 
     /// <summary>
