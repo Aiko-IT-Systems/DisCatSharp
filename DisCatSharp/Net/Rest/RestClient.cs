@@ -362,6 +362,7 @@ namespace DisCatSharp.Net
                         {
                             if (global)
                             {
+                                bucket.IsGlobal = true;
                                 this.Logger.LogError(LoggerEvents.RatelimitHit, "Global ratelimit hit, cooling down");
                                 try
                                 {
@@ -629,10 +630,19 @@ namespace DisCatSharp.Net
 
             var hs = response.Headers;
 
+            if (hs.TryGetValue("X-RateLimit-Scope", out var scope))
+            {
+                bucket.Scope = scope;
+            }
+
+
             if (hs.TryGetValue("X-RateLimit-Global", out var isglobal) && isglobal.ToLowerInvariant() == "true")
             {
                 if (response.ResponseCode != 429)
+                {
+                    bucket.IsGlobal = true;
                     this.FailInitialRateLimitTest(request, ratelimitTcs);
+                }
 
                 return;
             }
