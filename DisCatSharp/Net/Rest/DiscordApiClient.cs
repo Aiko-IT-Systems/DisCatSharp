@@ -3436,24 +3436,26 @@ namespace DisCatSharp.Net
             if (builder.Mentions != null)
                 pld.Mentions = new DiscordMentions(builder.Mentions, builder.Mentions.Any());
 
-
-            ulong file_id = 0;
-            List<DiscordAttachment> attachments = new(builder.Files.Count);
-            foreach (var file in builder.Files)
+            if (builder.Files?.Count > 0)
             {
-                DiscordAttachment att = new()
+                ulong file_id = 0;
+                List<DiscordAttachment> attachments = new(builder.Files.Count);
+                foreach (var file in builder.Files)
                 {
-                    Id = file_id,
-                    Discord = this.Discord,
-                    Description = file.Description,
-                    FileName = file.FileName
-                };
-                attachments.Add(att);
-                file_id++;
+                    DiscordAttachment att = new()
+                    {
+                        Id = file_id,
+                        Discord = this.Discord,
+                        Description = file.Description,
+                        FileName = file.FileName
+                    };
+                    attachments.Add(att);
+                    file_id++;
+                }
+                pld.Attachments = attachments;
             }
-            pld.Attachments = attachments;
 
-            if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTTS == true || builder.Mentions != null)
+            if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.Files?.Count > 0 || builder.IsTTS == true || builder.Mentions != null)
                 values["payload_json"] = DiscordJson.SerializeObject(pld);
 
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
@@ -3541,8 +3543,28 @@ namespace DisCatSharp.Net
                 Embeds = builder.Embeds,
                 Mentions = builder.Mentions,
                 Components = builder.Components,
-                Attachments = builder.Attachments
             };
+
+
+            if (builder.Files?.Count > 0)
+            {
+                ulong file_id = 0;
+                List<DiscordAttachment> attachments = new();
+                attachments.AddRange(builder.Attachments);
+                foreach (var file in builder.Files)
+                {
+                    DiscordAttachment att = new()
+                    {
+                        Id = file_id,
+                        Discord = this.Discord,
+                        Description = file.Description,
+                        FileName = file.FileName
+                    };
+                    attachments.Add(att);
+                    file_id++;
+                }
+                pld.Attachments = attachments;
+            }
 
             var values = new Dictionary<string, string>
             {
@@ -4941,10 +4963,29 @@ namespace DisCatSharp.Net
                     } : null
                 };
 
+                if(builder.Files != null && builder.Files.Count > 0)
+                {
+                    ulong file_id = 0;
+                    List<DiscordAttachment> attachments = new(builder.Files.Count);
+                    foreach (var file in builder.Files)
+                    {
+                        DiscordAttachment att = new()
+                        {
+                            Id = file_id,
+                            Discord = this.Discord,
+                            Description = file.Description,
+                            FileName = file.FileName
+                        };
+                        attachments.Add(att);
+                        file_id++;
+                    }
+                    pld.Data.Attachments = attachments;
+                }
+
                 var values = new Dictionary<string, string>();
 
                 if (builder != null)
-                    if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTTS == true || builder.Mentions != null)
+                    if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTTS == true || builder.Mentions != null || builder.Files?.Count > 0)
                         values["payload_json"] = DiscordJson.SerializeObject(pld);
 
                 var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
@@ -4953,6 +4994,7 @@ namespace DisCatSharp.Net
                 var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
                 if (builder != null)
                 {
+                    this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
                     await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files);
 
                     foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
@@ -5058,10 +5100,30 @@ namespace DisCatSharp.Net
                 Components = builder.Components
             };
 
+
+            if (builder.Files != null && builder.Files.Count > 0)
+            {
+                ulong file_id = 0;
+                List<DiscordAttachment> attachments = new(builder.Files.Count);
+                foreach (var file in builder.Files)
+                {
+                    DiscordAttachment att = new()
+                    {
+                        Id = file_id,
+                        Discord = this.Discord,
+                        Description = file.Description,
+                        FileName = file.FileName
+                    };
+                    attachments.Add(att);
+                    file_id++;
+                }
+                pld.Attachments = attachments;
+            }
+
             if (builder.Mentions != null)
                 pld.Mentions = new DiscordMentions(builder.Mentions, builder.Mentions.Any());
 
-            if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTTS == true || builder.Mentions != null)
+            if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTTS == true || builder.Mentions != null || builder.Files?.Count > 0)
                 values["payload_json"] = DiscordJson.SerializeObject(pld);
 
             var route = $"{Endpoints.WEBHOOKS}/:application_id/:interaction_token";

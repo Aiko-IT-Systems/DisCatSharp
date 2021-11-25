@@ -169,6 +169,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyCollection<DiscordActionRowComponent> Components { get; set; }
+
+        /// <summary>
+        /// Gets attachments.
+        /// </summary>
+        [JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DiscordAttachment> Attachments { get; set; }
     }
 
     /// <summary>

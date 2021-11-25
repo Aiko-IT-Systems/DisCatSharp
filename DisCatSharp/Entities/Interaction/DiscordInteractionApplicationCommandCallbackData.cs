@@ -71,6 +71,12 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyCollection<DiscordApplicationCommandAutocompleteChoice> Choices { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the attachments.
+        /// </summary>
+        [JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DiscordAttachment> Attachments { get; set; }
     }
 
     /// <summary>
