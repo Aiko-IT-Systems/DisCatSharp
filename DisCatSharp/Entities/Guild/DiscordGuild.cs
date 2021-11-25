@@ -517,6 +517,12 @@ namespace DisCatSharp.Entities
         public bool IsNSFW { get; internal set; }
 
         /// <summary>
+        /// Gets this guild's hub type, if applicable.
+        /// </summary>
+        [JsonProperty("hub_type", NullValueHandling = NullValueHandling.Ignore)]
+        public HubType HubType { get; internal set; }
+
+        /// <summary>
         /// Gets a dictionary of all by position ordered channels associated with this guild. The dictionary's key is the channel ID.
         /// </summary>
         [JsonIgnore]

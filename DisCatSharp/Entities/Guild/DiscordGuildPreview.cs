@@ -121,6 +121,12 @@ namespace DisCatSharp.Entities
         public SystemChannelFlags SystemChannelFlags { get; internal set; }
 
         /// <summary>
+        /// Gets this hub type for the guild, if the guild is a hub.
+        /// </summary>
+        [JsonProperty("hub_type", NullValueHandling = NullValueHandling.Ignore)]
+        public HubType HubType { get; internal set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DiscordGuildPreview"/> class.
         /// </summary>
         internal DiscordGuildPreview() { }
