@@ -247,9 +247,9 @@ namespace DisCatSharp.Net
         /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
         /// <returns>A Task.</returns>
         private Task<RestResponse> DoMultipartAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, IReadOnlyDictionary<string, string> values = null,
-            IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimitWaitOverride = null)
+            IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimitWaitOverride = null, int? overwriteFileIdStart = null)
         {
-            var req = new MultipartWebRequest(client, bucket, url, method, route, headers, values, files, ratelimitWaitOverride);
+            var req = new MultipartWebRequest(client, bucket, url, method, route, headers, values, files, ratelimitWaitOverride, overwriteFileIdStart);
 
             if (this.Discord != null)
                 this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
@@ -3545,12 +3545,21 @@ namespace DisCatSharp.Net
                 Components = builder.Components,
             };
 
-
+            int? overwrite = null;
             if (builder.Files?.Count > 0)
             {
                 ulong file_id = 0;
                 List<DiscordAttachment> attachments = new();
-                attachments.AddRange(builder.Attachments);
+                if (builder.Attachments?.Count() > 0)
+                {
+                    foreach (var att in builder.Attachments)
+                    {
+                        att.Id = file_id;
+                        attachments.Add(att);
+                        file_id++;
+                    }
+                    overwrite = int.Parse(file_id.ToString());
+                }
                 foreach (var file in builder.Files)
                 {
                     DiscordAttachment att = new()
@@ -3564,6 +3573,9 @@ namespace DisCatSharp.Net
                     file_id++;
                 }
                 pld.Attachments = attachments;
+            } else
+            {
+                pld.Attachments = builder.Attachments;
             }
 
             var values = new Dictionary<string, string>
@@ -3578,7 +3590,7 @@ namespace DisCatSharp.Net
             if (thread_id != null)
                 qub.AddParameter("thread_id", thread_id);
             var url = qub.Build();
-            var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files);
+            var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files, overwriteFileIdStart: overwrite);
 
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
             ret.Discord = this.Discord;
@@ -5104,7 +5116,7 @@ namespace DisCatSharp.Net
             if (builder.Files != null && builder.Files.Count > 0)
             {
                 ulong file_id = 0;
-                List<DiscordAttachment> attachments = new(builder.Files.Count);
+                List<DiscordAttachment> attachments = new();
                 foreach (var file in builder.Files)
                 {
                     DiscordAttachment att = new()
