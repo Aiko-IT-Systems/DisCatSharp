@@ -109,6 +109,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordInteractionApplicationCommandCallbackData Data { get; set; }
+
+        /// <summary>
+        /// Gets the attachments.
+        /// </summary>
+        [JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DiscordAttachment> Attachments { get; set; }
     }
 
     /// <summary>

@@ -4947,13 +4947,21 @@ namespace DisCatSharp.Net
                     var data = builder != null ? new DiscordInteractionApplicationCommandCallbackData
                     {
                         Content = builder.Content ?? null,
-                        /*Embeds = builder.Embeds ?? null,
+                        Embeds = builder.Embeds ?? null,
                         IsTTS = builder.IsTTS,
                         Mentions = builder.Mentions ?? null,
                         Flags = builder.IsEphemeral ? MessageFlags.Ephemeral : null,
                         Components = builder.Components ?? null,
-                        Choices = null*/
+                        Choices = null
                     } : null;
+
+
+                    pld = new RestInteractionResponsePayload
+                    {
+                        Type = type,
+                        Data = data 
+                    };
+
 
                     if (builder != null && builder.Files != null && builder.Files.Count > 0)
                     {
@@ -4964,7 +4972,7 @@ namespace DisCatSharp.Net
                             DiscordAttachment att = new()
                             {
                                 Id = file_id,
-                                //Discord = this.Discord,
+                                Discord = this.Discord,
                                 Description = file.Description,
                                 FileName = file.FileName,
                                 FileSize = null
@@ -4972,14 +4980,8 @@ namespace DisCatSharp.Net
                             attachments.Add(att);
                             file_id++;
                         }
-                        data.Attachments = attachments;
+                        pld.Attachments = attachments;
                     }
-
-                    pld = new RestInteractionResponsePayload
-                    {
-                        Type = type,
-                        Data = data 
-                    };
                 }
                 else
                 {
