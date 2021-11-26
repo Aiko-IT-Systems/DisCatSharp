@@ -33,13 +33,13 @@ namespace DisCatSharp.Entities
         /// Gets the name of the file.
         /// </summary>
         [JsonProperty("filename", NullValueHandling = NullValueHandling.Ignore)]
-        public string FileName { get; internal set; }
+        public string FileName { get; set; }
 
         /// <summary>
         /// Gets the description of the file.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-        public string Description { get; internal set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets the media, or MIME, type of the file.
