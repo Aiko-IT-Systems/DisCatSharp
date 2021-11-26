@@ -350,9 +350,9 @@ namespace DisCatSharp.Entities
         /// Keeps the given attachments on edit.
         /// You can modify the attachments descriptions / names before inserting it here.
         /// </summary>
-        /// <param name="attachments">Attachments to keep (on edit).</param>
+        /// <param name="attachments">Attachments to keep and optional edit (on edit).</param>
         /// <returns></returns>
-        public DiscordMessageBuilder KeepAttachments(IEnumerable<DiscordAttachment> attachments)
+        public DiscordMessageBuilder KeepOrModifyAttachments(IEnumerable<DiscordAttachment> attachments)
         {
             this._attachments.AddRange(attachments);
             return this;
