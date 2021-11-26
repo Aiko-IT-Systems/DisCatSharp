@@ -1796,8 +1796,6 @@ namespace DisCatSharp.Net
                 }
                 pld.Attachments = attachments;
 
-                this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
-
                 var values = new Dictionary<string, string>
                 {
                     ["payload_json"] = DiscordJson.SerializeObject(pld)

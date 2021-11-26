@@ -582,7 +582,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <returns></returns>
         public Task<DiscordMessage> ClearAttachmentsAsync()
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, this.GetMentions(), default, default, default, Array.Empty<DiscordAttachment>().ToList());
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, this.GetMentions(), default, default, default, null);
 
         /// <summary>
         /// Edits the message.
