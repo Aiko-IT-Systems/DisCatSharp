@@ -2011,8 +2011,9 @@ namespace DisCatSharp.Net
         /// <param name="components">The components.</param>
         /// <param name="suppress_embed">The suppress_embed.</param>
         /// <param name="files">The files.</param>
+        /// <param name="attachments">The attachments to keep.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordMessage> EditMessageAsync(ulong channel_id, ulong message_id, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, IEnumerable<IMention> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppress_embed, IReadOnlyCollection<DiscordMessageFile> files)
+        internal async Task<DiscordMessage> EditMessageAsync(ulong channel_id, ulong message_id, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, IEnumerable<IMention> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppress_embed, IReadOnlyCollection<DiscordMessageFile> files, List<DiscordAttachment> attachments = null)
         {
             if (embeds.HasValue && embeds.Value != null)
                 foreach (var embed in embeds.Value)
@@ -2025,9 +2026,35 @@ namespace DisCatSharp.Net
                 Content = content.HasValue ? (string)content : null,
                 HasEmbed = embeds.HasValue && (embeds.Value?.Any() ?? false),
                 Embeds = embeds.HasValue && (embeds.Value?.Any() ?? false) ? embeds.Value : null,
-                Components = components,
+                Components = components ?? null,
                 Flags = suppress_embed.HasValue ? (bool)suppress_embed ? MessageFlags.SuppressedEmbeds : null : null
             };
+
+            if (files?.Count > 0)
+            {
+                ulong file_id = 0;
+                List<DiscordAttachment> attachments_new = new();
+                foreach (var file in files)
+                {
+                    DiscordAttachment att = new()
+                    {
+                        Id = file_id,
+                        Discord = this.Discord,
+                        Description = file.Description,
+                        FileName = file.FileName
+                    };
+                    attachments_new.Add(att);
+                    file_id++;
+                }
+                if (attachments != null && attachments?.Count() > 0)
+                    attachments_new.AddRange(attachments);
+
+                pld.Attachments = attachments_new;
+            }
+            else
+            {
+                pld.Attachments = attachments;
+            }
 
             pld.Mentions = new DiscordMentions(mentions ?? Mentions.None, false, mentions?.OfType<RepliedUserMention>().Any() ?? false);
 
@@ -3562,7 +3589,7 @@ namespace DisCatSharp.Net
                         Discord = this.Discord,
                         Description = file.Description,
                         FileName = file.FileName,
-                        FileSize = 0
+                        FileSize = null
                     };
                     attachments.Add(att);
                     file_id++;

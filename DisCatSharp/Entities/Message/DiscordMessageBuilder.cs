@@ -97,7 +97,8 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the Attachments to be sent in the Message.
         /// </summary>
-        internal List<DiscordAttachment> Attachments { get; private set; } = null;
+        public IReadOnlyList<DiscordAttachment> Attachments => this._attachments;
+        internal readonly List<DiscordAttachment> _attachments = new();
 
         /// <summary>
         /// Gets the Reply Message ID.
@@ -346,6 +347,18 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
+        /// Keeps the given attachments on edit.
+        /// You can modify the attachments descriptions / names before inserting it here.
+        /// </summary>
+        /// <param name="attachments">Attachments to keep (on edit).</param>
+        /// <returns></returns>
+        public DiscordMessageBuilder KeepAttachments(IEnumerable<DiscordAttachment> attachments)
+        {
+            this._attachments.AddRange(attachments);
+            return this;
+        }
+
+        /// <summary>
         /// Sets if the message is a reply
         /// </summary>
         /// <param name="messageId">The ID of the message to reply to.</param>
@@ -404,7 +417,7 @@ namespace DisCatSharp.Entities
             this._components.Clear();
             this.Suppressed = false;
             this.Sticker = null;
-            this.Attachments.Clear();
+            this._attachments.Clear();
         }
 
         /// <summary>
