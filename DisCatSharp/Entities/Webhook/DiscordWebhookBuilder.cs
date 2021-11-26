@@ -91,7 +91,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Attachments to keep on this webhook request.
         /// </summary>
-        public IEnumerable<DiscordAttachment> Attachments { get; }
+        public IEnumerable<DiscordAttachment> Attachments => this._attachments;
         private readonly List<DiscordAttachment> _attachments = new();
 
         /// <summary>
@@ -281,6 +281,17 @@ namespace DisCatSharp.Entities
             }
 
 
+            return this;
+        }
+
+        /// <summary>
+        /// Keeps the given attachments on edit.
+        /// </summary>
+        /// <param name="attachments">Attachments to keep (on edit).</param>
+        /// <returns></returns>
+        public DiscordWebhookBuilder KeepAttachments(IEnumerable<DiscordAttachment> attachments)
+        {
+            this._attachments.AddRange(attachments);
             return this;
         }
 

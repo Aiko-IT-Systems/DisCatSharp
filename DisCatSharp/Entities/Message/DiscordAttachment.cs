@@ -51,7 +51,7 @@ namespace DisCatSharp.Entities
         /// Gets the file size in bytes.
         /// </summary>
         [JsonProperty("size", NullValueHandling = NullValueHandling.Ignore)]
-        public int FileSize { get; internal set; }
+        public int? FileSize { get; internal set; }
 
         /// <summary>
         /// Gets the URL of the file.

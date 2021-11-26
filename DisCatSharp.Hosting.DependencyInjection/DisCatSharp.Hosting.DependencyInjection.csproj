@@ -6,7 +6,7 @@
     <Import Project="../Package.targets" />
     <Import Project="../NuGet.targets" />
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>

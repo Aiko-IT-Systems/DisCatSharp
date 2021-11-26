@@ -377,5 +377,9 @@ namespace DisCatSharp.Net
         /// The config endpoint.
         /// </summary>
         public const string CONFIG = "/config";
+        /// <summary>
+        /// The ephemeral attachments endpoint.
+        /// </summary>
+        public const string EphemeralAttachments = "/ephemeral-attachments";
     }
 }
