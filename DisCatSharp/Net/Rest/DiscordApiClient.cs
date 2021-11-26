@@ -3440,7 +3440,7 @@ namespace DisCatSharp.Net
             if (builder.Files?.Count > 0)
             {
                 ulong file_id = 0;
-                List<DiscordAttachment> attachments = new(builder.Files.Count);
+                List<DiscordAttachment> attachments = new();
                 foreach (var file in builder.Files)
                 {
                     DiscordAttachment att = new()
@@ -3448,7 +3448,8 @@ namespace DisCatSharp.Net
                         Id = file_id,
                         Discord = this.Discord,
                         Description = file.Description,
-                        FileName = file.FileName
+                        FileName = file.FileName,
+                        FileSize = null
                     };
                     attachments.Add(att);
                     file_id++;
@@ -3551,16 +3552,6 @@ namespace DisCatSharp.Net
             {
                 ulong file_id = 0;
                 List<DiscordAttachment> attachments = new();
-                if (builder.Attachments?.Count() > 0)
-                {
-                    foreach (var att in builder.Attachments)
-                    {
-                        att.Id = file_id;
-                        attachments.Add(att);
-                        file_id++;
-                    }
-                    overwrite = int.Parse(file_id.ToString());
-                }
                 foreach (var file in builder.Files)
                 {
                     DiscordAttachment att = new()
@@ -3568,11 +3559,14 @@ namespace DisCatSharp.Net
                         Id = file_id,
                         Discord = this.Discord,
                         Description = file.Description,
-                        FileName = file.FileName
+                        FileName = file.FileName,
+                        FileSize = 0
                     };
                     attachments.Add(att);
                     file_id++;
                 }
+                if (builder.Attachments != null && builder.Attachments?.Count() > 0)
+                    attachments.AddRange(builder.Attachments);
                 pld.Attachments = attachments;
             } else
             {
@@ -3583,7 +3577,6 @@ namespace DisCatSharp.Net
             {
                 ["payload_json"] = DiscordJson.SerializeObject(pld)
             };
-
             var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id, webhook_token, message_id }, out var path);
 
@@ -3594,6 +3587,7 @@ namespace DisCatSharp.Net
             var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files, overwriteFileIdStart: overwrite);
 
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+
             ret.Discord = this.Discord;
 
             foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue)) {
@@ -4946,54 +4940,64 @@ namespace DisCatSharp.Net
                         if (embed.Timestamp != null)
                             embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
 
-                var pld = type == InteractionResponseType.AutoCompleteResult
-                ? new RestInteractionResponsePayload
-                {
-                    Type = type,
-                    Data = new DiscordInteractionApplicationCommandCallbackData
-                    {
-                        Content = null,
-                        Embeds = null,
-                        IsTTS = null,
-                        Mentions = null,
-                        Flags = null,
-                        Components = null,
-                        Choices = builder.Choices
-                    }
-                }
-                : new RestInteractionResponsePayload
-                {
-                    Type = type,
-                    Data = builder != null ? new DiscordInteractionApplicationCommandCallbackData
-                    {
-                        Content = builder.Content,
-                        Embeds = builder.Embeds,
-                        IsTTS = builder.IsTTS,
-                        Mentions = builder.Mentions,
-                        Flags = builder.IsEphemeral ? MessageFlags.Ephemeral : 0,
-                        Components = builder.Components,
-                        Choices = null
-                    } : null
-                };
+                RestInteractionResponsePayload pld;
 
-                if(builder.Files != null && builder.Files.Count > 0)
+                if (type != InteractionResponseType.AutoCompleteResult)
                 {
-                    ulong file_id = 0;
-                    List<DiscordAttachment> attachments = new();
-                    foreach (var file in builder.Files)
+                    var data = builder != null ? new DiscordInteractionApplicationCommandCallbackData
                     {
-                        DiscordAttachment att = new()
+                        Content = builder.Content ?? null,
+                        /*Embeds = builder.Embeds ?? null,
+                        IsTTS = builder.IsTTS,
+                        Mentions = builder.Mentions ?? null,
+                        Flags = builder.IsEphemeral ? MessageFlags.Ephemeral : null,
+                        Components = builder.Components ?? null,
+                        Choices = null*/
+                    } : null;
+
+                    if (builder != null && builder.Files != null && builder.Files.Count > 0)
+                    {
+                        ulong file_id = 0;
+                        List<DiscordAttachment> attachments = new();
+                        foreach (var file in builder.Files)
                         {
-                            Id = file_id,
-                            Discord = this.Discord,
-                            Description = file.Description,
-                            FileName = file.FileName,
-                            FileSize = null
-                        };
-                        attachments.Add(att);
-                        file_id++;
+                            DiscordAttachment att = new()
+                            {
+                                Id = file_id,
+                                //Discord = this.Discord,
+                                Description = file.Description,
+                                FileName = file.FileName,
+                                FileSize = null
+                            };
+                            attachments.Add(att);
+                            file_id++;
+                        }
+                        data.Attachments = attachments;
                     }
-                    pld.Data.Attachments = attachments;
+
+                    pld = new RestInteractionResponsePayload
+                    {
+                        Type = type,
+                        Data = data 
+                    };
+                }
+                else
+                {
+                    pld = new RestInteractionResponsePayload
+                    {
+                        Type = type,
+                        Data = new DiscordInteractionApplicationCommandCallbackData
+                        {
+                            Content = null,
+                            Embeds = null,
+                            IsTTS = null,
+                            Mentions = null,
+                            Flags = null,
+                            Components = null,
+                            Choices = builder.Choices,
+                            Attachments = null
+                        }
+                    };
                 }
 
                 var values = new Dictionary<string, string>();
@@ -5005,11 +5009,11 @@ namespace DisCatSharp.Net
                 var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
                 var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
 
-                var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
+                var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "false").Build();
                 if (builder != null)
                 {
                     await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files);
-
+                    this.Discord.Logger.LogDebug(values["payload_json"]);
                     foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
                     {
                         file.Stream.Position = file.ResetPositionTo.Value;
@@ -5146,6 +5150,12 @@ namespace DisCatSharp.Net
             var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
             var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+            this.Discord.Logger.LogDebug(values["payload_json"]);
+
+            foreach (var att in ret._attachments)
+            {
+                att.Discord = this.Discord;
+            }
 
             foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
             {
