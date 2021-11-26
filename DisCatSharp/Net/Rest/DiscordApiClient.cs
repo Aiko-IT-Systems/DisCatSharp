@@ -245,6 +245,7 @@ namespace DisCatSharp.Net
         /// <param name="values">The values.</param>
         /// <param name="files">The files.</param>
         /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
+        /// <param name="overwriteFileIdStart">The file id start.</param>
         /// <returns>A Task.</returns>
         private Task<RestResponse> DoMultipartAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, IReadOnlyDictionary<string, string> values = null,
             IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimitWaitOverride = null, int? overwriteFileIdStart = null)
@@ -5124,7 +5125,8 @@ namespace DisCatSharp.Net
                         Id = file_id,
                         Discord = this.Discord,
                         Description = file.Description,
-                        FileName = file.FileName
+                        FileName = file.FileName,
+                        FileSize = null
                     };
                     attachments.Add(att);
                     file_id++;
