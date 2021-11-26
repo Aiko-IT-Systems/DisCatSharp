@@ -534,14 +534,15 @@ namespace DisCatSharp.Net
                     foreach (var kvp in mprequest.Values)
                         content.Add(new StringContent(kvp.Value), kvp.Key);
 
+                var fileId = mprequest.OverwriteFileIdStart ?? 0;
+
                 if (mprequest.Files != null && mprequest.Files.Any())
                 {
-                    var i = 0;
                     foreach (var f in mprequest.Files)
                     {
-                        var name = $"files[{i.ToString(CultureInfo.InvariantCulture)}]";
+                        var name = $"files[{fileId.ToString(CultureInfo.InvariantCulture)}]";
                         content.Add(new StreamContent(f.Value), name, f.Key);
-                        i++;
+                        fileId++;
                     }
                 }
 
@@ -577,7 +578,6 @@ namespace DisCatSharp.Net
 
                 req.Content = content;
             }
-
             return req;
         }
 
