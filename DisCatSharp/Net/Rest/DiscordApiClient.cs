@@ -4979,7 +4979,7 @@ namespace DisCatSharp.Net
                 if(builder.Files != null && builder.Files.Count > 0)
                 {
                     ulong file_id = 0;
-                    List<DiscordAttachment> attachments = new(builder.Files.Count);
+                    List<DiscordAttachment> attachments = new();
                     foreach (var file in builder.Files)
                     {
                         DiscordAttachment att = new()
@@ -4987,7 +4987,8 @@ namespace DisCatSharp.Net
                             Id = file_id,
                             Discord = this.Discord,
                             Description = file.Description,
-                            FileName = file.FileName
+                            FileName = file.FileName,
+                            FileSize = null
                         };
                         attachments.Add(att);
                         file_id++;
@@ -5007,7 +5008,6 @@ namespace DisCatSharp.Net
                 var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
                 if (builder != null)
                 {
-                    this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
                     await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files);
 
                     foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))

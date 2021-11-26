@@ -578,7 +578,6 @@ namespace DisCatSharp.Net
 
                 req.Content = content;
             }
-
             return req;
         }
 
