@@ -245,12 +245,11 @@ namespace DisCatSharp.Net
         /// <param name="values">The values.</param>
         /// <param name="files">The files.</param>
         /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-        /// <param name="overwriteFileIdStart">The file id start.</param>
         /// <returns>A Task.</returns>
         private Task<RestResponse> DoMultipartAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, IReadOnlyDictionary<string, string> values = null,
-            IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimitWaitOverride = null, int? overwriteFileIdStart = null)
+            IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimitWaitOverride = null)
         {
-            var req = new MultipartWebRequest(client, bucket, url, method, route, headers, values, files, ratelimitWaitOverride, overwriteFileIdStart);
+            var req = new MultipartWebRequest(client, bucket, url, method, route, headers, values, files, ratelimitWaitOverride);
 
             if (this.Discord != null)
                 this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
@@ -3466,10 +3465,14 @@ namespace DisCatSharp.Net
             var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true");
             if (thread_id != null)
                 qub.AddParameter("thread_id", thread_id);
+
             var url = qub.Build();
 
             var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+
+            foreach (var att in ret.Attachments)
+                att.Discord = this.Discord;
 
             foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
             {
@@ -3547,7 +3550,6 @@ namespace DisCatSharp.Net
                 Components = builder.Components,
             };
 
-            int? overwrite = null;
             if (builder.Files?.Count > 0)
             {
                 ulong file_id = 0;
@@ -3567,6 +3569,7 @@ namespace DisCatSharp.Net
                 }
                 if (builder.Attachments != null && builder.Attachments?.Count() > 0)
                     attachments.AddRange(builder.Attachments);
+
                 pld.Attachments = attachments;
             } else
             {
@@ -3583,12 +3586,16 @@ namespace DisCatSharp.Net
             var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
             if (thread_id != null)
                 qub.AddParameter("thread_id", thread_id);
+
             var url = qub.Build();
-            var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files, overwriteFileIdStart: overwrite);
+            var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files);
 
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
 
             ret.Discord = this.Discord;
+
+            foreach (var att in ret._attachments)
+                att.Discord = this.Discord;
 
             foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue)) {
                 file.Stream.Position = file.ResetPositionTo.Value;
@@ -4933,102 +4940,97 @@ namespace DisCatSharp.Net
         /// <returns>A Task.</returns>
         internal async Task CreateInteractionResponseAsync(ulong interaction_id, string interaction_token, InteractionResponseType type, DiscordInteractionResponseBuilder builder)
         {
-            try
+            if (builder?.Embeds != null)
+                foreach (var embed in builder.Embeds)
+                    if (embed.Timestamp != null)
+                        embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
+
+            RestInteractionResponsePayload pld;
+
+            if (type != InteractionResponseType.AutoCompleteResult)
             {
-                if (builder?.Embeds != null)
-                    foreach (var embed in builder.Embeds)
-                        if (embed.Timestamp != null)
-                            embed.Timestamp = embed.Timestamp.Value.ToUniversalTime();
-
-                RestInteractionResponsePayload pld;
-
-                if (type != InteractionResponseType.AutoCompleteResult)
+                var data = builder != null ? new DiscordInteractionApplicationCommandCallbackData
                 {
-                    var data = builder != null ? new DiscordInteractionApplicationCommandCallbackData
+                    Content = builder.Content ?? null,
+                    Embeds = builder.Embeds ?? null,
+                    IsTTS = builder.IsTTS,
+                    Mentions = builder.Mentions ?? null,
+                    Flags = builder.IsEphemeral ? MessageFlags.Ephemeral : null,
+                    Components = builder.Components ?? null,
+                    Choices = null
+                } : null;
+
+
+                pld = new RestInteractionResponsePayload
+                {
+                    Type = type,
+                    Data = data 
+                };
+
+
+                if (builder != null && builder.Files != null && builder.Files.Count > 0)
+                {
+                    ulong file_id = 0;
+                    List<DiscordAttachment> attachments = new();
+                    foreach (var file in builder.Files)
                     {
-                        Content = builder.Content ?? null,
-                        Embeds = builder.Embeds ?? null,
-                        IsTTS = builder.IsTTS,
-                        Mentions = builder.Mentions ?? null,
-                        Flags = builder.IsEphemeral ? MessageFlags.Ephemeral : null,
-                        Components = builder.Components ?? null,
-                        Choices = null
-                    } : null;
-
-
-                    pld = new RestInteractionResponsePayload
-                    {
-                        Type = type,
-                        Data = data 
-                    };
-
-
-                    if (builder != null && builder.Files != null && builder.Files.Count > 0)
-                    {
-                        ulong file_id = 0;
-                        List<DiscordAttachment> attachments = new();
-                        foreach (var file in builder.Files)
+                        DiscordAttachment att = new()
                         {
-                            DiscordAttachment att = new()
-                            {
-                                Id = file_id,
-                                Discord = this.Discord,
-                                Description = file.Description,
-                                FileName = file.FileName,
-                                FileSize = null
-                            };
-                            attachments.Add(att);
-                            file_id++;
-                        }
-                        pld.Attachments = attachments;
+                            Id = file_id,
+                            Discord = this.Discord,
+                            Description = file.Description,
+                            FileName = file.FileName,
+                            FileSize = null
+                        };
+                        attachments.Add(att);
+                        file_id++;
                     }
-                }
-                else
-                {
-                    pld = new RestInteractionResponsePayload
-                    {
-                        Type = type,
-                        Data = new DiscordInteractionApplicationCommandCallbackData
-                        {
-                            Content = null,
-                            Embeds = null,
-                            IsTTS = null,
-                            Mentions = null,
-                            Flags = null,
-                            Components = null,
-                            Choices = builder.Choices,
-                            Attachments = null
-                        }
-                    };
-                }
-
-                var values = new Dictionary<string, string>();
-
-                if (builder != null)
-                    if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTTS == true || builder.Mentions != null || builder.Files?.Count > 0)
-                        values["payload_json"] = DiscordJson.SerializeObject(pld);
-
-                var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
-                var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
-
-                var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "false").Build();
-                if (builder != null)
-                {
-                    await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files);
-                    this.Discord.Logger.LogDebug(values["payload_json"]);
-                    foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
-                    {
-                        file.Stream.Position = file.ResetPositionTo.Value;
-                    }
-                }
-                else
-                {
-                    await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
+                    pld.Attachments = attachments;
+                    pld.Data.Attachments = attachments;
                 }
             }
-            catch(Exception ex)
+            else
             {
-                this.Discord.Logger.LogDebug(ex, ex.Message);
+                pld = new RestInteractionResponsePayload
+                {
+                    Type = type,
+                    Data = new DiscordInteractionApplicationCommandCallbackData
+                    {
+                        Content = null,
+                        Embeds = null,
+                        IsTTS = null,
+                        Mentions = null,
+                        Flags = null,
+                        Components = null,
+                        Choices = builder.Choices,
+                        Attachments = null
+                    },
+                    Attachments = null
+                };
+            }
+
+            var values = new Dictionary<string, string>();
+
+            if (builder != null)
+                if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTTS == true || builder.Mentions != null || builder.Files?.Count > 0)
+                    values["payload_json"] = DiscordJson.SerializeObject(pld);
+
+            var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
+            var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
+
+            var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "false").Build();
+            if (builder != null)
+            {
+                await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files);
+
+                foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+                {
+                    file.Stream.Position = file.ResetPositionTo.Value;
+                }
+            }
+            else
+            {
+                await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld));
             }
         }
 
@@ -5152,7 +5154,6 @@ namespace DisCatSharp.Net
             var url = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration).AddParameter("wait", "true").Build();
             var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
             var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
-            this.Discord.Logger.LogDebug(values["payload_json"]);
 
             foreach (var att in ret._attachments)
             {
