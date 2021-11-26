@@ -77,6 +77,8 @@ namespace DisCatSharp.Entities
         /// </summary>
         public bool IsTTS { get; set; } = false;
 
+        internal bool _keepAttachments = false;
+
         /// <summary>
         /// Gets the Allowed Mentions for the message to be sent.
         /// </summary>
@@ -347,14 +349,23 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Keeps the given attachments on edit.
-        /// You can modify the attachments descriptions / names before inserting it here.
+        /// Modifies the given attachments on edit.
         /// </summary>
-        /// <param name="attachments">Attachments to keep and optional edit (on edit).</param>
+        /// <param name="attachments">Attachments to edit.</param>
         /// <returns></returns>
-        public DiscordMessageBuilder KeepOrModifyAttachments(IEnumerable<DiscordAttachment> attachments)
+        public DiscordMessageBuilder ModifyAttachments(IEnumerable<DiscordAttachment> attachments)
         {
             this._attachments.AddRange(attachments);
+            return this;
+        }
+
+        /// <summary>
+        /// Whether to keep the message attachments, if new ones are added.
+        /// </summary>
+        /// <returns></returns>
+        public DiscordMessageBuilder KeepAttachments()
+        {
+            this._keepAttachments = true;
             return this;
         }
 
@@ -418,6 +429,7 @@ namespace DisCatSharp.Entities
             this.Suppressed = false;
             this.Sticker = null;
             this._attachments.Clear();
+            this._keepAttachments = false;
         }
 
         /// <summary>

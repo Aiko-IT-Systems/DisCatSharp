@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -563,8 +562,7 @@ namespace DisCatSharp.Entities
         public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder)
         {
             builder.Validate(true);
-            var attachments = builder._attachments;
-            return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, attachments?.Count > 0 ? attachments : null);
+            return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? builder._attachments : builder._keepAttachments ? this._attachments : null);
         }
 
         /// <summary>
@@ -600,8 +598,7 @@ namespace DisCatSharp.Entities
             var builder = new DiscordMessageBuilder();
             action(builder);
             builder.Validate(true);
-            var attachments = builder._attachments;
-            return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, attachments?.Count > 0 ? attachments : null);
+            return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? builder._attachments : builder._keepAttachments ? this._attachments : null);
         }
 
         /// <summary>
