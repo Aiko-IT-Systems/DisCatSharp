@@ -2011,7 +2011,7 @@ namespace DisCatSharp.Net
         /// <param name="files">The files.</param>
         /// <param name="attachments">The attachments to keep.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordMessage> EditMessageAsync(ulong channel_id, ulong message_id, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, IEnumerable<IMention> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppress_embed, IReadOnlyCollection<DiscordMessageFile> files, Optional<List<DiscordAttachment>> attachments)
+        internal async Task<DiscordMessage> EditMessageAsync(ulong channel_id, ulong message_id, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, IEnumerable<IMention> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppress_embed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
         {
             if (embeds.HasValue && embeds.Value != null)
                 foreach (var embed in embeds.Value)
@@ -2044,7 +2044,7 @@ namespace DisCatSharp.Net
                     attachments_new.Add(att);
                     file_id++;
                 }
-                if (attachments.HasValue && attachments.Value?.Count > 0)
+                if (attachments.HasValue && attachments.Value?.Count() > 0)
                     attachments_new.AddRange(attachments.Value);
 
                 pld.Attachments = attachments_new;
