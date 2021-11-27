@@ -29,7 +29,6 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
-using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Serialization;
 using Microsoft.Extensions.Logging;
