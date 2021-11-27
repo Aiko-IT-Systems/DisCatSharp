@@ -66,7 +66,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Whether to keep previous attachments.
         /// </summary>
-        internal bool _keepAttachments = false;
+        internal bool? _keepAttachments = null;
 
         /// <summary>
         /// Embeds to send on this webhook request.
@@ -304,9 +304,9 @@ namespace DisCatSharp.Entities
         /// Whether to keep the message attachments, if new ones are added.
         /// </summary>
         /// <returns></returns>
-        public DiscordWebhookBuilder KeepAttachments()
+        public DiscordWebhookBuilder KeepAttachments(bool keep)
         {
-            this._keepAttachments = true;
+            this._keepAttachments = keep;
             return this;
         }
 

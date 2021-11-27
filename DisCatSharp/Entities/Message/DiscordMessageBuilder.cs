@@ -80,7 +80,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Whether to keep previous attachments.
         /// </summary>
-        internal bool _keepAttachments = false;
+        internal bool? _keepAttachments = null;
 
         /// <summary>
         /// Gets the Allowed Mentions for the message to be sent.
@@ -366,9 +366,9 @@ namespace DisCatSharp.Entities
         /// Whether to keep the message attachments, if new ones are added.
         /// </summary>
         /// <returns></returns>
-        public DiscordMessageBuilder KeepAttachments()
+        public DiscordMessageBuilder KeepAttachments(bool keep)
         {
-            this._keepAttachments = true;
+            this._keepAttachments = keep;
             return this;
         }
 
