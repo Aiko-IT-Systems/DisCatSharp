@@ -2073,9 +2073,7 @@ namespace DisCatSharp.Net
                 var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
                 return ret;
-            }
-
-            
+            }            
         }
 
         /// <summary>
@@ -3627,7 +3625,7 @@ namespace DisCatSharp.Net
                 return ret;
             } else
             {
-                pld.Attachments = builder.Attachments?.Count() > 0 ? builder.Attachments : builder._keepAttachments ? builder.Attachments : Array.Empty<DiscordAttachment>();
+                pld.Attachments = builder.Attachments;
 
                 var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
                 var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id, webhook_token, message_id }, out var path);
