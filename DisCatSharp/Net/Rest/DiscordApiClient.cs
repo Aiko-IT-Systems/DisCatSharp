@@ -1805,26 +1805,16 @@ namespace DisCatSharp.Net
                 var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id }, out var path);
 
                 var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-                try
+                var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
+
+                var ret = this.PrepareMessage(JObject.Parse(res.Response));
+
+                foreach (var file in builder._files.Where(x => x.ResetPositionTo.HasValue))
                 {
-
-                    var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
-
-                    var ret = this.PrepareMessage(JObject.Parse(res.Response));
-
-                    foreach (var file in builder._files.Where(x => x.ResetPositionTo.HasValue))
-                    {
-                        file.Stream.Position = file.ResetPositionTo.Value;
-                    }
-
-                    return ret;
-                } catch(BadRequestException ex)
-                {
-                    this.Discord.Logger.LogError(ex.Message);
-                    this.Discord.Logger.LogError(ex.StackTrace);
-                    this.Discord.Logger.LogDebug(ex.WebResponse.Response);
-                    return null;
+                    file.Stream.Position = file.ResetPositionTo.Value;
                 }
+
+                return ret;
             }
         }
 
@@ -2056,56 +2046,34 @@ namespace DisCatSharp.Net
                     ["payload_json"] = DiscordJson.SerializeObject(pld)
                 };
 
-                try
+                var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
+                var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id, message_id }, out var path);
+
+                var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+                var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: files).ConfigureAwait(false);
+
+                var ret = this.PrepareMessage(JObject.Parse(res.Response));
+
+                foreach (var file in files.Where(x => x.ResetPositionTo.HasValue))
                 {
-                    var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
-                    var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id, message_id }, out var path);
-
-                    var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-                    this.Discord.Logger.LogDebug("Trying to patch with payload_json: " + values["payload_json"]);
-                    var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: files).ConfigureAwait(false);
-
-                    var ret = this.PrepareMessage(JObject.Parse(res.Response));
-
-                    foreach (var file in files.Where(x => x.ResetPositionTo.HasValue))
-                    {
-                        file.Stream.Position = file.ResetPositionTo.Value;
-                    }
-
-                    return ret;
+                    file.Stream.Position = file.ResetPositionTo.Value;
                 }
-                catch (BadRequestException ex)
-                {
-                    this.Discord.Logger.LogError(ex.Message);
-                    this.Discord.Logger.LogError(ex.StackTrace);
-                    this.Discord.Logger.LogDebug(ex.WebResponse.Response);
-                    return null;
-                }
+
+                return ret;
             }
             else
             {
                 pld.Attachments = attachments.HasValue ? attachments.Value : null;
 
-                try
-                {
-                    var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
-                    var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id, message_id }, out var path);
+                var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
+                var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id, message_id }, out var path);
 
-                    var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-                    this.Discord.Logger.LogDebug("Trying to patch with payload: " + DiscordJson.SerializeObject(pld));
-                    var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+                var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+                var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
-                    var ret = this.PrepareMessage(JObject.Parse(res.Response));
+                var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
-                    return ret;
-                }
-                catch (BadRequestException ex)
-                {
-                    this.Discord.Logger.LogError(ex.Message);
-                    this.Discord.Logger.LogError(ex.StackTrace);
-                    this.Discord.Logger.LogDebug(ex.WebResponse.Response);
-                    return null;
-                }
+                return ret;
             }
 
             
