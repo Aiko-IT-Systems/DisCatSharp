@@ -77,6 +77,9 @@ namespace DisCatSharp.Entities
         /// </summary>
         public bool IsTTS { get; set; } = false;
 
+        /// <summary>
+        /// Whether to keep previous attachments.
+        /// </summary>
         internal bool _keepAttachments = false;
 
         /// <summary>

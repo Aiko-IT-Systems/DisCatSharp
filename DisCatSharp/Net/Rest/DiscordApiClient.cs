@@ -3598,37 +3598,57 @@ namespace DisCatSharp.Net
                     attachments.AddRange(builder.Attachments);
 
                 pld.Attachments = attachments;
+
+                var values = new Dictionary<string, string>
+                {
+                    ["payload_json"] = DiscordJson.SerializeObject(pld)
+                };
+                var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
+                var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id, webhook_token, message_id }, out var path);
+
+                var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
+                if (thread_id != null)
+                    qub.AddParameter("thread_id", thread_id);
+
+                var url = qub.Build();
+                var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files);
+
+                var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+
+                ret.Discord = this.Discord;
+
+                foreach (var att in ret._attachments)
+                    att.Discord = this.Discord;
+
+                foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+                {
+                    file.Stream.Position = file.ResetPositionTo.Value;
+                }
+
+                return ret;
             } else
             {
-                pld.Attachments = builder.Attachments;
+                pld.Attachments = builder.Attachments?.Count() > 0 ? builder.Attachments : builder._keepAttachments ? builder.Attachments : Array.Empty<DiscordAttachment>();
+
+                var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
+                var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id, webhook_token, message_id }, out var path);
+
+                var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
+                if (thread_id != null)
+                    qub.AddParameter("thread_id", thread_id);
+
+                var url = qub.Build();
+                var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
+
+                var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+
+                ret.Discord = this.Discord;
+
+                foreach (var att in ret._attachments)
+                    att.Discord = this.Discord;
+
+                return ret;
             }
-
-            var values = new Dictionary<string, string>
-            {
-                ["payload_json"] = DiscordJson.SerializeObject(pld)
-            };
-            var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id, webhook_token, message_id }, out var path);
-
-            var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
-            if (thread_id != null)
-                qub.AddParameter("thread_id", thread_id);
-
-            var url = qub.Build();
-            var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files);
-
-            var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
-
-            ret.Discord = this.Discord;
-
-            foreach (var att in ret._attachments)
-                att.Discord = this.Discord;
-
-            foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue)) {
-                file.Stream.Position = file.ResetPositionTo.Value;
-            }
-
-            return ret;
         }
 
         /// <summary>
