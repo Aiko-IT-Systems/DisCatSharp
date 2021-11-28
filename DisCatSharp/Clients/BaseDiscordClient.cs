@@ -44,6 +44,7 @@ namespace DisCatSharp
         /// Gets the api client.
         /// </summary>
         internal protected DiscordApiClient ApiClient { get; }
+
         /// <summary>
         /// Gets the configuration.
         /// </summary>
