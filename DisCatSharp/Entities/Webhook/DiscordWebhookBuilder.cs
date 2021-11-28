@@ -91,7 +91,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Attachments to keep on this webhook request.
         /// </summary>
-        public IEnumerable<DiscordAttachment> Attachments { get; }
+        public IEnumerable<DiscordAttachment> Attachments => this._attachments;
         private readonly List<DiscordAttachment> _attachments = new();
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="components">The components to add to the builder.</param>
         /// <returns>The current builder to be chained.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">No components were passed.</exception>
         public DiscordWebhookBuilder AddComponents(params DiscordComponent[] components)
             => this.AddComponents((IEnumerable<DiscordComponent>)components);
 
@@ -133,7 +133,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="components">The components to add to the builder.</param>
         /// <returns>The current builder to be chained.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">No components were passed.</exception>
         public DiscordWebhookBuilder AddComponents(IEnumerable<DiscordComponent> components)
         {
             var cmpArr = components.ToArray();
@@ -219,7 +219,8 @@ namespace DisCatSharp.Entities
         /// <param name="filename">Name of the file.</param>
         /// <param name="data">File data.</param>
         /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
-        public DiscordWebhookBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false)
+        /// <param name="description">Description of the file.</param>
+        public DiscordWebhookBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
         {
             if (this.Files.Count() > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -228,9 +229,9 @@ namespace DisCatSharp.Entities
                 throw new ArgumentException("A File with that filename already exists");
 
             if (resetStreamPosition)
-                this._files.Add(new DiscordMessageFile(filename, data, data.Position));
+                this._files.Add(new DiscordMessageFile(filename, data, data.Position, description: description));
             else
-                this._files.Add(new DiscordMessageFile(filename, data, null));
+                this._files.Add(new DiscordMessageFile(filename, data, null, description: description));
 
             return this;
         }
@@ -240,8 +241,9 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="stream">The Stream to the file.</param>
         /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="description">Description of the file.</param>
         /// <returns></returns>
-        public DiscordWebhookBuilder AddFile(FileStream stream, bool resetStreamPosition = false)
+        public DiscordWebhookBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
         {
             if (this.Files.Count() > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
@@ -250,9 +252,9 @@ namespace DisCatSharp.Entities
                 throw new ArgumentException("A File with that filename already exists");
 
             if (resetStreamPosition)
-                this._files.Add(new DiscordMessageFile(stream.Name, stream, stream.Position));
+                this._files.Add(new DiscordMessageFile(stream.Name, stream, stream.Position, description: description));
             else
-                this._files.Add(new DiscordMessageFile(stream.Name, stream, null));
+                this._files.Add(new DiscordMessageFile(stream.Name, stream, null, description: description));
 
             return this;
         }
@@ -279,6 +281,17 @@ namespace DisCatSharp.Entities
             }
 
 
+            return this;
+        }
+
+        /// <summary>
+        /// Keeps the given attachments on edit.
+        /// </summary>
+        /// <param name="attachments">Attachments to keep (on edit).</param>
+        /// <returns></returns>
+        public DiscordWebhookBuilder KeepAttachments(IEnumerable<DiscordAttachment> attachments)
+        {
+            this._attachments.AddRange(attachments);
             return this;
         }
 

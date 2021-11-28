@@ -28,7 +28,7 @@ using System.Numerics;
 namespace DisCatSharp.Common.Serialization
 {
     /// <summary>
-    /// Decomposes <see cref="Complex"/> numbers into tuples (arrays of 2).
+    /// Decomposes <see cref="System.Numerics.Complex"/> numbers into tuples (arrays of 2).
     /// </summary>
     public sealed class ComplexDecomposer : IDecomposer
     {

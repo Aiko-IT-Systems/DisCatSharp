@@ -57,7 +57,7 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Gets the value of this interaction parameter.
-        /// <para>This can be cast to a <see langword="long"/>, <see langword="bool"></see>, <see langword="string"></see>, <see langword="double"></see> or <see langword="ulong"/> depending on the <see cref="Type"/></para>
+        /// <para>This can be cast to a <see langword="long"/>, <see langword="bool"></see>, <see langword="string"></see>, <see langword="double"></see> or <see langword="ulong"/> depending on the <see cref="System.Type"/></para>
         /// </summary>
         [JsonIgnore]
         public object Value

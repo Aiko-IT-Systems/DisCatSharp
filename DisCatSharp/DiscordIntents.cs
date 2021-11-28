@@ -90,7 +90,7 @@ namespace DisCatSharp
 
         /// <summary>
         /// Whether to include guild ban events.
-        /// <para>These include <see cref="DiscordClient.GuildBanAdded"/>, and <see cref="DiscordClient.GuildBanRemoved"/>.</para>
+        /// <para>These include <see cref="DiscordClient.GuildBanAdded"/> and <see cref="DiscordClient.GuildBanRemoved"/>.</para>
         /// </summary>
         GuildBans = 1 << 2,
 
@@ -114,7 +114,7 @@ namespace DisCatSharp
 
         /// <summary>
         /// Whether to include guild invite events.
-        /// <para>These include <see cref="DiscordClient.InviteCreated"/>, and <see cref="DiscordClient.InviteDeleted"/>.</para>
+        /// <para>These include <see cref="DiscordClient.InviteCreated"/> and <see cref="DiscordClient.InviteDeleted"/>.</para>
         /// </summary>
         GuildInvites = 1 << 6,
 
@@ -141,7 +141,7 @@ namespace DisCatSharp
 
         /// <summary>
         /// Whether to include guild reaction events.
-        /// <para>These include <see cref="DiscordClient.MessageReactionAdded"/>, <see cref="DiscordClient.MessageReactionRemoved"/>, <see cref="DiscordClient.MessageReactionsCleared"/>,</para>
+        /// <para>These include <see cref="DiscordClient.MessageReactionAdded"/>, <see cref="DiscordClient.MessageReactionRemoved"/>, <see cref="DiscordClient.MessageReactionsCleared"/></para>
         /// <para>and <see cref="DiscordClient.MessageReactionRemovedEmoji"/>.</para>
         /// </summary>
         GuildMessageReactions = 1 << 10,
@@ -154,8 +154,8 @@ namespace DisCatSharp
 
         /// <summary>
         /// Whether to include general direct message events.
-        /// <para>These include <see cref="DiscordClient.ChannelCreated"/>, <see cref="DiscordClient.MessageCreated"/>, <see cref="DiscordClient.MessageUpdated"/>, </para>
-        /// <para><see cref="DiscordClient.MessageDeleted"/>, <see cref="DiscordClient.ChannelPinsUpdated"/>.</para>
+        /// <para>These include <see cref="DiscordClient.ChannelCreated"/>, <see cref="DiscordClient.MessageCreated"/>, <see cref="DiscordClient.MessageUpdated"/>,</para>
+        /// <para><see cref="DiscordClient.MessageDeleted"/> and <see cref="DiscordClient.ChannelPinsUpdated"/>.</para>
         /// <para>These events only fire for DM channels.</para>
         /// </summary>
         DirectMessages = 1 << 12,
@@ -163,7 +163,7 @@ namespace DisCatSharp
         /// <summary>
         /// Whether to include direct message reaction events.
         /// <para>These include <see cref="DiscordClient.MessageReactionAdded"/>, <see cref="DiscordClient.MessageReactionRemoved"/>,</para>
-        /// <para><see cref="DiscordClient.MessageReactionsCleared"/>, and <see cref="DiscordClient.MessageReactionRemovedEmoji"/>.</para>
+        /// <para><see cref="DiscordClient.MessageReactionsCleared"/> and <see cref="DiscordClient.MessageReactionRemovedEmoji"/>.</para>
         /// <para>These events only fire for DM channels.</para>
         /// </summary>
         DirectMessageReactions = 1 << 13,
@@ -176,18 +176,24 @@ namespace DisCatSharp
         DirectMessageTyping = 1 << 14,
 
         /// <summary>
+        /// Whether to include guild scheduled event events.
+        /// <para>These include <see cref="DiscordClient.GuildScheduledEventCreated"/>, <see cref="DiscordClient.GuildScheduledEventUpdated"/>, <see cref="DiscordClient.GuildScheduledEventDeleted"/>,</para>
+        /// <para><see cref="DiscordClient.GuildScheduledEventUserAdded"/> and <see cref="DiscordClient.GuildScheduledEventUserRemoved"/>.</para>
+        /// The events <see cref="DiscordClient.GuildScheduledEventUserAdded"/> and <see cref="DiscordClient.GuildScheduledEventUserRemoved"/> are in experiment and not officially supported.
+        /// </summary>
+        GuildScheduledEvents = 1 << 16,
+
+        /// <summary>
         /// Includes all unprivileged intents.
         /// <para>These are all intents excluding <see cref="GuildMembers"/> and <see cref="GuildPresences"/>.</para>
-        /// <para>The <see cref="GuildMessages"/> will be excluded as of April 2022.</para>
         /// </summary>
-        AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates |
-              GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping,
+        AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
+              GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents,
 
         /// <summary>
         /// Includes all intents.
         /// <para>The <see cref="GuildMembers"/> and <see cref="GuildPresences"/> intents are privileged, and must be enabled on the bot's developer page.</para>
-        /// <para>The <see cref="GuildMessages"/> will be privileged as of April 2022.</para>
         /// </summary>
-        All = AllUnprivileged | GuildMembers | GuildPresences | GuildMessages
+        All = AllUnprivileged | GuildMembers | GuildPresences
     }
 }

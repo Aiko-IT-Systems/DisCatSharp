@@ -4,6 +4,8 @@
   items:
   - name: Version 9.9.0
     href: important_changes/9_9_0.md
+  - name: Version 9.8.4
+    href: important_changes/9_8_4.md
   - name: Version 9.8.3
     href: important_changes/9_8_3.md
   - name: Version 9.8.2
@@ -16,6 +18,8 @@
     href: basics/first_bot.md
   - name: Bot as Hosted Service
     href: basics/web_app.md
+  - name: Project Templates
+    href: basics/templates.md
 - name: Beyond Basics
   items:
   - name: Events

@@ -20,26 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
+using System;
+using DisCatSharp.Entities;
 
-namespace DisCatSharp.Entities
+namespace DisCatSharp.EventArgs
 {
     /// <summary>
-    /// Represents an scheduled event.
+    /// Represents arguments for <see cref="DiscordClient.GuildScheduledEventUserAdded"/> event.
     /// </summary>
-    public class DiscordEventEntityMetadata
+    public class GuildScheduledEventUserAddEventArgs : DiscordEventArgs
     {
         /// <summary>
-        /// Gets the the speakers of the stage channel.
+        /// Gets the scheduled event.
         /// </summary>
-        [JsonProperty("speaker_ids", NullValueHandling = NullValueHandling.Ignore)]
-        public List<DiscordMember> Speakers { get; internal set; }
+        public DiscordScheduledEvent ScheduledEvent { get; internal set; }
 
         /// <summary>
-        /// Gets the the location of the event.
+        /// Gets the guild.
         /// </summary>
-        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
-        public string Location { get; internal set; }
+        public DiscordGuild Guild { get; internal set; }
+
+        /// <summary>
+        /// Gets the user which has subscribed to this scheduled event.
+        /// </summary>
+        public DiscordUser User { get; internal set; }
+
+        /// <summary>
+        /// Gets the member which has subscribed to this scheduled event.
+        /// </summary>
+        public DiscordMember Member { get; internal set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GuildScheduledEventUserAddEventArgs"/> class.
+        /// </summary>
+        internal GuildScheduledEventUserAddEventArgs(IServiceProvider provider) : base(provider) { }
     }
 }

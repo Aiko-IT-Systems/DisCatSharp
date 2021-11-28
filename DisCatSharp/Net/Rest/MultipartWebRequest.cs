@@ -45,6 +45,11 @@ namespace DisCatSharp.Net
         public IReadOnlyDictionary<string, Stream> Files { get; }
 
         /// <summary>
+        /// Overwrites the file id start.
+        /// </summary>
+        public int? OverwriteFileIdStart { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MultipartWebRequest"/> class.
         /// </summary>
         /// <param name="client">The client.</param>
@@ -56,11 +61,13 @@ namespace DisCatSharp.Net
         /// <param name="values">The values.</param>
         /// <param name="files">The files.</param>
         /// <param name="ratelimit_wait_override">The ratelimit_wait_override.</param>
+        /// <param name="overwrite_file_id_start">The file id start.</param>
         internal MultipartWebRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, IReadOnlyDictionary<string, string> values = null,
-            IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimit_wait_override = null)
+            IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimit_wait_override = null, int? overwrite_file_id_start = null)
             : base(client, bucket, url, method, route, headers, ratelimit_wait_override)
         {
             this.Values = values;
+            this.OverwriteFileIdStart = overwrite_file_id_start;
             this.Files = files.ToDictionary(x => x.FileName, x => x.Stream);
         }
     }

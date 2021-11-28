@@ -71,5 +71,35 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyCollection<DiscordApplicationCommandAutocompleteChoice> Choices { get; internal set; }
+
+        /// <summary>
+        /// Gets the attachments.
+        /// </summary>
+        [JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DiscordAttachment> Attachments { get; set; }
+    }
+
+    /// <summary>
+    /// Represants a interactions application command callback data.
+    /// </summary>
+    internal class DiscordInteractionApplicationCommandModalCallbackData
+    {
+        /// <summary>
+        /// Gets the custom id.
+        /// </summary>
+        [JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
+        public string CustomId { get; internal set; }
+
+        /// <summary>
+        /// Gets the content.
+        /// </summary>
+        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+        public string Title { get; internal set; }
+
+        /// <summary>
+        /// Gets the components.
+        /// </summary>
+        [JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+        public IReadOnlyCollection<DiscordComponent> ModalComponents { get; internal set; }
     }
 }

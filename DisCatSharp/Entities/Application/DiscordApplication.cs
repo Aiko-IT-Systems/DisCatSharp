@@ -133,6 +133,22 @@ namespace DisCatSharp.Entities
         private IReadOnlyList<DiscordApplicationAsset> Assets { get; set; }
 
         /// <summary>
+        /// A custom url for the Add To Server button.
+        /// </summary>
+        public string CustomInstallUrl { get; internal set; }
+
+        /// <summary>
+        /// Install parameters for adding the application to a guild.
+        /// </summary>
+        public DiscordApplicationInstallParams InstallParams { get; internal set; }
+
+        /// <summary>
+        /// The application tags.
+        /// Not used atm.
+        /// </summary>
+        public IReadOnlyList<string> Tags { get; internal set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DiscordApplication"/> class.
         /// </summary>
         internal DiscordApplication() { }

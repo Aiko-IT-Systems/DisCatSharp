@@ -25,7 +25,7 @@ using System.IO;
 namespace DisCatSharp.Entities
 {
     /// <summary>
-    /// Represents the File that should be sent to Discord from the <see cref="DiscordMessageBuilder"/>.
+    /// Represents the File that should be sent to Discord from the <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
     /// </summary>
     public class DiscordMessageFile
     {
@@ -37,19 +37,26 @@ namespace DisCatSharp.Entities
         /// <param name="resetPositionTo">The reset position to.</param>
         /// <param name="fileType">The file type.</param>
         /// <param name="contentType">The content type.</param>
-        internal DiscordMessageFile(string fileName, Stream stream, long? resetPositionTo, string fileType = null, string contentType = null)
+        /// <param name="description">The description.</param>
+        internal DiscordMessageFile(string fileName, Stream stream, long? resetPositionTo, string fileType = null, string contentType = null, string description = null)
 {
             this.FileName = fileName;
             this.FileType = fileType;
             this.ContentType = contentType;
             this.Stream = stream;
             this.ResetPositionTo = resetPositionTo;
+            this.Description = description;
         }
 
         /// <summary>
         /// Gets the FileName of the File.
         /// </summary>
         public string FileName { get; internal set; }
+
+        /// <summary>
+        /// Gets the description of the File.
+        /// </summary>
+        public string Description { get; internal set; }
 
         /// <summary>
         /// Gets the stream of the File.

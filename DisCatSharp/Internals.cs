@@ -69,7 +69,7 @@ namespace DisCatSharp
         internal static bool IsVoiceJoinable(this DiscordChannel channel) => channel.Type == ChannelType.Voice || channel.Type == ChannelType.Stage;
 
         /// <summary>
-        /// Whether the <see cref="DiscordChannel"/> is related to threads.
+        /// Whether the <see cref="DiscordChannel"/> can have threads.
         /// </summary>
         /// <param name="channel">The channel.</param>
         internal static bool IsThreadHolder(this DiscordChannel channel) => channel.Type == ChannelType.Text || channel.Type == ChannelType.News || channel.Type == ChannelType.GuildForum;
@@ -93,9 +93,9 @@ namespace DisCatSharp
         internal static bool IsMovableInParent(this DiscordChannel channel) => channel.Type == ChannelType.Voice || channel.Type == ChannelType.Stage || channel.Type == ChannelType.Text || channel.Type == ChannelType.GuildForum || channel.Type == ChannelType.News || channel.Type == ChannelType.Store;
 
         /// <summary>
-        /// Whether the <see cref="DiscordChannel"/> is moveable in a parent.
+        /// Whether the <see cref="DiscordChannel"/> is moveable.
         /// </summary>
         /// <param name="channel">The channel.</param>
-        internal static bool IsMovable (this DiscordChannel channel) => channel.Type == ChannelType.Voice || channel.Type == ChannelType.Stage || channel.Type == ChannelType.Text || channel.Type == ChannelType.Category || channel.Type == ChannelType.GuildForum || channel.Type == ChannelType.News || channel.Type == ChannelType.Store;
+        internal static bool IsMovable(this DiscordChannel channel) => channel.Type == ChannelType.Voice || channel.Type == ChannelType.Stage || channel.Type == ChannelType.Text || channel.Type == ChannelType.Category || channel.Type == ChannelType.GuildForum || channel.Type == ChannelType.News || channel.Type == ChannelType.Store;
     }
 }

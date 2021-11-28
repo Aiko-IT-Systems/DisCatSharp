@@ -70,7 +70,7 @@ namespace DisCatSharp.Entities
 
         /// <summary>
         /// Gets the user that invoked this interaction.
-        /// <para>This can be cast to a <see cref="DiscordMember"/> if created in a guild.</para>
+        /// <para>This can be cast to a <see cref="DisCatSharp.Entities.DiscordMember"/> if created in a guild.</para>
         /// </summary>
         [JsonIgnore]
         public DiscordUser User { get; internal set; }
@@ -106,6 +106,13 @@ namespace DisCatSharp.Entities
         /// <param name="builder">The data, if any, to send.</param>
         public Task CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder builder = null) =>
             this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
+
+        /// <summary>
+        /// Creates a modal response to this interaction.
+        /// </summary>
+        /// <param name="builder">The data to send.</param>
+        public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder) =>
+            this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder);
 
         /// <summary>
         /// Gets the original interaction response.

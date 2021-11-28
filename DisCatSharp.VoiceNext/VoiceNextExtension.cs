@@ -77,7 +77,7 @@ namespace DisCatSharp.VoiceNext
         /// DO NOT USE THIS MANUALLY.
         /// </summary>
         /// <param name="client">DO NOT USE THIS MANUALLY.</param>
-        /// <exception cref="InvalidOperationException"/>
+        /// <exception cref="System.InvalidOperationException"/>
         protected internal override void Setup(DiscordClient client)
         {
             if (this.Client != null)

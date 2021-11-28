@@ -108,6 +108,10 @@ namespace DisCatSharp.Net
         {
             this.Discord = client;
             this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(client));
+            if (client.Configuration.Override != null)
+            {
+                this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", client.Configuration.Override);
+            }
         }
 
         /// <summary>
@@ -137,6 +141,10 @@ namespace DisCatSharp.Net
             };
 
             this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
+            if (this.Discord != null && this.Discord.Configuration != null && this.Discord.Configuration.Override != null)
+            {
+                this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this.Discord.Configuration.Override);
+            }
 
             this.RoutesToHashes = new ConcurrentDictionary<string, string>();
             this.HashesToBuckets = new ConcurrentDictionary<string, RateLimitBucket>();
@@ -354,6 +362,7 @@ namespace DisCatSharp.Net
                         {
                             if (global)
                             {
+                                bucket.IsGlobal = true;
                                 this.Logger.LogError(LoggerEvents.RatelimitHit, "Global ratelimit hit, cooling down");
                                 try
                                 {
@@ -525,11 +534,16 @@ namespace DisCatSharp.Net
                     foreach (var kvp in mprequest.Values)
                         content.Add(new StringContent(kvp.Value), kvp.Key);
 
+                var fileId = mprequest.OverwriteFileIdStart ?? 0;
+
                 if (mprequest.Files != null && mprequest.Files.Any())
                 {
-                    var i = 1;
                     foreach (var f in mprequest.Files)
-                        content.Add(new StreamContent(f.Value), $"file{i++.ToString(CultureInfo.InvariantCulture)}", f.Key);
+                    {
+                        var name = $"files[{fileId.ToString(CultureInfo.InvariantCulture)}]";
+                        content.Add(new StreamContent(f.Value), name, f.Key);
+                        fileId++;
+                    }
                 }
 
                 req.Content = content;
@@ -564,7 +578,6 @@ namespace DisCatSharp.Net
 
                 req.Content = content;
             }
-
             return req;
         }
 
@@ -617,10 +630,19 @@ namespace DisCatSharp.Net
 
             var hs = response.Headers;
 
+            if (hs.TryGetValue("X-RateLimit-Scope", out var scope))
+            {
+                bucket.Scope = scope;
+            }
+
+
             if (hs.TryGetValue("X-RateLimit-Global", out var isglobal) && isglobal.ToLowerInvariant() == "true")
             {
                 if (response.ResponseCode != 429)
+                {
+                    bucket.IsGlobal = true;
                     this.FailInitialRateLimitTest(request, ratelimitTcs);
+                }
 
                 return;
             }

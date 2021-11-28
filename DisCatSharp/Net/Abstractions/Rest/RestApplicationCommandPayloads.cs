@@ -109,6 +109,30 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
         public DiscordInteractionApplicationCommandCallbackData Data { get; set; }
+
+        /// <summary>
+        /// Gets the attachments.
+        /// </summary>
+        [JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DiscordAttachment> Attachments { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a interaction response payload.
+    /// </summary>
+    internal class RestInteractionModalResponsePayload
+    {
+        /// <summary>
+        /// Gets the type.
+        /// </summary>
+        [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+        public InteractionResponseType Type { get; set; }
+
+        /// <summary>
+        /// Gets the data.
+        /// </summary>
+        [JsonProperty("data", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordInteractionApplicationCommandModalCallbackData Data { get; set; }
     }
 
     /// <summary>
@@ -151,6 +175,12 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyCollection<DiscordActionRowComponent> Components { get; set; }
+
+        /// <summary>
+        /// Gets attachments.
+        /// </summary>
+        [JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DiscordAttachment> Attachments { get; set; }
     }
 
     /// <summary>

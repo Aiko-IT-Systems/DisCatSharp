@@ -107,6 +107,13 @@ namespace DisCatSharp.ApplicationCommands
             => this.Interaction.CreateResponseAsync(type, builder);
 
         /// <summary>
+        /// Creates a modal response to this interaction.
+        /// </summary>
+        /// <param name="builder">The data to send.</param>
+        public Task CreateModalResponseAsync(DiscordInteractionModalBuilder builder) =>
+            this.Interaction.CreateInteractionModalResponseAsync(builder);
+
+        /// <summary>
         /// Edits the interaction response.
         /// </summary>
         /// <param name="builder">The data to edit the response with.</param>

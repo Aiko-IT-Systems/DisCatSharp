@@ -16,6 +16,27 @@ attributeRules:
     uidRegex: ^System\.Collections\.Immutable$
     type: Namespace
 - exclude:
+    uidRegex: ^Microsoft\.Extensions\.Logging$
+    type: Namespace
+- exclude:
+    uidRegex: ^Microsoft\.Extensions\.Logging\.LogLevel$
+    type: Namespace
+- exclude:
+    uidRegex: ^Microsoft\.Extensions\.Hosting\.BackgroundService$
+    type: Namespace
+- exclude:
+    uidRegex: ^Microsoft\.Extensions\.Hosting$
+    type: Namespace
+- exclude:
+    uidRegex: ^Microsoft\.Extensions$
+    type: Namespace
+- exclude:
+    uidRegex: ^Newtonsoft\.Json$
+    type: Namespace
+- exclude:
+    uidRegex: ^Newtonsoft\.Json\.JsonConverter$
+    type: Namespace
+- exclude:
     uidRegex: ^System\.Runtime\.CompilerServices\.Unsafe$
     type: Namespace
 - exclude:
@@ -43,6 +64,12 @@ attributeRules:
     uidRegex: ^System\.EnterpriseServices$
     type: Namespace
 - exclude:
+    uidRegex: ^System\.Numerics$
+    type: Namespace
+- exclude:
+    uidRegex: ^System\.Numerics\.Complex$
+    type: Namespace
+- exclude:
     uidRegex: ^System\.Diagnostics\.CodeAnalysis$
     type: Namespace
 - include:
@@ -62,6 +89,21 @@ attributeRules:
     type: Type
 - exclude:
     uidRegex: ^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$
+    type: Type
+- exclude:
+    uidRegex: ^Microsoft\.Extensions\.Hosting\.BackgroundService$
+    type: Type
+- exclude:
+    uidRegex: ^Microsoft\.Extensions\.Logging\.LogLevel\.Information$
+    type: Type
+- exclude:
+    uidRegex: ^Microsoft\.Extensions\.Logging\.ILoggerFactory$
+    type: Type
+- exclude:
+    uidRegex: ^Newtonsoft\.Json\.JsonConverter$
+    type: Type
+- exclude:
+    uidRegex: ^System\.Numerics\.Complex$
     type: Type
 - exclude:
     uidRegex: '^System\.Runtime\.CompilerServices\.[^.]+$'

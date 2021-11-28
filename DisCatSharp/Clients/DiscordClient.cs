@@ -237,6 +237,8 @@ namespace DisCatSharp
             this._guildScheduledEventCreated = new AsyncEvent<DiscordClient, GuildScheduledEventCreateEventArgs>("GUILD_SCHEDULED_EVENT_CREATED", EventExecutionLimit, this.EventErrorHandler);
             this._guildScheduledEventUpdated = new AsyncEvent<DiscordClient, GuildScheduledEventUpdateEventArgs>("GUILD_SCHEDULED_EVENT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
             this._guildScheduledEventDeleted = new AsyncEvent<DiscordClient, GuildScheduledEventDeleteEventArgs>("GUILD_SCHEDULED_EVENT_DELETED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventUserAdded = new AsyncEvent<DiscordClient, GuildScheduledEventUserAddEventArgs>("GUILD_SCHEDULED_EVENT_USER_ADDED", EventExecutionLimit, this.EventErrorHandler);
+            this._guildScheduledEventUserRemoved = new AsyncEvent<DiscordClient, GuildScheduledEventUserRemoveEventArgs>("GUILD_SCHEDULED_EVENT_USER_REMOVED", EventExecutionLimit, this.EventErrorHandler);
             this._embeddedActivityUpdated = new AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs>("EMBEDDED_ACTIVITY_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 
             this._guilds.Clear();
@@ -274,9 +276,9 @@ namespace DisCatSharp
         /// <summary>
         /// Connects to the gateway.
         /// </summary>
-        /// <exception cref="UnauthorizedException">Thrown when an invalid token was provided.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when an invalid token was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task ConnectAsync(DiscordActivity activity = null, UserStatus? status = null, DateTimeOffset? idlesince = null)
         {
             // Check if connection lock is already set, and set it if it isn't
@@ -388,12 +390,14 @@ namespace DisCatSharp
         /// <param name="userId">Id of the user</param>
         /// <param name="fetch">Whether to fetch the user again (Defaults to false).</param>
         /// <returns>The requested user.</returns>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordUser> GetUserAsync(ulong userId, bool fetch = false)
         {
-            if (!fetch && this.TryGetCachedUserInternal(userId, out var usr))
+            if (this.TryGetCachedUserInternal(userId, out var usr))
                 return usr;
+            else if (!fetch)
+                return new DiscordUser { Id = userId, Discord = this };
 
             usr = await this.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
             usr = this.UserCache.AddOrUpdate(userId, usr, (id, old) =>
@@ -414,9 +418,9 @@ namespace DisCatSharp
         /// </summary>
         /// <param name="id">The id of the channel to get.</param>
         /// <returns>The requested channel.</returns>
-        /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordChannel> GetChannelAsync(ulong id)
             => this.InternalGetCachedChannel(id) ?? await this.ApiClient.GetChannelAsync(id).ConfigureAwait(false);
 
@@ -425,9 +429,9 @@ namespace DisCatSharp
         /// </summary>
         /// <param name="id">The id of the thread to get.</param>
         /// <returns>The requested thread.</returns>
-        /// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordThreadChannel> GetThreadAsync(ulong id)
             => this.InternalGetCachedThread(id) ?? await this.ApiClient.GetThreadAsync(id).ConfigureAwait(false);
 
@@ -437,10 +441,10 @@ namespace DisCatSharp
         /// <param name="channel">Channel to send to.</param>
         /// <param name="content">Message content to send.</param>
         /// <returns>The message that was sent.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
-        /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content)
             => this.ApiClient.CreateMessageAsync(channel.Id, content, embeds: null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
@@ -450,10 +454,10 @@ namespace DisCatSharp
         /// <param name="channel">Channel to send to.</param>
         /// <param name="embed">Embed to attach to the message.</param>
         /// <returns>The message that was sent.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
-        /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordEmbed embed)
             => this.ApiClient.CreateMessageAsync(channel.Id, null, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
@@ -464,36 +468,36 @@ namespace DisCatSharp
         /// <param name="content">Message content to send.</param>
         /// <param name="embed">Embed to attach to the message.</param>
         /// <returns>The message that was sent.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
-        /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, string content, DiscordEmbed embed)
             => this.ApiClient.CreateMessageAsync(channel.Id, content, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
         /// <summary>
-        /// Sends a message with the <see cref="DiscordMessageBuilder"/>.
+        /// Sends a message with the <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
         /// </summary>
         /// <param name="channel">Channel to send the message to.</param>
         /// <param name="builder">The message builder.</param>
         /// <returns>The message that was sent.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is false and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
-        /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is false and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, DiscordMessageBuilder builder)
             => this.ApiClient.CreateMessageAsync(channel.Id, builder);
 
         /// <summary>
-        /// Sends a message with an <see cref="Action{DiscordMessageBuilder}"/>.
+        /// Sends a message with an <see cref="System.Action{DiscordMessageBuilder}"/>.
         /// </summary>
         /// <param name="channel">Channel to send the message to.</param>
         /// <param name="action">The message builder.</param>
         /// <returns>The message that was sent.</returns>
-        /// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is false and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
-        /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is false and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordMessage> SendMessageAsync(DiscordChannel channel, Action<DiscordMessageBuilder> action)
         {
             var builder = new DiscordMessageBuilder();
@@ -512,9 +516,9 @@ namespace DisCatSharp
         /// <param name="defaultMessageNotifications">Default message notification settings for the guild.</param>
         /// <param name="systemChannelFlags">System channel flags fopr the guild.</param>
         /// <returns>The created guild.</returns>
-        /// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordGuild> CreateGuildAsync(string name, string region = null, Optional<Stream> icon = default, VerificationLevel? verificationLevel = null,
             DefaultMessageNotifications? defaultMessageNotifications = null, SystemChannelFlags? systemChannelFlags = null)
         {
@@ -535,8 +539,8 @@ namespace DisCatSharp
         /// <param name="name">Name of the guild.</param>
         /// <param name="icon">Stream containing the icon for the guild.</param>
         /// <returns>The created guild.</returns>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordGuild> CreateGuildFromTemplateAsync(string code, string name, Optional<Stream> icon = default)
         {
             var iconb64 = Optional.FromNoValue<string>();
@@ -560,19 +564,21 @@ namespace DisCatSharp
         /// </example>
         /// <param name="method">The method.</param>
         /// <param name="route">The route.</param>
+        /// <param name="routeParams">The route parameters.</param>
         /// <param name="jsonBody">The json body.</param>
         /// <param name="additionalHeaders">The addditional headers.</param>
-        /// <exception cref="NotFoundException">Thrown when the ressource does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the ressource does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         /// <returns>A awaitable RestResponse</returns>
-        public async Task<RestResponse> ExecuteRawRequestAsync(RestRequestMethod method, string route, string jsonBody = null, Dictionary<string, string> additionalHeaders = null)
+        public async Task<RestResponse> ExecuteRawRequestAsync(RestRequestMethod method, string route, object routeParams, string jsonBody = null, Dictionary<string, string> additionalHeaders = null, double? ratelimitWaitOverride = null)
         {
 
-            var bucket = this.ApiClient.Rest.GetBucket(method, route, null, out var path);
+            var bucket = this.ApiClient.Rest.GetBucket(method, route, routeParams, out var path);
 
             var url = Utilities.GetApiUriFor(path, this.Configuration);
-            var res = await this.ApiClient.DoRequestAsync(this, bucket, url, method, route, additionalHeaders, DiscordJson.SerializeObject(jsonBody));
+            var res = await this.ApiClient.DoRequestAsync(this, bucket, url, method, route, additionalHeaders, DiscordJson.SerializeObject(jsonBody), ratelimitWaitOverride);
 
             return res;
         }
@@ -584,9 +590,9 @@ namespace DisCatSharp
         /// <param name="id">The guild ID to search for.</param>
         /// <param name="withCounts">Whether to include approximate presence and member counts in the returned guild.</param>
         /// <returns>The requested Guild.</returns>
-        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordGuild> GetGuildAsync(ulong id, bool? withCounts = null)
         {
             if (this._guilds.TryGetValue(id, out var guild) && (!withCounts.HasValue || !withCounts.Value))
@@ -604,9 +610,9 @@ namespace DisCatSharp
         /// </summary>
         /// <param name="id">The guild ID.</param>
         /// <returns></returns>
-        /// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordGuildPreview> GetGuildPreviewAsync(ulong id)
             => this.ApiClient.GetGuildPreviewAsync(id);
 
@@ -618,17 +624,17 @@ namespace DisCatSharp
         /// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
         /// <param name="scheduledEventId">The scheduled event id.</param>
         /// <returns>The requested Invite.</returns>
-        /// <exception cref="NotFoundException">Thrown when the invite does not exists.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the invite does not exists.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordInvite> GetInviteByCodeAsync(string code, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
             => this.ApiClient.GetInviteAsync(code, withCounts, withExpiration, scheduledEventId);
 
         /// <summary>
         /// Gets a list of connections.
         /// </summary>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<IReadOnlyList<DiscordConnection>> GetConnectionsAsync()
             => this.ApiClient.GetUsersConnectionsAsync();
 
@@ -637,9 +643,9 @@ namespace DisCatSharp
         /// </summary>
         /// <returns>The requested sticker.</returns>
         /// <param name="id">The id of the sticker.</param>
-        /// <exception cref="NotFoundException">Thrown when the sticker does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the sticker does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordSticker> GetStickerAsync(ulong id)
             => this.ApiClient.GetStickerAsync(id);
 
@@ -648,8 +654,8 @@ namespace DisCatSharp
         /// Gets all nitro sticker packs.
         /// </summary>
         /// <returns>List of sticker packs.</returns>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
             => this.ApiClient.GetStickerPacksAsync();
 
@@ -657,7 +663,7 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the In-App OAuth Url.
         /// </summary>
-        /// <param name="scopes">Defaults to <see cref="OAuthScopes.BOT_DEFAULT"/>.</param>
+        /// <param name="scopes">Defaults to <see cref="DisCatSharp.Enums.OAuthScopes.BOT_DEFAULT"/>.</param>
         /// <param name="redir">Redirect Uri.</param>
         /// <param name="permissions">Defaults to <see cref="Permissions.None"/>.</param>
         /// <returns>The OAuth Url</returns>
@@ -679,9 +685,9 @@ namespace DisCatSharp
         /// </summary>
         /// <param name="id">The target webhook id.</param>
         /// <returns>The requested webhook.</returns>
-        /// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordWebhook> GetWebhookAsync(ulong id)
             => this.ApiClient.GetWebhookAsync(id);
 
@@ -691,9 +697,9 @@ namespace DisCatSharp
         /// <param name="id">The target webhook id.</param>
         /// <param name="token">The target webhook token.</param>
         /// <returns>The requested webhook.</returns>
-        /// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordWebhook> GetWebhookWithTokenAsync(ulong id, string token)
             => this.ApiClient.GetWebhookWithTokenAsync(id, token);
 
@@ -713,9 +719,9 @@ namespace DisCatSharp
         /// <param name="username">New username.</param>
         /// <param name="avatar">New avatar.</param>
         /// <returns>The modified user.</returns>
-        /// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the user does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public async Task<DiscordUser> UpdateCurrentUserAsync(string username = null, Optional<Stream> avatar = default)
         {
             var av64 = Optional.FromNoValue<string>();
@@ -738,8 +744,8 @@ namespace DisCatSharp
         /// </summary>
         /// <param name="code">The code of the template.</param>
         /// <returns>The guild template for the code.</returns>
-        /// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-        /// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public Task<DiscordGuildTemplate> GetTemplateAsync(string code)
             => this.ApiClient.GetTemplateAsync(code);
 
@@ -903,6 +909,21 @@ namespace DisCatSharp
             return null;
         }
 
+
+        /// <summary>
+        /// Gets the internal chached scheduled event.
+        /// </summary>
+        /// <param name="scheduledEventId">The target scheduled event id.</param>
+        /// <returns>The requested scheduled event.</returns>
+        internal DiscordScheduledEvent InternalGetCachedScheduledEvent(ulong scheduledEventId)
+        {
+            foreach (var guild in this.Guilds.Values)
+                if (guild.ScheduledEvents.TryGetValue(scheduledEventId, out var foundScheduledEvent))
+                    return foundScheduledEvent;
+
+            return null;
+        }
+
         /// <summary>
         /// Gets the internal chached channel.
         /// </summary>
@@ -973,6 +994,37 @@ namespace DisCatSharp
         }
 
         /// <summary>
+        /// Updates a scheduled event.
+        /// </summary>
+        /// <param name="scheduledEvent">The scheduled event to update.</param>
+        /// <param name="guild">The guild to update.</param>
+        /// <returns>The updated scheduled event.</returns>
+        private DiscordScheduledEvent UpdateScheduledEvent(DiscordScheduledEvent scheduledEvent, DiscordGuild guild)
+        {
+            if (scheduledEvent != null)
+            {
+                _ = guild._scheduledEvents.AddOrUpdate(scheduledEvent.Id, scheduledEvent, (id, old) =>
+                {
+                    old.Discord = this;
+                    old.Description = scheduledEvent.Description;
+                    old.ChannelId = scheduledEvent.ChannelId;
+                    old.EntityId = scheduledEvent.EntityId;
+                    old.EntityType = scheduledEvent.EntityType;
+                    old.EntityMetadata = scheduledEvent.EntityMetadata;
+                    old.PrivacyLevel = scheduledEvent.PrivacyLevel;
+                    old.Name = scheduledEvent.Name;
+                    old.Status = scheduledEvent.Status;
+                    old.UserCount = scheduledEvent.UserCount;
+                    old.ScheduledStartTimeRaw = scheduledEvent.ScheduledStartTimeRaw;
+                    old.ScheduledEndTimeRaw = scheduledEvent.ScheduledEndTimeRaw;
+                    return old;
+                });
+            }
+
+            return scheduledEvent;
+        }
+
+        /// <summary>
         /// Updates a user.
         /// </summary>
         /// <param name="usr">The user to update.</param>
@@ -1033,6 +1085,31 @@ namespace DisCatSharp
             }
 
             return usr;
+        }
+
+        /// <summary>
+        /// Updates the cached events in a guild.
+        /// </summary>
+        /// <param name="guild">The guild.</param>
+        /// <param name="rawEvents">The raw events.</param>
+        private void UpdateCachedScheduledEvent(DiscordGuild guild, JArray rawEvents)
+        {
+            if (this._disposed)
+                return;
+
+            if (rawEvents != null)
+            {
+                guild._scheduledEvents.Clear();
+
+                foreach (var xj in rawEvents)
+                {
+                    var xtm = xj.ToDiscordObject<DiscordScheduledEvent>();
+
+                    xtm.Discord = this;
+
+                    guild._scheduledEvents[xtm.Id] = xtm;
+                }
+            }
         }
 
         /// <summary>

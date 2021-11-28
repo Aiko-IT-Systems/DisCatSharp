@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,29 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using DisCatSharp.Entities;
-
-namespace DisCatSharp.EventArgs
+namespace DisCatSharp
 {
     /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.GuildScheduledEventUpdated"/> event.
+    /// Represents the privacy level for a guild scheduled event.
     /// </summary>
-    public class GuildScheduledEventUpdateEventArgs : DiscordEventArgs
+    public enum ScheduledEventPrivacyLevel : int
     {
         /// <summary>
-        /// Gets the stage instance that was created.
+        /// Indicates that the guild scheduled event is public and available in discovery.
         /// </summary>
-        public DiscordEvent ScheduledEvent { get; internal set; }
+        Public = 1,
 
         /// <summary>
-        /// Gets the guild in which the stage instance was created.
+        /// Indicates that the the guild scheduled event is only accessable to guild members.
         /// </summary>
-        public DiscordGuild Guild { get; internal set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GuildScheduledEventUpdateEventArgs"/> class.
-        /// </summary>
-        internal GuildScheduledEventUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+        GuildOnly = 2
     }
 }
