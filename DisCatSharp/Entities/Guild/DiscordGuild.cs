@@ -1907,6 +1907,13 @@ namespace DisCatSharp.Entities
                                         After = (bool?)xc.NewValue
                                     };
                                     break;
+                                case "communication_disabled_until":
+                                    entrymbu.CommunicationDisabledUntilChange = new PropertyChange<DateTimeOffset?>
+                                    {
+                                        Before = (DateTimeOffset?)xc.OldValue,
+                                        After = (DateTimeOffset?)xc.NewValue
+                                    };
+                                    break;
 
                                 case "$add":
                                     entrymbu.AddedRoles = new ReadOnlyCollection<DiscordRole>(xc.NewValues.Select(xo => (ulong)xo["id"]).Select(this.GetRole).ToList());

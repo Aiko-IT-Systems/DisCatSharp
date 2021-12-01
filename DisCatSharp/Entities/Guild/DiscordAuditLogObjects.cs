@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 
 namespace DisCatSharp.Entities
@@ -327,6 +328,11 @@ namespace DisCatSharp.Entities
         /// Gets the description of member's deaf status change.
         /// </summary>
         public PropertyChange<bool?> DeafenChange { get; internal set; }
+
+        /// <summary>
+        /// Get's the timeout change.
+        /// </summary>
+        public PropertyChange<DateTimeOffset?> CommunicationDisabledUntilChange { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordAuditLogMemberUpdateEntry"/> class.
