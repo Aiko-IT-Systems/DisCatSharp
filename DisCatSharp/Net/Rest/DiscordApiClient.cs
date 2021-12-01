@@ -2592,7 +2592,7 @@ namespace DisCatSharp.Net
         /// <param name="until">Datetime offset.</param>
         /// <param name="reason">The reason.</param>
         /// <returns>A Task.</returns>
-        internal Task ModifyTimeOutAsync(ulong guild_id, ulong user_id, DateTimeOffset? until, string reason)
+        internal Task ModifyTimeoutAsync(ulong guild_id, ulong user_id, DateTimeOffset? until, string reason)
         {
             var headers = Utilities.GetBaseHeaders();
             if (!string.IsNullOrWhiteSpace(reason))
