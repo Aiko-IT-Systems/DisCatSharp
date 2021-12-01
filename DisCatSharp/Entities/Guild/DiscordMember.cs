@@ -517,8 +517,8 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task TimeOutAsync(DateTimeOffset until, string reason = null)
-            => until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeOutAsync(this.Guild.Id, this.Id, until, reason);
+        public Task TimeoutAsync(DateTimeOffset until, string reason = null)
+            => until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, until, reason);
 
         /// <summary>
         /// Adds a timeout to a member.
@@ -530,8 +530,8 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task TimeOutAsync(TimeSpan until, string reason = null)
-            => this.TimeOutAsync(DateTimeOffset.UtcNow + until, reason);
+        public Task TimeoutAsync(TimeSpan until, string reason = null)
+            => this.TimeoutAsync(DateTimeOffset.UtcNow + until, reason);
 
         /// <summary>
         /// Adds a timeout to a member.
@@ -543,8 +543,8 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task TimeOutAsync(DateTime until, string reason = null)
-            => this.TimeOutAsync(until.ToUniversalTime() - DateTime.UtcNow, reason);
+        public Task TimeoutAsync(DateTime until, string reason = null)
+            => this.TimeoutAsync(until.ToUniversalTime() - DateTime.UtcNow, reason);
 
         /// <summary>
         /// Removes the timeout from a member.
@@ -555,7 +555,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task RemoveTimeOutAsync(string reason = null) => this.Discord.ApiClient.ModifyTimeOutAsync(this.Guild.Id, this.Id, null, reason);
+        public Task RemoveTimeoutAsync(string reason = null) => this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, null, reason);
 
         /// <summary>
         /// Grants a role to the member.
