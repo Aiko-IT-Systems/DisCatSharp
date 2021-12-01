@@ -74,7 +74,7 @@ namespace DisCatSharp.Entities
                     ApplicationCommandOptionType.Role => ulong.Parse(this.RawValue),
                     ApplicationCommandOptionType.Mentionable => ulong.Parse(this.RawValue),
                     ApplicationCommandOptionType.Number => double.Parse(this.RawValue),
-                    ApplicationCommandOptionType.Attachment => this.RawValue,
+                    ApplicationCommandOptionType.Attachment => int.Parse(this.RawValue),
                     _ => this.RawValue,
                 };
             }

@@ -21,21 +21,19 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using DisCatSharp.Entities;
-using System.Linq;
-using DisCatSharp.EventArgs;
-using Microsoft.Extensions.Logging;
-using DisCatSharp.Common.Utilities;
-using Microsoft.Extensions.DependencyInjection;
-using DisCatSharp.ApplicationCommands.EventArgs;
-using DisCatSharp.Exceptions;
-using DisCatSharp.Enums;
 using DisCatSharp.ApplicationCommands.Attributes;
-using System.Text.RegularExpressions;
-using DisCatSharp.Common;
+using DisCatSharp.ApplicationCommands.EventArgs;
+using DisCatSharp.Common.Utilities;
+using DisCatSharp.Entities;
+using DisCatSharp.Enums;
+using DisCatSharp.EventArgs;
+using DisCatSharp.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.ApplicationCommands
 {
