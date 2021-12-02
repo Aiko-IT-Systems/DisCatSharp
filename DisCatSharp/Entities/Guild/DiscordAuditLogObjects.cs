@@ -332,7 +332,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Get's the timeout change.
         /// </summary>
-        public PropertyChange<DateTimeOffset?> CommunicationDisabledUntilChange { get; internal set; }
+        public PropertyChange<DateTime?> CommunicationDisabledUntilChange { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordAuditLogMemberUpdateEntry"/> class.
