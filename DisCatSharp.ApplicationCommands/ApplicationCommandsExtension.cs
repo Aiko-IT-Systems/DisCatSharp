@@ -546,6 +546,7 @@ namespace DisCatSharp.ApplicationCommands
                         ResolvedUserMentions = e.Interaction.Data.Resolved?.Users?.Values.ToList(),
                         ResolvedRoleMentions = e.Interaction.Data.Resolved?.Roles?.Values.ToList(),
                         ResolvedChannelMentions = e.Interaction.Data.Resolved?.Channels?.Values.ToList(),
+                        Attachments = e.Interaction.Data.Attachments?.ToList(),
                         Type = ApplicationCommandType.ChatInput
                     };
 
@@ -915,6 +916,8 @@ namespace DisCatSharp.ApplicationCommands
                         args.Add((bool?)option.Value);
                     else if (parameter.ParameterType == typeof(double) || parameter.ParameterType == typeof(double?))
                         args.Add((double?)option.Value);
+                    else if (parameter.ParameterType == typeof(DiscordAttachment))
+                        args.Add(context.Attachments.ElementAt((int)option.Value));
                     else if (parameter.ParameterType == typeof(DiscordUser))
                     {
                         //Checks through resolved
