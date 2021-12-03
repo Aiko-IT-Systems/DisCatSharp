@@ -221,7 +221,7 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets the attachments.
         /// </summary>
         [JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-        public List<DiscordAttachment> Attachments { get; set; }
+        public IEnumerable<DiscordAttachment> Attachments { get; set; }
 
         /// <summary>
         /// Gets or sets the flags.

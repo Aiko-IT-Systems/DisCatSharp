@@ -39,7 +39,7 @@ namespace DisCatSharp.Entities
         /// Gets the description of the file.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
-        public string Description { get; internal set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets the media, or MIME, type of the file.

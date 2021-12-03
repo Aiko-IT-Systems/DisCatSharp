@@ -64,6 +64,11 @@ namespace DisCatSharp.Entities
         private string _content;
 
         /// <summary>
+        /// Whether to keep previous attachments.
+        /// </summary>
+        internal bool? _keepAttachments = null;
+
+        /// <summary>
         /// Embeds to send on this webhook request.
         /// </summary>
         public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
@@ -92,7 +97,7 @@ namespace DisCatSharp.Entities
         /// Attachments to keep on this webhook request.
         /// </summary>
         public IEnumerable<DiscordAttachment> Attachments => this._attachments;
-        private readonly List<DiscordAttachment> _attachments = new();
+        internal readonly List<DiscordAttachment> _attachments = new();
 
         /// <summary>
         /// Constructs a new empty webhook request builder.
@@ -285,13 +290,23 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
-        /// Keeps the given attachments on edit.
+        /// Modifies the given attachments on edit.
         /// </summary>
-        /// <param name="attachments">Attachments to keep (on edit).</param>
+        /// <param name="attachments">Attachments to edit.</param>
         /// <returns></returns>
-        public DiscordWebhookBuilder KeepAttachments(IEnumerable<DiscordAttachment> attachments)
+        public DiscordWebhookBuilder ModifyAttachments(IEnumerable<DiscordAttachment> attachments)
         {
             this._attachments.AddRange(attachments);
+            return this;
+        }
+
+        /// <summary>
+        /// Whether to keep the message attachments, if new ones are added.
+        /// </summary>
+        /// <returns></returns>
+        public DiscordWebhookBuilder KeepAttachments(bool keep)
+        {
+            this._keepAttachments = keep;
             return this;
         }
 
@@ -382,6 +397,7 @@ namespace DisCatSharp.Entities
             this._files.Clear();
             this._attachments.Clear();
             this._components.Clear();
+            this._keepAttachments = false;
         }
 
         /// <summary>

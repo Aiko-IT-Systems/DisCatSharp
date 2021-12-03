@@ -78,6 +78,11 @@ namespace DisCatSharp.Entities
         public bool IsTTS { get; set; } = false;
 
         /// <summary>
+        /// Whether to keep previous attachments.
+        /// </summary>
+        internal bool? _keepAttachments = null;
+
+        /// <summary>
         /// Gets the Allowed Mentions for the message to be sent.
         /// </summary>
         public List<IMention> Mentions { get; private set; } = null;
@@ -97,7 +102,8 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the Attachments to be sent in the Message.
         /// </summary>
-        internal List<DiscordAttachment> Attachments { get; private set; } = null;
+        public IReadOnlyList<DiscordAttachment> Attachments => this._attachments;
+        internal readonly List<DiscordAttachment> _attachments = new();
 
         /// <summary>
         /// Gets the Reply Message ID.
@@ -346,6 +352,27 @@ namespace DisCatSharp.Entities
         }
 
         /// <summary>
+        /// Modifies the given attachments on edit.
+        /// </summary>
+        /// <param name="attachments">Attachments to edit.</param>
+        /// <returns></returns>
+        public DiscordMessageBuilder ModifyAttachments(IEnumerable<DiscordAttachment> attachments)
+        {
+            this._attachments.AddRange(attachments);
+            return this;
+        }
+
+        /// <summary>
+        /// Whether to keep the message attachments, if new ones are added.
+        /// </summary>
+        /// <returns></returns>
+        public DiscordMessageBuilder KeepAttachments(bool keep)
+        {
+            this._keepAttachments = keep;
+            return this;
+        }
+
+        /// <summary>
         /// Sets if the message is a reply
         /// </summary>
         /// <param name="messageId">The ID of the message to reply to.</param>
@@ -404,7 +431,8 @@ namespace DisCatSharp.Entities
             this._components.Clear();
             this.Suppressed = false;
             this.Sticker = null;
-            this.Attachments.Clear();
+            this._attachments.Clear();
+            this._keepAttachments = false;
         }
 
         /// <summary>
