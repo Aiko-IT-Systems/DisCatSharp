@@ -460,6 +460,69 @@ namespace DisCatSharp.CommandsNext.Converters
     }
 
     /// <summary>
+    /// Represents a discord scheduled event converter.
+    /// </summary>
+    public class DiscordScheduledEventConverter : IArgumentConverter<DiscordScheduledEvent>
+    {
+        /// <summary>
+        /// Gets the event regex.
+        /// </summary>
+        private static Regex EventRegex { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordScheduledEventConverter"/> class.
+        /// </summary>
+        static DiscordScheduledEventConverter()
+        {
+#if NETSTANDARD1_3
+            EventRegex = new Regex(@"^\/events\/(?<guild>\d+)\/(?<event>\d+)$", RegexOptions.ECMAScript);
+#else
+            EventRegex = DiscordRegEx.Event;
+#endif
+        }
+
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
+        async Task<Optional<DiscordScheduledEvent>> IArgumentConverter<DiscordScheduledEvent>.ConvertAsync(string value, CommandContext ctx)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return Optional.FromNoValue<DiscordScheduledEvent>();
+
+            var msguri = value.StartsWith("<") && value.EndsWith(">") ? value.Substring(1, value.Length - 2) : value;
+            ulong seid;
+            if (Uri.TryCreate(msguri, UriKind.Absolute, out var uri))
+            {
+                if (uri.Host != "discordapp.com" && uri.Host != "discord.com" && !uri.Host.EndsWith(".discordapp.com") && !uri.Host.EndsWith(".discord.com"))
+                    return Optional.FromNoValue<DiscordScheduledEvent>();
+
+                var uripath = EventRegex.Match(uri.AbsolutePath);
+                if (!uripath.Success
+                    || !ulong.TryParse(uripath.Groups["guild"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var gid)
+                    || !ulong.TryParse(uripath.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out seid))
+                    return Optional.FromNoValue<DiscordScheduledEvent>();
+
+                var guild = await ctx.Client.GetGuildAsync(gid).ConfigureAwait(false);
+                if (guild == null)
+                    return Optional.FromNoValue<DiscordScheduledEvent>();
+
+                var ev = await guild.GetScheduledEventAsync(seid).ConfigureAwait(false);
+                return ev != null ? Optional.FromValue(ev) : Optional.FromNoValue<DiscordScheduledEvent>();
+            }
+
+            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out seid))
+            {
+                var result = await ctx.Guild.GetScheduledEventAsync(seid).ConfigureAwait(false);
+                return result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordScheduledEvent>();
+            }
+
+            return Optional.FromNoValue<DiscordScheduledEvent>();
+        }
+    }
+
+    /// <summary>
     /// Represents a discord emoji converter.
     /// </summary>
     public class DiscordEmojiConverter : IArgumentConverter<DiscordEmoji>
