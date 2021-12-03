@@ -1908,10 +1908,10 @@ namespace DisCatSharp.Entities
                                     };
                                     break;
                                 case "communication_disabled_until":
-                                    entrymbu.CommunicationDisabledUntilChange = new PropertyChange<DateTimeOffset?>
+                                    entrymbu.CommunicationDisabledUntilChange = new PropertyChange<DateTime?>
                                     {
-                                        Before = (DateTimeOffset?)xc.OldValue,
-                                        After = (DateTimeOffset?)xc.NewValue
+                                        Before = (DateTime?)xc.OldValue,
+                                        After = (DateTime?)xc.NewValue
                                     };
                                     break;
 
