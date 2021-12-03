@@ -2035,7 +2035,7 @@ namespace DisCatSharp.Net
                     attachments_new.Add(att);
                     file_id++;
                 }
-                if (attachments.HasValue && attachments.Value?.Count() > 0)
+                if (attachments.HasValue && attachments.Value.Any())
                     attachments_new.AddRange(attachments.Value);
 
                 pld.Attachments = attachments_new;
