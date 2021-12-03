@@ -36,7 +36,7 @@ namespace DisCatSharp.Common.RegularExpressions
         /// Represents a invite.
         /// </summary>
         public static Regex Invite
-            => new(@"^(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/(.+[a-z])$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+            => new(@"^(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.(com|net)\/invite)\/(.+[a-z])$", RegexOptions.ECMAScript | RegexOptions.Compiled);
 
         /// <summary>
         /// Represents a message link.
@@ -79,5 +79,11 @@ namespace DisCatSharp.Common.RegularExpressions
         /// </summary>
         public static Regex User
             => new(@"^<@\!?(\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+
+        /// <summary>
+        /// Represents a event.
+        /// </summary>
+        public static Regex Event
+            => new(@"^\/events\/(?<guild>\d+)\/(?<event>\d+)$", RegexOptions.ECMAScript | RegexOptions.Compiled);
     }
 }
