@@ -51,6 +51,36 @@ namespace DisCatSharp.Common.RegularExpressions
             => new(@"^<(?<animated>a)?:(?<name>[a-zA-Z0-9_]+?):(?<id>\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
 
         /// <summary>
+        /// Represents a animated emoji.
+        /// </summary>
+        public static Regex AnimatedEmoji
+            => new(@"^<(?<animated>a):(?<name>\w{2,32}):(?<id>\d{17,20})>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+
+        /// <summary>
+        /// Represents a non-animated emoji.
+        /// </summary>
+        public static Regex StaticEmoji
+            => new(@"^<:(?<name>\w{2,32}):(?<id>\d{17,20})>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+
+        /// <summary>
+        /// Represents a timestamp.
+        /// </summary>
+        public static Regex Timestamp
+            => new(@"^<t:(?<timestamp>-?\d{1,13})(:(?<style>[tTdDfFR]))?>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+
+        /// <summary>
+        /// Represents a default styled timestamp.
+        /// </summary>
+        public static Regex DefaultStyledTimestamp
+            => new(@"^<t:(?<timestamp>-?\d{1,13})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+
+        /// <summary>
+        /// Represents a styled timestamp.
+        /// </summary>
+        public static Regex StyledTimestamp
+            => new(@"^<t:(?<timestamp>-?\d{1,13}):(?<style>[tTdDfFR])>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+
+        /// <summary>
         /// Represents a hex color string.
         /// </summary>
         public static Regex HexColorString
@@ -79,6 +109,24 @@ namespace DisCatSharp.Common.RegularExpressions
         /// </summary>
         public static Regex User
             => new(@"^<@\!?(\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+
+        /// <summary>
+        /// Represents a user with nickname.
+        /// </summary>
+        public static Regex UserWithNickname
+            => new(@"^<@\!(?<id>\d{17,20})>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+
+        /// <summary>
+        /// Represents a user with optional nickname.
+        /// </summary>
+        public static Regex UserWithOptionalNickname
+            => new(@"^<@\!?(?<id>\d{17,20})>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+
+        /// <summary>
+        /// Represents a user without nickname.
+        /// </summary>
+        public static Regex UserWithoutNickname
+            => new(@"^<@(?<id>\d{17,20})>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
 
         /// <summary>
         /// Represents a event.
