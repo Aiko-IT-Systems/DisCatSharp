@@ -29,7 +29,6 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
-using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Serialization;
 using Microsoft.Extensions.Logging;
@@ -1796,8 +1795,6 @@ namespace DisCatSharp.Net
                 }
                 pld.Attachments = attachments;
 
-                this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
-
                 var values = new Dictionary<string, string>
                 {
                     ["payload_json"] = DiscordJson.SerializeObject(pld)
@@ -1807,26 +1804,16 @@ namespace DisCatSharp.Net
                 var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id }, out var path);
 
                 var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-                try
+                var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
+
+                var ret = this.PrepareMessage(JObject.Parse(res.Response));
+
+                foreach (var file in builder._files.Where(x => x.ResetPositionTo.HasValue))
                 {
-
-                    var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, values: values, files: builder.Files).ConfigureAwait(false);
-
-                    var ret = this.PrepareMessage(JObject.Parse(res.Response));
-
-                    foreach (var file in builder._files.Where(x => x.ResetPositionTo.HasValue))
-                    {
-                        file.Stream.Position = file.ResetPositionTo.Value;
-                    }
-
-                    return ret;
-                } catch(BadRequestException ex)
-                {
-                    this.Discord.Logger.LogError(ex.Message);
-                    this.Discord.Logger.LogError(ex.StackTrace);
-                    this.Discord.Logger.LogDebug(ex.WebResponse.Response);
-                    return null;
+                    file.Stream.Position = file.ResetPositionTo.Value;
                 }
+
+                return ret;
             }
         }
 
@@ -2011,8 +1998,9 @@ namespace DisCatSharp.Net
         /// <param name="components">The components.</param>
         /// <param name="suppress_embed">The suppress_embed.</param>
         /// <param name="files">The files.</param>
+        /// <param name="attachments">The attachments to keep.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordMessage> EditMessageAsync(ulong channel_id, ulong message_id, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, IEnumerable<IMention> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppress_embed, IReadOnlyCollection<DiscordMessageFile> files)
+        internal async Task<DiscordMessage> EditMessageAsync(ulong channel_id, ulong message_id, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, IEnumerable<IMention> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppress_embed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
         {
             if (embeds.HasValue && embeds.Value != null)
                 foreach (var embed in embeds.Value)
@@ -2025,31 +2013,67 @@ namespace DisCatSharp.Net
                 Content = content.HasValue ? (string)content : null,
                 HasEmbed = embeds.HasValue && (embeds.Value?.Any() ?? false),
                 Embeds = embeds.HasValue && (embeds.Value?.Any() ?? false) ? embeds.Value : null,
-                Components = components,
+                Components = components ?? null,
                 Flags = suppress_embed.HasValue ? (bool)suppress_embed ? MessageFlags.SuppressedEmbeds : null : null
             };
 
             pld.Mentions = new DiscordMentions(mentions ?? Mentions.None, false, mentions?.OfType<RepliedUserMention>().Any() ?? false);
 
-            var values = new Dictionary<string, string>
+            if (files?.Count > 0)
             {
-                ["payload_json"] = DiscordJson.SerializeObject(pld)
-            };
+                ulong file_id = 0;
+                List<DiscordAttachment> attachments_new = new();
+                foreach (var file in files)
+                {
+                    DiscordAttachment att = new()
+                    {
+                        Id = file_id,
+                        Discord = this.Discord,
+                        Description = file.Description,
+                        FileName = file.FileName
+                    };
+                    attachments_new.Add(att);
+                    file_id++;
+                }
+                if (attachments.HasValue && attachments.Value.Any())
+                    attachments_new.AddRange(attachments.Value);
 
-            var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id, message_id }, out var path);
+                pld.Attachments = attachments_new;
 
-            var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-            var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: files).ConfigureAwait(false);
+                var values = new Dictionary<string, string>
+                {
+                    ["payload_json"] = DiscordJson.SerializeObject(pld)
+                };
 
-            var ret = this.PrepareMessage(JObject.Parse(res.Response));
+                var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
+                var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id, message_id }, out var path);
 
-            foreach (var file in files.Where(x => x.ResetPositionTo.HasValue))
-            {
-                file.Stream.Position = file.ResetPositionTo.Value;
+                var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+                var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: files).ConfigureAwait(false);
+
+                var ret = this.PrepareMessage(JObject.Parse(res.Response));
+
+                foreach (var file in files.Where(x => x.ResetPositionTo.HasValue))
+                {
+                    file.Stream.Position = file.ResetPositionTo.Value;
+                }
+
+                return ret;
             }
+            else
+            {
+                pld.Attachments = attachments.HasValue ? attachments.Value : null;
 
-            return ret;
+                var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
+                var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id, message_id }, out var path);
+
+                var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+                var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+                var ret = this.PrepareMessage(JObject.Parse(res.Response));
+
+                return ret;
+            }            
         }
 
         /// <summary>
@@ -3562,7 +3586,7 @@ namespace DisCatSharp.Net
                         Discord = this.Discord,
                         Description = file.Description,
                         FileName = file.FileName,
-                        FileSize = 0
+                        FileSize = null
                     };
                     attachments.Add(att);
                     file_id++;
@@ -3571,37 +3595,57 @@ namespace DisCatSharp.Net
                     attachments.AddRange(builder.Attachments);
 
                 pld.Attachments = attachments;
+
+                var values = new Dictionary<string, string>
+                {
+                    ["payload_json"] = DiscordJson.SerializeObject(pld)
+                };
+                var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
+                var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id, webhook_token, message_id }, out var path);
+
+                var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
+                if (thread_id != null)
+                    qub.AddParameter("thread_id", thread_id);
+
+                var url = qub.Build();
+                var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files);
+
+                var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+
+                ret.Discord = this.Discord;
+
+                foreach (var att in ret._attachments)
+                    att.Discord = this.Discord;
+
+                foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue))
+                {
+                    file.Stream.Position = file.ResetPositionTo.Value;
+                }
+
+                return ret;
             } else
             {
                 pld.Attachments = builder.Attachments;
+
+                var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
+                var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id, webhook_token, message_id }, out var path);
+
+                var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
+                if (thread_id != null)
+                    qub.AddParameter("thread_id", thread_id);
+
+                var url = qub.Build();
+                var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
+
+                var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
+
+                ret.Discord = this.Discord;
+
+                foreach (var att in ret._attachments)
+                    att.Discord = this.Discord;
+
+                return ret;
             }
-
-            var values = new Dictionary<string, string>
-            {
-                ["payload_json"] = DiscordJson.SerializeObject(pld)
-            };
-            var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
-            var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { webhook_id, webhook_token, message_id }, out var path);
-
-            var qub = Utilities.GetApiUriBuilderFor(path, this.Discord.Configuration);
-            if (thread_id != null)
-                qub.AddParameter("thread_id", thread_id);
-
-            var url = qub.Build();
-            var res = await this.DoMultipartAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, values: values, files: builder.Files);
-
-            var ret = JsonConvert.DeserializeObject<DiscordMessage>(res.Response);
-
-            ret.Discord = this.Discord;
-
-            foreach (var att in ret._attachments)
-                att.Discord = this.Discord;
-
-            foreach (var file in builder.Files.Where(x => x.ResetPositionTo.HasValue)) {
-                file.Stream.Position = file.ResetPositionTo.Value;
-            }
-
-            return ret;
         }
 
         /// <summary>

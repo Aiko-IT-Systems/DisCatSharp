@@ -207,7 +207,13 @@ namespace DisCatSharp.Entities
         public async Task<DiscordMessage> EditMessageAsync(ulong messageId, DiscordWebhookBuilder builder, string thread_id = null)
         {
             builder.Validate(true);
-
+            if (builder._keepAttachments.HasValue && builder._keepAttachments.Value)
+            {
+                builder._attachments.AddRange(this.ApiClient.GetWebhookMessageAsync(this.Id, this.Token, messageId.ToString(), thread_id).Result.Attachments);
+            } else if (builder._keepAttachments.HasValue)
+            {
+                builder._attachments.Clear();
+            }
             return await (this.Discord?.ApiClient ?? this.ApiClient).EditWebhookMessageAsync(this.Id, this.Token, messageId.ToString(), builder, thread_id).ConfigureAwait(false);
         }
 

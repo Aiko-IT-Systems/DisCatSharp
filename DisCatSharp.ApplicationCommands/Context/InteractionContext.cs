@@ -47,5 +47,10 @@ namespace DisCatSharp.ApplicationCommands
         /// Gets the channels mentioned in the command parameters.
         /// </summary>
         public IReadOnlyList<DiscordChannel> ResolvedChannelMentions { get; internal set; }
+
+        /// <summary>
+        /// Gets the attachments in the command parameters, if applicable.
+        /// </summary>
+        public IReadOnlyList<DiscordAttachment> Attachments { get; internal set; }
     }
 }
