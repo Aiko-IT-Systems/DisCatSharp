@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.CommandsNext.Converters;
 using DisCatSharp.Entities;
+using DisCatSharp.Common.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.CommandsNext
@@ -43,7 +44,7 @@ namespace DisCatSharp.CommandsNext
         /// <summary>
         /// Gets the user regex.
         /// </summary>
-        private static Regex UserRegex { get; } = new Regex(@"<@\!?(\d+?)> ", RegexOptions.ECMAScript);
+        private static Regex UserRegex { get; } = DiscordRegEx.User;
 
         /// <summary>
         /// Checks whether the message has a specified string prefix.

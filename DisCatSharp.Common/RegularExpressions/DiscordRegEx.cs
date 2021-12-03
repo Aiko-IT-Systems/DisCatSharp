@@ -81,18 +81,6 @@ namespace DisCatSharp.Common.RegularExpressions
             => new(@"^<t:(?<timestamp>-?\d{1,13}):(?<style>[tTdDfFR])>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
 
         /// <summary>
-        /// Represents a hex color string.
-        /// </summary>
-        public static Regex HexColorString
-            => new(@"^#?([a-fA-F0-9]{6})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-
-        /// <summary>
-        /// Represents a rgp color string.
-        /// </summary>
-        public static Regex RgbColorString
-            => new(@"^(\d{1,3})\s*?,\s*?(\d{1,3}),\s*?(\d{1,3})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-
-        /// <summary>
         /// Represents a role.
         /// </summary>
         public static Regex Role
