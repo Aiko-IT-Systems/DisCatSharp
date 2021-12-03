@@ -21,11 +21,11 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.CommandsNext.Converters
@@ -48,7 +48,7 @@ namespace DisCatSharp.CommandsNext.Converters
 #if NETSTANDARD1_3
             UserRegex = new Regex(@"^<@\!?(\d+?)>$", RegexOptions.ECMAScript);
 #else
-            UserRegex = new Regex(@"^<@\!?(\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+            UserRegex = DiscordRegEx.User;
 #endif
         }
 
@@ -109,7 +109,7 @@ namespace DisCatSharp.CommandsNext.Converters
 #if NETSTANDARD1_3
             UserRegex = new Regex(@"^<@\!?(\d+?)>$", RegexOptions.ECMAScript);
 #else
-            UserRegex = new Regex(@"^<@\!?(\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+            UserRegex = DiscordRegEx.User;
 #endif
         }
 
@@ -177,7 +177,7 @@ namespace DisCatSharp.CommandsNext.Converters
 #if NETSTANDARD1_3
             ChannelRegex = new Regex(@"^<#(\d+)>$", RegexOptions.ECMAScript);
 #else
-            ChannelRegex = new Regex(@"^<#(\d+)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+            ChannelRegex = DiscordRegEx.Channel;
 #endif
         }
 
@@ -230,7 +230,7 @@ namespace DisCatSharp.CommandsNext.Converters
 #if NETSTANDARD1_3
             ChannelRegex = new Regex(@"^<#(\d+)>$", RegexOptions.ECMAScript);
 #else
-            ChannelRegex = new Regex(@"^<#(\d+)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+            ChannelRegex = DiscordRegEx.Channel;
 #endif
         }
 
@@ -283,7 +283,7 @@ namespace DisCatSharp.CommandsNext.Converters
 #if NETSTANDARD1_3
             RoleRegex = new Regex(@"^<@&(\d+?)>$", RegexOptions.ECMAScript);
 #else
-            RoleRegex = new Regex(@"^<@&(\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+            RoleRegex = DiscordRegEx.Role;
 #endif
         }
 
@@ -368,7 +368,7 @@ namespace DisCatSharp.CommandsNext.Converters
 #if NETSTANDARD1_3
             InviteRegex = new Regex(@"^(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/(.+[a-z])$", RegexOptions.ECMAScript);
 #else
-            InviteRegex = new Regex(@"^(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/(.+[a-z])$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+            InviteRegex = DiscordRegEx.Invite;
 #endif
         }
 
@@ -414,7 +414,7 @@ namespace DisCatSharp.CommandsNext.Converters
 #if NETSTANDARD1_3
             MessagePathRegex = new Regex(@"^\/channels\/(?<guild>(?:\d+|@me))\/(?<channel>\d+)\/(?<message>\d+)\/?$", RegexOptions.ECMAScript);
 #else
-            MessagePathRegex = new Regex(@"^\/channels\/(?<guild>(?:\d+|@me))\/(?<channel>\d+)\/(?<message>\d+)\/?$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+            MessagePathRegex = DiscordRegEx.MessageLink;
 #endif
         }
 
@@ -477,7 +477,7 @@ namespace DisCatSharp.CommandsNext.Converters
 #if NETSTANDARD1_3
             EmoteRegex = new Regex(@"^<a?:([a-zA-Z0-9_]+?):(\d+?)>$", RegexOptions.ECMAScript);
 #else
-            EmoteRegex = new Regex(@"^<(?<animated>a)?:(?<name>[a-zA-Z0-9_]+?):(?<id>\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+            EmoteRegex = DiscordRegEx.Emoji;
 #endif
         }
 
@@ -544,8 +544,8 @@ namespace DisCatSharp.CommandsNext.Converters
             ColorRegexHex = new Regex(@"^#?([a-fA-F0-9]{6})$", RegexOptions.ECMAScript);
             ColorRegexRgb = new Regex(@"^(\d{1,3})\s*?,\s*?(\d{1,3}),\s*?(\d{1,3})$", RegexOptions.ECMAScript);
 #else
-            ColorRegexHex = new Regex(@"^#?([a-fA-F0-9]{6})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-            ColorRegexRgb = new Regex(@"^(\d{1,3})\s*?,\s*?(\d{1,3}),\s*?(\d{1,3})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+            ColorRegexHex = DiscordRegEx.HexColorString;
+            ColorRegexRgb = DiscordRegEx.RgbColorString;
 #endif
         }
 
