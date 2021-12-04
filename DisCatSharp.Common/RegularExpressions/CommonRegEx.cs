@@ -39,7 +39,7 @@ namespace DisCatSharp.Common.RegularExpressions
             => new(@"^#?([a-fA-F0-9]{6})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
 
         /// <summary>
-        /// Represents a rgp color string.
+        /// Represents a rgb color string.
         /// </summary>
         public static Regex RgbColorString
             => new(@"^(\d{1,3})\s*?,\s*?(\d{1,3}),\s*?(\d{1,3})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
