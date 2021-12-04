@@ -112,7 +112,8 @@ namespace DisCatSharp.CommandsNext
                 [typeof(DiscordEmoji)] = new DiscordEmojiConverter(),
                 [typeof(DiscordThreadChannel)] = new DiscordThreadChannelConverter(),
                 [typeof(DiscordInvite)] = new DiscordInviteConverter(),
-                [typeof(DiscordColor)] = new DiscordColorConverter()
+                [typeof(DiscordColor)] = new DiscordColorConverter(),
+                [typeof(DiscordScheduledEvent)] = new DiscordScheduledEventConverter(),
             };
 
             this.UserFriendlyTypeNames = new Dictionary<Type, string>()
@@ -143,7 +144,8 @@ namespace DisCatSharp.CommandsNext
                 [typeof(DiscordEmoji)] = "emoji",
                 [typeof(DiscordThreadChannel)] = "thread",
                 [typeof(DiscordInvite)] = "invite",
-                [typeof(DiscordColor)] = "color"
+                [typeof(DiscordColor)] = "color",
+                [typeof(DiscordScheduledEvent)] = "event"
             };
 
             var ncvt = typeof(NullableConverter<>);

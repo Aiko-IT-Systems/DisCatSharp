@@ -30,8 +30,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DisCatSharp.Enums;
-using DisCatSharp.EventArgs;
-using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Models;
@@ -832,6 +830,60 @@ namespace DisCatSharp.Entities
 
             return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, features, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
         }
+
+        /// <summary>
+        /// Timeout a specified member in this guild.
+        /// </summary>
+        /// <param name="member_id">Member to timeout.</param>
+        /// <param name="until">The datetime offset to time out the user. Up to 28 days.</param>
+        /// <param name="reason">Reason for audit logs.</param>
+        /// <returns></returns>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task TimeoutAsync(ulong member_id, DateTimeOffset until, string reason = null)
+            => until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, member_id, until, reason);
+
+        /// <summary>
+        /// Timeout a specified member in this guild.
+        /// </summary>
+        /// <param name="member_id">Member to timeout.</param>
+        /// <param name="until">The timespan to time out the user. Up to 28 days.</param>
+        /// <param name="reason">Reason for audit logs.</param>
+        /// <returns></returns>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task TimeoutAsync(ulong member_id, TimeSpan until, string reason = null)
+            => this.TimeoutAsync(member_id, DateTimeOffset.UtcNow + until, reason);
+
+        /// <summary>
+        /// Timeout a specified member in this guild.
+        /// </summary>
+        /// <param name="member_id">Member to timeout.</param>
+        /// <param name="until">The datetime to time out the user. Up to 28 days.</param>
+        /// <param name="reason">Reason for audit logs.</param>
+        /// <returns></returns>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task TimeoutAsync(ulong member_id, DateTime until, string reason = null)
+            => this.TimeoutAsync(member_id, until.ToUniversalTime() - DateTime.UtcNow, reason);
+
+        /// <summary>
+        /// Removes the timeout from a specified member in this guild.
+        /// </summary>
+        /// <param name="member_id">Member to remove the timeout from.</param>
+        /// <param name="reason">Reason for audit logs.</param>
+        /// <returns></returns>
+        /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+        /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+        public Task RemoveTimeoutAsync(ulong member_id, string reason = null) => this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, member_id, null, reason);
 
         /// <summary>
         /// Bans a specified member from this guild.
