@@ -25,6 +25,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
+using DisCatSharp.Common.RegularExpressions;
 
 namespace DisCatSharp.CommandsNext.Converters
 {
@@ -79,11 +80,7 @@ namespace DisCatSharp.CommandsNext.Converters
         /// </summary>
         static TimeSpanConverter()
         {
-#if NETSTANDARD1_3
-            TimeSpanRegex = new Regex(@"^(?<days>\d+d\s*)?(?<hours>\d{1,2}h\s*)?(?<minutes>\d{1,2}m\s*)?(?<seconds>\d{1,2}s\s*)?$", RegexOptions.ECMAScript);
-#else
-            TimeSpanRegex = new Regex(@"^(?<days>\d+d\s*)?(?<hours>\d{1,2}h\s*)?(?<minutes>\d{1,2}m\s*)?(?<seconds>\d{1,2}s\s*)?$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-#endif
+            TimeSpanRegex = CommonRegEx.TimeSpan;
         }
 
         /// <summary>
