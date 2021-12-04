@@ -21,11 +21,11 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DisCatSharp.Common.RegularExpressions;
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.CommandsNext.Converters
@@ -45,11 +45,7 @@ namespace DisCatSharp.CommandsNext.Converters
         /// </summary>
         static DiscordUserConverter()
         {
-#if NETSTANDARD1_3
-            UserRegex = new Regex(@"^<@\!?(\d+?)>$", RegexOptions.ECMAScript);
-#else
-            UserRegex = new Regex(@"^<@\!?(\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-#endif
+            UserRegex = DiscordRegEx.User;
         }
 
         /// <summary>
@@ -106,11 +102,7 @@ namespace DisCatSharp.CommandsNext.Converters
         /// </summary>
         static DiscordMemberConverter()
         {
-#if NETSTANDARD1_3
-            UserRegex = new Regex(@"^<@\!?(\d+?)>$", RegexOptions.ECMAScript);
-#else
-            UserRegex = new Regex(@"^<@\!?(\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-#endif
+            UserRegex = DiscordRegEx.User;
         }
 
         /// <summary>
@@ -174,11 +166,7 @@ namespace DisCatSharp.CommandsNext.Converters
         /// </summary>
         static DiscordChannelConverter()
         {
-#if NETSTANDARD1_3
-            ChannelRegex = new Regex(@"^<#(\d+)>$", RegexOptions.ECMAScript);
-#else
-            ChannelRegex = new Regex(@"^<#(\d+)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-#endif
+            ChannelRegex = DiscordRegEx.Channel;
         }
 
         /// <summary>
@@ -227,11 +215,7 @@ namespace DisCatSharp.CommandsNext.Converters
         /// </summary>
         static DiscordThreadChannelConverter()
         {
-#if NETSTANDARD1_3
-            ChannelRegex = new Regex(@"^<#(\d+)>$", RegexOptions.ECMAScript);
-#else
-            ChannelRegex = new Regex(@"^<#(\d+)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-#endif
+            ChannelRegex = DiscordRegEx.Channel;
         }
 
         /// <summary>
@@ -280,11 +264,7 @@ namespace DisCatSharp.CommandsNext.Converters
         /// </summary>
         static DiscordRoleConverter()
         {
-#if NETSTANDARD1_3
-            RoleRegex = new Regex(@"^<@&(\d+?)>$", RegexOptions.ECMAScript);
-#else
-            RoleRegex = new Regex(@"^<@&(\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-#endif
+            RoleRegex = DiscordRegEx.Role;
         }
 
         /// <summary>
@@ -365,11 +345,7 @@ namespace DisCatSharp.CommandsNext.Converters
         /// </summary>
         static DiscordInviteConverter()
         {
-#if NETSTANDARD1_3
-            InviteRegex = new Regex(@"^(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/(.+[a-z])$", RegexOptions.ECMAScript);
-#else
-            InviteRegex = new Regex(@"^(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/(.+[a-z])$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-#endif
+            InviteRegex = DiscordRegEx.Invite;
         }
 
         /// <summary>
@@ -411,11 +387,7 @@ namespace DisCatSharp.CommandsNext.Converters
         /// </summary>
         static DiscordMessageConverter()
         {
-#if NETSTANDARD1_3
-            MessagePathRegex = new Regex(@"^\/channels\/(?<guild>(?:\d+|@me))\/(?<channel>\d+)\/(?<message>\d+)\/?$", RegexOptions.ECMAScript);
-#else
-            MessagePathRegex = new Regex(@"^\/channels\/(?<guild>(?:\d+|@me))\/(?<channel>\d+)\/(?<message>\d+)\/?$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-#endif
+            MessagePathRegex = DiscordRegEx.MessageLink;
         }
 
         /// <summary>
@@ -460,6 +432,65 @@ namespace DisCatSharp.CommandsNext.Converters
     }
 
     /// <summary>
+    /// Represents a discord scheduled event converter.
+    /// </summary>
+    public class DiscordScheduledEventConverter : IArgumentConverter<DiscordScheduledEvent>
+    {
+        /// <summary>
+        /// Gets the event regex.
+        /// </summary>
+        private static Regex EventRegex { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiscordScheduledEventConverter"/> class.
+        /// </summary>
+        static DiscordScheduledEventConverter()
+        {
+            EventRegex = DiscordRegEx.Event;
+        }
+
+        /// <summary>
+        /// Converts a string.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <param name="ctx">The command context.</param>
+        async Task<Optional<DiscordScheduledEvent>> IArgumentConverter<DiscordScheduledEvent>.ConvertAsync(string value, CommandContext ctx)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return Optional.FromNoValue<DiscordScheduledEvent>();
+
+            var msguri = value.StartsWith("<") && value.EndsWith(">") ? value.Substring(1, value.Length - 2) : value;
+            ulong seid;
+            if (Uri.TryCreate(msguri, UriKind.Absolute, out var uri))
+            {
+                if (uri.Host != "discordapp.com" && uri.Host != "discord.com" && !uri.Host.EndsWith(".discordapp.com") && !uri.Host.EndsWith(".discord.com"))
+                    return Optional.FromNoValue<DiscordScheduledEvent>();
+
+                var uripath = EventRegex.Match(uri.AbsolutePath);
+                if (!uripath.Success
+                    || !ulong.TryParse(uripath.Groups["guild"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var gid)
+                    || !ulong.TryParse(uripath.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out seid))
+                    return Optional.FromNoValue<DiscordScheduledEvent>();
+
+                var guild = await ctx.Client.GetGuildAsync(gid).ConfigureAwait(false);
+                if (guild == null)
+                    return Optional.FromNoValue<DiscordScheduledEvent>();
+
+                var ev = await guild.GetScheduledEventAsync(seid).ConfigureAwait(false);
+                return ev != null ? Optional.FromValue(ev) : Optional.FromNoValue<DiscordScheduledEvent>();
+            }
+
+            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out seid))
+            {
+                var result = await ctx.Guild.GetScheduledEventAsync(seid).ConfigureAwait(false);
+                return result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordScheduledEvent>();
+            }
+
+            return Optional.FromNoValue<DiscordScheduledEvent>();
+        }
+    }
+
+    /// <summary>
     /// Represents a discord emoji converter.
     /// </summary>
     public class DiscordEmojiConverter : IArgumentConverter<DiscordEmoji>
@@ -474,11 +505,7 @@ namespace DisCatSharp.CommandsNext.Converters
         /// </summary>
         static DiscordEmojiConverter()
         {
-#if NETSTANDARD1_3
-            EmoteRegex = new Regex(@"^<a?:([a-zA-Z0-9_]+?):(\d+?)>$", RegexOptions.ECMAScript);
-#else
-            EmoteRegex = new Regex(@"^<(?<animated>a)?:(?<name>[a-zA-Z0-9_]+?):(?<id>\d+?)>$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-#endif
+            EmoteRegex = DiscordRegEx.Emoji;
         }
 
         /// <summary>
@@ -540,13 +567,8 @@ namespace DisCatSharp.CommandsNext.Converters
         /// </summary>
         static DiscordColorConverter()
         {
-#if NETSTANDARD1_3
-            ColorRegexHex = new Regex(@"^#?([a-fA-F0-9]{6})$", RegexOptions.ECMAScript);
-            ColorRegexRgb = new Regex(@"^(\d{1,3})\s*?,\s*?(\d{1,3}),\s*?(\d{1,3})$", RegexOptions.ECMAScript);
-#else
-            ColorRegexHex = new Regex(@"^#?([a-fA-F0-9]{6})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-            ColorRegexRgb = new Regex(@"^(\d{1,3})\s*?,\s*?(\d{1,3}),\s*?(\d{1,3})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-#endif
+            ColorRegexHex = CommonRegEx.HexColorString;
+            ColorRegexRgb = CommonRegEx.RgbColorString;
         }
 
         /// <summary>
