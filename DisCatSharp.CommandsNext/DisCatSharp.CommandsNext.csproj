@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+    <ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
