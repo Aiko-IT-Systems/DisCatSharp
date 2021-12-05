@@ -51,7 +51,7 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Gets the http client.
         /// </summary>
-        private HttpClient HttpClient { get; }
+        internal HttpClient HttpClient { get; }
 
         /// <summary>
         /// Gets the discord client.
