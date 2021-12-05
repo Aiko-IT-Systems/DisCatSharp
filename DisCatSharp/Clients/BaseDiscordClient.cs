@@ -82,6 +82,8 @@ namespace DisCatSharp
         /// </summary>
         public DiscordApplication CurrentApplication { get; internal set; }
 
+        public HttpClient RestClient { get; internal set; }
+
         /// <summary>
         /// Exposes a <see cref="System.Net.Http.HttpClient"/> for custom operations.
         /// </summary>
@@ -135,6 +137,8 @@ namespace DisCatSharp
             this.UserCache = new ConcurrentDictionary<ulong, DiscordUser>();
             this.InternalVoiceRegions = new ConcurrentDictionary<string, DiscordVoiceRegion>();
             this._voice_regions_lazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this.InternalVoiceRegions));
+
+            this.RestClient = this.ApiClient.Rest.HttpClient;
 
             var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 
