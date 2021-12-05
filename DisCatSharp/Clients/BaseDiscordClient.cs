@@ -26,6 +26,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
@@ -81,6 +82,8 @@ namespace DisCatSharp
         /// </summary>
         public DiscordApplication CurrentApplication { get; internal set; }
 
+        public HttpClient RestClient { get; internal set; }
+
         /// <summary>
         /// Gets the cached guilds for this client.
         /// </summary>
@@ -129,6 +132,8 @@ namespace DisCatSharp
             this.UserCache = new ConcurrentDictionary<ulong, DiscordUser>();
             this.InternalVoiceRegions = new ConcurrentDictionary<string, DiscordVoiceRegion>();
             this._voice_regions_lazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this.InternalVoiceRegions));
+
+            this.RestClient = this.ApiClient.Rest.HttpClient;
 
             var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 
