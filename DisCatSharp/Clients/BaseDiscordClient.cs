@@ -26,6 +26,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
@@ -80,6 +81,11 @@ namespace DisCatSharp
         /// Gets the current application.
         /// </summary>
         public DiscordApplication CurrentApplication { get; internal set; }
+
+        /// <summary>
+        /// Exposes a <see cref="System.Net.Http.HttpClient"/> for custom operations.
+        /// </summary>
+        public HttpClient RestClient { get; internal set; }
 
         /// <summary>
         /// Gets the cached guilds for this client.
