@@ -82,8 +82,6 @@ namespace DisCatSharp
         /// </summary>
         public DiscordApplication CurrentApplication { get; internal set; }
 
-        public HttpClient RestClient { get; internal set; }
-
         /// <summary>
         /// Exposes a <see cref="System.Net.Http.HttpClient"/> for custom operations.
         /// </summary>
