@@ -10,4 +10,4 @@
 
 ## Reporting a Vulnerability
 
-Write an mail to security-dcs@aitsys.dev or open an ticket at our [guild](https://discord.gg/discatsharp).
+Write an mail to support@aitsys.dev or open an ticket at our [guild](https://discord.gg/discatsharp).
