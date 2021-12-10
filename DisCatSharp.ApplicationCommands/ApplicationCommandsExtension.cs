@@ -916,6 +916,8 @@ namespace DisCatSharp.ApplicationCommands
                         args.Add((bool?)option.Value);
                     else if (parameter.ParameterType == typeof(double) || parameter.ParameterType == typeof(double?))
                         args.Add((double?)option.Value);
+                    else if(parameter.ParameterType == typeof(int) || parameter.ParameterType == typeof(int?))
+                        args.Add((int?)option.Value);
                     else if (parameter.ParameterType == typeof(DiscordAttachment))
                         args.Add(context.Attachments.ElementAt((int)option.Value));
                     else if (parameter.ParameterType == typeof(DiscordUser))
@@ -1094,6 +1096,8 @@ namespace DisCatSharp.ApplicationCommands
                 ? ApplicationCommandOptionType.String
                 : type == typeof(long) || type == typeof(long?)
                 ? ApplicationCommandOptionType.Integer
+                : type == typeof(int) || type == typeof(int?)
+                ? ApplicationCommandOptionType.Integer
                 : type == typeof(bool) || type == typeof(bool?)
                 ? ApplicationCommandOptionType.Boolean
                 : type == typeof(double) || type == typeof(double?)
@@ -1110,7 +1114,7 @@ namespace DisCatSharp.ApplicationCommands
                 ? ApplicationCommandOptionType.Attachment
                 : type.IsEnum
                 ? ApplicationCommandOptionType.String
-                : throw new ArgumentException("Cannot convert type! Argument types must be string, long, bool, double, DiscordChannel, DiscordUser, DiscordRole, SnowflakeObject, DiscordAttachment or an Enum.");
+                : throw new ArgumentException("Cannot convert type! Argument types must be string, int, long, bool, double, DiscordChannel, DiscordUser, DiscordRole, SnowflakeObject, DiscordAttachment or an Enum.");
             return parametertype;
         }
 
