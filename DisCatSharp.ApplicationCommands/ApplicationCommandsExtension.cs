@@ -904,8 +904,6 @@ namespace DisCatSharp.ApplicationCommands
                 {
                     var option = options.Single(x => x.Name == parameter.GetCustomAttribute<OptionAttribute>().Name.ToLower());
 
-                    //Checks the type and casts/references resolved and adds the value to the list
-                    //This can probably reference the slash command's type property that didn't exist when I wrote this and it could use a cleaner switch instead, but if it works it works
                     if (parameter.ParameterType == typeof(string))
                         args.Add(option.Value.ToString());
                     else if (parameter.ParameterType.IsEnum)

@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -64,19 +65,22 @@ namespace DisCatSharp.Entities
         {
             get
             {
-                return this.Type switch
-                {
-                    ApplicationCommandOptionType.Boolean => bool.Parse(this.RawValue),
-                    ApplicationCommandOptionType.Integer => long.Parse(this.RawValue),
-                    ApplicationCommandOptionType.String => this.RawValue,
-                    ApplicationCommandOptionType.Channel => ulong.Parse(this.RawValue),
-                    ApplicationCommandOptionType.User => ulong.Parse(this.RawValue),
-                    ApplicationCommandOptionType.Role => ulong.Parse(this.RawValue),
-                    ApplicationCommandOptionType.Mentionable => ulong.Parse(this.RawValue),
-                    ApplicationCommandOptionType.Number => double.Parse(this.RawValue),
-                    ApplicationCommandOptionType.Attachment => int.Parse(this.RawValue),
-                    _ => this.RawValue,
-                };
+                return this.Type == ApplicationCommandOptionType.Integer && int.TryParse(this.RawValue, out var raw)
+                    ? raw
+                    : this.Type == ApplicationCommandOptionType.Integer
+                        ? long.Parse(this.RawValue)
+                        : this.Type switch
+                        {
+                            ApplicationCommandOptionType.Boolean => bool.Parse(this.RawValue),
+                            ApplicationCommandOptionType.String => this.RawValue,
+                            ApplicationCommandOptionType.Channel => ulong.Parse(this.RawValue),
+                            ApplicationCommandOptionType.User => ulong.Parse(this.RawValue),
+                            ApplicationCommandOptionType.Role => ulong.Parse(this.RawValue),
+                            ApplicationCommandOptionType.Mentionable => ulong.Parse(this.RawValue),
+                            ApplicationCommandOptionType.Number => double.Parse(this.RawValue),
+                            ApplicationCommandOptionType.Attachment => int.Parse(this.RawValue),
+                            _ => this.RawValue,
+                        };
             }
         }
 
