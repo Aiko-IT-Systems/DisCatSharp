@@ -41,7 +41,7 @@ jobs:
         tar -xf dcs-docs.tar.xz -C ./DisCatSharp.Docs
         
     - name: Commit and push changes
-      uses: EndBug/add-and-commit@master
+      uses: EndBug/add-and-commit@main
       with:
         cwd: ./DisCatSharp.Docs
         default_author: github_actions
