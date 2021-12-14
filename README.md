@@ -2,7 +2,7 @@
 
 ![dcs-christmas-banner](https://user-images.githubusercontent.com/14029133/144901681-3056a79a-16fd-43ab-956e-b4268c3427e1.jpeg)
 
-[Discord Bot Library](https://discord.gg/discatsharp) written in C# for .NET.
+Discord Bot Library written in C# for .NET.
 
 #### Status
 [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=NuGet%20Overall%20Version)](https://nuget.dcs.aitsys.dev)
@@ -28,7 +28,7 @@ We want the lib always up-to-date. The newest features are important for us.
 So the API version is always the newest, in the actual case `v9`.
 
 ## Where is the Changelog?
-On our guild! You find it in [this channel](https://discord.com/channels/858089281214087179/858099438580006913).
+On [our guild!](https://discord.gg/discatsharp) You find it in [this channel](https://discord.com/channels/858089281214087179/858099438580006913).
 
 ## Installing
 You can install the library from following source:
