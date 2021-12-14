@@ -45,6 +45,12 @@ namespace DisCatSharp.Entities
         public IEnumerable<DiscordInteractionDataOption> Options { get; internal set; }
 
         /// <summary>
+        /// Gets the components (Applicable to modal submits).
+        /// </summary>
+        [JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+        public IEnumerable<DiscordActionRowComponentResult> Components { get; internal set; }
+
+        /// <summary>
         /// Gets the attachments of the invoked interaction, if applicable.
         /// </summary>
         [JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,17 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using DisCatSharp.Enums;
-using DisCatSharp.Net.Serialization;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
     /// <summary>
-    /// A component to attach to a message.
+    /// Represents a <see cref="DiscordActionRowComponentResult"/> resolved from a <see cref="DisCatSharp.Enums.ApplicationCommandType.ModalSubmit"/>.
     /// </summary>
-    [JsonConverter(typeof(DiscordComponentJsonConverter))]
-    public class DiscordComponent
+    public sealed class DiscordActionRowComponentResult
     {
         /// <summary>
         /// The type of component this represents.
@@ -39,14 +38,14 @@ namespace DisCatSharp.Entities
         public ComponentType Type { get; internal set; }
 
         /// <summary>
-        /// The Id of this component, if applicable. Not applicable on ActionRow(s) and link buttons.
+        /// The components contained within the resolved action row.
         /// </summary>
-        [JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
-        public string CustomId { get; internal set; }
+        [JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+        public List<DiscordComponentResult> Components { get; internal set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordComponent"/> class.
+        /// Initializes a new instance of the <see cref="DiscordActionRowComponentResult"/> class.
         /// </summary>
-        internal DiscordComponent() { }
+        internal DiscordActionRowComponentResult() { }
     }
 }
