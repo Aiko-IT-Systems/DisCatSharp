@@ -520,7 +520,6 @@ namespace DisCatSharp
                 #region Interaction/Integration/Application
 
                 case "interaction_create":
-
                     rawMbr = dat["member"];
 
                     if (rawMbr != null)
@@ -3106,7 +3105,7 @@ namespace DisCatSharp
                 }
             }
 
-            if (interaction.Type is InteractionType.Component)
+            if (interaction.Type is InteractionType.Component || interaction.Type is InteractionType.ModalSubmit)
             {
 
                 interaction.Message.Discord = this;
