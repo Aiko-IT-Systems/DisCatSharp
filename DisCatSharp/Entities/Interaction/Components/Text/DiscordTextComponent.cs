@@ -50,6 +50,12 @@ namespace DisCatSharp.Entities
         public string Placeholder { get; internal set; }
 
         /// <summary>
+        /// The pre-filled value for the text component.
+        /// </summary>
+        [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
+        public string Value { get; internal set; }
+
+        /// <summary>
         /// The minimal length of text input.
         /// </summary>
         [JsonProperty("min_length", NullValueHandling = NullValueHandling.Ignore)]
@@ -61,13 +67,19 @@ namespace DisCatSharp.Entities
         [JsonProperty("max_length", NullValueHandling = NullValueHandling.Ignore)]
         public int? MaxLength { get; internal set; }
 
-        /// <summary>
+        /*/// <summary>
         /// Whether this text component can be used.
         /// </summary>
         [JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
-        public bool Disabled { get; internal set; }
+        public bool Disabled { get; internal set; }*/
 
         /// <summary>
+        /// Whether this text component is required.
+        /// </summary>
+        [JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
+        public bool Required { get; internal set; }
+
+        /*/// <summary>
         /// Enables this component if it was disabled before.
         /// </summary>
         /// <returns>The current component.</returns>
@@ -85,7 +97,7 @@ namespace DisCatSharp.Entities
         {
             this.Disabled = true;
             return this;
-        }
+        }*/
 
         /// <summary>
         /// Constructs a new <see cref="DiscordTextComponent"/>.
@@ -104,10 +116,12 @@ namespace DisCatSharp.Entities
             this.CustomId = other.CustomId;
             this.Style = other.Style;
             this.Label = other.Label;
-            this.Disabled = other.Disabled;
+            //this.Disabled = other.Disabled;
             this.MinLength = other.MinLength;
             this.MaxLength = other.MaxLength;
             this.Placeholder = other.Placeholder;
+            this.Required = other.Required;
+            this.Value = other.Value;
         }
 
         /// <summary>
@@ -119,8 +133,9 @@ namespace DisCatSharp.Entities
         /// <param name="placeholder">The placeholder for the text input.</param>
         /// <param name="minLength">The minimal length of text input.</param>
         /// <param name="maxLength">The maximal length of text input.</param>
-        /// <param name="disabled">Whether this text component should be initialized as being disabled.</param>
-        public DiscordTextComponent(TextComponentStyle style, string customId, string label, string placeholder = null, int? minLength = null, int? maxLength = null, bool disabled = false)
+        /// <param name="required">Whether this text component should be required.</param>
+        /// <param name="default_value">Pre-filled value for text field.</param>
+        public DiscordTextComponent(TextComponentStyle style, string customId, string label, string placeholder = null, int? minLength = null, int? maxLength = null, bool required = true, string default_value = null)
         {
             this.Style = style;
             this.Label = label;
@@ -128,7 +143,9 @@ namespace DisCatSharp.Entities
             this.MinLength = minLength;
             this.MaxLength = maxLength;
             this.Placeholder = placeholder;
-            this.Disabled = disabled;
+            //this.Disabled = disabled;
+            this.Required = required;
+            this.Value = default_value;
             this.Type = ComponentType.InputText;
         }
     }

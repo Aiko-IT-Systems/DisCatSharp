@@ -5101,9 +5101,6 @@ namespace DisCatSharp.Net
 
             var values = new Dictionary<string, string>();
 
-            if (type == InteractionResponseType.Modal)
-                this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
-
             var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { interaction_id, interaction_token }, out var path);
 
