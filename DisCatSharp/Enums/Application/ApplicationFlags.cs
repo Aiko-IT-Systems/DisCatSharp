@@ -31,6 +31,11 @@ namespace DisCatSharp
     public enum ApplicationFlags
     {
         /// <summary>
+        /// The application is embedded released.
+        /// </summary>
+        EmbeddedReleased = 1 << 1,
+    
+        /// <summary>
         /// The application is a managed emoji.
         /// </summary>
         ManagedEmoji = 1 << 2,
