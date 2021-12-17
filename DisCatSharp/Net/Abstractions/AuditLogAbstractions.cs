@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH Represents a SOFTWARE OR Represents a USE OR ORepresents aR DEALINGS IN Represents a
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using DisCatSharp.Entities;
 using Newtonsoft.Json;
@@ -97,6 +98,111 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("id")]
         public ulong Id { get; set; }
+    }
+
+    internal sealed class AuditLogThreadMetadata
+    {
+        [JsonProperty("archived")]
+        public bool Archived { get; set; }
+
+        [JsonProperty("archive_timestamp")]
+        public DateTime ArchiveTimestamp { get; set; }
+
+        [JsonProperty("auto_archive_duration")]
+        public int AutoArchiveDuration { get; set; }
+
+        [JsonProperty("locked")]
+        public bool Locked { get; set; }
+    }
+
+    internal sealed class AuditLogThread
+    {
+        [JsonProperty("id")]
+        public ulong Id { get; set; }
+
+        [JsonProperty("guild_id")]
+        public ulong GuildId { get; set; }
+
+        [JsonProperty("parent_id")]
+        public ulong ParentId { get; set; }
+
+        [JsonProperty("owner_id")]
+        public ulong OwnerId { get; set; }
+
+        [JsonProperty("type")]
+        public ChannelType Type { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("last_message_id")]
+        public ulong LastMessageId { get; set; }
+
+        [JsonProperty("thread_metadata")]
+        public AuditLogThreadMetadata ThreadMetadata { get; set; }
+
+        [JsonProperty("message_count")]
+        public int MessageCount { get; set; }
+
+        [JsonProperty("member_count")]
+        public int MemberCount { get; set; }
+
+        [JsonProperty("rate_limit_per_user")]
+        public int RateLimitPerUser { get; set; }
+    }
+
+    internal sealed class AuditLogGuildScheduledEvent
+    {
+        [JsonProperty("id")]
+        public ulong Id { get; set; }
+
+        [JsonProperty("guild_id")]
+        public ulong GuildId { get; set; }
+
+        [JsonProperty("channel_id")]
+        public ulong ChannelId { get; set; }
+
+        [JsonProperty("creator_id")]
+        public ulong CreatorId { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        [JsonProperty("image")]
+        public object Image { get; set; }
+
+        [JsonProperty("scheduled_start_time")]
+        public string ScheduledStartTime;
+
+        [JsonProperty("scheduled_end_time")]
+        public string ScheduledEndTime { get; set; }
+
+        [JsonProperty("privacy_level")]
+        public ScheduledEventPrivacyLevel PrivacyLevel { get; set; }
+
+        [JsonProperty("status")]
+        public ScheduledEventStatus Status { get; set; }
+
+        [JsonProperty("entity_type")]
+        public ScheduledEventEntityType EntityType { get; set; }
+
+        [JsonProperty("entity_id")]
+        public ulong EntityId { get; set; }
+
+        [JsonProperty("entity_metadata")]
+        public AuditLogGuildScheduledEventEntityMetadata EntityMetadata { get; set; }
+
+        [JsonProperty("sku_ids")]
+        public List<ulong> SkuIds { get; set; }
+    }
+
+    internal sealed class AuditLogGuildScheduledEventEntityMetadata
+    {
+        [JsonProperty("location")]
+        public string Location { get; set; }
     }
 
     /// <summary>
@@ -285,5 +391,34 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("audit_log_entries")]
         public IEnumerable<AuditLogAction> Entries { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scheduled events.
+        /// </summary>
+        [JsonProperty("guild_scheduled_events")]
+        public IEnumerable<AuditLogGuildScheduledEvent> ScheduledEvents { get; set; }
+
+        /// <summary>
+        /// Gets or sets the threads.
+        /// </summary>
+        [JsonProperty("threads")]
+        public IEnumerable<AuditLogThread> Threads { get; set; }
+
+        /*
+         * TODO: Additional audit log fields
+        /// <summary>
+        /// Gets or sets the integrations.
+        /// Twitch related.
+        /// </summary>
+        [JsonProperty("integrations")]
+        public IEnumerable<AuditLogIntegration> Integrations { get; set; }
+
+        /// <summary>
+        /// Gets or sets the application commands.
+        /// Releated to Permissions V2.
+        /// </summary>
+        [JsonProperty("application_commands")]
+        public IEnumerable<AuditLogApplicationCommand> ApplicationCommands { get; set; }
+        */
     }
 }

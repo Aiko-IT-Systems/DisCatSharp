@@ -1593,6 +1593,14 @@ namespace DisCatSharp.Entities
                 });
             }
 
+            var atgse = alrs.SelectMany(xa => xa.ScheduledEvents)
+                .GroupBy(xu => xu.Id)
+                .Select(xgu => xgu.First());
+
+            var ath = alrs.SelectMany(xa => xa.Threads)
+                .GroupBy(xu => xu.Id)
+                .Select(xgu => xgu.First());
+
             var ahr = alrs.SelectMany(xa => xa.Webhooks)
                 .GroupBy(xh => xh.Id)
                 .Select(xgh => xgh.First());
