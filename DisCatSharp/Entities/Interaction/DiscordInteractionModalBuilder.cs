@@ -80,8 +80,8 @@ namespace DisCatSharp.Entities
         /// <param name="components">The components to append. Up to five.</param>
         /// <returns>The current builder to chain calls with.</returns>
         /// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
-        public DiscordInteractionModalBuilder AddModalComponents(params DiscordComponent[] components)
-            => this.AddModalComponents((IEnumerable<DiscordComponent>)components);
+        public DiscordInteractionModalBuilder AddModalComponents(params DiscordTextComponent[] components)
+            => this.AddModalComponents((IEnumerable<DiscordTextComponent>)components);
 
         /// <summary>
         /// Appends a text component to the builder.
@@ -90,7 +90,7 @@ namespace DisCatSharp.Entities
         /// <returns>The current builder to chain calls with.</returns>
         public DiscordInteractionModalBuilder AddTextComponent(DiscordTextComponent component)
         {
-            List<DiscordComponent> comp = new(1);
+            List<DiscordTextComponent> comp = new(1);
             comp.Add(component);
 
             return this.AddModalComponents(comp);
@@ -121,7 +121,7 @@ namespace DisCatSharp.Entities
         /// <param name="components">The components to append. Up to five.</param>
         /// <returns>The current builder to chain calls with.</returns>
         /// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
-        public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordComponent> components)
+        public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordTextComponent> components)
         {
             var compArr = components.ToArray();
             var count = compArr.Length;
