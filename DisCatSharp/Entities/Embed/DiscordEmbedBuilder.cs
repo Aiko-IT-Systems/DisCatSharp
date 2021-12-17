@@ -471,16 +471,29 @@ namespace DisCatSharp.Entities
 
             embed.Fields = new ReadOnlyCollection<DiscordEmbedField>(new List<DiscordEmbedField>(this._fields)); // copy the list, don't wrap it, prevents mutation
 
-            var tfc = 0;
-            foreach(var field in this._fields)
+            var char_count = 0;
+            if (embed.Fields.Any())
             {
-                tfc += field.Name.Count();
-                tfc += field.Value.Count();
+                foreach (var field in embed.Fields)
+                {
+                    char_count += field.Name.Length;
+                    char_count += field.Value.Length;
+                }
             }
 
-            return embed.Fields.Count >= 25
-                ? throw new NotSupportedException("Embeds can not have more than 25 fields. See https://discord.com/developers/docs/resources/channel#embed-limits.")
-                : embed.Author.Name.Length + embed.Footer.Text.Length + embed.Title.Length + embed.Description.Length + tfc >= 6000
+            if (embed.Author != null && !string.IsNullOrEmpty(embed.Author.Name))
+                char_count += embed.Author.Name.Length;
+
+            if (embed.Footer != null && !string.IsNullOrEmpty(embed.Footer.Text))
+                char_count += embed.Footer.Text.Length;
+
+            if (!string.IsNullOrEmpty(embed.Title))
+                char_count += embed.Title.Length;
+
+            if (!string.IsNullOrEmpty(embed.Description))
+                char_count += embed.Description.Length;
+
+            return char_count >= 6000
                 ? throw new NotSupportedException("Total char count can not exceed 6000 chars. See https://discord.com/developers/docs/resources/channel#embed-limits.")
                 : embed;
         }
