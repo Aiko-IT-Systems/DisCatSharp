@@ -100,109 +100,262 @@ namespace DisCatSharp.Net.Abstractions
         public ulong Id { get; set; }
     }
 
+    /// <summary>
+    /// Represents a audit log thread metadata
+    /// </summary>
     internal sealed class AuditLogThreadMetadata
     {
+        /// <summary>
+        /// Gets whether the thread is archived
+        /// </summary>
         [JsonProperty("archived")]
         public bool Archived { get; set; }
 
-        [JsonProperty("archive_timestamp")]
-        public DateTime ArchiveTimestamp { get; set; }
+        /// <summary>
+        /// Gets the threads archive timestamp
+        /// </summary>
+        [JsonProperty("archive_timestamp", NullValueHandling = NullValueHandling.Ignore)]
+        public string ArchiveTimestamp { get; set; }
 
+        /// <summary>
+        /// Gets the threads auto archive duration
+        /// </summary>
         [JsonProperty("auto_archive_duration")]
         public int AutoArchiveDuration { get; set; }
 
+        /// <summary>
+        /// Gets whether the thread is lockeed
+        /// </summary>
         [JsonProperty("locked")]
         public bool Locked { get; set; }
     }
 
+    /// <summary>
+    /// Represents a audit log thread
+    /// </summary>
     internal sealed class AuditLogThread
     {
+        /// <summary>
+        /// Gets the thread id
+        /// </summary>
         [JsonProperty("id")]
         public ulong Id { get; set; }
 
+        /// <summary>
+        /// Gets the thread guild id
+        /// </summary>
         [JsonProperty("guild_id")]
         public ulong GuildId { get; set; }
 
+        /// <summary>
+        /// Gets the thread parent channel id
+        /// </summary>
         [JsonProperty("parent_id")]
         public ulong ParentId { get; set; }
 
-        [JsonProperty("owner_id")]
-        public ulong OwnerId { get; set; }
+        /// <summary>
+        /// Gets the thread owner id
+        /// </summary>
+        [JsonProperty("owner_id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong? OwnerId { get; set; }
 
+        /// <summary>
+        /// Gets the thread type
+        /// </summary>
         [JsonProperty("type")]
         public ChannelType Type { get; set; }
 
+        /// <summary>
+        /// Gets the thread name
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("last_message_id")]
-        public ulong LastMessageId { get; set; }
+        /// <summary>
+        /// Gets the thread last message id
+        /// </summary>
+        [JsonProperty("last_message_id", NullValueHandling = NullValueHandling.Ignore)]
+        public ulong? LastMessageId { get; set; }
 
+        /// <summary>
+        /// Gets the thread metadata
+        /// </summary>
         [JsonProperty("thread_metadata")]
-        public AuditLogThreadMetadata ThreadMetadata { get; set; }
+        public AuditLogThreadMetadata Metadata { get; set; }
 
-        [JsonProperty("message_count")]
-        public int MessageCount { get; set; }
+        /// <summary>
+        /// Gets the thread approximate message count
+        /// </summary>
+        [JsonProperty("message_count", NullValueHandling = NullValueHandling.Ignore)]
+        public int? MessageCount { get; set; }
 
-        [JsonProperty("member_count")]
-        public int MemberCount { get; set; }
+        /// <summary>
+        /// Gets the thread member count
+        /// </summary>
+        [JsonProperty("member_count", NullValueHandling = NullValueHandling.Ignore)]
+        public int? MemberCount { get; set; }
 
-        [JsonProperty("rate_limit_per_user")]
-        public int RateLimitPerUser { get; set; }
+        /// <summary>
+        /// Gets the thread rate limit per user
+        /// </summary>
+        [JsonProperty("rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
+        public int? RateLimitPerUser { get; set; }
     }
 
+    /// <summary>
+    /// Represents a audit log scheduled event
+    /// </summary>
     internal sealed class AuditLogGuildScheduledEvent
     {
+        /// <summary>
+        /// Gets the scheduled event id
+        /// </summary>
         [JsonProperty("id")]
         public ulong Id { get; set; }
 
+        /// <summary>
+        /// Gets the scheduled event guild id
+        /// </summary>
         [JsonProperty("guild_id")]
         public ulong GuildId { get; set; }
 
+        /// <summary>
+        /// Gets the scheduled event channel id
+        /// </summary>
         [JsonProperty("channel_id")]
         public ulong ChannelId { get; set; }
 
+        /// <summary>
+        /// Gets the scheduled event creator id
+        /// </summary>
         [JsonProperty("creator_id")]
         public ulong CreatorId { get; set; }
 
+        /// <summary>
+        /// Gets the scheduled event name
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets the scheduled event description
+        /// </summary>
         [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonProperty("image")]
-        public object Image { get; set; }
+        /// <summary>
+        /// Gets the scheduled event image
+        /// </summary>
+        [JsonProperty("image", NullValueHandling = NullValueHandling.Ignore)]
+        public string Image { get; set; }
 
+        /// <summary>
+        /// Gets the scheduled event scheduled start time
+        /// </summary>
         [JsonProperty("scheduled_start_time")]
         public string ScheduledStartTime;
 
+        /// <summary>
+        /// Gets the scheduled event scheduled end time
+        /// </summary>
         [JsonProperty("scheduled_end_time")]
         public string ScheduledEndTime { get; set; }
 
+        /// <summary>
+        /// Gets the scheduled event privacy level
+        /// </summary>
         [JsonProperty("privacy_level")]
         public ScheduledEventPrivacyLevel PrivacyLevel { get; set; }
 
+        /// <summary>
+        /// Gets the scheduled event status
+        /// </summary>
         [JsonProperty("status")]
         public ScheduledEventStatus Status { get; set; }
 
+        /// <summary>
+        /// Gets the scheduled event entity type
+        /// </summary>
         [JsonProperty("entity_type")]
         public ScheduledEventEntityType EntityType { get; set; }
 
+        /// <summary>
+        /// Gets the scheduled event entity id
+        /// </summary>
         [JsonProperty("entity_id")]
         public ulong EntityId { get; set; }
 
+        /// <summary>
+        /// Gets the scheduled event entity metadata
+        /// </summary>
         [JsonProperty("entity_metadata")]
         public AuditLogGuildScheduledEventEntityMetadata EntityMetadata { get; set; }
 
+        /// <summary>
+        /// Gets the scheduled event sku ids
+        /// </summary>
         [JsonProperty("sku_ids")]
         public List<ulong> SkuIds { get; set; }
     }
 
+    /// <summary>
+    /// Represents a audit log scheduled event entity metadata
+    /// </summary>
     internal sealed class AuditLogGuildScheduledEventEntityMetadata
     {
+        /// <summary>
+        /// Gets the scheduled events external location
+        /// </summary>
         [JsonProperty("location")]
         public string Location { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a audit log integration account
+    /// </summary>
+    internal sealed class AuditLogIntegrationAccount
+    {
+        /// <summary>
+        /// Gets the account id
+        /// </summary>
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets the account name
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a audit log integration
+    /// </summary>
+    internal sealed class AuditLogIntegration
+    {
+        /// <summary>
+        /// Gets the integration id
+        /// </summary>
+        [JsonProperty("id")]
+        public ulong Id { get; set; }
+
+        /// <summary>
+        /// Gets the integration type
+        /// </summary>
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Gets the integration name
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets the integration account
+        /// </summary>
+        [JsonProperty("account")]
+        public AuditLogIntegrationAccount Account { get; set; }
     }
 
     /// <summary>
@@ -404,8 +557,6 @@ namespace DisCatSharp.Net.Abstractions
         [JsonProperty("threads")]
         public IEnumerable<AuditLogThread> Threads { get; set; }
 
-        /*
-         * TODO: Additional audit log fields
         /// <summary>
         /// Gets or sets the integrations.
         /// Twitch related.
@@ -413,6 +564,7 @@ namespace DisCatSharp.Net.Abstractions
         [JsonProperty("integrations")]
         public IEnumerable<AuditLogIntegration> Integrations { get; set; }
 
+        /*
         /// <summary>
         /// Gets or sets the application commands.
         /// Releated to Permissions V2.
