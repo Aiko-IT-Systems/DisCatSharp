@@ -323,6 +323,8 @@ namespace DisCatSharp.Entities
         /// <returns>This embed builder.</returns>
         public DiscordEmbedBuilder WithAuthor(string name = null, string url = null, string iconUrl = null)
         {
+            if (!string.IsNullOrEmpty(name) && name.Length < 256)
+                throw new NotSupportedException("Embed author name can not exceed 256 chars. See https://discord.com/developers/docs/resources/channel#embed-limits.");
             this.Author = string.IsNullOrEmpty(name) && string.IsNullOrEmpty(url) && string.IsNullOrEmpty(iconUrl)
                 ? null
                 : new EmbedAuthor
@@ -469,7 +471,9 @@ namespace DisCatSharp.Entities
 
             embed.Fields = new ReadOnlyCollection<DiscordEmbedField>(new List<DiscordEmbedField>(this._fields)); // copy the list, don't wrap it, prevents mutation
 
-            return embed;
+            return embed.Fields.Count < 25
+                ? throw new NotSupportedException("Embeds can not have more than 25 fields. See https://discord.com/developers/docs/resources/channel#embed-limits.")
+                : embed;
         }
 
         /// <summary>
