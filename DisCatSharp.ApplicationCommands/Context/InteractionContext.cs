@@ -51,6 +51,6 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Gets the attachments in the command parameters, if applicable.
         /// </summary>
-        public IReadOnlyList<DiscordAttachment> Attachments { get; internal set; }
+        public IReadOnlyList<DiscordAttachment> ResolvedAttachments { get; internal set; }
     }
 }
