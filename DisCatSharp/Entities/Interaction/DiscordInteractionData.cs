@@ -51,12 +51,6 @@ namespace DisCatSharp.Entities
         public IEnumerable<DiscordActionRowComponentResult> Components { get; internal set; }
 
         /// <summary>
-        /// Gets the attachments of the invoked interaction, if applicable.
-        /// </summary>
-        [JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-        public IEnumerable<DiscordAttachment> Attachments { get; internal set; }
-
-        /// <summary>
         /// Gets the Discord snowflake objects resolved from this interaction's arguments.
         /// </summary>
         [JsonProperty("resolved", NullValueHandling = NullValueHandling.Ignore)]
@@ -85,7 +79,6 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
         public string[] Values { get; internal set; } = Array.Empty<string>();
-
 
         /// <summary>
         /// Gets the type of the interaction.

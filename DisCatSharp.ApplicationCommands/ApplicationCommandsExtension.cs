@@ -546,7 +546,7 @@ namespace DisCatSharp.ApplicationCommands
                         ResolvedUserMentions = e.Interaction.Data.Resolved?.Users?.Values.ToList(),
                         ResolvedRoleMentions = e.Interaction.Data.Resolved?.Roles?.Values.ToList(),
                         ResolvedChannelMentions = e.Interaction.Data.Resolved?.Channels?.Values.ToList(),
-                        Attachments = e.Interaction.Data.Attachments?.ToList(),
+                        ResolvedAttachments = e.Interaction.Data.Resolved?.Attachments?.Values.ToList(),
                         Type = ApplicationCommandType.ChatInput
                     };
 
@@ -917,7 +917,12 @@ namespace DisCatSharp.ApplicationCommands
                     else if(parameter.ParameterType == typeof(int) || parameter.ParameterType == typeof(int?))
                         args.Add((int?)option.Value);
                     else if (parameter.ParameterType == typeof(DiscordAttachment))
-                        args.Add(context.Attachments.ElementAt((int)option.Value));
+                    {
+                        //Checks through resolved
+                        if (e.Interaction.Data.Resolved.Attachments != null &&
+                            e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
+                            args.Add(attachment);
+                    }
                     else if (parameter.ParameterType == typeof(DiscordUser))
                     {
                         //Checks through resolved
@@ -957,6 +962,8 @@ namespace DisCatSharp.ApplicationCommands
                             args.Add(member);
                         else if (e.Interaction.Data.Resolved.Users != null && e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
                             args.Add(user);
+                        else if (e.Interaction.Data.Resolved.Attachments != null && e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
+                            args.Add(attachment);
                         else
                             throw new ArgumentException("Error resolving mentionable option.");
                     }
