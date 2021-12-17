@@ -74,6 +74,13 @@ namespace DisCatSharp.Entities
         public TargetType? TargetType { get; internal set; }
 
         /// <summary>
+        /// Gets the type of this invite.
+        /// 2 = user.
+        /// </summary>
+        [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+        public int? Type { get; internal set; }
+
+        /// <summary>
         /// Gets the user that is currently livestreaming.
         /// </summary>
         [JsonProperty("target_user", NullValueHandling = NullValueHandling.Ignore)]
