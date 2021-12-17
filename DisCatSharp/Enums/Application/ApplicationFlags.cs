@@ -31,7 +31,8 @@ namespace DisCatSharp
     public enum ApplicationFlags
     {
         /// <summary>
-        /// The application is embedded released.
+        /// The application is embedded and can be used by users.
+        /// This was introdruced to avoid users using in-dev apps.
         /// </summary>
         EmbeddedReleased = 1 << 1,
     
@@ -91,7 +92,7 @@ namespace DisCatSharp
         GatewayMessageContentLimited = 1 << 19,
 
         /// <summary>
-        /// Unknown description.
+        /// Related to embedded applications.
         /// </summary>
         EmbeddedFirstParty = 1 << 20
     }
