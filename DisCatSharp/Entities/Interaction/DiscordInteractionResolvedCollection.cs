@@ -59,5 +59,11 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("messages", NullValueHandling = NullValueHandling.Ignore)]
         public IReadOnlyDictionary<ulong, DiscordMessage> Messages { get; internal set; }
+
+        /// <summary>
+        /// Gets the resolved attachments objects, if any.
+        /// </summary>
+        [JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
+        public IReadOnlyDictionary<ulong, DiscordAttachment> Attachments { get; internal set; }
     }
 }
