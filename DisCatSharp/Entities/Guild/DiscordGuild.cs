@@ -2166,6 +2166,8 @@ namespace DisCatSharp.Entities
                                     };
                                     break;
 
+                                // TODO: Add changes for target application
+
                                 default:
                                     this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in invite update: {0} - this should be reported to library developers", xc.Key);
                                     break;
