@@ -1594,12 +1594,16 @@ namespace DisCatSharp.Entities
             }
 
             var atgse = alrs.SelectMany(xa => xa.ScheduledEvents)
-                .GroupBy(xu => xu.Id)
-                .Select(xgu => xgu.First());
+                .GroupBy(xse => xse.Id)
+                .Select(xgse => xgse.First());
 
             var ath = alrs.SelectMany(xa => xa.Threads)
-                .GroupBy(xu => xu.Id)
-                .Select(xgu => xgu.First());
+                .GroupBy(xt => xt.Id)
+                .Select(xgt => xgt.First());
+
+            var aig = alrs.SelectMany(xa => xa.Integrations)
+                .GroupBy(xi => xi.Id)
+                .Select(xgi => xgi.First());
 
             var ahr = alrs.SelectMany(xa => xa.Webhooks)
                 .GroupBy(xh => xh.Id)
@@ -1607,6 +1611,12 @@ namespace DisCatSharp.Entities
 
             var ams = amr.Select(xau => (this._members != null && this._members.TryGetValue(xau.Id, out var member)) ? member : new DiscordMember { Discord = this.Discord, Id = xau.Id, _guild_id = this.Id });
             var amd = ams.ToDictionary(xm => xm.Id, xm => xm);
+
+            #pragma warning disable CS0219
+            Dictionary<ulong, DiscordThreadChannel> dtc = null;
+            Dictionary<ulong, DiscordIntegration> di = null;
+            Dictionary<ulong, DiscordScheduledEvent> dse = null;
+            #pragma warning restore
 
             Dictionary<ulong, DiscordWebhook> ahd = null;
             if (ahr.Any())
