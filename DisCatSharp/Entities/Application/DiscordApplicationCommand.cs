@@ -52,11 +52,17 @@ namespace DisCatSharp.Entities
         [JsonProperty("name")]
         public string Name { get; internal set; }
 
+        [JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordApplicationCommandLocalization NameLocalizations { get; internal set; }
+
         /// <summary>
         /// Gets the description of this command.
         /// </summary>
         [JsonProperty("description")]
         public string Description { get; internal set; }
+
+        [JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordApplicationCommandLocalization DescriptionLocalizations { get; internal set; }
 
         /// <summary>
         /// Gets the potential parameters for this command.
@@ -84,7 +90,7 @@ namespace DisCatSharp.Entities
         /// <param name="options">Optional parameters for this command.</param>
         /// <param name="default_permission">Optional default permission for this command.</param>
         /// <param name="type">The type of the command. Defaults to ChatInput.</param>
-        public DiscordApplicationCommand(string name, string description, IEnumerable<DiscordApplicationCommandOption> options = null, bool default_permission = true, ApplicationCommandType type = ApplicationCommandType.ChatInput)
+        public DiscordApplicationCommand(string name, string description, IEnumerable<DiscordApplicationCommandOption> options = null, bool default_permission = true, ApplicationCommandType type = ApplicationCommandType.ChatInput, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null)
         {
             if (type is ApplicationCommandType.ChatInput)
             {
@@ -94,6 +100,9 @@ namespace DisCatSharp.Entities
                     throw new ArgumentException("Slash command name cannot have any upper case characters.", nameof(name));
                 if (description.Length > 100)
                     throw new ArgumentException("Slash command description cannot exceed 100 characters.", nameof(description));
+
+                this.NameLocalizations = nameLocalizations;
+                this.DescriptionLocalizations = descriptionLocalizations;
             }
             else
             {
@@ -102,6 +111,8 @@ namespace DisCatSharp.Entities
                 if (options?.Any() ?? false)
                     throw new ArgumentException("Context menus do not support options.");
                 description = string.Empty;
+
+                this.NameLocalizations = nameLocalizations;
             }
 
             var optionsList = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;
