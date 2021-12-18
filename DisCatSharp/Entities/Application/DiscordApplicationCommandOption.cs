@@ -42,13 +42,13 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the name of this command parameter.
         /// </summary>
-        [JsonProperty("name")]
+        [JsonProperty("name")] // name_localizations
         public string Name { get; internal set; }
 
         /// <summary>
         /// Gets the description of this command parameter.
         /// </summary>
-        [JsonProperty("description")]
+        [JsonProperty("description")] // description_localizations
         public string Description { get; internal set; }
 
         /// <summary>

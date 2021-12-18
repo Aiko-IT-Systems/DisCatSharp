@@ -49,13 +49,13 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the name of this command.
         /// </summary>
-        [JsonProperty("name")]
+        [JsonProperty("name")] // name_localizations
         public string Name { get; internal set; }
 
         /// <summary>
         /// Gets the description of this command.
         /// </summary>
-        [JsonProperty("description")]
+        [JsonProperty("description")] // description_localizations
         public string Description { get; internal set; }
 
         /// <summary>
@@ -69,6 +69,18 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("default_permission", NullValueHandling = NullValueHandling.Ignore)]
         public bool DefaultPermission { get; internal set; }
+
+        /// <summary>
+        /// Gets the commands needed permissions.
+        /// </summary>
+        [JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Ignore)]
+        public Permissions Permission { get; internal set; }
+
+        /// <summary>
+        /// Gets whether the command can be used in direct messages.
+        /// </summary>
+        [JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Ignore)]
+        public bool DmPermission { get; internal set; }
 
         /// <summary>
         /// Gets the version number for this command. 

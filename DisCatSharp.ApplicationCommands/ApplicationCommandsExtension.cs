@@ -821,7 +821,7 @@ namespace DisCatSharp.ApplicationCommands
         }
 
         /// <summary>
-        /// Property injection copied over from CommandsNext
+        /// Property injection
         /// </summary>
         /// <param name="t">The type.</param>
         /// <param name="services">The services.</param>
@@ -897,8 +897,7 @@ namespace DisCatSharp.ApplicationCommands
                 var parameter = parameters.ElementAt(i);
 
                 //Accounts for optional arguments without values given
-                if (parameter.IsOptional && (options == null ||
-                                             (!options?.Any(x => x.Name == parameter.GetCustomAttribute<OptionAttribute>().Name.ToLower()) ?? true)))
+                if (parameter.IsOptional && (options == null || (!options?.Any(x => x.Name == parameter.GetCustomAttribute<OptionAttribute>().Name.ToLower()) ?? true)))
                     args.Add(parameter.DefaultValue);
                 else
                 {
@@ -922,6 +921,8 @@ namespace DisCatSharp.ApplicationCommands
                         if (e.Interaction.Data.Resolved.Attachments != null &&
                             e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
                             args.Add(attachment);
+                        else
+                            args.Add(new DiscordAttachment() { Id = (ulong)option.Value, Discord = this.Client.ApiClient.Discord });
                     }
                     else if (parameter.ParameterType == typeof(DiscordUser))
                     {

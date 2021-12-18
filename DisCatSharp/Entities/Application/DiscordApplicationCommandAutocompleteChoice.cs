@@ -33,7 +33,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the name of this option which will be presented to the user.
         /// </summary>
-        [JsonProperty("name")]
+        [JsonProperty("name")] // name_localizations
         public string Name { get; internal set; }
 
         /// <summary>
