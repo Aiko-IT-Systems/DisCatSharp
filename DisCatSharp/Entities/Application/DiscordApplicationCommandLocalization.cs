@@ -33,19 +33,19 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the localization dict.
         /// </summary>
-        public Dictionary<string, string> Localization { get; internal set; }
+        public Dictionary<string, string> Localizations { get; internal set; }
 
         public void AddLocalization(CultureInfo language, string value)
-            => this.Localization.Add(language.Name, value);
+            => this.Localizations.Add(language.Name, value);
 
         public void AddLocalization(string language, string value)
-            => this.Localization.Add(language, value);
+            => this.Localizations.Add(language, value);
 
         public void RemoveLocalization(CultureInfo language)
-            => this.Localization.Remove(language.Name);
+            => this.Localizations.Remove(language.Name);
 
         public void RemoveLocalization(string language)
-            => this.Localization.Remove(language);
+            => this.Localizations.Remove(language);
 
         /// <summary>
         /// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.
