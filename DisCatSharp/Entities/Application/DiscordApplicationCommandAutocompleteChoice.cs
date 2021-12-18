@@ -36,6 +36,9 @@ namespace DisCatSharp.Entities
         [JsonProperty("name")]
         public string Name { get; internal set; }
 
+        [JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
+        public DiscordApplicationCommandLocalization NameLocalizations { get; internal set; }
+
         /// <summary>
         /// Gets the value of this option.
         /// </summary>
@@ -47,7 +50,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="name">The name of this option, which will be presented to the user.</param>
         /// <param name="value">The value of this option.</param>
-        public DiscordApplicationCommandAutocompleteChoice(string name, object value)
+        public DiscordApplicationCommandAutocompleteChoice(string name, object value, DiscordApplicationCommandLocalization nameLocalizations = null)
         {
             if (name.Length > 100)
                 throw new ArgumentException("Application command choice name cannot exceed 100 characters.", nameof(name));
@@ -57,6 +60,7 @@ namespace DisCatSharp.Entities
                 throw new InvalidOperationException($"Only {typeof(string)}, {typeof(long)}, {typeof(double)} or {typeof(int)} types may be passed to a autocomplete choice.");
 
             this.Name = name;
+            this.NameLocalizations = nameLocalizations;
             this.Value = value;
         }
     }
