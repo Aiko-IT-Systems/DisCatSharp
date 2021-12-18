@@ -44,11 +44,17 @@ namespace DisCatSharp.Net.Abstractions
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<DiscordApplicationCommandLocalization> NameLocalizations { get; set; }
+
         /// <summary>
         /// Gets the description.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; set; }
+
+        [JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<DiscordApplicationCommandLocalization> DescriptionLocalizations { get; set; }
 
         /// <summary>
         /// Gets the options.
@@ -74,11 +80,17 @@ namespace DisCatSharp.Net.Abstractions
         [JsonProperty("name")]
         public Optional<string> Name { get; set; }
 
+        [JsonProperty("name_localizations")]
+        public Optional<DiscordApplicationCommandLocalization> NameLocalizations { get; set; }
+
         /// <summary>
         /// Gets the description.
         /// </summary>
         [JsonProperty("description")]
         public Optional<string> Description { get; set; }
+
+        [JsonProperty("description_localizations")]
+        public Optional<DiscordApplicationCommandLocalization> DescriptionLocalizations { get; set; }
 
         /// <summary>
         /// Gets the options.
