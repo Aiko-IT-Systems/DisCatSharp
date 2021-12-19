@@ -3024,7 +3024,6 @@ namespace DisCatSharp
         /// <param name="user">The user.</param>
         /// <param name="member">The member.</param>
         /// <param name="interaction">The interaction.</param>
-
         internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction)
         {
             var usr = new DiscordUser(user) { Discord = this };
