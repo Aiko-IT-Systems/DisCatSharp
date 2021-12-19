@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
@@ -36,8 +37,18 @@ namespace DisCatSharp.Entities
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Sets the name localizations.
+        /// </summary>
         [JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordApplicationCommandLocalization NameLocalizations { get; set; }
+        internal Dictionary<string, string> RawNameLocalizations { get; set; }
+
+        /// <summary>
+        /// Gets the name localizations.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization NameLocalizations
+            => new(this.RawNameLocalizations);
 
         /// <summary>
         /// Gets the value of this choice parameter. This will either be a type of <see cref="int"/>, <see cref="long"/>, <see cref="double"/> or <see cref="string"/>.
@@ -62,7 +73,7 @@ namespace DisCatSharp.Entities
                 throw new ArgumentException("Application command choice value cannot exceed 100 characters.", nameof(value));
 
             this.Name = name;
-            this.NameLocalizations = nameLocalizations;
+            this.RawNameLocalizations = nameLocalizations.GetKeyValuePairs();
             this.Value = value;
         }
     }

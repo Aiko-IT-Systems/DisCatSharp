@@ -52,8 +52,18 @@ namespace DisCatSharp.Entities
         [JsonProperty("name")]
         public string Name { get; internal set; }
 
+        /// <summary>
+        /// Sets the name localizations.
+        /// </summary>
         [JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordApplicationCommandLocalization NameLocalizations { get; internal set; }
+        internal Dictionary<string, string> RawNameLocalizations { get; set; }
+
+        /// <summary>
+        /// Gets the name localizations.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization NameLocalizations
+            => new(this.RawNameLocalizations);
 
         /// <summary>
         /// Gets the description of this command.
@@ -61,8 +71,18 @@ namespace DisCatSharp.Entities
         [JsonProperty("description")]
         public string Description { get; internal set; }
 
+        /// <summary>
+        /// Sets the description localizations.
+        /// </summary>
         [JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordApplicationCommandLocalization DescriptionLocalizations { get; internal set; }
+        internal Dictionary<string, string> RawDescriptionLocalizations { get; set; }
+
+        /// <summary>
+        /// Gets the description localizations.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization DescriptionLocalizations
+            => new(this.RawDescriptionLocalizations);
 
         /// <summary>
         /// Gets the potential parameters for this command.
@@ -103,8 +123,8 @@ namespace DisCatSharp.Entities
                 if (description.Length > 100)
                     throw new ArgumentException("Slash command description cannot exceed 100 characters.", nameof(description));
 
-                this.NameLocalizations = nameLocalizations;
-                this.DescriptionLocalizations = descriptionLocalizations;
+                this.RawNameLocalizations = nameLocalizations.GetKeyValuePairs();
+                this.RawDescriptionLocalizations = descriptionLocalizations.GetKeyValuePairs();
             }
             else
             {
@@ -114,7 +134,7 @@ namespace DisCatSharp.Entities
                     throw new ArgumentException("Context menus do not support options.");
                 description = string.Empty;
 
-                this.NameLocalizations = nameLocalizations;
+                this.RawNameLocalizations = nameLocalizations.GetKeyValuePairs();
             }
 
             var optionsList = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;

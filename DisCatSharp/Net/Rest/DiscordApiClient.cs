@@ -4679,15 +4679,19 @@ namespace DisCatSharp.Net
         /// <param name="description">The description.</param>
         /// <param name="options">The options.</param>
         /// <param name="default_permission">The default_permission.</param>
+        /// <param name="name_localization">The localizations of the name.</param>
+        /// <param name="description_localization">The localizations of the description.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong application_id, ulong command_id, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> default_permission)
+        internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong application_id, ulong command_id, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> default_permission, Optional<DiscordApplicationCommandLocalization> name_localization, Optional<DiscordApplicationCommandLocalization> description_localization)
         {
             var pld = new RestApplicationCommandEditPayload
             {
                 Name = name,
                 Description = description,
                 Options = options,
-                DefaultPermission = default_permission
+                DefaultPermission = default_permission,
+                NameLocalizations = name_localization.HasValue ? name_localization.Value.GetKeyValuePairs() : null,
+                DescriptionLocalizations = description_localization.HasValue ? description_localization.Value.GetKeyValuePairs() : null
             };
 
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -4836,14 +4840,18 @@ namespace DisCatSharp.Net
         /// <param name="description">The description.</param>
         /// <param name="options">The options.</param>
         /// <param name="default_permission">The default_permission.</param>
-        internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong application_id, ulong guild_id, ulong command_id, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> default_permission)
+        /// <param name="name_localization">The localizations of the name.</param>
+        /// <param name="description_localization">The localizations of the description.</param>
+        internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong application_id, ulong guild_id, ulong command_id, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> default_permission, Optional<DiscordApplicationCommandLocalization> name_localization, Optional<DiscordApplicationCommandLocalization> description_localization)
         {
             var pld = new RestApplicationCommandEditPayload
             {
                 Name = name,
                 Description = description,
                 Options = options,
-                DefaultPermission = default_permission
+                DefaultPermission = default_permission,
+                NameLocalizations = name_localization.HasValue ? name_localization.Value.GetKeyValuePairs() : null,
+                DescriptionLocalizations = description_localization.HasValue ? description_localization.Value.GetKeyValuePairs() : null
             };
 
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
