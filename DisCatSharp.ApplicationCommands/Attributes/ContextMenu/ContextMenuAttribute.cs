@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
 namespace DisCatSharp.ApplicationCommands
@@ -45,7 +46,12 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Gets whether this command is enabled by default.
         /// </summary>
-        public bool DefaultPermission { get; internal set;}
+        public bool DefaultPermission { get; internal set; }
+
+        /// <summary>
+        /// Gets the context menu name localizations.
+        /// </summary>
+        public DiscordApplicationCommandLocalization NameLocalizations { get; internal set; }
 
         /// <summary>
         /// Marks this method as a context menu.
@@ -53,7 +59,8 @@ namespace DisCatSharp.ApplicationCommands
         /// <param name="type">The type of the context menu.</param>
         /// <param name="name">The name of the context menu.</param>
         /// <param name="defaultPermission">The default permission of the context menu.</param>
-        public ContextMenuAttribute(ApplicationCommandType type, string name, bool defaultPermission = true)
+        /// <param name="name_localizations">The localizations of the context menu name.</param>
+        public ContextMenuAttribute(ApplicationCommandType type, string name, bool defaultPermission = true, DiscordApplicationCommandLocalization name_localizations = null)
         {
             if (type == ApplicationCommandType.ChatInput)
                 throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
@@ -61,6 +68,7 @@ namespace DisCatSharp.ApplicationCommands
             this.Type = type;
             this.Name = name;
             this.DefaultPermission = defaultPermission;
+            this.NameLocalizations = name_localizations;
         }
     }
 }
