@@ -4788,7 +4788,9 @@ namespace DisCatSharp.Net
                 Name = command.Name,
                 Description = command.Description,
                 Options = command.Options,
-                DefaultPermission = command.DefaultPermission
+                DefaultPermission = command.DefaultPermission,
+                NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
+                DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs()
 
             };
 
