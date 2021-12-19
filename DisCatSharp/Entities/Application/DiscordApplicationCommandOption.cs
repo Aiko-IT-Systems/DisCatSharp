@@ -113,6 +113,8 @@ namespace DisCatSharp.Entities
         /// <param name="autocomplete">Whether this option provides autocompletion.</param>
         /// <param name="minimumValue">The minimum value for this parameter. Only valid for types <see cref="ApplicationCommandOptionType.Integer"/> or <see cref="ApplicationCommandOptionType.Number"/>.</param>
         /// <param name="maximumValue">The maximum value for this parameter. Only valid for types <see cref="ApplicationCommandOptionType.Integer"/> or <see cref="ApplicationCommandOptionType.Number"/>.</param>
+        /// <param name="nameLocalizations">The localizations of the parameter name.</param>
+        /// <param name="descriptionLocalizations">The localizations of the parameter description.</param>
         public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool? required = null, IEnumerable<DiscordApplicationCommandOptionChoice> choices = null, IEnumerable<DiscordApplicationCommandOption> options = null, IEnumerable<ChannelType> channeltypes = null, bool? autocomplete = null, object minimumValue = null, object maximumValue = null, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null)
         {
             if (!Utilities.IsValidSlashCommandName(name))

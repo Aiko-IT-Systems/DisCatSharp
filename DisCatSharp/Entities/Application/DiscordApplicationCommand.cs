@@ -90,6 +90,8 @@ namespace DisCatSharp.Entities
         /// <param name="options">Optional parameters for this command.</param>
         /// <param name="default_permission">Optional default permission for this command.</param>
         /// <param name="type">The type of the command. Defaults to ChatInput.</param>
+        /// <param name="nameLocalizations">The localizations of the command name.</param>
+        /// <param name="descriptionLocalizations">The localizations of the command description.</param>
         public DiscordApplicationCommand(string name, string description, IEnumerable<DiscordApplicationCommandOption> options = null, bool default_permission = true, ApplicationCommandType type = ApplicationCommandType.ChatInput, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null)
         {
             if (type is ApplicationCommandType.ChatInput)

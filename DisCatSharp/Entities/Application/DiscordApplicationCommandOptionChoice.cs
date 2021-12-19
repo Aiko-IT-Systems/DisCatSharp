@@ -50,6 +50,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="name">The name of the parameter choice.</param>
         /// <param name="value">The value of the parameter choice.</param>
+        /// <param name="nameLocalizations">The localizations of the parameter choice name.</param>
         public DiscordApplicationCommandOptionChoice(string name, object value, DiscordApplicationCommandLocalization nameLocalizations = null)
         {
             if (!(value is string || value is long || value is int || value is double))
