@@ -272,7 +272,7 @@ namespace DisCatSharp.ApplicationCommands
                             }
 
                             //Initializes the command
-                            var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, default_permission: groupAttribute.DefaultPermission);
+                            var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, default_permission: groupAttribute.DefaultPermission, nameLocalizations: groupAttribute.NameLocalizations, descriptionLocalizations: groupAttribute.DescriptionLocalizations);
                             commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 
                             var commandmethods = new List<KeyValuePair<string, MethodInfo>>();
@@ -290,8 +290,8 @@ namespace DisCatSharp.ApplicationCommands
                                 var options = await this.ParseParameters(parameters, guildid);
 
                                 //Creates the subcommand and adds it to the main command
-                                var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, null, null, options);
-                                payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission);
+                                var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, null, null, options, nameLocalizations: commandAttribute.NameLocalizations, descriptionLocalizations: commandAttribute.DescriptionLocalizations);
+                                payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations);
                                 commandTypeSources.Add(new KeyValuePair<Type, Type>(subclassinfo, type));
 
                                 //Adds it to the method lists
@@ -322,16 +322,16 @@ namespace DisCatSharp.ApplicationCommands
                                     parameters = parameters.Skip(1).ToArray();
                                     suboptions = suboptions.Concat(await this.ParseParameters(parameters, guildid)).ToList();
 
-                                    var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, suboptions);
+                                    var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, suboptions, nameLocalizations: commatt.NameLocalizations, descriptionLocalizations: commatt.DescriptionLocalizations);
                                     options.Add(subsubpayload);
                                     commandmethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
                                     currentMethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
                                 }
 
                                 //Adds the group to the command and method lists
-                                var subpayload = new DiscordApplicationCommandOption(subGroupAttribute.Name, subGroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options);
+                                var subpayload = new DiscordApplicationCommandOption(subGroupAttribute.Name, subGroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options, nameLocalizations: subGroupAttribute.NameLocalizations, descriptionLocalizations: subGroupAttribute.DescriptionLocalizations);
                                 command.SubCommands.Add(new GroupCommand { Name = subGroupAttribute.Name, Methods = currentMethods });
-                                payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission);
+                                payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, ApplicationCommandType.ChatInput, payload.NameLocalizations, payload.DescriptionLocalizations);
                                 commandTypeSources.Add(new KeyValuePair<Type, Type>(subclass, type));
 
                                 //Accounts for lifespans for the sub group
@@ -373,7 +373,7 @@ namespace DisCatSharp.ApplicationCommands
 
                                 commandMethods.Add(new CommandMethod { Method = method, Name = commandattribute.Name });
 
-                                var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, options, commandattribute.DefaultPermission);
+                                var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, options, commandattribute.DefaultPermission, ApplicationCommandType.ChatInput, commandattribute.NameLocalizations, commandattribute.DescriptionLocalizations);
                                 updateList.Add(payload);
                                 commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
                             }
@@ -383,7 +383,7 @@ namespace DisCatSharp.ApplicationCommands
                             foreach (var contextMethod in contextMethods)
                             {
                                 var contextAttribute = contextMethod.GetCustomAttribute<ContextMenuAttribute>();
-                                var command = new DiscordApplicationCommand(contextAttribute.Name, null, type: contextAttribute.Type, default_permission: contextAttribute.DefaultPermission);
+                                var command = new DiscordApplicationCommand(contextAttribute.Name, null, null, contextAttribute.DefaultPermission, contextAttribute.Type, contextAttribute.NameLocalizations);
 
                                 var parameters = contextMethod.GetParameters();
                                 if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(ContextMenuContext)))

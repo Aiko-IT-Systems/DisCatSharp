@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -41,47 +42,60 @@ namespace DisCatSharp.ApplicationCommands
         public object Value { get; }
 
         /// <summary>
+        /// Gets the name localizations of this option
+        /// </summary>
+        public DiscordApplicationCommandLocalization NameLocalizations { get; }
+
+        /// <summary>
         /// Adds a choice to the slash command option
         /// </summary>
-        /// <param name="name">The name of the choice</param>
-        /// <param name="value">The value of the choice</param>
-        public ChoiceAttribute(string name, string value)
+        /// <param name="name">The name of the choice.</param>
+        /// <param name="value">The value of the choice.</param>
+        /// <param name="name_localizations">The localizations of the choice name.</param>
+        public ChoiceAttribute(string name, string value, DiscordApplicationCommandLocalization name_localizations = null)
         {
             this.Name = name;
             this.Value = value;
+            this.NameLocalizations = name_localizations;
         }
 
         /// <summary>
         /// Adds a choice to the slash command option
         /// </summary>
-        /// <param name="name">The name of the choice</param>
-        /// <param name="value">The value of the choice</param>
-        public ChoiceAttribute(string name, long value)
+        /// <param name="name">The name of the choice.</param>
+        /// <param name="value">The value of the choice.</param>
+        /// <param name="name_localizations">The localizations of the choice name.</param>
+        public ChoiceAttribute(string name, long value, DiscordApplicationCommandLocalization name_localizations = null)
         {
             this.Name = name;
             this.Value = value;
+            this.NameLocalizations = name_localizations;
         }
 
         /// <summary>
         /// Adds a choice to the slash command option
         /// </summary>
-        /// <param name="name">The name of the choice</param>
-        /// <param name="value">The value of the choice</param>
-        public ChoiceAttribute(string name, int value)
+        /// <param name="name">The name of the choice.</param>
+        /// <param name="value">The value of the choice.</param>
+        /// <param name="name_localizations">The localizations of the choice name.</param>
+        public ChoiceAttribute(string name, int value, DiscordApplicationCommandLocalization name_localizations = null)
         {
             this.Name = name;
             this.Value = value;
+            this.NameLocalizations = name_localizations;
         }
 
         /// <summary>
         /// Adds a choice to the slash command option
         /// </summary>
-        /// <param name="name">The name of the choice</param>
-        /// <param name="value">The value of the choice</param>
-        public ChoiceAttribute(string name, double value)
+        /// <param name="name">The name of the choice.</param>
+        /// <param name="value">The value of the choice.</param>
+        /// <param name="name_localizations">The localizations of the choice name.</param>
+        public ChoiceAttribute(string name, double value, DiscordApplicationCommandLocalization name_localizations = null)
         {
             this.Name = name;
             this.Value = value;
+            this.NameLocalizations = name_localizations;
         }
     }
 }

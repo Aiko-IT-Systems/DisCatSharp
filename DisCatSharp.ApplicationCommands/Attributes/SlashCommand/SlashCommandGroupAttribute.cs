@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -46,16 +47,43 @@ namespace DisCatSharp.ApplicationCommands
         public bool DefaultPermission { get; set; }
 
         /// <summary>
+        /// Gets the name localizations of this command
+        /// </summary>
+        public DiscordApplicationCommandLocalization NameLocalizations { get; set; }
+
+        /// <summary>
+        /// Gets the description localizations of this command
+        /// </summary>
+        public DiscordApplicationCommandLocalization DescriptionLocalizations { get; set; }
+
+        /// <summary>
         /// Marks this class as a slash command group
         /// </summary>
-        /// <param name="name">The name of this slash command group</param>
-        /// <param name="description">The description of this slash command group</param>
+        /// <param name="name">The name of this slash command group.</param>
+        /// <param name="description">The description of this slash command group.</param>
         /// <param name="default_permission">Whether everyone can execute this command.</param>
         public SlashCommandGroupAttribute(string name, string description, bool default_permission = true)
         {
             this.Name = name.ToLower();
             this.Description = description;
             this.DefaultPermission = default_permission;
+        }
+
+        /// <summary>
+        /// Marks this method as a slash command group with localizations.
+        /// </summary>
+        /// <param name="name">The name of this slash command group.</param>
+        /// <param name="description">The description of this slash command group.</param>
+        /// <param name="default_permission">Whether everyone can execute this command group.</param>
+        /// <param name="name_localizations">The name localizations.</param>
+        /// <param name="description_localizations">The description localizations.</param>
+        public SlashCommandGroupAttribute(string name, string description, bool default_permission = true, DiscordApplicationCommandLocalization name_localizations = null, DiscordApplicationCommandLocalization description_localizations = null)
+        {
+            this.Name = name.ToLower();
+            this.Description = description;
+            this.DefaultPermission = default_permission;
+            this.NameLocalizations = name_localizations;
+            this.DescriptionLocalizations = description_localizations;
         }
     }
 }

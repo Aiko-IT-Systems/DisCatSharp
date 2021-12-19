@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -43,19 +44,48 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Gets the default permission of this command
         /// </summary>
-        public bool DefaultPermission { get; set; }
+        public bool DefaultPermission { get; }
+
+        /// <summary>
+        /// Gets the name localizations of this command
+        /// </summary>
+        public DiscordApplicationCommandLocalization NameLocalizations { get; }
+
+        /// <summary>
+        /// Gets the description localizations of this command
+        /// </summary>
+        public DiscordApplicationCommandLocalization DescriptionLocalizations { get; }
 
         /// <summary>
         /// Marks this method as a slash command
         /// </summary>
-        /// <param name="name">The name of this slash command</param>
-        /// <param name="description">The description of this slash command</param>
+        /// <param name="name">The name of this slash command.</param>
+        /// <param name="description">The description of this slash command.</param>
         /// <param name="default_permission">Whether everyone can execute this command.</param>
         public SlashCommandAttribute(string name, string description, bool default_permission = true)
         {
             this.Name = name.ToLower();
             this.Description = description;
             this.DefaultPermission = default_permission;
+            this.NameLocalizations = null;
+            this.DescriptionLocalizations = null;
+        }
+
+        /// <summary>
+        /// Marks this method as a slash command with localizations.
+        /// </summary>
+        /// <param name="name">The name of this slash command.</param>
+        /// <param name="description">The description of this slash command.</param>
+        /// <param name="default_permission">Whether everyone can execute this command.</param>
+        /// <param name="name_localizations">The name localizations.</param>
+        /// <param name="description_localizations">The description localizations.</param>
+        public SlashCommandAttribute(string name, string description, bool default_permission = true, DiscordApplicationCommandLocalization name_localizations = null, DiscordApplicationCommandLocalization description_localizations = null)
+        {
+            this.Name = name.ToLower();
+            this.Description = description;
+            this.DefaultPermission = default_permission;
+            this.NameLocalizations = name_localizations;
+            this.DescriptionLocalizations = description_localizations;
         }
     }
 }

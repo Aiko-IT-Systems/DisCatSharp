@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -36,12 +37,19 @@ namespace DisCatSharp.ApplicationCommands
         public string Name { get; set; }
 
         /// <summary>
+        /// The name localizations.
+        /// </summary>
+        public DiscordApplicationCommandLocalization NameLocalizations { get; set;  }
+
+        /// <summary>
         /// Sets the name for this enum choice.
         /// </summary>
         /// <param name="name">The name for this enum choice.</param>
-        public ChoiceNameAttribute(string name)
+        /// <param name="name_localizations">The localizations of the enum choice name.</param>
+        public ChoiceNameAttribute(string name, DiscordApplicationCommandLocalization name_localizations = null)
         {
             this.Name = name;
+            this.NameLocalizations = name_localizations;
         }
     }
 }

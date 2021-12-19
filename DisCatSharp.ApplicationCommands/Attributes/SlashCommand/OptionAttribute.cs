@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -49,6 +50,16 @@ namespace DisCatSharp.ApplicationCommands
         public bool Autocomplete;
 
         /// <summary>
+        /// Gets the name localizations of this option
+        /// </summary>
+        public DiscordApplicationCommandLocalization NameLocalizations;
+
+        /// <summary>
+        /// Gets the description localizations of this option
+        /// </summary>
+        public DiscordApplicationCommandLocalization DescriptionLocalizations;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="OptionAttribute"/> class.
         /// </summary>
         /// <param name="name">The name.</param>
@@ -64,6 +75,30 @@ namespace DisCatSharp.ApplicationCommands
             Name = name.ToLower();
             Description = description;
             Autocomplete = autocomplete;
+            NameLocalizations = null;
+            DescriptionLocalizations = null;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OptionAttribute"/> class with localizations.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="autocomplete">If true, autocomplete.</param>
+        /// <param name="name_localizations">The name localizations.</param>
+        /// <param name="description_localizations">The description localizations.</param>
+        public OptionAttribute(string name, string description, bool autocomplete = false, DiscordApplicationCommandLocalization name_localizations = null, DiscordApplicationCommandLocalization description_localizations = null)
+        {
+            if (name.Length > 32)
+                throw new ArgumentException("Slash command option names cannot go over 32 characters.");
+            else if (description.Length > 100)
+                throw new ArgumentException("Slash command option descriptions cannot go over 100 characters.");
+
+            Name = name.ToLower();
+            Description = description;
+            Autocomplete = autocomplete;
+            NameLocalizations = name_localizations;
+            DescriptionLocalizations = description_localizations;
         }
     }
 }
