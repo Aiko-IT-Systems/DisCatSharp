@@ -35,24 +35,51 @@ namespace DisCatSharp.Entities
         /// </summary>
         public Dictionary<string, string> Localizations { get; internal set; }
 
+        /// <summary>
+        /// Adds a localization.
+        /// </summary>
+        /// <param name="language">The <see cref="System.Globalization.CultureInfo"/> to add.</param>
+        /// <param name="value">The translation to add.</param>
         public void AddLocalization(CultureInfo language, string value)
             => this.Localizations.Add(language.Name, value);
 
+        /// <summary>
+        /// Adds a localization.
+        /// </summary>
+        /// <param name="language">The language to add.</param>
+        /// <param name="value">The translation to add.</param>
         public void AddLocalization(string language, string value)
             => this.Localizations.Add(language, value);
 
+        /// <summary>
+        /// Removes a localization.
+        /// </summary>
+        /// <param name="language">The <see cref="System.Globalization.CultureInfo"/> to remove.</param>
         public void RemoveLocalization(CultureInfo language)
             => this.Localizations.Remove(language.Name);
 
+        /// <summary>
+        /// Removes a localization.
+        /// </summary>
+        /// <param name="language">The language to remove.</param>
         public void RemoveLocalization(string language)
             => this.Localizations.Remove(language);
 
         /// <summary>
         /// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.
         /// </summary>
-        public DiscordApplicationCommandLocalization()
-        {
+        public DiscordApplicationCommandLocalization() { }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.
+        /// </summary>
+        /// <param name="localizations">Localizations.</param>
+        internal DiscordApplicationCommandLocalization(Dictionary<string, string> localizations)
+        {
+            this.Localizations = localizations;
         }
+
+        public Dictionary<string, string> GetKeyValuePairs()
+                => this.Localizations;
     }
 }
