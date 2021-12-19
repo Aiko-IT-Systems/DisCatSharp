@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
@@ -36,8 +37,18 @@ namespace DisCatSharp.Entities
         [JsonProperty("name")]
         public string Name { get; internal set; }
 
+        /// <summary>
+        /// Sets the name localizations.
+        /// </summary>
         [JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordApplicationCommandLocalization NameLocalizations { get; internal set; }
+        internal Dictionary<string, string> RawNameLocalizations { get; set; }
+
+        /// <summary>
+        /// Gets the name localizations.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization NameLocalizations
+            => new(this.RawNameLocalizations);
 
         /// <summary>
         /// Gets the value of this option.
@@ -61,7 +72,7 @@ namespace DisCatSharp.Entities
                 throw new InvalidOperationException($"Only {typeof(string)}, {typeof(long)}, {typeof(double)} or {typeof(int)} types may be passed to a autocomplete choice.");
 
             this.Name = name;
-            this.NameLocalizations = nameLocalizations;
+            this.RawNameLocalizations = nameLocalizations.GetKeyValuePairs();
             this.Value = value;
         }
     }

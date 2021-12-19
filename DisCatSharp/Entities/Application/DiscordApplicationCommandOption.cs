@@ -45,8 +45,18 @@ namespace DisCatSharp.Entities
         [JsonProperty("name")]
         public string Name { get; internal set; }
 
+        /// <summary>
+        /// Sets the name localizations.
+        /// </summary>
         [JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordApplicationCommandLocalization NameLocalizations { get; internal set; }
+        internal Dictionary<string, string> RawNameLocalizations { get; set; }
+
+        /// <summary>
+        /// Gets the name localizations.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization NameLocalizations
+            => new(this.RawNameLocalizations);
 
         /// <summary>
         /// Gets the description of this command parameter.
@@ -54,8 +64,18 @@ namespace DisCatSharp.Entities
         [JsonProperty("description")]
         public string Description { get; internal set; }
 
+        /// <summary>
+        /// Sets the description localizations.
+        /// </summary>
         [JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordApplicationCommandLocalization DescriptionLocalizations { get; internal set; }
+        internal Dictionary<string, string> RawDescriptionLocalizations { get; set; }
+
+        /// <summary>
+        /// Gets the description localizations.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization DescriptionLocalizations
+            => new(this.RawDescriptionLocalizations);
 
         /// <summary>
         /// Gets whether this command parameter is required.
@@ -140,8 +160,8 @@ namespace DisCatSharp.Entities
             this.AutoComplete = autocomplete;
             this.MinimumValue = minimumValue;
             this.MaximumValue = maximumValue;
-            this.NameLocalizations = nameLocalizations;
-            this.DescriptionLocalizations = descriptionLocalizations;
+            this.RawNameLocalizations = nameLocalizations.GetKeyValuePairs();
+            this.RawDescriptionLocalizations = descriptionLocalizations.GetKeyValuePairs();
         }
     }
 }
