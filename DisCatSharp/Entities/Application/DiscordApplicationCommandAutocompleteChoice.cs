@@ -49,6 +49,7 @@ namespace DisCatSharp.Entities
         /// Creates a new instance of <see cref="DiscordApplicationCommandAutocompleteChoice"/>.
         /// </summary>
         /// <param name="name">The name of this option, which will be presented to the user.</param>
+        /// <param name="nameLocalizations">The localizations of the option name.</param>
         /// <param name="value">The value of this option.</param>
         public DiscordApplicationCommandAutocompleteChoice(string name, object value, DiscordApplicationCommandLocalization nameLocalizations = null)
         {
