@@ -26,24 +26,45 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    public class OptionTranslator
+    /// <summary>
+    /// Represents a group translator.
+    /// </summary>
+    internal class GroupTranslator
     {
+        /// <summary>
+        /// Gets the group name.
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets the group name translations.
+        /// </summary>
         [JsonProperty("name_translations")]
         internal Dictionary<string, string> NT { get; set; }
         [JsonIgnore]
         public DiscordApplicationCommandLocalization NameTranslations
             => new(this.NT);
 
+        /// <summary>
+        /// Gets the group description translations.
+        /// </summary>
         [JsonProperty("description_translations")]
         internal Dictionary<string, string> DT { get; set; }
         [JsonIgnore]
         public DiscordApplicationCommandLocalization DescriptionTranslations
             => new(this.DT);
 
-        [JsonProperty("choices")]
-        public List<ChoiceTranslator> Choices { get; set; }
+        /// <summary>
+        /// Gets the sub group translators, if applicable.
+        /// </summary>
+        [JsonProperty("groups")]
+        public List<SubGroupTranslator> SubGroups { get; set; }
+
+        /// <summary>
+        /// Gets the command translators, if applicable.
+        /// </summary>
+        [JsonProperty("commands")]
+        public List<CommandTranslator> Commands { get; set; }
     }
 }
