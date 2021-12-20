@@ -74,7 +74,7 @@ namespace DisCatSharp.Entities
         /// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.
         /// </summary>
         /// <param name="localizations">Localizations.</param>
-        internal DiscordApplicationCommandLocalization(Dictionary<string, string> localizations)
+        public DiscordApplicationCommandLocalization(Dictionary<string, string> localizations)
         {
             this.Localizations = localizations;
         }
