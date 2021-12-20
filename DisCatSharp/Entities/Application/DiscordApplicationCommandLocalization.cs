@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Text;
 
 namespace DisCatSharp.Entities
 {
@@ -39,30 +40,31 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets valid locales for Discord.
         /// </summary>
-        internal IReadOnlyList<string> _validLocales = new List<string>() { "ru", "fi", "hr", "de", "hu", "sv-SE", "cs", "fr", "it", "en-GB", "pt-BR", "ja", "tr", "en-US", "es-ES", "uk", "hi", "th", "el", "no", "ro", "ko", "zh-TW", "vi", "zh-CN", "pl", "bg", "da", "nl", "lt" };
+        internal List<string> _validLocales = new() { "ru", "fi", "hr", "de", "hu", "sv-SE", "cs", "fr", "it", "en-GB", "pt-BR", "ja", "tr", "en-US", "es-ES", "uk", "hi", "th", "el", "no", "ro", "ko", "zh-TW", "vi", "zh-CN", "pl", "bg", "da", "nl", "lt" };
 
         /// <summary>
         /// Adds a localization.
         /// </summary>
-        /// <param name="language">The language to add.</param>
+        /// <param name="locale">The locale to add.</param>
         /// <param name="value">The translation to add.</param>
-        public void AddLocalization(string language, string value)
+        public void AddLocalization(string locale, string value)
         {
-            if (this.Validate(language))
+            if (this.Validate(locale))
             {
-                this.Localizations.Add(language, value);
+                this.Localizations.Add(locale, value);
             } else
             {
-                throw new NotSupportedException($"The provided locale is not valid for Discord. Valid: {this._validLocales}");
+                throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
+                    $"Valid locales: {string.Join(", ", this._validLocales.ToArray())}");
             }
         }
 
         /// <summary>
         /// Removes a localization.
         /// </summary>
-        /// <param name="language">The language to remove.</param>
-        public void RemoveLocalization(string language)
-            => this.Localizations.Remove(language);
+        /// <param name="locale">The locale to remove.</param>
+        public void RemoveLocalization(string locale)
+            => this.Localizations.Remove(locale);
 
         /// <summary>
         /// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.
@@ -75,10 +77,14 @@ namespace DisCatSharp.Entities
         /// <param name="localizations">Localizations.</param>
         public DiscordApplicationCommandLocalization(Dictionary<string, string> localizations)
         {
-            foreach(var locale in localizations.Keys)
+            if (localizations != null)
             {
-                if (!this.Validate(locale))
-                    throw new NotSupportedException($"The provided locale is not valid for Discord. Valid: {this._validLocales}");
+                foreach (var locale in localizations.Keys)
+                {
+                    if (!this.Validate(locale))
+                        throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
+                            $"Valid locales: {string.Join(", ", this._validLocales.ToArray())}");
+                }
             }
 
             this.Localizations = localizations;

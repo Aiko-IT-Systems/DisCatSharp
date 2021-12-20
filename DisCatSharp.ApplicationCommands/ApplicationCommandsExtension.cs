@@ -275,15 +275,7 @@ namespace DisCatSharp.ApplicationCommands
 
                             if (!string.IsNullOrEmpty(ctx.Translations))
                             {
-                                try
-                                {
-                                    translations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
-                                }
-                                catch (Exception ex)
-                                {
-                                    this.Client.Logger.LogError(ex.Message);
-                                    this.Client.Logger.LogError(ex.StackTrace);
-                                }
+                                translations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
                             }
 
                             //Gets the attribute and methods in the group
@@ -432,15 +424,7 @@ namespace DisCatSharp.ApplicationCommands
 
                             if (!string.IsNullOrEmpty(ctx.Translations))
                             {
-                                try
-                                {
-                                    translations = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
-                                }
-                                catch (Exception ex)
-                                {
-                                    this.Client.Logger.LogError(ex.Message);
-                                    this.Client.Logger.LogError(ex.StackTrace);
-                                }
+                                translations = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
                             }
 
                             //Slash commands (again, similar to the one for groups)
