@@ -271,11 +271,13 @@ namespace DisCatSharp.ApplicationCommands
                             var ctx = new ApplicationCommandsTranslationContext(type, module.FullName);
                             config.Translations?.Invoke(ctx);
 
+                            List<GroupTranslator> translations = null;
+
                             if (!string.IsNullOrEmpty(ctx.Translations))
                             {
                                 try
                                 {
-                                    var translation = JsonConvert.DeserializeObject<GroupTranslator>(ctx.Translations);
+                                    translations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
                                 }
                                 catch (Exception ex)
                                 {
@@ -385,13 +387,13 @@ namespace DisCatSharp.ApplicationCommands
                             var ctx = new ApplicationCommandsTranslationContext(type, module.FullName);
                             config.Translations?.Invoke(ctx);
 
-                            List<CommandTranslator> translation = null;
+                            List<CommandTranslator> translations = null;
 
                             if (!string.IsNullOrEmpty(ctx.Translations))
                             {
                                 try
                                 {
-                                    translation = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
+                                    translations = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
                                 }
                                 catch (Exception ex)
                                 {
@@ -418,9 +420,9 @@ namespace DisCatSharp.ApplicationCommands
                                 DiscordApplicationCommandLocalization DescriptionLocalizations = null;
                                 List<DiscordApplicationCommandOption> LocalizisedOptions = null;
 
-                                if (translation != null)
+                                if (translations != null)
                                 {
-                                    var command_translation = translation.Single(c => c.Name == commandattribute.Name && c.Type == ApplicationCommandType.ChatInput);
+                                    var command_translation = translations.Single(c => c.Name == commandattribute.Name && c.Type == ApplicationCommandType.ChatInput);
 
                                     LocalizisedOptions = new(options.Count);
                                     foreach (var option in options)
@@ -457,9 +459,9 @@ namespace DisCatSharp.ApplicationCommands
 
                                 DiscordApplicationCommandLocalization NameLocalizations = null;
 
-                                if (translation != null)
+                                if (translations != null)
                                 {
-                                    var command_translation = translation.Single(c => c.Name == contextAttribute.Name && c.Type == contextAttribute.Type);
+                                    var command_translation = translations.Single(c => c.Name == contextAttribute.Name && c.Type == contextAttribute.Type);
                                     NameLocalizations = command_translation.NameTranslations;
                                 }
 
