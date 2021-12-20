@@ -533,7 +533,7 @@ namespace DisCatSharp
                     }
 
                     cid = (ulong)dat["channel_id"];
-                    await this.OnInteractionCreateAsync((ulong?)dat["guild_id"], cid, usr, mbr, dat.ToDiscordObject<DiscordInteraction>()).ConfigureAwait(false);
+                    await this.OnInteractionCreateAsync((ulong?)dat["guild_id"], cid, usr, mbr, dat.ToDiscordObject<DiscordInteraction>(), dat).ConfigureAwait(false);
                     break;
 
                 case "application_command_create":
@@ -3024,8 +3024,10 @@ namespace DisCatSharp
         /// <param name="user">The user.</param>
         /// <param name="member">The member.</param>
         /// <param name="interaction">The interaction.</param>
-        internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction)
+        internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, JObject dat)
         {
+            this.Logger.LogDebug(dat.ToString());
+
             var usr = new DiscordUser(user) { Discord = this };
 
             interaction.ChannelId = channelId;
