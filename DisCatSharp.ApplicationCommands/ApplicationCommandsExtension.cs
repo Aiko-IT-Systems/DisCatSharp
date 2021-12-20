@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Transactions;
 using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.ApplicationCommands.EventArgs;
 using DisCatSharp.Common.Utilities;
@@ -368,6 +367,21 @@ namespace DisCatSharp.ApplicationCommands
 
                                 var currentMethods = new List<KeyValuePair<string, MethodInfo>>();
 
+
+                                DiscordApplicationCommandLocalization SubNameLocalizations = null;
+                                DiscordApplicationCommandLocalization SubDescriptionLocalizations = null;
+
+                                if (translations != null)
+                                {
+                                    var command_translation = translations.Single(c => c.Name == payload.Name);
+
+                                    var sub_command_translation = command_translation.SubGroups.Single(sc => sc.Name == subGroupAttribute.Name);
+
+
+                                    SubNameLocalizations = sub_command_translation.NameTranslations;
+                                    SubDescriptionLocalizations = sub_command_translation.DescriptionTranslations;
+                                }
+
                                 //Similar to the one for regular groups
                                 foreach (var subsubmethod in subsubmethods)
                                 {
@@ -376,17 +390,52 @@ namespace DisCatSharp.ApplicationCommands
                                     var parameters = subsubmethod.GetParameters();
                                     if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
                                         throw new ArgumentException($"The first argument must be an InteractionContext!");
+
                                     parameters = parameters.Skip(1).ToArray();
                                     suboptions = suboptions.Concat(await this.ParseParameters(parameters, guildid)).ToList();
 
-                                    var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, suboptions);
+                                    DiscordApplicationCommandLocalization SubSubNameLocalizations = null;
+                                    DiscordApplicationCommandLocalization SubSubDescriptionLocalizations = null;
+                                    List<DiscordApplicationCommandOption> LocalizisedOptions = null;
+
+                                    if (translations != null)
+                                    {
+                                        var command_translation = translations.Single(c => c.Name == payload.Name);
+
+                                        var sub_command_translation = command_translation.SubGroups.Single(sc => sc.Name == commatt.Name);
+
+                                        var sub_sub_command_translation = sub_command_translation.Commands.Single(sc => sc.Name == commatt.Name);
+
+                                        LocalizisedOptions = new(suboptions.Count);
+                                        foreach (var option in suboptions)
+                                        {
+                                            List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new(option.Choices.Count()) : null;
+                                            if (option.Choices != null)
+                                            {
+                                                foreach (var choice in option.Choices)
+                                                {
+                                                    choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, sub_sub_command_translation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+                                                }
+                                            }
+
+                                            LocalizisedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
+                                                choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
+                                                sub_sub_command_translation.Options.Single(o => o.Name == option.Name).NameTranslations, sub_sub_command_translation.Options.Single(o => o.Name == option.Name).DescriptionTranslations
+                                            ));
+                                        }
+
+                                        SubSubNameLocalizations = sub_sub_command_translation.NameTranslations;
+                                        SubSubDescriptionLocalizations = sub_sub_command_translation.DescriptionTranslations;
+                                    }
+
+                                    var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, LocalizisedOptions ?? suboptions, nameLocalizations: SubSubNameLocalizations, descriptionLocalizations: SubSubDescriptionLocalizations);
                                     options.Add(subsubpayload);
                                     commandmethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
                                     currentMethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
                                 }
 
                                 //Adds the group to the command and method lists
-                                var subpayload = new DiscordApplicationCommandOption(subGroupAttribute.Name, subGroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options);
+                                var subpayload = new DiscordApplicationCommandOption(subGroupAttribute.Name, subGroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options, nameLocalizations: SubNameLocalizations, descriptionLocalizations: SubDescriptionLocalizations);
                                 command.SubCommands.Add(new GroupCommand { Name = subGroupAttribute.Name, Methods = currentMethods });
                                 payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations);
                                 commandTypeSources.Add(new KeyValuePair<Type, Type>(subclass, type));
