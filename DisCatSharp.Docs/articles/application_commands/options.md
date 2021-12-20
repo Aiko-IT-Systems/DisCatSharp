@@ -8,11 +8,15 @@ For slash commands, you can create options. They allow users to submit additiona
 
 Command options can be of the following types:
 - string
+- int
 - long
+- double
 - bool
 - [DiscordUser](xref:DisCatSharp.Entities.DiscordUser)
 - [DiscordRole](xref:DisCatSharp.Entities.DiscordRole)
 - [DiscordChannel](xref:DisCatSharp.Entities.DiscordChannel)
+- [DiscordAttachment](xref:DisCatSharp.Entities.DiscordAttachment)
+- mentionable (ulong)
 - Enum
 
 ## Basic usage
