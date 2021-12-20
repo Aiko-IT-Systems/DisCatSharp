@@ -671,7 +671,9 @@ namespace DisCatSharp.ApplicationCommands
                         ResolvedRoleMentions = e.Interaction.Data.Resolved?.Roles?.Values.ToList(),
                         ResolvedChannelMentions = e.Interaction.Data.Resolved?.Channels?.Values.ToList(),
                         ResolvedAttachments = e.Interaction.Data.Resolved?.Attachments?.Values.ToList(),
-                        Type = ApplicationCommandType.ChatInput
+                        Type = ApplicationCommandType.ChatInput,
+                        Locale = e.Interaction.Locale,
+                        GuildLocale = e.Interaction.GuildLocale
                     };
 
                     try
@@ -754,7 +756,9 @@ namespace DisCatSharp.ApplicationCommands
                                 Channel = e.Interaction.Channel,
                                 User = e.Interaction.User,
                                 Options = e.Interaction.Data.Options.ToList(),
-                                FocusedOption = focusedOption
+                                FocusedOption = focusedOption,
+                                Locale = e.Interaction.Locale,
+                                GuildLocale = e.Interaction.GuildLocale
                             };
 
                             var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
@@ -780,7 +784,9 @@ namespace DisCatSharp.ApplicationCommands
                                 Channel = e.Interaction.Channel,
                                 User = e.Interaction.User,
                                 Options = command.Options.ToList(),
-                                FocusedOption = focusedOption
+                                FocusedOption = focusedOption,
+                                Locale = e.Interaction.Locale,
+                                GuildLocale = e.Interaction.GuildLocale
                             };
 
                             var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
@@ -849,7 +855,9 @@ namespace DisCatSharp.ApplicationCommands
                     Token = e.Interaction.Token,
                     TargetUser = e.TargetUser,
                     TargetMessage = e.TargetMessage,
-                    Type = e.Type
+                    Type = e.Type,
+                    Locale = e.Interaction.Locale,
+                    GuildLocale = e.Interaction.GuildLocale
                 };
 
                 try

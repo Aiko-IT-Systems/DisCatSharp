@@ -85,6 +85,16 @@ namespace DisCatSharp.ApplicationCommands
         public string CommandName { get; internal set; }
 
         /// <summary>
+        /// Gets the invoking user locale.
+        /// </summary>
+        public string Locale { get; internal set; }
+
+        /// <summary>
+        /// Gets the guild locale if applicable.
+        /// </summary>
+        public string GuildLocale { get; internal set; }
+
+        /// <summary>
         /// Gets the type of this interaction.
         /// </summary>
         public ApplicationCommandType Type { get; internal set;}

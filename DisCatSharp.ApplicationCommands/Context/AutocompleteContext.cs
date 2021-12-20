@@ -64,6 +64,16 @@ namespace DisCatSharp.ApplicationCommands
             => this.User is DiscordMember member ? member : null;
 
         /// <summary>
+        /// Gets the invoking user locale.
+        /// </summary>
+        public string Locale { get; internal set; }
+
+        /// <summary>
+        /// Gets the guild locale if applicable.
+        /// </summary>
+        public string GuildLocale { get; internal set; }
+
+        /// <summary>
         /// Gets the slash command module this interaction was created in.
         /// </summary>
         public ApplicationCommandsExtension ApplicationCommandsExtension { get; internal set; }
