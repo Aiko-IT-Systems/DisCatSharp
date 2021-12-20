@@ -100,6 +100,18 @@ namespace DisCatSharp.Entities
         internal DiscordMessage Message { get; set; }
 
         /// <summary>
+        /// Gets the invoking user locale.
+        /// </summary>
+        [JsonProperty("locale", NullValueHandling = NullValueHandling.Ignore)]
+        public string Locale { get; internal set; }
+
+        /// <summary>
+        /// Gets the guild locale if applicable.
+        /// </summary>
+        [JsonProperty("guild_locale", NullValueHandling = NullValueHandling.Ignore)]
+        public string GuildLocale { get; internal set; }
+
+        /// <summary>
         /// Creates a response to this interaction.
         /// </summary>
         /// <param name="type">The type of the response.</param>
