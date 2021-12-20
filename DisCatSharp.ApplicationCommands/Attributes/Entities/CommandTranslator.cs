@@ -33,12 +33,12 @@ namespace DisCatSharp.ApplicationCommands
         public string Name { get; set; }
 
         [JsonProperty("name_translations")]
-        public IEnumerable<KeyValuePair<string, string>> NameTranslations { get; set; }
+        public List<KeyValuePair<string, string>> NameTranslations { get; set; }
 
         [JsonProperty("description_translations")]
-        public IEnumerable<KeyValuePair<string, string>> DescriptionTranslations { get; set; }
+        public List<KeyValuePair<string, string>> DescriptionTranslations { get; set; }
 
         [JsonProperty("options")]
-        public IEnumerable<OptionTranslator> Options { get; set; }
+        public List<OptionTranslator> Options { get; set; }
     }
 }
