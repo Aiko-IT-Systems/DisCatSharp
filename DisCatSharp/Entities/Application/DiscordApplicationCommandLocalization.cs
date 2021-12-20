@@ -36,6 +36,9 @@ namespace DisCatSharp.Entities
         /// </summary>
         public Dictionary<string, string> Localizations { get; internal set; }
 
+        /// <summary>
+        /// Gets valid locales for Discord.
+        /// </summary>
         internal IReadOnlyList<string> _validLocales = new List<string>() { "ru", "fi", "hr", "de", "hu", "sv-SE", "cs", "fr", "it", "en-GB", "pt-BR", "ja", "tr", "en-US", "es-ES", "uk", "hi", "th", "el", "no", "ro", "ko", "zh-TW", "vi", "zh-CN", "pl", "bg", "da", "nl", "lt" };
 
         /// <summary>
@@ -81,9 +84,17 @@ namespace DisCatSharp.Entities
             this.Localizations = localizations;
         }
 
+        /// <summary>
+        /// Gets the KVPs.
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, string> GetKeyValuePairs()
                 => this.Localizations;
 
+        /// <summary>
+        /// Whether the locale to be added is valid for Discord.
+        /// </summary>
+        /// <param name="lang">Locale string.</param>
         public bool Validate(string lang)
             => this._validLocales.Contains(lang);
     }
