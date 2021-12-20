@@ -51,6 +51,12 @@
     href: application_commands/options.md
   - name: Events
     href: application_commands/events.md
+  - name: Translations
+    items:
+      - name: Using Translations
+        href: application_commands/translations/using.md
+      - name: Translation Reference
+        href: application_commands/translations/reference.md
 - name: Commands
   items:
   - name: Introduction
