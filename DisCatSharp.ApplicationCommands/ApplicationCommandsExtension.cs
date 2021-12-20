@@ -370,7 +370,6 @@ namespace DisCatSharp.ApplicationCommands
                             foreach (var subclass in subclasses)
                             {
                                 var subGroupAttribute = subclass.GetCustomAttribute<SlashCommandGroupAttribute>();
-                                //I couldn't think of more creative naming
                                 var subsubmethods = subclass.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
 
                                 var options = new List<DiscordApplicationCommandOption>();
@@ -397,7 +396,7 @@ namespace DisCatSharp.ApplicationCommands
                                 //Adds the group to the command and method lists
                                 var subpayload = new DiscordApplicationCommandOption(subGroupAttribute.Name, subGroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options);
                                 command.SubCommands.Add(new GroupCommand { Name = subGroupAttribute.Name, Methods = currentMethods });
-                                payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission);
+                                payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations);
                                 commandTypeSources.Add(new KeyValuePair<Type, Type>(subclass, type));
 
                                 //Accounts for lifespans for the sub group
