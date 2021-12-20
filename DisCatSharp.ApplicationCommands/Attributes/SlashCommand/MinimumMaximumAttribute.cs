@@ -26,7 +26,7 @@ using System.Collections.Generic;
 namespace DisCatSharp.ApplicationCommands.Attributes
 {
     /// <summary>
-    /// Sets a minimum value for this slash command option. Only valid for <see cref="long"/> or <see cref="double"/> parameters.
+    /// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
     public class MinimumAttribute : Attribute
@@ -37,7 +37,15 @@ namespace DisCatSharp.ApplicationCommands.Attributes
         public object Value { get; internal set; }
 
         /// <summary>
-        /// Sets a minimum value for this slash command option. Only valid for <see cref="long"/> or <see cref="double"/> parameters.
+        /// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
+        /// </summary>
+        public MinimumAttribute(int value)
+        {
+            this.Value = value;
+        }
+
+        /// <summary>
+        /// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
         /// </summary>
         public MinimumAttribute(long value)
         {
@@ -45,7 +53,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
         }
 
         /// <summary>
-        /// Sets a minimum value for this slash command option. Only valid for <see cref="long"/> or <see cref="double"/> parameters.
+        /// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
         /// </summary>
         public MinimumAttribute(double value)
         {
@@ -54,7 +62,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
     }
 
     /// <summary>
-    /// Sets a maximum value for this slash command option. Only valid for <see cref="long"/> or <see cref="double"/> parameters.
+    /// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
     public class MaximumAttribute : Attribute
@@ -65,7 +73,15 @@ namespace DisCatSharp.ApplicationCommands.Attributes
         public object Value { get; internal set; }
 
         /// <summary>
-        /// Sets a maximum value for this slash command option. Only valid for <see cref="long"/> or <see cref="double"/> parameters.
+        /// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
+        /// </summary>
+        public MaximumAttribute(int value)
+        {
+            this.Value = value;
+        }
+
+        /// <summary>
+        /// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
         /// </summary>
         public MaximumAttribute(long value)
         {
@@ -73,7 +89,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
         }
 
         /// <summary>
-        /// Sets a maximum value for this slash command option. Only valid for <see cref="long"/> or <see cref="double"/> parameters.
+        /// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
         /// </summary>
         public MaximumAttribute(double value)
         {
