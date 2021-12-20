@@ -31,6 +31,6 @@ namespace DisCatSharp.ApplicationCommands
         public string Name { get; set; }
 
         [JsonProperty("name_translations")]
-        public List<KeyValuePair<string, string>> NameTranslations { get; set; }
+        public Dictionary<string, string> NameTranslations { get; set; }
     }
 }
