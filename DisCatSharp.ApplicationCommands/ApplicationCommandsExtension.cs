@@ -34,6 +34,7 @@ using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -266,6 +267,22 @@ namespace DisCatSharp.ApplicationCommands
                         //Handles groups
                         foreach (var subclassinfo in classes)
                         {
+                            var ctx = new ApplicationCommandsTranslationContext(type, module.FullName);
+                            config.Translations?.Invoke(ctx);
+
+                            if (!string.IsNullOrEmpty(ctx.Translations))
+                            {
+                                try
+                                {
+                                    var translation = JsonConvert.DeserializeObject<GroupTranslator>(ctx.Translations);
+                                }
+                                catch (Exception ex)
+                                {
+                                    this.Client.Logger.LogError(ex.Message);
+                                    this.Client.Logger.LogError(ex.StackTrace);
+                                }
+                            }
+
                             //Gets the attribute and methods in the group
                             var groupAttribute = subclassinfo.GetCustomAttribute<SlashCommandGroupAttribute>();
                             var submethods = subclassinfo.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
@@ -363,6 +380,23 @@ namespace DisCatSharp.ApplicationCommands
                         //Handles methods and context menus, only if the module isn't a group itself
                         if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
                         {
+
+                            var ctx = new ApplicationCommandsTranslationContext(type, module.FullName);
+                            config.Translations?.Invoke(ctx);
+
+                            if (!string.IsNullOrEmpty(ctx.Translations))
+                            {
+                                try
+                                {
+                                    var translation = JsonConvert.DeserializeObject<CommandTranslator>(ctx.Translations);
+                                }
+                                catch (Exception ex)
+                                {
+                                    this.Client.Logger.LogError(ex.Message);
+                                    this.Client.Logger.LogError(ex.StackTrace);
+                                }
+                            }
+
                             //Slash commands (again, similar to the one for groups)
                             var methods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
                             foreach (var method in methods)
