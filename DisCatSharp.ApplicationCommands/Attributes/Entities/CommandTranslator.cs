@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,28 +21,24 @@
 // SOFTWARE.
 
 using System;
-using DisCatSharp.Entities;
+using System.Collections.Generic;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Sets the name for this enum choice.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
-    public class ChoiceNameAttribute : Attribute
+    internal class CommandTranslator
     {
-        /// <summary>
-        /// The name.
-        /// </summary>
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        /// <summary>
-        /// Sets the name for this enum choice.
-        /// </summary>
-        /// <param name="name">The name for this enum choice.</param>
-        public ChoiceNameAttribute(string name)
-        {
-            this.Name = name;
-        }
+        [JsonProperty("name_translations")]
+        public IEnumerable<KeyValuePair<string, string>> NameTranslations { get; set; }
+
+        [JsonProperty("description_translations")]
+        public IEnumerable<KeyValuePair<string, string>> DescriptionTranslations { get; set; }
+
+        [JsonProperty("options")]
+        public IEnumerable<OptionTranslator> Options { get; set; }
     }
 }

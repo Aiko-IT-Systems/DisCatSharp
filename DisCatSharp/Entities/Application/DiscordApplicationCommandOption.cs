@@ -160,8 +160,8 @@ namespace DisCatSharp.Entities
             this.AutoComplete = autocomplete;
             this.MinimumValue = minimumValue;
             this.MaximumValue = maximumValue;
-            this.RawNameLocalizations = nameLocalizations.GetKeyValuePairs();
-            this.RawDescriptionLocalizations = descriptionLocalizations.GetKeyValuePairs();
+            this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
+            this.RawDescriptionLocalizations = descriptionLocalizations?.GetKeyValuePairs();
         }
     }
 }

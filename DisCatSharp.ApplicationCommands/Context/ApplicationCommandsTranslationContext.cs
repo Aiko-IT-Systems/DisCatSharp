@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,42 +21,41 @@
 // SOFTWARE.
 
 using System;
-using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands
 {
     /// <summary>
-    /// Marks this class a slash command group
+    /// The application commands permission context.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class SlashCommandGroupAttribute : Attribute
+    public class ApplicationCommandsTranslationContext
     {
         /// <summary>
-        /// Gets the name of this slash command group
+        /// Gets the type.
         /// </summary>
-        public string Name { get; set; }
+        public Type Type { get; }
 
         /// <summary>
-        /// Gets the description of this slash command group
+        /// Gets the name.
         /// </summary>
-        public string Description { get; set; }
+        public string Name { get; }
 
         /// <summary>
-        /// Gets the default permission of this slash command group
+        /// Gets the translation json.
         /// </summary>
-        public bool DefaultPermission { get; set; }
+        internal string Translations { get; set; }
 
         /// <summary>
-        /// Marks this class as a slash command group
+        /// Initializes a new instance of the <see cref="ApplicationCommandsTranslationContext"/> class.
         /// </summary>
-        /// <param name="name">The name of this slash command group.</param>
-        /// <param name="description">The description of this slash command group.</param>
-        /// <param name="default_permission">Whether everyone can execute this command.</param>
-        public SlashCommandGroupAttribute(string name, string description, bool default_permission = true)
+        /// <param name="type">The type.</param>
+        /// <param name="name">The name.</param>
+        internal ApplicationCommandsTranslationContext(Type type, string name)
         {
-            this.Name = name.ToLower();
-            this.Description = description;
-            this.DefaultPermission = default_permission;
+            this.Type = type;
+            this.Name = name;
         }
+
+        public void AddTranslation(string translation_json)
+            => this.Translations = translation_json;
     }
 }
