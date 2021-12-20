@@ -26,7 +26,7 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    public class OptionTranslator
+    public class ChoiceTranslator
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -36,14 +36,5 @@ namespace DisCatSharp.ApplicationCommands
         [JsonIgnore]
         public DiscordApplicationCommandLocalization NameTranslations
             => new(this.NT);
-
-        [JsonProperty("description_translations")]
-        internal Dictionary<string, string> DT { get; set; }
-        [JsonIgnore]
-        public DiscordApplicationCommandLocalization DescriptionTranslations
-            => new(this.DT);
-
-        [JsonProperty("choices")]
-        public List<ChoiceTranslator> Choices { get; set; }
     }
 }
