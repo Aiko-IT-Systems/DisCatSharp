@@ -20,35 +20,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    internal class GroupTranslator
+    /// <summary>
+    /// Represents a command translator.
+    /// </summary>
+    internal class CommandTranslator
     {
+        /// <summary>
+        /// Gets the command name.
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets the application command type.
+        /// Used to determine whether it is an translator for context menu or not.
+        /// </summary>
+        [JsonProperty("type")]
+        public ApplicationCommandType Type { get; set; }
+
+        /// <summary>
+        /// Gets the command name translations.
+        /// </summary>
         [JsonProperty("name_translations")]
         internal Dictionary<string, string> NT { get; set; }
         [JsonIgnore]
         public DiscordApplicationCommandLocalization NameTranslations
             => new(this.NT);
 
+        /// <summary>
+        /// Gets the command description translations.
+        /// </summary>
         [JsonProperty("description_translations")]
         internal Dictionary<string, string> DT { get; set; }
         [JsonIgnore]
         public DiscordApplicationCommandLocalization DescriptionTranslations
             => new(this.DT);
 
-        [JsonProperty("groups")]
-        public List<SubGroupTranslator> SubGroups { get; set; }
-
-        [JsonProperty("commands")]
-        public List<CommandTranslator> Commands { get; set; }
+        /// <summary>
+        /// Gets the option translators, if applicable.
+        /// </summary>
+        [JsonProperty("options")]
+        public List<OptionTranslator> Options { get; set; }
     }
 }

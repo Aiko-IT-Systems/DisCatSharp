@@ -20,32 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using DisCatSharp.Entities;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    internal class SubGroupTranslator
+    public class ChoiceTranslator
     {
+        /// <summary>
+        /// Gets the choice name.
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets the choice name translations.
+        /// </summary>
         [JsonProperty("name_translations")]
         internal Dictionary<string, string> NT { get; set; }
         [JsonIgnore]
         public DiscordApplicationCommandLocalization NameTranslations
             => new(this.NT);
-
-        [JsonProperty("description_translations")]
-        internal Dictionary<string, string> DT { get; set; }
-        [JsonIgnore]
-        public DiscordApplicationCommandLocalization DescriptionTranslations
-            => new(this.DT);
-
-        [JsonProperty("commands")]
-        public List<CommandTranslator> Commands { get; set; }
     }
 }

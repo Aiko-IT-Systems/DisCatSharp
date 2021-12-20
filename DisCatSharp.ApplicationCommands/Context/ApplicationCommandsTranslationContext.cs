@@ -25,7 +25,7 @@ using System;
 namespace DisCatSharp.ApplicationCommands
 {
     /// <summary>
-    /// The application commands permission context.
+    /// The application commands translation context.
     /// </summary>
     public class ApplicationCommandsTranslationContext
     {
