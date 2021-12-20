@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using DisCatSharp.Entities;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
@@ -31,6 +32,9 @@ namespace DisCatSharp.ApplicationCommands
         public string Name { get; set; }
 
         [JsonProperty("name_translations")]
-        public Dictionary<string, string> NameTranslations { get; set; }
+        internal Dictionary<string, string> NT { get; set; }
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization NameTranslations
+            => new(this.NT);
     }
 }

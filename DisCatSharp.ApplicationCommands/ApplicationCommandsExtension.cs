@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Transactions;
 using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.ApplicationCommands.EventArgs;
 using DisCatSharp.Common.Utilities;
@@ -384,12 +385,13 @@ namespace DisCatSharp.ApplicationCommands
                             var ctx = new ApplicationCommandsTranslationContext(type, module.FullName);
                             config.Translations?.Invoke(ctx);
 
+                            List<CommandTranslator> translation = null;
+
                             if (!string.IsNullOrEmpty(ctx.Translations))
                             {
                                 try
                                 {
-                                    var translation = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
-                                    this.Client.Logger.LogDebug(translation.First().DescriptionTranslations.Where(t => t.Key == "de-DE").First().Value);
+                                    translation = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
                                 }
                                 catch (Exception ex)
                                 {
@@ -411,6 +413,12 @@ namespace DisCatSharp.ApplicationCommands
                                 var options = await this.ParseParameters(parameters, guildid);
 
                                 commandMethods.Add(new CommandMethod { Method = method, Name = commandattribute.Name });
+
+                                if (translation != null)
+                                {
+                                    this.Client.Logger.LogDebug($"Registering Slash Command with name {commandattribute.Name}.");
+                                    this.Client.Logger.LogDebug($"Found translation for command: {translation.Single(c => c.Name == commandattribute.Name).DescriptionTranslations.Localizations.Single(dt => dt.Key == "de-DE").Value}");
+                                }
 
                                 var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, options, commandattribute.DefaultPermission);
                                 updateList.Add(payload);
