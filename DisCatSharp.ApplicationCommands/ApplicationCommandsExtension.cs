@@ -295,16 +295,18 @@ namespace DisCatSharp.ApplicationCommands
                                 throw new ArgumentException("Slash command groups cannot have both subcommands and subgroups!");
                             }
 
-                            DiscordApplicationCommandLocalization GroupNameLocalizations = null;
-                            DiscordApplicationCommandLocalization GroupDescriptionLocalizations = null;
+                            DiscordApplicationCommandLocalization NameLocalizations = null;
+                            DiscordApplicationCommandLocalization DescriptionLocalizations = null;
 
                             if (translations != null)
                             {
                                 var command_translation = translations.Single(c => c.Name == groupAttribute.Name);
+                                NameLocalizations = command_translation.NameTranslations;
+                                DescriptionLocalizations = command_translation.DescriptionTranslations;
                             }
 
                             //Initializes the command
-                            var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, default_permission: groupAttribute.DefaultPermission, nameLocalizations: GroupNameLocalizations, descriptionLocalizations: GroupDescriptionLocalizations);
+                            var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, default_permission: groupAttribute.DefaultPermission, nameLocalizations: NameLocalizations, descriptionLocalizations: DescriptionLocalizations);
                             commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 
                             var commandmethods = new List<KeyValuePair<string, MethodInfo>>();
@@ -321,8 +323,6 @@ namespace DisCatSharp.ApplicationCommands
 
                                 var options = await this.ParseParameters(parameters, guildid);
 
-                                DiscordApplicationCommandLocalization NameLocalizations = null;
-                                DiscordApplicationCommandLocalization DescriptionLocalizations = null;
                                 DiscordApplicationCommandLocalization SubNameLocalizations = null;
                                 DiscordApplicationCommandLocalization SubDescriptionLocalizations = null;
                                 List<DiscordApplicationCommandOption> LocalizisedOptions = null;
@@ -350,15 +350,13 @@ namespace DisCatSharp.ApplicationCommands
                                         ));
                                     }
 
-                                    NameLocalizations = command_translation.NameTranslations;
-                                    DescriptionLocalizations = command_translation.DescriptionTranslations;
                                     SubNameLocalizations = sub_command_translation.NameTranslations;
                                     SubDescriptionLocalizations = sub_command_translation.DescriptionTranslations;
                                 }
 
 
                                 //Creates the subcommand and adds it to the main command
-                                var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, null, null, options, nameLocalizations: SubNameLocalizations, descriptionLocalizations: SubDescriptionLocalizations);
+                                var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, null, null, LocalizisedOptions ?? options, nameLocalizations: SubNameLocalizations, descriptionLocalizations: SubDescriptionLocalizations);
                                 payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations);
                                 commandTypeSources.Add(new KeyValuePair<Type, Type>(subclassinfo, type));
 
