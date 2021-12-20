@@ -20,10 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
@@ -32,6 +31,9 @@ namespace DisCatSharp.ApplicationCommands
     {
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        [JsonProperty("type")]
+        public ApplicationCommandType Type { get; set; }
 
         [JsonProperty("name_translations")]
         internal Dictionary<string, string> NT { get; set; }

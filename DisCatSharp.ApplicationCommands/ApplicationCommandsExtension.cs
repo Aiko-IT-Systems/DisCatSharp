@@ -414,13 +414,37 @@ namespace DisCatSharp.ApplicationCommands
 
                                 commandMethods.Add(new CommandMethod { Method = method, Name = commandattribute.Name });
 
+                                DiscordApplicationCommandLocalization NameLocalizations = null;
+                                DiscordApplicationCommandLocalization DescriptionLocalizations = null;
+                                List<DiscordApplicationCommandOption> LocalizisedOptions = null;
+
                                 if (translation != null)
                                 {
-                                    this.Client.Logger.LogDebug($"Registering Slash Command with name {commandattribute.Name}.");
-                                    this.Client.Logger.LogDebug($"Found translation for command: {translation.Single(c => c.Name == commandattribute.Name).DescriptionTranslations.Localizations.Single(dt => dt.Key == "de-DE").Value}");
+                                    var command_translation = translation.Single(c => c.Name == commandattribute.Name && c.Type == ApplicationCommandType.ChatInput);
+
+                                    LocalizisedOptions = new(options.Count);
+                                    foreach (var option in options)
+                                    {
+                                        List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new(option.Choices.Count()) : null;
+                                        if (option.Choices != null)
+                                        {
+                                            foreach (var choice in option.Choices)
+                                            {
+                                                choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, command_translation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+                                            }
+                                        }
+
+                                        LocalizisedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
+                                            choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
+                                            command_translation.Options.Single(o => o.Name == option.Name).NameTranslations, command_translation.Options.Single(o => o.Name == option.Name).DescriptionTranslations
+                                        ));
+                                    }
+
+                                    NameLocalizations = command_translation.NameTranslations;
+                                    DescriptionLocalizations = command_translation.DescriptionTranslations;
                                 }
 
-                                var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, options, commandattribute.DefaultPermission);
+                                var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, LocalizisedOptions ?? options, commandattribute.DefaultPermission, ApplicationCommandType.ChatInput, NameLocalizations, DescriptionLocalizations);
                                 updateList.Add(payload);
                                 commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
                             }
@@ -430,7 +454,16 @@ namespace DisCatSharp.ApplicationCommands
                             foreach (var contextMethod in contextMethods)
                             {
                                 var contextAttribute = contextMethod.GetCustomAttribute<ContextMenuAttribute>();
-                                var command = new DiscordApplicationCommand(contextAttribute.Name, null, null, contextAttribute.DefaultPermission, contextAttribute.Type);
+
+                                DiscordApplicationCommandLocalization NameLocalizations = null;
+
+                                if (translation != null)
+                                {
+                                    var command_translation = translation.Single(c => c.Name == contextAttribute.Name && c.Type == contextAttribute.Type);
+                                    NameLocalizations = command_translation.NameTranslations;
+                                }
+
+                                var command = new DiscordApplicationCommand(contextAttribute.Name, null, null, contextAttribute.DefaultPermission, contextAttribute.Type, NameLocalizations);
 
                                 var parameters = contextMethod.GetParameters();
                                 if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(ContextMenuContext)))

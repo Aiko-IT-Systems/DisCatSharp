@@ -4602,10 +4602,12 @@ namespace DisCatSharp.Net
                     Description = command.Description,
                     Options = command.Options,
                     DefaultPermission = command.DefaultPermission,
-                    NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
-                    DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs()
+                    NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
+                    DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs()
                 });
             }
+
+            this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
 
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id }, out var path);
@@ -4760,10 +4762,11 @@ namespace DisCatSharp.Net
                     Description = command.Description,
                     Options = command.Options,
                     DefaultPermission = command.DefaultPermission,
-                    NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
-                    DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs()
+                    NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
+                    DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs()
                 });
             }
+            this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
 
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id, guild_id }, out var path);
