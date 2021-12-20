@@ -73,7 +73,7 @@ namespace DisCatSharp.Entities
                 throw new ArgumentException("Application command choice value cannot exceed 100 characters.", nameof(value));
 
             this.Name = name;
-            this.RawNameLocalizations = nameLocalizations.GetKeyValuePairs();
+            this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
             this.Value = value;
         }
     }

@@ -123,8 +123,8 @@ namespace DisCatSharp.Entities
                 if (description.Length > 100)
                     throw new ArgumentException("Slash command description cannot exceed 100 characters.", nameof(description));
 
-                this.RawNameLocalizations = nameLocalizations.GetKeyValuePairs();
-                this.RawDescriptionLocalizations = descriptionLocalizations.GetKeyValuePairs();
+                this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
+                this.RawDescriptionLocalizations = descriptionLocalizations?.GetKeyValuePairs();
             }
             else
             {
@@ -134,7 +134,7 @@ namespace DisCatSharp.Entities
                     throw new ArgumentException("Context menus do not support options.");
                 description = string.Empty;
 
-                this.RawNameLocalizations = nameLocalizations.GetKeyValuePairs();
+                this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
             }
 
             var optionsList = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;

@@ -3024,6 +3024,7 @@ namespace DisCatSharp
         /// <param name="user">The user.</param>
         /// <param name="member">The member.</param>
         /// <param name="interaction">The interaction.</param>
+        /// <param name="dat">Debug json.</param>
         internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, JObject dat)
         {
             this.Logger.LogDebug(dat.ToString());

@@ -72,7 +72,7 @@ namespace DisCatSharp.Entities
                 throw new InvalidOperationException($"Only {typeof(string)}, {typeof(long)}, {typeof(double)} or {typeof(int)} types may be passed to a autocomplete choice.");
 
             this.Name = name;
-            this.RawNameLocalizations = nameLocalizations.GetKeyValuePairs();
+            this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
             this.Value = value;
         }
     }
