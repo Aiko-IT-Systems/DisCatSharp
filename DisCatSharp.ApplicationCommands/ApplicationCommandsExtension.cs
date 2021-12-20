@@ -388,7 +388,8 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 try
                                 {
-                                    var translation = JsonConvert.DeserializeObject<CommandTranslator>(ctx.Translations);
+                                    var translation = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
+                                    this.Client.Logger.LogDebug(translation.First().DescriptionTranslations.Where(t => t.Key == "de-DE").First().Value);
                                 }
                                 catch (Exception ex)
                                 {
