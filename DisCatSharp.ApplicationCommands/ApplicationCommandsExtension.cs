@@ -146,7 +146,7 @@ namespace DisCatSharp.ApplicationCommands
         }
 
         /// <summary>
-        /// Registers a command class with permission setup.
+        /// Registers a command class with permission and translation setup.
         /// </summary>
         /// <typeparam name="T">The command class to register.</typeparam>
         /// <param name="guildId">The guild id to register it on.</param>
@@ -159,7 +159,7 @@ namespace DisCatSharp.ApplicationCommands
         }
 
         /// <summary>
-        /// Registers a command class with permission setup.
+        /// Registers a command class with permission and translation setup.
         /// </summary>
         /// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
         /// <param name="guildId">The guild id to register it on.</param>
@@ -581,7 +581,7 @@ namespace DisCatSharp.ApplicationCommands
                         {
                             if (!guildid.HasValue)
                             {
-                                this.Client.Logger.LogWarning("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
+                                this.Client.Logger.LogTrace("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
                             }
                             else
                             {
