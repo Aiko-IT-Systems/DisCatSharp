@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,23 +25,37 @@ using System;
 namespace DisCatSharp.ApplicationCommands
 {
     /// <summary>
-    /// Sets the name for this enum choice.
+    /// The application commands translation context.
     /// </summary>
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
-    public class ChoiceNameAttribute : Attribute
+    public class ApplicationCommandsTranslationContext
     {
         /// <summary>
-        /// The name.
+        /// Gets the type.
         /// </summary>
-        public string Name { get; set; }
+        public Type Type { get; }
 
         /// <summary>
-        /// Sets the name for this enum choice.
+        /// Gets the name.
         /// </summary>
-        /// <param name="name">The name for this enum choice.</param>
-        public ChoiceNameAttribute(string name)
+        public string Name { get; }
+
+        /// <summary>
+        /// Gets the translation json.
+        /// </summary>
+        internal string Translations { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplicationCommandsTranslationContext"/> class.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="name">The name.</param>
+        internal ApplicationCommandsTranslationContext(Type type, string name)
         {
+            this.Type = type;
             this.Name = name;
         }
+
+        public void AddTranslation(string translation_json)
+            => this.Translations = translation_json;
     }
 }
