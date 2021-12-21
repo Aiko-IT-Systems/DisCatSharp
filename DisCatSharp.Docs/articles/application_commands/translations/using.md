@@ -5,3 +5,181 @@ title: Using Translations
 
 # Using Translations
 
+## Why do we outsource translation in external json files
+
+Pretty simple, it's common to have translations external stored.
+This makes it easier to modify them, while keeping the code itself clean.
+
+## Adding translations
+
+Translations are added the same way like permissions are added to Application Commands:
+```cs
+const string TRANSLATION_PATH = "translations/";
+
+Client.GetShard(0).GetApplicationCommands().RegisterCommands<Commands>(1215484634894646844, perms => {
+    perms.AddRole(915747497668915230, true);
+}, translations =>
+{
+    string json = File.ReadAllText(TRANSLATION_PATH + "commands.json");
+
+    translations.AddTranslation(json);
+});
+```
+
+## Creating the translation json
+
+We split the translation in two categories.
+One for slash command groups and one for normal slash commands and context menu commands.
+
+### Translation for Slash Command Groups
+
+Imagine, your class look like the following example:
+```cs
+public class MyCommand : ApplicationCommandsModule
+{
+    [SlashCommandGroup("my_command", "This is decription of the command group.")]
+    public class MyCommandGroup : ApplicationCommandsModule
+    {
+        [SlashCommand("first", "This is decription of the command.")]
+        public async Task MySlashCommand(InteractionContext context)
+        {
+            await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+            {
+                Content = "This is first subcommand."
+            });
+        }
+        [SlashCommand("second", "This is decription of the command.")]
+        public async Task MySecondCommand(InteractionContext context, [Option("value", "Some string value.")] string value)
+        {
+            await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+            {
+                Content = "This is second subcommand. The value was " + value
+            });
+        }
+    }
+}
+```
+
+The translation json is a object of [Command Group Objects](xref:application_commands_translations_reference#command-group-object)
+A correct translation json for english and german would look like that:
+```json
+[
+    {
+        "name": "my_command",
+        "name_translations": {
+            "en-US": "my_command",
+            "de": "mein_befehl"
+        },
+        "description_translations": {
+            "en-US": "This is decription of the command group.",
+            "de": "Das ist die Beschreibung der Befehl Gruppe."
+        },
+        "commands": [
+            {
+                "name": "first",
+                "type": 1,
+                "name_translations": {
+                    "en-US": "first",
+                    "de": "erste"
+                },
+                "description_translations": {
+                    "en-US": "This is decription of the command.",
+                    "de": "Das ist die Beschreibung des Befehls."
+                }
+            },
+            {
+                "name": "second",
+                "type": 1,
+                "name_translations": {
+                    "en-US": "second",
+                    "de": "zweite"
+                },
+                "description_translations": {
+                    "en-US": "This is decription of the command.",
+                    "de": "Das ist die Beschreibung des Befehls."
+                },
+                "options": [
+                    {
+                        "name": "value",
+                        "name_translations": {
+                            "en-US": "value",
+                            "de": "wert"
+                        },
+                        "description_translations": {
+                            "en-US": "Some string value.",
+                            "de": "Ein string Wert."
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]
+```
+
+### Translation for Slash Commands & Context Menu Commands
+
+Now imagine, that your class look like this example:
+```cs
+public class MyCommand : ApplicationCommandsModule
+{
+    [SlashCommand("my_command", "This is decription of the command.")]
+    public async Task MySlashCommand(InteractionContext context)
+    {
+
+    }
+
+    [ContextMenu(ApplicationCommandType.User, "My Command")]
+    public async Task MyContextMenuCommand(ContextMenuContext context)
+    {
+
+    }
+}
+```
+
+The slash command is a simple [Command Object](xref:application_commands_translations_reference#command-object).
+Same goes for the context menu command, but note that it can't have a description.
+
+Slash Commands has the [type](xref:application_commands_translations_reference#application-command-type) `1` and context menu commands the [type](xref:application_commands_translations_reference#application-command-type) `2` or `3`.
+We use this to determine, where the translation belongs to.
+
+A correct json for this example would look like that:
+```json
+[
+   {
+      "name":"my_command",
+      "type": 1, // Type 1 for slash command
+      "name_translations":{
+         "en-US":"my_command",
+         "de":"mein_befehl"
+      },
+      "description_translations":{
+         "en-US":"This is decription of the command.",
+         "de":"Das ist die Beschreibung des Befehls."
+      }
+   },
+   {
+      "name":"My Command",
+      "type": 2, // Type 2 for user context menu command
+      "name_translations":{
+         "en-US":"My Command",
+         "de":"Mein Command"
+      }
+   }
+]
+```
+
+
+## Available Locales
+
+Discord has a limited choice of locales, in particular, the ones you can select in the client.
+To see the available locales, visit [this](xref:application_commands_translations_reference#translation-kvp) page.
+
+## Receiving the client locales on interactions?
+
+Yes, you can do it!
+Discord sends the user on all [interaction types](), except `ping`.
+
+We introduced two new properties `Locale` and `GuildLocale` on [InteractionContext](xref:DisCatSharp.ApplicationCommands.InteractionContext), [ContextMenuContext](xref:DisCatSharp.ApplicationCommands.ContextMenuContext), [AutoCompleteContext](xref:DisCatSharp.ApplicationCommands_AutocompleteContext) and [DiscordInteraction](xref:DisCatSharp.Entities.DiscordInteraction).
+`Locale` is the locale of the user and always represented.
+`GuildLocale` is only represented, when the interaction is **not** in a DM.
