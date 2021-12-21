@@ -533,7 +533,7 @@ namespace DisCatSharp
                     }
 
                     cid = (ulong)dat["channel_id"];
-                    await this.OnInteractionCreateAsync((ulong?)dat["guild_id"], cid, usr, mbr, dat.ToDiscordObject<DiscordInteraction>(), dat).ConfigureAwait(false);
+                    await this.OnInteractionCreateAsync((ulong?)dat["guild_id"], cid, usr, mbr, dat.ToDiscordObject<DiscordInteraction>()).ConfigureAwait(false);
                     break;
 
                 case "application_command_create":
@@ -3024,11 +3024,8 @@ namespace DisCatSharp
         /// <param name="user">The user.</param>
         /// <param name="member">The member.</param>
         /// <param name="interaction">The interaction.</param>
-        /// <param name="dat">Debug json.</param>
-        internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, JObject dat)
+        internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction)
         {
-            this.Logger.LogDebug(dat.ToString());
-
             var usr = new DiscordUser(user) { Discord = this };
 
             interaction.ChannelId = channelId;
@@ -3039,10 +3036,12 @@ namespace DisCatSharp
             if (member != null)
             {
                 usr = new DiscordMember(member) { _guild_id = guildId.Value, Discord = this };
+                usr.Locale = interaction.Locale;
                 this.UpdateUser(usr, guildId, interaction.Guild, member);
             }
             else
             {
+                usr.Locale = interaction.Locale;
                 this.UserCache.AddOrUpdate(usr.Id, usr, (old, @new) => @new);
             }
 
