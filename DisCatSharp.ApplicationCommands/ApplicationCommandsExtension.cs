@@ -1143,7 +1143,7 @@ namespace DisCatSharp.ApplicationCommands
         /// Runs the preexecution checks.
         /// </summary>
         /// <param name="method">The method info.</param>
-        /// <param name="context">The basecontext.</param>
+        /// <param name="context">The base context.</param>
         private async Task RunPreexecutionChecksAsync(MethodInfo method, BaseContext context)
         {
             if (context is InteractionContext ctx)
@@ -1205,7 +1205,7 @@ namespace DisCatSharp.ApplicationCommands
         /// Gets the choice attributes from choice provider.
         /// </summary>
         /// <param name="customAttributes">The custom attributes.</param>
-        /// <param name="guildId"></param>
+        /// <param name="guildId">The optional guild id</param>
         private async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(IEnumerable<ChoiceProviderAttribute> customAttributes, ulong? guildId = null)
         {
             var choices = new List<DiscordApplicationCommandOptionChoice>();
@@ -1302,8 +1302,7 @@ namespace DisCatSharp.ApplicationCommands
         /// Parses the parameters.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        /// <param name="guildId">The guild id.</param>
-        /// <returns>A Task.</returns>
+        /// <param name="guildId">The optional guild id.</param>
         private async Task<List<DiscordApplicationCommandOption>> ParseParameters(ParameterInfo[] parameters, ulong? guildId)
         {
             var options = new List<DiscordApplicationCommandOption>();
@@ -1430,7 +1429,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         /// <param name="type">The type of the command module.</param>
         /// <param name="setup">The permission setup callback.</param>
-        /// <param name="translations">The translation callback.</param>
+        /// <param name="translations">The translation setup callback.</param>
         public ApplicationCommandsModuleConfiguration(Type type, Action<ApplicationCommandsPermissionContext> setup = null, Action<ApplicationCommandsTranslationContext> translations = null)
         {
             this.Type = type;
