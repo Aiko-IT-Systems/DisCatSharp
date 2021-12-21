@@ -64,9 +64,7 @@ title: Translation Reference
 
 ## Translation KVP
 
-A translation object is a key-value-pair of `lang: value`.
-
-Valid languages are: `ru`, `fi`, `hr`, `de`, `hu`, `sv-SE`, `cs`, `fr`, `it`, `en-GB`, `pt-BR`, `ja`, `tr`, `en-US`, `es-ES`, `uk`, `hi`, `th`, `el`, `no`, `ro`, `ko`, `zh-TW`, `vi`, `zh-CN`, `pl`, `bg`, `da`, `nl` and `lt`.
+A translation object is a key-value-pair of `"locale": "value"`.
 
 ### Example Translation Array:
 ```json
@@ -75,3 +73,38 @@ Valid languages are: `ru`, `fi`, `hr`, `de`, `hu`, `sv-SE`, `cs`, `fr`, `it`, `e
     "de": "Hallo"
 }
 ```
+
+## Valid Locales
+
+| Locale | Language              |
+| ------ | --------------------- |
+| da     | Danish                |
+| de     | German                |
+| en-GB  | English, UK           |
+| en-US  | English, US           |
+| es-ES  | Spanish               |
+| fr     | French                |
+| hr     | Croatioan             |
+| it     | Italian               |
+| lt     | Lithuanian            |
+| hu     | Hungarian             |
+| nl     | Dutch                 |
+| no     | Norwegian             |
+| pl     | Polish                |
+| pt-BR  | Portuguese, Brazilian |
+| ro     | Romanian, Romania     |
+| fi     | Finnish               |
+| sv-SE  | Swedish               |
+| vi     | Vietnamese            |
+| tr     | Turkish               |
+| cs     | Czech                 |
+| el     | Greek                 |
+| bg     | Bulgarian             |
+| ru     | Russian               |
+| uk     | Ukrainian             |
+| hi     | Hindi                 |
+| th     | Thai                  |
+| zh-CN  | Chinese, China        |
+| ja     | Japanese              |
+| zh-TW  | Chinese, Taiwan       |
+| ko     | Korean                |
