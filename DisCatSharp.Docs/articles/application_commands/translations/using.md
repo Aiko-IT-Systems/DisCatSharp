@@ -183,7 +183,7 @@ A correct json for this example would look like that:
 ## Available Locales
 
 Discord has a limited choice of locales, in particular, the ones you can select in the client.
-To see the available locales, visit [this](xref:application_commands_translations_reference#translation-kvp) page.
+To see the available locales, visit [this](xref:application_commands_translations_reference#valid-locales) page.
 
 ## Can We Get The User And Guild Locale?
 
