@@ -5,9 +5,9 @@ title: Using Translations
 
 # Using Translations
 
-## Why Do We outsource Translation In External JSON Files
+## Why Do We Outsource Translation In External JSON Files
 
-Pretty simple, it's common to have translations external stored.
+Pretty simple: It's common to have translations external stored.
 This makes it easier to modify them, while keeping the code itself clean.
 
 ## Adding Translations
