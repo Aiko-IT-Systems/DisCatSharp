@@ -48,9 +48,9 @@ Select the `Browse` tab towards the top left, then type `DisCatSharp` into the s
 ![NuGet Package Search](/images/basics_first_bot_06.png)
 
 <br/>
-The first results should be the six DisCatSharp packages.
+The first results should be the DisCatSharp packages.
 
-![Search Results](/images/basics_first_bot_07.png)
+<!--![Search Results](/images/basics_first_bot_07.png)-->
 Package|Description
 :---: |:---:
 `DisCatSharp`|Main package; Discord API client.
@@ -58,7 +58,7 @@ Package|Description
 `DisCatSharp.Common`|Common tools & converters
 `DisCatSharp.Interactivity`|Add-on which allows for interactive commands.
 `DisCatSharp.Lavalink`|Client implementation for [Lavalink](xref:audio_lavalink_setup). Useful for music bots.
-`DisCatSharp.SlashCommands`|Add-on which makes dealing with slash commands easyer.
+`DisCatSharp.ApplicationCommands`|Add-on which makes dealing with application commands easier.
 `DisCatSharp.VoiceNext`|Add-on which enables connectivity to Discord voice channels.
 `DisCatSharp.VoiceNext.Natives`|Voice next natives.
 
