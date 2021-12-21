@@ -915,7 +915,6 @@ namespace DisCatSharp
             remove => this._clientErrored.Unregister(value);
         }
         private AsyncEvent<DiscordClient, ClientErrorEventArgs> _clientErrored;
-
         #endregion
 
         #region Error Handling

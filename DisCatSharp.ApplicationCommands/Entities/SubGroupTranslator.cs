@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,28 +20,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using System.Collections.Generic;
+using DisCatSharp.Entities;
+using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
     /// <summary>
-    /// Sets the name for this enum choice.
+    /// Represents a sub group translator.
     /// </summary>
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
-    public class ChoiceNameAttribute : Attribute
+    internal class SubGroupTranslator
     {
         /// <summary>
-        /// The name.
+        /// Gets the sub group name.
         /// </summary>
+        [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Sets the name for this enum choice.
+        /// Gets the sub group name translations.
         /// </summary>
-        /// <param name="name">The name for this enum choice.</param>
-        public ChoiceNameAttribute(string name)
-        {
-            this.Name = name;
-        }
+        [JsonProperty("name_translations")]
+        internal Dictionary<string, string> NT { get; set; }
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization NameTranslations
+            => new(this.NT);
+
+        /// <summary>
+        /// Gets the sub group description translations.
+        /// </summary>
+        [JsonProperty("description_translations")]
+        internal Dictionary<string, string> DT { get; set; }
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization DescriptionTranslations
+            => new(this.DT);
+
+        /// <summary>
+        /// Gets the command translators.
+        /// </summary>
+        [JsonProperty("commands")]
+        public List<CommandTranslator> Commands { get; set; }
     }
 }

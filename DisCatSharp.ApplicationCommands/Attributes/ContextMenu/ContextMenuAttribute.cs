@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
 namespace DisCatSharp.ApplicationCommands
@@ -45,7 +46,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Gets whether this command is enabled by default.
         /// </summary>
-        public bool DefaultPermission { get; internal set;}
+        public bool DefaultPermission { get; internal set; }
 
         /// <summary>
         /// Marks this method as a context menu.

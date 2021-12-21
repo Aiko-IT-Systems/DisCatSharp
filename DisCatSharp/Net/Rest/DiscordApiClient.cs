@@ -191,7 +191,6 @@ namespace DisCatSharp.Net
         /// <param name="headers">The headers.</param>
         /// <param name="payload">The payload.</param>
         /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-        /// <returns>A Task.</returns>
         internal Task<RestResponse> DoRequestAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, string payload = null, double? ratelimitWaitOverride = null)
         {
             var req = new RestRequest(client, bucket, url, method, route, headers, payload, ratelimitWaitOverride);
@@ -218,7 +217,6 @@ namespace DisCatSharp.Net
         /// <param name="tags">The sticker tag.</param>
         /// <param name="description">The sticker description.</param>
         /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-        /// <returns>A Task.</returns>
         private Task<RestResponse> DoStickerMultipartAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null,
             DiscordMessageFile file = null, string name = "", string tags = "", string description = "", double? ratelimitWaitOverride = null)
 {
@@ -244,7 +242,6 @@ namespace DisCatSharp.Net
         /// <param name="values">The values.</param>
         /// <param name="files">The files.</param>
         /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-        /// <returns>A Task.</returns>
         private Task<RestResponse> DoMultipartAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, IReadOnlyDictionary<string, string> values = null,
             IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimitWaitOverride = null)
         {
@@ -266,7 +263,6 @@ namespace DisCatSharp.Net
         /// <param name="guild_id">The guild_id.</param>
         /// <param name="name">The name.</param>
         /// <param name="limit">The limit.</param>
-        /// <returns>A Task.</returns>
         internal async Task<IReadOnlyList<DiscordMember>> SearchMembersAsync(ulong guild_id, string name, int? limit)
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}{Endpoints.SEARCH}";
@@ -306,7 +302,6 @@ namespace DisCatSharp.Net
         /// </summary>
         /// <param name="guild_id">The guild_id.</param>
         /// <param name="user_id">The user_id.</param>
-        /// <returns>A Task.</returns>
         internal async Task<DiscordBan> GetGuildBanAsync(ulong guild_id, ulong user_id)
         {
             var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}/:user_id";
@@ -574,7 +569,6 @@ namespace DisCatSharp.Net
         /// <param name="user_id">The user_id.</param>
         /// <param name="delete_message_days">The delete_message_days.</param>
         /// <param name="reason">The reason.</param>
-        /// <returns>A Task.</returns>
         internal Task CreateGuildBanAsync(ulong guild_id, ulong user_id, int delete_message_days, string reason)
         {
             if (delete_message_days < 0 || delete_message_days > 7)
@@ -2073,7 +2067,7 @@ namespace DisCatSharp.Net
                 var ret = this.PrepareMessage(JObject.Parse(res.Response));
 
                 return ret;
-            }            
+            }
         }
 
         /// <summary>
@@ -4601,9 +4595,13 @@ namespace DisCatSharp.Net
                     Name = command.Name,
                     Description = command.Description,
                     Options = command.Options,
-                    DefaultPermission = command.DefaultPermission
+                    DefaultPermission = command.DefaultPermission,
+                    NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
+                    DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs()
                 });
             }
+
+            this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
 
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id }, out var path);
@@ -4631,7 +4629,9 @@ namespace DisCatSharp.Net
                 Name = command.Name,
                 Description = command.Description,
                 Options = command.Options,
-                DefaultPermission = command.DefaultPermission
+                DefaultPermission = command.DefaultPermission,
+                NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
+                DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs()
             };
 
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -4675,15 +4675,19 @@ namespace DisCatSharp.Net
         /// <param name="description">The description.</param>
         /// <param name="options">The options.</param>
         /// <param name="default_permission">The default_permission.</param>
+        /// <param name="name_localization">The localizations of the name.</param>
+        /// <param name="description_localization">The localizations of the description.</param>
         /// <returns>A Task.</returns>
-        internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong application_id, ulong command_id, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> default_permission)
+        internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong application_id, ulong command_id, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> default_permission, Optional<DiscordApplicationCommandLocalization> name_localization, Optional<DiscordApplicationCommandLocalization> description_localization)
         {
             var pld = new RestApplicationCommandEditPayload
             {
                 Name = name,
                 Description = description,
                 Options = options,
-                DefaultPermission = default_permission
+                DefaultPermission = default_permission,
+                NameLocalizations = name_localization.HasValue ? name_localization.Value.GetKeyValuePairs() : null,
+                DescriptionLocalizations = description_localization.HasValue ? description_localization.Value.GetKeyValuePairs() : null
             };
 
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -4751,9 +4755,12 @@ namespace DisCatSharp.Net
                     Name = command.Name,
                     Description = command.Description,
                     Options = command.Options,
-                    DefaultPermission = command.DefaultPermission
+                    DefaultPermission = command.DefaultPermission,
+                    NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
+                    DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs()
                 });
             }
+            this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
 
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
             var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id, guild_id }, out var path);
@@ -4782,7 +4789,9 @@ namespace DisCatSharp.Net
                 Name = command.Name,
                 Description = command.Description,
                 Options = command.Options,
-                DefaultPermission = command.DefaultPermission
+                DefaultPermission = command.DefaultPermission,
+                NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
+                DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs()
 
             };
 
@@ -4828,14 +4837,18 @@ namespace DisCatSharp.Net
         /// <param name="description">The description.</param>
         /// <param name="options">The options.</param>
         /// <param name="default_permission">The default_permission.</param>
-        internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong application_id, ulong guild_id, ulong command_id, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> default_permission)
+        /// <param name="name_localization">The localizations of the name.</param>
+        /// <param name="description_localization">The localizations of the description.</param>
+        internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong application_id, ulong guild_id, ulong command_id, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> default_permission, Optional<DiscordApplicationCommandLocalization> name_localization, Optional<DiscordApplicationCommandLocalization> description_localization)
         {
             var pld = new RestApplicationCommandEditPayload
             {
                 Name = name,
                 Description = description,
                 Options = options,
-                DefaultPermission = default_permission
+                DefaultPermission = default_permission,
+                NameLocalizations = name_localization.HasValue ? name_localization.Value.GetKeyValuePairs() : null,
+                DescriptionLocalizations = description_localization.HasValue ? description_localization.Value.GetKeyValuePairs() : null
             };
 
             var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
@@ -5008,7 +5021,7 @@ namespace DisCatSharp.Net
                 pld = new RestInteractionResponsePayload
                 {
                     Type = type,
-                    Data = data 
+                    Data = data
                 };
 
 
