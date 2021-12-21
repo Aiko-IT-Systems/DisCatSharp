@@ -43,8 +43,8 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Adds a choice to the slash command option
         /// </summary>
-        /// <param name="name">The name of the choice</param>
-        /// <param name="value">The value of the choice</param>
+        /// <param name="name">The name of the choice.</param>
+        /// <param name="value">The value of the choice.</param>
         public ChoiceAttribute(string name, string value)
         {
             this.Name = name;
@@ -54,8 +54,8 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Adds a choice to the slash command option
         /// </summary>
-        /// <param name="name">The name of the choice</param>
-        /// <param name="value">The value of the choice</param>
+        /// <param name="name">The name of the choice.</param>
+        /// <param name="value">The value of the choice.</param>
         public ChoiceAttribute(string name, long value)
         {
             this.Name = name;
@@ -65,8 +65,8 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Adds a choice to the slash command option
         /// </summary>
-        /// <param name="name">The name of the choice</param>
-        /// <param name="value">The value of the choice</param>
+        /// <param name="name">The name of the choice.</param>
+        /// <param name="value">The value of the choice.</param>
         public ChoiceAttribute(string name, int value)
         {
             this.Name = name;
@@ -76,8 +76,8 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Adds a choice to the slash command option
         /// </summary>
-        /// <param name="name">The name of the choice</param>
-        /// <param name="value">The value of the choice</param>
+        /// <param name="name">The name of the choice.</param>
+        /// <param name="value">The value of the choice.</param>
         public ChoiceAttribute(string name, double value)
         {
             this.Name = name;

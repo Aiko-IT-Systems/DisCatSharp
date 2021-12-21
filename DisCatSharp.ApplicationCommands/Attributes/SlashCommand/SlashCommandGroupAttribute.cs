@@ -48,8 +48,8 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Marks this class as a slash command group
         /// </summary>
-        /// <param name="name">The name of this slash command group</param>
-        /// <param name="description">The description of this slash command group</param>
+        /// <param name="name">The name of this slash command group.</param>
+        /// <param name="description">The description of this slash command group.</param>
         /// <param name="default_permission">Whether everyone can execute this command.</param>
         public SlashCommandGroupAttribute(string name, string description, bool default_permission = true)
         {

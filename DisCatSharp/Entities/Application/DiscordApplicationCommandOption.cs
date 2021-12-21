@@ -46,10 +46,36 @@ namespace DisCatSharp.Entities
         public string Name { get; internal set; }
 
         /// <summary>
+        /// Sets the name localizations.
+        /// </summary>
+        [JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
+        internal Dictionary<string, string> RawNameLocalizations { get; set; }
+
+        /// <summary>
+        /// Gets the name localizations.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization NameLocalizations
+            => new(this.RawNameLocalizations);
+
+        /// <summary>
         /// Gets the description of this command parameter.
         /// </summary>
         [JsonProperty("description")]
         public string Description { get; internal set; }
+
+        /// <summary>
+        /// Sets the description localizations.
+        /// </summary>
+        [JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
+        internal Dictionary<string, string> RawDescriptionLocalizations { get; set; }
+
+        /// <summary>
+        /// Gets the description localizations.
+        /// </summary>
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization DescriptionLocalizations
+            => new(this.RawDescriptionLocalizations);
 
         /// <summary>
         /// Gets whether this command parameter is required.
@@ -107,7 +133,9 @@ namespace DisCatSharp.Entities
         /// <param name="autocomplete">Whether this option provides autocompletion.</param>
         /// <param name="minimumValue">The minimum value for this parameter. Only valid for types <see cref="ApplicationCommandOptionType.Integer"/> or <see cref="ApplicationCommandOptionType.Number"/>.</param>
         /// <param name="maximumValue">The maximum value for this parameter. Only valid for types <see cref="ApplicationCommandOptionType.Integer"/> or <see cref="ApplicationCommandOptionType.Number"/>.</param>
-        public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool? required = null, IEnumerable<DiscordApplicationCommandOptionChoice> choices = null, IEnumerable<DiscordApplicationCommandOption> options = null, IEnumerable<ChannelType> channeltypes = null, bool? autocomplete = null, object minimumValue = null, object maximumValue = null)
+        /// <param name="nameLocalizations">The localizations of the parameter name.</param>
+        /// <param name="descriptionLocalizations">The localizations of the parameter description.</param>
+        public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool? required = null, IEnumerable<DiscordApplicationCommandOptionChoice> choices = null, IEnumerable<DiscordApplicationCommandOption> options = null, IEnumerable<ChannelType> channeltypes = null, bool? autocomplete = null, object minimumValue = null, object maximumValue = null, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null)
         {
             if (!Utilities.IsValidSlashCommandName(name))
                 throw new ArgumentException("Invalid application command option name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
@@ -132,6 +160,8 @@ namespace DisCatSharp.Entities
             this.AutoComplete = autocomplete;
             this.MinimumValue = minimumValue;
             this.MaximumValue = maximumValue;
+            this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
+            this.RawDescriptionLocalizations = descriptionLocalizations?.GetKeyValuePairs();
         }
     }
 }

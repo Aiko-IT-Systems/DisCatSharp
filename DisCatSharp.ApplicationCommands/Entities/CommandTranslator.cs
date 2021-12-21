@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,42 +20,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using System.Collections.Generic;
+using DisCatSharp.Entities;
+using DisCatSharp.Enums;
+using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
     /// <summary>
-    /// Marks this method as a slash command
+    /// Represents a command translator.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class SlashCommandAttribute : Attribute
+    internal class CommandTranslator
     {
         /// <summary>
-        /// Gets the name of this command
+        /// Gets the command name.
         /// </summary>
-        public string Name { get; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
         /// <summary>
-        /// Gets the description of this command
+        /// Gets the application command type.
+        /// Used to determine whether it is an translator for context menu or not.
         /// </summary>
-        public string Description { get; }
+        [JsonProperty("type")]
+        public ApplicationCommandType Type { get; set; }
 
         /// <summary>
-        /// Gets the default permission of this command
+        /// Gets the command name translations.
         /// </summary>
-        public bool DefaultPermission { get; }
+        [JsonProperty("name_translations")]
+        internal Dictionary<string, string> NT { get; set; }
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization NameTranslations
+            => new(this.NT);
 
         /// <summary>
-        /// Marks this method as a slash command
+        /// Gets the command description translations.
         /// </summary>
-        /// <param name="name">The name of this slash command.</param>
-        /// <param name="description">The description of this slash command.</param>
-        /// <param name="default_permission">Whether everyone can execute this command.</param>
-        public SlashCommandAttribute(string name, string description, bool default_permission = true)
-        {
-            this.Name = name.ToLower();
-            this.Description = description;
-            this.DefaultPermission = default_permission;
-        }
+        [JsonProperty("description_translations")]
+        internal Dictionary<string, string> DT { get; set; }
+        [JsonIgnore]
+        public DiscordApplicationCommandLocalization DescriptionTranslations
+            => new(this.DT);
+
+        /// <summary>
+        /// Gets the option translators, if applicable.
+        /// </summary>
+        [JsonProperty("options")]
+        public List<OptionTranslator> Options { get; set; }
     }
 }

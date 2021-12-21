@@ -1,5 +1,5 @@
 ---
-uid: appcommands_intro
+uid: application_commands_intro
 title: Application Commands Introduction
 ---
 

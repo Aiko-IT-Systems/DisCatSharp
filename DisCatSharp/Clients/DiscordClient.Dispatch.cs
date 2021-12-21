@@ -3024,7 +3024,6 @@ namespace DisCatSharp
         /// <param name="user">The user.</param>
         /// <param name="member">The member.</param>
         /// <param name="interaction">The interaction.</param>
-
         internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction)
         {
             var usr = new DiscordUser(user) { Discord = this };
@@ -3037,10 +3036,12 @@ namespace DisCatSharp
             if (member != null)
             {
                 usr = new DiscordMember(member) { _guild_id = guildId.Value, Discord = this };
+                usr.Locale = interaction.Locale;
                 this.UpdateUser(usr, guildId, interaction.Guild, member);
             }
             else
             {
+                usr.Locale = interaction.Locale;
                 this.UserCache.AddOrUpdate(usr.Id, usr, (old, @new) => @new);
             }
 
