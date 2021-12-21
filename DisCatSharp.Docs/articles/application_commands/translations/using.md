@@ -5,33 +5,43 @@ title: Using Translations
 
 # Using Translations
 
-## Why do we outsource translation in external json files
+## Why Do We outsource Translation In External JSON Files
 
 Pretty simple, it's common to have translations external stored.
 This makes it easier to modify them, while keeping the code itself clean.
 
-## Adding translations
+## Adding Translations
 
 Translations are added the same way like permissions are added to Application Commands:
 ```cs
 const string TRANSLATION_PATH = "translations/";
 
-Client.GetShard(0).GetApplicationCommands().RegisterCommands<Commands>(1215484634894646844, perms => {
+Client.GetShard(0).GetApplicationCommands().RegisterCommands<MyCommand>(1215484634894646844, perms => {
     perms.AddRole(915747497668915230, true);
 }, translations =>
 {
-    string json = File.ReadAllText(TRANSLATION_PATH + "commands.json");
+    string json = File.ReadAllText(TRANSLATION_PATH + "my_command.json");
+
+    translations.AddTranslation(json);
+});
+
+Client.GetShard(0).GetApplicationCommands().RegisterCommands<MySimpleCommands>(1215484634894646844, perms => {
+    perms.AddRole(915747497668915230, true);
+}, translations =>
+{
+    string json = File.ReadAllText(TRANSLATION_PATH + "my_simple_command.json");
 
     translations.AddTranslation(json);
 });
 ```
 
-## Creating the translation json
+## Creating The Translation JSON
 
 We split the translation in two categories.
 One for slash command groups and one for normal slash commands and context menu commands.
+The `name` key in the JSON will be mapped to the command / option / choice names internally.
 
-### Translation for Slash Command Groups
+### Translation For Slash Command Groups
 
 Imagine, your class look like the following example:
 ```cs
@@ -117,11 +127,11 @@ A correct translation json for english and german would look like that:
 ]
 ```
 
-### Translation for Slash Commands & Context Menu Commands
+### Translation For Slash Commands & Context Menu Commands
 
 Now imagine, that your class look like this example:
 ```cs
-public class MyCommand : ApplicationCommandsModule
+public class MySimpleCommands : ApplicationCommandsModule
 {
     [SlashCommand("my_command", "This is decription of the command.")]
     public async Task MySlashCommand(InteractionContext context)
@@ -175,10 +185,10 @@ A correct json for this example would look like that:
 Discord has a limited choice of locales, in particular, the ones you can select in the client.
 To see the available locales, visit [this](xref:application_commands_translations_reference#translation-kvp) page.
 
-## Receiving the client locales on interactions?
+## Can We Get The User And Guild Locale?
 
-Yes, you can do it!
-Discord sends the user on all [interaction types](), except `ping`.
+Yes, you can!
+Discord sends the user on all [interaction types](xref:DisCatSharp.InteractionType), except `Ping`.
 
 We introduced two new properties `Locale` and `GuildLocale` on [InteractionContext](xref:DisCatSharp.ApplicationCommands.InteractionContext), [ContextMenuContext](xref:DisCatSharp.ApplicationCommands.ContextMenuContext), [AutoCompleteContext](xref:DisCatSharp.ApplicationCommands_AutocompleteContext) and [DiscordInteraction](xref:DisCatSharp.Entities.DiscordInteraction).
 `Locale` is the locale of the user and always represented.
