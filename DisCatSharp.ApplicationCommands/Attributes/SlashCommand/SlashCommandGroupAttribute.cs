@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands
 {
