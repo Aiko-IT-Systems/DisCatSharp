@@ -146,6 +146,23 @@ namespace DisCatSharp.ApplicationCommands
         }
 
         /// <summary>
+        /// Cleans all guild application commands.
+        /// </summary>
+        public async Task CleanGuildCommandsAsync()
+        {
+            foreach(var guild in this.Client.Guilds.Values)
+            {
+                await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, Array.Empty<DiscordApplicationCommand>());
+            }
+        }
+
+        /// <summary>
+        /// Cleans the global application commands.
+        /// </summary>
+        public async Task CleanGlobalCommandsAsync()
+            => await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(Array.Empty<DiscordApplicationCommand>());
+
+        /// <summary>
         /// Registers a command class with permission and translation setup.
         /// </summary>
         /// <typeparam name="T">The command class to register.</typeparam>
