@@ -3036,12 +3036,10 @@ namespace DisCatSharp
             if (member != null)
             {
                 usr = new DiscordMember(member) { _guild_id = guildId.Value, Discord = this };
-                usr.Locale = interaction.Locale;
                 this.UpdateUser(usr, guildId, interaction.Guild, member);
             }
             else
             {
-                usr.Locale = interaction.Locale;
                 this.UserCache.AddOrUpdate(usr.Id, usr, (old, @new) => @new);
             }
 

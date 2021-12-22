@@ -392,25 +392,26 @@ namespace DisCatSharp
         /// <returns>The requested user.</returns>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordUser> GetUserAsync(ulong userId, bool fetch = false)
+        public async Task<DiscordUser> GetUserAsync(ulong userId, bool fetch = true)
         {
-            if (this.TryGetCachedUserInternal(userId, out var usr))
-                return usr;
-            else if (!fetch)
-                return new DiscordUser { Id = userId, Discord = this };
-
-            usr = await this.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
-            usr = this.UserCache.AddOrUpdate(userId, usr, (id, old) =>
+            if (!fetch)
             {
-                old.Username = usr.Username;
-                old.Discriminator = usr.Discriminator;
-                old.AvatarHash = usr.AvatarHash;
-                old.BannerHash = usr.BannerHash;
-                old._bannerColor = usr._bannerColor;
-                return old;
-            });
+                return this.TryGetCachedUserInternal(userId, out var usr) ? usr : new DiscordUser { Id = userId, Discord = this };
+            } else
+            {
+                var usr = await this.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
+                usr = this.UserCache.AddOrUpdate(userId, usr, (id, old) =>
+                {
+                    old.Username = usr.Username;
+                    old.Discriminator = usr.Discriminator;
+                    old.AvatarHash = usr.AvatarHash;
+                    old.BannerHash = usr.BannerHash;
+                    old._bannerColor = usr._bannerColor;
+                    return old;
+                });
 
-            return usr;
+                return usr;
+            }
         }
 
         /// <summary>

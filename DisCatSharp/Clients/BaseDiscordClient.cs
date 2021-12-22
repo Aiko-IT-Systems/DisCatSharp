@@ -95,7 +95,7 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the cached users for this client.
         /// </summary>
-        protected internal ConcurrentDictionary<ulong, DiscordUser> UserCache { get; }
+        public ConcurrentDictionary<ulong, DiscordUser> UserCache { get; internal set; }
 
         /// <summary>
         /// <para>Gets the service provider.</para>
