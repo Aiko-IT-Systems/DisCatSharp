@@ -35,6 +35,10 @@ Client.GetShard(0).GetApplicationCommands().RegisterCommands<MySimpleCommands>(1
 });
 ```
 
+> [!WARNING]
+ > If you add a translation to a class, you have to supply translations for every command in this class. Otherwise it will fail.
+
+
 ## Creating The Translation JSON
 
 We split the translation in two categories.
