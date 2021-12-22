@@ -42,7 +42,7 @@ namespace DisCatSharp.Common.RegularExpressions
         /// Represents a message link.
         /// </summary>
         public static Regex MessageLink
-            => new(@"^\/channels\/(?<guild>(?:\d+|@me))\/(?<channel>\d+)\/(?<message>\d+)\/?$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+            => new(@"(https?:\/\/)?(www\.|canary\.|ptb\.)?(discord)\.(com|net)\/channels\/(?<guild>(?:\d+|@me))\/(?<channel>\d+)\/(?<message>\d+)\/?", RegexOptions.ECMAScript | RegexOptions.Compiled);
 
         /// <summary>
         /// Represents a emoji.
