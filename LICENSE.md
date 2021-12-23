@@ -1,12 +1,3 @@
-
-# Package licenses for DisCatSharp
-Parts of this package are not provided under DisCatSharp's license. Said
-licenses are listed here.
-
-
-
-## Package
-[Original license reading](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md)
 ```
 The MIT License (MIT)
 
@@ -31,7 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## Package source
+# Package licenses for DisCatSharp
+Parts of this package are not provided under DisCatSharp's license. Said
+licenses are listed here.
+
+
+## Package base
 [Original license reading](https://github.com/DSharpPlus/DSharpPlus/blob/master/LICENSE)
 ```
 The MIT License (MIT)
