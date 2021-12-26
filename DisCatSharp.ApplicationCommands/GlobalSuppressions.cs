@@ -30,3 +30,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._singletonModules")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._subGroupCommands")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._updateList")]
+[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._globalDiscordCommands")]
+[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._guildDiscordCommands")]
