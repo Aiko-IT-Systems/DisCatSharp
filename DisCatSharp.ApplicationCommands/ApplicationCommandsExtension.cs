@@ -744,10 +744,6 @@ namespace DisCatSharp.ApplicationCommands
                                     Commands.Add(discord_backend_command);
                                 }
                             }
-                            else if (!GlobalCommandsCreateList.Any() && !GlobalCommandsOverwriteList.Any())
-                            {
-                                // Nothing to do.
-                            }
 
                             foreach (var cmdId in GlobalCommandsDeleteList)
                             {
@@ -795,10 +791,6 @@ namespace DisCatSharp.ApplicationCommands
                                     );
                                     Commands.Add(discord_backend_command);
                                 }
-                            }
-                            else if (!GuildCommandsCreateList.Any() && !GuildCommandsOverwriteList.Any())
-                            {
-                                // Nothing to do.
                             }
 
                             foreach (var cmdId in GuildCommandsDeleteList)
