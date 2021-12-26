@@ -38,3 +38,5 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("DisCatSharp.VoiceNext")]
 [assembly: InternalsVisibleTo("DisCatSharp.VoiceNext.Natives")]
 [assembly: InternalsVisibleTo("Nyaw")]
+[assembly: InternalsVisibleTo("DisCatSharp.DevTools")]
+[assembly: InternalsVisibleTo("DisCatSharp.DevTools.ApplicationCommands")]
