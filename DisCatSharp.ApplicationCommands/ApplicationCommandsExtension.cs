@@ -673,18 +673,28 @@ namespace DisCatSharp.ApplicationCommands
                             ? await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(updateList)
                             : (IEnumerable<DiscordApplicationCommand>)await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guildid.Value, updateList);
 
+                        List<DiscordApplicationCommand> Commands = new();
+
                         if(guildid == null)
                         {
-                            Dictionary<ulong, DiscordApplicationCommand> GlobalCommandsOverwriteList = this.BuildGlobalOverwriteList(updateList);
-                            List<DiscordApplicationCommand> GlobalCommandsCreateList = this.BuildGlobalCreateList(updateList);
-                            List<ulong> GlobalCommandsDeleteList = this.BuildGlobalDeleteList(updateList);
+                            var GlobalCommandsOverwriteList = this.BuildGlobalOverwriteList(updateList);
+                            var GlobalCommandsCreateList = this.BuildGlobalCreateList(updateList);
+                            var GlobalCommandsDeleteList = this.BuildGlobalDeleteList(updateList);
+                            foreach(var cmdId in GlobalCommandsDeleteList)
+                            {
+                                await this.Client.DeleteGlobalApplicationCommandAsync(cmdId);
+                            }
 
                         }
                         else
                         {
-                            Dictionary<ulong, DiscordApplicationCommand> GuildCommandsOverwriteList = this.BuildGuildOverwriteList(guildid.Value, updateList);
-                            List<DiscordApplicationCommand> GuildCommandsCreateList = this.BuildGuildCreateList(guildid.Value, updateList);
-                            List<ulong> GuildCommandsDeleteList = this.BuildGuildDeleteList(guildid.Value, updateList);
+                            var GuildCommandsOverwriteList = this.BuildGuildOverwriteList(guildid.Value, updateList);
+                            var GuildCommandsCreateList = this.BuildGuildCreateList(guildid.Value, updateList);
+                            var GuildCommandsDeleteList = this.BuildGuildDeleteList(guildid.Value, updateList);
+                            foreach (var cmdId in GuildCommandsDeleteList)
+                            {
+                                await this.Client.DeleteGuildApplicationCommandAsync(guildid, cmdId);
+                            }
                         }
 
                         //Creates a guild command if a guild id is specified, otherwise global
