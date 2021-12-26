@@ -768,12 +768,33 @@ namespace DisCatSharp.ApplicationCommands
 
         private List<DiscordApplicationCommand> BuildGuildCreateList(ulong guildId,  List<DiscordApplicationCommand> updateList)
         {
-            var discord = this._guildDiscordCommands.Where(l => l.Key == guildId);
+            var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
+            List<DiscordApplicationCommand> NewCommands = new();
+            foreach(var cmd in updateList)
+            {
+                if(!discord.Where(d => d.Name == cmd.Name).Any())
+                {
+                    NewCommands.Add(cmd);
+                }
+            }
+
+            return NewCommands;
         }
 
         private Dictionary<ulong, DiscordApplicationCommand> BuildGuildOverwriteList(ulong guildId,  List<DiscordApplicationCommand> updateList)
         {
-            var discord = this._guildDiscordCommands.Where(l => l.Key == guildId);
+            var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
+            Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
+            foreach (var cmd in updateList)
+            {
+                var dc = discord.Where(d => d.Name == cmd.Name);
+                if (dc.Any())
+                {
+                    UpdateCommands.Add(dc.First().Id, cmd);
+                }
+            }
+
+            return UpdateCommands;
         }
 
         private List<ulong> BuildGlobalDeleteList(List<DiscordApplicationCommand> updateList)
