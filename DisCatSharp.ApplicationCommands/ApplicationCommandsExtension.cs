@@ -701,12 +701,6 @@ namespace DisCatSharp.ApplicationCommands
                             }
                         }
 
-
-                        // Rewrite
-                        var commands = guildid == null
-                            ? await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(updateList)
-                            : (IEnumerable<DiscordApplicationCommand>)await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guildid.Value, updateList);
-
                         List<DiscordApplicationCommand> Commands = new();
 
                         if(guildid == null)
@@ -714,12 +708,51 @@ namespace DisCatSharp.ApplicationCommands
                             var GlobalCommandsOverwriteList = this.BuildGlobalOverwriteList(updateList);
                             var GlobalCommandsCreateList = this.BuildGlobalCreateList(updateList);
                             var GlobalCommandsDeleteList = this.BuildGlobalDeleteList(updateList);
-                            foreach(var cmdId in GlobalCommandsDeleteList)
+
+                            if (GlobalCommandsCreateList.Any() && !GlobalCommandsOverwriteList.Any())
+                            {
+                                var cmds = await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(GlobalCommandsCreateList);
+                                Commands.AddRange(cmds);
+                            }
+                            else if (!GlobalCommandsCreateList.Any() && GlobalCommandsOverwriteList.Any())
+                            {
+                                List<DiscordApplicationCommand> OverwriteList = new();
+                                foreach (var overwrite in GlobalCommandsOverwriteList)
+                                {
+                                    var cmd = overwrite.Value;
+                                    cmd.Id = overwrite.Key;
+                                    OverwriteList.Add(cmd);
+                                }
+                                var discord_backend_commands = await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(OverwriteList);
+                                Commands.AddRange(discord_backend_commands);
+                            }
+                            else if (GlobalCommandsCreateList.Any() && GlobalCommandsOverwriteList.Any())
+                            {
+                                foreach (var cmd in GlobalCommandsCreateList)
+                                {
+                                    var discord_backend_command = await this.Client.CreateGlobalApplicationCommandAsync(cmd);
+                                    Commands.Add(discord_backend_command);
+                                }
+
+                                foreach (var cmd in GlobalCommandsOverwriteList)
+                                {
+                                    var command = cmd.Value;
+                                    var discord_backend_command = await this.Client.ApiClient.EditGlobalApplicationCommandAsync(this.Client.CurrentApplication.Id,
+                                        cmd.Key, command.Name, command.Description, command.Options.Any() ? Optional.FromValue(command.Options) : null, command.DefaultPermission,
+                                        command.NameLocalizations, command.DescriptionLocalizations
+                                    );
+                                    Commands.Add(discord_backend_command);
+                                }
+                            }
+                            else if (!GlobalCommandsCreateList.Any() && !GlobalCommandsOverwriteList.Any())
+                            {
+                                // Nothing to do.
+                            }
+
+                            foreach (var cmdId in GlobalCommandsDeleteList)
                             {
                                 await this.Client.DeleteGlobalApplicationCommandAsync(cmdId);
                             }
-
-
                             _globalCommands.AddRange(Commands);
                         }
                         else
@@ -778,7 +811,7 @@ namespace DisCatSharp.ApplicationCommands
 
                         //Creates a guild command if a guild id is specified, otherwise global
                         //Checks against the ids and adds them to the command method lists
-                        foreach (var command in commands)
+                        foreach (var command in Commands)
                         {
                             if (commandMethods.Any(x => x.Name == command.Name))
                             {
@@ -822,7 +855,7 @@ namespace DisCatSharp.ApplicationCommands
                         _subGroupCommands.AddRange(subGroupCommands);
                         _contextMenuCommands.AddRange(contextMenuCommands);
 
-                        _registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildid, commands.ToList()));
+                        _registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildid, Commands.ToList()));
 
                         foreach (var command in commandMethods)
                         {
