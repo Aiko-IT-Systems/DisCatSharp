@@ -813,11 +813,32 @@ namespace DisCatSharp.ApplicationCommands
         private List<DiscordApplicationCommand> BuildGlobalCreateList(List<DiscordApplicationCommand> updateList)
         {
             var discord = this._globalDiscordCommands;
+            List<DiscordApplicationCommand> NewCommands = new();
+            foreach (var cmd in updateList)
+            {
+                if (!discord.Where(d => d.Name == cmd.Name).Any())
+                {
+                    NewCommands.Add(cmd);
+                }
+            }
+
+            return NewCommands;
         }
 
         private Dictionary<ulong, DiscordApplicationCommand> BuildGlobalOverwriteList(List<DiscordApplicationCommand> updateList)
         {
             var discord = this._globalDiscordCommands;
+            Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
+            foreach (var cmd in updateList)
+            {
+                var dc = discord.Where(d => d.Name == cmd.Name);
+                if (dc.Any())
+                {
+                    UpdateCommands.Add(dc.First().Id, cmd);
+                }
+            }
+
+            return UpdateCommands;
         }
 
         /// <summary>
