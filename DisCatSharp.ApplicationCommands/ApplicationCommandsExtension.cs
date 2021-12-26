@@ -63,9 +63,15 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         private static List<ContextMenuCommand> _contextMenuCommands { get; set; } = new List<ContextMenuCommand>();
 
-        private List<DiscordApplicationCommand> _globalDiscordCommands { get; set; } = new List<DiscordApplicationCommand>();
+        /// <summary>
+        /// List of global commands on discords backend.
+        /// </summary>
+        private static List<DiscordApplicationCommand> _globalDiscordCommands { get; set; } = new List<DiscordApplicationCommand>();
 
-        private Dictionary<ulong, List<DiscordApplicationCommand>> _guildDiscordCommands { get; set; } = new Dictionary<ulong, List<DiscordApplicationCommand>>();
+        /// <summary>
+        /// List of guild commands on discords backend.
+        /// </summary>
+        private static Dictionary<ulong, List<DiscordApplicationCommand>> _guildDiscordCommands { get; set; } = new Dictionary<ulong, List<DiscordApplicationCommand>>();
 
         /// <summary>
         /// Singleton modules.
@@ -94,6 +100,14 @@ namespace DisCatSharp.ApplicationCommands
             => _registeredCommands;
         private static List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> _registeredCommands = new();
 
+        public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
+            => _globalCommands;
+        private static readonly List<DiscordApplicationCommand> _globalCommands = new();
+
+        public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
+        => _guildCommands;
+        private static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> _guildCommands = new();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
         /// </summary>
@@ -118,6 +132,7 @@ namespace DisCatSharp.ApplicationCommands
             this._slashExecuted = new AsyncEvent<ApplicationCommandsExtension, SlashCommandExecutedEventArgs>("SLASHCOMMAND_EXECUTED", TimeSpan.Zero, null);
             this._contextMenuErrored = new AsyncEvent<ApplicationCommandsExtension, ContextMenuErrorEventArgs>("CONTEXTMENU_ERRORED", TimeSpan.Zero, null);
             this._contextMenuExecuted = new AsyncEvent<ApplicationCommandsExtension, ContextMenuExecutedEventArgs>("CONTEXTMENU_EXECUTED", TimeSpan.Zero, null);
+            this._applicationCommandsModuleReady = new AsyncEvent<ApplicationCommandsExtension, ApplicationCommandsModuleReadyEventArgs>("APPLICATION_COMMANDS_READY", TimeSpan.Zero, null);
 
             this.Client.Ready += this.Update;
             this.Client.InteractionCreated += this.InteractionHandler;
@@ -223,6 +238,17 @@ namespace DisCatSharp.ApplicationCommands
         */
 
         /// <summary>
+        /// Fired when the application commands module is ready.
+        /// </summary>
+        public event AsyncEventHandler<ApplicationCommandsExtension, ApplicationCommandsModuleReadyEventArgs> ApplicationCommandsModuleReady
+        {
+            add { this._applicationCommandsModuleReady.Register(value); }
+            remove { this._applicationCommandsModuleReady.Unregister(value); }
+        }
+        private AsyncEvent<ApplicationCommandsExtension, ApplicationCommandsModuleReadyEventArgs> _applicationCommandsModuleReady;
+
+
+        /// <summary>
         /// To be run on ready.
         /// </summary>
         /// <param name="client">The client.</param>
@@ -238,10 +264,10 @@ namespace DisCatSharp.ApplicationCommands
             //Only update for shard 0
             if (this.Client.ShardId == 0)
             {
-                this._globalDiscordCommands = this.Client.GetGlobalApplicationCommandsAsync().Result.ToList();
+                _globalDiscordCommands = this.Client.GetGlobalApplicationCommandsAsync().Result.ToList();
                 foreach(var guild in this.Client.Guilds.Keys)
                 {
-                    this._guildDiscordCommands.Add(guild, this.Client.GetGuildApplicationCommandsAsync(guild).Result.ToList());
+                    _guildDiscordCommands.Add(guild, this.Client.GetGuildApplicationCommandsAsync(guild).Result.ToList());
                 }
 
                 //Groups commands by guild id or global
@@ -250,6 +276,14 @@ namespace DisCatSharp.ApplicationCommands
                     this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
                 }
             }
+
+            this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(this._configuration?.ServiceProvider)
+            {
+                Handled = true,
+                RegisteredGlobalCommands = GlobalCommands,
+                RegisteredGuildCommands = GuildCommands
+            }).Wait();
+
             return Task.CompletedTask;
         }
 
@@ -685,16 +719,61 @@ namespace DisCatSharp.ApplicationCommands
                                 await this.Client.DeleteGlobalApplicationCommandAsync(cmdId);
                             }
 
+
+                            _globalCommands.AddRange(Commands);
                         }
                         else
                         {
                             var GuildCommandsOverwriteList = this.BuildGuildOverwriteList(guildid.Value, updateList);
                             var GuildCommandsCreateList = this.BuildGuildCreateList(guildid.Value, updateList);
                             var GuildCommandsDeleteList = this.BuildGuildDeleteList(guildid.Value, updateList);
+
+                            if (GuildCommandsCreateList.Any() && !GuildCommandsOverwriteList.Any())
+                            {
+                                var cmds = await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guildid.Value, GuildCommandsCreateList);
+                                Commands.AddRange(cmds);
+                            }
+                            else if (!GuildCommandsCreateList.Any() && GuildCommandsOverwriteList.Any())
+                            {
+                                List<DiscordApplicationCommand> OverwriteList = new();
+                                foreach(var overwrite in GuildCommandsOverwriteList)
+                                {
+                                    var cmd = overwrite.Value;
+                                    cmd.Id = overwrite.Key;
+                                    OverwriteList.Add(cmd);
+                                }
+                                var discord_backend_commands = await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guildid.Value, OverwriteList);
+                                Commands.AddRange(discord_backend_commands);
+                            }
+                            else if (GuildCommandsCreateList.Any() && GuildCommandsOverwriteList.Any())
+                            {
+                                foreach(var cmd in GuildCommandsCreateList)
+                                {
+                                    var discord_backend_command = await this.Client.CreateGuildApplicationCommandAsync(guildid.Value, cmd);
+                                    Commands.Add(discord_backend_command);
+                                }
+
+                                foreach (var cmd in GuildCommandsOverwriteList)
+                                {
+                                    var command = cmd.Value;
+                                    var discord_backend_command = await this.Client.ApiClient.EditGuildApplicationCommandAsync(this.Client.CurrentApplication.Id, guildid.Value,
+                                        cmd.Key, command.Name, command.Description, command.Options.Any() ? Optional.FromValue(command.Options) : null, command.DefaultPermission,
+                                        command.NameLocalizations, command.DescriptionLocalizations
+                                    );
+                                    Commands.Add(discord_backend_command);
+                                }
+                            }
+                            else if (!GuildCommandsCreateList.Any() && !GuildCommandsOverwriteList.Any())
+                            {
+                                // Nothing to do.
+                            }
+
                             foreach (var cmdId in GuildCommandsDeleteList)
                             {
                                 await this.Client.DeleteGuildApplicationCommandAsync(guildid.Value, cmdId);
                             }
+
+                            _guildCommands.Add(guildid.Value, Commands);
                         }
 
                         //Creates a guild command if a guild id is specified, otherwise global
@@ -764,7 +843,7 @@ namespace DisCatSharp.ApplicationCommands
 
         private List<ulong> BuildGuildDeleteList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
-            var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First();
+            var discord = _guildDiscordCommands.Where(l => l.Key == guildId).First();
 
             List<ulong> InvalidCommandIds = new();
             foreach (var cmd in discord.Value)
@@ -778,7 +857,7 @@ namespace DisCatSharp.ApplicationCommands
 
         private List<DiscordApplicationCommand> BuildGuildCreateList(ulong guildId,  List<DiscordApplicationCommand> updateList)
         {
-            var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
+            var discord = _guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
             List<DiscordApplicationCommand> NewCommands = new();
             foreach(var cmd in updateList)
             {
@@ -793,7 +872,7 @@ namespace DisCatSharp.ApplicationCommands
 
         private Dictionary<ulong, DiscordApplicationCommand> BuildGuildOverwriteList(ulong guildId,  List<DiscordApplicationCommand> updateList)
         {
-            var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
+            var discord = _guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
             Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
             foreach (var cmd in updateList)
             {
@@ -809,7 +888,7 @@ namespace DisCatSharp.ApplicationCommands
 
         private List<ulong> BuildGlobalDeleteList(List<DiscordApplicationCommand> updateList)
         {
-            var discord = this._globalDiscordCommands;
+            var discord = _globalDiscordCommands;
             List<ulong> InvalidCommandIds = new();
             foreach(var cmd in discord)
             {
@@ -822,7 +901,7 @@ namespace DisCatSharp.ApplicationCommands
 
         private List<DiscordApplicationCommand> BuildGlobalCreateList(List<DiscordApplicationCommand> updateList)
         {
-            var discord = this._globalDiscordCommands;
+            var discord = _globalDiscordCommands;
             List<DiscordApplicationCommand> NewCommands = new();
             foreach (var cmd in updateList)
             {
@@ -837,7 +916,7 @@ namespace DisCatSharp.ApplicationCommands
 
         private Dictionary<ulong, DiscordApplicationCommand> BuildGlobalOverwriteList(List<DiscordApplicationCommand> updateList)
         {
-            var discord = this._globalDiscordCommands;
+            var discord = _globalDiscordCommands;
             Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
             foreach (var cmd in updateList)
             {
