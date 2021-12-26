@@ -693,7 +693,7 @@ namespace DisCatSharp.ApplicationCommands
                             var GuildCommandsDeleteList = this.BuildGuildDeleteList(guildid.Value, updateList);
                             foreach (var cmdId in GuildCommandsDeleteList)
                             {
-                                await this.Client.DeleteGuildApplicationCommandAsync(guildid, cmdId);
+                                await this.Client.DeleteGuildApplicationCommandAsync(guildid.Value, cmdId);
                             }
                         }
 
