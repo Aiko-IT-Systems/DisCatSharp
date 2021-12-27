@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,30 +21,27 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.ApplicationCommands.EventArgs
 {
     /// <summary>
-    /// Represents arguments for a <see cref="ApplicationCommandsExtension.SlashCommandErrored"/> event
+    /// Represents arguments for a <see cref="ApplicationCommandsExtension.ApplicationCommandsModuleReady"/> event.
     /// </summary>
-    public class SlashCommandErrorEventArgs : DiscordEventArgs
+    public class ApplicationCommandsModuleReadyEventArgs : DiscordEventArgs
     {
         /// <summary>
-        /// The context of the command.
+        /// Gets a list of all guild ids missing the application commands scope.
         /// </summary>
-        public InteractionContext Context { get; internal set; }
+        public IReadOnlyList<ulong> GuildsWithoutScope { get; internal set; }
 
         /// <summary>
-        /// The exception thrown.
-        /// </summary>
-        public Exception Exception { get; internal set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SlashCommandErrorEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="ApplicationCommandsModuleReadyEventArgs"/> class.
         /// </summary>
         /// <param name="provider">The provider.</param>
-        public SlashCommandErrorEventArgs(IServiceProvider provider) : base(provider)
+        internal ApplicationCommandsModuleReadyEventArgs(IServiceProvider provider) : base(provider)
         { }
     }
 }
