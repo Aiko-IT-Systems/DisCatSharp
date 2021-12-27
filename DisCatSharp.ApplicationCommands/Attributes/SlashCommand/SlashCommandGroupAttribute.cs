@@ -46,6 +46,16 @@ namespace DisCatSharp.ApplicationCommands
         public bool DefaultPermission { get; set; }
 
         /// <summary>
+        /// Gets the needed permission of this slash command group
+        /// </summary>
+        public Permissions? Permission { get; set; }
+
+        /// <summary>
+        /// Gets the dm permission of this slash command group
+        /// </summary>
+        public bool? DmPermission { get; set; }
+
+        /// <summary>
         /// Marks this class as a slash command group
         /// </summary>
         /// <param name="name">The name of this slash command group.</param>

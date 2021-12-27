@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using DisCatSharp.Entities;
+using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Models
 {
@@ -74,5 +75,15 @@ namespace DisCatSharp.Net.Models
         /// Sets the command's default permission.
         /// </summary>
         public Optional<bool> DefaultPermission { internal get; set; }
+
+        /// <summary>
+        /// Sets the command's needed permissions.
+        /// </summary>
+        public Optional<Permissions> Permission { internal get; set; }
+
+        /// <summary>
+        /// Sets whether the command can be used in direct messages.
+        /// </summary>
+        public Optional<bool> DmPermission { internal get; set; }
     }
 }
