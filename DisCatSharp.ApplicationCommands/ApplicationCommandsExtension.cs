@@ -970,10 +970,6 @@ namespace DisCatSharp.ApplicationCommands
                         }
 
                         RegistrationCount++;
-
-                        this.Client.Logger.LogDebug($"Planed are {ExpectedCount} commands to register.");
-                        this.Client.Logger.LogDebug($"{RegistrationCount} commands are registered.");
-
                         this.CheckRegistrationStartup();
                     }
                     catch (Exception ex)
