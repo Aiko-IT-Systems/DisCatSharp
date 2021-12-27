@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -66,12 +67,12 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// List of global commands on discords backend.
         /// </summary>
-        private static List<DiscordApplicationCommand> _globalDiscordCommands { get; set; } = new List<DiscordApplicationCommand>();
+        public static List<DiscordApplicationCommand> _globalDiscordCommands { get; set; } = new List<DiscordApplicationCommand>();
 
         /// <summary>
         /// List of guild commands on discords backend.
         /// </summary>
-        private static Dictionary<ulong, List<DiscordApplicationCommand>> _guildDiscordCommands { get; set; } = new Dictionary<ulong, List<DiscordApplicationCommand>>();
+        public static Dictionary<ulong, List<DiscordApplicationCommand>> _guildDiscordCommands { get; set; } = new Dictionary<ulong, List<DiscordApplicationCommand>>();
 
         /// <summary>
         /// Singleton modules.
@@ -208,7 +209,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         public async Task CleanGuildCommandsAsync()
         {
-            foreach(var guild in this.Client.Guilds.Values)
+            foreach (var guild in this.Client.Guilds.Values)
             {
                 await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, Array.Empty<DiscordApplicationCommand>());
             }
@@ -323,8 +324,8 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="e">The ready event args.</param>
-        internal async Task UpdateAsync(DiscordClient client, ReadyEventArgs e)
-            => await this.UpdateAsync();
+        internal Task UpdateAsync(DiscordClient client, ReadyEventArgs e)
+            => _ = Task.Run(async () => await this.UpdateAsync());
 
         /// <summary>
         /// Actual method for registering, used for RegisterCommands and on Ready.
@@ -339,7 +340,7 @@ namespace DisCatSharp.ApplicationCommands
 
                 List<ulong> FailedGuilds = new();
                 _globalDiscordCommands = this.Client.GetGlobalApplicationCommandsAsync().Result.ToList();
-                foreach(var guild in this.Client.Guilds.Keys)
+                foreach (var guild in this.Client.Guilds.Keys)
                 {
                     IEnumerable<DiscordApplicationCommand> Commands = null;
                     var unauthorized = false;
@@ -359,8 +360,15 @@ namespace DisCatSharp.ApplicationCommands
                             FailedGuilds.Add(guild);
                     }
                 }
-
-                foreach (var key in commands_pending)
+                if (this._configuration is not null && this._configuration.EnableDefaultHelp)
+                {
+                    foreach (var key in commands_pending.ToList())
+                    {
+                        this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
+                            (key, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
+                    }
+                }
+                foreach (var key in commands_pending.ToList())
                 {
                     this.Client.Logger.LogDebug(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
                     this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
@@ -1957,5 +1965,91 @@ namespace DisCatSharp.ApplicationCommands
         /// Gets or sets the method.
         /// </summary>
         public MethodInfo Method { get; set; }
+    }
+
+    /// <summary>
+    /// Represents the default help module.
+    /// </summary>
+    public class DefaultHelpModule : ApplicationCommandsModule
+    {
+        [SlashCommand("help", "Displays command help")]
+        public async Task DefaultHelpAsync(InteractionContext ctx,
+            [Option("command_name", "command to provide help for")] string commandName)
+        {
+            ulong currentGuildId = ctx.Guild.Id;
+            string[] args = commandName.Split(' ');
+            var applicationCommands = new List<DiscordApplicationCommand>();
+            applicationCommands.AddRange(ApplicationCommandsExtension._globalDiscordCommands);
+            applicationCommands.AddRange(ApplicationCommandsExtension._guildDiscordCommands[currentGuildId]);
+            applicationCommands.Distinct().ToList();
+            applicationCommands.RemoveAll(ac => ac.Name.ToLower().Equals("help"));
+            bool isSubCommandQuery = false;
+            if (applicationCommands is null)
+            {
+                await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+                    .WithContent($"There are no slash commands for guild {ctx.Guild.Name}").AsEphemeral(true));
+                return;
+            }
+            if (args.Length > 1)
+            {
+                isSubCommandQuery = true;
+            }
+            if (isSubCommandQuery)
+            {
+                List<DiscordApplicationCommand> commandsWithOptions = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.All(op => op.Type == ApplicationCommandOptionType.SubCommand));
+                DiscordApplicationCommand subCommandParent = commandsWithOptions.FirstOrDefault(cm => cm.Name.ToLower().Equals(args[0].ToLower()));
+                var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.ToLower().Equals(args[1].ToLower()));
+                var discordEmbed = new DiscordEmbedBuilder
+                {
+                    Title = "Help",
+                    Description = $"{Formatter.InlineCode(subCommand.Name)}: {subCommand.Description ?? "No description provided."}"
+                };
+                if (subCommand.Options is not null)
+                {
+                    List<DiscordApplicationCommandOption> commandOptions = subCommand.Options.ToList();
+                    var sb = new StringBuilder();
+
+                    foreach (var option in commandOptions)
+                        sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
+
+                    sb.Append('\n');
+                    discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
+                }
+                await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+                    new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
+            }
+            else
+            {
+                DiscordApplicationCommand command = applicationCommands.FirstOrDefault(cm => cm.Name.ToLower().Equals(commandName.ToLower()));
+                if (command is null)
+                {
+                    await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+                            .WithContent($"No command called {commandName} in guild {ctx.Guild.Name}").AsEphemeral(true));
+                    return;
+                }
+                else
+                {
+                    //AddField(this.Command != null ? "Subcommands" : "Commands", string.Join(", ", subcommands.Select(x => Formatter.InlineCode(x.Name))), false);
+                    var discordEmbed = new DiscordEmbedBuilder
+                    {
+                        Title = "Help",
+                        Description = $"{Formatter.InlineCode(command.Name)}: {command.Description ?? "No description provided."}"
+                    };
+                    if (command.Options is not null)
+                    {
+                        List<DiscordApplicationCommandOption> commandOptions = command.Options.ToList();
+                        var sb = new StringBuilder();
+
+                        foreach (var option in commandOptions)
+                            sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
+
+                        sb.Append('\n');
+                        discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
+                    }
+                    await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+                        new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
+                }
+            }
+        }
     }
 }

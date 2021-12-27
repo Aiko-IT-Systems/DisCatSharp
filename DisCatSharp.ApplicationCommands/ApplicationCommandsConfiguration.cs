@@ -38,6 +38,15 @@ namespace DisCatSharp.ApplicationCommands
         public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
 
         /// <summary>
+        /// <para>Sets whether to enable default help command.</para>
+        /// <para>Disabling this will allow you to make your own help command.</para>
+        /// <para>
+        /// </para>
+        /// <para>Defaults to true.</para>
+        /// </summary>
+        public bool EnableDefaultHelp { internal get; set; } = true;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
         /// </summary>
         /// <param name="provider">The service provider.</param>
@@ -46,5 +55,13 @@ namespace DisCatSharp.ApplicationCommands
         {
             this.ServiceProvider = provider;
         }
+
+        public ApplicationCommandsConfiguration(ApplicationCommandsConfiguration acc)
+        {
+            this.EnableDefaultHelp = acc.EnableDefaultHelp;
+            this.ServiceProvider = acc.ServiceProvider;
+        }
+
+        public ApplicationCommandsConfiguration() { }
     }
 }
