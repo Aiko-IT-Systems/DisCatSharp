@@ -48,12 +48,12 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Gets the needed permission of this command
         /// </summary>
-        public Permissions Permission { get; set; }
+        public Permissions? Permission { get; set; }
 
         /// <summary>
         /// Gets the dm permission of this command
         /// </summary>
-        public bool DmPermission { get; set; }
+        public bool? DmPermission { get; set; }
 
         /// <summary>
         /// Marks this method as a slash command
