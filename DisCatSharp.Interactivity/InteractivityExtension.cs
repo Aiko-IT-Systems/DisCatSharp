@@ -169,28 +169,13 @@ namespace DisCatSharp.Interactivity
             return new(res is null, res);
         }
 
-        /*
-         * TODO: Later
-        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(DiscordMessage message, DiscordInteractionModalBuilder modalBuilder, CancellationToken token)
-        {
-            if (message.Author != this.Client.CurrentUser)
-                throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
-
-            if (!message.Components.Any())
-                throw new ArgumentException("Provided message does not contain any components.");
-
-            if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
-                throw new ArgumentException("Provided Message does not contain any button components.");
-
-            var res = await this.ComponentEventWaiter
-                .WaitForMatchAsync(new(message,
-                    c =>
-                        c.Interaction.Type == InteractionType.ModalSubmit &&
-                        modalBuilder.ModalComponents.Any(b => b.CustomId == c.Id), token)).ConfigureAwait(false);
-
-            return new(res is null, res);
-        }
-        */
+        /// <summary>
+        /// Waits for a user modal submit.
+        /// </summary>
+        /// <param name="id">The id of the modal to wait for.</param>
+        /// <param name="timeoutOverride">Override the timeout period in <see cref="InteractivityConfiguration"/>.</param>
+        public Task<InteractivityResult<InteractionCreateEventArgs>> WaitForModalAsync(string id, TimeSpan? timeoutOverride = null)
+            => this.WaitForEventArgsAsync<InteractionCreateEventArgs>(m => m.Interaction.Data.CustomId == id, timeoutOverride);
 
         /// <summary>
         /// Waits for any button on the specified message to be pressed.
