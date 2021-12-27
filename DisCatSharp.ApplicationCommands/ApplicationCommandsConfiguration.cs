@@ -59,7 +59,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Creates a new instance of <see cref="ApplicationCommandsConfiguration"/>, copying the properties of another configuration.
         /// </summary>
-        /// <param name="other">Configuration the properties of which are to be copied.</param>
+        /// <param name="acc">Configuration the properties of which are to be copied.</param>
         public ApplicationCommandsConfiguration(ApplicationCommandsConfiguration acc)
         {
             this.EnableDefaultHelp = acc.EnableDefaultHelp;

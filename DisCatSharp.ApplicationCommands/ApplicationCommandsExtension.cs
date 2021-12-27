@@ -67,12 +67,12 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// List of global commands on discords backend.
         /// </summary>
-        public static List<DiscordApplicationCommand> _globalDiscordCommands { get; set; } = new List<DiscordApplicationCommand>();
+        private static List<DiscordApplicationCommand> _globalDiscordCommands { get; set; } = new List<DiscordApplicationCommand>();
 
         /// <summary>
         /// List of guild commands on discords backend.
         /// </summary>
-        public static Dictionary<ulong, List<DiscordApplicationCommand>> _guildDiscordCommands { get; set; } = new Dictionary<ulong, List<DiscordApplicationCommand>>();
+        private static Dictionary<ulong, List<DiscordApplicationCommand>> _guildDiscordCommands { get; set; } = new Dictionary<ulong, List<DiscordApplicationCommand>>();
 
         /// <summary>
         /// Singleton modules.
@@ -1980,8 +1980,10 @@ namespace DisCatSharp.ApplicationCommands
             ulong currentGuildId = ctx.Guild.Id;
             string[] args = commandName.Split(' ');
             var applicationCommands = new List<DiscordApplicationCommand>();
-            applicationCommands.AddRange(ApplicationCommandsExtension._globalDiscordCommands);
-            applicationCommands.AddRange(ApplicationCommandsExtension._guildDiscordCommands[currentGuildId]);
+            var globalCommands = await ctx.Client.GetGlobalApplicationCommandsAsync();
+            var guildCommands = await ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
+            applicationCommands.AddRange(globalCommands);
+            applicationCommands.AddRange(guildCommands);
             applicationCommands.Distinct().ToList();
             applicationCommands.RemoveAll(ac => ac.Name.ToLower().Equals("help"));
             bool isSubCommandQuery = false;
