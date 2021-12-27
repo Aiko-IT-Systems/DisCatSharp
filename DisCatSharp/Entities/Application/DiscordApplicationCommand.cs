@@ -97,6 +97,18 @@ namespace DisCatSharp.Entities
         public bool DefaultPermission { get; internal set; }
 
         /// <summary>
+        /// Gets the commands needed permissions.
+        /// </summary>
+        [JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Ignore)]
+        public Permissions? Permission { get; internal set; }
+
+        /// <summary>
+        /// Gets whether the command can be used in direct messages.
+        /// </summary>
+        [JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? DmPermission { get; internal set; }
+
+        /// <summary>
         /// Gets the version number for this command. 
         /// </summary>
         [JsonProperty("version")]

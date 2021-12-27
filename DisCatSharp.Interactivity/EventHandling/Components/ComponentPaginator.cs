@@ -97,6 +97,9 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <param name="e">The event arguments.</param>
         private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs e)
         {
+            if (e.Interaction.Type == InteractionType.ModalSubmit)
+                return;
+
             if (!this._requests.TryGetValue(e.Message.Id, out var req))
                 return;
 

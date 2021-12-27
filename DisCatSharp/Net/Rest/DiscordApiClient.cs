@@ -5101,6 +5101,9 @@ namespace DisCatSharp.Net
         /// <returns>A Task.</returns>
         internal async Task CreateInteractionModalResponseAsync(ulong interaction_id, string interaction_token, InteractionResponseType type, DiscordInteractionModalBuilder builder)
         {
+            if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type != Enums.ComponentType.InputText)))
+                throw new NotSupportedException("Can't send any other type then Input Text as Modal Component.");
+
             var pld = new RestInteractionModalResponsePayload
             {
                 Type = type,
