@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -116,22 +117,22 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="type">The type of the response.</param>
         /// <param name="builder">The data, if any, to send.</param>
-        public Task CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder builder = null) =>
-            this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
+        public Task CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder builder = null)
+            => this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
 
         /// <summary>
         /// Creates a modal response to this interaction.
         /// </summary>
         /// <param name="builder">The data to send.</param>
-        public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder) =>
-            this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder);
+        public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder)
+            => this.Type != InteractionType.Ping && this.Type != InteractionType.ModalSubmit ?  this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder) : throw new NotSupportedException("You can't respond to an PING with a modal.");
 
         /// <summary>
         /// Gets the original interaction response.
         /// </summary>
         /// <returns>The origingal message that was sent. This <b>does not work on ephemeral messages.</b></returns>
-        public Task<DiscordMessage> GetOriginalResponseAsync() =>
-            this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
+        public Task<DiscordMessage> GetOriginalResponseAsync()
+            => this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
 
         /// <summary>
         /// Edits the original interaction response.
@@ -160,8 +161,8 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Deletes the original interaction response.
         /// </summary>>
-        public Task DeleteOriginalResponseAsync() =>
-            this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
+        public Task DeleteOriginalResponseAsync()
+            =>  this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
 
         /// <summary>
         /// Creates a follow up message to this interaction.
@@ -179,8 +180,8 @@ namespace DisCatSharp.Entities
         /// Gets a follow up message.
         /// </summary>
         /// <param name="messageId">The id of the follow up message.</param>
-        public Task<DiscordMessage> GetFollowupMessageAsync(ulong messageId) =>
-            this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
+        public Task<DiscordMessage> GetFollowupMessageAsync(ulong messageId)
+            => this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
 
         /// <summary>
         /// Edits a follow up message.
@@ -212,7 +213,7 @@ namespace DisCatSharp.Entities
         /// Deletes a follow up message.
         /// </summary>
         /// <param name="messageId">The id of the follow up message.</param>
-        public Task DeleteFollowupMessageAsync(ulong messageId) =>
-            this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
+        public Task DeleteFollowupMessageAsync(ulong messageId)
+            => this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
     }
 }

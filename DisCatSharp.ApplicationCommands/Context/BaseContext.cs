@@ -120,8 +120,8 @@ namespace DisCatSharp.ApplicationCommands
         /// Creates a modal response to this interaction.
         /// </summary>
         /// <param name="builder">The data to send.</param>
-        public Task CreateModalResponseAsync(DiscordInteractionModalBuilder builder) =>
-            this.Interaction.CreateInteractionModalResponseAsync(builder);
+        public Task CreateModalResponseAsync(DiscordInteractionModalBuilder builder)
+            => this.Interaction.Type != InteractionType.Ping && this.Interaction.Type != InteractionType.ModalSubmit ? this.Interaction.CreateInteractionModalResponseAsync(builder) : throw new NotSupportedException("You can't respond to an PING with a modal.");
 
         /// <summary>
         /// Edits the interaction response.
