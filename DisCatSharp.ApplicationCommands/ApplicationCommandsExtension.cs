@@ -839,10 +839,17 @@ namespace DisCatSharp.ApplicationCommands
                                         foreach (var cmd in GlobalCommandsOverwriteList)
                                         {
                                             var command = cmd.Value;
-                                            var discord_backend_command = await this.Client.ApiClient.EditGlobalApplicationCommandAsync(this.Client.CurrentApplication.Id,
-                                        cmd.Key, command.Name, command.Description, command.Options.Any() ? Optional.FromValue(command.Options) : null, command.DefaultPermission,
-                                        command.NameLocalizations, command.DescriptionLocalizations
-                                    );
+
+                                            var discord_backend_command = await this.Client.EditGlobalApplicationCommandAsync(cmd.Key, action =>
+                                            {
+                                                action.Name = command.Name;
+                                                action.NameLocalizations = command.NameLocalizations;
+                                                action.Description = command.Description;
+                                                action.DescriptionLocalizations = command.DescriptionLocalizations;
+                                                if(command.Options != null && command.Options.Any())
+                                                    action.Options = Optional.FromValue(command.Options);
+                                                action.DefaultPermission = command.DefaultPermission;
+                                            });
                                             Commands.Add(discord_backend_command);
                                         }
                                     }
@@ -897,10 +904,17 @@ namespace DisCatSharp.ApplicationCommands
                                         foreach (var cmd in GuildCommandsOverwriteList)
                                         {
                                             var command = cmd.Value;
-                                            var discord_backend_command = await this.Client.ApiClient.EditGuildApplicationCommandAsync(this.Client.CurrentApplication.Id, guildid.Value,
-                                        cmd.Key, command.Name, command.Description, command.Options.Any() ? Optional.FromValue(command.Options) : null, command.DefaultPermission,
-                                        command.NameLocalizations, command.DescriptionLocalizations
-                                    );
+                                            var discord_backend_command = await this.Client.EditGuildApplicationCommandAsync(guildid.Value, cmd.Key, action =>
+                                            {
+                                                action.Name = command.Name;
+                                                action.NameLocalizations = command.NameLocalizations;
+                                                action.Description = command.Description;
+                                                action.DescriptionLocalizations = command.DescriptionLocalizations;
+                                                if(command.Options != null && command.Options.Any())
+                                                    action.Options = Optional.FromValue(command.Options);
+                                                action.DefaultPermission = command.DefaultPermission;
+                                            });
+
                                             Commands.Add(discord_backend_command);
                                         }
                                     }
