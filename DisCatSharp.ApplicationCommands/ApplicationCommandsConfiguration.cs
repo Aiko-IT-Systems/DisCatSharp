@@ -56,12 +56,19 @@ namespace DisCatSharp.ApplicationCommands
             this.ServiceProvider = provider;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ApplicationCommandsConfiguration"/>, copying the properties of another configuration.
+        /// </summary>
+        /// <param name="other">Configuration the properties of which are to be copied.</param>
         public ApplicationCommandsConfiguration(ApplicationCommandsConfiguration acc)
         {
             this.EnableDefaultHelp = acc.EnableDefaultHelp;
             this.ServiceProvider = acc.ServiceProvider;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ApplicationCommandsConfiguration"/>.
+        /// </summary>
         public ApplicationCommandsConfiguration() { }
     }
 }

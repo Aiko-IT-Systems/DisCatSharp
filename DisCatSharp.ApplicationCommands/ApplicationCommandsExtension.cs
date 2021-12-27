@@ -209,7 +209,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         public async Task CleanGuildCommandsAsync()
         {
-            foreach (var guild in this.Client.Guilds.Values)
+            foreach(var guild in this.Client.Guilds.Values)
             {
                 await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, Array.Empty<DiscordApplicationCommand>());
             }
@@ -340,7 +340,7 @@ namespace DisCatSharp.ApplicationCommands
 
                 List<ulong> FailedGuilds = new();
                 _globalDiscordCommands = this.Client.GetGlobalApplicationCommandsAsync().Result.ToList();
-                foreach (var guild in this.Client.Guilds.Keys)
+                foreach(var guild in this.Client.Guilds.Keys)
                 {
                     IEnumerable<DiscordApplicationCommand> Commands = null;
                     var unauthorized = false;
@@ -362,13 +362,13 @@ namespace DisCatSharp.ApplicationCommands
                 }
                 if (this._configuration is not null && this._configuration.EnableDefaultHelp)
                 {
-                    foreach (var key in commands_pending.ToList())
+                    foreach(var key in commands_pending.ToList())
                     {
                         this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
                             (key, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
                     }
                 }
-                foreach (var key in commands_pending.ToList())
+                foreach(var key in commands_pending.ToList())
                 {
                     this.Client.Logger.LogDebug(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
                     this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
@@ -1967,6 +1967,7 @@ namespace DisCatSharp.ApplicationCommands
         public MethodInfo Method { get; set; }
     }
 
+    #region Default Help
     /// <summary>
     /// Represents the default help module.
     /// </summary>
@@ -2029,7 +2030,6 @@ namespace DisCatSharp.ApplicationCommands
                 }
                 else
                 {
-                    //AddField(this.Command != null ? "Subcommands" : "Commands", string.Join(", ", subcommands.Select(x => Formatter.InlineCode(x.Name))), false);
                     var discordEmbed = new DiscordEmbedBuilder
                     {
                         Title = "Help",
@@ -2052,4 +2052,5 @@ namespace DisCatSharp.ApplicationCommands
             }
         }
     }
+    #endregion
 }
