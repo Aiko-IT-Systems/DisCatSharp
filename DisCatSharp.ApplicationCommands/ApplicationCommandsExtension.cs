@@ -1013,7 +1013,7 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 Handled = true,
                                 GuildId = guildid.Value,
-                                RegisteredCommands = _guildCommands.Single(c => c.Key == guildid.Value).Value
+                                RegisteredCommands = _guildCommands.Any(c => c.Key == guildid.Value) ? _guildCommands.Single(c => c.Key == guildid.Value).Value : null
                             });
                         }
                         else
