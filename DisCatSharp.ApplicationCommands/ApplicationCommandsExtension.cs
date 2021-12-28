@@ -131,12 +131,18 @@ namespace DisCatSharp.ApplicationCommands
         private IReadOnlyList<ulong> MissingScopeGuildIds { get; set; }
 
         /// <summary>
+        /// Gets whether debug is enabled.
+        /// </summary>
+        private static bool DebugEnabled { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         internal ApplicationCommandsExtension(ApplicationCommandsConfiguration configuration)
         {
             this._configuration = configuration;
+            DebugEnabled = configuration.DebugStartupCounts;
         }
 
         /// <summary>
@@ -340,6 +346,9 @@ namespace DisCatSharp.ApplicationCommands
 
                 var commands_pending = this._updateList.Select(x => x.Key).Distinct();
                 ExpectedCount = commands_pending.Count();
+
+                if (DebugEnabled)
+                    this.Client.Logger.LogDebug($"Expected Count: {ExpectedCount}");
 
                 List<ulong> FailedGuilds = new();
                 IEnumerable<DiscordApplicationCommand> GlobalCommands = null;
@@ -1022,7 +1031,7 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 Handled = true,
                                 GuildId = guildid.Value,
-                                RegisteredCommands = _guildCommands.Single(c => c.Key == guildid.Value).Value
+                                RegisteredCommands = _guildCommands.Any(c => c.Key == guildid.Value) ? _guildCommands.Single(c => c.Key == guildid.Value).Value : null
                             });
                         }
                         else
@@ -1035,6 +1044,8 @@ namespace DisCatSharp.ApplicationCommands
                         }
 
                         RegistrationCount++;
+                        if (DebugEnabled)
+                            this.Client.Logger.LogDebug($"Expected Count: {ExpectedCount}\nCurrent Count: {RegistrationCount}");
                         this.CheckRegistrationStartup();
                     }
                     catch (Exception ex)
@@ -1069,6 +1080,8 @@ namespace DisCatSharp.ApplicationCommands
 
         private async void CheckRegistrationStartup()
         {
+            if (DebugEnabled)
+                this.Client.Logger.LogDebug($"Checking counts...\n\nExpected Count: {ExpectedCount}\nCurrent Count: {RegistrationCount}");
             if (RegistrationCount == ExpectedCount)
             {
                 await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new ApplicationCommandsModuleStartupFinishedEventArgs(this._configuration?.ServiceProvider)
