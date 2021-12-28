@@ -308,10 +308,10 @@ namespace DisCatSharp.Common
         /// Fills specified memory region with random bytes.
         /// </summary>
         /// <param name="buffer">Memory region to fill with bytes.</param>
-        #if NETCOREAPP
+#if NETCOREAPP
         override 
-        #endif 
-        public void NextBytes(Span<byte> buffer)
+#endif
+        public new void NextBytes(Span<byte> buffer)
             => this.GetBytes(buffer);
 
         /// <summary>
