@@ -1103,7 +1103,8 @@ namespace DisCatSharp.ApplicationCommands
                     RegisteredGuildCommands = _guildCommands,
                     GuildsWithoutScope = MissingScopeGuildIds
                 });
-                this.MapGuildCommands();
+                if (GuildDownloadFinished)
+                    this.MapGuildCommands();
                 this.FinishedRegistration();
             }
         }
