@@ -136,6 +136,11 @@ namespace DisCatSharp.ApplicationCommands
         private static bool DebugEnabled { get; set; }
 
         /// <summary>
+        /// Gets whether the guild download is finished.
+        /// </summary>
+        private static bool GuildDownloadFinished { get; set; } = false;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
@@ -168,6 +173,13 @@ namespace DisCatSharp.ApplicationCommands
             this.Client.Ready += this.UpdateAsync;
             this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
             this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
+            this.Client.GuildDownloadCompleted += this.Client_GuildDownloadCompleted;
+        }
+
+        private Task Client_GuildDownloadCompleted(DiscordClient sender, GuildDownloadCompletedEventArgs e)
+        {
+            GuildDownloadFinished = true;
+            return Task.CompletedTask;
         }
 
         private async Task CatchInteractionsOnStartup(DiscordClient sender, InteractionCreateEventArgs e)
@@ -1091,7 +1103,26 @@ namespace DisCatSharp.ApplicationCommands
                     RegisteredGuildCommands = _guildCommands,
                     GuildsWithoutScope = MissingScopeGuildIds
                 });
+                this.MapGuildCommands();
                 this.FinishedRegistration();
+            }
+        }
+
+        private void MapGuildCommands()
+        {
+            var guilds = this.Client.Guilds;
+            foreach(var guild in guilds)
+            {
+                var guildCommands = _guildCommands[guild.Key];
+                if (guildCommands != null && guildCommands.Any())
+                {
+                    Dictionary<ulong, string> commands = new(guildCommands.Count);
+                    foreach(var cmd in guildCommands)
+                    {
+                        commands.Add(cmd.Id, cmd.Name);
+                    }
+                    guild.Value.RegisteredApplicationCommands = commands;
+                }
             }
         }
 
