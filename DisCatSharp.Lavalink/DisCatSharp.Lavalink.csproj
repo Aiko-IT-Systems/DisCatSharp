@@ -5,12 +5,11 @@
   <Import Project="../DisCatSharp.targets" />
   <Import Project="../Package.targets" />
   <Import Project="../NuGet.targets" />
+  <Import Project="../Library.targets" />
 
   <PropertyGroup>
     <AssemblyName>DisCatSharp.Lavalink</AssemblyName>
     <RootNamespace>DisCatSharp.Lavalink</RootNamespace>
-    <OutputType>Library</OutputType>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 

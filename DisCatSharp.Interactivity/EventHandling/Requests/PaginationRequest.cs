@@ -36,7 +36,7 @@ namespace DisCatSharp.Interactivity.EventHandling
     {
         private TaskCompletionSource<bool> _tcs;
         private readonly CancellationTokenSource _ct;
-        private TimeSpan _timeout;
+        private readonly TimeSpan _timeout;
         private readonly List<Page> _pages;
         private readonly PaginationBehaviour _behaviour;
         private readonly DiscordMessage _message;

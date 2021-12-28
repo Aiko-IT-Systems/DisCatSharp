@@ -4,6 +4,7 @@
   <Import Project="../Version.targets" />
   <Import Project="../DisCatSharp.targets" />
   <Import Project="../NuGet.targets" />
+  <Import Project="../Library.targets" />
 
   <PropertyGroup>
     <AssemblyName>DisCatSharp.Common</AssemblyName>
@@ -13,8 +14,6 @@
     <Optimize>True</Optimize>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DebugType>Portable</DebugType>
-    <OutputType>Library</OutputType>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -28,12 +27,12 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <NoWarn>1701;1702;;DV2001</NoWarn>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1|AnyCPU'">
+    <NoWarn>1701;1702;DV2001</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <NoWarn>1701;1702;;DV2001</NoWarn>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1|AnyCPU'">
+    <NoWarn>1701;1702;DV2001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

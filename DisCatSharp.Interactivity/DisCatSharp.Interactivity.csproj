@@ -5,12 +5,11 @@
   <Import Project="../DisCatSharp.targets" />
   <Import Project="../Package.targets" />
   <Import Project="../NuGet.targets" />
+  <Import Project="../Library.targets" />
 
   <PropertyGroup>
     <AssemblyName>DisCatSharp.Interactivity</AssemblyName>
     <RootNamespace>DisCatSharp.Interactivity</RootNamespace>
-    <OutputType>Library</OutputType>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
