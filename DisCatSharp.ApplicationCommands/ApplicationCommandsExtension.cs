@@ -2228,7 +2228,18 @@ namespace DisCatSharp.ApplicationCommands
                 var slashCommands = globalCommands.Concat(guildCommands)
                 .Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
                 .GroupBy(ac => ac.Name).Select(x => x.First());
-                slashCommands.ToList().ForEach(sc => options.Add(new DiscordApplicationCommandAutocompleteChoice(sc.Name, sc.Name.Trim())));
+                var list = slashCommands.ToList();
+                var count = 0;
+                foreach (var sc in list)
+                {
+                    if (count < 25)
+                    {
+                        options.Add(new DiscordApplicationCommandAutocompleteChoice(sc.Name, sc.Name.Trim()));
+                        count++;
+                    }
+                    else
+                        continue;
+                }
                 return options.AsEnumerable();
             }
         }
@@ -2251,7 +2262,18 @@ namespace DisCatSharp.ApplicationCommands
                 }
                 else
                 {
-                    command.Options.ToList().ForEach(option => options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name)));
+                    var opt = command.Options.ToList();
+                    var count = 0;
+                    foreach (var option in opt)
+                    {
+                        if (count < 25)
+                        {
+                            options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
+                            count++;
+                        }
+                        else
+                            continue;
+                    }
                 }
                 return options.AsEnumerable();
             }
@@ -2281,7 +2303,19 @@ namespace DisCatSharp.ApplicationCommands
                 }
                 else
                 {
-                    foundCommand.Options.ToList().ForEach(option => options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name)));
+                    var opt = foundCommand.Options.ToList();
+
+                    var count = 0;
+                    foreach (var option in opt)
+                    {
+                        if (count < 25)
+                        {
+                            options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
+                            count++;
+                        }
+                        else
+                            continue;
+                    }
                 }
                 return options.AsEnumerable();
             }
