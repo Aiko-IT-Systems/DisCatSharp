@@ -33,17 +33,27 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Gets the name of this command
         /// </summary>
-        public string Name { get; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets the description of this command
         /// </summary>
-        public string Description { get; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets the default permission of this command
         /// </summary>
         public bool DefaultPermission { get; }
+
+        /// <summary>
+        /// Gets the needed permission of this command
+        /// </summary>
+        public Permissions? Permission { get; set; }
+
+        /// <summary>
+        /// Gets the dm permission of this command
+        /// </summary>
+        public bool? DmPermission { get; set; }
 
         /// <summary>
         /// Marks this method as a slash command

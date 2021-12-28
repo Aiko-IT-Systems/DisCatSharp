@@ -67,6 +67,18 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("default_permission")]
         public bool DefaultPermission { get; set; }
+
+        /// <summary>
+        /// The command needed permissions.
+        /// </summary>
+        [JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Ignore)]
+        public Permissions? DefaultMemberPermission { get; set; }
+
+        /// <summary>
+        /// Whether the command is allowed for dms.
+        /// </summary>
+        [JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? DmPermission { get; set; }
     }
 
     /// <summary>
@@ -103,6 +115,18 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("default_permission")]
         public Optional<bool> DefaultPermission { get; set; }
+
+        /// <summary>
+        /// The command needed permissions.
+        /// </summary>
+        [JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<Permissions> DefaultMemberPermission { get; set; }
+
+        /// <summary>
+        /// Whether the command is allowed for dms.
+        /// </summary>
+        [JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Ignore)]
+        public Optional<bool> DmPermission { get; set; }
     }
 
     /// <summary>

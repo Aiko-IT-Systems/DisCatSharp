@@ -3106,9 +3106,11 @@ namespace DisCatSharp
 
             if (interaction.Type is InteractionType.Component || interaction.Type is InteractionType.ModalSubmit)
             {
-
-                interaction.Message.Discord = this;
-                interaction.Message.ChannelId = interaction.ChannelId;
+                if (interaction.Message != null)
+                {
+                    interaction.Message.Discord = this;
+                    interaction.Message.ChannelId = interaction.ChannelId;
+                }
                 var cea = new ComponentInteractionCreateEventArgs(this.ServiceProvider)
                 {
                     Message = interaction.Message,

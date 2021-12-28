@@ -54,9 +54,13 @@ namespace DisCatSharp.Interactivity
 
         private EventWaiter<TypingStartEventArgs> TypingStartWaiter;
 
+        private EventWaiter<ComponentInteractionCreateEventArgs> ModalInteractionWaiter;
+
         private EventWaiter<ComponentInteractionCreateEventArgs> ComponentInteractionWaiter;
 
         private ComponentEventWaiter ComponentEventWaiter;
+
+        private ModalEventWaiter ModalEventWaiter;
 
         private ReactionCollector ReactionCollector;
 
@@ -86,12 +90,14 @@ namespace DisCatSharp.Interactivity
             this.MessageCreatedWaiter = new EventWaiter<MessageCreateEventArgs>(this.Client);
             this.MessageReactionAddWaiter = new EventWaiter<MessageReactionAddEventArgs>(this.Client);
             this.ComponentInteractionWaiter = new EventWaiter<ComponentInteractionCreateEventArgs>(this.Client);
+            this.ModalInteractionWaiter = new EventWaiter<ComponentInteractionCreateEventArgs>(this.Client);
             this.TypingStartWaiter = new EventWaiter<TypingStartEventArgs>(this.Client);
             this.Poller = new Poller(this.Client);
             this.ReactionCollector = new ReactionCollector(this.Client);
             this.Paginator = new Paginator(this.Client);
             this._compPaginator = new(this.Client, this.Config);
             this.ComponentEventWaiter = new(this.Client, this.Config);
+            this.ModalEventWaiter = new(this.Client, this.Config);
 
         }
 
@@ -167,6 +173,32 @@ namespace DisCatSharp.Interactivity
                         buttons.Any(b => b.CustomId == c.Id), token)).ConfigureAwait(false);
 
             return new(res is null, res);
+        }
+
+        /// <summary>
+        /// Waits for a user modal submit.
+        /// </summary>
+        /// <param name="custom_id">The custom id of the modal to wait for.</param>
+        /// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
+        /// <returns>A <see cref="InteractivityResult{T}"/> with the result of the modal.</returns>
+        public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string custom_id, TimeSpan? timeoutOverride = null)
+            => this.WaitForModalAsync(custom_id, this.GetCancellationToken(timeoutOverride));
+
+        /// <summary>
+        /// Waits for a user modal submit.
+        /// </summary>
+        /// <param name="custom_id">The custom id of the modal to wait for.</param>
+        /// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
+        /// <returns>A <see cref="InteractivityResult{T}"/> with the result of the modal.</returns>
+        public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string custom_id, CancellationToken token)
+        {
+            var result =
+                await this
+                .ModalEventWaiter
+                .WaitForModalMatchAsync(new(custom_id, c => c.Interaction.Type == InteractionType.ModalSubmit, token))
+                .ConfigureAwait(false);
+
+            return new(result is null, result);
         }
 
         /// <summary>
