@@ -858,7 +858,14 @@ namespace DisCatSharp.ApplicationCommands
                                     {
                                         foreach (var cmdId in GlobalCommandsDeleteList)
                                         {
-                                            await this.Client.DeleteGlobalApplicationCommandAsync(cmdId);
+                                            try
+                                            {
+                                                await this.Client.DeleteGlobalApplicationCommandAsync(cmdId);
+                                            }
+                                            catch (NotFoundException)
+                                            {
+                                                this.Client.Logger.LogError($"Could not delete global command {cmdId}. Please clean up manually");
+                                            }
                                         }
                                     }
 
@@ -923,7 +930,14 @@ namespace DisCatSharp.ApplicationCommands
                                     {
                                         foreach (var cmdId in GuildCommandsDeleteList)
                                         {
-                                            await this.Client.DeleteGuildApplicationCommandAsync(guildid.Value, cmdId);
+                                            try
+                                            {
+                                                await this.Client.DeleteGuildApplicationCommandAsync(guildid.Value, cmdId);
+                                            }
+                                            catch (NotFoundException)
+                                            {
+                                                this.Client.Logger.LogError($"Could not delete guild command {cmdId} in guild {guildid.Value}. Please clean up manually");
+                                            }
                                         }
                                     }
 
