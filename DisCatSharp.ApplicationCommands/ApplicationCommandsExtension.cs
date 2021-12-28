@@ -874,6 +874,20 @@ namespace DisCatSharp.ApplicationCommands
                                     else
                                         return;
                                 }
+                                else
+                                {
+                                    foreach (var cmd in this._globalDiscordCommands)
+                                    {
+                                        try
+                                        {
+                                            await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id);
+                                        }
+                                        catch (NotFoundException)
+                                        {
+                                            this.Client.Logger.LogError($"Could not delete global command {cmd.Id}. Please clean up manually");
+                                        }
+                                    }
+                                }
                             }
                             else
                             {
@@ -945,6 +959,19 @@ namespace DisCatSharp.ApplicationCommands
                                         _guildCommands.Add(guildid.Value, Commands);
                                     else
                                         return;
+                                } else
+                                {
+                                    foreach (var cmd in this._guildDiscordCommands[guildid.Value])
+                                    {
+                                        try
+                                        {
+                                            await this.Client.DeleteGuildApplicationCommandAsync(guildid.Value, cmd.Id);
+                                        }
+                                        catch (NotFoundException)
+                                        {
+                                            this.Client.Logger.LogError($"Could not delete guild command {cmd.Id} in guild {guildid.Value}. Please clean up manually");
+                                        }
+                                    }
                                 }
                             }
                         }
