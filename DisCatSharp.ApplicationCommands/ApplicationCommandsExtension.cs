@@ -2262,7 +2262,7 @@ namespace DisCatSharp.ApplicationCommands
                 }
                 else
                 {
-                    var opt = command.Options.ToList();
+                    var opt = command.Options.Where(c => c.Type == ApplicationCommandOptionType.SubCommandGroup || c.Type == ApplicationCommandOptionType.SubCommand).ToList();
                     var count = 0;
                     foreach (var option in opt)
                     {
@@ -2303,7 +2303,7 @@ namespace DisCatSharp.ApplicationCommands
                 }
                 else
                 {
-                    var opt = foundCommand.Options.ToList();
+                    var opt = foundCommand.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand).ToList();
 
                     var count = 0;
                     foreach (var option in opt)
