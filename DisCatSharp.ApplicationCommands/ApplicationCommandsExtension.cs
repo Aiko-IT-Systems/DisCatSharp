@@ -1114,8 +1114,8 @@ namespace DisCatSharp.ApplicationCommands
             var guilds = this.Client.Guilds;
             foreach(var guild in guilds)
             {
-                var guildCommands = _guildCommands[guild.Key];
-                if (guildCommands != null && guildCommands.Any())
+                var hasCommands = _guildCommands.TryGetValue(guild.Key, out var guildCommands);
+                if (hasCommands && guildCommands.Any())
                 {
                     Dictionary<ulong, string> commands = new(guildCommands.Count);
                     foreach(var cmd in guildCommands)
