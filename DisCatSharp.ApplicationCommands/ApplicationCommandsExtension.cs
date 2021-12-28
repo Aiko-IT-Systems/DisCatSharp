@@ -370,7 +370,7 @@ namespace DisCatSharp.ApplicationCommands
                 //so this should still add the default help
                 if (this._configuration is null || (this._configuration is not null && this._configuration.EnableDefaultHelp))
                 {
-                    foreach(var key in commands_pending)
+                    foreach(var key in commands_pending.ToList())
                     {
                         this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
                             (key, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));

@@ -51,7 +51,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         /// <param name="provider">The service provider.</param>
         [ActivatorUtilitiesConstructor]
-        public ApplicationCommandsConfiguration(IServiceProvider provider)
+        public ApplicationCommandsConfiguration(IServiceProvider provider = null)
         {
             this.ServiceProvider = provider;
         }
@@ -65,10 +65,5 @@ namespace DisCatSharp.ApplicationCommands
             this.EnableDefaultHelp = acc.EnableDefaultHelp;
             this.ServiceProvider = acc.ServiceProvider;
         }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="ApplicationCommandsConfiguration"/>.
-        /// </summary>
-        public ApplicationCommandsConfiguration() { }
     }
 }
