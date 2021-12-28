@@ -370,7 +370,7 @@ namespace DisCatSharp.ApplicationCommands
                 //so this should still add the default help
                 if (this._configuration is null || (this._configuration is not null && this._configuration.EnableDefaultHelp))
                 {
-                    foreach(var key in commands_pending.ToList())
+                    foreach(var key in commands_pending)
                     {
                         this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
                             (key, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
@@ -2165,12 +2165,10 @@ namespace DisCatSharp.ApplicationCommands
 
                 var globalCommands = await context.Client.GetGlobalApplicationCommandsAsync();
                 var guildCommands = await context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
-                var slashCommands = new List<DiscordApplicationCommand>();
-                slashCommands.AddRange(globalCommands);
-                slashCommands.AddRange(guildCommands);
-                slashCommands.RemoveAll(ac => ac.Name.ToLower().Equals("help"));
-                slashCommands.Distinct().ToList();
-                slashCommands.ForEach(sc => options.Add(new DiscordApplicationCommandAutocompleteChoice(sc.Name, sc.Name.Trim())));
+                var slashCommands = globalCommands.Concat(guildCommands)
+                .Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+                .GroupBy(ac => ac.Name).Select(x => x.First());
+                slashCommands.ToList().ForEach(sc => options.Add(new DiscordApplicationCommandAutocompleteChoice(sc.Name, sc.Name.Trim())));
                 return options.AsEnumerable();
             }
         }
@@ -2182,11 +2180,11 @@ namespace DisCatSharp.ApplicationCommands
                 var options = new List<DiscordApplicationCommandAutocompleteChoice>();
                 var globalCommands = await context.Client.GetGlobalApplicationCommandsAsync();
                 var guildCommands = await context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
-                var slashCommands = new List<DiscordApplicationCommand>();
-                slashCommands.AddRange(globalCommands);
-                slashCommands.AddRange(guildCommands);
+                var slashCommands = globalCommands.Concat(guildCommands)
+                .Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+                .GroupBy(ac => ac.Name).Select(x => x.First());
                 var command = slashCommands.FirstOrDefault(ac =>
-                    ac.Name.ToLower().Equals(context.Options[0].Value.ToString().ToLower().Trim()));
+                    ac.Name.Equals(context.Options[0].Value.ToString().Trim(),StringComparison.OrdinalIgnoreCase));
                 if (command is null || command.Options is null)
                 {
                     options.Add(new DiscordApplicationCommandAutocompleteChoice("no_options_for_this_command", "no_options_for_this_command"));
@@ -2206,17 +2204,17 @@ namespace DisCatSharp.ApplicationCommands
                 var options = new List<DiscordApplicationCommandAutocompleteChoice>();
                 var globalCommands = await context.Client.GetGlobalApplicationCommandsAsync();
                 var guildCommands = await context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
-                var slashCommands = new List<DiscordApplicationCommand>();
-                slashCommands.AddRange(globalCommands);
-                slashCommands.AddRange(guildCommands);
+                var slashCommands = globalCommands.Concat(guildCommands)
+                .Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+                .GroupBy(ac => ac.Name).Select(x => x.First());
                 var command = slashCommands.FirstOrDefault(ac =>
-                    ac.Name.ToLower().Equals(context.Options[0].Value.ToString().ToLower().Trim()));
+                    ac.Name.Equals(context.Options[0].Value.ToString().Trim(), StringComparison.OrdinalIgnoreCase));
                 if (command.Options is null)
                 {
                     options.Add(new DiscordApplicationCommandAutocompleteChoice("no_options_for_this_command", "no_options_for_this_command"));
                     return options.AsEnumerable();
                 }
-                var foundCommand = command.Options.ToList().FindAll(op => op.Name.ToLower().Equals(context.Options[1].Value.ToString().ToLower().Trim())).FirstOrDefault();
+                var foundCommand = command.Options.FirstOrDefault(op => op.Name.Equals(context.Options[1].Value.ToString().Trim(), StringComparison.OrdinalIgnoreCase));
                 if (foundCommand is null || foundCommand.Options is null)
                 {
                     options.Add(new DiscordApplicationCommandAutocompleteChoice("no_options_for_this_command", "no_options_for_this_command"));
@@ -2239,13 +2237,12 @@ namespace DisCatSharp.ApplicationCommands
             [Option("option_three", "command to provide help for", true)] string commandTwoName = null)
         {
             ulong currentGuildId = ctx.Guild.Id;
-            var applicationCommands = new List<DiscordApplicationCommand>();
             var globalCommands = await ctx.Client.GetGlobalApplicationCommandsAsync();
             var guildCommands = await ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
-            applicationCommands.AddRange(globalCommands);
-            applicationCommands.AddRange(guildCommands);
-            applicationCommands.Distinct().ToList();
-            applicationCommands.RemoveAll(ac => ac.Name.ToLower().Equals("help"));
+            var applicationCommands = globalCommands.Concat(guildCommands)
+                .Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+                .GroupBy(ac => ac.Name).Select(x => x.First())
+                .ToList();
             if (applicationCommands is null)
             {
                 await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
@@ -2255,9 +2252,9 @@ namespace DisCatSharp.ApplicationCommands
             if (commandTwoName is not null && !commandTwoName.Equals("no_options_for_this_command"))
             {
                 List<DiscordApplicationCommand> commandsWithSubCommands = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.Any(op => op.Type == ApplicationCommandOptionType.SubCommandGroup));
-                var cmdParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Options.ToList().Any(op => op.Name.Equals(commandOneName))).Options.ToList()
-                        .FirstOrDefault(opt => opt.Name.ToLower().Equals(commandOneName.ToLower()));
-                var cmd = cmdParent.Options.ToList().FirstOrDefault(op => op.Name.ToLower().Equals(commandTwoName.ToLower()));
+                var cmdParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Options.Any(op => op.Name.Equals(commandOneName))).Options
+                        .FirstOrDefault(opt => opt.Name.Equals(commandOneName,StringComparison.OrdinalIgnoreCase));
+                var cmd = cmdParent.Options.FirstOrDefault(op => op.Name.Equals(commandTwoName,StringComparison.OrdinalIgnoreCase));
                 var discordEmbed = new DiscordEmbedBuilder
                 {
                     Title = "Help",
@@ -2280,8 +2277,8 @@ namespace DisCatSharp.ApplicationCommands
             else if (commandOneName is not null && commandTwoName is null && !commandOneName.Equals("no_options_for_this_command"))
             {
                 List<DiscordApplicationCommand> commandsWithOptions = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.All(op => op.Type == ApplicationCommandOptionType.SubCommand));
-                DiscordApplicationCommand subCommandParent = commandsWithOptions.FirstOrDefault(cm => cm.Name.ToLower().Equals(commandName.ToLower()));
-                var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.ToLower().Equals(commandOneName.ToLower()));
+                DiscordApplicationCommand subCommandParent = commandsWithOptions.FirstOrDefault(cm => cm.Name.Equals(commandName,StringComparison.OrdinalIgnoreCase));
+                var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.Equals(commandOneName,StringComparison.OrdinalIgnoreCase));
                 var discordEmbed = new DiscordEmbedBuilder
                 {
                     Title = "Help",
@@ -2303,7 +2300,7 @@ namespace DisCatSharp.ApplicationCommands
             }
             else
             {
-                DiscordApplicationCommand command = applicationCommands.FirstOrDefault(cm => cm.Name.ToLower().Equals(commandName.ToLower()));
+                DiscordApplicationCommand command = applicationCommands.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
                 if (command is null)
                 {
                     await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
