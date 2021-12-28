@@ -1025,6 +1025,10 @@ namespace DisCatSharp.ApplicationCommands
                             var app = types.First(t => t.Type == command.Method.DeclaringType);
                         }
 
+                        RegistrationCount++;
+                        if (DebugEnabled)
+                            this.Client.Logger.LogDebug($"Expected Count: {ExpectedCount}\nCurrent Count: {RegistrationCount}");
+
                         if (guildid.HasValue)
                         {
                             await this._guildApplicationCommandsRegistered.InvokeAsync(this, new GuildApplicationCommandsRegisteredEventArgs(this._configuration?.ServiceProvider)
@@ -1043,9 +1047,6 @@ namespace DisCatSharp.ApplicationCommands
                             });
                         }
 
-                        RegistrationCount++;
-                        if (DebugEnabled)
-                            this.Client.Logger.LogDebug($"Expected Count: {ExpectedCount}\nCurrent Count: {RegistrationCount}");
                         this.CheckRegistrationStartup();
                     }
                     catch (Exception ex)
