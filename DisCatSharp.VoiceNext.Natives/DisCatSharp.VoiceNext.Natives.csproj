@@ -6,7 +6,7 @@
   <Import Project="../Package.targets" />
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>

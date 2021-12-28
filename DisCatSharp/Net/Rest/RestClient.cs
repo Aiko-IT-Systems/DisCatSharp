@@ -94,7 +94,7 @@ namespace DisCatSharp.Net
         private bool UseResetAfter { get; }
 
         private CancellationTokenSource _bucketCleanerTokenSource;
-        private TimeSpan _bucketCleanupDelay = TimeSpan.FromSeconds(60);
+        private readonly TimeSpan _bucketCleanupDelay = TimeSpan.FromSeconds(60);
         private volatile bool _cleanerRunning;
         private Task _cleanerTask;
         private volatile bool _disposed;
