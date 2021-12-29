@@ -68,12 +68,12 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// List of global commands on discords backend.
         /// </summary>
-        private List<DiscordApplicationCommand> _globalDiscordCommands { get; set; } = null;
+        internal static List<DiscordApplicationCommand> _globalDiscordCommands { get; set; } = null;
 
         /// <summary>
         /// List of guild commands on discords backend.
         /// </summary>
-        private Dictionary<ulong, List<DiscordApplicationCommand>> _guildDiscordCommands { get; set; } = null;
+        internal static Dictionary<ulong, List<DiscordApplicationCommand>> _guildDiscordCommands { get; set; } = null;
 
         /// <summary>
         /// Singleton modules.
@@ -112,14 +112,14 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
             => _globalCommands;
-        private static readonly List<DiscordApplicationCommand> _globalCommands = new();
+        internal static readonly List<DiscordApplicationCommand> _globalCommands = new();
 
         /// <summary>
         /// Gets a list of registered guild commands mapped by guild id.
         /// </summary>
         public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
         => _guildCommands;
-        private static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> _guildCommands = new();
+        internal static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> _guildCommands = new();
 
         /// <summary>
         /// Gets the registration count.
@@ -348,8 +348,8 @@ namespace DisCatSharp.ApplicationCommands
             //Only update for shard 0
             if (this.Client.ShardId == 0)
             {
-                this._globalDiscordCommands = new();
-                this._guildDiscordCommands = new();
+                _globalDiscordCommands = new();
+                _guildDiscordCommands = new();
 
                 var commands_pending = this._updateList.Select(x => x.Key).Distinct();
                 ExpectedCount = commands_pending.Count();
@@ -375,9 +375,9 @@ namespace DisCatSharp.ApplicationCommands
                     finally
                     {
                         if (!unauthorized && Commands != null && Commands.Any())
-                            this._guildDiscordCommands.Add(guild, Commands.ToList());
+                            _guildDiscordCommands.Add(guild, Commands.ToList());
                         else if (!unauthorized)
-                            this._guildDiscordCommands.Add(guild, null);
+                            _guildDiscordCommands.Add(guild, null);
                         else
                             FailedGuilds.Add(guild);
                     }
@@ -393,7 +393,7 @@ namespace DisCatSharp.ApplicationCommands
                     }
                 }
                 if (GlobalCommands != null && GlobalCommands.Any())
-                    this._globalDiscordCommands.AddRange(GlobalCommands);
+                    _globalDiscordCommands.AddRange(GlobalCommands);
                 foreach(var key in commands_pending.ToList())
                 {
                     this.Client.Logger.LogDebug(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
@@ -546,76 +546,11 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 if (updateList != null && updateList.Any())
                                 {
-                                    var GlobalCommandsOverwriteList = this.BuildGlobalOverwriteList(updateList);
-                                    var GlobalCommandsCreateList = this.BuildGlobalCreateList(updateList);
-                                    var GlobalCommandsDeleteList = this.BuildGlobalDeleteList(updateList);
-
-                                    if (CheckAnyAndNotNull(GlobalCommandsCreateList) && CheckNotAnyOrNull(GlobalCommandsOverwriteList))
-                                    {
-                                        var cmds = await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(GlobalCommandsCreateList);
-                                        Commands.AddRange(cmds);
-                                    }
-                                    else if (CheckNotAnyOrNull(GlobalCommandsCreateList) && CheckAnyAndNotNull(GlobalCommandsOverwriteList))
-                                    {
-                                        List<DiscordApplicationCommand> OverwriteList = new();
-                                        foreach (var overwrite in GlobalCommandsOverwriteList)
-                                        {
-                                            var cmd = overwrite.Value;
-                                            cmd.Id = overwrite.Key;
-                                            OverwriteList.Add(cmd);
-                                        }
-                                        var discord_backend_commands = await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(OverwriteList);
-                                        Commands.AddRange(discord_backend_commands);
-                                    }
-                                    else if (CheckAnyAndNotNull(GlobalCommandsCreateList) && CheckAnyAndNotNull(GlobalCommandsOverwriteList))
-                                    {
-                                        foreach (var cmd in GlobalCommandsCreateList)
-                                        {
-                                            var discord_backend_command = await this.Client.CreateGlobalApplicationCommandAsync(cmd);
-                                            Commands.Add(discord_backend_command);
-                                        }
-
-                                        foreach (var cmd in GlobalCommandsOverwriteList)
-                                        {
-                                            var command = cmd.Value;
-
-                                            var discord_backend_command = await this.Client.EditGlobalApplicationCommandAsync(cmd.Key, action =>
-                                            {
-                                                action.Name = command.Name;
-                                                action.NameLocalizations = command.NameLocalizations;
-                                                action.Description = command.Description;
-                                                action.DescriptionLocalizations = command.DescriptionLocalizations;
-                                                if(command.Options != null && command.Options.Any())
-                                                    action.Options = Optional.FromValue(command.Options);
-                                                action.DefaultPermission = command.DefaultPermission;
-                                            });
-                                            Commands.Add(discord_backend_command);
-                                        }
-                                    }
-
-                                    if (CheckAnyAndNotNull(GlobalCommandsDeleteList))
-                                    {
-                                        foreach (var cmdId in GlobalCommandsDeleteList)
-                                        {
-                                            try
-                                            {
-                                                await this.Client.DeleteGlobalApplicationCommandAsync(cmdId);
-                                            }
-                                            catch (NotFoundException)
-                                            {
-                                                this.Client.Logger.LogError($"Could not delete global command {cmdId}. Please clean up manually");
-                                            }
-                                        }
-                                    }
-
-                                    if (CheckAnyAndNotNull(Commands))
-                                        _globalCommands.AddRange(Commands);
-                                    else
-                                        return;
+                                    await RegistrationWorker.RegisterGlobalCommandsAsync(updateList);
                                 }
                                 else
                                 {
-                                    foreach (var cmd in this._globalDiscordCommands)
+                                    foreach (var cmd in _globalDiscordCommands)
                                     {
                                         try
                                         {
@@ -632,75 +567,10 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 if (updateList != null && updateList.Any())
                                 {
-                                    var GuildCommandsOverwriteList = this.BuildGuildOverwriteList(guildid.Value, updateList);
-                                    var GuildCommandsCreateList = this.BuildGuildCreateList(guildid.Value, updateList);
-                                    var GuildCommandsDeleteList = this.BuildGuildDeleteList(guildid.Value, updateList);
-
-                                    if (CheckAnyAndNotNull(GuildCommandsCreateList) && CheckNotAnyOrNull(GuildCommandsOverwriteList))
-                                    {
-                                        var cmds = await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guildid.Value, GuildCommandsCreateList);
-                                        Commands.AddRange(cmds);
-                                    }
-                                    else if (CheckNotAnyOrNull(GuildCommandsCreateList) && CheckAnyAndNotNull(GuildCommandsOverwriteList))
-                                    {
-                                        List<DiscordApplicationCommand> OverwriteList = new();
-                                        foreach (var overwrite in GuildCommandsOverwriteList)
-                                        {
-                                            var cmd = overwrite.Value;
-                                            cmd.Id = overwrite.Key;
-                                            OverwriteList.Add(cmd);
-                                        }
-                                        var discord_backend_commands = await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guildid.Value, OverwriteList);
-                                        Commands.AddRange(discord_backend_commands);
-                                    }
-                                    else if (CheckAnyAndNotNull(GuildCommandsCreateList) && CheckAnyAndNotNull(GuildCommandsOverwriteList))
-                                    {
-                                        foreach (var cmd in GuildCommandsCreateList)
-                                        {
-                                            var discord_backend_command = await this.Client.CreateGuildApplicationCommandAsync(guildid.Value, cmd);
-                                            Commands.Add(discord_backend_command);
-                                        }
-
-                                        foreach (var cmd in GuildCommandsOverwriteList)
-                                        {
-                                            var command = cmd.Value;
-                                            var discord_backend_command = await this.Client.EditGuildApplicationCommandAsync(guildid.Value, cmd.Key, action =>
-                                            {
-                                                action.Name = command.Name;
-                                                action.NameLocalizations = command.NameLocalizations;
-                                                action.Description = command.Description;
-                                                action.DescriptionLocalizations = command.DescriptionLocalizations;
-                                                if(command.Options != null && command.Options.Any())
-                                                    action.Options = Optional.FromValue(command.Options);
-                                                action.DefaultPermission = command.DefaultPermission;
-                                            });
-
-                                            Commands.Add(discord_backend_command);
-                                        }
-                                    }
-
-                                   if(CheckAnyAndNotNull(GuildCommandsDeleteList))
-                                    {
-                                        foreach (var cmdId in GuildCommandsDeleteList)
-                                        {
-                                            try
-                                            {
-                                                await this.Client.DeleteGuildApplicationCommandAsync(guildid.Value, cmdId);
-                                            }
-                                            catch (NotFoundException)
-                                            {
-                                                this.Client.Logger.LogError($"Could not delete guild command {cmdId} in guild {guildid.Value}. Please clean up manually");
-                                            }
-                                        }
-                                    }
-
-                                    if (CheckAnyAndNotNull(Commands))
-                                        _guildCommands.Add(guildid.Value, Commands);
-                                    else
-                                        return;
+                                    await RegistrationWorker.RegisterGuilldCommandsAsync(guildid.Value, updateList);
                                 } else
                                 {
-                                    foreach (var cmd in this._guildDiscordCommands[guildid.Value])
+                                    foreach (var cmd in _guildDiscordCommands[guildid.Value])
                                     {
                                         try
                                         {
@@ -809,24 +679,6 @@ namespace DisCatSharp.ApplicationCommands
             });
         }
 
-        internal static bool CheckNotAnyOrNull(List<DiscordApplicationCommand> list)
-            => list == null || !list.Any();
-
-        internal static bool CheckNotAnyOrNull(List<ulong> list)
-            => list == null || !list.Any();
-
-        internal static bool CheckNotAnyOrNull(Dictionary<ulong, DiscordApplicationCommand> dict)
-            => dict == null || !dict.Any() || dict.Keys == null || !dict.Keys.Any();
-
-        internal static bool CheckAnyAndNotNull(List<DiscordApplicationCommand> list)
-            => list != null && list.Any();
-
-        internal static bool CheckAnyAndNotNull(List<ulong> list)
-            => list != null && list.Any();
-
-        internal static bool CheckAnyAndNotNull(Dictionary<ulong, DiscordApplicationCommand> dict)
-            => dict != null && dict.Any() && dict.Keys != null && dict.Keys.Any();
-
         private async void CheckRegistrationStartup()
         {
             if (DebugEnabled)
@@ -859,215 +711,6 @@ namespace DisCatSharp.ApplicationCommands
                         commands.Add(cmd.Id, cmd.Name);
                     }
                     guild.Value.RegisteredApplicationCommands = commands;
-                }
-            }
-        }
-
-        private List<ulong> BuildGuildDeleteList(ulong guildId, List<DiscordApplicationCommand> updateList)
-        {
-            if(this._guildDiscordCommands == null || !this._guildDiscordCommands.Any())
-            {
-                return null;
-            }
-            else if (updateList == null)
-            {
-                var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
-
-                if (discord != null)
-                {
-                    List<ulong> InvalidCommandIds = new();
-                    foreach (var cmd in discord)
-                    {
-                        InvalidCommandIds.Add(cmd.Id);
-                    }
-
-                    return InvalidCommandIds;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
-
-                if (discord != null) {
-                    List<ulong> InvalidCommandIds = new();
-                    foreach (var cmd in discord)
-                    {
-                        if (!updateList.Any(ul => ul.Name == cmd.Name))
-                            InvalidCommandIds.Add(cmd.Id);
-                    }
-
-                    return InvalidCommandIds;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        private List<DiscordApplicationCommand> BuildGuildCreateList(ulong guildId,  List<DiscordApplicationCommand> updateList)
-        {
-            if (this._guildDiscordCommands == null || !this._guildDiscordCommands.Any())
-            {
-                return updateList;
-            }
-            else if (updateList == null)
-            {
-                return null;
-            }
-            else
-            {
-                var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
-                List<DiscordApplicationCommand> NewCommands = new();
-                foreach (var cmd in updateList)
-                {
-                    if (discord == null || !discord.Any(d => d.Name == cmd.Name))
-                    {
-                        NewCommands.Add(cmd);
-                    }
-                }
-
-                return NewCommands;
-            }
-        }
-
-        private Dictionary<ulong, DiscordApplicationCommand> BuildGuildOverwriteList(ulong guildId,  List<DiscordApplicationCommand> updateList)
-        {
-            if (this._guildDiscordCommands == null || !this._guildDiscordCommands.Any() || !this._guildDiscordCommands.Any(l => l.Key == guildId))
-            {
-                return null;
-            }
-            else if (updateList == null)
-            {
-                return null;
-            }
-            else
-            {
-                var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
-                if (discord != null)
-                {
-                    Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
-                    foreach (var cmd in updateList)
-                    {
-                        if (discord.Any(d => d.Name == cmd.Name))
-                        {
-                            UpdateCommands.Add(discord.Where(d => d.Name == cmd.Name).First().Id, cmd);
-                        }
-                    }
-                    return UpdateCommands;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        private List<ulong> BuildGlobalDeleteList(List<DiscordApplicationCommand> updateList = null)
-        {
-            if (this._globalDiscordCommands == null || !this._globalDiscordCommands.Any())
-            {
-                return null;
-            }
-            else if (updateList == null)
-            {
-                var discord = this._globalDiscordCommands;
-
-                if (discord != null) {
-                    List<ulong> InvalidCommandIds = new();
-                    foreach (var cmd in discord)
-                    {
-                        InvalidCommandIds.Add(cmd.Id);
-                    }
-
-                    return InvalidCommandIds;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                var discord = this._globalDiscordCommands;
-
-                if (discord != null)
-                {
-                    List<ulong> InvalidCommandIds = new();
-                    foreach (var cmd in discord)
-                    {
-                        if (!updateList.Any(ul => ul.Name == cmd.Name))
-                            InvalidCommandIds.Add(cmd.Id);
-                    }
-
-                    return InvalidCommandIds;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        private List<DiscordApplicationCommand> BuildGlobalCreateList(List<DiscordApplicationCommand> updateList)
-        {
-            if (this._globalDiscordCommands == null || !this._globalDiscordCommands.Any())
-            {
-                return updateList;
-            }
-            else if(updateList == null)
-            {
-                return null;
-            }
-            else
-            {
-                var discord = this._globalDiscordCommands;
-                List<DiscordApplicationCommand> NewCommands = new();
-                foreach (var cmd in updateList)
-                {
-                    if (discord == null || !discord.Any(d => d.Name == cmd.Name))
-                    {
-                        NewCommands.Add(cmd);
-                    }
-                }
-
-                return NewCommands;
-            }
-        }
-
-        private Dictionary<ulong, DiscordApplicationCommand> BuildGlobalOverwriteList(List<DiscordApplicationCommand> updateList)
-        {
-            if (this._globalDiscordCommands == null || !this._globalDiscordCommands.Any())
-            {
-                return null;
-            }
-            else if (updateList == null)
-            {
-                return null;
-            }
-            else
-            {
-                var discord = this._globalDiscordCommands;
-                if (discord != null)
-                {
-                    Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
-                    foreach (var cmd in updateList)
-                    {
-                        if (discord.Any(d => d.Name == cmd.Name))
-                        {
-                            UpdateCommands.Add(discord.Where(d => d.Name == cmd.Name).First().Id, cmd);
-                        }
-                    }
-
-                    return UpdateCommands;
-                }
-                else
-                {
-                    return null;
                 }
             }
         }
@@ -1758,10 +1401,10 @@ namespace DisCatSharp.ApplicationCommands
             _subGroupCommands.Clear();
             _registeredCommands.Clear();
             _contextMenuCommands.Clear();
-            this._globalDiscordCommands.Clear();
-            this._guildDiscordCommands.Clear();
-            this._globalDiscordCommands = null;
-            this._guildDiscordCommands = null;
+            _globalDiscordCommands.Clear();
+            _guildDiscordCommands.Clear();
+            _globalDiscordCommands = null;
+            _guildDiscordCommands = null;
             _guildCommands.Clear();
             _globalCommands.Clear();
 
