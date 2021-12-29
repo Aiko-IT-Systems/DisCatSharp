@@ -27,24 +27,28 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 namespace DisCatSharp.ApplicationCommands
 {
     internal class CommandWorker
     {
-        internal Task<Dictionary<DiscordApplicationCommand, KeyValuePair<Type, Type>>> ParseContextMenuCommands(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
+        internal Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<ContextMenuCommand>>> ParseContextMenuCommands(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
         {
-            Dictionary<DiscordApplicationCommand, KeyValuePair<Type, Type>> Commands = new();
-            /*
-            foreach (var contextMethod in contextMethods)
+            List<DiscordApplicationCommand> Commands = new();
+            List<KeyValuePair<Type, Type>> CommandTypeSources = new();
+            List<ContextMenuCommand> contextMenuCommands = new();
+
+
+            foreach (var contextMethod in methods)
             {
                 var contextAttribute = contextMethod.GetCustomAttribute<ContextMenuAttribute>();
 
                 DiscordApplicationCommandLocalization NameLocalizations = null;
 
-                if (translations != null)
+                if (translator != null)
                 {
-                    var command_translation = translations.Single(c => c.Name == contextAttribute.Name && c.Type == contextAttribute.Type);
+                    var command_translation = translator.Single(c => c.Name == contextAttribute.Name && c.Type == contextAttribute.Type);
                     if (command_translation != null)
                         NameLocalizations = command_translation.NameTranslations;
                 }
@@ -59,17 +63,19 @@ namespace DisCatSharp.ApplicationCommands
 
                 contextMenuCommands.Add(new ContextMenuCommand { Method = contextMethod, Name = contextAttribute.Name });
 
-                updateList.Add(command);
-                commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
+                Commands.Add(command);
+                CommandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
             }
-            */
-            return Task.FromResult(Commands);   
+            
+            return Task.FromResult(Tuple.Create(Commands, CommandTypeSources, contextMenuCommands));   
         }
 
-        internal Task<Dictionary<DiscordApplicationCommand, KeyValuePair<Type, Type>>> ParseBasicSlashCommands(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
+        internal async Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<CommandMethod>>> ParseBasicSlashCommandsAsync(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
         {
-            Dictionary<DiscordApplicationCommand, KeyValuePair<Type, Type>> Commands = new();
-            /*
+            List<DiscordApplicationCommand> Commands = new();
+            List<KeyValuePair<Type, Type>> CommandTypeSources = new();
+            List<CommandMethod> commandMethods = new();
+
             foreach (var method in methods)
             {
                 var commandattribute = method.GetCustomAttribute<SlashCommandAttribute>();
@@ -78,7 +84,7 @@ namespace DisCatSharp.ApplicationCommands
                 if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
                     throw new ArgumentException($"The first argument must be an InteractionContext!");
                 parameters = parameters.Skip(1).ToArray();
-                var options = await this.ParseParametersAsync(parameters, guildid);
+                var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters, guildid);
 
                 commandMethods.Add(new CommandMethod { Method = method, Name = commandattribute.Name });
 
@@ -86,9 +92,9 @@ namespace DisCatSharp.ApplicationCommands
                 DiscordApplicationCommandLocalization DescriptionLocalizations = null;
                 List<DiscordApplicationCommandOption> LocalizisedOptions = null;
 
-                if (translations != null)
+                if (translator != null)
                 {
-                    var command_translation = translations.Single(c => c.Name == commandattribute.Name && c.Type == ApplicationCommandType.ChatInput);
+                    var command_translation = translator.Single(c => c.Name == commandattribute.Name && c.Type == ApplicationCommandType.ChatInput);
 
                     if (command_translation != null)
                     {
@@ -119,17 +125,25 @@ namespace DisCatSharp.ApplicationCommands
                 }
 
                 var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, LocalizisedOptions ?? options, commandattribute.DefaultPermission, ApplicationCommandType.ChatInput, NameLocalizations, DescriptionLocalizations);
-                updateList.Add(payload);
-                commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
+                Commands.Add(payload);
+                CommandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
             }
-            */
-            return Task.FromResult(Commands);
+
+            return Tuple.Create(Commands, CommandTypeSources, commandMethods);
         }
     }
 
     internal class NestedCommandWorker
     {
-        internal async Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<object>, List<GroupCommand>, List<SubGroupCommand>>> ParseSlashGroupsAsync(Type type, List<TypeInfo> types, ulong? guildid = null, List<GroupTranslator> translator = null)
+        internal async Task<
+            Tuple<
+                List<DiscordApplicationCommand>,
+                List<KeyValuePair<Type, Type>>,
+                List<object>,
+                List<GroupCommand>,
+                List<SubGroupCommand>
+                >
+            > ParseSlashGroupsAsync(Type type, List<TypeInfo> types, ulong? guildid = null, List<GroupTranslator> translator = null)
         {
             List<DiscordApplicationCommand> Commands = new();
             List<KeyValuePair<Type, Type>> CommandTypeSources = new();
