@@ -546,7 +546,9 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 if (updateList != null && updateList.Any())
                                 {
-                                    Commands = await RegistrationWorker.RegisterGlobalCommandsAsync(updateList);
+                                    var RegCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(updateList);
+                                    Commands.AddRange(RegCommands);
+                                    _globalCommands.AddRange(RegCommands);
                                 }
                                 else
                                 {
@@ -567,7 +569,9 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 if (updateList != null && updateList.Any())
                                 {
-                                    Commands = await RegistrationWorker.RegisterGuilldCommandsAsync(guildid.Value, updateList);
+                                    var RegCommands = await RegistrationWorker.RegisterGuilldCommandsAsync(guildid.Value, updateList);
+                                    Commands.AddRange(RegCommands);
+                                    _guildCommands.Add(guildid.Value, RegCommands);
                                 } else
                                 {
                                     foreach (var cmd in _guildDiscordCommands[guildid.Value])
