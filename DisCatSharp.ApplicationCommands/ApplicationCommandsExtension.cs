@@ -36,6 +36,7 @@ using DisCatSharp.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+// ReSharper disable All
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -1988,19 +1989,12 @@ namespace DisCatSharp.ApplicationCommands
                 var globalCommands = await context.Client.GetGlobalApplicationCommandsAsync();
                 var guildCommands = await context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
                 var slashCommands = globalCommands.Concat(guildCommands)
-                .Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-                .GroupBy(ac => ac.Name).Select(x => x.First());
+                    .Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+                    .GroupBy(ac => ac.Name).Select(x => x.First()).Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase));
                 var list = slashCommands.ToList();
-                var count = 0;
-                foreach (var sc in list)
+                foreach (var sc in list.Take(25))
                 {
-                    if (count < 25)
-                    {
-                        options.Add(new DiscordApplicationCommandAutocompleteChoice(sc.Name, sc.Name.Trim()));
-                        count++;
-                    }
-                    else
-                        continue;
+                    options.Add(new DiscordApplicationCommandAutocompleteChoice(sc.Name, sc.Name.Trim()));
                 }
                 return options.AsEnumerable();
             }
@@ -2025,16 +2019,9 @@ namespace DisCatSharp.ApplicationCommands
                 else
                 {
                     var opt = command.Options.Where(c => c.Type == ApplicationCommandOptionType.SubCommandGroup || c.Type == ApplicationCommandOptionType.SubCommand).ToList();
-                    var count = 0;
-                    foreach (var option in opt)
+                    foreach (var option in opt.Take(25))
                     {
-                        if (count < 25)
-                        {
-                            options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
-                            count++;
-                        }
-                        else
-                            continue;
+                        options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
                     }
                 }
                 return options.AsEnumerable();
@@ -2066,17 +2053,9 @@ namespace DisCatSharp.ApplicationCommands
                 else
                 {
                     var opt = foundCommand.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand).ToList();
-
-                    var count = 0;
-                    foreach (var option in opt)
+                    foreach (var option in opt.Take(25))
                     {
-                        if (count < 25)
-                        {
-                            options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
-                            count++;
-                        }
-                        else
-                            continue;
+                        options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
                     }
                 }
                 return options.AsEnumerable();
