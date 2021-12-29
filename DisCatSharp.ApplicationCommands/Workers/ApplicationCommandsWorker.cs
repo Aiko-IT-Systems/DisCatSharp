@@ -33,7 +33,7 @@ namespace DisCatSharp.ApplicationCommands
 {
     internal class CommandWorker
     {
-        internal Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<ContextMenuCommand>>> ParseContextMenuCommands(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
+        internal static Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<ContextMenuCommand>>> ParseContextMenuCommands(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
         {
             List<DiscordApplicationCommand> Commands = new();
             List<KeyValuePair<Type, Type>> CommandTypeSources = new();
@@ -70,7 +70,7 @@ namespace DisCatSharp.ApplicationCommands
             return Task.FromResult(Tuple.Create(Commands, CommandTypeSources, contextMenuCommands));   
         }
 
-        internal async Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<CommandMethod>>> ParseBasicSlashCommandsAsync(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
+        internal static async Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<CommandMethod>>> ParseBasicSlashCommandsAsync(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
         {
             List<DiscordApplicationCommand> Commands = new();
             List<KeyValuePair<Type, Type>> CommandTypeSources = new();
@@ -135,7 +135,7 @@ namespace DisCatSharp.ApplicationCommands
 
     internal class NestedCommandWorker
     {
-        internal async Task<
+        internal static async Task<
             Tuple<
                 List<DiscordApplicationCommand>,
                 List<KeyValuePair<Type, Type>>,

@@ -28,13 +28,13 @@ namespace DisCatSharp.ApplicationCommands
 {
     internal class RegistrationWorker
     {
-        public Task<List<DiscordApplicationCommand>> RegisterGlobalCommandsAsync(List<DiscordApplicationCommand> Commands)
+        internal Task<List<DiscordApplicationCommand>> RegisterGlobalCommandsAsync(List<DiscordApplicationCommand> Commands)
         {
             return null;
             // TODO
         }
 
-        public Task<List<DiscordApplicationCommand>> RegisterGuilldCommandsAsync(ulong GuildId, List<DiscordApplicationCommand> Commands)
+        internal Task<List<DiscordApplicationCommand>> RegisterGuilldCommandsAsync(ulong GuildId, List<DiscordApplicationCommand> Commands)
         {
             return null;
             // TODO

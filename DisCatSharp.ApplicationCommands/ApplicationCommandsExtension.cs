@@ -91,6 +91,11 @@ namespace DisCatSharp.ApplicationCommands
         internal static ApplicationCommandsConfiguration _configuration;
 
         /// <summary>
+        /// Discord client.
+        /// </summary>
+        internal static DiscordClient _client;
+
+        /// <summary>
         /// Set to true if anything fails when registering.
         /// </summary>
         private static bool _errored { get; set; } = false;
@@ -137,11 +142,6 @@ namespace DisCatSharp.ApplicationCommands
         private static bool DebugEnabled { get; set; }
 
         /// <summary>
-        /// Gets whether the guild download is finished.
-        /// </summary>
-        private static bool GuildDownloadFinished { get; set; } = false;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
@@ -161,6 +161,7 @@ namespace DisCatSharp.ApplicationCommands
                 throw new InvalidOperationException("What did I tell you?");
 
             this.Client = client;
+            _client = client;
 
             this._slashError = new AsyncEvent<ApplicationCommandsExtension, SlashCommandErrorEventArgs>("SLASHCOMMAND_ERRORED", TimeSpan.Zero, null);
             this._slashExecuted = new AsyncEvent<ApplicationCommandsExtension, SlashCommandExecutedEventArgs>("SLASHCOMMAND_EXECUTED", TimeSpan.Zero, null);
@@ -174,13 +175,6 @@ namespace DisCatSharp.ApplicationCommands
             this.Client.GuildDownloadCompleted += this.UpdateAsync;
             this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
             this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
-            //this.Client.GuildDownloadCompleted += this.Client_GuildDownloadCompleted;
-        }
-
-        private Task Client_GuildDownloadCompleted(DiscordClient sender, GuildDownloadCompletedEventArgs e)
-        {
-            GuildDownloadFinished = true;
-            return Task.CompletedTask;
         }
 
         private async Task CatchInteractionsOnStartup(DiscordClient sender, InteractionCreateEventArgs e)
@@ -430,9 +424,6 @@ namespace DisCatSharp.ApplicationCommands
             var contextMenuCommands = new List<ContextMenuCommand>();
             var updateList = new List<DiscordApplicationCommand>();
 
-            var commandWorker = new CommandWorker();
-            var nestedCommandWorker = new NestedCommandWorker();
-
             var commandTypeSources = new List<KeyValuePair<Type, Type>>();
 
             _ = Task.Run(async () =>
@@ -467,7 +458,7 @@ namespace DisCatSharp.ApplicationCommands
                             groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
                         }
 
-                        var slashGroupsTulpe = nestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildid, groupTranslations).Result;
+                        var slashGroupsTulpe = NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildid, groupTranslations).Result;
 
                         if (slashGroupsTulpe.Item1 != null && slashGroupsTulpe.Item1.Any())
                             updateList.AddRange(slashGroupsTulpe.Item1);
@@ -484,16 +475,6 @@ namespace DisCatSharp.ApplicationCommands
                         if (slashGroupsTulpe.Item5 != null && slashGroupsTulpe.Item5.Any())
                             subGroupCommands.AddRange(slashGroupsTulpe.Item5);
 
-                        if (DebugEnabled)
-                        {
-                            this.Client.Logger.LogDebug($"INTERN :: Group command register");
-                            this.Client.Logger.LogDebug($"Length updateList: {updateList.Count}");
-                            this.Client.Logger.LogDebug($"Length commandTypeSources: {commandTypeSources.Count}");
-                            this.Client.Logger.LogDebug($"Length _singletonModules: {_singletonModules.Count}");
-                            this.Client.Logger.LogDebug($"Length groupCommands: {groupCommands.Count}");
-                            this.Client.Logger.LogDebug($"Length subGroupCommands: {subGroupCommands.Count}");
-                        }
-
                         //Handles methods and context menus, only if the module isn't a group itself
                         if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
                         {
@@ -507,7 +488,7 @@ namespace DisCatSharp.ApplicationCommands
                             //Slash commands
                             var methods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
 
-                            var slashCommands = commandWorker.ParseBasicSlashCommandsAsync(type, methods, guildid, commandTranslations).Result;
+                            var slashCommands = CommandWorker.ParseBasicSlashCommandsAsync(type, methods, guildid, commandTranslations).Result;
 
                             if (slashCommands.Item1 != null && slashCommands.Item1.Any())
                                 updateList.AddRange(slashCommands.Item1);
@@ -518,19 +499,10 @@ namespace DisCatSharp.ApplicationCommands
                             if (slashCommands.Item3 != null && slashCommands.Item3.Any())
                                 commandMethods.AddRange(slashCommands.Item3);
 
-
-                            if (DebugEnabled)
-                            {
-                                this.Client.Logger.LogDebug($"INTERN :: Command register");
-                                this.Client.Logger.LogDebug($"Length updateList: {updateList.Count}");
-                                this.Client.Logger.LogDebug($"Length commandTypeSources: {commandTypeSources.Count}");
-                                this.Client.Logger.LogDebug($"Length commandMethods: {commandMethods.Count}");
-                            }
-
                             //Context Menus
                             var contextMethods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<ContextMenuAttribute>() != null);
 
-                            var contextCommands = await commandWorker.ParseContextMenuCommands(type, contextMethods, guildid, commandTranslations);
+                            var contextCommands = await CommandWorker.ParseContextMenuCommands(type, contextMethods, guildid, commandTranslations);
 
                             if (contextCommands.Item1 != null && contextCommands.Item1.Any())
                                 updateList.AddRange(contextCommands.Item1);
@@ -540,15 +512,6 @@ namespace DisCatSharp.ApplicationCommands
 
                             if (contextCommands.Item3 != null && contextCommands.Item3.Any())
                                 contextMenuCommands.AddRange(contextCommands.Item3);
-
-
-                            if (DebugEnabled)
-                            {
-                                this.Client.Logger.LogDebug($"INTERN :: Command register");
-                                this.Client.Logger.LogDebug($"Length updateList: {updateList.Count}");
-                                this.Client.Logger.LogDebug($"Length commandTypeSources: {commandTypeSources.Count}");
-                                this.Client.Logger.LogDebug($"Length contextMenuCommands: {contextMenuCommands.Count}");
-                            }
 
                             //Accounts for lifespans
                             if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null)
@@ -573,34 +536,7 @@ namespace DisCatSharp.ApplicationCommands
                 {
                     try
                     {
-                        async Task UpdateCommandPermission(ulong commandId, string commandName, Type commandDeclaringType, Type commandRootType)
-                        {
-                            if (!guildid.HasValue)
-                            {
-                                this.Client.Logger.LogTrace("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
-                            }
-                            else
-                            {
-                                var ctx = new ApplicationCommandsPermissionContext(commandDeclaringType, commandName);
-                                var conf = types.First(t => t.Type == commandRootType);
-                                conf.Setup?.Invoke(ctx);
-
-                                if (ctx.Permissions.Count == 0)
-                                    return;
-
-                                await this.Client.OverwriteGuildApplicationCommandPermissionsAsync(guildid.Value, commandId, ctx.Permissions);
-                            }
-                        }
-
-                        async Task UpdateCommandPermissionGroup(GroupCommand groupCommand)
-                        {
-                            foreach (var com in groupCommand.Methods)
-                            {
-                                var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Value.DeclaringType);
-
-                                await UpdateCommandPermission(groupCommand.CommandId, com.Key, source.Key, source.Value);
-                            }
-                        }
+                        
 
                         List<DiscordApplicationCommand> Commands = new();
 
@@ -794,7 +730,7 @@ namespace DisCatSharp.ApplicationCommands
                                 com.CommandId = command.Id;
 
                                 var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Method.DeclaringType);
-                                await UpdateCommandPermission(command.Id, com.Name, source.Value, source.Key);
+                                await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, command.Id, com.Name, source.Value, source.Key);
                             }
 
                             else if (groupCommands.Any(x => x.Name == command.Name))
@@ -802,7 +738,7 @@ namespace DisCatSharp.ApplicationCommands
                                 var com = groupCommands.First(x => x.Name == command.Name);
                                 com.CommandId = command.Id;
 
-                                await UpdateCommandPermissionGroup(com);
+                                await PermissionWorker.UpdateCommandPermissionGroupAsync(types, guildid, commandTypeSources, com);
                             }
 
                             else if (subGroupCommands.Any(x => x.Name == command.Name))
@@ -811,7 +747,7 @@ namespace DisCatSharp.ApplicationCommands
                                 com.CommandId = command.Id;
 
                                 foreach (var groupComs in com.SubCommands)
-                                    await UpdateCommandPermissionGroup(groupComs);
+                                    await PermissionWorker.UpdateCommandPermissionGroupAsync(types, guildid, commandTypeSources, groupComs);
                             }
 
                             else if (contextMenuCommands.Any(x => x.Name == command.Name))
@@ -820,7 +756,7 @@ namespace DisCatSharp.ApplicationCommands
                                 com.CommandId = command.Id;
 
                                 var source = commandTypeSources.First(f => f.Key == com.Method.DeclaringType);
-                                await UpdateCommandPermission(command.Id, com.Name, source.Value, source.Key);
+                                await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, command.Id, com.Name, source.Value, source.Key);
                             }
                         }
 
@@ -903,8 +839,8 @@ namespace DisCatSharp.ApplicationCommands
                     RegisteredGuildCommands = _guildCommands,
                     GuildsWithoutScope = MissingScopeGuildIds
                 });
-                if (GuildDownloadFinished)
-                    this.MapGuildCommands();
+
+                this.MapGuildCommands();
                 this.FinishedRegistration();
             }
         }
