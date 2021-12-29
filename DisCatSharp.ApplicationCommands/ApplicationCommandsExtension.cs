@@ -494,7 +494,7 @@ namespace DisCatSharp.ApplicationCommands
                                 commandTranslations = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
                             }
 
-                            //Slash commands (again, similar to the one for groups)
+                            //Slash commands
                             var methods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
 
                             var slashCommands = await commandWorker.ParseBasicSlashCommandsAsync(type, methods, guildid, commandTranslations);
