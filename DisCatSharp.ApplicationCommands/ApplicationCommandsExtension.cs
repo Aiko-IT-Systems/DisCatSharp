@@ -171,10 +171,10 @@ namespace DisCatSharp.ApplicationCommands
             this._globalApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs>("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null);
             this._guildApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs>("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 
-            this.Client.Ready += this.UpdateAsync;
+            this.Client.GuildDownloadCompleted += this.UpdateAsync;
             this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
             this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
-            this.Client.GuildDownloadCompleted += this.Client_GuildDownloadCompleted;
+            //this.Client.GuildDownloadCompleted += this.Client_GuildDownloadCompleted;
         }
 
         private Task Client_GuildDownloadCompleted(DiscordClient sender, GuildDownloadCompletedEventArgs e)
@@ -343,7 +343,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         /// <param name="client">The client.</param>
         /// <param name="e">The ready event args.</param>
-        internal Task UpdateAsync(DiscordClient client, ReadyEventArgs e)
+        internal Task UpdateAsync(DiscordClient client, GuildDownloadCompletedEventArgs e)
             => _ = Task.Run(async () => await this.UpdateAsync());
 
         /// <summary>
@@ -467,7 +467,7 @@ namespace DisCatSharp.ApplicationCommands
                             groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
                         }
 
-                        var slashGroupsTulpe = await nestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildid, groupTranslations);
+                        var slashGroupsTulpe = nestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildid, groupTranslations).Result;
 
                         if (slashGroupsTulpe.Item1 != null && slashGroupsTulpe.Item1.Any())
                             updateList.AddRange(slashGroupsTulpe.Item1);
@@ -484,6 +484,16 @@ namespace DisCatSharp.ApplicationCommands
                         if (slashGroupsTulpe.Item5 != null && slashGroupsTulpe.Item5.Any())
                             subGroupCommands.AddRange(slashGroupsTulpe.Item5);
 
+                        if (DebugEnabled)
+                        {
+                            this.Client.Logger.LogDebug($"INTERN :: Group command register");
+                            this.Client.Logger.LogDebug($"Length updateList: {updateList.Count}");
+                            this.Client.Logger.LogDebug($"Length commandTypeSources: {commandTypeSources.Count}");
+                            this.Client.Logger.LogDebug($"Length _singletonModules: {_singletonModules.Count}");
+                            this.Client.Logger.LogDebug($"Length groupCommands: {groupCommands.Count}");
+                            this.Client.Logger.LogDebug($"Length subGroupCommands: {subGroupCommands.Count}");
+                        }
+
                         //Handles methods and context menus, only if the module isn't a group itself
                         if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
                         {
@@ -497,7 +507,7 @@ namespace DisCatSharp.ApplicationCommands
                             //Slash commands
                             var methods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
 
-                            var slashCommands = await commandWorker.ParseBasicSlashCommandsAsync(type, methods, guildid, commandTranslations);
+                            var slashCommands = commandWorker.ParseBasicSlashCommandsAsync(type, methods, guildid, commandTranslations).Result;
 
                             if (slashCommands.Item1 != null && slashCommands.Item1.Any())
                                 updateList.AddRange(slashCommands.Item1);
@@ -507,6 +517,15 @@ namespace DisCatSharp.ApplicationCommands
 
                             if (slashCommands.Item3 != null && slashCommands.Item3.Any())
                                 commandMethods.AddRange(slashCommands.Item3);
+
+
+                            if (DebugEnabled)
+                            {
+                                this.Client.Logger.LogDebug($"INTERN :: Command register");
+                                this.Client.Logger.LogDebug($"Length updateList: {updateList.Count}");
+                                this.Client.Logger.LogDebug($"Length commandTypeSources: {commandTypeSources.Count}");
+                                this.Client.Logger.LogDebug($"Length commandMethods: {commandMethods.Count}");
+                            }
 
                             //Context Menus
                             var contextMethods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<ContextMenuAttribute>() != null);
@@ -522,6 +541,15 @@ namespace DisCatSharp.ApplicationCommands
                             if (contextCommands.Item3 != null && contextCommands.Item3.Any())
                                 contextMenuCommands.AddRange(contextCommands.Item3);
 
+
+                            if (DebugEnabled)
+                            {
+                                this.Client.Logger.LogDebug($"INTERN :: Command register");
+                                this.Client.Logger.LogDebug($"Length updateList: {updateList.Count}");
+                                this.Client.Logger.LogDebug($"Length commandTypeSources: {commandTypeSources.Count}");
+                                this.Client.Logger.LogDebug($"Length contextMenuCommands: {contextMenuCommands.Count}");
+                            }
+
                             //Accounts for lifespans
                             if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null)
                             {
@@ -534,7 +562,6 @@ namespace DisCatSharp.ApplicationCommands
                     }
                     catch (Exception ex)
                     {
-                        //This isn't really much more descriptive but I added a separate case for it anyway
                         if (ex is BadRequestException brex)
                             this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.JsonMessage}");
                         else
