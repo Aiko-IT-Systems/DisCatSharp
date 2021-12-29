@@ -129,10 +129,12 @@ namespace DisCatSharp.ApplicationCommands
 
     internal class NestedCommandWorker
     {
-        internal async Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<object>>> ParseSlashGroupsAsync(Type type, List<TypeInfo> types, ulong? guildid = null, List<GroupTranslator> translator = null)
+        internal async Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<object>, List<GroupCommand>, List<SubGroupCommand>>> ParseSlashGroupsAsync(Type type, List<TypeInfo> types, ulong? guildid = null, List<GroupTranslator> translator = null)
         {
             List<DiscordApplicationCommand> Commands = new();
             List<KeyValuePair<Type, Type>> CommandTypeSources = new();
+            List<GroupCommand> groupCommands = new();
+            List<SubGroupCommand> subGroupCommands = new();
             List<object> SingletonModules = new();
 
             //Handles groups
@@ -350,7 +352,7 @@ namespace DisCatSharp.ApplicationCommands
                 }
             }
 
-            return Tuple.Create(Commands, CommandTypeSources, SingletonModules);
+            return Tuple.Create(Commands, CommandTypeSources, SingletonModules, groupCommands, subGroupCommands);
         }
     }
 }

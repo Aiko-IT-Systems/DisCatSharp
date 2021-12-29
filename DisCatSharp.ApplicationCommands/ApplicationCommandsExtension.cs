@@ -469,18 +469,20 @@ namespace DisCatSharp.ApplicationCommands
 
                         var slashGroupsTulpe = await nestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildid, groupTranslations);
 
-                        var slashGroups = slashGroupsTulpe.Item1;
-                        var cts = slashGroupsTulpe.Item2;
-                        var singletons = slashGroupsTulpe.Item3;
+                        if (slashGroupsTulpe.Item1 != null && slashGroupsTulpe.Item1.Any())
+                            updateList.AddRange(slashGroupsTulpe.Item1);
 
-                        if (slashGroups != null && slashGroups.Any())
-                            updateList.AddRange(slashGroups);
+                        if (slashGroupsTulpe.Item2 != null && slashGroupsTulpe.Item2.Any())
+                            commandTypeSources.AddRange(slashGroupsTulpe.Item2);
 
-                        if (singletons != null && singletons.Any())
-                            _singletonModules.AddRange(singletons);
+                        if (slashGroupsTulpe.Item3 != null && slashGroupsTulpe.Item3.Any())
+                            _singletonModules.AddRange(slashGroupsTulpe.Item3);
 
-                        if (cts != null && cts.Any())
-                            commandTypeSources.AddRange(cts);
+                        if (slashGroupsTulpe.Item4 != null && slashGroupsTulpe.Item4.Any())
+                            groupCommands.AddRange(slashGroupsTulpe.Item4);
+
+                        if (slashGroupsTulpe.Item5 != null && slashGroupsTulpe.Item5.Any())
+                            subGroupCommands.AddRange(slashGroupsTulpe.Item5);
 
                         //Handles methods and context menus, only if the module isn't a group itself
                         if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
