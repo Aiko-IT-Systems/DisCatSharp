@@ -32,8 +32,11 @@ namespace DisCatSharp.ApplicationCommands
     internal class RegistrationWorker
     {
 
-        
-
+        /// <summary>
+        /// Registers the global commands.
+        /// </summary>
+        /// <param name="Commands">The command list.</param>
+        /// <returns>A list of registered commands.</returns>
         internal static async Task<List<DiscordApplicationCommand>> RegisterGlobalCommandsAsync(List<DiscordApplicationCommand> Commands)
         {
             var GlobalCommandsOverwriteList = BuildGlobalOverwriteList(Commands);
@@ -101,6 +104,12 @@ namespace DisCatSharp.ApplicationCommands
             return CheckAnyAndNotNull(Commands) ? Commands : null;
         }
 
+        /// <summary>
+        /// Registers the guild commands.
+        /// </summary>
+        /// <param name="GuildId">The target guild id.</param>
+        /// <param name="Commands">The command list.</param>
+        /// <returns>A list of registered commands.</returns>
         internal static async Task<List<DiscordApplicationCommand>> RegisterGuilldCommandsAsync(ulong GuildId, List<DiscordApplicationCommand> Commands)
         {
             var GuildCommandsOverwriteList = BuildGuildOverwriteList(GuildId, Commands);
@@ -168,6 +177,7 @@ namespace DisCatSharp.ApplicationCommands
             return CheckAnyAndNotNull(Commands) ? Commands : null;
         }
 
+        #region Helpers
         private static bool CheckNotAnyOrNull(List<DiscordApplicationCommand> list)
             => list == null || !list.Any();
 
@@ -185,7 +195,14 @@ namespace DisCatSharp.ApplicationCommands
 
         private static bool CheckAnyAndNotNull(Dictionary<ulong, DiscordApplicationCommand> dict)
             => dict != null && dict.Any() && dict.Keys != null && dict.Keys.Any();
+        #endregion
 
+        /// <summary>
+        /// Builds a list of guild command ids to be deleted on discords backend.
+        /// </summary>
+        /// <param name="guildId">The guild id these commands belong to.</param>
+        /// <param name="updateList">The command list.</param>
+        /// <returns>A list of command ids.</returns>
         private static List<ulong> BuildGuildDeleteList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
             if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any()
@@ -216,6 +233,12 @@ namespace DisCatSharp.ApplicationCommands
             return InvalidCommandIds;
         }
 
+        /// <summary>
+        /// Builds a list of guild commands to be created on discords backend.
+        /// </summary>
+        /// <param name="guildId">The guild id these commands belong to.</param>
+        /// <param name="updateList">The command list.</param>
+        /// <returns></returns>
         private static List<DiscordApplicationCommand> BuildGuildCreateList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
             if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any()
@@ -238,6 +261,12 @@ namespace DisCatSharp.ApplicationCommands
             return NewCommands;
         }
 
+        /// <summary>
+        /// Builds a list of guild commands to be overwritten on discords backend.
+        /// </summary>
+        /// <param name="guildId">The guild id these commands belong to.</param>
+        /// <param name="updateList">The command list.</param>
+        /// <returns>A dictionary of command id and command.</returns>
         private static Dictionary<ulong, DiscordApplicationCommand> BuildGuildOverwriteList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
             if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any()
@@ -261,6 +290,11 @@ namespace DisCatSharp.ApplicationCommands
             return UpdateCommands;
         }
 
+        /// <summary>
+        /// Builds a list of global command ids to be deleted on discords backend.
+        /// </summary>
+        /// <param name="updateList">The command list.</param>
+        /// <returns>A list of command ids.</returns>
         private static List<ulong> BuildGlobalDeleteList(List<DiscordApplicationCommand> updateList = null)
         {
             if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any()
@@ -291,6 +325,11 @@ namespace DisCatSharp.ApplicationCommands
             return InvalidCommandIds;
         }
 
+        /// <summary>
+        /// Builds a list of global commands to be created on discords backend.
+        /// </summary>
+        /// <param name="updateList">The command list.</param>
+        /// <returns>A list of commands.</returns>
         private static List<DiscordApplicationCommand> BuildGlobalCreateList(List<DiscordApplicationCommand> updateList)
         {
             if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any() || updateList == null)
@@ -311,6 +350,11 @@ namespace DisCatSharp.ApplicationCommands
             return NewCommands;
         }
 
+        /// <summary>
+        /// Builds a list of global commands to be overwritten on discords backend.
+        /// </summary>
+        /// <param name="updateList">The command list.</param>
+        /// <returns>A dictionary of command ids and commands.</returns>
         private static Dictionary<ulong, DiscordApplicationCommand> BuildGlobalOverwriteList(List<DiscordApplicationCommand> updateList)
         {
             if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any()
