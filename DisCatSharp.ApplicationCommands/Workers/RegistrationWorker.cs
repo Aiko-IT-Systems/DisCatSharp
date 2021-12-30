@@ -168,30 +168,28 @@ namespace DisCatSharp.ApplicationCommands
             return CheckAnyAndNotNull(Commands) ? Commands : null;
         }
 
-        internal static bool CheckNotAnyOrNull(List<DiscordApplicationCommand> list)
+        private static bool CheckNotAnyOrNull(List<DiscordApplicationCommand> list)
             => list == null || !list.Any();
 
-        internal static bool CheckNotAnyOrNull(List<ulong> list)
+        private static bool CheckNotAnyOrNull(List<ulong> list)
             => list == null || !list.Any();
 
-        internal static bool CheckNotAnyOrNull(Dictionary<ulong, DiscordApplicationCommand> dict)
+        private static bool CheckNotAnyOrNull(Dictionary<ulong, DiscordApplicationCommand> dict)
             => dict == null || !dict.Any() || dict.Keys == null || !dict.Keys.Any();
 
-        internal static bool CheckAnyAndNotNull(List<DiscordApplicationCommand> list)
+        private static bool CheckAnyAndNotNull(List<DiscordApplicationCommand> list)
             => list != null && list.Any();
 
-        internal static bool CheckAnyAndNotNull(List<ulong> list)
+        private static bool CheckAnyAndNotNull(List<ulong> list)
             => list != null && list.Any();
 
-        internal static bool CheckAnyAndNotNull(Dictionary<ulong, DiscordApplicationCommand> dict)
+        private static bool CheckAnyAndNotNull(Dictionary<ulong, DiscordApplicationCommand> dict)
             => dict != null && dict.Any() && dict.Keys != null && dict.Keys.Any();
 
         private static List<ulong> BuildGuildDeleteList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
             if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any())
-            {
                 return null;
-            }
             else if (updateList == null)
             {
                 var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
@@ -206,10 +204,8 @@ namespace DisCatSharp.ApplicationCommands
 
                     return InvalidCommandIds;
                 }
-                else
-                {
-                    return null;
-                }
+                
+                return null;
             }
             else
             {
@@ -226,23 +222,15 @@ namespace DisCatSharp.ApplicationCommands
 
                     return InvalidCommandIds;
                 }
-                else
-                {
-                    return null;
-                }
+
+                return null;
             }
         }
 
         private static List<DiscordApplicationCommand> BuildGuildCreateList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
-            if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any())
-            {
+            if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any() || updateList == null)
                 return updateList;
-            }
-            else if (updateList == null)
-            {
-                return null;
-            }
             else
             {
                 var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
@@ -261,14 +249,8 @@ namespace DisCatSharp.ApplicationCommands
 
         private static Dictionary<ulong, DiscordApplicationCommand> BuildGuildOverwriteList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
-            if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any() || !ApplicationCommandsExtension._guildDiscordCommands.Any(l => l.Key == guildId))
-            {
+            if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any() || !ApplicationCommandsExtension._guildDiscordCommands.Any(l => l.Key == guildId) || updateList == null)
                 return null;
-            }
-            else if (updateList == null)
-            {
-                return null;
-            }
             else
             {
                 var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
@@ -284,19 +266,15 @@ namespace DisCatSharp.ApplicationCommands
                     }
                     return UpdateCommands;
                 }
-                else
-                {
-                    return null;
-                }
+
+                return null;
             }
         }
 
         private static List<ulong> BuildGlobalDeleteList(List<DiscordApplicationCommand> updateList = null)
         {
             if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any())
-            {
                 return null;
-            }
             else if (updateList == null)
             {
                 var discord = ApplicationCommandsExtension._globalDiscordCommands;
@@ -311,10 +289,8 @@ namespace DisCatSharp.ApplicationCommands
 
                     return InvalidCommandIds;
                 }
-                else
-                {
-                    return null;
-                }
+                
+                return null;
             }
             else
             {
@@ -331,23 +307,15 @@ namespace DisCatSharp.ApplicationCommands
 
                     return InvalidCommandIds;
                 }
-                else
-                {
-                    return null;
-                }
+
+                return null;
             }
         }
 
         private static List<DiscordApplicationCommand> BuildGlobalCreateList(List<DiscordApplicationCommand> updateList)
         {
-            if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any())
-            {
+            if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any() || updateList == null)
                 return updateList;
-            }
-            else if (updateList == null)
-            {
-                return null;
-            }
             else
             {
                 var discord = ApplicationCommandsExtension._globalDiscordCommands;
@@ -366,14 +334,8 @@ namespace DisCatSharp.ApplicationCommands
 
         private static Dictionary<ulong, DiscordApplicationCommand> BuildGlobalOverwriteList(List<DiscordApplicationCommand> updateList)
         {
-            if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any())
-            {
+            if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any() || updateList == null)
                 return null;
-            }
-            else if (updateList == null)
-            {
-                return null;
-            }
             else
             {
                 var discord = ApplicationCommandsExtension._globalDiscordCommands;
@@ -390,10 +352,8 @@ namespace DisCatSharp.ApplicationCommands
 
                     return UpdateCommands;
                 }
-                else
-                {
-                    return null;
-                }
+
+                return null;
             }
         }
     }
