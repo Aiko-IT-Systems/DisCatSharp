@@ -92,7 +92,7 @@ namespace DisCatSharp.Net.WebSocket
             this.CompressedStream.Position = 0;
 
             var cspan = compressed.AsSpan();
-            var suffix = BinaryPrimitives.ReadUInt32BigEndian(cspan.Slice(cspan.Length - 4));
+            var suffix = BinaryPrimitives.ReadUInt32BigEndian(cspan[^4..]);
             if (this.CompressionLevel == GatewayCompressionLevel.Stream && suffix != ZlibFlush)
             {
                 if (this.CompressionLevel == GatewayCompressionLevel.Payload)

@@ -297,7 +297,7 @@ namespace DisCatSharp.VoiceNext.Codec
                 throw new Exception($"Could not encode PCM data to Opus: {error} ({(int)error}).");
             }
 
-            opus = opus.Slice(0, len);
+            opus = opus[..len];
         }
 
         /// <summary>

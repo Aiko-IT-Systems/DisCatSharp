@@ -141,13 +141,13 @@ namespace DisCatSharp.VoiceNext
                 {
                     var len = Math.Min(pcmSpan.Length - this.PcmBufferLength, remaining);
 
-                    var tgt = pcmSpan.Slice(this.PcmBufferLength);
-                    var src = buffSpan.Slice(0, len);
+                    var tgt = pcmSpan[this.PcmBufferLength..];
+                    var src = buffSpan[..len];
 
                     src.CopyTo(tgt);
                     this.PcmBufferLength += len;
                     remaining -= len;
-                    buffSpan = buffSpan.Slice(len);
+                    buffSpan = buffSpan[len..];
 
                     if (this.PcmBufferLength == this.PcmBuffer.Length)
                     {
@@ -156,7 +156,7 @@ namespace DisCatSharp.VoiceNext
                         this.PcmBufferLength = 0;
 
                         var packet = ArrayPool<byte>.Shared.Rent(this.PcmMemory.Length);
-                        var packetMemory = packet.AsMemory().Slice(0, this.PcmMemory.Length);
+                        var packetMemory = packet.AsMemory()[..this.PcmMemory.Length];
                         this.PcmMemory.CopyTo(packetMemory);
 
                         await this.Connection.EnqueuePacketAsync(new RawVoicePacket(packetMemory, this.PcmBufferDuration, false, packet), cancellationToken).ConfigureAwait(false);
@@ -176,12 +176,12 @@ namespace DisCatSharp.VoiceNext
         public async Task FlushAsync(CancellationToken cancellationToken = default)
         {
             var pcm = this.PcmMemory;
-            Helpers.ZeroFill(pcm.Slice(this.PcmBufferLength).Span);
+            Helpers.ZeroFill(pcm[this.PcmBufferLength..].Span);
 
             this.ApplyFiltersSync(pcm);
 
             var packet = ArrayPool<byte>.Shared.Rent(pcm.Length);
-            var packetMemory = packet.AsMemory().Slice(0, pcm.Length);
+            var packetMemory = packet.AsMemory()[..pcm.Length];
             pcm.CopyTo(packetMemory);
 
             await this.Connection.EnqueuePacketAsync(new RawVoicePacket(packetMemory, this.PcmBufferDuration, false, packet), cancellationToken).ConfigureAwait(false);

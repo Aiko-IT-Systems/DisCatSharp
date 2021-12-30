@@ -372,8 +372,8 @@ namespace DisCatSharp.VoiceNext
             var epp = 443;
             if (epi != -1)
             {
-                eph = eps.Substring(0, epi);
-                epp = int.Parse(eps.Substring(epi + 1));
+                eph = eps[..epi];
+                epp = int.Parse(eps[(epi + 1)..]);
             }
             else
             {
@@ -509,7 +509,7 @@ namespace DisCatSharp.VoiceNext
             switch (this.SelectedEncryptionMode)
             {
                 case EncryptionMode.XSalsa20_Poly1305:
-                    this.Sodium.GenerateNonce(packet.Slice(0, Rtp.HeaderSize), nonce);
+                    this.Sodium.GenerateNonce(packet[..Rtp.HeaderSize], nonce);
                     break;
 
                 case EncryptionMode.XSalsa20_Poly1305_Suffix:
@@ -527,8 +527,8 @@ namespace DisCatSharp.VoiceNext
 
             Span<byte> encrypted = stackalloc byte[Sodium.CalculateTargetSize(opus)];
             this.Sodium.Encrypt(opus, encrypted, nonce);
-            encrypted.CopyTo(packet.Slice(Rtp.HeaderSize));
-            packet = packet.Slice(0, this.Rtp.CalculatePacketSize(encrypted.Length, this.SelectedEncryptionMode));
+            encrypted.CopyTo(packet[Rtp.HeaderSize..]);
+            packet = packet[..this.Rtp.CalculatePacketSize(encrypted.Length, this.SelectedEncryptionMode)];
             this.Sodium.AppendNonce(nonce, packet, this.SelectedEncryptionMode);
 
             target = packetArray;
@@ -663,7 +663,7 @@ namespace DisCatSharp.VoiceNext
             this.Rtp.GetDataFromPacket(data, out var encryptedOpus, this.SelectedEncryptionMode);
 
             var opusSize = Sodium.CalculateSourceSize(encryptedOpus);
-            opus = opus.Slice(0, opusSize);
+            opus = opus[..opusSize];
             var opusSpan = opus.Span;
             try
             {
@@ -693,7 +693,7 @@ namespace DisCatSharp.VoiceNext
                         while (opusSpan[i] == 0)
                             i++;
 
-                        opusSpan = opusSpan.Slice(i);
+                        opusSpan = opusSpan[i..];
                     }
 
                     // TODO: consider implementing RFC 5285, 4.3. Two-Byte Header
@@ -703,7 +703,7 @@ namespace DisCatSharp.VoiceNext
                 {
                     // I'm not 100% sure what this header is/does, however removing the data causes no
                     // real issues, and has the added benefit of removing a lot of noise.
-                    opusSpan = opusSpan.Slice(2);
+                    opusSpan = opusSpan[2..];
                 }
 
                 if (gap == 1)
@@ -728,7 +728,7 @@ namespace DisCatSharp.VoiceNext
 
                 var pcmSpan = pcm.Span;
                 this.Opus.Decode(vtx.Decoder, opusSpan, ref pcmSpan, false, out outputFormat);
-                pcm = pcm.Slice(0, pcmSpan.Length);
+                pcm = pcm[..pcmSpan.Length];
             }
             finally
             {
@@ -1051,7 +1051,7 @@ namespace DisCatSharp.VoiceNext
                 var ipString = Utilities.UTF8.GetString(packet, 4, 64 /* 70 - 6 */).TrimEnd('\0');
                 decodedIp = System.Net.IPAddress.Parse(ipString);
 
-                decodedPort = BinaryPrimitives.ReadUInt16LittleEndian(packetSpan.Slice(68 /* 70 - 2 */));
+                decodedPort = BinaryPrimitives.ReadUInt16LittleEndian(packetSpan[68 /* 70 - 2 */..]);
             }
 
             // Select voice encryption mode

@@ -72,7 +72,7 @@ namespace DisCatSharp.CommandsNext
                         Message = ctx.Message,
                         Command = cmd,
                         Config = ctx.Config,
-                        RawArgumentString = ctx.RawArgumentString.Substring(findpos),
+                        RawArgumentString = ctx.RawArgumentString[findpos..],
                         Prefix = ctx.Prefix,
                         CommandsNext = ctx.CommandsNext,
                         Services = ctx.Services

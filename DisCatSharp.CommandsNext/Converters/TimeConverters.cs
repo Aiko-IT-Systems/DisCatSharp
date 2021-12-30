@@ -117,8 +117,8 @@ namespace DisCatSharp.CommandsNext.Converters
                 if (string.IsNullOrWhiteSpace(gpc))
                     continue;
 
-                var gpt = gpc[gpc.Length - 1];
-                int.TryParse(gpc.Substring(0, gpc.Length - 1), NumberStyles.Integer, CultureInfo.InvariantCulture, out var val);
+                var gpt = gpc[^1];
+                int.TryParse(gpc[0..^1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var val);
                 switch (gpt)
                 {
                     case 'd':

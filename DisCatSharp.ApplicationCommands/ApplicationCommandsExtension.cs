@@ -1679,7 +1679,7 @@ namespace DisCatSharp.ApplicationCommands
             }
             if (commandTwoName is not null && !commandTwoName.Equals("no_options_for_this_command"))
             {
-                List<DiscordApplicationCommand> commandsWithSubCommands = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.Any(op => op.Type == ApplicationCommandOptionType.SubCommandGroup));
+                var commandsWithSubCommands = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.Any(op => op.Type == ApplicationCommandOptionType.SubCommandGroup));
                 var cmdParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Options.Any(op => op.Name.Equals(commandOneName))).Options
                         .FirstOrDefault(opt => opt.Name.Equals(commandOneName,StringComparison.OrdinalIgnoreCase));
                 var cmd = cmdParent.Options.FirstOrDefault(op => op.Name.Equals(commandTwoName,StringComparison.OrdinalIgnoreCase));
@@ -1704,8 +1704,8 @@ namespace DisCatSharp.ApplicationCommands
             }
             else if (commandOneName is not null && commandTwoName is null && !commandOneName.Equals("no_options_for_this_command"))
             {
-                List<DiscordApplicationCommand> commandsWithOptions = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.All(op => op.Type == ApplicationCommandOptionType.SubCommand));
-                DiscordApplicationCommand subCommandParent = commandsWithOptions.FirstOrDefault(cm => cm.Name.Equals(commandName,StringComparison.OrdinalIgnoreCase));
+                var commandsWithOptions = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.All(op => op.Type == ApplicationCommandOptionType.SubCommand));
+                var subCommandParent = commandsWithOptions.FirstOrDefault(cm => cm.Name.Equals(commandName,StringComparison.OrdinalIgnoreCase));
                 var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.Equals(commandOneName,StringComparison.OrdinalIgnoreCase));
                 var discordEmbed = new DiscordEmbedBuilder
                 {
@@ -1728,7 +1728,7 @@ namespace DisCatSharp.ApplicationCommands
             }
             else
             {
-                DiscordApplicationCommand command = applicationCommands.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+                var command = applicationCommands.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
                 if (command is null)
                 {
                     await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()

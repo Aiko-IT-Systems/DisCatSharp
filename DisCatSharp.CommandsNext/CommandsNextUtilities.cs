@@ -75,7 +75,7 @@ namespace DisCatSharp.CommandsNext
             if (cni == -1 || content.Length <= cni + 2)
                 return -1;
 
-            var cnp = content.Substring(0, cni + 2);
+            var cnp = content[..(cni + 2)];
             var m = UserRegex.Match(cnp);
             if (!m.Success)
                 return -1;
@@ -164,12 +164,12 @@ namespace DisCatSharp.CommandsNext
                 if (endPosition != -1)
                 {
                     startPos = endPosition;
-                    return startPosition != endPosition ? str.Substring(startPosition, endPosition - startPosition).CleanupString(removeIndices) : null;
+                    return startPosition != endPosition ? str[startPosition..endPosition].CleanupString(removeIndices) : null;
                 }
             }
 
             startPos = str.Length;
-            return startPos != startPosition ? str.Substring(startPosition).CleanupString(removeIndices) : null;
+            return startPos != startPosition ? str[startPosition..].CleanupString(removeIndices) : null;
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace DisCatSharp.CommandsNext
                         if (argString == null)
                             break;
 
-                        argValue = argString.Substring(foundAt).Trim();
+                        argValue = argString[foundAt..].Trim();
                         argValue = argValue == "" ? null : argValue;
                         foundAt = argString.Length;
 

@@ -355,7 +355,7 @@ namespace DisCatSharp.Common
         /// <returns>Whether the supplied string ends with supplied character.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool EndsWithCharacter(this string s, char c)
-            => s.Length >= 1 && s[s.Length - 1] == c;
+            => s.Length >= 1 && s[^1] == c;
 
         /// <summary>
         /// Tests whether given string starts with given character.

@@ -250,8 +250,8 @@ namespace DisCatSharp.CommandsNext
             if (mpos == -1)
                 return;
 
-            var pfx = e.Message.Content.Substring(0, mpos);
-            var cnt = e.Message.Content.Substring(mpos);
+            var pfx = e.Message.Content[..mpos];
+            var cnt = e.Message.Content[mpos..];
 
             var __ = 0;
             var fname = cnt.ExtractNextArgument(ref __);
@@ -298,7 +298,7 @@ namespace DisCatSharp.CommandsNext
 
             if (cmd is not CommandGroup)
             {
-                rawArguments = commandString.Substring(pos).Trim();
+                rawArguments = commandString[pos..].Trim();
                 return cmd;
             }
 
@@ -328,7 +328,7 @@ namespace DisCatSharp.CommandsNext
                 }
             }
 
-            rawArguments = commandString.Substring(pos).Trim();
+            rawArguments = commandString[pos..].Trim();
             return cmd;
         }
 
@@ -510,11 +510,11 @@ namespace DisCatSharp.CommandsNext
                             moduleName = ti.Name;
 
                             if (moduleName.EndsWith("Group") && moduleName != "Group")
-                                moduleName = moduleName.Substring(0, moduleName.Length - 5);
+                                moduleName = moduleName[0..^5];
                             else if (moduleName.EndsWith("Module") && moduleName != "Module")
-                                moduleName = moduleName.Substring(0, moduleName.Length - 6);
+                                moduleName = moduleName[0..^6];
                             else if (moduleName.EndsWith("Commands") && moduleName != "Commands")
-                                moduleName = moduleName.Substring(0, moduleName.Length - 8);
+                                moduleName = moduleName[0..^8];
                         }
 
                         if (!this.Config.CaseSensitive)
@@ -580,7 +580,7 @@ namespace DisCatSharp.CommandsNext
                 {
                     commandName = m.Name;
                     if (commandName.EndsWith("Async") && commandName != "Async")
-                        commandName = commandName.Substring(0, commandName.Length - 5);
+                        commandName = commandName[0..^5];
                 }
 
                 if (!this.Config.CaseSensitive)

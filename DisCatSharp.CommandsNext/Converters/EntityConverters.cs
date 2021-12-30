@@ -75,8 +75,8 @@ namespace DisCatSharp.CommandsNext.Converters
                 value = value.ToLowerInvariant();
 
             var di = value.IndexOf('#');
-            var un = di != -1 ? value.Substring(0, di) : value;
-            var dv = di != -1 ? value.Substring(di + 1) : null;
+            var un = di != -1 ? value[..di] : value;
+            var dv = di != -1 ? value[(di + 1)..] : null;
 
             var us = ctx.Client.Guilds.Values
                 .SelectMany(xkvp => xkvp.Members.Values)
@@ -139,8 +139,8 @@ namespace DisCatSharp.CommandsNext.Converters
                 value = value.ToLowerInvariant();
 
             var di = value.IndexOf('#');
-            var un = di != -1 ? value.Substring(0, di) : value;
-            var dv = di != -1 ? value.Substring(di + 1) : null;
+            var un = di != -1 ? value[..di] : value;
+            var dv = di != -1 ? value[(di + 1)..] : null;
 
             var us = ctx.Guild.Members.Values
                 .Where(xm => ((cs ? xm.Username : xm.Username.ToLowerInvariant()) == un && ((dv != null && xm.Discriminator == dv) || dv == null))
@@ -400,7 +400,7 @@ namespace DisCatSharp.CommandsNext.Converters
             if (string.IsNullOrWhiteSpace(value))
                 return Optional.FromNoValue<DiscordMessage>();
 
-            var msguri = value.StartsWith("<") && value.EndsWith(">") ? value.Substring(1, value.Length - 2) : value;
+            var msguri = value.StartsWith("<") && value.EndsWith(">") ? value[1..^1] : value;
             ulong mid;
             if (Uri.TryCreate(msguri, UriKind.Absolute, out var uri))
             {
@@ -459,7 +459,7 @@ namespace DisCatSharp.CommandsNext.Converters
             if (string.IsNullOrWhiteSpace(value))
                 return Optional.FromNoValue<DiscordScheduledEvent>();
 
-            var msguri = value.StartsWith("<") && value.EndsWith(">") ? value.Substring(1, value.Length - 2) : value;
+            var msguri = value.StartsWith("<") && value.EndsWith(">") ? value[1..^1] : value;
             ulong seid;
             if (Uri.TryCreate(msguri, UriKind.Absolute, out var uri))
             {

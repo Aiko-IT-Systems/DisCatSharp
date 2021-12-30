@@ -100,10 +100,10 @@ namespace DisCatSharp.Common.Types
                 avs = avs > src.Length
                     ? src.Length
                     : avs;
-                var dmem = mem.Slice(this._lastSegmentLength);
+                var dmem = mem[this._lastSegmentLength..];
 
-                src.Slice(0, avs).CopyTo(dmem.Span);
-                src = src.Slice(avs);
+                src[..avs].CopyTo(dmem.Span);
+                src = src[avs..];
 
                 this.Length += (ulong)avs;
                 this._lastSegmentLength += avs;
@@ -157,7 +157,7 @@ namespace DisCatSharp.Common.Types
                 avs = avs > len
                     ? len
                     : avs;
-                var dmem = mem.Slice(this._lastSegmentLength);
+                var dmem = mem[this._lastSegmentLength..];
 
 #if HAS_SPAN_STREAM_OVERLOADS
                 stream.Read(dmem.Span);
@@ -195,7 +195,7 @@ namespace DisCatSharp.Common.Types
             var buffs = buff.AsSpan();
             while ((read = stream.Read(buff, 0, buff.Length - this._lastSegmentLength)) != 0)
 #endif
-                this.Write(MemoryMarshal.Cast<byte, T>(buffs.Slice(0, read)));
+                this.Write(MemoryMarshal.Cast<byte, T>(buffs[..read]));
         }
 
         /// <inheritdoc />
@@ -233,18 +233,18 @@ namespace DisCatSharp.Common.Types
 
                 if (sri != 0)
                 {
-                    src = src.Slice(sri);
+                    src = src[sri..];
                     sri = 0;
                 }
 
                 if (itemsWritten + src.Length > dl)
-                    src = src.Slice(0, dl - itemsWritten);
+                    src = src[..(dl - itemsWritten)];
 
                 if (src.Length > dst.Length)
-                    src = src.Slice(0, dst.Length);
+                    src = src[..dst.Length];
 
                 src.CopyTo(dst);
-                dst = dst.Slice(src.Length);
+                dst = dst[src.Length..];
                 itemsWritten += src.Length;
             }
 

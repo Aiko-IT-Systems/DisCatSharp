@@ -78,7 +78,7 @@ namespace DisCatSharp.Common.Types
             var bytes = MemoryMarshal.AsBytes(data);
             this.EnsureSize(this._pos + bytes.Length);
 
-            bytes.CopyTo(this._buff.Slice(this._pos).Span);
+            bytes.CopyTo(this._buff[this._pos..].Span);
             this._pos += bytes.Length;
         }
 
@@ -119,7 +119,7 @@ namespace DisCatSharp.Common.Types
             try
             {
                 var br = stream.Read(memo, 0, memo.Length);
-                memo.AsSpan(0, br).CopyTo(this._buff.Slice(this._pos).Span);
+                memo.AsSpan(0, br).CopyTo(this._buff[this._pos..].Span);
             }
             finally
             {
@@ -153,7 +153,7 @@ namespace DisCatSharp.Common.Types
                 while ((br = stream.Read(memo, 0, memo.Length)) != 0)
                 {
                     this.EnsureSize(this._pos + br);
-                    memo.AsSpan(0, br).CopyTo(this._buff.Slice(this._pos).Span);
+                    memo.AsSpan(0, br).CopyTo(this._buff[this._pos..].Span);
                     this._pos += br;
                 }
             }
@@ -176,10 +176,10 @@ namespace DisCatSharp.Common.Types
                 throw new ArgumentOutOfRangeException(nameof(source), "Cannot copy data from beyond the buffer.");
 
             var start = (int)source;
-            var sbuff = this._buff.Slice(start, this._pos - start).Span;
+            var sbuff = this._buff[start..this._pos ].Span;
             var dbuff = MemoryMarshal.AsBytes(destination);
             if (sbuff.Length > dbuff.Length)
-                sbuff = sbuff.Slice(0, dbuff.Length);
+                sbuff = sbuff[..dbuff.Length];
 
             itemsWritten = sbuff.Length / this._itemSize;
             sbuff.CopyTo(dbuff);
@@ -201,7 +201,7 @@ namespace DisCatSharp.Common.Types
             if (this._isDisposed)
                 throw new ObjectDisposedException("This buffer is disposed.");
 
-            return MemoryMarshal.Cast<byte, T>(this._buff.Slice(0, this._pos).Span).ToArray();
+            return MemoryMarshal.Cast<byte, T>(this._buff[..this._pos].Span).ToArray();
         }
 
         /// <inheritdoc />
@@ -213,7 +213,7 @@ namespace DisCatSharp.Common.Types
 #if HAS_SPAN_STREAM_OVERLOADS
             destination.Write(this._buff.Slice(0, this._pos).Span);
 #else
-            var buff = this._buff.Slice(0, this._pos).ToArray();
+            var buff = this._buff[..this._pos].ToArray();
             destination.Write(buff, 0, buff.Length);
 #endif
         }

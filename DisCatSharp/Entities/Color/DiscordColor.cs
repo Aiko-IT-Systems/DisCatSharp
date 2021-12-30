@@ -110,7 +110,7 @@ namespace DisCatSharp.Entities
             if (color.Length == 7 && color[0] != '#')
                 throw new ArgumentException(nameof(color), "7-character colors must begin with #.");
             else if (color.Length == 7)
-                color = color.Substring(1);
+                color = color[1..];
 
             if (color.Any(xc => !HexAlphabet.Contains(xc)))
                 throw new ArgumentException(nameof(color), "Colors must consist of hexadecimal characters only.");

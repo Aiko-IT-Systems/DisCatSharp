@@ -70,9 +70,9 @@ namespace DisCatSharp.VoiceNext.Codec
             target[1] = RtpVersion;
 
             // Write data big endian
-            BinaryPrimitives.WriteUInt16BigEndian(target.Slice(2), sequence);  // header + magic
-            BinaryPrimitives.WriteUInt32BigEndian(target.Slice(4), timestamp); // header + magic + sizeof(sequence)
-            BinaryPrimitives.WriteUInt32BigEndian(target.Slice(8), ssrc);      // header + magic + sizeof(sequence) + sizeof(timestamp)
+            BinaryPrimitives.WriteUInt16BigEndian(target[2..], sequence);  // header + magic
+            BinaryPrimitives.WriteUInt32BigEndian(target[4..], timestamp); // header + magic + sizeof(sequence)
+            BinaryPrimitives.WriteUInt32BigEndian(target[8..], ssrc);      // header + magic + sizeof(sequence) + sizeof(timestamp)
         }
 
         /// <summary>
@@ -101,9 +101,9 @@ namespace DisCatSharp.VoiceNext.Codec
             hasExtension = source[0] == RtpExtension;
 
             // Read data big endian
-            sequence = BinaryPrimitives.ReadUInt16BigEndian(source.Slice(2));
-            timestamp = BinaryPrimitives.ReadUInt32BigEndian(source.Slice(4));
-            ssrc = BinaryPrimitives.ReadUInt32BigEndian(source.Slice(8));
+            sequence = BinaryPrimitives.ReadUInt16BigEndian(source[2..]);
+            timestamp = BinaryPrimitives.ReadUInt32BigEndian(source[4..]);
+            ssrc = BinaryPrimitives.ReadUInt32BigEndian(source[8..]);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace DisCatSharp.VoiceNext.Codec
             switch (encryptionMode)
             {
                 case EncryptionMode.XSalsa20_Poly1305:
-                    data = packet.Slice(HeaderSize);
+                    data = packet[HeaderSize..];
                     return;
 
                 case EncryptionMode.XSalsa20_Poly1305_Suffix:

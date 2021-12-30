@@ -119,7 +119,7 @@ namespace DisCatSharp.VoiceNext.Codec
             var sampleCount = Interop.OpusDecode(decoder.Decoder, opus, frameSize, target, useFec);
 
             var sampleSize = outputFormat.SampleCountToSampleSize(sampleCount);
-            target = target.Slice(0, sampleSize);
+            target = target[..sampleSize];
         }
 
         /// <summary>

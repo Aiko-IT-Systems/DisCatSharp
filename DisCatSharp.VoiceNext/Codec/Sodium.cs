@@ -103,7 +103,7 @@ namespace DisCatSharp.VoiceNext.Codec
             rtpHeader.CopyTo(target);
 
             // Zero rest of the span.
-            Helpers.ZeroFill(target.Slice(rtpHeader.Length));
+            Helpers.ZeroFill(target[rtpHeader.Length..]);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace DisCatSharp.VoiceNext.Codec
             BinaryPrimitives.WriteUInt32BigEndian(target, nonce);
 
             // Zero rest of the buffer.
-            Helpers.ZeroFill(target.Slice(4));
+            Helpers.ZeroFill(target[4..]);
         }
 
         /// <summary>
@@ -150,11 +150,11 @@ namespace DisCatSharp.VoiceNext.Codec
                     return;
 
                 case EncryptionMode.XSalsa20_Poly1305_Suffix:
-                    nonce.CopyTo(target.Slice(target.Length - 12));
+                    nonce.CopyTo(target[^12..]);
                     return;
 
                 case EncryptionMode.XSalsa20_Poly1305_Lite:
-                    nonce.Slice(0, 4).CopyTo(target.Slice(target.Length - 4));
+                    nonce[..4].CopyTo(target[^4..]);
                     return;
 
                 default:
@@ -176,15 +176,15 @@ namespace DisCatSharp.VoiceNext.Codec
             switch (encryptionMode)
             {
                 case EncryptionMode.XSalsa20_Poly1305:
-                    source.Slice(0, 12).CopyTo(target);
+                    source[..12].CopyTo(target);
                     return;
 
                 case EncryptionMode.XSalsa20_Poly1305_Suffix:
-                    source.Slice(source.Length - Interop.SodiumNonceSize).CopyTo(target);
+                    source[^Interop.SodiumNonceSize..].CopyTo(target);
                     return;
 
                 case EncryptionMode.XSalsa20_Poly1305_Lite:
-                    source.Slice(source.Length - 4).CopyTo(target);
+                    source[^4..].CopyTo(target);
                     return;
 
                 default:

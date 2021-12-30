@@ -76,7 +76,7 @@ namespace DisCatSharp
             lock (_lock)
             {
                 var ename = eventId.Name;
-                ename = ename?.Length > 12 ? ename?.Substring(0, 12) : ename;
+                ename = ename?.Length > 12 ? ename?[..12] : ename;
                 Console.Write($"[{DateTimeOffset.Now.ToString(this.TimestampFormat)}] [{eventId.Id,-4}/{ename,-12}] ");
 
                 switch (logLevel)
