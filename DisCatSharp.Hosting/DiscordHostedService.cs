@@ -37,7 +37,7 @@ namespace DisCatSharp.Hosting
         /// <inheritdoc/>
         public DiscordClient Client { get; protected set; }
 
-        #pragma warning disable 8618
+#pragma warning disable 8618
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordHostedService"/> class.
         /// </summary>
@@ -53,9 +53,9 @@ namespace DisCatSharp.Hosting
             string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
             : base(config, logger, serviceProvider, applicationLifetime, configBotSection)
         {
-            
+
         }
-        #pragma warning restore 8618
+#pragma warning restore 8618
 
         protected override Task ConfigureAsync()
         {

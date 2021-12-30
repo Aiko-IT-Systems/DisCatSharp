@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,22 +24,22 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Models;
 using DisCatSharp.Net.Serialization;
-using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using DisCatSharp.Enums;
-using System.Globalization;
 
 namespace DisCatSharp
 {
@@ -397,7 +397,8 @@ namespace DisCatSharp
             if (!fetch)
             {
                 return this.TryGetCachedUserInternal(userId, out var usr) ? usr : new DiscordUser { Id = userId, Discord = this };
-            } else
+            }
+            else
             {
                 var usr = await this.ApiClient.GetUserAsync(userId).ConfigureAwait(false);
                 usr = this.UserCache.AddOrUpdate(userId, usr, (id, old) =>

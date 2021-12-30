@@ -77,7 +77,7 @@ namespace DisCatSharp.Configuration
                 if (typeof(string) == prop.PropertyType)
                 {
                     // We do NOT want to override value if nothing was provided
-                    if(!string.IsNullOrEmpty(entry))
+                    if (!string.IsNullOrEmpty(entry))
                         prop.SetValue(config, entry);
 
                     continue;
@@ -143,7 +143,7 @@ namespace DisCatSharp.Configuration
         public static object ExtractConfig(this ConfigSection section, Func<object> factory)
         {
             if (factory == null)
-                throw new ArgumentNullException(nameof(factory),FactoryErrorMessage);
+                throw new ArgumentNullException(nameof(factory), FactoryErrorMessage);
 
             // Create default instance
             var config = factory();
@@ -195,7 +195,7 @@ namespace DisCatSharp.Configuration
 
             HydrateInstance(ref configInstance, new ConfigSection(ref config, sectionName, rootSectionName));
 
-            return (TConfig) configInstance;
+            return (TConfig)configInstance;
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace DisCatSharp.Configuration
 
             HydrateInstance(ref configInstance, new ConfigSection(ref config, sectionName, rootSectionName));
 
-            return (TConfig) configInstance;
+            return (TConfig)configInstance;
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace DisCatSharp.Configuration
                 current = current.GetSection(values[i]);
             }
 
-            return current.GetChildren().Any(x=>x.Key == values[^1]);
+            return current.GetChildren().Any(x => x.Key == values[^1]);
         }
 
         /// <summary>

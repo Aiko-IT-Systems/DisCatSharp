@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -227,7 +227,7 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets the flags.
         /// </summary>
         [JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
-        public MessageFlags? Flags{ get; set; }
+        public MessageFlags? Flags { get; set; }
 
         /// <summary>
         /// Gets or sets the components.
@@ -348,7 +348,7 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets the target type.
         /// </summary>
         [JsonProperty("target_type", NullValueHandling = NullValueHandling.Ignore)]
-        public TargetType? TargetType{ get; set; }
+        public TargetType? TargetType { get; set; }
 
         /// <summary>
         /// Gets or sets the target application.

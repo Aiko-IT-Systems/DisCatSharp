@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -180,7 +180,7 @@ namespace DisCatSharp.Common
 
             return inclusive ? (num >= min && num <= max) : (num > min && num < max);
         }
-        
+
         /// <summary>
         /// Tests wheter given value is in supplied range, optionally allowing it to be an exclusive check.
         /// </summary>

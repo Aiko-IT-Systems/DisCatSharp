@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -240,7 +240,7 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets the command id.
         /// </summary>
         [JsonProperty("id")]
-        public ulong CommandId { get; set;  }
+        public ulong CommandId { get; set; }
 
         /// <summary>
         /// Gets the permissions.

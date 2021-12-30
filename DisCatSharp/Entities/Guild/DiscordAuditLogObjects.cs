@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -1048,7 +1048,7 @@ namespace DisCatSharp.Entities
         /// Indicates that an event was deleted.
         /// </summary>
         GuildScheduledEventDelete = 102,
-        
+
         /// <summary>
         /// Indicates that an thread was created.
         /// </summary>
@@ -1063,6 +1063,6 @@ namespace DisCatSharp.Entities
         /// Indicates that an thread was deleted.
         /// </summary>
         ThreadDelete = 112,
-        
+
     }
 }

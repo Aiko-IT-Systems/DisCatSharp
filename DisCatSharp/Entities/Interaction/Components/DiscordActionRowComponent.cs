@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -48,7 +48,7 @@ namespace DisCatSharp.Entities
         /// Constructs a new <see cref="DiscordActionRowComponent"/>.
         /// </summary>
         /// <param name="components">List of components</param>
-        public DiscordActionRowComponent(IEnumerable<DiscordComponent> components): this()
+        public DiscordActionRowComponent(IEnumerable<DiscordComponent> components) : this()
         {
             this.Components = components.ToList().AsReadOnly();
         }

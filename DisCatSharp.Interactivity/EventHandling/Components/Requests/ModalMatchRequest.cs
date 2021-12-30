@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,7 +23,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.Interactivity.EventHandling

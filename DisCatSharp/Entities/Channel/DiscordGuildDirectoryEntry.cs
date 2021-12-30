@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,15 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using DisCatSharp.Exceptions;
-using DisCatSharp.Net.Abstractions;
-using DisCatSharp.Net.Models;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
@@ -39,13 +30,13 @@ namespace DisCatSharp.Entities
     /// </summary>
     public class DiscordGuildDirectoryEntry : SnowflakeObject, IEquatable<DiscordGuildDirectoryEntry>
     {
-        
+
         /// <summary>
         /// Gets the description of the directory entry.
         /// </summary>
         [JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
         public string Description { get; internal set; }
-        
+
         /// <summary>
         /// Gets the primary category of the directory entry.
         /// </summary>
@@ -69,11 +60,11 @@ namespace DisCatSharp.Entities
         /// Initializes a new instance of the <see cref="DiscordGuildDirectoryEntry"/> class.
         /// </summary>
         internal DiscordGuildDirectoryEntry() { }
-        
+
         #region Methods
-        
+
         #endregion
-        
+
         /// <summary>
         /// Checks whether this <see cref="DiscordGuildDirectoryEntry"/> is equal to another object.
         /// </summary>

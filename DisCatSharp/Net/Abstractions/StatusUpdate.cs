@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -47,7 +47,7 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonIgnore]
         public UserStatus Status { get; set; } = UserStatus.Online;
-        
+
         /// <summary>
         /// Gets the status string of the user.
         /// </summary>

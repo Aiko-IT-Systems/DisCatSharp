@@ -74,6 +74,6 @@ namespace DisCatSharp.Common
 #nullable enable
         public static bool NotEmptyAndNotNull<T>(this List<T?>? list)
             => list != null && list.Any();
-        #nullable disable
+#nullable disable
     }
 }

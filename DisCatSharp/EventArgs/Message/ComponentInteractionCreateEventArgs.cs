@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,7 +22,6 @@
 
 using System;
 using DisCatSharp.Entities;
-using Newtonsoft.Json;
 
 namespace DisCatSharp.EventArgs
 {

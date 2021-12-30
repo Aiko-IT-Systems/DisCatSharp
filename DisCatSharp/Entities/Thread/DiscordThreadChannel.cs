@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -27,7 +27,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Models;
 using DisCatSharp.Net.Serialization;
 using Newtonsoft.Json;
@@ -270,7 +269,7 @@ namespace DisCatSharp.Entities
             var role = this.Guild.GetRole(role_id);
             var members = await this.Guild.GetAllMembersAsync();
             var roleMembers = members.Where(m => m.Roles.Contains(role));
-            foreach(var member in roleMembers)
+            foreach (var member in roleMembers)
             {
                 await this.Discord.ApiClient.AddThreadMemberAsync(this.Id, member.Id);
             }
@@ -364,7 +363,7 @@ namespace DisCatSharp.Entities
         {
             return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] {embed}, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] { embed }, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
 
         /// <summary>
@@ -381,7 +380,7 @@ namespace DisCatSharp.Entities
         {
             return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, new[] {embed}, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, new[] { embed }, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
         }
 
         /// <summary>
@@ -593,7 +592,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         public new Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync()
         {
-            return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread&& this.Type != ChannelType.News
+            return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.News
                 ? throw new ArgumentException("A non-thread channel does not have pinned messages.")
                 : this.Discord.ApiClient.GetPinnedMessagesAsync(this.Id);
         }

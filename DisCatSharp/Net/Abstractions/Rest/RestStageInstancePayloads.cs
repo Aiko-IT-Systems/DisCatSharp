@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using DisCatSharp.Entities;
 using Newtonsoft.Json;
 
@@ -48,7 +47,7 @@ namespace DisCatSharp.Net.Abstractions
         /// </summary>
         [JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
         public StagePrivacyLevel PrivacyLevel { get; set; }
-        
+
         /// <summary>
         /// Whether everyone should be notified about the start.
         /// </summary>

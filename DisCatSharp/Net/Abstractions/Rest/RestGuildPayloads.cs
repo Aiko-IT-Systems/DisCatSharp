@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -462,9 +462,9 @@ namespace DisCatSharp.Net.Abstractions
         public DateTimeOffset? CommunicationDisabledUntil { get; internal set; }
     }
 
-        /// <summary>
-        /// Represents a guild role payload.
-        /// </summary>
+    /// <summary>
+    /// Represents a guild role payload.
+    /// </summary>
     internal sealed class RestGuildRolePayload
     {
         /// <summary>

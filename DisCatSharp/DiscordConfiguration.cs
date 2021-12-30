@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -198,7 +198,7 @@ namespace DisCatSharp
         /// <para>Defaults to false.</para>
         /// </summary>
         public bool MobileStatus { internal get; set; } = false;
-        
+
         /// <summary>
         /// <para>Use canary.</para>
         /// <para>Defaults to false.</para>

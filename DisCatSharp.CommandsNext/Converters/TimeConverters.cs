@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,8 +24,8 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using DisCatSharp.Entities;
 using DisCatSharp.Common.RegularExpressions;
+using DisCatSharp.Entities;
 
 namespace DisCatSharp.CommandsNext.Converters
 {

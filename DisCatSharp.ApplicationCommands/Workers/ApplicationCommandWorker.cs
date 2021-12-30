@@ -76,8 +76,8 @@ namespace DisCatSharp.ApplicationCommands
                 Commands.Add(command);
                 CommandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
             }
-            
-            return Task.FromResult(Tuple.Create(Commands, CommandTypeSources, contextMenuCommands));   
+
+            return Task.FromResult(Tuple.Create(Commands, CommandTypeSources, contextMenuCommands));
         }
 
         /// <summary>
@@ -331,9 +331,9 @@ namespace DisCatSharp.ApplicationCommands
                                 {
                                     var sub_sub_command_translation = sub_command_translation.Commands.Single(sc => sc.Name == commatt.Name);
 
-                                    if(sub_sub_command_translation != null)
+                                    if (sub_sub_command_translation != null)
                                     {
-                                        if(sub_sub_command_translation.Options != null)
+                                        if (sub_sub_command_translation.Options != null)
                                         {
                                             LocalizisedOptions = new(suboptions.Count);
                                             foreach (var option in suboptions)

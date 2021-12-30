@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -77,7 +77,7 @@ namespace DisCatSharp.CommandsNext.Attributes
             }
             else
             {
-                return ctx.Member != null && ctx.Member.PremiumSince.HasValue ? await Task.FromResult(ctx.Member.PremiumSince.Value.UtcDateTime.Date < DateTime.UtcNow.Date.AddDays(-this.Since)): await Task.FromResult(false);
+                return ctx.Member != null && ctx.Member.PremiumSince.HasValue ? await Task.FromResult(ctx.Member.PremiumSince.Value.UtcDateTime.Date < DateTime.UtcNow.Date.AddDays(-this.Since)) : await Task.FromResult(false);
             }
         }
     }

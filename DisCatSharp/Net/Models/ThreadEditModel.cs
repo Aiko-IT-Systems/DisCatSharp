@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -42,7 +42,7 @@ namespace DisCatSharp.Net.Models
         /// <summary>
         /// Sets the threads's archived state.
         /// </summary>
-        public Optional<bool?> Archived{ internal get; set; }
+        public Optional<bool?> Archived { internal get; set; }
 
         /// <summary>
         /// Sets the threads's auto archive duration.

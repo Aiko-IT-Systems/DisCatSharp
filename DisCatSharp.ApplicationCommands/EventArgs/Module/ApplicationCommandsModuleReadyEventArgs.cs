@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.ApplicationCommands.EventArgs

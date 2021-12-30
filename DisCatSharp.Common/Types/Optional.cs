@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project.
+﻿// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -45,7 +45,7 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Gets the value of this <see cref="Optional{T}"/>. Will throw if a value is not present.
         /// </summary>
-        public T Value 
+        public T Value
             => this.HasValue ? this._value : throw new InvalidOperationException("This property has no value set.");
         private readonly T _value;
 

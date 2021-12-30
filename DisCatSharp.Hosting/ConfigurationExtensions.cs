@@ -96,16 +96,16 @@ namespace DisCatSharp.Hosting
                 }
 
                 // Time to check if one of the referenced assemblies is something we're looking for
-                foreach(var referencedAssembly in assembly.GetReferencedAssemblies()
+                foreach (var referencedAssembly in assembly.GetReferencedAssemblies()
                                                           .Where(x => x.Name != null && queue.Contains(x.Name)))
                     try
                     {
                         // Must load the assembly into our workspace so we can do stuff with it later
                         results.Add(Assembly.Load(referencedAssembly));
 
-                        #pragma warning disable 8604
+#pragma warning disable 8604
                         queue.Remove(referencedAssembly.Name);
-                        #pragma warning restore 8604
+#pragma warning restore 8604
                     }
                     catch (Exception ex)
                     {
@@ -148,8 +148,8 @@ namespace DisCatSharp.Hosting
                 : Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(
                         configuration[configuration.ConfigPath(rootName, "Using")]);
 
-            #pragma warning disable 8604
-            foreach (var assembly in FindAssemblies(assemblyNames.Select(x=> x.StartsWith(Constants.LibName) ? x : $"{Constants.LibName}.{x}").ToArray()))
+#pragma warning disable 8604
+            foreach (var assembly in FindAssemblies(assemblyNames.Select(x => x.StartsWith(Constants.LibName) ? x : $"{Constants.LibName}.{x}").ToArray()))
             {
                 ExtensionConfigResult result = new();
 
@@ -162,7 +162,7 @@ namespace DisCatSharp.Hosting
                     result.ConfigType = type;
 
                     // Does a section exist with the classname? (DiscordConfiguration - for instance)
-                    if(configuration.HasSection( rootName, sectionName))
+                    if (configuration.HasSection(rootName, sectionName))
                         result.Section = new ConfigSection(ref configuration, type.Name, rootName);
 
                     // Does a section exist with the classname minus Configuration? (Discord - for Instance)
@@ -192,7 +192,7 @@ namespace DisCatSharp.Hosting
                     }
                 }
             }
-            #pragma warning restore 8604
+#pragma warning restore 8604
 
             return results;
         }

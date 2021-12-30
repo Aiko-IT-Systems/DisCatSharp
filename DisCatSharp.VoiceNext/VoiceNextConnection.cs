@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -31,6 +31,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Net;
@@ -39,7 +40,6 @@ using DisCatSharp.Net.WebSocket;
 using DisCatSharp.VoiceNext.Codec;
 using DisCatSharp.VoiceNext.Entities;
 using DisCatSharp.VoiceNext.EventArgs;
-using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -942,7 +942,7 @@ namespace DisCatSharp.VoiceNext
                 this.Rtp?.Dispose();
                 this.Rtp = null;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 this.Discord.Logger.LogError(ex, ex.Message);
             }

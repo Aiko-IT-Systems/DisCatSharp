@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project.
+﻿// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //

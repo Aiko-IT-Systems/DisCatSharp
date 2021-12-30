@@ -36,7 +36,7 @@ namespace DisCatSharp.Hosting
     {
         public DiscordShardedClient ShardedClient { get; protected set; }
 
-        #pragma warning disable 8618
+#pragma warning disable 8618
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordShardedHostedService"/> class.
         /// </summary>
@@ -54,7 +54,7 @@ namespace DisCatSharp.Hosting
         {
 
         }
-        #pragma warning restore 8618
+#pragma warning restore 8618
 
         protected override Task ConfigureAsync()
         {

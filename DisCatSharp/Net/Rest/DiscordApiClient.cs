@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -219,7 +219,7 @@ namespace DisCatSharp.Net
         /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
         private Task<RestResponse> DoStickerMultipartAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null,
             DiscordMessageFile file = null, string name = "", string tags = "", string description = "", double? ratelimitWaitOverride = null)
-{
+        {
             var req = new MultipartStickerWebRequest(client, bucket, url, method, route, headers, file, name, tags, description, ratelimitWaitOverride);
 
             if (this.Discord != null)
@@ -1394,7 +1394,7 @@ namespace DisCatSharp.Net
             foreach (var ev in events_raw)
             {
                 ev.Discord = this.Discord;
-                if(ev.Creator != null)
+                if (ev.Creator != null)
                 {
                     ev.Creator.Discord = this.Discord;
                     this.Discord.UserCache.AddOrUpdate(ev.Creator.Id, ev.Creator, (id, old) =>
@@ -1775,7 +1775,7 @@ namespace DisCatSharp.Net
             {
                 ulong file_id = 0;
                 List<DiscordAttachment> attachments = new(builder.Files.Count);
-                foreach(var file in builder.Files)
+                foreach (var file in builder.Files)
                 {
                     DiscordAttachment att = new()
                     {
@@ -3617,7 +3617,8 @@ namespace DisCatSharp.Net
                 }
 
                 return ret;
-            } else
+            }
+            else
             {
                 pld.Attachments = builder.Attachments;
 
@@ -5397,7 +5398,8 @@ namespace DisCatSharp.Net
                 dcst.Developers = team;
 
                 return dcst;
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 this.Discord.Logger.LogDebug(ex.Message);
                 this.Discord.Logger.LogDebug(ex.StackTrace);

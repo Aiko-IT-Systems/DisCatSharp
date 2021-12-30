@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -34,7 +34,6 @@ using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Lavalink.EventArgs;
 using DisCatSharp.Net;
 using DisCatSharp.Net.WebSocket;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -279,7 +278,7 @@ namespace DisCatSharp.Lavalink
                 { throw; }
                 catch (Exception ex)
                 {
-                    if(!this.Configuration.SocketAutoReconnect || this._backoff == MaximumBackoff)
+                    if (!this.Configuration.SocketAutoReconnect || this._backoff == MaximumBackoff)
                     {
                         this.Discord.Logger.LogCritical(LavalinkEvents.LavalinkConnectionError, ex, "Failed to connect to Lavalink.");
                         throw ex;

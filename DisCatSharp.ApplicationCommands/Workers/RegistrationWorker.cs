@@ -349,7 +349,7 @@ namespace DisCatSharp.ApplicationCommands
             Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
             foreach (var cmd in updateList)
             {
-                if(discord.GetFirstValueWhere(d => d.Name == cmd.Name, out var command))
+                if (discord.GetFirstValueWhere(d => d.Name == cmd.Name, out var command))
                     UpdateCommands.Add(command.Id, cmd);
             }
 

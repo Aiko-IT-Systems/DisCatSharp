@@ -30,7 +30,7 @@ namespace DisCatSharp.ApplicationCommands
     /// </summary>
     public class ApplicationCommandsTranslationResolver
     {
-        #pragma warning disable IDE1006
+#pragma warning disable IDE1006
         /// <summary>
         /// Gets the group translations.
         /// </summary>
@@ -49,7 +49,7 @@ namespace DisCatSharp.ApplicationCommands
         public IReadOnlyDictionary<string, CommandTranslation> CommandTranslations => this._commandTranslations;
         private Dictionary<string, CommandTranslation> _commandTranslations => new();
 
-        #pragma warning restore IDE1006
+#pragma warning restore IDE1006
     }
 
     public class GroupTranslation

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -259,7 +259,7 @@ namespace DisCatSharp.Net
                 return;
 
             while (Interlocked.CompareExchange(ref this._limitResetting, 1, 0) != 0)
-            #pragma warning restore 420
+#pragma warning restore 420
                 await Task.Yield();
 
             if (this._nextReset != 0)

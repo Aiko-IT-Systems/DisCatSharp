@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,16 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using DisCatSharp.Exceptions;
-using DisCatSharp.Net.Abstractions;
-using DisCatSharp.Net.Models;
-using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
@@ -43,11 +33,11 @@ namespace DisCatSharp.Entities
         /// Initializes a new instance of the <see cref="DiscordGuildDirectoryChannel"/> class.
         /// </summary>
         internal DiscordGuildDirectoryChannel() { }
-        
+
         #region Methods
-        
+
         #endregion
-        
+
         /// <summary>
         /// Checks whether this <see cref="DiscordGuildDirectoryChannel"/> is equal to another object.
         /// </summary>

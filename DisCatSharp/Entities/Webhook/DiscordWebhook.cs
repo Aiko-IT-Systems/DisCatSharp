@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -210,7 +210,8 @@ namespace DisCatSharp.Entities
             if (builder._keepAttachments.HasValue && builder._keepAttachments.Value)
             {
                 builder._attachments.AddRange(this.ApiClient.GetWebhookMessageAsync(this.Id, this.Token, messageId.ToString(), thread_id).Result.Attachments);
-            } else if (builder._keepAttachments.HasValue)
+            }
+            else if (builder._keepAttachments.HasValue)
             {
                 builder._attachments.Clear();
             }

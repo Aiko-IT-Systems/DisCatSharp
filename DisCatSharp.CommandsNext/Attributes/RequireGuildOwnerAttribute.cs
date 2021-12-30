@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DisCatSharp.CommandsNext.Attributes
@@ -45,7 +44,8 @@ namespace DisCatSharp.CommandsNext.Attributes
                 var owner = await Task.FromResult(ctx.Member == ctx.Guild.Owner);
 
                 return owner;
-            } else
+            }
+            else
             {
                 return false;
             }

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -23,10 +23,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DisCatSharp.Exceptions;
 using DisCatSharp.Enums;
-using Newtonsoft.Json;
 using DisCatSharp.Net;
+using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {

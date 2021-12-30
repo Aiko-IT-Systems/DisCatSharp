@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -29,10 +29,10 @@ namespace DisCatSharp.ApplicationCommands
     /// </summary>
     public abstract class ApplicationCommandsModule
     {        /// <summary>
-        /// Called before the execution of a slash command in the module.
-        /// </summary>
-        /// <param name="ctx">The context.</param>
-        /// <returns> Whether or not to execute the slash command.</returns>
+             /// Called before the execution of a slash command in the module.
+             /// </summary>
+             /// <param name="ctx">The context.</param>
+             /// <returns> Whether or not to execute the slash command.</returns>
         public virtual Task<bool> BeforeSlashExecutionAsync(InteractionContext ctx)
             => Task.FromResult(true);
 

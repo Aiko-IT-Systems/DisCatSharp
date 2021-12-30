@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -302,7 +302,7 @@ namespace DisCatSharp.Net
 
                 var req = this.BuildRequest(request);
 
-                if(this.Debug)
+                if (this.Debug)
                     this.Logger.LogTrace(LoggerEvents.Misc, await req.Content.ReadAsStringAsync());
 
                 var response = new RestResponse();
@@ -825,7 +825,7 @@ namespace DisCatSharp.Net
 
         ~RestClient()
             => this.Dispose();
-        
+
         /// <summary>
         /// Disposes the rest client.
         /// </summary>

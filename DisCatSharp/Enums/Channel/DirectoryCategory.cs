@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -51,7 +51,7 @@ namespace DisCatSharp
         /// Indicates that this entry falls under the category Miscellaneous.
         /// </summary>
         Miscellaneous = 5,
-        
+
         /// <summary>
         /// Indicates unknown category type.
         /// </summary>

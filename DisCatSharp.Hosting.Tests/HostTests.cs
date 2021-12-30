@@ -92,14 +92,14 @@ namespace DisCatSharp.Hosting.Tests
                 { "DisCatSharp:Discord:Intents", "AllUnprivileged" }
             };
 
-        public Dictionary<string, string> DiscordInteractivity() => new (this.DefaultDiscord())
+        public Dictionary<string, string> DiscordInteractivity() => new(this.DefaultDiscord())
         {
-            {"DisCatSharp:Using","[\"DisCatSharp.Interactivity\"]"},
+            { "DisCatSharp:Using", "[\"DisCatSharp.Interactivity\"]" },
         };
 
-        public Dictionary<string, string> DiscordInteractivityAndLavalink() => new (this.DefaultDiscord())
+        public Dictionary<string, string> DiscordInteractivityAndLavalink() => new(this.DefaultDiscord())
         {
-            {"DisCatSharp:Using","[\"DisCatSharp.Interactivity\", \"DisCatSharp.Lavalink\"]"},
+            { "DisCatSharp:Using", "[\"DisCatSharp.Interactivity\", \"DisCatSharp.Lavalink\"]" },
         };
 
         IHostBuilder Create(Dictionary<string, string> configValues) =>

@@ -32,7 +32,7 @@ namespace DisCatSharp.Configuration.Models
         /// <summary>
         /// Key within <see cref="Config"/> which represents an object containing multiple values
         /// </summary>
-        public string SectionName { get;}
+        public string SectionName { get; }
 
         /// <summary>
         /// Optional used to indicate this section is nested within another

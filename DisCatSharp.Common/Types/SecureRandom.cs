@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -71,7 +71,7 @@ namespace DisCatSharp.Common
         {
             this.RNG.GetNonZeroBytes(buffer);
         }
-        
+
         /// <summary>
         /// Fills a supplied memory region with random bytes.
         /// </summary>
@@ -94,7 +94,7 @@ namespace DisCatSharp.Common
             }
 #endif
         }
-        
+
         /// <summary>
         /// Fills a supplied memory region with random nonzero bytes.
         /// </summary>

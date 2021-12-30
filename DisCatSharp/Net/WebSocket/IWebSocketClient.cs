@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,9 +24,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DisCatSharp.EventArgs;
 using DisCatSharp.Common.Utilities;
-using Microsoft.Extensions.DependencyInjection;
+using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.Net.WebSocket
 {

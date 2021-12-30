@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -21,10 +21,10 @@
 // SOFTWARE.
 
 using System;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.ApplicationCommands.EventArgs;
@@ -221,7 +221,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         public async Task CleanGuildCommandsAsync()
         {
-            foreach(var guild in this.Client.Guilds.Values)
+            foreach (var guild in this.Client.Guilds.Values)
             {
                 await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, Array.Empty<DiscordApplicationCommand>());
             }
@@ -350,7 +350,7 @@ namespace DisCatSharp.ApplicationCommands
                 List<ulong> FailedGuilds = new();
                 IEnumerable<DiscordApplicationCommand> GlobalCommands = null;
                 GlobalCommands = await this.Client.GetGlobalApplicationCommandsAsync() ?? null;
-                foreach(var guild in this.Client.Guilds.Keys)
+                foreach (var guild in this.Client.Guilds.Keys)
                 {
                     IEnumerable<DiscordApplicationCommand> Commands = null;
                     var unauthorized = false;
@@ -376,7 +376,7 @@ namespace DisCatSharp.ApplicationCommands
                 //so this should still add the default help
                 if (_configuration is null || (_configuration is not null && _configuration.EnableDefaultHelp))
                 {
-                    foreach(var key in commands_pending.ToList())
+                    foreach (var key in commands_pending.ToList())
                     {
                         this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
                             (key, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
@@ -384,7 +384,7 @@ namespace DisCatSharp.ApplicationCommands
                 }
                 if (GlobalCommands != null && GlobalCommands.Any())
                     _globalDiscordCommands.AddRange(GlobalCommands);
-                foreach(var key in commands_pending.ToList())
+                foreach (var key in commands_pending.ToList())
                 {
                     this.Client.Logger.LogDebug(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
                     this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
@@ -565,7 +565,8 @@ namespace DisCatSharp.ApplicationCommands
                                         guild.InternalRegisteredApplicationCommands.AddRange(ActualCommands);
                                     }
 
-                                } else
+                                }
+                                else
                                 {
                                     foreach (var cmd in _guildDiscordCommands[guildid.Value])
                                     {
@@ -1095,7 +1096,7 @@ namespace DisCatSharp.ApplicationCommands
                         args.Add((bool?)option.Value);
                     else if (parameter.ParameterType == typeof(double) || parameter.ParameterType == typeof(double?))
                         args.Add((double?)option.Value);
-                    else if(parameter.ParameterType == typeof(int) || parameter.ParameterType == typeof(int?))
+                    else if (parameter.ParameterType == typeof(int) || parameter.ParameterType == typeof(int?))
                         args.Add((int?)option.Value);
                     else if (parameter.ParameterType == typeof(DiscordAttachment))
                     {
@@ -1445,7 +1446,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         public Action<ApplicationCommandsPermissionContext> Setup { get; }
 
-        public Action<ApplicationCommandsTranslationContext> Translations { get;  }
+        public Action<ApplicationCommandsTranslationContext> Translations { get; }
 
         /// <summary>
         /// Creates a new command configuration.

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -714,7 +714,7 @@ namespace DisCatSharp.Entities
                 afkChannelId = null;
 
             var rulesChannelId = Optional.FromNoValue<ulong?>();
-            if (mdl.RulesChannel.HasValue && mdl.RulesChannel.Value != null && mdl.RulesChannel.Value.Type != ChannelType.Text && mdl.RulesChannel.Value.Type != ChannelType.News )
+            if (mdl.RulesChannel.HasValue && mdl.RulesChannel.Value != null && mdl.RulesChannel.Value.Type != ChannelType.Text && mdl.RulesChannel.Value.Type != ChannelType.News)
                 throw new ArgumentException("Rules channel needs to be a text channel.");
             else if (mdl.RulesChannel.HasValue && mdl.RulesChannel.Value != null)
                 rulesChannelId = mdl.RulesChannel.Value.Id;
@@ -796,7 +796,7 @@ namespace DisCatSharp.Entities
         public async Task<DiscordGuild> ModifyCommunitySettingsAsync(bool enabled, DiscordChannel rulesChannel = null, DiscordChannel publicUpdatesChannel = null, string preferredLocale = "en-US", string description = null, DefaultMessageNotifications defaultMessageNotifications = DefaultMessageNotifications.MentionsOnly, string reason = null)
         {
             var verificationLevel = this.VerificationLevel;
-            if(this.VerificationLevel != VerificationLevel.Highest)
+            if (this.VerificationLevel != VerificationLevel.Highest)
             {
                 verificationLevel = VerificationLevel.High;
             }
@@ -824,7 +824,8 @@ namespace DisCatSharp.Entities
             if (this.RawFeatures.Contains("COMMUNITY") && enabled)
             {
                 features = rfeatures;
-            } else if(!this.RawFeatures.Contains("COMMUNITY") && enabled)
+            }
+            else if (!this.RawFeatures.Contains("COMMUNITY") && enabled)
             {
                 rfeatures.Add("COMMUNITY");
                 features = rfeatures;
@@ -833,7 +834,8 @@ namespace DisCatSharp.Entities
             {
                 rfeatures.Remove("COMMUNITY");
                 features = rfeatures;
-            } else if(!this.RawFeatures.Contains("COMMUNITY") && !enabled)
+            }
+            else if (!this.RawFeatures.Contains("COMMUNITY") && !enabled)
             {
                 features = rfeatures;
             }
@@ -1622,11 +1624,11 @@ namespace DisCatSharp.Entities
             var ams = amr.Select(xau => (this._members != null && this._members.TryGetValue(xau.Id, out var member)) ? member : new DiscordMember { Discord = this.Discord, Id = xau.Id, _guild_id = this.Id });
             var amd = ams.ToDictionary(xm => xm.Id, xm => xm);
 
-            #pragma warning disable CS0219
+#pragma warning disable CS0219
             Dictionary<ulong, DiscordThreadChannel> dtc = null;
             Dictionary<ulong, DiscordIntegration> di = null;
             Dictionary<ulong, DiscordScheduledEvent> dse = null;
-            #pragma warning restore
+#pragma warning restore
 
             Dictionary<ulong, DiscordWebhook> ahd = null;
             if (ahr.Any())

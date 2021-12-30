@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -39,7 +39,7 @@ namespace DisCatSharp.Entities
         /// <param name="contentType">The content type.</param>
         /// <param name="description">The description.</param>
         internal DiscordMessageFile(string fileName, Stream stream, long? resetPositionTo, string fileType = null, string contentType = null, string description = null)
-{
+        {
             this.FileName = fileName;
             this.FileType = fileType;
             this.ContentType = contentType;

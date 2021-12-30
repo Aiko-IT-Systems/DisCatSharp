@@ -90,7 +90,7 @@ namespace DisCatSharp.Hosting
 
             this.Logger.LogDebug($"Found the following config types: {string.Join("\n\t", typeMap.Keys)}");
 
-             foreach (var typePair in typeMap)
+            foreach (var typePair in typeMap)
                 try
                 {
                     /*
@@ -144,7 +144,7 @@ namespace DisCatSharp.Hosting
                     this.OnInitializationError(ex);
                 }
 
-             return Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -129,7 +129,7 @@ namespace DisCatSharp.Entities
             if (type is ApplicationCommandType.ChatInput)
             {
                 if (!Utilities.IsValidSlashCommandName(name))
-                throw new ArgumentException("Invalid slash command name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
+                    throw new ArgumentException("Invalid slash command name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
                 if (name.Any(ch => char.IsUpper(ch)))
                     throw new ArgumentException("Slash command name cannot have any upper case characters.", nameof(name));
                 if (description.Length > 100)

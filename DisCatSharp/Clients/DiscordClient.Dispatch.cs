@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -841,7 +841,7 @@ namespace DisCatSharp
 
                 if (gld._channels.TryRemove(channel.Id, out var cachedChannel)) channel = cachedChannel;
 
-                if(this.Configuration.AutoRefreshChannelCache)
+                if (this.Configuration.AutoRefreshChannelCache)
                 {
                     await this.RefreshChannelsAsync(channel.Guild.Id);
                 }
@@ -932,7 +932,7 @@ namespace DisCatSharp
 
             if (guild._channels == null)
                 guild._channels = new ConcurrentDictionary<ulong, DiscordChannel>();
-            if(guild._threads == null)
+            if (guild._threads == null)
                 guild._threads = new ConcurrentDictionary<ulong, DiscordThreadChannel>();
             if (guild._roles == null)
                 guild._roles = new ConcurrentDictionary<ulong, DiscordRole>();
@@ -981,7 +981,7 @@ namespace DisCatSharp
                     xo._channel_id = xc.Id;
                 }
             }
-            foreach(var xt in guild._threads.Values)
+            foreach (var xt in guild._threads.Values)
             {
                 xt.GuildId = guild.Id;
                 xt.Discord = this;
@@ -1396,7 +1396,9 @@ namespace DisCatSharp
             if (!guild._scheduledEvents.ContainsKey(scheduled_event.Id))
             {
                 old_event = null;
-            } else {
+            }
+            else
+            {
                 var ev = guild._scheduledEvents[scheduled_event.Id];
                 old_event = new DiscordScheduledEvent
                 {
@@ -1486,7 +1488,8 @@ namespace DisCatSharp
         /// </summary>
         internal async Task OnGuildScheduledEventUserAddedEventAsync(ulong guild_scheduled_event_id, ulong user_id, DiscordGuild guild)
         {
-            var scheduled_event = this.InternalGetCachedScheduledEvent(guild_scheduled_event_id) ?? this.UpdateScheduledEvent(new DiscordScheduledEvent {
+            var scheduled_event = this.InternalGetCachedScheduledEvent(guild_scheduled_event_id) ?? this.UpdateScheduledEvent(new DiscordScheduledEvent
+            {
                 Id = guild_scheduled_event_id,
                 GuildId = guild.Id,
                 Discord = this,
@@ -1865,7 +1868,7 @@ namespace DisCatSharp
 
             invite.Discord = this;
 
-            if(invite.Inviter is not null)
+            if (invite.Inviter is not null)
             {
                 invite.Inviter.Discord = this;
                 this.UserCache.AddOrUpdate(invite.Inviter.Id, invite.Inviter, (old, @new) => @new);
@@ -2538,7 +2541,7 @@ namespace DisCatSharp
                     var xtm = xj.ToDiscordObject<DiscordThreadChannelMember>();
                     xtm.Discord = this;
                     xtm._guild_id = guild.Id;
-                    if(xtm != null)
+                    if (xtm != null)
                         addedMembers.Add(xtm);
 
                     if (xtm.Id == this.CurrentUser.Id)
@@ -2987,7 +2990,7 @@ namespace DisCatSharp
             {
                 cmd = await this.GetGuildApplicationCommandAsync(guild_id, c_id);
             }
-            catch(NotFoundException)
+            catch (NotFoundException)
             {
                 cmd = await this.GetGlobalApplicationCommandAsync(c_id);
             }

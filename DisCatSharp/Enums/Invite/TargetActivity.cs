@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -37,7 +37,7 @@ namespace DisCatSharp
         /// </summary>
         Betrayal = 773336526917861400,
 
-	    /// <summary>
+        /// <summary>
         /// Represents the embedded application Chess in the park.
         /// Dev?
         /// </summary>

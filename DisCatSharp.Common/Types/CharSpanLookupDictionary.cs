@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -31,9 +31,9 @@ namespace DisCatSharp.Common
     /// Represents collection of string keys and <typeparamref name="TValue"/> values, allowing the use of <see cref="System.ReadOnlySpan{T}"/> for dictionary operations.
     /// </summary>
     /// <typeparam name="TValue">Type of items in this dictionary.</typeparam>
-    public sealed class CharSpanLookupDictionary<TValue> : 
-        IDictionary<string, TValue>, 
-        IReadOnlyDictionary<string, TValue>, 
+    public sealed class CharSpanLookupDictionary<TValue> :
+        IDictionary<string, TValue>,
+        IReadOnlyDictionary<string, TValue>,
         IDictionary
     {
         /// <summary>
@@ -108,7 +108,7 @@ namespace DisCatSharp.Common
             set
             {
                 if (key == null)
-                     throw new ArgumentNullException(nameof(key));
+                    throw new ArgumentNullException(nameof(key));
 
                 this.TryInsertInternal(key, value, true);
             }

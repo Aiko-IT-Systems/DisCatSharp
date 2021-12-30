@@ -23,7 +23,6 @@
 using System.Globalization;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
-using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {

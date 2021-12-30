@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,11 +26,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Lavalink.EventArgs;
-using DisCatSharp.Common.Utilities;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Lavalink

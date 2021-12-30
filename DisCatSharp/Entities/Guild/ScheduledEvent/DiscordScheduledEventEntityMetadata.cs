@@ -20,9 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using DisCatSharp.Net.Serialization;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities

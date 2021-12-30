@@ -60,7 +60,7 @@ namespace DisCatSharp.Enums
         /// <summary>
         /// The oauth scope.
         /// </summary>
-        
+
 
         /// <summary>
         /// Resolves the scopes.

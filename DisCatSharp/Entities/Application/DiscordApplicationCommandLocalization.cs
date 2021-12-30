@@ -20,10 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-using System.Linq;
 using System;
-using System.Text;
+using System.Collections.Generic;
 
 namespace DisCatSharp.Entities
 {
@@ -52,7 +50,8 @@ namespace DisCatSharp.Entities
             if (this.Validate(locale))
             {
                 this.Localizations.Add(locale, value);
-            } else
+            }
+            else
             {
                 throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
                     $"Valid locales: {string.Join(", ", this._validLocales.ToArray())}");

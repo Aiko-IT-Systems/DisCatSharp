@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -31,9 +31,9 @@ using DisCatSharp.CommandsNext.Builders;
 using DisCatSharp.CommandsNext.Converters;
 using DisCatSharp.CommandsNext.Entities;
 using DisCatSharp.CommandsNext.Exceptions;
+using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
-using DisCatSharp.Common.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -35,7 +35,7 @@ namespace DisCatSharp
         /// This was introdruced to avoid users using in-dev apps.
         /// </summary>
         EmbeddedReleased = 1 << 1,
-    
+
         /// <summary>
         /// The application is a managed emoji.
         /// </summary>

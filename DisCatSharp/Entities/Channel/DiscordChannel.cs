@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -408,7 +408,7 @@ namespace DisCatSharp.Entities
             var userLimit = this.UserLimit;
             Optional<int?> perUserRateLimit = this.PerUserRateLimit;
 
-            if(!this.IsVoiceJoinable())
+            if (!this.IsVoiceJoinable())
             {
                 bitrate = null;
                 userLimit = null;

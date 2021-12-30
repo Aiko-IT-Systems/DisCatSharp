@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, a fork of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -125,7 +125,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         /// <param name="builder">The data to send.</param>
         public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder)
-            => this.Type != InteractionType.Ping && this.Type != InteractionType.ModalSubmit ?  this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder) : throw new NotSupportedException("You can't respond to an PING with a modal.");
+            => this.Type != InteractionType.Ping && this.Type != InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder) : throw new NotSupportedException("You can't respond to an PING with a modal.");
 
         /// <summary>
         /// Gets the original interaction response.
@@ -162,7 +162,7 @@ namespace DisCatSharp.Entities
         /// Deletes the original interaction response.
         /// </summary>>
         public Task DeleteOriginalResponseAsync()
-            =>  this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
+            => this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
 
         /// <summary>
         /// Creates a follow up message to this interaction.
