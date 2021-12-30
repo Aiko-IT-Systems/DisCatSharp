@@ -189,12 +189,12 @@ namespace DisCatSharp.ApplicationCommands
         /// <returns>A list of command ids.</returns>
         private static List<ulong> BuildGuildDeleteList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
+            List<DiscordApplicationCommand> discord;
+
             if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any()
-                || ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value == null
+                || !ApplicationCommandsExtension._guildDiscordCommands.GetFirstValueWhereKey(guildId, out discord)
             )
                 return null;
-
-            var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
 
             List<ulong> InvalidCommandIds = new();
 
@@ -225,12 +225,12 @@ namespace DisCatSharp.ApplicationCommands
         /// <returns></returns>
         private static List<DiscordApplicationCommand> BuildGuildCreateList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
+            List<DiscordApplicationCommand> discord;
+
             if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any()
-                || updateList == null || ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value == null
+                || updateList == null || !ApplicationCommandsExtension._guildDiscordCommands.GetFirstValueWhereKey(guildId, out discord)
             )
                 return updateList;
-
-            var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
 
             List<DiscordApplicationCommand> NewCommands = new();
 
@@ -253,13 +253,13 @@ namespace DisCatSharp.ApplicationCommands
         /// <returns>A dictionary of command id and command.</returns>
         private static Dictionary<ulong, DiscordApplicationCommand> BuildGuildOverwriteList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
+            List<DiscordApplicationCommand> discord;
+
             if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any()
                 || !ApplicationCommandsExtension._guildDiscordCommands.Any(l => l.Key == guildId) || updateList == null
-                || ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value == null
+                || !ApplicationCommandsExtension._guildDiscordCommands.GetFirstValueWhereKey(guildId, out discord)
             )
                 return null;
-
-            var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
 
             Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
 

@@ -37,7 +37,7 @@ namespace DisCatSharp.Common
         /// <typeparam name="T2">Any value type.</typeparam>
         /// <param name="dictionary">The dictionary to check on.</param>
         /// <returns>True if satisfied, false otherwise.</returns>
-        #nullable enable
+#nullable enable
         public static bool EmptyOrNull<T1, T2>(this Dictionary<T1?, T2?>? dictionary)
             => dictionary == null || !dictionary.Any() || dictionary.Keys == null || !dictionary.Keys.Any();
 #nullable disable
