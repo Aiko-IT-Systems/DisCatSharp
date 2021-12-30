@@ -172,7 +172,7 @@ namespace DisCatSharp.ApplicationCommands
             this._globalApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs>("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null);
             this._guildApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs>("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 
-            this.Client.GuildDownloadCompleted += this.UpdateAsync;
+            this.Client.GuildDownloadCompleted += async (c, e) => await this.UpdateAsync();
             this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
             this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
         }
@@ -331,17 +331,8 @@ namespace DisCatSharp.ApplicationCommands
         }
         private AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs> _globalApplicationCommandsRegistered;
 
-
         /// <summary>
-        /// To be run on ready.
-        /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="e">The ready event args.</param>
-        internal Task UpdateAsync(DiscordClient client, GuildDownloadCompletedEventArgs e)
-            => _ = Task.Run(async () => await this.UpdateAsync());
-
-        /// <summary>
-        /// Actual method for registering, used for RegisterCommands and on Ready.
+        /// Used for RegisterCommands and the <see cref="DisCatSharp.DiscordClient.GuildDownloadCompleted"/> event.
         /// </summary>
         internal async Task UpdateAsync()
         {
@@ -536,8 +527,6 @@ namespace DisCatSharp.ApplicationCommands
                 {
                     try
                     {
-                        
-
                         List<DiscordApplicationCommand> Commands = new();
 
                         try
@@ -547,8 +536,9 @@ namespace DisCatSharp.ApplicationCommands
                                 if (updateList != null && updateList.Any())
                                 {
                                     var RegCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(updateList);
-                                    Commands.AddRange(RegCommands);
-                                    _globalCommands.AddRange(RegCommands);
+                                    var ActualCommands = RegCommands.Distinct().ToList();
+                                    Commands.AddRange(ActualCommands);
+                                    _globalCommands.AddRange(ActualCommands);
                                 }
                                 else
                                 {
@@ -570,8 +560,15 @@ namespace DisCatSharp.ApplicationCommands
                                 if (updateList != null && updateList.Any())
                                 {
                                     var RegCommands = await RegistrationWorker.RegisterGuilldCommandsAsync(guildid.Value, updateList);
-                                    Commands.AddRange(RegCommands);
-                                    _guildCommands.Add(guildid.Value, RegCommands);
+                                    var ActualCommands = RegCommands.Distinct().ToList();
+                                    Commands.AddRange(ActualCommands);
+                                    _guildCommands.Add(guildid.Value, ActualCommands);
+                                    if (this.Client.Guilds.TryGetValue(guildid.Value, out var guild))
+                                    {
+                                        guild.InternalRegisteredApplicationCommands = new();
+                                        guild.InternalRegisteredApplicationCommands.AddRange(ActualCommands);
+                                    }
+
                                 } else
                                 {
                                     foreach (var cmd in _guildDiscordCommands[guildid.Value])
@@ -696,27 +693,7 @@ namespace DisCatSharp.ApplicationCommands
                     GuildsWithoutScope = MissingScopeGuildIds
                 });
 
-                this.MapGuildCommands();
                 this.FinishedRegistration();
-            }
-        }
-
-        private void MapGuildCommands()
-        {
-            var guilds = this.Client.Guilds;
-            foreach(var guild in guilds)
-            {
-                var hasCommands = _guildCommands.TryGetValue(guild.Key, out var guildCommands);
-                if (hasCommands && guildCommands.Any())
-                {
-                    Dictionary<ulong, string> commands = new(guildCommands.Count);
-                    foreach(var cmd in guildCommands)
-                    {
-                        commands.TryAdd(cmd.Id, cmd.Name);
-                    }
-                    guild.Value.RegisteredApplicationCommands = commands;
-                    commands.Clear();
-                }
             }
         }
 

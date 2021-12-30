@@ -145,11 +145,14 @@ namespace DisCatSharp.Entities
             => this.GetChannel(this.AfkChannelId);
 
         /// <summary>
-        /// Mapped KVP of application command id and name.
+        /// List of <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/>.
         /// Null if DisCatSharp.ApplicationCommands is not used or no guild commands are registered.
         /// </summary>
         [JsonIgnore]
-        public Dictionary<ulong, string> RegisteredApplicationCommands { get; internal set; } = null;
+        public ReadOnlyCollection<DiscordApplicationCommand> RegisteredApplicationCommands
+            => new(this.InternalRegisteredApplicationCommands);
+        [JsonIgnore]
+        internal List<DiscordApplicationCommand> InternalRegisteredApplicationCommands { get; set; } = null;
 
         /// <summary>
         /// Gets the guild's AFK timeout.
