@@ -188,173 +188,148 @@ namespace DisCatSharp.ApplicationCommands
 
         private static List<ulong> BuildGuildDeleteList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
-            if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any())
+            if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any()
+                || ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value == null
+            )
                 return null;
-            else if (updateList == null)
+
+            var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
+
+            List<ulong> InvalidCommandIds = new();
+
+            if (updateList == null)
             {
-                var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
-
-                if (discord != null)
+                foreach (var cmd in discord)
                 {
-                    List<ulong> InvalidCommandIds = new();
-                    foreach (var cmd in discord)
-                    {
-                        InvalidCommandIds.Add(cmd.Id);
-                    }
-
-                    return InvalidCommandIds;
+                    InvalidCommandIds.Add(cmd.Id);
                 }
-                
-                return null;
             }
             else
             {
-                var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
-
-                if (discord != null)
+                foreach (var cmd in discord)
                 {
-                    List<ulong> InvalidCommandIds = new();
-                    foreach (var cmd in discord)
-                    {
-                        if (!updateList.Any(ul => ul.Name == cmd.Name))
-                            InvalidCommandIds.Add(cmd.Id);
-                    }
-
-                    return InvalidCommandIds;
+                    if (!updateList.Any(ul => ul.Name == cmd.Name))
+                        InvalidCommandIds.Add(cmd.Id);
                 }
-
-                return null;
             }
+
+            return InvalidCommandIds;
         }
 
         private static List<DiscordApplicationCommand> BuildGuildCreateList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
-            if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any() || updateList == null)
+            if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any()
+                || updateList == null || ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value == null
+            )
                 return updateList;
-            else
-            {
-                var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
-                List<DiscordApplicationCommand> NewCommands = new();
-                foreach (var cmd in updateList)
-                {
-                    if (discord == null || !discord.Any(d => d.Name == cmd.Name))
-                    {
-                        NewCommands.Add(cmd);
-                    }
-                }
 
-                return NewCommands;
+            var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
+
+            List<DiscordApplicationCommand> NewCommands = new();
+
+            foreach (var cmd in updateList)
+            {
+                if (!discord.Any(d => d.Name == cmd.Name))
+                {
+                    NewCommands.Add(cmd);
+                }
             }
+
+            return NewCommands;
         }
 
         private static Dictionary<ulong, DiscordApplicationCommand> BuildGuildOverwriteList(ulong guildId, List<DiscordApplicationCommand> updateList)
         {
-            if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any() || !ApplicationCommandsExtension._guildDiscordCommands.Any(l => l.Key == guildId) || updateList == null)
+            if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any()
+                || !ApplicationCommandsExtension._guildDiscordCommands.Any(l => l.Key == guildId) || updateList == null
+                || ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value == null
+            )
                 return null;
-            else
-            {
-                var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
-                if (discord != null)
-                {
-                    Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
-                    foreach (var cmd in updateList)
-                    {
-                        if (discord.Any(d => d.Name == cmd.Name))
-                        {
-                            UpdateCommands.Add(discord.Where(d => d.Name == cmd.Name).First().Id, cmd);
-                        }
-                    }
-                    return UpdateCommands;
-                }
 
-                return null;
+            var discord = ApplicationCommandsExtension._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
+
+            Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
+
+            foreach (var cmd in updateList)
+            {
+                if (discord.Any(d => d.Name == cmd.Name))
+                {
+                    UpdateCommands.Add(discord.Where(d => d.Name == cmd.Name).First().Id, cmd);
+                }
             }
+
+            return UpdateCommands;
         }
 
         private static List<ulong> BuildGlobalDeleteList(List<DiscordApplicationCommand> updateList = null)
         {
-            if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any())
+            if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any()
+                || ApplicationCommandsExtension._globalDiscordCommands == null
+            )
                 return null;
-            else if (updateList == null)
+
+            var discord = ApplicationCommandsExtension._globalDiscordCommands;
+
+            List<ulong> InvalidCommandIds = new();
+
+            if (updateList == null)
             {
-                var discord = ApplicationCommandsExtension._globalDiscordCommands;
-
-                if (discord != null)
+                foreach (var cmd in discord)
                 {
-                    List<ulong> InvalidCommandIds = new();
-                    foreach (var cmd in discord)
-                    {
-                        InvalidCommandIds.Add(cmd.Id);
-                    }
-
-                    return InvalidCommandIds;
+                    InvalidCommandIds.Add(cmd.Id);
                 }
-                
-                return null;
             }
             else
             {
-                var discord = ApplicationCommandsExtension._globalDiscordCommands;
-
-                if (discord != null)
+                foreach (var cmd in discord)
                 {
-                    List<ulong> InvalidCommandIds = new();
-                    foreach (var cmd in discord)
-                    {
-                        if (!updateList.Any(ul => ul.Name == cmd.Name))
-                            InvalidCommandIds.Add(cmd.Id);
-                    }
-
-                    return InvalidCommandIds;
+                    if (!updateList.Any(ul => ul.Name == cmd.Name))
+                        InvalidCommandIds.Add(cmd.Id);
                 }
-
-                return null;
             }
+
+            return InvalidCommandIds;
         }
 
         private static List<DiscordApplicationCommand> BuildGlobalCreateList(List<DiscordApplicationCommand> updateList)
         {
             if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any() || updateList == null)
                 return updateList;
-            else
-            {
-                var discord = ApplicationCommandsExtension._globalDiscordCommands;
-                List<DiscordApplicationCommand> NewCommands = new();
-                foreach (var cmd in updateList)
-                {
-                    if (discord == null || !discord.Any(d => d.Name == cmd.Name))
-                    {
-                        NewCommands.Add(cmd);
-                    }
-                }
 
-                return NewCommands;
+            var discord = ApplicationCommandsExtension._globalDiscordCommands;
+
+            List<DiscordApplicationCommand> NewCommands = new();
+
+            foreach (var cmd in updateList)
+            {
+                if (discord.Any(d => d.Name == cmd.Name))
+                {
+                    NewCommands.Add(cmd);
+                }
             }
+
+            return NewCommands;
         }
 
         private static Dictionary<ulong, DiscordApplicationCommand> BuildGlobalOverwriteList(List<DiscordApplicationCommand> updateList)
         {
-            if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any() || updateList == null)
+            if (ApplicationCommandsExtension._globalDiscordCommands == null || !ApplicationCommandsExtension._globalDiscordCommands.Any()
+                || updateList == null || ApplicationCommandsExtension._globalDiscordCommands == null
+            )
                 return null;
-            else
+
+            var discord = ApplicationCommandsExtension._globalDiscordCommands;
+
+            Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
+            foreach (var cmd in updateList)
             {
-                var discord = ApplicationCommandsExtension._globalDiscordCommands;
-                if (discord != null)
+                if (discord.Any(d => d.Name == cmd.Name))
                 {
-                    Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
-                    foreach (var cmd in updateList)
-                    {
-                        if (discord.Any(d => d.Name == cmd.Name))
-                        {
-                            UpdateCommands.Add(discord.Where(d => d.Name == cmd.Name).First().Id, cmd);
-                        }
-                    }
-
-                    return UpdateCommands;
+                    UpdateCommands.Add(discord.Where(d => d.Name == cmd.Name).First().Id, cmd);
                 }
-
-                return null;
             }
+
+            return UpdateCommands;
         }
     }
 }
