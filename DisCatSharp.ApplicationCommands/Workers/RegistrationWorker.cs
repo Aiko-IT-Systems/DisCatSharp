@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
 using DisCatSharp.Common;
@@ -265,10 +266,8 @@ namespace DisCatSharp.ApplicationCommands
 
             foreach (var cmd in updateList)
             {
-                if (discord.Any(d => d.Name == cmd.Name))
-                {
-                    UpdateCommands.Add(discord.Where(d => d.Name == cmd.Name).First().Id, cmd);
-                }
+                if (discord.GetFirstValueWhere(d => d.Name == cmd.Name, out var command))
+                    UpdateCommands.Add(command.Id, cmd);
             }
 
             return UpdateCommands;
@@ -351,10 +350,8 @@ namespace DisCatSharp.ApplicationCommands
             Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
             foreach (var cmd in updateList)
             {
-                if (discord.Any(d => d.Name == cmd.Name))
-                {
-                    UpdateCommands.Add(discord.Where(d => d.Name == cmd.Name).First().Id, cmd);
-                }
+                if(discord.GetFirstValueWhere(d => d.Name == cmd.Name, out var command))
+                    UpdateCommands.Add(command.Id, cmd);
             }
 
             return UpdateCommands;
