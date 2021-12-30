@@ -36,7 +36,6 @@ using DisCatSharp.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-// ReSharper disable All
 
 namespace DisCatSharp.ApplicationCommands
 {
