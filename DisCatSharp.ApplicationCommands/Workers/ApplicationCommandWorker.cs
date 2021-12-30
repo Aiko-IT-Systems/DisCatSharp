@@ -42,6 +42,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <param name="methods">List of method infos.</param>
         /// <param name="guildid">The optional guild id.</param>
         /// <param name="translator">The optional command translations.</param>
+        /// <returns>Too much.</returns>
         internal static Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<ContextMenuCommand>>> ParseContextMenuCommands(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
         {
             List<DiscordApplicationCommand> Commands = new();
@@ -86,6 +87,7 @@ namespace DisCatSharp.ApplicationCommands
         /// <param name="methods">List of method infos.</param>
         /// <param name="guildid">The optional guild id.</param>
         /// <param name="translator">The optional command translations.</param>
+        /// <returns>Too much.</returns>
         internal static async Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<CommandMethod>>> ParseBasicSlashCommandsAsync(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
         {
             List<DiscordApplicationCommand> Commands = new();
