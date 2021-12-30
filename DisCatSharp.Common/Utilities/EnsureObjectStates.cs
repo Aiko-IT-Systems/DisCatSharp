@@ -33,22 +33,26 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Checks whether the dictionary is null or empty.
         /// </summary>
-        /// <typeparam name="T">Any.</typeparam>
-        /// <typeparam name="F">Any.</typeparam>
-        /// <param name="dict">The dictionary to check on.</param>
+        /// <typeparam name="T1">Any.</typeparam>
+        /// <typeparam name="T2">Any.</typeparam>
+        /// <param name="dictionary">The dictionary to check on.</param>
         /// <returns>True if satisfied, false otherwise.</returns>
-        public static bool EmptyOrNull<T, F>(this Dictionary<T, F> dict)
-            => dict == null || !dict.Any() || dict.Keys == null || !dict.Keys.Any();
+        #nullable enable
+        public static bool EmptyOrNull<T1, T2>(this Dictionary<T1?, T2?>? dictionary)
+            => dictionary == null || !dictionary.Any() || dictionary.Keys == null || !dictionary.Keys.Any();
+        #nullable disable
 
         /// <summary>
         /// Checks whether the dictionary is not null and not empty.
         /// </summary>
-        /// <typeparam name="T">Any.</typeparam>
-        /// <typeparam name="F">Any.</typeparam>
-        /// <param name="dict">The dictionary to check on.</param>
+        /// <typeparam name="T1">Any.</typeparam>
+        /// <typeparam name="T2">Any.</typeparam>
+        /// <param name="dictionary">The dictionary to check on.</param>
         /// <returns>True if satisfied, false otherwise.</returns>
-        public static bool NotEmptyAndNotNull<T,F>(this Dictionary<T, F> dict)
-            => dict != null && dict.Any() && dict.Keys != null && dict.Keys.Any();
+        #nullable enable
+        public static bool NotEmptyAndNotNull<T1, T2>(this Dictionary<T1?, T2?>? dictionary)
+            => dictionary != null && dictionary.Any() && dictionary.Keys != null && dictionary.Keys.Any();
+        #nullable disable
 
         /// <summary>
         /// Checks whether the list is null or empty.
@@ -56,8 +60,10 @@ namespace DisCatSharp.Common
         /// <typeparam name="T">Any.</typeparam>
         /// <param name="list">The list to check on.</param>
         /// <returns>True if satisfied, false otherwise.</returns>
-        public static bool EmptyOrNull<T>(this List<T> list)
+        #nullable enable
+        public static bool EmptyOrNull<T>(this List<T?>? list)
             => list == null || !list.Any();
+        #nullable disable
 
         /// <summary>
         /// Checks whether the list is not null and not empty.
@@ -65,7 +71,9 @@ namespace DisCatSharp.Common
         /// <typeparam name="T">Any.</typeparam>
         /// <param name="list">The list to check on.</param>
         /// <returns>True if satisfied, false otherwise.</returns>
-        public static bool NotEmptyAndNotNull<T>(this List<T> list)
+        #nullable enable
+        public static bool NotEmptyAndNotNull<T>(this List<T?>? list)
             => list != null && list.Any();
+        #nullable disable
     }
 }
