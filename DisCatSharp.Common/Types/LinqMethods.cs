@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,6 +32,29 @@ namespace DisCatSharp.Common
     public static class LinqMethods
     {
         /// <summary>
+        /// Safely tries to get the first match out of a list.
+        /// </summary>
+        /// <typeparam name="TSource">Value type of list.</typeparam>
+        /// <param name="list">The list to use.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="value">The value to get if succeeded</param>
+        /// <returns>Whether a value was found.</returns>
+        #nullable enable
+        public static bool GetFirstValueWhere<TSource>(this List<TSource?>? list, Func<TSource?, bool> predicate, out TSource? value)
+        {
+            if (list == null || !list.Any())
+            {
+                value = default;
+                return false;
+            }
+
+            value = list.Where(predicate).FirstOrDefault();
+
+            return value is not null;
+        }
+#nullable disable
+
+        /// <summary>
         /// Safely tries to extract the value of the first match where target key is found, otherwise null.
         /// </summary>
         /// <typeparam name="TKey">Key type of dictionary.</typeparam>
@@ -40,7 +64,7 @@ namespace DisCatSharp.Common
         /// <param name="value">The value to get if succeeded.</param>
         /// <returns>Whether a value was found through the key.</returns>
         #nullable enable
-        public static bool GetFirstValueWhereKey<TKey, TValue>(this Dictionary<TKey?, TValue?>? dict, TKey key, out TValue? value)
+        public static bool GetFirstValueByKey<TKey, TValue>(this Dictionary<TKey?, TValue?>? dict, TKey? key, out TValue? value)
         {
             if (dict == null)
             {
@@ -48,24 +72,7 @@ namespace DisCatSharp.Common
                 return false;
             }
 
-            #pragma warning disable CS8602
-            var key_results = dict.Where(predicate: d => d.Key.Equals(key));
-            #pragma warning restore CS8602
-            if (key_results.Any())
-            {
-                var key_result = key_results.FirstOrDefault();
-                if (key_result.Key != null && key_result.Value != null)
-                {
-                    value = key_result.Value;
-                    return true;
-                }
-
-                value = default;
-                return false;
-            }
-
-            value = default;
-            return false;
+            return dict.TryGetValue(key, out value);
         }
         #nullable disable
     }

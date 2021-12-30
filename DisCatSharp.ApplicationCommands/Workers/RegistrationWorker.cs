@@ -192,7 +192,7 @@ namespace DisCatSharp.ApplicationCommands
             List<DiscordApplicationCommand> discord;
 
             if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any()
-                || !ApplicationCommandsExtension._guildDiscordCommands.GetFirstValueWhereKey(guildId, out discord)
+                || !ApplicationCommandsExtension._guildDiscordCommands.GetFirstValueByKey(guildId, out discord)
             )
                 return null;
 
@@ -228,7 +228,7 @@ namespace DisCatSharp.ApplicationCommands
             List<DiscordApplicationCommand> discord;
 
             if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any()
-                || updateList == null || !ApplicationCommandsExtension._guildDiscordCommands.GetFirstValueWhereKey(guildId, out discord)
+                || updateList == null || !ApplicationCommandsExtension._guildDiscordCommands.GetFirstValueByKey(guildId, out discord)
             )
                 return updateList;
 
@@ -257,7 +257,7 @@ namespace DisCatSharp.ApplicationCommands
 
             if (ApplicationCommandsExtension._guildDiscordCommands == null || !ApplicationCommandsExtension._guildDiscordCommands.Any()
                 || !ApplicationCommandsExtension._guildDiscordCommands.Any(l => l.Key == guildId) || updateList == null
-                || !ApplicationCommandsExtension._guildDiscordCommands.GetFirstValueWhereKey(guildId, out discord)
+                || !ApplicationCommandsExtension._guildDiscordCommands.GetFirstValueByKey(guildId, out discord)
             )
                 return null;
 
