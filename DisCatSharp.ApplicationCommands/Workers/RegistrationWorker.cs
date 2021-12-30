@@ -29,6 +29,9 @@ using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.ApplicationCommands
 {
+    /// <summary>
+    /// Represents a <see cref="RegistrationWorker"/>.
+    /// </summary>
     internal class RegistrationWorker
     {
 

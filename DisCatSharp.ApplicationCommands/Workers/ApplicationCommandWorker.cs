@@ -24,15 +24,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
 namespace DisCatSharp.ApplicationCommands
 {
+    /// <summary>
+    /// Represents a <see cref="CommandWorker"/>.
+    /// </summary>
     internal class CommandWorker
     {
+        /// <summary>
+        /// Parses context menu application commands.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="methods">List of method infos.</param>
+        /// <param name="guildid">The optional guild id.</param>
+        /// <param name="translator">The optional command translations.</param>
         internal static Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<ContextMenuCommand>>> ParseContextMenuCommands(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
         {
             List<DiscordApplicationCommand> Commands = new();
@@ -70,6 +79,13 @@ namespace DisCatSharp.ApplicationCommands
             return Task.FromResult(Tuple.Create(Commands, CommandTypeSources, contextMenuCommands));   
         }
 
+        /// <summary>
+        /// Parses single application commands.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="methods">List of method infos.</param>
+        /// <param name="guildid">The optional guild id.</param>
+        /// <param name="translator">The optional command translations.</param>
         internal static async Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<CommandMethod>>> ParseBasicSlashCommandsAsync(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
         {
             List<DiscordApplicationCommand> Commands = new();
@@ -133,8 +149,19 @@ namespace DisCatSharp.ApplicationCommands
         }
     }
 
+    /// <summary>
+    /// Represents a <see cref="NestedCommandWorker"/>.
+    /// </summary>
     internal class NestedCommandWorker
     {
+        /// <summary>
+        /// Parses application command groups.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="types">List of type infos.</param>
+        /// <param name="guildid">The optional guild id.</param>
+        /// <param name="translator">The optional group translations.</param>
+        /// <returns>Too much.</returns>
         internal static async Task<
             Tuple<
                 List<DiscordApplicationCommand>,

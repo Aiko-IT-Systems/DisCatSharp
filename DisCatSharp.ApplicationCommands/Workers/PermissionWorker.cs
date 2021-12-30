@@ -28,6 +28,9 @@ using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.ApplicationCommands
 {
+    /// <summary>
+    /// Represents a <see cref="PermissionWorker"/>.
+    /// </summary>
     internal class PermissionWorker
     {
         internal static async Task UpdateCommandPermissionAsync(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildid, ulong commandId, string commandName, Type commandDeclaringType, Type commandRootType)
