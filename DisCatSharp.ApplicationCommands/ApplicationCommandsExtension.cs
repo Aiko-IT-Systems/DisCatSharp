@@ -505,12 +505,9 @@ namespace DisCatSharp.ApplicationCommands
                                 contextMenuCommands.AddRange(contextCommands.Item3);
 
                             //Accounts for lifespans
-                            if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null)
+                            if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
                             {
-                                if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
-                                {
-                                    _singletonModules.Add(CreateInstance(module, _configuration?.ServiceProvider));
-                                }
+                                _singletonModules.Add(CreateInstance(module, _configuration?.ServiceProvider));
                             }
                         }
                     }

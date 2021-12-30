@@ -374,24 +374,18 @@ namespace DisCatSharp.ApplicationCommands
                     CommandTypeSources.Add(new KeyValuePair<Type, Type>(subclass, type));
 
                     //Accounts for lifespans for the sub group
-                    if (subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null)
+                    if (subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
                     {
-                        if (subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
-                        {
-                            SingletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclass, ApplicationCommandsExtension._configuration?.ServiceProvider));
-                        }
+                        SingletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclass, ApplicationCommandsExtension._configuration?.ServiceProvider));
                     }
                 }
                 if (command.SubCommands.Any()) subGroupCommands.Add(command);
                 Commands.Add(payload);
 
-                    //Accounts for lifespans
-                    if (subclassinfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null)
-                    {
-                        if (subclassinfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
-                        {
-                            SingletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclassinfo, ApplicationCommandsExtension._configuration?.ServiceProvider));
-                        }
+                //Accounts for lifespans
+                if (subclassinfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && subclassinfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
+                {
+                    SingletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclassinfo, ApplicationCommandsExtension._configuration?.ServiceProvider));
                 }
             }
 

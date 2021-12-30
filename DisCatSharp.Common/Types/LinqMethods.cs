@@ -52,7 +52,7 @@ namespace DisCatSharp.Common
 
             return value is not null;
         }
-#nullable disable
+        #nullable disable
 
         /// <summary>
         /// Safely tries to extract the value of the first match where target key is found, otherwise null.
