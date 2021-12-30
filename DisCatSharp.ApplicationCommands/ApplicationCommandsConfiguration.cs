@@ -38,13 +38,38 @@ namespace DisCatSharp.ApplicationCommands
         public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
 
         /// <summary>
+        /// <para>Sets whether to enable default help command.</para>
+        /// <para>Disabling this will allow you to make your own help command.</para>
+        /// <para>
+        /// </para>
+        /// <para>Defaults to true.</para>
+        /// </summary>
+        public bool EnableDefaultHelp { internal get; set; } = true;
+
+        /// <summary>
+        /// Debugs the startups expected and actual count.
+        /// </summary>
+        public bool DebugStartupCounts { internal get; set; } = false;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
         /// </summary>
         /// <param name="provider">The service provider.</param>
         [ActivatorUtilitiesConstructor]
-        public ApplicationCommandsConfiguration(IServiceProvider provider)
+        public ApplicationCommandsConfiguration(IServiceProvider provider = null)
         {
             this.ServiceProvider = provider;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ApplicationCommandsConfiguration"/>, copying the properties of another configuration.
+        /// </summary>
+        /// <param name="acc">Configuration the properties of which are to be copied.</param>
+        public ApplicationCommandsConfiguration(ApplicationCommandsConfiguration acc)
+        {
+            this.EnableDefaultHelp = acc.EnableDefaultHelp;
+            this.ServiceProvider = acc.ServiceProvider;
+            this.DebugStartupCounts = acc.DebugStartupCounts;
         }
     }
 }

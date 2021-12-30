@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -35,6 +36,7 @@ using DisCatSharp.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+// ReSharper disable All
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -66,12 +68,12 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// List of global commands on discords backend.
         /// </summary>
-        private List<DiscordApplicationCommand> _globalDiscordCommands { get; set; } = null;
+        internal static List<DiscordApplicationCommand> _globalDiscordCommands { get; set; } = null;
 
         /// <summary>
         /// List of guild commands on discords backend.
         /// </summary>
-        private Dictionary<ulong, List<DiscordApplicationCommand>> _guildDiscordCommands { get; set; } = null;
+        internal static Dictionary<ulong, List<DiscordApplicationCommand>> _guildDiscordCommands { get; set; } = null;
 
         /// <summary>
         /// Singleton modules.
@@ -86,7 +88,12 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Configuration for Discord.
         /// </summary>
-        private readonly ApplicationCommandsConfiguration _configuration;
+        internal static ApplicationCommandsConfiguration _configuration;
+
+        /// <summary>
+        /// Discord client.
+        /// </summary>
+        internal static DiscordClient _client;
 
         /// <summary>
         /// Set to true if anything fails when registering.
@@ -105,14 +112,14 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
             => _globalCommands;
-        private static readonly List<DiscordApplicationCommand> _globalCommands = new();
+        internal static readonly List<DiscordApplicationCommand> _globalCommands = new();
 
         /// <summary>
         /// Gets a list of registered guild commands mapped by guild id.
         /// </summary>
         public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
         => _guildCommands;
-        private static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> _guildCommands = new();
+        internal static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> _guildCommands = new();
 
         /// <summary>
         /// Gets the registration count.
@@ -130,12 +137,18 @@ namespace DisCatSharp.ApplicationCommands
         private IReadOnlyList<ulong> MissingScopeGuildIds { get; set; }
 
         /// <summary>
+        /// Gets whether debug is enabled.
+        /// </summary>
+        private static bool DebugEnabled { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         internal ApplicationCommandsExtension(ApplicationCommandsConfiguration configuration)
         {
-            this._configuration = configuration;
+            _configuration = configuration;
+            DebugEnabled = configuration.DebugStartupCounts;
         }
 
         /// <summary>
@@ -148,6 +161,7 @@ namespace DisCatSharp.ApplicationCommands
                 throw new InvalidOperationException("What did I tell you?");
 
             this.Client = client;
+            _client = client;
 
             this._slashError = new AsyncEvent<ApplicationCommandsExtension, SlashCommandErrorEventArgs>("SLASHCOMMAND_ERRORED", TimeSpan.Zero, null);
             this._slashExecuted = new AsyncEvent<ApplicationCommandsExtension, SlashCommandExecutedEventArgs>("SLASHCOMMAND_EXECUTED", TimeSpan.Zero, null);
@@ -158,7 +172,7 @@ namespace DisCatSharp.ApplicationCommands
             this._globalApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs>("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null);
             this._guildApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs>("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 
-            this.Client.Ready += this.UpdateAsync;
+            this.Client.GuildDownloadCompleted += async (c, e) => await this.UpdateAsync();
             this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
             this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
         }
@@ -317,28 +331,22 @@ namespace DisCatSharp.ApplicationCommands
         }
         private AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs> _globalApplicationCommandsRegistered;
 
-
         /// <summary>
-        /// To be run on ready.
-        /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="e">The ready event args.</param>
-        internal async Task UpdateAsync(DiscordClient client, ReadyEventArgs e)
-            => await this.UpdateAsync();
-
-        /// <summary>
-        /// Actual method for registering, used for RegisterCommands and on Ready.
+        /// Used for RegisterCommands and the <see cref="DisCatSharp.DiscordClient.GuildDownloadCompleted"/> event.
         /// </summary>
         internal async Task UpdateAsync()
         {
             //Only update for shard 0
             if (this.Client.ShardId == 0)
             {
-                this._globalDiscordCommands = new();
-                this._guildDiscordCommands = new();
+                _globalDiscordCommands = new();
+                _guildDiscordCommands = new();
 
                 var commands_pending = this._updateList.Select(x => x.Key).Distinct();
                 ExpectedCount = commands_pending.Count();
+
+                if (DebugEnabled)
+                    this.Client.Logger.LogDebug($"Expected Count: {ExpectedCount}");
 
                 List<ulong> FailedGuilds = new();
                 IEnumerable<DiscordApplicationCommand> GlobalCommands = null;
@@ -358,18 +366,26 @@ namespace DisCatSharp.ApplicationCommands
                     finally
                     {
                         if (!unauthorized && Commands != null && Commands.Any())
-                            this._guildDiscordCommands.Add(guild, Commands.ToList());
+                            _guildDiscordCommands.Add(guild, Commands.ToList());
                         else if (!unauthorized)
-                            this._guildDiscordCommands.Add(guild, null);
+                            _guildDiscordCommands.Add(guild, null);
                         else
                             FailedGuilds.Add(guild);
                     }
                 }
-
+                //Default should be to add the help and slash commands can be added without setting any configuration
+                //so this should still add the default help
+                if (_configuration is null || (_configuration is not null && _configuration.EnableDefaultHelp))
+                {
+                    foreach(var key in commands_pending.ToList())
+                    {
+                        this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
+                            (key, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
+                    }
+                }
                 if (GlobalCommands != null && GlobalCommands.Any())
-                    this._globalDiscordCommands.AddRange(GlobalCommands);
-
-                foreach (var key in commands_pending)
+                    _globalDiscordCommands.AddRange(GlobalCommands);
+                foreach(var key in commands_pending.ToList())
                 {
                     this.Client.Logger.LogDebug(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
                     this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
@@ -377,7 +393,7 @@ namespace DisCatSharp.ApplicationCommands
 
                 this.MissingScopeGuildIds = FailedGuilds;
 
-                await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(this._configuration?.ServiceProvider)
+                await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(_configuration?.ServiceProvider)
                 {
                     Handled = true,
                     GuildsWithoutScope = FailedGuilds
@@ -412,6 +428,9 @@ namespace DisCatSharp.ApplicationCommands
                         var module = type.GetTypeInfo();
                         var classes = new List<TypeInfo>();
 
+                        var ctx = new ApplicationCommandsTranslationContext(type, module.FullName);
+                        config.Translations?.Invoke(ctx);
+
                         //Add module to classes list if it's a group
                         if (module.GetCustomAttribute<SlashCommandGroupAttribute>() != null)
                         {
@@ -423,342 +442,80 @@ namespace DisCatSharp.ApplicationCommands
                             classes = module.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
                         }
 
-                        //Handles groups
-                        foreach (var subclassinfo in classes)
+                        List<GroupTranslator> groupTranslations = null;
+
+                        if (!string.IsNullOrEmpty(ctx.Translations))
                         {
-                            var ctx = new ApplicationCommandsTranslationContext(type, module.FullName);
-                            config.Translations?.Invoke(ctx);
-
-                            List<GroupTranslator> translations = null;
-
-                            if (!string.IsNullOrEmpty(ctx.Translations))
-                            {
-                                translations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
-                            }
-
-                            //Gets the attribute and methods in the group
-                            var groupAttribute = subclassinfo.GetCustomAttribute<SlashCommandGroupAttribute>();
-                            var submethods = subclassinfo.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
-                            var subclasses = subclassinfo.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null);
-                            if (subclasses.Any() && submethods.Any())
-                            {
-                                throw new ArgumentException("Slash command groups cannot have both subcommands and subgroups!");
-                            }
-
-                            DiscordApplicationCommandLocalization NameLocalizations = null;
-                            DiscordApplicationCommandLocalization DescriptionLocalizations = null;
-
-                            if (translations != null)
-                            {
-                                var command_translation = translations.Single(c => c.Name == groupAttribute.Name);
-                                if (command_translation != null)
-                                {
-                                    NameLocalizations = command_translation.NameTranslations;
-                                    DescriptionLocalizations = command_translation.DescriptionTranslations;
-                                }
-                            }
-
-                            //Initializes the command
-                            var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, default_permission: groupAttribute.DefaultPermission, nameLocalizations: NameLocalizations, descriptionLocalizations: DescriptionLocalizations);
-                            commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
-
-                            var commandmethods = new List<KeyValuePair<string, MethodInfo>>();
-                            //Handles commands in the group
-                            foreach (var submethod in submethods)
-                            {
-                                var commandAttribute = submethod.GetCustomAttribute<SlashCommandAttribute>();
-
-                                //Gets the paramaters and accounts for InteractionContext
-                                var parameters = submethod.GetParameters();
-                                if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
-                                    throw new ArgumentException($"The first argument must be an InteractionContext!");
-                                parameters = parameters.Skip(1).ToArray();
-
-                                var options = await this.ParseParameters(parameters, guildid);
-
-                                DiscordApplicationCommandLocalization SubNameLocalizations = null;
-                                DiscordApplicationCommandLocalization SubDescriptionLocalizations = null;
-                                List<DiscordApplicationCommandOption> LocalizisedOptions = null;
-
-                                if (translations != null)
-                                {
-                                    var command_translation = translations.Single(c => c.Name == payload.Name);
-
-                                    if (command_translation.Commands != null)
-                                    {
-
-                                        var sub_command_translation = command_translation.Commands.Single(sc => sc.Name == commandAttribute.Name);
-                                        if (sub_command_translation.Options != null)
-                                        {
-                                            LocalizisedOptions = new(options.Count);
-                                            foreach (var option in options)
-                                            {
-                                                List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new(option.Choices.Count()) : null;
-                                                if (option.Choices != null)
-                                                {
-                                                    foreach (var choice in option.Choices)
-                                                    {
-                                                        choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, sub_command_translation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
-                                                    }
-                                                }
-
-                                                LocalizisedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
-                                                    choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
-                                                    sub_command_translation.Options.Single(o => o.Name == option.Name).NameTranslations, sub_command_translation.Options.Single(o => o.Name == option.Name).DescriptionTranslations
-                                                ));
-                                            }
-                                        }
-
-                                        SubNameLocalizations = sub_command_translation.NameTranslations;
-                                        SubDescriptionLocalizations = sub_command_translation.DescriptionTranslations;
-                                    }
-                                }
-
-
-                                //Creates the subcommand and adds it to the main command
-                                var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, null, null, LocalizisedOptions ?? options, nameLocalizations: SubNameLocalizations, descriptionLocalizations: SubDescriptionLocalizations);
-                                payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations);
-                                commandTypeSources.Add(new KeyValuePair<Type, Type>(subclassinfo, type));
-
-                                //Adds it to the method lists
-                                commandmethods.Add(new KeyValuePair<string, MethodInfo>(commandAttribute.Name, submethod));
-                                groupCommands.Add(new GroupCommand { Name = groupAttribute.Name, Methods = commandmethods });
-                            }
-
-                            var command = new SubGroupCommand { Name = groupAttribute.Name };
-                            //Handles subgroups
-                            foreach (var subclass in subclasses)
-                            {
-                                var subGroupAttribute = subclass.GetCustomAttribute<SlashCommandGroupAttribute>();
-                                var subsubmethods = subclass.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
-
-                                var options = new List<DiscordApplicationCommandOption>();
-
-                                var currentMethods = new List<KeyValuePair<string, MethodInfo>>();
-
-
-                                DiscordApplicationCommandLocalization SubNameLocalizations = null;
-                                DiscordApplicationCommandLocalization SubDescriptionLocalizations = null;
-
-                                if (translations != null)
-                                {
-                                    var command_translation = translations.Single(c => c.Name == payload.Name);
-                                    if (command_translation != null && command_translation.SubGroups != null)
-                                    {
-
-                                        var sub_command_translation = command_translation.SubGroups.Single(sc => sc.Name == subGroupAttribute.Name);
-
-                                        if (sub_command_translation != null)
-                                        {
-                                            SubNameLocalizations = sub_command_translation.NameTranslations;
-                                            SubDescriptionLocalizations = sub_command_translation.DescriptionTranslations;
-                                        }
-                                    }
-                                }
-
-                                //Similar to the one for regular groups
-                                foreach (var subsubmethod in subsubmethods)
-                                {
-                                    var suboptions = new List<DiscordApplicationCommandOption>();
-                                    var commatt = subsubmethod.GetCustomAttribute<SlashCommandAttribute>();
-                                    var parameters = subsubmethod.GetParameters();
-                                    if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
-                                        throw new ArgumentException($"The first argument must be an InteractionContext!");
-
-                                    parameters = parameters.Skip(1).ToArray();
-                                    suboptions = suboptions.Concat(await this.ParseParameters(parameters, guildid)).ToList();
-
-                                    DiscordApplicationCommandLocalization SubSubNameLocalizations = null;
-                                    DiscordApplicationCommandLocalization SubSubDescriptionLocalizations = null;
-                                    List<DiscordApplicationCommandOption> LocalizisedOptions = null;
-
-                                    if (translations != null)
-                                    {
-                                        var command_translation = translations.Single(c => c.Name == payload.Name);
-
-                                        if (command_translation.SubGroups != null)
-                                        {
-                                            var sub_command_translation = command_translation.SubGroups.Single(sc => sc.Name == commatt.Name);
-
-                                            if (sub_command_translation != null)
-                                            {
-                                                var sub_sub_command_translation = sub_command_translation.Commands.Single(sc => sc.Name == commatt.Name);
-
-                                                if(sub_sub_command_translation != null)
-                                                {
-                                                    if(sub_sub_command_translation.Options != null)
-                                                    {
-                                                        LocalizisedOptions = new(suboptions.Count);
-                                                        foreach (var option in suboptions)
-                                                        {
-                                                            List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new(option.Choices.Count()) : null;
-                                                            if (option.Choices != null)
-                                                            {
-                                                                foreach (var choice in option.Choices)
-                                                                {
-                                                                    choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, sub_sub_command_translation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
-                                                                }
-                                                            }
-
-                                                            LocalizisedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
-                                                                choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
-                                                                sub_sub_command_translation.Options.Single(o => o.Name == option.Name).NameTranslations, sub_sub_command_translation.Options.Single(o => o.Name == option.Name).DescriptionTranslations
-                                                            ));
-                                                        }
-                                                    }
-
-                                                    SubSubNameLocalizations = sub_sub_command_translation.NameTranslations;
-                                                    SubSubDescriptionLocalizations = sub_sub_command_translation.DescriptionTranslations;
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, LocalizisedOptions ?? suboptions, nameLocalizations: SubSubNameLocalizations, descriptionLocalizations: SubSubDescriptionLocalizations);
-                                    options.Add(subsubpayload);
-                                    commandmethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
-                                    currentMethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
-                                }
-
-                                //Adds the group to the command and method lists
-                                var subpayload = new DiscordApplicationCommandOption(subGroupAttribute.Name, subGroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options, nameLocalizations: SubNameLocalizations, descriptionLocalizations: SubDescriptionLocalizations);
-                                command.SubCommands.Add(new GroupCommand { Name = subGroupAttribute.Name, Methods = currentMethods });
-                                payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations);
-                                commandTypeSources.Add(new KeyValuePair<Type, Type>(subclass, type));
-
-                                //Accounts for lifespans for the sub group
-                                if (subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null)
-                                {
-                                    if (subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
-                                    {
-                                        _singletonModules.Add(this.CreateInstance(subclass, this._configuration?.ServiceProvider));
-                                    }
-                                }
-                            }
-                            if (command.SubCommands.Any()) subGroupCommands.Add(command);
-                            updateList.Add(payload);
-
-                            //Accounts for lifespans
-                            if (subclassinfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null)
-                            {
-                                if (subclassinfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
-                                {
-                                    _singletonModules.Add(this.CreateInstance(subclassinfo, this._configuration?.ServiceProvider));
-                                }
-                            }
+                            groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
                         }
+
+                        var slashGroupsTulpe = NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildid, groupTranslations).Result;
+
+                        if (slashGroupsTulpe.Item1 != null && slashGroupsTulpe.Item1.Any())
+                            updateList.AddRange(slashGroupsTulpe.Item1);
+
+                        if (slashGroupsTulpe.Item2 != null && slashGroupsTulpe.Item2.Any())
+                            commandTypeSources.AddRange(slashGroupsTulpe.Item2);
+
+                        if (slashGroupsTulpe.Item3 != null && slashGroupsTulpe.Item3.Any())
+                            _singletonModules.AddRange(slashGroupsTulpe.Item3);
+
+                        if (slashGroupsTulpe.Item4 != null && slashGroupsTulpe.Item4.Any())
+                            groupCommands.AddRange(slashGroupsTulpe.Item4);
+
+                        if (slashGroupsTulpe.Item5 != null && slashGroupsTulpe.Item5.Any())
+                            subGroupCommands.AddRange(slashGroupsTulpe.Item5);
 
                         //Handles methods and context menus, only if the module isn't a group itself
                         if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
                         {
-
-                            var ctx = new ApplicationCommandsTranslationContext(type, module.FullName);
-                            config.Translations?.Invoke(ctx);
-
-                            List<CommandTranslator> translations = null;
+                            List<CommandTranslator> commandTranslations = null;
 
                             if (!string.IsNullOrEmpty(ctx.Translations))
                             {
-                                translations = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
+                                commandTranslations = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
                             }
 
-                            //Slash commands (again, similar to the one for groups)
+                            //Slash commands
                             var methods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
-                            foreach (var method in methods)
-                            {
-                                var commandattribute = method.GetCustomAttribute<SlashCommandAttribute>();
 
-                                var parameters = method.GetParameters();
-                                if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
-                                    throw new ArgumentException($"The first argument must be an InteractionContext!");
-                                parameters = parameters.Skip(1).ToArray();
-                                var options = await this.ParseParameters(parameters, guildid);
+                            var slashCommands = CommandWorker.ParseBasicSlashCommandsAsync(type, methods, guildid, commandTranslations).Result;
 
-                                commandMethods.Add(new CommandMethod { Method = method, Name = commandattribute.Name });
+                            if (slashCommands.Item1 != null && slashCommands.Item1.Any())
+                                updateList.AddRange(slashCommands.Item1);
 
-                                DiscordApplicationCommandLocalization NameLocalizations = null;
-                                DiscordApplicationCommandLocalization DescriptionLocalizations = null;
-                                List<DiscordApplicationCommandOption> LocalizisedOptions = null;
+                            if (slashCommands.Item2 != null && slashCommands.Item2.Any())
+                                commandTypeSources.AddRange(slashCommands.Item2);
 
-                                if (translations != null)
-                                {
-                                    var command_translation = translations.Single(c => c.Name == commandattribute.Name && c.Type == ApplicationCommandType.ChatInput);
-
-                                    if (command_translation != null)
-                                    {
-                                        if (command_translation.Options != null)
-                                        {
-                                            LocalizisedOptions = new(options.Count);
-                                            foreach (var option in options)
-                                            {
-                                                List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new(option.Choices.Count()) : null;
-                                                if (option.Choices != null)
-                                                {
-                                                    foreach (var choice in option.Choices)
-                                                    {
-                                                        choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, command_translation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
-                                                    }
-                                                }
-
-                                                LocalizisedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
-                                                    choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
-                                                    command_translation.Options.Single(o => o.Name == option.Name).NameTranslations, command_translation.Options.Single(o => o.Name == option.Name).DescriptionTranslations
-                                                ));
-                                            }
-                                        }
-
-                                        NameLocalizations = command_translation.NameTranslations;
-                                        DescriptionLocalizations = command_translation.DescriptionTranslations;
-                                    }
-                                }
-
-                                var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, LocalizisedOptions ?? options, commandattribute.DefaultPermission, ApplicationCommandType.ChatInput, NameLocalizations, DescriptionLocalizations);
-                                updateList.Add(payload);
-                                commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
-                            }
+                            if (slashCommands.Item3 != null && slashCommands.Item3.Any())
+                                commandMethods.AddRange(slashCommands.Item3);
 
                             //Context Menus
                             var contextMethods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<ContextMenuAttribute>() != null);
-                            foreach (var contextMethod in contextMethods)
-                            {
-                                var contextAttribute = contextMethod.GetCustomAttribute<ContextMenuAttribute>();
 
-                                DiscordApplicationCommandLocalization NameLocalizations = null;
+                            var contextCommands = await CommandWorker.ParseContextMenuCommands(type, contextMethods, guildid, commandTranslations);
 
-                                if (translations != null)
-                                {
-                                    var command_translation = translations.Single(c => c.Name == contextAttribute.Name && c.Type == contextAttribute.Type);
-                                    if (command_translation != null)
-                                        NameLocalizations = command_translation.NameTranslations;
-                                }
+                            if (contextCommands.Item1 != null && contextCommands.Item1.Any())
+                                updateList.AddRange(contextCommands.Item1);
 
-                                var command = new DiscordApplicationCommand(contextAttribute.Name, null, null, contextAttribute.DefaultPermission, contextAttribute.Type, NameLocalizations);
+                            if (contextCommands.Item2 != null && contextCommands.Item2.Any())
+                                commandTypeSources.AddRange(contextCommands.Item2);
 
-                                var parameters = contextMethod.GetParameters();
-                                if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(ContextMenuContext)))
-                                    throw new ArgumentException($"The first argument must be a ContextMenuContext!");
-                                if (parameters.Length > 1)
-                                    throw new ArgumentException($"A context menu cannot have parameters!");
-
-                                contextMenuCommands.Add(new ContextMenuCommand { Method = contextMethod, Name = contextAttribute.Name });
-
-                                updateList.Add(command);
-                                commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
-                            }
+                            if (contextCommands.Item3 != null && contextCommands.Item3.Any())
+                                contextMenuCommands.AddRange(contextCommands.Item3);
 
                             //Accounts for lifespans
                             if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null)
                             {
                                 if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
                                 {
-                                    _singletonModules.Add(this.CreateInstance(module, this._configuration?.ServiceProvider));
+                                    _singletonModules.Add(CreateInstance(module, _configuration?.ServiceProvider));
                                 }
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        //This isn't really much more descriptive but I added a separate case for it anyway
                         if (ex is BadRequestException brex)
                             this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.JsonMessage}");
                         else
@@ -770,35 +527,6 @@ namespace DisCatSharp.ApplicationCommands
                 {
                     try
                     {
-                        async Task UpdateCommandPermission(ulong commandId, string commandName, Type commandDeclaringType, Type commandRootType)
-                        {
-                            if (!guildid.HasValue)
-                            {
-                                this.Client.Logger.LogTrace("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
-                            }
-                            else
-                            {
-                                var ctx = new ApplicationCommandsPermissionContext(commandDeclaringType, commandName);
-                                var conf = types.First(t => t.Type == commandRootType);
-                                conf.Setup?.Invoke(ctx);
-
-                                if (ctx.Permissions.Count == 0)
-                                    return;
-
-                                await this.Client.OverwriteGuildApplicationCommandPermissionsAsync(guildid.Value, commandId, ctx.Permissions);
-                            }
-                        }
-
-                        async Task UpdateCommandPermissionGroup(GroupCommand groupCommand)
-                        {
-                            foreach (var com in groupCommand.Methods)
-                            {
-                                var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Value.DeclaringType);
-
-                                await UpdateCommandPermission(groupCommand.CommandId, com.Key, source.Key, source.Value);
-                            }
-                        }
-
                         List<DiscordApplicationCommand> Commands = new();
 
                         try
@@ -807,76 +535,14 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 if (updateList != null && updateList.Any())
                                 {
-                                    var GlobalCommandsOverwriteList = this.BuildGlobalOverwriteList(updateList);
-                                    var GlobalCommandsCreateList = this.BuildGlobalCreateList(updateList);
-                                    var GlobalCommandsDeleteList = this.BuildGlobalDeleteList(updateList);
-
-                                    if (CheckAnyAndNotNull(GlobalCommandsCreateList) && CheckNotAnyOrNull(GlobalCommandsOverwriteList))
-                                    {
-                                        var cmds = await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(GlobalCommandsCreateList);
-                                        Commands.AddRange(cmds);
-                                    }
-                                    else if (CheckNotAnyOrNull(GlobalCommandsCreateList) && CheckAnyAndNotNull(GlobalCommandsOverwriteList))
-                                    {
-                                        List<DiscordApplicationCommand> OverwriteList = new();
-                                        foreach (var overwrite in GlobalCommandsOverwriteList)
-                                        {
-                                            var cmd = overwrite.Value;
-                                            cmd.Id = overwrite.Key;
-                                            OverwriteList.Add(cmd);
-                                        }
-                                        var discord_backend_commands = await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(OverwriteList);
-                                        Commands.AddRange(discord_backend_commands);
-                                    }
-                                    else if (CheckAnyAndNotNull(GlobalCommandsCreateList) && CheckAnyAndNotNull(GlobalCommandsOverwriteList))
-                                    {
-                                        foreach (var cmd in GlobalCommandsCreateList)
-                                        {
-                                            var discord_backend_command = await this.Client.CreateGlobalApplicationCommandAsync(cmd);
-                                            Commands.Add(discord_backend_command);
-                                        }
-
-                                        foreach (var cmd in GlobalCommandsOverwriteList)
-                                        {
-                                            var command = cmd.Value;
-
-                                            var discord_backend_command = await this.Client.EditGlobalApplicationCommandAsync(cmd.Key, action =>
-                                            {
-                                                action.Name = command.Name;
-                                                action.NameLocalizations = command.NameLocalizations;
-                                                action.Description = command.Description;
-                                                action.DescriptionLocalizations = command.DescriptionLocalizations;
-                                                if(command.Options != null && command.Options.Any())
-                                                    action.Options = Optional.FromValue(command.Options);
-                                                action.DefaultPermission = command.DefaultPermission;
-                                            });
-                                            Commands.Add(discord_backend_command);
-                                        }
-                                    }
-
-                                    if (CheckAnyAndNotNull(GlobalCommandsDeleteList))
-                                    {
-                                        foreach (var cmdId in GlobalCommandsDeleteList)
-                                        {
-                                            try
-                                            {
-                                                await this.Client.DeleteGlobalApplicationCommandAsync(cmdId);
-                                            }
-                                            catch (NotFoundException)
-                                            {
-                                                this.Client.Logger.LogError($"Could not delete global command {cmdId}. Please clean up manually");
-                                            }
-                                        }
-                                    }
-
-                                    if (CheckAnyAndNotNull(Commands))
-                                        _globalCommands.AddRange(Commands);
-                                    else
-                                        return;
+                                    var RegCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(updateList);
+                                    var ActualCommands = RegCommands.Distinct().ToList();
+                                    Commands.AddRange(ActualCommands);
+                                    _globalCommands.AddRange(ActualCommands);
                                 }
                                 else
                                 {
-                                    foreach (var cmd in this._globalDiscordCommands)
+                                    foreach (var cmd in _globalDiscordCommands)
                                     {
                                         try
                                         {
@@ -893,75 +559,19 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 if (updateList != null && updateList.Any())
                                 {
-                                    var GuildCommandsOverwriteList = this.BuildGuildOverwriteList(guildid.Value, updateList);
-                                    var GuildCommandsCreateList = this.BuildGuildCreateList(guildid.Value, updateList);
-                                    var GuildCommandsDeleteList = this.BuildGuildDeleteList(guildid.Value, updateList);
-
-                                    if (CheckAnyAndNotNull(GuildCommandsCreateList) && CheckNotAnyOrNull(GuildCommandsOverwriteList))
+                                    var RegCommands = await RegistrationWorker.RegisterGuilldCommandsAsync(guildid.Value, updateList);
+                                    var ActualCommands = RegCommands.Distinct().ToList();
+                                    Commands.AddRange(ActualCommands);
+                                    _guildCommands.Add(guildid.Value, ActualCommands);
+                                    if (this.Client.Guilds.TryGetValue(guildid.Value, out var guild))
                                     {
-                                        var cmds = await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guildid.Value, GuildCommandsCreateList);
-                                        Commands.AddRange(cmds);
-                                    }
-                                    else if (CheckNotAnyOrNull(GuildCommandsCreateList) && CheckAnyAndNotNull(GuildCommandsOverwriteList))
-                                    {
-                                        List<DiscordApplicationCommand> OverwriteList = new();
-                                        foreach (var overwrite in GuildCommandsOverwriteList)
-                                        {
-                                            var cmd = overwrite.Value;
-                                            cmd.Id = overwrite.Key;
-                                            OverwriteList.Add(cmd);
-                                        }
-                                        var discord_backend_commands = await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guildid.Value, OverwriteList);
-                                        Commands.AddRange(discord_backend_commands);
-                                    }
-                                    else if (CheckAnyAndNotNull(GuildCommandsCreateList) && CheckAnyAndNotNull(GuildCommandsOverwriteList))
-                                    {
-                                        foreach (var cmd in GuildCommandsCreateList)
-                                        {
-                                            var discord_backend_command = await this.Client.CreateGuildApplicationCommandAsync(guildid.Value, cmd);
-                                            Commands.Add(discord_backend_command);
-                                        }
-
-                                        foreach (var cmd in GuildCommandsOverwriteList)
-                                        {
-                                            var command = cmd.Value;
-                                            var discord_backend_command = await this.Client.EditGuildApplicationCommandAsync(guildid.Value, cmd.Key, action =>
-                                            {
-                                                action.Name = command.Name;
-                                                action.NameLocalizations = command.NameLocalizations;
-                                                action.Description = command.Description;
-                                                action.DescriptionLocalizations = command.DescriptionLocalizations;
-                                                if(command.Options != null && command.Options.Any())
-                                                    action.Options = Optional.FromValue(command.Options);
-                                                action.DefaultPermission = command.DefaultPermission;
-                                            });
-
-                                            Commands.Add(discord_backend_command);
-                                        }
+                                        guild.InternalRegisteredApplicationCommands = new();
+                                        guild.InternalRegisteredApplicationCommands.AddRange(ActualCommands);
                                     }
 
-                                   if(CheckAnyAndNotNull(GuildCommandsDeleteList))
-                                    {
-                                        foreach (var cmdId in GuildCommandsDeleteList)
-                                        {
-                                            try
-                                            {
-                                                await this.Client.DeleteGuildApplicationCommandAsync(guildid.Value, cmdId);
-                                            }
-                                            catch (NotFoundException)
-                                            {
-                                                this.Client.Logger.LogError($"Could not delete guild command {cmdId} in guild {guildid.Value}. Please clean up manually");
-                                            }
-                                        }
-                                    }
-
-                                    if (CheckAnyAndNotNull(Commands))
-                                        _guildCommands.Add(guildid.Value, Commands);
-                                    else
-                                        return;
                                 } else
                                 {
-                                    foreach (var cmd in this._guildDiscordCommands[guildid.Value])
+                                    foreach (var cmd in _guildDiscordCommands[guildid.Value])
                                     {
                                         try
                                         {
@@ -991,7 +601,7 @@ namespace DisCatSharp.ApplicationCommands
                                 com.CommandId = command.Id;
 
                                 var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Method.DeclaringType);
-                                await UpdateCommandPermission(command.Id, com.Name, source.Value, source.Key);
+                                await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, command.Id, com.Name, source.Value, source.Key);
                             }
 
                             else if (groupCommands.Any(x => x.Name == command.Name))
@@ -999,7 +609,7 @@ namespace DisCatSharp.ApplicationCommands
                                 var com = groupCommands.First(x => x.Name == command.Name);
                                 com.CommandId = command.Id;
 
-                                await UpdateCommandPermissionGroup(com);
+                                await PermissionWorker.UpdateCommandPermissionGroupAsync(types, guildid, commandTypeSources, com);
                             }
 
                             else if (subGroupCommands.Any(x => x.Name == command.Name))
@@ -1008,7 +618,7 @@ namespace DisCatSharp.ApplicationCommands
                                 com.CommandId = command.Id;
 
                                 foreach (var groupComs in com.SubCommands)
-                                    await UpdateCommandPermissionGroup(groupComs);
+                                    await PermissionWorker.UpdateCommandPermissionGroupAsync(types, guildid, commandTypeSources, groupComs);
                             }
 
                             else if (contextMenuCommands.Any(x => x.Name == command.Name))
@@ -1017,7 +627,7 @@ namespace DisCatSharp.ApplicationCommands
                                 com.CommandId = command.Id;
 
                                 var source = commandTypeSources.First(f => f.Key == com.Method.DeclaringType);
-                                await UpdateCommandPermission(command.Id, com.Name, source.Value, source.Key);
+                                await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, command.Id, com.Name, source.Value, source.Key);
                             }
                         }
 
@@ -1034,9 +644,13 @@ namespace DisCatSharp.ApplicationCommands
                             var app = types.First(t => t.Type == command.Method.DeclaringType);
                         }
 
+                        RegistrationCount++;
+                        if (DebugEnabled)
+                            this.Client.Logger.LogDebug($"Expected Count: {ExpectedCount}\nCurrent Count: {RegistrationCount}");
+
                         if (guildid.HasValue)
                         {
-                            await this._guildApplicationCommandsRegistered.InvokeAsync(this, new GuildApplicationCommandsRegisteredEventArgs(this._configuration?.ServiceProvider)
+                            await this._guildApplicationCommandsRegistered.InvokeAsync(this, new GuildApplicationCommandsRegisteredEventArgs(_configuration?.ServiceProvider)
                             {
                                 Handled = true,
                                 GuildId = guildid.Value,
@@ -1045,14 +659,13 @@ namespace DisCatSharp.ApplicationCommands
                         }
                         else
                         {
-                            await this._globalApplicationCommandsRegistered.InvokeAsync(this, new GlobalApplicationCommandsRegisteredEventArgs(this._configuration?.ServiceProvider)
+                            await this._globalApplicationCommandsRegistered.InvokeAsync(this, new GlobalApplicationCommandsRegisteredEventArgs(_configuration?.ServiceProvider)
                             {
                                 Handled = true,
                                 RegisteredCommands = _globalCommands
                             });
                         }
 
-                        RegistrationCount++;
                         this.CheckRegistrationStartup();
                     }
                     catch (Exception ex)
@@ -1067,244 +680,20 @@ namespace DisCatSharp.ApplicationCommands
             });
         }
 
-        internal static bool CheckNotAnyOrNull(List<DiscordApplicationCommand> list)
-            => list == null ? true : !list.Any();
-
-        internal static bool CheckNotAnyOrNull(List<ulong> list)
-            => list == null ? true : !list.Any();
-
-        internal static bool CheckNotAnyOrNull(Dictionary<ulong, DiscordApplicationCommand> dict)
-            => dict == null ? true : !dict.Any() ? true : dict.Keys == null ? true : !dict.Keys.Any();
-
-        internal static bool CheckAnyAndNotNull(List<DiscordApplicationCommand> list)
-            => list == null ? false : list.Any();
-
-        internal static bool CheckAnyAndNotNull(List<ulong> list)
-            => list == null ? false : list.Any();
-
-        internal static bool CheckAnyAndNotNull(Dictionary<ulong, DiscordApplicationCommand> dict)
-            => dict == null ? false : !dict.Any() ? false : dict.Keys == null ? false : !dict.Keys.Any() ? false : true;
-
         private async void CheckRegistrationStartup()
         {
+            if (DebugEnabled)
+                this.Client.Logger.LogDebug($"Checking counts...\n\nExpected Count: {ExpectedCount}\nCurrent Count: {RegistrationCount}");
             if (RegistrationCount == ExpectedCount)
             {
-                await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new ApplicationCommandsModuleStartupFinishedEventArgs(this._configuration?.ServiceProvider)
+                await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new ApplicationCommandsModuleStartupFinishedEventArgs(_configuration?.ServiceProvider)
                 {
                     RegisteredGlobalCommands = _globalCommands,
                     RegisteredGuildCommands = _guildCommands,
-                    GuildsWithoutScope = MissingScopeGuildIds 
+                    GuildsWithoutScope = MissingScopeGuildIds
                 });
+
                 this.FinishedRegistration();
-            }
-        }
-
-        private List<ulong> BuildGuildDeleteList(ulong guildId, List<DiscordApplicationCommand> updateList)
-        {
-            if(this._guildDiscordCommands == null || !this._guildDiscordCommands.Any())
-            {
-                return null;
-            }
-            else if (updateList == null)
-            {
-                var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
-
-                if (discord != null)
-                {
-                    List<ulong> InvalidCommandIds = new();
-                    foreach (var cmd in discord)
-                    {
-                        InvalidCommandIds.Add(cmd.Id);
-                    }
-
-                    return InvalidCommandIds;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
-
-                if (discord != null) {
-                    List<ulong> InvalidCommandIds = new();
-                    foreach (var cmd in discord)
-                    {
-                        if (!updateList.Any(ul => ul.Name == cmd.Name))
-                            InvalidCommandIds.Add(cmd.Id);
-                    }
-
-                    return InvalidCommandIds;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        private List<DiscordApplicationCommand> BuildGuildCreateList(ulong guildId,  List<DiscordApplicationCommand> updateList)
-        {
-            if (this._guildDiscordCommands == null || !this._guildDiscordCommands.Any())
-            {
-                return updateList;
-            }
-            else if (updateList == null)
-            {
-                return null;
-            }
-            else
-            {
-                var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
-                List<DiscordApplicationCommand> NewCommands = new();
-                foreach (var cmd in updateList)
-                {
-                    if (discord == null || !discord.Any(d => d.Name == cmd.Name))
-                    {
-                        NewCommands.Add(cmd);
-                    }
-                }
-
-                return NewCommands;
-            }
-        }
-
-        private Dictionary<ulong, DiscordApplicationCommand> BuildGuildOverwriteList(ulong guildId,  List<DiscordApplicationCommand> updateList)
-        {
-            if (this._guildDiscordCommands == null || !this._guildDiscordCommands.Any() || !this._guildDiscordCommands.Any(l => l.Key == guildId))
-            {
-                return null;
-            }
-            else if (updateList == null)
-            {
-                return null;
-            }
-            else
-            {
-                var discord = this._guildDiscordCommands.Where(l => l.Key == guildId).First().Value;
-                if (discord != null)
-                {
-                    Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
-                    foreach (var cmd in updateList)
-                    {
-                        if (discord.Any(d => d.Name == cmd.Name))
-                        {
-                            UpdateCommands.Add(discord.Where(d => d.Name == cmd.Name).First().Id, cmd);
-                        }
-                    }
-                    return UpdateCommands;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        private List<ulong> BuildGlobalDeleteList(List<DiscordApplicationCommand> updateList = null)
-        {
-            if (this._globalDiscordCommands == null || !this._globalDiscordCommands.Any())
-            {
-                return null;
-            }
-            else if (updateList == null)
-            {
-                var discord = this._globalDiscordCommands;
-
-                if (discord != null) {
-                    List<ulong> InvalidCommandIds = new();
-                    foreach (var cmd in discord)
-                    {
-                        InvalidCommandIds.Add(cmd.Id);
-                    }
-
-                    return InvalidCommandIds;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                var discord = this._globalDiscordCommands;
-
-                if (discord != null)
-                {
-                    List<ulong> InvalidCommandIds = new();
-                    foreach (var cmd in discord)
-                    {
-                        if (!updateList.Any(ul => ul.Name == cmd.Name))
-                            InvalidCommandIds.Add(cmd.Id);
-                    }
-
-                    return InvalidCommandIds;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        private List<DiscordApplicationCommand> BuildGlobalCreateList(List<DiscordApplicationCommand> updateList)
-        {
-            if (this._globalDiscordCommands == null || !this._globalDiscordCommands.Any())
-            {
-                return updateList;
-            }
-            else if(updateList == null)
-            {
-                return null;
-            }
-            else
-            {
-                var discord = this._globalDiscordCommands;
-                List<DiscordApplicationCommand> NewCommands = new();
-                foreach (var cmd in updateList)
-                {
-                    if (discord == null || !discord.Any(d => d.Name == cmd.Name))
-                    {
-                        NewCommands.Add(cmd);
-                    }
-                }
-
-                return NewCommands;
-            }
-        }
-
-        private Dictionary<ulong, DiscordApplicationCommand> BuildGlobalOverwriteList(List<DiscordApplicationCommand> updateList)
-        {
-            if (this._globalDiscordCommands == null || !this._globalDiscordCommands.Any())
-            {
-                return null;
-            }
-            else if (updateList == null)
-            {
-                return null;
-            }
-            else
-            {
-                var discord = this._globalDiscordCommands;
-                if (discord != null)
-                {
-                    Dictionary<ulong, DiscordApplicationCommand> UpdateCommands = new();
-                    foreach (var cmd in updateList)
-                    {
-                        if (discord.Any(d => d.Name == cmd.Name))
-                        {
-                            UpdateCommands.Add(discord.Where(d => d.Name == cmd.Name).First().Id, cmd);
-                        }
-                    }
-
-                    return UpdateCommands;
-                }
-                else
-                {
-                    return null;
-                }
             }
         }
 
@@ -1331,7 +720,7 @@ namespace DisCatSharp.ApplicationCommands
                         CommandName = e.Interaction.Data.Name,
                         InteractionId = e.Interaction.Id,
                         Token = e.Interaction.Token,
-                        Services = this._configuration?.ServiceProvider,
+                        Services = _configuration?.ServiceProvider,
                         ResolvedUserMentions = e.Interaction.Data.Resolved?.Users?.Values.ToList(),
                         ResolvedRoleMentions = e.Interaction.Data.Resolved?.Roles?.Values.ToList(),
                         ResolvedChannelMentions = e.Interaction.Data.Resolved?.Channels?.Values.ToList(),
@@ -1415,7 +804,7 @@ namespace DisCatSharp.ApplicationCommands
                             {
                                 Interaction = e.Interaction,
                                 Client = this.Client,
-                                Services = this._configuration?.ServiceProvider,
+                                Services = _configuration?.ServiceProvider,
                                 ApplicationCommandsExtension = this,
                                 Guild = e.Interaction.Guild,
                                 Channel = e.Interaction.Channel,
@@ -1443,7 +832,7 @@ namespace DisCatSharp.ApplicationCommands
                             var context = new AutocompleteContext
                             {
                                 Interaction = e.Interaction,
-                                Services = this._configuration?.ServiceProvider,
+                                Services = _configuration?.ServiceProvider,
                                 ApplicationCommandsExtension = this,
                                 Guild = e.Interaction.Guild,
                                 Channel = e.Interaction.Channel,
@@ -1511,7 +900,7 @@ namespace DisCatSharp.ApplicationCommands
                     Interaction = e.Interaction,
                     Channel = e.Interaction.Channel,
                     Client = client,
-                    Services = this._configuration?.ServiceProvider,
+                    Services = _configuration?.ServiceProvider,
                     CommandName = e.Interaction.Data.Name,
                     ApplicationCommandsExtension = this,
                     Guild = e.Interaction.Guild,
@@ -1566,12 +955,12 @@ namespace DisCatSharp.ApplicationCommands
             {
                 case ApplicationCommandModuleLifespan.Scoped:
                     //Accounts for static methods and adds DI
-                    classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(this._configuration?.ServiceProvider.CreateScope().ServiceProvider, method.DeclaringType) : this.CreateInstance(method.DeclaringType, this._configuration?.ServiceProvider.CreateScope().ServiceProvider);
+                    classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(_configuration?.ServiceProvider.CreateScope().ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, _configuration?.ServiceProvider.CreateScope().ServiceProvider);
                     break;
 
                 case ApplicationCommandModuleLifespan.Transient:
                     //Accounts for static methods and adds DI
-                    classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(this._configuration?.ServiceProvider, method.DeclaringType) : this.CreateInstance(method.DeclaringType, this._configuration?.ServiceProvider);
+                    classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(_configuration?.ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, _configuration?.ServiceProvider);
                     break;
 
                 //If singleton, gets it from the singleton list
@@ -1622,7 +1011,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         /// <param name="t">The type.</param>
         /// <param name="services">The services.</param>
-        internal object CreateInstance(Type t, IServiceProvider services)
+        internal static object CreateInstance(Type t, IServiceProvider services)
         {
             var ti = t.GetTypeInfo();
             var constructors = ti.DeclaredConstructors
@@ -1840,7 +1229,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         /// <param name="customAttributes">The custom attributes.</param>
         /// <param name="guildId">The optional guild id</param>
-        private async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(IEnumerable<ChoiceProviderAttribute> customAttributes, ulong? guildId = null)
+        private static async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(IEnumerable<ChoiceProviderAttribute> customAttributes, ulong? guildId = null)
         {
             var choices = new List<DiscordApplicationCommandOptionChoice>();
             foreach (var choiceProviderAttribute in customAttributes)
@@ -1893,13 +1282,11 @@ namespace DisCatSharp.ApplicationCommands
         /// Gets the parameter type.
         /// </summary>
         /// <param name="type">The type.</param>
-        private ApplicationCommandOptionType GetParameterType(Type type)
+        private static ApplicationCommandOptionType GetParameterType(Type type)
         {
             var parametertype = type == typeof(string)
                 ? ApplicationCommandOptionType.String
-                : type == typeof(long) || type == typeof(long?)
-                ? ApplicationCommandOptionType.Integer
-                : type == typeof(int) || type == typeof(int?)
+                : type == typeof(long) || type == typeof(long?) || type == typeof(int) || type == typeof(int?)
                 ? ApplicationCommandOptionType.Integer
                 : type == typeof(bool) || type == typeof(bool?)
                 ? ApplicationCommandOptionType.Boolean
@@ -1925,7 +1312,7 @@ namespace DisCatSharp.ApplicationCommands
         /// Gets the choice attributes from parameter.
         /// </summary>
         /// <param name="choiceattributes">The choice attributes.</param>
-        private List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(IEnumerable<ChoiceAttribute> choiceattributes)
+        private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(IEnumerable<ChoiceAttribute> choiceattributes)
         {
             return !choiceattributes.Any()
                 ? null
@@ -1937,7 +1324,7 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         /// <param name="guildId">The optional guild id.</param>
-        private async Task<List<DiscordApplicationCommandOption>> ParseParameters(ParameterInfo[] parameters, ulong? guildId)
+        internal static async Task<List<DiscordApplicationCommandOption>> ParseParametersAsync(ParameterInfo[] parameters, ulong? guildId)
         {
             var options = new List<DiscordApplicationCommandOption>();
             foreach (var parameter in parameters)
@@ -1959,11 +1346,11 @@ namespace DisCatSharp.ApplicationCommands
 
                 //Sets the type
                 var type = parameter.ParameterType;
-                var parametertype = this.GetParameterType(type);
+                var parametertype = GetParameterType(type);
 
                 //Handles choices
                 //From attributes
-                var choices = this.GetChoiceAttributesFromParameter(parameter.GetCustomAttributes<ChoiceAttribute>());
+                var choices = GetChoiceAttributesFromParameter(parameter.GetCustomAttributes<ChoiceAttribute>());
                 //From enums
                 if (parameter.ParameterType.IsEnum)
                 {
@@ -1973,7 +1360,7 @@ namespace DisCatSharp.ApplicationCommands
                 var choiceProviders = parameter.GetCustomAttributes<ChoiceProviderAttribute>();
                 if (choiceProviders.Any())
                 {
-                    choices = await this.GetChoiceAttributesFromProvider(choiceProviders, guildId);
+                    choices = await GetChoiceAttributesFromProvider(choiceProviders, guildId);
                 }
 
                 var channelTypes = parameter.GetCustomAttribute<ChannelTypesAttribute>()?.ChannelTypes ?? null;
@@ -1996,10 +1383,10 @@ namespace DisCatSharp.ApplicationCommands
             _subGroupCommands.Clear();
             _registeredCommands.Clear();
             _contextMenuCommands.Clear();
-            this._globalDiscordCommands.Clear();
-            this._guildDiscordCommands.Clear();
-            this._globalDiscordCommands = null;
-            this._guildDiscordCommands = null;
+            _globalDiscordCommands.Clear();
+            _guildDiscordCommands.Clear();
+            _globalDiscordCommands = null;
+            _guildDiscordCommands = null;
             _guildCommands.Clear();
             _globalCommands.Clear();
 
@@ -2182,4 +1569,198 @@ namespace DisCatSharp.ApplicationCommands
         /// </summary>
         public MethodInfo Method { get; set; }
     }
+
+    #region Default Help
+    /// <summary>
+    /// Represents the default help module.
+    /// </summary>
+    public class DefaultHelpModule : ApplicationCommandsModule
+    {
+        public class DefaultHelpAutoCompleteProvider : IAutocompleteProvider
+        {
+            public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
+            {
+                var options = new List<DiscordApplicationCommandAutocompleteChoice>();
+
+                var globalCommands = await context.Client.GetGlobalApplicationCommandsAsync();
+                var guildCommands = await context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+                var slashCommands = globalCommands.Concat(guildCommands)
+                    .Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+                    .GroupBy(ac => ac.Name).Select(x => x.First()).Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase));
+                var list = slashCommands.ToList();
+                foreach (var sc in list.Take(25))
+                {
+                    options.Add(new DiscordApplicationCommandAutocompleteChoice(sc.Name, sc.Name.Trim()));
+                }
+                return options.AsEnumerable();
+            }
+        }
+
+        public class DefaultHelpAutoCompleteLevelOneProvider : IAutocompleteProvider
+        {
+            public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
+            {
+                var options = new List<DiscordApplicationCommandAutocompleteChoice>();
+                var globalCommands = await context.Client.GetGlobalApplicationCommandsAsync();
+                var guildCommands = await context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+                var slashCommands = globalCommands.Concat(guildCommands)
+                .Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+                .GroupBy(ac => ac.Name).Select(x => x.First());
+                var command = slashCommands.FirstOrDefault(ac =>
+                    ac.Name.Equals(context.Options[0].Value.ToString().Trim(),StringComparison.OrdinalIgnoreCase));
+                if (command is null || command.Options is null)
+                {
+                    options.Add(new DiscordApplicationCommandAutocompleteChoice("no_options_for_this_command", "no_options_for_this_command"));
+                }
+                else
+                {
+                    var opt = command.Options.Where(c => c.Type == ApplicationCommandOptionType.SubCommandGroup || c.Type == ApplicationCommandOptionType.SubCommand).ToList();
+                    foreach (var option in opt.Take(25))
+                    {
+                        options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
+                    }
+                }
+                return options.AsEnumerable();
+            }
+        }
+
+        public class DefaultHelpAutoCompleteLevelTwoProvider : IAutocompleteProvider
+        {
+            public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
+            {
+                var options = new List<DiscordApplicationCommandAutocompleteChoice>();
+                var globalCommands = await context.Client.GetGlobalApplicationCommandsAsync();
+                var guildCommands = await context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+                var slashCommands = globalCommands.Concat(guildCommands)
+                .Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+                .GroupBy(ac => ac.Name).Select(x => x.First());
+                var command = slashCommands.FirstOrDefault(ac =>
+                    ac.Name.Equals(context.Options[0].Value.ToString().Trim(), StringComparison.OrdinalIgnoreCase));
+                if (command.Options is null)
+                {
+                    options.Add(new DiscordApplicationCommandAutocompleteChoice("no_options_for_this_command", "no_options_for_this_command"));
+                    return options.AsEnumerable();
+                }
+                var foundCommand = command.Options.FirstOrDefault(op => op.Name.Equals(context.Options[1].Value.ToString().Trim(), StringComparison.OrdinalIgnoreCase));
+                if (foundCommand is null || foundCommand.Options is null)
+                {
+                    options.Add(new DiscordApplicationCommandAutocompleteChoice("no_options_for_this_command", "no_options_for_this_command"));
+                }
+                else
+                {
+                    var opt = foundCommand.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand).ToList();
+                    foreach (var option in opt.Take(25))
+                    {
+                        options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
+                    }
+                }
+                return options.AsEnumerable();
+            }
+        }
+
+        [SlashCommand("help", "Displays command help")]
+        public async Task DefaultHelpAsync(InteractionContext ctx,
+            [Autocomplete(typeof(DefaultHelpAutoCompleteProvider))]
+            [Option("option_one", "top level command to provide help for", true)] string commandName,
+            [Autocomplete(typeof(DefaultHelpAutoCompleteLevelOneProvider))]
+            [Option("option_two", "subgroup or command to provide help for", true)] string commandOneName = null,
+            [Autocomplete(typeof(DefaultHelpAutoCompleteLevelTwoProvider))]
+            [Option("option_three", "command to provide help for", true)] string commandTwoName = null)
+        {
+            ulong currentGuildId = ctx.Guild.Id;
+            var globalCommands = await ctx.Client.GetGlobalApplicationCommandsAsync();
+            var guildCommands = await ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
+            var applicationCommands = globalCommands.Concat(guildCommands)
+                .Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+                .GroupBy(ac => ac.Name).Select(x => x.First())
+                .ToList();
+            if (applicationCommands is null)
+            {
+                await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+                    .WithContent($"There are no slash commands for guild {ctx.Guild.Name}").AsEphemeral(true));
+                return;
+            }
+            if (commandTwoName is not null && !commandTwoName.Equals("no_options_for_this_command"))
+            {
+                List<DiscordApplicationCommand> commandsWithSubCommands = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.Any(op => op.Type == ApplicationCommandOptionType.SubCommandGroup));
+                var cmdParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Options.Any(op => op.Name.Equals(commandOneName))).Options
+                        .FirstOrDefault(opt => opt.Name.Equals(commandOneName,StringComparison.OrdinalIgnoreCase));
+                var cmd = cmdParent.Options.FirstOrDefault(op => op.Name.Equals(commandTwoName,StringComparison.OrdinalIgnoreCase));
+                var discordEmbed = new DiscordEmbedBuilder
+                {
+                    Title = "Help",
+                    Description = $"{Formatter.InlineCode(cmd.Name)}: {cmd.Description ?? "No description provided."}"
+                };
+                if (cmd.Options is not null)
+                {
+                    var commandOptions = cmd.Options.ToList();
+                    var sb = new StringBuilder();
+
+                    foreach (var option in commandOptions)
+                        sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
+
+                    sb.Append('\n');
+                    discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
+                }
+                await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+                    new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
+            }
+            else if (commandOneName is not null && commandTwoName is null && !commandOneName.Equals("no_options_for_this_command"))
+            {
+                List<DiscordApplicationCommand> commandsWithOptions = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.All(op => op.Type == ApplicationCommandOptionType.SubCommand));
+                DiscordApplicationCommand subCommandParent = commandsWithOptions.FirstOrDefault(cm => cm.Name.Equals(commandName,StringComparison.OrdinalIgnoreCase));
+                var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.Equals(commandOneName,StringComparison.OrdinalIgnoreCase));
+                var discordEmbed = new DiscordEmbedBuilder
+                {
+                    Title = "Help",
+                    Description = $"{Formatter.InlineCode(subCommand.Name)}: {subCommand.Description ?? "No description provided."}"
+                };
+                if (subCommand.Options is not null)
+                {
+                    var commandOptions = subCommand.Options.ToList();
+                    var sb = new StringBuilder();
+
+                    foreach (var option in commandOptions)
+                        sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
+
+                    sb.Append('\n');
+                    discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
+                }
+                await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+                    new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
+            }
+            else
+            {
+                DiscordApplicationCommand command = applicationCommands.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+                if (command is null)
+                {
+                    await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+                            .WithContent($"No command called {commandName} in guild {ctx.Guild.Name}").AsEphemeral(true));
+                    return;
+                }
+                else
+                {
+                    var discordEmbed = new DiscordEmbedBuilder
+                    {
+                        Title = "Help",
+                        Description = $"{Formatter.InlineCode(command.Name)}: {command.Description ?? "No description provided."}"
+                    };
+                    if (command.Options is not null)
+                    {
+                        var commandOptions = command.Options.ToList();
+                        var sb = new StringBuilder();
+
+                        foreach (var option in commandOptions)
+                            sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
+
+                        sb.Append('\n');
+                        discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
+                    }
+                    await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+                        new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
+                }
+            }
+        }
+    }
+    #endregion
 }
