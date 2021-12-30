@@ -712,9 +712,10 @@ namespace DisCatSharp.ApplicationCommands
                     Dictionary<ulong, string> commands = new(guildCommands.Count);
                     foreach(var cmd in guildCommands)
                     {
-                        commands.Add(cmd.Id, cmd.Name);
+                        commands.TryAdd(cmd.Id, cmd.Name);
                     }
                     guild.Value.RegisteredApplicationCommands = commands;
+                    commands.Clear();
                 }
             }
         }
