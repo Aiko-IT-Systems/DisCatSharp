@@ -1610,7 +1610,8 @@ namespace DisCatSharp.ApplicationCommands
                 }
                 else
                 {
-                    var opt = command.Options.Where(c => c.Type == ApplicationCommandOptionType.SubCommandGroup || c.Type == ApplicationCommandOptionType.SubCommand).ToList();
+                    var opt = command.Options.Where(c => c.Type is ApplicationCommandOptionType.SubCommandGroup or ApplicationCommandOptionType.SubCommand
+                                                         && c.Name.StartsWith(context.Options[1].Value.ToString(), StringComparison.InvariantCultureIgnoreCase)).ToList();
                     foreach (var option in opt.Take(25))
                     {
                         options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
@@ -1644,7 +1645,8 @@ namespace DisCatSharp.ApplicationCommands
                 }
                 else
                 {
-                    var opt = foundCommand.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand).ToList();
+                    var opt = foundCommand.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand &&
+                                                              x.Name.StartsWith(context.Options[2].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
                     foreach (var option in opt.Take(25))
                     {
                         options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
@@ -1663,14 +1665,13 @@ namespace DisCatSharp.ApplicationCommands
             [Autocomplete(typeof(DefaultHelpAutoCompleteLevelTwoProvider))]
             [Option("option_three", "command to provide help for", true)] string commandTwoName = null)
         {
-            ulong currentGuildId = ctx.Guild.Id;
             var globalCommands = await ctx.Client.GetGlobalApplicationCommandsAsync();
             var guildCommands = await ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
             var applicationCommands = globalCommands.Concat(guildCommands)
                 .Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
                 .GroupBy(ac => ac.Name).Select(x => x.First())
                 .ToList();
-            if (applicationCommands is null)
+            if (applicationCommands.Count < 1)
             {
                 await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
                     .WithContent($"There are no slash commands for guild {ctx.Guild.Name}").AsEphemeral(true));
@@ -1734,27 +1735,24 @@ namespace DisCatSharp.ApplicationCommands
                             .WithContent($"No command called {commandName} in guild {ctx.Guild.Name}").AsEphemeral(true));
                     return;
                 }
-                else
+                var discordEmbed = new DiscordEmbedBuilder
                 {
-                    var discordEmbed = new DiscordEmbedBuilder
-                    {
-                        Title = "Help",
-                        Description = $"{Formatter.InlineCode(command.Name)}: {command.Description ?? "No description provided."}"
-                    };
-                    if (command.Options is not null)
-                    {
-                        var commandOptions = command.Options.ToList();
-                        var sb = new StringBuilder();
+                    Title = "Help",
+                    Description = $"{Formatter.InlineCode(command.Name)}: {command.Description ?? "No description provided."}"
+                };
+                if (command.Options is not null)
+                {
+                    var commandOptions = command.Options.ToList();
+                    var sb = new StringBuilder();
 
-                        foreach (var option in commandOptions)
-                            sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
+                    foreach (var option in commandOptions)
+                        sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
-                        sb.Append('\n');
-                        discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
-                    }
-                    await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-                        new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
+                    sb.Append('\n');
+                    discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
                 }
+                await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+                    new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
             }
         }
     }
