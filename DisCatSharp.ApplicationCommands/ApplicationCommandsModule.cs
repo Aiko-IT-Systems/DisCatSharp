@@ -28,7 +28,8 @@ namespace DisCatSharp.ApplicationCommands
     /// Represents a base class for application command modules
     /// </summary>
     public abstract class ApplicationCommandsModule
-    {        /// <summary>
+    {
+        /// <summary>
              /// Called before the execution of a slash command in the module.
              /// </summary>
              /// <param name="ctx">The context.</param>
