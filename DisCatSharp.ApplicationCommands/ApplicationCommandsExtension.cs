@@ -654,7 +654,7 @@ namespace DisCatSharp.ApplicationCommands
 							{
 								Handled = true,
 								GuildId = guildid.Value,
-								RegisteredCommands = GuildCommandsInternal.Any(c => c.Key == guildid.Value) ? GuildCommandsInternal.Single(c => c.Key == guildid.Value).Value : null
+								RegisteredCommands = GuildCommandsInternal.Any(c => c.Key == guildid.Value) ? GuildCommandsInternal.FirstOrDefault(c => c.Key == guildid.Value).Value : null
 							});
 						}
 						else
