@@ -101,13 +101,13 @@ namespace DisCatSharp.Lavalink
 	/// </summary>
 	internal class JavaBinaryReader : BinaryReader
 	{
-		private static readonly Encoding s_utf8NoBom = new UTF8Encoding();
+		private static readonly Encoding _utf8NoBom = new UTF8Encoding();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="JavaBinaryReader"/> class.
 		/// </summary>
 		/// <param name="ms">The ms.</param>
-		public JavaBinaryReader(Stream ms) : base(ms, s_utf8NoBom)
+		public JavaBinaryReader(Stream ms) : base(ms, _utf8NoBom)
 		{
 		}
 
