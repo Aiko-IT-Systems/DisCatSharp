@@ -260,7 +260,7 @@ dotnet_naming_style.async_suffix.required_suffix = Async
 dotnet_naming_style.async_suffix.word_separator =
 dotnet_naming_style.async_suffix.capitalization = pascal_case
 
-# Constants are UPPERCASE
+# Constants are UPPER_CASE
 dotnet_naming_rule.constants_should_be_upper_case.severity = error
 dotnet_naming_rule.constants_should_be_upper_case.symbols = constants
 dotnet_naming_rule.constants_should_be_upper_case.style = constant_style
