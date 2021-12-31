@@ -450,20 +450,20 @@ namespace DisCatSharp.ApplicationCommands
 
 						var slashGroupsTulpe = NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildid, groupTranslations).Result;
 
-						if (slashGroupsTulpe.Item1 != null && slashGroupsTulpe.Item1.Any())
-							updateList.AddRange(slashGroupsTulpe.Item1);
+						if (slashGroupsTulpe.applicationCommands != null && slashGroupsTulpe.applicationCommands.Any())
+							updateList.AddRange(slashGroupsTulpe.applicationCommands);
 
-						if (slashGroupsTulpe.Item2 != null && slashGroupsTulpe.Item2.Any())
-							commandTypeSources.AddRange(slashGroupsTulpe.Item2);
+						if (slashGroupsTulpe.commandTypeSources != null && slashGroupsTulpe.commandTypeSources.Any())
+							commandTypeSources.AddRange(slashGroupsTulpe.commandTypeSources);
 
-						if (slashGroupsTulpe.Item3 != null && slashGroupsTulpe.Item3.Any())
-							_singletonModules.AddRange(slashGroupsTulpe.Item3);
+						if (slashGroupsTulpe.singletonModules != null && slashGroupsTulpe.singletonModules.Any())
+							_singletonModules.AddRange(slashGroupsTulpe.singletonModules);
 
-						if (slashGroupsTulpe.Item4 != null && slashGroupsTulpe.Item4.Any())
-							groupCommands.AddRange(slashGroupsTulpe.Item4);
+						if (slashGroupsTulpe.groupCommands != null && slashGroupsTulpe.groupCommands.Any())
+							groupCommands.AddRange(slashGroupsTulpe.groupCommands);
 
-						if (slashGroupsTulpe.Item5 != null && slashGroupsTulpe.Item5.Any())
-							subGroupCommands.AddRange(slashGroupsTulpe.Item5);
+						if (slashGroupsTulpe.subGroupCommands != null && slashGroupsTulpe.subGroupCommands.Any())
+							subGroupCommands.AddRange(slashGroupsTulpe.subGroupCommands);
 
 						//Handles methods and context menus, only if the module isn't a group itself
 						if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
@@ -480,28 +480,28 @@ namespace DisCatSharp.ApplicationCommands
 
 							var slashCommands = CommandWorker.ParseBasicSlashCommandsAsync(type, methods, guildid, commandTranslations).Result;
 
-							if (slashCommands.Item1 != null && slashCommands.Item1.Any())
-								updateList.AddRange(slashCommands.Item1);
+							if (slashCommands.applicationCommands != null && slashCommands.applicationCommands.Any())
+								updateList.AddRange(slashCommands.applicationCommands);
 
-							if (slashCommands.Item2 != null && slashCommands.Item2.Any())
-								commandTypeSources.AddRange(slashCommands.Item2);
+							if (slashCommands.commandTypeSources != null && slashCommands.commandTypeSources.Any())
+								commandTypeSources.AddRange(slashCommands.commandTypeSources);
 
-							if (slashCommands.Item3 != null && slashCommands.Item3.Any())
-								commandMethods.AddRange(slashCommands.Item3);
+							if (slashCommands.commandMethods != null && slashCommands.commandMethods.Any())
+								commandMethods.AddRange(slashCommands.commandMethods);
 
 							//Context Menus
 							var contextMethods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<ContextMenuAttribute>() != null);
 
-							var contextCommands = await CommandWorker.ParseContextMenuCommands(type, contextMethods, guildid, commandTranslations);
+							var contextCommands = await CommandWorker.ParseContextMenuCommands(type, contextMethods, commandTranslations);
 
-							if (contextCommands.Item1 != null && contextCommands.Item1.Any())
-								updateList.AddRange(contextCommands.Item1);
+							if (contextCommands.applicationCommands != null && contextCommands.applicationCommands.Any())
+								updateList.AddRange(contextCommands.applicationCommands);
 
-							if (contextCommands.Item2 != null && contextCommands.Item2.Any())
-								commandTypeSources.AddRange(contextCommands.Item2);
+							if (contextCommands.commandTypeSources != null && contextCommands.commandTypeSources.Any())
+								commandTypeSources.AddRange(contextCommands.commandTypeSources);
 
-							if (contextCommands.Item3 != null && contextCommands.Item3.Any())
-								contextMenuCommands.AddRange(contextCommands.Item3);
+							if (contextCommands.contextMenuCommands != null && contextCommands.contextMenuCommands.Any())
+								contextMenuCommands.AddRange(contextCommands.contextMenuCommands);
 
 							//Accounts for lifespans
 							if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)

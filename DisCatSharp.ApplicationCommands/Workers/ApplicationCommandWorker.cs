@@ -40,13 +40,12 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <param name="methods">List of method infos.</param>
-		/// <param name="guildid">The optional guild id.</param>
 		/// <param name="translator">The optional command translations.</param>
 		/// <returns>Too much.</returns>
-		internal static Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<ContextMenuCommand>>> ParseContextMenuCommands(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
+		internal static Task<(List<DiscordApplicationCommand> applicationCommands, List<KeyValuePair<Type, Type>> commandTypeSources, List<ContextMenuCommand> contextMenuCommands)> ParseContextMenuCommands(Type type, IEnumerable<MethodInfo> methods, List<CommandTranslator> translator = null)
 		{
-			List<DiscordApplicationCommand> Commands = new();
-			List<KeyValuePair<Type, Type>> CommandTypeSources = new();
+			List<DiscordApplicationCommand> commands = new();
+			List<KeyValuePair<Type, Type>> commandTypeSources = new();
 			List<ContextMenuCommand> contextMenuCommands = new();
 
 
@@ -70,11 +69,11 @@ namespace DisCatSharp.ApplicationCommands
 
 				contextMenuCommands.Add(new ContextMenuCommand { Method = contextMethod, Name = contextAttribute.Name });
 
-				Commands.Add(command);
-				CommandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
+				commands.Add(command);
+				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 			}
 
-			return Task.FromResult(Tuple.Create(Commands, CommandTypeSources, contextMenuCommands));
+			return Task.FromResult((commands, commandTypeSources, contextMenuCommands));
 		}
 
 		/// <summary>
@@ -82,13 +81,13 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <param name="methods">List of method infos.</param>
-		/// <param name="guildid">The optional guild id.</param>
+		/// <param name="guildId">The optional guild id.</param>
 		/// <param name="translator">The optional command translations.</param>
 		/// <returns>Too much.</returns>
-		internal static async Task<Tuple<List<DiscordApplicationCommand>, List<KeyValuePair<Type, Type>>, List<CommandMethod>>> ParseBasicSlashCommandsAsync(Type type, IEnumerable<MethodInfo> methods, ulong? guildid = null, List<CommandTranslator> translator = null)
+		internal static async Task<(List<DiscordApplicationCommand> applicationCommands, List<KeyValuePair<Type, Type>> commandTypeSources, List<CommandMethod> commandMethods)> ParseBasicSlashCommandsAsync(Type type, IEnumerable<MethodInfo> methods, ulong? guildId = null, List<CommandTranslator> translator = null)
 		{
-			List<DiscordApplicationCommand> Commands = new();
-			List<KeyValuePair<Type, Type>> CommandTypeSources = new();
+			List<DiscordApplicationCommand> commands = new();
+			List<KeyValuePair<Type, Type>> commandTypeSources = new();
 			List<CommandMethod> commandMethods = new();
 
 			foreach (var method in methods)
@@ -99,7 +98,7 @@ namespace DisCatSharp.ApplicationCommands
 				if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
 					throw new ArgumentException($"The first argument must be an InteractionContext!");
 				parameters = parameters.Skip(1).ToArray();
-				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters, guildid);
+				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters, guildId);
 
 				commandMethods.Add(new CommandMethod { Method = method, Name = commandattribute.Name });
 
@@ -137,11 +136,11 @@ namespace DisCatSharp.ApplicationCommands
 				}
 
 				var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, LocalizisedOptions ?? options, commandattribute.DefaultPermission, ApplicationCommandType.ChatInput, NameLocalizations, DescriptionLocalizations);
-				Commands.Add(payload);
-				CommandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
+				commands.Add(payload);
+				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 			}
 
-			return Tuple.Create(Commands, CommandTypeSources, commandMethods);
+			return (commands, commandTypeSources, commandMethods);
 		}
 	}
 
@@ -155,24 +154,24 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <param name="types">List of type infos.</param>
-		/// <param name="guildid">The optional guild id.</param>
+		/// <param name="guildId">The optional guild id.</param>
 		/// <param name="translator">The optional group translations.</param>
 		/// <returns>Too much.</returns>
 		internal static async Task<
-			Tuple<
-				List<DiscordApplicationCommand>,
-				List<KeyValuePair<Type, Type>>,
-				List<object>,
-				List<GroupCommand>,
-				List<SubGroupCommand>
-				>
-			> ParseSlashGroupsAsync(Type type, List<TypeInfo> types, ulong? guildid = null, List<GroupTranslator> translator = null)
+			(
+				List<DiscordApplicationCommand> applicationCommands,
+				List<KeyValuePair<Type, Type>> commandTypeSources,
+				List<object> singletonModules,
+				List<GroupCommand> groupCommands,
+				List<SubGroupCommand> subGroupCommands
+			)
+			> ParseSlashGroupsAsync(Type type, List<TypeInfo> types, ulong? guildId = null, List<GroupTranslator> translator = null)
 		{
-			List<DiscordApplicationCommand> Commands = new();
-			List<KeyValuePair<Type, Type>> CommandTypeSources = new();
+			List<DiscordApplicationCommand> commands = new();
+			List<KeyValuePair<Type, Type>> commandTypeSources = new();
 			List<GroupCommand> groupCommands = new();
 			List<SubGroupCommand> subGroupCommands = new();
-			List<object> SingletonModules = new();
+			List<object> singletonModules = new();
 
 			//Handles groups
 			foreach (var subclassinfo in types)
@@ -201,7 +200,7 @@ namespace DisCatSharp.ApplicationCommands
 
 				//Initializes the command
 				var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, default_permission: groupAttribute.DefaultPermission, nameLocalizations: NameLocalizations, descriptionLocalizations: DescriptionLocalizations);
-				CommandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
+				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 
 				var commandmethods = new List<KeyValuePair<string, MethodInfo>>();
 				//Handles commands in the group
@@ -215,7 +214,7 @@ namespace DisCatSharp.ApplicationCommands
 						throw new ArgumentException($"The first argument must be an InteractionContext!");
 					parameters = parameters.Skip(1).ToArray();
 
-					var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters, guildid);
+					var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters, guildId);
 
 					DiscordApplicationCommandLocalization SubNameLocalizations = null;
 					DiscordApplicationCommandLocalization SubDescriptionLocalizations = null;
@@ -256,7 +255,7 @@ namespace DisCatSharp.ApplicationCommands
 					//Creates the subcommand and adds it to the main command
 					var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, null, null, LocalizisedOptions ?? options, nameLocalizations: SubNameLocalizations, descriptionLocalizations: SubDescriptionLocalizations);
 					payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations);
-					CommandTypeSources.Add(new KeyValuePair<Type, Type>(subclassinfo, type));
+					commandTypeSources.Add(new KeyValuePair<Type, Type>(subclassinfo, type));
 
 					//Adds it to the method lists
 					commandmethods.Add(new KeyValuePair<string, MethodInfo>(commandAttribute.Name, submethod));
@@ -304,7 +303,7 @@ namespace DisCatSharp.ApplicationCommands
 							throw new ArgumentException($"The first argument must be an InteractionContext!");
 
 						parameters = parameters.Skip(1).ToArray();
-						suboptions = suboptions.Concat(await ApplicationCommandsExtension.ParseParametersAsync(parameters, guildid)).ToList();
+						suboptions = suboptions.Concat(await ApplicationCommandsExtension.ParseParametersAsync(parameters, guildId)).ToList();
 
 						DiscordApplicationCommandLocalization SubSubNameLocalizations = null;
 						DiscordApplicationCommandLocalization SubSubDescriptionLocalizations = null;
@@ -353,25 +352,25 @@ namespace DisCatSharp.ApplicationCommands
 					var subpayload = new DiscordApplicationCommandOption(subGroupAttribute.Name, subGroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options, nameLocalizations: SubNameLocalizations, descriptionLocalizations: SubDescriptionLocalizations);
 					command.SubCommands.Add(new GroupCommand { Name = subGroupAttribute.Name, Methods = currentMethods });
 					payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations);
-					CommandTypeSources.Add(new KeyValuePair<Type, Type>(subclass, type));
+					commandTypeSources.Add(new KeyValuePair<Type, Type>(subclass, type));
 
 					//Accounts for lifespans for the sub group
 					if (subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
 					{
-						SingletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclass, ApplicationCommandsExtension._configuration?.ServiceProvider));
+						singletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclass, ApplicationCommandsExtension._configuration?.ServiceProvider));
 					}
 				}
 				if (command.SubCommands.Any()) subGroupCommands.Add(command);
-				Commands.Add(payload);
+				commands.Add(payload);
 
 				//Accounts for lifespans
 				if (subclassinfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && subclassinfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
 				{
-					SingletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclassinfo, ApplicationCommandsExtension._configuration?.ServiceProvider));
+					singletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclassinfo, ApplicationCommandsExtension._configuration?.ServiceProvider));
 				}
 			}
 
-			return Tuple.Create(Commands, CommandTypeSources, SingletonModules, groupCommands, subGroupCommands);
+			return (commands, commandTypeSources, singletonModules, groupCommands, subGroupCommands);
 		}
 	}
 }
