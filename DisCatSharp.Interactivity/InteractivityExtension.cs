@@ -177,7 +177,7 @@ namespace DisCatSharp.Interactivity
 		/// <summary>
 		/// Waits for a user modal submit.
 		/// </summary>
-		/// <param name="custom_id">The custom id of the modal to wait for.</param>
+		/// <param name="customId">The custom id of the modal to wait for.</param>
 		/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
 		/// <returns>A <see cref="InteractivityResult{T}"/> with the result of the modal.</returns>
 		public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string customId, TimeSpan? timeoutOverride = null)
@@ -186,7 +186,7 @@ namespace DisCatSharp.Interactivity
 		/// <summary>
 		/// Waits for a user modal submit.
 		/// </summary>
-		/// <param name="custom_id">The custom id of the modal to wait for.</param>
+		/// <param name="customId">The custom id of the modal to wait for.</param>
 		/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 		/// <returns>A <see cref="InteractivityResult{T}"/> with the result of the modal.</returns>
 		public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string customId, CancellationToken token)

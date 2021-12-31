@@ -48,7 +48,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ModalMatchRequest"/> class.
 		/// </summary>
-		/// <param name="custom_id">The custom id.</param>
+		/// <param name="customId">The custom id.</param>
 		/// <param name="predicate">The predicate.</param>
 		/// <param name="cancellation">The cancellation token.</param>
 		public ModalMatchRequest(string customId, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation)

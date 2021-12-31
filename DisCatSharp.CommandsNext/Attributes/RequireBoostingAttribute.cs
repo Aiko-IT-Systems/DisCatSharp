@@ -54,7 +54,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RequireBoostingAttribute"/> class.
 		/// </summary>
-		/// <param name="guild_id">Target guild id.</param>
+		/// <param name="guildId">Target guild id.</param>
 		/// <param name="days">Boosting since days.</param>
 		public RequireBoostingAttribute(ulong guildId, int days = 0)
 		{

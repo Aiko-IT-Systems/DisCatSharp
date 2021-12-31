@@ -106,7 +106,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		public string GetDiscordName()
 		{
-			DiscordNameLookup.TryGetValue(this.Name, out var name);
+			s_discordNameLookup.TryGetValue(this.Name, out var name);
 
 			return name ?? $":{ this.Name }:";
 		}
@@ -192,7 +192,7 @@ namespace DisCatSharp.Entities
 		/// <param name="unicodeEntity">Entity to check.</param>
 		/// <returns>Whether it's a valid emoji.</returns>
 		public static bool IsValidUnicode(string unicodeEntity)
-			=> DiscordNameLookup.ContainsKey(unicodeEntity);
+			=> s_discordNameLookup.ContainsKey(unicodeEntity);
 
 		/// <summary>
 		/// Creates an emoji object from a unicode entity.
@@ -228,10 +228,10 @@ namespace DisCatSharp.Entities
 			// through this, the inconsistency is normalized.
 
 			emoji = null;
-			if (!DiscordNameLookup.TryGetValue(unicodeEntity, out var discordName))
+			if (!s_discordNameLookup.TryGetValue(unicodeEntity, out var discordName))
 				return false;
 
-			if (!UnicodeEmojis.TryGetValue(discordName, out unicodeEntity))
+			if (!s_unicodeEmojis.TryGetValue(discordName, out unicodeEntity))
 				return false;
 
 			emoji = new DiscordEmoji { Name = unicodeEntity, Discord = client };
@@ -306,7 +306,7 @@ namespace DisCatSharp.Entities
 			if (string.IsNullOrWhiteSpace(name))
 				throw new ArgumentNullException(nameof(name), "Name cannot be empty or null.");
 
-			if (UnicodeEmojis.TryGetValue(name, out var unicodeEntity))
+			if (s_unicodeEmojis.TryGetValue(name, out var unicodeEntity))
 				return new DiscordEmoji { Discord = client, Name = unicodeEntity };
 
 			if (includeGuilds)
@@ -353,7 +353,7 @@ namespace DisCatSharp.Entities
 			if (string.IsNullOrWhiteSpace(name))
 				throw new ArgumentNullException(nameof(name), "Name cannot be empty or null.");
 
-			if (UnicodeEmojis.TryGetValue(name, out var unicodeEntity))
+			if (s_unicodeEmojis.TryGetValue(name, out var unicodeEntity))
 			{
 				emoji = new DiscordEmoji { Discord = client, Name = unicodeEntity };
 				return true;

@@ -120,7 +120,7 @@ namespace DisCatSharp.Entities
 		/// <param name="name">The name of the command.</param>
 		/// <param name="description">The description of the command.</param>
 		/// <param name="options">Optional parameters for this command.</param>
-		/// <param name="default_permission">Optional default permission for this command.</param>
+		/// <param name="defaultPermission">Optional default permission for this command.</param>
 		/// <param name="type">The type of the command. Defaults to ChatInput.</param>
 		/// <param name="nameLocalizations">The localizations of the command name.</param>
 		/// <param name="descriptionLocalizations">The localizations of the command description.</param>

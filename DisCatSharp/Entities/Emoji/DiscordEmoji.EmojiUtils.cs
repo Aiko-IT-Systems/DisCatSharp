@@ -32,12 +32,12 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets a mapping of :name: => unicode.
 		/// </summary>
-		private static IReadOnlyDictionary<string, string> UnicodeEmojis { get; }
+		private static IReadOnlyDictionary<string, string> s_unicodeEmojis { get; }
 
 		/// <summary>
 		/// Gets a mapping of unicode => :name:.
 		/// </summary>
-		private static IReadOnlyDictionary<string, string> DiscordNameLookup { get; }
+		private static IReadOnlyDictionary<string, string> s_discordNameLookup { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordEmoji"/> class.
@@ -51,7 +51,7 @@ namespace DisCatSharp.Entities
 			//   url               https://static.emzi0767.com/misc/discordEmojiMap.min.json
 			//   definition count  3,321
 
-			UnicodeEmojis = new Dictionary<string, string>
+			s_unicodeEmojis = new Dictionary<string, string>
 			{
 				[":100:"] = "\U0001f4af",
 				[":1234:"] = "\U0001f522",
@@ -6707,7 +6707,7 @@ namespace DisCatSharp.Entities
 				[":zzz:"] = "\U0001f4a4",
 			};
 
-			DiscordNameLookup = new Dictionary<string, string>
+			s_discordNameLookup = new Dictionary<string, string>
 			{
 				["\U0001f4af"] = ":100:",
 				["\U0001f522"] = ":1234:",

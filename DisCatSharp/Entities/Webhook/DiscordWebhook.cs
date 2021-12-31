@@ -163,7 +163,7 @@ namespace DisCatSharp.Entities
 		/// Executes this webhook with the given <see cref="DiscordWebhookBuilder"/>.
 		/// </summary>
 		/// <param name="builder">Webhook builder filled with data to send.</param>
-		/// <param name="thread_id">Target thread id (Optional). Defaults to null.</param>
+		/// <param name="threadId">Target thread id (Optional). Defaults to null.</param>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -174,7 +174,7 @@ namespace DisCatSharp.Entities
 		/// Executes this webhook in Slack compatibility mode.
 		/// </summary>
 		/// <param name="json">JSON containing Slack-compatible payload for this webhook.</param>
-		/// <param name="thread_id">Target thread id (Optional). Defaults to null.</param>
+		/// <param name="threadId">Target thread id (Optional). Defaults to null.</param>
 		/// <returns></returns>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -186,7 +186,7 @@ namespace DisCatSharp.Entities
 		/// Executes this webhook in GitHub compatibility mode.
 		/// </summary>
 		/// <param name="json">JSON containing GitHub-compatible payload for this webhook.</param>
-		/// <param name="thread_id">Target thread id (Optional). Defaults to null.</param>
+		/// <param name="threadId">Target thread id (Optional). Defaults to null.</param>
 		/// <returns></returns>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -199,7 +199,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="messageId">The id of the message to edit.</param>
 		/// <param name="builder">The builder of the message to edit.</param>
-		/// <param name="thread_id">Target thread id (Optional). Defaults to null.</param>
+		/// <param name="threadId">Target thread id (Optional). Defaults to null.</param>
 		/// <returns>The modified <see cref="DiscordMessage"/></returns>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>

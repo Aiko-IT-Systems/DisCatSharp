@@ -104,8 +104,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// Gets a list of registered commands. The key is the guild id (null if global).
 		/// </summary>
 		public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> RegisteredCommands
-			=> s_registeredCommands;
-		private static List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
+			=> _registeredCommands;
+		private static readonly List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> _registeredCommands = new();
 
 		/// <summary>
 		/// Gets a list of registered global commands.
@@ -637,7 +637,7 @@ namespace DisCatSharp.ApplicationCommands
 						s_subGroupCommands.AddRange(subGroupCommands);
 						s_contextMenuCommands.AddRange(contextMenuCommands);
 
-						s_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildid, commands.ToList()));
+						_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildid, commands.ToList()));
 
 						foreach (var command in commandMethods)
 						{
@@ -1381,7 +1381,7 @@ namespace DisCatSharp.ApplicationCommands
 			s_commandMethods.Clear();
 			s_groupCommands.Clear();
 			s_subGroupCommands.Clear();
-			s_registeredCommands.Clear();
+			_registeredCommands.Clear();
 			s_contextMenuCommands.Clear();
 			GlobalDiscordCommands.Clear();
 			GuildDiscordCommands.Clear();

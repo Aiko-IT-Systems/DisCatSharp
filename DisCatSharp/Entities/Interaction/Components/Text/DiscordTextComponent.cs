@@ -135,7 +135,7 @@ namespace DisCatSharp.Entities
 		/// <param name="minLength">The minimal length of text input.</param>
 		/// <param name="maxLength">The maximal length of text input.</param>
 		/// <param name="required">Whether this text component should be required.</param>
-		/// <param name="default_value">Pre-filled value for text field.</param>
+		/// <param name="defaultValue">Pre-filled value for text field.</param>
 		public DiscordTextComponent(TextComponentStyle style, string customId, string label, string placeholder = null, int? minLength = null, int? maxLength = null, bool required = true, string defaultValue = null)
 		{
 			this.Style = style;
