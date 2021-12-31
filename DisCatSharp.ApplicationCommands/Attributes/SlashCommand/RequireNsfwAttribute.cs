@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,22 +25,22 @@ using System.Threading.Tasks;
 
 namespace DisCatSharp.ApplicationCommands.Attributes
 {
-    /// <summary>
-    /// Defines that this application command is only usable within a guild.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class ApplicationCommandRequireNsfwAttribute : SlashCheckBaseAttribute
-    {
-        /// <summary>
-        /// Defines that this command is only usable within a guild.
-        /// </summary>
-        public ApplicationCommandRequireNsfwAttribute()
-        { }
+	/// <summary>
+	/// Defines that this application command is only usable within a guild.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	public sealed class ApplicationCommandRequireNsfwAttribute : SlashCheckBaseAttribute
+	{
+		/// <summary>
+		/// Defines that this command is only usable within a guild.
+		/// </summary>
+		public ApplicationCommandRequireNsfwAttribute()
+		{ }
 
-        /// <summary>
-        /// Runs checks.
-        /// </summary>
-        public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-            => Task.FromResult(ctx.Channel.Guild == null || ctx.Channel.IsNSFW);
-    }
+		/// <summary>
+		/// Runs checks.
+		/// </summary>
+		public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+			=> Task.FromResult(ctx.Channel.Guild == null || ctx.Channel.IsNSFW);
+	}
 }

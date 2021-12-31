@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -27,27 +27,27 @@ using System.Linq;
 
 namespace DisCatSharp.CommandsNext.Attributes
 {
-    /// <summary>
-    /// Adds aliases to this command or group.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class AliasesAttribute : Attribute
-    {
-        /// <summary>
-        /// Gets this group's aliases.
-        /// </summary>
-        public IReadOnlyList<string> Aliases { get; }
+	/// <summary>
+	/// Adds aliases to this command or group.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
+	public sealed class AliasesAttribute : Attribute
+	{
+		/// <summary>
+		/// Gets this group's aliases.
+		/// </summary>
+		public IReadOnlyList<string> Aliases { get; }
 
-        /// <summary>
-        /// Adds aliases to this command or group.
-        /// </summary>
-        /// <param name="aliases">Aliases to add to this command or group.</param>
-        public AliasesAttribute(params string[] aliases)
-        {
-            if (aliases.Any(xa => xa == null || xa.Any(xc => char.IsWhiteSpace(xc))))
-                throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.", nameof(aliases));
+		/// <summary>
+		/// Adds aliases to this command or group.
+		/// </summary>
+		/// <param name="aliases">Aliases to add to this command or group.</param>
+		public AliasesAttribute(params string[] aliases)
+		{
+			if (aliases.Any(xa => xa == null || xa.Any(xc => char.IsWhiteSpace(xc))))
+				throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.", nameof(aliases));
 
-            this.Aliases = new ReadOnlyCollection<string>(aliases);
-        }
-    }
+			this.Aliases = new ReadOnlyCollection<string>(aliases);
+		}
+	}
 }

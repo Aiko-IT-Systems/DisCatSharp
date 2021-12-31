@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,32 +24,32 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents a Discord guild's widget settings.
-    /// </summary>
-    public class DiscordWidgetSettings
-    {
-        /// <summary>
-        /// Gets the guild.
-        /// </summary>
-        internal DiscordGuild Guild { get; set; }
+	/// <summary>
+	/// Represents a Discord guild's widget settings.
+	/// </summary>
+	public class DiscordWidgetSettings
+	{
+		/// <summary>
+		/// Gets the guild.
+		/// </summary>
+		internal DiscordGuild Guild { get; set; }
 
-        /// <summary>
-        /// Gets the guild's widget channel id.
-        /// </summary>
-        [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong ChannelId { get; internal set; }
+		/// <summary>
+		/// Gets the guild's widget channel id.
+		/// </summary>
+		[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
+		public ulong ChannelId { get; internal set; }
 
-        /// <summary>
-        /// Gets the guild's widget channel.
-        /// </summary>
-        public DiscordChannel Channel
-            => this.Guild?.GetChannel(this.ChannelId);
+		/// <summary>
+		/// Gets the guild's widget channel.
+		/// </summary>
+		public DiscordChannel Channel
+			=> this.Guild?.GetChannel(this.ChannelId);
 
-        /// <summary>
-        /// Gets if the guild's widget is enabled.
-        /// </summary>
-        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
-        public bool IsEnabled { get; internal set; }
-    }
+		/// <summary>
+		/// Gets if the guild's widget is enabled.
+		/// </summary>
+		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
+		public bool IsEnabled { get; internal set; }
+	}
 }

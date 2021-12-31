@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,19 +24,19 @@ using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.CommandsNext
 {
-    /// <summary>
-    /// Contains well-defined event IDs used by CommandsNext.
-    /// </summary>
-    public static class CommandsNextEvents
-    {
-        /// <summary>
-        /// Miscellaneous events, that do not fit in any other category.
-        /// </summary>
-        internal static EventId Misc { get; } = new EventId(200, "CommandsNext");
+	/// <summary>
+	/// Contains well-defined event IDs used by CommandsNext.
+	/// </summary>
+	public static class CommandsNextEvents
+	{
+		/// <summary>
+		/// Miscellaneous events, that do not fit in any other category.
+		/// </summary>
+		internal static EventId Misc { get; } = new EventId(200, "CommandsNext");
 
-        /// <summary>
-        /// Events pertaining to Gateway Intents. Typically diagnostic information.
-        /// </summary>
-        internal static EventId Intents { get; } = new EventId(201, nameof(Intents));
-    }
+		/// <summary>
+		/// Events pertaining to Gateway Intents. Typically diagnostic information.
+		/// </summary>
+		internal static EventId Intents { get; } = new EventId(201, nameof(Intents));
+	}
 }

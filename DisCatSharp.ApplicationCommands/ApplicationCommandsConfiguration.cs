@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,51 +25,51 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// A configuration for a <see cref="ApplicationCommandsExtension"/>
-    /// </summary>
-    public class ApplicationCommandsConfiguration
-    {
-        /// <summary>
-        /// <para>Sets the service provider.</para>
-        /// <para>Objects in this provider are used when instantiating application command modules. This allows passing data around without resorting to static members.</para>
-        /// <para>Defaults to null.</para>
-        /// </summary>
-        public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
+	/// <summary>
+	/// A configuration for a <see cref="ApplicationCommandsExtension"/>
+	/// </summary>
+	public class ApplicationCommandsConfiguration
+	{
+		/// <summary>
+		/// <para>Sets the service provider.</para>
+		/// <para>Objects in this provider are used when instantiating application command modules. This allows passing data around without resorting to static members.</para>
+		/// <para>Defaults to null.</para>
+		/// </summary>
+		public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
 
-        /// <summary>
-        /// <para>Sets whether to enable default help command.</para>
-        /// <para>Disabling this will allow you to make your own help command.</para>
-        /// <para>
-        /// </para>
-        /// <para>Defaults to true.</para>
-        /// </summary>
-        public bool EnableDefaultHelp { internal get; set; } = true;
+		/// <summary>
+		/// <para>Sets whether to enable default help command.</para>
+		/// <para>Disabling this will allow you to make your own help command.</para>
+		/// <para>
+		/// </para>
+		/// <para>Defaults to true.</para>
+		/// </summary>
+		public bool EnableDefaultHelp { internal get; set; } = true;
 
-        /// <summary>
-        /// Debugs the startups expected and actual count.
-        /// </summary>
-        public bool DebugStartupCounts { internal get; set; } = false;
+		/// <summary>
+		/// Debugs the startups expected and actual count.
+		/// </summary>
+		public bool DebugStartupCounts { internal get; set; } = false;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
-        /// </summary>
-        /// <param name="provider">The service provider.</param>
-        [ActivatorUtilitiesConstructor]
-        public ApplicationCommandsConfiguration(IServiceProvider provider = null)
-        {
-            this.ServiceProvider = provider;
-        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
+		/// </summary>
+		/// <param name="provider">The service provider.</param>
+		[ActivatorUtilitiesConstructor]
+		public ApplicationCommandsConfiguration(IServiceProvider provider = null)
+		{
+			this.ServiceProvider = provider;
+		}
 
-        /// <summary>
-        /// Creates a new instance of <see cref="ApplicationCommandsConfiguration"/>, copying the properties of another configuration.
-        /// </summary>
-        /// <param name="acc">Configuration the properties of which are to be copied.</param>
-        public ApplicationCommandsConfiguration(ApplicationCommandsConfiguration acc)
-        {
-            this.EnableDefaultHelp = acc.EnableDefaultHelp;
-            this.ServiceProvider = acc.ServiceProvider;
-            this.DebugStartupCounts = acc.DebugStartupCounts;
-        }
-    }
+		/// <summary>
+		/// Creates a new instance of <see cref="ApplicationCommandsConfiguration"/>, copying the properties of another configuration.
+		/// </summary>
+		/// <param name="acc">Configuration the properties of which are to be copied.</param>
+		public ApplicationCommandsConfiguration(ApplicationCommandsConfiguration acc)
+		{
+			this.EnableDefaultHelp = acc.EnableDefaultHelp;
+			this.ServiceProvider = acc.ServiceProvider;
+			this.DebugStartupCounts = acc.DebugStartupCounts;
+		}
+	}
 }

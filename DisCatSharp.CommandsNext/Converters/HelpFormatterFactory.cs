@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,30 +24,30 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.CommandsNext.Converters
 {
-    /// <summary>
-    /// Represents the help formatter factory.
-    /// </summary>
-    internal class HelpFormatterFactory
-    {
-        /// <summary>
-        /// Gets or sets the factory.
-        /// </summary>
-        private ObjectFactory Factory { get; set; }
+	/// <summary>
+	/// Represents the help formatter factory.
+	/// </summary>
+	internal class HelpFormatterFactory
+	{
+		/// <summary>
+		/// Gets or sets the factory.
+		/// </summary>
+		private ObjectFactory Factory { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HelpFormatterFactory"/> class.
-        /// </summary>
-        public HelpFormatterFactory() { }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HelpFormatterFactory"/> class.
+		/// </summary>
+		public HelpFormatterFactory() { }
 
-        /// <summary>
-        /// Sets the formatter type.
-        /// </summary>
-        public void SetFormatterType<T>() where T : BaseHelpFormatter => this.Factory = ActivatorUtilities.CreateFactory(typeof(T), new[] { typeof(CommandContext) });
+		/// <summary>
+		/// Sets the formatter type.
+		/// </summary>
+		public void SetFormatterType<T>() where T : BaseHelpFormatter => this.Factory = ActivatorUtilities.CreateFactory(typeof(T), new[] { typeof(CommandContext) });
 
-        /// <summary>
-        /// Creates the help formatter.
-        /// </summary>
-        /// <param name="ctx">The command context.</param>
-        public BaseHelpFormatter Create(CommandContext ctx) => this.Factory(ctx.Services, new object[] { ctx }) as BaseHelpFormatter;
-    }
+		/// <summary>
+		/// Creates the help formatter.
+		/// </summary>
+		/// <param name="ctx">The command context.</param>
+		public BaseHelpFormatter Create(CommandContext ctx) => this.Factory(ctx.Services, new object[] { ctx }) as BaseHelpFormatter;
+	}
 }

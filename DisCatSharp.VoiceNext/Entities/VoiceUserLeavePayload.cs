@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,15 +24,15 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.VoiceNext.Entities
 {
-    /// <summary>
-    /// The voice user leave payload.
-    /// </summary>
-    internal sealed class VoiceUserLeavePayload
-    {
-        /// <summary>
-        /// Gets or sets the user id.
-        /// </summary>
-        [JsonProperty("user_id")]
-        public ulong UserId { get; set; }
-    }
+	/// <summary>
+	/// The voice user leave payload.
+	/// </summary>
+	internal sealed class VoiceUserLeavePayload
+	{
+		/// <summary>
+		/// Gets or sets the user id.
+		/// </summary>
+		[JsonProperty("user_id")]
+		public ulong UserId { get; set; }
+	}
 }

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,14 +22,14 @@
 
 namespace DisCatSharp.Net.Models
 {
-    /// <summary>
-    /// Represents the base edit model.
-    /// </summary>
-    public class BaseEditModel
-    {
-        /// <summary>
-        /// Reason given in audit logs
-        /// </summary>
-        public string AuditLogReason { internal get; set; }
-    }
+	/// <summary>
+	/// Represents the base edit model.
+	/// </summary>
+	public class BaseEditModel
+	{
+		/// <summary>
+		/// Reason given in audit logs
+		/// </summary>
+		public string AuditLogReason { internal get; set; }
+	}
 }

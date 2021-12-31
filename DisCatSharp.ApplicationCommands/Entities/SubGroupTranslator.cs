@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,39 +26,39 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Represents a sub group translator.
-    /// </summary>
-    internal class SubGroupTranslator
-    {
-        /// <summary>
-        /// Gets the sub group name.
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name { get; set; }
+	/// <summary>
+	/// Represents a sub group translator.
+	/// </summary>
+	internal class SubGroupTranslator
+	{
+		/// <summary>
+		/// Gets the sub group name.
+		/// </summary>
+		[JsonProperty("name")]
+		public string Name { get; set; }
 
-        /// <summary>
-        /// Gets the sub group name translations.
-        /// </summary>
-        [JsonProperty("name_translations")]
-        internal Dictionary<string, string> NT { get; set; }
-        [JsonIgnore]
-        public DiscordApplicationCommandLocalization NameTranslations
-            => new(this.NT);
+		/// <summary>
+		/// Gets the sub group name translations.
+		/// </summary>
+		[JsonProperty("name_translations")]
+		internal Dictionary<string, string> NT { get; set; }
+		[JsonIgnore]
+		public DiscordApplicationCommandLocalization NameTranslations
+			=> new(this.NT);
 
-        /// <summary>
-        /// Gets the sub group description translations.
-        /// </summary>
-        [JsonProperty("description_translations")]
-        internal Dictionary<string, string> DT { get; set; }
-        [JsonIgnore]
-        public DiscordApplicationCommandLocalization DescriptionTranslations
-            => new(this.DT);
+		/// <summary>
+		/// Gets the sub group description translations.
+		/// </summary>
+		[JsonProperty("description_translations")]
+		internal Dictionary<string, string> DT { get; set; }
+		[JsonIgnore]
+		public DiscordApplicationCommandLocalization DescriptionTranslations
+			=> new(this.DT);
 
-        /// <summary>
-        /// Gets the command translators.
-        /// </summary>
-        [JsonProperty("commands")]
-        public List<CommandTranslator> Commands { get; set; }
-    }
+		/// <summary>
+		/// Gets the command translators.
+		/// </summary>
+		[JsonProperty("commands")]
+		public List<CommandTranslator> Commands { get; set; }
+	}
 }

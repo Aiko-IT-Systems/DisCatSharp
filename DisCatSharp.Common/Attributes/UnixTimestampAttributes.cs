@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,19 +24,19 @@ using System;
 
 namespace DisCatSharp.Common.Serialization
 {
-    /// <summary>
-    /// <para>Specifies that this <see cref="System.DateTime"/> or <see cref="System.DateTimeOffset"/> will be serialized as Unix timestamp seconds.</para>
-    /// <para>This value will always be serialized as a number.</para>
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class UnixSecondsAttribute : SerializationAttribute
-    { }
+	/// <summary>
+	/// <para>Specifies that this <see cref="System.DateTime"/> or <see cref="System.DateTimeOffset"/> will be serialized as Unix timestamp seconds.</para>
+	/// <para>This value will always be serialized as a number.</para>
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+	public sealed class UnixSecondsAttribute : SerializationAttribute
+	{ }
 
-    /// <summary>
-    /// <para>Specifies that this <see cref="System.DateTime"/> or <see cref="System.DateTimeOffset"/> will be serialized as Unix timestamp milliseconds.</para>
-    /// <para>This value will always be serialized as a number.</para>
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class UnixMillisecondsAttribute : SerializationAttribute
-    { }
+	/// <summary>
+	/// <para>Specifies that this <see cref="System.DateTime"/> or <see cref="System.DateTimeOffset"/> will be serialized as Unix timestamp milliseconds.</para>
+	/// <para>This value will always be serialized as a number.</para>
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+	public sealed class UnixMillisecondsAttribute : SerializationAttribute
+	{ }
 }

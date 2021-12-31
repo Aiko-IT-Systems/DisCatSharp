@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,29 +24,29 @@ using System.Collections.Generic;
 
 namespace DisCatSharp.Net
 {
-    /// <summary>
-    /// Represents a response sent by the remote HTTP party.
-    /// </summary>
-    public sealed class RestResponse
-    {
-        /// <summary>
-        /// Gets the response code sent by the remote party.
-        /// </summary>
-        public int ResponseCode { get; internal set; }
+	/// <summary>
+	/// Represents a response sent by the remote HTTP party.
+	/// </summary>
+	public sealed class RestResponse
+	{
+		/// <summary>
+		/// Gets the response code sent by the remote party.
+		/// </summary>
+		public int ResponseCode { get; internal set; }
 
-        /// <summary>
-        /// Gets the headers sent by the remote party.
-        /// </summary>
-        public IReadOnlyDictionary<string, string> Headers { get; internal set; }
+		/// <summary>
+		/// Gets the headers sent by the remote party.
+		/// </summary>
+		public IReadOnlyDictionary<string, string> Headers { get; internal set; }
 
-        /// <summary>
-        /// Gets the contents of the response sent by the remote party.
-        /// </summary>
-        public string Response { get; internal set; }
+		/// <summary>
+		/// Gets the contents of the response sent by the remote party.
+		/// </summary>
+		public string Response { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RestResponse"/> class.
-        /// </summary>
-        internal RestResponse() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="RestResponse"/> class.
+		/// </summary>
+		internal RestResponse() { }
+	}
 }

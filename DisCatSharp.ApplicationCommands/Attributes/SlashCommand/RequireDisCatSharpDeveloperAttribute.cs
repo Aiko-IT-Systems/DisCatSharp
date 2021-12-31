@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,25 +26,25 @@ using System.Threading.Tasks;
 
 namespace DisCatSharp.ApplicationCommands.Attributes
 {
-    /// <summary>
-    /// Defines that this application command is restricted to the owner of the bot.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class ApplicationCommandRequireDisCatSharpDeveloperAttribute : SlashCheckBaseAttribute
-    {
-        /// <summary>
-        /// Defines that this application command is restricted to the owner of the bot.
-        /// </summary>
-        public ApplicationCommandRequireDisCatSharpDeveloperAttribute()
-        { }
+	/// <summary>
+	/// Defines that this application command is restricted to the owner of the bot.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	public sealed class ApplicationCommandRequireDisCatSharpDeveloperAttribute : SlashCheckBaseAttribute
+	{
+		/// <summary>
+		/// Defines that this application command is restricted to the owner of the bot.
+		/// </summary>
+		public ApplicationCommandRequireDisCatSharpDeveloperAttribute()
+		{ }
 
-        /// <summary>
-        /// Runs checks.
-        /// </summary>
-        public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-        {
-            var team = ctx.Client.LibraryDeveloperTeam.Developers;
-            return team != null ? Task.FromResult(team.Where(x => x.Id == ctx.User.Id).Any()) : Task.FromResult(false);
-        }
-    }
+		/// <summary>
+		/// Runs checks.
+		/// </summary>
+		public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+		{
+			var team = ctx.Client.LibraryDeveloperTeam.Developers;
+			return team != null ? Task.FromResult(team.Where(x => x.Id == ctx.User.Id).Any()) : Task.FromResult(false);
+		}
+	}
 }

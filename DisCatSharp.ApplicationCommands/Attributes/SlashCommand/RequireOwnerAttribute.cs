@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,27 +26,27 @@ using System.Threading.Tasks;
 
 namespace DisCatSharp.ApplicationCommands.Attributes
 {
-    /// <summary>
-    /// Defines that this application command is restricted to the owner of the bot.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class ApplicationCommandRequireOwnerAttribute : SlashCheckBaseAttribute
-    {
-        /// <summary>
-        /// Defines that this application command is restricted to the owner of the bot.
-        /// </summary>
-        public ApplicationCommandRequireOwnerAttribute()
-        { }
+	/// <summary>
+	/// Defines that this application command is restricted to the owner of the bot.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	public sealed class ApplicationCommandRequireOwnerAttribute : SlashCheckBaseAttribute
+	{
+		/// <summary>
+		/// Defines that this application command is restricted to the owner of the bot.
+		/// </summary>
+		public ApplicationCommandRequireOwnerAttribute()
+		{ }
 
-        /// <summary>
-        /// Runs checks.
-        /// </summary>
-        public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-        {
-            var app = ctx.Client.CurrentApplication;
-            var me = ctx.Client.CurrentUser;
+		/// <summary>
+		/// Runs checks.
+		/// </summary>
+		public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+		{
+			var app = ctx.Client.CurrentApplication;
+			var me = ctx.Client.CurrentUser;
 
-            return app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
-        }
-    }
+			return app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
+		}
+	}
 }

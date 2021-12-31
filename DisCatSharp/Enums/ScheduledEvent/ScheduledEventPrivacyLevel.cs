@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,19 +22,19 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents the privacy level for a guild scheduled event.
-    /// </summary>
-    public enum ScheduledEventPrivacyLevel : int
-    {
-        /// <summary>
-        /// Indicates that the guild scheduled event is public and available in discovery.
-        /// </summary>
-        Public = 1,
+	/// <summary>
+	/// Represents the privacy level for a guild scheduled event.
+	/// </summary>
+	public enum ScheduledEventPrivacyLevel : int
+	{
+		/// <summary>
+		/// Indicates that the guild scheduled event is public and available in discovery.
+		/// </summary>
+		Public = 1,
 
-        /// <summary>
-        /// Indicates that the the guild scheduled event is only accessable to guild members.
-        /// </summary>
-        GuildOnly = 2
-    }
+		/// <summary>
+		/// Indicates that the the guild scheduled event is only accessable to guild members.
+		/// </summary>
+		GuildOnly = 2
+	}
 }

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,24 +24,24 @@ using System;
 
 namespace DisCatSharp.CommandsNext.Attributes
 {
-    /// <summary>
-    /// Gives this command, group, or argument a description, which is used when listing help.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Parameter, AllowMultiple = false)]
-    public sealed class DescriptionAttribute : Attribute
-    {
-        /// <summary>
-        /// Gets the description for this command, group, or argument.
-        /// </summary>
-        public string Description { get; }
+	/// <summary>
+	/// Gives this command, group, or argument a description, which is used when listing help.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Parameter, AllowMultiple = false)]
+	public sealed class DescriptionAttribute : Attribute
+	{
+		/// <summary>
+		/// Gets the description for this command, group, or argument.
+		/// </summary>
+		public string Description { get; }
 
-        /// <summary>
-        /// Gives this command, group, or argument a description, which is used when listing help.
-        /// </summary>
-        /// <param name="description"></param>
-        public DescriptionAttribute(string description)
-        {
-            this.Description = description;
-        }
-    }
+		/// <summary>
+		/// Gives this command, group, or argument a description, which is used when listing help.
+		/// </summary>
+		/// <param name="description"></param>
+		public DescriptionAttribute(string description)
+		{
+			this.Description = description;
+		}
+	}
 }

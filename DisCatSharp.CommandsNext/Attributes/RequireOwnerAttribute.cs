@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,23 +26,23 @@ using System.Threading.Tasks;
 
 namespace DisCatSharp.CommandsNext.Attributes
 {
-    /// <summary>
-    /// Defines that usage of this command is restricted to the owner of the bot.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class RequireOwnerAttribute : CheckBaseAttribute
-    {
-        /// <summary>
-        /// Executes the a check.
-        /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
-        {
-            var app = ctx.Client.CurrentApplication;
-            var me = ctx.Client.CurrentUser;
+	/// <summary>
+	/// Defines that usage of this command is restricted to the owner of the bot.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	public sealed class RequireOwnerAttribute : CheckBaseAttribute
+	{
+		/// <summary>
+		/// Executes the a check.
+		/// </summary>
+		/// <param name="ctx">The command context.</param>
+		/// <param name="help">If true, help - returns true.</param>
+		public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
+		{
+			var app = ctx.Client.CurrentApplication;
+			var me = ctx.Client.CurrentUser;
 
-            return app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
-        }
-    }
+			return app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
+		}
+	}
 }

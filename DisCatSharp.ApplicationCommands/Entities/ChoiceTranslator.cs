@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,21 +26,21 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    public class ChoiceTranslator
-    {
-        /// <summary>
-        /// Gets the choice name.
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name { get; set; }
+	public class ChoiceTranslator
+	{
+		/// <summary>
+		/// Gets the choice name.
+		/// </summary>
+		[JsonProperty("name")]
+		public string Name { get; set; }
 
-        /// <summary>
-        /// Gets the choice name translations.
-        /// </summary>
-        [JsonProperty("name_translations")]
-        internal Dictionary<string, string> NT { get; set; }
-        [JsonIgnore]
-        public DiscordApplicationCommandLocalization NameTranslations
-            => new(this.NT);
-    }
+		/// <summary>
+		/// Gets the choice name translations.
+		/// </summary>
+		[JsonProperty("name_translations")]
+		internal Dictionary<string, string> NT { get; set; }
+		[JsonIgnore]
+		public DiscordApplicationCommandLocalization NameTranslations
+			=> new(this.NT);
+	}
 }

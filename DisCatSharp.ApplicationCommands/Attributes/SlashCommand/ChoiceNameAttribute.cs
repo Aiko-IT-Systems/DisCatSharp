@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,24 +24,24 @@ using System;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Sets the name for this enum choice.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
-    public class ChoiceNameAttribute : Attribute
-    {
-        /// <summary>
-        /// The name.
-        /// </summary>
-        public string Name { get; set; }
+	/// <summary>
+	/// Sets the name for this enum choice.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
+	public class ChoiceNameAttribute : Attribute
+	{
+		/// <summary>
+		/// The name.
+		/// </summary>
+		public string Name { get; set; }
 
-        /// <summary>
-        /// Sets the name for this enum choice.
-        /// </summary>
-        /// <param name="name">The name for this enum choice.</param>
-        public ChoiceNameAttribute(string name)
-        {
-            this.Name = name;
-        }
-    }
+		/// <summary>
+		/// Sets the name for this enum choice.
+		/// </summary>
+		/// <param name="name">The name for this enum choice.</param>
+		public ChoiceNameAttribute(string name)
+		{
+			this.Name = name;
+		}
+	}
 }

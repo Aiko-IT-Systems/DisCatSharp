@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,10 +24,10 @@ using System;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Prevents this field or property from having its value injected by dependency injection.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public class DontInjectAttribute : Attribute
-    { }
+	/// <summary>
+	/// Prevents this field or property from having its value injected by dependency injection.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+	public class DontInjectAttribute : Attribute
+	{ }
 }

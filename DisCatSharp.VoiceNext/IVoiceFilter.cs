@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,17 +24,17 @@ using System;
 
 namespace DisCatSharp.VoiceNext
 {
-    /// <summary>
-    /// Represents a filter for PCM data. PCM data submitted through a <see cref="VoiceTransmitSink"/> will be sent through all installed instances of <see cref="IVoiceFilter"/> first.
-    /// </summary>
-    public interface IVoiceFilter
-    {
-        /// <summary>
-        /// Transforms the supplied PCM data using this filter.
-        /// </summary>
-        /// <param name="pcmData">PCM data to transform. The transformation happens in-place.</param>
-        /// <param name="pcmFormat">Format of the supplied PCM data.</param>
-        /// <param name="duration">Millisecond duration of the supplied PCM data.</param>
-        void Transform(Span<short> pcmData, AudioFormat pcmFormat, int duration);
-    }
+	/// <summary>
+	/// Represents a filter for PCM data. PCM data submitted through a <see cref="VoiceTransmitSink"/> will be sent through all installed instances of <see cref="IVoiceFilter"/> first.
+	/// </summary>
+	public interface IVoiceFilter
+	{
+		/// <summary>
+		/// Transforms the supplied PCM data using this filter.
+		/// </summary>
+		/// <param name="pcmData">PCM data to transform. The transformation happens in-place.</param>
+		/// <param name="pcmFormat">Format of the supplied PCM data.</param>
+		/// <param name="duration">Millisecond duration of the supplied PCM data.</param>
+		void Transform(Span<short> pcmData, AudioFormat pcmFormat, int duration);
+	}
 }

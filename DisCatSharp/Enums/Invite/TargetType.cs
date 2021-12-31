@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,19 +22,19 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents the type of user who the invite is for.
-    /// </summary>
-    public enum TargetType
-    {
-        /// <summary>
-        /// Represents a streaming invite.
-        /// </summary>
-        Streaming = 1,
+	/// <summary>
+	/// Represents the type of user who the invite is for.
+	/// </summary>
+	public enum TargetType
+	{
+		/// <summary>
+		/// Represents a streaming invite.
+		/// </summary>
+		Streaming = 1,
 
-        /// <summary>
-        /// Represents a activity invite.
-        /// </summary>
-        EmbeddedApplication = 2
-    }
+		/// <summary>
+		/// Represents a activity invite.
+		/// </summary>
+		EmbeddedApplication = 2
+	}
 }

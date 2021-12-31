@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -30,125 +30,125 @@ using DisCatSharp.Entities;
 
 namespace DisCatSharp.Interactivity.EventHandling
 {
-    /// <summary>
-    /// The poll request.
-    /// </summary>
-    public class PollRequest
-    {
-        internal TaskCompletionSource<bool> _tcs;
-        internal CancellationTokenSource _ct;
-        internal TimeSpan _timeout;
-        internal ConcurrentHashSet<PollEmoji> _collected;
-        internal DiscordMessage _message;
-        internal IEnumerable<DiscordEmoji> _emojis;
+	/// <summary>
+	/// The poll request.
+	/// </summary>
+	public class PollRequest
+	{
+		internal TaskCompletionSource<bool> _tcs;
+		internal CancellationTokenSource _ct;
+		internal TimeSpan _timeout;
+		internal ConcurrentHashSet<PollEmoji> _collected;
+		internal DiscordMessage _message;
+		internal IEnumerable<DiscordEmoji> _emojis;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="timeout"></param>
-        /// <param name="emojis"></param>
-        public PollRequest(DiscordMessage message, TimeSpan timeout, IEnumerable<DiscordEmoji> emojis)
-        {
-            this._tcs = new TaskCompletionSource<bool>();
-            this._ct = new CancellationTokenSource(timeout);
-            this._ct.Token.Register(() => this._tcs.TrySetResult(true));
-            this._timeout = timeout;
-            this._emojis = emojis;
-            this._collected = new ConcurrentHashSet<PollEmoji>();
-            this._message = message;
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="timeout"></param>
+		/// <param name="emojis"></param>
+		public PollRequest(DiscordMessage message, TimeSpan timeout, IEnumerable<DiscordEmoji> emojis)
+		{
+			this._tcs = new TaskCompletionSource<bool>();
+			this._ct = new CancellationTokenSource(timeout);
+			this._ct.Token.Register(() => this._tcs.TrySetResult(true));
+			this._timeout = timeout;
+			this._emojis = emojis;
+			this._collected = new ConcurrentHashSet<PollEmoji>();
+			this._message = message;
 
-            foreach (var e in emojis)
-            {
-                this._collected.Add(new PollEmoji(e));
-            }
-        }
+			foreach (var e in emojis)
+			{
+				this._collected.Add(new PollEmoji(e));
+			}
+		}
 
-        /// <summary>
-        /// Clears the collected.
-        /// </summary>
-        internal void ClearCollected()
-        {
-            this._collected.Clear();
-            foreach (var e in this._emojis)
-            {
-                this._collected.Add(new PollEmoji(e));
-            }
-        }
+		/// <summary>
+		/// Clears the collected.
+		/// </summary>
+		internal void ClearCollected()
+		{
+			this._collected.Clear();
+			foreach (var e in this._emojis)
+			{
+				this._collected.Add(new PollEmoji(e));
+			}
+		}
 
-        /// <summary>
-        /// Removes the reaction.
-        /// </summary>
-        /// <param name="emoji">The emoji.</param>
-        /// <param name="member">The member.</param>
-        internal void RemoveReaction(DiscordEmoji emoji, DiscordUser member)
-        {
-            if (this._collected.Any(x => x.Emoji == emoji))
-            {
-                if (this._collected.Any(x => x.Voted.Contains(member)))
-                {
-                    var e = this._collected.First(x => x.Emoji == emoji);
-                    this._collected.TryRemove(e);
-                    e.Voted.TryRemove(member);
-                    this._collected.Add(e);
-                }
-            }
-        }
+		/// <summary>
+		/// Removes the reaction.
+		/// </summary>
+		/// <param name="emoji">The emoji.</param>
+		/// <param name="member">The member.</param>
+		internal void RemoveReaction(DiscordEmoji emoji, DiscordUser member)
+		{
+			if (this._collected.Any(x => x.Emoji == emoji))
+			{
+				if (this._collected.Any(x => x.Voted.Contains(member)))
+				{
+					var e = this._collected.First(x => x.Emoji == emoji);
+					this._collected.TryRemove(e);
+					e.Voted.TryRemove(member);
+					this._collected.Add(e);
+				}
+			}
+		}
 
-        /// <summary>
-        /// Adds the reaction.
-        /// </summary>
-        /// <param name="emoji">The emoji.</param>
-        /// <param name="member">The member.</param>
-        internal void AddReaction(DiscordEmoji emoji, DiscordUser member)
-        {
-            if (this._collected.Any(x => x.Emoji == emoji))
-            {
-                if (!this._collected.Any(x => x.Voted.Contains(member)))
-                {
-                    var e = this._collected.First(x => x.Emoji == emoji);
-                    this._collected.TryRemove(e);
-                    e.Voted.Add(member);
-                    this._collected.Add(e);
-                }
-            }
-        }
+		/// <summary>
+		/// Adds the reaction.
+		/// </summary>
+		/// <param name="emoji">The emoji.</param>
+		/// <param name="member">The member.</param>
+		internal void AddReaction(DiscordEmoji emoji, DiscordUser member)
+		{
+			if (this._collected.Any(x => x.Emoji == emoji))
+			{
+				if (!this._collected.Any(x => x.Voted.Contains(member)))
+				{
+					var e = this._collected.First(x => x.Emoji == emoji);
+					this._collected.TryRemove(e);
+					e.Voted.Add(member);
+					this._collected.Add(e);
+				}
+			}
+		}
 
-        ~PollRequest()
-        {
-            this.Dispose();
-        }
+		~PollRequest()
+		{
+			this.Dispose();
+		}
 
-        /// <summary>
-        /// Disposes this PollRequest.
-        /// </summary>
-        public void Dispose()
-        {
-            this._ct.Dispose();
-            this._tcs = null;
-        }
-    }
+		/// <summary>
+		/// Disposes this PollRequest.
+		/// </summary>
+		public void Dispose()
+		{
+			this._ct.Dispose();
+			this._tcs = null;
+		}
+	}
 
-    /// <summary>
-    /// The poll emoji.
-    /// </summary>
-    public class PollEmoji
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PollEmoji"/> class.
-        /// </summary>
-        /// <param name="emoji">The emoji.</param>
-        internal PollEmoji(DiscordEmoji emoji)
-        {
-            this.Emoji = emoji;
-            this.Voted = new ConcurrentHashSet<DiscordUser>();
-        }
+	/// <summary>
+	/// The poll emoji.
+	/// </summary>
+	public class PollEmoji
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PollEmoji"/> class.
+		/// </summary>
+		/// <param name="emoji">The emoji.</param>
+		internal PollEmoji(DiscordEmoji emoji)
+		{
+			this.Emoji = emoji;
+			this.Voted = new ConcurrentHashSet<DiscordUser>();
+		}
 
-        public DiscordEmoji Emoji;
-        public ConcurrentHashSet<DiscordUser> Voted;
-        /// <summary>
-        /// Gets the total.
-        /// </summary>
-        public int Total => this.Voted.Count;
-    }
+		public DiscordEmoji Emoji;
+		public ConcurrentHashSet<DiscordUser> Voted;
+		/// <summary>
+		/// Gets the total.
+		/// </summary>
+		public int Total => this.Voted.Count;
+	}
 }

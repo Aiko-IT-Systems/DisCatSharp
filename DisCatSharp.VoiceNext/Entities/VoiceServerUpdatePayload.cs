@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,27 +24,27 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.VoiceNext.Entities
 {
-    /// <summary>
-    /// The voice server update payload.
-    /// </summary>
-    internal sealed class VoiceServerUpdatePayload
-    {
-        /// <summary>
-        /// Gets or sets the token.
-        /// </summary>
-        [JsonProperty("token")]
-        public string Token { get; set; }
+	/// <summary>
+	/// The voice server update payload.
+	/// </summary>
+	internal sealed class VoiceServerUpdatePayload
+	{
+		/// <summary>
+		/// Gets or sets the token.
+		/// </summary>
+		[JsonProperty("token")]
+		public string Token { get; set; }
 
-        /// <summary>
-        /// Gets or sets the guild id.
-        /// </summary>
-        [JsonProperty("guild_id")]
-        public ulong GuildId { get; set; }
+		/// <summary>
+		/// Gets or sets the guild id.
+		/// </summary>
+		[JsonProperty("guild_id")]
+		public ulong GuildId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the endpoint.
-        /// </summary>
-        [JsonProperty("endpoint")]
-        public string Endpoint { get; set; }
-    }
+		/// <summary>
+		/// Gets or sets the endpoint.
+		/// </summary>
+		[JsonProperty("endpoint")]
+		public string Endpoint { get; set; }
+	}
 }

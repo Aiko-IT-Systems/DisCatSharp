@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,32 +24,32 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents a field inside a discord embed.
-    /// </summary>
-    public sealed class DiscordEmbedField
-    {
-        /// <summary>
-        /// Gets the name of the field.
-        /// </summary>
-        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
+	/// <summary>
+	/// Represents a field inside a discord embed.
+	/// </summary>
+	public sealed class DiscordEmbedField
+	{
+		/// <summary>
+		/// Gets the name of the field.
+		/// </summary>
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		public string Name { get; set; }
 
-        /// <summary>
-        /// Gets the value of the field.
-        /// </summary>
-        [JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
-        public string Value { get; set; }
+		/// <summary>
+		/// Gets the value of the field.
+		/// </summary>
+		[JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
+		public string Value { get; set; }
 
-        /// <summary>
-        /// Gets whether or not this field should display inline.
-        /// </summary>
-        [JsonProperty("inline", NullValueHandling = NullValueHandling.Ignore)]
-        public bool Inline { get; set; }
+		/// <summary>
+		/// Gets whether or not this field should display inline.
+		/// </summary>
+		[JsonProperty("inline", NullValueHandling = NullValueHandling.Ignore)]
+		public bool Inline { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordEmbedField"/> class.
-        /// </summary>
-        internal DiscordEmbedField() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordEmbedField"/> class.
+		/// </summary>
+		internal DiscordEmbedField() { }
+	}
 }

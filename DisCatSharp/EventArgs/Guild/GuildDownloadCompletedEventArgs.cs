@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,25 +26,25 @@ using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.GuildDownloadCompleted"/> event.
-    /// </summary>
-    public class GuildDownloadCompletedEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the dictionary of guilds that just finished downloading.
-        /// </summary>
-        public IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.GuildDownloadCompleted"/> event.
+	/// </summary>
+	public class GuildDownloadCompletedEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the dictionary of guilds that just finished downloading.
+		/// </summary>
+		public IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GuildDownloadCompletedEventArgs"/> class.
-        /// </summary>
-        /// <param name="guilds">The guilds.</param>
-        /// <param name="provider">Service provider.</param>
-        internal GuildDownloadCompletedEventArgs(IReadOnlyDictionary<ulong, DiscordGuild> guilds, IServiceProvider provider)
-            : base(provider)
-        {
-            this.Guilds = guilds;
-        }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GuildDownloadCompletedEventArgs"/> class.
+		/// </summary>
+		/// <param name="guilds">The guilds.</param>
+		/// <param name="provider">Service provider.</param>
+		internal GuildDownloadCompletedEventArgs(IReadOnlyDictionary<ulong, DiscordGuild> guilds, IServiceProvider provider)
+			: base(provider)
+		{
+			this.Guilds = guilds;
+		}
+	}
 }

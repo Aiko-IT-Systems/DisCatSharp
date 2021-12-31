@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,29 +22,29 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents notification settings for a thread.
-    /// </summary>
-    public enum ThreadMemberFlags : int
-    {
-        /// <summary>
-        /// Indicates that the notification setting is set to has interacted.
-        /// </summary>
-        HasInteracted = 1,
+	/// <summary>
+	/// Represents notification settings for a thread.
+	/// </summary>
+	public enum ThreadMemberFlags : int
+	{
+		/// <summary>
+		/// Indicates that the notification setting is set to has interacted.
+		/// </summary>
+		HasInteracted = 1,
 
-        /// <summary>
-        /// Indicates that the notification setting is set to all messages.
-        /// </summary>
-        AllMessages = 2,
+		/// <summary>
+		/// Indicates that the notification setting is set to all messages.
+		/// </summary>
+		AllMessages = 2,
 
-        /// <summary>
-        /// Indicates that the notification setting is set to only mentions.
-        /// </summary>
-        OnlyMentions = 4,
+		/// <summary>
+		/// Indicates that the notification setting is set to only mentions.
+		/// </summary>
+		OnlyMentions = 4,
 
-        /// <summary>
-        /// Indicates that the notification setting is set to none.
-        /// </summary>
-        None = 8
-    }
+		/// <summary>
+		/// Indicates that the notification setting is set to none.
+		/// </summary>
+		None = 8
+	}
 }

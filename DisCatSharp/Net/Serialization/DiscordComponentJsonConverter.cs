@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -28,62 +28,62 @@ using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.Net.Serialization
 {
-    /// <summary>
-    /// Represents a discord component json converter.
-    /// </summary>
-    internal sealed class DiscordComponentJsonConverter : JsonConverter
-    {
-        /// <summary>
-        /// Whether the converter can write.
-        /// </summary>
-        public override bool CanWrite => false;
+	/// <summary>
+	/// Represents a discord component json converter.
+	/// </summary>
+	internal sealed class DiscordComponentJsonConverter : JsonConverter
+	{
+		/// <summary>
+		/// Whether the converter can write.
+		/// </summary>
+		public override bool CanWrite => false;
 
-        /// <summary>
-        /// Writes the json.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => throw new NotImplementedException();
+		/// <summary>
+		/// Writes the json.
+		/// </summary>
+		/// <param name="writer">The writer.</param>
+		/// <param name="value">The value.</param>
+		/// <param name="serializer">The serializer.</param>
+		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => throw new NotImplementedException();
 
-        /// <summary>
-        /// Reads the json.
-        /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="objectType">The object type.</param>
-        /// <param name="existingValue">The existing value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.Null)
-                return null;
+		/// <summary>
+		/// Reads the json.
+		/// </summary>
+		/// <param name="reader">The reader.</param>
+		/// <param name="objectType">The object type.</param>
+		/// <param name="existingValue">The existing value.</param>
+		/// <param name="serializer">The serializer.</param>
+		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+		{
+			if (reader.TokenType == JsonToken.Null)
+				return null;
 
-            var job = JObject.Load(reader);
-            var type = job["type"]?.ToObject<ComponentType>();
+			var job = JObject.Load(reader);
+			var type = job["type"]?.ToObject<ComponentType>();
 
-            if (type == null)
-                throw new ArgumentException($"Value {reader} does not have a component type specifier");
+			if (type == null)
+				throw new ArgumentException($"Value {reader} does not have a component type specifier");
 
-            var cmp = type switch
-            {
-                ComponentType.ActionRow => new DiscordActionRowComponent(),
-                ComponentType.Button => new DiscordButtonComponent(),
-                ComponentType.Select => new DiscordSelectComponent(),
-                ComponentType.InputText => new DiscordTextComponent(),
-                _ => new DiscordComponent() { Type = type.Value }
-            };
+			var cmp = type switch
+			{
+				ComponentType.ActionRow => new DiscordActionRowComponent(),
+				ComponentType.Button => new DiscordButtonComponent(),
+				ComponentType.Select => new DiscordSelectComponent(),
+				ComponentType.InputText => new DiscordTextComponent(),
+				_ => new DiscordComponent() { Type = type.Value }
+			};
 
-            // Populate the existing component with the values in the JObject. This avoids a recursive JsonConverter loop
-            using var jreader = job.CreateReader();
-            serializer.Populate(jreader, cmp);
+			// Populate the existing component with the values in the JObject. This avoids a recursive JsonConverter loop
+			using var jreader = job.CreateReader();
+			serializer.Populate(jreader, cmp);
 
-            return cmp;
-        }
+			return cmp;
+		}
 
-        /// <summary>
-        /// Whether the json can convert.
-        /// </summary>
-        /// <param name="objectType">The object type.</param>
-        public override bool CanConvert(Type objectType) => typeof(DiscordComponent).IsAssignableFrom(objectType);
-    }
+		/// <summary>
+		/// Whether the json can convert.
+		/// </summary>
+		/// <param name="objectType">The object type.</param>
+		public override bool CanConvert(Type objectType) => typeof(DiscordComponent).IsAssignableFrom(objectType);
+	}
 }

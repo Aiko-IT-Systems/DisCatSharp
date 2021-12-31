@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,14 +24,14 @@ using System;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.Ready"/> event.
-    /// </summary>
-    public sealed class ReadyEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ReadyEventArgs"/> class.
-        /// </summary>
-        internal ReadyEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.Ready"/> event.
+	/// </summary>
+	public sealed class ReadyEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ReadyEventArgs"/> class.
+		/// </summary>
+		internal ReadyEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

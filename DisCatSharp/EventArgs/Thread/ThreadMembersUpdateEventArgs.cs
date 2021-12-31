@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,45 +26,45 @@ using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.ThreadMembersUpdated"/> event.
-    /// </summary>
-    public class ThreadMembersUpdateEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the approximate number of members in the thread, capped at 50.
-        /// </summary>
-        public int MemberCount { get; internal set; }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.ThreadMembersUpdated"/> event.
+	/// </summary>
+	public class ThreadMembersUpdateEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the approximate number of members in the thread, capped at 50.
+		/// </summary>
+		public int MemberCount { get; internal set; }
 
-        /// <summary>
-        /// Gets the users who were removed from the thread.
-        /// </summary>
-        public IReadOnlyList<DiscordMember> RemovedMembers { get; internal set; }
+		/// <summary>
+		/// Gets the users who were removed from the thread.
+		/// </summary>
+		public IReadOnlyList<DiscordMember> RemovedMembers { get; internal set; }
 
 
-        /// <summary>
-        /// Gets the users who were added to the thread.
-        /// </summary>
-        public IReadOnlyList<DiscordThreadChannelMember> AddedMembers { get; internal set; }
+		/// <summary>
+		/// Gets the users who were added to the thread.
+		/// </summary>
+		public IReadOnlyList<DiscordThreadChannelMember> AddedMembers { get; internal set; }
 
-        /// <summary>
-        /// Gets the id of the thread.
-        /// </summary>
-        public ulong ThreadId { get; internal set; }
+		/// <summary>
+		/// Gets the id of the thread.
+		/// </summary>
+		public ulong ThreadId { get; internal set; }
 
-        /// <summary>
-        /// Gets the id of the thread.
-        /// </summary>
-        public DiscordThreadChannel Thread { get; internal set; }
+		/// <summary>
+		/// Gets the id of the thread.
+		/// </summary>
+		public DiscordThreadChannel Thread { get; internal set; }
 
-        /// <summary>
-        /// Gets the guild.
-        /// </summary>
-        public DiscordGuild Guild { get; internal set; }
+		/// <summary>
+		/// Gets the guild.
+		/// </summary>
+		public DiscordGuild Guild { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThreadMembersUpdateEventArgs"/> class.
-        /// </summary>
-        internal ThreadMembersUpdateEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ThreadMembersUpdateEventArgs"/> class.
+		/// </summary>
+		internal ThreadMembersUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,34 +22,34 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents a server's premium tier.
-    /// </summary>
-    public enum PremiumTier : int
-    {
-        /// <summary>
-        /// Indicates that this server was not boosted.
-        /// </summary>
-        None = 0,
+	/// <summary>
+	/// Represents a server's premium tier.
+	/// </summary>
+	public enum PremiumTier : int
+	{
+		/// <summary>
+		/// Indicates that this server was not boosted.
+		/// </summary>
+		None = 0,
 
-        /// <summary>
-        /// Indicates that this server was boosted two times.
-        /// </summary>
-        TierOne = 1,
+		/// <summary>
+		/// Indicates that this server was boosted two times.
+		/// </summary>
+		TierOne = 1,
 
-        /// <summary>
-        /// Indicates that this server was boosted seven times.
-        /// </summary>
-        TierTwo = 2,
+		/// <summary>
+		/// Indicates that this server was boosted seven times.
+		/// </summary>
+		TierTwo = 2,
 
-        /// <summary>
-        /// Indicates that this server was boosted fourteen times.
-        /// </summary>
-        TierThree = 3,
+		/// <summary>
+		/// Indicates that this server was boosted fourteen times.
+		/// </summary>
+		TierThree = 3,
 
-        /// <summary>
-        /// Indicates an unknown premium tier.
-        /// </summary>
-        Unknown = int.MaxValue
-    }
+		/// <summary>
+		/// Indicates an unknown premium tier.
+		/// </summary>
+		Unknown = int.MaxValue
+	}
 }

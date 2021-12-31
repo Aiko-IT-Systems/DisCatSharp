@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,129 +25,129 @@ using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Represents a application commands translation resolver.
-    /// </summary>
-    public class ApplicationCommandsTranslationResolver
-    {
+	/// <summary>
+	/// Represents a application commands translation resolver.
+	/// </summary>
+	public class ApplicationCommandsTranslationResolver
+	{
 #pragma warning disable IDE1006
-        /// <summary>
-        /// Gets the group translations.
-        /// </summary>
-        public IReadOnlyDictionary<string, GroupTranslation> GroupTranslations => this._groupTranslations;
-        private Dictionary<string, GroupTranslation> _groupTranslations => new();
+		/// <summary>
+		/// Gets the group translations.
+		/// </summary>
+		public IReadOnlyDictionary<string, GroupTranslation> GroupTranslations => this._groupTranslations;
+		private Dictionary<string, GroupTranslation> _groupTranslations => new();
 
-        /// <summary>
-        /// Gets the sub group translations.
-        /// </summary>
-        public IReadOnlyDictionary<string, SubGroupTranslation> SubGroupTranslations => this._subGroupTranslations;
-        private Dictionary<string, SubGroupTranslation> _subGroupTranslations => new();
+		/// <summary>
+		/// Gets the sub group translations.
+		/// </summary>
+		public IReadOnlyDictionary<string, SubGroupTranslation> SubGroupTranslations => this._subGroupTranslations;
+		private Dictionary<string, SubGroupTranslation> _subGroupTranslations => new();
 
-        /// <summary>
-        /// Gets the command translations.
-        /// </summary>
-        public IReadOnlyDictionary<string, CommandTranslation> CommandTranslations => this._commandTranslations;
-        private Dictionary<string, CommandTranslation> _commandTranslations => new();
+		/// <summary>
+		/// Gets the command translations.
+		/// </summary>
+		public IReadOnlyDictionary<string, CommandTranslation> CommandTranslations => this._commandTranslations;
+		private Dictionary<string, CommandTranslation> _commandTranslations => new();
 
 #pragma warning restore IDE1006
-    }
+	}
 
-    public class GroupTranslation
-    {
-        /// <summary>
-        /// Gets the group name.
-        /// </summary>
-        public string GroupName { get; set; }
+	public class GroupTranslation
+	{
+		/// <summary>
+		/// Gets the group name.
+		/// </summary>
+		public string GroupName { get; set; }
 
-        public DiscordApplicationCommandLocalization GroupNameLocalizations { get; set; }
+		public DiscordApplicationCommandLocalization GroupNameLocalizations { get; set; }
 
-        public DiscordApplicationCommandLocalization GroupDescriptionLocalizations { get; set; }
+		public DiscordApplicationCommandLocalization GroupDescriptionLocalizations { get; set; }
 
-        /// <summary>
-        /// Gets the sub group translations.
-        /// </summary>
-        public Dictionary<string, SubGroupTranslation> SubGroupTranslations { get; set; }
+		/// <summary>
+		/// Gets the sub group translations.
+		/// </summary>
+		public Dictionary<string, SubGroupTranslation> SubGroupTranslations { get; set; }
 
-        /// <summary>
-        /// Gets the command translations.
-        /// </summary>
-        public Dictionary<string, CommandTranslation> CommandTranslations { get; set; }
-    }
+		/// <summary>
+		/// Gets the command translations.
+		/// </summary>
+		public Dictionary<string, CommandTranslation> CommandTranslations { get; set; }
+	}
 
-    public class SubGroupTranslation
-    {
-        /// <summary>
-        /// Gets the sub group name.
-        /// </summary>
-        public string SubGroupName { get; set; }
+	public class SubGroupTranslation
+	{
+		/// <summary>
+		/// Gets the sub group name.
+		/// </summary>
+		public string SubGroupName { get; set; }
 
-        public DiscordApplicationCommandLocalization SubGroupNameLocalizations { get; set; }
+		public DiscordApplicationCommandLocalization SubGroupNameLocalizations { get; set; }
 
-        public DiscordApplicationCommandLocalization SubGroupDescriptionLocalizations { get; set; }
+		public DiscordApplicationCommandLocalization SubGroupDescriptionLocalizations { get; set; }
 
-        /// <summary>
-        /// Gets the command translations.
-        /// </summary>
-        public Dictionary<string, CommandTranslation> CommandTranslations { get; set; }
-    }
+		/// <summary>
+		/// Gets the command translations.
+		/// </summary>
+		public Dictionary<string, CommandTranslation> CommandTranslations { get; set; }
+	}
 
-    public class CommandTranslation
-    {
-        /// <summary>
-        /// Gets the command name.
-        /// </summary>
-        public string CommandName { get; set; }
+	public class CommandTranslation
+	{
+		/// <summary>
+		/// Gets the command name.
+		/// </summary>
+		public string CommandName { get; set; }
 
-        public DiscordApplicationCommandLocalization CommandNameLocalizations { get; set; }
+		public DiscordApplicationCommandLocalization CommandNameLocalizations { get; set; }
 
-        public DiscordApplicationCommandLocalization CommandDescriptionLocalizations { get; set; }
+		public DiscordApplicationCommandLocalization CommandDescriptionLocalizations { get; set; }
 
-        /// <summary>
-        /// Gets the option translations.
-        /// </summary>
-        public Dictionary<string, OptionTranslation> OptionTranslations { get; set; }
-    }
+		/// <summary>
+		/// Gets the option translations.
+		/// </summary>
+		public Dictionary<string, OptionTranslation> OptionTranslations { get; set; }
+	}
 
-    public class OptionTranslation
-    {
-        /// <summary>
-        /// Gets the option name.
-        /// </summary>
-        public string OptionName { get; set; }
+	public class OptionTranslation
+	{
+		/// <summary>
+		/// Gets the option name.
+		/// </summary>
+		public string OptionName { get; set; }
 
-        public DiscordApplicationCommandLocalization OptionNameLocalizations { get; set; }
+		public DiscordApplicationCommandLocalization OptionNameLocalizations { get; set; }
 
-        public DiscordApplicationCommandLocalization OptionDescriptionLocalizations { get; set; }
+		public DiscordApplicationCommandLocalization OptionDescriptionLocalizations { get; set; }
 
-        /// <summary>
-        /// Gets the choice translations
-        /// </summary>
-        public Dictionary<string, ChoiceTranslation> ChoiceTranslations { get; set; }
+		/// <summary>
+		/// Gets the choice translations
+		/// </summary>
+		public Dictionary<string, ChoiceTranslation> ChoiceTranslations { get; set; }
 
-        /// <summary>
-        /// Gets the auto complete choice translations
-        /// </summary>
-        public Dictionary<string, AutocompleteChoiceTranslation> AutocompleteChoiceTranslations { get; set; }
-    }
+		/// <summary>
+		/// Gets the auto complete choice translations
+		/// </summary>
+		public Dictionary<string, AutocompleteChoiceTranslation> AutocompleteChoiceTranslations { get; set; }
+	}
 
-    public class AutocompleteChoiceTranslation
-    {
-        /// <summary>
-        /// Gets the autocomplete choice name.
-        /// </summary>
-        public string AutocompleteChoiceName { get; set; }
+	public class AutocompleteChoiceTranslation
+	{
+		/// <summary>
+		/// Gets the autocomplete choice name.
+		/// </summary>
+		public string AutocompleteChoiceName { get; set; }
 
-        public DiscordApplicationCommandLocalization AutocompleteNameLocalizations { get; set; }
+		public DiscordApplicationCommandLocalization AutocompleteNameLocalizations { get; set; }
 
-    }
+	}
 
-    public class ChoiceTranslation
-    {
-        /// <summary>
-        /// Gets the choice name
-        /// </summary>
-        public string ChoiceName { get; set; }
+	public class ChoiceTranslation
+	{
+		/// <summary>
+		/// Gets the choice name
+		/// </summary>
+		public string ChoiceName { get; set; }
 
-        public DiscordApplicationCommandLocalization ChoiceNameLocalizations { get; set; }
-    }
+		public DiscordApplicationCommandLocalization ChoiceNameLocalizations { get; set; }
+	}
 }

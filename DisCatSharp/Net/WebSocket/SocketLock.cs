@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,114 +26,114 @@ using System.Threading.Tasks;
 
 namespace DisCatSharp.Net.WebSocket
 {
-    // Licensed from Clyde.NET
+	// Licensed from Clyde.NET
 
-    /// <summary>
-    /// Represents a socket lock.
-    /// </summary>
-    internal sealed class SocketLock : IDisposable
-    {
-        /// <summary>
-        /// Gets the application id.
-        /// </summary>
-        public ulong ApplicationId { get; }
+	/// <summary>
+	/// Represents a socket lock.
+	/// </summary>
+	internal sealed class SocketLock : IDisposable
+	{
+		/// <summary>
+		/// Gets the application id.
+		/// </summary>
+		public ulong ApplicationId { get; }
 
-        /// <summary>
-        /// Gets the lock semaphore.
-        /// </summary>
-        private SemaphoreSlim LockSemaphore { get; }
+		/// <summary>
+		/// Gets the lock semaphore.
+		/// </summary>
+		private SemaphoreSlim LockSemaphore { get; }
 
-        /// <summary>
-        /// Gets or sets the timeout cancel source.
-        /// </summary>
-        private CancellationTokenSource TimeoutCancelSource { get; set; }
+		/// <summary>
+		/// Gets or sets the timeout cancel source.
+		/// </summary>
+		private CancellationTokenSource TimeoutCancelSource { get; set; }
 
-        /// <summary>
-        /// Gets the cancel token.
-        /// </summary>
-        private CancellationToken TimeoutCancel => this.TimeoutCancelSource.Token;
+		/// <summary>
+		/// Gets the cancel token.
+		/// </summary>
+		private CancellationToken TimeoutCancel => this.TimeoutCancelSource.Token;
 
-        /// <summary>
-        /// Gets or sets the unlock task.
-        /// </summary>
-        private Task UnlockTask { get; set; }
+		/// <summary>
+		/// Gets or sets the unlock task.
+		/// </summary>
+		private Task UnlockTask { get; set; }
 
-        /// <summary>
-        /// Gets or sets the max concurrency.
-        /// </summary>
-        private int MaxConcurrency { get; set; }
+		/// <summary>
+		/// Gets or sets the max concurrency.
+		/// </summary>
+		private int MaxConcurrency { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SocketLock"/> class.
-        /// </summary>
-        /// <param name="appId">The app id.</param>
-        /// <param name="maxConcurrency">The max concurrency.</param>
-        public SocketLock(ulong appId, int maxConcurrency)
-        {
-            this.ApplicationId = appId;
-            this.TimeoutCancelSource = null;
-            this.MaxConcurrency = maxConcurrency;
-            this.LockSemaphore = new SemaphoreSlim(maxConcurrency);
-        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SocketLock"/> class.
+		/// </summary>
+		/// <param name="appId">The app id.</param>
+		/// <param name="maxConcurrency">The max concurrency.</param>
+		public SocketLock(ulong appId, int maxConcurrency)
+		{
+			this.ApplicationId = appId;
+			this.TimeoutCancelSource = null;
+			this.MaxConcurrency = maxConcurrency;
+			this.LockSemaphore = new SemaphoreSlim(maxConcurrency);
+		}
 
-        /// <summary>
-        /// Locks the socket.
-        /// </summary>
-        public async Task LockAsync()
-        {
-            await this.LockSemaphore.WaitAsync().ConfigureAwait(false);
+		/// <summary>
+		/// Locks the socket.
+		/// </summary>
+		public async Task LockAsync()
+		{
+			await this.LockSemaphore.WaitAsync().ConfigureAwait(false);
 
-            this.TimeoutCancelSource = new CancellationTokenSource();
-            this.UnlockTask = Task.Delay(TimeSpan.FromSeconds(30), this.TimeoutCancel);
-            _ = this.UnlockTask.ContinueWith(this.InternalUnlock, TaskContinuationOptions.NotOnCanceled);
-        }
+			this.TimeoutCancelSource = new CancellationTokenSource();
+			this.UnlockTask = Task.Delay(TimeSpan.FromSeconds(30), this.TimeoutCancel);
+			_ = this.UnlockTask.ContinueWith(this.InternalUnlock, TaskContinuationOptions.NotOnCanceled);
+		}
 
-        /// <summary>
-        /// Unlocks the socket after a given timespan.
-        /// </summary>
-        /// <param name="unlockDelay">The unlock delay.</param>
-        public void UnlockAfter(TimeSpan unlockDelay)
-        {
-            if (this.TimeoutCancelSource == null || this.LockSemaphore.CurrentCount > 0)
-                return; // it's not unlockable because it's post-IDENTIFY or not locked
+		/// <summary>
+		/// Unlocks the socket after a given timespan.
+		/// </summary>
+		/// <param name="unlockDelay">The unlock delay.</param>
+		public void UnlockAfter(TimeSpan unlockDelay)
+		{
+			if (this.TimeoutCancelSource == null || this.LockSemaphore.CurrentCount > 0)
+				return; // it's not unlockable because it's post-IDENTIFY or not locked
 
-            try
-            {
-                this.TimeoutCancelSource.Cancel();
-                this.TimeoutCancelSource.Dispose();
-            }
-            catch { }
-            this.TimeoutCancelSource = null;
+			try
+			{
+				this.TimeoutCancelSource.Cancel();
+				this.TimeoutCancelSource.Dispose();
+			}
+			catch { }
+			this.TimeoutCancelSource = null;
 
-            this.UnlockTask = Task.Delay(unlockDelay, CancellationToken.None);
-            _ = this.UnlockTask.ContinueWith(this.InternalUnlock);
-        }
+			this.UnlockTask = Task.Delay(unlockDelay, CancellationToken.None);
+			_ = this.UnlockTask.ContinueWith(this.InternalUnlock);
+		}
 
-        /// <summary>
-        /// Waits for the socket lock.
-        /// </summary>
-        /// <returns>A Task.</returns>
-        public Task WaitAsync()
-            => this.LockSemaphore.WaitAsync();
+		/// <summary>
+		/// Waits for the socket lock.
+		/// </summary>
+		/// <returns>A Task.</returns>
+		public Task WaitAsync()
+			=> this.LockSemaphore.WaitAsync();
 
-        /// <summary>
-        /// Disposes the socket lock.
-        /// </summary>
-        public void Dispose()
-        {
-            try
-            {
-                this.TimeoutCancelSource?.Cancel();
-                this.TimeoutCancelSource?.Dispose();
-            }
-            catch { }
-        }
+		/// <summary>
+		/// Disposes the socket lock.
+		/// </summary>
+		public void Dispose()
+		{
+			try
+			{
+				this.TimeoutCancelSource?.Cancel();
+				this.TimeoutCancelSource?.Dispose();
+			}
+			catch { }
+		}
 
-        /// <summary>
-        /// Unlocks the socket.
-        /// </summary>
-        /// <param name="t">The task.</param>
-        private void InternalUnlock(Task t)
-            => this.LockSemaphore.Release(this.MaxConcurrency);
-    }
+		/// <summary>
+		/// Unlocks the socket.
+		/// </summary>
+		/// <param name="t">The task.</param>
+		private void InternalUnlock(Task t)
+			=> this.LockSemaphore.Release(this.MaxConcurrency);
+	}
 }

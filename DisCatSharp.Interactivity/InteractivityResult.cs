@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,30 +22,30 @@
 
 namespace DisCatSharp.Interactivity
 {
-    /// <summary>
-    /// Interactivity result
-    /// </summary>
-    /// <typeparam name="T">Type of result</typeparam>
-    public readonly struct InteractivityResult<T>
-    {
-        /// <summary>
-        /// Whether interactivity was timed out
-        /// </summary>
-        public bool TimedOut { get; }
-        /// <summary>
-        /// Result
-        /// </summary>
-        public T Result { get; }
+	/// <summary>
+	/// Interactivity result
+	/// </summary>
+	/// <typeparam name="T">Type of result</typeparam>
+	public readonly struct InteractivityResult<T>
+	{
+		/// <summary>
+		/// Whether interactivity was timed out
+		/// </summary>
+		public bool TimedOut { get; }
+		/// <summary>
+		/// Result
+		/// </summary>
+		public T Result { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InteractivityResult{T}"/> class.
-        /// </summary>
-        /// <param name="timedout">If true, timedout.</param>
-        /// <param name="result">The result.</param>
-        internal InteractivityResult(bool timedout, T result)
-        {
-            this.TimedOut = timedout;
-            this.Result = result;
-        }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="InteractivityResult{T}"/> class.
+		/// </summary>
+		/// <param name="timedout">If true, timedout.</param>
+		/// <param name="result">The result.</param>
+		internal InteractivityResult(bool timedout, T result)
+		{
+			this.TimedOut = timedout;
+			this.Result = result;
+		}
+	}
 }

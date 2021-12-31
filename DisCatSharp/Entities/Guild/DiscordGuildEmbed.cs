@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,21 +24,21 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents a Discord guild widget.
-    /// </summary>
-    public class DiscordGuildEmbed
-    {
-        /// <summary>
-        /// Gets whether the embed is enabled.
-        /// </summary>
-        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
-        public bool IsEnabled { get; set; }
+	/// <summary>
+	/// Represents a Discord guild widget.
+	/// </summary>
+	public class DiscordGuildEmbed
+	{
+		/// <summary>
+		/// Gets whether the embed is enabled.
+		/// </summary>
+		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
+		public bool IsEnabled { get; set; }
 
-        /// <summary>
-        /// Gets the ID of the widget channel.
-        /// </summary>
-        [JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong ChannelId { get; set; }
-    }
+		/// <summary>
+		/// Gets the ID of the widget channel.
+		/// </summary>
+		[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
+		public ulong ChannelId { get; set; }
+	}
 }

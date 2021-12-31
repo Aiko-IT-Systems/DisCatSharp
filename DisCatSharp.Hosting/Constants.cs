@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,22 +22,22 @@
 
 namespace DisCatSharp.Hosting
 {
-    /// <summary>
-    /// The constants.
-    /// </summary>
-    internal static class Constants
-    {
-        /// <summary>
-        /// Gets the lib name.
-        /// </summary>
-        public static string LibName => Configuration.ConfigurationExtensions.DefaultRootLib;
-        /// <summary>
-        /// Gets the config suffix.
-        /// </summary>
-        public static string ConfigSuffix => "Configuration";
-        /// <summary>
-        /// Gets the extension suffix.
-        /// </summary>
-        public static string ExtensionSuffix => "Extension";
-    }
+	/// <summary>
+	/// The constants.
+	/// </summary>
+	internal static class Constants
+	{
+		/// <summary>
+		/// Gets the lib name.
+		/// </summary>
+		public static string LibName => Configuration.ConfigurationExtensions.DefaultRootLib;
+		/// <summary>
+		/// Gets the config suffix.
+		/// </summary>
+		public static string ConfigSuffix => "Configuration";
+		/// <summary>
+		/// Gets the extension suffix.
+		/// </summary>
+		public static string ExtensionSuffix => "Extension";
+	}
 }

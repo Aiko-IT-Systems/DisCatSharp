@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,30 +24,30 @@ using DisCatSharp.Entities;
 
 namespace DisCatSharp.CommandsNext.Entities
 {
-    /// <summary>
-    /// Represents a formatted help message.
-    /// </summary>
-    public struct CommandHelpMessage
-    {
-        /// <summary>
-        /// Gets the contents of the help message.
-        /// </summary>
-        public string Content { get; }
+	/// <summary>
+	/// Represents a formatted help message.
+	/// </summary>
+	public struct CommandHelpMessage
+	{
+		/// <summary>
+		/// Gets the contents of the help message.
+		/// </summary>
+		public string Content { get; }
 
-        /// <summary>
-        /// Gets the embed attached to the help message.
-        /// </summary>
-        public DiscordEmbed Embed { get; }
+		/// <summary>
+		/// Gets the embed attached to the help message.
+		/// </summary>
+		public DiscordEmbed Embed { get; }
 
-        /// <summary>
-        /// Creates a new instance of a help message.
-        /// </summary>
-        /// <param name="content">Contents of the message.</param>
-        /// <param name="embed">Embed to attach to the message.</param>
-        public CommandHelpMessage(string content = null, DiscordEmbed embed = null)
-        {
-            this.Content = content;
-            this.Embed = embed;
-        }
-    }
+		/// <summary>
+		/// Creates a new instance of a help message.
+		/// </summary>
+		/// <param name="content">Contents of the message.</param>
+		/// <param name="embed">Embed to attach to the message.</param>
+		public CommandHelpMessage(string content = null, DiscordEmbed embed = null)
+		{
+			this.Content = content;
+			this.Embed = embed;
+		}
+	}
 }

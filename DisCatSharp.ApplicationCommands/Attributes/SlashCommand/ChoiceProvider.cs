@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -27,24 +27,24 @@ using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Implementation of <see cref="IChoiceProvider"/> with access to service collection.
-    /// </summary>
-    public abstract class ChoiceProvider : IChoiceProvider
-    {
-        /// <summary>
-        /// Sets the choices for the slash command.
-        /// </summary>
-        public abstract Task<IEnumerable<DiscordApplicationCommandOptionChoice>> Provider();
+	/// <summary>
+	/// Implementation of <see cref="IChoiceProvider"/> with access to service collection.
+	/// </summary>
+	public abstract class ChoiceProvider : IChoiceProvider
+	{
+		/// <summary>
+		/// Sets the choices for the slash command.
+		/// </summary>
+		public abstract Task<IEnumerable<DiscordApplicationCommandOptionChoice>> Provider();
 
-        /// <summary>
-        /// Sets the service provider.
-        /// </summary>
-        public IServiceProvider Services { get; set; }
+		/// <summary>
+		/// Sets the service provider.
+		/// </summary>
+		public IServiceProvider Services { get; set; }
 
-        /// <summary>
-        /// The optional ID of the Guild the command got registered for.
-        /// </summary>
-        public ulong? GuildId { get; set; }
-    }
+		/// <summary>
+		/// The optional ID of the Guild the command got registered for.
+		/// </summary>
+		public ulong? GuildId { get; set; }
+	}
 }

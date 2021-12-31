@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,16 +26,16 @@ using Newtonsoft.Json.Converters;
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents a membership screening field type
-    /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum MembershipScreeningFieldType
-    {
-        /// <summary>
-        /// Specifies the server rules
-        /// </summary>
-        [EnumMember(Value = "TERMS")]
-        Terms
-    }
+	/// <summary>
+	/// Represents a membership screening field type
+	/// </summary>
+	[JsonConverter(typeof(StringEnumConverter))]
+	public enum MembershipScreeningFieldType
+	{
+		/// <summary>
+		/// Specifies the server rules
+		/// </summary>
+		[EnumMember(Value = "TERMS")]
+		Terms
+	}
 }

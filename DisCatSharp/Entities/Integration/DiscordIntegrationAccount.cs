@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,26 +24,26 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents a Discord integration account.
-    /// </summary>
-    public class DiscordIntegrationAccount
-    {
-        /// <summary>
-        /// Gets the ID of the account.
-        /// </summary>
-        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-        public string Id { get; internal set; }
+	/// <summary>
+	/// Represents a Discord integration account.
+	/// </summary>
+	public class DiscordIntegrationAccount
+	{
+		/// <summary>
+		/// Gets the ID of the account.
+		/// </summary>
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		public string Id { get; internal set; }
 
-        /// <summary>
-        /// Gets the name of the account.
-        /// </summary>
-        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; internal set; }
+		/// <summary>
+		/// Gets the name of the account.
+		/// </summary>
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		public string Name { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordIntegrationAccount"/> class.
-        /// </summary>
-        internal DiscordIntegrationAccount() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordIntegrationAccount"/> class.
+		/// </summary>
+		internal DiscordIntegrationAccount() { }
+	}
 }

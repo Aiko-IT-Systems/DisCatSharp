@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -28,37 +28,37 @@ using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Represents a <see cref="PermissionWorker"/>.
-    /// </summary>
-    internal class PermissionWorker
-    {
-        internal static async Task UpdateCommandPermissionAsync(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildid, ulong commandId, string commandName, Type commandDeclaringType, Type commandRootType)
-        {
-            if (!guildid.HasValue)
-            {
-                ApplicationCommandsExtension._client.Logger.LogTrace("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
-                return;
-            }
+	/// <summary>
+	/// Represents a <see cref="PermissionWorker"/>.
+	/// </summary>
+	internal class PermissionWorker
+	{
+		internal static async Task UpdateCommandPermissionAsync(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildid, ulong commandId, string commandName, Type commandDeclaringType, Type commandRootType)
+		{
+			if (!guildid.HasValue)
+			{
+				ApplicationCommandsExtension._client.Logger.LogTrace("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
+				return;
+			}
 
-            var ctx = new ApplicationCommandsPermissionContext(commandDeclaringType, commandName);
-            var conf = types.First(t => t.Type == commandRootType);
-            conf.Setup?.Invoke(ctx);
+			var ctx = new ApplicationCommandsPermissionContext(commandDeclaringType, commandName);
+			var conf = types.First(t => t.Type == commandRootType);
+			conf.Setup?.Invoke(ctx);
 
-            if (ctx.Permissions.Count == 0)
-                return;
+			if (ctx.Permissions.Count == 0)
+				return;
 
-            await ApplicationCommandsExtension._client.OverwriteGuildApplicationCommandPermissionsAsync(guildid.Value, commandId, ctx.Permissions);
-        }
+			await ApplicationCommandsExtension._client.OverwriteGuildApplicationCommandPermissionsAsync(guildid.Value, commandId, ctx.Permissions);
+		}
 
-        internal static async Task UpdateCommandPermissionGroupAsync(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildid, List<KeyValuePair<Type, Type>> commandTypeSources, GroupCommand groupCommand)
-        {
-            foreach (var com in groupCommand.Methods)
-            {
-                var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Value.DeclaringType);
+		internal static async Task UpdateCommandPermissionGroupAsync(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildid, List<KeyValuePair<Type, Type>> commandTypeSources, GroupCommand groupCommand)
+		{
+			foreach (var com in groupCommand.Methods)
+			{
+				var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Value.DeclaringType);
 
-                await UpdateCommandPermissionAsync(types, guildid, groupCommand.CommandId, com.Key, source.Key, source.Value);
-            }
-        }
-    }
+				await UpdateCommandPermissionAsync(types, guildid, groupCommand.CommandId, com.Key, source.Key, source.Value);
+			}
+		}
+	}
 }

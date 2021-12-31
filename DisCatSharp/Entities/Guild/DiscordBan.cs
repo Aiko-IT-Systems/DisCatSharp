@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,32 +25,32 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents a Discord ban
-    /// </summary>
-    public class DiscordBan
-    {
-        /// <summary>
-        /// Gets the reason for the ban
-        /// </summary>
-        [JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
-        public string Reason { get; internal set; }
+	/// <summary>
+	/// Represents a Discord ban
+	/// </summary>
+	public class DiscordBan
+	{
+		/// <summary>
+		/// Gets the reason for the ban
+		/// </summary>
+		[JsonProperty("reason", NullValueHandling = NullValueHandling.Ignore)]
+		public string Reason { get; internal set; }
 
-        /// <summary>
-        /// Gets the banned user
-        /// </summary>
-        [JsonIgnore]
-        public DiscordUser User { get; internal set; }
+		/// <summary>
+		/// Gets the banned user
+		/// </summary>
+		[JsonIgnore]
+		public DiscordUser User { get; internal set; }
 
-        /// <summary>
-        /// Gets the raw user.
-        /// </summary>
-        [JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
-        internal TransportUser RawUser { get; set; }
+		/// <summary>
+		/// Gets the raw user.
+		/// </summary>
+		[JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
+		internal TransportUser RawUser { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordBan"/> class.
-        /// </summary>
-        internal DiscordBan() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordBan"/> class.
+		/// </summary>
+		internal DiscordBan() { }
+	}
 }

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,24 +22,24 @@
 
 namespace DisCatSharp.Interactivity.Enums
 {
-    /// <summary>
-    /// Specifies what should be done once pagination times out.
-    /// </summary>
-    public enum PaginationDeletion
-    {
-        /// <summary>
-        /// Reaction emojis will be deleted on timeout.
-        /// </summary>
-        DeleteEmojis = 0,
+	/// <summary>
+	/// Specifies what should be done once pagination times out.
+	/// </summary>
+	public enum PaginationDeletion
+	{
+		/// <summary>
+		/// Reaction emojis will be deleted on timeout.
+		/// </summary>
+		DeleteEmojis = 0,
 
-        /// <summary>
-        /// Reaction emojis will not be deleted on timeout.
-        /// </summary>
-        KeepEmojis = 1,
+		/// <summary>
+		/// Reaction emojis will not be deleted on timeout.
+		/// </summary>
+		KeepEmojis = 1,
 
-        /// <summary>
-        /// The message will be completely deleted on timeout.
-        /// </summary>
-        DeleteMessage = 2
-    }
+		/// <summary>
+		/// The message will be completely deleted on timeout.
+		/// </summary>
+		DeleteMessage = 2
+	}
 }

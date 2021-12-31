@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,19 +22,19 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents the privacy level for a stage.
-    /// </summary>
-    public enum StagePrivacyLevel : int
-    {
-        /// <summary>
-        /// Indicates that the stage is public visible, i.e. on stage discovery.
-        /// </summary>
-        Public = 1,
+	/// <summary>
+	/// Represents the privacy level for a stage.
+	/// </summary>
+	public enum StagePrivacyLevel : int
+	{
+		/// <summary>
+		/// Indicates that the stage is public visible, i.e. on stage discovery.
+		/// </summary>
+		Public = 1,
 
-        /// <summary>
-        /// Indicates that the stage is only visible to guild members.
-        /// </summary>
-        GuildOnly = 2
-    }
+		/// <summary>
+		/// Indicates that the stage is only visible to guild members.
+		/// </summary>
+		GuildOnly = 2
+	}
 }

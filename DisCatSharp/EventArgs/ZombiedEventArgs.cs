@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,24 +24,24 @@ using System;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.Zombied"/> event.
-    /// </summary>
-    public class ZombiedEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets how many heartbeat failures have occured.
-        /// </summary>
-        public int Failures { get; internal set; }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.Zombied"/> event.
+	/// </summary>
+	public class ZombiedEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets how many heartbeat failures have occured.
+		/// </summary>
+		public int Failures { get; internal set; }
 
-        /// <summary>
-        /// Gets whether the zombie event occured whilst guilds are downloading.
-        /// </summary>
-        public bool GuildDownloadCompleted { get; internal set; }
+		/// <summary>
+		/// Gets whether the zombie event occured whilst guilds are downloading.
+		/// </summary>
+		public bool GuildDownloadCompleted { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ZombiedEventArgs"/> class.
-        /// </summary>
-        internal ZombiedEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ZombiedEventArgs"/> class.
+		/// </summary>
+		internal ZombiedEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

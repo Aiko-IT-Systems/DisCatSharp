@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,14 +25,14 @@ using System.Collections.Generic;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Thrown when a pre-execution check for a context menu command fails.
-    /// </summary>
-    public sealed class ContextMenuExecutionChecksFailedException : Exception
-    {
-        /// <summary>
-        /// The list of failed checks.
-        /// </summary>
-        public IReadOnlyList<ContextMenuCheckBaseAttribute> FailedChecks;
-    }
+	/// <summary>
+	/// Thrown when a pre-execution check for a context menu command fails.
+	/// </summary>
+	public sealed class ContextMenuExecutionChecksFailedException : Exception
+	{
+		/// <summary>
+		/// The list of failed checks.
+		/// </summary>
+		public IReadOnlyList<ContextMenuCheckBaseAttribute> FailedChecks;
+	}
 }

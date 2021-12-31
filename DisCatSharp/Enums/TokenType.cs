@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,26 +24,26 @@ using System;
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents the token type
-    /// </summary>
-    public enum TokenType
-    {
-        /// <summary>
-        /// User token type
-        /// </summary>
-        [Obsolete("Logging in with a user token may result in your account being terminated, and is therefore highly unrecommended." +
-            "\nIf anything goes wrong with this, we will not provide any support!", true)]
-        User = 0,
+	/// <summary>
+	/// Represents the token type
+	/// </summary>
+	public enum TokenType
+	{
+		/// <summary>
+		/// User token type
+		/// </summary>
+		[Obsolete("Logging in with a user token may result in your account being terminated, and is therefore highly unrecommended." +
+			"\nIf anything goes wrong with this, we will not provide any support!", true)]
+		User = 0,
 
-        /// <summary>
-        /// Bot token type
-        /// </summary>
-        Bot = 1,
+		/// <summary>
+		/// Bot token type
+		/// </summary>
+		Bot = 1,
 
-        /// <summary>
-        /// Bearer token type (used for oAuth)
-        /// </summary>
-        Bearer = 2
-    }
+		/// <summary>
+		/// Bearer token type (used for oAuth)
+		/// </summary>
+		Bearer = 2
+	}
 }

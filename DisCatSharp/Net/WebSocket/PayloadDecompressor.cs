@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -27,103 +27,103 @@ using System.IO.Compression;
 
 namespace DisCatSharp.Net.WebSocket
 {
-    /// <summary>
-    /// Represents a payload decompressor.
-    /// </summary>
-    internal sealed class PayloadDecompressor : IDisposable
-    {
-        /// <summary>
-        /// The zlib flush.
-        /// </summary>
-        private const uint ZlibFlush = 0x0000FFFF;
+	/// <summary>
+	/// Represents a payload decompressor.
+	/// </summary>
+	internal sealed class PayloadDecompressor : IDisposable
+	{
+		/// <summary>
+		/// The zlib flush.
+		/// </summary>
+		private const uint ZlibFlush = 0x0000FFFF;
 
-        /// <summary>
-        /// The zlib prefix.
-        /// </summary>
-        private const byte ZlibPrefix = 0x78;
+		/// <summary>
+		/// The zlib prefix.
+		/// </summary>
+		private const byte ZlibPrefix = 0x78;
 
-        /// <summary>
-        /// Gets the compression level.
-        /// </summary>
-        public GatewayCompressionLevel CompressionLevel { get; }
+		/// <summary>
+		/// Gets the compression level.
+		/// </summary>
+		public GatewayCompressionLevel CompressionLevel { get; }
 
-        /// <summary>
-        /// Gets the compressed stream.
-        /// </summary>
-        private MemoryStream CompressedStream { get; }
+		/// <summary>
+		/// Gets the compressed stream.
+		/// </summary>
+		private MemoryStream CompressedStream { get; }
 
-        /// <summary>
-        /// Gets the decompressor stream.
-        /// </summary>
-        private DeflateStream DecompressorStream { get; }
+		/// <summary>
+		/// Gets the decompressor stream.
+		/// </summary>
+		private DeflateStream DecompressorStream { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PayloadDecompressor"/> class.
-        /// </summary>
-        /// <param name="compressionLevel">The compression level.</param>
-        public PayloadDecompressor(GatewayCompressionLevel compressionLevel)
-        {
-            if (compressionLevel == GatewayCompressionLevel.None)
-                throw new InvalidOperationException("Decompressor requires a valid compression mode.");
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PayloadDecompressor"/> class.
+		/// </summary>
+		/// <param name="compressionLevel">The compression level.</param>
+		public PayloadDecompressor(GatewayCompressionLevel compressionLevel)
+		{
+			if (compressionLevel == GatewayCompressionLevel.None)
+				throw new InvalidOperationException("Decompressor requires a valid compression mode.");
 
-            this.CompressionLevel = compressionLevel;
-            this.CompressedStream = new MemoryStream();
-            if (this.CompressionLevel == GatewayCompressionLevel.Stream)
-                this.DecompressorStream = new DeflateStream(this.CompressedStream, CompressionMode.Decompress);
-        }
+			this.CompressionLevel = compressionLevel;
+			this.CompressedStream = new MemoryStream();
+			if (this.CompressionLevel == GatewayCompressionLevel.Stream)
+				this.DecompressorStream = new DeflateStream(this.CompressedStream, CompressionMode.Decompress);
+		}
 
-        /// <summary>
-        /// Tries the decompress.
-        /// </summary>
-        /// <param name="compressed">The compressed bytes.</param>
-        /// <param name="decompressed">The decompressed memory stream.</param>
-        public bool TryDecompress(ArraySegment<byte> compressed, MemoryStream decompressed)
-        {
-            var zlib = this.CompressionLevel == GatewayCompressionLevel.Stream
-                ? this.DecompressorStream
-                : new DeflateStream(this.CompressedStream, CompressionMode.Decompress, true);
+		/// <summary>
+		/// Tries the decompress.
+		/// </summary>
+		/// <param name="compressed">The compressed bytes.</param>
+		/// <param name="decompressed">The decompressed memory stream.</param>
+		public bool TryDecompress(ArraySegment<byte> compressed, MemoryStream decompressed)
+		{
+			var zlib = this.CompressionLevel == GatewayCompressionLevel.Stream
+				? this.DecompressorStream
+				: new DeflateStream(this.CompressedStream, CompressionMode.Decompress, true);
 
-            if (compressed.Array[0] == ZlibPrefix)
-                this.CompressedStream.Write(compressed.Array, compressed.Offset + 2, compressed.Count - 2);
-            else
-                this.CompressedStream.Write(compressed.Array, compressed.Offset, compressed.Count);
+			if (compressed.Array[0] == ZlibPrefix)
+				this.CompressedStream.Write(compressed.Array, compressed.Offset + 2, compressed.Count - 2);
+			else
+				this.CompressedStream.Write(compressed.Array, compressed.Offset, compressed.Count);
 
-            this.CompressedStream.Flush();
-            this.CompressedStream.Position = 0;
+			this.CompressedStream.Flush();
+			this.CompressedStream.Position = 0;
 
-            var cspan = compressed.AsSpan();
-            var suffix = BinaryPrimitives.ReadUInt32BigEndian(cspan[^4..]);
-            if (this.CompressionLevel == GatewayCompressionLevel.Stream && suffix != ZlibFlush)
-            {
-                if (this.CompressionLevel == GatewayCompressionLevel.Payload)
-                    zlib.Dispose();
+			var cspan = compressed.AsSpan();
+			var suffix = BinaryPrimitives.ReadUInt32BigEndian(cspan[^4..]);
+			if (this.CompressionLevel == GatewayCompressionLevel.Stream && suffix != ZlibFlush)
+			{
+				if (this.CompressionLevel == GatewayCompressionLevel.Payload)
+					zlib.Dispose();
 
-                return false;
-            }
+				return false;
+			}
 
-            try
-            {
-                zlib.CopyTo(decompressed);
-                return true;
-            }
-            catch { return false; }
-            finally
-            {
-                this.CompressedStream.Position = 0;
-                this.CompressedStream.SetLength(0);
+			try
+			{
+				zlib.CopyTo(decompressed);
+				return true;
+			}
+			catch { return false; }
+			finally
+			{
+				this.CompressedStream.Position = 0;
+				this.CompressedStream.SetLength(0);
 
-                if (this.CompressionLevel == GatewayCompressionLevel.Payload)
-                    zlib.Dispose();
-            }
-        }
+				if (this.CompressionLevel == GatewayCompressionLevel.Payload)
+					zlib.Dispose();
+			}
+		}
 
-        /// <summary>
-        /// Disposes the decompressor.
-        /// </summary>
-        public void Dispose()
-        {
-            this.DecompressorStream?.Dispose();
-            this.CompressedStream.Dispose();
-        }
-    }
+		/// <summary>
+		/// Disposes the decompressor.
+		/// </summary>
+		public void Dispose()
+		{
+			this.DecompressorStream?.Dispose();
+			this.CompressedStream.Dispose();
+		}
+	}
 }

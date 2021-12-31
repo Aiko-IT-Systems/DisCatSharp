@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,26 +25,26 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// The application install params.
-    /// </summary>
-    public sealed class DiscordApplicationInstallParams
-    {
-        /// <summary>
-        /// Gets the scopes.
-        /// </summary>
-        [JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
-        public IReadOnlyList<string> Scopes { get; internal set; }
+	/// <summary>
+	/// The application install params.
+	/// </summary>
+	public sealed class DiscordApplicationInstallParams
+	{
+		/// <summary>
+		/// Gets the scopes.
+		/// </summary>
+		[JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
+		public IReadOnlyList<string> Scopes { get; internal set; }
 
-        /// <summary>
-        /// Gets or sets the permissions.
-        /// </summary>
-        [JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
-        public Permissions? Permissions { get; internal set; }
+		/// <summary>
+		/// Gets or sets the permissions.
+		/// </summary>
+		[JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
+		public Permissions? Permissions { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordApplicationInstallParams"/> class.
-        /// </summary>
-        internal DiscordApplicationInstallParams() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordApplicationInstallParams"/> class.
+		/// </summary>
+		internal DiscordApplicationInstallParams() { }
+	}
 }

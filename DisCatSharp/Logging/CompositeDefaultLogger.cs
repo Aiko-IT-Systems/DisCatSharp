@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -27,52 +27,52 @@ using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents a composite default logger.
-    /// </summary>
-    internal class CompositeDefaultLogger : ILogger<BaseDiscordClient>
-    {
-        /// <summary>
-        /// Gets the loggers.
-        /// </summary>
-        private IEnumerable<ILogger<BaseDiscordClient>> Loggers { get; }
+	/// <summary>
+	/// Represents a composite default logger.
+	/// </summary>
+	internal class CompositeDefaultLogger : ILogger<BaseDiscordClient>
+	{
+		/// <summary>
+		/// Gets the loggers.
+		/// </summary>
+		private IEnumerable<ILogger<BaseDiscordClient>> Loggers { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CompositeDefaultLogger"/> class.
-        /// </summary>
-        /// <param name="providers">The providers.</param>
-        public CompositeDefaultLogger(IEnumerable<ILoggerProvider> providers)
-        {
-            this.Loggers = providers.Select(x => x.CreateLogger(typeof(BaseDiscordClient).FullName))
-                .OfType<ILogger<BaseDiscordClient>>()
-                .ToList();
-        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CompositeDefaultLogger"/> class.
+		/// </summary>
+		/// <param name="providers">The providers.</param>
+		public CompositeDefaultLogger(IEnumerable<ILoggerProvider> providers)
+		{
+			this.Loggers = providers.Select(x => x.CreateLogger(typeof(BaseDiscordClient).FullName))
+				.OfType<ILogger<BaseDiscordClient>>()
+				.ToList();
+		}
 
-        /// <summary>
-        /// Whether the logger is enabled.
-        /// </summary>
-        /// <param name="logLevel">The log level.</param>
-        public bool IsEnabled(LogLevel logLevel)
-            => true;
+		/// <summary>
+		/// Whether the logger is enabled.
+		/// </summary>
+		/// <param name="logLevel">The log level.</param>
+		public bool IsEnabled(LogLevel logLevel)
+			=> true;
 
-        /// <summary>
-        /// Logs an event.
-        /// </summary>
-        /// <param name="logLevel">The log level.</param>
-        /// <param name="eventId">The event id.</param>
-        /// <param name="state">The state.</param>
-        /// <param name="exception">The exception.</param>
-        /// <param name="formatter">The formatter.</param>
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-        {
-            foreach (var logger in this.Loggers)
-                logger.Log(logLevel, eventId, state, exception, formatter);
-        }
+		/// <summary>
+		/// Logs an event.
+		/// </summary>
+		/// <param name="logLevel">The log level.</param>
+		/// <param name="eventId">The event id.</param>
+		/// <param name="state">The state.</param>
+		/// <param name="exception">The exception.</param>
+		/// <param name="formatter">The formatter.</param>
+		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+		{
+			foreach (var logger in this.Loggers)
+				logger.Log(logLevel, eventId, state, exception, formatter);
+		}
 
-        /// <summary>
-        /// Begins the scope.
-        /// </summary>
-        /// <param name="state">The state.</param>
-        public IDisposable BeginScope<TState>(TState state) => throw new NotImplementedException();
-    }
+		/// <summary>
+		/// Begins the scope.
+		/// </summary>
+		/// <param name="state">The state.</param>
+		public IDisposable BeginScope<TState>(TState state) => throw new NotImplementedException();
+	}
 }

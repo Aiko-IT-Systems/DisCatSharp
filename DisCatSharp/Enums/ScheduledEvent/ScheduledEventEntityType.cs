@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,24 +22,24 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents the entity type for a scheduled event.
-    /// </summary>
-    public enum ScheduledEventEntityType : int
-    {
-        /// <summary>
-        /// Indicates that the events is hold in a stage instance.
-        /// </summary>
-        StageInstance = 1,
+	/// <summary>
+	/// Represents the entity type for a scheduled event.
+	/// </summary>
+	public enum ScheduledEventEntityType : int
+	{
+		/// <summary>
+		/// Indicates that the events is hold in a stage instance.
+		/// </summary>
+		StageInstance = 1,
 
-        /// <summary>
-        /// Indicates that the events is hold in a voice channel.
-        /// </summary>
-        Voice = 2,
+		/// <summary>
+		/// Indicates that the events is hold in a voice channel.
+		/// </summary>
+		Voice = 2,
 
-        /// <summary>
-        /// Indicates that the events is hold external.
-        /// </summary>
-        External = 3
-    }
+		/// <summary>
+		/// Indicates that the events is hold external.
+		/// </summary>
+		External = 3
+	}
 }

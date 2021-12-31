@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,29 +24,29 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents an scheduled event.
-    /// </summary>
-    public class DiscordScheduledEventEntityMetadata
-    {
-        /// <summary>
-        /// External location if event type is <see cref="ScheduledEventEntityType.External"/>.
-        /// </summary>
-        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
-        public string Location { get; internal set; }
+	/// <summary>
+	/// Represents an scheduled event.
+	/// </summary>
+	public class DiscordScheduledEventEntityMetadata
+	{
+		/// <summary>
+		/// External location if event type is <see cref="ScheduledEventEntityType.External"/>.
+		/// </summary>
+		[JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
+		public string Location { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
-        /// </summary>
-        internal DiscordScheduledEventEntityMetadata() { }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
+		/// </summary>
+		internal DiscordScheduledEventEntityMetadata() { }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
-        /// </summary>
-        /// <param name="location">The location.</param>
-        public DiscordScheduledEventEntityMetadata(string location)
-        {
-            this.Location = location;
-        }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
+		/// </summary>
+		/// <param name="location">The location.</param>
+		public DiscordScheduledEventEntityMetadata(string location)
+		{
+			this.Location = location;
+		}
+	}
 }

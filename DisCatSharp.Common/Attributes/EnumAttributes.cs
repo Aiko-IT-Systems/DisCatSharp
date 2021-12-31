@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,19 +24,19 @@ using System;
 
 namespace DisCatSharp.Common.Serialization
 {
-    /// <summary>
-    /// <para>Specifies that this enum should be serialized and deserialized as its underlying numeric type.</para>
-    /// <para>This is used to change the behaviour of enum serialization.</para>
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class NumericEnumAttribute : SerializationAttribute
-    { }
+	/// <summary>
+	/// <para>Specifies that this enum should be serialized and deserialized as its underlying numeric type.</para>
+	/// <para>This is used to change the behaviour of enum serialization.</para>
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+	public sealed class NumericEnumAttribute : SerializationAttribute
+	{ }
 
-    /// <summary>
-    /// <para>Specifies that this enum should be serialized and deserialized as its string representation.</para>
-    /// <para>This is used to change the behaviour of enum serialization.</para>
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class StringEnumAttribute : SerializationAttribute
-    { }
+	/// <summary>
+	/// <para>Specifies that this enum should be serialized and deserialized as its string representation.</para>
+	/// <para>This is used to change the behaviour of enum serialization.</para>
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+	public sealed class StringEnumAttribute : SerializationAttribute
+	{ }
 }

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,29 +22,29 @@
 
 namespace DisCatSharp.Enums
 {
-    /// <summary>
-    /// Represents a button's style/color.
-    /// </summary>
-    public enum ButtonStyle : int
-    {
-        /// <summary>
-        /// Blurple button.
-        /// </summary>
-        Primary = 1,
+	/// <summary>
+	/// Represents a button's style/color.
+	/// </summary>
+	public enum ButtonStyle : int
+	{
+		/// <summary>
+		/// Blurple button.
+		/// </summary>
+		Primary = 1,
 
-        /// <summary>
-        /// Grey button.
-        /// </summary>
-        Secondary = 2,
+		/// <summary>
+		/// Grey button.
+		/// </summary>
+		Secondary = 2,
 
-        /// <summary>
-        /// Green button.
-        /// </summary>
-        Success  = 3,
+		/// <summary>
+		/// Green button.
+		/// </summary>
+		Success  = 3,
 
-        /// <summary>
-        /// Red button.
-        /// </summary>
-        Danger = 4,
-    }
+		/// <summary>
+		/// Red button.
+		/// </summary>
+		Danger = 4,
+	}
 }

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,46 +25,46 @@ using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents a sharded logger factory.
-    /// </summary>
-    internal class ShardedLoggerFactory : ILoggerFactory
-    {
-        /// <summary>
-        /// Gets the logger.
-        /// </summary>
-        private ILogger<BaseDiscordClient> Logger { get; }
+	/// <summary>
+	/// Represents a sharded logger factory.
+	/// </summary>
+	internal class ShardedLoggerFactory : ILoggerFactory
+	{
+		/// <summary>
+		/// Gets the logger.
+		/// </summary>
+		private ILogger<BaseDiscordClient> Logger { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ShardedLoggerFactory"/> class.
-        /// </summary>
-        /// <param name="instance">The instance.</param>
-        public ShardedLoggerFactory(ILogger<BaseDiscordClient> instance)
-        {
-            this.Logger = instance;
-        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ShardedLoggerFactory"/> class.
+		/// </summary>
+		/// <param name="instance">The instance.</param>
+		public ShardedLoggerFactory(ILogger<BaseDiscordClient> instance)
+		{
+			this.Logger = instance;
+		}
 
-        /// <summary>
-        /// Adds a provider.
-        /// </summary>
-        /// <param name="provider">The provider to be added.</param>
-        public void AddProvider(ILoggerProvider provider) => throw new InvalidOperationException("This is a passthrough logger container, it cannot register new providers.");
+		/// <summary>
+		/// Adds a provider.
+		/// </summary>
+		/// <param name="provider">The provider to be added.</param>
+		public void AddProvider(ILoggerProvider provider) => throw new InvalidOperationException("This is a passthrough logger container, it cannot register new providers.");
 
-        /// <summary>
-        /// Creates a logger.
-        /// </summary>
-        /// <param name="categoryName">The category name.</param>
-        public ILogger CreateLogger(string categoryName)
-        {
-            return categoryName != typeof(BaseDiscordClient).FullName
-                ? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}.", nameof(categoryName))
-                : this.Logger;
-        }
+		/// <summary>
+		/// Creates a logger.
+		/// </summary>
+		/// <param name="categoryName">The category name.</param>
+		public ILogger CreateLogger(string categoryName)
+		{
+			return categoryName != typeof(BaseDiscordClient).FullName
+				? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}.", nameof(categoryName))
+				: this.Logger;
+		}
 
-        /// <summary>
-        /// Disposes the logger.
-        /// </summary>
-        public void Dispose()
-        { }
-    }
+		/// <summary>
+		/// Disposes the logger.
+		/// </summary>
+		public void Dispose()
+		{ }
+	}
 }

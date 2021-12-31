@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -27,90 +27,90 @@ using System.Numerics;
 
 namespace DisCatSharp.Common.Serialization
 {
-    /// <summary>
-    /// Decomposes <see cref="System.Numerics.Complex"/> numbers into tuples (arrays of 2).
-    /// </summary>
-    public sealed class ComplexDecomposer : IDecomposer
-    {
-        /// <summary>
-        /// Gets the t complex.
-        /// </summary>
-        private static Type TComplex { get; } = typeof(Complex);
-        /// <summary>
-        /// Gets the t double array.
-        /// </summary>
-        private static Type TDoubleArray { get; } = typeof(double[]);
-        /// <summary>
-        /// Gets the t double enumerable.
-        /// </summary>
-        private static Type TDoubleEnumerable { get; } = typeof(IEnumerable<double>);
-        /// <summary>
-        /// Gets the t object array.
-        /// </summary>
-        private static Type TObjectArray { get; } = typeof(object[]);
-        /// <summary>
-        /// Gets the t object enumerable.
-        /// </summary>
-        private static Type TObjectEnumerable { get; } = typeof(IEnumerable<object>);
+	/// <summary>
+	/// Decomposes <see cref="System.Numerics.Complex"/> numbers into tuples (arrays of 2).
+	/// </summary>
+	public sealed class ComplexDecomposer : IDecomposer
+	{
+		/// <summary>
+		/// Gets the t complex.
+		/// </summary>
+		private static Type TComplex { get; } = typeof(Complex);
+		/// <summary>
+		/// Gets the t double array.
+		/// </summary>
+		private static Type TDoubleArray { get; } = typeof(double[]);
+		/// <summary>
+		/// Gets the t double enumerable.
+		/// </summary>
+		private static Type TDoubleEnumerable { get; } = typeof(IEnumerable<double>);
+		/// <summary>
+		/// Gets the t object array.
+		/// </summary>
+		private static Type TObjectArray { get; } = typeof(object[]);
+		/// <summary>
+		/// Gets the t object enumerable.
+		/// </summary>
+		private static Type TObjectEnumerable { get; } = typeof(IEnumerable<object>);
 
-        /// <inheritdoc />
-        public bool CanDecompose(Type t)
-            => t == TComplex;
+		/// <inheritdoc />
+		public bool CanDecompose(Type t)
+			=> t == TComplex;
 
-        /// <inheritdoc />
-        public bool CanRecompose(Type t)
-            => t == TDoubleArray
-            || t == TObjectArray
-            || TDoubleEnumerable.IsAssignableFrom(t)
-            || TObjectEnumerable.IsAssignableFrom(t);
+		/// <inheritdoc />
+		public bool CanRecompose(Type t)
+			=> t == TDoubleArray
+			|| t == TObjectArray
+			|| TDoubleEnumerable.IsAssignableFrom(t)
+			|| TObjectEnumerable.IsAssignableFrom(t);
 
-        /// <inheritdoc />
-        public bool TryDecompose(object obj, Type tobj, out object decomposed, out Type tdecomposed)
-        {
-            decomposed = null;
-            tdecomposed = TDoubleArray;
+		/// <inheritdoc />
+		public bool TryDecompose(object obj, Type tobj, out object decomposed, out Type tdecomposed)
+		{
+			decomposed = null;
+			tdecomposed = TDoubleArray;
 
-            if (tobj != TComplex || obj is not Complex c)
-                return false;
+			if (tobj != TComplex || obj is not Complex c)
+				return false;
 
-            decomposed = new[] { c.Real, c.Imaginary };
-            return true;
-        }
+			decomposed = new[] { c.Real, c.Imaginary };
+			return true;
+		}
 
-        /// <inheritdoc />
-        public bool TryRecompose(object obj, Type tobj, Type trecomposed, out object recomposed)
-        {
-            recomposed = null;
+		/// <inheritdoc />
+		public bool TryRecompose(object obj, Type tobj, Type trecomposed, out object recomposed)
+		{
+			recomposed = null;
 
-            if (trecomposed != TComplex)
-                return false;
+			if (trecomposed != TComplex)
+				return false;
 
-            // ie<double>
-            if (TDoubleEnumerable.IsAssignableFrom(tobj) && obj is IEnumerable<double> ied)
-            {
-                if (ied.Count() < 2)
-                    return false;
+			// ie<double>
+			if (TDoubleEnumerable.IsAssignableFrom(tobj) && obj is IEnumerable<double> ied)
+			{
+				if (ied.Count() < 2)
+					return false;
 
-                var (real, imag) = ied.FirstTwoOrDefault();
-                recomposed = new Complex(real, imag);
-                return true;
-            }
+				var (real, imag) = ied.FirstTwoOrDefault();
+				recomposed = new Complex(real, imag);
+				return true;
+			}
 
-            // ie<obj>
-            if (TObjectEnumerable.IsAssignableFrom(tobj) && obj is IEnumerable<object> ieo)
-            {
-                if (ieo.Count() < 2)
-                    return false;
+			// ie<obj>
+			if (TObjectEnumerable.IsAssignableFrom(tobj) && obj is IEnumerable<object> ieo)
+			{
+				if (ieo.Count() < 2)
+					return false;
 
-                var (real, imag) = ieo.FirstTwoOrDefault();
-                if (real is not double dreal || imag is not double dimag)
-                    return false;
+				var (real, imag) = ieo.FirstTwoOrDefault();
+				if (real is not double dreal || imag is not double dimag)
+					return false;
 
-                recomposed = new Complex(dreal, dimag);
-                return true;
-            }
+				recomposed = new Complex(dreal, dimag);
+				return true;
+			}
 
-            return false;
-        }
-    }
+			return false;
+		}
+	}
 }

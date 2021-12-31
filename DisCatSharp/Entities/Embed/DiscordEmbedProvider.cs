@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,26 +25,26 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents an embed provider.
-    /// </summary>
-    public sealed class DiscordEmbedProvider
-    {
-        /// <summary>
-        /// Gets the name of the provider.
-        /// </summary>
-        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; internal set; }
+	/// <summary>
+	/// Represents an embed provider.
+	/// </summary>
+	public sealed class DiscordEmbedProvider
+	{
+		/// <summary>
+		/// Gets the name of the provider.
+		/// </summary>
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		public string Name { get; internal set; }
 
-        /// <summary>
-        /// Gets the url of the provider.
-        /// </summary>
-        [JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri Url { get; internal set; }
+		/// <summary>
+		/// Gets the url of the provider.
+		/// </summary>
+		[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
+		public Uri Url { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordEmbedProvider"/> class.
-        /// </summary>
-        internal DiscordEmbedProvider() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordEmbedProvider"/> class.
+		/// </summary>
+		internal DiscordEmbedProvider() { }
+	}
 }

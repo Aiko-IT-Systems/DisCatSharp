@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,32 +24,32 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents a reaction to a message.
-    /// </summary>
-    public class DiscordReaction
-    {
-        /// <summary>
-        /// Gets the total number of users who reacted with this emoji.
-        /// </summary>
-        [JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
-        public int Count { get; internal set; }
+	/// <summary>
+	/// Represents a reaction to a message.
+	/// </summary>
+	public class DiscordReaction
+	{
+		/// <summary>
+		/// Gets the total number of users who reacted with this emoji.
+		/// </summary>
+		[JsonProperty("count", NullValueHandling = NullValueHandling.Ignore)]
+		public int Count { get; internal set; }
 
-        /// <summary>
-        /// Gets whether the current user reacted with this emoji.
-        /// </summary>
-        [JsonProperty("me", NullValueHandling = NullValueHandling.Ignore)]
-        public bool IsMe { get; internal set; }
+		/// <summary>
+		/// Gets whether the current user reacted with this emoji.
+		/// </summary>
+		[JsonProperty("me", NullValueHandling = NullValueHandling.Ignore)]
+		public bool IsMe { get; internal set; }
 
-        /// <summary>
-        /// Gets the emoji used to react to this message.
-        /// </summary>
-        [JsonProperty("emoji", NullValueHandling = NullValueHandling.Ignore)]
-        public DiscordEmoji Emoji { get; internal set; }
+		/// <summary>
+		/// Gets the emoji used to react to this message.
+		/// </summary>
+		[JsonProperty("emoji", NullValueHandling = NullValueHandling.Ignore)]
+		public DiscordEmoji Emoji { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordReaction"/> class.
-        /// </summary>
-        internal DiscordReaction() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordReaction"/> class.
+		/// </summary>
+		internal DiscordReaction() { }
+	}
 }

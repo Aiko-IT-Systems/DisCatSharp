@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,19 +22,19 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents a channelpermissions overwrite's type.
-    /// </summary>
-    public enum OverwriteType : int
-    {
-        /// <summary>
-        /// Specifies that this overwrite applies to a role.
-        /// </summary>
-        Role,
+	/// <summary>
+	/// Represents a channelpermissions overwrite's type.
+	/// </summary>
+	public enum OverwriteType : int
+	{
+		/// <summary>
+		/// Specifies that this overwrite applies to a role.
+		/// </summary>
+		Role,
 
-        /// <summary>
-        /// Specifies that this overwrite applies to a member.
-        /// </summary>
-        Member
-    }
+		/// <summary>
+		/// Specifies that this overwrite applies to a member.
+		/// </summary>
+		Member
+	}
 }

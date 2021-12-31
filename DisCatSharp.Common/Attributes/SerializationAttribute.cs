@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+﻿// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,9 +24,9 @@ using System;
 
 namespace DisCatSharp.Common.Serialization
 {
-    /// <summary>
-    /// ABC for serialization attributes.
-    /// </summary>
-    public abstract class SerializationAttribute : Attribute
-    { }
+	/// <summary>
+	/// ABC for serialization attributes.
+	/// </summary>
+	public abstract class SerializationAttribute : Attribute
+	{ }
 }

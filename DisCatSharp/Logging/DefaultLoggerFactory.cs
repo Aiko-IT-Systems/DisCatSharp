@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,49 +26,49 @@ using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents a default logger factory.
-    /// </summary>
-    internal class DefaultLoggerFactory : ILoggerFactory
-    {
-        /// <summary>
-        /// Gets the providers.
-        /// </summary>
-        private List<ILoggerProvider> Providers { get; } = new List<ILoggerProvider>();
-        private bool _isDisposed = false;
+	/// <summary>
+	/// Represents a default logger factory.
+	/// </summary>
+	internal class DefaultLoggerFactory : ILoggerFactory
+	{
+		/// <summary>
+		/// Gets the providers.
+		/// </summary>
+		private List<ILoggerProvider> Providers { get; } = new List<ILoggerProvider>();
+		private bool _isDisposed = false;
 
-        /// <summary>
-        /// Adds a provider.
-        /// </summary>
-        /// <param name="provider">The provider to be added.</param>
-        public void AddProvider(ILoggerProvider provider) => this.Providers.Add(provider);
+		/// <summary>
+		/// Adds a provider.
+		/// </summary>
+		/// <param name="provider">The provider to be added.</param>
+		public void AddProvider(ILoggerProvider provider) => this.Providers.Add(provider);
 
-        /// <summary>
-        /// Creates the logger.
-        /// </summary>
-        /// <param name="categoryName">The category name.</param>
-        public ILogger CreateLogger(string categoryName)
-        {
-            return this._isDisposed
-                ? throw new InvalidOperationException("This logger factory is already disposed.")
-                : categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName
-                ? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName} or {typeof(DiscordWebhookClient).FullName}.", nameof(categoryName))
-                : new CompositeDefaultLogger(this.Providers);
-        }
+		/// <summary>
+		/// Creates the logger.
+		/// </summary>
+		/// <param name="categoryName">The category name.</param>
+		public ILogger CreateLogger(string categoryName)
+		{
+			return this._isDisposed
+				? throw new InvalidOperationException("This logger factory is already disposed.")
+				: categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName
+				? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName} or {typeof(DiscordWebhookClient).FullName}.", nameof(categoryName))
+				: new CompositeDefaultLogger(this.Providers);
+		}
 
-        /// <summary>
-        /// Disposes the logger.
-        /// </summary>
-        public void Dispose()
-        {
-            if (this._isDisposed)
-                return;
-            this._isDisposed = true;
+		/// <summary>
+		/// Disposes the logger.
+		/// </summary>
+		public void Dispose()
+		{
+			if (this._isDisposed)
+				return;
+			this._isDisposed = true;
 
-            foreach (var provider in this.Providers)
-                provider.Dispose();
+			foreach (var provider in this.Providers)
+				provider.Dispose();
 
-            this.Providers.Clear();
-        }
-    }
+			this.Providers.Clear();
+		}
+	}
 }

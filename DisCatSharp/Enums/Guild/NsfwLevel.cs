@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,29 +22,29 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents a guild's conetent level.
-    /// </summary>
-    public enum NsfwLevel
-    {
-        /// <summary>
-        /// Indicates the guild has no special NSFW level.
-        /// </summary>
-        Default = 0,
+	/// <summary>
+	/// Represents a guild's conetent level.
+	/// </summary>
+	public enum NsfwLevel
+	{
+		/// <summary>
+		/// Indicates the guild has no special NSFW level.
+		/// </summary>
+		Default = 0,
 
-        /// <summary>
-        /// Indicates the guild has extremely suggestive or mature content that would only be suitable for users over 18
-        /// </summary>
-        Explicit = 1,
+		/// <summary>
+		/// Indicates the guild has extremely suggestive or mature content that would only be suitable for users over 18
+		/// </summary>
+		Explicit = 1,
 
-        /// <summary>
-        /// Indicates the guild has no content that could be deemed NSFW. It is SFW.
-        /// </summary>
-        Safe = 2,
+		/// <summary>
+		/// Indicates the guild has no content that could be deemed NSFW. It is SFW.
+		/// </summary>
+		Safe = 2,
 
-        /// <summary>
-        /// Indicates the guild has mildly NSFW content that may not be suitable for users under 18.
-        /// </summary>
-        Age_Restricted = 3
-    }
+		/// <summary>
+		/// Indicates the guild has mildly NSFW content that may not be suitable for users under 18.
+		/// </summary>
+		Age_Restricted = 3
+	}
 }

@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,15 +26,15 @@ using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands.Attributes
 {
-    /// <summary>
-    /// The autocomplete provider.
-    /// </summary>
-    public interface IAutocompleteProvider
-    {
-        /// <summary>
-        /// Provider the autocompletion.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context);
-    }
+	/// <summary>
+	/// The autocomplete provider.
+	/// </summary>
+	public interface IAutocompleteProvider
+	{
+		/// <summary>
+		/// Provider the autocompletion.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context);
+	}
 }

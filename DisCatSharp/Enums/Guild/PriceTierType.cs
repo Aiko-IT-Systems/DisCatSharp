@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -22,14 +22,14 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents a price tier type.
-    /// </summary>
-    public enum PriceTierType : int
-    {
-        /// <summary>
-        /// Indicates that this is a role subscriotion.
-        /// </summary>
-        GuildRoleSubscriptions = 1
-    }
+	/// <summary>
+	/// Represents a price tier type.
+	/// </summary>
+	public enum PriceTierType : int
+	{
+		/// <summary>
+		/// Indicates that this is a role subscriotion.
+		/// </summary>
+		GuildRoleSubscriptions = 1
+	}
 }

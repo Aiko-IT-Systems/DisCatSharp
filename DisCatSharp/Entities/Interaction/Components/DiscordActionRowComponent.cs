@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -27,38 +27,38 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents a row of components. Acion rows can have up to five components.
-    /// </summary>
-    public sealed class DiscordActionRowComponent : DiscordComponent
-    {
-        /// <summary>
-        /// The components contained within the action row.
-        /// </summary>
-        public IReadOnlyCollection<DiscordComponent> Components
-        {
-            get => this._components ?? new List<DiscordComponent>();
-            set => this._components = new List<DiscordComponent>(value);
-        }
+	/// <summary>
+	/// Represents a row of components. Acion rows can have up to five components.
+	/// </summary>
+	public sealed class DiscordActionRowComponent : DiscordComponent
+	{
+		/// <summary>
+		/// The components contained within the action row.
+		/// </summary>
+		public IReadOnlyCollection<DiscordComponent> Components
+		{
+			get => this._components ?? new List<DiscordComponent>();
+			set => this._components = new List<DiscordComponent>(value);
+		}
 
-        [JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-        private List<DiscordComponent> _components;
+		[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+		private List<DiscordComponent> _components;
 
-        /// <summary>
-        /// Constructs a new <see cref="DiscordActionRowComponent"/>.
-        /// </summary>
-        /// <param name="components">List of components</param>
-        public DiscordActionRowComponent(IEnumerable<DiscordComponent> components) : this()
-        {
-            this.Components = components.ToList().AsReadOnly();
-        }
+		/// <summary>
+		/// Constructs a new <see cref="DiscordActionRowComponent"/>.
+		/// </summary>
+		/// <param name="components">List of components</param>
+		public DiscordActionRowComponent(IEnumerable<DiscordComponent> components) : this()
+		{
+			this.Components = components.ToList().AsReadOnly();
+		}
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordActionRowComponent"/> class.
-        /// </summary>
-        internal DiscordActionRowComponent()
-        {
-            this.Type = ComponentType.ActionRow;
-        } // For Json.NET
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordActionRowComponent"/> class.
+		/// </summary>
+		internal DiscordActionRowComponent()
+		{
+			this.Type = ComponentType.ActionRow;
+		} // For Json.NET
+	}
 }

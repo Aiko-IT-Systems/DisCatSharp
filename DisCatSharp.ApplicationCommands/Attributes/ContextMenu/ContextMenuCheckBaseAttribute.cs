@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,16 +25,16 @@ using System.Threading.Tasks;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// The base class for a pre-execution check for a context menu.
-    /// </summary>
-    public abstract class ContextMenuCheckBaseAttribute : Attribute
-    {
-        /// <summary>
-        /// Checks whether this command can be executed within the current context.
-        /// </summary>
-        /// <param name="ctx">The context.</param>
-        /// <returns>Whether the checks passed.</returns>
-        public abstract Task<bool> ExecuteChecksAsync(ContextMenuContext ctx);
-    }
+	/// <summary>
+	/// The base class for a pre-execution check for a context menu.
+	/// </summary>
+	public abstract class ContextMenuCheckBaseAttribute : Attribute
+	{
+		/// <summary>
+		/// Checks whether this command can be executed within the current context.
+		/// </summary>
+		/// <param name="ctx">The context.</param>
+		/// <returns>Whether the checks passed.</returns>
+		public abstract Task<bool> ExecuteChecksAsync(ContextMenuContext ctx);
+	}
 }

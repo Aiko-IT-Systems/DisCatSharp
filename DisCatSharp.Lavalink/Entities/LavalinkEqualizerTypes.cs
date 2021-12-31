@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -26,59 +26,59 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Lavalink
 {
-    /// <summary>
-    /// Represents Lavalink equalizer band adjustment. This is used to alter the sound output by using Lavalink's equalizer.
-    /// </summary>
-    public struct LavalinkBandAdjustment
-    {
-        /// <summary>
-        /// Gets the ID of the band to adjust.
-        /// </summary>
-        [JsonProperty("band")]
-        public int BandId { get; }
+	/// <summary>
+	/// Represents Lavalink equalizer band adjustment. This is used to alter the sound output by using Lavalink's equalizer.
+	/// </summary>
+	public struct LavalinkBandAdjustment
+	{
+		/// <summary>
+		/// Gets the ID of the band to adjust.
+		/// </summary>
+		[JsonProperty("band")]
+		public int BandId { get; }
 
-        /// <summary>
-        /// Gets the gain of the specified band.
-        /// </summary>
-        [JsonProperty("gain")]
-        public float Gain { get; }
+		/// <summary>
+		/// Gets the gain of the specified band.
+		/// </summary>
+		[JsonProperty("gain")]
+		public float Gain { get; }
 
-        /// <summary>
-        /// Creates a new band adjustment with specified parameters.
-        /// </summary>
-        /// <param name="bandId">Which band to adjust. Must be in 0-14 range.</param>
-        /// <param name="gain">By how much to adjust the band. Must be greater than or equal to -0.25 (muted), and less than or equal to +1.0. +0.25 means the band is doubled.</param>
-        public LavalinkBandAdjustment(int bandId, float gain)
-        {
-            if (bandId < 0 || bandId > 14)
-                throw new ArgumentOutOfRangeException(nameof(bandId), "Band ID cannot be lower than 0 or greater than 14.");
+		/// <summary>
+		/// Creates a new band adjustment with specified parameters.
+		/// </summary>
+		/// <param name="bandId">Which band to adjust. Must be in 0-14 range.</param>
+		/// <param name="gain">By how much to adjust the band. Must be greater than or equal to -0.25 (muted), and less than or equal to +1.0. +0.25 means the band is doubled.</param>
+		public LavalinkBandAdjustment(int bandId, float gain)
+		{
+			if (bandId < 0 || bandId > 14)
+				throw new ArgumentOutOfRangeException(nameof(bandId), "Band ID cannot be lower than 0 or greater than 14.");
 
-            if (gain < -0.25 || gain > 1.0)
-                throw new ArgumentOutOfRangeException(nameof(gain), "Gain cannot be lower than -0.25 or greater than 1.0.");
+			if (gain < -0.25 || gain > 1.0)
+				throw new ArgumentOutOfRangeException(nameof(gain), "Gain cannot be lower than -0.25 or greater than 1.0.");
 
-            this.BandId = bandId;
-            this.Gain = gain;
-        }
-    }
+			this.BandId = bandId;
+			this.Gain = gain;
+		}
+	}
 
-    /// <summary>
-    /// The lavalink band adjustment comparer.
-    /// </summary>
-    internal class LavalinkBandAdjustmentComparer : IEqualityComparer<LavalinkBandAdjustment>
-    {
-        /// <summary>
-        /// Whether two band adjustments are equal.
-        /// </summary>
-        /// <param name="x">The first band adjustments.</param>
-        /// <param name="y">The seconed band adjustments.</param>
-        public bool Equals(LavalinkBandAdjustment x, LavalinkBandAdjustment y)
-            => x.BandId == y.BandId;
+	/// <summary>
+	/// The lavalink band adjustment comparer.
+	/// </summary>
+	internal class LavalinkBandAdjustmentComparer : IEqualityComparer<LavalinkBandAdjustment>
+	{
+		/// <summary>
+		/// Whether two band adjustments are equal.
+		/// </summary>
+		/// <param name="x">The first band adjustments.</param>
+		/// <param name="y">The seconed band adjustments.</param>
+		public bool Equals(LavalinkBandAdjustment x, LavalinkBandAdjustment y)
+			=> x.BandId == y.BandId;
 
-        /// <summary>
-        /// Gets the hash code.
-        /// </summary>
-        /// <param name="obj">The band adjustments.</param>
-        public int GetHashCode(LavalinkBandAdjustment obj)
-            => obj.BandId;
-    }
+		/// <summary>
+		/// Gets the hash code.
+		/// </summary>
+		/// <param name="obj">The band adjustments.</param>
+		public int GetHashCode(LavalinkBandAdjustment obj)
+			=> obj.BandId;
+	}
 }

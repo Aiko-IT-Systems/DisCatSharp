@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -24,14 +24,14 @@ using System;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents basic socket event arguments.
-    /// </summary>
-    public class SocketEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Creates a new event argument container.
-        /// </summary>
-        public SocketEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+	/// <summary>
+	/// Represents basic socket event arguments.
+	/// </summary>
+	public class SocketEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Creates a new event argument container.
+		/// </summary>
+		public SocketEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

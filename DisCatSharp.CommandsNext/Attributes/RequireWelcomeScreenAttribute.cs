@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -25,23 +25,23 @@ using System.Threading.Tasks;
 
 namespace DisCatSharp.CommandsNext.Attributes
 {
-    /// <summary>
-    /// Defines that a command is only usable within a guild which has enabled the welcome screen.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class RequireWelcomeScreenAttribute : CheckBaseAttribute
-    {
-        /// <summary>
-        /// Defines that this command is only usable within a guild which has enabled the welcome screen.
-        /// </summary>
-        public RequireWelcomeScreenAttribute()
-        { }
+	/// <summary>
+	/// Defines that a command is only usable within a guild which has enabled the welcome screen.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	public sealed class RequireWelcomeScreenAttribute : CheckBaseAttribute
+	{
+		/// <summary>
+		/// Defines that this command is only usable within a guild which has enabled the welcome screen.
+		/// </summary>
+		public RequireWelcomeScreenAttribute()
+		{ }
 
-        /// <summary>
-        /// Executes a check.
-        /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => Task.FromResult(ctx.Guild != null && ctx.Guild.HasWelcomeScreen);
-    }
+		/// <summary>
+		/// Executes a check.
+		/// </summary>
+		/// <param name="ctx">The command context.</param>
+		/// <param name="help">If true, help - returns true.</param>
+		public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => Task.FromResult(ctx.Guild != null && ctx.Guild.HasWelcomeScreen);
+	}
 }
