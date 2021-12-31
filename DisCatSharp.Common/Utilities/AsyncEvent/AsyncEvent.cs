@@ -61,7 +61,7 @@ namespace DisCatSharp.Common.Utilities
 		/// </summary>
 		public TimeSpan MaximumExecutionTime { get; }
 
-		private readonly object _lock = new object();
+		private readonly object _lock = new();
 		private ImmutableArray<AsyncEventHandler<TSender, TArgs>> _handlers;
 		private readonly AsyncEventExceptionHandler<TSender, TArgs> _exceptionHandler;
 
@@ -109,10 +109,7 @@ namespace DisCatSharp.Common.Utilities
 		/// <summary>
 		/// Unregisters all existing handlers from this event.
 		/// </summary>
-		public void UnregisterAll()
-		{
-			this._handlers = ImmutableArray<AsyncEventHandler<TSender, TArgs>>.Empty;
-		}
+		public void UnregisterAll() => this._handlers = ImmutableArray<AsyncEventHandler<TSender, TArgs>>.Empty;
 
 		/// <summary>
 		/// <para>Raises this event by invoking all of its registered handlers, in order of registration.</para>

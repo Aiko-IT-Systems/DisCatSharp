@@ -5383,7 +5383,7 @@ namespace DisCatSharp.Net
 					}
 					else
 					{
-						team.Add(new()
+						team.Add(new DisCatSharpTeamMember
 						{
 							Id = user.Id,
 							Username = user.Username,

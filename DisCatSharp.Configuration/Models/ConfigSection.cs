@@ -84,11 +84,9 @@ namespace DisCatSharp.Configuration.Models
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns>A string.</returns>
-		public string GetPath(string value)
-		{
-			return string.IsNullOrEmpty(this.Root)
+		public string GetPath(string value) =>
+			string.IsNullOrEmpty(this.Root)
 				? this.Config.ConfigPath(this.SectionName, value)
 				: this.Config.ConfigPath(this.Root, this.SectionName, value);
-		}
 	}
 }

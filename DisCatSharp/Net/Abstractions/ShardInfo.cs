@@ -83,12 +83,10 @@ namespace DisCatSharp.Net.Abstractions
 		/// </summary>
 		/// <param name="reader">The reader.</param>
 		/// <param name="serializer">The serializer.</param>
-		private JArray ReadArrayObject(JsonReader reader, JsonSerializer serializer)
-		{
-			return serializer.Deserialize<JToken>(reader) is not JArray arr || arr.Count != 2
+		private JArray ReadArrayObject(JsonReader reader, JsonSerializer serializer) =>
+			serializer.Deserialize<JToken>(reader) is not JArray arr || arr.Count != 2
 				? throw new JsonSerializationException("Expected array of length 2")
 				: arr;
-		}
 
 		/// <summary>
 		/// Whether this can be converted.

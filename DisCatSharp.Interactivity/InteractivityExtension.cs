@@ -91,9 +91,9 @@ namespace DisCatSharp.Interactivity
 			this._poller = new Poller(this.Client);
 			this._reactionCollector = new ReactionCollector(this.Client);
 			this._paginator = new Paginator(this.Client);
-			this._compPaginator = new(this.Client, this.Config);
-			this._componentEventWaiter = new(this.Client, this.Config);
-			this._modalEventWaiter = new(this.Client, this.Config);
+			this._compPaginator = new ComponentPaginator(this.Client, this.Config);
+			this._componentEventWaiter = new ComponentEventWaiter(this.Client, this.Config);
+			this._modalEventWaiter = new ModalEventWaiter(this.Client, this.Config);
 
 		}
 
@@ -163,12 +163,12 @@ namespace DisCatSharp.Interactivity
 				throw new ArgumentException("Provided Message does not contain any button components.");
 
 			var res = await this._componentEventWaiter
-				.WaitForMatchAsync(new(message,
+				.WaitForMatchAsync(new ComponentMatchRequest(message,
 					c =>
 						c.Interaction.Data.ComponentType == ComponentType.Button &&
 						buttons.Any(b => b.CustomId == c.Id), token)).ConfigureAwait(false);
 
-			return new(res is null, res);
+			return new InteractivityResult<ComponentInteractionCreateEventArgs>(res is null, res);
 		}
 
 		/// <summary>
@@ -191,10 +191,10 @@ namespace DisCatSharp.Interactivity
 			var result =
 				await this
 				._modalEventWaiter
-				.WaitForModalMatchAsync(new(customId, c => c.Interaction.Type == InteractionType.ModalSubmit, token))
+				.WaitForModalMatchAsync(new ModalMatchRequest(customId, c => c.Interaction.Type == InteractionType.ModalSubmit, token))
 				.ConfigureAwait(false);
 
-			return new(result is null, result);
+			return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
 		}
 
 		/// <summary>
@@ -232,10 +232,10 @@ namespace DisCatSharp.Interactivity
 			var result =
 				await this
 				._componentEventWaiter
-				.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType == ComponentType.Button && ids.Contains(c.Id), token))
+				.WaitForMatchAsync(new ComponentMatchRequest(message, c => c.Interaction.Data.ComponentType == ComponentType.Button && ids.Contains(c.Id), token))
 				.ConfigureAwait(false);
 
-			return new(result is null, result);
+			return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
 		}
 
 		/// <summary>
@@ -272,10 +272,10 @@ namespace DisCatSharp.Interactivity
 
 			var result = await this
 				._componentEventWaiter
-				.WaitForMatchAsync(new(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.User == user, token))
+				.WaitForMatchAsync(new ComponentMatchRequest(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.User == user, token))
 				.ConfigureAwait(false);
 
-			return new(result is null, result);
+			return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
 
 		}
 
@@ -315,10 +315,10 @@ namespace DisCatSharp.Interactivity
 				throw new ArgumentException($"Message does not contain button with Id of '{id}'.");
 			var result = await this
 				._componentEventWaiter
-				.WaitForMatchAsync(new(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.Id == id, token))
+				.WaitForMatchAsync(new ComponentMatchRequest(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.Id == id, token))
 				.ConfigureAwait(false);
 
-			return new(result is null, result);
+			return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
 		}
 
 		/// <summary>
@@ -349,10 +349,10 @@ namespace DisCatSharp.Interactivity
 
 			var result = await this
 				._componentEventWaiter
-				.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType is ComponentType.Button && predicate(c), token))
+				.WaitForMatchAsync(new ComponentMatchRequest(message, c => c.Interaction.Data.ComponentType is ComponentType.Button && predicate(c), token))
 				.ConfigureAwait(false);
 
-			return new(result is null, result);
+			return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
 		}
 
 
@@ -386,10 +386,10 @@ namespace DisCatSharp.Interactivity
 
 			var result = await this
 				._componentEventWaiter
-				.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType is ComponentType.Select && predicate(c), token))
+				.WaitForMatchAsync(new ComponentMatchRequest(message, c => c.Interaction.Data.ComponentType is ComponentType.Select && predicate(c), token))
 				.ConfigureAwait(false);
 
-			return new(result is null, result);
+			return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
 		}
 
 		/// <summary>
@@ -426,10 +426,10 @@ namespace DisCatSharp.Interactivity
 
 			var result = await this
 				._componentEventWaiter
-				.WaitForMatchAsync(new(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Select && c.Id == id, token))
+				.WaitForMatchAsync(new ComponentMatchRequest(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Select && c.Id == id, token))
 				.ConfigureAwait(false);
 
-			return new(result is null, result);
+			return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
 		}
 
 		/// <summary>
@@ -467,9 +467,9 @@ namespace DisCatSharp.Interactivity
 
 			var result = await this
 				._componentEventWaiter
-				.WaitForMatchAsync(new(message, (c) => c.Id == id && c.User == user, token)).ConfigureAwait(false);
+				.WaitForMatchAsync(new ComponentMatchRequest(message, (c) => c.Id == id && c.User == user, token)).ConfigureAwait(false);
 
-			return new(result is null, result);
+			return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
 		}
 
 
@@ -660,7 +660,7 @@ namespace DisCatSharp.Interactivity
 			var del = deletion ?? this.Config.ButtonBehavior;
 			var bts = buttons ?? this.Config.PaginationButtons;
 
-			bts = new(bts);
+			bts = new PaginationButtons(bts);
 			if (bhv is PaginationBehaviour.Ignore)
 			{
 				bts.SkipLeft.Disable();
@@ -770,7 +770,7 @@ namespace DisCatSharp.Interactivity
 			var del = deletion ?? this.Config.ButtonBehavior;
 			var bts = buttons ?? this.Config.PaginationButtons;
 
-			bts = new(bts);
+			bts = new PaginationButtons(bts);
 			if (bhv is PaginationBehaviour.Ignore)
 			{
 				bts.SkipLeft.Disable();
@@ -947,7 +947,7 @@ namespace DisCatSharp.Interactivity
 			var at = this.Config.ResponseBehavior switch
 			{
 				InteractionResponseBehavior.Ack => interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate),
-				InteractionResponseBehavior.Respond => interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new() { Content = this.Config.ResponseMessage, IsEphemeral = true}),
+				InteractionResponseBehavior.Respond => interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder { Content = this.Config.ResponseMessage, IsEphemeral = true}),
 				InteractionResponseBehavior.Ignore => Task.CompletedTask,
 				_ => throw new ArgumentException("Unknown enum value.")
 			};

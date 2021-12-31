@@ -80,9 +80,9 @@ namespace DisCatSharp.Net.WebSocket
 		private CancellationToken _socketToken;
 		private ClientWebSocket _ws;
 
-		private volatile bool _isClientClose = false;
-		private volatile bool _isConnected = false;
-		private bool _isDisposed = false;
+		private volatile bool _isClientClose;
+		private volatile bool _isConnected;
+		private bool _isDisposed;
 
 		/// <summary>
 		/// Instantiates a new WebSocket client with specified proxy settings.

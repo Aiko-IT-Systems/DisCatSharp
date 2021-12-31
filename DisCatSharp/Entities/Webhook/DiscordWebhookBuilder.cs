@@ -66,7 +66,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Whether to keep previous attachments.
 		/// </summary>
-		internal bool? KeepAttachmentsInternal = null;
+		internal bool? KeepAttachmentsInternal;
 
 		/// <summary>
 		/// Embeds to send on this webhook request.

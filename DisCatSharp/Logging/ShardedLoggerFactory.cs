@@ -54,12 +54,10 @@ namespace DisCatSharp
 		/// Creates a logger.
 		/// </summary>
 		/// <param name="categoryName">The category name.</param>
-		public ILogger CreateLogger(string categoryName)
-		{
-			return categoryName != typeof(BaseDiscordClient).FullName
+		public ILogger CreateLogger(string categoryName) =>
+			categoryName != typeof(BaseDiscordClient).FullName
 				? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}.", nameof(categoryName))
 				: this._logger;
-		}
 
 		/// <summary>
 		/// Disposes the logger.

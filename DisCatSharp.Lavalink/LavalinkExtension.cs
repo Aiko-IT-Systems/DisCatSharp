@@ -42,8 +42,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkNodeConnection, NodeDisconnectedEventArgs> NodeDisconnected
 		{
-			add { this._nodeDisconnected.Register(value); }
-			remove { this._nodeDisconnected.Unregister(value); }
+			add => this._nodeDisconnected.Register(value);
+			remove => this._nodeDisconnected.Unregister(value);
 		}
 		private AsyncEvent<LavalinkNodeConnection, NodeDisconnectedEventArgs> _nodeDisconnected;
 

@@ -52,8 +52,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkNodeConnection, SocketErrorEventArgs> LavalinkSocketErrored
 		{
-			add { this._lavalinkSocketError.Register(value); }
-			remove { this._lavalinkSocketError.Unregister(value); }
+			add => this._lavalinkSocketError.Register(value);
+			remove => this._lavalinkSocketError.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkNodeConnection, SocketErrorEventArgs> _lavalinkSocketError;
 
@@ -62,8 +62,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkNodeConnection, NodeDisconnectedEventArgs> Disconnected
 		{
-			add { this._disconnected.Register(value); }
-			remove { this._disconnected.Unregister(value); }
+			add => this._disconnected.Register(value);
+			remove => this._disconnected.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkNodeConnection, NodeDisconnectedEventArgs> _disconnected;
 
@@ -72,8 +72,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkNodeConnection, StatisticsReceivedEventArgs> StatisticsReceived
 		{
-			add { this._statsReceived.Register(value); }
-			remove { this._statsReceived.Unregister(value); }
+			add => this._statsReceived.Register(value);
+			remove => this._statsReceived.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkNodeConnection, StatisticsReceivedEventArgs> _statsReceived;
 
@@ -82,8 +82,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkGuildConnection, PlayerUpdateEventArgs> PlayerUpdated
 		{
-			add { this._playerUpdated.Register(value); }
-			remove { this._playerUpdated.Unregister(value); }
+			add => this._playerUpdated.Register(value);
+			remove => this._playerUpdated.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkGuildConnection, PlayerUpdateEventArgs> _playerUpdated;
 
@@ -93,8 +93,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkGuildConnection, TrackStartEventArgs> PlaybackStarted
 		{
-			add { this._playbackStarted.Register(value); }
-			remove { this._playbackStarted.Unregister(value); }
+			add => this._playbackStarted.Register(value);
+			remove => this._playbackStarted.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkGuildConnection, TrackStartEventArgs> _playbackStarted;
 
@@ -103,8 +103,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkGuildConnection, TrackFinishEventArgs> PlaybackFinished
 		{
-			add { this._playbackFinished.Register(value); }
-			remove { this._playbackFinished.Unregister(value); }
+			add => this._playbackFinished.Register(value);
+			remove => this._playbackFinished.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkGuildConnection, TrackFinishEventArgs> _playbackFinished;
 
@@ -113,8 +113,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkGuildConnection, TrackStuckEventArgs> TrackStuck
 		{
-			add { this._trackStuck.Register(value); }
-			remove { this._trackStuck.Unregister(value); }
+			add => this._trackStuck.Register(value);
+			remove => this._trackStuck.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkGuildConnection, TrackStuckEventArgs> _trackStuck;
 
@@ -123,8 +123,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkGuildConnection, TrackExceptionEventArgs> TrackException
 		{
-			add { this._trackException.Register(value); }
-			remove { this._trackException.Unregister(value); }
+			add => this._trackException.Register(value);
+			remove => this._trackException.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkGuildConnection, TrackExceptionEventArgs> _trackException;
 
@@ -137,8 +137,8 @@ namespace DisCatSharp.Lavalink
 		/// Gets whether the client is connected to Lavalink.
 		/// </summary>
 		public bool IsConnected => !Volatile.Read(ref this._isDisposed);
-		private bool _isDisposed = false;
-		private int _backoff = 0;
+		private bool _isDisposed;
+		private int _backoff;
 		/// <summary>
 		/// The minimum backoff.
 		/// </summary>

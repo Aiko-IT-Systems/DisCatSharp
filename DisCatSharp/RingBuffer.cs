@@ -59,7 +59,7 @@ namespace DisCatSharp
 		/// Gets or sets the internal collection of items.
 		/// </summary>
 		protected T[] InternalBuffer { get; set; }
-		private bool _reachedEnd = false;
+		private bool _reachedEnd;
 
 		/// <summary>
 		/// Creates a new ring buffer with specified size.
@@ -223,14 +223,12 @@ namespace DisCatSharp
 		/// Returns an enumerator for this ring buffer.
 		/// </summary>
 		/// <returns>Enumerator for this ring buffer.</returns>
-		public IEnumerator<T> GetEnumerator()
-		{
-			return !this._reachedEnd
+		public IEnumerator<T> GetEnumerator() =>
+			!this._reachedEnd
 				? this.InternalBuffer.AsEnumerable().GetEnumerator()
 				: this.InternalBuffer.Skip(this.CurrentIndex)
-				.Concat(this.InternalBuffer.Take(this.CurrentIndex))
-				.GetEnumerator();
-		}
+					.Concat(this.InternalBuffer.Take(this.CurrentIndex))
+					.GetEnumerator();
 
 		/// <summary>
 		/// Returns an enumerator for this ring buffer.

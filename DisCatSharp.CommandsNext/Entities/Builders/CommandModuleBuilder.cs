@@ -76,14 +76,12 @@ namespace DisCatSharp.CommandsNext.Builders
 		/// Builds the command module.
 		/// </summary>
 		/// <param name="services">The services.</param>
-		internal ICommandModule Build(IServiceProvider services)
-		{
-			return this.Lifespan switch
+		internal ICommandModule Build(IServiceProvider services) =>
+			this.Lifespan switch
 			{
 				ModuleLifespan.Singleton => new SingletonCommandModule(this.Type, services),
 				ModuleLifespan.Transient => new TransientCommandModule(this.Type),
 				_ => throw new NotSupportedException("Module lifespans other than transient and singleton are not supported."),
 			};
-		}
 	}
 }

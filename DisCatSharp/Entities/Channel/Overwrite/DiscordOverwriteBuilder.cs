@@ -142,16 +142,14 @@ namespace DisCatSharp.Entities
 		/// Builds this DiscordOverwrite.
 		/// </summary>
 		/// <returns>Use this object for creation of new overwrites.</returns>
-		internal DiscordRestOverwrite Build()
-		{
-			return new DiscordRestOverwrite()
+		internal DiscordRestOverwrite Build() =>
+			new DiscordRestOverwrite()
 			{
 				Allow = this.Allowed,
 				Deny = this.Denied,
 				Id = this.Target.Id,
 				Type = this.Type,
 			};
-		}
 	}
 
 	internal struct DiscordRestOverwrite

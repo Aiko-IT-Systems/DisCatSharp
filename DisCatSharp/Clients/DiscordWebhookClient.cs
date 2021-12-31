@@ -50,7 +50,7 @@ namespace DisCatSharp
 		/// Gets the webhook regex.
 		/// this regex has 2 named capture groups: "id" and "token".
 		/// </summary>
-		private static Regex s_webhookRegex { get; } = new Regex(@"(?:https?:\/\/)?discord(?:app)?.com\/api\/(?:v\d\/)?webhooks\/(?<id>\d+)\/(?<token>[A-Za-z0-9_\-]+)", RegexOptions.ECMAScript);
+		private static Regex s_webhookRegex { get; } = new(@"(?:https?:\/\/)?discord(?:app)?.com\/api\/(?:v\d\/)?webhooks\/(?<id>\d+)\/(?<token>[A-Za-z0-9_\-]+)", RegexOptions.ECMAScript);
 
 		/// <summary>
 		/// Gets the collection of registered webhooks.

@@ -68,9 +68,8 @@ namespace DisCatSharp.Enums
 		/// </summary>
 		/// <param name="scope">The scope.</param>
 		/// <returns>A string representing the scopes.</returns>
-		public static string ResolveScopes(OAuthScopes scope)
-		{
-			return scope switch
+		public static string ResolveScopes(OAuthScopes scope) =>
+			scope switch
 			{
 				OAuthScopes.BOT_DEFAULT => BOT_DEFAULT,
 				OAuthScopes.BOT_MINIMAL => BOT_MINIMAL,
@@ -80,7 +79,6 @@ namespace DisCatSharp.Enums
 				OAuthScopes.ALL => ALL,
 				_ => BOT_DEFAULT,
 			};
-		}
 	}
 	/// <summary>
 	/// The oauth scopes.

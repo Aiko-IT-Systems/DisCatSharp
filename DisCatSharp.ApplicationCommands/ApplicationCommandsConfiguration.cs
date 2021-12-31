@@ -49,7 +49,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Debugs the startups expected and actual count.
 		/// </summary>
-		public bool DebugStartupCounts { internal get; set; } = false;
+		public bool DebugStartupCounts { internal get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.

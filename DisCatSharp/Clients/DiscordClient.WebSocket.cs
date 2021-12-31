@@ -49,7 +49,7 @@ namespace DisCatSharp
 
 		internal static DateTimeOffset DiscordEpoch = new(2015, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
-		private int _skippedHeartbeats = 0;
+		private int _skippedHeartbeats;
 		private long _lastSequence;
 
 		internal IWebSocketClient WebSocketClient;
@@ -65,7 +65,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the socket locks.
 		/// </summary>
-		private static ConcurrentDictionary<ulong, SocketLock> s_socketLocks { get; } = new ConcurrentDictionary<ulong, SocketLock>();
+		private static ConcurrentDictionary<ulong, SocketLock> s_socketLocks { get; } = new();
 
 		/// <summary>
 		/// Gets the session lock.

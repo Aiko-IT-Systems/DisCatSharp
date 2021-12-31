@@ -117,11 +117,10 @@ namespace DisCatSharp.Entities
 		/// <param name="objectType">The object type.</param>
 		/// <param name="existingValue">The existing value.</param>
 		/// <param name="serializer">The serializer.</param>
-		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-		{
+		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) =>
 			// Active sessions are indicated with an "online", "idle", or "dnd" string per platform. If a user is
 			// offline or invisible, the corresponding field is not present.
-			return (reader.Value?.ToString().ToLowerInvariant()) switch // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
+			reader.Value?.ToString().ToLowerInvariant() switch // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
 			{
 				"online" => UserStatus.Online,
 				"idle" => UserStatus.Idle,
@@ -130,7 +129,6 @@ namespace DisCatSharp.Entities
 				"streaming" => UserStatus.Streaming,
 				_ => UserStatus.Offline,
 			};
-		}
 
 		/// <summary>
 		/// Whether this user5 status can be converted.

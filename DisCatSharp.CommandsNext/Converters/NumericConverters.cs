@@ -36,12 +36,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<bool>> IArgumentConverter<bool>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return bool.TryParse(value, out var result)
+		Task<Optional<bool>> IArgumentConverter<bool>.ConvertAsync(string value, CommandContext ctx) =>
+			bool.TryParse(value, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<bool>());
-		}
 	}
 
 	/// <summary>
@@ -54,12 +52,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<sbyte>> IArgumentConverter<sbyte>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return sbyte.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
+		Task<Optional<sbyte>> IArgumentConverter<sbyte>.ConvertAsync(string value, CommandContext ctx) =>
+			sbyte.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<sbyte>());
-		}
 	}
 
 	/// <summary>
@@ -72,12 +68,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<byte>> IArgumentConverter<byte>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return byte.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
+		Task<Optional<byte>> IArgumentConverter<byte>.ConvertAsync(string value, CommandContext ctx) =>
+			byte.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<byte>());
-		}
 	}
 
 	/// <summary>
@@ -90,12 +84,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<short>> IArgumentConverter<short>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return short.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
+		Task<Optional<short>> IArgumentConverter<short>.ConvertAsync(string value, CommandContext ctx) =>
+			short.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<short>());
-		}
 	}
 
 	/// <summary>
@@ -108,12 +100,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<ushort>> IArgumentConverter<ushort>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return ushort.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
+		Task<Optional<ushort>> IArgumentConverter<ushort>.ConvertAsync(string value, CommandContext ctx) =>
+			ushort.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<ushort>());
-		}
 	}
 
 	/// <summary>
@@ -126,12 +116,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<int>> IArgumentConverter<int>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
+		Task<Optional<int>> IArgumentConverter<int>.ConvertAsync(string value, CommandContext ctx) =>
+			int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<int>());
-		}
 	}
 
 	/// <summary>
@@ -144,12 +132,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<uint>> IArgumentConverter<uint>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return uint.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
+		Task<Optional<uint>> IArgumentConverter<uint>.ConvertAsync(string value, CommandContext ctx) =>
+			uint.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<uint>());
-		}
 	}
 
 	/// <summary>
@@ -162,12 +148,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<long>> IArgumentConverter<long>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
+		Task<Optional<long>> IArgumentConverter<long>.ConvertAsync(string value, CommandContext ctx) =>
+			long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<long>());
-		}
 	}
 
 	/// <summary>
@@ -180,12 +164,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<ulong>> IArgumentConverter<ulong>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
+		Task<Optional<ulong>> IArgumentConverter<ulong>.ConvertAsync(string value, CommandContext ctx) =>
+			ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<ulong>());
-		}
 	}
 
 	/// <summary>
@@ -198,12 +180,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<float>> IArgumentConverter<float>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return float.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var result)
+		Task<Optional<float>> IArgumentConverter<float>.ConvertAsync(string value, CommandContext ctx) =>
+			float.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<float>());
-		}
 	}
 
 	/// <summary>
@@ -216,12 +196,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<double>> IArgumentConverter<double>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return double.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var result)
+		Task<Optional<double>> IArgumentConverter<double>.ConvertAsync(string value, CommandContext ctx) =>
+			double.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<double>());
-		}
 	}
 
 	/// <summary>
@@ -234,11 +212,9 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<decimal>> IArgumentConverter<decimal>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var result)
+		Task<Optional<decimal>> IArgumentConverter<decimal>.ConvertAsync(string value, CommandContext ctx) =>
+			decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<decimal>());
-		}
 	}
 }

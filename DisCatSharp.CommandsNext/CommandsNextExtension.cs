@@ -1048,8 +1048,8 @@ namespace DisCatSharp.CommandsNext
 		/// </summary>
 		public event AsyncEventHandler<CommandsNextExtension, CommandExecutionEventArgs> CommandExecuted
 		{
-			add { this._executed.Register(value); }
-			remove { this._executed.Unregister(value); }
+			add => this._executed.Register(value);
+			remove => this._executed.Unregister(value);
 		}
 		private AsyncEvent<CommandsNextExtension, CommandExecutionEventArgs> _executed;
 
@@ -1058,8 +1058,8 @@ namespace DisCatSharp.CommandsNext
 		/// </summary>
 		public event AsyncEventHandler<CommandsNextExtension, CommandErrorEventArgs> CommandErrored
 		{
-			add { this._error.Register(value); }
-			remove { this._error.Unregister(value); }
+			add => this._error.Register(value);
+			remove => this._error.Unregister(value);
 		}
 		private AsyncEvent<CommandsNextExtension, CommandErrorEventArgs> _error;
 

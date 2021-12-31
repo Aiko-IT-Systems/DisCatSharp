@@ -60,28 +60,23 @@ namespace DisCatSharp.Entities
 		/// <para>This can be cast to a <see langword="long"/>, <see langword="bool"></see>, <see langword="string"></see>, <see langword="double"></see> or <see langword="ulong"/> depending on the <see cref="System.Type"/></para>
 		/// </summary>
 		[JsonIgnore]
-		public object Value
-		{
-			get
-			{
-				return this.Type == ApplicationCommandOptionType.Integer && int.TryParse(this.RawValue, out var raw)
-					? raw
-					: this.Type == ApplicationCommandOptionType.Integer
-						? long.Parse(this.RawValue)
-						: this.Type switch
-						{
-							ApplicationCommandOptionType.Boolean => bool.Parse(this.RawValue),
-							ApplicationCommandOptionType.String => this.RawValue,
-							ApplicationCommandOptionType.Channel => ulong.Parse(this.RawValue),
-							ApplicationCommandOptionType.User => ulong.Parse(this.RawValue),
-							ApplicationCommandOptionType.Role => ulong.Parse(this.RawValue),
-							ApplicationCommandOptionType.Mentionable => ulong.Parse(this.RawValue),
-							ApplicationCommandOptionType.Number => double.Parse(this.RawValue),
-							ApplicationCommandOptionType.Attachment => int.Parse(this.RawValue),
-							_ => this.RawValue,
-						};
-			}
-		}
+		public object Value =>
+			this.Type == ApplicationCommandOptionType.Integer && int.TryParse(this.RawValue, out var raw)
+				? raw
+				: this.Type == ApplicationCommandOptionType.Integer
+					? long.Parse(this.RawValue)
+					: this.Type switch
+					{
+						ApplicationCommandOptionType.Boolean => bool.Parse(this.RawValue),
+						ApplicationCommandOptionType.String => this.RawValue,
+						ApplicationCommandOptionType.Channel => ulong.Parse(this.RawValue),
+						ApplicationCommandOptionType.User => ulong.Parse(this.RawValue),
+						ApplicationCommandOptionType.Role => ulong.Parse(this.RawValue),
+						ApplicationCommandOptionType.Mentionable => ulong.Parse(this.RawValue),
+						ApplicationCommandOptionType.Number => double.Parse(this.RawValue),
+						ApplicationCommandOptionType.Attachment => int.Parse(this.RawValue),
+						_ => this.RawValue,
+					};
 
 		/// <summary>
 		/// Gets the additional parameters if this parameter is a subcommand.

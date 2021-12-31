@@ -75,17 +75,17 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets or Sets if the message should be TTS.
 		/// </summary>
-		public bool IsTts { get; set; } = false;
+		public bool IsTts { get; set; }
 
 		/// <summary>
 		/// Whether to keep previous attachments.
 		/// </summary>
-		internal bool? KeepAttachmentsInternal = null;
+		internal bool? KeepAttachmentsInternal;
 
 		/// <summary>
 		/// Gets the Allowed Mentions for the message to be sent.
 		/// </summary>
-		public List<IMention> Mentions { get; private set; } = null;
+		public List<IMention> Mentions { get; private set; }
 
 		/// <summary>
 		/// Gets the Files to be sent in the Message.
@@ -108,17 +108,17 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the Reply Message ID.
 		/// </summary>
-		public ulong? ReplyId { get; private set; } = null;
+		public ulong? ReplyId { get; private set; }
 
 		/// <summary>
 		/// Gets if the Reply should mention the user.
 		/// </summary>
-		public bool MentionOnReply { get; private set; } = false;
+		public bool MentionOnReply { get; private set; }
 
 		/// <summary>
 		/// Gets if the embeds should be suppressed.
 		/// </summary>
-		public bool Suppressed { get; private set; } = false;
+		public bool Suppressed { get; private set; }
 
 		/// <summary>
 		/// Gets if the Reply will error if the Reply Message Id does not reference a valid message.

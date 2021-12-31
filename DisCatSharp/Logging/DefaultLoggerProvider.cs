@@ -40,7 +40,7 @@ namespace DisCatSharp
 		/// </summary>
 		private readonly string _timestampFormat;
 
-		private bool _isDisposed = false;
+		private bool _isDisposed;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DefaultLoggerProvider"/> class.
@@ -73,14 +73,12 @@ namespace DisCatSharp
 		/// Creates the logger.
 		/// </summary>
 		/// <param name="categoryName">The category name.</param>
-		public ILogger CreateLogger(string categoryName)
-		{
-			return this._isDisposed
+		public ILogger CreateLogger(string categoryName) =>
+			this._isDisposed
 				? throw new InvalidOperationException("This logger provider is already disposed.")
 				: categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName
-				? throw new ArgumentException($"This provider can only provide instances of loggers for {typeof(BaseDiscordClient).FullName} or {typeof(DiscordWebhookClient).FullName}.", nameof(categoryName))
-				: new DefaultLogger(this._minimumLevel, this._timestampFormat);
-		}
+					? throw new ArgumentException($"This provider can only provide instances of loggers for {typeof(BaseDiscordClient).FullName} or {typeof(DiscordWebhookClient).FullName}.", nameof(categoryName))
+					: new DefaultLogger(this._minimumLevel, this._timestampFormat);
 
 		/// <summary>
 		/// Disposes the logger.

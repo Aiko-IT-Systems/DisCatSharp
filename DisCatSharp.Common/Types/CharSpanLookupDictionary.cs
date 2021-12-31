@@ -65,7 +65,7 @@ namespace DisCatSharp.Common
 		/// <summary>
 		/// Gets the total number of items in this dictionary.
 		/// </summary>
-		public int Count { get; private set; } = 0;
+		public int Count { get; private set; }
 
 		/// <summary>
 		/// Gets whether this dictionary is read-only.
@@ -85,7 +85,7 @@ namespace DisCatSharp.Common
 		/// <summary>
 		/// Gets the object which allows synchronizing access to this dictionary.
 		/// </summary>
-		public object SyncRoot { get; } = new object();
+		public object SyncRoot { get; } = new();
 
 		/// <summary>
 		/// Gets or sets a value corresponding to given key in this dictionary.
@@ -759,7 +759,7 @@ namespace DisCatSharp.Common
 			/// <summary>
 			/// Gets the entry.
 			/// </summary>
-			DictionaryEntry IDictionaryEnumerator.Entry => new DictionaryEntry(this.Current.Key, this.Current.Value);
+			DictionaryEntry IDictionaryEnumerator.Entry => new(this.Current.Key, this.Current.Value);
 
 			/// <summary>
 			/// Gets the internal dictionary.
@@ -823,10 +823,7 @@ namespace DisCatSharp.Common
 			/// <summary>
 			/// Disposes the.
 			/// </summary>
-			public void Dispose()
-			{
-				this.Reset();
-			}
+			public void Dispose() => this.Reset();
 		}
 	}
 }

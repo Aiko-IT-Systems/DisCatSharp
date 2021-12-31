@@ -51,7 +51,7 @@ namespace DisCatSharp.VoiceNext
 		/// <summary>
 		/// Gets the default audio format. This is a formt configured for 48kHz sampling rate, 2 channels, with music quality preset.
 		/// </summary>
-		public static AudioFormat Default { get; } = new AudioFormat(48000, 2, VoiceApplication.Music);
+		public static AudioFormat Default { get; } = new(48000, 2, VoiceApplication.Music);
 
 		/// <summary>
 		/// Gets the audio sampling rate in Hz.

@@ -105,7 +105,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Gets the time interval to wait before the rate limit resets.
 		/// </summary>
-		public TimeSpan? ResetAfter { get; internal set; } = null;
+		public TimeSpan? ResetAfter { get; internal set; }
 
 		/// <summary>
 		/// Gets a value indicating whether the ratelimit global.

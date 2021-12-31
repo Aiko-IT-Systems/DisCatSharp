@@ -224,11 +224,9 @@ namespace DisCatSharp.CommandsNext
 		/// Returns a string representation of this command.
 		/// </summary>
 		/// <returns>String representation of this command.</returns>
-		public override string ToString()
-		{
-			return this is CommandGroup g
+		public override string ToString() =>
+			this is CommandGroup g
 				? $"Command Group: {this.QualifiedName}, {g.Children.Count} top-level children"
 				: $"Command: {this.QualifiedName}";
-		}
 	}
 }

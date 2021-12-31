@@ -158,7 +158,7 @@ namespace DisCatSharp.Common.Utilities
 			/// <summary>
 			/// Gets whether the task returned a result.
 			/// </summary>
-			public bool HasResult { get; set; } = false;
+			public bool HasResult { get; set; }
 
 			/// <summary>
 			/// Initializes a new instance of the <see cref="StateRef{T}"/> class.

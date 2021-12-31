@@ -46,7 +46,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Gets the route argument regex.
 		/// </summary>
-		private static Regex s_routeArgumentRegex { get; } = new Regex(@":([a-z_]+)");
+		private static Regex s_routeArgumentRegex { get; } = new(@":([a-z_]+)");
 
 		/// <summary>
 		/// Gets the http client.
@@ -824,7 +824,9 @@ namespace DisCatSharp.Net
 		}
 
 		~RestClient()
-			=> this.Dispose();
+		{
+			this.Dispose();
+		}
 
 		/// <summary>
 		/// Disposes the rest client.

@@ -135,7 +135,7 @@ namespace DisCatSharp.Entities
 		/// Gets the guild's AFK voice channel ID.
 		/// </summary>
 		[JsonProperty("afk_channel_id", NullValueHandling = NullValueHandling.Ignore)]
-		internal ulong AfkChannelId { get; set; } = 0;
+		internal ulong AfkChannelId { get; set; }
 
 		/// <summary>
 		/// Gets the guild's AFK voice channel.
@@ -646,7 +646,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordGuild()
 		{
-			this._currentMemberLazy = new Lazy<DiscordMember>(() => (this.MembersInternal != null && this.MembersInternal.TryGetValue(this.Discord.CurrentUser.Id, out var member)) ? member : null);
+			this._currentMemberLazy = new Lazy<DiscordMember>(() => this.MembersInternal != null && this.MembersInternal.TryGetValue(this.Discord.CurrentUser.Id, out var member) ? member : null);
 			this.Invites = new ConcurrentDictionary<string, DiscordInvite>();
 			this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this.ThreadsInternal);
 			this.StageInstances = new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this.StageInstancesInternal);
@@ -1158,15 +1158,13 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task<DiscordChannel> CreateChannelAsync(string name, ChannelType type, DiscordChannel parent = null, Optional<string> topic = default, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, VideoQualityMode? qualityMode = null, string reason = null)
-		{
+		public Task<DiscordChannel> CreateChannelAsync(string name, ChannelType type, DiscordChannel parent = null, Optional<string> topic = default, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, VideoQualityMode? qualityMode = null, string reason = null) =>
 			// technically you can create news/store channels but not always
-			return type != ChannelType.Text && type != ChannelType.Voice && type != ChannelType.Category && type != ChannelType.News && type != ChannelType.Store && type != ChannelType.Stage
+			type != ChannelType.Text && type != ChannelType.Voice && type != ChannelType.Category && type != ChannelType.News && type != ChannelType.Store && type != ChannelType.Stage
 				? throw new ArgumentException("Channel type must be text, voice, stage, or category.", nameof(type))
 				: type == ChannelType.Category && parent != null
-				? throw new ArgumentException("Cannot specify parent of a channel category.", nameof(parent))
-				: this.Discord.ApiClient.CreateGuildChannelAsync(this.Id, name, type, parent?.Id, topic, bitrate, userLimit, overwrites, nsfw, perUserRateLimit, qualityMode, reason);
-		}
+					? throw new ArgumentException("Cannot specify parent of a channel category.", nameof(parent))
+					: this.Discord.ApiClient.CreateGuildChannelAsync(this.Id, name, type, parent?.Id, topic, bitrate, userLimit, overwrites, nsfw, perUserRateLimit, qualityMode, reason);
 
 		/// <summary>
 		/// Gets active threads. Can contain more threads.
@@ -1538,7 +1536,7 @@ namespace DisCatSharp.Entities
 		/// <returns>Requested channel.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public DiscordChannel GetChannel(ulong id)
-			=> (this.ChannelsInternal != null && this.ChannelsInternal.TryGetValue(id, out var channel)) ? channel : null;
+			=> this.ChannelsInternal != null && this.ChannelsInternal.TryGetValue(id, out var channel) ? channel : null;
 
 		/// <summary>
 		/// Gets a thread from this guild by its ID.
@@ -1547,7 +1545,7 @@ namespace DisCatSharp.Entities
 		/// <returns>Requested thread.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public DiscordThreadChannel GetThread(ulong id)
-			=> (this.ThreadsInternal != null && this.ThreadsInternal.TryGetValue(id, out var thread)) ? thread : null;
+			=> this.ThreadsInternal != null && this.ThreadsInternal.TryGetValue(id, out var thread) ? thread : null;
 
 		/// <summary>
 		/// Gets audit log entries for this guild.
@@ -1621,7 +1619,7 @@ namespace DisCatSharp.Entities
 				.GroupBy(xh => xh.Id)
 				.Select(xgh => xgh.First());
 
-			var ams = amr.Select(xau => (this.MembersInternal != null && this.MembersInternal.TryGetValue(xau.Id, out var member)) ? member : new DiscordMember { Discord = this.Discord, Id = xau.Id, GuildId = this.Id });
+			var ams = amr.Select(xau => this.MembersInternal != null && this.MembersInternal.TryGetValue(xau.Id, out var member) ? member : new DiscordMember { Discord = this.Discord, Id = xau.Id, GuildId = this.Id });
 			var amd = ams.ToDictionary(xm => xm.Id, xm => xm);
 
 #pragma warning disable CS0219
@@ -1673,8 +1671,8 @@ namespace DisCatSharp.Entities
 								case "owner_id":
 									entrygld.OwnerChange = new PropertyChange<DiscordMember>
 									{
-										Before = (this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.OldValueUlong, out var oldMember)) ? oldMember : await this.GetMemberAsync(xc.OldValueUlong).ConfigureAwait(false),
-										After = (this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.NewValueUlong, out var newMember)) ? newMember : await this.GetMemberAsync(xc.NewValueUlong).ConfigureAwait(false)
+										Before = this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.OldValueUlong, out var oldMember) ? oldMember : await this.GetMemberAsync(xc.OldValueUlong).ConfigureAwait(false),
+										After = this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.NewValueUlong, out var newMember) ? newMember : await this.GetMemberAsync(xc.NewValueUlong).ConfigureAwait(false)
 									};
 									break;
 
@@ -2798,14 +2796,12 @@ namespace DisCatSharp.Entities
 		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task DeleteEmojiAsync(DiscordGuildEmoji emoji, string reason = null)
-		{
-			return emoji == null
+		public Task DeleteEmojiAsync(DiscordGuildEmoji emoji, string reason = null) =>
+			emoji == null
 				? throw new ArgumentNullException(nameof(emoji))
 				: emoji.Guild.Id != this.Id
-				? throw new ArgumentException("This emoji does not belong to this guild.")
-				: this.Discord.ApiClient.DeleteGuildEmojiAsync(this.Id, emoji.Id, reason);
-		}
+					? throw new ArgumentException("This emoji does not belong to this guild.")
+					: this.Discord.ApiClient.DeleteGuildEmojiAsync(this.Id, emoji.Id, reason);
 
 		/// <summary>
 		/// Gets all of this guild's custom stickers.
@@ -2875,7 +2871,7 @@ namespace DisCatSharp.Entities
 				? throw new ArgumentOutOfRangeException(nameof(name), "Sticker name needs to be between 2 and 30 characters long.")
 				: description.Length < 1 || description.Length > 100
 				? throw new ArgumentOutOfRangeException(nameof(description), "Sticker description needs to be between 1 and 100 characters long.")
-				: this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.GetDiscordName().Replace(":", ""), new("sticker", file, null, fileExt, contentType), reason);
+				: this.Discord.ApiClient.CreateGuildStickerAsync(this.Id, name, description, emoji.GetDiscordName().Replace(":", ""), new DiscordMessageFile("sticker", file, null, fileExt, contentType), reason);
 		}
 
 		/// <summary>
@@ -2941,14 +2937,12 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
-		public Task DeleteStickerAsync(ulong sticker, string reason = null)
-		{
-			return !this.StickersInternal.TryGetValue(sticker, out var stickerobj)
+		public Task DeleteStickerAsync(ulong sticker, string reason = null) =>
+			!this.StickersInternal.TryGetValue(sticker, out var stickerobj)
 				? throw new ArgumentNullException(nameof(sticker))
 				: stickerobj.Guild.Id != this.Id
-				? throw new ArgumentException("This sticker does not belong to this guild.")
-				: this.Discord.ApiClient.DeleteGuildStickerAsync(this.Id, sticker, reason);
-		}
+					? throw new ArgumentException("This sticker does not belong to this guild.")
+					: this.Discord.ApiClient.DeleteGuildStickerAsync(this.Id, sticker, reason);
 
 		/// <summary>
 		/// Deletes a sticker
@@ -2968,12 +2962,10 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <returns>This member's default guild.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public DiscordChannel GetDefaultChannel()
-		{
-			return this.ChannelsInternal?.Values.Where(xc => xc.Type == ChannelType.Text)
-					.OrderBy(xc => xc.Position)
-					.FirstOrDefault(xc => (xc.PermissionsFor(this.CurrentMember) & DisCatSharp.Permissions.AccessChannels) == DisCatSharp.Permissions.AccessChannels);
-		}
+		public DiscordChannel GetDefaultChannel() =>
+			this.ChannelsInternal?.Values.Where(xc => xc.Type == ChannelType.Text)
+				.OrderBy(xc => xc.Position)
+				.FirstOrDefault(xc => (xc.PermissionsFor(this.CurrentMember) & DisCatSharp.Permissions.AccessChannels) == DisCatSharp.Permissions.AccessChannels);
 
 		/// <summary>
 		/// Gets the guild's widget

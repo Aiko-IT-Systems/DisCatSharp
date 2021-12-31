@@ -263,7 +263,7 @@ namespace DisCatSharp.Enums
 			this.Domain = domain;
 			var url = $"https://{domain}";
 			this.Url = url;
-			this.Uri = new(url);
+			this.Uri = new Uri(url);
 		}
 	}
 }

@@ -154,18 +154,16 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
-		public Task<DiscordSticker> ModifyAsync(Optional<string> name, Optional<string> description, Optional<string> tags, string reason = null)
-		{
-			return !this.GuildId.HasValue
+		public Task<DiscordSticker> ModifyAsync(Optional<string> name, Optional<string> description, Optional<string> tags, string reason = null) =>
+			!this.GuildId.HasValue
 				? throw new ArgumentException("This sticker does not belong to a guild.")
 				: name.HasValue && (name.Value.Length < 2 || name.Value.Length > 30)
-				? throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.")
-				: description.HasValue && (description.Value.Length < 1 || description.Value.Length > 100)
-				? throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.")
-				: tags.HasValue && !DiscordEmoji.TryFromUnicode(this.Discord, tags.Value, out var emoji)
-				? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
-				: this.Discord.ApiClient.ModifyGuildStickerAsync(this.GuildId.Value, this.Id, name, description, tags, reason);
-		}
+					? throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.")
+					: description.HasValue && (description.Value.Length < 1 || description.Value.Length > 100)
+						? throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.")
+						: tags.HasValue && !DiscordEmoji.TryFromUnicode(this.Discord, tags.Value, out var emoji)
+							? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
+							: this.Discord.ApiClient.ModifyGuildStickerAsync(this.GuildId.Value, this.Id, name, description, tags, reason);
 
 		/// <summary>
 		/// Deletes the sticker

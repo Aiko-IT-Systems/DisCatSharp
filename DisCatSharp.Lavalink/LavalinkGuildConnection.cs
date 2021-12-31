@@ -47,8 +47,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkGuildConnection, PlayerUpdateEventArgs> PlayerUpdated
 		{
-			add { this._playerUpdated.Register(value); }
-			remove { this._playerUpdated.Unregister(value); }
+			add => this._playerUpdated.Register(value);
+			remove => this._playerUpdated.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkGuildConnection, PlayerUpdateEventArgs> _playerUpdated;
 
@@ -58,8 +58,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkGuildConnection, TrackStartEventArgs> PlaybackStarted
 		{
-			add { this._playbackStarted.Register(value); }
-			remove { this._playbackStarted.Unregister(value); }
+			add => this._playbackStarted.Register(value);
+			remove => this._playbackStarted.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkGuildConnection, TrackStartEventArgs> _playbackStarted;
 
@@ -68,8 +68,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkGuildConnection, TrackFinishEventArgs> PlaybackFinished
 		{
-			add { this._playbackFinished.Register(value); }
-			remove { this._playbackFinished.Unregister(value); }
+			add => this._playbackFinished.Register(value);
+			remove => this._playbackFinished.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkGuildConnection, TrackFinishEventArgs> _playbackFinished;
 
@@ -78,8 +78,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkGuildConnection, TrackStuckEventArgs> TrackStuck
 		{
-			add { this._trackStuck.Register(value); }
-			remove { this._trackStuck.Unregister(value); }
+			add => this._trackStuck.Register(value);
+			remove => this._trackStuck.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkGuildConnection, TrackStuckEventArgs> _trackStuck;
 
@@ -88,8 +88,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkGuildConnection, TrackExceptionEventArgs> TrackException
 		{
-			add { this._trackException.Register(value); }
-			remove { this._trackException.Unregister(value); }
+			add => this._trackException.Register(value);
+			remove => this._trackException.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkGuildConnection, TrackExceptionEventArgs> _trackException;
 
@@ -98,8 +98,8 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		public event AsyncEventHandler<LavalinkGuildConnection, WebSocketCloseEventArgs> DiscordWebSocketClosed
 		{
-			add { this._webSocketClosed.Register(value); }
-			remove { this._webSocketClosed.Unregister(value); }
+			add => this._webSocketClosed.Register(value);
+			remove => this._webSocketClosed.Unregister(value);
 		}
 		private readonly AsyncEvent<LavalinkGuildConnection, WebSocketCloseEventArgs> _webSocketClosed;
 
@@ -107,7 +107,7 @@ namespace DisCatSharp.Lavalink
 		/// Gets whether this channel is still connected.
 		/// </summary>
 		public bool IsConnected => !Volatile.Read(ref this._isDisposed) && this.Channel != null;
-		private bool _isDisposed = false;
+		private bool _isDisposed;
 
 		/// <summary>
 		/// Gets the current player state.

@@ -57,7 +57,7 @@ namespace DisCatSharp
 		internal RingBuffer<DiscordMessage> MessageCache { get; }
 
 		private List<BaseExtension> _extensions = new();
-		private StatusUpdate _status = null;
+		private StatusUpdate _status;
 
 		/// <summary>
 		/// Gets the connection lock.

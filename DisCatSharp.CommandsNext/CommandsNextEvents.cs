@@ -32,11 +32,11 @@ namespace DisCatSharp.CommandsNext
 		/// <summary>
 		/// Miscellaneous events, that do not fit in any other category.
 		/// </summary>
-		internal static EventId Misc { get; } = new EventId(200, "CommandsNext");
+		internal static EventId Misc { get; } = new(200, "CommandsNext");
 
 		/// <summary>
 		/// Events pertaining to Gateway Intents. Typically diagnostic information.
 		/// </summary>
-		internal static EventId Intents { get; } = new EventId(201, nameof(Intents));
+		internal static EventId Intents { get; } = new(201, nameof(Intents));
 	}
 }

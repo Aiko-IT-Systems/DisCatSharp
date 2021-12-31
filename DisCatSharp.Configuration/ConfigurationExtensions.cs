@@ -304,7 +304,7 @@ namespace DisCatSharp.Configuration
 					: null;
 
 			return string.IsNullOrEmpty(section)
-				? new DiscordClient(new(serviceProvider))
+				? new DiscordClient(new DiscordConfiguration(serviceProvider))
 				: new DiscordClient(config.ExtractConfig<DiscordConfiguration>(serviceProvider, section, botSectionName));
 		}
 	}

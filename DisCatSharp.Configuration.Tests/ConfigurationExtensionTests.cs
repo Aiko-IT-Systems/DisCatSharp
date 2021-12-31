@@ -53,7 +53,7 @@ namespace DisCatSharp.Configuration.Tests
 
 		class ClassWithList
 		{
-			public List<string> Strings { get; set; } = new List<string>
+			public List<string> Strings { get; set; } = new()
 			{
 				"1",
 				"2",
@@ -62,7 +62,7 @@ namespace DisCatSharp.Configuration.Tests
 				"5"
 			};
 
-			public List<int> Values { get; set; } = new List<int>
+			public List<int> Values { get; set; } = new()
 			{
 				1,
 				2,

@@ -60,7 +60,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Gets the headers sent with this request.
 		/// </summary>
-		public IReadOnlyDictionary<string, string> Headers { get; } = null;
+		public IReadOnlyDictionary<string, string> Headers { get; }
 
 		/// <summary>
 		/// Gets the override for the rate limit bucket wait time.

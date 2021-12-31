@@ -83,12 +83,10 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the overwrite does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public async Task<DiscordMember> GetMemberAsync()
-		{
-			return this.Type != OverwriteType.Member
+		public async Task<DiscordMember> GetMemberAsync() =>
+			this.Type != OverwriteType.Member
 				? throw new ArgumentException(nameof(this.Type), "This overwrite is for a role, not a member.")
 				: await (await this.Discord.ApiClient.GetChannelAsync(this.ChannelId).ConfigureAwait(false)).Guild.GetMemberAsync(this.Id).ConfigureAwait(false);
-		}
 
 		/// <summary>
 		/// Gets the DiscordRole that is affected by this overwrite.
@@ -97,12 +95,10 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the role does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public async Task<DiscordRole> GetRoleAsync()
-		{
-			return this.Type != OverwriteType.Role
+		public async Task<DiscordRole> GetRoleAsync() =>
+			this.Type != OverwriteType.Role
 				? throw new ArgumentException(nameof(this.Type), "This overwrite is for a member, not a role.")
 				: (await this.Discord.ApiClient.GetChannelAsync(this.ChannelId).ConfigureAwait(false)).Guild.GetRole(this.Id);
-		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordOverwrite"/> class.
@@ -114,11 +110,9 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="permission">Permissions to check.</param>
 		/// <returns>Whether given permissions are allowed, denied, or not set.</returns>
-		public PermissionLevel CheckPermission(Permissions permission)
-		{
-			return (this.Allowed & permission) != 0
+		public PermissionLevel CheckPermission(Permissions permission) =>
+			(this.Allowed & permission) != 0
 				? PermissionLevel.Allowed
 				: (this.Denied & permission) != 0 ? PermissionLevel.Denied : PermissionLevel.Unset;
-		}
 	}
 }

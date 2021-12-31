@@ -346,7 +346,7 @@ namespace DisCatSharp.Entities
 				ImageFormat.Jpeg => "jpg",
 				ImageFormat.Png => "png",
 				ImageFormat.WebP => "webp",
-				ImageFormat.Auto => !string.IsNullOrWhiteSpace(this.AvatarHash) ? (this.AvatarHash.StartsWith("a_") ? "gif" : "png") : "png",
+				ImageFormat.Auto => !string.IsNullOrWhiteSpace(this.AvatarHash) ? this.AvatarHash.StartsWith("a_") ? "gif" : "png" : "png",
 				_ => throw new ArgumentOutOfRangeException(nameof(fmt)),
 			};
 			var ssize = size.ToString(CultureInfo.InvariantCulture);

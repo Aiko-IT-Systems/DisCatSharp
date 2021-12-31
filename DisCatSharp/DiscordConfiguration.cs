@@ -98,7 +98,7 @@ namespace DisCatSharp
 		/// <para>Sets the ID of the shard to connect to.</para>
 		/// <para>If not sharding, or sharding automatically, this value should be left with the default value of 0.</para>
 		/// </summary>
-		public int ShardId { internal get; set; } = 0;
+		public int ShardId { internal get; set; }
 
 		/// <summary>
 		/// <para>Sets the total number of shards the bot is on. If not sharding, this value should be left with a default value of 1.</para>
@@ -123,7 +123,7 @@ namespace DisCatSharp
 		/// <para>Sets the proxy to use for HTTP and WebSocket connections to Discord.</para>
 		/// <para>Defaults to null.</para>
 		/// </summary>
-		public IWebProxy Proxy { internal get; set; } = null;
+		public IWebProxy Proxy { internal get; set; }
 
 		/// <summary>
 		/// <para>Sets the timeout for HTTP requests.</para>
@@ -137,7 +137,7 @@ namespace DisCatSharp
 		/// <para>This is typically a very bad idea to set to <c>true</c>, as it will swallow all connection errors.</para>
 		/// <para>Defaults to false.</para>
 		/// </summary>
-		public bool ReconnectIndefinitely { internal get; set; } = false;
+		public bool ReconnectIndefinitely { internal get; set; }
 
 		/// <summary>
 		/// Sets whether the client should attempt to cache members if exclusively using unprivileged intents.
@@ -191,31 +191,31 @@ namespace DisCatSharp
 		/// <para>To create your own logger, implement the <see cref="Microsoft.Extensions.Logging.ILoggerFactory"/> instance.</para>
 		/// <para>Defaults to built-in implementation.</para>
 		/// </summary>
-		public ILoggerFactory LoggerFactory { internal get; set; } = null;
+		public ILoggerFactory LoggerFactory { internal get; set; }
 
 		/// <summary>
 		/// <para>Sets if the bot's status should show the mobile icon.</para>
 		/// <para>Defaults to false.</para>
 		/// </summary>
-		public bool MobileStatus { internal get; set; } = false;
+		public bool MobileStatus { internal get; set; }
 
 		/// <summary>
 		/// <para>Use canary.</para>
 		/// <para>Defaults to false.</para>
 		/// </summary>
-		public bool UseCanary { internal get; set; } = false;
+		public bool UseCanary { internal get; set; }
 
 		/// <summary>
 		/// <para>Refresh full guild channel cache.</para>
 		/// <para>Defaults to false.</para>
 		/// </summary>
-		public bool AutoRefreshChannelCache { internal get; set; } = false;
+		public bool AutoRefreshChannelCache { internal get; set; }
 
 		/// <summary>
 		/// <para>Do not use, this is meant for DisCatSharp Devs.</para>
 		/// <para>Defaults to null.</para>
 		/// </summary>
-		public string Override { internal get; set; } = null;
+		public string Override { internal get; set; }
 
 		/// <summary>
 		/// <para>Sets the service provider.</para>

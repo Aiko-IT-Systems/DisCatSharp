@@ -52,21 +52,16 @@ namespace DisCatSharp.Net.Abstractions
 		/// Gets the status string of the user.
 		/// </summary>
 		[JsonProperty("status")]
-		internal string StatusString
-		{
-			get
+		internal string StatusString =>
+			this.Status switch
 			{
-				return this.Status switch
-				{
-					UserStatus.Online => "online",
-					UserStatus.Idle => "idle",
-					UserStatus.DoNotDisturb => "dnd",
-					UserStatus.Invisible or UserStatus.Offline => "invisible",
-					UserStatus.Streaming => "streaming",
-					_ => "online",
-				};
-			}
-		}
+				UserStatus.Online => "online",
+				UserStatus.Idle => "idle",
+				UserStatus.DoNotDisturb => "dnd",
+				UserStatus.Invisible or UserStatus.Offline => "invisible",
+				UserStatus.Streaming => "streaming",
+				_ => "online",
+			};
 
 		/// <summary>
 		/// Gets or sets the game the user is playing.

@@ -44,7 +44,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		AsyncEventHandler<DiscordClient, T> _handler;
 		ConcurrentHashSet<MatchRequest<T>> _matchrequests;
 		ConcurrentHashSet<CollectRequest<T>> _collectrequests;
-		bool _disposed = false;
+		bool _disposed;
 
 		/// <summary>
 		/// Creates a new Eventwaiter object.

@@ -48,7 +48,7 @@ namespace DisCatSharp
 		#region Private Fields
 
 		private string _sessionId;
-		private bool _guildDownloadCompleted = false;
+		private bool _guildDownloadCompleted;
 
 		#endregion
 
@@ -67,7 +67,7 @@ namespace DisCatSharp
 				return;
 			}
 
-			await this._payloadReceived.InvokeAsync(this, new(this.ServiceProvider)
+			await this._payloadReceived.InvokeAsync(this, new PayloadReceivedEventArgs(this.ServiceProvider)
 			{
 				EventName = payload.EventName,
 				PayloadObject = dat

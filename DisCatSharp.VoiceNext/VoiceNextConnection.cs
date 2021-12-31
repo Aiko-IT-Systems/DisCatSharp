@@ -58,8 +58,8 @@ namespace DisCatSharp.VoiceNext
 		/// </summary>
 		public event AsyncEventHandler<VoiceNextConnection, UserSpeakingEventArgs> UserSpeaking
 		{
-			add { this._userSpeaking.Register(value); }
-			remove { this._userSpeaking.Unregister(value); }
+			add => this._userSpeaking.Register(value);
+			remove => this._userSpeaking.Unregister(value);
 		}
 		private readonly AsyncEvent<VoiceNextConnection, UserSpeakingEventArgs> _userSpeaking;
 
@@ -68,8 +68,8 @@ namespace DisCatSharp.VoiceNext
 		/// </summary>
 		public event AsyncEventHandler<VoiceNextConnection, VoiceUserJoinEventArgs> UserJoined
 		{
-			add { this._userJoined.Register(value); }
-			remove { this._userJoined.Unregister(value); }
+			add => this._userJoined.Register(value);
+			remove => this._userJoined.Unregister(value);
 		}
 		private readonly AsyncEvent<VoiceNextConnection, VoiceUserJoinEventArgs> _userJoined;
 
@@ -78,8 +78,8 @@ namespace DisCatSharp.VoiceNext
 		/// </summary>
 		public event AsyncEventHandler<VoiceNextConnection, VoiceUserLeaveEventArgs> UserLeft
 		{
-			add { this._userLeft.Register(value); }
-			remove { this._userLeft.Unregister(value); }
+			add => this._userLeft.Register(value);
+			remove => this._userLeft.Unregister(value);
 		}
 		private readonly AsyncEvent<VoiceNextConnection, VoiceUserLeaveEventArgs> _userLeft;
 
@@ -88,8 +88,8 @@ namespace DisCatSharp.VoiceNext
 		/// </summary>
 		public event AsyncEventHandler<VoiceNextConnection, VoiceReceiveEventArgs> VoiceReceived
 		{
-			add { this._voiceReceived.Register(value); }
-			remove { this._voiceReceived.Unregister(value); }
+			add => this._voiceReceived.Register(value);
+			remove => this._voiceReceived.Unregister(value);
 		}
 		private readonly AsyncEvent<VoiceNextConnection, VoiceReceiveEventArgs> _voiceReceived;
 
@@ -98,8 +98,8 @@ namespace DisCatSharp.VoiceNext
 		/// </summary>
 		public event AsyncEventHandler<VoiceNextConnection, SocketErrorEventArgs> VoiceSocketErrored
 		{
-			add { this._voiceSocketError.Register(value); }
-			remove { this._voiceSocketError.Unregister(value); }
+			add => this._voiceSocketError.Register(value);
+			remove => this._voiceSocketError.Unregister(value);
 		}
 		private readonly AsyncEvent<VoiceNextConnection, SocketErrorEventArgs> _voiceSocketError;
 
@@ -108,7 +108,7 @@ namespace DisCatSharp.VoiceNext
 		/// <summary>
 		/// Gets the unix epoch.
 		/// </summary>
-		private static DateTimeOffset s_unixEpoch { get; } = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+		private static DateTimeOffset s_unixEpoch { get; } = new(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
 		/// <summary>
 		/// Gets the discord.
@@ -200,7 +200,7 @@ namespace DisCatSharp.VoiceNext
 		/// <summary>
 		/// Gets or sets the nonce.
 		/// </summary>
-		private uint _nonce = 0;
+		private uint _nonce;
 
 		/// <summary>
 		/// Gets or sets the sequence.
@@ -274,7 +274,7 @@ namespace DisCatSharp.VoiceNext
 		/// Gets the keepalive timestamps.
 		/// </summary>
 		private readonly ConcurrentDictionary<ulong, long> _keepaliveTimestamps;
-		private ulong _lastKeepalive = 0;
+		private ulong _lastKeepalive;
 
 		/// <summary>
 		/// Gets or sets the sender task.
@@ -321,7 +321,7 @@ namespace DisCatSharp.VoiceNext
 		private CancellationToken KEEPALIVE_TOKEN
 			=> this._keepaliveTokenSource.Token;
 
-		private volatile bool _isSpeaking = false;
+		private volatile bool _isSpeaking;
 
 		/// <summary>
 		/// Gets the audio format used by the Opus encoder.
@@ -339,14 +339,14 @@ namespace DisCatSharp.VoiceNext
 		/// </summary>
 		public int WebSocketPing
 			=> Volatile.Read(ref this._wsPing);
-		private int _wsPing = 0;
+		private int _wsPing;
 
 		/// <summary>
 		/// Gets the UDP round-trip time in ms.
 		/// </summary>
 		public int UdpPing
 			=> Volatile.Read(ref this._udpPing);
-		private int _udpPing = 0;
+		private int _udpPing;
 
 		private int _queueCount;
 

@@ -738,7 +738,9 @@ namespace DisCatSharp
 		#region Destructor
 
 		~DiscordShardedClient()
-			=> this.InternalStopAsync(false).GetAwaiter().GetResult();
+		{
+			this.InternalStopAsync(false).GetAwaiter().GetResult();
+		}
 
 		#endregion
 	}

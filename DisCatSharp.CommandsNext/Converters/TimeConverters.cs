@@ -39,12 +39,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<DateTime>> IArgumentConverter<DateTime>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
+		Task<Optional<DateTime>> IArgumentConverter<DateTime>.ConvertAsync(string value, CommandContext ctx) =>
+			DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
 				? Task.FromResult(new Optional<DateTime>(result))
 				: Task.FromResult(Optional.FromNoValue<DateTime>());
-		}
 	}
 
 	/// <summary>
@@ -57,12 +55,10 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
-		Task<Optional<DateTimeOffset>> IArgumentConverter<DateTimeOffset>.ConvertAsync(string value, CommandContext ctx)
-		{
-			return DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
+		Task<Optional<DateTimeOffset>> IArgumentConverter<DateTimeOffset>.ConvertAsync(string value, CommandContext ctx) =>
+			DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
 				? Task.FromResult(Optional.FromValue(result))
 				: Task.FromResult(Optional.FromNoValue<DateTimeOffset>());
-		}
 	}
 
 	/// <summary>

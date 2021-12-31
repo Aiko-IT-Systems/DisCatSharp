@@ -184,7 +184,7 @@ namespace DisCatSharp.Common.Types
 			itemsWritten = sbuff.Length / this._itemSize;
 			sbuff.CopyTo(dbuff);
 
-			return (this.Length - source) != (ulong)itemsWritten;
+			return this.Length - source != (ulong)itemsWritten;
 		}
 
 		/// <inheritdoc />

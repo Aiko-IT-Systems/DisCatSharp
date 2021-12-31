@@ -39,7 +39,7 @@ namespace DisCatSharp.VoiceNext
 		/// <para>Sets whether incoming voice receiver should be enabled.</para>
 		/// <para>Defaults to false.</para>
 		/// </summary>
-		public bool EnableIncoming { internal get; set; } = false;
+		public bool EnableIncoming { internal get; set; }
 
 		/// <summary>
 		/// <para>Sets the size of the packet queue.</para>

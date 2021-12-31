@@ -112,16 +112,14 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="encryptedLength">The encrypted length.</param>
 		/// <param name="encryptionMode">The encryption mode.</param>
 		/// <returns>An int.</returns>
-		public int CalculatePacketSize(int encryptedLength, EncryptionMode encryptionMode)
-		{
-			return encryptionMode switch
+		public int CalculatePacketSize(int encryptedLength, EncryptionMode encryptionMode) =>
+			encryptionMode switch
 			{
 				EncryptionMode.XSalsa20Poly1305 => HEADER_SIZE + encryptedLength,
 				EncryptionMode.XSalsa20Poly1305Suffix => HEADER_SIZE + encryptedLength + Interop.SodiumNonceSize,
 				EncryptionMode.XSalsa20Poly1305Lite => HEADER_SIZE + encryptedLength + 4,
 				_ => throw new ArgumentException("Unsupported encryption mode.", nameof(encryptionMode)),
 			};
-		}
 
 		/// <summary>
 		/// Gets the data from packet.

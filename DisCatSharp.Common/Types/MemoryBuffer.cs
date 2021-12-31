@@ -249,7 +249,7 @@ namespace DisCatSharp.Common.Types
 			}
 
 			itemsWritten /= this._itemSize;
-			return (this.Length - source) != (ulong)itemsWritten;
+			return this.Length - source != (ulong)itemsWritten;
 		}
 
 		/// <inheritdoc />
@@ -332,7 +332,7 @@ namespace DisCatSharp.Common.Types
 		{
 			var capacity = this.Capacity;
 			var length = this.Length;
-			var totalAmt = (length + (ulong)minAmount);
+			var totalAmt = length + (ulong)minAmount;
 			if (capacity >= totalAmt)
 				return; // we're good
 

@@ -120,15 +120,13 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="obj">Object to compare to.</param>
 		/// <returns>Whether the object is equal to this <see cref="Optional{T}"/> or its value.</returns>
-		public override bool Equals(object obj)
-		{
-			return obj switch
+		public override bool Equals(object obj) =>
+			obj switch
 			{
 				T t => this.Equals(t),
 				Optional<T> opt => this.Equals(opt),
 				_ => false,
 			};
-		}
 
 		/// <summary>
 		/// Checks whether this <see cref="Optional{T}"/> is equal to another <see cref="Optional{T}"/>.

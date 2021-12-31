@@ -41,25 +41,25 @@ namespace DisCatSharp.Net.Abstractions
 		/// Gets the query.
 		/// </summary>
 		[JsonProperty("query", NullValueHandling = NullValueHandling.Ignore)]
-		public string Query { get; set; } = null;
+		public string Query { get; set; }
 
 		/// <summary>
 		/// Gets the limit.
 		/// </summary>
 		[JsonProperty("limit")]
-		public int Limit { get; set; } = 0;
+		public int Limit { get; set; }
 
 		/// <summary>
 		/// Gets whether presences should be returned.
 		/// </summary>
 		[JsonProperty("presences", NullValueHandling = NullValueHandling.Ignore)]
-		public bool? Presences { get; set; } = null;
+		public bool? Presences { get; set; }
 
 		/// <summary>
 		/// Gets the user ids.
 		/// </summary>
 		[JsonProperty("user_ids", NullValueHandling = NullValueHandling.Ignore)]
-		public IEnumerable<ulong> UserIds { get; set; } = null;
+		public IEnumerable<ulong> UserIds { get; set; }
 
 		/// <summary>
 		/// Gets the nonce.

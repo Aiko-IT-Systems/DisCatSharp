@@ -410,10 +410,7 @@ namespace DisCatSharp.Common
 			/// <summary>
 			/// Disposes the.
 			/// </summary>
-			public void Dispose()
-			{
-				this.Reset();
-			}
+			public void Dispose() => this.Reset();
 		}
 	}
 }

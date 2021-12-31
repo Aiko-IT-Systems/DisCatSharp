@@ -80,13 +80,11 @@ namespace DisCatSharp
 		/// <summary>
 		/// Builds the uri.
 		/// </summary>
-		public Uri Build()
-		{
-			return new UriBuilder(this.SourceUri)
+		public Uri Build() =>
+			new UriBuilder(this.SourceUri)
 			{
 				Query = string.Join("&", this._queryParams.Select(e => Uri.EscapeDataString(e.Key) + '=' + Uri.EscapeDataString(e.Value)))
 			}.Uri;
-		}
 
 		/// <summary>
 		/// Returns a readable string.

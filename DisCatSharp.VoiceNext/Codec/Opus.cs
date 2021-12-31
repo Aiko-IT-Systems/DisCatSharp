@@ -205,7 +205,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// </summary>
 		internal IntPtr Decoder { get; private set; }
 
-		private volatile bool _isDisposed = false;
+		private volatile bool _isDisposed;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OpusDecoder"/> class.

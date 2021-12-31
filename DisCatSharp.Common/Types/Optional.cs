@@ -35,7 +35,7 @@ namespace DisCatSharp.Common
 		/// <summary>
 		/// Gets an initialized instance of <see cref="Optional{T}"/> which has no value set.
 		/// </summary>
-		public static Optional<T> Default { get; } = new Optional<T>();
+		public static Optional<T> Default { get; } = new();
 
 		/// <summary>
 		/// Gets whether the value of this <see cref="Optional{T}"/> is present.
@@ -138,7 +138,7 @@ namespace DisCatSharp.Common
 		/// </summary>
 		/// <param name="value">Value to convert into an optional property.</param>
 		public static implicit operator Optional<T>(T value)
-			=> new Optional<T>(value);
+			=> new(value);
 
 		/// <summary>
 		/// Compares two properties and returns whether they are equal.
@@ -205,7 +205,7 @@ namespace DisCatSharp.Common
 		/// <param name="value">Value to set the property to.</param>
 		/// <returns>Created optional property, which has a specified value set.</returns>
 		public static Optional<T> FromValue<T>(T value)
-			=> new Optional<T>(value);
+			=> new(value);
 
 		/// <summary>
 		/// Creates a new <see cref="Optional{T}"/> from a default value for type <typeparamref name="T"/>.
@@ -213,7 +213,7 @@ namespace DisCatSharp.Common
 		/// <typeparam name="T">Type of the value to create an optional property for.</typeparam>
 		/// <returns>Created optional property, which has a default value for <typeparamref name="T"/> set.</returns>
 		public static Optional<T> FromDefaultValue<T>()
-			=> new Optional<T>(default);
+			=> new(default);
 
 		/// <summary>
 		/// Creates a new <see cref="Optional{T}"/> which has no value.

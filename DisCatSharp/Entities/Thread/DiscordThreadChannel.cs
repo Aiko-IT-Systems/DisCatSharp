@@ -343,12 +343,10 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public new Task<DiscordMessage> SendMessageAsync(string content)
-		{
-			return !this.IsWriteable()
+		public new Task<DiscordMessage> SendMessageAsync(string content) =>
+			!this.IsWriteable()
 				? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
-		}
 
 		/// <summary>
 		/// Sends a message to this thread.
@@ -359,12 +357,10 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public new Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
-		{
-			return !this.IsWriteable()
+		public new Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed) =>
+			!this.IsWriteable()
 				? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] { embed }, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
-		}
 
 		/// <summary>
 		/// Sends a message to this thread.
@@ -376,12 +372,10 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public new Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
-		{
-			return !this.IsWriteable()
+		public new Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed) =>
+			!this.IsWriteable()
 				? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, new[] { embed }, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
-		}
 
 		/// <summary>
 		/// Sends a message to this thread.
@@ -422,15 +416,13 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public new async Task<DiscordMessage> GetMessageAsync(ulong id)
-		{
-			return this.Discord.Configuration.MessageCacheSize > 0
-				&& this.Discord is DiscordClient dc
-				&& dc.MessageCache != null
-				&& dc.MessageCache.TryGet(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)
+		public new async Task<DiscordMessage> GetMessageAsync(ulong id) =>
+			this.Discord.Configuration.MessageCacheSize > 0
+			&& this.Discord is DiscordClient dc
+			&& dc.MessageCache != null
+			&& dc.MessageCache.TryGet(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)
 				? msg
 				: await this.Discord.ApiClient.GetMessageAsync(this.Id, id).ConfigureAwait(false);
-		}
 
 		/// <summary>
 		/// Returns a list of messages before a certain message.
@@ -576,12 +568,10 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public new Task TriggerTypingAsync()
-		{
-			return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
+		public new Task TriggerTypingAsync() =>
+			this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
 				? throw new ArgumentException("Cannot start typing in a non-text channel.")
 				: this.Discord.ApiClient.TriggerTypingAsync(this.Id);
-		}
 
 		/// <summary>
 		/// Returns all pinned messages
@@ -590,12 +580,10 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public new Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync()
-		{
-			return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.News
+		public new Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync() =>
+			this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.News
 				? throw new ArgumentException("A non-thread channel does not have pinned messages.")
 				: this.Discord.ApiClient.GetPinnedMessagesAsync(this.Id);
-		}
 
 		/// <summary>
 		/// Returns a string representation of this thread.

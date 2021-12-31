@@ -48,37 +48,37 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// A list of methods for top level commands.
 		/// </summary>
-		private static List<CommandMethod> s_commandMethods { get; set; } = new List<CommandMethod>();
+		private static List<CommandMethod> s_commandMethods { get; set; } = new();
 
 		/// <summary>
 		/// List of groups.
 		/// </summary>
-		private static List<GroupCommand> s_groupCommands { get; set; } = new List<GroupCommand>();
+		private static List<GroupCommand> s_groupCommands { get; set; } = new();
 
 		/// <summary>
 		/// List of groups with subgroups.
 		/// </summary>
-		private static List<SubGroupCommand> s_subGroupCommands { get; set; } = new List<SubGroupCommand>();
+		private static List<SubGroupCommand> s_subGroupCommands { get; set; } = new();
 
 		/// <summary>
 		/// List of context menus.
 		/// </summary>
-		private static List<ContextMenuCommand> s_contextMenuCommands { get; set; } = new List<ContextMenuCommand>();
+		private static List<ContextMenuCommand> s_contextMenuCommands { get; set; } = new();
 
 		/// <summary>
 		/// List of global commands on discords backend.
 		/// </summary>
-		internal static List<DiscordApplicationCommand> GlobalDiscordCommands { get; set; } = null;
+		internal static List<DiscordApplicationCommand> GlobalDiscordCommands { get; set; }
 
 		/// <summary>
 		/// List of guild commands on discords backend.
 		/// </summary>
-		internal static Dictionary<ulong, List<DiscordApplicationCommand>> GuildDiscordCommands { get; set; } = null;
+		internal static Dictionary<ulong, List<DiscordApplicationCommand>> GuildDiscordCommands { get; set; }
 
 		/// <summary>
 		/// Singleton modules.
 		/// </summary>
-		private static List<object> s_singletonModules { get; set; } = new List<object>();
+		private static List<object> s_singletonModules { get; set; } = new();
 
 		/// <summary>
 		/// List of modules to register.
@@ -98,7 +98,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Set to true if anything fails when registering.
 		/// </summary>
-		private static bool s_errored { get; set; } = false;
+		private static bool s_errored { get; set; }
 
 		/// <summary>
 		/// Gets a list of registered commands. The key is the guild id (null if global).
@@ -124,12 +124,12 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Gets the registration count.
 		/// </summary>
-		private static int s_registrationCount { get; set; } = 0;
+		private static int s_registrationCount { get; set; }
 
 		/// <summary>
 		/// Gets the expected count.
 		/// </summary>
-		private static int s_expectedCount { get; set; } = 0;
+		private static int s_expectedCount { get; set; }
 
 		/// <summary>
 		/// Gets the guild ids where the applications.commands scope is missing.
@@ -295,8 +295,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		public event AsyncEventHandler<ApplicationCommandsExtension, ApplicationCommandsModuleReadyEventArgs> ApplicationCommandsModuleReady
 		{
-			add { this._applicationCommandsModuleReady.Register(value); }
-			remove { this._applicationCommandsModuleReady.Unregister(value); }
+			add => this._applicationCommandsModuleReady.Register(value);
+			remove => this._applicationCommandsModuleReady.Unregister(value);
 		}
 		private AsyncEvent<ApplicationCommandsExtension, ApplicationCommandsModuleReadyEventArgs> _applicationCommandsModuleReady;
 
@@ -305,8 +305,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		public event AsyncEventHandler<ApplicationCommandsExtension, ApplicationCommandsModuleStartupFinishedEventArgs> ApplicationCommandsModuleStartupFinished
 		{
-			add { this._applicationCommandsModuleStartupFinished.Register(value); }
-			remove { this._applicationCommandsModuleStartupFinished.Unregister(value); }
+			add => this._applicationCommandsModuleStartupFinished.Register(value);
+			remove => this._applicationCommandsModuleStartupFinished.Unregister(value);
 		}
 		private AsyncEvent<ApplicationCommandsExtension, ApplicationCommandsModuleStartupFinishedEventArgs> _applicationCommandsModuleStartupFinished;
 
@@ -316,8 +316,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		public event AsyncEventHandler<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs> GuildApplicationCommandsRegistered
 		{
-			add { this._guildApplicationCommandsRegistered.Register(value); }
-			remove { this._guildApplicationCommandsRegistered.Unregister(value); }
+			add => this._guildApplicationCommandsRegistered.Register(value);
+			remove => this._guildApplicationCommandsRegistered.Unregister(value);
 		}
 		private AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs> _guildApplicationCommandsRegistered;
 
@@ -326,8 +326,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		public event AsyncEventHandler<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs> GlobalApplicationCommandsRegistered
 		{
-			add { this._globalApplicationCommandsRegistered.Register(value); }
-			remove { this._globalApplicationCommandsRegistered.Unregister(value); }
+			add => this._globalApplicationCommandsRegistered.Register(value);
+			remove => this._globalApplicationCommandsRegistered.Unregister(value);
 		}
 		private AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs> _globalApplicationCommandsRegistered;
 
@@ -339,8 +339,8 @@ namespace DisCatSharp.ApplicationCommands
 			//Only update for shard 0
 			if (this.Client.ShardId == 0)
 			{
-				GlobalDiscordCommands = new();
-				GuildDiscordCommands = new();
+				GlobalDiscordCommands = new List<DiscordApplicationCommand>();
+				GuildDiscordCommands = new Dictionary<ulong, List<DiscordApplicationCommand>>();
 
 				var commandsPending = this._updateList.Select(x => x.Key).Distinct();
 				s_expectedCount = commandsPending.Count();
@@ -562,7 +562,7 @@ namespace DisCatSharp.ApplicationCommands
 									GuildCommandsInternal.Add(guildid.Value, actualCommands);
 									if (this.Client.Guilds.TryGetValue(guildid.Value, out var guild))
 									{
-										guild.InternalRegisteredApplicationCommands = new();
+										guild.InternalRegisteredApplicationCommands = new List<DiscordApplicationCommand>();
 										guild.InternalRegisteredApplicationCommands.AddRange(actualCommands);
 									}
 
@@ -1312,12 +1312,10 @@ namespace DisCatSharp.ApplicationCommands
 		/// Gets the choice attributes from parameter.
 		/// </summary>
 		/// <param name="choiceattributes">The choice attributes.</param>
-		private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(IEnumerable<ChoiceAttribute> choiceattributes)
-		{
-			return !choiceattributes.Any()
+		private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(IEnumerable<ChoiceAttribute> choiceattributes) =>
+			!choiceattributes.Any()
 				? null
 				: choiceattributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, att.Value)).ToList();
-		}
 
 		/// <summary>
 		/// Parses the parameters.
@@ -1398,8 +1396,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		public event AsyncEventHandler<ApplicationCommandsExtension, SlashCommandErrorEventArgs> SlashCommandErrored
 		{
-			add { this._slashError.Register(value); }
-			remove { this._slashError.Unregister(value); }
+			add => this._slashError.Register(value);
+			remove => this._slashError.Unregister(value);
 		}
 		private AsyncEvent<ApplicationCommandsExtension, SlashCommandErrorEventArgs> _slashError;
 
@@ -1408,8 +1406,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		public event AsyncEventHandler<ApplicationCommandsExtension, SlashCommandExecutedEventArgs> SlashCommandExecuted
 		{
-			add { this._slashExecuted.Register(value); }
-			remove { this._slashExecuted.Unregister(value); }
+			add => this._slashExecuted.Register(value);
+			remove => this._slashExecuted.Unregister(value);
 		}
 		private AsyncEvent<ApplicationCommandsExtension, SlashCommandExecutedEventArgs> _slashExecuted;
 
@@ -1418,8 +1416,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		public event AsyncEventHandler<ApplicationCommandsExtension, ContextMenuErrorEventArgs> ContextMenuErrored
 		{
-			add { this._contextMenuErrored.Register(value); }
-			remove { this._contextMenuErrored.Unregister(value); }
+			add => this._contextMenuErrored.Register(value);
+			remove => this._contextMenuErrored.Unregister(value);
 		}
 		private AsyncEvent<ApplicationCommandsExtension, ContextMenuErrorEventArgs> _contextMenuErrored;
 
@@ -1428,8 +1426,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		public event AsyncEventHandler<ApplicationCommandsExtension, ContextMenuExecutedEventArgs> ContextMenuExecuted
 		{
-			add { this._contextMenuExecuted.Register(value); }
-			remove { this._contextMenuExecuted.Unregister(value); }
+			add => this._contextMenuExecuted.Register(value);
+			remove => this._contextMenuExecuted.Unregister(value);
 		}
 		private AsyncEvent<ApplicationCommandsExtension, ContextMenuExecutedEventArgs> _contextMenuExecuted;
 	}
@@ -1546,7 +1544,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Gets or sets the sub commands.
 		/// </summary>
-		public List<GroupCommand> SubCommands { get; set; } = new List<GroupCommand>();
+		public List<GroupCommand> SubCommands { get; set; } = new();
 	}
 
 	/// <summary>

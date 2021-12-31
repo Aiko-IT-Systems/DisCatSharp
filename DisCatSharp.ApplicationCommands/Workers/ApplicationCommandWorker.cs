@@ -122,10 +122,10 @@ namespace DisCatSharp.ApplicationCommands
 
 				if (commandTranslation != null && commandTranslation.Options != null)
 				{
-					localizisedOptions = new(options.Count);
+					localizisedOptions = new List<DiscordApplicationCommandOption>(options.Count);
 					foreach (var option in options)
 					{
-						List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new(option.Choices.Count()) : null;
+						List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count()) : null;
 						if (option.Choices != null)
 						{
 							foreach (var choice in option.Choices)
@@ -237,10 +237,10 @@ namespace DisCatSharp.ApplicationCommands
 						var subCommandTranslation = commandTranslation.Commands.Single(sc => sc.Name == commandAttribute.Name);
 						if (subCommandTranslation.Options != null)
 						{
-							localizisedOptions = new(options.Count);
+							localizisedOptions = new List<DiscordApplicationCommandOption>(options.Count);
 							foreach (var option in options)
 							{
-								List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new(option.Choices.Count()) : null;
+								List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count()) : null;
 								if (option.Choices != null)
 								{
 									foreach (var choice in option.Choices)
@@ -326,10 +326,10 @@ namespace DisCatSharp.ApplicationCommands
 
 						if (subSubCommandTranslation != null && subSubCommandTranslation.Options != null)
 						{
-							localizisedOptions = new(suboptions.Count);
+							localizisedOptions = new List<DiscordApplicationCommandOption>(suboptions.Count);
 							foreach (var option in suboptions)
 							{
-								List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new(option.Choices.Count) : null;
+								List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
 								if (option.Choices != null)
 								{
 									foreach (var choice in option.Choices)

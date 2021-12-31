@@ -54,7 +54,7 @@ namespace DisCatSharp
 		/// Gets the utf8 encoding
 		/// </summary>
 		// ReSharper disable once InconsistentNaming
-		internal static UTF8Encoding UTF8 { get; } = new UTF8Encoding(false);
+		internal static UTF8Encoding UTF8 { get; } = new(false);
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Utilities"/> class.
@@ -138,15 +138,13 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="config">The config.</param>
 		/// <returns>A string.</returns>
-		internal static string GetFormattedToken(DiscordConfiguration config)
-		{
-			return config.TokenType switch
+		internal static string GetFormattedToken(DiscordConfiguration config) =>
+			config.TokenType switch
 			{
 				TokenType.Bearer => $"Bearer {config.Token}",
 				TokenType.Bot => $"Bot {config.Token}",
 				_ => throw new ArgumentException("Invalid token type specified.", nameof(config.Token)),
 			};
-		}
 
 		/// <summary>
 		/// Gets the base headers.
@@ -291,12 +289,10 @@ namespace DisCatSharp
 		/// <param name="guild">The guild.</param>
 		/// <param name="taad">The taad.</param>
 		/// <returns>A bool.</returns>
-		internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
-		{
-			return taad == ThreadAutoArchiveDuration.ThreeDays
-				? (guild.PremiumTier.HasFlag(PremiumTier.TierOne) || guild.Features.CanSetThreadArchiveDurationThreeDays)
+		internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad) =>
+			taad == ThreadAutoArchiveDuration.ThreeDays
+				? guild.PremiumTier.HasFlag(PremiumTier.TierOne) || guild.Features.CanSetThreadArchiveDurationThreeDays
 				: taad != ThreadAutoArchiveDuration.OneWeek || guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || guild.Features.CanSetThreadArchiveDurationSevenDays;
-		}
 
 		/// <summary>
 		/// Checks the thread private feature.

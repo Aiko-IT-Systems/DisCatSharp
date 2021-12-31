@@ -61,7 +61,7 @@ namespace DisCatSharp.Interactivity
 		/// <summary>
 		/// How to handle buttons after pagination ends.
 		/// </summary>
-		public ButtonPaginationBehavior ButtonBehavior { internal get; set; } = new();
+		public ButtonPaginationBehavior ButtonBehavior { internal get; set; }
 
 		/// <summary>
 		/// How to handle pagination. Defaults to WrapAround.

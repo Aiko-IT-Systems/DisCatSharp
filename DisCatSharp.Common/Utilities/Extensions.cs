@@ -136,7 +136,7 @@ namespace DisCatSharp.Common
 				min ^= max;
 			}
 
-			return inclusive ? (num >= min && num <= max) : (num > min && num < max);
+			return inclusive ? num >= min && num <= max : num > min && num < max;
 		}
 
 		/// <summary>
@@ -157,7 +157,7 @@ namespace DisCatSharp.Common
 				min ^= max;
 			}
 
-			return inclusive ? (num >= min && num <= max) : (num > min && num < max);
+			return inclusive ? num >= min && num <= max : num > min && num < max;
 		}
 
 		/// <summary>
@@ -178,7 +178,7 @@ namespace DisCatSharp.Common
 				min ^= max;
 			}
 
-			return inclusive ? (num >= min && num <= max) : (num > min && num < max);
+			return inclusive ? num >= min && num <= max : num > min && num < max;
 		}
 
 		/// <summary>
@@ -199,7 +199,7 @@ namespace DisCatSharp.Common
 				min ^= max;
 			}
 
-			return inclusive ? (num >= min && num <= max) : (num > min && num < max);
+			return inclusive ? num >= min && num <= max : num > min && num < max;
 		}
 
 		/// <summary>
@@ -220,7 +220,7 @@ namespace DisCatSharp.Common
 				min ^= max;
 			}
 
-			return inclusive ? (num >= min && num <= max) : (num > min && num < max);
+			return inclusive ? num >= min && num <= max : num > min && num < max;
 		}
 
 		/// <summary>
@@ -241,7 +241,7 @@ namespace DisCatSharp.Common
 				min ^= max;
 			}
 
-			return inclusive ? (num >= min && num <= max) : (num > min && num < max);
+			return inclusive ? num >= min && num <= max : num > min && num < max;
 		}
 
 		/// <summary>
@@ -262,7 +262,7 @@ namespace DisCatSharp.Common
 				min ^= max;
 			}
 
-			return inclusive ? (num >= min && num <= max) : (num > min && num < max);
+			return inclusive ? num >= min && num <= max : num > min && num < max;
 		}
 
 		/// <summary>
@@ -283,7 +283,7 @@ namespace DisCatSharp.Common
 				min ^= max;
 			}
 
-			return inclusive ? (num >= min && num <= max) : (num > min && num < max);
+			return inclusive ? num >= min && num <= max : num > min && num < max;
 		}
 
 		/// <summary>
@@ -300,7 +300,7 @@ namespace DisCatSharp.Common
 			if (min > max)
 				return false;
 
-			return inclusive ? (num >= min && num <= max) : (num > min && num < max);
+			return inclusive ? num >= min && num <= max : num > min && num < max;
 		}
 
 		/// <summary>
@@ -317,7 +317,7 @@ namespace DisCatSharp.Common
 			if (min > max)
 				return false;
 
-			return inclusive ? (num >= min && num <= max) : (num > min && num < max);
+			return inclusive ? num >= min && num <= max : num > min && num < max;
 		}
 
 		/// <summary>

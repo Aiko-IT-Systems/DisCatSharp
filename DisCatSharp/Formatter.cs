@@ -35,11 +35,11 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the md sanitize regex.
 		/// </summary>
-		private static Regex s_mdSanitizeRegex { get; } = new Regex(@"([`\*_~<>\[\]\(\)""@\!\&#:\|])", RegexOptions.ECMAScript);
+		private static Regex s_mdSanitizeRegex { get; } = new(@"([`\*_~<>\[\]\(\)""@\!\&#:\|])", RegexOptions.ECMAScript);
 		/// <summary>
 		/// Gets the md strip regex.
 		/// </summary>
-		private static Regex s_mdStripRegex { get; } = new Regex(@"([`\*_~\[\]\(\)""\|]|<@\!?\d+>|<#\d+>|<@\&\d+>|<:[a-zA-Z0-9_\-]:\d+>)", RegexOptions.ECMAScript);
+		private static Regex s_mdStripRegex { get; } = new(@"([`\*_~\[\]\(\)""\|]|<@\!?\d+>|<#\d+>|<@\&\d+>|<:[a-zA-Z0-9_\-]:\d+>)", RegexOptions.ECMAScript);
 
 		/// <summary>
 		/// Creates a block of code.

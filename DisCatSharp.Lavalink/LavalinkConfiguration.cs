@@ -35,13 +35,13 @@ namespace DisCatSharp.Lavalink
 		/// Sets the endpoint for Lavalink REST.
 		/// <para>Defaults to 127.0.0.1 on port 2333.</para>
 		/// </summary>
-		public ConnectionEndpoint RestEndpoint { internal get; set; } = new ConnectionEndpoint("127.0.0.1", 2333);
+		public ConnectionEndpoint RestEndpoint { internal get; set; } = new("127.0.0.1", 2333);
 
 		/// <summary>
 		/// Sets the endpoint for the Lavalink Websocket connection.
 		/// <para>Defaults to 127.0.0.1 on port 2333.</para>
 		/// </summary>
-		public ConnectionEndpoint SocketEndpoint { internal get; set; } = new ConnectionEndpoint("127.0.0.1", 2333);
+		public ConnectionEndpoint SocketEndpoint { internal get; set; } = new("127.0.0.1", 2333);
 
 		/// <summary>
 		/// Sets whether the connection wrapper should attempt automatic reconnects should the connection drop.
