@@ -50,15 +50,5 @@ namespace DisCatSharp.ApplicationCommands
 
 			await ApplicationCommandsExtension._client.OverwriteGuildApplicationCommandPermissionsAsync(guildid.Value, commandId, ctx.Permissions);
 		}
-
-		internal static async Task UpdateCommandPermissionGroupAsync(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildid, List<KeyValuePair<Type, Type>> commandTypeSources, GroupCommand groupCommand)
-		{
-			foreach (var com in groupCommand.Methods)
-			{
-				var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Value.DeclaringType);
-
-				await UpdateCommandPermissionAsync(types, guildid, groupCommand.CommandId, com.Key, source.Key, source.Value);
-			}
-		}
 	}
 }
