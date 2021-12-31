@@ -36,42 +36,43 @@ namespace DisCatSharp.Net.Udp
 		/// <summary>
 		/// Gets the client.
 		/// </summary>
-		private UdpClient Client { get; set; }
+		private UdpClient _client;
 
 		/// <summary>
 		/// Gets the end point.
 		/// </summary>
-		private ConnectionEndpoint EndPoint { get; set; }
+		private ConnectionEndpoint _endPoint;
 
 		/// <summary>
 		/// Gets the packet queue.
 		/// </summary>
-		private BlockingCollection<byte[]> PacketQueue { get; }
+		private readonly BlockingCollection<byte[]> _packetQueue;
 
 
 		/// <summary>
 		/// Gets the receiver task.
 		/// </summary>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>")]
-		private Task ReceiverTask { get; set; }
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members",
+			Justification = "<Pending>")]
+		private Task _receiverTask;
 
 		/// <summary>
 		/// Gets the cancellation token source.
 		/// </summary>
-		private CancellationTokenSource TokenSource { get; }
+		private readonly CancellationTokenSource _tokenSource;
 
 		/// <summary>
 		/// Gets the cancellation token.
 		/// </summary>
-		private CancellationToken Token => this.TokenSource.Token;
+		private CancellationToken TOKEN => this._tokenSource.Token;
 
 		/// <summary>
 		/// Creates a new UDP client instance.
 		/// </summary>
 		public DcsUdpClient()
 		{
-			this.PacketQueue = new BlockingCollection<byte[]>();
-			this.TokenSource = new CancellationTokenSource();
+			this._packetQueue = new BlockingCollection<byte[]>();
+			this._tokenSource = new CancellationTokenSource();
 		}
 
 		/// <summary>
@@ -80,9 +81,9 @@ namespace DisCatSharp.Net.Udp
 		/// <param name="endpoint">Endpoint that the client will be communicating with.</param>
 		public override void Setup(ConnectionEndpoint endpoint)
 		{
-			this.EndPoint = endpoint;
-			this.Client = new UdpClient();
-			this.ReceiverTask = Task.Run(this.ReceiverLoopAsync, this.Token);
+			this._endPoint = endpoint;
+			this._client = new UdpClient();
+			this._receiverTask = Task.Run(this.ReceiverLoopAsync, this.TOKEN);
 		}
 
 		/// <summary>
@@ -92,28 +93,28 @@ namespace DisCatSharp.Net.Udp
 		/// <param name="dataLength">Length of the datagram.</param>
 		/// <returns></returns>
 		public override Task SendAsync(byte[] data, int dataLength)
-			=> this.Client.SendAsync(data, dataLength, this.EndPoint.Hostname, this.EndPoint.Port);
+			=> this._client.SendAsync(data, dataLength, this._endPoint.Hostname, this._endPoint.Port);
 
 		/// <summary>
 		/// Receives a datagram.
 		/// </summary>
 		/// <returns>The received bytes.</returns>
-		public override Task<byte[]> ReceiveAsync() => Task.FromResult(this.PacketQueue.Take(this.Token));
+		public override Task<byte[]> ReceiveAsync() => Task.FromResult(this._packetQueue.Take(this.TOKEN));
 
 		/// <summary>
 		/// Closes and disposes the client.
 		/// </summary>
 		public override void Close()
 		{
-			this.TokenSource.Cancel();
+			this._tokenSource.Cancel();
 #if !NETSTANDARD1_3
 			try
-			{ this.Client.Close(); }
+			{ this._client.Close(); }
 			catch (Exception) { }
 #endif
 
 			// dequeue all the packets
-			this.PacketQueue.Dispose();
+			this._packetQueue.Dispose();
 		}
 
 		/// <summary>
@@ -121,12 +122,12 @@ namespace DisCatSharp.Net.Udp
 		/// </summary>
 		private async Task ReceiverLoopAsync()
 		{
-			while (!this.Token.IsCancellationRequested)
+			while (!this.TOKEN.IsCancellationRequested)
 			{
 				try
 				{
-					var packet = await this.Client.ReceiveAsync().ConfigureAwait(false);
-					this.PacketQueue.Add(packet.Buffer);
+					var packet = await this._client.ReceiveAsync().ConfigureAwait(false);
+					this._packetQueue.Add(packet.Buffer);
 				}
 				catch (Exception) { }
 			}

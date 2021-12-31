@@ -70,7 +70,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the session lock.
 		/// </summary>
-		private ManualResetEventSlim SessionLock { get; } = new ManualResetEventSlim(true);
+		private readonly ManualResetEventSlim _sessionLock  = new ManualResetEventSlim(true);
 
 		#endregion
 
@@ -204,8 +204,8 @@ namespace DisCatSharp
 			async Task SocketOnDisconnect(IWebSocketClient sender, SocketCloseEventArgs e)
 			{
 				// release session and connection
-				this.ConnectionLock.Set();
-				this.SessionLock.Set();
+				this._connectionLock.Set();
+				this._sessionLock.Set();
 
 				if (!this._disposed)
 					this._cancelTokenSource.Cancel();
@@ -308,8 +308,8 @@ namespace DisCatSharp
 		internal async Task OnInvalidateSessionAsync(bool data)
 		{
 			// begin a session if one is not open already
-			if (this.SessionLock.Wait(0))
-				this.SessionLock.Reset();
+			if (this._sessionLock.Wait(0))
+				this._sessionLock.Reset();
 
 			// we are sending a fresh resume/identify, so lock the socket
 			var socketLock = this.GetSocketLock();
@@ -339,9 +339,9 @@ namespace DisCatSharp
 		{
 			this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received HELLO (OP10)");
 
-			if (this.SessionLock.Wait(0))
+			if (this._sessionLock.Wait(0))
 			{
-				this.SessionLock.Reset();
+				this._sessionLock.Reset();
 				this.GetSocketLock().UnlockAfter(TimeSpan.FromSeconds(5));
 			}
 			else

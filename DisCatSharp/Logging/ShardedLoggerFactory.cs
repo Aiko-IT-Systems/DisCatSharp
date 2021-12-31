@@ -33,7 +33,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the logger.
 		/// </summary>
-		private ILogger<BaseDiscordClient> Logger { get; }
+		private readonly ILogger<BaseDiscordClient> _logger;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ShardedLoggerFactory"/> class.
@@ -41,7 +41,7 @@ namespace DisCatSharp
 		/// <param name="instance">The instance.</param>
 		public ShardedLoggerFactory(ILogger<BaseDiscordClient> instance)
 		{
-			this.Logger = instance;
+			this._logger = instance;
 		}
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace DisCatSharp
 		{
 			return categoryName != typeof(BaseDiscordClient).FullName
 				? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}.", nameof(categoryName))
-				: this.Logger;
+				: this._logger;
 		}
 
 		/// <summary>

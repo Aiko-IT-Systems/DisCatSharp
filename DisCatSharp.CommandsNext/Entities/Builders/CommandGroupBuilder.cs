@@ -36,10 +36,11 @@ namespace DisCatSharp.CommandsNext.Builders
 		/// Gets the list of child commands registered for this group.
 		/// </summary>
 		public IReadOnlyList<CommandBuilder> Children { get; }
+
 		/// <summary>
 		/// Gets the children list.
 		/// </summary>
-		private List<CommandBuilder> ChildrenList { get; }
+		private readonly List<CommandBuilder> _childrenList;
 
 		/// <summary>
 		/// Creates a new module-less command group builder.
@@ -55,8 +56,8 @@ namespace DisCatSharp.CommandsNext.Builders
 		public CommandGroupBuilder(ICommandModule module)
 			: base(module)
 		{
-			this.ChildrenList = new List<CommandBuilder>();
-			this.Children = new ReadOnlyCollection<CommandBuilder>(this.ChildrenList);
+			this._childrenList = new List<CommandBuilder>();
+			this.Children = new ReadOnlyCollection<CommandBuilder>(this._childrenList);
 		}
 
 		/// <summary>
@@ -66,7 +67,7 @@ namespace DisCatSharp.CommandsNext.Builders
 		/// <returns>This builder.</returns>
 		public CommandGroupBuilder WithChild(CommandBuilder child)
 		{
-			this.ChildrenList.Add(child);
+			this._childrenList.Add(child);
 			return this;
 		}
 

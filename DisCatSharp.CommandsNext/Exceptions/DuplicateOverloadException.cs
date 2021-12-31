@@ -44,7 +44,7 @@ namespace DisCatSharp.CommandsNext.Exceptions
 		/// <summary>
 		/// Gets the argument set key.
 		/// </summary>
-		private string ArgumentSetKey { get; }
+		private readonly string _argumentSetKey;
 
 		/// <summary>
 		/// Creates a new exception indicating given argument set already exists as an overload for specified command.
@@ -57,13 +57,13 @@ namespace DisCatSharp.CommandsNext.Exceptions
 		{
 			this.CommandName = name;
 			this.ArgumentTypes = new ReadOnlyCollection<Type>(argumentTypes);
-			this.ArgumentSetKey = argumentSetKey;
+			this._argumentSetKey = argumentSetKey;
 		}
 
 		/// <summary>
 		/// Returns a string representation of this <see cref="DuplicateOverloadException"/>.
 		/// </summary>
 		/// <returns>A string representation.</returns>
-		public override string ToString() => $"{this.GetType()}: {this.Message}\nCommand name: {this.CommandName}\nArgument types: {this.ArgumentSetKey}"; // much like System.ArgumentException works
+		public override string ToString() => $"{this.GetType()}: {this.Message}\nCommand name: {this.CommandName}\nArgument types: {this._argumentSetKey}"; // much like System.ArgumentException works
 	}
 }

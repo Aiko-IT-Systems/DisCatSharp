@@ -35,7 +35,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the loggers.
 		/// </summary>
-		private IEnumerable<ILogger<BaseDiscordClient>> Loggers { get; }
+		private readonly IEnumerable<ILogger<BaseDiscordClient>> _loggers;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CompositeDefaultLogger"/> class.
@@ -43,7 +43,7 @@ namespace DisCatSharp
 		/// <param name="providers">The providers.</param>
 		public CompositeDefaultLogger(IEnumerable<ILoggerProvider> providers)
 		{
-			this.Loggers = providers.Select(x => x.CreateLogger(typeof(BaseDiscordClient).FullName))
+			this._loggers = providers.Select(x => x.CreateLogger(typeof(BaseDiscordClient).FullName))
 				.OfType<ILogger<BaseDiscordClient>>()
 				.ToList();
 		}
@@ -65,7 +65,7 @@ namespace DisCatSharp
 		/// <param name="formatter">The formatter.</param>
 		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
 		{
-			foreach (var logger in this.Loggers)
+			foreach (var logger in this._loggers)
 				logger.Log(logLevel, eventId, state, exception, formatter);
 		}
 

@@ -83,7 +83,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// List of modules to register.
 		/// </summary>
-		private List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>> UpdateList { get; set; } = new List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>>();
+		private List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>> _updateList = new List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>>();
 
 		/// <summary>
 		/// Configuration for Discord.
@@ -134,7 +134,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Gets the guild ids where the applications.commands scope is missing.
 		/// </summary>
-		private IReadOnlyList<ulong> MissingScopeGuildIds { get; set; }
+		private IReadOnlyList<ulong> _missingScopeGuildIds;
 
 		/// <summary>
 		/// Gets whether debug is enabled.
@@ -200,7 +200,7 @@ namespace DisCatSharp.ApplicationCommands
 		public void RegisterCommands<T>(ulong? guildId = null) where T : ApplicationCommandsModule
 		{
 			if (this.Client.ShardId == 0)
-				this.UpdateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T))));
+				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T))));
 		}
 
 		/// <summary>
@@ -214,7 +214,7 @@ namespace DisCatSharp.ApplicationCommands
 				throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
 			//If sharding, only register for shard 0
 			if (this.Client.ShardId == 0)
-				this.UpdateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type)));
+				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type)));
 		}
 
 		/// <summary>
@@ -244,7 +244,7 @@ namespace DisCatSharp.ApplicationCommands
 		public void RegisterCommands<T>(ulong guildId, Action<ApplicationCommandsPermissionContext> permissionSetup = null, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
 		{
 			if (this.Client.ShardId == 0)
-				this.UpdateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T), permissionSetup, translationSetup)));
+				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T), permissionSetup, translationSetup)));
 		}
 
 		/// <summary>
@@ -260,7 +260,7 @@ namespace DisCatSharp.ApplicationCommands
 				throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
 			//If sharding, only register for shard 0
 			if (this.Client.ShardId == 0)
-				this.UpdateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type, permissionSetup, translationSetup)));
+				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type, permissionSetup, translationSetup)));
 		}
 
 		/*
@@ -342,7 +342,7 @@ namespace DisCatSharp.ApplicationCommands
 				GlobalDiscordCommands = new();
 				GuildDiscordCommands = new();
 
-				var commandsPending = this.UpdateList.Select(x => x.Key).Distinct();
+				var commandsPending = this._updateList.Select(x => x.Key).Distinct();
 				s_expectedCount = commandsPending.Count();
 
 				if (s_debugEnabled)
@@ -379,7 +379,7 @@ namespace DisCatSharp.ApplicationCommands
 				{
 					foreach (var key in commandsPending.ToList())
 					{
-						this.UpdateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
+						this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
 							(key, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
 					}
 				}
@@ -388,10 +388,10 @@ namespace DisCatSharp.ApplicationCommands
 				foreach (var key in commandsPending.ToList())
 				{
 					this.Client.Logger.LogDebug(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
-					this.RegisterCommands(this.UpdateList.Where(x => x.Key == key).Select(x => x.Value), key);
+					this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
 				}
 
-				this.MissingScopeGuildIds = failedGuilds;
+				this._missingScopeGuildIds = failedGuilds;
 
 				await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(Configuration?.ServiceProvider)
 				{
@@ -690,7 +690,7 @@ namespace DisCatSharp.ApplicationCommands
 				{
 					RegisteredGlobalCommands = GlobalCommandsInternal,
 					RegisteredGuildCommands = GuildCommandsInternal,
-					GuildsWithoutScope = MissingScopeGuildIds
+					GuildsWithoutScope = this._missingScopeGuildIds
 				});
 
 				this.FinishedRegistration();

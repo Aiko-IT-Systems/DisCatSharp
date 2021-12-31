@@ -29,7 +29,7 @@ namespace DisCatSharp.Common
 	/// Represents a property with an optional value.
 	/// </summary>
 	/// <typeparam name="T">Type of the value.</typeparam>
-	[DebuggerDisplay(@"{DebuggerDisplay,nq}")]
+	[DebuggerDisplay(@"{DEBUGGER_DISPLAY,nq}")]
 	public struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>
 	{
 		/// <summary>
@@ -52,7 +52,7 @@ namespace DisCatSharp.Common
 		/// <summary>
 		/// Gets the debugger display.
 		/// </summary>
-		private string DebuggerDisplay
+		private string DEBUGGER_DISPLAY
 			=> this.HasValue ? $"Optional<{typeof(T)}> <has value> {this._value?.ToString() ?? "<null>"}" : $"Optional<{typeof(T)}> <has no value>";
 
 		/// <summary>

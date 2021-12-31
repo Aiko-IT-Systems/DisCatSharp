@@ -39,20 +39,22 @@ namespace DisCatSharp.VoiceNext
 		/// <summary>
 		/// Gets or sets the configuration.
 		/// </summary>
-		private VoiceNextConfiguration Configuration { get; set; }
+		private readonly VoiceNextConfiguration _configuration;
 
 		/// <summary>
 		/// Gets or sets the active connections.
 		/// </summary>
-		private ConcurrentDictionary<ulong, VoiceNextConnection> ActiveConnections { get; set; }
+		private readonly ConcurrentDictionary<ulong, VoiceNextConnection> _activeConnections;
+
 		/// <summary>
 		/// Gets or sets the voice state updates.
 		/// </summary>
-		private ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>> VoiceStateUpdates { get; set; }
+		private readonly ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>> _voiceStateUpdates;
+
 		/// <summary>
 		/// Gets or sets the voice server updates.
 		/// </summary>
-		private ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>> VoiceServerUpdates { get; set; }
+		private readonly ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>> _voiceServerUpdates;
 
 		/// <summary>
 		/// Gets whether this connection has incoming voice enabled.
@@ -65,12 +67,12 @@ namespace DisCatSharp.VoiceNext
 		/// <param name="config">The config.</param>
 		internal VoiceNextExtension(VoiceNextConfiguration config)
 		{
-			this.Configuration = new VoiceNextConfiguration(config);
+			this._configuration = new VoiceNextConfiguration(config);
 			this.IsIncomingEnabled = config.EnableIncoming;
 
-			this.ActiveConnections = new ConcurrentDictionary<ulong, VoiceNextConnection>();
-			this.VoiceStateUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>>();
-			this.VoiceServerUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>>();
+			this._activeConnections = new ConcurrentDictionary<ulong, VoiceNextConnection>();
+			this._voiceStateUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>>();
+			this._voiceServerUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>>();
 		}
 
 		/// <summary>
@@ -106,13 +108,13 @@ namespace DisCatSharp.VoiceNext
 				throw new InvalidOperationException("You need AccessChannels and UseVoice permission to connect to this voice channel");
 
 			var gld = channel.Guild;
-			if (this.ActiveConnections.ContainsKey(gld.Id))
+			if (this._activeConnections.ContainsKey(gld.Id))
 				throw new InvalidOperationException("This guild already has a voice connection");
 
 			var vstut = new TaskCompletionSource<VoiceStateUpdateEventArgs>();
 			var vsrut = new TaskCompletionSource<VoiceServerUpdateEventArgs>();
-			this.VoiceStateUpdates[gld.Id] = vstut;
-			this.VoiceServerUpdates[gld.Id] = vsrut;
+			this._voiceStateUpdates[gld.Id] = vstut;
+			this._voiceServerUpdates[gld.Id] = vsrut;
 
 			var vsd = new VoiceDispatch
 			{
@@ -142,11 +144,11 @@ namespace DisCatSharp.VoiceNext
 				Token = vsru.VoiceToken
 			};
 
-			var vnc = new VoiceNextConnection(this.Client, gld, channel, this.Configuration, vsrup, vstup);
+			var vnc = new VoiceNextConnection(this.Client, gld, channel, this._configuration, vsrup, vstup);
 			vnc.VoiceDisconnected += this.Vnc_VoiceDisconnected;
 			await vnc.ConnectAsync().ConfigureAwait(false);
 			await vnc.WaitForReadyAsync().ConfigureAwait(false);
-			this.ActiveConnections[gld.Id] = vnc;
+			this._activeConnections[gld.Id] = vnc;
 			return vnc;
 		}
 
@@ -155,7 +157,7 @@ namespace DisCatSharp.VoiceNext
 		/// </summary>
 		/// <param name="guild">Guild to get VoiceNext connection for.</param>
 		/// <returns>VoiceNext connection for the specified guild.</returns>
-		public VoiceNextConnection GetConnection(DiscordGuild guild) => this.ActiveConnections.ContainsKey(guild.Id) ? this.ActiveConnections[guild.Id] : null;
+		public VoiceNextConnection GetConnection(DiscordGuild guild) => this._activeConnections.ContainsKey(guild.Id) ? this._activeConnections[guild.Id] : null;
 
 		/// <summary>
 		/// Vnc_S the voice disconnected.
@@ -165,8 +167,8 @@ namespace DisCatSharp.VoiceNext
 		private async Task Vnc_VoiceDisconnected(DiscordGuild guild)
 		{
 			VoiceNextConnection vnc = null;
-			if (this.ActiveConnections.ContainsKey(guild.Id))
-				this.ActiveConnections.TryRemove(guild.Id, out vnc);
+			if (this._activeConnections.ContainsKey(guild.Id))
+				this._activeConnections.TryRemove(guild.Id, out vnc);
 
 			var vsd = new VoiceDispatch
 			{
@@ -198,13 +200,13 @@ namespace DisCatSharp.VoiceNext
 
 			if (e.User.Id == this.Client.CurrentUser.Id)
 			{
-				if (e.After.Channel == null && this.ActiveConnections.TryRemove(gld.Id, out var ac))
+				if (e.After.Channel == null && this._activeConnections.TryRemove(gld.Id, out var ac))
 					ac.Disconnect();
 
-				if (this.ActiveConnections.TryGetValue(e.Guild.Id, out var vnc))
+				if (this._activeConnections.TryGetValue(e.Guild.Id, out var vnc))
 					vnc.TargetChannel = e.Channel;
 
-				if (!string.IsNullOrWhiteSpace(e.SessionId) && e.Channel != null && this.VoiceStateUpdates.TryRemove(gld.Id, out var xe))
+				if (!string.IsNullOrWhiteSpace(e.SessionId) && e.Channel != null && this._voiceStateUpdates.TryRemove(gld.Id, out var xe))
 					xe.SetResult(e);
 			}
 
@@ -223,7 +225,7 @@ namespace DisCatSharp.VoiceNext
 			if (gld == null)
 				return;
 
-			if (this.ActiveConnections.TryGetValue(e.Guild.Id, out var vnc))
+			if (this._activeConnections.TryGetValue(e.Guild.Id, out var vnc))
 			{
 				vnc.ServerData = new VoiceServerUpdatePayload
 				{
@@ -251,9 +253,9 @@ namespace DisCatSharp.VoiceNext
 				await vnc.ReconnectAsync().ConfigureAwait(false);
 			}
 
-			if (this.VoiceServerUpdates.ContainsKey(gld.Id))
+			if (this._voiceServerUpdates.ContainsKey(gld.Id))
 			{
-				this.VoiceServerUpdates.TryRemove(gld.Id, out var xe);
+				this._voiceServerUpdates.TryRemove(gld.Id, out var xe);
 				xe.SetResult(e);
 			}
 		}

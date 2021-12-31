@@ -91,7 +91,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the configuration.
 		/// </summary>
-		private DiscordConfiguration Configuration { get; }
+		private readonly DiscordConfiguration _configuration;
 
 		/// <summary>
 		/// Gets the list of available voice regions. This property is meant as a way to modify <see cref="VoiceRegions"/>.
@@ -118,15 +118,15 @@ namespace DisCatSharp
 			if (config.ShardCount > 1)
 				this._manuallySharding = true;
 
-			this.Configuration = config;
+			this._configuration = config;
 			this.ShardClients = new ReadOnlyConcurrentDictionary<int, DiscordClient>(this._shards);
 
-			if (this.Configuration.LoggerFactory == null)
+			if (this._configuration.LoggerFactory == null)
 			{
-				this.Configuration.LoggerFactory = new DefaultLoggerFactory();
-				this.Configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this.Configuration.MinimumLogLevel, this.Configuration.LogTimestampFormat));
+				this._configuration.LoggerFactory = new DefaultLoggerFactory();
+				this._configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this._configuration.MinimumLogLevel, this._configuration.LogTimestampFormat));
 			}
-			this.Logger = this.Configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
+			this.Logger = this._configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
 		}
 
 		#endregion
@@ -148,7 +148,7 @@ namespace DisCatSharp
 
 			try
 			{
-				if (this.Configuration.TokenType != TokenType.Bot)
+				if (this._configuration.TokenType != TokenType.Bot)
 					this.Logger.LogWarning(LoggerEvents.Misc, "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful.");
 				this.Logger.LogInformation(LoggerEvents.Startup, "Lib {0}, version {1}", this._botLibrary, this._versionString.Value);
 
@@ -253,11 +253,11 @@ namespace DisCatSharp
 				return this._shards.Count;
 
 			this.GatewayInfo = await this.GetGatewayInfoAsync().ConfigureAwait(false);
-			var shardc = this.Configuration.ShardCount == 1 ? this.GatewayInfo.ShardCount : this.Configuration.ShardCount;
+			var shardc = this._configuration.ShardCount == 1 ? this.GatewayInfo.ShardCount : this._configuration.ShardCount;
 			var lf = new ShardedLoggerFactory(this.Logger);
 			for (var i = 0; i < shardc; i++)
 			{
-				var cfg = new DiscordConfiguration(this.Configuration)
+				var cfg = new DiscordConfiguration(this._configuration)
 				{
 					ShardId = i,
 					ShardCount = shardc,
@@ -282,14 +282,14 @@ namespace DisCatSharp
 		/// <returns>A Task.</returns>
 		private async Task<GatewayInfo> GetGatewayInfoAsync()
 		{
-			var url = $"{Utilities.GetApiBaseUri(this.Configuration)}{Endpoints.GATEWAY}{Endpoints.BOT}";
+			var url = $"{Utilities.GetApiBaseUri(this._configuration)}{Endpoints.GATEWAY}{Endpoints.BOT}";
 			var http = new HttpClient();
 
 			http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
-			http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(this.Configuration));
-			if (this.Configuration != null && this.Configuration.Override != null)
+			http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(this._configuration));
+			if (this._configuration != null && this._configuration.Override != null)
 			{
-				http.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this.Configuration.Override);
+				http.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._configuration.Override);
 			}
 
 			this.Logger.LogDebug(LoggerEvents.ShardRest, $"Obtaining gateway information from GET {Endpoints.GATEWAY}{Endpoints.BOT}...");

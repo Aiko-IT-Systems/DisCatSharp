@@ -37,10 +37,11 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// Gets the embed builder.
 		/// </summary>
 		public DiscordEmbedBuilder EmbedBuilder { get; }
+
 		/// <summary>
 		/// Gets or sets the command.
 		/// </summary>
-		private Command Command { get; set; }
+		private Command _command;
 
 		/// <summary>
 		/// Creates a new default help formatter.
@@ -61,7 +62,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <returns>This help formatter.</returns>
 		public override BaseHelpFormatter WithCommand(Command command)
 		{
-			this.Command = command;
+			this._command = command;
 
 			this.EmbedBuilder.WithDescription($"{Formatter.InlineCode(command.Name)}: {command.Description ?? "No description provided."}");
 
@@ -103,7 +104,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <returns>This help formatter.</returns>
 		public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
 		{
-			this.EmbedBuilder.AddField(this.Command != null ? "Subcommands" : "Commands", string.Join(", ", subcommands.Select(x => Formatter.InlineCode(x.Name))), false);
+			this.EmbedBuilder.AddField(this._command != null ? "Subcommands" : "Commands", string.Join(", ", subcommands.Select(x => Formatter.InlineCode(x.Name))), false);
 
 			return this;
 		}
@@ -114,7 +115,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <returns>Data for the help message.</returns>
 		public override CommandHelpMessage Build()
 		{
-			if (this.Command == null)
+			if (this._command == null)
 				this.EmbedBuilder.WithDescription("Listing all top-level commands and groups. Specify a command to see more information.");
 
 			return new CommandHelpMessage(embed: this.EmbedBuilder.Build());

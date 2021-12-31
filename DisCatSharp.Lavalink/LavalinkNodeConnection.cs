@@ -186,16 +186,17 @@ namespace DisCatSharp.Lavalink
 		/// <summary>
 		/// Gets or sets the web socket.
 		/// </summary>
-		private IWebSocketClient WebSocket { get; set; }
+		private IWebSocketClient _webSocket;
 
 		/// <summary>
 		/// Gets the voice state updates.
 		/// </summary>
-		private ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>> VoiceStateUpdates { get; }
+		private readonly ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>> _voiceStateUpdates;
+
 		/// <summary>
 		/// Gets the voice server updates.
 		/// </summary>
-		private ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>> VoiceServerUpdates { get; }
+		private readonly ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>> _voiceServerUpdates;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="LavalinkNodeConnection"/> class.
@@ -224,8 +225,8 @@ namespace DisCatSharp.Lavalink
 			this._trackStuck = new AsyncEvent<LavalinkGuildConnection, TrackStuckEventArgs>("LAVALINK_TRACK_STUCK", TimeSpan.Zero, this.Discord.EventErrorHandler);
 			this._trackException = new AsyncEvent<LavalinkGuildConnection, TrackExceptionEventArgs>("LAVALINK_TRACK_EXCEPTION", TimeSpan.Zero, this.Discord.EventErrorHandler);
 
-			this.VoiceServerUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>>();
-			this.VoiceStateUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>>();
+			this._voiceServerUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceServerUpdateEventArgs>>();
+			this._voiceStateUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>>();
 			this.Discord.VoiceStateUpdated += this.Discord_VoiceStateUpdated;
 			this.Discord.VoiceServerUpdated += this.Discord_VoiceServerUpdated;
 
@@ -243,17 +244,17 @@ namespace DisCatSharp.Lavalink
 			if (this.Discord?.CurrentUser?.Id == null || this.Discord?.ShardCount == null)
 				throw new InvalidOperationException("This operation requires the Discord client to be fully initialized.");
 
-			this.WebSocket = this.Discord.Configuration.WebSocketClientFactory(this.Discord.Configuration.Proxy, this.Discord.ServiceProvider);
-			this.WebSocket.Connected += this.WebSocket_OnConnect;
-			this.WebSocket.Disconnected += this.WebSocket_OnDisconnect;
-			this.WebSocket.ExceptionThrown += this.WebSocket_OnException;
-			this.WebSocket.MessageReceived += this.WebSocket_OnMessage;
+			this._webSocket = this.Discord.Configuration.WebSocketClientFactory(this.Discord.Configuration.Proxy, this.Discord.ServiceProvider);
+			this._webSocket.Connected += this.WebSocket_OnConnect;
+			this._webSocket.Disconnected += this.WebSocket_OnDisconnect;
+			this._webSocket.ExceptionThrown += this.WebSocket_OnException;
+			this._webSocket.MessageReceived += this.WebSocket_OnMessage;
 
-			this.WebSocket.AddDefaultHeader("Authorization", this.Configuration.Password);
-			this.WebSocket.AddDefaultHeader("Num-Shards", this.Discord.ShardCount.ToString(CultureInfo.InvariantCulture));
-			this.WebSocket.AddDefaultHeader("User-Id", this.Discord.CurrentUser.Id.ToString(CultureInfo.InvariantCulture));
+			this._webSocket.AddDefaultHeader("Authorization", this.Configuration.Password);
+			this._webSocket.AddDefaultHeader("Num-Shards", this.Discord.ShardCount.ToString(CultureInfo.InvariantCulture));
+			this._webSocket.AddDefaultHeader("User-Id", this.Discord.CurrentUser.Id.ToString(CultureInfo.InvariantCulture));
 			if (this.Configuration.ResumeKey != null)
-				this.WebSocket.AddDefaultHeader("Resume-Key", this.Configuration.ResumeKey);
+				this._webSocket.AddDefaultHeader("Resume-Key", this.Configuration.ResumeKey);
 
 			do
 			{
@@ -269,7 +270,7 @@ namespace DisCatSharp.Lavalink
 						this._backoff = MINIMUM_BACKOFF;
 					}
 
-					await this.WebSocket.ConnectAsync(new Uri(this.Configuration.SocketEndpoint.ToWebSocketString())).ConfigureAwait(false);
+					await this._webSocket.ConnectAsync(new Uri(this.Configuration.SocketEndpoint.ToWebSocketString())).ConfigureAwait(false);
 					break;
 				}
 				catch (PlatformNotSupportedException)
@@ -306,7 +307,7 @@ namespace DisCatSharp.Lavalink
 			this.NodeDisconnected?.Invoke(this);
 
 			Volatile.Write(ref this._isDisposed, true);
-			await this.WebSocket.DisconnectAsync().ConfigureAwait(false);
+			await this._webSocket.DisconnectAsync().ConfigureAwait(false);
 			// this should not be here, no?
 			//await this._disconnected.InvokeAsync(this, new NodeDisconnectedEventArgs(this)).ConfigureAwait(false);
 		}
@@ -326,8 +327,8 @@ namespace DisCatSharp.Lavalink
 
 			var vstut = new TaskCompletionSource<VoiceStateUpdateEventArgs>();
 			var vsrut = new TaskCompletionSource<VoiceServerUpdateEventArgs>();
-			this.VoiceStateUpdates[channel.Guild.Id] = vstut;
-			this.VoiceServerUpdates[channel.Guild.Id] = vsrut;
+			this._voiceStateUpdates[channel.Guild.Id] = vstut;
+			this._voiceServerUpdates[channel.Guild.Id] = vsrut;
 
 			var vsd = new VoiceDispatch
 			{
@@ -560,7 +561,7 @@ namespace DisCatSharp.Lavalink
 					});
 				}
 
-				if (!string.IsNullOrWhiteSpace(e.SessionId) && e.Channel != null && this.VoiceStateUpdates.TryRemove(gld.Id, out var xe))
+				if (!string.IsNullOrWhiteSpace(e.SessionId) && e.Channel != null && this._voiceStateUpdates.TryRemove(gld.Id, out var xe))
 					xe.SetResult(e);
 			}
 
@@ -584,7 +585,7 @@ namespace DisCatSharp.Lavalink
 				_ = Task.Run(() => this.WsSendAsync(JsonConvert.SerializeObject(lvlp)));
 			}
 
-			if (this.VoiceServerUpdates.TryRemove(gld.Id, out var xe))
+			if (this._voiceServerUpdates.TryRemove(gld.Id, out var xe))
 				xe.SetResult(e);
 
 			return Task.CompletedTask;
@@ -597,7 +598,7 @@ namespace DisCatSharp.Lavalink
 		private async Task WsSendAsync(string payload)
 		{
 			this.Discord.Logger.LogTrace(LavalinkEvents.LavalinkWsTx, payload);
-			await this.WebSocket.SendMessageAsync(payload).ConfigureAwait(false);
+			await this._webSocket.SendMessageAsync(payload).ConfigureAwait(false);
 		}
 
 		internal event NodeDisconnectedEventHandler NodeDisconnected;

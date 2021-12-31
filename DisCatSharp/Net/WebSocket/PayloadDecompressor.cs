@@ -50,12 +50,12 @@ namespace DisCatSharp.Net.WebSocket
 		/// <summary>
 		/// Gets the compressed stream.
 		/// </summary>
-		private MemoryStream CompressedStream { get; }
+		private readonly MemoryStream _compressedStream;
 
 		/// <summary>
 		/// Gets the decompressor stream.
 		/// </summary>
-		private DeflateStream DecompressorStream { get; }
+		private readonly DeflateStream _decompressorStream;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PayloadDecompressor"/> class.
@@ -67,9 +67,9 @@ namespace DisCatSharp.Net.WebSocket
 				throw new InvalidOperationException("Decompressor requires a valid compression mode.");
 
 			this.CompressionLevel = compressionLevel;
-			this.CompressedStream = new MemoryStream();
+			this._compressedStream = new MemoryStream();
 			if (this.CompressionLevel == GatewayCompressionLevel.Stream)
-				this.DecompressorStream = new DeflateStream(this.CompressedStream, CompressionMode.Decompress);
+				this._decompressorStream = new DeflateStream(this._compressedStream, CompressionMode.Decompress);
 		}
 
 		/// <summary>
@@ -80,16 +80,16 @@ namespace DisCatSharp.Net.WebSocket
 		public bool TryDecompress(ArraySegment<byte> compressed, MemoryStream decompressed)
 		{
 			var zlib = this.CompressionLevel == GatewayCompressionLevel.Stream
-				? this.DecompressorStream
-				: new DeflateStream(this.CompressedStream, CompressionMode.Decompress, true);
+				? this._decompressorStream
+				: new DeflateStream(this._compressedStream, CompressionMode.Decompress, true);
 
 			if (compressed.Array[0] == ZLIB_PREFIX)
-				this.CompressedStream.Write(compressed.Array, compressed.Offset + 2, compressed.Count - 2);
+				this._compressedStream.Write(compressed.Array, compressed.Offset + 2, compressed.Count - 2);
 			else
-				this.CompressedStream.Write(compressed.Array, compressed.Offset, compressed.Count);
+				this._compressedStream.Write(compressed.Array, compressed.Offset, compressed.Count);
 
-			this.CompressedStream.Flush();
-			this.CompressedStream.Position = 0;
+			this._compressedStream.Flush();
+			this._compressedStream.Position = 0;
 
 			var cspan = compressed.AsSpan();
 			var suffix = BinaryPrimitives.ReadUInt32BigEndian(cspan[^4..]);
@@ -109,8 +109,8 @@ namespace DisCatSharp.Net.WebSocket
 			catch { return false; }
 			finally
 			{
-				this.CompressedStream.Position = 0;
-				this.CompressedStream.SetLength(0);
+				this._compressedStream.Position = 0;
+				this._compressedStream.SetLength(0);
 
 				if (this.CompressionLevel == GatewayCompressionLevel.Payload)
 					zlib.Dispose();
@@ -122,8 +122,8 @@ namespace DisCatSharp.Net.WebSocket
 		/// </summary>
 		public void Dispose()
 		{
-			this.DecompressorStream?.Dispose();
-			this.CompressedStream.Dispose();
+			this._decompressorStream?.Dispose();
+			this._compressedStream.Dispose();
 		}
 	}
 }

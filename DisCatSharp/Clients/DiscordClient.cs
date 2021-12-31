@@ -62,7 +62,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the connection lock.
 		/// </summary>
-		private ManualResetEventSlim ConnectionLock { get; } = new ManualResetEventSlim(true);
+		private readonly ManualResetEventSlim _connectionLock = new ManualResetEventSlim(true);
 
 		#endregion
 
@@ -282,9 +282,9 @@ namespace DisCatSharp
 		public async Task ConnectAsync(DiscordActivity activity = null, UserStatus? status = null, DateTimeOffset? idlesince = null)
 		{
 			// Check if connection lock is already set, and set it if it isn't
-			if (!this.ConnectionLock.Wait(0))
+			if (!this._connectionLock.Wait(0))
 				throw new InvalidOperationException("This client is already connected.");
-			this.ConnectionLock.Set();
+			this._connectionLock.Set();
 
 			var w = 7500;
 			var i = 5;
@@ -323,17 +323,17 @@ namespace DisCatSharp
 				}
 				catch (UnauthorizedException e)
 				{
-					FailConnection(this.ConnectionLock);
+					FailConnection(this._connectionLock);
 					throw new Exception("Authentication failed. Check your token and try again.", e);
 				}
 				catch (PlatformNotSupportedException)
 				{
-					FailConnection(this.ConnectionLock);
+					FailConnection(this._connectionLock);
 					throw;
 				}
 				catch (NotImplementedException)
 				{
-					FailConnection(this.ConnectionLock);
+					FailConnection(this._connectionLock);
 					throw;
 				}
 				catch (Exception ex)
@@ -353,7 +353,7 @@ namespace DisCatSharp
 
 			if (!s && cex != null)
 			{
-				this.ConnectionLock.Set();
+				this._connectionLock.Set();
 				throw new Exception("Could not connect to Discord.", cex);
 			}
 

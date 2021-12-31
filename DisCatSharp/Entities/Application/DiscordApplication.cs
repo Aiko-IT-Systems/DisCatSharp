@@ -130,7 +130,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets or sets a list of <see cref="DiscordApplicationAsset"/>.
 		/// </summary>
-		private IReadOnlyList<DiscordApplicationAsset> Assets { get; set; }
+		private IReadOnlyList<DiscordApplicationAsset> _assets;
 
 		/// <summary>
 		/// A custom url for the Add To Server button.
@@ -192,10 +192,10 @@ namespace DisCatSharp.Entities
 		/// <returns>This application's assets.</returns>
 		public async Task<IReadOnlyList<DiscordApplicationAsset>> GetAssetsAsync()
 		{
-			if (this.Assets == null)
-				this.Assets = await this.Discord.ApiClient.GetApplicationAssetsAsync(this).ConfigureAwait(false);
+			if (this._assets == null)
+				this._assets = await this.Discord.ApiClient.GetApplicationAssetsAsync(this).ConfigureAwait(false);
 
-			return this.Assets;
+			return this._assets;
 		}
 
 		/// <summary>

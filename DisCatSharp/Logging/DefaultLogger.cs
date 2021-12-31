@@ -35,11 +35,12 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the minimum log level.
 		/// </summary>
-		private LogLevel MinimumLevel { get; }
+		private readonly LogLevel _minimumLevel;
+
 		/// <summary>
 		/// Gets the timestamp format.
 		/// </summary>
-		private string TimestampFormat { get; }
+		private readonly string _timestampFormat;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DefaultLogger"/> class.
@@ -56,8 +57,8 @@ namespace DisCatSharp
 		/// <param name="timestampFormat">The timestamp format.</param>
 		internal DefaultLogger(LogLevel minLevel = LogLevel.Information, string timestampFormat = "yyyy-MM-dd HH:mm:ss zzz")
 		{
-			this.MinimumLevel = minLevel;
-			this.TimestampFormat = timestampFormat;
+			this._minimumLevel = minLevel;
+			this._timestampFormat = timestampFormat;
 		}
 
 		/// <summary>
@@ -77,7 +78,7 @@ namespace DisCatSharp
 			{
 				var ename = eventId.Name;
 				ename = ename?.Length > 12 ? ename?[..12] : ename;
-				Console.Write($"[{DateTimeOffset.Now.ToString(this.TimestampFormat)}] [{eventId.Id,-4}/{ename,-12}] ");
+				Console.Write($"[{DateTimeOffset.Now.ToString(this._timestampFormat)}] [{eventId.Id,-4}/{ename,-12}] ");
 
 				switch (logLevel)
 				{
@@ -135,7 +136,7 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="logLevel">The log level.</param>
 		public bool IsEnabled(LogLevel logLevel)
-			=> logLevel >= this.MinimumLevel;
+			=> logLevel >= this._minimumLevel;
 
 		/// <summary>
 		/// Begins the scope.

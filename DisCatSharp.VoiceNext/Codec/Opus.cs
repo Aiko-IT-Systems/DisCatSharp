@@ -38,12 +38,12 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <summary>
 		/// Gets the encoder.
 		/// </summary>
-		private IntPtr Encoder { get; }
+		private readonly IntPtr _encoder;
 
 		/// <summary>
 		/// Gets the managed decoders.
 		/// </summary>
-		private List<OpusDecoder> ManagedDecoders { get; }
+		private readonly List<OpusDecoder> _managedDecoders;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Opus"/> class.
@@ -55,7 +55,7 @@ namespace DisCatSharp.VoiceNext.Codec
 				throw new ArgumentException("Invalid audio format specified.", nameof(audioFormat));
 
 			this.AudioFormat = audioFormat;
-			this.Encoder = Interop.OpusCreateEncoder(this.AudioFormat);
+			this._encoder = Interop.OpusCreateEncoder(this.AudioFormat);
 
 			// Set appropriate encoder options
 			var sig = OpusSignal.Auto;
@@ -69,12 +69,12 @@ namespace DisCatSharp.VoiceNext.Codec
 					sig = OpusSignal.Voice;
 					break;
 			}
-			Interop.OpusSetEncoderOption(this.Encoder, OpusControl.SetSignal, (int)sig);
-			Interop.OpusSetEncoderOption(this.Encoder, OpusControl.SetPacketLossPercent, 15);
-			Interop.OpusSetEncoderOption(this.Encoder, OpusControl.SetInBandFec, 1);
-			Interop.OpusSetEncoderOption(this.Encoder, OpusControl.SetBitrate, 131072);
+			Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetSignal, (int)sig);
+			Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetPacketLossPercent, 15);
+			Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetInBandFec, 1);
+			Interop.OpusSetEncoderOption(this._encoder, OpusControl.SetBitrate, 131072);
 
-			this.ManagedDecoders = new List<OpusDecoder>();
+			this._managedDecoders = new List<OpusDecoder>();
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace DisCatSharp.VoiceNext.Codec
 			if (pcm.Length != sampleSize)
 				throw new ArgumentException("Invalid PCM sample size.", nameof(target));
 
-			Interop.OpusEncode(this.Encoder, pcm, frameSize, ref target);
+			Interop.OpusEncode(this._encoder, pcm, frameSize, ref target);
 		}
 
 		/// <summary>
@@ -147,10 +147,10 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <returns>An OpusDecoder.</returns>
 		public OpusDecoder CreateDecoder()
 		{
-			lock (this.ManagedDecoders)
+			lock (this._managedDecoders)
 			{
 				var managedDecoder = new OpusDecoder(this);
-				this.ManagedDecoders.Add(managedDecoder);
+				this._managedDecoders.Add(managedDecoder);
 				return managedDecoder;
 			}
 		}
@@ -161,12 +161,12 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="decoder">The decoder.</param>
 		public void DestroyDecoder(OpusDecoder decoder)
 		{
-			lock (this.ManagedDecoders)
+			lock (this._managedDecoders)
 			{
-				if (!this.ManagedDecoders.Contains(decoder))
+				if (!this._managedDecoders.Contains(decoder))
 					return;
 
-				this.ManagedDecoders.Remove(decoder);
+				this._managedDecoders.Remove(decoder);
 				decoder.Dispose();
 			}
 		}
@@ -176,11 +176,11 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// </summary>
 		public void Dispose()
 		{
-			Interop.OpusDestroyEncoder(this.Encoder);
+			Interop.OpusDestroyEncoder(this._encoder);
 
-			lock (this.ManagedDecoders)
+			lock (this._managedDecoders)
 			{
-				foreach (var decoder in this.ManagedDecoders)
+				foreach (var decoder in this._managedDecoders)
 					decoder.Dispose();
 			}
 		}

@@ -44,10 +44,11 @@ namespace DisCatSharp.CommandsNext.Builders
 		/// Gets the aliases set for this command.
 		/// </summary>
 		public IReadOnlyList<string> Aliases { get; }
+
 		/// <summary>
 		/// Gets the alias list.
 		/// </summary>
-		private List<string> AliasList { get; }
+		private readonly List<string> _aliasList;
 
 		/// <summary>
 		/// Gets the description set for this command.
@@ -63,23 +64,26 @@ namespace DisCatSharp.CommandsNext.Builders
 		/// Gets the execution checks defined for this command.
 		/// </summary>
 		public IReadOnlyList<CheckBaseAttribute> ExecutionChecks { get; }
+
 		/// <summary>
 		/// Gets the execution check list.
 		/// </summary>
-		private List<CheckBaseAttribute> ExecutionCheckList { get; }
+		private readonly List<CheckBaseAttribute> _executionCheckList;
 
 		/// <summary>
 		/// Gets the collection of this command's overloads.
 		/// </summary>
 		public IReadOnlyList<CommandOverloadBuilder> Overloads { get; }
+
 		/// <summary>
 		/// Gets the overload list.
 		/// </summary>
-		private List<CommandOverloadBuilder> OverloadList { get; }
+		private readonly List<CommandOverloadBuilder> _overloadList;
+
 		/// <summary>
 		/// Gets the overload argument sets.
 		/// </summary>
-		private HashSet<string> OverloadArgumentSets { get; }
+		private readonly HashSet<string> _overloadArgumentSets;
 
 		/// <summary>
 		/// Gets the module on which this command is to be defined.
@@ -90,10 +94,11 @@ namespace DisCatSharp.CommandsNext.Builders
 		/// Gets custom attributes defined on this command.
 		/// </summary>
 		public IReadOnlyList<Attribute> CustomAttributes { get; }
+
 		/// <summary>
 		/// Gets the custom attribute list.
 		/// </summary>
-		private List<Attribute> CustomAttributeList { get; }
+		private readonly List<Attribute> _customAttributeList;
 
 		/// <summary>
 		/// Creates a new module-less command builder.
@@ -108,20 +113,20 @@ namespace DisCatSharp.CommandsNext.Builders
 		/// <param name="module">Module on which this command is to be defined.</param>
 		public CommandBuilder(ICommandModule module)
 		{
-			this.AliasList = new List<string>();
-			this.Aliases = new ReadOnlyCollection<string>(this.AliasList);
+			this._aliasList = new List<string>();
+			this.Aliases = new ReadOnlyCollection<string>(this._aliasList);
 
-			this.ExecutionCheckList = new List<CheckBaseAttribute>();
-			this.ExecutionChecks = new ReadOnlyCollection<CheckBaseAttribute>(this.ExecutionCheckList);
+			this._executionCheckList = new List<CheckBaseAttribute>();
+			this.ExecutionChecks = new ReadOnlyCollection<CheckBaseAttribute>(this._executionCheckList);
 
-			this.OverloadArgumentSets = new HashSet<string>();
-			this.OverloadList = new List<CommandOverloadBuilder>();
-			this.Overloads = new ReadOnlyCollection<CommandOverloadBuilder>(this.OverloadList);
+			this._overloadArgumentSets = new HashSet<string>();
+			this._overloadList = new List<CommandOverloadBuilder>();
+			this.Overloads = new ReadOnlyCollection<CommandOverloadBuilder>(this._overloadList);
 
 			this.Module = module;
 
-			this.CustomAttributeList = new List<Attribute>();
-			this.CustomAttributes = new ReadOnlyCollection<Attribute>(this.CustomAttributeList);
+			this._customAttributeList = new List<Attribute>();
+			this.CustomAttributes = new ReadOnlyCollection<Attribute>(this._customAttributeList);
 		}
 
 		/// <summary>
@@ -137,7 +142,7 @@ namespace DisCatSharp.CommandsNext.Builders
 			if (this.Name != null)
 				throw new InvalidOperationException("This command already has a name.");
 
-			if (this.AliasList.Contains(name))
+			if (this._aliasList.Contains(name))
 				throw new ArgumentException("Command name cannot be one of its aliases.", nameof(name));
 
 			this.Name = name;
@@ -170,10 +175,10 @@ namespace DisCatSharp.CommandsNext.Builders
 			if (alias.ToCharArray().Any(xc => char.IsWhiteSpace(xc)))
 				throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.", nameof(alias));
 
-			if (this.Name == alias || this.AliasList.Contains(alias))
+			if (this.Name == alias || this._aliasList.Contains(alias))
 				throw new ArgumentException("Aliases cannot contain the command name, and cannot be duplicate.", nameof(alias));
 
-			this.AliasList.Add(alias);
+			this._aliasList.Add(alias);
 			return this;
 		}
 
@@ -206,7 +211,7 @@ namespace DisCatSharp.CommandsNext.Builders
 		/// <returns>This builder.</returns>
 		public CommandBuilder WithExecutionChecks(params CheckBaseAttribute[] checks)
 		{
-			this.ExecutionCheckList.AddRange(checks.Except(this.ExecutionCheckList));
+			this._executionCheckList.AddRange(checks.Except(this._executionCheckList));
 			return this;
 		}
 
@@ -217,8 +222,8 @@ namespace DisCatSharp.CommandsNext.Builders
 		/// <returns>This builder.</returns>
 		public CommandBuilder WithExecutionCheck(CheckBaseAttribute check)
 		{
-			if (!this.ExecutionCheckList.Contains(check))
-				this.ExecutionCheckList.Add(check);
+			if (!this._executionCheckList.Contains(check))
+				this._executionCheckList.Add(check);
 			return this;
 		}
 
@@ -242,11 +247,11 @@ namespace DisCatSharp.CommandsNext.Builders
 		/// <returns>This builder.</returns>
 		public CommandBuilder WithOverload(CommandOverloadBuilder overload)
 		{
-			if (this.OverloadArgumentSets.Contains(overload.ArgumentSet))
+			if (this._overloadArgumentSets.Contains(overload.ArgumentSet))
 				throw new DuplicateOverloadException(this.Name, overload.Arguments.Select(x => x.Type).ToList(), overload.ArgumentSet);
 
-			this.OverloadArgumentSets.Add(overload.ArgumentSet);
-			this.OverloadList.Add(overload);
+			this._overloadArgumentSets.Add(overload.ArgumentSet);
+			this._overloadList.Add(overload);
 
 			return this;
 		}
@@ -258,7 +263,7 @@ namespace DisCatSharp.CommandsNext.Builders
 		/// <returns>This builder.</returns>
 		public CommandBuilder WithCustomAttribute(Attribute attribute)
 		{
-			this.CustomAttributeList.Add(attribute);
+			this._customAttributeList.Add(attribute);
 			return this;
 		}
 

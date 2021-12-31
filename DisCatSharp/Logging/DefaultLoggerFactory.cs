@@ -34,14 +34,14 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the providers.
 		/// </summary>
-		private List<ILoggerProvider> Providers { get; } = new List<ILoggerProvider>();
+		private readonly List<ILoggerProvider> _providers = new List<ILoggerProvider>();
 		private bool _isDisposed = false;
 
 		/// <summary>
 		/// Adds a provider.
 		/// </summary>
 		/// <param name="provider">The provider to be added.</param>
-		public void AddProvider(ILoggerProvider provider) => this.Providers.Add(provider);
+		public void AddProvider(ILoggerProvider provider) => this._providers.Add(provider);
 
 		/// <summary>
 		/// Creates the logger.
@@ -53,7 +53,7 @@ namespace DisCatSharp
 				? throw new InvalidOperationException("This logger factory is already disposed.")
 				: categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName
 				? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName} or {typeof(DiscordWebhookClient).FullName}.", nameof(categoryName))
-				: new CompositeDefaultLogger(this.Providers);
+				: new CompositeDefaultLogger(this._providers);
 		}
 
 		/// <summary>
@@ -65,10 +65,10 @@ namespace DisCatSharp
 				return;
 			this._isDisposed = true;
 
-			foreach (var provider in this.Providers)
+			foreach (var provider in this._providers)
 				provider.Dispose();
 
-			this.Providers.Clear();
+			this._providers.Clear();
 		}
 	}
 }

@@ -52,7 +52,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 		/// <summary>
 		/// Gets the cooldown buckets for this command.
 		/// </summary>
-		private ConcurrentDictionary<string, CommandCooldownBucket> Buckets { get; }
+		private readonly ConcurrentDictionary<string, CommandCooldownBucket> _buckets;
 
 		/// <summary>
 		/// Defines a cooldown for this command. This means that users will be able to use the command a specific number of times before they have to wait to use it again.
@@ -65,7 +65,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 			this.MaxUses = maxUses;
 			this.Reset = TimeSpan.FromSeconds(resetAfter);
 			this.BucketType = bucketType;
-			this.Buckets = new ConcurrentDictionary<string, CommandCooldownBucket>();
+			this._buckets = new ConcurrentDictionary<string, CommandCooldownBucket>();
 		}
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 		public CommandCooldownBucket GetBucket(CommandContext ctx)
 		{
 			var bid = this.GetBucketId(ctx, out _, out _, out _);
-			this.Buckets.TryGetValue(bid, out var bucket);
+			this._buckets.TryGetValue(bid, out var bucket);
 			return bucket;
 		}
 
@@ -130,10 +130,10 @@ namespace DisCatSharp.CommandsNext.Attributes
 				return true;
 
 			var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld);
-			if (!this.Buckets.TryGetValue(bid, out var bucket))
+			if (!this._buckets.TryGetValue(bid, out var bucket))
 			{
 				bucket = new CommandCooldownBucket(this.MaxUses, this.Reset, usr, chn, gld);
-				this.Buckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
+				this._buckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
 			}
 
 			return await bucket.DecrementUseAsync().ConfigureAwait(false);
@@ -217,7 +217,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 		/// <summary>
 		/// Gets the semaphore used to lock the use value.
 		/// </summary>
-		private SemaphoreSlim UsageSemaphore { get; }
+		private readonly SemaphoreSlim _usageSemaphore;
 
 		/// <summary>
 		/// Creates a new command cooldown bucket.
@@ -237,7 +237,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 			this.ChannelId = channelId;
 			this.GuildId = guildId;
 			this.BucketId = MakeId(userId, channelId, guildId);
-			this.UsageSemaphore = new SemaphoreSlim(1, 1);
+			this._usageSemaphore = new SemaphoreSlim(1, 1);
 		}
 
 		/// <summary>
@@ -246,7 +246,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 		/// <returns>Whether decrement succeded or not.</returns>
 		internal async Task<bool> DecrementUseAsync()
 		{
-			await this.UsageSemaphore.WaitAsync().ConfigureAwait(false);
+			await this._usageSemaphore.WaitAsync().ConfigureAwait(false);
 
 			// if we're past reset time...
 			var now = DateTimeOffset.UtcNow;
@@ -267,7 +267,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 			}
 
 			// ...otherwise just fail
-			this.UsageSemaphore.Release();
+			this._usageSemaphore.Release();
 			return success;
 		}
 

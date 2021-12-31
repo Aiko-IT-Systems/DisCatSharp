@@ -56,7 +56,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Gets the discord client.
 		/// </summary>
-		private BaseDiscordClient Discord { get; }
+		private readonly BaseDiscordClient _discord;
 
 		/// <summary>
 		/// Gets a value indicating whether debug is enabled.
@@ -66,32 +66,32 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Gets the logger.
 		/// </summary>
-		private ILogger Logger { get; }
+		private readonly ILogger _logger;
 
 		/// <summary>
 		/// Gets the routes to hashes.
 		/// </summary>
-		private ConcurrentDictionary<string, string> RoutesToHashes { get; }
+		private readonly ConcurrentDictionary<string, string> _routesToHashes;
 
 		/// <summary>
 		/// Gets the hashes to buckets.
 		/// </summary>
-		private ConcurrentDictionary<string, RateLimitBucket> HashesToBuckets { get; }
+		private readonly ConcurrentDictionary<string, RateLimitBucket> _hashesToBuckets;
 
 		/// <summary>
 		/// Gets the request queue.
 		/// </summary>
-		private ConcurrentDictionary<string, int> RequestQueue { get; }
+		private readonly ConcurrentDictionary<string, int> _requestQueue;
 
 		/// <summary>
 		/// Gets the global rate limit event.
 		/// </summary>
-		private AsyncManualResetEvent GlobalRateLimitEvent { get; }
+		private readonly AsyncManualResetEvent _globalRateLimitEvent;
 
 		/// <summary>
 		/// Gets a value indicating whether use reset after.
 		/// </summary>
-		private bool UseResetAfter { get; }
+		private readonly bool _useResetAfter;
 
 		private CancellationTokenSource _bucketCleanerTokenSource;
 		private readonly TimeSpan _bucketCleanupDelay = TimeSpan.FromSeconds(60);
@@ -106,7 +106,7 @@ namespace DisCatSharp.Net
 		internal RestClient(BaseDiscordClient client)
 			: this(client.Configuration.Proxy, client.Configuration.HttpTimeout, client.Configuration.UseRelativeRatelimit, client.Logger)
 		{
-			this.Discord = client;
+			this._discord = client;
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(client));
 			if (client.Configuration.Override != null)
 			{
@@ -124,7 +124,7 @@ namespace DisCatSharp.Net
 		internal RestClient(IWebProxy proxy, TimeSpan timeout, bool useRelativeRatelimit,
 			ILogger logger) // This is for meta-clients, such as the webhook client
 		{
-			this.Logger = logger;
+			this._logger = logger;
 
 			var httphandler = new HttpClientHandler
 			{
@@ -136,22 +136,22 @@ namespace DisCatSharp.Net
 
 			this.HttpClient = new HttpClient(httphandler)
 			{
-				BaseAddress = new Uri(Utilities.GetApiBaseUri(this.Discord?.Configuration)),
+				BaseAddress = new Uri(Utilities.GetApiBaseUri(this._discord?.Configuration)),
 				Timeout = timeout
 			};
 
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
-			if (this.Discord != null && this.Discord.Configuration != null && this.Discord.Configuration.Override != null)
+			if (this._discord != null && this._discord.Configuration != null && this._discord.Configuration.Override != null)
 			{
-				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this.Discord.Configuration.Override);
+				this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._discord.Configuration.Override);
 			}
 
-			this.RoutesToHashes = new ConcurrentDictionary<string, string>();
-			this.HashesToBuckets = new ConcurrentDictionary<string, RateLimitBucket>();
-			this.RequestQueue = new ConcurrentDictionary<string, int>();
+			this._routesToHashes = new ConcurrentDictionary<string, string>();
+			this._hashesToBuckets = new ConcurrentDictionary<string, RateLimitBucket>();
+			this._requestQueue = new ConcurrentDictionary<string, int>();
 
-			this.GlobalRateLimitEvent = new AsyncManualResetEvent(true);
-			this.UseResetAfter = useRelativeRatelimit;
+			this._globalRateLimitEvent = new AsyncManualResetEvent(true);
+			this._useResetAfter = useRelativeRatelimit;
 		}
 
 		/// <summary>
@@ -193,7 +193,7 @@ namespace DisCatSharp.Net
 			// If it doesn't exist, we create an unlimited hash as our initial key in the form of the hash key + the unlimited constant
 			// and assign this to the route to hash cache
 			// ex: this.RoutesToHashes[POST:/channels/channel_id/messages] = POST:/channels/channel_id/messages:unlimited
-			var hash = this.RoutesToHashes.GetOrAdd(hashKey, RateLimitBucket.GenerateUnlimitedHash(method, route));
+			var hash = this._routesToHashes.GetOrAdd(hashKey, RateLimitBucket.GenerateUnlimitedHash(method, route));
 
 			// Next we use the hash to generate the key to obtain the bucket.
 			// ex: 80c17d2f203122d936070c88c8d10f33:guild_id:506128773926879242:webhook_id
@@ -201,7 +201,7 @@ namespace DisCatSharp.Net
 			var bucketId = RateLimitBucket.GenerateBucketId(hash, guildId, channelId, webhookId);
 
 			// If it's not in cache, create a new bucket and index it by its bucket id.
-			var bucket = this.HashesToBuckets.GetOrAdd(bucketId, new RateLimitBucket(hash, guildId, channelId, webhookId));
+			var bucket = this._hashesToBuckets.GetOrAdd(bucketId, new RateLimitBucket(hash, guildId, channelId, webhookId));
 
 			bucket.LastAttemptAt = DateTimeOffset.UtcNow;
 
@@ -211,10 +211,10 @@ namespace DisCatSharp.Net
 
 			// Add the current route to the request queue, which indexes the amount
 			// of requests occurring to the bucket id.
-			_ = this.RequestQueue.TryGetValue(bucketId, out var count);
+			_ = this._requestQueue.TryGetValue(bucketId, out var count);
 
 			// Increment by one atomically due to concurrency
-			this.RequestQueue[bucketId] = Interlocked.Increment(ref count);
+			this._requestQueue[bucketId] = Interlocked.Increment(ref count);
 
 			// Start bucket cleaner if not already running.
 			if (!this._cleanerRunning)
@@ -222,7 +222,7 @@ namespace DisCatSharp.Net
 				this._cleanerRunning = true;
 				this._bucketCleanerTokenSource = new CancellationTokenSource();
 				this._cleanerTask = Task.Run(this.CleanupBucketsAsync, this._bucketCleanerTokenSource.Token);
-				this.Logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task started.");
+				this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task started.");
 			}
 
 			url = s_routeArgumentRegex.Replace(route, xm => rparams[xm.Groups[1].Value]);
@@ -252,7 +252,7 @@ namespace DisCatSharp.Net
 
 			try
 			{
-				await this.GlobalRateLimitEvent.WaitAsync().ConfigureAwait(false);
+				await this._globalRateLimitEvent.WaitAsync().ConfigureAwait(false);
 
 				if (bucket == null)
 					bucket = request.RateLimitBucket;
@@ -269,11 +269,11 @@ namespace DisCatSharp.Net
 					// Decrement the remaining number of requests as there can be other concurrent requests before this one finishes and has a chance to update the bucket
 					if (Interlocked.Decrement(ref bucket.RemainingInternal) < 0)
 					{
-						this.Logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {0} is blocked", bucket.ToString());
+						this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {0} is blocked", bucket.ToString());
 						var delay = bucket.Reset - now;
 						var resetDate = bucket.Reset;
 
-						if (this.UseResetAfter)
+						if (this._useResetAfter)
 						{
 							delay = bucket.ResetAfter.Value;
 							resetDate = bucket.ResetAfterOffset;
@@ -281,29 +281,29 @@ namespace DisCatSharp.Net
 
 						if (delay < new TimeSpan(-TimeSpan.TicksPerMinute))
 						{
-							this.Logger.LogError(LoggerEvents.RatelimitDiag, "Failed to retrieve ratelimits - giving up and allowing next request for bucket");
+							this._logger.LogError(LoggerEvents.RatelimitDiag, "Failed to retrieve ratelimits - giving up and allowing next request for bucket");
 							bucket.RemainingInternal = 1;
 						}
 
 						if (delay < TimeSpan.Zero)
 							delay = TimeSpan.FromMilliseconds(100);
 
-						this.Logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Pre-emptive ratelimit triggered - waiting until {0:yyyy-MM-dd HH:mm:ss zzz} ({1:c}).", resetDate, delay);
+						this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Pre-emptive ratelimit triggered - waiting until {0:yyyy-MM-dd HH:mm:ss zzz} ({1:c}).", resetDate, delay);
 						Task.Delay(delay)
 							.ContinueWith(_ => this.ExecuteRequestAsync(request, null, null))
-							.LogTaskFault(this.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
+							.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
 
 						return;
 					}
-					this.Logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {0} is allowed", bucket.ToString());
+					this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {0} is allowed", bucket.ToString());
 				}
 				else
-					this.Logger.LogDebug(LoggerEvents.RatelimitDiag, "Initial request for {0} is allowed", bucket.ToString());
+					this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Initial request for {0} is allowed", bucket.ToString());
 
 				var req = this.BuildRequest(request);
 
 				if (this.Debug)
-					this.Logger.LogTrace(LoggerEvents.Misc, await req.Content.ReadAsStringAsync());
+					this._logger.LogTrace(LoggerEvents.Misc, await req.Content.ReadAsStringAsync());
 
 				var response = new RestResponse();
 				try
@@ -316,7 +316,7 @@ namespace DisCatSharp.Net
 					var bts = await res.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 					var txt = Utilities.UTF8.GetString(bts, 0, bts.Length);
 
-					this.Logger.LogTrace(LoggerEvents.RestRx, txt);
+					this._logger.LogTrace(LoggerEvents.RestRx, txt);
 
 					response.Headers = res.Headers.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 					response.Response = txt;
@@ -324,7 +324,7 @@ namespace DisCatSharp.Net
 				}
 				catch (HttpRequestException httpex)
 				{
-					this.Logger.LogError(LoggerEvents.RestError, httpex, "Request to {0} triggered an HttpException", request.Url);
+					this._logger.LogError(LoggerEvents.RestError, httpex, "Request to {0} triggered an HttpException", request.Url);
 					request.SetFaulted(httpex);
 					this.FailInitialRateLimitTest(request, ratelimitTcs);
 					return;
@@ -363,26 +363,26 @@ namespace DisCatSharp.Net
 							if (global)
 							{
 								bucket.IsGlobal = true;
-								this.Logger.LogError(LoggerEvents.RatelimitHit, "Global ratelimit hit, cooling down");
+								this._logger.LogError(LoggerEvents.RatelimitHit, "Global ratelimit hit, cooling down");
 								try
 								{
-									this.GlobalRateLimitEvent.Reset();
+									this._globalRateLimitEvent.Reset();
 									await wait.ConfigureAwait(false);
 								}
 								finally
 								{
 									// we don't want to wait here until all the blocked requests have been run, additionally Set can never throw an exception that could be suppressed here
-									_ = this.GlobalRateLimitEvent.SetAsync();
+									_ = this._globalRateLimitEvent.SetAsync();
 								}
 								this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
-									.LogTaskFault(this.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while retrying request");
+									.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while retrying request");
 							}
 							else
 							{
-								this.Logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeueing request to {0}", request.Url);
+								this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeueing request to {0}", request.Url);
 								await wait.ConfigureAwait(false);
 								this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
-									.LogTaskFault(this.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while retrying request");
+									.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while retrying request");
 							}
 
 							return;
@@ -404,7 +404,7 @@ namespace DisCatSharp.Net
 			}
 			catch (Exception ex)
 			{
-				this.Logger.LogError(LoggerEvents.RestError, ex, "Request to {0} triggered an exception", request.Url);
+				this._logger.LogError(LoggerEvents.RestError, ex, "Request to {0} triggered an exception", request.Url);
 
 				// if something went wrong and we couldn't get rate limits for the first request here, allow the next request to run
 				if (bucket != null && ratelimitTcs != null && bucket.LimitTesting != 0)
@@ -418,8 +418,8 @@ namespace DisCatSharp.Net
 				res?.Dispose();
 
 				// Get and decrement active requests in this bucket by 1.
-				_ = this.RequestQueue.TryGetValue(bucket.BucketId, out var count);
-				this.RequestQueue[bucket.BucketId] = Interlocked.Decrement(ref count);
+				_ = this._requestQueue.TryGetValue(bucket.BucketId, out var count);
+				this._requestQueue[bucket.BucketId] = Interlocked.Decrement(ref count);
 
 				// If it's 0 or less, we can remove the bucket from the active request queue,
 				// along with any of its past routes.
@@ -427,9 +427,9 @@ namespace DisCatSharp.Net
 				{
 					foreach (var r in bucket.RouteHashes)
 					{
-						if (this.RequestQueue.ContainsKey(r))
+						if (this._requestQueue.ContainsKey(r))
 						{
-							_ = this.RequestQueue.TryRemove(r, out _);
+							_ = this._requestQueue.TryRemove(r, out _);
 						}
 					}
 				}
@@ -514,7 +514,7 @@ namespace DisCatSharp.Net
 
 			if (request is RestRequest nmprequest && !string.IsNullOrWhiteSpace(nmprequest.Payload))
 			{
-				this.Logger.LogTrace(LoggerEvents.RestTx, nmprequest.Payload);
+				this._logger.LogTrace(LoggerEvents.RestTx, nmprequest.Payload);
 
 				req.Content = new StringContent(nmprequest.Payload);
 				req.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -522,7 +522,7 @@ namespace DisCatSharp.Net
 
 			if (request is MultipartWebRequest mprequest)
 			{
-				this.Logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
+				this._logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
 
 				var boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
 
@@ -551,7 +551,7 @@ namespace DisCatSharp.Net
 
 			if (request is MultipartStickerWebRequest mpsrequest)
 			{
-				this.Logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
+				this._logger.LogTrace(LoggerEvents.RestTx, "<multipart request>");
 
 				var boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
 
@@ -679,7 +679,7 @@ namespace DisCatSharp.Net
 				resetdelta = TimeSpan.FromSeconds(request.RateLimitWaitOverride.Value);
 			var newReset = clienttime + resetdelta;
 
-			if (this.UseResetAfter)
+			if (this._useResetAfter)
 			{
 				bucket.ResetAfter = TimeSpan.FromSeconds(double.Parse(resetAfter, CultureInfo.InvariantCulture));
 				newReset = clienttime + bucket.ResetAfter.Value + (request.RateLimitWaitOverride.HasValue
@@ -722,14 +722,14 @@ namespace DisCatSharp.Net
 		{
 			var hashKey = RateLimitBucket.GenerateHashKey(request.Method, request.Route);
 
-			if (!this.RoutesToHashes.TryGetValue(hashKey, out var oldHash))
+			if (!this._routesToHashes.TryGetValue(hashKey, out var oldHash))
 				return;
 
 			// This is an unlimited bucket, which we don't need to keep track of.
 			if (newHash == null)
 			{
-				_ = this.RoutesToHashes.TryRemove(hashKey, out _);
-				_ = this.HashesToBuckets.TryRemove(bucket.BucketId, out _);
+				_ = this._routesToHashes.TryRemove(hashKey, out _);
+				_ = this._hashesToBuckets.TryRemove(bucket.BucketId, out _);
 				return;
 			}
 
@@ -738,18 +738,18 @@ namespace DisCatSharp.Net
 			// in which case, Dispose will need to be called to clear the caches.
 			if (bucket.IsUnlimited && newHash != oldHash)
 			{
-				this.Logger.LogDebug(LoggerEvents.RestHashMover, "Updating hash in {0}: \"{1}\" -> \"{2}\"", hashKey, oldHash, newHash);
+				this._logger.LogDebug(LoggerEvents.RestHashMover, "Updating hash in {0}: \"{1}\" -> \"{2}\"", hashKey, oldHash, newHash);
 				var bucketId = RateLimitBucket.GenerateBucketId(newHash, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);
 
-				_ = this.RoutesToHashes.AddOrUpdate(hashKey, newHash, (key, oldHash) =>
+				_ = this._routesToHashes.AddOrUpdate(hashKey, newHash, (key, oldHash) =>
 				{
 					bucket.Hash = newHash;
 
 					var oldBucketId = RateLimitBucket.GenerateBucketId(oldHash, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);
 
 					// Remove the old unlimited bucket.
-					_ = this.HashesToBuckets.TryRemove(oldBucketId, out _);
-					_ = this.HashesToBuckets.AddOrUpdate(bucketId, bucket, (key, oldBucket) => bucket);
+					_ = this._hashesToBuckets.TryRemove(oldBucketId, out _);
+					_ = this._hashesToBuckets.AddOrUpdate(bucketId, bucket, (key, oldBucket) => bucket);
 
 					return newHash;
 				});
@@ -775,18 +775,18 @@ namespace DisCatSharp.Net
 					return;
 
 				//Check and clean request queue first in case it wasn't removed properly during requests.
-				foreach (var key in this.RequestQueue.Keys)
+				foreach (var key in this._requestQueue.Keys)
 				{
-					var bucket = this.HashesToBuckets.Values.FirstOrDefault(x => x.RouteHashes.Contains(key));
+					var bucket = this._hashesToBuckets.Values.FirstOrDefault(x => x.RouteHashes.Contains(key));
 
 					if (bucket == null || (bucket != null && bucket.LastAttemptAt.AddSeconds(5) < DateTimeOffset.UtcNow))
-						_ = this.RequestQueue.TryRemove(key, out _);
+						_ = this._requestQueue.TryRemove(key, out _);
 				}
 
 				var removedBuckets = 0;
 				StringBuilder bucketIdStrBuilder = default;
 
-				foreach (var kvp in this.HashesToBuckets)
+				foreach (var kvp in this._hashesToBuckets)
 				{
 					if (bucketIdStrBuilder == null)
 						bucketIdStrBuilder = new StringBuilder();
@@ -795,24 +795,24 @@ namespace DisCatSharp.Net
 					var value = kvp.Value;
 
 					// Don't remove the bucket if it's currently being handled by the rest client, unless it's an unlimited bucket.
-					if (this.RequestQueue.ContainsKey(value.BucketId) && !value.IsUnlimited)
+					if (this._requestQueue.ContainsKey(value.BucketId) && !value.IsUnlimited)
 						continue;
 
-					var resetOffset = this.UseResetAfter ? value.ResetAfterOffset : value.Reset;
+					var resetOffset = this._useResetAfter ? value.ResetAfterOffset : value.Reset;
 
 					// Don't remove the bucket if it's reset date is less than now + the additional wait time, unless it's an unlimited bucket.
 					if (resetOffset != null && !value.IsUnlimited && (resetOffset > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - resetOffset < this._bucketCleanupDelay))
 						continue;
 
-					_ = this.HashesToBuckets.TryRemove(key, out _);
+					_ = this._hashesToBuckets.TryRemove(key, out _);
 					removedBuckets++;
 					bucketIdStrBuilder.Append(value.BucketId + ", ");
 				}
 
 				if (removedBuckets > 0)
-					this.Logger.LogDebug(LoggerEvents.RestCleaner, "Removed {0} unused bucket{1}: [{2}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder.ToString().TrimEnd(',', ' '));
+					this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed {0} unused bucket{1}: [{2}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder.ToString().TrimEnd(',', ' '));
 
-				if (this.HashesToBuckets.Count == 0)
+				if (this._hashesToBuckets.Count == 0)
 					break;
 			}
 
@@ -820,7 +820,7 @@ namespace DisCatSharp.Net
 				this._bucketCleanerTokenSource.Cancel();
 
 			this._cleanerRunning = false;
-			this.Logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped.");
+			this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped.");
 		}
 
 		~RestClient()
@@ -836,12 +836,12 @@ namespace DisCatSharp.Net
 
 			this._disposed = true;
 
-			this.GlobalRateLimitEvent.Reset();
+			this._globalRateLimitEvent.Reset();
 
 			if (this._bucketCleanerTokenSource?.IsCancellationRequested == false)
 			{
 				this._bucketCleanerTokenSource?.Cancel();
-				this.Logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped.");
+				this._logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task stopped.");
 			}
 
 			try
@@ -852,9 +852,9 @@ namespace DisCatSharp.Net
 			}
 			catch { }
 
-			this.RoutesToHashes.Clear();
-			this.HashesToBuckets.Clear();
-			this.RequestQueue.Clear();
+			this._routesToHashes.Clear();
+			this._hashesToBuckets.Clear();
+			this._requestQueue.Clear();
 		}
 	}
 }

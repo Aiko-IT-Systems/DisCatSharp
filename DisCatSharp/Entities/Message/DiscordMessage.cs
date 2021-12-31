@@ -53,7 +53,7 @@ namespace DisCatSharp.Entities
 			{
 				var gid = this.Channel != null
 					? this.Channel is DiscordDmChannel ? "@me" : this.Channel.GuildId.Value.ToString(CultureInfo.InvariantCulture)
-					: this.InternalThread.GuildId.Value.ToString(CultureInfo.InvariantCulture);
+					: this.INTERNAL_THREAD.GuildId.Value.ToString(CultureInfo.InvariantCulture);
 				var cid = this.ChannelId.ToString(CultureInfo.InvariantCulture);
 				var mid = this.Id.ToString(CultureInfo.InvariantCulture);
 
@@ -111,7 +111,7 @@ namespace DisCatSharp.Entities
 		/// Gets the thread in which the message was sent.
 		/// </summary>
 		[JsonIgnore]
-		private DiscordThreadChannel InternalThread
+		private DiscordThreadChannel INTERNAL_THREAD
 		{
 			get => (this.Discord as DiscordClient)?.InternalGetCachedThread(this.ChannelId) ?? this._thread;
 			set => this._thread = value;

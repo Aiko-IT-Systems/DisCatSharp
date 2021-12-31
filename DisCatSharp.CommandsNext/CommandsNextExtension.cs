@@ -47,20 +47,22 @@ namespace DisCatSharp.CommandsNext
 		/// <summary>
 		/// Gets the config.
 		/// </summary>
-		private CommandsNextConfiguration Config { get; }
+		private readonly CommandsNextConfiguration _config;
+
 		/// <summary>
 		/// Gets the help formatter.
 		/// </summary>
-		private HelpFormatterFactory HelpFormatter { get; }
+		private readonly HelpFormatterFactory _helpFormatter;
 
 		/// <summary>
 		/// Gets the convert generic.
 		/// </summary>
-		private MethodInfo ConvertGeneric { get; }
+		private readonly MethodInfo _convertGeneric;
+
 		/// <summary>
 		/// Gets the user friendly type names.
 		/// </summary>
-		private Dictionary<Type, string> UserFriendlyTypeNames { get; }
+		private readonly Dictionary<Type, string> _userFriendlyTypeNames;
 		/// <summary>
 		/// Gets the argument converters.
 		/// </summary>
@@ -70,7 +72,7 @@ namespace DisCatSharp.CommandsNext
 		/// Gets the service provider this CommandsNext module was configured with.
 		/// </summary>
 		public IServiceProvider Services
-			=> this.Config.ServiceProvider;
+			=> this._config.ServiceProvider;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CommandsNextExtension"/> class.
@@ -78,11 +80,11 @@ namespace DisCatSharp.CommandsNext
 		/// <param name="cfg">The cfg.</param>
 		internal CommandsNextExtension(CommandsNextConfiguration cfg)
 		{
-			this.Config = new CommandsNextConfiguration(cfg);
-			this.TopLevelCommands = new Dictionary<string, Command>();
-			this._registeredCommandsLazy = new Lazy<IReadOnlyDictionary<string, Command>>(() => new ReadOnlyDictionary<string, Command>(this.TopLevelCommands));
-			this.HelpFormatter = new HelpFormatterFactory();
-			this.HelpFormatter.SetFormatterType<DefaultHelpFormatter>();
+			this._config = new CommandsNextConfiguration(cfg);
+			this._topLevelCommands = new Dictionary<string, Command>();
+			this._registeredCommandsLazy = new Lazy<IReadOnlyDictionary<string, Command>>(() => new ReadOnlyDictionary<string, Command>(this._topLevelCommands));
+			this._helpFormatter = new HelpFormatterFactory();
+			this._helpFormatter.SetFormatterType<DefaultHelpFormatter>();
 
 			this.ArgumentConverters = new Dictionary<Type, IArgumentConverter>
 			{
@@ -116,7 +118,7 @@ namespace DisCatSharp.CommandsNext
 				[typeof(DiscordScheduledEvent)] = new DiscordScheduledEventConverter(),
 			};
 
-			this.UserFriendlyTypeNames = new Dictionary<Type, string>()
+			this._userFriendlyTypeNames = new Dictionary<Type, string>()
 			{
 				[typeof(string)] = "string",
 				[typeof(bool)] = "boolean",
@@ -164,20 +166,20 @@ namespace DisCatSharp.CommandsNext
 
 				var xcv = Activator.CreateInstance(xcvt) as IArgumentConverter;
 				this.ArgumentConverters[xnt] = xcv;
-				this.UserFriendlyTypeNames[xnt] = this.UserFriendlyTypeNames[xt];
+				this._userFriendlyTypeNames[xnt] = this._userFriendlyTypeNames[xt];
 			}
 
 			var t = typeof(CommandsNextExtension);
 			var ms = t.GetTypeInfo().DeclaredMethods;
 			var m = ms.FirstOrDefault(xm => xm.Name == "ConvertArgument" && xm.ContainsGenericParameters && !xm.IsStatic && xm.IsPublic);
-			this.ConvertGeneric = m;
+			this._convertGeneric = m;
 		}
 
 		/// <summary>
 		/// Sets the help formatter to use with the default help command.
 		/// </summary>
 		/// <typeparam name="T">Type of the formatter to use.</typeparam>
-		public void SetHelpFormatter<T>() where T : BaseHelpFormatter => this.HelpFormatter.SetFormatterType<T>();
+		public void SetHelpFormatter<T>() where T : BaseHelpFormatter => this._helpFormatter.SetFormatterType<T>();
 
 		#region DiscordClient Registration
 		/// <summary>
@@ -195,18 +197,18 @@ namespace DisCatSharp.CommandsNext
 			this._executed = new AsyncEvent<CommandsNextExtension, CommandExecutionEventArgs>("COMMAND_EXECUTED", TimeSpan.Zero, this.Client.EventErrorHandler);
 			this._error = new AsyncEvent<CommandsNextExtension, CommandErrorEventArgs>("COMMAND_ERRORED", TimeSpan.Zero, this.Client.EventErrorHandler);
 
-			if (this.Config.UseDefaultCommandHandler)
+			if (this._config.UseDefaultCommandHandler)
 				this.Client.MessageCreated += this.HandleCommandsAsync;
 			else
 				this.Client.Logger.LogWarning(CommandsNextEvents.Misc, "Not attaching default command handler - if this is intentional, you can ignore this message");
 
-			if (this.Config.EnableDefaultHelp)
+			if (this._config.EnableDefaultHelp)
 			{
 				this.RegisterCommands(typeof(DefaultHelpModule), null, null, out var tcmds);
 
-				if (this.Config.DefaultHelpChecks != null)
+				if (this._config.DefaultHelpChecks != null)
 				{
-					var checks = this.Config.DefaultHelpChecks.ToArray();
+					var checks = this._config.DefaultHelpChecks.ToArray();
 
 					for (var i = 0; i < tcmds.Count; i++)
 						tcmds[i].WithExecutionChecks(checks);
@@ -232,20 +234,20 @@ namespace DisCatSharp.CommandsNext
 			if (e.Author.IsBot) // bad bot
 				return;
 
-			if (!this.Config.EnableDms && e.Channel.IsPrivate)
+			if (!this._config.EnableDms && e.Channel.IsPrivate)
 				return;
 
 			var mpos = -1;
-			if (this.Config.EnableMentionPrefix)
+			if (this._config.EnableMentionPrefix)
 				mpos = e.Message.GetMentionPrefixLength(this.Client.CurrentUser);
 
-			if (this.Config.StringPrefixes?.Any() == true)
-				foreach (var pfix in this.Config.StringPrefixes)
+			if (this._config.StringPrefixes?.Any() == true)
+				foreach (var pfix in this._config.StringPrefixes)
 					if (mpos == -1 && !string.IsNullOrWhiteSpace(pfix))
-						mpos = e.Message.GetStringPrefixLength(pfix, this.Config.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase);
+						mpos = e.Message.GetStringPrefixLength(pfix, this._config.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase);
 
-			if (mpos == -1 && this.Config.PrefixResolver != null)
-				mpos = await this.Config.PrefixResolver(e.Message).ConfigureAwait(false);
+			if (mpos == -1 && this._config.PrefixResolver != null)
+				mpos = await this._config.PrefixResolver(e.Message).ConfigureAwait(false);
 
 			if (mpos == -1)
 				return;
@@ -277,7 +279,7 @@ namespace DisCatSharp.CommandsNext
 		{
 			rawArguments = null;
 
-			var ignoreCase = !this.Config.CaseSensitive;
+			var ignoreCase = !this._config.CaseSensitive;
 			var pos = 0;
 			var next = commandString.ExtractNextArgument(ref pos);
 			if (next == null)
@@ -347,7 +349,7 @@ namespace DisCatSharp.CommandsNext
 				Client = this.Client,
 				Command = cmd,
 				Message = msg,
-				Config = this.Config,
+				Config = this._config,
 				RawArgumentString = rawArguments ?? "",
 				Prefix = prefix,
 				CommandsNext = this,
@@ -421,7 +423,7 @@ namespace DisCatSharp.CommandsNext
 		/// <summary>
 		/// Gets or sets the top level commands.
 		/// </summary>
-		private Dictionary<string, Command> TopLevelCommands { get; set; }
+		private Dictionary<string, Command> _topLevelCommands;
 		private readonly Lazy<IReadOnlyDictionary<string, Command>> _registeredCommandsLazy;
 
 		/// <summary>
@@ -517,7 +519,7 @@ namespace DisCatSharp.CommandsNext
 								moduleName = moduleName[0..^8];
 						}
 
-						if (!this.Config.CaseSensitive)
+						if (!this._config.CaseSensitive)
 							moduleName = moduleName.ToLowerInvariant();
 
 						groupBuilder.WithName(moduleName);
@@ -532,7 +534,7 @@ namespace DisCatSharp.CommandsNext
 
 					case AliasesAttribute a:
 						foreach (var xalias in a.Aliases)
-							groupBuilder.WithAlias(this.Config.CaseSensitive ? xalias : xalias.ToLowerInvariant());
+							groupBuilder.WithAlias(this._config.CaseSensitive ? xalias : xalias.ToLowerInvariant());
 						break;
 
 					case HiddenAttribute h:
@@ -583,7 +585,7 @@ namespace DisCatSharp.CommandsNext
 						commandName = commandName[0..^5];
 				}
 
-				if (!this.Config.CaseSensitive)
+				if (!this._config.CaseSensitive)
 					commandName = commandName.ToLowerInvariant();
 
 				if (!commandBuilders.TryGetValue(commandName, out var commandBuilder))
@@ -611,7 +613,7 @@ namespace DisCatSharp.CommandsNext
 					{
 						case AliasesAttribute a:
 							foreach (var xalias in a.Aliases)
-								commandBuilder.WithAlias(this.Config.CaseSensitive ? xalias : xalias.ToLowerInvariant());
+								commandBuilder.WithAlias(this._config.CaseSensitive ? xalias : xalias.ToLowerInvariant());
 							break;
 
 						case CheckBaseAttribute p:
@@ -685,7 +687,7 @@ namespace DisCatSharp.CommandsNext
 
 			var keys = this.RegisteredCommands.Where(x => cmds.Contains(x.Value)).Select(x => x.Key).ToList();
 			foreach (var key in keys)
-				this.TopLevelCommands.Remove(key);
+				this._topLevelCommands.Remove(key);
 		}
 
 		/// <summary>
@@ -697,13 +699,13 @@ namespace DisCatSharp.CommandsNext
 			if (cmd.Parent != null)
 				return;
 
-			if (this.TopLevelCommands.ContainsKey(cmd.Name) || (cmd.Aliases != null && cmd.Aliases.Any(xs => this.TopLevelCommands.ContainsKey(xs))))
+			if (this._topLevelCommands.ContainsKey(cmd.Name) || (cmd.Aliases != null && cmd.Aliases.Any(xs => this._topLevelCommands.ContainsKey(xs))))
 				throw new DuplicateCommandException(cmd.QualifiedName);
 
-			this.TopLevelCommands[cmd.Name] = cmd;
+			this._topLevelCommands[cmd.Name] = cmd;
 			if (cmd.Aliases != null)
 				foreach (var xs in cmd.Aliases)
-					this.TopLevelCommands[xs] = cmd;
+					this._topLevelCommands[xs] = cmd;
 		}
 		#endregion
 
@@ -723,8 +725,8 @@ namespace DisCatSharp.CommandsNext
 			[Command("help"), Description("Displays command help.")]
 			public async Task DefaultHelpAsync(CommandContext ctx, [Description("Command to provide help for.")] params string[] command)
 			{
-				var topLevel = ctx.CommandsNext.TopLevelCommands.Values.Distinct();
-				var helpBuilder = ctx.CommandsNext.HelpFormatter.Create(ctx);
+				var topLevel = ctx.CommandsNext._topLevelCommands.Values.Distinct();
+				var helpBuilder = ctx.CommandsNext._helpFormatter.Create(ctx);
 
 				if (command != null && command.Any())
 				{
@@ -873,7 +875,7 @@ namespace DisCatSharp.CommandsNext
 				Client = this.Client,
 				Command = cmd,
 				Message = msg,
-				Config = this.Config,
+				Config = this._config,
 				RawArgumentString = rawArguments ?? "",
 				Prefix = prefix,
 				CommandsNext = this,
@@ -921,7 +923,7 @@ namespace DisCatSharp.CommandsNext
 		/// <returns>Converted object.</returns>
 		public async Task<object> ConvertArgument(string value, CommandContext ctx, Type type)
 		{
-			var m = this.ConvertGeneric.MakeGenericMethod(type);
+			var m = this._convertGeneric.MakeGenericMethod(type);
 			try
 			{
 				return await (m.Invoke(this, new object[] { value, ctx }) as Task<object>).ConfigureAwait(false);
@@ -969,8 +971,8 @@ namespace DisCatSharp.CommandsNext
 			if (this.ArgumentConverters.ContainsKey(t))
 				this.ArgumentConverters.Remove(t);
 
-			if (this.UserFriendlyTypeNames.ContainsKey(t))
-				this.UserFriendlyTypeNames.Remove(t);
+			if (this._userFriendlyTypeNames.ContainsKey(t))
+				this._userFriendlyTypeNames.Remove(t);
 
 			if (!ti.IsValueType)
 				return;
@@ -980,7 +982,7 @@ namespace DisCatSharp.CommandsNext
 				return;
 
 			this.ArgumentConverters.Remove(nullableType);
-			this.UserFriendlyTypeNames.Remove(nullableType);
+			this._userFriendlyTypeNames.Remove(nullableType);
 		}
 
 		/// <summary>
@@ -998,13 +1000,13 @@ namespace DisCatSharp.CommandsNext
 			if (!this.ArgumentConverters.ContainsKey(t))
 				throw new InvalidOperationException("Cannot register a friendly name for a type which has no associated converter.");
 
-			this.UserFriendlyTypeNames[t] = value;
+			this._userFriendlyTypeNames[t] = value;
 
 			if (!ti.IsValueType)
 				return;
 
 			var nullableType = typeof(Nullable<>).MakeGenericType(t);
-			this.UserFriendlyTypeNames[nullableType] = value;
+			this._userFriendlyTypeNames[nullableType] = value;
 		}
 
 		/// <summary>
@@ -1014,14 +1016,14 @@ namespace DisCatSharp.CommandsNext
 		/// <returns>User-friendly type name.</returns>
 		public string GetUserFriendlyTypeName(Type t)
 		{
-			if (this.UserFriendlyTypeNames.ContainsKey(t))
-				return this.UserFriendlyTypeNames[t];
+			if (this._userFriendlyTypeNames.ContainsKey(t))
+				return this._userFriendlyTypeNames[t];
 
 			var ti = t.GetTypeInfo();
 			if (ti.IsGenericTypeDefinition && t.GetGenericTypeDefinition() == typeof(Nullable<>))
 			{
 				var tn = ti.GenericTypeArguments[0];
-				return this.UserFriendlyTypeNames.ContainsKey(tn) ? this.UserFriendlyTypeNames[tn] : tn.Name;
+				return this._userFriendlyTypeNames.ContainsKey(tn) ? this._userFriendlyTypeNames[tn] : tn.Name;
 			}
 
 			return t.Name;
@@ -1035,7 +1037,7 @@ namespace DisCatSharp.CommandsNext
 		/// </summary>
 		/// <returns>A string comparer.</returns>
 		internal IEqualityComparer<string> GetStringComparer()
-			=> this.Config.CaseSensitive
+			=> this._config.CaseSensitive
 				? StringComparer.Ordinal
 				: StringComparer.OrdinalIgnoreCase;
 		#endregion

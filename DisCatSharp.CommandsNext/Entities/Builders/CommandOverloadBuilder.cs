@@ -60,7 +60,7 @@ namespace DisCatSharp.CommandsNext.Builders
 		/// <summary>
 		/// Gets the invocation target.
 		/// </summary>
-		private object InvocationTarget { get; }
+		private readonly object _invocationTarget;
 
 		/// <summary>
 		/// Creates a new command overload builder from specified method.
@@ -88,7 +88,7 @@ namespace DisCatSharp.CommandsNext.Builders
 			if (!method.IsCommandCandidate(out var prms))
 				throw new ArgumentException("Specified method is not suitable for a command.", nameof(method));
 
-			this.InvocationTarget = target;
+			this._invocationTarget = target;
 
 			// create the argument array
 			var ea = new ParameterExpression[prms.Length + 1];
@@ -184,7 +184,7 @@ namespace DisCatSharp.CommandsNext.Builders
 				Arguments = this.Arguments,
 				Priority = this.Priority,
 				Callable = this.Callable,
-				InvocationTarget = this.InvocationTarget
+				InvocationTarget = this._invocationTarget
 			};
 
 			return ovl;

@@ -36,7 +36,7 @@ namespace DisCatSharp.Common
 		/// <summary>
 		/// Gets the r n g.
 		/// </summary>
-		private RandomNumberGenerator Rng { get; } = RandomNumberGenerator.Create();
+		private readonly RandomNumberGenerator _rng = RandomNumberGenerator.Create();
 
 		private volatile bool _isDisposed = false;
 
@@ -60,7 +60,7 @@ namespace DisCatSharp.Common
 		/// <param name="buffer">Buffer to fill with random bytes.</param>
 		public void GetBytes(byte[] buffer)
 		{
-			this.Rng.GetBytes(buffer);
+			this._rng.GetBytes(buffer);
 		}
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace DisCatSharp.Common
 		/// <param name="buffer">Buffer to fill with random nonzero bytes.</param>
 		public void GetNonZeroBytes(byte[] buffer)
 		{
-			this.Rng.GetNonZeroBytes(buffer);
+			this._rng.GetNonZeroBytes(buffer);
 		}
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace DisCatSharp.Common
 			try
 			{
 				var buffSpan = buff.AsSpan(0, buffer.Length);
-				this.Rng.GetBytes(buff);
+				this._rng.GetBytes(buff);
 				buffSpan.CopyTo(buffer);
 			}
 			finally
@@ -108,7 +108,7 @@ namespace DisCatSharp.Common
 			try
 			{
 				var buffSpan = buff.AsSpan(0, buffer.Length);
-				this.Rng.GetNonZeroBytes(buff);
+				this._rng.GetNonZeroBytes(buff);
 				buffSpan.CopyTo(buffer);
 			}
 			finally
@@ -323,7 +323,7 @@ namespace DisCatSharp.Common
 				return;
 
 			this._isDisposed = true;
-			this.Rng.Dispose();
+			this._rng.Dispose();
 		}
 
 		/// <summary>

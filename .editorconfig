@@ -200,6 +200,10 @@ dotnet_naming_rule.readonly.severity = error
 dotnet_naming_rule.readonly.symbols = readonly
 dotnet_naming_rule.readonly.style = underscore_prefixed_camel_case
 
+dotnet_naming_rule.private_field_should_be_underscore_prefixed_camel_case.severity = error
+dotnet_naming_rule.private_field_should_be_underscore_prefixed_camel_case.symbols = private_fields
+dotnet_naming_rule.private_field_should_be_underscore_prefixed_camel_case.style = underscore_prefixed_camel_case
+
 dotnet_naming_rule.types_should_be_pascal_case.severity = error
 dotnet_naming_rule.types_should_be_pascal_case.symbols = types
 dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
@@ -212,9 +216,9 @@ dotnet_naming_rule.constants_should_be_upper_case.severity = error
 dotnet_naming_rule.constants_should_be_upper_case.symbols = constants
 dotnet_naming_rule.constants_should_be_upper_case.style = constant_style
 
-dotnet_naming_rule.private_field_should_be_underscore_prefixed_camel_case.severity = error
-dotnet_naming_rule.private_field_should_be_underscore_prefixed_camel_case.symbols = private_fields
-dotnet_naming_rule.private_field_should_be_underscore_prefixed_camel_case.style = underscore_prefixed_camel_case
+dotnet_naming_rule.private_props_not_allowed.severity = error
+dotnet_naming_rule.private_props_not_allowed.symbols = private_prop
+dotnet_naming_rule.private_props_not_allowed.style = constant_style
 
 # Symbol specifications
 
@@ -226,6 +230,10 @@ dotnet_naming_symbols.private_static_field_props.applicable_kinds = field, prope
 dotnet_naming_symbols.private_static_field_props.applicable_accessibilities = private
 dotnet_naming_symbols.private_static_field_props.required_modifiers = static
 
+dotnet_naming_symbols.private_prop.applicable_kinds = property
+dotnet_naming_symbols.private_prop.applicable_accessibilities = private
+dotnet_naming_symbols.private_prop.required_modifiers =
+
 dotnet_naming_symbols.constants.applicable_kinds = field, local
 dotnet_naming_symbols.constants.required_modifiers = const
 
@@ -233,7 +241,7 @@ dotnet_naming_symbols.const_fields.applicable_kinds = field, property
 dotnet_naming_symbols.const_fields.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.const_fields.required_modifiers = const
 
-dotnet_naming_symbols.readonly.applicable_kinds = field
+dotnet_naming_symbols.readonly.applicable_kinds = field, property
 dotnet_naming_symbols.readonly.applicable_accessibilities = private
 dotnet_naming_symbols.readonly.required_modifiers = readonly
 

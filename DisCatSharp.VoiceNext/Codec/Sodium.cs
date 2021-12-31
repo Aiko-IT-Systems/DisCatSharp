@@ -48,15 +48,17 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <summary>
 		/// Gets the c s p r n g.
 		/// </summary>
-		private RandomNumberGenerator Csprng { get; }
+		private readonly RandomNumberGenerator _csprng;
+
 		/// <summary>
 		/// Gets the buffer.
 		/// </summary>
-		private byte[] Buffer { get; }
+		private readonly byte[] _buffer;
+
 		/// <summary>
 		/// Gets the key.
 		/// </summary>
-		private ReadOnlyMemory<byte> Key { get; }
+		private readonly ReadOnlyMemory<byte> _key;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Sodium"/> class.
@@ -80,10 +82,10 @@ namespace DisCatSharp.VoiceNext.Codec
 			if (key.Length != Interop.SodiumKeySize)
 				throw new ArgumentException($"Invalid Sodium key size. Key needs to have a length of {Interop.SodiumKeySize} bytes.", nameof(key));
 
-			this.Key = key;
+			this._key = key;
 
-			this.Csprng = RandomNumberGenerator.Create();
-			this.Buffer = new byte[Interop.SodiumNonceSize];
+			this._csprng = RandomNumberGenerator.Create();
+			this._buffer = new byte[Interop.SodiumNonceSize];
 		}
 
 		/// <summary>
@@ -115,8 +117,8 @@ namespace DisCatSharp.VoiceNext.Codec
 			if (target.Length != Interop.SodiumNonceSize)
 				throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
 
-			this.Csprng.GetBytes(this.Buffer);
-			this.Buffer.AsSpan().CopyTo(target);
+			this._csprng.GetBytes(this._buffer);
+			this._buffer.AsSpan().CopyTo(target);
 		}
 
 		/// <summary>
@@ -207,7 +209,7 @@ namespace DisCatSharp.VoiceNext.Codec
 				throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is a sum of input buffer length and Sodium MAC size ({Interop.SodiumMacSize} bytes).", nameof(target));
 
 			int result;
-			if ((result = Interop.Encrypt(source, target, this.Key.Span, nonce)) != 0)
+			if ((result = Interop.Encrypt(source, target, this._key.Span, nonce)) != 0)
 				throw new CryptographicException($"Could not encrypt the buffer. Sodium returned code {result}.");
 		}
 
@@ -226,14 +228,14 @@ namespace DisCatSharp.VoiceNext.Codec
 				throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is input buffer decreased by Sodium MAC size ({Interop.SodiumMacSize} bytes).", nameof(target));
 
 			int result;
-			if ((result = Interop.Decrypt(source, target, this.Key.Span, nonce)) != 0)
+			if ((result = Interop.Decrypt(source, target, this._key.Span, nonce)) != 0)
 				throw new CryptographicException($"Could not decrypt the buffer. Sodium returned code {result}.");
 		}
 
 		/// <summary>
 		/// Disposes the Sodium.
 		/// </summary>
-		public void Dispose() => this.Csprng.Dispose();
+		public void Dispose() => this._csprng.Dispose();
 
 		/// <summary>
 		/// Selects the mode.

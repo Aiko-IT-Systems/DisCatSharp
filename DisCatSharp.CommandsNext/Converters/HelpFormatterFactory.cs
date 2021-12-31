@@ -32,7 +32,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Gets or sets the factory.
 		/// </summary>
-		private ObjectFactory Factory { get; set; }
+		private ObjectFactory _factory;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="HelpFormatterFactory"/> class.
@@ -42,12 +42,12 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Sets the formatter type.
 		/// </summary>
-		public void SetFormatterType<T>() where T : BaseHelpFormatter => this.Factory = ActivatorUtilities.CreateFactory(typeof(T), new[] { typeof(CommandContext) });
+		public void SetFormatterType<T>() where T : BaseHelpFormatter => this._factory = ActivatorUtilities.CreateFactory(typeof(T), new[] { typeof(CommandContext) });
 
 		/// <summary>
 		/// Creates the help formatter.
 		/// </summary>
 		/// <param name="ctx">The command context.</param>
-		public BaseHelpFormatter Create(CommandContext ctx) => this.Factory(ctx.Services, new object[] { ctx }) as BaseHelpFormatter;
+		public BaseHelpFormatter Create(CommandContext ctx) => this._factory(ctx.Services, new object[] { ctx }) as BaseHelpFormatter;
 	}
 }

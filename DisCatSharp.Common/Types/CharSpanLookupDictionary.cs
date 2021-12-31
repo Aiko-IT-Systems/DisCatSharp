@@ -175,14 +175,14 @@ namespace DisCatSharp.Common
 		/// <summary>
 		/// Gets the internal buckets.
 		/// </summary>
-		private Dictionary<ulong, KeyedValue> InternalBuckets { get; }
+		private readonly Dictionary<ulong, KeyedValue> _internalBuckets;
 
 		/// <summary>
 		/// Creates a new, empty <see cref="CharSpanLookupDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/>.
 		/// </summary>
 		public CharSpanLookupDictionary()
 		{
-			this.InternalBuckets = new Dictionary<ulong, KeyedValue>();
+			this._internalBuckets = new Dictionary<ulong, KeyedValue>();
 		}
 
 		/// <summary>
@@ -191,7 +191,7 @@ namespace DisCatSharp.Common
 		/// <param name="initialCapacity">Initial capacity of the dictionary.</param>
 		public CharSpanLookupDictionary(int initialCapacity)
 		{
-			this.InternalBuckets = new Dictionary<ulong, KeyedValue>(initialCapacity);
+			this._internalBuckets = new Dictionary<ulong, KeyedValue>(initialCapacity);
 		}
 
 		/// <summary>
@@ -355,7 +355,7 @@ namespace DisCatSharp.Common
 		/// </summary>
 		public void Clear()
 		{
-			this.InternalBuckets.Clear();
+			this._internalBuckets.Clear();
 			this.Count = 0;
 		}
 
@@ -460,7 +460,7 @@ namespace DisCatSharp.Common
 				throw new ArgumentException("Target array is too small.", nameof(array));
 
 			var i = arrayIndex;
-			foreach (var (k, v) in this.InternalBuckets)
+			foreach (var (k, v) in this._internalBuckets)
 			{
 				var kdv = v;
 				while (kdv != null)
@@ -488,7 +488,7 @@ namespace DisCatSharp.Common
 				throw new ArgumentException($"Array needs to be an instance of {typeof(TValue[])} or object[].");
 
 			var i = arrayIndex;
-			foreach (var (k, v) in this.InternalBuckets)
+			foreach (var (k, v) in this._internalBuckets)
 			{
 				var kdv = v;
 				while (kdv != null)
@@ -519,14 +519,14 @@ namespace DisCatSharp.Common
 				throw new ArgumentNullException(nameof(key), "Key cannot be null.");
 
 			var hash = key.CalculateKnuthHash();
-			if (!this.InternalBuckets.ContainsKey(hash))
+			if (!this._internalBuckets.ContainsKey(hash))
 			{
-				this.InternalBuckets.Add(hash, new KeyedValue(key, hash, value));
+				this._internalBuckets.Add(hash, new KeyedValue(key, hash, value));
 				this.Count++;
 				return true;
 			}
 
-			var kdv = this.InternalBuckets[hash];
+			var kdv = this._internalBuckets[hash];
 			var kdvLast = kdv;
 			while (kdv != null)
 			{
@@ -559,7 +559,7 @@ namespace DisCatSharp.Common
 			value = default;
 
 			var hash = key.CalculateKnuthHash();
-			if (!this.InternalBuckets.TryGetValue(hash, out var kdv))
+			if (!this._internalBuckets.TryGetValue(hash, out var kdv))
 				return false;
 
 			while (kdv != null)
@@ -585,7 +585,7 @@ namespace DisCatSharp.Common
 			value = default;
 
 			var hash = key.CalculateKnuthHash();
-			if (!this.InternalBuckets.TryGetValue(hash, out var kdv))
+			if (!this._internalBuckets.TryGetValue(hash, out var kdv))
 				return false;
 
 			if (kdv.Next == null && key.SequenceEqual(kdv.Key.AsSpan()))
@@ -593,7 +593,7 @@ namespace DisCatSharp.Common
 				// Only bucket under this hash and key matches, pop the entire bucket
 
 				value = kdv.Value;
-				this.InternalBuckets.Remove(hash);
+				this._internalBuckets.Remove(hash);
 				this.Count--;
 				return true;
 			}
@@ -608,7 +608,7 @@ namespace DisCatSharp.Common
 				// First key in the bucket matches, pop it and set its child as current bucket
 
 				value = kdv.Value;
-				this.InternalBuckets[hash] = kdv.Next;
+				this._internalBuckets[hash] = kdv.Next;
 				this.Count--;
 				return true;
 			}
@@ -642,7 +642,7 @@ namespace DisCatSharp.Common
 		private bool ContainsKeyInternal(ReadOnlySpan<char> key)
 		{
 			var hash = key.CalculateKnuthHash();
-			if (!this.InternalBuckets.TryGetValue(hash, out var kdv))
+			if (!this._internalBuckets.TryGetValue(hash, out var kdv))
 				return false;
 
 			while (kdv != null)
@@ -663,7 +663,7 @@ namespace DisCatSharp.Common
 		private ImmutableArray<string> GetKeysInternal()
 		{
 			var builder = ImmutableArray.CreateBuilder<string>(this.Count);
-			foreach (var value in this.InternalBuckets.Values)
+			foreach (var value in this._internalBuckets.Values)
 			{
 				var kdv = value;
 				while (kdv != null)
@@ -683,7 +683,7 @@ namespace DisCatSharp.Common
 		private ImmutableArray<TValue> GetValuesInternal()
 		{
 			var builder = ImmutableArray.CreateBuilder<TValue>(this.Count);
-			foreach (var value in this.InternalBuckets.Values)
+			foreach (var value in this._internalBuckets.Values)
 			{
 				var kdv = value;
 				while (kdv != null)
@@ -764,15 +764,17 @@ namespace DisCatSharp.Common
 			/// <summary>
 			/// Gets the internal dictionary.
 			/// </summary>
-			private CharSpanLookupDictionary<TValue> InternalDictionary { get; }
+			private readonly CharSpanLookupDictionary<TValue> _internalDictionary;
+
 			/// <summary>
 			/// Gets the internal enumerator.
 			/// </summary>
-			private IEnumerator<KeyValuePair<ulong, KeyedValue>> InternalEnumerator { get; }
+			private readonly IEnumerator<KeyValuePair<ulong, KeyedValue>> _internalEnumerator;
+
 			/// <summary>
 			/// Gets or sets the current value.
 			/// </summary>
-			private KeyedValue CurrentValue { get; set; } = null;
+			private KeyedValue _currentValue;
 
 			/// <summary>
 			/// Initializes a new instance of the <see cref="Enumerator"/> class.
@@ -780,8 +782,8 @@ namespace DisCatSharp.Common
 			/// <param name="spDict">The sp dict.</param>
 			public Enumerator(CharSpanLookupDictionary<TValue> spDict)
 			{
-				this.InternalDictionary = spDict;
-				this.InternalEnumerator = this.InternalDictionary.InternalBuckets.GetEnumerator();
+				this._internalDictionary = spDict;
+				this._internalEnumerator = this._internalDictionary._internalBuckets.GetEnumerator();
 			}
 
 			/// <summary>
@@ -790,21 +792,21 @@ namespace DisCatSharp.Common
 			/// <returns>A bool.</returns>
 			public bool MoveNext()
 			{
-				var kdv = this.CurrentValue;
+				var kdv = this._currentValue;
 				if (kdv == null)
 				{
-					if (!this.InternalEnumerator.MoveNext())
+					if (!this._internalEnumerator.MoveNext())
 						return false;
 
-					kdv = this.InternalEnumerator.Current.Value;
+					kdv = this._internalEnumerator.Current.Value;
 					this.Current = new KeyValuePair<string, TValue>(kdv.Key, kdv.Value);
 
-					this.CurrentValue = kdv.Next;
+					this._currentValue = kdv.Next;
 					return true;
 				}
 
 				this.Current = new KeyValuePair<string, TValue>(kdv.Key, kdv.Value);
-				this.CurrentValue = kdv.Next;
+				this._currentValue = kdv.Next;
 				return true;
 			}
 
@@ -813,9 +815,9 @@ namespace DisCatSharp.Common
 			/// </summary>
 			public void Reset()
 			{
-				this.InternalEnumerator.Reset();
+				this._internalEnumerator.Reset();
 				this.Current = default;
-				this.CurrentValue = null;
+				this._currentValue = null;
 			}
 
 			/// <summary>
