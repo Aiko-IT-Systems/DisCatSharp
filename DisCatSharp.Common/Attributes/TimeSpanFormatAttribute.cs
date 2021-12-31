@@ -33,7 +33,7 @@ namespace DisCatSharp.Common.Serialization
         /// <summary>
         /// Gets the ISO 8601 format string of @"ddThh\:mm\:ss\.fff".
         /// </summary>
-        public const string FormatISO8601 = @"ddThh\:mm\:ss\.fff";
+        public const string FormatIso8601 = @"ddThh\:mm\:ss\.fff";
 
         /// <summary>
         /// Gets the constant format.
@@ -63,13 +63,13 @@ namespace DisCatSharp.Common.Serialization
         /// <summary>
         /// Specifies a predefined format to use.
         /// </summary>
-        /// <param name="kind">Predefined format kind to use.</param>
-        public TimeSpanFormatAttribute(TimeSpanFormatKind kind)
+        /// <param name="Kind">Predefined format kind to use.</param>
+        public TimeSpanFormatAttribute(TimeSpanFormatKind Kind)
         {
-            if (kind < 0 || kind > TimeSpanFormatKind.InvariantLocaleShort)
-                throw new ArgumentOutOfRangeException(nameof(kind), "Specified format kind is not legal or supported.");
+            if (Kind < 0 || Kind > TimeSpanFormatKind.InvariantLocaleShort)
+                throw new ArgumentOutOfRangeException(nameof(Kind), "Specified format kind is not legal or supported.");
 
-            this.Kind = kind;
+            this.Kind = Kind;
             this.Format = null;
         }
 
@@ -77,14 +77,14 @@ namespace DisCatSharp.Common.Serialization
         /// <para>Specifies a custom format to use.</para>
         /// <para>See https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-timespan-format-strings for more details.</para>
         /// </summary>
-        /// <param name="format">Custom format string to use.</param>
-        public TimeSpanFormatAttribute(string format)
+        /// <param name="Format">Custom format string to use.</param>
+        public TimeSpanFormatAttribute(string Format)
         {
-            if (string.IsNullOrWhiteSpace(format))
-                throw new ArgumentNullException(nameof(format), "Specified format cannot be null or empty.");
+            if (string.IsNullOrWhiteSpace(Format))
+                throw new ArgumentNullException(nameof(Format), "Specified format cannot be null or empty.");
 
             this.Kind = TimeSpanFormatKind.Custom;
-            this.Format = format;
+            this.Format = Format;
         }
     }
 
@@ -97,7 +97,7 @@ namespace DisCatSharp.Common.Serialization
         /// <summary>
         /// Specifies ISO 8601-like time format, which is equivalent to .NET format string of @"ddThh\:mm\:ss\.fff".
         /// </summary>
-        ISO8601 = 0,
+        Iso8601 = 0,
 
         /// <summary>
         /// Specifies a format defined by <see cref="System.Globalization.CultureInfo.InvariantCulture"/>, with a format string of "c".

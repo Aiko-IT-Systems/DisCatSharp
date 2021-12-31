@@ -37,9 +37,9 @@ namespace DisCatSharp.CommandsNext.Entities
         /// <summary>
         /// Returns an instance of this module.
         /// </summary>
-        /// <param name="services">Services to instantiate the module with.</param>
+        /// <param name="Services">Services to instantiate the module with.</param>
         /// <returns>A created instance of this module.</returns>
-        BaseCommandModule GetInstance(IServiceProvider services);
+        BaseCommandModule GetInstance(IServiceProvider Services);
     }
 
     /// <summary>
@@ -55,19 +55,19 @@ namespace DisCatSharp.CommandsNext.Entities
         /// <summary>
         /// Creates a new transient module.
         /// </summary>
-        /// <param name="t">Type of the module to create.</param>
-        internal TransientCommandModule(Type t)
+        /// <param name="T">Type of the module to create.</param>
+        internal TransientCommandModule(Type T)
         {
-            this.ModuleType = t;
+            this.ModuleType = T;
         }
 
         /// <summary>
         /// Creates a new instance of this module.
         /// </summary>
-        /// <param name="services">Services to instantiate the module with.</param>
+        /// <param name="Services">Services to instantiate the module with.</param>
         /// <returns>Created module.</returns>
-        public BaseCommandModule GetInstance(IServiceProvider services)
-            => this.ModuleType.CreateInstance(services) as BaseCommandModule;
+        public BaseCommandModule GetInstance(IServiceProvider Services)
+            => this.ModuleType.CreateInstance(Services) as BaseCommandModule;
     }
 
     /// <summary>
@@ -88,20 +88,20 @@ namespace DisCatSharp.CommandsNext.Entities
         /// <summary>
         /// Creates a new singleton module, and instantiates it.
         /// </summary>
-        /// <param name="t">Type of the module to create.</param>
-        /// <param name="services">Services to instantiate the module with.</param>
-        internal SingletonCommandModule(Type t, IServiceProvider services)
+        /// <param name="T">Type of the module to create.</param>
+        /// <param name="Services">Services to instantiate the module with.</param>
+        internal SingletonCommandModule(Type T, IServiceProvider Services)
         {
-            this.ModuleType = t;
-            this.Instance = t.CreateInstance(services) as BaseCommandModule;
+            this.ModuleType = T;
+            this.Instance = T.CreateInstance(Services) as BaseCommandModule;
         }
 
         /// <summary>
         /// Returns the instance of this module.
         /// </summary>
-        /// <param name="services">Services to instantiate the module with.</param>
+        /// <param name="Services">Services to instantiate the module with.</param>
         /// <returns>This module's instance.</returns>
-        public BaseCommandModule GetInstance(IServiceProvider services)
+        public BaseCommandModule GetInstance(IServiceProvider Services)
             => this.Instance;
     }
 }

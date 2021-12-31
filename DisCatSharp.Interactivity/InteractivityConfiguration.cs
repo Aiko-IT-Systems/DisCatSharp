@@ -94,19 +94,19 @@ namespace DisCatSharp.Interactivity
         /// <summary>
         /// Creates a new instance of <see cref="InteractivityConfiguration"/>, copying the properties of another configuration.
         /// </summary>
-        /// <param name="other">Configuration the properties of which are to be copied.</param>
-        public InteractivityConfiguration(InteractivityConfiguration other)
+        /// <param name="Other">Configuration the properties of which are to be copied.</param>
+        public InteractivityConfiguration(InteractivityConfiguration Other)
         {
-            this.AckPaginationButtons = other.AckPaginationButtons;
-            this.PaginationButtons = other.PaginationButtons;
-            this.ButtonBehavior = other.ButtonBehavior;
-            this.PaginationBehaviour = other.PaginationBehaviour;
-            this.PaginationDeletion = other.PaginationDeletion;
-            this.ResponseBehavior = other.ResponseBehavior;
-            this.PaginationEmojis = other.PaginationEmojis;
-            this.ResponseMessage = other.ResponseMessage;
-            this.PollBehaviour = other.PollBehaviour;
-            this.Timeout = other.Timeout;
+            this.AckPaginationButtons = Other.AckPaginationButtons;
+            this.PaginationButtons = Other.PaginationButtons;
+            this.ButtonBehavior = Other.ButtonBehavior;
+            this.PaginationBehaviour = Other.PaginationBehaviour;
+            this.PaginationDeletion = Other.PaginationDeletion;
+            this.ResponseBehavior = Other.ResponseBehavior;
+            this.PaginationEmojis = Other.PaginationEmojis;
+            this.ResponseMessage = Other.ResponseMessage;
+            this.PollBehaviour = Other.PollBehaviour;
+            this.Timeout = Other.Timeout;
 
             if (this.ResponseBehavior is InteractionResponseBehavior.Respond && string.IsNullOrWhiteSpace(this.ResponseMessage))
                 throw new ArgumentException($"{nameof(this.ResponseMessage)} cannot be null, empty, or whitespace when {nameof(this.ResponseBehavior)} is set to respond.");

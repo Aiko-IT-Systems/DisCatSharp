@@ -37,11 +37,11 @@ namespace DisCatSharp.CommandsNext.Exceptions
         /// <summary>
         /// Creates a new exception indicating that given command name is already taken.
         /// </summary>
-        /// <param name="name">Name of the command that was taken.</param>
-        internal DuplicateCommandException(string name)
+        /// <param name="Name">Name of the command that was taken.</param>
+        internal DuplicateCommandException(string Name)
             : base("A command with specified name already exists.")
         {
-            this.CommandName = name;
+            this.CommandName = Name;
         }
 
         /// <summary>

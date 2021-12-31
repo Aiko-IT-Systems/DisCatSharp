@@ -44,36 +44,36 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Defines that usage of this command is restricted to members with specified permissions. This check also verifies that the bot has the same permissions.
         /// </summary>
-        /// <param name="permissions">Permissions required to execute this command.</param>
-        /// <param name="ignoreDms">Sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that it will always fail.</param>
-        public RequirePermissionsAttribute(Permissions permissions, bool ignoreDms = true)
+        /// <param name="Permissions">Permissions required to execute this command.</param>
+        /// <param name="IgnoreDms">Sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that it will always fail.</param>
+        public RequirePermissionsAttribute(Permissions Permissions, bool IgnoreDms = true)
         {
-            this.Permissions = permissions;
-            this.IgnoreDms = ignoreDms;
+            this.Permissions = Permissions;
+            this.IgnoreDms = IgnoreDms;
         }
 
         /// <summary>
         /// Executes the a check.
         /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
+        /// <param name="Ctx">The command context.</param>
+        /// <param name="Help">If true, help - returns true.</param>
+        public override async Task<bool> ExecuteCheck(CommandContext Ctx, bool Help)
         {
-            if (ctx.Guild == null)
+            if (Ctx.Guild == null)
                 return this.IgnoreDms;
 
-            var usr = ctx.Member;
+            var usr = Ctx.Member;
             if (usr == null)
                 return false;
-            var pusr = ctx.Channel.PermissionsFor(usr);
+            var pusr = Ctx.Channel.PermissionsFor(usr);
 
-            var bot = await ctx.Guild.GetMemberAsync(ctx.Client.CurrentUser.Id).ConfigureAwait(false);
+            var bot = await Ctx.Guild.GetMemberAsync(Ctx.Client.CurrentUser.Id).ConfigureAwait(false);
             if (bot == null)
                 return false;
-            var pbot = ctx.Channel.PermissionsFor(bot);
+            var pbot = Ctx.Channel.PermissionsFor(bot);
 
-            var usrok = ctx.Guild.OwnerId == usr.Id;
-            var botok = ctx.Guild.OwnerId == bot.Id;
+            var usrok = Ctx.Guild.OwnerId == usr.Id;
+            var botok = Ctx.Guild.OwnerId == bot.Id;
 
             if (!usrok)
                 usrok = (pusr & Permissions.Administrator) != 0 || (pusr & this.Permissions) == this.Permissions;

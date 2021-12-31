@@ -49,63 +49,63 @@ namespace DisCatSharp.Common.Types
         /// <summary>
         /// Appends data from a supplied buffer to this buffer, growing it if necessary.
         /// </summary>
-        /// <param name="data">Buffer containing data to write.</param>
-        void Write(ReadOnlySpan<T> data);
+        /// <param name="Data">Buffer containing data to write.</param>
+        void Write(ReadOnlySpan<T> Data);
 
         /// <summary>
         /// Appends data from a supplied array to this buffer, growing it if necessary.
         /// </summary>
-        /// <param name="data">Array containing data to write.</param>
-        /// <param name="start">Index from which to start reading the data.</param>
-        /// <param name="count">Number of bytes to read from the source.</param>
-        void Write(T[] data, int start, int count);
+        /// <param name="Data">Array containing data to write.</param>
+        /// <param name="Start">Index from which to start reading the data.</param>
+        /// <param name="Count">Number of bytes to read from the source.</param>
+        void Write(T[] Data, int Start, int Count);
 
         /// <summary>
         /// Appends data from a supplied array slice to this buffer, growing it if necessary.
         /// </summary>
-        /// <param name="data">Array slice containing data to write.</param>
-        void Write(ArraySegment<T> data);
+        /// <param name="Data">Array slice containing data to write.</param>
+        void Write(ArraySegment<T> Data);
 
         /// <summary>
         /// Appends data from a supplied stream to this buffer, growing it if necessary.
         /// </summary>
-        /// <param name="stream">Stream to copy data from.</param>
-        void Write(Stream stream);
+        /// <param name="Stream">Stream to copy data from.</param>
+        void Write(Stream Stream);
 
         /// <summary>
-        /// Reads data from this buffer to the specified destination buffer. This method will write either as many 
-        /// bytes as there are in the destination buffer, or however many bytes are available in this buffer, 
+        /// Reads data from this buffer to the specified destination buffer. This method will write either as many
+        /// bytes as there are in the destination buffer, or however many bytes are available in this buffer,
         /// whichever is less.
         /// </summary>
-        /// <param name="destination">Buffer to read the data from this buffer into.</param>
-        /// <param name="source">Starting position in this buffer to read from.</param>
-        /// <param name="itemsWritten">Number of items written to the destination buffer.</param>
+        /// <param name="Destination">Buffer to read the data from this buffer into.</param>
+        /// <param name="Source">Starting position in this buffer to read from.</param>
+        /// <param name="ItemsWritten">Number of items written to the destination buffer.</param>
         /// <returns>Whether more data is available in this buffer.</returns>
-        bool Read(Span<T> destination, ulong source, out int itemsWritten);
+        bool Read(Span<T> Destination, ulong Source, out int ItemsWritten);
 
         /// <summary>
-        /// Reads data from this buffer to specified destination array. This method will write either as many bytes 
-        /// as specified for the destination array, or however many bytes are available in this buffer, whichever is 
+        /// Reads data from this buffer to specified destination array. This method will write either as many bytes
+        /// as specified for the destination array, or however many bytes are available in this buffer, whichever is
         /// less.
         /// </summary>
-        /// <param name="data">Array to read the data from this buffer into.</param>
-        /// <param name="start">Starting position in the target array to write to.</param>
-        /// <param name="count">Maximum number of bytes to write to target array.</param>
-        /// <param name="source">Starting position in this buffer to read from.</param>
-        /// <param name="itemsWritten">Number of items written to the destination buffer.</param>
+        /// <param name="Data">Array to read the data from this buffer into.</param>
+        /// <param name="Start">Starting position in the target array to write to.</param>
+        /// <param name="Count">Maximum number of bytes to write to target array.</param>
+        /// <param name="Source">Starting position in this buffer to read from.</param>
+        /// <param name="ItemsWritten">Number of items written to the destination buffer.</param>
         /// <returns>Whether more data is available in this buffer.</returns>
-        bool Read(T[] data, int start, int count, ulong source, out int itemsWritten);
+        bool Read(T[] Data, int Start, int Count, ulong Source, out int ItemsWritten);
 
         /// <summary>
-        /// Reads data from this buffer to specified destination array slice. This method will write either as many 
-        /// bytes as specified in the target slice, or however many bytes are available in this buffer, whichever is 
+        /// Reads data from this buffer to specified destination array slice. This method will write either as many
+        /// bytes as specified in the target slice, or however many bytes are available in this buffer, whichever is
         /// less.
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="source"></param>
-        /// <param name="itemsWritten">Number of items written to the destination buffer.</param>
+        /// <param name="Data"></param>
+        /// <param name="Source"></param>
+        /// <param name="ItemsWritten">Number of items written to the destination buffer.</param>
         /// <returns>Whether more data is available in this buffer.</returns>
-        bool Read(ArraySegment<T> data, ulong source, out int itemsWritten);
+        bool Read(ArraySegment<T> Data, ulong Source, out int ItemsWritten);
 
         /// <summary>
         /// Converts this buffer into a single continuous byte array.
@@ -116,8 +116,8 @@ namespace DisCatSharp.Common.Types
         /// <summary>
         /// Copies all the data from this buffer to a stream.
         /// </summary>
-        /// <param name="destination">Stream to copy this buffer's data to.</param>
-        void CopyTo(Stream destination);
+        /// <param name="Destination">Stream to copy this buffer's data to.</param>
+        void CopyTo(Stream Destination);
 
         /// <summary>
         /// Resets the buffer's pointer to the beginning, allowing for reuse.

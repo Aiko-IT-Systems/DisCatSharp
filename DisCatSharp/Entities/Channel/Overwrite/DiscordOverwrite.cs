@@ -50,29 +50,29 @@ namespace DisCatSharp.Entities
         public Permissions Denied { get; internal set; }
 
         [JsonIgnore]
-        internal ulong _channel_id;
+        internal ulong _channelId;
 
         #region Methods
         /// <summary>
         /// Deletes this channel overwrite.
         /// </summary>
-        /// <param name="reason">Reason as to why this overwrite gets deleted.</param>
+        /// <param name="Reason">Reason as to why this overwrite gets deleted.</param>
         /// <returns></returns>
-        public Task DeleteAsync(string reason = null) => this.Discord.ApiClient.DeleteChannelPermissionAsync(this._channel_id, this.Id, reason);
+        public Task Delete(string Reason = null) => this.Discord.ApiClient.DeleteChannelPermission(this._channelId, this.Id, Reason);
 
         /// <summary>
         /// Updates this channel overwrite.
         /// </summary>
-        /// <param name="allow">Permissions that are allowed.</param>
-        /// <param name="deny">Permissions that are denied.</param>
-        /// <param name="reason">Reason as to why you made this change.</param>
+        /// <param name="Allow">Permissions that are allowed.</param>
+        /// <param name="Deny">Permissions that are denied.</param>
+        /// <param name="Reason">Reason as to why you made this change.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the overwrite does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task UpdateAsync(Permissions? allow = null, Permissions? deny = null, string reason = null)
-            => this.Discord.ApiClient.EditChannelPermissionsAsync(this._channel_id, this.Id, allow ?? this.Allowed, deny ?? this.Denied, this.Type.ToString().ToLowerInvariant(), reason);
+        public Task Update(Permissions? Allow = null, Permissions? Deny = null, string Reason = null)
+            => this.Discord.ApiClient.EditChannelPermissions(this._channelId, this.Id, Allow ?? this.Allowed, Deny ?? this.Denied, this.Type.ToString().ToLowerInvariant(), Reason);
         #endregion
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace DisCatSharp.Entities
         {
             return this.Type != OverwriteType.Member
                 ? throw new ArgumentException(nameof(this.Type), "This overwrite is for a role, not a member.")
-                : await (await this.Discord.ApiClient.GetChannelAsync(this._channel_id).ConfigureAwait(false)).Guild.GetMemberAsync(this.Id).ConfigureAwait(false);
+                : await (await this.Discord.ApiClient.GetChannelAsync(this._channelId).ConfigureAwait(false)).Guild.GetMemberAsync(this.Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace DisCatSharp.Entities
         {
             return this.Type != OverwriteType.Role
                 ? throw new ArgumentException(nameof(this.Type), "This overwrite is for a member, not a role.")
-                : (await this.Discord.ApiClient.GetChannelAsync(this._channel_id).ConfigureAwait(false)).Guild.GetRole(this.Id);
+                : (await this.Discord.ApiClient.GetChannelAsync(this._channelId).ConfigureAwait(false)).Guild.GetRole(this.Id);
         }
 
         /// <summary>
@@ -112,13 +112,13 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Checks whether given permissions are allowed, denied, or not set.
         /// </summary>
-        /// <param name="permission">Permissions to check.</param>
+        /// <param name="Permission">Permissions to check.</param>
         /// <returns>Whether given permissions are allowed, denied, or not set.</returns>
-        public PermissionLevel CheckPermission(Permissions permission)
+        public PermissionLevel CheckPermission(Permissions Permission)
         {
-            return (this.Allowed & permission) != 0
+            return (this.Allowed & Permission) != 0
                 ? PermissionLevel.Allowed
-                : (this.Denied & permission) != 0 ? PermissionLevel.Denied : PermissionLevel.Unset;
+                : (this.Denied & Permission) != 0 ? PermissionLevel.Denied : PermissionLevel.Unset;
         }
     }
 }

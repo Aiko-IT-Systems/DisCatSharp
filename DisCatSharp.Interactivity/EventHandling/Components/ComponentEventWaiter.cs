@@ -47,29 +47,29 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentEventWaiter"/> class.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="config">The config.</param>
-        public ComponentEventWaiter(DiscordClient client, InteractivityConfiguration config)
+        /// <param name="Client">The client.</param>
+        /// <param name="Config">The config.</param>
+        public ComponentEventWaiter(DiscordClient Client, InteractivityConfiguration Config)
         {
-            this._client = client;
+            this._client = Client;
             this._client.ComponentInteractionCreated += this.Handle;
-            this._config = config;
+            this._config = Config;
 
-            this._message = new() { Content = config.ResponseMessage ?? "This message was not meant for you.", IsEphemeral = true };
+            this._message = new() { Content = Config.ResponseMessage ?? "This message was not meant for you.", IsEphemeral = true };
         }
 
         /// <summary>
         /// Waits for a specified <see cref="ComponentMatchRequest"/>'s predicate to be fufilled.
         /// </summary>
-        /// <param name="request">The request to wait for.</param>
+        /// <param name="Request">The request to wait for.</param>
         /// <returns>The returned args, or null if it timed out.</returns>
-        public async Task<ComponentInteractionCreateEventArgs> WaitForMatchAsync(ComponentMatchRequest request)
+        public async Task<ComponentInteractionCreateEventArgs> WaitForMatchAsync(ComponentMatchRequest Request)
         {
-            this._matchRequests.Add(request);
+            this._matchRequests.Add(Request);
 
             try
             {
-                return await request.Tcs.Task.ConfigureAwait(false);
+                return await Request.Tcs.Task.ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -78,21 +78,21 @@ namespace DisCatSharp.Interactivity.EventHandling
             }
             finally
             {
-                this._matchRequests.TryRemove(request);
+                this._matchRequests.TryRemove(Request);
             }
         }
 
         /// <summary>
         /// Collects reactions and returns the result when the <see cref="ComponentMatchRequest"/>'s cancellation token is canceled.
         /// </summary>
-        /// <param name="request">The request to wait on.</param>
+        /// <param name="Request">The request to wait on.</param>
         /// <returns>The result from request's predicate over the period of time leading up to the token's cancellation.</returns>
-        public async Task<IReadOnlyList<ComponentInteractionCreateEventArgs>> CollectMatchesAsync(ComponentCollectRequest request)
+        public async Task<IReadOnlyList<ComponentInteractionCreateEventArgs>> CollectMatchesAsync(ComponentCollectRequest Request)
         {
-            this._collectRequests.Add(request);
+            this._collectRequests.Add(Request);
             try
             {
-                await request.Tcs.Task.ConfigureAwait(false);
+                await Request.Tcs.Task.ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -100,40 +100,40 @@ namespace DisCatSharp.Interactivity.EventHandling
             }
             finally
             {
-                this._collectRequests.TryRemove(request);
+                this._collectRequests.TryRemove(Request);
             }
 
-            return request.Collected.ToArray();
+            return Request.Collected.ToArray();
         }
 
         /// <summary>
         /// Handles the waiter.
         /// </summary>
         /// <param name="_">The client.</param>
-        /// <param name="args">The args.</param>
-        private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs args)
+        /// <param name="Args">The args.</param>
+        private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs Args)
         {
             foreach (var mreq in this._matchRequests.ToArray())
             {
-                if (mreq.Message == args.Message && mreq.IsMatch(args))
-                    mreq.Tcs.TrySetResult(args);
+                if (mreq.Message == Args.Message && mreq.IsMatch(Args))
+                    mreq.Tcs.TrySetResult(Args);
 
                 else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-                    await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
+                    await Args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
             }
 
 
             foreach (var creq in this._collectRequests.ToArray())
             {
-                if (creq.Message == args.Message && creq.IsMatch(args))
+                if (creq.Message == Args.Message && creq.IsMatch(Args))
                 {
-                    await args.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
+                    await Args.Interaction.CreateResponse(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
 
-                    if (creq.IsMatch(args))
-                        creq.Collected.Add(args);
+                    if (creq.IsMatch(Args))
+                        creq.Collected.Add(Args);
 
                     else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-                        await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
+                        await Args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
                 }
             }
         }

@@ -49,16 +49,16 @@ namespace DisCatSharp.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestSizeException"/> class.
         /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="response">The response.</param>
-        internal RequestSizeException(BaseRestRequest request, RestResponse response) : base($"Request entity too large: {response.ResponseCode}. Make sure the data sent is within Discord's upload limit.")
+        /// <param name="Request">The request.</param>
+        /// <param name="Response">The response.</param>
+        internal RequestSizeException(BaseRestRequest Request, RestResponse Response) : base($"Request entity too large: {Response.ResponseCode}. Make sure the data sent is within Discord's upload limit.")
         {
-            this.WebRequest = request;
-            this.WebResponse = response;
+            this.WebRequest = Request;
+            this.WebResponse = Response;
 
             try
             {
-                var j = JObject.Parse(response.Response);
+                var j = JObject.Parse(Response.Response);
 
                 if (j["message"] != null)
                     this.JsonMessage = j["message"].ToString();

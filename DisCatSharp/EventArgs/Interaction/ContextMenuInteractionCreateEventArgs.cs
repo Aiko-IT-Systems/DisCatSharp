@@ -54,8 +54,8 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenuInteractionCreateEventArgs"/> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        public ContextMenuInteractionCreateEventArgs(IServiceProvider provider) : base(provider)
+        /// <param name="Provider">The provider.</param>
+        public ContextMenuInteractionCreateEventArgs(IServiceProvider Provider) : base(Provider)
         { }
     }
 }

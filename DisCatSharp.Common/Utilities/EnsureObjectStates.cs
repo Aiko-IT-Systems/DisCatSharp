@@ -35,11 +35,11 @@ namespace DisCatSharp.Common
         /// </summary>
         /// <typeparam name="T1">Any key type.</typeparam>
         /// <typeparam name="T2">Any value type.</typeparam>
-        /// <param name="dictionary">The dictionary to check on.</param>
+        /// <param name="Dictionary">The dictionary to check on.</param>
         /// <returns>True if satisfied, false otherwise.</returns>
 #nullable enable
-        public static bool EmptyOrNull<T1, T2>(this Dictionary<T1?, T2?>? dictionary)
-            => dictionary == null || !dictionary.Any() || dictionary.Keys == null || !dictionary.Keys.Any();
+        public static bool EmptyOrNull<T1, T2>(this Dictionary<T1?, T2?>? Dictionary)
+            => Dictionary == null || !Dictionary.Any() || Dictionary.Keys == null || !Dictionary.Keys.Any();
 #nullable disable
 
         /// <summary>
@@ -47,33 +47,33 @@ namespace DisCatSharp.Common
         /// </summary>
         /// <typeparam name="T1">Any key type.</typeparam>
         /// <typeparam name="T2">Any value type.</typeparam>
-        /// <param name="dictionary">The dictionary to check on.</param>
+        /// <param name="Dictionary">The dictionary to check on.</param>
         /// <returns>True if satisfied, false otherwise.</returns>
 #nullable enable
-        public static bool NotEmptyAndNotNull<T1, T2>(this Dictionary<T1?, T2?>? dictionary)
-            => dictionary != null && dictionary.Any() && dictionary.Keys != null && dictionary.Keys.Any();
+        public static bool NotEmptyAndNotNull<T1, T2>(this Dictionary<T1?, T2?>? Dictionary)
+            => Dictionary != null && Dictionary.Any() && Dictionary.Keys != null && Dictionary.Keys.Any();
 #nullable disable
 
         /// <summary>
         /// Checks whether the list is null or empty.
         /// </summary>
         /// <typeparam name="T">Any value type.</typeparam>
-        /// <param name="list">The list to check on.</param>
+        /// <param name="List">The list to check on.</param>
         /// <returns>True if satisfied, false otherwise.</returns>
 #nullable enable
-        public static bool EmptyOrNull<T>(this List<T?>? list)
-            => list == null || !list.Any();
+        public static bool EmptyOrNull<T>(this List<T?>? List)
+            => List == null || !List.Any();
 #nullable disable
 
         /// <summary>
         /// Checks whether the list is not null and not empty.
         /// </summary>
         /// <typeparam name="T">Any value type.</typeparam>
-        /// <param name="list">The list to check on.</param>
+        /// <param name="List">The list to check on.</param>
         /// <returns>True if satisfied, false otherwise.</returns>
 #nullable enable
-        public static bool NotEmptyAndNotNull<T>(this List<T?>? list)
-            => list != null && list.Any();
+        public static bool NotEmptyAndNotNull<T>(this List<T?>? List)
+            => List != null && List.Any();
 #nullable disable
     }
 }

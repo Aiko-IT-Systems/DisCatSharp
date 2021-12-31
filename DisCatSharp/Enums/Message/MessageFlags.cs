@@ -32,10 +32,10 @@ namespace DisCatSharp
         /// <summary>
         /// Calculates whether these message flags contain a specific flag.
         /// </summary>
-        /// <param name="baseFlags">The existing flags.</param>
-        /// <param name="flag">The flags to search for.</param>
+        /// <param name="BaseFlags">The existing flags.</param>
+        /// <param name="Flag">The flags to search for.</param>
         /// <returns></returns>
-        public static bool HasMessageFlag(this MessageFlags baseFlags, MessageFlags flag) => (baseFlags & flag) == flag;
+        public static bool HasMessageFlag(this MessageFlags BaseFlags, MessageFlags Flag) => (BaseFlags & Flag) == Flag;
     }
 
     /// <summary>

@@ -45,20 +45,20 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         ///
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="timeout"></param>
-        /// <param name="emojis"></param>
-        public PollRequest(DiscordMessage message, TimeSpan timeout, IEnumerable<DiscordEmoji> emojis)
+        /// <param name="Message"></param>
+        /// <param name="Timeout"></param>
+        /// <param name="Emojis"></param>
+        public PollRequest(DiscordMessage Message, TimeSpan Timeout, IEnumerable<DiscordEmoji> Emojis)
         {
             this._tcs = new TaskCompletionSource<bool>();
-            this._ct = new CancellationTokenSource(timeout);
+            this._ct = new CancellationTokenSource(Timeout);
             this._ct.Token.Register(() => this._tcs.TrySetResult(true));
-            this._timeout = timeout;
-            this._emojis = emojis;
+            this._timeout = Timeout;
+            this._emojis = Emojis;
             this._collected = new ConcurrentHashSet<PollEmoji>();
-            this._message = message;
+            this._message = Message;
 
-            foreach (var e in emojis)
+            foreach (var e in Emojis)
             {
                 this._collected.Add(new PollEmoji(e));
             }
@@ -79,17 +79,17 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Removes the reaction.
         /// </summary>
-        /// <param name="emoji">The emoji.</param>
-        /// <param name="member">The member.</param>
-        internal void RemoveReaction(DiscordEmoji emoji, DiscordUser member)
+        /// <param name="Emoji">The emoji.</param>
+        /// <param name="Member">The member.</param>
+        internal void RemoveReaction(DiscordEmoji Emoji, DiscordUser Member)
         {
-            if (this._collected.Any(x => x.Emoji == emoji))
+            if (this._collected.Any(X => X.Emoji == Emoji))
             {
-                if (this._collected.Any(x => x.Voted.Contains(member)))
+                if (this._collected.Any(X => X.Voted.Contains(Member)))
                 {
-                    var e = this._collected.First(x => x.Emoji == emoji);
+                    var e = this._collected.First(X => X.Emoji == Emoji);
                     this._collected.TryRemove(e);
-                    e.Voted.TryRemove(member);
+                    e.Voted.TryRemove(Member);
                     this._collected.Add(e);
                 }
             }
@@ -98,17 +98,17 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Adds the reaction.
         /// </summary>
-        /// <param name="emoji">The emoji.</param>
-        /// <param name="member">The member.</param>
-        internal void AddReaction(DiscordEmoji emoji, DiscordUser member)
+        /// <param name="Emoji">The emoji.</param>
+        /// <param name="Member">The member.</param>
+        internal void AddReaction(DiscordEmoji Emoji, DiscordUser Member)
         {
-            if (this._collected.Any(x => x.Emoji == emoji))
+            if (this._collected.Any(X => X.Emoji == Emoji))
             {
-                if (!this._collected.Any(x => x.Voted.Contains(member)))
+                if (!this._collected.Any(X => X.Voted.Contains(Member)))
                 {
-                    var e = this._collected.First(x => x.Emoji == emoji);
+                    var e = this._collected.First(X => X.Emoji == Emoji);
                     this._collected.TryRemove(e);
-                    e.Voted.Add(member);
+                    e.Voted.Add(Member);
                     this._collected.Add(e);
                 }
             }
@@ -137,10 +137,10 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Initializes a new instance of the <see cref="PollEmoji"/> class.
         /// </summary>
-        /// <param name="emoji">The emoji.</param>
-        internal PollEmoji(DiscordEmoji emoji)
+        /// <param name="Emoji">The emoji.</param>
+        internal PollEmoji(DiscordEmoji Emoji)
         {
-            this.Emoji = emoji;
+            this.Emoji = Emoji;
             this.Voted = new ConcurrentHashSet<DiscordUser>();
         }
 

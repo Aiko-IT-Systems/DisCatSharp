@@ -45,29 +45,29 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentEventWaiter"/> class.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="config">The config.</param>
-        public ModalEventWaiter(DiscordClient client, InteractivityConfiguration config)
+        /// <param name="Client">The client.</param>
+        /// <param name="Config">The config.</param>
+        public ModalEventWaiter(DiscordClient Client, InteractivityConfiguration Config)
         {
-            this._client = client;
+            this._client = Client;
             this._client.ComponentInteractionCreated += this.Handle;
-            this._config = config;
+            this._config = Config;
 
-            this._message = new() { Content = config.ResponseMessage ?? "This modal was not meant for you.", IsEphemeral = true };
+            this._message = new() { Content = Config.ResponseMessage ?? "This modal was not meant for you.", IsEphemeral = true };
         }
 
         /// <summary>
         /// Waits for a specified <see cref="ModalMatchRequest"/>'s predicate to be fufilled.
         /// </summary>
-        /// <param name="request">The request to wait for.</param>
+        /// <param name="Request">The request to wait for.</param>
         /// <returns>The returned args, or null if it timed out.</returns>
-        public async Task<ComponentInteractionCreateEventArgs> WaitForModalMatchAsync(ModalMatchRequest request)
+        public async Task<ComponentInteractionCreateEventArgs> WaitForModalMatchAsync(ModalMatchRequest Request)
         {
-            this._modalMatchRequests.Add(request);
+            this._modalMatchRequests.Add(Request);
 
             try
             {
-                return await request.Tcs.Task.ConfigureAwait(false);
+                return await Request.Tcs.Task.ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -76,7 +76,7 @@ namespace DisCatSharp.Interactivity.EventHandling
             }
             finally
             {
-                this._modalMatchRequests.TryRemove(request);
+                this._modalMatchRequests.TryRemove(Request);
             }
         }
 
@@ -84,16 +84,16 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Handles the waiter.
         /// </summary>
         /// <param name="_">The client.</param>
-        /// <param name="args">The args.</param>
-        private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs args)
+        /// <param name="Args">The args.</param>
+        private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs Args)
         {
             foreach (var mreq in this._modalMatchRequests.ToArray())
             {
-                if (mreq.CustomId == args.Interaction.Data.CustomId && mreq.IsMatch(args))
-                    mreq.Tcs.TrySetResult(args);
+                if (mreq.CustomId == Args.Interaction.Data.CustomId && mreq.IsMatch(Args))
+                    mreq.Tcs.TrySetResult(Args);
 
                 else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-                    await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
+                    await Args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
             }
         }
 

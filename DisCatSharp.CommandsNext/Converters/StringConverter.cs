@@ -34,10 +34,10 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        Task<Optional<string>> IArgumentConverter<string>.ConvertAsync(string value, CommandContext ctx)
-            => Task.FromResult(Optional.FromValue(value));
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        Task<Optional<string>> IArgumentConverter<string>.Convert(string Value, CommandContext Ctx)
+            => Task.FromResult(Optional.FromValue(Value));
     }
 
     /// <summary>
@@ -48,16 +48,16 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        Task<Optional<Uri>> IArgumentConverter<Uri>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        Task<Optional<Uri>> IArgumentConverter<Uri>.Convert(string Value, CommandContext Ctx)
         {
             try
             {
-                if (value.StartsWith("<") && value.EndsWith(">"))
-                    value = value[1..^1];
+                if (Value.StartsWith("<") && Value.EndsWith(">"))
+                    Value = Value[1..^1];
 
-                return Task.FromResult(Optional.FromValue(new Uri(value)));
+                return Task.FromResult(Optional.FromValue(new Uri(Value)));
             }
             catch
             {

@@ -43,17 +43,17 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds a localization.
         /// </summary>
-        /// <param name="locale">The [locale](xref:application_commands_translations_reference#valid-locales) to add.</param>
-        /// <param name="value">The translation to add.</param>
-        public void AddLocalization(string locale, string value)
+        /// <param name="Locale">The [locale](xref:application_commands_translations_reference#valid-locales) to add.</param>
+        /// <param name="Value">The translation to add.</param>
+        public void AddLocalization(string Locale, string Value)
         {
-            if (this.Validate(locale))
+            if (this.Validate(Locale))
             {
-                this.Localizations.Add(locale, value);
+                this.Localizations.Add(Locale, Value);
             }
             else
             {
-                throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
+                throw new NotSupportedException($"The provided locale \"{Locale}\" is not valid for Discord.\n" +
                     $"Valid locales: {string.Join(", ", this._validLocales.ToArray())}");
             }
         }
@@ -61,9 +61,9 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Removes a localization.
         /// </summary>
-        /// <param name="locale">The [locale](xref:application_commands_translations_reference#valid-locales) to remove.</param>
-        public void RemoveLocalization(string locale)
-            => this.Localizations.Remove(locale);
+        /// <param name="Locale">The [locale](xref:application_commands_translations_reference#valid-locales) to remove.</param>
+        public void RemoveLocalization(string Locale)
+            => this.Localizations.Remove(Locale);
 
         /// <summary>
         /// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.
@@ -73,12 +73,12 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.
         /// </summary>
-        /// <param name="localizations">Localizations.</param>
-        public DiscordApplicationCommandLocalization(Dictionary<string, string> localizations)
+        /// <param name="Localizations">Localizations.</param>
+        public DiscordApplicationCommandLocalization(Dictionary<string, string> Localizations)
         {
-            if (localizations != null)
+            if (Localizations != null)
             {
-                foreach (var locale in localizations.Keys)
+                foreach (var locale in Localizations.Keys)
                 {
                     if (!this.Validate(locale))
                         throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
@@ -86,7 +86,7 @@ namespace DisCatSharp.Entities
                 }
             }
 
-            this.Localizations = localizations;
+            this.Localizations = Localizations;
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Whether the [locale](xref:application_commands_translations_reference#valid-locales) to be added is valid for Discord.
         /// </summary>
-        /// <param name="lang">[Locale](xref:application_commands_translations_reference#valid-locales) string.</param>
-        public bool Validate(string lang)
-            => this._validLocales.Contains(lang);
+        /// <param name="Lang">[Locale](xref:application_commands_translations_reference#valid-locales) string.</param>
+        public bool Validate(string Lang)
+            => this._validLocales.Contains(Lang);
     }
 }

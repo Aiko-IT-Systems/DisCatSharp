@@ -65,6 +65,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="ThreadMembersUpdateEventArgs"/> class.
         /// </summary>
-        internal ThreadMembersUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+        internal ThreadMembersUpdateEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

@@ -38,10 +38,10 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Sets the name for this enum choice.
         /// </summary>
-        /// <param name="name">The name for this enum choice.</param>
-        public ChoiceNameAttribute(string name)
+        /// <param name="Name">The name for this enum choice.</param>
+        public ChoiceNameAttribute(string Name)
         {
-            this.Name = name;
+            this.Name = Name;
         }
     }
 }

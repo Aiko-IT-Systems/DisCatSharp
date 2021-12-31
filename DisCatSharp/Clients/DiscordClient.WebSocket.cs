@@ -79,16 +79,16 @@ namespace DisCatSharp
         /// <summary>
         /// Internals the reconnect async.
         /// </summary>
-        /// <param name="startNewSession">If true, start new session.</param>
-        /// <param name="code">The code.</param>
-        /// <param name="message">The message.</param>
+        /// <param name="StartNewSession">If true, start new session.</param>
+        /// <param name="Code">The code.</param>
+        /// <param name="Message">The message.</param>
         /// <returns>A Task.</returns>
-        private Task InternalReconnectAsync(bool startNewSession = false, int code = 1000, string message = "")
+        private Task InternalReconnect(bool StartNewSession = false, int Code = 1000, string Message = "")
         {
-            if (startNewSession)
+            if (StartNewSession)
                 this._sessionId = null;
 
-            _ = this._webSocketClient.DisconnectAsync(code, message);
+            _ = this._webSocketClient.Disconnect(Code, Message);
             return Task.CompletedTask;
         }
 
@@ -161,19 +161,19 @@ namespace DisCatSharp
             if (this.Configuration.GatewayCompressionLevel == GatewayCompressionLevel.Stream)
                 gwuri.AddParameter("compress", "zlib-stream");
 
-            await this._webSocketClient.ConnectAsync(gwuri.Build()).ConfigureAwait(false);
+            await this._webSocketClient.Connect(gwuri.Build()).ConfigureAwait(false);
 
-            Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
-                => this._socketOpened.InvokeAsync(this, e);
+            Task SocketOnConnect(IWebSocketClient Sender, SocketEventArgs E)
+                => this._socketOpened.InvokeAsync(this, E);
 
-            async Task SocketOnMessage(IWebSocketClient sender, SocketMessageEventArgs e)
+            async Task SocketOnMessage(IWebSocketClient Sender, SocketMessageEventArgs E)
             {
                 string msg = null;
-                if (e is SocketTextMessageEventArgs etext)
+                if (E is SocketTextMessageEventArgs etext)
                 {
                     msg = etext.Message;
                 }
-                else if (e is SocketBinaryMessageEventArgs ebin) // :DDDD
+                else if (E is SocketBinaryMessageEventArgs ebin) // :DDDD
                 {
                     using var ms = new MemoryStream();
                     if (!this._payloadDecompressor.TryDecompress(new ArraySegment<byte>(ebin.Message), ms))
@@ -183,7 +183,7 @@ namespace DisCatSharp
                     }
 
                     ms.Position = 0;
-                    using var sr = new StreamReader(ms, Utilities.UTF8);
+                    using var sr = new StreamReader(ms, Utilities.Utf8);
                     msg = await sr.ReadToEndAsync().ConfigureAwait(false);
                 }
 
@@ -198,10 +198,10 @@ namespace DisCatSharp
                 }
             }
 
-            Task SocketOnException(IWebSocketClient sender, SocketErrorEventArgs e)
-                => this._socketErrored.InvokeAsync(this, e);
+            Task SocketOnException(IWebSocketClient Sender, SocketErrorEventArgs E)
+                => this._socketErrored.InvokeAsync(this, E);
 
-            async Task SocketOnDisconnect(IWebSocketClient sender, SocketCloseEventArgs e)
+            async Task SocketOnDisconnect(IWebSocketClient Sender, SocketCloseEventArgs E)
             {
                 // release session and connection
                 this.ConnectionLock.Set();
@@ -210,14 +210,14 @@ namespace DisCatSharp
                 if (!this._disposed)
                     this._cancelTokenSource.Cancel();
 
-                this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Connection closed ({0}, '{1}')", e.CloseCode, e.CloseMessage);
-                await this._socketClosed.InvokeAsync(this, e).ConfigureAwait(false);
+                this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Connection closed ({0}, '{1}')", E.CloseCode, E.CloseMessage);
+                await this._socketClosed.InvokeAsync(this, E).ConfigureAwait(false);
 
 
 
-                if (this.Configuration.AutoReconnect && (e.CloseCode < 4001 || e.CloseCode >= 5000))
+                if (this.Configuration.AutoReconnect && (E.CloseCode < 4001 || E.CloseCode >= 5000))
                 {
-                    this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({0}, '{1}'), reconnecting", e.CloseCode, e.CloseMessage);
+                    this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({0}, '{1}'), reconnecting", E.CloseCode, E.CloseMessage);
 
                     if (this._status == null)
                         await this.ConnectAsync().ConfigureAwait(false);
@@ -229,7 +229,7 @@ namespace DisCatSharp
                 }
                 else
                 {
-                    this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({0}, '{1}')", e.CloseCode, e.CloseMessage);
+                    this.Logger.LogCritical(LoggerEvents.ConnectionClose, "Connection terminated ({0}, '{1}')", E.CloseCode, E.CloseMessage);
                 }
             }
         }
@@ -241,11 +241,11 @@ namespace DisCatSharp
         /// <summary>
         /// Handles the socket message async.
         /// </summary>
-        /// <param name="data">The data.</param>
+        /// <param name="Data">The data.</param>
         /// <returns>A Task.</returns>
-        internal async Task HandleSocketMessageAsync(string data)
+        internal async Task HandleSocketMessageAsync(string Data)
         {
-            var payload = JsonConvert.DeserializeObject<GatewayPayload>(data);
+            var payload = JsonConvert.DeserializeObject<GatewayPayload>(Data);
             this._lastSequence = payload.Sequence ?? this._lastSequence;
             switch (payload.OpCode)
             {
@@ -282,12 +282,12 @@ namespace DisCatSharp
         /// <summary>
         /// Ons the heartbeat async.
         /// </summary>
-        /// <param name="seq">The seq.</param>
+        /// <param name="Seq">The seq.</param>
         /// <returns>A Task.</returns>
-        internal async Task OnHeartbeatAsync(long seq)
+        internal async Task OnHeartbeatAsync(long Seq)
         {
             this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received HEARTBEAT (OP1)");
-            await this.SendHeartbeatAsync(seq).ConfigureAwait(false);
+            await this.SendHeartbeatAsync(Seq).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -297,15 +297,15 @@ namespace DisCatSharp
         internal async Task OnReconnectAsync()
         {
             this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received RECONNECT (OP7)");
-            await this.InternalReconnectAsync(code: 4000, message: "OP7 acknowledged").ConfigureAwait(false);
+            await this.InternalReconnect(Code: 4000, Message: "OP7 acknowledged").ConfigureAwait(false);
         }
 
         /// <summary>
         /// Ons the invalidate session async.
         /// </summary>
-        /// <param name="data">If true, data.</param>
+        /// <param name="Data">If true, data.</param>
         /// <returns>A Task.</returns>
-        internal async Task OnInvalidateSessionAsync(bool data)
+        internal async Task OnInvalidateSessionAsync(bool Data)
         {
             // begin a session if one is not open already
             if (this.SessionLock.Wait(0))
@@ -316,7 +316,7 @@ namespace DisCatSharp
             await socketLock.LockAsync().ConfigureAwait(false);
             socketLock.UnlockAfter(TimeSpan.FromSeconds(5));
 
-            if (data)
+            if (Data)
             {
                 this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received INVALID_SESSION (OP9, true)");
                 await Task.Delay(6000).ConfigureAwait(false);
@@ -333,9 +333,9 @@ namespace DisCatSharp
         /// <summary>
         /// Ons the hello async.
         /// </summary>
-        /// <param name="hello">The hello.</param>
+        /// <param name="Hello">The hello.</param>
         /// <returns>A Task.</returns>
-        internal async Task OnHelloAsync(GatewayHello hello)
+        internal async Task OnHelloAsync(GatewayHello Hello)
         {
             this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received HELLO (OP10)");
 
@@ -351,7 +351,7 @@ namespace DisCatSharp
             }
 
             Interlocked.CompareExchange(ref this._skippedHeartbeats, 0, 0);
-            this._heartbeatInterval = hello.HeartbeatInterval;
+            this._heartbeatInterval = Hello.HeartbeatInterval;
             this._heartbeatTask = Task.Run(this.HeartbeatLoopAsync, this._cancelToken);
 
             if (string.IsNullOrEmpty(this._sessionId))
@@ -410,35 +410,35 @@ namespace DisCatSharp
         /// <summary>
         /// Internals the update status async.
         /// </summary>
-        /// <param name="activity">The activity.</param>
-        /// <param name="userStatus">The user status.</param>
-        /// <param name="idleSince">The idle since.</param>
+        /// <param name="Activity">The activity.</param>
+        /// <param name="UserStatus">The user status.</param>
+        /// <param name="IdleSince">The idle since.</param>
         /// <returns>A Task.</returns>
-        internal async Task InternalUpdateStatusAsync(DiscordActivity activity, UserStatus? userStatus, DateTimeOffset? idleSince)
+        internal async Task InternalUpdateStatusAsync(DiscordActivity Activity, UserStatus? UserStatus, DateTimeOffset? IdleSince)
         {
-            if (activity != null && activity.Name != null && activity.Name.Length > 128)
+            if (Activity != null && Activity.Name != null && Activity.Name.Length > 128)
                 throw new Exception("Game name can't be longer than 128 characters!");
 
-            var since_unix = idleSince != null ? (long?)Utilities.GetUnixTime(idleSince.Value) : null;
-            var act = activity ?? new DiscordActivity();
+            var sinceUnix = IdleSince != null ? (long?)Utilities.GetUnixTime(IdleSince.Value) : null;
+            var act = Activity ?? new DiscordActivity();
 
             var status = new StatusUpdate
             {
                 Activity = new TransportActivity(act),
-                IdleSince = since_unix,
-                IsAFK = idleSince != null,
-                Status = userStatus ?? UserStatus.Online
+                IdleSince = sinceUnix,
+                IsAfk = IdleSince != null,
+                Status = UserStatus ?? Entities.UserStatus.Online
             };
 
             // Solution to have status persist between sessions
             this._status = status;
-            var status_update = new GatewayPayload
+            var statusUpdate = new GatewayPayload
             {
                 OpCode = GatewayOpCode.StatusUpdate,
                 Data = status
             };
 
-            var statusstr = JsonConvert.SerializeObject(status_update);
+            var statusstr = JsonConvert.SerializeObject(statusUpdate);
 
             await this.WsSendAsync(statusstr).ConfigureAwait(false);
 
@@ -448,7 +448,7 @@ namespace DisCatSharp
                 {
                     Discord = this,
                     Activity = act,
-                    Status = userStatus ?? UserStatus.Online,
+                    Status = UserStatus ?? Entities.UserStatus.Online,
                     InternalUser = new TransportUser { Id = this.CurrentUser.Id }
                 };
             }
@@ -456,20 +456,20 @@ namespace DisCatSharp
             {
                 var pr = this._presences[this.CurrentUser.Id];
                 pr.Activity = act;
-                pr.Status = userStatus ?? pr.Status;
+                pr.Status = UserStatus ?? pr.Status;
             }
         }
 
         /// <summary>
         /// Sends the heartbeat async.
         /// </summary>
-        /// <param name="seq">The seq.</param>
+        /// <param name="Seq">The seq.</param>
         /// <returns>A Task.</returns>
-        internal async Task SendHeartbeatAsync(long seq)
+        internal async Task SendHeartbeatAsync(long Seq)
         {
-            var more_than_5 = Volatile.Read(ref this._skippedHeartbeats) > 5;
-            var guilds_comp = Volatile.Read(ref this._guildDownloadCompleted);
-            if (guilds_comp && more_than_5)
+            var moreThan5 = Volatile.Read(ref this._skippedHeartbeats) > 5;
+            var guildsComp = Volatile.Read(ref this._guildDownloadCompleted);
+            if (guildsComp && moreThan5)
             {
                 this.Logger.LogCritical(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats - connection is zombie");
 
@@ -480,10 +480,10 @@ namespace DisCatSharp
                 };
                 await this._zombied.InvokeAsync(this, args).ConfigureAwait(false);
 
-                await this.InternalReconnectAsync(code: 4001, message: "Too many heartbeats missed").ConfigureAwait(false);
+                await this.InternalReconnect(Code: 4001, Message: "Too many heartbeats missed").ConfigureAwait(false);
                 return;
             }
-            else if (!guilds_comp && more_than_5)
+            else if (!guildsComp && moreThan5)
             {
                 var args = new ZombiedEventArgs(this.ServiceProvider)
                 {
@@ -495,15 +495,15 @@ namespace DisCatSharp
                 this.Logger.LogWarning(LoggerEvents.HeartbeatFailure, "Server failed to acknowledge more than 5 heartbeats, but the guild download is still running - check your connection speed");
             }
 
-            Volatile.Write(ref this._lastSequence, seq);
+            Volatile.Write(ref this._lastSequence, Seq);
             this.Logger.LogTrace(LoggerEvents.Heartbeat, "Sending heartbeat");
             var heartbeat = new GatewayPayload
             {
                 OpCode = GatewayOpCode.Heartbeat,
-                Data = seq
+                Data = Seq
             };
-            var heartbeat_str = JsonConvert.SerializeObject(heartbeat);
-            await this.WsSendAsync(heartbeat_str).ConfigureAwait(false);
+            var heartbeatStr = JsonConvert.SerializeObject(heartbeat);
+            await this.WsSendAsync(heartbeatStr).ConfigureAwait(false);
 
             this._lastHeartbeat = DateTimeOffset.Now;
 
@@ -513,9 +513,9 @@ namespace DisCatSharp
         /// <summary>
         /// Sends the identify async.
         /// </summary>
-        /// <param name="status">The status.</param>
+        /// <param name="Status">The status.</param>
         /// <returns>A Task.</returns>
-        internal async Task SendIdentifyAsync(StatusUpdate status)
+        internal async Task SendIdentifyAsync(StatusUpdate Status)
         {
             var identify = new GatewayIdentify
             {
@@ -527,7 +527,7 @@ namespace DisCatSharp
                     ShardId = this.Configuration.ShardId,
                     ShardCount = this.Configuration.ShardCount
                 },
-                Presence = status,
+                Presence = Status,
                 Intents = this.Configuration.Intents,
                 Discord = this
             };
@@ -554,12 +554,12 @@ namespace DisCatSharp
                 SessionId = this._sessionId,
                 SequenceNumber = Volatile.Read(ref this._lastSequence)
             };
-            var resume_payload = new GatewayPayload
+            var resumePayload = new GatewayPayload
             {
                 OpCode = GatewayOpCode.Resume,
                 Data = resume
             };
-            var resumestr = JsonConvert.SerializeObject(resume_payload);
+            var resumestr = JsonConvert.SerializeObject(resumePayload);
 
             await this.WsSendAsync(resumestr).ConfigureAwait(false);
         }
@@ -577,12 +577,12 @@ namespace DisCatSharp
         /// <summary>
         /// Ws the send async.
         /// </summary>
-        /// <param name="payload">The payload.</param>
+        /// <param name="Payload">The payload.</param>
         /// <returns>A Task.</returns>
-        internal async Task WsSendAsync(string payload)
+        internal async Task WsSendAsync(string Payload)
         {
-            this.Logger.LogTrace(LoggerEvents.GatewayWsTx, payload);
-            await this._webSocketClient.SendMessageAsync(payload).ConfigureAwait(false);
+            this.Logger.LogTrace(LoggerEvents.GatewayWsTx, Payload);
+            await this._webSocketClient.SendMessage(Payload).ConfigureAwait(false);
         }
 
         #endregion
@@ -594,7 +594,7 @@ namespace DisCatSharp
         /// </summary>
         /// <returns>A SocketLock.</returns>
         private SocketLock GetSocketLock()
-            => SocketLocks.GetOrAdd(this.CurrentApplication.Id, appId => new SocketLock(appId, this.GatewayInfo.SessionBucket.MaxConcurrency));
+            => SocketLocks.GetOrAdd(this.CurrentApplication.Id, AppId => new SocketLock(AppId, this.GatewayInfo.SessionBucket.MaxConcurrency));
 
         #endregion
     }

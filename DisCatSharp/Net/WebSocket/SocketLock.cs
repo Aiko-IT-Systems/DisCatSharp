@@ -66,14 +66,14 @@ namespace DisCatSharp.Net.WebSocket
         /// <summary>
         /// Initializes a new instance of the <see cref="SocketLock"/> class.
         /// </summary>
-        /// <param name="appId">The app id.</param>
-        /// <param name="maxConcurrency">The max concurrency.</param>
-        public SocketLock(ulong appId, int maxConcurrency)
+        /// <param name="AppId">The app id.</param>
+        /// <param name="MaxConcurrency">The max concurrency.</param>
+        public SocketLock(ulong AppId, int MaxConcurrency)
         {
-            this.ApplicationId = appId;
+            this.ApplicationId = AppId;
             this.TimeoutCancelSource = null;
-            this.MaxConcurrency = maxConcurrency;
-            this.LockSemaphore = new SemaphoreSlim(maxConcurrency);
+            this.MaxConcurrency = MaxConcurrency;
+            this.LockSemaphore = new SemaphoreSlim(MaxConcurrency);
         }
 
         /// <summary>
@@ -91,8 +91,8 @@ namespace DisCatSharp.Net.WebSocket
         /// <summary>
         /// Unlocks the socket after a given timespan.
         /// </summary>
-        /// <param name="unlockDelay">The unlock delay.</param>
-        public void UnlockAfter(TimeSpan unlockDelay)
+        /// <param name="UnlockDelay">The unlock delay.</param>
+        public void UnlockAfter(TimeSpan UnlockDelay)
         {
             if (this.TimeoutCancelSource == null || this.LockSemaphore.CurrentCount > 0)
                 return; // it's not unlockable because it's post-IDENTIFY or not locked
@@ -105,7 +105,7 @@ namespace DisCatSharp.Net.WebSocket
             catch { }
             this.TimeoutCancelSource = null;
 
-            this.UnlockTask = Task.Delay(unlockDelay, CancellationToken.None);
+            this.UnlockTask = Task.Delay(UnlockDelay, CancellationToken.None);
             _ = this.UnlockTask.ContinueWith(this.InternalUnlock);
         }
 
@@ -113,7 +113,7 @@ namespace DisCatSharp.Net.WebSocket
         /// Waits for the socket lock.
         /// </summary>
         /// <returns>A Task.</returns>
-        public Task WaitAsync()
+        public Task Wait()
             => this.LockSemaphore.WaitAsync();
 
         /// <summary>
@@ -132,8 +132,8 @@ namespace DisCatSharp.Net.WebSocket
         /// <summary>
         /// Unlocks the socket.
         /// </summary>
-        /// <param name="t">The task.</param>
-        private void InternalUnlock(Task t)
+        /// <param name="T">The task.</param>
+        private void InternalUnlock(Task T)
             => this.LockSemaphore.Release(this.MaxConcurrency);
     }
 }

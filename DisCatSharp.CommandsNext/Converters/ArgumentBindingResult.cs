@@ -50,24 +50,24 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Initializes a new instance of the <see cref="ArgumentBindingResult"/> class.
         /// </summary>
-        /// <param name="converted">The converted.</param>
-        /// <param name="raw">The raw.</param>
-        public ArgumentBindingResult(object[] converted, IReadOnlyList<string> raw)
+        /// <param name="Converted">The converted.</param>
+        /// <param name="Raw">The raw.</param>
+        public ArgumentBindingResult(object[] Converted, IReadOnlyList<string> Raw)
         {
             this.IsSuccessful = true;
             this.Reason = null;
-            this.Converted = converted;
-            this.Raw = raw;
+            this.Converted = Converted;
+            this.Raw = Raw;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArgumentBindingResult"/> class.
         /// </summary>
-        /// <param name="ex">The ex.</param>
-        public ArgumentBindingResult(Exception ex)
+        /// <param name="Ex">The ex.</param>
+        public ArgumentBindingResult(Exception Ex)
         {
             this.IsSuccessful = false;
-            this.Reason = ex;
+            this.Reason = Ex;
             this.Converted = null;
             this.Raw = null;
         }

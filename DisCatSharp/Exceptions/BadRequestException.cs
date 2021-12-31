@@ -59,16 +59,16 @@ namespace DisCatSharp.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="DisCatSharp.Exceptions.BadRequestException"/> class.
         /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="response">The response.</param>
-        internal BadRequestException(BaseRestRequest request, RestResponse response) : base("Bad request: " + response.ResponseCode)
+        /// <param name="Request">The request.</param>
+        /// <param name="Response">The response.</param>
+        internal BadRequestException(BaseRestRequest Request, RestResponse Response) : base("Bad request: " + Response.ResponseCode)
         {
-            this.WebRequest = request;
-            this.WebResponse = response;
+            this.WebRequest = Request;
+            this.WebResponse = Response;
 
             try
             {
-                var j = JObject.Parse(response.Response);
+                var j = JObject.Parse(Response.Response);
 
                 if (j["code"] != null)
                     this.Code = (int)j["code"];

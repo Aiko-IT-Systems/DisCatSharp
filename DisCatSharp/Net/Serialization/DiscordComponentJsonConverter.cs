@@ -41,28 +41,28 @@ namespace DisCatSharp.Net.Serialization
         /// <summary>
         /// Writes the json.
         /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => throw new NotImplementedException();
+        /// <param name="Writer">The writer.</param>
+        /// <param name="Value">The value.</param>
+        /// <param name="Serializer">The serializer.</param>
+        public override void WriteJson(JsonWriter Writer, object Value, JsonSerializer Serializer) => throw new NotImplementedException();
 
         /// <summary>
         /// Reads the json.
         /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="objectType">The object type.</param>
-        /// <param name="existingValue">The existing value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        /// <param name="Reader">The reader.</param>
+        /// <param name="ObjectType">The object type.</param>
+        /// <param name="ExistingValue">The existing value.</param>
+        /// <param name="Serializer">The serializer.</param>
+        public override object ReadJson(JsonReader Reader, Type ObjectType, object ExistingValue, JsonSerializer Serializer)
         {
-            if (reader.TokenType == JsonToken.Null)
+            if (Reader.TokenType == JsonToken.Null)
                 return null;
 
-            var job = JObject.Load(reader);
+            var job = JObject.Load(Reader);
             var type = job["type"]?.ToObject<ComponentType>();
 
             if (type == null)
-                throw new ArgumentException($"Value {reader} does not have a component type specifier");
+                throw new ArgumentException($"Value {Reader} does not have a component type specifier");
 
             var cmp = type switch
             {
@@ -75,7 +75,7 @@ namespace DisCatSharp.Net.Serialization
 
             // Populate the existing component with the values in the JObject. This avoids a recursive JsonConverter loop
             using var jreader = job.CreateReader();
-            serializer.Populate(jreader, cmp);
+            Serializer.Populate(jreader, cmp);
 
             return cmp;
         }
@@ -83,7 +83,7 @@ namespace DisCatSharp.Net.Serialization
         /// <summary>
         /// Whether the json can convert.
         /// </summary>
-        /// <param name="objectType">The object type.</param>
-        public override bool CanConvert(Type objectType) => typeof(DiscordComponent).IsAssignableFrom(objectType);
+        /// <param name="ObjectType">The object type.</param>
+        public override bool CanConvert(Type ObjectType) => typeof(DiscordComponent).IsAssignableFrom(ObjectType);
     }
 }

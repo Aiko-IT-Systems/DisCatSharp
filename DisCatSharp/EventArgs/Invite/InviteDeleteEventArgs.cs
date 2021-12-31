@@ -48,6 +48,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="InviteDeleteEventArgs"/> class.
         /// </summary>
-        internal InviteDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+        internal InviteDeleteEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

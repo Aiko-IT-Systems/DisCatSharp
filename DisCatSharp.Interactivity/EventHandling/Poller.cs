@@ -42,10 +42,10 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Creates a new Eventwaiter object.
         /// </summary>
-        /// <param name="client">Your DiscordClient</param>
-        public Poller(DiscordClient client)
+        /// <param name="Client">Your DiscordClient</param>
+        public Poller(DiscordClient Client)
         {
-            this._client = client;
+            this._client = Client;
             this._requests = new ConcurrentHashSet<PollRequest>();
 
             this._client.MessageReactionAdded += this.HandleReactionAdd;
@@ -56,15 +56,15 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Dos the poll async.
         /// </summary>
-        /// <param name="request">The request.</param>
+        /// <param name="Request">The request.</param>
         /// <returns>A Task.</returns>
-        public async Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(PollRequest request)
+        public async Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(PollRequest Request)
         {
             ReadOnlyCollection<PollEmoji> result = null;
-            this._requests.Add(request);
+            this._requests.Add(Request);
             try
             {
-                await request._tcs.Task.ConfigureAwait(false);
+                await Request._tcs.Task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -72,9 +72,9 @@ namespace DisCatSharp.Interactivity.EventHandling
             }
             finally
             {
-                result = new ReadOnlyCollection<PollEmoji>(new HashSet<PollEmoji>(request._collected).ToList());
-                request.Dispose();
-                this._requests.TryRemove(request);
+                result = new ReadOnlyCollection<PollEmoji>(new HashSet<PollEmoji>(Request._collected).ToList());
+                Request.Dispose();
+                this._requests.TryRemove(Request);
             }
             return result;
         }
@@ -82,10 +82,10 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Handles the reaction add.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="eventargs">The eventargs.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="Eventargs">The eventargs.</param>
         /// <returns>A Task.</returns>
-        private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventargs)
+        private Task HandleReactionAdd(DiscordClient Client, MessageReactionAddEventArgs Eventargs)
         {
             if (this._requests.Count == 0)
                 return Task.CompletedTask;
@@ -95,18 +95,18 @@ namespace DisCatSharp.Interactivity.EventHandling
                 foreach (var req in this._requests)
                 {
                     // match message
-                    if (req._message.Id == eventargs.Message.Id && req._message.ChannelId == eventargs.Channel.Id)
+                    if (req._message.Id == Eventargs.Message.Id && req._message.ChannelId == Eventargs.Channel.Id)
                     {
-                        if (req._emojis.Contains(eventargs.Emoji) && !req._collected.Any(x => x.Voted.Contains(eventargs.User)))
+                        if (req._emojis.Contains(Eventargs.Emoji) && !req._collected.Any(X => X.Voted.Contains(Eventargs.User)))
                         {
-                            if (eventargs.User.Id != this._client.CurrentUser.Id)
-                                req.AddReaction(eventargs.Emoji, eventargs.User);
+                            if (Eventargs.User.Id != this._client.CurrentUser.Id)
+                                req.AddReaction(Eventargs.Emoji, Eventargs.User);
                         }
                         else
                         {
-                            var member = await eventargs.Channel.Guild.GetMemberAsync(client.CurrentUser.Id).ConfigureAwait(false);
-                            if (eventargs.Channel.PermissionsFor(member).HasPermission(Permissions.ManageMessages))
-                                await eventargs.Message.DeleteReactionAsync(eventargs.Emoji, eventargs.User).ConfigureAwait(false);
+                            var member = await Eventargs.Channel.Guild.GetMemberAsync(Client.CurrentUser.Id).ConfigureAwait(false);
+                            if (Eventargs.Channel.PermissionsFor(member).HasPermission(Permissions.ManageMessages))
+                                await Eventargs.Message.DeleteReaction(Eventargs.Emoji, Eventargs.User).ConfigureAwait(false);
                         }
                     }
                 }
@@ -117,18 +117,18 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Handles the reaction remove.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="eventargs">The eventargs.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="Eventargs">The eventargs.</param>
         /// <returns>A Task.</returns>
-        private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventargs)
+        private Task HandleReactionRemove(DiscordClient Client, MessageReactionRemoveEventArgs Eventargs)
         {
             foreach (var req in this._requests)
             {
                 // match message
-                if (req._message.Id == eventargs.Message.Id && req._message.ChannelId == eventargs.Channel.Id)
+                if (req._message.Id == Eventargs.Message.Id && req._message.ChannelId == Eventargs.Channel.Id)
                 {
-                    if (eventargs.User.Id != this._client.CurrentUser.Id)
-                        req.RemoveReaction(eventargs.Emoji, eventargs.User);
+                    if (Eventargs.User.Id != this._client.CurrentUser.Id)
+                        req.RemoveReaction(Eventargs.Emoji, Eventargs.User);
                 }
             }
             return Task.CompletedTask;
@@ -137,15 +137,15 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Handles the reaction clear.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="eventargs">The eventargs.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="Eventargs">The eventargs.</param>
         /// <returns>A Task.</returns>
-        private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventargs)
+        private Task HandleReactionClear(DiscordClient Client, MessageReactionsClearEventArgs Eventargs)
         {
             foreach (var req in this._requests)
             {
                 // match message
-                if (req._message.Id == eventargs.Message.Id && req._message.ChannelId == eventargs.Channel.Id)
+                if (req._message.Id == Eventargs.Message.Id && req._message.ChannelId == Eventargs.Channel.Id)
                 {
                     req.ClearCollected();
                 }

@@ -41,7 +41,7 @@ namespace DisCatSharp.Entities
         /// Gets the teams's icon.
         /// </summary>
         public string Icon
-            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TEAM_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TeamIcons}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets the team's icon hash.
@@ -52,7 +52,7 @@ namespace DisCatSharp.Entities
         /// Gets the teams's logo.
         /// </summary>
         public string Logo
-            => !string.IsNullOrWhiteSpace(this.LogoHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}/{this.LogoHash}.png?size=1024" : null;
+            => !string.IsNullOrWhiteSpace(this.LogoHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Icons}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}/{this.LogoHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets the team's logo hash.
@@ -63,7 +63,7 @@ namespace DisCatSharp.Entities
         /// Gets the teams's banner.
         /// </summary>
         public string Banner
-            => !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.png?size=1024" : null;
+            => !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Banners}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets the team's banner hash.

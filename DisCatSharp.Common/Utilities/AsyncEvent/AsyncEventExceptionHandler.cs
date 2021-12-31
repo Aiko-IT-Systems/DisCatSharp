@@ -29,11 +29,11 @@ namespace DisCatSharp.Common.Utilities
     /// </summary>
     /// <typeparam name="TSender">Type of the object that dispatches this event.</typeparam>
     /// <typeparam name="TArgs">Type of the object which holds arguments for this event.</typeparam>
-    /// <param name="asyncEvent">Asynchronous event which threw the exception.</param>
-    /// <param name="exception">Exception that was thrown</param>
-    /// <param name="handler">Handler which threw the exception.</param>
-    /// <param name="sender">Object which dispatched the event.</param>
-    /// <param name="eventArgs">Arguments with which the event was dispatched.</param>
-    public delegate void AsyncEventExceptionHandler<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception exception, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
+    /// <param name="AsyncEvent">Asynchronous event which threw the exception.</param>
+    /// <param name="Exception">Exception that was thrown</param>
+    /// <param name="Handler">Handler which threw the exception.</param>
+    /// <param name="Sender">Object which dispatched the event.</param>
+    /// <param name="EventArgs">Arguments with which the event was dispatched.</param>
+    public delegate void AsyncEventExceptionHandler<TSender, TArgs>(AsyncEvent<TSender, TArgs> AsyncEvent, Exception Exception, AsyncEventHandler<TSender, TArgs> Handler, TSender Sender, TArgs EventArgs)
         where TArgs : AsyncEventArgs;
 }

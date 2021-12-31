@@ -44,43 +44,43 @@ namespace DisCatSharp.Entities
         /// </summary>
         internal DiscordMember()
         {
-            this._role_ids_lazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._role_ids));
+            this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._roleIds));
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordMember"/> class.
         /// </summary>
-        /// <param name="user">The user.</param>
-        internal DiscordMember(DiscordUser user)
+        /// <param name="User">The user.</param>
+        internal DiscordMember(DiscordUser User)
         {
-            this.Discord = user.Discord;
+            this.Discord = User.Discord;
 
-            this.Id = user.Id;
+            this.Id = User.Id;
 
-            this._role_ids = new List<ulong>();
-            this._role_ids_lazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._role_ids));
+            this._roleIds = new List<ulong>();
+            this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._roleIds));
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordMember"/> class.
         /// </summary>
-        /// <param name="mbr">The mbr.</param>
-        internal DiscordMember(TransportMember mbr)
+        /// <param name="Mbr">The mbr.</param>
+        internal DiscordMember(TransportMember Mbr)
         {
-            this.Id = mbr.User.Id;
-            this.IsDeafened = mbr.IsDeafened;
-            this.IsMuted = mbr.IsMuted;
-            this.JoinedAt = mbr.JoinedAt;
-            this.Nickname = mbr.Nickname;
-            this.PremiumSince = mbr.PremiumSince;
-            this.IsPending = mbr.IsPending;
-            this.GuildAvatarHash = mbr.GuildAvatarHash;
-            this.GuildBannerHash = mbr.GuildBannerHash;
-            this.GuildBio = mbr.GuildBio;
-            this.CommunicationDisabledUntil = mbr.CommunicationDisabledUntil;
-            this._avatarHash = mbr.AvatarHash;
-            this._role_ids = mbr.Roles ?? new List<ulong>();
-            this._role_ids_lazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._role_ids));
+            this.Id = Mbr.User.Id;
+            this.IsDeafened = Mbr.IsDeafened;
+            this.IsMuted = Mbr.IsMuted;
+            this.JoinedAt = Mbr.JoinedAt;
+            this.Nickname = Mbr.Nickname;
+            this.PremiumSince = Mbr.PremiumSince;
+            this.IsPending = Mbr.IsPending;
+            this.GuildAvatarHash = Mbr.GuildAvatarHash;
+            this.GuildBannerHash = Mbr.GuildBannerHash;
+            this.GuildBio = Mbr.GuildBio;
+            this.CommunicationDisabledUntil = Mbr.CommunicationDisabledUntil;
+            this._avatarHash = Mbr.AvatarHash;
+            this._roleIds = Mbr.Roles ?? new List<ulong>();
+            this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._roleIds));
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public string GuildAvatarUrl
-            => string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? this.User.AvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this._guild_id.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.AVATARS}/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+            => string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? this.User.AvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Guilds}/{this._guildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.Users}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.Avatars}/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
         /// <summary>
         /// Gets this member's banner url.
@@ -125,7 +125,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public string GuildBannerUrl
-            => string.IsNullOrWhiteSpace(this.GuildBannerHash) ? this.User.BannerUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this._guild_id.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.BANNERS}/{this.GuildBannerHash}.{(this.GuildBannerHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+            => string.IsNullOrWhiteSpace(this.GuildBannerHash) ? this.User.BannerUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Guilds}/{this._guildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.Users}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.Banners}/{this.GuildBannerHash}.{(this.GuildBannerHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
         /// <summary>
         /// The color of this member's banner. Mutually exclusive with <see cref="BannerHash"/>.
@@ -161,19 +161,19 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         internal IReadOnlyList<ulong> RoleIds
-            => this._role_ids_lazy.Value;
+            => this._roleIdsLazy.Value;
 
         [JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-        internal List<ulong> _role_ids;
+        internal List<ulong> _roleIds;
         [JsonIgnore]
-        private readonly Lazy<IReadOnlyList<ulong>> _role_ids_lazy;
+        private readonly Lazy<IReadOnlyList<ulong>> _roleIdsLazy;
 
         /// <summary>
         /// Gets the list of roles associated with this member.
         /// </summary>
         [JsonIgnore]
         public IEnumerable<DiscordRole> Roles
-            => this.RoleIds.Select(id => this.Guild.GetRole(id)).Where(x => x != null);
+            => this.RoleIds.Select(Id => this.Guild.GetRole(Id)).Where(X => X != null);
 
         /// <summary>
         /// Gets the color associated with this user's top color-giving role, otherwise 0 (no color).
@@ -183,7 +183,7 @@ namespace DisCatSharp.Entities
         {
             get
             {
-                var role = this.Roles.OrderByDescending(xr => xr.Position).FirstOrDefault(xr => xr.Color.Value != 0);
+                var role = this.Roles.OrderByDescending(Xr => Xr.Position).FirstOrDefault(Xr => Xr.Color.Value != 0);
                 return role != null ? role.Color : new DiscordColor();
             }
         }
@@ -229,17 +229,17 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public DiscordVoiceState VoiceState
-            => this.Discord.Guilds[this._guild_id].VoiceStates.TryGetValue(this.Id, out var voiceState) ? voiceState : null;
+            => this.Discord.Guilds[this._guildId].VoiceStates.TryGetValue(this.Id, out var voiceState) ? voiceState : null;
 
         [JsonIgnore]
-        internal ulong _guild_id = 0;
+        internal ulong _guildId = 0;
 
         /// <summary>
         /// Gets the guild of which this member is a part of.
         /// </summary>
         [JsonIgnore]
         public DiscordGuild Guild
-            => this.Discord.Guilds[this._guild_id];
+            => this.Discord.Guilds[this._guildId];
 
         /// <summary>
         /// Gets whether this member is the Guild owner.
@@ -253,7 +253,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public int Hierarchy
-            => this.IsOwner ? int.MaxValue : this.RoleIds.Count == 0 ? 0 : this.Roles.Max(x => x.Position);
+            => this.IsOwner ? int.MaxValue : this.RoleIds.Count == 0 ? 0 : this.Roles.Max(X => X.Position);
 
         /// <summary>
         /// Gets the permissions for the current member.
@@ -371,244 +371,244 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordDmChannel> CreateDmChannelAsync()
+        public Task<DiscordDmChannel> CreateDmChannel()
             => this.Discord.ApiClient.CreateDmAsync(this.Id);
 
         /// <summary>
         /// Sends a direct message to this member. Creates a direct message channel if one does not exist already.
         /// </summary>
-        /// <param name="content">Content of the message to send.</param>
+        /// <param name="Content">Content of the message to send.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordMessage> SendMessageAsync(string content)
+        public async Task<DiscordMessage> SendMessageAsync(string Content)
         {
             if (this.IsBot && this.Discord.CurrentUser.IsBot)
                 throw new ArgumentException("Bots cannot DM each other.");
 
-            var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
-            return await chn.SendMessageAsync(content).ConfigureAwait(false);
+            var chn = await this.CreateDmChannel().ConfigureAwait(false);
+            return await chn.SendMessage(Content).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Sends a direct message to this member. Creates a direct message channel if one does not exist already.
         /// </summary>
-        /// <param name="embed">Embed to attach to the message.</param>
+        /// <param name="Embed">Embed to attach to the message.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
+        public async Task<DiscordMessage> SendMessageAsync(DiscordEmbed Embed)
         {
             if (this.IsBot && this.Discord.CurrentUser.IsBot)
                 throw new ArgumentException("Bots cannot DM each other.");
 
-            var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
-            return await chn.SendMessageAsync(embed).ConfigureAwait(false);
+            var chn = await this.CreateDmChannel().ConfigureAwait(false);
+            return await chn.SendMessage(Embed).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Sends a direct message to this member. Creates a direct message channel if one does not exist already.
         /// </summary>
-        /// <param name="content">Content of the message to send.</param>
-        /// <param name="embed">Embed to attach to the message.</param>
+        /// <param name="Content">Content of the message to send.</param>
+        /// <param name="Embed">Embed to attach to the message.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
+        public async Task<DiscordMessage> SendMessageAsync(string Content, DiscordEmbed Embed)
         {
             if (this.IsBot && this.Discord.CurrentUser.IsBot)
                 throw new ArgumentException("Bots cannot DM each other.");
 
-            var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
-            return await chn.SendMessageAsync(content, embed).ConfigureAwait(false);
+            var chn = await this.CreateDmChannel().ConfigureAwait(false);
+            return await chn.SendMessage(Content, Embed).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Sends a direct message to this member. Creates a direct message channel if one does not exist already.
         /// </summary>
-        /// <param name="message">Builder to with the message.</param>
+        /// <param name="Message">Builder to with the message.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder message)
+        public async Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder Message)
         {
             if (this.IsBot && this.Discord.CurrentUser.IsBot)
                 throw new ArgumentException("Bots cannot DM each other.");
 
-            var chn = await this.CreateDmChannelAsync().ConfigureAwait(false);
-            return await chn.SendMessageAsync(message).ConfigureAwait(false);
+            var chn = await this.CreateDmChannel().ConfigureAwait(false);
+            return await chn.SendMessage(Message).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Sets this member's voice mute status.
         /// </summary>
-        /// <param name="mute">Whether the member is to be muted.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Mute">Whether the member is to be muted.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task SetMuteAsync(bool mute, string reason = null)
-            => this.Discord.ApiClient.ModifyGuildMemberAsync(this._guild_id, this.Id, default, default, mute, default, default, reason);
+        public Task SetMute(bool Mute, string Reason = null)
+            => this.Discord.ApiClient.ModifyGuildMember(this._guildId, this.Id, default, default, Mute, default, default, Reason);
 
         /// <summary>
         /// Sets this member's voice deaf status.
         /// </summary>
-        /// <param name="deaf">Whether the member is to be deafened.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Deaf">Whether the member is to be deafened.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.DeafenMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task SetDeafAsync(bool deaf, string reason = null)
-            => this.Discord.ApiClient.ModifyGuildMemberAsync(this._guild_id, this.Id, default, default, default, deaf, default, reason);
+        public Task SetDeaf(bool Deaf, string Reason = null)
+            => this.Discord.ApiClient.ModifyGuildMember(this._guildId, this.Id, default, default, default, Deaf, default, Reason);
 
         /// <summary>
         /// Modifies this member.
         /// </summary>
-        /// <param name="action">Action to perform on this member.</param>
+        /// <param name="Action">Action to perform on this member.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageNicknames"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task ModifyAsync(Action<MemberEditModel> action)
+        public async Task ModifyAsync(Action<MemberEditModel> Action)
         {
             var mdl = new MemberEditModel();
-            action(mdl);
+            Action(mdl);
 
             if (mdl.VoiceChannel.HasValue && mdl.VoiceChannel.Value != null && mdl.VoiceChannel.Value.Type != ChannelType.Voice && mdl.VoiceChannel.Value.Type != ChannelType.Stage)
                 throw new ArgumentException("Given channel is not a voice or stage channel.", nameof(mdl.VoiceChannel));
 
             if (mdl.Nickname.HasValue && this.Discord.CurrentUser.Id == this.Id)
             {
-                await this.Discord.ApiClient.ModifyCurrentMemberNicknameAsync(this.Guild.Id, mdl.Nickname.Value,
+                await this.Discord.ApiClient.ModifyCurrentMemberNickname(this.Guild.Id, mdl.Nickname.Value,
                     mdl.AuditLogReason).ConfigureAwait(false);
 
-                await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, Optional.FromNoValue<string>(),
-                    mdl.Roles.IfPresent(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
-                    mdl.VoiceChannel.IfPresent(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
+                await this.Discord.ApiClient.ModifyGuildMember(this.Guild.Id, this.Id, Optional.FromNoValue<string>(),
+                    mdl.Roles.IfPresent(E => E.Select(Xr => Xr.Id)), mdl.Muted, mdl.Deafened,
+                    mdl.VoiceChannel.IfPresent(E => E?.Id), mdl.AuditLogReason).ConfigureAwait(false);
             }
             else
             {
-                await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, mdl.Nickname,
-                    mdl.Roles.IfPresent(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
-                    mdl.VoiceChannel.IfPresent(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
+                await this.Discord.ApiClient.ModifyGuildMember(this.Guild.Id, this.Id, mdl.Nickname,
+                    mdl.Roles.IfPresent(E => E.Select(Xr => Xr.Id)), mdl.Muted, mdl.Deafened,
+                    mdl.VoiceChannel.IfPresent(E => E?.Id), mdl.AuditLogReason).ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Adds a timeout to a member.
         /// </summary>
-        /// <param name="until">The datetime offset to time out the user. Up to 28 days.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Until">The datetime offset to time out the user. Up to 28 days.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task TimeoutAsync(DateTimeOffset until, string reason = null)
-            => until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, until, reason);
+        public Task Timeout(DateTimeOffset Until, string Reason = null)
+            => Until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeout(this.Guild.Id, this.Id, Until, Reason);
 
         /// <summary>
         /// Adds a timeout to a member.
         /// </summary>
-        /// <param name="until">The timespan to time out the user. Up to 28 days.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Until">The timespan to time out the user. Up to 28 days.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task TimeoutAsync(TimeSpan until, string reason = null)
-            => this.TimeoutAsync(DateTimeOffset.UtcNow + until, reason);
+        public Task Timeout(TimeSpan Until, string Reason = null)
+            => this.Timeout(DateTimeOffset.UtcNow + Until, Reason);
 
         /// <summary>
         /// Adds a timeout to a member.
         /// </summary>
-        /// <param name="until">The datetime to time out the user. Up to 28 days.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Until">The datetime to time out the user. Up to 28 days.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task TimeoutAsync(DateTime until, string reason = null)
-            => this.TimeoutAsync(until.ToUniversalTime() - DateTime.UtcNow, reason);
+        public Task Timeout(DateTime Until, string Reason = null)
+            => this.Timeout(Until.ToUniversalTime() - DateTime.UtcNow, Reason);
 
         /// <summary>
         /// Removes the timeout from a member.
         /// </summary>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task RemoveTimeoutAsync(string reason = null) => this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, null, reason);
+        public Task RemoveTimeout(string Reason = null) => this.Discord.ApiClient.ModifyTimeout(this.Guild.Id, this.Id, null, Reason);
 
         /// <summary>
         /// Grants a role to the member.
         /// </summary>
-        /// <param name="role">Role to grant.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Role">Role to grant.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task GrantRoleAsync(DiscordRole role, string reason = null)
-            => this.Discord.ApiClient.AddGuildMemberRoleAsync(this.Guild.Id, this.Id, role.Id, reason);
+        public Task GrantRole(DiscordRole Role, string Reason = null)
+            => this.Discord.ApiClient.AddGuildMemberRole(this.Guild.Id, this.Id, Role.Id, Reason);
 
         /// <summary>
         /// Revokes a role from a member.
         /// </summary>
-        /// <param name="role">Role to revoke.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Role">Role to revoke.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task RevokeRoleAsync(DiscordRole role, string reason = null)
-            => this.Discord.ApiClient.RemoveGuildMemberRoleAsync(this.Guild.Id, this.Id, role.Id, reason);
+        public Task RevokeRole(DiscordRole Role, string Reason = null)
+            => this.Discord.ApiClient.RemoveGuildMemberRole(this.Guild.Id, this.Id, Role.Id, Reason);
 
         /// <summary>
         /// Sets the member's roles to ones specified.
         /// </summary>
-        /// <param name="roles">Roles to set.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Roles">Roles to set.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task ReplaceRolesAsync(IEnumerable<DiscordRole> roles, string reason = null)
-            => this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, default,
-                new Optional<IEnumerable<ulong>>(roles.Select(xr => xr.Id)), default, default, default, reason);
+        public Task ReplaceRoles(IEnumerable<DiscordRole> Roles, string Reason = null)
+            => this.Discord.ApiClient.ModifyGuildMember(this.Guild.Id, this.Id, default,
+                new Optional<IEnumerable<ulong>>(Roles.Select(Xr => Xr.Id)), default, default, default, Reason);
 
         /// <summary>
         /// Bans this member from their guild.
         /// </summary>
         /// <param name="delete_message_days">How many days to remove messages from.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task BanAsync(int delete_message_days = 0, string reason = null)
-            => this.Guild.BanMemberAsync(this, delete_message_days, reason);
+        public Task Ban(int DeleteMessageDays = 0, string Reason = null)
+            => this.Guild.BanMember(this, DeleteMessageDays, Reason);
 
         /// <summary>
         /// Unbans this member from their guild.
@@ -617,45 +617,45 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task UnbanAsync(string reason = null) => this.Guild.UnbanMemberAsync(this, reason);
+        public Task Unban(string Reason = null) => this.Guild.UnbanMember(this, Reason);
 
         /// <summary>
         /// Kicks this member from their guild.
         /// </summary>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <remarks>[alias="KickAsync"]</remarks>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task RemoveAsync(string reason = null)
-            => this.Discord.ApiClient.RemoveGuildMemberAsync(this._guild_id, this.Id, reason);
+        public Task Remove(string Reason = null)
+            => this.Discord.ApiClient.RemoveGuildMember(this._guildId, this.Id, Reason);
 
         /// <summary>
         /// Moves this member to the specified voice channel
         /// </summary>
-        /// <param name="channel"></param>
+        /// <param name="Channel"></param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MoveMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task PlaceInAsync(DiscordChannel channel)
-            => channel.PlaceMemberAsync(this);
+        public Task PlaceIn(DiscordChannel Channel)
+            => Channel.PlaceMemberAsync(this);
 
         /// <summary>
         /// Updates the member's suppress state in a stage channel.
         /// </summary>
-        /// <param name="channel">The channel the member is currently in.</param>
-        /// <param name="suppress">Toggles the member's suppress state.</param>
+        /// <param name="Channel">The channel the member is currently in.</param>
+        /// <param name="Suppress">Toggles the member's suppress state.</param>
         /// <exception cref="System.ArgumentException">Thrown when the channel in not a voice channel.</exception>
-        public async Task UpdateVoiceStateAsync(DiscordChannel channel, bool? suppress)
+        public async Task UpdateVoiceStateAsync(DiscordChannel Channel, bool? Suppress)
         {
-            if (channel.Type != ChannelType.Stage)
+            if (Channel.Type != ChannelType.Stage)
                 throw new ArgumentException("Voice state can only be updated in a stage channel.");
 
-            await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, channel.Id, suppress).ConfigureAwait(false);
+            await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, Channel.Id, Suppress).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -695,10 +695,10 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Calculates permissions in a given channel for this member.
         /// </summary>
-        /// <param name="channel">Channel to calculate permissions for.</param>
+        /// <param name="Channel">Channel to calculate permissions for.</param>
         /// <returns>Calculated permissions for this member in the channel.</returns>
-        public Permissions PermissionsIn(DiscordChannel channel)
-            => channel.PermissionsFor(this);
+        public Permissions PermissionsIn(DiscordChannel Channel)
+            => Channel.PermissionsFor(this);
 
         /// <summary>
         /// Get's the current member's roles based on the sum of the permissions of their given roles.
@@ -706,7 +706,7 @@ namespace DisCatSharp.Entities
         private Permissions GetPermissions()
         {
             if (this.Guild.OwnerId == this.Id)
-                return PermissionMethods.FULL_PERMS;
+                return PermissionMethods.FullPerms;
 
             Permissions perms;
 
@@ -715,10 +715,10 @@ namespace DisCatSharp.Entities
             perms = everyoneRole.Permissions;
 
             // assign permissions from member's roles (in order)
-            perms |= this.Roles.Aggregate(Permissions.None, (c, role) => c | role.Permissions);
+            perms |= this.Roles.Aggregate(Permissions.None, (C, Role) => C | Role.Permissions);
 
             // Adminstrator grants all permissions and cannot be overridden
-            return (perms & Permissions.Administrator) == Permissions.Administrator ? PermissionMethods.FULL_PERMS : perms;
+            return (perms & Permissions.Administrator) == Permissions.Administrator ? PermissionMethods.FullPerms : perms;
         }
 
         /// <summary>
@@ -730,16 +730,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Checks whether this <see cref="DiscordMember"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="DiscordMember"/>.</returns>
-        public override bool Equals(object obj) => this.Equals(obj as DiscordMember);
+        public override bool Equals(object Obj) => this.Equals(Obj as DiscordMember);
 
         /// <summary>
         /// Checks whether this <see cref="DiscordMember"/> is equal to another <see cref="DiscordMember"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordMember"/> to compare to.</param>
+        /// <param name="E"><see cref="DiscordMember"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordMember"/> is equal to this <see cref="DiscordMember"/>.</returns>
-        public bool Equals(DiscordMember e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this._guild_id == e._guild_id));
+        public bool Equals(DiscordMember E) => E is not null && (ReferenceEquals(this, E) || (this.Id == E.Id && this._guildId == E._guildId));
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordMember"/>.
@@ -750,7 +750,7 @@ namespace DisCatSharp.Entities
             var hash = 13;
 
             hash = (hash * 7) + this.Id.GetHashCode();
-            hash = (hash * 7) + this._guild_id.GetHashCode();
+            hash = (hash * 7) + this._guildId.GetHashCode();
 
             return hash;
         }
@@ -758,24 +758,24 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordMember"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First member to compare.</param>
-        /// <param name="e2">Second member to compare.</param>
+        /// <param name="E1">First member to compare.</param>
+        /// <param name="E2">Second member to compare.</param>
         /// <returns>Whether the two members are equal.</returns>
-        public static bool operator ==(DiscordMember e1, DiscordMember e2)
+        public static bool operator ==(DiscordMember E1, DiscordMember E2)
         {
-            var o1 = e1 as object;
-            var o2 = e2 as object;
+            var o1 = E1 as object;
+            var o2 = E2 as object;
 
-            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1._guild_id == e2._guild_id));
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (E1.Id == E2.Id && E1._guildId == E2._guildId));
         }
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordMember"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First member to compare.</param>
-        /// <param name="e2">Second member to compare.</param>
+        /// <param name="E1">First member to compare.</param>
+        /// <param name="E2">Second member to compare.</param>
         /// <returns>Whether the two members are not equal.</returns>
-        public static bool operator !=(DiscordMember e1, DiscordMember e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordMember E1, DiscordMember E2)
+            => !(E1 == E2);
     }
 }

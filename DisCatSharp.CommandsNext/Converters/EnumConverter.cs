@@ -35,15 +35,15 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        Task<Optional<T>> IArgumentConverter<T>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        Task<Optional<T>> IArgumentConverter<T>.Convert(string Value, CommandContext Ctx)
         {
             var t = typeof(T);
             var ti = t.GetTypeInfo();
             return !ti.IsEnum
                 ? throw new InvalidOperationException("Cannot convert non-enum value to an enum.")
-                : Enum.TryParse(value, !ctx.Config.CaseSensitive, out T ev)
+                : Enum.TryParse(Value, !Ctx.Config.CaseSensitive, out T ev)
                 ? Task.FromResult(Optional.FromValue(ev))
                 : Task.FromResult(Optional.FromNoValue<T>());
         }

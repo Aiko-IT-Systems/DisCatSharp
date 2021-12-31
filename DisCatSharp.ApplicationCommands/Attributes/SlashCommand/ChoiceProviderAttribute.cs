@@ -40,10 +40,10 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Adds a choice provider to this command.
         /// </summary>
-        /// <param name="providerType">The type of the provider.</param>
-        public ChoiceProviderAttribute(Type providerType)
+        /// <param name="ProviderType">The type of the provider.</param>
+        public ChoiceProviderAttribute(Type ProviderType)
         {
-            this.ProviderType = providerType;
+            this.ProviderType = ProviderType;
         }
     }
 }

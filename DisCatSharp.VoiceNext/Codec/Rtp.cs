@@ -57,96 +57,96 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// Encodes the header.
         /// </summary>
-        /// <param name="sequence">The sequence.</param>
-        /// <param name="timestamp">The timestamp.</param>
-        /// <param name="ssrc">The ssrc.</param>
-        /// <param name="target">The target.</param>
-        public void EncodeHeader(ushort sequence, uint timestamp, uint ssrc, Span<byte> target)
+        /// <param name="Sequence">The sequence.</param>
+        /// <param name="Timestamp">The timestamp.</param>
+        /// <param name="Ssrc">The ssrc.</param>
+        /// <param name="Target">The target.</param>
+        public void EncodeHeader(ushort Sequence, uint Timestamp, uint Ssrc, Span<byte> Target)
         {
-            if (target.Length < HeaderSize)
-                throw new ArgumentException("Header buffer is too short.", nameof(target));
+            if (Target.Length < HeaderSize)
+                throw new ArgumentException("Header buffer is too short.", nameof(Target));
 
-            target[0] = RtpNoExtension;
-            target[1] = RtpVersion;
+            Target[0] = RtpNoExtension;
+            Target[1] = RtpVersion;
 
             // Write data big endian
-            BinaryPrimitives.WriteUInt16BigEndian(target[2..], sequence);  // header + magic
-            BinaryPrimitives.WriteUInt32BigEndian(target[4..], timestamp); // header + magic + sizeof(sequence)
-            BinaryPrimitives.WriteUInt32BigEndian(target[8..], ssrc);      // header + magic + sizeof(sequence) + sizeof(timestamp)
+            BinaryPrimitives.WriteUInt16BigEndian(Target[2..], Sequence);  // header + magic
+            BinaryPrimitives.WriteUInt32BigEndian(Target[4..], Timestamp); // header + magic + sizeof(sequence)
+            BinaryPrimitives.WriteUInt32BigEndian(Target[8..], Ssrc);      // header + magic + sizeof(sequence) + sizeof(timestamp)
         }
 
         /// <summary>
         /// Are the rtp header.
         /// </summary>
-        /// <param name="source">The source.</param>
+        /// <param name="Source">The source.</param>
         /// <returns>A bool.</returns>
-        public bool IsRtpHeader(ReadOnlySpan<byte> source) => source.Length >= HeaderSize && (source[0] == RtpNoExtension || source[0] == RtpExtension) && source[1] == RtpVersion;
+        public bool IsRtpHeader(ReadOnlySpan<byte> Source) => Source.Length >= HeaderSize && (Source[0] == RtpNoExtension || Source[0] == RtpExtension) && Source[1] == RtpVersion;
 
         /// <summary>
         /// Decodes the header.
         /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="sequence">The sequence.</param>
-        /// <param name="timestamp">The timestamp.</param>
-        /// <param name="ssrc">The ssrc.</param>
-        /// <param name="hasExtension">If true, has extension.</param>
-        public void DecodeHeader(ReadOnlySpan<byte> source, out ushort sequence, out uint timestamp, out uint ssrc, out bool hasExtension)
+        /// <param name="Source">The source.</param>
+        /// <param name="Sequence">The sequence.</param>
+        /// <param name="Timestamp">The timestamp.</param>
+        /// <param name="Ssrc">The ssrc.</param>
+        /// <param name="HasExtension">If true, has extension.</param>
+        public void DecodeHeader(ReadOnlySpan<byte> Source, out ushort Sequence, out uint Timestamp, out uint Ssrc, out bool HasExtension)
         {
-            if (source.Length < HeaderSize)
-                throw new ArgumentException("Header buffer is too short.", nameof(source));
+            if (Source.Length < HeaderSize)
+                throw new ArgumentException("Header buffer is too short.", nameof(Source));
 
-            if ((source[0] != RtpNoExtension && source[0] != RtpExtension) || source[1] != RtpVersion)
-                throw new ArgumentException("Invalid RTP header.", nameof(source));
+            if ((Source[0] != RtpNoExtension && Source[0] != RtpExtension) || Source[1] != RtpVersion)
+                throw new ArgumentException("Invalid RTP header.", nameof(Source));
 
-            hasExtension = source[0] == RtpExtension;
+            HasExtension = Source[0] == RtpExtension;
 
             // Read data big endian
-            sequence = BinaryPrimitives.ReadUInt16BigEndian(source[2..]);
-            timestamp = BinaryPrimitives.ReadUInt32BigEndian(source[4..]);
-            ssrc = BinaryPrimitives.ReadUInt32BigEndian(source[8..]);
+            Sequence = BinaryPrimitives.ReadUInt16BigEndian(Source[2..]);
+            Timestamp = BinaryPrimitives.ReadUInt32BigEndian(Source[4..]);
+            Ssrc = BinaryPrimitives.ReadUInt32BigEndian(Source[8..]);
         }
 
         /// <summary>
         /// Calculates the packet size.
         /// </summary>
-        /// <param name="encryptedLength">The encrypted length.</param>
-        /// <param name="encryptionMode">The encryption mode.</param>
+        /// <param name="EncryptedLength">The encrypted length.</param>
+        /// <param name="EncryptionMode">The encryption mode.</param>
         /// <returns>An int.</returns>
-        public int CalculatePacketSize(int encryptedLength, EncryptionMode encryptionMode)
+        public int CalculatePacketSize(int EncryptedLength, EncryptionMode EncryptionMode)
         {
-            return encryptionMode switch
+            return EncryptionMode switch
             {
-                EncryptionMode.XSalsa20_Poly1305 => HeaderSize + encryptedLength,
-                EncryptionMode.XSalsa20_Poly1305_Suffix => HeaderSize + encryptedLength + Interop.SodiumNonceSize,
-                EncryptionMode.XSalsa20_Poly1305_Lite => HeaderSize + encryptedLength + 4,
-                _ => throw new ArgumentException("Unsupported encryption mode.", nameof(encryptionMode)),
+                EncryptionMode.XSalsa20Poly1305 => HeaderSize + EncryptedLength,
+                EncryptionMode.XSalsa20Poly1305Suffix => HeaderSize + EncryptedLength + Interop.SodiumNonceSize,
+                EncryptionMode.XSalsa20Poly1305Lite => HeaderSize + EncryptedLength + 4,
+                _ => throw new ArgumentException("Unsupported encryption mode.", nameof(EncryptionMode)),
             };
         }
 
         /// <summary>
         /// Gets the data from packet.
         /// </summary>
-        /// <param name="packet">The packet.</param>
-        /// <param name="data">The data.</param>
-        /// <param name="encryptionMode">The encryption mode.</param>
-        public void GetDataFromPacket(ReadOnlySpan<byte> packet, out ReadOnlySpan<byte> data, EncryptionMode encryptionMode)
+        /// <param name="Packet">The packet.</param>
+        /// <param name="Data">The data.</param>
+        /// <param name="EncryptionMode">The encryption mode.</param>
+        public void GetDataFromPacket(ReadOnlySpan<byte> Packet, out ReadOnlySpan<byte> Data, EncryptionMode EncryptionMode)
         {
-            switch (encryptionMode)
+            switch (EncryptionMode)
             {
-                case EncryptionMode.XSalsa20_Poly1305:
-                    data = packet[HeaderSize..];
+                case EncryptionMode.XSalsa20Poly1305:
+                    Data = Packet[HeaderSize..];
                     return;
 
-                case EncryptionMode.XSalsa20_Poly1305_Suffix:
-                    data = packet.Slice(HeaderSize, packet.Length - HeaderSize - Interop.SodiumNonceSize);
+                case EncryptionMode.XSalsa20Poly1305Suffix:
+                    Data = Packet.Slice(HeaderSize, Packet.Length - HeaderSize - Interop.SodiumNonceSize);
                     return;
 
-                case EncryptionMode.XSalsa20_Poly1305_Lite:
-                    data = packet.Slice(HeaderSize, packet.Length - HeaderSize - 4);
+                case EncryptionMode.XSalsa20Poly1305Lite:
+                    Data = Packet.Slice(HeaderSize, Packet.Length - HeaderSize - 4);
                     break;
 
                 default:
-                    throw new ArgumentException("Unsupported encryption mode.", nameof(encryptionMode));
+                    throw new ArgumentException("Unsupported encryption mode.", nameof(EncryptionMode));
             }
         }
 

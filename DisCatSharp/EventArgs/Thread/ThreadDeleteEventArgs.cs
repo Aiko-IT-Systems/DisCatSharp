@@ -53,6 +53,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="ThreadDeleteEventArgs"/> class.
         /// </summary>
-        internal ThreadDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+        internal ThreadDeleteEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

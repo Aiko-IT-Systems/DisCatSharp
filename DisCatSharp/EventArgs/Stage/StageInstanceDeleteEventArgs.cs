@@ -43,6 +43,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="StageInstanceDeleteEventArgs"/> class.
         /// </summary>
-        internal StageInstanceDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+        internal StageInstanceDeleteEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

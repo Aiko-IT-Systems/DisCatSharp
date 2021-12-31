@@ -32,8 +32,8 @@ namespace DisCatSharp.CommandsNext
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandExecutionEventArgs"/> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        public CommandExecutionEventArgs(IServiceProvider provider) : base(provider)
+        /// <param name="Provider">The provider.</param>
+        public CommandExecutionEventArgs(IServiceProvider Provider) : base(Provider)
         { }
     }
 }

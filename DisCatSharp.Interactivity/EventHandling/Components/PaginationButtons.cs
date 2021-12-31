@@ -82,14 +82,14 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Initializes a new instance of the <see cref="PaginationButtons"/> class.
         /// </summary>
-        /// <param name="other">The other <see cref="PaginationButtons"/>.</param>
-        public PaginationButtons(PaginationButtons other)
+        /// <param name="Other">The other <see cref="PaginationButtons"/>.</param>
+        public PaginationButtons(PaginationButtons Other)
         {
-            this.Stop = new(other.Stop);
-            this.Left = new(other.Left);
-            this.Right = new(other.Right);
-            this.SkipLeft = new(other.SkipLeft);
-            this.SkipRight = new(other.SkipRight);
+            this.Stop = new(Other.Stop);
+            this.Left = new(Other.Left);
+            this.Right = new(Other.Right);
+            this.SkipLeft = new(Other.SkipLeft);
+            this.SkipRight = new(Other.SkipRight);
         }
     }
 }

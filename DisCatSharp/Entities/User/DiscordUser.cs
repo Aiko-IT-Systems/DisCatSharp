@@ -44,24 +44,24 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordUser"/> class.
         /// </summary>
-        /// <param name="transport">The transport.</param>
-        internal DiscordUser(TransportUser transport)
+        /// <param name="Transport">The transport.</param>
+        internal DiscordUser(TransportUser Transport)
         {
-            this.Id = transport.Id;
-            this.Username = transport.Username;
-            this.Discriminator = transport.Discriminator;
-            this.AvatarHash = transport.AvatarHash;
-            this.BannerHash = transport.BannerHash;
-            this._bannerColor = transport.BannerColor;
-            this.IsBot = transport.IsBot;
-            this.MfaEnabled = transport.MfaEnabled;
-            this.Verified = transport.Verified;
-            this.Email = transport.Email;
-            this.PremiumType = transport.PremiumType;
-            this.Locale = transport.Locale;
-            this.Flags = transport.Flags;
-            this.OAuthFlags = transport.OAuthFlags;
-            this.Bio = transport.Bio;
+            this.Id = Transport.Id;
+            this.Username = Transport.Username;
+            this.Discriminator = Transport.Discriminator;
+            this.AvatarHash = Transport.AvatarHash;
+            this.BannerHash = Transport.BannerHash;
+            this._bannerColor = Transport.BannerColor;
+            this.IsBot = Transport.IsBot;
+            this.MfaEnabled = Transport.MfaEnabled;
+            this.Verified = Transport.Verified;
+            this.Email = Transport.Email;
+            this.PremiumType = Transport.PremiumType;
+            this.Locale = Transport.Locale;
+            this.Flags = Transport.Flags;
+            this.OAuthFlags = Transport.OAuthFlags;
+            this.Bio = Transport.Bio;
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public string BannerUrl
-            => string.IsNullOrWhiteSpace(this.BannerHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
+            => string.IsNullOrWhiteSpace(this.BannerHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Banners}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
 
         /// <summary>
         /// Gets the user's profile banner hash. Mutually exclusive with <see cref="BannerColor"/>.
@@ -127,12 +127,12 @@ namespace DisCatSharp.Entities
         public virtual string AvatarHash { get; internal set; }
 
         /// <summary>
-        /// Returns a uri to this users profile. 
+        /// Returns a uri to this users profile.
         /// </summary>
-        public Uri ProfileUri => new($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.USERS}/{this.Id}");
+        public Uri ProfileUri => new($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.Users}/{this.Id}");
 
         /// <summary>
-        /// Returns a string representing the direct URL to this users profile. 
+        /// Returns a string representing the direct URL to this users profile.
         /// </summary>
         /// <returns>The URL of this users profile.</returns>
         public string ProfileUrl => this.ProfileUri.AbsoluteUri;
@@ -142,14 +142,14 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public string AvatarUrl
-            => string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+            => string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Avatars}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
         /// <summary>
         /// Gets the URL of default avatar for this user.
         /// </summary>
         [JsonIgnore]
         public string DefaultAvatarUrl
-            => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{(this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture)}.png?size=1024";
+            => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Embed}{Endpoints.Avatars}/{(this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture)}.png?size=1024";
 
         /// <summary>
         /// Gets whether the user is a bot.
@@ -276,14 +276,14 @@ namespace DisCatSharp.Entities
         /// </code>
         /// results to <c>J_M_Lutra is a member of Project Nyaw~</c>.
         /// </example>
-        /// <param name="guild"><see cref="DiscordGuild"/></param>
+        /// <param name="Guild"><see cref="DiscordGuild"/></param>
         /// <returns><see cref="bool"/></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-        public async Task<bool> IsInGuild(DiscordGuild guild)
+        public async Task<bool> IsInGuildAsync(DiscordGuild Guild)
         {
             try
             {
-                var member = await guild.GetMemberAsync(this.Id);
+                var member = await Guild.GetMemberAsync(this.Id);
                 return member is not null;
 
             }
@@ -296,23 +296,23 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Whether this user is not in a <see cref="DiscordGuild"/>
         /// </summary>
-        /// <param name="guild"><see cref="DiscordGuild"/></param>
+        /// <param name="Guild"><see cref="DiscordGuild"/></param>
         /// <returns><see cref="bool"/></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-        public async Task<bool> IsNotInGuild(DiscordGuild guild) => !await this.IsInGuild(guild);
+        public async Task<bool> IsNotInGuildAsync(DiscordGuild Guild) => !await this.IsInGuildAsync(Guild);
 
         /// <summary>
         /// Unbans this user from a guild.
         /// </summary>
-        /// <param name="guild">Guild to unban this user from.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Guild">Guild to unban this user from.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the user does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task UnbanAsync(DiscordGuild guild, string reason = null)
-            => guild.UnbanMemberAsync(this, reason);
+        public Task Unban(DiscordGuild Guild, string Reason = null)
+            => Guild.UnbanMember(this, Reason);
 
         /// <summary>
         /// Gets this user's presence.
@@ -324,41 +324,41 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the user's avatar URL, in requested format and size.
         /// </summary>
-        /// <param name="fmt">Format of the avatar to get.</param>
-        /// <param name="size">Maximum size of the avatar. Must be a power of two, minimum 16, maximum 2048.</param>
+        /// <param name="Fmt">Format of the avatar to get.</param>
+        /// <param name="Size">Maximum size of the avatar. Must be a power of two, minimum 16, maximum 2048.</param>
         /// <returns>URL of the user's avatar.</returns>
-        public string GetAvatarUrl(ImageFormat fmt, ushort size = 1024)
+        public string GetAvatarUrl(ImageFormat Fmt, ushort Size = 1024)
         {
-            if (fmt == ImageFormat.Unknown)
-                throw new ArgumentException("You must specify valid image format.", nameof(fmt));
+            if (Fmt == ImageFormat.Unknown)
+                throw new ArgumentException("You must specify valid image format.", nameof(Fmt));
 
-            if (size < 16 || size > 2048)
-                throw new ArgumentOutOfRangeException(nameof(size));
+            if (Size < 16 || Size > 2048)
+                throw new ArgumentOutOfRangeException(nameof(Size));
 
-            var log = Math.Log(size, 2);
+            var log = Math.Log(Size, 2);
             if (log < 4 || log > 11 || log % 1 != 0)
-                throw new ArgumentOutOfRangeException(nameof(size));
+                throw new ArgumentOutOfRangeException(nameof(Size));
 
             var sfmt = "";
-            sfmt = fmt switch
+            sfmt = Fmt switch
             {
                 ImageFormat.Gif => "gif",
                 ImageFormat.Jpeg => "jpg",
                 ImageFormat.Png => "png",
                 ImageFormat.WebP => "webp",
                 ImageFormat.Auto => !string.IsNullOrWhiteSpace(this.AvatarHash) ? (this.AvatarHash.StartsWith("a_") ? "gif" : "png") : "png",
-                _ => throw new ArgumentOutOfRangeException(nameof(fmt)),
+                _ => throw new ArgumentOutOfRangeException(nameof(Fmt)),
             };
-            var ssize = size.ToString(CultureInfo.InvariantCulture);
+            var ssize = Size.ToString(CultureInfo.InvariantCulture);
             if (!string.IsNullOrWhiteSpace(this.AvatarHash))
             {
                 var id = this.Id.ToString(CultureInfo.InvariantCulture);
-                return $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{id}/{this.AvatarHash}.{sfmt}?size={ssize}";
+                return $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Avatars}/{id}/{this.AvatarHash}.{sfmt}?size={ssize}";
             }
             else
             {
                 var type = (this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture);
-                return $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{type}.{sfmt}?size={ssize}";
+                return $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Embed}{Endpoints.Avatars}/{type}.{sfmt}?size={ssize}";
             }
         }
 
@@ -371,16 +371,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Checks whether this <see cref="DiscordUser"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="DiscordUser"/>.</returns>
-        public override bool Equals(object obj) => this.Equals(obj as DiscordUser);
+        public override bool Equals(object Obj) => this.Equals(Obj as DiscordUser);
 
         /// <summary>
         /// Checks whether this <see cref="DiscordUser"/> is equal to another <see cref="DiscordUser"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordUser"/> to compare to.</param>
+        /// <param name="E"><see cref="DiscordUser"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordUser"/> is equal to this <see cref="DiscordUser"/>.</returns>
-        public bool Equals(DiscordUser e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+        public bool Equals(DiscordUser E) => E is not null && (ReferenceEquals(this, E) || this.Id == E.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordUser"/>.
@@ -391,25 +391,25 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordUser"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First user to compare.</param>
-        /// <param name="e2">Second user to compare.</param>
+        /// <param name="E1">First user to compare.</param>
+        /// <param name="E2">Second user to compare.</param>
         /// <returns>Whether the two users are equal.</returns>
-        public static bool operator ==(DiscordUser e1, DiscordUser e2)
+        public static bool operator ==(DiscordUser E1, DiscordUser E2)
         {
-            var o1 = e1 as object;
-            var o2 = e2 as object;
+            var o1 = E1 as object;
+            var o2 = E2 as object;
 
-            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || E1.Id == E2.Id);
         }
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordUser"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First user to compare.</param>
-        /// <param name="e2">Second user to compare.</param>
+        /// <param name="E1">First user to compare.</param>
+        /// <param name="E2">Second user to compare.</param>
         /// <returns>Whether the two users are not equal.</returns>
-        public static bool operator !=(DiscordUser e1, DiscordUser e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordUser E1, DiscordUser E2)
+            => !(E1 == E2);
     }
 
     /// <summary>
@@ -420,14 +420,14 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Whether the users are equal.
         /// </summary>
-        /// <param name="x">The first user</param>
-        /// <param name="y">The second user.</param>
-        public bool Equals(DiscordUser x, DiscordUser y) => x.Equals(y);
+        /// <param name="X">The first user</param>
+        /// <param name="Y">The second user.</param>
+        public bool Equals(DiscordUser X, DiscordUser Y) => X.Equals(Y);
 
         /// <summary>
         /// Gets the hash code.
         /// </summary>
-        /// <param name="obj">The user.</param>
-        public int GetHashCode(DiscordUser obj) => obj.Id.GetHashCode();
+        /// <param name="Obj">The user.</param>
+        public int GetHashCode(DiscordUser Obj) => Obj.Id.GetHashCode();
     }
 }

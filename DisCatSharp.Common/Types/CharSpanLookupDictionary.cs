@@ -90,40 +90,40 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Gets or sets a value corresponding to given key in this dictionary.
         /// </summary>
-        /// <param name="key">Key to get or set the value for.</param>
+        /// <param name="Key">Key to get or set the value for.</param>
         /// <returns>Value matching the supplied key, if applicable.</returns>
-        public TValue this[string key]
+        public TValue this[string Key]
         {
             get
             {
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
+                if (Key == null)
+                    throw new ArgumentNullException(nameof(Key));
 
-                if (!this.TryRetrieveInternal(key.AsSpan(), out var value))
-                    throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.");
+                if (!this.TryRetrieveInternal(Key.AsSpan(), out var value))
+                    throw new KeyNotFoundException($"The given key '{Key}' was not present in the dictionary.");
 
                 return value;
             }
 
             set
             {
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
+                if (Key == null)
+                    throw new ArgumentNullException(nameof(Key));
 
-                this.TryInsertInternal(key, value, true);
+                this.TryInsertInternal(Key, value, true);
             }
         }
 
         /// <summary>
         /// Gets or sets a value corresponding to given key in this dictionary.
         /// </summary>
-        /// <param name="key">Key to get or set the value for.</param>
+        /// <param name="Key">Key to get or set the value for.</param>
         /// <returns>Value matching the supplied key, if applicable.</returns>
-        public TValue this[ReadOnlySpan<char> key]
+        public TValue this[ReadOnlySpan<char> Key]
         {
             get
             {
-                if (!this.TryRetrieveInternal(key, out var value))
+                if (!this.TryRetrieveInternal(Key, out var value))
                     throw new KeyNotFoundException($"The given key was not present in the dictionary.");
 
                 return value;
@@ -136,18 +136,18 @@ namespace DisCatSharp.Common
             {
                 unsafe
                 {
-                    fixed (char* chars = &key.GetPinnableReference())
-                        this.TryInsertInternal(new string(chars, 0, key.Length), value, true);
+                    fixed (char* chars = &Key.GetPinnableReference())
+                        this.TryInsertInternal(new string(chars, 0, Key.Length), value, true);
                 }
             }
 #endif
         }
 
-        object IDictionary.this[object key]
+        object IDictionary.this[object Key]
         {
             get
             {
-                if (!(key is string tkey))
+                if (!(Key is string tkey))
                     throw new ArgumentException("Key needs to be an instance of a string.");
 
                 if (!this.TryRetrieveInternal(tkey.AsSpan(), out var value))
@@ -158,7 +158,7 @@ namespace DisCatSharp.Common
 
             set
             {
-                if (!(key is string tkey))
+                if (!(Key is string tkey))
                     throw new ArgumentException("Key needs to be an instance of a string.");
 
                 if (!(value is TValue tvalue))
@@ -188,62 +188,62 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Creates a new, empty <see cref="CharSpanLookupDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and sets its initial capacity to specified value.
         /// </summary>
-        /// <param name="initialCapacity">Initial capacity of the dictionary.</param>
-        public CharSpanLookupDictionary(int initialCapacity)
+        /// <param name="InitialCapacity">Initial capacity of the dictionary.</param>
+        public CharSpanLookupDictionary(int InitialCapacity)
         {
-            this.InternalBuckets = new Dictionary<ulong, KeyedValue>(initialCapacity);
+            this.InternalBuckets = new Dictionary<ulong, KeyedValue>(InitialCapacity);
         }
 
         /// <summary>
         /// Creates a new <see cref="CharSpanLookupDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied dictionary.
         /// </summary>
-        /// <param name="values">Dictionary containing items to populate this dictionary with.</param>
-        public CharSpanLookupDictionary(IDictionary<string, TValue> values)
-            : this(values.Count)
+        /// <param name="Values">Dictionary containing items to populate this dictionary with.</param>
+        public CharSpanLookupDictionary(IDictionary<string, TValue> Values)
+            : this(Values.Count)
         {
-            foreach (var (k, v) in values)
+            foreach (var (k, v) in Values)
                 this.Add(k, v);
         }
 
         /// <summary>
         /// Creates a new <see cref="CharSpanLookupDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied dictionary.
         /// </summary>
-        /// <param name="values">Dictionary containing items to populate this dictionary with.</param>
-        public CharSpanLookupDictionary(IReadOnlyDictionary<string, TValue> values)
-             : this(values.Count)
+        /// <param name="Values">Dictionary containing items to populate this dictionary with.</param>
+        public CharSpanLookupDictionary(IReadOnlyDictionary<string, TValue> Values)
+             : this(Values.Count)
         {
-            foreach (var (k, v) in values)
+            foreach (var (k, v) in Values)
                 this.Add(k, v);
         }
 
         /// <summary>
         /// Creates a new <see cref="CharSpanLookupDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied key-value collection.
         /// </summary>
-        /// <param name="values">Dictionary containing items to populate this dictionary with.</param>
-        public CharSpanLookupDictionary(IEnumerable<KeyValuePair<string, TValue>> values)
+        /// <param name="Values">Dictionary containing items to populate this dictionary with.</param>
+        public CharSpanLookupDictionary(IEnumerable<KeyValuePair<string, TValue>> Values)
             : this()
         {
-            foreach (var (k, v) in values)
+            foreach (var (k, v) in Values)
                 this.Add(k, v);
         }
 
         /// <summary>
         /// Inserts a specific key and corresponding value into this dictionary.
         /// </summary>
-        /// <param name="key">Key to insert.</param>
-        /// <param name="value">Value corresponding to this key.</param>
-        public void Add(string key, TValue value)
+        /// <param name="Key">Key to insert.</param>
+        /// <param name="Value">Value corresponding to this key.</param>
+        public void Add(string Key, TValue Value)
         {
-            if (!this.TryInsertInternal(key, value, false))
-                throw new ArgumentException("Given key is already present in the dictionary.", nameof(key));
+            if (!this.TryInsertInternal(Key, Value, false))
+                throw new ArgumentException("Given key is already present in the dictionary.", nameof(Key));
         }
 
         /// <summary>
         /// Inserts a specific key and corresponding value into this dictionary.
         /// </summary>
-        /// <param name="key">Key to insert.</param>
-        /// <param name="value">Value corresponding to this key.</param>
-        public void Add(ReadOnlySpan<char> key, TValue value)
+        /// <param name="Key">Key to insert.</param>
+        /// <param name="Value">Value corresponding to this key.</param>
+        public void Add(ReadOnlySpan<char> Key, TValue Value)
 #if NETCOREAPP
         {
             if (!this.TryInsertInternal(new string(key), value, false))
@@ -253,9 +253,9 @@ namespace DisCatSharp.Common
         {
             unsafe
             {
-                fixed (char* chars = &key.GetPinnableReference())
-                    if (!this.TryInsertInternal(new string(chars, 0, key.Length), value, false))
-                        throw new ArgumentException("Given key is already present in the dictionary.", nameof(key));
+                fixed (char* chars = &Key.GetPinnableReference())
+                    if (!this.TryInsertInternal(new string(chars, 0, Key.Length), Value, false))
+                        throw new ArgumentException("Given key is already present in the dictionary.", nameof(Key));
             }
         }
 #endif
@@ -263,27 +263,27 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Attempts to insert a specific key and corresponding value into this dictionary.
         /// </summary>
-        /// <param name="key">Key to insert.</param>
-        /// <param name="value">Value corresponding to this key.</param>
+        /// <param name="Key">Key to insert.</param>
+        /// <param name="Value">Value corresponding to this key.</param>
         /// <returns>Whether the operation was successful.</returns>
-        public bool TryAdd(string key, TValue value)
-            => this.TryInsertInternal(key, value, false);
+        public bool TryAdd(string Key, TValue Value)
+            => this.TryInsertInternal(Key, Value, false);
 
         /// <summary>
         /// Attempts to insert a specific key and corresponding value into this dictionary.
         /// </summary>
-        /// <param name="key">Key to insert.</param>
-        /// <param name="value">Value corresponding to this key.</param>
+        /// <param name="Key">Key to insert.</param>
+        /// <param name="Value">Value corresponding to this key.</param>
         /// <returns>Whether the operation was successful.</returns>
-        public bool TryAdd(ReadOnlySpan<char> key, TValue value)
+        public bool TryAdd(ReadOnlySpan<char> Key, TValue Value)
 #if NETCOREAPP
             => this.TryInsertInternal(new string(key), value, false);
 #else
         {
             unsafe
             {
-                fixed (char* chars = &key.GetPinnableReference())
-                    return this.TryInsertInternal(new string(chars, 0, key.Length), value, false);
+                fixed (char* chars = &Key.GetPinnableReference())
+                    return this.TryInsertInternal(new string(chars, 0, Key.Length), Value, false);
             }
         }
 #endif
@@ -291,64 +291,64 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
         /// </summary>
-        /// <param name="key">Key to retrieve the value for.</param>
-        /// <param name="value">Retrieved value.</param>
+        /// <param name="Key">Key to retrieve the value for.</param>
+        /// <param name="Value">Retrieved value.</param>
         /// <returns>Whether the operation was successful.</returns>
-        public bool TryGetValue(string key, out TValue value)
+        public bool TryGetValue(string Key, out TValue Value)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
+            if (Key == null)
+                throw new ArgumentNullException(nameof(Key));
 
-            return this.TryRetrieveInternal(key.AsSpan(), out value);
+            return this.TryRetrieveInternal(Key.AsSpan(), out Value);
         }
 
         /// <summary>
         /// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
         /// </summary>
-        /// <param name="key">Key to retrieve the value for.</param>
-        /// <param name="value">Retrieved value.</param>
+        /// <param name="Key">Key to retrieve the value for.</param>
+        /// <param name="Value">Retrieved value.</param>
         /// <returns>Whether the operation was successful.</returns>
-        public bool TryGetValue(ReadOnlySpan<char> key, out TValue value)
-            => this.TryRetrieveInternal(key, out value);
+        public bool TryGetValue(ReadOnlySpan<char> Key, out TValue Value)
+            => this.TryRetrieveInternal(Key, out Value);
 
         /// <summary>
         /// Attempts to remove a value corresponding to the supplied key from this dictionary.
         /// </summary>
-        /// <param name="key">Key to remove the value for.</param>
-        /// <param name="value">Removed value.</param>
+        /// <param name="Key">Key to remove the value for.</param>
+        /// <param name="Value">Removed value.</param>
         /// <returns>Whether the operation was successful.</returns>
-        public bool TryRemove(string key, out TValue value)
+        public bool TryRemove(string Key, out TValue Value)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
+            if (Key == null)
+                throw new ArgumentNullException(nameof(Key));
 
-            return this.TryRemoveInternal(key.AsSpan(), out value);
+            return this.TryRemoveInternal(Key.AsSpan(), out Value);
         }
 
         /// <summary>
         /// Attempts to remove a value corresponding to the supplied key from this dictionary.
         /// </summary>
-        /// <param name="key">Key to remove the value for.</param>
-        /// <param name="value">Removed value.</param>
+        /// <param name="Key">Key to remove the value for.</param>
+        /// <param name="Value">Removed value.</param>
         /// <returns>Whether the operation was successful.</returns>
-        public bool TryRemove(ReadOnlySpan<char> key, out TValue value)
-            => this.TryRemoveInternal(key, out value);
+        public bool TryRemove(ReadOnlySpan<char> Key, out TValue Value)
+            => this.TryRemoveInternal(Key, out Value);
 
         /// <summary>
         /// Checks whether this dictionary contains the specified key.
         /// </summary>
-        /// <param name="key">Key to check for in this dictionary.</param>
+        /// <param name="Key">Key to check for in this dictionary.</param>
         /// <returns>Whether the key was present in the dictionary.</returns>
-        public bool ContainsKey(string key)
-            => this.ContainsKeyInternal(key.AsSpan());
+        public bool ContainsKey(string Key)
+            => this.ContainsKeyInternal(Key.AsSpan());
 
         /// <summary>
         /// Checks whether this dictionary contains the specified key.
         /// </summary>
-        /// <param name="key">Key to check for in this dictionary.</param>
+        /// <param name="Key">Key to check for in this dictionary.</param>
         /// <returns>Whether the key was present in the dictionary.</returns>
-        public bool ContainsKey(ReadOnlySpan<char> key)
-            => this.ContainsKeyInternal(key);
+        public bool ContainsKey(ReadOnlySpan<char> Key)
+            => this.ContainsKeyInternal(Key);
 
         /// <summary>
         /// Removes all items from this dictionary.
@@ -369,22 +369,22 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Removes the.
         /// </summary>
-        /// <param name="key">The key.</param>
+        /// <param name="Key">The key.</param>
         /// <returns>A bool.</returns>
-        bool IDictionary<string, TValue>.Remove(string key)
-            => this.TryRemove(key.AsSpan(), out _);
+        bool IDictionary<string, TValue>.Remove(string Key)
+            => this.TryRemove(Key.AsSpan(), out _);
 
         /// <summary>
         /// Adds the.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
-        void IDictionary.Add(object key, object value)
+        /// <param name="Key">The key.</param>
+        /// <param name="Value">The value.</param>
+        void IDictionary.Add(object Key, object Value)
         {
-            if (!(key is string tkey))
+            if (!(Key is string tkey))
                 throw new ArgumentException("Key needs to be an instance of a string.");
 
-            if (!(value is TValue tvalue))
+            if (!(Value is TValue tvalue))
             {
                 tvalue = default;
                 if (tvalue != null)
@@ -397,10 +397,10 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Removes the.
         /// </summary>
-        /// <param name="key">The key.</param>
-        void IDictionary.Remove(object key)
+        /// <param name="Key">The key.</param>
+        void IDictionary.Remove(object Key)
         {
-            if (!(key is string tkey))
+            if (!(Key is string tkey))
                 throw new ArgumentException("Key needs to be an instance of a string.");
 
             this.TryRemove(tkey, out _);
@@ -409,11 +409,11 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Contains the.
         /// </summary>
-        /// <param name="key">The key.</param>
+        /// <param name="Key">The key.</param>
         /// <returns>A bool.</returns>
-        bool IDictionary.Contains(object key)
+        bool IDictionary.Contains(object Key)
         {
-            if (!(key is string tkey))
+            if (!(Key is string tkey))
                 throw new ArgumentException("Key needs to be an instance of a string.");
 
             return this.ContainsKey(tkey);
@@ -429,43 +429,43 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Adds the.
         /// </summary>
-        /// <param name="item">The item.</param>
-        void ICollection<KeyValuePair<string, TValue>>.Add(KeyValuePair<string, TValue> item)
-            => this.Add(item.Key, item.Value);
+        /// <param name="Item">The item.</param>
+        void ICollection<KeyValuePair<string, TValue>>.Add(KeyValuePair<string, TValue> Item)
+            => this.Add(Item.Key, Item.Value);
 
         /// <summary>
         /// Removes the.
         /// </summary>
-        /// <param name="item">The item.</param>
+        /// <param name="Item">The item.</param>
         /// <returns>A bool.</returns>
-        bool ICollection<KeyValuePair<string, TValue>>.Remove(KeyValuePair<string, TValue> item)
-            => this.TryRemove(item.Key, out _);
+        bool ICollection<KeyValuePair<string, TValue>>.Remove(KeyValuePair<string, TValue> Item)
+            => this.TryRemove(Item.Key, out _);
 
         /// <summary>
         /// Contains the.
         /// </summary>
-        /// <param name="item">The item.</param>
+        /// <param name="Item">The item.</param>
         /// <returns>A bool.</returns>
-        bool ICollection<KeyValuePair<string, TValue>>.Contains(KeyValuePair<string, TValue> item)
-            => this.TryGetValue(item.Key, out var value) && EqualityComparer<TValue>.Default.Equals(value, item.Value);
+        bool ICollection<KeyValuePair<string, TValue>>.Contains(KeyValuePair<string, TValue> Item)
+            => this.TryGetValue(Item.Key, out var value) && EqualityComparer<TValue>.Default.Equals(value, Item.Value);
 
         /// <summary>
         /// Copies the to.
         /// </summary>
-        /// <param name="array">The array.</param>
-        /// <param name="arrayIndex">The array index.</param>
-        void ICollection<KeyValuePair<string, TValue>>.CopyTo(KeyValuePair<string, TValue>[] array, int arrayIndex)
+        /// <param name="Array">The array.</param>
+        /// <param name="ArrayIndex">The array index.</param>
+        void ICollection<KeyValuePair<string, TValue>>.CopyTo(KeyValuePair<string, TValue>[] Array, int ArrayIndex)
         {
-            if (array.Length - arrayIndex < this.Count)
-                throw new ArgumentException("Target array is too small.", nameof(array));
+            if (Array.Length - ArrayIndex < this.Count)
+                throw new ArgumentException("Target array is too small.", nameof(Array));
 
-            var i = arrayIndex;
+            var i = ArrayIndex;
             foreach (var (k, v) in this.InternalBuckets)
             {
                 var kdv = v;
                 while (kdv != null)
                 {
-                    array[i++] = new KeyValuePair<string, TValue>(kdv.Key, kdv.Value);
+                    Array[i++] = new KeyValuePair<string, TValue>(kdv.Key, kdv.Value);
                     kdv = kdv.Next;
                 }
             }
@@ -474,26 +474,26 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Copies the to.
         /// </summary>
-        /// <param name="array">The array.</param>
-        /// <param name="arrayIndex">The array index.</param>
-        void ICollection.CopyTo(Array array, int arrayIndex)
+        /// <param name="Array">The array.</param>
+        /// <param name="ArrayIndex">The array index.</param>
+        void ICollection.CopyTo(Array Array, int ArrayIndex)
         {
-            if (array is KeyValuePair<string, TValue>[] tarray)
+            if (Array is KeyValuePair<string, TValue>[] tarray)
             {
-                (this as ICollection<KeyValuePair<string, TValue>>).CopyTo(tarray, arrayIndex);
+                (this as ICollection<KeyValuePair<string, TValue>>).CopyTo(tarray, ArrayIndex);
                 return;
             }
 
-            if (array is not object[])
+            if (Array is not object[])
                 throw new ArgumentException($"Array needs to be an instance of {typeof(TValue[])} or object[].");
 
-            var i = arrayIndex;
+            var i = ArrayIndex;
             foreach (var (k, v) in this.InternalBuckets)
             {
                 var kdv = v;
                 while (kdv != null)
                 {
-                    array.SetValue(new KeyValuePair<string, TValue>(kdv.Key, kdv.Value), i++);
+                    Array.SetValue(new KeyValuePair<string, TValue>(kdv.Key, kdv.Value), i++);
                     kdv = kdv.Next;
                 }
             }
@@ -509,19 +509,19 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Tries the insert internal.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="replace">If true, replace.</param>
+        /// <param name="Key">The key.</param>
+        /// <param name="Value">The value.</param>
+        /// <param name="Replace">If true, replace.</param>
         /// <returns>A bool.</returns>
-        private bool TryInsertInternal(string key, TValue value, bool replace)
+        private bool TryInsertInternal(string Key, TValue Value, bool Replace)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key), "Key cannot be null.");
+            if (Key == null)
+                throw new ArgumentNullException(nameof(Key), "Key cannot be null.");
 
-            var hash = key.CalculateKnuthHash();
+            var hash = Key.CalculateKnuthHash();
             if (!this.InternalBuckets.ContainsKey(hash))
             {
-                this.InternalBuckets.Add(hash, new KeyedValue(key, hash, value));
+                this.InternalBuckets.Add(hash, new KeyedValue(Key, hash, Value));
                 this.Count++;
                 return true;
             }
@@ -530,12 +530,12 @@ namespace DisCatSharp.Common
             var kdvLast = kdv;
             while (kdv != null)
             {
-                if (kdv.Key == key)
+                if (kdv.Key == Key)
                 {
-                    if (!replace)
+                    if (!Replace)
                         return false;
 
-                    kdv.Value = value;
+                    kdv.Value = Value;
                     return true;
                 }
 
@@ -543,7 +543,7 @@ namespace DisCatSharp.Common
                 kdv = kdv.Next;
             }
 
-            kdvLast.Next = new KeyedValue(key, hash, value);
+            kdvLast.Next = new KeyedValue(Key, hash, Value);
             this.Count++;
             return true;
         }
@@ -551,22 +551,22 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Tries the retrieve internal.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="Key">The key.</param>
+        /// <param name="Value">The value.</param>
         /// <returns>A bool.</returns>
-        private bool TryRetrieveInternal(ReadOnlySpan<char> key, out TValue value)
+        private bool TryRetrieveInternal(ReadOnlySpan<char> Key, out TValue Value)
         {
-            value = default;
+            Value = default;
 
-            var hash = key.CalculateKnuthHash();
+            var hash = Key.CalculateKnuthHash();
             if (!this.InternalBuckets.TryGetValue(hash, out var kdv))
                 return false;
 
             while (kdv != null)
             {
-                if (key.SequenceEqual(kdv.Key.AsSpan()))
+                if (Key.SequenceEqual(kdv.Key.AsSpan()))
                 {
-                    value = kdv.Value;
+                    Value = kdv.Value;
                     return true;
                 }
             }
@@ -577,22 +577,22 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Tries the remove internal.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="Key">The key.</param>
+        /// <param name="Value">The value.</param>
         /// <returns>A bool.</returns>
-        private bool TryRemoveInternal(ReadOnlySpan<char> key, out TValue value)
+        private bool TryRemoveInternal(ReadOnlySpan<char> Key, out TValue Value)
         {
-            value = default;
+            Value = default;
 
-            var hash = key.CalculateKnuthHash();
+            var hash = Key.CalculateKnuthHash();
             if (!this.InternalBuckets.TryGetValue(hash, out var kdv))
                 return false;
 
-            if (kdv.Next == null && key.SequenceEqual(kdv.Key.AsSpan()))
+            if (kdv.Next == null && Key.SequenceEqual(kdv.Key.AsSpan()))
             {
                 // Only bucket under this hash and key matches, pop the entire bucket
 
-                value = kdv.Value;
+                Value = kdv.Value;
                 this.InternalBuckets.Remove(hash);
                 this.Count--;
                 return true;
@@ -603,11 +603,11 @@ namespace DisCatSharp.Common
 
                 return false;
             }
-            else if (key.SequenceEqual(kdv.Key.AsSpan()))
+            else if (Key.SequenceEqual(kdv.Key.AsSpan()))
             {
                 // First key in the bucket matches, pop it and set its child as current bucket
 
-                value = kdv.Value;
+                Value = kdv.Value;
                 this.InternalBuckets[hash] = kdv.Next;
                 this.Count--;
                 return true;
@@ -617,11 +617,11 @@ namespace DisCatSharp.Common
             kdv = kdv.Next;
             while (kdv != null)
             {
-                if (key.SequenceEqual(kdv.Key.AsSpan()))
+                if (Key.SequenceEqual(kdv.Key.AsSpan()))
                 {
                     // Key matched, remove this bucket from the chain
 
-                    value = kdv.Value;
+                    Value = kdv.Value;
                     kdvLast.Next = kdv.Next;
                     this.Count--;
                     return true;
@@ -637,17 +637,17 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Contains the key internal.
         /// </summary>
-        /// <param name="key">The key.</param>
+        /// <param name="Key">The key.</param>
         /// <returns>A bool.</returns>
-        private bool ContainsKeyInternal(ReadOnlySpan<char> key)
+        private bool ContainsKeyInternal(ReadOnlySpan<char> Key)
         {
-            var hash = key.CalculateKnuthHash();
+            var hash = Key.CalculateKnuthHash();
             if (!this.InternalBuckets.TryGetValue(hash, out var kdv))
                 return false;
 
             while (kdv != null)
             {
-                if (key.SequenceEqual(kdv.Key.AsSpan()))
+                if (Key.SequenceEqual(kdv.Key.AsSpan()))
                     return true;
 
                 kdv = kdv.Next;
@@ -722,14 +722,14 @@ namespace DisCatSharp.Common
             /// <summary>
             /// Initializes a new instance of the <see cref="KeyedValue"/> class.
             /// </summary>
-            /// <param name="key">The key.</param>
-            /// <param name="keyHash">The key hash.</param>
-            /// <param name="value">The value.</param>
-            public KeyedValue(string key, ulong keyHash, TValue value)
+            /// <param name="Key">The key.</param>
+            /// <param name="KeyHash">The key hash.</param>
+            /// <param name="Value">The value.</param>
+            public KeyedValue(string Key, ulong KeyHash, TValue Value)
             {
-                this.KeyHash = keyHash;
-                this.Key = key;
-                this.Value = value;
+                this.KeyHash = KeyHash;
+                this.Key = Key;
+                this.Value = Value;
             }
         }
 
@@ -777,10 +777,10 @@ namespace DisCatSharp.Common
             /// <summary>
             /// Initializes a new instance of the <see cref="Enumerator"/> class.
             /// </summary>
-            /// <param name="spDict">The sp dict.</param>
-            public Enumerator(CharSpanLookupDictionary<TValue> spDict)
+            /// <param name="SpDict">The sp dict.</param>
+            public Enumerator(CharSpanLookupDictionary<TValue> SpDict)
             {
-                this.InternalDictionary = spDict;
+                this.InternalDictionary = SpDict;
                 this.InternalEnumerator = this.InternalDictionary.InternalBuckets.GetEnumerator();
             }
 

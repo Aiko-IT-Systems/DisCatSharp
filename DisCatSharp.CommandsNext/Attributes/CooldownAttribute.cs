@@ -57,25 +57,25 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Defines a cooldown for this command. This means that users will be able to use the command a specific number of times before they have to wait to use it again.
         /// </summary>
-        /// <param name="maxUses">Number of times the command can be used before triggering a cooldown.</param>
-        /// <param name="resetAfter">Number of seconds after which the cooldown is reset.</param>
-        /// <param name="bucketType">Type of cooldown bucket. This allows controlling whether the bucket will be cooled down per user, guild, channel, or globally.</param>
-        public CooldownAttribute(int maxUses, double resetAfter, CooldownBucketType bucketType)
+        /// <param name="MaxUses">Number of times the command can be used before triggering a cooldown.</param>
+        /// <param name="ResetAfter">Number of seconds after which the cooldown is reset.</param>
+        /// <param name="BucketType">Type of cooldown bucket. This allows controlling whether the bucket will be cooled down per user, guild, channel, or globally.</param>
+        public CooldownAttribute(int MaxUses, double ResetAfter, CooldownBucketType BucketType)
         {
-            this.MaxUses = maxUses;
-            this.Reset = TimeSpan.FromSeconds(resetAfter);
-            this.BucketType = bucketType;
+            this.MaxUses = MaxUses;
+            this.Reset = TimeSpan.FromSeconds(ResetAfter);
+            this.BucketType = BucketType;
             this.Buckets = new ConcurrentDictionary<string, CommandCooldownBucket>();
         }
 
         /// <summary>
         /// Gets a cooldown bucket for given command context.
         /// </summary>
-        /// <param name="ctx">Command context to get cooldown bucket for.</param>
+        /// <param name="Ctx">Command context to get cooldown bucket for.</param>
         /// <returns>Requested cooldown bucket, or null if one wasn't present.</returns>
-        public CommandCooldownBucket GetBucket(CommandContext ctx)
+        public CommandCooldownBucket GetBucket(CommandContext Ctx)
         {
-            var bid = this.GetBucketId(ctx, out _, out _, out _);
+            var bid = this.GetBucketId(Ctx, out _, out _, out _);
             this.Buckets.TryGetValue(bid, out var bucket);
             return bucket;
         }
@@ -83,57 +83,57 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Calculates the cooldown remaining for given command context.
         /// </summary>
-        /// <param name="ctx">Context for which to calculate the cooldown.</param>
+        /// <param name="Ctx">Context for which to calculate the cooldown.</param>
         /// <returns>Remaining cooldown, or zero if no cooldown is active.</returns>
-        public TimeSpan GetRemainingCooldown(CommandContext ctx)
+        public TimeSpan GetRemainingCooldown(CommandContext Ctx)
         {
-            var bucket = this.GetBucket(ctx);
+            var bucket = this.GetBucket(Ctx);
             return bucket == null ? TimeSpan.Zero : bucket.RemainingUses > 0 ? TimeSpan.Zero : bucket.ResetsAt - DateTimeOffset.UtcNow;
         }
 
         /// <summary>
         /// Calculates bucket ID for given command context.
         /// </summary>
-        /// <param name="ctx">Context for which to calculate bucket ID for.</param>
-        /// <param name="userId">ID of the user with which this bucket is associated.</param>
-        /// <param name="channelId">ID of the channel with which this bucket is associated.</param>
-        /// <param name="guildId">ID of the guild with which this bucket is associated.</param>
+        /// <param name="Ctx">Context for which to calculate bucket ID for.</param>
+        /// <param name="UserId">ID of the user with which this bucket is associated.</param>
+        /// <param name="ChannelId">ID of the channel with which this bucket is associated.</param>
+        /// <param name="GuildId">ID of the guild with which this bucket is associated.</param>
         /// <returns>Calculated bucket ID.</returns>
-        private string GetBucketId(CommandContext ctx, out ulong userId, out ulong channelId, out ulong guildId)
+        private string GetBucketId(CommandContext Ctx, out ulong UserId, out ulong ChannelId, out ulong GuildId)
         {
-            userId = 0ul;
+            UserId = 0ul;
             if ((this.BucketType & CooldownBucketType.User) != 0)
-                userId = ctx.User.Id;
+                UserId = Ctx.User.Id;
 
-            channelId = 0ul;
+            ChannelId = 0ul;
             if ((this.BucketType & CooldownBucketType.Channel) != 0)
-                channelId = ctx.Channel.Id;
-            if ((this.BucketType & CooldownBucketType.Guild) != 0 && ctx.Guild == null)
-                channelId = ctx.Channel.Id;
+                ChannelId = Ctx.Channel.Id;
+            if ((this.BucketType & CooldownBucketType.Guild) != 0 && Ctx.Guild == null)
+                ChannelId = Ctx.Channel.Id;
 
-            guildId = 0ul;
-            if (ctx.Guild != null && (this.BucketType & CooldownBucketType.Guild) != 0)
-                guildId = ctx.Guild.Id;
+            GuildId = 0ul;
+            if (Ctx.Guild != null && (this.BucketType & CooldownBucketType.Guild) != 0)
+                GuildId = Ctx.Guild.Id;
 
-            var bid = CommandCooldownBucket.MakeId(userId, channelId, guildId);
+            var bid = CommandCooldownBucket.MakeId(UserId, ChannelId, GuildId);
             return bid;
         }
 
         /// <summary>
         /// Executes a check.
         /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
+        /// <param name="Ctx">The command context.</param>
+        /// <param name="Help">If true, help - returns true.</param>
+        public override async Task<bool> ExecuteCheck(CommandContext Ctx, bool Help)
         {
-            if (help)
+            if (Help)
                 return true;
 
-            var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld);
+            var bid = this.GetBucketId(Ctx, out var usr, out var chn, out var gld);
             if (!this.Buckets.TryGetValue(bid, out var bucket))
             {
                 bucket = new CommandCooldownBucket(this.MaxUses, this.Reset, usr, chn, gld);
-                this.Buckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
+                this.Buckets.AddOrUpdate(bid, bucket, (K, V) => bucket);
             }
 
             return await bucket.DecrementUseAsync().ConfigureAwait(false);
@@ -195,9 +195,9 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// Gets the remaining number of uses before the cooldown is triggered.
         /// </summary>
         public int RemainingUses
-            => Volatile.Read(ref this._remaining_uses);
+            => Volatile.Read(ref this._remainingUses);
 
-        private int _remaining_uses;
+        private int _remainingUses;
 
         /// <summary>
         /// Gets the maximum number of times this command can be used in given timespan.
@@ -222,21 +222,21 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Creates a new command cooldown bucket.
         /// </summary>
-        /// <param name="maxUses">Maximum number of uses for this bucket.</param>
-        /// <param name="resetAfter">Time after which this bucket resets.</param>
-        /// <param name="userId">ID of the user with which this cooldown is associated.</param>
-        /// <param name="channelId">ID of the channel with which this cooldown is associated.</param>
-        /// <param name="guildId">ID of the guild with which this cooldown is associated.</param>
-        internal CommandCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
+        /// <param name="MaxUses">Maximum number of uses for this bucket.</param>
+        /// <param name="ResetAfter">Time after which this bucket resets.</param>
+        /// <param name="UserId">ID of the user with which this cooldown is associated.</param>
+        /// <param name="ChannelId">ID of the channel with which this cooldown is associated.</param>
+        /// <param name="GuildId">ID of the guild with which this cooldown is associated.</param>
+        internal CommandCooldownBucket(int MaxUses, TimeSpan ResetAfter, ulong UserId = 0, ulong ChannelId = 0, ulong GuildId = 0)
         {
-            this._remaining_uses = maxUses;
-            this.MaxUses = maxUses;
-            this.ResetsAt = DateTimeOffset.UtcNow + resetAfter;
-            this.Reset = resetAfter;
-            this.UserId = userId;
-            this.ChannelId = channelId;
-            this.GuildId = guildId;
-            this.BucketId = MakeId(userId, channelId, guildId);
+            this._remainingUses = MaxUses;
+            this.MaxUses = MaxUses;
+            this.ResetsAt = DateTimeOffset.UtcNow + ResetAfter;
+            this.Reset = ResetAfter;
+            this.UserId = UserId;
+            this.ChannelId = ChannelId;
+            this.GuildId = GuildId;
+            this.BucketId = MakeId(UserId, ChannelId, GuildId);
             this.UsageSemaphore = new SemaphoreSlim(1, 1);
         }
 
@@ -253,7 +253,7 @@ namespace DisCatSharp.CommandsNext.Attributes
             if (now >= this.ResetsAt)
             {
                 // ...do the reset and set a new reset time
-                Interlocked.Exchange(ref this._remaining_uses, this.MaxUses);
+                Interlocked.Exchange(ref this._remainingUses, this.MaxUses);
                 this.ResetsAt = now + this.Reset;
             }
 
@@ -262,7 +262,7 @@ namespace DisCatSharp.CommandsNext.Attributes
             if (this.RemainingUses > 0)
             {
                 // ...decrement, and return success...
-                Interlocked.Decrement(ref this._remaining_uses);
+                Interlocked.Decrement(ref this._remainingUses);
                 success = true;
             }
 
@@ -280,16 +280,16 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Checks whether this <see cref="CommandCooldownBucket"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="CommandCooldownBucket"/>.</returns>
-        public override bool Equals(object obj) => this.Equals(obj as CommandCooldownBucket);
+        public override bool Equals(object Obj) => this.Equals(Obj as CommandCooldownBucket);
 
         /// <summary>
         /// Checks whether this <see cref="CommandCooldownBucket"/> is equal to another <see cref="CommandCooldownBucket"/>.
         /// </summary>
-        /// <param name="other"><see cref="CommandCooldownBucket"/> to compare to.</param>
+        /// <param name="Other"><see cref="CommandCooldownBucket"/> to compare to.</param>
         /// <returns>Whether the <see cref="CommandCooldownBucket"/> is equal to this <see cref="CommandCooldownBucket"/>.</returns>
-        public bool Equals(CommandCooldownBucket other) => other is not null && (ReferenceEquals(this, other) || (this.UserId == other.UserId && this.ChannelId == other.ChannelId && this.GuildId == other.GuildId));
+        public bool Equals(CommandCooldownBucket Other) => Other is not null && (ReferenceEquals(this, Other) || (this.UserId == Other.UserId && this.ChannelId == Other.ChannelId && this.GuildId == Other.GuildId));
 
         /// <summary>
         /// Gets the hash code for this <see cref="CommandCooldownBucket"/>.
@@ -300,13 +300,13 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Gets whether the two <see cref="CommandCooldownBucket"/> objects are equal.
         /// </summary>
-        /// <param name="bucket1">First bucket to compare.</param>
-        /// <param name="bucket2">Second bucket to compare.</param>
+        /// <param name="Bucket1">First bucket to compare.</param>
+        /// <param name="Bucket2">Second bucket to compare.</param>
         /// <returns>Whether the two buckets are equal.</returns>
-        public static bool operator ==(CommandCooldownBucket bucket1, CommandCooldownBucket bucket2)
+        public static bool operator ==(CommandCooldownBucket Bucket1, CommandCooldownBucket Bucket2)
         {
-            var null1 = bucket1 is null;
-            var null2 = bucket2 is null;
+            var null1 = Bucket1 is null;
+            var null2 = Bucket2 is null;
 
             return (null1 && null2) || (null1 == null2 && null1.Equals(null2));
         }
@@ -314,20 +314,20 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Gets whether the two <see cref="CommandCooldownBucket"/> objects are not equal.
         /// </summary>
-        /// <param name="bucket1">First bucket to compare.</param>
-        /// <param name="bucket2">Second bucket to compare.</param>
+        /// <param name="Bucket1">First bucket to compare.</param>
+        /// <param name="Bucket2">Second bucket to compare.</param>
         /// <returns>Whether the two buckets are not equal.</returns>
-        public static bool operator !=(CommandCooldownBucket bucket1, CommandCooldownBucket bucket2)
-            => !(bucket1 == bucket2);
+        public static bool operator !=(CommandCooldownBucket Bucket1, CommandCooldownBucket Bucket2)
+            => !(Bucket1 == Bucket2);
 
         /// <summary>
         /// Creates a bucket ID from given bucket parameters.
         /// </summary>
-        /// <param name="userId">ID of the user with which this cooldown is associated.</param>
-        /// <param name="channelId">ID of the channel with which this cooldown is associated.</param>
-        /// <param name="guildId">ID of the guild with which this cooldown is associated.</param>
+        /// <param name="UserId">ID of the user with which this cooldown is associated.</param>
+        /// <param name="ChannelId">ID of the channel with which this cooldown is associated.</param>
+        /// <param name="GuildId">ID of the guild with which this cooldown is associated.</param>
         /// <returns>Generated bucket ID.</returns>
-        public static string MakeId(ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
-            => $"{userId.ToString(CultureInfo.InvariantCulture)}:{channelId.ToString(CultureInfo.InvariantCulture)}:{guildId.ToString(CultureInfo.InvariantCulture)}";
+        public static string MakeId(ulong UserId = 0, ulong ChannelId = 0, ulong GuildId = 0)
+            => $"{UserId.ToString(CultureInfo.InvariantCulture)}:{ChannelId.ToString(CultureInfo.InvariantCulture)}:{GuildId.ToString(CultureInfo.InvariantCulture)}";
     }
 }

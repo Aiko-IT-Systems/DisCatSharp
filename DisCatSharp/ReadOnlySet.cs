@@ -37,10 +37,10 @@ namespace DisCatSharp
         /// <summary>
         /// Creates a new read-only view of the given set.
         /// </summary>
-        /// <param name="sourceSet">Set to create a view over.</param>
-        public ReadOnlySet(ISet<T> sourceSet)
+        /// <param name="SourceSet">Set to create a view over.</param>
+        public ReadOnlySet(ISet<T> SourceSet)
         {
-            this._underlyingSet = sourceSet;
+            this._underlyingSet = SourceSet;
         }
 
         /// <summary>

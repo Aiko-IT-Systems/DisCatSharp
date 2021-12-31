@@ -50,24 +50,24 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Initializes a new instance of the <see cref="ButtonPaginationRequest"/> class.
         /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="user">The user.</param>
-        /// <param name="behavior">The behavior.</param>
-        /// <param name="buttonBehavior">The button behavior.</param>
-        /// <param name="buttons">The buttons.</param>
-        /// <param name="pages">The pages.</param>
-        /// <param name="token">The token.</param>
-        public ButtonPaginationRequest(DiscordMessage message, DiscordUser user,
-            PaginationBehaviour behavior, ButtonPaginationBehavior buttonBehavior,
-            PaginationButtons buttons, IEnumerable<Page> pages, CancellationToken token)
+        /// <param name="Message">The message.</param>
+        /// <param name="User">The user.</param>
+        /// <param name="Behavior">The behavior.</param>
+        /// <param name="ButtonBehavior">The button behavior.</param>
+        /// <param name="Buttons">The buttons.</param>
+        /// <param name="Pages">The pages.</param>
+        /// <param name="Token">The token.</param>
+        public ButtonPaginationRequest(DiscordMessage Message, DiscordUser User,
+            PaginationBehaviour Behavior, ButtonPaginationBehavior ButtonBehavior,
+            PaginationButtons Buttons, IEnumerable<Page> Pages, CancellationToken Token)
         {
-            this._user = user;
-            this._token = token;
-            this._buttons = new(buttons);
-            this._message = message;
-            this._wrapBehavior = behavior;
-            this._behaviorBehavior = buttonBehavior;
-            this._pages.AddRange(pages);
+            this._user = User;
+            this._token = Token;
+            this._buttons = new(Buttons);
+            this._message = Message;
+            this._wrapBehavior = Behavior;
+            this._behaviorBehavior = ButtonBehavior;
+            this._pages.AddRange(Pages);
 
             this._token.Register(() => this._tcs.TrySetResult(false));
         }
@@ -80,7 +80,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Gets the page.
         /// </summary>
-        public Task<Page> GetPageAsync()
+        public Task<Page> GetPage()
         {
             var page = Task.FromResult(this._pages[this._index]);
 
@@ -111,7 +111,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Skips the left.
         /// </summary>
-        public Task SkipLeftAsync()
+        public Task SkipLeft()
         {
             if (this._wrapBehavior is PaginationBehaviour.WrapAround)
             {
@@ -127,7 +127,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Skips the right.
         /// </summary>
-        public Task SkipRightAsync()
+        public Task SkipRight()
         {
             if (this._wrapBehavior is PaginationBehaviour.WrapAround)
             {
@@ -143,7 +143,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Gets the next page.
         /// </summary>
-        public Task NextPageAsync()
+        public Task NextPage()
         {
             this._index++;
 
@@ -163,7 +163,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Gets the previous page.
         /// </summary>
-        public Task PreviousPageAsync()
+        public Task PreviousPage()
         {
             this._index--;
 
@@ -183,45 +183,45 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Gets the emojis.
         /// </summary>
-        public Task<PaginationEmojis> GetEmojisAsync() => Task.FromException<PaginationEmojis>(new NotSupportedException("Emojis aren't supported for this request."));
+        public Task<PaginationEmojis> GetEmojis() => Task.FromException<PaginationEmojis>(new NotSupportedException("Emojis aren't supported for this request."));
 
         /// <summary>
         /// Gets the buttons.
         /// </summary>
-        public Task<IEnumerable<DiscordButtonComponent>> GetButtonsAsync()
+        public Task<IEnumerable<DiscordButtonComponent>> GetButtons()
             => Task.FromResult((IEnumerable<DiscordButtonComponent>)this._buttons.ButtonArray);
 
         /// <summary>
         /// Gets the message.
         /// </summary>
-        public Task<DiscordMessage> GetMessageAsync() => Task.FromResult(this._message);
+        public Task<DiscordMessage> GetMessage() => Task.FromResult(this._message);
 
         /// <summary>
         /// Gets the user.
         /// </summary>
-        public Task<DiscordUser> GetUserAsync() => Task.FromResult(this._user);
+        public Task<DiscordUser> GetUser() => Task.FromResult(this._user);
 
         /// <summary>
         /// Gets the task completion source.
         /// </summary>
-        public Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync() => Task.FromResult(this._tcs);
+        public Task<TaskCompletionSource<bool>> GetTaskCompletionSource() => Task.FromResult(this._tcs);
 
         /// <summary>
         /// Does the cleanup.
         /// </summary>
-        public async Task DoCleanupAsync()
+        public async Task DoCleanup()
         {
             switch (this._behaviorBehavior)
             {
                 case ButtonPaginationBehavior.Disable:
-                    var buttons = this._buttons.ButtonArray.Select(b => b.Disable());
+                    var buttons = this._buttons.ButtonArray.Select(B => B.Disable());
 
                     var builder = new DiscordMessageBuilder()
                         .WithContent(this._pages[this._index].Content)
                         .AddEmbed(this._pages[this._index].Embed)
                         .AddComponents(buttons);
 
-                    await builder.ModifyAsync(this._message).ConfigureAwait(false);
+                    await builder.Modify(this._message).ConfigureAwait(false);
                     break;
 
                 case ButtonPaginationBehavior.DeleteButtons:
@@ -229,11 +229,11 @@ namespace DisCatSharp.Interactivity.EventHandling
                         .WithContent(this._pages[this._index].Content)
                         .AddEmbed(this._pages[this._index].Embed);
 
-                    await builder.ModifyAsync(this._message).ConfigureAwait(false);
+                    await builder.Modify(this._message).ConfigureAwait(false);
                     break;
 
                 case ButtonPaginationBehavior.DeleteMessage:
-                    await this._message.DeleteAsync().ConfigureAwait(false);
+                    await this._message.Delete().ConfigureAwait(false);
                     break;
 
                 case ButtonPaginationBehavior.Ignore:

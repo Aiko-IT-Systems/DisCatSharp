@@ -50,37 +50,37 @@ namespace DisCatSharp.CommandsNext.Builders
         /// <summary>
         /// Sets the type this builder will construct a module out of.
         /// </summary>
-        /// <param name="t">Type to build a module out of. It has to derive from <see cref="BaseCommandModule"/>.</param>
+        /// <param name="T">Type to build a module out of. It has to derive from <see cref="BaseCommandModule"/>.</param>
         /// <returns>This builder.</returns>
-        public CommandModuleBuilder WithType(Type t)
+        public CommandModuleBuilder WithType(Type T)
         {
-            if (!t.IsModuleCandidateType())
-                throw new ArgumentException("Specified type is not a valid module type.", nameof(t));
+            if (!T.IsModuleCandidateType())
+                throw new ArgumentException("Specified type is not a valid module type.", nameof(T));
 
-            this.Type = t;
+            this.Type = T;
             return this;
         }
 
         /// <summary>
         /// Lifespan to give this module.
         /// </summary>
-        /// <param name="lifespan">Lifespan for this module.</param>
+        /// <param name="Lifespan">Lifespan for this module.</param>
         /// <returns>This builder.</returns>
-        public CommandModuleBuilder WithLifespan(ModuleLifespan lifespan)
+        public CommandModuleBuilder WithLifespan(ModuleLifespan Lifespan)
         {
-            this.Lifespan = lifespan;
+            this.Lifespan = Lifespan;
             return this;
         }
 
         /// <summary>
         /// Builds the command module.
         /// </summary>
-        /// <param name="services">The services.</param>
-        internal ICommandModule Build(IServiceProvider services)
+        /// <param name="Services">The services.</param>
+        internal ICommandModule Build(IServiceProvider Services)
         {
             return this.Lifespan switch
             {
-                ModuleLifespan.Singleton => new SingletonCommandModule(this.Type, services),
+                ModuleLifespan.Singleton => new SingletonCommandModule(this.Type, Services),
                 ModuleLifespan.Transient => new TransientCommandModule(this.Type),
                 _ => throw new NotSupportedException("Module lifespans other than transient and singleton are not supported."),
             };

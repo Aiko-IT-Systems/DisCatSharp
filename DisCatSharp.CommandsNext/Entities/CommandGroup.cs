@@ -51,31 +51,31 @@ namespace DisCatSharp.CommandsNext
         /// <summary>
         /// Executes this command or its subcommand with specified context.
         /// </summary>
-        /// <param name="ctx">Context to execute the command in.</param>
+        /// <param name="Ctx">Context to execute the command in.</param>
         /// <returns>Command's execution results.</returns>
-        public override async Task<CommandResult> ExecuteAsync(CommandContext ctx)
+        public override async Task<CommandResult> ExecuteAsync(CommandContext Ctx)
         {
             var findpos = 0;
-            var cn = CommandsNextUtilities.ExtractNextArgument(ctx.RawArgumentString, ref findpos);
+            var cn = CommandsNextUtilities.ExtractNextArgument(Ctx.RawArgumentString, ref findpos);
 
             if (cn != null)
             {
-                var cmd = ctx.Config.CaseSensitive
-                    ? this.Children.FirstOrDefault(xc => xc.Name == cn || (xc.Aliases != null && xc.Aliases.Contains(cn)))
-                    : this.Children.FirstOrDefault(xc => xc.Name.ToLowerInvariant() == cn.ToLowerInvariant() || (xc.Aliases != null && xc.Aliases.Select(xs => xs.ToLowerInvariant()).Contains(cn.ToLowerInvariant())));
+                var cmd = Ctx.Config.CaseSensitive
+                    ? this.Children.FirstOrDefault(Xc => Xc.Name == cn || (Xc.Aliases != null && Xc.Aliases.Contains(cn)))
+                    : this.Children.FirstOrDefault(Xc => Xc.Name.ToLowerInvariant() == cn.ToLowerInvariant() || (Xc.Aliases != null && Xc.Aliases.Select(Xs => Xs.ToLowerInvariant()).Contains(cn.ToLowerInvariant())));
                 if (cmd != null)
                 {
                     // pass the execution on
                     var xctx = new CommandContext
                     {
-                        Client = ctx.Client,
-                        Message = ctx.Message,
+                        Client = Ctx.Client,
+                        Message = Ctx.Message,
                         Command = cmd,
-                        Config = ctx.Config,
-                        RawArgumentString = ctx.RawArgumentString[findpos..],
-                        Prefix = ctx.Prefix,
-                        CommandsNext = ctx.CommandsNext,
-                        Services = ctx.Services
+                        Config = Ctx.Config,
+                        RawArgumentString = Ctx.RawArgumentString[findpos..],
+                        Prefix = Ctx.Prefix,
+                        CommandsNext = Ctx.CommandsNext,
+                        Services = Ctx.Services
                     };
 
                     var fchecks = await cmd.RunChecksAsync(xctx, false).ConfigureAwait(false);
@@ -95,9 +95,9 @@ namespace DisCatSharp.CommandsNext
                 {
                     IsSuccessful = false,
                     Exception = new InvalidOperationException("No matching subcommands were found, and this group is not executable."),
-                    Context = ctx
+                    Context = Ctx
                 }
-                : await base.ExecuteAsync(ctx).ConfigureAwait(false);
+                : await base.ExecuteAsync(Ctx).ConfigureAwait(false);
         }
     }
 }

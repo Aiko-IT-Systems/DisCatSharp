@@ -40,12 +40,12 @@ namespace DisCatSharp.Common.Utilities
         /// <summary>
         /// Creates a new asynchronous synchronization event with initial state.
         /// </summary>
-        /// <param name="initialState">Initial state of this event.</param>
-        public AsyncManualResetEvent(bool initialState)
+        /// <param name="InitialState">Initial state of this event.</param>
+        public AsyncManualResetEvent(bool InitialState)
         {
             this._resetTcs = new TaskCompletionSource<bool>();
-            if (initialState)
-                this._resetTcs.TrySetResult(initialState);
+            if (InitialState)
+                this._resetTcs.TrySetResult(InitialState);
         }
 
         // Spawn a threadpool thread instead of making a task
@@ -55,14 +55,14 @@ namespace DisCatSharp.Common.Utilities
         /// Asynchronously signal this event.
         /// </summary>
         /// <returns></returns>
-        public Task SetAsync()
+        public Task Set()
             => Task.Run(() => this._resetTcs.TrySetResult(true));
 
         /// <summary>
         /// Asynchronously wait for this event to be signaled.
         /// </summary>
         /// <returns></returns>
-        public Task WaitAsync()
+        public Task Wait()
             => this._resetTcs.Task;
 
         /// <summary>

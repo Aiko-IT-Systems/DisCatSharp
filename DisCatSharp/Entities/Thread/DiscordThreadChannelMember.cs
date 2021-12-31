@@ -81,24 +81,24 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public DiscordGuild Guild
-            => this.Discord.Guilds.TryGetValue(this._guild_id, out var guild) ? guild : null;
+            => this.Discord.Guilds.TryGetValue(this._guildId, out var guild) ? guild : null;
 
         [JsonIgnore]
-        internal ulong _guild_id;
+        internal ulong _guildId;
 
         /// <summary>
         /// Checks whether this <see cref="DiscordThreadChannelMember"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="DiscordThreadChannelMember"/>.</returns>
-        public override bool Equals(object obj) => this.Equals(obj as DiscordThreadChannelMember);
+        public override bool Equals(object Obj) => this.Equals(Obj as DiscordThreadChannelMember);
 
         /// <summary>
         /// Checks whether this <see cref="DiscordThreadChannel"/> is equal to another <see cref="DiscordThreadChannelMember"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordThreadChannel"/> to compare to.</param>
+        /// <param name="E"><see cref="DiscordThreadChannel"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordThreadChannel"/> is equal to this <see cref="DiscordThreadChannelMember"/>.</returns>
-        public bool Equals(DiscordThreadChannelMember e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.UserId == e.UserId));
+        public bool Equals(DiscordThreadChannelMember E) => E is not null && (ReferenceEquals(this, E) || (this.Id == E.Id && this.UserId == E.UserId));
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordThreadChannelMember"/>.
@@ -109,25 +109,25 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordThreadChannel"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First channel to compare.</param>
-        /// <param name="e2">Second channel to compare.</param>
+        /// <param name="E1">First channel to compare.</param>
+        /// <param name="E2">Second channel to compare.</param>
         /// <returns>Whether the two channels are equal.</returns>
-        public static bool operator ==(DiscordThreadChannelMember e1, DiscordThreadChannelMember e2)
+        public static bool operator ==(DiscordThreadChannelMember E1, DiscordThreadChannelMember E2)
         {
-            var o1 = e1 as object;
-            var o2 = e2 as object;
+            var o1 = E1 as object;
+            var o2 = E2 as object;
 
-            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.UserId == e2.UserId));
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (E1.Id == E2.Id && E1.UserId == E2.UserId));
         }
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordThreadChannelMember"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First channel to compare.</param>
-        /// <param name="e2">Second channel to compare.</param>
+        /// <param name="E1">First channel to compare.</param>
+        /// <param name="E2">Second channel to compare.</param>
         /// <returns>Whether the two channels are not equal.</returns>
-        public static bool operator !=(DiscordThreadChannelMember e1, DiscordThreadChannelMember e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordThreadChannelMember E1, DiscordThreadChannelMember E2)
+            => !(E1 == E2);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordThreadChannelMember"/> class.

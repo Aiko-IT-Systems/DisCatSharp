@@ -59,6 +59,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedActivityUpdateEventArgs"/> class.
         /// </summary>
-        internal EmbeddedActivityUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+        internal EmbeddedActivityUpdateEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

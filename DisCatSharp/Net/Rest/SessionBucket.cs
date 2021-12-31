@@ -60,7 +60,7 @@ namespace DisCatSharp.Net
         /// </summary>
         [JsonProperty("reset_after")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-        internal int resetAfter { get; set; }
+        internal int ResetAfter { get; set; }
 
         /// <summary>
         /// Returns a readable session bucket string.

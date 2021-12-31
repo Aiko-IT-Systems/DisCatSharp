@@ -52,7 +52,7 @@ namespace DisCatSharp.Hosting
     internal static class ConfigurationExtensions
     {
         /// <summary>
-        /// Find assemblies that match the names provided via <paramref name="names"/>.
+        /// Find assemblies that match the names provided via <paramref name="Names"/>.
         /// </summary>
         /// <remarks>
         /// In some cases the assembly the user is after could be used in the application but
@@ -60,9 +60,9 @@ namespace DisCatSharp.Hosting
         /// The workaround for this is to check the assemblies in the <see cref="AppDomain"/>, as well as referenced
         /// assemblies. If the targeted assembly is a reference, we need to load it into our workspace to get more info.
         /// </remarks>
-        /// <param name="names">Names of assemblies to look for</param>
+        /// <param name="Names">Names of assemblies to look for</param>
         /// <returns>Assemblies which meet the given names. No duplicates</returns>
-        public static Assembly[] FindAssemblies(string[]? names)
+        public static Assembly[] FindAssemblies(string[]? Names)
         {
 
             /*
@@ -71,10 +71,10 @@ namespace DisCatSharp.Hosting
              */
             List<Assembly> results = new();
 
-            if (names is null)
+            if (Names is null)
                 return results.ToArray();
 
-            List<string> queue = new(names);
+            List<string> queue = new(Names);
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (!queue.Any())
@@ -97,7 +97,7 @@ namespace DisCatSharp.Hosting
 
                 // Time to check if one of the referenced assemblies is something we're looking for
                 foreach (var referencedAssembly in assembly.GetReferencedAssemblies()
-                                                          .Where(x => x.Name != null && queue.Contains(x.Name)))
+                                                          .Where(X => X.Name != null && queue.Contains(X.Name)))
                     try
                     {
                         // Must load the assembly into our workspace so we can do stuff with it later
@@ -117,23 +117,23 @@ namespace DisCatSharp.Hosting
         }
 
         /// <summary>
-        /// Easily identify which configuration types have been added to the <paramref name="configuration"/> <br/>
+        /// Easily identify which configuration types have been added to the <paramref name="Configuration"/> <br/>
         /// This way we can dynamically load extensions without explicitly doing so
         /// </summary>
-        /// <param name="configuration"></param>
-        /// <param name="rootName"></param>
+        /// <param name="Configuration"></param>
+        /// <param name="RootName"></param>
         /// <returns>Dictionary where Key -> Name of implemented type<br/>Value -> <see cref="ExtensionConfigResult"/></returns>
-        public static Dictionary<string, ExtensionConfigResult> FindImplementedExtensions(this IConfiguration configuration,
-            string rootName = Configuration.ConfigurationExtensions.DefaultRootLib)
+        public static Dictionary<string, ExtensionConfigResult> FindImplementedExtensions(this IConfiguration Configuration,
+            string RootName = Configuration.ConfigurationExtensions.DefaultRootLib)
         {
-            if (string.IsNullOrEmpty(rootName))
-                throw new ArgumentNullException(nameof(rootName), "Root name must be provided");
+            if (string.IsNullOrEmpty(RootName))
+                throw new ArgumentNullException(nameof(RootName), "Root name must be provided");
 
             Dictionary<string, ExtensionConfigResult> results = new();
             string[]? assemblyNames;
 
             // Has the user defined a using section within the root name?
-            if (!configuration.HasSection(rootName, "Using"))
+            if (!Configuration.HasSection(RootName, "Using"))
                 return results;
 
             /*
@@ -143,18 +143,18 @@ namespace DisCatSharp.Hosting
 
                JSON or as Text.
              */
-            assemblyNames = string.IsNullOrEmpty(configuration[configuration.ConfigPath(rootName, "Using")])
-                ? configuration.GetSection(configuration.ConfigPath(rootName, "Using")).Get<string[]>()
+            assemblyNames = string.IsNullOrEmpty(Configuration[Configuration.ConfigPath(RootName, "Using")])
+                ? Configuration.GetSection(Configuration.ConfigPath(RootName, "Using")).Get<string[]>()
                 : Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(
-                        configuration[configuration.ConfigPath(rootName, "Using")]);
+                        Configuration[Configuration.ConfigPath(RootName, "Using")]);
 
 #pragma warning disable 8604
-            foreach (var assembly in FindAssemblies(assemblyNames.Select(x => x.StartsWith(Constants.LibName) ? x : $"{Constants.LibName}.{x}").ToArray()))
+            foreach (var assembly in FindAssemblies(assemblyNames.Select(X => X.StartsWith(Constants.LibName) ? X : $"{Constants.LibName}.{X}").ToArray()))
             {
                 ExtensionConfigResult result = new();
 
                 foreach (var type in assembly.ExportedTypes
-                    .Where(x => x.Name.EndsWith(Constants.ConfigSuffix) && !x.IsAbstract && !x.IsInterface))
+                    .Where(X => X.Name.EndsWith(Constants.ConfigSuffix) && !X.IsAbstract && !X.IsInterface))
                 {
                     string sectionName = type.Name;
                     string prefix = type.Name.Replace(Constants.ConfigSuffix, "");
@@ -162,12 +162,12 @@ namespace DisCatSharp.Hosting
                     result.ConfigType = type;
 
                     // Does a section exist with the classname? (DiscordConfiguration - for instance)
-                    if (configuration.HasSection(rootName, sectionName))
-                        result.Section = new ConfigSection(ref configuration, type.Name, rootName);
+                    if (Configuration.HasSection(RootName, sectionName))
+                        result.Section = new ConfigSection(ref Configuration, type.Name, RootName);
 
                     // Does a section exist with the classname minus Configuration? (Discord - for Instance)
-                    else if (configuration.HasSection(rootName, prefix))
-                        result.Section = new ConfigSection(ref configuration, prefix, rootName);
+                    else if (Configuration.HasSection(RootName, prefix))
+                        result.Section = new ConfigSection(ref Configuration, prefix, RootName);
 
                     // IF THE SECTION IS NOT PROVIDED --> WE WILL USE DEFAULT CONFIG IMPLEMENTATION
 
@@ -180,9 +180,9 @@ namespace DisCatSharp.Hosting
                         Type should not be an interface or abstract, should also be assignable to BaseExtension
                      */
 
-                    var implementationType = assembly.ExportedTypes.FirstOrDefault(x =>
-                        !x.IsAbstract && !x.IsInterface && x.Name.StartsWith(prefix) &&
-                        x.Name.EndsWith(Constants.ExtensionSuffix) && x.IsAssignableTo(typeof(BaseExtension)));
+                    var implementationType = assembly.ExportedTypes.FirstOrDefault(X =>
+                        !X.IsAbstract && !X.IsInterface && X.Name.StartsWith(prefix) &&
+                        X.Name.EndsWith(Constants.ExtensionSuffix) && X.IsAssignableTo(typeof(BaseExtension)));
 
                     // If the implementation type was found we can add it to our result set
                     if (implementationType != null)

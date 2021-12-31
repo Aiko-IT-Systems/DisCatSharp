@@ -31,352 +31,352 @@ namespace DisCatSharp.Net
         /// <summary>
         /// The base discord api uri.
         /// </summary>
-        public const string BASE_URI = "https://discord.com/api/v";
+        public const string BaseUri = "https://discord.com/api/v";
 
         /// <summary>
         /// The base discord canary api uri.
         /// </summary>
-        public const string CANARY_URI = "https://canary.discord.com/api/v";
+        public const string CanaryUri = "https://canary.discord.com/api/v";
 
         /// <summary>
         /// The oauth2 endpoint.
         /// </summary>
-        public const string OAUTH2 = "/oauth2";
+        public const string Oauth2 = "/oauth2";
         /// <summary>
         /// The oauth2 authorize endpoint.
         /// </summary>
-        public const string AUTHORIZE = "/authorize";
+        public const string Authorize = "/authorize";
         /// <summary>
         /// The applications endpoint.
         /// </summary>
-        public const string APPLICATIONS = "/applications";
+        public const string Applications = "/applications";
         /// <summary>
         /// The message reactions endpoint.
         /// </summary>
-        public const string REACTIONS = "/reactions";
+        public const string Reactions = "/reactions";
         /// <summary>
         /// The self (@me) endpoint.
         /// </summary>
-        public const string ME = "/@me";
+        public const string Me = "/@me";
         /// <summary>
         /// The @original endpoint.
         /// </summary>
-        public const string ORIGINAL = "/@original";
+        public const string Original = "/@original";
         /// <summary>
         /// The permissions endpoint.
         /// </summary>
-        public const string PERMISSIONS = "/permissions";
+        public const string Permissions = "/permissions";
         /// <summary>
         /// The recipients endpoint.
         /// </summary>
-        public const string RECIPIENTS = "/recipients";
+        public const string Recipients = "/recipients";
         /// <summary>
         /// The bulk-delete endpoint.
         /// </summary>
-        public const string BULK_DELETE = "/bulk-delete";
+        public const string BulkDelete = "/bulk-delete";
         /// <summary>
         /// The integrations endpoint.
         /// </summary>
-        public const string INTEGRATIONS = "/integrations";
+        public const string Integrations = "/integrations";
         /// <summary>
         /// The applications endpoint.
         /// </summary>
-        public const string SYNC = "/sync";
+        public const string Sync = "/sync";
         /// <summary>
         /// The prune endpoint.
         /// Used for user removal.
         /// </summary>
-        public const string PRUNE = "/prune";
+        public const string Prune = "/prune";
         /// <summary>
         /// The regions endpoint.
         /// </summary>
-        public const string REGIONS = "/regions";
+        public const string Regions = "/regions";
         /// <summary>
         /// The connections endpoint.
         /// </summary>
-        public const string CONNECTIONS = "/connections";
+        public const string Connections = "/connections";
         /// <summary>
         /// The icons endpoint.
         /// </summary>
-        public const string ICONS = "/icons";
+        public const string Icons = "/icons";
         /// <summary>
         /// The gateway endpoint.
         /// </summary>
-        public const string GATEWAY = "/gateway";
+        public const string Gateway = "/gateway";
         /// <summary>
         /// The oauth2 auth endpoint.
         /// </summary>
-        public const string AUTH = "/auth";
+        public const string Auth = "/auth";
         /// <summary>
         /// The oauth2 login endpoint.
         /// </summary>
-        public const string LOGIN = "/login";
+        public const string Login = "/login";
         /// <summary>
         /// The channels endpoint.
         /// </summary>
-        public const string CHANNELS = "/channels";
+        public const string Channels = "/channels";
         /// <summary>
         /// The messages endpoint.
         /// </summary>
-        public const string MESSAGES = "/messages";
+        public const string Messages = "/messages";
         /// <summary>
         /// The pinned messages endpoint.
         /// </summary>
-        public const string PINS = "/pins";
+        public const string Pins = "/pins";
         /// <summary>
         /// The users endpoint.
         /// </summary>
-        public const string USERS = "/users";
+        public const string Users = "/users";
         /// <summary>
         /// The guilds endpoint.
         /// </summary>
-        public const string GUILDS = "/guilds";
+        public const string Guilds = "/guilds";
         /// <summary>
         /// The guild discovery splash endpoint.
         /// </summary>
-        public const string GUILD_DISCOVERY_SPLASHES = "/discovery-splashes";
+        public const string GuildDiscoverySplashes = "/discovery-splashes";
         /// <summary>
         /// The guild splash endpoint.
         /// </summary>
-        public const string SPLASHES = "/splashes";
+        public const string Splashes = "/splashes";
         /// <summary>
         /// The search endpoint.
         /// </summary>
-        public const string SEARCH = "/search";
+        public const string Search = "/search";
         /// <summary>
         /// The invites endpoint.
         /// </summary>
-        public const string INVITES = "/invites";
+        public const string Invites = "/invites";
         /// <summary>
         /// The roles endpoint.
         /// </summary>
-        public const string ROLES = "/roles";
+        public const string Roles = "/roles";
         /// <summary>
         /// The members endpoint.
         /// </summary>
-        public const string MEMBERS = "/members";
+        public const string Members = "/members";
         /// <summary>
         /// The typing endpoint.
         /// Triggers a typing indicator inside a channel.
         /// </summary>
-        public const string TYPING = "/typing";
+        public const string Typing = "/typing";
         /// <summary>
         /// The avatars endpoint.
         /// </summary>
-        public const string AVATARS = "/avatars";
+        public const string Avatars = "/avatars";
         /// <summary>
         /// The bans endpoint.
         /// </summary>
-        public const string BANS = "/bans";
+        public const string Bans = "/bans";
         /// <summary>
         /// The webhook endpoint.
         /// </summary>
-        public const string WEBHOOKS = "/webhooks";
+        public const string Webhooks = "/webhooks";
         /// <summary>
         /// The slack endpoint.
         /// Used for <see cref="Entities.DiscordWebhook"/>.
         /// </summary>
-        public const string SLACK = "/slack";
+        public const string Slack = "/slack";
         /// <summary>
         /// The github endpoint.
         /// Used for <see cref="Entities.DiscordWebhook"/>.
         /// </summary>
-        public const string GITHUB = "/github";
+        public const string Github = "/github";
         /// <summary>
         /// The bot endpoint.
         /// </summary>
-        public const string BOT = "/bot";
+        public const string Bot = "/bot";
         /// <summary>
         /// The voice endpoint.
         /// </summary>
-        public const string VOICE = "/voice";
+        public const string Voice = "/voice";
         /// <summary>
         /// The audit logs endpoint.
         /// </summary>
-        public const string AUDIT_LOGS = "/audit-logs";
+        public const string AuditLogs = "/audit-logs";
         /// <summary>
         /// The acknowledge endpoint.
         /// Indicates that a message is read.
         /// </summary>
-        public const string ACK = "/ack";
+        public const string Ack = "/ack";
         /// <summary>
         /// The nickname endpoint.
         /// </summary>
-        public const string NICK = "/nick";
+        public const string Nick = "/nick";
         /// <summary>
         /// The assets endpoint.
         /// </summary>
-        public const string ASSETS = "/assets";
+        public const string Assets = "/assets";
         /// <summary>
         /// The embed endpoint.
         /// </summary>
-        public const string EMBED = "/embed";
+        public const string Embed = "/embed";
         /// <summary>
         /// The emojis endpoint.
         /// </summary>
-        public const string EMOJIS = "/emojis";
+        public const string Emojis = "/emojis";
         /// <summary>
         /// The vanity url endpoint.
         /// </summary>
-        public const string VANITY_URL = "/vanity-url";
+        public const string VanityUrl = "/vanity-url";
         /// <summary>
         /// The guild preview endpoint.
         /// </summary>
-        public const string PREVIEW = "/preview";
+        public const string Preview = "/preview";
         /// <summary>
         /// The followers endpoint.
         /// </summary>
-        public const string FOLLOWERS = "/followers";
+        public const string Followers = "/followers";
         /// <summary>
         /// The crosspost endpoint.
         /// </summary>
-        public const string CROSSPOST = "/crosspost";
+        public const string Crosspost = "/crosspost";
         /// <summary>
         /// The guild widget endpoint.
         /// </summary>
-        public const string WIDGET = "/widget";
+        public const string Widget = "/widget";
         /// <summary>
         /// The guild widget json endpoint.
         /// </summary>
-        public const string WIDGET_JSON = "/widget.json";
+        public const string WidgetJson = "/widget.json";
         /// <summary>
         /// The guild widget png endpoint.
         /// </summary>
-        public const string WIDGET_PNG = "/widget.png";
+        public const string WidgetPng = "/widget.png";
         /// <summary>
         /// The templates endpoint.
         /// </summary>
-        public const string TEMPLATES = "/templates";
+        public const string Templates = "/templates";
         /// <summary>
         /// The member verification gate endpoint.
         /// </summary>
-        public const string MEMBER_VERIFICATION = "/member-verification";
+        public const string MemberVerification = "/member-verification";
         /// <summary>
         /// The slash commands endpoint.
         /// </summary>
-        public const string COMMANDS = "/commands";
+        public const string Commands = "/commands";
         /// <summary>
         /// The interactions endpoint.
         /// </summary>
-        public const string INTERACTIONS = "/interactions";
+        public const string Interactions = "/interactions";
         /// <summary>
         /// The interaction/command callback endpoint.
         /// </summary>
-        public const string CALLBACK = "/callback";
+        public const string Callback = "/callback";
         /// <summary>
         /// The welcome screen endpoint.
         /// </summary>
-        public const string WELCOME_SCREEN = "/welcome-screen";
+        public const string WelcomeScreen = "/welcome-screen";
         /// <summary>
         /// The voice states endpoint.
         /// </summary>
-        public const string VOICE_STATES = "/voice-states";
+        public const string VoiceStates = "/voice-states";
         /// <summary>
         /// The stage instances endpoint.
         /// </summary>
-        public const string STAGE_INSTANCES = "/stage-instances";
+        public const string StageInstances = "/stage-instances";
         /// <summary>
         /// The threads endpoint.
         /// </summary>
-        public const string THREADS = "/threads";
+        public const string Threads = "/threads";
         /// <summary>
         /// The public threads endpoint.
         /// </summary>
-        public const string THREAD_PUBLIC = "/public";
+        public const string ThreadPublic = "/public";
         /// <summary>
         /// The private threads endpoint.
         /// </summary>
-        public const string THREAD_PRIVATE = "/private";
+        public const string ThreadPrivate = "/private";
         /// <summary>
         /// The active threads endpoint.
         /// </summary>
-        public const string THREAD_ACTIVE = "/active";
+        public const string ThreadActive = "/active";
         /// <summary>
         /// The archived threads endpoint.
         /// </summary>
-        public const string THREAD_ARCHIVED = "/archived";
+        public const string ThreadArchived = "/archived";
         /// <summary>
         /// The thread members endpoint.
         /// </summary>
-        public const string THREAD_MEMBERS = "/thread-members";
+        public const string ThreadMembers = "/thread-members";
         /// <summary>
         /// The guild sheduled events endpoint.
         /// </summary>
-        public const string SCHEDULED_EVENTS = "/scheduled-events";
+        public const string ScheduledEvents = "/scheduled-events";
         /// <summary>
         /// The stickers endpoint.
         /// </summary>
-        public const string STICKERS = "/stickers";
+        public const string Stickers = "/stickers";
         /// <summary>
         /// The sticker packs endpoint.
         /// Global nitro sticker packs.
         /// </summary>
-        public const string STICKERPACKS = "/sticker-packs";
+        public const string Stickerpacks = "/sticker-packs";
         /// <summary>
         /// The store endpoint.
         /// </summary>
-        public const string STORE = "/store";
+        public const string Store = "/store";
         /// <summary>
         /// The app assets endpoint.
         /// </summary>
-        public const string APP_ASSETS = "/app-assets";
+        public const string AppAssets = "/app-assets";
         /// <summary>
         /// The app icons endpoint.
         /// </summary>
-        public const string APP_ICONS = "/app-icons";
+        public const string AppIcons = "/app-icons";
         /// <summary>
         /// The team icons endpoint.
         /// </summary>
-        public const string TEAM_ICONS = "/team-icons";
+        public const string TeamIcons = "/team-icons";
         /// <summary>
         /// The channel icons endpoint.
         /// </summary>
-        public const string CHANNEL_ICONS = "/channel-icons";
+        public const string ChannelIcons = "/channel-icons";
         /// <summary>
         /// The user banners endpoint.
         /// </summary>
-        public const string BANNERS = "/banners";
+        public const string Banners = "/banners";
         /// <summary>
         /// The sticker endpoint.
         /// This endpoint is the static nitro sticker application.
         /// </summary>
-        public const string STICKER_APPLICATION = "/710982414301790216";
+        public const string StickerApplication = "/710982414301790216";
         /// <summary>
         /// The role subscription endpoint.
         /// </summary>
-        public const string ROLE_SUBSCRIPTIONS = "/role-subscriptions";
+        public const string RoleSubscriptions = "/role-subscriptions";
         /// <summary>
         /// The group listings endpoint.
         /// </summary>
-        public const string GROUP_LISTINGS = "/group-listings";
+        public const string GroupListings = "/group-listings";
         /// <summary>
         /// The subscription listings endpoint.
         /// </summary>
-        public const string SUBSCRIPTION_LISTINGS = "/subscription-listings";
+        public const string SubscriptionListings = "/subscription-listings";
         /// <summary>
         /// The directory entries endpoint.
         /// </summary>
-        public const string DIRECTORY_ENTRIES = "/directory-entries";
+        public const string DirectoryEntries = "/directory-entries";
         /// <summary>
         /// The counts endpoint.
         /// </summary>
-        public const string COUNTS = "/counts";
+        public const string Counts = "/counts";
         /// <summary>
         /// The list endpoint.
         /// </summary>
-        public const string LIST = "/list";
+        public const string List = "/list";
         /// <summary>
         /// The role icons endpoint.
         /// </summary>
-        public const string ROLE_ICONS = "/role-icons";
+        public const string RoleIcons = "/role-icons";
         /// <summary>
         /// The activities endpoint.
         /// </summary>
-        public const string ACTIVITIES = "/activities";
+        public const string Activities = "/activities";
         /// <summary>
         /// The config endpoint.
         /// </summary>
-        public const string CONFIG = "/config";
+        public const string Config = "/config";
         /// <summary>
         /// The ephemeral attachments endpoint.
         /// </summary>

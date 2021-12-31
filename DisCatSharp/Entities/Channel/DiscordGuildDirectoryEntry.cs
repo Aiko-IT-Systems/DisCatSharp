@@ -68,16 +68,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Checks whether this <see cref="DiscordGuildDirectoryEntry"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="DiscordGuildDirectoryEntry"/>.</returns>
-        public override bool Equals(object obj) => this.Equals(obj as DiscordGuildDirectoryEntry);
+        public override bool Equals(object Obj) => this.Equals(Obj as DiscordGuildDirectoryEntry);
 
         /// <summary>
         /// Checks whether this <see cref="DiscordGuildDirectoryEntry"/> is equal to another <see cref="DiscordGuildDirectoryEntry"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordGuildDirectoryEntry"/> to compare to.</param>
+        /// <param name="E"><see cref="DiscordGuildDirectoryEntry"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordGuildDirectoryEntry"/> is equal to this <see cref="DiscordGuildDirectoryEntry"/>.</returns>
-        public bool Equals(DiscordGuildDirectoryEntry e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+        public bool Equals(DiscordGuildDirectoryEntry E) => E is not null && (ReferenceEquals(this, E) || this.Id == E.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordGuildDirectoryEntry"/>.
@@ -88,24 +88,24 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordGuildDirectoryEntry"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First channel to compare.</param>
-        /// <param name="e2">Second channel to compare.</param>
+        /// <param name="E1">First channel to compare.</param>
+        /// <param name="E2">Second channel to compare.</param>
         /// <returns>Whether the two channels are equal.</returns>
-        public static bool operator ==(DiscordGuildDirectoryEntry e1, DiscordGuildDirectoryEntry e2)
+        public static bool operator ==(DiscordGuildDirectoryEntry E1, DiscordGuildDirectoryEntry E2)
         {
-            var o1 = e1 as object;
-            var o2 = e2 as object;
+            var o1 = E1 as object;
+            var o2 = E2 as object;
 
-            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || E1.Id == E2.Id);
         }
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordGuildDirectoryEntry"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First channel to compare.</param>
-        /// <param name="e2">Second channel to compare.</param>
+        /// <param name="E1">First channel to compare.</param>
+        /// <param name="E2">Second channel to compare.</param>
         /// <returns>Whether the two channels are not equal.</returns>
-        public static bool operator !=(DiscordGuildDirectoryEntry e1, DiscordGuildDirectoryEntry e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordGuildDirectoryEntry E1, DiscordGuildDirectoryEntry E2)
+            => !(E1 == E2);
     }
 }

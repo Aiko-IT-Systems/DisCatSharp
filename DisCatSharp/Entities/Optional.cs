@@ -42,11 +42,11 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Creates a new <see cref="Optional{T}"/> with specified value and valid state.
         /// </summary>
-        /// <param name="value">Value to populate the optional with.</param>
+        /// <param name="Value">Value to populate the optional with.</param>
         /// <typeparam name="T">Type of the value.</typeparam>
         /// <returns>Created optional.</returns>
-        public static Optional<T> FromValue<T>(T value)
-            => new(value);
+        public static Optional<T> FromValue<T>(T Value)
+            => new(Value);
 
         /// <summary>
         /// Creates a new empty <see cref="Optional{T}"/> with no value and invalid state.
@@ -102,10 +102,10 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Creates a new <see cref="Optional{T}"/> with specified value.
         /// </summary>
-        /// <param name="value">Value of this option.</param>
-        public Optional(T value)
+        /// <param name="Value">Value of this option.</param>
+        public Optional(T Value)
         {
-            this._val = value;
+            this._val = Value;
             this.HasValue = true;
         }
 
@@ -118,11 +118,11 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Checks whether this <see cref="Optional{T}"/> (or its value) are equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="Optional{T}"/> or its value.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object Obj)
         {
-            return obj switch
+            return Obj switch
             {
                 T t => this.Equals(t),
                 Optional<T> opt => this.Equals(opt),
@@ -133,17 +133,17 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Checks whether this <see cref="Optional{T}"/> is equal to another <see cref="Optional{T}"/>.
         /// </summary>
-        /// <param name="e"><see cref="Optional{T}"/> to compare to.</param>
+        /// <param name="E"><see cref="Optional{T}"/> to compare to.</param>
         /// <returns>Whether the <see cref="Optional{T}"/> is equal to this <see cref="Optional{T}"/>.</returns>
-        public bool Equals(Optional<T> e) => (!this.HasValue && !e.HasValue) || (this.HasValue == e.HasValue && this.Value.Equals(e.Value));
+        public bool Equals(Optional<T> E) => (!this.HasValue && !E.HasValue) || (this.HasValue == E.HasValue && this.Value.Equals(E.Value));
 
         /// <summary>
         /// Checks whether the value of this <see cref="Optional{T}"/> is equal to specified object.
         /// </summary>
-        /// <param name="e">Object to compare to.</param>
+        /// <param name="E">Object to compare to.</param>
         /// <returns>Whether the object is equal to the value of this <see cref="Optional{T}"/>.</returns>
-        public bool Equals(T e)
-            => this.HasValue && ReferenceEquals(this.Value, e);
+        public bool Equals(T E)
+            => this.HasValue && ReferenceEquals(this.Value, E);
 
         /// <summary>
         /// Gets the hash code for this <see cref="Optional{T}"/>.
@@ -152,37 +152,37 @@ namespace DisCatSharp.Entities
         public override int GetHashCode()
             => this.HasValue ? this.Value.GetHashCode() : 0;
 
-        public static implicit operator Optional<T>(T val)
-            => new(val);
+        public static implicit operator Optional<T>(T Val)
+            => new(Val);
 
-        public static explicit operator T(Optional<T> opt)
-            => opt.Value;
+        public static explicit operator T(Optional<T> Opt)
+            => Opt.Value;
 
-        public static bool operator ==(Optional<T> opt1, Optional<T> opt2)
-            => opt1.Equals(opt2);
+        public static bool operator ==(Optional<T> Opt1, Optional<T> Opt2)
+            => Opt1.Equals(Opt2);
 
-        public static bool operator !=(Optional<T> opt1, Optional<T> opt2)
-            => !opt1.Equals(opt2);
+        public static bool operator !=(Optional<T> Opt1, Optional<T> Opt2)
+            => !Opt1.Equals(Opt2);
 
-        public static bool operator ==(Optional<T> opt, T t)
-            => opt.Equals(t);
+        public static bool operator ==(Optional<T> Opt, T T)
+            => Opt.Equals(T);
 
-        public static bool operator !=(Optional<T> opt, T t)
-            => !opt.Equals(t);
+        public static bool operator !=(Optional<T> Opt, T T)
+            => !Opt.Equals(T);
 
         /// <summary>
         /// Performs a mapping operation on the current <see cref="Optional{T}"/>, turning it into an Optional holding a
         /// <typeparamref name="TTarget"/> instance if the source optional contains a value; otherwise, returns an
         /// <see cref="Optional{T}"/> of that same type with no value.
         /// </summary>
-        /// <param name="mapper">The mapping function to apply on the current value if it exists</param>
-        /// <typeparam name="TTarget">The type of the target value returned by <paramref name="mapper"/></typeparam>
+        /// <param name="Mapper">The mapping function to apply on the current value if it exists</param>
+        /// <typeparam name="TTarget">The type of the target value returned by <paramref name="Mapper"/></typeparam>
         /// <returns>
-        /// An <see cref="Optional{T}"/> containing a value denoted by calling <paramref name="mapper"/> if the current
+        /// An <see cref="Optional{T}"/> containing a value denoted by calling <paramref name="Mapper"/> if the current
         /// <see cref="Optional{T}"/> contains a value; otherwise, an empty <see cref="Optional{T}"/> of the target
         /// type.
         /// </returns>
-        public Optional<TTarget> IfPresent<TTarget>(Func<T, TTarget> mapper) => this.HasValue ? new Optional<TTarget>(mapper(this.Value)) : default;
+        public Optional<TTarget> IfPresent<TTarget>(Func<T, TTarget> Mapper) => this.HasValue ? new Optional<TTarget>(Mapper(this.Value)) : default;
     }
 
     /// <summary>
@@ -194,11 +194,11 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Creates the property.
         /// </summary>
-        /// <param name="member">The member.</param>
-        /// <param name="memberSerialization">The member serialization.</param>
-        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+        /// <param name="Member">The member.</param>
+        /// <param name="MemberSerialization">The member serialization.</param>
+        protected override JsonProperty CreateProperty(MemberInfo Member, MemberSerialization MemberSerialization)
         {
-            var property = base.CreateProperty(member, memberSerialization);
+            var property = base.CreateProperty(Member, MemberSerialization);
 
             var type = property.PropertyType;
 
@@ -209,21 +209,21 @@ namespace DisCatSharp.Entities
             // access to the property value so we have to reflect into it from the parent instance
             // we use UnderlyingName instead of PropertyName in case the C# name is different from the Json name.
             var declaringMember = property.DeclaringType.GetTypeInfo().DeclaredMembers
-                .FirstOrDefault(e => e.Name == property.UnderlyingName);
+                .FirstOrDefault(E => E.Name == property.UnderlyingName);
 
             switch (declaringMember)
             {
                 case PropertyInfo declaringProp:
-                    property.ShouldSerialize = instance => // instance here is the declaring (parent) type
+                    property.ShouldSerialize = Instance => // instance here is the declaring (parent) type
                     {
-                        var optionalValue = declaringProp.GetValue(instance);
+                        var optionalValue = declaringProp.GetValue(Instance);
                         return (optionalValue as IOptional).HasValue;
                     };
                     return property;
                 case FieldInfo declaringField:
-                    property.ShouldSerialize = instance => // instance here is the declaring (parent) type
+                    property.ShouldSerialize = Instance => // instance here is the declaring (parent) type
                     {
-                        var optionalValue = declaringField.GetValue(instance);
+                        var optionalValue = declaringField.GetValue(Instance);
                         return (optionalValue as IOptional).HasValue;
                     };
                     return property;
@@ -242,50 +242,50 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Writes the json.
         /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        /// <param name="Writer">The writer.</param>
+        /// <param name="Value">The value.</param>
+        /// <param name="Serializer">The serializer.</param>
+        public override void WriteJson(JsonWriter Writer, object Value, JsonSerializer Serializer)
         {
             // we don't check for HasValue here since it's checked in OptionalJsonContractResolver
-            var val = (value as IOptional).RawValue;
+            var val = (Value as IOptional).RawValue;
             // JToken.FromObject will throw if `null` so we manually write a null value.
             if (val == null)
             {
                 // you can read serializer.NullValueHandling here, but unfortunately you can **not** skip serialization
                 // here, or else you will get a nasty JsonWriterException, so we just ignore its value and manually
                 // write the null.
-                writer.WriteToken(JsonToken.Null);
+                Writer.WriteToken(JsonToken.Null);
             }
             else
             {
                 // convert the value to a JSON object and write it to the property value.
-                JToken.FromObject(val).WriteTo(writer);
+                JToken.FromObject(val).WriteTo(Writer);
             }
         }
 
         /// <summary>
         /// Reads the json.
         /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="objectType">The object type.</param>
-        /// <param name="existingValue">The existing value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
+        /// <param name="Reader">The reader.</param>
+        /// <param name="ObjectType">The object type.</param>
+        /// <param name="ExistingValue">The existing value.</param>
+        /// <param name="Serializer">The serializer.</param>
+        public override object ReadJson(JsonReader Reader, Type ObjectType, object ExistingValue,
+            JsonSerializer Serializer)
         {
-            var genericType = objectType.GenericTypeArguments[0];
+            var genericType = ObjectType.GenericTypeArguments[0];
 
-            var constructor = objectType.GetTypeInfo().DeclaredConstructors
-                .FirstOrDefault(e => e.GetParameters()[0].ParameterType == genericType);
+            var constructor = ObjectType.GetTypeInfo().DeclaredConstructors
+                .FirstOrDefault(E => E.GetParameters()[0].ParameterType == genericType);
 
-            return constructor.Invoke(new[] { serializer.Deserialize(reader, genericType) });
+            return constructor.Invoke(new[] { Serializer.Deserialize(Reader, genericType) });
         }
 
         /// <summary>
         /// Whether it can convert.
         /// </summary>
-        /// <param name="objectType">The object type.</param>
-        public override bool CanConvert(Type objectType) => objectType.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IOptional));
+        /// <param name="ObjectType">The object type.</param>
+        public override bool CanConvert(Type ObjectType) => ObjectType.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IOptional));
     }
 }

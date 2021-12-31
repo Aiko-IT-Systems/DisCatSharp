@@ -35,19 +35,19 @@ namespace DisCatSharp.ApplicationCommands
         /// Gets the group translations.
         /// </summary>
         public IReadOnlyDictionary<string, GroupTranslation> GroupTranslations => this._groupTranslations;
-        private Dictionary<string, GroupTranslation> _groupTranslations => new();
+        private Dictionary<string, GroupTranslation> GroupTranslations => new();
 
         /// <summary>
         /// Gets the sub group translations.
         /// </summary>
         public IReadOnlyDictionary<string, SubGroupTranslation> SubGroupTranslations => this._subGroupTranslations;
-        private Dictionary<string, SubGroupTranslation> _subGroupTranslations => new();
+        private Dictionary<string, SubGroupTranslation> SubGroupTranslations => new();
 
         /// <summary>
         /// Gets the command translations.
         /// </summary>
         public IReadOnlyDictionary<string, CommandTranslation> CommandTranslations => this._commandTranslations;
-        private Dictionary<string, CommandTranslation> _commandTranslations => new();
+        private Dictionary<string, CommandTranslation> CommandTranslations => new();
 
 #pragma warning restore IDE1006
     }

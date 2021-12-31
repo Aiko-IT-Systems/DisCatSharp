@@ -86,31 +86,31 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Constucts a new button based on another button.
         /// </summary>
-        /// <param name="other">The button to copy.</param>
-        public DiscordButtonComponent(DiscordButtonComponent other) : this()
+        /// <param name="Other">The button to copy.</param>
+        public DiscordButtonComponent(DiscordButtonComponent Other) : this()
         {
-            this.CustomId = other.CustomId;
-            this.Style = other.Style;
-            this.Label = other.Label;
-            this.Disabled = other.Disabled;
-            this.Emoji = other.Emoji;
+            this.CustomId = Other.CustomId;
+            this.Style = Other.Style;
+            this.Label = Other.Label;
+            this.Disabled = Other.Disabled;
+            this.Emoji = Other.Emoji;
         }
 
         /// <summary>
         /// Constructs a new button with the specified options.
         /// </summary>
-        /// <param name="style">The style/color of the button.</param>
-        /// <param name="customId">The Id to assign to the button. This is sent back when a user presses it.</param>
-        /// <param name="label">The text to display on the button, up to 80 characters. Can be left blank if <paramref name="emoji"/>is set.</param>
-        /// <param name="disabled">Whether this button should be initialized as being disabled. User sees a greyed out button that cannot be interacted with.</param>
-        /// <param name="emoji">The emoji to add to the button. This is required if <paramref name="label"/> is empty or null.</param>
-        public DiscordButtonComponent(ButtonStyle style, string customId, string label, bool disabled = false, DiscordComponentEmoji emoji = null)
+        /// <param name="Style">The style/color of the button.</param>
+        /// <param name="CustomId">The Id to assign to the button. This is sent back when a user presses it.</param>
+        /// <param name="Label">The text to display on the button, up to 80 characters. Can be left blank if <paramref name="Emoji"/>is set.</param>
+        /// <param name="Disabled">Whether this button should be initialized as being disabled. User sees a greyed out button that cannot be interacted with.</param>
+        /// <param name="Emoji">The emoji to add to the button. This is required if <paramref name="Label"/> is empty or null.</param>
+        public DiscordButtonComponent(ButtonStyle Style, string CustomId, string Label, bool Disabled = false, DiscordComponentEmoji Emoji = null)
         {
-            this.Style = style;
-            this.Label = label;
-            this.CustomId = customId;
-            this.Disabled = disabled;
-            this.Emoji = emoji;
+            this.Style = Style;
+            this.Label = Label;
+            this.CustomId = CustomId;
+            this.Disabled = Disabled;
+            this.Emoji = Emoji;
             this.Type = ComponentType.Button;
         }
     }

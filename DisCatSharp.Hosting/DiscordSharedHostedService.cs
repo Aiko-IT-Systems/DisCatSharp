@@ -40,23 +40,23 @@ namespace DisCatSharp.Hosting
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordShardedHostedService"/> class.
         /// </summary>
-        /// <param name="config">The config.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="applicationLifetime">The application lifetime.</param>
-        /// <param name="configBotSection">The config bot section.</param>
-        protected DiscordShardedHostedService(IConfiguration config,
-            ILogger<DiscordShardedHostedService> logger,
-            IServiceProvider serviceProvider,
-            IHostApplicationLifetime applicationLifetime,
-            string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
-            : base(config, logger, serviceProvider, applicationLifetime, configBotSection)
+        /// <param name="Config">The config.</param>
+        /// <param name="Logger">The logger.</param>
+        /// <param name="ServiceProvider">The service provider.</param>
+        /// <param name="ApplicationLifetime">The application lifetime.</param>
+        /// <param name="ConfigBotSection">The config bot section.</param>
+        protected DiscordShardedHostedService(IConfiguration Config,
+            ILogger<DiscordShardedHostedService> Logger,
+            IServiceProvider ServiceProvider,
+            IHostApplicationLifetime ApplicationLifetime,
+            string ConfigBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
+            : base(Config, Logger, ServiceProvider, ApplicationLifetime, ConfigBotSection)
         {
 
         }
 #pragma warning restore 8618
 
-        protected override Task ConfigureAsync()
+        protected override Task Configure()
         {
             try
             {
@@ -72,9 +72,9 @@ namespace DisCatSharp.Hosting
             return Task.CompletedTask;
         }
 
-        protected sealed override async Task ConnectAsync() => await this.ShardedClient.StartAsync();
+        protected sealed override async Task Connect() => await this.ShardedClient.StartAsync();
 
-        protected override Task ConfigureExtensionsAsync()
+        protected override Task ConfigureExtensions()
         {
             foreach (var client in this.ShardedClient.ShardClients.Values)
             {

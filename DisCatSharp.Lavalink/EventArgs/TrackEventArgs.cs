@@ -73,12 +73,12 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackStartEventArgs"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        /// <param name="track">The track.</param>
-        internal TrackStartEventArgs(LavalinkGuildConnection lvl, LavalinkTrack track) : base(lvl.Node.Discord.ServiceProvider)
+        /// <param name="Lvl">The lvl.</param>
+        /// <param name="Track">The track.</param>
+        internal TrackStartEventArgs(LavalinkGuildConnection Lvl, LavalinkTrack Track) : base(Lvl.Node.Discord.ServiceProvider)
         {
-            this.Track = track;
-            this.Player = lvl;
+            this.Track = Track;
+            this.Player = Lvl;
         }
     }
 
@@ -120,14 +120,14 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackFinishEventArgs"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        /// <param name="track">The track.</param>
-        /// <param name="reason">The reason.</param>
-        internal TrackFinishEventArgs(LavalinkGuildConnection lvl, LavalinkTrack track, TrackEndReason reason) : base(lvl.Node.Discord.ServiceProvider)
+        /// <param name="Lvl">The lvl.</param>
+        /// <param name="Track">The track.</param>
+        /// <param name="Reason">The reason.</param>
+        internal TrackFinishEventArgs(LavalinkGuildConnection Lvl, LavalinkTrack Track, TrackEndReason Reason) : base(Lvl.Node.Discord.ServiceProvider)
         {
-            this.Track = track;
-            this.Reason = reason;
-            this.Player = lvl;
+            this.Track = Track;
+            this.Reason = Reason;
+            this.Player = Lvl;
         }
     }
 
@@ -200,14 +200,14 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackStuckEventArgs"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        /// <param name="thresholdMs">The threshold ms.</param>
-        /// <param name="track">The track.</param>
-        internal TrackStuckEventArgs(LavalinkGuildConnection lvl, long thresholdMs, LavalinkTrack track) : base(lvl.Node.Discord.ServiceProvider)
+        /// <param name="Lvl">The lvl.</param>
+        /// <param name="ThresholdMs">The threshold ms.</param>
+        /// <param name="Track">The track.</param>
+        internal TrackStuckEventArgs(LavalinkGuildConnection Lvl, long ThresholdMs, LavalinkTrack Track) : base(Lvl.Node.Discord.ServiceProvider)
         {
-            this.ThresholdMilliseconds = thresholdMs;
-            this.Track = track;
-            this.Player = lvl;
+            this.ThresholdMilliseconds = ThresholdMs;
+            this.Track = Track;
+            this.Player = Lvl;
         }
     }
 
@@ -249,14 +249,14 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackExceptionEventArgs"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        /// <param name="error">The error.</param>
-        /// <param name="track">The track.</param>
-        internal TrackExceptionEventArgs(LavalinkGuildConnection lvl, string error, LavalinkTrack track) : base(lvl.Node.Discord.ServiceProvider)
+        /// <param name="Lvl">The lvl.</param>
+        /// <param name="Error">The error.</param>
+        /// <param name="Track">The track.</param>
+        internal TrackExceptionEventArgs(LavalinkGuildConnection Lvl, string Error, LavalinkTrack Track) : base(Lvl.Node.Discord.ServiceProvider)
         {
-            this.Error = error;
-            this.Track = track;
-            this.Player = lvl;
+            this.Error = Error;
+            this.Track = Track;
+            this.Player = Lvl;
         }
     }
 }

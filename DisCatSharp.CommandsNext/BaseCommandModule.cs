@@ -32,17 +32,17 @@ namespace DisCatSharp.CommandsNext
         /// <summary>
         /// Called before a command in the implementing module is executed.
         /// </summary>
-        /// <param name="ctx">Context in which the method is being executed.</param>
+        /// <param name="Ctx">Context in which the method is being executed.</param>
         /// <returns></returns>
-        public virtual Task BeforeExecutionAsync(CommandContext ctx)
+        public virtual Task BeforeExecution(CommandContext Ctx)
             => Task.Delay(0);
 
         /// <summary>
         /// Called after a command in the implementing module is successfully executed.
         /// </summary>
-        /// <param name="ctx">Context in which the method is being executed.</param>
+        /// <param name="Ctx">Context in which the method is being executed.</param>
         /// <returns></returns>
-        public virtual Task AfterExecutionAsync(CommandContext ctx)
+        public virtual Task AfterExecution(CommandContext Ctx)
             => Task.Delay(0);
     }
 }

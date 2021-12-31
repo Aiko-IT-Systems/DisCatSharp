@@ -33,8 +33,8 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Checks whether this command can be executed within the current context.
         /// </summary>
-        /// <param name="ctx">The context.</param>
+        /// <param name="Ctx">The context.</param>
         /// <returns>Whether the checks passed.</returns>
-        public abstract Task<bool> ExecuteChecksAsync(InteractionContext ctx);
+        public abstract Task<bool> ExecuteChecks(InteractionContext Ctx);
     }
 }

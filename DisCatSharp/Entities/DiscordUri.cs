@@ -44,30 +44,30 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordUri"/> class.
         /// </summary>
-        /// <param name="value">The value.</param>
-        internal DiscordUri(Uri value)
+        /// <param name="Value">The value.</param>
+        internal DiscordUri(Uri Value)
         {
-            this._value = value ?? throw new ArgumentNullException(nameof(value));
+            this._value = Value ?? throw new ArgumentNullException(nameof(Value));
             this.Type = DiscordUriType.Standard;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordUri"/> class.
         /// </summary>
-        /// <param name="value">The value.</param>
-        internal DiscordUri(string value)
+        /// <param name="Value">The value.</param>
+        internal DiscordUri(string Value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            if (Value == null)
+                throw new ArgumentNullException(nameof(Value));
 
-            if (IsStandard(value))
+            if (IsStandard(Value))
             {
-                this._value = new Uri(value);
+                this._value = new Uri(Value);
                 this.Type = DiscordUriType.Standard;
             }
             else
             {
-                this._value = value;
+                this._value = Value;
                 this.Type = DiscordUriType.NonStandard;
             }
         }
@@ -76,9 +76,9 @@ namespace DisCatSharp.Net
         /// <summary>
         /// If the uri is a standard uri
         /// </summary>
-        /// <param name="value">Uri string</param>
+        /// <param name="Value">Uri string</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool IsStandard(string value) => !value.StartsWith("attachment://");
+        private static bool IsStandard(string Value) => !Value.StartsWith("attachment://");
 
         /// <summary>
         /// Returns a string representation of this DiscordUri.
@@ -107,27 +107,27 @@ namespace DisCatSharp.Net
             /// <summary>
             /// Writes the json.
             /// </summary>
-            /// <param name="writer">The writer.</param>
-            /// <param name="value">The value.</param>
-            /// <param name="serializer">The serializer.</param>
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => writer.WriteValue((value as DiscordUri)._value);
+            /// <param name="Writer">The writer.</param>
+            /// <param name="Value">The value.</param>
+            /// <param name="Serializer">The serializer.</param>
+            public override void WriteJson(JsonWriter Writer, object Value, JsonSerializer Serializer) => Writer.WriteValue((Value as DiscordUri)._value);
 
             /// <summary>
             /// Reads the json.
             /// </summary>
-            /// <param name="reader">The reader.</param>
-            /// <param name="objectType">The object type.</param>
-            /// <param name="existingValue">The existing value.</param>
-            /// <param name="serializer">The serializer.</param>
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-                JsonSerializer serializer)
+            /// <param name="Reader">The reader.</param>
+            /// <param name="ObjectType">The object type.</param>
+            /// <param name="ExistingValue">The existing value.</param>
+            /// <param name="Serializer">The serializer.</param>
+            public override object ReadJson(JsonReader Reader, Type ObjectType, object ExistingValue,
+                JsonSerializer Serializer)
             {
-                var val = reader.Value;
+                var val = Reader.Value;
                 return val == null
                     ? null
                     : val is not string s
                     ? throw new JsonReaderException("DiscordUri value invalid format! This is a bug in DisCatSharp. " +
-                                                  $"Include the type in your bug report: [[{reader.TokenType}]]")
+                                                  $"Include the type in your bug report: [[{Reader.TokenType}]]")
                     : IsStandard(s)
                     ? new DiscordUri(new Uri(s))
                     : new DiscordUri(s);
@@ -136,9 +136,9 @@ namespace DisCatSharp.Net
             /// <summary>
             /// Whether it can be converted.
             /// </summary>
-            /// <param name="objectType">The object type.</param>
+            /// <param name="ObjectType">The object type.</param>
             /// <returns>A bool.</returns>
-            public override bool CanConvert(Type objectType) => objectType == typeof(DiscordUri);
+            public override bool CanConvert(Type ObjectType) => ObjectType == typeof(DiscordUri);
         }
     }
 

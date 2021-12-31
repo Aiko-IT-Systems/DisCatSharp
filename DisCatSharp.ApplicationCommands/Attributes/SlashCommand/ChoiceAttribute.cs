@@ -43,45 +43,45 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Adds a choice to the slash command option
         /// </summary>
-        /// <param name="name">The name of the choice.</param>
-        /// <param name="value">The value of the choice.</param>
-        public ChoiceAttribute(string name, string value)
+        /// <param name="Name">The name of the choice.</param>
+        /// <param name="Value">The value of the choice.</param>
+        public ChoiceAttribute(string Name, string Value)
         {
-            this.Name = name;
-            this.Value = value;
+            this.Name = Name;
+            this.Value = Value;
         }
 
         /// <summary>
         /// Adds a choice to the slash command option
         /// </summary>
-        /// <param name="name">The name of the choice.</param>
-        /// <param name="value">The value of the choice.</param>
-        public ChoiceAttribute(string name, long value)
+        /// <param name="Name">The name of the choice.</param>
+        /// <param name="Value">The value of the choice.</param>
+        public ChoiceAttribute(string Name, long Value)
         {
-            this.Name = name;
-            this.Value = value;
+            this.Name = Name;
+            this.Value = Value;
         }
 
         /// <summary>
         /// Adds a choice to the slash command option
         /// </summary>
-        /// <param name="name">The name of the choice.</param>
-        /// <param name="value">The value of the choice.</param>
-        public ChoiceAttribute(string name, int value)
+        /// <param name="Name">The name of the choice.</param>
+        /// <param name="Value">The value of the choice.</param>
+        public ChoiceAttribute(string Name, int Value)
         {
-            this.Name = name;
-            this.Value = value;
+            this.Name = Name;
+            this.Value = Value;
         }
 
         /// <summary>
         /// Adds a choice to the slash command option
         /// </summary>
-        /// <param name="name">The name of the choice.</param>
-        /// <param name="value">The value of the choice.</param>
-        public ChoiceAttribute(string name, double value)
+        /// <param name="Name">The name of the choice.</param>
+        /// <param name="Value">The value of the choice.</param>
+        public ChoiceAttribute(string Name, double Value)
         {
-            this.Name = name;
-            this.Value = value;
+            this.Name = Name;
+            this.Value = Value;
         }
     }
 }

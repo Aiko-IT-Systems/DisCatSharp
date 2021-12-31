@@ -110,15 +110,15 @@ namespace DisCatSharp
         /// <summary>
         /// Initializes new auto-sharding Discord client.
         /// </summary>
-        /// <param name="config">Configuration to use.</param>
-        public DiscordShardedClient(DiscordConfiguration config)
+        /// <param name="Config">Configuration to use.</param>
+        public DiscordShardedClient(DiscordConfiguration Config)
         {
             this.InternalSetup();
 
-            if (config.ShardCount > 1)
+            if (Config.ShardCount > 1)
                 this._manuallySharding = true;
 
-            this.Configuration = config;
+            this.Configuration = Config;
             this.ShardClients = new ReadOnlyConcurrentDictionary<int, DiscordClient>(this._shards);
 
             if (this.Configuration.LoggerFactory == null)
@@ -163,11 +163,11 @@ namespace DisCatSharp
                         this.GatewayInfo.SessionBucket.MaxConcurrency = 1;
 
                     if (this.GatewayInfo.SessionBucket.MaxConcurrency == 1)
-                        await this.ConnectShardAsync(i).ConfigureAwait(false);
+                        await this.ConnectShard(i).ConfigureAwait(false);
                     else
                     {
                         //Concurrent login.
-                        connectTasks.Add(this.ConnectShardAsync(i));
+                        connectTasks.Add(this.ConnectShard(i));
 
                         if (connectTasks.Count == this.GatewayInfo.SessionBucket.MaxConcurrency)
                         {
@@ -179,7 +179,7 @@ namespace DisCatSharp
             }
             catch (Exception ex)
             {
-                await this.InternalStopAsync(false).ConfigureAwait(false);
+                await this.InternalStop(false).ConfigureAwait(false);
 
                 var message = $"Shard initialization failed, check inner exceptions for details: ";
 
@@ -192,8 +192,8 @@ namespace DisCatSharp
         /// </summary>
         /// <returns></returns>
         /// <exception cref="System.InvalidOperationException"></exception>
-        public Task StopAsync()
-            => this.InternalStopAsync();
+        public Task Stop()
+            => this.InternalStop();
 
         /// <summary>
         /// Gets a shard from a guild ID.
@@ -202,11 +202,11 @@ namespace DisCatSharp
         ///     Otherwise if manually sharding, it will instead iterate through each shard's guild caches.
         /// </para>
         /// </summary>
-        /// <param name="guildId">The guild ID for the shard.</param>
+        /// <param name="GuildId">The guild ID for the shard.</param>
         /// <returns>The found <see cref="DiscordClient"/> shard. Otherwise <see langword="null"/> if the shard was not found for the guild ID.</returns>
-        public DiscordClient GetShard(ulong guildId)
+        public DiscordClient GetShard(ulong GuildId)
         {
-            var index = this._manuallySharding ? this.GetShardIdFromGuilds(guildId) : Utilities.GetShardId(guildId, this.ShardClients.Count);
+            var index = this._manuallySharding ? this.GetShardIdFromGuilds(GuildId) : Utilities.GetShardId(GuildId, this.ShardClients.Count);
 
             return index != -1 ? this._shards[index] : null;
         }
@@ -218,23 +218,23 @@ namespace DisCatSharp
         ///     Otherwise if manually sharding, it will instead iterate through each shard's guild caches.
         /// </para>
         /// </summary>
-        /// <param name="guild">The guild for the shard.</param>
+        /// <param name="Guild">The guild for the shard.</param>
         /// <returns>The found <see cref="DiscordClient"/> shard. Otherwise <see langword="null"/> if the shard was not found for the guild.</returns>
-        public DiscordClient GetShard(DiscordGuild guild)
-            => this.GetShard(guild.Id);
+        public DiscordClient GetShard(DiscordGuild Guild)
+            => this.GetShard(Guild.Id);
 
         /// <summary>
         /// Updates playing statuses on all shards.
         /// </summary>
-        /// <param name="activity">Activity to set.</param>
-        /// <param name="userStatus">Status of the user.</param>
-        /// <param name="idleSince">Since when is the client performing the specified activity.</param>
+        /// <param name="Activity">Activity to set.</param>
+        /// <param name="UserStatus">Status of the user.</param>
+        /// <param name="IdleSince">Since when is the client performing the specified activity.</param>
         /// <returns>Asynchronous operation.</returns>
-        public async Task UpdateStatusAsync(DiscordActivity activity = null, UserStatus? userStatus = null, DateTimeOffset? idleSince = null)
+        public async Task UpdateStatusAsync(DiscordActivity Activity = null, UserStatus? UserStatus = null, DateTimeOffset? IdleSince = null)
         {
             var tasks = new List<Task>();
             foreach (var client in this._shards.Values)
-                tasks.Add(client.UpdateStatusAsync(activity, userStatus, idleSince));
+                tasks.Add(client.UpdateStatus(Activity, UserStatus, IdleSince));
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
         }
@@ -252,7 +252,7 @@ namespace DisCatSharp
             if (this._shards.Count != 0)
                 return this._shards.Count;
 
-            this.GatewayInfo = await this.GetGatewayInfoAsync().ConfigureAwait(false);
+            this.GatewayInfo = await this.GetGatewayInfo().ConfigureAwait(false);
             var shardc = this.Configuration.ShardCount == 1 ? this.GatewayInfo.ShardCount : this.Configuration.ShardCount;
             var lf = new ShardedLoggerFactory(this.Logger);
             for (var i = 0; i < shardc; i++)
@@ -280,9 +280,9 @@ namespace DisCatSharp
         /// Gets the gateway info async.
         /// </summary>
         /// <returns>A Task.</returns>
-        private async Task<GatewayInfo> GetGatewayInfoAsync()
+        private async Task<GatewayInfo> GetGatewayInfo()
         {
-            var url = $"{Utilities.GetApiBaseUri(this.Configuration)}{Endpoints.GATEWAY}{Endpoints.BOT}";
+            var url = $"{Utilities.GetApiBaseUri(this.Configuration)}{Endpoints.Gateway}{Endpoints.Bot}";
             var http = new HttpClient();
 
             http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
@@ -292,7 +292,7 @@ namespace DisCatSharp
                 http.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this.Configuration.Override);
             }
 
-            this.Logger.LogDebug(LoggerEvents.ShardRest, $"Obtaining gateway information from GET {Endpoints.GATEWAY}{Endpoints.BOT}...");
+            this.Logger.LogDebug(LoggerEvents.ShardRest, $"Obtaining gateway information from GET {Endpoints.Gateway}{Endpoints.Bot}...");
             var resp = await http.GetAsync(url).ConfigureAwait(false);
 
             http.Dispose();
@@ -302,7 +302,7 @@ namespace DisCatSharp
                 var ratelimited = await HandleHttpError(url, resp).ConfigureAwait(false);
 
                 if (ratelimited)
-                    return await this.GetGatewayInfoAsync().ConfigureAwait(false);
+                    return await this.GetGatewayInfo().ConfigureAwait(false);
             }
 
             var timer = new Stopwatch();
@@ -319,34 +319,34 @@ namespace DisCatSharp
 
             return info;
 
-            async Task<bool> HandleHttpError(string reqUrl, HttpResponseMessage msg)
+            async Task<bool> HandleHttpError(string ReqUrl, HttpResponseMessage Msg)
             {
-                var code = (int)msg.StatusCode;
+                var code = (int)Msg.StatusCode;
 
                 if (code == 401 || code == 403)
                 {
-                    throw new Exception($"Authentication failed, check your token and try again: {code} {msg.ReasonPhrase}");
+                    throw new Exception($"Authentication failed, check your token and try again: {code} {Msg.ReasonPhrase}");
                 }
                 else if (code == 429)
                 {
-                    this.Logger.LogError(LoggerEvents.ShardClientError, $"Ratelimit hit, requeuing request to {reqUrl}");
+                    this.Logger.LogError(LoggerEvents.ShardClientError, $"Ratelimit hit, requeuing request to {ReqUrl}");
 
-                    var hs = msg.Headers.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
+                    var hs = Msg.Headers.ToDictionary(Xh => Xh.Key, Xh => string.Join("\n", Xh.Value), StringComparer.OrdinalIgnoreCase);
                     var waitInterval = 0;
 
-                    if (hs.TryGetValue("Retry-After", out var retry_after_raw))
-                        waitInterval = int.Parse(retry_after_raw, CultureInfo.InvariantCulture);
+                    if (hs.TryGetValue("Retry-After", out var retryAfterRaw))
+                        waitInterval = int.Parse(retryAfterRaw, CultureInfo.InvariantCulture);
 
                     await Task.Delay(waitInterval).ConfigureAwait(false);
                     return true;
                 }
                 else if (code >= 500)
                 {
-                    throw new Exception($"Internal Server Error: {code} {msg.ReasonPhrase}");
+                    throw new Exception($"Internal Server Error: {code} {Msg.ReasonPhrase}");
                 }
                 else
                 {
-                    throw new Exception($"An unsuccessful HTTP status code was encountered: {code} {msg.ReasonPhrase}");
+                    throw new Exception($"An unsuccessful HTTP status code was encountered: {code} {Msg.ReasonPhrase}");
                 }
             }
         }
@@ -378,12 +378,12 @@ namespace DisCatSharp
         /// <summary>
         /// Connects the shard async.
         /// </summary>
-        /// <param name="i">The i.</param>
+        /// <param name="I">The i.</param>
         /// <returns>A Task.</returns>
-        private async Task ConnectShardAsync(int i)
+        private async Task ConnectShard(int I)
         {
-            if (!this._shards.TryGetValue(i, out var client))
-                throw new Exception($"Could not initialize shard {i}.");
+            if (!this._shards.TryGetValue(I, out var client))
+                throw new Exception($"Could not initialize shard {I}.");
 
             if (this.GatewayInfo != null)
             {
@@ -400,14 +400,14 @@ namespace DisCatSharp
             if (this._internalVoiceRegions != null)
             {
                 client.InternalVoiceRegions = this._internalVoiceRegions;
-                client._voice_regions_lazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(client.InternalVoiceRegions));
+                client._voiceRegionsLazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(client.InternalVoiceRegions));
             }
 
             this.HookEventHandlers(client);
 
             client._isShard = true;
             await client.ConnectAsync().ConfigureAwait(false);
-            this.Logger.LogInformation(LoggerEvents.ShardStartup, "Booted shard {0}.", i);
+            this.Logger.LogInformation(LoggerEvents.ShardStartup, "Booted shard {0}.", I);
 
             if (this.CurrentUser == null)
                 this.CurrentUser = client.CurrentUser;
@@ -425,14 +425,14 @@ namespace DisCatSharp
         /// <summary>
         /// Internals the stop async.
         /// </summary>
-        /// <param name="enableLogger">If true, enable logger.</param>
+        /// <param name="EnableLogger">If true, enable logger.</param>
         /// <returns>A Task.</returns>
-        private Task InternalStopAsync(bool enableLogger = true)
+        private Task InternalStop(bool EnableLogger = true)
         {
             if (!this._isStarted)
                 throw new InvalidOperationException("This client has not been started.");
 
-            if (enableLogger)
+            if (EnableLogger)
                 this.Logger.LogInformation(LoggerEvents.ShardShutdown, "Disposing {0} shards.", this._shards.Count);
 
             this._isStarted = false;
@@ -450,7 +450,7 @@ namespace DisCatSharp
 
                     client.Dispose();
 
-                    if (enableLogger)
+                    if (EnableLogger)
                         this.Logger.LogInformation(LoggerEvents.ShardShutdown, "Disconnected shard {0}.", i);
                 }
             }
@@ -550,181 +550,181 @@ namespace DisCatSharp
         /// <summary>
         /// Hooks the event handlers.
         /// </summary>
-        /// <param name="client">The client.</param>
-        private void HookEventHandlers(DiscordClient client)
+        /// <param name="Client">The client.</param>
+        private void HookEventHandlers(DiscordClient Client)
         {
-            client.ClientErrored += this.Client_ClientError;
-            client.SocketErrored += this.Client_SocketError;
-            client.SocketOpened += this.Client_SocketOpened;
-            client.SocketClosed += this.Client_SocketClosed;
-            client.Ready += this.Client_Ready;
-            client.Resumed += this.Client_Resumed;
-            client.ChannelCreated += this.Client_ChannelCreated;
-            client.ChannelUpdated += this.Client_ChannelUpdated;
-            client.ChannelDeleted += this.Client_ChannelDeleted;
-            client.DmChannelDeleted += this.Client_DMChannelDeleted;
-            client.ChannelPinsUpdated += this.Client_ChannelPinsUpdated;
-            client.GuildCreated += this.Client_GuildCreated;
-            client.GuildAvailable += this.Client_GuildAvailable;
-            client.GuildUpdated += this.Client_GuildUpdated;
-            client.GuildDeleted += this.Client_GuildDeleted;
-            client.GuildUnavailable += this.Client_GuildUnavailable;
-            client.GuildDownloadCompleted += this.Client_GuildDownloadCompleted;
-            client.InviteCreated += this.Client_InviteCreated;
-            client.InviteDeleted += this.Client_InviteDeleted;
-            client.MessageCreated += this.Client_MessageCreated;
-            client.PresenceUpdated += this.Client_PresenceUpdate;
-            client.GuildBanAdded += this.Client_GuildBanAdd;
-            client.GuildBanRemoved += this.Client_GuildBanRemove;
-            client.GuildEmojisUpdated += this.Client_GuildEmojisUpdate;
-            client.GuildStickersUpdated += this.Client_GuildStickersUpdate;
-            client.GuildIntegrationsUpdated += this.Client_GuildIntegrationsUpdate;
-            client.GuildMemberAdded += this.Client_GuildMemberAdd;
-            client.GuildMemberRemoved += this.Client_GuildMemberRemove;
-            client.GuildMemberUpdated += this.Client_GuildMemberUpdate;
-            client.GuildRoleCreated += this.Client_GuildRoleCreate;
-            client.GuildRoleUpdated += this.Client_GuildRoleUpdate;
-            client.GuildRoleDeleted += this.Client_GuildRoleDelete;
-            client.MessageUpdated += this.Client_MessageUpdate;
-            client.MessageDeleted += this.Client_MessageDelete;
-            client.MessagesBulkDeleted += this.Client_MessageBulkDelete;
-            client.InteractionCreated += this.Client_InteractionCreate;
-            client.ComponentInteractionCreated += this.Client_ComponentInteractionCreate;
-            client.ContextMenuInteractionCreated += this.Client_ContextMenuInteractionCreate;
-            client.TypingStarted += this.Client_TypingStart;
-            client.UserSettingsUpdated += this.Client_UserSettingsUpdate;
-            client.UserUpdated += this.Client_UserUpdate;
-            client.VoiceStateUpdated += this.Client_VoiceStateUpdate;
-            client.VoiceServerUpdated += this.Client_VoiceServerUpdate;
-            client.GuildMembersChunked += this.Client_GuildMembersChunk;
-            client.UnknownEvent += this.Client_UnknownEvent;
-            client.MessageReactionAdded += this.Client_MessageReactionAdd;
-            client.MessageReactionRemoved += this.Client_MessageReactionRemove;
-            client.MessageReactionsCleared += this.Client_MessageReactionRemoveAll;
-            client.MessageReactionRemovedEmoji += this.Client_MessageReactionRemovedEmoji;
-            client.WebhooksUpdated += this.Client_WebhooksUpdate;
-            client.Heartbeated += this.Client_HeartBeated;
-            client.ApplicationCommandCreated += this.Client_ApplicationCommandCreated;
-            client.ApplicationCommandUpdated += this.Client_ApplicationCommandUpdated;
-            client.ApplicationCommandDeleted += this.Client_ApplicationCommandDeleted;
-            client.GuildApplicationCommandCountUpdated += this.Client_GuildApplicationCommandCountUpdated;
-            client.ApplicationCommandPermissionsUpdated += this.Client_ApplicationCommandPermissionsUpdated;
-            client.GuildIntegrationCreated += this.Client_GuildIntegrationCreated;
-            client.GuildIntegrationUpdated += this.Client_GuildIntegrationUpdated;
-            client.GuildIntegrationDeleted += this.Client_GuildIntegrationDeleted;
-            client.StageInstanceCreated += this.Client_StageInstanceCreated;
-            client.StageInstanceUpdated += this.Client_StageInstanceUpdated;
-            client.StageInstanceDeleted += this.Client_StageInstanceDeleted;
-            client.ThreadCreated += this.Client_ThreadCreated;
-            client.ThreadUpdated += this.Client_ThreadUpdated;
-            client.ThreadDeleted += this.Client_ThreadDeleted;
-            client.ThreadListSynced += this.Client_ThreadListSynced;
-            client.ThreadMemberUpdated += this.Client_ThreadMemberUpdated;
-            client.ThreadMembersUpdated += this.Client_ThreadMembersUpdated;
-            client.Zombied += this.Client_Zombied;
-            client.PayloadReceived += this.Client_PayloadReceived;
-            client.GuildScheduledEventCreated += this.Client_GuildScheduledEventCreated;
-            client.GuildScheduledEventUpdated += this.Client_GuildScheduledEventUpdated;
-            client.GuildScheduledEventDeleted += this.Client_GuildScheduledEventDeleted;
-            client.GuildScheduledEventUserAdded += this.Client_GuildScheduledEventUserAdded; ;
-            client.GuildScheduledEventUserRemoved += this.Client_GuildScheduledEventUserRemoved;
-            client.EmbeddedActivityUpdated += this.Client_EmbeddedActivityUpdated;
+            Client.ClientErrored += this.Client_ClientError;
+            Client.SocketErrored += this.Client_SocketError;
+            Client.SocketOpened += this.Client_SocketOpened;
+            Client.SocketClosed += this.Client_SocketClosed;
+            Client.Ready += this.Client_Ready;
+            Client.Resumed += this.Client_Resumed;
+            Client.ChannelCreated += this.Client_ChannelCreated;
+            Client.ChannelUpdated += this.Client_ChannelUpdated;
+            Client.ChannelDeleted += this.Client_ChannelDeleted;
+            Client.DmChannelDeleted += this.Client_DMChannelDeleted;
+            Client.ChannelPinsUpdated += this.Client_ChannelPinsUpdated;
+            Client.GuildCreated += this.Client_GuildCreated;
+            Client.GuildAvailable += this.Client_GuildAvailable;
+            Client.GuildUpdated += this.Client_GuildUpdated;
+            Client.GuildDeleted += this.Client_GuildDeleted;
+            Client.GuildUnavailable += this.Client_GuildUnavailable;
+            Client.GuildDownloadCompleted += this.Client_GuildDownloadCompleted;
+            Client.InviteCreated += this.Client_InviteCreated;
+            Client.InviteDeleted += this.Client_InviteDeleted;
+            Client.MessageCreated += this.Client_MessageCreated;
+            Client.PresenceUpdated += this.Client_PresenceUpdate;
+            Client.GuildBanAdded += this.Client_GuildBanAdd;
+            Client.GuildBanRemoved += this.Client_GuildBanRemove;
+            Client.GuildEmojisUpdated += this.Client_GuildEmojisUpdate;
+            Client.GuildStickersUpdated += this.Client_GuildStickersUpdate;
+            Client.GuildIntegrationsUpdated += this.Client_GuildIntegrationsUpdate;
+            Client.GuildMemberAdded += this.Client_GuildMemberAdd;
+            Client.GuildMemberRemoved += this.Client_GuildMemberRemove;
+            Client.GuildMemberUpdated += this.Client_GuildMemberUpdate;
+            Client.GuildRoleCreated += this.Client_GuildRoleCreate;
+            Client.GuildRoleUpdated += this.Client_GuildRoleUpdate;
+            Client.GuildRoleDeleted += this.Client_GuildRoleDelete;
+            Client.MessageUpdated += this.Client_MessageUpdate;
+            Client.MessageDeleted += this.Client_MessageDelete;
+            Client.MessagesBulkDeleted += this.Client_MessageBulkDelete;
+            Client.InteractionCreated += this.Client_InteractionCreate;
+            Client.ComponentInteractionCreated += this.Client_ComponentInteractionCreate;
+            Client.ContextMenuInteractionCreated += this.Client_ContextMenuInteractionCreate;
+            Client.TypingStarted += this.Client_TypingStart;
+            Client.UserSettingsUpdated += this.Client_UserSettingsUpdate;
+            Client.UserUpdated += this.Client_UserUpdate;
+            Client.VoiceStateUpdated += this.Client_VoiceStateUpdate;
+            Client.VoiceServerUpdated += this.Client_VoiceServerUpdate;
+            Client.GuildMembersChunked += this.Client_GuildMembersChunk;
+            Client.UnknownEvent += this.Client_UnknownEvent;
+            Client.MessageReactionAdded += this.Client_MessageReactionAdd;
+            Client.MessageReactionRemoved += this.Client_MessageReactionRemove;
+            Client.MessageReactionsCleared += this.Client_MessageReactionRemoveAll;
+            Client.MessageReactionRemovedEmoji += this.Client_MessageReactionRemovedEmoji;
+            Client.WebhooksUpdated += this.Client_WebhooksUpdate;
+            Client.Heartbeated += this.Client_HeartBeated;
+            Client.ApplicationCommandCreated += this.Client_ApplicationCommandCreated;
+            Client.ApplicationCommandUpdated += this.Client_ApplicationCommandUpdated;
+            Client.ApplicationCommandDeleted += this.Client_ApplicationCommandDeleted;
+            Client.GuildApplicationCommandCountUpdated += this.Client_GuildApplicationCommandCountUpdated;
+            Client.ApplicationCommandPermissionsUpdated += this.Client_ApplicationCommandPermissionsUpdated;
+            Client.GuildIntegrationCreated += this.Client_GuildIntegrationCreated;
+            Client.GuildIntegrationUpdated += this.Client_GuildIntegrationUpdated;
+            Client.GuildIntegrationDeleted += this.Client_GuildIntegrationDeleted;
+            Client.StageInstanceCreated += this.Client_StageInstanceCreated;
+            Client.StageInstanceUpdated += this.Client_StageInstanceUpdated;
+            Client.StageInstanceDeleted += this.Client_StageInstanceDeleted;
+            Client.ThreadCreated += this.Client_ThreadCreated;
+            Client.ThreadUpdated += this.Client_ThreadUpdated;
+            Client.ThreadDeleted += this.Client_ThreadDeleted;
+            Client.ThreadListSynced += this.Client_ThreadListSynced;
+            Client.ThreadMemberUpdated += this.Client_ThreadMemberUpdated;
+            Client.ThreadMembersUpdated += this.Client_ThreadMembersUpdated;
+            Client.Zombied += this.Client_Zombied;
+            Client.PayloadReceived += this.Client_PayloadReceived;
+            Client.GuildScheduledEventCreated += this.Client_GuildScheduledEventCreated;
+            Client.GuildScheduledEventUpdated += this.Client_GuildScheduledEventUpdated;
+            Client.GuildScheduledEventDeleted += this.Client_GuildScheduledEventDeleted;
+            Client.GuildScheduledEventUserAdded += this.Client_GuildScheduledEventUserAdded; ;
+            Client.GuildScheduledEventUserRemoved += this.Client_GuildScheduledEventUserRemoved;
+            Client.EmbeddedActivityUpdated += this.Client_EmbeddedActivityUpdated;
         }
 
         /// <summary>
         /// Unhooks the event handlers.
         /// </summary>
-        /// <param name="client">The client.</param>
-        private void UnhookEventHandlers(DiscordClient client)
+        /// <param name="Client">The client.</param>
+        private void UnhookEventHandlers(DiscordClient Client)
         {
-            client.ClientErrored -= this.Client_ClientError;
-            client.SocketErrored -= this.Client_SocketError;
-            client.SocketOpened -= this.Client_SocketOpened;
-            client.SocketClosed -= this.Client_SocketClosed;
-            client.Ready -= this.Client_Ready;
-            client.Resumed -= this.Client_Resumed;
-            client.ChannelCreated -= this.Client_ChannelCreated;
-            client.ChannelUpdated -= this.Client_ChannelUpdated;
-            client.ChannelDeleted -= this.Client_ChannelDeleted;
-            client.DmChannelDeleted -= this.Client_DMChannelDeleted;
-            client.ChannelPinsUpdated -= this.Client_ChannelPinsUpdated;
-            client.GuildCreated -= this.Client_GuildCreated;
-            client.GuildAvailable -= this.Client_GuildAvailable;
-            client.GuildUpdated -= this.Client_GuildUpdated;
-            client.GuildDeleted -= this.Client_GuildDeleted;
-            client.GuildUnavailable -= this.Client_GuildUnavailable;
-            client.GuildDownloadCompleted -= this.Client_GuildDownloadCompleted;
-            client.InviteCreated -= this.Client_InviteCreated;
-            client.InviteDeleted -= this.Client_InviteDeleted;
-            client.MessageCreated -= this.Client_MessageCreated;
-            client.PresenceUpdated -= this.Client_PresenceUpdate;
-            client.GuildBanAdded -= this.Client_GuildBanAdd;
-            client.GuildBanRemoved -= this.Client_GuildBanRemove;
-            client.GuildEmojisUpdated -= this.Client_GuildEmojisUpdate;
-            client.GuildStickersUpdated -= this.Client_GuildStickersUpdate;
-            client.GuildIntegrationsUpdated -= this.Client_GuildIntegrationsUpdate;
-            client.GuildMemberAdded -= this.Client_GuildMemberAdd;
-            client.GuildMemberRemoved -= this.Client_GuildMemberRemove;
-            client.GuildMemberUpdated -= this.Client_GuildMemberUpdate;
-            client.GuildRoleCreated -= this.Client_GuildRoleCreate;
-            client.GuildRoleUpdated -= this.Client_GuildRoleUpdate;
-            client.GuildRoleDeleted -= this.Client_GuildRoleDelete;
-            client.MessageUpdated -= this.Client_MessageUpdate;
-            client.MessageDeleted -= this.Client_MessageDelete;
-            client.MessagesBulkDeleted -= this.Client_MessageBulkDelete;
-            client.InteractionCreated -= this.Client_InteractionCreate;
-            client.ComponentInteractionCreated -= this.Client_ComponentInteractionCreate;
-            client.ContextMenuInteractionCreated -= this.Client_ContextMenuInteractionCreate;
-            client.TypingStarted -= this.Client_TypingStart;
-            client.UserSettingsUpdated -= this.Client_UserSettingsUpdate;
-            client.UserUpdated -= this.Client_UserUpdate;
-            client.VoiceStateUpdated -= this.Client_VoiceStateUpdate;
-            client.VoiceServerUpdated -= this.Client_VoiceServerUpdate;
-            client.GuildMembersChunked -= this.Client_GuildMembersChunk;
-            client.UnknownEvent -= this.Client_UnknownEvent;
-            client.MessageReactionAdded -= this.Client_MessageReactionAdd;
-            client.MessageReactionRemoved -= this.Client_MessageReactionRemove;
-            client.MessageReactionsCleared -= this.Client_MessageReactionRemoveAll;
-            client.MessageReactionRemovedEmoji -= this.Client_MessageReactionRemovedEmoji;
-            client.WebhooksUpdated -= this.Client_WebhooksUpdate;
-            client.Heartbeated -= this.Client_HeartBeated;
-            client.ApplicationCommandCreated -= this.Client_ApplicationCommandCreated;
-            client.ApplicationCommandUpdated -= this.Client_ApplicationCommandUpdated;
-            client.ApplicationCommandDeleted -= this.Client_ApplicationCommandDeleted;
-            client.GuildApplicationCommandCountUpdated -= this.Client_GuildApplicationCommandCountUpdated;
-            client.ApplicationCommandPermissionsUpdated -= this.Client_ApplicationCommandPermissionsUpdated;
-            client.GuildIntegrationCreated -= this.Client_GuildIntegrationCreated;
-            client.GuildIntegrationUpdated -= this.Client_GuildIntegrationUpdated;
-            client.GuildIntegrationDeleted -= this.Client_GuildIntegrationDeleted;
-            client.StageInstanceCreated -= this.Client_StageInstanceCreated;
-            client.StageInstanceUpdated -= this.Client_StageInstanceUpdated;
-            client.StageInstanceDeleted -= this.Client_StageInstanceDeleted;
-            client.ThreadCreated -= this.Client_ThreadCreated;
-            client.ThreadUpdated -= this.Client_ThreadUpdated;
-            client.ThreadDeleted -= this.Client_ThreadDeleted;
-            client.ThreadListSynced -= this.Client_ThreadListSynced;
-            client.ThreadMemberUpdated -= this.Client_ThreadMemberUpdated;
-            client.ThreadMembersUpdated -= this.Client_ThreadMembersUpdated;
-            client.Zombied -= this.Client_Zombied;
-            client.PayloadReceived -= this.Client_PayloadReceived;
-            client.GuildScheduledEventCreated -= this.Client_GuildScheduledEventCreated;
-            client.GuildScheduledEventUpdated -= this.Client_GuildScheduledEventUpdated;
-            client.GuildScheduledEventDeleted -= this.Client_GuildScheduledEventDeleted;
-            client.GuildScheduledEventUserAdded -= this.Client_GuildScheduledEventUserAdded; ;
-            client.GuildScheduledEventUserRemoved -= this.Client_GuildScheduledEventUserRemoved;
-            client.EmbeddedActivityUpdated -= this.Client_EmbeddedActivityUpdated;
+            Client.ClientErrored -= this.Client_ClientError;
+            Client.SocketErrored -= this.Client_SocketError;
+            Client.SocketOpened -= this.Client_SocketOpened;
+            Client.SocketClosed -= this.Client_SocketClosed;
+            Client.Ready -= this.Client_Ready;
+            Client.Resumed -= this.Client_Resumed;
+            Client.ChannelCreated -= this.Client_ChannelCreated;
+            Client.ChannelUpdated -= this.Client_ChannelUpdated;
+            Client.ChannelDeleted -= this.Client_ChannelDeleted;
+            Client.DmChannelDeleted -= this.Client_DMChannelDeleted;
+            Client.ChannelPinsUpdated -= this.Client_ChannelPinsUpdated;
+            Client.GuildCreated -= this.Client_GuildCreated;
+            Client.GuildAvailable -= this.Client_GuildAvailable;
+            Client.GuildUpdated -= this.Client_GuildUpdated;
+            Client.GuildDeleted -= this.Client_GuildDeleted;
+            Client.GuildUnavailable -= this.Client_GuildUnavailable;
+            Client.GuildDownloadCompleted -= this.Client_GuildDownloadCompleted;
+            Client.InviteCreated -= this.Client_InviteCreated;
+            Client.InviteDeleted -= this.Client_InviteDeleted;
+            Client.MessageCreated -= this.Client_MessageCreated;
+            Client.PresenceUpdated -= this.Client_PresenceUpdate;
+            Client.GuildBanAdded -= this.Client_GuildBanAdd;
+            Client.GuildBanRemoved -= this.Client_GuildBanRemove;
+            Client.GuildEmojisUpdated -= this.Client_GuildEmojisUpdate;
+            Client.GuildStickersUpdated -= this.Client_GuildStickersUpdate;
+            Client.GuildIntegrationsUpdated -= this.Client_GuildIntegrationsUpdate;
+            Client.GuildMemberAdded -= this.Client_GuildMemberAdd;
+            Client.GuildMemberRemoved -= this.Client_GuildMemberRemove;
+            Client.GuildMemberUpdated -= this.Client_GuildMemberUpdate;
+            Client.GuildRoleCreated -= this.Client_GuildRoleCreate;
+            Client.GuildRoleUpdated -= this.Client_GuildRoleUpdate;
+            Client.GuildRoleDeleted -= this.Client_GuildRoleDelete;
+            Client.MessageUpdated -= this.Client_MessageUpdate;
+            Client.MessageDeleted -= this.Client_MessageDelete;
+            Client.MessagesBulkDeleted -= this.Client_MessageBulkDelete;
+            Client.InteractionCreated -= this.Client_InteractionCreate;
+            Client.ComponentInteractionCreated -= this.Client_ComponentInteractionCreate;
+            Client.ContextMenuInteractionCreated -= this.Client_ContextMenuInteractionCreate;
+            Client.TypingStarted -= this.Client_TypingStart;
+            Client.UserSettingsUpdated -= this.Client_UserSettingsUpdate;
+            Client.UserUpdated -= this.Client_UserUpdate;
+            Client.VoiceStateUpdated -= this.Client_VoiceStateUpdate;
+            Client.VoiceServerUpdated -= this.Client_VoiceServerUpdate;
+            Client.GuildMembersChunked -= this.Client_GuildMembersChunk;
+            Client.UnknownEvent -= this.Client_UnknownEvent;
+            Client.MessageReactionAdded -= this.Client_MessageReactionAdd;
+            Client.MessageReactionRemoved -= this.Client_MessageReactionRemove;
+            Client.MessageReactionsCleared -= this.Client_MessageReactionRemoveAll;
+            Client.MessageReactionRemovedEmoji -= this.Client_MessageReactionRemovedEmoji;
+            Client.WebhooksUpdated -= this.Client_WebhooksUpdate;
+            Client.Heartbeated -= this.Client_HeartBeated;
+            Client.ApplicationCommandCreated -= this.Client_ApplicationCommandCreated;
+            Client.ApplicationCommandUpdated -= this.Client_ApplicationCommandUpdated;
+            Client.ApplicationCommandDeleted -= this.Client_ApplicationCommandDeleted;
+            Client.GuildApplicationCommandCountUpdated -= this.Client_GuildApplicationCommandCountUpdated;
+            Client.ApplicationCommandPermissionsUpdated -= this.Client_ApplicationCommandPermissionsUpdated;
+            Client.GuildIntegrationCreated -= this.Client_GuildIntegrationCreated;
+            Client.GuildIntegrationUpdated -= this.Client_GuildIntegrationUpdated;
+            Client.GuildIntegrationDeleted -= this.Client_GuildIntegrationDeleted;
+            Client.StageInstanceCreated -= this.Client_StageInstanceCreated;
+            Client.StageInstanceUpdated -= this.Client_StageInstanceUpdated;
+            Client.StageInstanceDeleted -= this.Client_StageInstanceDeleted;
+            Client.ThreadCreated -= this.Client_ThreadCreated;
+            Client.ThreadUpdated -= this.Client_ThreadUpdated;
+            Client.ThreadDeleted -= this.Client_ThreadDeleted;
+            Client.ThreadListSynced -= this.Client_ThreadListSynced;
+            Client.ThreadMemberUpdated -= this.Client_ThreadMemberUpdated;
+            Client.ThreadMembersUpdated -= this.Client_ThreadMembersUpdated;
+            Client.Zombied -= this.Client_Zombied;
+            Client.PayloadReceived -= this.Client_PayloadReceived;
+            Client.GuildScheduledEventCreated -= this.Client_GuildScheduledEventCreated;
+            Client.GuildScheduledEventUpdated -= this.Client_GuildScheduledEventUpdated;
+            Client.GuildScheduledEventDeleted -= this.Client_GuildScheduledEventDeleted;
+            Client.GuildScheduledEventUserAdded -= this.Client_GuildScheduledEventUserAdded; ;
+            Client.GuildScheduledEventUserRemoved -= this.Client_GuildScheduledEventUserRemoved;
+            Client.EmbeddedActivityUpdated -= this.Client_EmbeddedActivityUpdated;
         }
 
         /// <summary>
         /// Gets the shard id from guilds.
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="Id">The id.</param>
         /// <returns>An int.</returns>
-        private int GetShardIdFromGuilds(ulong id)
+        private int GetShardIdFromGuilds(ulong Id)
         {
             foreach (var s in this._shards.Values)
             {
-                if (s._guilds.TryGetValue(id, out _))
+                if (s._guilds.TryGetValue(Id, out _))
                 {
                     return s.ShardId;
                 }
@@ -738,7 +738,7 @@ namespace DisCatSharp
         #region Destructor
 
         ~DiscordShardedClient()
-            => this.InternalStopAsync(false).GetAwaiter().GetResult();
+            => this.InternalStop(false).GetAwaiter().GetResult();
 
         #endregion
     }

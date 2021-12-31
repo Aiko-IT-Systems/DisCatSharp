@@ -52,12 +52,12 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkVoiceServerUpdate"/> class.
         /// </summary>
-        /// <param name="vsu">The vsu.</param>
-        internal LavalinkVoiceServerUpdate(VoiceServerUpdateEventArgs vsu)
+        /// <param name="Vsu">The vsu.</param>
+        internal LavalinkVoiceServerUpdate(VoiceServerUpdateEventArgs Vsu)
         {
-            this.Token = vsu.VoiceToken;
-            this.GuildId = vsu.Guild.Id.ToString(CultureInfo.InvariantCulture);
-            this.Endpoint = vsu.Endpoint;
+            this.Token = Vsu.VoiceToken;
+            this.GuildId = Vsu.Guild.Id.ToString(CultureInfo.InvariantCulture);
+            this.Endpoint = Vsu.Endpoint;
         }
     }
 
@@ -81,13 +81,13 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkVoiceUpdate"/> class.
         /// </summary>
-        /// <param name="vstu">The vstu.</param>
-        /// <param name="vsrvu">The vsrvu.</param>
-        public LavalinkVoiceUpdate(VoiceStateUpdateEventArgs vstu, VoiceServerUpdateEventArgs vsrvu)
-            : base("voiceUpdate", vstu.Guild.Id.ToString(CultureInfo.InvariantCulture))
+        /// <param name="Vstu">The vstu.</param>
+        /// <param name="Vsrvu">The vsrvu.</param>
+        public LavalinkVoiceUpdate(VoiceStateUpdateEventArgs Vstu, VoiceServerUpdateEventArgs Vsrvu)
+            : base("voiceUpdate", Vstu.Guild.Id.ToString(CultureInfo.InvariantCulture))
         {
-            this.SessionId = vstu.SessionId;
-            this.Event = new LavalinkVoiceServerUpdate(vsrvu);
+            this.SessionId = Vstu.SessionId;
+            this.Event = new LavalinkVoiceServerUpdate(Vsrvu);
         }
     }
 }

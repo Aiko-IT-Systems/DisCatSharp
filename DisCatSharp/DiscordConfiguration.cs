@@ -176,15 +176,15 @@ namespace DisCatSharp
 
         /// <summary>
         /// <para>Sets the factory method used to create instances of UDP clients.</para>
-        /// <para>Use <see cref="DisCatSharp.Net.Udp.DCSUdpClient.CreateNew"/> and equivalents on other implementations to switch out client implementations.</para>
-        /// <para>Defaults to <see cref="DisCatSharp.Net.Udp.DCSUdpClient.CreateNew"/>.</para>
+        /// <para>Use <see cref="DcsUdpClient.CreateNew"/> and equivalents on other implementations to switch out client implementations.</para>
+        /// <para>Defaults to <see cref="DcsUdpClient.CreateNew"/>.</para>
         /// </summary>
         public UdpClientFactoryDelegate UdpClientFactory
         {
             internal get => this._udpClientFactory;
             set => this._udpClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid UDP client factory method.");
         }
-        private UdpClientFactoryDelegate _udpClientFactory = DCSUdpClient.CreateNew;
+        private UdpClientFactoryDelegate _udpClientFactory = DcsUdpClient.CreateNew;
 
         /// <summary>
         /// <para>Sets the logger implementation to use.</para>
@@ -233,43 +233,43 @@ namespace DisCatSharp
         /// <summary>
         /// Utilized via Dependency Injection Pipeline
         /// </summary>
-        /// <param name="provider"></param>
+        /// <param name="Provider"></param>
         [ActivatorUtilitiesConstructor]
-        public DiscordConfiguration(IServiceProvider provider)
+        public DiscordConfiguration(IServiceProvider Provider)
         {
-            this.ServiceProvider = provider;
+            this.ServiceProvider = Provider;
         }
 
         /// <summary>
         /// Creates a clone of another discord configuration.
         /// </summary>
-        /// <param name="other">Client configuration to clone.</param>
-        public DiscordConfiguration(DiscordConfiguration other)
+        /// <param name="Other">Client configuration to clone.</param>
+        public DiscordConfiguration(DiscordConfiguration Other)
         {
-            this.Token = other.Token;
-            this.TokenType = other.TokenType;
-            this.MinimumLogLevel = other.MinimumLogLevel;
-            this.UseRelativeRatelimit = other.UseRelativeRatelimit;
-            this.LogTimestampFormat = other.LogTimestampFormat;
-            this.LargeThreshold = other.LargeThreshold;
-            this.AutoReconnect = other.AutoReconnect;
-            this.ShardId = other.ShardId;
-            this.ShardCount = other.ShardCount;
-            this.GatewayCompressionLevel = other.GatewayCompressionLevel;
-            this.MessageCacheSize = other.MessageCacheSize;
-            this.WebSocketClientFactory = other.WebSocketClientFactory;
-            this.UdpClientFactory = other.UdpClientFactory;
-            this.Proxy = other.Proxy;
-            this.HttpTimeout = other.HttpTimeout;
-            this.ReconnectIndefinitely = other.ReconnectIndefinitely;
-            this.Intents = other.Intents;
-            this.LoggerFactory = other.LoggerFactory;
-            this.MobileStatus = other.MobileStatus;
-            this.UseCanary = other.UseCanary;
-            this.AutoRefreshChannelCache = other.AutoRefreshChannelCache;
-            this.ApiVersion = other.ApiVersion;
-            this.ServiceProvider = other.ServiceProvider;
-            this.Override = other.Override;
+            this.Token = Other.Token;
+            this.TokenType = Other.TokenType;
+            this.MinimumLogLevel = Other.MinimumLogLevel;
+            this.UseRelativeRatelimit = Other.UseRelativeRatelimit;
+            this.LogTimestampFormat = Other.LogTimestampFormat;
+            this.LargeThreshold = Other.LargeThreshold;
+            this.AutoReconnect = Other.AutoReconnect;
+            this.ShardId = Other.ShardId;
+            this.ShardCount = Other.ShardCount;
+            this.GatewayCompressionLevel = Other.GatewayCompressionLevel;
+            this.MessageCacheSize = Other.MessageCacheSize;
+            this.WebSocketClientFactory = Other.WebSocketClientFactory;
+            this.UdpClientFactory = Other.UdpClientFactory;
+            this.Proxy = Other.Proxy;
+            this.HttpTimeout = Other.HttpTimeout;
+            this.ReconnectIndefinitely = Other.ReconnectIndefinitely;
+            this.Intents = Other.Intents;
+            this.LoggerFactory = Other.LoggerFactory;
+            this.MobileStatus = Other.MobileStatus;
+            this.UseCanary = Other.UseCanary;
+            this.AutoRefreshChannelCache = Other.AutoRefreshChannelCache;
+            this.ApiVersion = Other.ApiVersion;
+            this.ServiceProvider = Other.ServiceProvider;
+            this.Override = Other.Override;
         }
     }
 }

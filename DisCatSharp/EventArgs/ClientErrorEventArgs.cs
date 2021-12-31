@@ -42,6 +42,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientErrorEventArgs"/> class.
         /// </summary>
-        internal ClientErrorEventArgs(IServiceProvider provider) : base(provider) { }
+        internal ClientErrorEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

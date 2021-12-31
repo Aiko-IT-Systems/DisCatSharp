@@ -45,6 +45,6 @@ namespace DisCatSharp
         /// <summary>
         /// Indicates the guild has mildly NSFW content that may not be suitable for users under 18.
         /// </summary>
-        Age_Restricted = 3
+        AgeRestricted = 3
     }
 }

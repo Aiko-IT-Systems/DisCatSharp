@@ -75,28 +75,28 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Creates a new <see cref="BaseRestRequest"/> with specified parameters.
         /// </summary>
-        /// <param name="client"><see cref="DiscordClient"/> from which this request originated.</param>
-        /// <param name="bucket">Rate limit bucket to place this request in.</param>
-        /// <param name="url">Uri to which this request is going to be sent to.</param>
-        /// <param name="method">Method to use for this request,</param>
-        /// <param name="route">The generic route the request url will use.</param>
-        /// <param name="headers">Additional headers for this request.</param>
-        /// <param name="ratelimitWaitOverride">Override for ratelimit bucket wait time.</param>
-        internal BaseRestRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, double? ratelimitWaitOverride = null)
+        /// <param name="Client"><see cref="DiscordClient"/> from which this request originated.</param>
+        /// <param name="Bucket">Rate limit bucket to place this request in.</param>
+        /// <param name="Url">Uri to which this request is going to be sent to.</param>
+        /// <param name="Method">Method to use for this request,</param>
+        /// <param name="Route">The generic route the request url will use.</param>
+        /// <param name="Headers">Additional headers for this request.</param>
+        /// <param name="RatelimitWaitOverride">Override for ratelimit bucket wait time.</param>
+        internal BaseRestRequest(BaseDiscordClient Client, RateLimitBucket Bucket, Uri Url, RestRequestMethod Method, string Route, IReadOnlyDictionary<string, string> Headers = null, double? RatelimitWaitOverride = null)
         {
-            this.Discord = client;
-            this.RateLimitBucket = bucket;
+            this.Discord = Client;
+            this.RateLimitBucket = Bucket;
             this.RequestTaskSource = new TaskCompletionSource<RestResponse>();
-            this.Url = url;
-            this.Method = method;
-            this.Route = route;
-            this.RateLimitWaitOverride = ratelimitWaitOverride;
+            this.Url = Url;
+            this.Method = Method;
+            this.Route = Route;
+            this.RateLimitWaitOverride = RatelimitWaitOverride;
 
-            if (headers != null)
+            if (Headers != null)
             {
-                headers = headers.Select(x => new KeyValuePair<string, string>(x.Key, Uri.EscapeDataString(x.Value)))
-                    .ToDictionary(x => x.Key, x => x.Value);
-                this.Headers = headers;
+                Headers = Headers.Select(X => new KeyValuePair<string, string>(X.Key, Uri.EscapeDataString(X.Value)))
+                    .ToDictionary(X => X.Key, X => X.Value);
+                this.Headers = Headers;
             }
         }
 
@@ -104,29 +104,29 @@ namespace DisCatSharp.Net
         /// Asynchronously waits for this request to complete.
         /// </summary>
         /// <returns>HTTP response to this request.</returns>
-        public Task<RestResponse> WaitForCompletionAsync()
+        public Task<RestResponse> WaitForCompletion()
             => this.RequestTaskSource.Task;
 
         /// <summary>
         /// Sets as completed.
         /// </summary>
-        /// <param name="response">The response to set.</param>
-        protected internal void SetCompleted(RestResponse response)
-            => this.RequestTaskSource.SetResult(response);
+        /// <param name="Response">The response to set.</param>
+        protected internal void SetCompleted(RestResponse Response)
+            => this.RequestTaskSource.SetResult(Response);
 
         /// <summary>
         /// Sets as faulted.
         /// </summary>
-        /// <param name="ex">The exception to set.</param>
-        protected internal void SetFaulted(Exception ex)
-            => this.RequestTaskSource.SetException(ex);
+        /// <param name="Ex">The exception to set.</param>
+        protected internal void SetFaulted(Exception Ex)
+            => this.RequestTaskSource.SetException(Ex);
 
         /// <summary>
         /// Tries to set as faulted.
         /// </summary>
-        /// <param name="ex">The exception to set.</param>
-        protected internal bool TrySetFaulted(Exception ex)
-            => this.RequestTaskSource.TrySetException(ex);
+        /// <param name="Ex">The exception to set.</param>
+        protected internal bool TrySetFaulted(Exception Ex)
+            => this.RequestTaskSource.TrySetException(Ex);
 
     }
 }

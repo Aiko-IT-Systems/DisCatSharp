@@ -35,7 +35,7 @@ namespace DisCatSharp
         /// <summary>
         /// Initializes this extension for given <see cref="DiscordClient"/> instance.
         /// </summary>
-        /// <param name="client">Discord client to initialize for.</param>
-        protected internal abstract void Setup(DiscordClient client);
+        /// <param name="Client">Discord client to initialize for.</param>
+        protected internal abstract void Setup(DiscordClient Client);
     }
 }

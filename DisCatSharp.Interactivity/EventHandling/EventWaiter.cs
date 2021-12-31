@@ -44,17 +44,17 @@ namespace DisCatSharp.Interactivity.EventHandling
         AsyncEventHandler<DiscordClient, T> _handler;
         ConcurrentHashSet<MatchRequest<T>> _matchrequests;
         ConcurrentHashSet<CollectRequest<T>> _collectrequests;
-        bool disposed = false;
+        bool _disposed = false;
 
         /// <summary>
         /// Creates a new Eventwaiter object.
         /// </summary>
-        /// <param name="client">Your DiscordClient</param>
-        public EventWaiter(DiscordClient client)
+        /// <param name="Client">Your DiscordClient</param>
+        public EventWaiter(DiscordClient Client)
         {
-            this._client = client;
+            this._client = Client;
             var tinfo = this._client.GetType().GetTypeInfo();
-            var handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, T>));
+            var handler = tinfo.DeclaredFields.First(X => X.FieldType == typeof(AsyncEvent<DiscordClient, T>));
             this._matchrequests = new ConcurrentHashSet<MatchRequest<T>>();
             this._collectrequests = new ConcurrentHashSet<CollectRequest<T>>();
             this._event = (AsyncEvent<DiscordClient, T>)handler.GetValue(this._client);
@@ -65,15 +65,15 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Waits for a match to a specific request, else returns null.
         /// </summary>
-        /// <param name="request">Request to match</param>
+        /// <param name="Request">Request to match</param>
         /// <returns></returns>
-        public async Task<T> WaitForMatchAsync(MatchRequest<T> request)
+        public async Task<T> WaitForMatchAsync(MatchRequest<T> Request)
         {
             T result = null;
-            this._matchrequests.Add(request);
+            this._matchrequests.Add(Request);
             try
             {
-                result = await request._tcs.Task.ConfigureAwait(false);
+                result = await Request._tcs.Task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -81,8 +81,8 @@ namespace DisCatSharp.Interactivity.EventHandling
             }
             finally
             {
-                request.Dispose();
-                this._matchrequests.TryRemove(request);
+                Request.Dispose();
+                this._matchrequests.TryRemove(Request);
             }
             return result;
         }
@@ -90,14 +90,14 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Collects the matches async.
         /// </summary>
-        /// <param name="request">The request.</param>
-        public async Task<ReadOnlyCollection<T>> CollectMatchesAsync(CollectRequest<T> request)
+        /// <param name="Request">The request.</param>
+        public async Task<ReadOnlyCollection<T>> CollectMatchesAsync(CollectRequest<T> Request)
         {
             ReadOnlyCollection<T> result = null;
-            this._collectrequests.Add(request);
+            this._collectrequests.Add(Request);
             try
             {
-                await request._tcs.Task.ConfigureAwait(false);
+                await Request._tcs.Task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -105,9 +105,9 @@ namespace DisCatSharp.Interactivity.EventHandling
             }
             finally
             {
-                result = new ReadOnlyCollection<T>(new HashSet<T>(request._collected).ToList());
-                request.Dispose();
-                this._collectrequests.TryRemove(request);
+                result = new ReadOnlyCollection<T>(new HashSet<T>(Request._collected).ToList());
+                Request.Dispose();
+                this._collectrequests.TryRemove(Request);
             }
             return result;
         }
@@ -115,25 +115,25 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Handles the event.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="eventargs">The event args.</param>
-        private Task HandleEvent(DiscordClient client, T eventargs)
+        /// <param name="Client">The client.</param>
+        /// <param name="Eventargs">The event args.</param>
+        private Task HandleEvent(DiscordClient Client, T Eventargs)
         {
-            if (!this.disposed)
+            if (!this._disposed)
             {
                 foreach (var req in this._matchrequests)
                 {
-                    if (req._predicate(eventargs))
+                    if (req._predicate(Eventargs))
                     {
-                        req._tcs.TrySetResult(eventargs);
+                        req._tcs.TrySetResult(Eventargs);
                     }
                 }
 
                 foreach (var req in this._collectrequests)
                 {
-                    if (req._predicate(eventargs))
+                    if (req._predicate(Eventargs))
                     {
-                        req._collected.Add(eventargs);
+                        req._collected.Add(Eventargs);
                     }
                 }
             }
@@ -151,7 +151,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// </summary>
         public void Dispose()
         {
-            this.disposed = true;
+            this._disposed = true;
             if (this._event != null)
                 this._event.Unregister(this._handler);
 

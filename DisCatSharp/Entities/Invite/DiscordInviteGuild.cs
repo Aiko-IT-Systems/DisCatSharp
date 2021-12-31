@@ -50,7 +50,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public string IconUrl
-            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.jpg" : null;
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Icons}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.jpg" : null;
 
         /// <summary>
         /// Gets the hash of guild's invite splash.
@@ -63,7 +63,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public string SplashUrl
-            => !string.IsNullOrWhiteSpace(this.SplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.SPLASHES}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.jpg" : null;
+            => !string.IsNullOrWhiteSpace(this.SplashHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Splashes}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.SplashHash}.jpg" : null;
 
         /// <summary>
         /// Gets the guild's banner hash, when applicable.
@@ -76,7 +76,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public string BannerUrl
-            => !string.IsNullOrWhiteSpace(this.Banner) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id}/{this.Banner}" : null;
+            => !string.IsNullOrWhiteSpace(this.Banner) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Banners}/{this.Id}/{this.Banner}" : null;
 
         /// <summary>
         /// Gets the guild description, when applicable.

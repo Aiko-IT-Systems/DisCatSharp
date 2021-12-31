@@ -48,6 +48,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="VoiceServerUpdateEventArgs"/> class.
         /// </summary>
-        internal VoiceServerUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+        internal VoiceServerUpdateEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

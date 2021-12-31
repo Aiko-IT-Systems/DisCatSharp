@@ -56,19 +56,19 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordGuildWelcomeScreenChannel"/> class.
         /// </summary>
-        /// <param name="channelId">The channel id.</param>
-        /// <param name="description">The description.</param>
-        /// <param name="emoji">The emoji.</param>
-        public DiscordGuildWelcomeScreenChannel(ulong channelId, string description, DiscordEmoji emoji = null)
+        /// <param name="ChannelId">The channel id.</param>
+        /// <param name="Description">The description.</param>
+        /// <param name="Emoji">The emoji.</param>
+        public DiscordGuildWelcomeScreenChannel(ulong ChannelId, string Description, DiscordEmoji Emoji = null)
         {
-            this.ChannelId = channelId;
-            this.Description = description;
-            if (emoji != null)
+            this.ChannelId = ChannelId;
+            this.Description = Description;
+            if (Emoji != null)
             {
-                if (emoji.Id == 0)
-                    this.EmojiName = emoji.Name;
+                if (Emoji.Id == 0)
+                    this.EmojiName = Emoji.Name;
                 else
-                    this.EmojiId = emoji.Id;
+                    this.EmojiId = Emoji.Id;
             }
         }
     }

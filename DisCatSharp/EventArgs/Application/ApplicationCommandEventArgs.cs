@@ -43,8 +43,8 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCommandEventArgs"/> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        public ApplicationCommandEventArgs(IServiceProvider provider) : base(provider)
+        /// <param name="Provider">The provider.</param>
+        public ApplicationCommandEventArgs(IServiceProvider Provider) : base(Provider)
         { }
     }
 }

@@ -38,8 +38,8 @@ namespace DisCatSharp.ApplicationCommands.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextMenuExecutedEventArgs"/> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        public ContextMenuExecutedEventArgs(IServiceProvider provider) : base(provider)
+        /// <param name="Provider">The provider.</param>
+        public ContextMenuExecutedEventArgs(IServiceProvider Provider) : base(Provider)
         { }
     }
 }

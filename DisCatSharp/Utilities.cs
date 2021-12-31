@@ -53,7 +53,7 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the utf8 encoding
         /// </summary>
-        internal static UTF8Encoding UTF8 { get; } = new UTF8Encoding(false);
+        internal static UTF8Encoding Utf8 { get; } = new UTF8Encoding(false);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Utilities"/> class.
@@ -68,7 +68,7 @@ namespace DisCatSharp
             foreach (var xv in vals)
             {
                 var xsv = xv.ToString();
-                var xmv = ti.DeclaredMembers.FirstOrDefault(xm => xm.Name == xsv);
+                var xmv = ti.DeclaredMembers.FirstOrDefault(Xm => Xm.Name == xsv);
                 var xav = xmv.GetCustomAttribute<PermissionStringAttribute>();
 
                 PermissionStrings[xv] = xav.String;
@@ -92,58 +92,58 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the api base uri.
         /// </summary>
-        /// <param name="config">The config</param>
+        /// <param name="Config">The config</param>
         /// <returns>A string.</returns>
-        internal static string GetApiBaseUri(DiscordConfiguration config = null)
-            => config == null ? Endpoints.BASE_URI + "9" : config.UseCanary ? Endpoints.CANARY_URI + config.ApiVersion : Endpoints.BASE_URI + config.ApiVersion;
+        internal static string GetApiBaseUri(DiscordConfiguration Config = null)
+            => Config == null ? Endpoints.BaseUri + "9" : Config.UseCanary ? Endpoints.CanaryUri + Config.ApiVersion : Endpoints.BaseUri + Config.ApiVersion;
 
         /// <summary>
         /// Gets the api uri for.
         /// </summary>
-        /// <param name="path">The path.</param>
-        /// <param name="config">The config</param>
+        /// <param name="Path">The path.</param>
+        /// <param name="Config">The config</param>
         /// <returns>An Uri.</returns>
-        internal static Uri GetApiUriFor(string path, DiscordConfiguration config)
-            => new($"{GetApiBaseUri(config)}{path}");
+        internal static Uri GetApiUriFor(string Path, DiscordConfiguration Config)
+            => new($"{GetApiBaseUri(Config)}{Path}");
 
         /// <summary>
         /// Gets the api uri for.
         /// </summary>
-        /// <param name="path">The path.</param>
-        /// <param name="queryString">The query string.</param>
-        /// <param name="config">The config</param>
+        /// <param name="Path">The path.</param>
+        /// <param name="QueryString">The query string.</param>
+        /// <param name="Config">The config</param>
         /// <returns>An Uri.</returns>
-        internal static Uri GetApiUriFor(string path, string queryString, DiscordConfiguration config)
-            => new($"{GetApiBaseUri(config)}{path}{queryString}");
+        internal static Uri GetApiUriFor(string Path, string QueryString, DiscordConfiguration Config)
+            => new($"{GetApiBaseUri(Config)}{Path}{QueryString}");
 
         /// <summary>
         /// Gets the api uri builder for.
         /// </summary>
-        /// <param name="path">The path.</param>
-        /// <param name="config">The config</param>
+        /// <param name="Path">The path.</param>
+        /// <param name="Config">The config</param>
         /// <returns>A QueryUriBuilder.</returns>
-        internal static QueryUriBuilder GetApiUriBuilderFor(string path, DiscordConfiguration config)
-            => new($"{GetApiBaseUri(config)}{path}");
+        internal static QueryUriBuilder GetApiUriBuilderFor(string Path, DiscordConfiguration Config)
+            => new($"{GetApiBaseUri(Config)}{Path}");
 
         /// <summary>
         /// Gets the formatted token.
         /// </summary>
-        /// <param name="client">The client.</param>
+        /// <param name="Client">The client.</param>
         /// <returns>A string.</returns>
-        internal static string GetFormattedToken(BaseDiscordClient client) => GetFormattedToken(client.Configuration);
+        internal static string GetFormattedToken(BaseDiscordClient Client) => GetFormattedToken(Client.Configuration);
 
         /// <summary>
         /// Gets the formatted token.
         /// </summary>
-        /// <param name="config">The config.</param>
+        /// <param name="Config">The config.</param>
         /// <returns>A string.</returns>
-        internal static string GetFormattedToken(DiscordConfiguration config)
+        internal static string GetFormattedToken(DiscordConfiguration Config)
         {
-            return config.TokenType switch
+            return Config.TokenType switch
             {
-                TokenType.Bearer => $"Bearer {config.Token}",
-                TokenType.Bot => $"Bot {config.Token}",
-                _ => throw new ArgumentException("Invalid token type specified.", nameof(config.Token)),
+                TokenType.Bearer => $"Bearer {Config.Token}",
+                TokenType.Bot => $"Bot {Config.Token}",
+                _ => throw new ArgumentException("Invalid token type specified.", nameof(Config.Token)),
             };
         }
 
@@ -164,72 +164,72 @@ namespace DisCatSharp
         /// <summary>
         /// Contains the user mentions.
         /// </summary>
-        /// <param name="message">The message.</param>
+        /// <param name="Message">The message.</param>
         /// <returns>A bool.</returns>
-        internal static bool ContainsUserMentions(string message)
+        internal static bool ContainsUserMentions(string Message)
         {
             var pattern = @"<@(\d+)>";
             var regex = new Regex(pattern, RegexOptions.ECMAScript);
-            return regex.IsMatch(message);
+            return regex.IsMatch(Message);
         }
 
         /// <summary>
         /// Contains the nickname mentions.
         /// </summary>
-        /// <param name="message">The message.</param>
+        /// <param name="Message">The message.</param>
         /// <returns>A bool.</returns>
-        internal static bool ContainsNicknameMentions(string message)
+        internal static bool ContainsNicknameMentions(string Message)
         {
             var pattern = @"<@!(\d+)>";
             var regex = new Regex(pattern, RegexOptions.ECMAScript);
-            return regex.IsMatch(message);
+            return regex.IsMatch(Message);
         }
 
         /// <summary>
         /// Contains the channel mentions.
         /// </summary>
-        /// <param name="message">The message.</param>
+        /// <param name="Message">The message.</param>
         /// <returns>A bool.</returns>
-        internal static bool ContainsChannelMentions(string message)
+        internal static bool ContainsChannelMentions(string Message)
         {
             var pattern = @"<#(\d+)>";
             var regex = new Regex(pattern, RegexOptions.ECMAScript);
-            return regex.IsMatch(message);
+            return regex.IsMatch(Message);
         }
 
         /// <summary>
         /// Contains the role mentions.
         /// </summary>
-        /// <param name="message">The message.</param>
+        /// <param name="Message">The message.</param>
         /// <returns>A bool.</returns>
-        internal static bool ContainsRoleMentions(string message)
+        internal static bool ContainsRoleMentions(string Message)
         {
             var pattern = @"<@&(\d+)>";
             var regex = new Regex(pattern, RegexOptions.ECMAScript);
-            return regex.IsMatch(message);
+            return regex.IsMatch(Message);
         }
 
         /// <summary>
         /// Contains the emojis.
         /// </summary>
-        /// <param name="message">The message.</param>
+        /// <param name="Message">The message.</param>
         /// <returns>A bool.</returns>
-        internal static bool ContainsEmojis(string message)
+        internal static bool ContainsEmojis(string Message)
         {
             var pattern = @"<a?:(.*):(\d+)>";
             var regex = new Regex(pattern, RegexOptions.ECMAScript);
-            return regex.IsMatch(message);
+            return regex.IsMatch(Message);
         }
 
         /// <summary>
         /// Gets the user mentions.
         /// </summary>
-        /// <param name="message">The message.</param>
+        /// <param name="Message">The message.</param>
         /// <returns>A list of ulong.</returns>
-        internal static IEnumerable<ulong> GetUserMentions(DiscordMessage message)
+        internal static IEnumerable<ulong> GetUserMentions(DiscordMessage Message)
         {
             var regex = new Regex(@"<@!?(\d+)>", RegexOptions.ECMAScript);
-            var matches = regex.Matches(message.Content);
+            var matches = regex.Matches(Message.Content);
             foreach (Match match in matches)
                 yield return ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
         }
@@ -237,12 +237,12 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the role mentions.
         /// </summary>
-        /// <param name="message">The message.</param>
+        /// <param name="Message">The message.</param>
         /// <returns>A list of ulong.</returns>
-        internal static IEnumerable<ulong> GetRoleMentions(DiscordMessage message)
+        internal static IEnumerable<ulong> GetRoleMentions(DiscordMessage Message)
         {
             var regex = new Regex(@"<@&(\d+)>", RegexOptions.ECMAScript);
-            var matches = regex.Matches(message.Content);
+            var matches = regex.Matches(Message.Content);
             foreach (Match match in matches)
                 yield return ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
         }
@@ -250,12 +250,12 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the channel mentions.
         /// </summary>
-        /// <param name="message">The message.</param>
+        /// <param name="Message">The message.</param>
         /// <returns>A list of ulong.</returns>
-        internal static IEnumerable<ulong> GetChannelMentions(DiscordMessage message)
+        internal static IEnumerable<ulong> GetChannelMentions(DiscordMessage Message)
         {
             var regex = new Regex(@"<#(\d+)>", RegexOptions.ECMAScript);
-            var matches = regex.Matches(message.Content);
+            var matches = regex.Matches(Message.Content);
             foreach (Match match in matches)
                 yield return ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
         }
@@ -263,12 +263,12 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the emojis.
         /// </summary>
-        /// <param name="message">The message.</param>
+        /// <param name="Message">The message.</param>
         /// <returns>A list of ulong.</returns>
-        internal static IEnumerable<ulong> GetEmojis(DiscordMessage message)
+        internal static IEnumerable<ulong> GetEmojis(DiscordMessage Message)
         {
             var regex = new Regex(@"<a?:([a-zA-Z0-9_]+):(\d+)>", RegexOptions.ECMAScript);
-            var matches = regex.Matches(message.Content);
+            var matches = regex.Matches(Message.Content);
             foreach (Match match in matches)
                 yield return ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
         }
@@ -276,83 +276,83 @@ namespace DisCatSharp
         /// <summary>
         /// Are the valid slash command name.
         /// </summary>
-        /// <param name="name">The name.</param>
+        /// <param name="Name">The name.</param>
         /// <returns>A bool.</returns>
-        internal static bool IsValidSlashCommandName(string name)
+        internal static bool IsValidSlashCommandName(string Name)
         {
             var regex = new Regex(@"^[\w-]{1,32}$", RegexOptions.ECMAScript);
-            return regex.IsMatch(name);
+            return regex.IsMatch(Name);
         }
 
         /// <summary>
         /// Checks the thread auto archive duration feature.
         /// </summary>
-        /// <param name="guild">The guild.</param>
-        /// <param name="taad">The taad.</param>
+        /// <param name="Guild">The guild.</param>
+        /// <param name="Taad">The taad.</param>
         /// <returns>A bool.</returns>
-        internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
+        internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild Guild, ThreadAutoArchiveDuration Taad)
         {
-            return taad == ThreadAutoArchiveDuration.ThreeDays
-                ? (guild.PremiumTier.HasFlag(PremiumTier.TierOne) || guild.Features.CanSetThreadArchiveDurationThreeDays)
-                : taad != ThreadAutoArchiveDuration.OneWeek || guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || guild.Features.CanSetThreadArchiveDurationSevenDays;
+            return Taad == ThreadAutoArchiveDuration.ThreeDays
+                ? (Guild.PremiumTier.HasFlag(PremiumTier.TierOne) || Guild.Features.CanSetThreadArchiveDurationThreeDays)
+                : Taad != ThreadAutoArchiveDuration.OneWeek || Guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || Guild.Features.CanSetThreadArchiveDurationSevenDays;
         }
 
         /// <summary>
         /// Checks the thread private feature.
         /// </summary>
-        /// <param name="guild">The guild.</param>
+        /// <param name="Guild">The guild.</param>
         /// <returns>A bool.</returns>
-        internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || guild.Features.CanCreatePrivateThreads;
+        internal static bool CheckThreadPrivateFeature(DiscordGuild Guild) => Guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || Guild.Features.CanCreatePrivateThreads;
 
         /// <summary>
         /// Have the message intents.
         /// </summary>
-        /// <param name="intents">The intents.</param>
+        /// <param name="Intents">The intents.</param>
         /// <returns>A bool.</returns>
-        internal static bool HasMessageIntents(DiscordIntents intents)
-            => intents.HasIntent(DiscordIntents.GuildMessages) || intents.HasIntent(DiscordIntents.DirectMessages);
+        internal static bool HasMessageIntents(DiscordIntents Intents)
+            => Intents.HasIntent(DiscordIntents.GuildMessages) || Intents.HasIntent(DiscordIntents.DirectMessages);
 
         /// <summary>
         /// Have the reaction intents.
         /// </summary>
-        /// <param name="intents">The intents.</param>
+        /// <param name="Intents">The intents.</param>
         /// <returns>A bool.</returns>
-        internal static bool HasReactionIntents(DiscordIntents intents)
-            => intents.HasIntent(DiscordIntents.GuildMessageReactions) || intents.HasIntent(DiscordIntents.DirectMessageReactions);
+        internal static bool HasReactionIntents(DiscordIntents Intents)
+            => Intents.HasIntent(DiscordIntents.GuildMessageReactions) || Intents.HasIntent(DiscordIntents.DirectMessageReactions);
 
         /// <summary>
         /// Have the typing intents.
         /// </summary>
-        /// <param name="intents">The intents.</param>
+        /// <param name="Intents">The intents.</param>
         /// <returns>A bool.</returns>
-        internal static bool HasTypingIntents(DiscordIntents intents)
-            => intents.HasIntent(DiscordIntents.GuildMessageTyping) || intents.HasIntent(DiscordIntents.DirectMessageTyping);
+        internal static bool HasTypingIntents(DiscordIntents Intents)
+            => Intents.HasIntent(DiscordIntents.GuildMessageTyping) || Intents.HasIntent(DiscordIntents.DirectMessageTyping);
 
         // https://discord.com/developers/docs/topics/gateway#sharding-sharding-formula
         /// <summary>
         /// Gets a shard id from a guild id and total shard count.
         /// </summary>
-        /// <param name="guildId">The guild id the shard is on.</param>
-        /// <param name="shardCount">The total amount of shards.</param>
+        /// <param name="GuildId">The guild id the shard is on.</param>
+        /// <param name="ShardCount">The total amount of shards.</param>
         /// <returns>The shard id.</returns>
-        public static int GetShardId(ulong guildId, int shardCount)
-            => (int)(guildId >> 22) % shardCount;
+        public static int GetShardId(ulong GuildId, int ShardCount)
+            => (int)(GuildId >> 22) % ShardCount;
 
         /// <summary>
         /// Helper method to create a <see cref="System.DateTimeOffset"/> from Unix time seconds for targets that do not support this natively.
         /// </summary>
-        /// <param name="unixTime">Unix time seconds to convert.</param>
-        /// <param name="shouldThrow">Whether the method should throw on failure. Defaults to true.</param>
+        /// <param name="UnixTime">Unix time seconds to convert.</param>
+        /// <param name="ShouldThrow">Whether the method should throw on failure. Defaults to true.</param>
         /// <returns>Calculated <see cref="System.DateTimeOffset"/>.</returns>
-        public static DateTimeOffset GetDateTimeOffset(long unixTime, bool shouldThrow = true)
+        public static DateTimeOffset GetDateTimeOffset(long UnixTime, bool ShouldThrow = true)
         {
             try
             {
-                return DateTimeOffset.FromUnixTimeSeconds(unixTime);
+                return DateTimeOffset.FromUnixTimeSeconds(UnixTime);
             }
             catch (Exception)
             {
-                if (shouldThrow)
+                if (ShouldThrow)
                     throw;
 
                 return DateTimeOffset.MinValue;
@@ -362,18 +362,18 @@ namespace DisCatSharp
         /// <summary>
         /// Helper method to create a <see cref="System.DateTimeOffset"/> from Unix time milliseconds for targets that do not support this natively.
         /// </summary>
-        /// <param name="unixTime">Unix time milliseconds to convert.</param>
-        /// <param name="shouldThrow">Whether the method should throw on failure. Defaults to true.</param>
+        /// <param name="UnixTime">Unix time milliseconds to convert.</param>
+        /// <param name="ShouldThrow">Whether the method should throw on failure. Defaults to true.</param>
         /// <returns>Calculated <see cref="System.DateTimeOffset"/>.</returns>
-        public static DateTimeOffset GetDateTimeOffsetFromMilliseconds(long unixTime, bool shouldThrow = true)
+        public static DateTimeOffset GetDateTimeOffsetFromMilliseconds(long UnixTime, bool ShouldThrow = true)
         {
             try
             {
-                return DateTimeOffset.FromUnixTimeMilliseconds(unixTime);
+                return DateTimeOffset.FromUnixTimeMilliseconds(UnixTime);
             }
             catch (Exception)
             {
-                if (shouldThrow)
+                if (ShouldThrow)
                     throw;
 
                 return DateTimeOffset.MinValue;
@@ -383,49 +383,49 @@ namespace DisCatSharp
         /// <summary>
         /// Helper method to calculate Unix time seconds from a <see cref="System.DateTimeOffset"/> for targets that do not support this natively.
         /// </summary>
-        /// <param name="dto"><see cref="System.DateTimeOffset"/> to calculate Unix time for.</param>
+        /// <param name="Dto"><see cref="System.DateTimeOffset"/> to calculate Unix time for.</param>
         /// <returns>Calculated Unix time.</returns>
-        public static long GetUnixTime(DateTimeOffset dto)
-            => dto.ToUnixTimeMilliseconds();
+        public static long GetUnixTime(DateTimeOffset Dto)
+            => Dto.ToUnixTimeMilliseconds();
 
         /// <summary>
         /// Computes a timestamp from a given snowflake.
         /// </summary>
-        /// <param name="snowflake">Snowflake to compute a timestamp from.</param>
+        /// <param name="Snowflake">Snowflake to compute a timestamp from.</param>
         /// <returns>Computed timestamp.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset GetSnowflakeTime(this ulong snowflake)
-            => DiscordClient._discordEpoch.AddMilliseconds(snowflake >> 22);
+        public static DateTimeOffset GetSnowflakeTime(this ulong Snowflake)
+            => DiscordClient._discordEpoch.AddMilliseconds(Snowflake >> 22);
 
         /// <summary>
         /// Converts this <see cref="Permissions"/> into human-readable format.
         /// </summary>
-        /// <param name="perm">Permissions enumeration to convert.</param>
+        /// <param name="Perm">Permissions enumeration to convert.</param>
         /// <returns>Human-readable permissions.</returns>
-        public static string ToPermissionString(this Permissions perm)
+        public static string ToPermissionString(this Permissions Perm)
         {
-            if (perm == Permissions.None)
-                return PermissionStrings[perm];
+            if (Perm == Permissions.None)
+                return PermissionStrings[Perm];
 
-            perm &= PermissionMethods.FULL_PERMS;
+            Perm &= PermissionMethods.FullPerms;
 
             var strs = PermissionStrings
-                .Where(xkvp => xkvp.Key != Permissions.None && (perm & xkvp.Key) == xkvp.Key)
-                .Select(xkvp => xkvp.Value);
+                .Where(Xkvp => Xkvp.Key != Permissions.None && (Perm & Xkvp.Key) == Xkvp.Key)
+                .Select(Xkvp => Xkvp.Value);
 
-            return string.Join(", ", strs.OrderBy(xs => xs));
+            return string.Join(", ", strs.OrderBy(Xs => Xs));
         }
 
         /// <summary>
         /// Checks whether this string contains given characters.
         /// </summary>
-        /// <param name="str">String to check.</param>
-        /// <param name="characters">Characters to check for.</param>
+        /// <param name="Str">String to check.</param>
+        /// <param name="Characters">Characters to check for.</param>
         /// <returns>Whether the string contained these characters.</returns>
-        public static bool Contains(this string str, params char[] characters)
+        public static bool Contains(this string Str, params char[] Characters)
         {
-            foreach (var xc in str)
-                if (characters.Contains(xc))
+            foreach (var xc in Str)
+                if (Characters.Contains(xc))
                     return true;
 
             return false;
@@ -434,32 +434,32 @@ namespace DisCatSharp
         /// <summary>
         /// Logs the task fault.
         /// </summary>
-        /// <param name="task">The task.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="level">The level.</param>
-        /// <param name="eventId">The event id.</param>
-        /// <param name="message">The message.</param>
-        internal static void LogTaskFault(this Task task, ILogger logger, LogLevel level, EventId eventId, string message)
+        /// <param name="Task">The task.</param>
+        /// <param name="Logger">The logger.</param>
+        /// <param name="Level">The level.</param>
+        /// <param name="EventId">The event id.</param>
+        /// <param name="Message">The message.</param>
+        internal static void LogTaskFault(this Task Task, ILogger Logger, LogLevel Level, EventId EventId, string Message)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            if (Task == null)
+                throw new ArgumentNullException(nameof(Task));
 
-            if (logger == null)
+            if (Logger == null)
                 return;
 
-            task.ContinueWith(t => logger.Log(level, eventId, t.Exception, message), TaskContinuationOptions.OnlyOnFaulted);
+            Task.ContinueWith(T => Logger.Log(Level, EventId, T.Exception, Message), TaskContinuationOptions.OnlyOnFaulted);
         }
 
         /// <summary>
         /// Deconstructs the.
         /// </summary>
-        /// <param name="kvp">The kvp.</param>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
-        internal static void Deconstruct<TKey, TValue>(this KeyValuePair<TKey, TValue> kvp, out TKey key, out TValue value)
+        /// <param name="Kvp">The kvp.</param>
+        /// <param name="Key">The key.</param>
+        /// <param name="Value">The value.</param>
+        internal static void Deconstruct<TKey, TValue>(this KeyValuePair<TKey, TValue> Kvp, out TKey Key, out TValue Value)
         {
-            key = kvp.Key;
-            value = kvp.Value;
+            Key = Kvp.Key;
+            Value = Kvp.Value;
         }
     }
 }

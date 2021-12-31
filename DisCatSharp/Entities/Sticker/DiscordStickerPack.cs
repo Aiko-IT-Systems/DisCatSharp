@@ -73,7 +73,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the pack's banner url.
         /// </summary>
-        public string BannerUrl => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}{Endpoints.STICKER_APPLICATION}{Endpoints.STORE}/{this.BannerAssetId}.png?size=4096";
+        public string BannerUrl => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AppAssets}{Endpoints.StickerApplication}{Endpoints.Store}/{this.BannerAssetId}.png?size=4096";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordStickerPack"/> class.

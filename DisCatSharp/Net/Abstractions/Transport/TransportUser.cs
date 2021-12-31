@@ -134,24 +134,24 @@ namespace DisCatSharp.Net.Abstractions
         /// <summary>
         /// Initializes a new instance of the <see cref="TransportUser"/> class from an existing <see cref="TransportUser"/>.
         /// </summary>
-        /// <param name="other">The other transport user.</param>
-        internal TransportUser(TransportUser other)
+        /// <param name="Other">The other transport user.</param>
+        internal TransportUser(TransportUser Other)
         {
-            this.Id = other.Id;
-            this.Username = other.Username;
-            this.Discriminator = other.Discriminator;
-            this.AvatarHash = other.AvatarHash;
-            this.BannerHash = other.BannerHash;
-            this.BannerColor = other.BannerColor;
-            this.IsBot = other.IsBot;
-            this.MfaEnabled = other.MfaEnabled;
-            this.Verified = other.Verified;
-            this.Email = other.Email;
-            this.PremiumType = other.PremiumType;
-            this.Locale = other.Locale;
-            this.Flags = other.Flags;
-            this.OAuthFlags = other.OAuthFlags;
-            this.Bio = other.Bio;
+            this.Id = Other.Id;
+            this.Username = Other.Username;
+            this.Discriminator = Other.Discriminator;
+            this.AvatarHash = Other.AvatarHash;
+            this.BannerHash = Other.BannerHash;
+            this.BannerColor = Other.BannerColor;
+            this.IsBot = Other.IsBot;
+            this.MfaEnabled = Other.MfaEnabled;
+            this.Verified = Other.Verified;
+            this.Email = Other.Email;
+            this.PremiumType = Other.PremiumType;
+            this.Locale = Other.Locale;
+            this.Flags = Other.Flags;
+            this.OAuthFlags = Other.OAuthFlags;
+            this.Bio = Other.Bio;
         }
     }
 }

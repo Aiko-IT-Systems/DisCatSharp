@@ -42,7 +42,7 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="SocketCloseEventArgs"/> class.
         /// </summary>
-        public SocketCloseEventArgs(IServiceProvider provider) : base(provider) { }
+        public SocketCloseEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 
     /// <summary>
@@ -58,6 +58,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="SocketErrorEventArgs"/> class.
         /// </summary>
-        public SocketErrorEventArgs(IServiceProvider provider) : base(provider) { }
+        public SocketErrorEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

@@ -42,12 +42,12 @@ namespace DisCatSharp.CommandsNext.Entities
         /// <summary>
         /// Creates a new instance of a help message.
         /// </summary>
-        /// <param name="content">Contents of the message.</param>
-        /// <param name="embed">Embed to attach to the message.</param>
-        public CommandHelpMessage(string content = null, DiscordEmbed embed = null)
+        /// <param name="Content">Contents of the message.</param>
+        /// <param name="Embed">Embed to attach to the message.</param>
+        public CommandHelpMessage(string Content = null, DiscordEmbed Embed = null)
         {
-            this.Content = content;
-            this.Embed = embed;
+            this.Content = Content;
+            this.Embed = Embed;
         }
     }
 }

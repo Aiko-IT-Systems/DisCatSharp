@@ -49,16 +49,16 @@ namespace DisCatSharp.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="DisCatSharp.Exceptions.NotFoundException"/> class.
         /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="response">The response.</param>
-        internal NotFoundException(BaseRestRequest request, RestResponse response) : base("Not found: " + response.ResponseCode)
+        /// <param name="Request">The request.</param>
+        /// <param name="Response">The response.</param>
+        internal NotFoundException(BaseRestRequest Request, RestResponse Response) : base("Not found: " + Response.ResponseCode)
         {
-            this.WebRequest = request;
-            this.WebResponse = response;
+            this.WebRequest = Request;
+            this.WebResponse = Response;
 
             try
             {
-                var j = JObject.Parse(response.Response);
+                var j = JObject.Parse(Response.Response);
 
                 if (j["message"] != null)
                     this.JsonMessage = j["message"].ToString();

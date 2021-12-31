@@ -30,38 +30,38 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// The version endpoint.
         /// </summary>
-        internal const string VERSION = "/version";
+        internal const string Version = "/version";
 
         //Track loading
         /// <summary>
         /// The load tracks endpoint.
         /// </summary>
-        internal const string LOAD_TRACKS = "/loadtracks";
+        internal const string LoadTracks = "/loadtracks";
         /// <summary>
         /// The decode track endpoint.
         /// </summary>
-        internal const string DECODE_TRACK = "/decodetrack";
+        internal const string DecodeTrack = "/decodetrack";
         /// <summary>
         /// The decode tracks endpoint.
         /// </summary>
-        internal const string DECODE_TRACKS = "/decodetracks";
+        internal const string DecodeTracks = "/decodetracks";
 
         //Route Planner
         /// <summary>
         /// The reoute planner endpoint.
         /// </summary>
-        internal const string ROUTE_PLANNER = "/routeplanner";
+        internal const string RoutePlanner = "/routeplanner";
         /// <summary>
         /// The status endpoint.
         /// </summary>
-        internal const string STATUS = "/status";
+        internal const string Status = "/status";
         /// <summary>
         /// The free address endpoint.
         /// </summary>
-        internal const string FREE_ADDRESS = "/free/address";
+        internal const string FreeAddress = "/free/address";
         /// <summary>
         /// The free all endpoint.
         /// </summary>
-        internal const string FREE_ALL = "/free/all";
+        internal const string FreeAll = "/free/all";
     }
 }

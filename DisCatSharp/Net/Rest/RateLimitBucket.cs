@@ -164,49 +164,49 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Initializes a new instance of the <see cref="RateLimitBucket"/> class.
         /// </summary>
-        /// <param name="hash">The hash.</param>
+        /// <param name="Hash">The hash.</param>
         /// <param name="guild_id">The guild_id.</param>
         /// <param name="channel_id">The channel_id.</param>
         /// <param name="webhook_id">The webhook_id.</param>
-        internal RateLimitBucket(string hash, string guild_id, string channel_id, string webhook_id)
+        internal RateLimitBucket(string Hash, string GuildId, string ChannelId, string WebhookId)
         {
-            this.Hash = hash;
-            this.ChannelId = channel_id;
-            this.GuildId = guild_id;
-            this.WebhookId = webhook_id;
+            this.Hash = Hash;
+            this.ChannelId = ChannelId;
+            this.GuildId = GuildId;
+            this.WebhookId = WebhookId;
 
-            this.BucketId = GenerateBucketId(hash, guild_id, channel_id, webhook_id);
+            this.BucketId = GenerateBucketId(Hash, GuildId, ChannelId, WebhookId);
             this.RouteHashes = new ConcurrentBag<string>();
         }
 
         /// <summary>
         /// Generates an ID for this request bucket.
         /// </summary>
-        /// <param name="hash">Hash for this bucket.</param>
+        /// <param name="Hash">Hash for this bucket.</param>
         /// <param name="guild_id">Guild Id for this bucket.</param>
         /// <param name="channel_id">Channel Id for this bucket.</param>
         /// <param name="webhook_id">Webhook Id for this bucket.</param>
         /// <returns>Bucket Id.</returns>
-        public static string GenerateBucketId(string hash, string guild_id, string channel_id, string webhook_id)
-            => $"{hash}:{guild_id}:{channel_id}:{webhook_id}";
+        public static string GenerateBucketId(string Hash, string GuildId, string ChannelId, string WebhookId)
+            => $"{Hash}:{GuildId}:{ChannelId}:{WebhookId}";
 
         /// <summary>
         /// Generates the hash key.
         /// </summary>
-        /// <param name="method">The method.</param>
-        /// <param name="route">The route.</param>
+        /// <param name="Method">The method.</param>
+        /// <param name="Route">The route.</param>
         /// <returns>A string.</returns>
-        public static string GenerateHashKey(RestRequestMethod method, string route)
-            => $"{method}:{route}";
+        public static string GenerateHashKey(RestRequestMethod Method, string Route)
+            => $"{Method}:{Route}";
 
         /// <summary>
         /// Generates the unlimited hash.
         /// </summary>
-        /// <param name="method">The method.</param>
-        /// <param name="route">The route.</param>
+        /// <param name="Method">The method.</param>
+        /// <param name="Route">The route.</param>
         /// <returns>A string.</returns>
-        public static string GenerateUnlimitedHash(RestRequestMethod method, string route)
-            => $"{GenerateHashKey(method, route)}:{_unlimitedHash}";
+        public static string GenerateUnlimitedHash(RestRequestMethod Method, string Route)
+            => $"{GenerateHashKey(Method, Route)}:{_unlimitedHash}";
 
         /// <summary>
         /// Returns a string representation of this bucket.
@@ -224,17 +224,17 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Checks whether this <see cref="RateLimitBucket"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="RateLimitBucket"/>.</returns>
-        public override bool Equals(object obj)
-            => this.Equals(obj as RateLimitBucket);
+        public override bool Equals(object Obj)
+            => this.Equals(Obj as RateLimitBucket);
 
         /// <summary>
         /// Checks whether this <see cref="RateLimitBucket"/> is equal to another <see cref="RateLimitBucket"/>.
         /// </summary>
-        /// <param name="e"><see cref="RateLimitBucket"/> to compare to.</param>
+        /// <param name="E"><see cref="RateLimitBucket"/> to compare to.</param>
         /// <returns>Whether the <see cref="RateLimitBucket"/> is equal to this <see cref="RateLimitBucket"/>.</returns>
-        public bool Equals(RateLimitBucket e) => e is not null && (ReferenceEquals(this, e) || this.BucketId == e.BucketId);
+        public bool Equals(RateLimitBucket E) => E is not null && (ReferenceEquals(this, E) || this.BucketId == E.BucketId);
 
         /// <summary>
         /// Gets the hash code for this <see cref="RateLimitBucket"/>.
@@ -246,16 +246,16 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Sets remaining number of requests to the maximum when the ratelimit is reset
         /// </summary>
-        /// <param name="now"></param>
-        internal async Task TryResetLimitAsync(DateTimeOffset now)
+        /// <param name="Now"></param>
+        internal async Task TryResetLimitAsync(DateTimeOffset Now)
         {
             if (this.ResetAfter.HasValue)
-                this.ResetAfter = this.ResetAfterOffset - now;
+                this.ResetAfter = this.ResetAfterOffset - Now;
 
             if (this._nextReset == 0)
                 return;
 
-            if (this._nextReset > now.UtcTicks)
+            if (this._nextReset > Now.UtcTicks)
                 return;
 
             while (Interlocked.CompareExchange(ref this._limitResetting, 1, 0) != 0)
@@ -274,14 +274,14 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Sets the initial values.
         /// </summary>
-        /// <param name="max">The max.</param>
-        /// <param name="usesLeft">The uses left.</param>
-        /// <param name="newReset">The new reset.</param>
-        internal void SetInitialValues(int max, int usesLeft, DateTimeOffset newReset)
+        /// <param name="Max">The max.</param>
+        /// <param name="UsesLeft">The uses left.</param>
+        /// <param name="NewReset">The new reset.</param>
+        internal void SetInitialValues(int Max, int UsesLeft, DateTimeOffset NewReset)
         {
-            this.Maximum = max;
-            this._remaining = usesLeft;
-            this._nextReset = newReset.UtcTicks;
+            this.Maximum = Max;
+            this._remaining = UsesLeft;
+            this._nextReset = NewReset.UtcTicks;
 
             this._limitValid = true;
             this._limitTestFinished = null;

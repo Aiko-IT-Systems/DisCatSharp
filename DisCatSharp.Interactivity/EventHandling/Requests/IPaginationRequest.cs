@@ -41,66 +41,66 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Returns the current page.
         /// </summary>
         /// <returns></returns>
-        Task<Page> GetPageAsync();
+        Task<Page> GetPage();
 
         /// <summary>
         /// Tells the request to set its index to the first page.
         /// </summary>
         /// <returns></returns>
-        Task SkipLeftAsync();
+        Task SkipLeft();
 
         /// <summary>
         /// Tells the request to set its index to the last page.
         /// </summary>
         /// <returns></returns>
-        Task SkipRightAsync();
+        Task SkipRight();
 
         /// <summary>
         /// Tells the request to increase its index by one.
         /// </summary>
         /// <returns></returns>
-        Task NextPageAsync();
+        Task NextPage();
 
         /// <summary>
         /// Tells the request to decrease its index by one.
         /// </summary>
         /// <returns></returns>
-        Task PreviousPageAsync();
+        Task PreviousPage();
 
         /// <summary>
         /// Requests the message buttons from the pagination request.
         /// </summary>
         /// <returns>The buttons.</returns>
-        Task<IEnumerable<DiscordButtonComponent>> GetButtonsAsync();
+        Task<IEnumerable<DiscordButtonComponent>> GetButtons();
 
         /// <summary>
         /// Requests message emojis from pagination request.
         /// </summary>
         /// <returns></returns>
-        Task<PaginationEmojis> GetEmojisAsync();
+        Task<PaginationEmojis> GetEmojis();
 
         /// <summary>
         /// Gets pagination message from this request.
         /// </summary>
         /// <returns></returns>
-        Task<DiscordMessage> GetMessageAsync();
+        Task<DiscordMessage> GetMessage();
 
         /// <summary>
         /// Gets the user this pagination applies to.
         /// </summary>
         /// <returns></returns>
-        Task<DiscordUser> GetUserAsync();
+        Task<DiscordUser> GetUser();
 
         /// <summary>
         /// Get this request's Task Completion Source.
         /// </summary>
         /// <returns></returns>
-        Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync();
+        Task<TaskCompletionSource<bool>> GetTaskCompletionSource();
 
         /// <summary>
         /// Tells the request to perform cleanup.
         /// </summary>
         /// <returns></returns>
-        Task DoCleanupAsync();
+        Task DoCleanup();
     }
 }

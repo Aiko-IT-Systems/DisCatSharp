@@ -35,7 +35,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Whether this interaction response is text-to-speech.
         /// </summary>
-        public bool IsTTS { get; set; }
+        public bool IsTts { get; set; }
 
         /// <summary>
         /// Whether this interaction response should be ephemeral.
@@ -99,33 +99,33 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Constructs a new <see cref="DiscordInteractionResponseBuilder"/> based on an existing <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
         /// </summary>
-        /// <param name="builder">The builder to copy.</param>
-        public DiscordInteractionResponseBuilder(DiscordMessageBuilder builder)
+        /// <param name="Builder">The builder to copy.</param>
+        public DiscordInteractionResponseBuilder(DiscordMessageBuilder Builder)
         {
-            this._content = builder.Content;
-            this._mentions = builder.Mentions;
-            this._embeds.AddRange(builder.Embeds);
-            this._components.AddRange(builder.Components);
+            this._content = Builder.Content;
+            this._mentions = Builder.Mentions;
+            this._embeds.AddRange(Builder.Embeds);
+            this._components.AddRange(Builder.Components);
         }
 
 
         /// <summary>
         /// Appends a collection of components to the builder. Each call will append to a new row.
         /// </summary>
-        /// <param name="components">The components to append. Up to five.</param>
+        /// <param name="Components">The components to append. Up to five.</param>
         /// <returns>The current builder to chain calls with.</returns>
         /// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
-        public DiscordInteractionResponseBuilder AddComponents(params DiscordComponent[] components)
-            => this.AddComponents((IEnumerable<DiscordComponent>)components);
+        public DiscordInteractionResponseBuilder AddComponents(params DiscordComponent[] Components)
+            => this.AddComponents((IEnumerable<DiscordComponent>)Components);
 
         /// <summary>
         /// Appends several rows of components to the message
         /// </summary>
-        /// <param name="components">The rows of components to add, holding up to five each.</param>
+        /// <param name="Components">The rows of components to add, holding up to five each.</param>
         /// <returns></returns>
-        public DiscordInteractionResponseBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
+        public DiscordInteractionResponseBuilder AddComponents(IEnumerable<DiscordActionRowComponent> Components)
         {
-            var ara = components.ToArray();
+            var ara = Components.ToArray();
 
             if (ara.Length + this._components.Count > 5)
                 throw new ArgumentException("ActionRow count exceeds maximum of five.");
@@ -139,12 +139,12 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Appends a collection of components to the builder. Each call will append to a new row.
         /// </summary>
-        /// <param name="components">The components to append. Up to five.</param>
+        /// <param name="Components">The components to append. Up to five.</param>
         /// <returns>The current builder to chain calls with.</returns>
         /// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
-        public DiscordInteractionResponseBuilder AddComponents(IEnumerable<DiscordComponent> components)
+        public DiscordInteractionResponseBuilder AddComponents(IEnumerable<DiscordComponent> Components)
         {
-            var compArr = components.ToArray();
+            var compArr = Components.ToArray();
             var count = compArr.Length;
 
             if (count > 5)
@@ -158,74 +158,74 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Indicates if the interaction response will be text-to-speech.
         /// </summary>
-        /// <param name="tts">Text-to-speech</param>
-        public DiscordInteractionResponseBuilder WithTTS(bool tts)
+        /// <param name="Tts">Text-to-speech</param>
+        public DiscordInteractionResponseBuilder WithTts(bool Tts)
         {
-            this.IsTTS = tts;
+            this.IsTts = Tts;
             return this;
         }
 
         /// <summary>
         /// Sets the interaction response to be ephemeral.
         /// </summary>
-        /// <param name="ephemeral">Ephemeral.</param>
-        public DiscordInteractionResponseBuilder AsEphemeral(bool ephemeral)
+        /// <param name="Ephemeral">Ephemeral.</param>
+        public DiscordInteractionResponseBuilder AsEphemeral(bool Ephemeral)
         {
-            this.IsEphemeral = ephemeral;
+            this.IsEphemeral = Ephemeral;
             return this;
         }
 
         /// <summary>
         /// Sets the content of the message to send.
         /// </summary>
-        /// <param name="content">Content to send.</param>
-        public DiscordInteractionResponseBuilder WithContent(string content)
+        /// <param name="Content">Content to send.</param>
+        public DiscordInteractionResponseBuilder WithContent(string Content)
         {
-            this.Content = content;
+            this.Content = Content;
             return this;
         }
 
         /// <summary>
         /// Adds an embed to send with the interaction response.
         /// </summary>
-        /// <param name="embed">Embed to add.</param>
-        public DiscordInteractionResponseBuilder AddEmbed(DiscordEmbed embed)
+        /// <param name="Embed">Embed to add.</param>
+        public DiscordInteractionResponseBuilder AddEmbed(DiscordEmbed Embed)
         {
-            if (embed != null)
-                this._embeds.Add(embed); // Interactions will 400 silently //
+            if (Embed != null)
+                this._embeds.Add(Embed); // Interactions will 400 silently //
             return this;
         }
 
         /// <summary>
         /// Adds the given embeds to send with the interaction response.
         /// </summary>
-        /// <param name="embeds">Embeds to add.</param>
-        public DiscordInteractionResponseBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
+        /// <param name="Embeds">Embeds to add.</param>
+        public DiscordInteractionResponseBuilder AddEmbeds(IEnumerable<DiscordEmbed> Embeds)
         {
-            this._embeds.AddRange(embeds);
+            this._embeds.AddRange(Embeds);
             return this;
         }
 
         /// <summary>
         /// Adds a file to the interaction response.
         /// </summary>
-        /// <param name="filename">Name of the file.</param>
-        /// <param name="data">File data.</param>
-        /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
-        /// <param name="description">Description of the file.</param>
+        /// <param name="Filename">Name of the file.</param>
+        /// <param name="Data">File data.</param>
+        /// <param name="ResetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="Description">Description of the file.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordInteractionResponseBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
+        public DiscordInteractionResponseBuilder AddFile(string Filename, Stream Data, bool ResetStreamPosition = false, string Description = null)
         {
             if (this.Files.Count >= 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-            if (this._files.Any(x => x.FileName == filename))
+            if (this._files.Any(X => X.FileName == Filename))
                 throw new ArgumentException("A File with that filename already exists");
 
-            if (resetStreamPosition)
-                this._files.Add(new DiscordMessageFile(filename, data, data.Position, description: description));
+            if (ResetStreamPosition)
+                this._files.Add(new DiscordMessageFile(Filename, Data, Data.Position, Description: Description));
             else
-                this._files.Add(new DiscordMessageFile(filename, data, null, description: description));
+                this._files.Add(new DiscordMessageFile(Filename, Data, null, Description: Description));
 
             return this;
         }
@@ -233,22 +233,22 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sets if the message has files to be sent.
         /// </summary>
-        /// <param name="stream">The Stream to the file.</param>
-        /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
-        /// <param name="description">Description of the file.</param>
+        /// <param name="Stream">The Stream to the file.</param>
+        /// <param name="ResetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="Description">Description of the file.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordInteractionResponseBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+        public DiscordInteractionResponseBuilder AddFile(FileStream Stream, bool ResetStreamPosition = false, string Description = null)
         {
             if (this.Files.Count >= 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-            if (this._files.Any(x => x.FileName == stream.Name))
+            if (this._files.Any(X => X.FileName == Stream.Name))
                 throw new ArgumentException("A File with that filename already exists");
 
-            if (resetStreamPosition)
-                this._files.Add(new DiscordMessageFile(stream.Name, stream, stream.Position, description: description));
+            if (ResetStreamPosition)
+                this._files.Add(new DiscordMessageFile(Stream.Name, Stream, Stream.Position, Description: Description));
             else
-                this._files.Add(new DiscordMessageFile(stream.Name, stream, null, description: description));
+                this._files.Add(new DiscordMessageFile(Stream.Name, Stream, null, Description: Description));
 
             return this;
         }
@@ -256,20 +256,20 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds the given files to the interaction response builder.
         /// </summary>
-        /// <param name="files">Dictionary of file name and file data.</param>
-        /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="Files">Dictionary of file name and file data.</param>
+        /// <param name="ResetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordInteractionResponseBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
+        public DiscordInteractionResponseBuilder AddFiles(Dictionary<string, Stream> Files, bool ResetStreamPosition = false)
         {
-            if (this.Files.Count + files.Count > 10)
+            if (this.Files.Count + Files.Count > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-            foreach (var file in files)
+            foreach (var file in Files)
             {
-                if (this._files.Any(x => x.FileName == file.Key))
+                if (this._files.Any(X => X.FileName == file.Key))
                     throw new ArgumentException("A File with that filename already exists");
 
-                if (resetStreamPosition)
+                if (ResetStreamPosition)
                     this._files.Add(new DiscordMessageFile(file.Key, file.Value, file.Value.Position));
                 else
                     this._files.Add(new DiscordMessageFile(file.Key, file.Value, null));
@@ -282,52 +282,52 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds the mention to the mentions to parse, etc. with the interaction response.
         /// </summary>
-        /// <param name="mention">Mention to add.</param>
-        public DiscordInteractionResponseBuilder AddMention(IMention mention)
+        /// <param name="Mention">Mention to add.</param>
+        public DiscordInteractionResponseBuilder AddMention(IMention Mention)
         {
-            this._mentions.Add(mention);
+            this._mentions.Add(Mention);
             return this;
         }
 
         /// <summary>
         /// Adds the mentions to the mentions to parse, etc. with the interaction response.
         /// </summary>
-        /// <param name="mentions">Mentions to add.</param>
-        public DiscordInteractionResponseBuilder AddMentions(IEnumerable<IMention> mentions)
+        /// <param name="Mentions">Mentions to add.</param>
+        public DiscordInteractionResponseBuilder AddMentions(IEnumerable<IMention> Mentions)
         {
-            this._mentions.AddRange(mentions);
+            this._mentions.AddRange(Mentions);
             return this;
         }
 
         /// <summary>
         /// Adds a single auto-complete choice to the builder.
         /// </summary>
-        /// <param name="choice">The choice to add.</param>
+        /// <param name="Choice">The choice to add.</param>
         /// <returns>The current builder to chain calls with.</returns>
-        public DiscordInteractionResponseBuilder AddAutoCompleteChoice(DiscordApplicationCommandAutocompleteChoice choice)
+        public DiscordInteractionResponseBuilder AddAutoCompleteChoice(DiscordApplicationCommandAutocompleteChoice Choice)
         {
-            this._choices.Add(choice);
+            this._choices.Add(Choice);
             return this;
         }
 
         /// <summary>
         /// Adds auto-complete choices to the builder.
         /// </summary>
-        /// <param name="choices">The choices to add.</param>
+        /// <param name="Choices">The choices to add.</param>
         /// <returns>The current builder to chain calls with.</returns>
-        public DiscordInteractionResponseBuilder AddAutoCompleteChoices(IEnumerable<DiscordApplicationCommandAutocompleteChoice> choices)
+        public DiscordInteractionResponseBuilder AddAutoCompleteChoices(IEnumerable<DiscordApplicationCommandAutocompleteChoice> Choices)
         {
-            this._choices.AddRange(choices);
+            this._choices.AddRange(Choices);
             return this;
         }
 
         /// <summary>
         /// Adds auto-complete choices to the builder.
         /// </summary>
-        /// <param name="choices">The choices to add.</param>
+        /// <param name="Choices">The choices to add.</param>
         /// <returns>The current builder to chain calls with.</returns>
-        public DiscordInteractionResponseBuilder AddAutoCompleteChoices(params DiscordApplicationCommandAutocompleteChoice[] choices)
-            => this.AddAutoCompleteChoices((IEnumerable<DiscordApplicationCommandAutocompleteChoice>)choices);
+        public DiscordInteractionResponseBuilder AddAutoCompleteChoices(params DiscordApplicationCommandAutocompleteChoice[] Choices)
+            => this.AddAutoCompleteChoices((IEnumerable<DiscordApplicationCommandAutocompleteChoice>)Choices);
 
         /// <summary>
         /// Clears all message components on this builder.
@@ -342,7 +342,7 @@ namespace DisCatSharp.Entities
         {
             this.Content = "";
             this._embeds.Clear();
-            this.IsTTS = false;
+            this.IsTts = false;
             this.IsEphemeral = false;
             this._mentions.Clear();
             this._components.Clear();

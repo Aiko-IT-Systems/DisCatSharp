@@ -46,13 +46,13 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkConfigureResume"/> class.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="timeout">The timeout.</param>
-        public LavalinkConfigureResume(string key, int timeout)
+        /// <param name="Key">The key.</param>
+        /// <param name="Timeout">The timeout.</param>
+        public LavalinkConfigureResume(string Key, int Timeout)
             : base("configureResuming")
         {
-            this.Key = key;
-            this.Timeout = timeout;
+            this.Key = Key;
+            this.Timeout = Timeout;
         }
     }
 
@@ -64,9 +64,9 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkDestroy"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        public LavalinkDestroy(LavalinkGuildConnection lvl)
-            : base("destroy", lvl.GuildIdString)
+        /// <param name="Lvl">The lvl.</param>
+        public LavalinkDestroy(LavalinkGuildConnection Lvl)
+            : base("destroy", Lvl.GuildIdString)
         { }
     }
 
@@ -84,12 +84,12 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkPlay"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        /// <param name="track">The track.</param>
-        public LavalinkPlay(LavalinkGuildConnection lvl, LavalinkTrack track)
-            : base("play", lvl.GuildIdString)
+        /// <param name="Lvl">The lvl.</param>
+        /// <param name="Track">The track.</param>
+        public LavalinkPlay(LavalinkGuildConnection Lvl, LavalinkTrack Track)
+            : base("play", Lvl.GuildIdString)
         {
-            this.Track = track.TrackString;
+            this.Track = Track.TrackString;
         }
     }
 
@@ -119,16 +119,16 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkPlayPartial"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        /// <param name="track">The track.</param>
-        /// <param name="start">The start.</param>
-        /// <param name="stop">The stop.</param>
-        public LavalinkPlayPartial(LavalinkGuildConnection lvl, LavalinkTrack track, TimeSpan start, TimeSpan stop)
-            : base("play", lvl.GuildIdString)
+        /// <param name="Lvl">The lvl.</param>
+        /// <param name="Track">The track.</param>
+        /// <param name="Start">The start.</param>
+        /// <param name="Stop">The stop.</param>
+        public LavalinkPlayPartial(LavalinkGuildConnection Lvl, LavalinkTrack Track, TimeSpan Start, TimeSpan Stop)
+            : base("play", Lvl.GuildIdString)
         {
-            this.Track = track.TrackString;
-            this.StartTime = (long)start.TotalMilliseconds;
-            this.StopTime = (long)stop.TotalMilliseconds;
+            this.Track = Track.TrackString;
+            this.StartTime = (long)Start.TotalMilliseconds;
+            this.StopTime = (long)Stop.TotalMilliseconds;
         }
     }
 
@@ -146,12 +146,12 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkPause"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        /// <param name="pause">If true, pause.</param>
-        public LavalinkPause(LavalinkGuildConnection lvl, bool pause)
-            : base("pause", lvl.GuildIdString)
+        /// <param name="Lvl">The lvl.</param>
+        /// <param name="Pause">If true, pause.</param>
+        public LavalinkPause(LavalinkGuildConnection Lvl, bool Pause)
+            : base("pause", Lvl.GuildIdString)
         {
-            this.Pause = pause;
+            this.Pause = Pause;
         }
     }
 
@@ -163,9 +163,9 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkStop"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        public LavalinkStop(LavalinkGuildConnection lvl)
-            : base("stop", lvl.GuildIdString)
+        /// <param name="Lvl">The lvl.</param>
+        public LavalinkStop(LavalinkGuildConnection Lvl)
+            : base("stop", Lvl.GuildIdString)
         { }
     }
 
@@ -183,12 +183,12 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkSeek"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        /// <param name="position">The position.</param>
-        public LavalinkSeek(LavalinkGuildConnection lvl, TimeSpan position)
-            : base("seek", lvl.GuildIdString)
+        /// <param name="Lvl">The lvl.</param>
+        /// <param name="Position">The position.</param>
+        public LavalinkSeek(LavalinkGuildConnection Lvl, TimeSpan Position)
+            : base("seek", Lvl.GuildIdString)
         {
-            this.Position = (long)position.TotalMilliseconds;
+            this.Position = (long)Position.TotalMilliseconds;
         }
     }
 
@@ -206,12 +206,12 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkVolume"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        /// <param name="volume">The volume.</param>
-        public LavalinkVolume(LavalinkGuildConnection lvl, int volume)
-            : base("volume", lvl.GuildIdString)
+        /// <param name="Lvl">The lvl.</param>
+        /// <param name="Volume">The volume.</param>
+        public LavalinkVolume(LavalinkGuildConnection Lvl, int Volume)
+            : base("volume", Lvl.GuildIdString)
         {
-            this.Volume = volume;
+            this.Volume = Volume;
         }
     }
 
@@ -229,12 +229,12 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkEqualizer"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        /// <param name="bands">The bands.</param>
-        public LavalinkEqualizer(LavalinkGuildConnection lvl, IEnumerable<LavalinkBandAdjustment> bands)
-            : base("equalizer", lvl.GuildIdString)
+        /// <param name="Lvl">The lvl.</param>
+        /// <param name="Bands">The bands.</param>
+        public LavalinkEqualizer(LavalinkGuildConnection Lvl, IEnumerable<LavalinkBandAdjustment> Bands)
+            : base("equalizer", Lvl.GuildIdString)
         {
-            this.Bands = bands;
+            this.Bands = Bands;
         }
     }
 }

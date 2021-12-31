@@ -263,7 +263,7 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets a value indicating whether t t is s.
         /// </summary>
         [JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? IsTTS { get; set; }
+        public bool? IsTts { get; set; }
 
         /// <summary>
         /// Gets or sets the stickers ids.
@@ -294,7 +294,7 @@ namespace DisCatSharp.Net.Abstractions
         /// Gets or sets a value indicating whether t t is s.
         /// </summary>
         [JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? IsTTS { get; set; }
+        public bool? IsTts { get; set; }
 
         /// <summary>
         /// Gets or sets the embeds.

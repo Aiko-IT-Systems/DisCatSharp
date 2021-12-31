@@ -29,28 +29,28 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Initializes a new instance of the <see cref="RawVoicePacket"/> class.
         /// </summary>
-        /// <param name="bytes">The bytes.</param>
-        /// <param name="duration">The duration.</param>
-        /// <param name="silence">If true, silence.</param>
-        public RawVoicePacket(Memory<byte> bytes, int duration, bool silence)
+        /// <param name="Bytes">The bytes.</param>
+        /// <param name="Duration">The duration.</param>
+        /// <param name="Silence">If true, silence.</param>
+        public RawVoicePacket(Memory<byte> Bytes, int Duration, bool Silence)
         {
-            this.Bytes = bytes;
-            this.Duration = duration;
-            this.Silence = silence;
+            this.Bytes = Bytes;
+            this.Duration = Duration;
+            this.Silence = Silence;
             this.RentedBuffer = null;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RawVoicePacket"/> class.
         /// </summary>
-        /// <param name="bytes">The bytes.</param>
-        /// <param name="duration">The duration.</param>
-        /// <param name="silence">If true, silence.</param>
-        /// <param name="rentedBuffer">The rented buffer.</param>
-        public RawVoicePacket(Memory<byte> bytes, int duration, bool silence, byte[] rentedBuffer)
-            : this(bytes, duration, silence)
+        /// <param name="Bytes">The bytes.</param>
+        /// <param name="Duration">The duration.</param>
+        /// <param name="Silence">If true, silence.</param>
+        /// <param name="RentedBuffer">The rented buffer.</param>
+        public RawVoicePacket(Memory<byte> Bytes, int Duration, bool Silence, byte[] RentedBuffer)
+            : this(Bytes, Duration, Silence)
         {
-            this.RentedBuffer = rentedBuffer;
+            this.RentedBuffer = RentedBuffer;
         }
 
         public readonly Memory<byte> Bytes;

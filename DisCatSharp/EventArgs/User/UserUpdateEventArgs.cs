@@ -43,6 +43,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="UserUpdateEventArgs"/> class.
         /// </summary>
-        internal UserUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+        internal UserUpdateEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

@@ -110,16 +110,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordPresence"/> class.
         /// </summary>
-        /// <param name="other">The other.</param>
-        internal DiscordPresence(DiscordPresence other)
+        /// <param name="Other">The other.</param>
+        internal DiscordPresence(DiscordPresence Other)
         {
-            this.Discord = other.Discord;
-            this.Activity = other.Activity;
-            this.RawActivity = other.RawActivity;
-            this._internalActivities = (DiscordActivity[])other._internalActivities?.Clone();
-            this.RawActivities = (TransportActivity[])other.RawActivities?.Clone();
-            this.Status = other.Status;
-            this.InternalUser = new TransportUser(other.InternalUser);
+            this.Discord = Other.Discord;
+            this.Activity = Other.Activity;
+            this.RawActivity = Other.RawActivity;
+            this._internalActivities = (DiscordActivity[])Other._internalActivities?.Clone();
+            this.RawActivities = (TransportActivity[])Other.RawActivities?.Clone();
+            this.Status = Other.Status;
+            this.InternalUser = new TransportUser(Other.InternalUser);
         }
     }
 

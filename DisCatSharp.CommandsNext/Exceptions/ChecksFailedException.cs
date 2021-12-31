@@ -50,15 +50,15 @@ namespace DisCatSharp.CommandsNext.Exceptions
         /// <summary>
         /// Creates a new <see cref="ChecksFailedException"/>.
         /// </summary>
-        /// <param name="command">Command that failed to execute.</param>
-        /// <param name="ctx">Context in which the command was executed.</param>
-        /// <param name="failedChecks">A collection of checks that failed.</param>
-        public ChecksFailedException(Command command, CommandContext ctx, IEnumerable<CheckBaseAttribute> failedChecks)
+        /// <param name="Command">Command that failed to execute.</param>
+        /// <param name="Ctx">Context in which the command was executed.</param>
+        /// <param name="FailedChecks">A collection of checks that failed.</param>
+        public ChecksFailedException(Command Command, CommandContext Ctx, IEnumerable<CheckBaseAttribute> FailedChecks)
             : base("One or more pre-execution checks failed.")
         {
-            this.Command = command;
-            this.Context = ctx;
-            this.FailedChecks = new ReadOnlyCollection<CheckBaseAttribute>(new List<CheckBaseAttribute>(failedChecks));
+            this.Command = Command;
+            this.Context = Ctx;
+            this.FailedChecks = new ReadOnlyCollection<CheckBaseAttribute>(new List<CheckBaseAttribute>(FailedChecks));
         }
     }
 }

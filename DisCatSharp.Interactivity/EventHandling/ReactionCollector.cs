@@ -57,28 +57,28 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Creates a new Eventwaiter object.
         /// </summary>
-        /// <param name="client">Your DiscordClient</param>
-        public ReactionCollector(DiscordClient client)
+        /// <param name="Client">Your DiscordClient</param>
+        public ReactionCollector(DiscordClient Client)
         {
-            this._client = client;
+            this._client = Client;
             var tinfo = this._client.GetType().GetTypeInfo();
 
             this._requests = new ConcurrentHashSet<ReactionCollectRequest>();
 
             // Grabbing all three events from client
-            var handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionAddEventArgs>));
+            var handler = tinfo.DeclaredFields.First(X => X.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionAddEventArgs>));
 
             this._reactionAddEvent = (AsyncEvent<DiscordClient, MessageReactionAddEventArgs>)handler.GetValue(this._client);
             this._reactionAddHandler = new AsyncEventHandler<DiscordClient, MessageReactionAddEventArgs>(this.HandleReactionAdd);
             this._reactionAddEvent.Register(this._reactionAddHandler);
 
-            handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>));
+            handler = tinfo.DeclaredFields.First(X => X.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>));
 
             this._reactionRemoveEvent = (AsyncEvent<DiscordClient, MessageReactionRemoveEventArgs>)handler.GetValue(this._client);
             this._reactionRemoveHandler = new AsyncEventHandler<DiscordClient, MessageReactionRemoveEventArgs>(this.HandleReactionRemove);
             this._reactionRemoveEvent.Register(this._reactionRemoveHandler);
 
-            handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>));
+            handler = tinfo.DeclaredFields.First(X => X.FieldType == typeof(AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>));
 
             this._reactionClearEvent = (AsyncEvent<DiscordClient, MessageReactionsClearEventArgs>)handler.GetValue(this._client);
             this._reactionClearHandler = new AsyncEventHandler<DiscordClient, MessageReactionsClearEventArgs>(this.HandleReactionClear);
@@ -88,16 +88,16 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Collects the async.
         /// </summary>
-        /// <param name="request">The request.</param>
+        /// <param name="Request">The request.</param>
         /// <returns>A Task.</returns>
-        public async Task<ReadOnlyCollection<Reaction>> CollectAsync(ReactionCollectRequest request)
+        public async Task<ReadOnlyCollection<Reaction>> CollectAsync(ReactionCollectRequest Request)
         {
-            this._requests.Add(request);
+            this._requests.Add(Request);
             var result = (ReadOnlyCollection<Reaction>)null;
 
             try
             {
-                await request._tcs.Task.ConfigureAwait(false);
+                await Request._tcs.Task.ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -105,9 +105,9 @@ namespace DisCatSharp.Interactivity.EventHandling
             }
             finally
             {
-                result = new ReadOnlyCollection<Reaction>(new HashSet<Reaction>(request._collected).ToList());
-                request.Dispose();
-                this._requests.TryRemove(request);
+                result = new ReadOnlyCollection<Reaction>(new HashSet<Reaction>(Request._collected).ToList());
+                Request.Dispose();
+                this._requests.TryRemove(Request);
             }
             return result;
         }
@@ -115,29 +115,29 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Handles the reaction add.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="eventargs">The eventargs.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="Eventargs">The eventargs.</param>
         /// <returns>A Task.</returns>
-        private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventargs)
+        private Task HandleReactionAdd(DiscordClient Client, MessageReactionAddEventArgs Eventargs)
         {
             // foreach request add
             foreach (var req in this._requests)
             {
-                if (req.message.Id == eventargs.Message.Id)
+                if (req._message.Id == Eventargs.Message.Id)
                 {
-                    if (req._collected.Any(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id)))
+                    if (req._collected.Any(X => X.Emoji == Eventargs.Emoji && X.Users.Any(Y => Y.Id == Eventargs.User.Id)))
                     {
-                        var reaction = req._collected.First(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id));
+                        var reaction = req._collected.First(X => X.Emoji == Eventargs.Emoji && X.Users.Any(Y => Y.Id == Eventargs.User.Id));
                         req._collected.TryRemove(reaction);
-                        reaction.Users.Add(eventargs.User);
+                        reaction.Users.Add(Eventargs.User);
                         req._collected.Add(reaction);
                     }
                     else
                     {
                         req._collected.Add(new Reaction()
                         {
-                            Emoji = eventargs.Emoji,
-                            Users = new ConcurrentHashSet<DiscordUser>() { eventargs.User }
+                            Emoji = Eventargs.Emoji,
+                            Users = new ConcurrentHashSet<DiscordUser>() { Eventargs.User }
                         });
                     }
                 }
@@ -148,21 +148,21 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Handles the reaction remove.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="eventargs">The eventargs.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="Eventargs">The eventargs.</param>
         /// <returns>A Task.</returns>
-        private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventargs)
+        private Task HandleReactionRemove(DiscordClient Client, MessageReactionRemoveEventArgs Eventargs)
         {
             // foreach request remove
             foreach (var req in this._requests)
             {
-                if (req.message.Id == eventargs.Message.Id)
+                if (req._message.Id == Eventargs.Message.Id)
                 {
-                    if (req._collected.Any(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id)))
+                    if (req._collected.Any(X => X.Emoji == Eventargs.Emoji && X.Users.Any(Y => Y.Id == Eventargs.User.Id)))
                     {
-                        var reaction = req._collected.First(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id));
+                        var reaction = req._collected.First(X => X.Emoji == Eventargs.Emoji && X.Users.Any(Y => Y.Id == Eventargs.User.Id));
                         req._collected.TryRemove(reaction);
-                        reaction.Users.TryRemove(eventargs.User);
+                        reaction.Users.TryRemove(Eventargs.User);
                         if (reaction.Users.Count > 0)
                             req._collected.Add(reaction);
                     }
@@ -174,15 +174,15 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Handles the reaction clear.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="eventargs">The eventargs.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="Eventargs">The eventargs.</param>
         /// <returns>A Task.</returns>
-        private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventargs)
+        private Task HandleReactionClear(DiscordClient Client, MessageReactionsClearEventArgs Eventargs)
         {
             // foreach request add
             foreach (var req in this._requests)
             {
-                if (req.message.Id == eventargs.Message.Id)
+                if (req._message.Id == Eventargs.Message.Id)
                 {
                     req._collected.Clear();
                 }
@@ -226,19 +226,19 @@ namespace DisCatSharp.Interactivity.EventHandling
         internal TaskCompletionSource<Reaction> _tcs;
         internal CancellationTokenSource _ct;
         internal TimeSpan _timeout;
-        internal DiscordMessage message;
+        internal DiscordMessage _message;
         internal ConcurrentHashSet<Reaction> _collected;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReactionCollectRequest"/> class.
         /// </summary>
-        /// <param name="msg">The msg.</param>
-        /// <param name="timeout">The timeout.</param>
-        public ReactionCollectRequest(DiscordMessage msg, TimeSpan timeout)
+        /// <param name="Msg">The msg.</param>
+        /// <param name="Timeout">The timeout.</param>
+        public ReactionCollectRequest(DiscordMessage Msg, TimeSpan Timeout)
         {
-            this.message = msg;
+            this._message = Msg;
             this._collected = new ConcurrentHashSet<Reaction>();
-            this._timeout = timeout;
+            this._timeout = Timeout;
             this._tcs = new TaskCompletionSource<Reaction>();
             this._ct = new CancellationTokenSource(this._timeout);
             this._ct.Token.Register(() => this._tcs.TrySetResult(null));
@@ -257,7 +257,7 @@ namespace DisCatSharp.Interactivity.EventHandling
             GC.SuppressFinalize(this);
             this._ct.Dispose();
             this._tcs = null;
-            this.message = null;
+            this._message = null;
             this._collected?.Clear();
             this._collected = null;
         }

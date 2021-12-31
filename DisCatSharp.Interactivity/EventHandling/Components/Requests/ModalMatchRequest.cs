@@ -42,27 +42,27 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// </summary>
         public TaskCompletionSource<ComponentInteractionCreateEventArgs> Tcs { get; private set; } = new();
 
-        protected readonly CancellationToken _cancellation;
-        protected readonly Func<ComponentInteractionCreateEventArgs, bool> _predicate;
+        protected readonly CancellationToken Cancellation;
+        protected readonly Func<ComponentInteractionCreateEventArgs, bool> Predicate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModalMatchRequest"/> class.
         /// </summary>
         /// <param name="custom_id">The custom id.</param>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="cancellation">The cancellation token.</param>
-        public ModalMatchRequest(string custom_id, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation)
+        /// <param name="Predicate">The predicate.</param>
+        /// <param name="Cancellation">The cancellation token.</param>
+        public ModalMatchRequest(string CustomId, Func<ComponentInteractionCreateEventArgs, bool> Predicate, CancellationToken Cancellation)
         {
-            this.CustomId = custom_id;
-            this._predicate = predicate;
-            this._cancellation = cancellation;
-            this._cancellation.Register(() => this.Tcs.TrySetResult(null)); // TrySetCancelled would probably be better but I digress ~Velvet //
+            this.CustomId = CustomId;
+            this.Predicate = Predicate;
+            this.Cancellation = Cancellation;
+            this.Cancellation.Register(() => this.Tcs.TrySetResult(null)); // TrySetCancelled would probably be better but I digress ~Velvet //
         }
 
         /// <summary>
         /// Whether it is a match.
         /// </summary>
-        /// <param name="args">The arguments.</param>
-        public bool IsMatch(ComponentInteractionCreateEventArgs args) => this._predicate(args);
+        /// <param name="Args">The arguments.</param>
+        public bool IsMatch(ComponentInteractionCreateEventArgs Args) => this.Predicate(Args);
     }
 }

@@ -35,7 +35,7 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Lavalink
 {
-    internal delegate void ChannelDisconnectedEventHandler(LavalinkGuildConnection node);
+    internal delegate void ChannelDisconnectedEventHandler(LavalinkGuildConnection Node);
 
     /// <summary>
     /// Represents a Lavalink connection to a channel.
@@ -149,13 +149,13 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkGuildConnection"/> class.
         /// </summary>
-        /// <param name="node">The node.</param>
-        /// <param name="channel">The channel.</param>
-        /// <param name="vstu">The vstu.</param>
-        internal LavalinkGuildConnection(LavalinkNodeConnection node, DiscordChannel channel, VoiceStateUpdateEventArgs vstu)
+        /// <param name="Node">The node.</param>
+        /// <param name="Channel">The channel.</param>
+        /// <param name="Vstu">The vstu.</param>
+        internal LavalinkGuildConnection(LavalinkNodeConnection Node, DiscordChannel Channel, VoiceStateUpdateEventArgs Vstu)
         {
-            this.Node = node;
-            this.VoiceStateUpdate = vstu;
+            this.Node = Node;
+            this.VoiceStateUpdate = Vstu;
             this.CurrentState = new LavalinkPlayerState();
             this.VoiceWsDisconnectTcs = new TaskCompletionSource<bool>();
 
@@ -172,28 +172,28 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Disconnects the connection from the voice channel.
         /// </summary>
-        /// <param name="shouldDestroy">Whether the connection should be destroyed on the Lavalink server when leaving.</param>
+        /// <param name="ShouldDestroy">Whether the connection should be destroyed on the Lavalink server when leaving.</param>
 
-        public Task DisconnectAsync(bool shouldDestroy = true)
-            => this.DisconnectInternalAsync(shouldDestroy);
+        public Task Disconnect(bool ShouldDestroy = true)
+            => this.DisconnectInternalAsync(ShouldDestroy);
 
         /// <summary>
         /// Disconnects the internal async.
         /// </summary>
-        /// <param name="shouldDestroy">If true, should destroy.</param>
-        /// <param name="isManualDisconnection">If true, is manual disconnection.</param>
+        /// <param name="ShouldDestroy">If true, should destroy.</param>
+        /// <param name="IsManualDisconnection">If true, is manual disconnection.</param>
 
-        internal async Task DisconnectInternalAsync(bool shouldDestroy, bool isManualDisconnection = false)
+        internal async Task DisconnectInternalAsync(bool ShouldDestroy, bool IsManualDisconnection = false)
         {
-            if (!this.IsConnected && !isManualDisconnection)
+            if (!this.IsConnected && !IsManualDisconnection)
                 throw new InvalidOperationException("This connection is not valid.");
 
             Volatile.Write(ref this._isDisposed, true);
 
-            if (shouldDestroy)
+            if (ShouldDestroy)
                 await this.Node.SendPayloadAsync(new LavalinkDestroy(this)).ConfigureAwait(false);
 
-            if (!isManualDisconnection)
+            if (!IsManualDisconnection)
             {
                 await this.SendVoiceUpdateAsync().ConfigureAwait(false);
                 this.ChannelDisconnected?.Invoke(this);
@@ -224,57 +224,57 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Searches for specified terms.
         /// </summary>
-        /// <param name="searchQuery">What to search for.</param>
-        /// <param name="type">What platform will search for.</param>
+        /// <param name="SearchQuery">What to search for.</param>
+        /// <param name="Type">What platform will search for.</param>
         /// <returns>A collection of tracks matching the criteria.</returns>
-        public Task<LavalinkLoadResult> GetTracksAsync(string searchQuery, LavalinkSearchType type = LavalinkSearchType.Youtube)
-            => this.Node.Rest.GetTracksAsync(searchQuery, type);
+        public Task<LavalinkLoadResult> GetTracks(string SearchQuery, LavalinkSearchType Type = LavalinkSearchType.Youtube)
+            => this.Node.Rest.GetTracks(SearchQuery, Type);
 
         /// <summary>
         /// Loads tracks from specified URL.
         /// </summary>
-        /// <param name="uri">URL to load tracks from.</param>
+        /// <param name="Uri">URL to load tracks from.</param>
         /// <returns>A collection of tracks from the URL.</returns>
-        public Task<LavalinkLoadResult> GetTracksAsync(Uri uri)
-            => this.Node.Rest.GetTracksAsync(uri);
+        public Task<LavalinkLoadResult> GetTracks(Uri Uri)
+            => this.Node.Rest.GetTracks(Uri);
 
         /// <summary>
         /// Loads tracks from a local file.
         /// </summary>
-        /// <param name="file">File to load tracks from.</param>
+        /// <param name="File">File to load tracks from.</param>
         /// <returns>A collection of tracks from the file.</returns>
-        public Task<LavalinkLoadResult> GetTracksAsync(FileInfo file)
-            => this.Node.Rest.GetTracksAsync(file);
+        public Task<LavalinkLoadResult> GetTracks(FileInfo File)
+            => this.Node.Rest.GetTracks(File);
 
         /// <summary>
         /// Queues the specified track for playback.
         /// </summary>
-        /// <param name="track">Track to play.</param>
-        public async Task PlayAsync(LavalinkTrack track)
+        /// <param name="Track">Track to play.</param>
+        public async Task PlayAsync(LavalinkTrack Track)
         {
             if (!this.IsConnected)
                 throw new InvalidOperationException("This connection is not valid.");
 
-            this.CurrentState.CurrentTrack = track;
-            await this.Node.SendPayloadAsync(new LavalinkPlay(this, track)).ConfigureAwait(false);
+            this.CurrentState.CurrentTrack = Track;
+            await this.Node.SendPayloadAsync(new LavalinkPlay(this, Track)).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Queues the specified track for playback. The track will be played from specified start timestamp to specified end timestamp.
         /// </summary>
-        /// <param name="track">Track to play.</param>
-        /// <param name="start">Timestamp to start playback at.</param>
-        /// <param name="end">Timestamp to stop playback at.</param>
-        public async Task PlayPartialAsync(LavalinkTrack track, TimeSpan start, TimeSpan end)
+        /// <param name="Track">Track to play.</param>
+        /// <param name="Start">Timestamp to start playback at.</param>
+        /// <param name="End">Timestamp to stop playback at.</param>
+        public async Task PlayPartialAsync(LavalinkTrack Track, TimeSpan Start, TimeSpan End)
         {
             if (!this.IsConnected)
                 throw new InvalidOperationException("This connection is not valid.");
 
-            if (start.TotalMilliseconds < 0 || end <= start)
+            if (Start.TotalMilliseconds < 0 || End <= Start)
                 throw new ArgumentException("Both start and end timestamps need to be greater or equal to zero, and the end timestamp needs to be greater than start timestamp.");
 
-            this.CurrentState.CurrentTrack = track;
-            await this.Node.SendPayloadAsync(new LavalinkPlayPartial(this, track, start, end)).ConfigureAwait(false);
+            this.CurrentState.CurrentTrack = Track;
+            await this.Node.SendPayloadAsync(new LavalinkPlayPartial(this, Track, Start, End)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -313,46 +313,46 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Seeks the current track to specified position.
         /// </summary>
-        /// <param name="position">Position to seek to.</param>
-        public async Task SeekAsync(TimeSpan position)
+        /// <param name="Position">Position to seek to.</param>
+        public async Task SeekAsync(TimeSpan Position)
         {
             if (!this.IsConnected)
                 throw new InvalidOperationException("This connection is not valid.");
 
-            await this.Node.SendPayloadAsync(new LavalinkSeek(this, position)).ConfigureAwait(false);
+            await this.Node.SendPayloadAsync(new LavalinkSeek(this, Position)).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Sets the playback volume. This might incur a lot of CPU usage.
         /// </summary>
-        /// <param name="volume">Volume to set. Needs to be greater or equal to 0, and less than or equal to 100. 100 means 100% and is the default value.</param>
-        public async Task SetVolumeAsync(int volume)
+        /// <param name="Volume">Volume to set. Needs to be greater or equal to 0, and less than or equal to 100. 100 means 100% and is the default value.</param>
+        public async Task SetVolumeAsync(int Volume)
         {
             if (!this.IsConnected)
                 throw new InvalidOperationException("This connection is not valid.");
 
-            if (volume < 0 || volume > 1000)
-                throw new ArgumentOutOfRangeException(nameof(volume), "Volume needs to range from 0 to 1000.");
+            if (Volume < 0 || Volume > 1000)
+                throw new ArgumentOutOfRangeException(nameof(Volume), "Volume needs to range from 0 to 1000.");
 
-            await this.Node.SendPayloadAsync(new LavalinkVolume(this, volume)).ConfigureAwait(false);
+            await this.Node.SendPayloadAsync(new LavalinkVolume(this, Volume)).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Adjusts the specified bands in the audio equalizer. This will alter the sound output, and might incur a lot of CPU usage.
         /// </summary>
-        /// <param name="bands">Bands adjustments to make. You must specify one adjustment per band at most.</param>
-        public async Task AdjustEqualizerAsync(params LavalinkBandAdjustment[] bands)
+        /// <param name="Bands">Bands adjustments to make. You must specify one adjustment per band at most.</param>
+        public async Task AdjustEqualizerAsync(params LavalinkBandAdjustment[] Bands)
         {
             if (!this.IsConnected)
                 throw new InvalidOperationException("This connection is not valid.");
 
-            if (bands?.Any() != true)
+            if (Bands?.Any() != true)
                 return;
 
-            if (bands.Distinct(new LavalinkBandAdjustmentComparer()).Count() != bands.Count())
+            if (Bands.Distinct(new LavalinkBandAdjustmentComparer()).Count() != Bands.Count())
                 throw new InvalidOperationException("You cannot specify multiple modifiers for the same band.");
 
-            await this.Node.SendPayloadAsync(new LavalinkEqualizer(this, bands)).ConfigureAwait(false);
+            await this.Node.SendPayloadAsync(new LavalinkEqualizer(this, Bands)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -363,76 +363,76 @@ namespace DisCatSharp.Lavalink
             if (!this.IsConnected)
                 throw new InvalidOperationException("This connection is not valid.");
 
-            await this.Node.SendPayloadAsync(new LavalinkEqualizer(this, Enumerable.Range(0, 15).Select(x => new LavalinkBandAdjustment(x, 0)))).ConfigureAwait(false);
+            await this.Node.SendPayloadAsync(new LavalinkEqualizer(this, Enumerable.Range(0, 15).Select(X => new LavalinkBandAdjustment(X, 0)))).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Internals the update player state async.
         /// </summary>
-        /// <param name="newState">The new state.</param>
+        /// <param name="NewState">The new state.</param>
 
-        internal Task InternalUpdatePlayerStateAsync(LavalinkState newState)
+        internal Task InternalUpdatePlayerState(LavalinkState NewState)
         {
-            this.CurrentState.LastUpdate = newState.Time;
-            this.CurrentState.PlaybackPosition = newState.Position;
+            this.CurrentState.LastUpdate = NewState.Time;
+            this.CurrentState.PlaybackPosition = NewState.Position;
 
-            return this._playerUpdated.InvokeAsync(this, new PlayerUpdateEventArgs(this, newState.Time, newState.Position));
+            return this._playerUpdated.InvokeAsync(this, new PlayerUpdateEventArgs(this, NewState.Time, NewState.Position));
         }
 
         /// <summary>
         /// Internals the playback started async.
         /// </summary>
-        /// <param name="track">The track.</param>
+        /// <param name="Track">The track.</param>
 
-        internal Task InternalPlaybackStartedAsync(string track)
+        internal Task InternalPlaybackStarted(string Track)
         {
-            var ea = new TrackStartEventArgs(this, LavalinkUtilities.DecodeTrack(track));
+            var ea = new TrackStartEventArgs(this, LavalinkUtilities.DecodeTrack(Track));
             return this._playbackStarted.InvokeAsync(this, ea);
         }
 
         /// <summary>
         /// Internals the playback finished async.
         /// </summary>
-        /// <param name="e">The e.</param>
+        /// <param name="E">The e.</param>
 
-        internal Task InternalPlaybackFinishedAsync(TrackFinishData e)
+        internal Task InternalPlaybackFinished(TrackFinishData E)
         {
-            if (e.Reason != TrackEndReason.Replaced)
+            if (E.Reason != TrackEndReason.Replaced)
                 this.CurrentState.CurrentTrack = default;
 
-            var ea = new TrackFinishEventArgs(this, LavalinkUtilities.DecodeTrack(e.Track), e.Reason);
+            var ea = new TrackFinishEventArgs(this, LavalinkUtilities.DecodeTrack(E.Track), E.Reason);
             return this._playbackFinished.InvokeAsync(this, ea);
         }
 
         /// <summary>
         /// Internals the track stuck async.
         /// </summary>
-        /// <param name="e">The e.</param>
+        /// <param name="E">The e.</param>
 
-        internal Task InternalTrackStuckAsync(TrackStuckData e)
+        internal Task InternalTrackStuck(TrackStuckData E)
         {
-            var ea = new TrackStuckEventArgs(this, e.Threshold, LavalinkUtilities.DecodeTrack(e.Track));
+            var ea = new TrackStuckEventArgs(this, E.Threshold, LavalinkUtilities.DecodeTrack(E.Track));
             return this._trackStuck.InvokeAsync(this, ea);
         }
 
         /// <summary>
         /// Internals the track exception async.
         /// </summary>
-        /// <param name="e">The e.</param>
+        /// <param name="E">The e.</param>
 
-        internal Task InternalTrackExceptionAsync(TrackExceptionData e)
+        internal Task InternalTrackException(TrackExceptionData E)
         {
-            var ea = new TrackExceptionEventArgs(this, e.Error, LavalinkUtilities.DecodeTrack(e.Track));
+            var ea = new TrackExceptionEventArgs(this, E.Error, LavalinkUtilities.DecodeTrack(E.Track));
             return this._trackException.InvokeAsync(this, ea);
         }
 
         /// <summary>
         /// Internals the web socket closed async.
         /// </summary>
-        /// <param name="e">The e.</param>
+        /// <param name="E">The e.</param>
 
-        internal Task InternalWebSocketClosedAsync(WebSocketCloseEventArgs e)
-            => this._webSocketClosed.InvokeAsync(this, e);
+        internal Task InternalWebSocketClosed(WebSocketCloseEventArgs E)
+            => this._webSocketClosed.InvokeAsync(this, E);
 
         internal event ChannelDisconnectedEventHandler ChannelDisconnected;
     }

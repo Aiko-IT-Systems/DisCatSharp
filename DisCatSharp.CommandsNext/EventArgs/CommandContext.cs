@@ -125,50 +125,50 @@ namespace DisCatSharp.CommandsNext
         /// <summary>
         /// Quickly respond to the message that triggered the command.
         /// </summary>
-        /// <param name="content">Message to respond with.</param>
+        /// <param name="Content">Message to respond with.</param>
         /// <returns></returns>
-        public Task<DiscordMessage> RespondAsync(string content)
-            => this.Message.RespondAsync(content);
+        public Task<DiscordMessage> Respond(string Content)
+            => this.Message.Respond(Content);
 
         /// <summary>
         /// Quickly respond to the message that triggered the command.
         /// </summary>
-        /// <param name="embed">Embed to attach.</param>
+        /// <param name="Embed">Embed to attach.</param>
         /// <returns></returns>
-        public Task<DiscordMessage> RespondAsync(DiscordEmbed embed)
-            => this.Message.RespondAsync(embed);
+        public Task<DiscordMessage> Respond(DiscordEmbed Embed)
+            => this.Message.Respond(Embed);
 
         /// <summary>
         /// Quickly respond to the message that triggered the command.
         /// </summary>
-        /// <param name="content">Message to respond with.</param>
-        /// <param name="embed">Embed to attach.</param>
+        /// <param name="Content">Message to respond with.</param>
+        /// <param name="Embed">Embed to attach.</param>
         /// <returns></returns>
-        public Task<DiscordMessage> RespondAsync(string content, DiscordEmbed embed)
-            => this.Message.RespondAsync(content, embed);
+        public Task<DiscordMessage> Respond(string Content, DiscordEmbed Embed)
+            => this.Message.Respond(Content, Embed);
 
         /// <summary>
         /// Quickly respond to the message that triggered the command.
         /// </summary>
-        /// <param name="builder">The Discord Message builder.</param>
+        /// <param name="Builder">The Discord Message builder.</param>
         /// <returns></returns>
-        public Task<DiscordMessage> RespondAsync(DiscordMessageBuilder builder)
-            => this.Message.RespondAsync(builder);
+        public Task<DiscordMessage> Respond(DiscordMessageBuilder Builder)
+            => this.Message.Respond(Builder);
 
         /// <summary>
         /// Quickly respond to the message that triggered the command.
         /// </summary>
-        /// <param name="action">The Discord Message builder.</param>
+        /// <param name="Action">The Discord Message builder.</param>
         /// <returns></returns>
-        public Task<DiscordMessage> RespondAsync(Action<DiscordMessageBuilder> action)
-            => this.Message.RespondAsync(action);
+        public Task<DiscordMessage> Respond(Action<DiscordMessageBuilder> Action)
+            => this.Message.Respond(Action);
 
         /// <summary>
         /// Triggers typing in the channel containing the message that triggered the command.
         /// </summary>
         /// <returns></returns>
-        public Task TriggerTypingAsync()
-            => this.Channel.TriggerTypingAsync();
+        public Task TriggerTyping()
+            => this.Channel.TriggerTyping();
 
         internal struct ServiceContext : IDisposable
         {
@@ -188,12 +188,12 @@ namespace DisCatSharp.CommandsNext
             /// <summary>
             /// Initializes a new instance of the <see cref="ServiceContext"/> class.
             /// </summary>
-            /// <param name="services">The services.</param>
-            /// <param name="scope">The scope.</param>
-            public ServiceContext(IServiceProvider services, IServiceScope scope)
+            /// <param name="Services">The services.</param>
+            /// <param name="Scope">The scope.</param>
+            public ServiceContext(IServiceProvider Services, IServiceScope Scope)
             {
-                this.Provider = services;
-                this.Scope = scope;
+                this.Provider = Services;
+                this.Scope = Scope;
                 this.IsInitialized = true;
             }
 

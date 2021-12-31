@@ -34,9 +34,9 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Asynchronously checks whether this command can be executed within given context.
         /// </summary>
-        /// <param name="ctx">Context to check execution ability for.</param>
-        /// <param name="help">Whether this check is being executed from help or not. This can be used to probe whether command can be run without setting off certain fail conditions (such as cooldowns).</param>
+        /// <param name="Ctx">Context to check execution ability for.</param>
+        /// <param name="Help">Whether this check is being executed from help or not. This can be used to probe whether command can be run without setting off certain fail conditions (such as cooldowns).</param>
         /// <returns>Whether the command can be executed in given context.</returns>
-        public abstract Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help);
+        public abstract Task<bool> ExecuteCheck(CommandContext Ctx, bool Help);
     }
 }

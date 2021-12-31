@@ -42,6 +42,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="ZombiedEventArgs"/> class.
         /// </summary>
-        internal ZombiedEventArgs(IServiceProvider provider) : base(provider) { }
+        internal ZombiedEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

@@ -39,10 +39,10 @@ namespace DisCatSharp.ApplicationCommands.Attributes
         /// <summary>
         /// Defines allowed channel types for a channel parameter.
         /// </summary>
-        /// <param name="channelTypes">The channel types to allow.</param>
-        public ChannelTypesAttribute(params ChannelType[] channelTypes)
+        /// <param name="ChannelTypes">The channel types to allow.</param>
+        public ChannelTypesAttribute(params ChannelType[] ChannelTypes)
         {
-            this.ChannelTypes = channelTypes;
+            this.ChannelTypes = ChannelTypes;
         }
     }
 }

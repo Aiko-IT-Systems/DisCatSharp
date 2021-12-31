@@ -34,7 +34,7 @@ namespace DisCatSharp.VoiceNext.EventArgs
         /// <summary>
         /// Gets the SSRC of the audio source.
         /// </summary>
-        public uint SSRC { get; internal set; }
+        public uint Ssrc { get; internal set; }
 
 #pragma warning disable CS8632
 
@@ -71,6 +71,6 @@ namespace DisCatSharp.VoiceNext.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="VoiceReceiveEventArgs"/> class.
         /// </summary>
-        internal VoiceReceiveEventArgs(IServiceProvider provider) : base(provider) { }
+        internal VoiceReceiveEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

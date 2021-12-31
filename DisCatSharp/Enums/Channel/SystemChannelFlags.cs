@@ -32,10 +32,10 @@ namespace DisCatSharp
         /// <summary>
         /// Calculates whether these system channel flags contain a specific flag.
         /// </summary>
-        /// <param name="baseFlags">The existing flags.</param>
-        /// <param name="flag">The flag to search for.</param>
+        /// <param name="BaseFlags">The existing flags.</param>
+        /// <param name="Flag">The flag to search for.</param>
         /// <returns></returns>
-        public static bool HasSystemChannelFlag(this SystemChannelFlags baseFlags, SystemChannelFlags flag) => (baseFlags & flag) == flag;
+        public static bool HasSystemChannelFlag(this SystemChannelFlags BaseFlags, SystemChannelFlags Flag) => (BaseFlags & Flag) == Flag;
     }
 
     /// <summary>

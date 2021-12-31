@@ -36,7 +36,7 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Gets the r n g.
         /// </summary>
-        private RandomNumberGenerator RNG { get; } = RandomNumberGenerator.Create();
+        private RandomNumberGenerator Rng { get; } = RandomNumberGenerator.Create();
 
         private volatile bool _isDisposed = false;
 
@@ -57,36 +57,36 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Fills a supplied buffer with random bytes.
         /// </summary>
-        /// <param name="buffer">Buffer to fill with random bytes.</param>
-        public void GetBytes(byte[] buffer)
+        /// <param name="Buffer">Buffer to fill with random bytes.</param>
+        public void GetBytes(byte[] Buffer)
         {
-            this.RNG.GetBytes(buffer);
+            this.Rng.GetBytes(Buffer);
         }
 
         /// <summary>
         /// Fills a supplied buffer with random nonzero bytes.
         /// </summary>
-        /// <param name="buffer">Buffer to fill with random nonzero bytes.</param>
-        public void GetNonZeroBytes(byte[] buffer)
+        /// <param name="Buffer">Buffer to fill with random nonzero bytes.</param>
+        public void GetNonZeroBytes(byte[] Buffer)
         {
-            this.RNG.GetNonZeroBytes(buffer);
+            this.Rng.GetNonZeroBytes(Buffer);
         }
 
         /// <summary>
         /// Fills a supplied memory region with random bytes.
         /// </summary>
-        /// <param name="buffer">Memmory region to fill with random bytes.</param>
-        public void GetBytes(Span<byte> buffer)
+        /// <param name="Buffer">Memmory region to fill with random bytes.</param>
+        public void GetBytes(Span<byte> Buffer)
         {
 #if NETCOREAPP
             this.RNG.GetBytes(buffer);
 #else
-            var buff = ArrayPool<byte>.Shared.Rent(buffer.Length);
+            var buff = ArrayPool<byte>.Shared.Rent(Buffer.Length);
             try
             {
-                var buffSpan = buff.AsSpan(0, buffer.Length);
-                this.RNG.GetBytes(buff);
-                buffSpan.CopyTo(buffer);
+                var buffSpan = buff.AsSpan(0, Buffer.Length);
+                this.Rng.GetBytes(buff);
+                buffSpan.CopyTo(Buffer);
             }
             finally
             {
@@ -98,18 +98,18 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Fills a supplied memory region with random nonzero bytes.
         /// </summary>
-        /// <param name="buffer">Memmory region to fill with random nonzero bytes.</param>
-        public void GetNonZeroBytes(Span<byte> buffer)
+        /// <param name="Buffer">Memmory region to fill with random nonzero bytes.</param>
+        public void GetNonZeroBytes(Span<byte> Buffer)
         {
 #if NETCOREAPP
             this.RNG.GetNonZeroBytes(buffer);
 #else
-            var buff = ArrayPool<byte>.Shared.Rent(buffer.Length);
+            var buff = ArrayPool<byte>.Shared.Rent(Buffer.Length);
             try
             {
-                var buffSpan = buff.AsSpan(0, buffer.Length);
-                this.RNG.GetNonZeroBytes(buff);
-                buffSpan.CopyTo(buffer);
+                var buffSpan = buff.AsSpan(0, Buffer.Length);
+                this.Rng.GetNonZeroBytes(buff);
+                buffSpan.CopyTo(Buffer);
             }
             finally
             {
@@ -121,129 +121,129 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Generates a signed 8-bit integer within specified range.
         /// </summary>
-        /// <param name="min">Minimum value to generate. Defaults to 0.</param>
-        /// <param name="max">Maximum value to generate. Defaults to <see cref="sbyte.MaxValue"/>.</param>
+        /// <param name="Min">Minimum value to generate. Defaults to 0.</param>
+        /// <param name="Max">Maximum value to generate. Defaults to <see cref="sbyte.MaxValue"/>.</param>
         /// <returns>Generated random value.</returns>
-        public sbyte GetInt8(sbyte min = 0, sbyte max = sbyte.MaxValue)
+        public sbyte GetInt8(sbyte Min = 0, sbyte Max = sbyte.MaxValue)
         {
-            if (max <= min)
-                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max));
+            if (Max <= Min)
+                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(Max));
 
-            var offset = (sbyte)(min < 0 ? -min : 0);
-            min += offset;
-            max += offset;
+            var offset = (sbyte)(Min < 0 ? -Min : 0);
+            Min += offset;
+            Max += offset;
 
-            return (sbyte)(Math.Abs(this.Generate<sbyte>()) % (max - min) + min - offset);
+            return (sbyte)(Math.Abs(this.Generate<sbyte>()) % (Max - Min) + Min - offset);
         }
 
         /// <summary>
         /// Generates a unsigned 8-bit integer within specified range.
         /// </summary>
-        /// <param name="min">Minimum value to generate. Defaults to 0.</param>
-        /// <param name="max">Maximum value to generate. Defaults to <see cref="byte.MaxValue"/>.</param>
+        /// <param name="Min">Minimum value to generate. Defaults to 0.</param>
+        /// <param name="Max">Maximum value to generate. Defaults to <see cref="byte.MaxValue"/>.</param>
         /// <returns>Generated random value.</returns>
-        public byte GetUInt8(byte min = 0, byte max = byte.MaxValue)
+        public byte GetUInt8(byte Min = 0, byte Max = byte.MaxValue)
         {
-            if (max <= min)
-                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max));
+            if (Max <= Min)
+                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(Max));
 
-            return (byte)(this.Generate<byte>() % (max - min) + min);
+            return (byte)(this.Generate<byte>() % (Max - Min) + Min);
         }
 
         /// <summary>
         /// Generates a signed 16-bit integer within specified range.
         /// </summary>
-        /// <param name="min">Minimum value to generate. Defaults to 0.</param>
-        /// <param name="max">Maximum value to generate. Defaults to <see cref="short.MaxValue"/>.</param>
+        /// <param name="Min">Minimum value to generate. Defaults to 0.</param>
+        /// <param name="Max">Maximum value to generate. Defaults to <see cref="short.MaxValue"/>.</param>
         /// <returns>Generated random value.</returns>
-        public short GetInt16(short min = 0, short max = short.MaxValue)
+        public short GetInt16(short Min = 0, short Max = short.MaxValue)
         {
-            if (max <= min)
-                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max));
+            if (Max <= Min)
+                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(Max));
 
-            var offset = (short)(min < 0 ? -min : 0);
-            min += offset;
-            max += offset;
+            var offset = (short)(Min < 0 ? -Min : 0);
+            Min += offset;
+            Max += offset;
 
-            return (short)(Math.Abs(this.Generate<short>()) % (max - min) + min - offset);
+            return (short)(Math.Abs(this.Generate<short>()) % (Max - Min) + Min - offset);
         }
 
         /// <summary>
         /// Generates a unsigned 16-bit integer within specified range.
         /// </summary>
-        /// <param name="min">Minimum value to generate. Defaults to 0.</param>
-        /// <param name="max">Maximum value to generate. Defaults to <see cref="ushort.MaxValue"/>.</param>
+        /// <param name="Min">Minimum value to generate. Defaults to 0.</param>
+        /// <param name="Max">Maximum value to generate. Defaults to <see cref="ushort.MaxValue"/>.</param>
         /// <returns>Generated random value.</returns>
-        public ushort GetUInt16(ushort min = 0, ushort max = ushort.MaxValue)
+        public ushort GetUInt16(ushort Min = 0, ushort Max = ushort.MaxValue)
         {
-            if (max <= min)
-                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max));
+            if (Max <= Min)
+                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(Max));
 
-            return (ushort)(this.Generate<ushort>() % (max - min) + min);
+            return (ushort)(this.Generate<ushort>() % (Max - Min) + Min);
         }
 
         /// <summary>
         /// Generates a signed 32-bit integer within specified range.
         /// </summary>
-        /// <param name="min">Minimum value to generate. Defaults to 0.</param>
-        /// <param name="max">Maximum value to generate. Defaults to <see cref="int.MaxValue"/>.</param>
+        /// <param name="Min">Minimum value to generate. Defaults to 0.</param>
+        /// <param name="Max">Maximum value to generate. Defaults to <see cref="int.MaxValue"/>.</param>
         /// <returns>Generated random value.</returns>
-        public int GetInt32(int min = 0, int max = int.MaxValue)
+        public int GetInt32(int Min = 0, int Max = int.MaxValue)
         {
-            if (max <= min)
-                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max));
+            if (Max <= Min)
+                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(Max));
 
-            var offset = min < 0 ? -min : 0;
-            min += offset;
-            max += offset;
+            var offset = Min < 0 ? -Min : 0;
+            Min += offset;
+            Max += offset;
 
-            return Math.Abs(this.Generate<int>()) % (max - min) + min - offset;
+            return Math.Abs(this.Generate<int>()) % (Max - Min) + Min - offset;
         }
 
         /// <summary>
         /// Generates a unsigned 32-bit integer within specified range.
         /// </summary>
-        /// <param name="min">Minimum value to generate. Defaults to 0.</param>
-        /// <param name="max">Maximum value to generate. Defaults to <see cref="uint.MaxValue"/>.</param>
+        /// <param name="Min">Minimum value to generate. Defaults to 0.</param>
+        /// <param name="Max">Maximum value to generate. Defaults to <see cref="uint.MaxValue"/>.</param>
         /// <returns>Generated random value.</returns>
-        public uint GetUInt32(uint min = 0, uint max = uint.MaxValue)
+        public uint GetUInt32(uint Min = 0, uint Max = uint.MaxValue)
         {
-            if (max <= min)
-                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max));
+            if (Max <= Min)
+                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(Max));
 
-            return this.Generate<uint>() % (max - min) + min;
+            return this.Generate<uint>() % (Max - Min) + Min;
         }
 
         /// <summary>
         /// Generates a signed 64-bit integer within specified range.
         /// </summary>
-        /// <param name="min">Minimum value to generate. Defaults to 0.</param>
-        /// <param name="max">Maximum value to generate. Defaults to <see cref="long.MaxValue"/>.</param>
+        /// <param name="Min">Minimum value to generate. Defaults to 0.</param>
+        /// <param name="Max">Maximum value to generate. Defaults to <see cref="long.MaxValue"/>.</param>
         /// <returns>Generated random value.</returns>
-        public long GetInt64(long min = 0, long max = long.MaxValue)
+        public long GetInt64(long Min = 0, long Max = long.MaxValue)
         {
-            if (max <= min)
-                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max));
+            if (Max <= Min)
+                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(Max));
 
-            var offset = min < 0 ? -min : 0;
-            min += offset;
-            max += offset;
+            var offset = Min < 0 ? -Min : 0;
+            Min += offset;
+            Max += offset;
 
-            return Math.Abs(this.Generate<long>()) % (max - min) + min - offset;
+            return Math.Abs(this.Generate<long>()) % (Max - Min) + Min - offset;
         }
 
         /// <summary>
         /// Generates a unsigned 64-bit integer within specified range.
         /// </summary>
-        /// <param name="min">Minimum value to generate. Defaults to 0.</param>
-        /// <param name="max">Maximum value to generate. Defaults to <see cref="ulong.MaxValue"/>.</param>
+        /// <param name="Min">Minimum value to generate. Defaults to 0.</param>
+        /// <param name="Max">Maximum value to generate. Defaults to <see cref="ulong.MaxValue"/>.</param>
         /// <returns>Generated random value.</returns>
-        public ulong GetUInt64(ulong min = 0, ulong max = ulong.MaxValue)
+        public ulong GetUInt64(ulong Min = 0, ulong Max = ulong.MaxValue)
         {
-            if (max <= min)
-                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(max));
+            if (Max <= Min)
+                throw new ArgumentException("Maximum needs to be greater than minimum.", nameof(Max));
 
-            return this.Generate<ulong>() % (max - min) + min;
+            return this.Generate<ulong>() % (Max - Min) + Min;
         }
 
         /// <summary>
@@ -274,21 +274,21 @@ namespace DisCatSharp.Common
             => this.GetInt32();
 
         /// <summary>
-        /// Generates a 32-bit integer between 0 and <paramref name="maxValue"/>. Upper end exclusive.
+        /// Generates a 32-bit integer between 0 and <paramref name="MaxValue"/>. Upper end exclusive.
         /// </summary>
-        /// <param name="maxValue">Maximum value of the generated integer.</param>
+        /// <param name="MaxValue">Maximum value of the generated integer.</param>
         /// <returns>Generated 32-bit integer.</returns>
-        public override int Next(int maxValue)
-            => this.GetInt32(0, maxValue);
+        public override int Next(int MaxValue)
+            => this.GetInt32(0, MaxValue);
 
         /// <summary>
-        /// Generates a 32-bit integer between <paramref name="minValue"/> and <paramref name="maxValue"/>. Upper end exclusive.
+        /// Generates a 32-bit integer between <paramref name="MinValue"/> and <paramref name="MaxValue"/>. Upper end exclusive.
         /// </summary>
-        /// <param name="minValue">Minimum value of the generate integer.</param>
-        /// <param name="maxValue">Maximum value of the generated integer.</param>
+        /// <param name="MinValue">Minimum value of the generate integer.</param>
+        /// <param name="MaxValue">Maximum value of the generated integer.</param>
         /// <returns>Generated 32-bit integer.</returns>
-        public override int Next(int minValue, int maxValue)
-            => this.GetInt32(minValue, maxValue);
+        public override int Next(int MinValue, int MaxValue)
+            => this.GetInt32(MinValue, MaxValue);
 
         /// <summary>
         /// Generates a 64-bit floating-point number between 0.0 and 1.0. Upper end exclusive.
@@ -300,19 +300,19 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Fills specified buffer with random bytes.
         /// </summary>
-        /// <param name="buffer">Buffer to fill with bytes.</param>
-        public override void NextBytes(byte[] buffer)
-            => this.GetBytes(buffer);
+        /// <param name="Buffer">Buffer to fill with bytes.</param>
+        public override void NextBytes(byte[] Buffer)
+            => this.GetBytes(Buffer);
 
         /// <summary>
         /// Fills specified memory region with random bytes.
         /// </summary>
-        /// <param name="buffer">Memory region to fill with bytes.</param>
+        /// <param name="Buffer">Memory region to fill with bytes.</param>
 #if NETCOREAPP
-        override 
+        override
 #endif
-        public new void NextBytes(Span<byte> buffer)
-            => this.GetBytes(buffer);
+        public new void NextBytes(Span<byte> Buffer)
+            => this.GetBytes(Buffer);
 
         /// <summary>
         /// Disposes this <see cref="SecureRandom"/> instance and its resources.
@@ -323,7 +323,7 @@ namespace DisCatSharp.Common
                 return;
 
             this._isDisposed = true;
-            this.RNG.Dispose();
+            this.Rng.Dispose();
         }
 
         /// <summary>

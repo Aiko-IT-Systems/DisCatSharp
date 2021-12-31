@@ -41,40 +41,40 @@ namespace DisCatSharp.Net.Serialization
         });
 
         /// <summary>Serializes the specified object to a JSON string.</summary>
-        /// <param name="value">The object to serialize.</param>
+        /// <param name="Value">The object to serialize.</param>
         /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value) => SerializeObjectInternal(value, null, _serializer);
+        public static string SerializeObject(object Value) => SerializeObjectInternal(Value, null, _serializer);
 
         /// <summary>Populates an object with the values from a JSON node.</summary>
-        /// <param name="value">The token to populate the object with.</param>
-        /// <param name="target">The object to populate.</param>
-        public static void PopulateObject(JToken value, object target)
+        /// <param name="Value">The token to populate the object with.</param>
+        /// <param name="Target">The object to populate.</param>
+        public static void PopulateObject(JToken Value, object Target)
         {
-            using var reader = value.CreateReader();
-            _serializer.Populate(reader, target);
+            using var reader = Value.CreateReader();
+            _serializer.Populate(reader, Target);
         }
 
         /// <summary>
         /// Converts this token into an object, passing any properties through extra <see cref="Newtonsoft.Json.JsonConverter"/>s if needed.
         /// </summary>
-        /// <param name="token">The token to convert</param>
+        /// <param name="Token">The token to convert</param>
         /// <typeparam name="T">Type to convert to</typeparam>
         /// <returns>The converted token</returns>
-        public static T ToDiscordObject<T>(this JToken token) => token.ToObject<T>(_serializer);
+        public static T ToDiscordObject<T>(this JToken Token) => Token.ToObject<T>(_serializer);
 
         /// <summary>
         /// Serializes the object.
         /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="type">The type.</param>
-        /// <param name="jsonSerializer">The json serializer.</param>
-        private static string SerializeObjectInternal(object value, Type type, JsonSerializer jsonSerializer)
+        /// <param name="Value">The value.</param>
+        /// <param name="Type">The type.</param>
+        /// <param name="JsonSerializer">The json serializer.</param>
+        private static string SerializeObjectInternal(object Value, Type Type, JsonSerializer JsonSerializer)
         {
             var stringWriter = new StringWriter(new StringBuilder(256), CultureInfo.InvariantCulture);
             using (var jsonTextWriter = new JsonTextWriter(stringWriter))
             {
-                jsonTextWriter.Formatting = jsonSerializer.Formatting;
-                jsonSerializer.Serialize(jsonTextWriter, value, type);
+                jsonTextWriter.Formatting = JsonSerializer.Formatting;
+                JsonSerializer.Serialize(jsonTextWriter, Value, Type);
             }
             return stringWriter.ToString();
         }

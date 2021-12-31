@@ -39,10 +39,10 @@ namespace DisCatSharp.ApplicationCommands.Attributes
         /// <summary>
         /// Adds an autocomplete provider to this command option.
         /// </summary>
-        /// <param name="providerType">The type of the provider.</param>
-        public AutocompleteAttribute(Type providerType)
+        /// <param name="ProviderType">The type of the provider.</param>
+        public AutocompleteAttribute(Type ProviderType)
         {
-            this.ProviderType = providerType;
+            this.ProviderType = ProviderType;
         }
     }
 }

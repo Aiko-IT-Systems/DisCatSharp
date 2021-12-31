@@ -43,27 +43,27 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentPaginator"/> class.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="config">The config.</param>
-        public ComponentPaginator(DiscordClient client, InteractivityConfiguration config)
+        /// <param name="Client">The client.</param>
+        /// <param name="Config">The config.</param>
+        public ComponentPaginator(DiscordClient Client, InteractivityConfiguration Config)
         {
-            this._client = client;
+            this._client = Client;
             this._client.ComponentInteractionCreated += this.Handle;
-            this._config = config;
+            this._config = Config;
         }
 
         /// <summary>
         /// Does the pagination async.
         /// </summary>
-        /// <param name="request">The request.</param>
-        public async Task DoPaginationAsync(IPaginationRequest request)
+        /// <param name="Request">The request.</param>
+        public async Task DoPagination(IPaginationRequest Request)
         {
-            var id = (await request.GetMessageAsync().ConfigureAwait(false)).Id;
-            this._requests.Add(id, request);
+            var id = (await Request.GetMessage().ConfigureAwait(false)).Id;
+            this._requests.Add(id, Request);
 
             try
             {
-                var tcs = await request.GetTaskCompletionSourceAsync().ConfigureAwait(false);
+                var tcs = await Request.GetTaskCompletionSource().ConfigureAwait(false);
                 await tcs.Task.ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -75,7 +75,7 @@ namespace DisCatSharp.Interactivity.EventHandling
                 this._requests.Remove(id);
                 try
                 {
-                    await request.DoCleanupAsync().ConfigureAwait(false);
+                    await Request.DoCleanup().ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -94,56 +94,56 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Handles the pagination event.
         /// </summary>
         /// <param name="_">The client.</param>
-        /// <param name="e">The event arguments.</param>
-        private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs e)
+        /// <param name="E">The event arguments.</param>
+        private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs E)
         {
-            if (e.Interaction.Type == InteractionType.ModalSubmit)
+            if (E.Interaction.Type == InteractionType.ModalSubmit)
                 return;
 
-            if (!this._requests.TryGetValue(e.Message.Id, out var req))
+            if (!this._requests.TryGetValue(E.Message.Id, out var req))
                 return;
 
             if (this._config.AckPaginationButtons)
             {
-                e.Handled = true;
-                await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
+                E.Handled = true;
+                await E.Interaction.CreateResponse(InteractionResponseType.DeferredMessageUpdate).ConfigureAwait(false);
             }
 
-            if (await req.GetUserAsync().ConfigureAwait(false) != e.User)
+            if (await req.GetUser().ConfigureAwait(false) != E.User)
             {
                 if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-                    await e.Interaction.CreateFollowupMessageAsync(new() { Content = this._config.ResponseMessage, IsEphemeral = true }).ConfigureAwait(false);
+                    await E.Interaction.CreateFollowupMessageAsync(new() { Content = this._config.ResponseMessage, IsEphemeral = true }).ConfigureAwait(false);
 
                 return;
             }
 
             if (req is InteractionPaginationRequest ipr)
-                ipr.RegenerateCTS(e.Interaction); // Necessary to ensure we don't prematurely yeet the CTS //
+                ipr.RegenerateCts(E.Interaction); // Necessary to ensure we don't prematurely yeet the CTS //
 
-            await this.HandlePaginationAsync(req, e).ConfigureAwait(false);
+            await this.HandlePagination(req, E).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Handles the pagination async.
         /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="args">The arguments.</param>
-        private async Task HandlePaginationAsync(IPaginationRequest request, ComponentInteractionCreateEventArgs args)
+        /// <param name="Request">The request.</param>
+        /// <param name="Args">The arguments.</param>
+        private async Task HandlePagination(IPaginationRequest Request, ComponentInteractionCreateEventArgs Args)
         {
             var buttons = this._config.PaginationButtons;
-            var msg = await request.GetMessageAsync().ConfigureAwait(false);
-            var id = args.Id;
-            var tcs = await request.GetTaskCompletionSourceAsync().ConfigureAwait(false);
+            var msg = await Request.GetMessage().ConfigureAwait(false);
+            var id = Args.Id;
+            var tcs = await Request.GetTaskCompletionSource().ConfigureAwait(false);
 
 #pragma warning disable CS8846 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
             var paginationTask = id switch
 #pragma warning restore CS8846 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
             {
-                _ when id == buttons.SkipLeft.CustomId => request.SkipLeftAsync(),
-                _ when id == buttons.SkipRight.CustomId => request.SkipRightAsync(),
+                _ when id == buttons.SkipLeft.CustomId => Request.SkipLeft(),
+                _ when id == buttons.SkipRight.CustomId => Request.SkipRight(),
                 _ when id == buttons.Stop.CustomId => Task.FromResult(tcs.TrySetResult(true)),
-                _ when id == buttons.Left.CustomId => request.PreviousPageAsync(),
-                _ when id == buttons.Right.CustomId => request.NextPageAsync(),
+                _ when id == buttons.Left.CustomId => Request.PreviousPage(),
+                _ when id == buttons.Right.CustomId => Request.NextPage(),
             };
 
             await paginationTask.ConfigureAwait(false);
@@ -151,19 +151,19 @@ namespace DisCatSharp.Interactivity.EventHandling
             if (id == buttons.Stop.CustomId)
                 return;
 
-            var page = await request.GetPageAsync().ConfigureAwait(false);
+            var page = await Request.GetPage().ConfigureAwait(false);
 
 
-            var bts = await request.GetButtonsAsync().ConfigureAwait(false);
+            var bts = await Request.GetButtons().ConfigureAwait(false);
 
-            if (request is InteractionPaginationRequest ipr)
+            if (Request is InteractionPaginationRequest ipr)
             {
                 var builder = new DiscordWebhookBuilder()
                     .WithContent(page.Content)
                     .AddEmbed(page.Embed)
                     .AddComponents(bts);
 
-                await args.Interaction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
+                await Args.Interaction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
                 return;
             }
 
@@ -174,7 +174,7 @@ namespace DisCatSharp.Interactivity.EventHandling
                 .AddEmbed(page.Embed)
                 .AddComponents(bts);
 
-            await this._builder.ModifyAsync(msg).ConfigureAwait(false);
+            await this._builder.Modify(msg).ConfigureAwait(false);
 
         }
     }

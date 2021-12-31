@@ -48,15 +48,15 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayerUpdateEventArgs"/> class.
         /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        /// <param name="timestamp">The timestamp.</param>
-        /// <param name="position">The position.</param>
-        internal PlayerUpdateEventArgs(LavalinkGuildConnection lvl, DateTimeOffset timestamp,
-            TimeSpan position) : base(lvl.Node.Discord.ServiceProvider)
+        /// <param name="Lvl">The lvl.</param>
+        /// <param name="Timestamp">The timestamp.</param>
+        /// <param name="Position">The position.</param>
+        internal PlayerUpdateEventArgs(LavalinkGuildConnection Lvl, DateTimeOffset Timestamp,
+            TimeSpan Position) : base(Lvl.Node.Discord.ServiceProvider)
         {
-            this.Player = lvl;
-            this.Timestamp = timestamp;
-            this.Position = position;
+            this.Player = Lvl;
+            this.Timestamp = Timestamp;
+            this.Position = Position;
         }
     }
 }

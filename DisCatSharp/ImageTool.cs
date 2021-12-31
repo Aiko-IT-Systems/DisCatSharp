@@ -34,44 +34,44 @@ namespace DisCatSharp
         /// <summary>
         /// The png magic .
         /// </summary>
-        private const ulong PNG_MAGIC = 0x0A1A_0A0D_474E_5089;
+        private const ulong PngMagic = 0x0A1A_0A0D_474E_5089;
         /// <summary>
         /// The jpeg magic 1.
         /// </summary>
-        private const ushort JPEG_MAGIC_1 = 0xD8FF;
+        private const ushort JpegMagic1 = 0xD8FF;
         /// <summary>
         /// The jpeg magic 2.
         /// </summary>
-        private const ushort JPEG_MAGIC_2 = 0xD9FF;
+        private const ushort JpegMagic2 = 0xD9FF;
         /// <summary>
         /// The gif magic 1
         /// </summary>
-        private const ulong GIF_MAGIC_1 = 0x0000_6139_3846_4947;
+        private const ulong GifMagic1 = 0x0000_6139_3846_4947;
         /// <summary>
         /// The gif magic 2.
         /// </summary>
-        private const ulong GIF_MAGIC_2 = 0x0000_6137_3846_4947;
+        private const ulong GifMagic2 = 0x0000_6137_3846_4947;
         /// <summary>
         /// The webp magic 1.
         /// </summary>
-        private const uint WEBP_MAGIC_1 = 0x4646_4952;
+        private const uint WebpMagic1 = 0x4646_4952;
         /// <summary>
         /// The webp magic 2.
         /// </summary>
-        private const uint WEBP_MAGIC_2 = 0x5042_4557;
+        private const uint WebpMagic2 = 0x5042_4557;
 
         /// <summary>
         /// The gif mask.
         /// </summary>
-        private const ulong GIF_MASK = 0x0000_FFFF_FFFF_FFFF;
+        private const ulong GifMask = 0x0000_FFFF_FFFF_FFFF;
         /// <summary>
         /// The mask 32.
         /// </summary>
-        private const ulong MASK32 = 0x0000_0000_FFFF_FFFF;
+        private const ulong Mask32 = 0x0000_0000_FFFF_FFFF;
         /// <summary>
         /// The mask 16.
         /// </summary>
-        private const uint MASK16 = 0x0000_FFFF;
+        private const uint Mask16 = 0x0000_FFFF;
 
         /// <summary>
         /// Gets the stream this tool is operating on.
@@ -79,25 +79,25 @@ namespace DisCatSharp
         public Stream SourceStream { get; }
 
         private ImageFormat _ifcache;
-        private string _b64cache;
+        private string _b64Cache;
 
         /// <summary>
         /// Creates a new image tool from given stream.
         /// </summary>
-        /// <param name="stream">Stream to work with.</param>
-        public ImageTool(Stream stream)
+        /// <param name="Stream">Stream to work with.</param>
+        public ImageTool(Stream Stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            if (Stream == null)
+                throw new ArgumentNullException(nameof(Stream));
 
-            if (!stream.CanRead || !stream.CanSeek)
-                throw new ArgumentException("The stream needs to be both readable and seekable.", nameof(stream));
+            if (!Stream.CanRead || !Stream.CanSeek)
+                throw new ArgumentException("The stream needs to be both readable and seekable.", nameof(Stream));
 
-            this.SourceStream = stream;
+            this.SourceStream = Stream;
             this.SourceStream.Seek(0, SeekOrigin.Begin);
 
             this._ifcache = 0;
-            this._b64cache = null;
+            this._b64Cache = null;
         }
 
         /// <summary>
@@ -109,25 +109,25 @@ namespace DisCatSharp
             if (this._ifcache != ImageFormat.Unknown)
                 return this._ifcache;
 
-            using (var br = new BinaryReader(this.SourceStream, Utilities.UTF8, true))
+            using (var br = new BinaryReader(this.SourceStream, Utilities.Utf8, true))
             {
                 var bgn64 = br.ReadUInt64();
-                if (bgn64 == PNG_MAGIC)
+                if (bgn64 == PngMagic)
                     return this._ifcache = ImageFormat.Png;
 
-                bgn64 &= GIF_MASK;
-                if (bgn64 == GIF_MAGIC_1 || bgn64 == GIF_MAGIC_2)
+                bgn64 &= GifMask;
+                if (bgn64 == GifMagic1 || bgn64 == GifMagic2)
                     return this._ifcache = ImageFormat.Gif;
 
-                var bgn32 = (uint)(bgn64 & MASK32);
-                if (bgn32 == WEBP_MAGIC_1 && br.ReadUInt32() == WEBP_MAGIC_2)
+                var bgn32 = (uint)(bgn64 & Mask32);
+                if (bgn32 == WebpMagic1 && br.ReadUInt32() == WebpMagic2)
                     return this._ifcache = ImageFormat.WebP;
 
-                var bgn16 = (ushort)(bgn32 & MASK16);
-                if (bgn16 == JPEG_MAGIC_1)
+                var bgn16 = (ushort)(bgn32 & Mask16);
+                if (bgn16 == JpegMagic1)
                 {
                     this.SourceStream.Seek(-2, SeekOrigin.End);
-                    if (br.ReadUInt16() == JPEG_MAGIC_2)
+                    if (br.ReadUInt16() == JpegMagic2)
                         return this._ifcache = ImageFormat.Jpeg;
                 }
             }
@@ -141,8 +141,8 @@ namespace DisCatSharp
         /// <returns>Data-scheme base64 string.</returns>
         public string GetBase64()
         {
-            if (this._b64cache != null)
-                return this._b64cache;
+            if (this._b64Cache != null)
+                return this._b64Cache;
 
             var fmt = this.GetFormat();
             var sb = new StringBuilder();
@@ -159,7 +159,7 @@ namespace DisCatSharp
 
             sb.Append(Convert.ToBase64String(buff));
 
-            return this._b64cache = sb.ToString();
+            return this._b64Cache = sb.ToString();
         }
 
         /// <summary>

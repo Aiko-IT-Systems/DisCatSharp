@@ -46,7 +46,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.VoiceNext
 {
-    internal delegate Task VoiceDisconnectedEventHandler(DiscordGuild guild);
+    internal delegate Task VoiceDisconnectedEventHandler(DiscordGuild Guild);
 
     /// <summary>
     /// VoiceNext connection to a voice channel.
@@ -121,7 +121,7 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Gets the transmitting s s r cs.
         /// </summary>
-        private ConcurrentDictionary<uint, AudioSender> TransmittingSSRCs { get; }
+        private ConcurrentDictionary<uint, AudioSender> TransmittingSsrCs { get; }
 
         /// <summary>
         /// Gets the udp client.
@@ -203,7 +203,7 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Gets or sets the s s r c.
         /// </summary>
-        private uint SSRC { get; set; }
+        private uint Ssrc { get; set; }
         /// <summary>
         /// Gets or sets the key.
         /// </summary>
@@ -336,18 +336,18 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Initializes a new instance of the <see cref="VoiceNextConnection"/> class.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="guild">The guild.</param>
-        /// <param name="channel">The channel.</param>
-        /// <param name="config">The config.</param>
-        /// <param name="server">The server.</param>
-        /// <param name="state">The state.</param>
-        internal VoiceNextConnection(DiscordClient client, DiscordGuild guild, DiscordChannel channel, VoiceNextConfiguration config, VoiceServerUpdatePayload server, VoiceStateUpdatePayload state)
+        /// <param name="Client">The client.</param>
+        /// <param name="Guild">The guild.</param>
+        /// <param name="Channel">The channel.</param>
+        /// <param name="Config">The config.</param>
+        /// <param name="Server">The server.</param>
+        /// <param name="State">The state.</param>
+        internal VoiceNextConnection(DiscordClient Client, DiscordGuild Guild, DiscordChannel Channel, VoiceNextConfiguration Config, VoiceServerUpdatePayload Server, VoiceStateUpdatePayload State)
         {
-            this.Discord = client;
-            this.Guild = guild;
-            this.TargetChannel = channel;
-            this.TransmittingSSRCs = new ConcurrentDictionary<uint, AudioSender>();
+            this.Discord = Client;
+            this.Guild = Guild;
+            this.TargetChannel = Channel;
+            this.TransmittingSsrCs = new ConcurrentDictionary<uint, AudioSender>();
 
             this._userSpeaking = new AsyncEvent<VoiceNextConnection, UserSpeakingEventArgs>("VNEXT_USER_SPEAKING", TimeSpan.Zero, this.Discord.EventErrorHandler);
             this._userJoined = new AsyncEvent<VoiceNextConnection, VoiceUserJoinEventArgs>("VNEXT_USER_JOINED", TimeSpan.Zero, this.Discord.EventErrorHandler);
@@ -356,15 +356,15 @@ namespace DisCatSharp.VoiceNext
             this._voiceSocketError = new AsyncEvent<VoiceNextConnection, SocketErrorEventArgs>("VNEXT_WS_ERROR", TimeSpan.Zero, this.Discord.EventErrorHandler);
             this.TokenSource = new CancellationTokenSource();
 
-            this.Configuration = config;
+            this.Configuration = Config;
             this.IsInitialized = false;
             this.IsDisposed = false;
             this.Opus = new Opus(this.AudioFormat);
             //this.Sodium = new Sodium();
             this.Rtp = new Rtp();
 
-            this.ServerData = server;
-            this.StateData = state;
+            this.ServerData = Server;
+            this.StateData = State;
 
             var eps = this.ServerData.Endpoint;
             var epi = eps.LastIndexOf(':');
@@ -384,7 +384,7 @@ namespace DisCatSharp.VoiceNext
             this.ReadyWait = new TaskCompletionSource<bool>();
 
             this.PlayingWait = null;
-            this.TransmitChannel = Channel.CreateBounded<RawVoicePacket>(new BoundedChannelOptions(this.Configuration.PacketQueueSize));
+            this.TransmitChannel = System.Threading.Channels.Channel.CreateBounded<RawVoicePacket>(new BoundedChannelOptions(this.Configuration.PacketQueueSize));
             this.KeepaliveTimestamps = new ConcurrentDictionary<ulong, long>();
             this.PauseEvent = new AsyncManualResetEvent(true);
 
@@ -405,7 +405,7 @@ namespace DisCatSharp.VoiceNext
         /// Connects to the specified voice channel.
         /// </summary>
         /// <returns>A task representing the connection operation.</returns>
-        internal Task ConnectAsync()
+        internal Task Connect()
         {
             var gwuri = new UriBuilder
             {
@@ -414,15 +414,15 @@ namespace DisCatSharp.VoiceNext
                 Query = "encoding=json&v=4"
             };
 
-            return this.VoiceWs.ConnectAsync(gwuri.Uri);
+            return this.VoiceWs.Connect(gwuri.Uri);
         }
 
         /// <summary>
         /// Reconnects .
         /// </summary>
         /// <returns>A Task.</returns>
-        internal Task ReconnectAsync()
-            => this.VoiceWs.DisconnectAsync();
+        internal Task Reconnect()
+            => this.VoiceWs.Disconnect();
 
         /// <summary>
         /// Starts .
@@ -456,39 +456,39 @@ namespace DisCatSharp.VoiceNext
                 };
             }
             var vdj = JsonConvert.SerializeObject(vdp, Formatting.None);
-            await this.WsSendAsync(vdj).ConfigureAwait(false);
+            await this.WsSend(vdj).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Waits the for ready async.
         /// </summary>
         /// <returns>A Task.</returns>
-        internal Task WaitForReadyAsync()
+        internal Task WaitForReady()
             => this.ReadyWait.Task;
 
         /// <summary>
         /// Enqueues the packet async.
         /// </summary>
-        /// <param name="packet">The packet.</param>
-        /// <param name="token">The token.</param>
+        /// <param name="Packet">The packet.</param>
+        /// <param name="Token">The token.</param>
         /// <returns>A Task.</returns>
-        internal async Task EnqueuePacketAsync(RawVoicePacket packet, CancellationToken token = default)
+        internal async Task EnqueuePacketAsync(RawVoicePacket Packet, CancellationToken Token = default)
         {
-            await this.TransmitChannel.Writer.WriteAsync(packet, token).ConfigureAwait(false);
+            await this.TransmitChannel.Writer.WriteAsync(Packet, Token).ConfigureAwait(false);
             this._queueCount++;
         }
 
         /// <summary>
         /// Prepares the packet.
         /// </summary>
-        /// <param name="pcm">The pcm.</param>
-        /// <param name="target">The target.</param>
-        /// <param name="length">The length.</param>
+        /// <param name="Pcm">The pcm.</param>
+        /// <param name="Target">The target.</param>
+        /// <param name="Length">The length.</param>
         /// <returns>A bool.</returns>
-        internal bool PreparePacket(ReadOnlySpan<byte> pcm, out byte[] target, out int length)
+        internal bool PreparePacket(ReadOnlySpan<byte> Pcm, out byte[] Target, out int Length)
         {
-            target = null;
-            length = 0;
+            Target = null;
+            Length = 0;
 
             if (this.IsDisposed)
                 return false;
@@ -498,25 +498,25 @@ namespace DisCatSharp.VoiceNext
             var packetArray = ArrayPool<byte>.Shared.Rent(this.Rtp.CalculatePacketSize(audioFormat.SampleCountToSampleSize(audioFormat.CalculateMaximumFrameSize()), this.SelectedEncryptionMode));
             var packet = packetArray.AsSpan();
 
-            this.Rtp.EncodeHeader(this.Sequence, this.Timestamp, this.SSRC, packet);
-            var opus = packet.Slice(Rtp.HeaderSize, pcm.Length);
-            this.Opus.Encode(pcm, ref opus);
+            this.Rtp.EncodeHeader(this.Sequence, this.Timestamp, this.Ssrc, packet);
+            var opus = packet.Slice(Rtp.HeaderSize, Pcm.Length);
+            this.Opus.Encode(Pcm, ref opus);
 
             this.Sequence++;
-            this.Timestamp += (uint)audioFormat.CalculateFrameSize(audioFormat.CalculateSampleDuration(pcm.Length));
+            this.Timestamp += (uint)audioFormat.CalculateFrameSize(audioFormat.CalculateSampleDuration(Pcm.Length));
 
             Span<byte> nonce = stackalloc byte[Sodium.NonceSize];
             switch (this.SelectedEncryptionMode)
             {
-                case EncryptionMode.XSalsa20_Poly1305:
+                case EncryptionMode.XSalsa20Poly1305:
                     this.Sodium.GenerateNonce(packet[..Rtp.HeaderSize], nonce);
                     break;
 
-                case EncryptionMode.XSalsa20_Poly1305_Suffix:
+                case EncryptionMode.XSalsa20Poly1305Suffix:
                     this.Sodium.GenerateNonce(nonce);
                     break;
 
-                case EncryptionMode.XSalsa20_Poly1305_Lite:
+                case EncryptionMode.XSalsa20Poly1305Lite:
                     this.Sodium.GenerateNonce(this.Nonce++, nonce);
                     break;
 
@@ -531,8 +531,8 @@ namespace DisCatSharp.VoiceNext
             packet = packet[..this.Rtp.CalculatePacketSize(encrypted.Length, this.SelectedEncryptionMode)];
             this.Sodium.AppendNonce(nonce, packet, this.SelectedEncryptionMode);
 
-            target = packetArray;
-            length = packet.Length;
+            Target = packetArray;
+            Length = packet.Length;
             return true;
         }
 
@@ -556,7 +556,7 @@ namespace DisCatSharp.VoiceNext
 
             while (!token.IsCancellationRequested)
             {
-                await this.PauseEvent.WaitAsync().ConfigureAwait(false);
+                await this.PauseEvent.Wait().ConfigureAwait(false);
 
                 var hasPacket = reader.TryRead(out var rawPacket);
                 if (hasPacket)
@@ -598,7 +598,7 @@ namespace DisCatSharp.VoiceNext
                     continue;
 
                 await this.SendSpeakingAsync(true).ConfigureAwait(false);
-                await client.SendAsync(data, length).ConfigureAwait(false);
+                await client.Send(data, length).ConfigureAwait(false);
                 ArrayPool<byte>.Shared.Return(data);
 
                 if (!rawPacket.Silence && this._queueCount == 0)
@@ -622,24 +622,24 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Processes the packet.
         /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="opus">The opus.</param>
-        /// <param name="pcm">The pcm.</param>
-        /// <param name="pcmPackets">The pcm packets.</param>
-        /// <param name="voiceSender">The voice sender.</param>
-        /// <param name="outputFormat">The output format.</param>
+        /// <param name="Data">The data.</param>
+        /// <param name="Opus">The opus.</param>
+        /// <param name="Pcm">The pcm.</param>
+        /// <param name="PcmPackets">The pcm packets.</param>
+        /// <param name="VoiceSender">The voice sender.</param>
+        /// <param name="OutputFormat">The output format.</param>
         /// <returns>A bool.</returns>
-        private bool ProcessPacket(ReadOnlySpan<byte> data, ref Memory<byte> opus, ref Memory<byte> pcm, IList<ReadOnlyMemory<byte>> pcmPackets, out AudioSender voiceSender, out AudioFormat outputFormat)
+        private bool ProcessPacket(ReadOnlySpan<byte> Data, ref Memory<byte> Opus, ref Memory<byte> Pcm, IList<ReadOnlyMemory<byte>> PcmPackets, out AudioSender VoiceSender, out AudioFormat OutputFormat)
         {
-            voiceSender = null;
-            outputFormat = default;
+            VoiceSender = null;
+            OutputFormat = default;
 
-            if (!this.Rtp.IsRtpHeader(data))
+            if (!this.Rtp.IsRtpHeader(Data))
                 return false;
 
-            this.Rtp.DecodeHeader(data, out var sequence, out var timestamp, out var ssrc, out var hasExtension);
+            this.Rtp.DecodeHeader(Data, out var sequence, out var timestamp, out var ssrc, out var hasExtension);
 
-            if (!this.TransmittingSSRCs.TryGetValue(ssrc, out var vtx))
+            if (!this.TransmittingSsrCs.TryGetValue(ssrc, out var vtx))
             {
                 var decoder = this.Opus.CreateDecoder();
 
@@ -650,7 +650,7 @@ namespace DisCatSharp.VoiceNext
                 };
             }
 
-            voiceSender = vtx;
+            VoiceSender = vtx;
             if (sequence <= vtx.LastSequence) // out-of-order packet; discard
                 return false;
             var gap = vtx.LastSequence != 0 ? sequence - 1 - vtx.LastSequence : 0;
@@ -659,12 +659,12 @@ namespace DisCatSharp.VoiceNext
                 this.Discord.Logger.LogWarning(VoiceNextEvents.VoiceReceiveFailure, "5 or more voice packets were dropped when receiving");
 
             Span<byte> nonce = stackalloc byte[Sodium.NonceSize];
-            this.Sodium.GetNonce(data, nonce, this.SelectedEncryptionMode);
-            this.Rtp.GetDataFromPacket(data, out var encryptedOpus, this.SelectedEncryptionMode);
+            this.Sodium.GetNonce(Data, nonce, this.SelectedEncryptionMode);
+            this.Rtp.GetDataFromPacket(Data, out var encryptedOpus, this.SelectedEncryptionMode);
 
             var opusSize = Sodium.CalculateSourceSize(encryptedOpus);
-            opus = opus[..opusSize];
-            var opusSpan = opus.Span;
+            Opus = Opus[..opusSize];
+            var opusSpan = Opus.Span;
             try
             {
                 this.Sodium.Decrypt(encryptedOpus, opusSpan, nonce);
@@ -712,7 +712,7 @@ namespace DisCatSharp.VoiceNext
                     var fecpcm = new byte[this.AudioFormat.SampleCountToSampleSize(lastSampleCount)];
                     var fecpcmMem = fecpcm.AsSpan();
                     this.Opus.Decode(vtx.Decoder, opusSpan, ref fecpcmMem, true, out _);
-                    pcmPackets.Add(fecpcm.AsMemory(0, fecpcmMem.Length));
+                    PcmPackets.Add(fecpcm.AsMemory(0, fecpcmMem.Length));
                 }
                 else if (gap > 1)
                 {
@@ -722,13 +722,13 @@ namespace DisCatSharp.VoiceNext
                         var fecpcm = new byte[this.AudioFormat.SampleCountToSampleSize(lastSampleCount)];
                         var fecpcmMem = fecpcm.AsSpan();
                         this.Opus.ProcessPacketLoss(vtx.Decoder, lastSampleCount, ref fecpcmMem);
-                        pcmPackets.Add(fecpcm.AsMemory(0, fecpcmMem.Length));
+                        PcmPackets.Add(fecpcm.AsMemory(0, fecpcmMem.Length));
                     }
                 }
 
-                var pcmSpan = pcm.Span;
-                this.Opus.Decode(vtx.Decoder, opusSpan, ref pcmSpan, false, out outputFormat);
-                pcm = pcm[..pcmSpan.Length];
+                var pcmSpan = Pcm.Span;
+                this.Opus.Decode(vtx.Decoder, opusSpan, ref pcmSpan, false, out OutputFormat);
+                Pcm = Pcm[..pcmSpan.Length];
             }
             finally
             {
@@ -741,11 +741,11 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Processes the voice packet.
         /// </summary>
-        /// <param name="data">The data.</param>
+        /// <param name="Data">The data.</param>
         /// <returns>A Task.</returns>
-        private async Task ProcessVoicePacket(byte[] data)
+        private async Task ProcessVoicePacket(byte[] Data)
         {
-            if (data.Length < 13) // minimum packet length
+            if (Data.Length < 13) // minimum packet length
                 return;
 
             try
@@ -755,13 +755,13 @@ namespace DisCatSharp.VoiceNext
                 var opus = new byte[pcm.Length];
                 var opusMem = opus.AsMemory();
                 var pcmFillers = new List<ReadOnlyMemory<byte>>();
-                if (!this.ProcessPacket(data, ref opusMem, ref pcmMem, pcmFillers, out var vtx, out var audioFormat))
+                if (!this.ProcessPacket(Data, ref opusMem, ref pcmMem, pcmFillers, out var vtx, out var audioFormat))
                     return;
 
                 foreach (var pcmFiller in pcmFillers)
                     await this._voiceReceived.InvokeAsync(this, new VoiceReceiveEventArgs(this.Discord.ServiceProvider)
                     {
-                        SSRC = vtx.SSRC,
+                        Ssrc = vtx.Ssrc,
                         User = vtx.User,
                         PcmData = pcmFiller,
                         OpusData = new byte[0].AsMemory(),
@@ -771,7 +771,7 @@ namespace DisCatSharp.VoiceNext
 
                 await this._voiceReceived.InvokeAsync(this, new VoiceReceiveEventArgs(this.Discord.ServiceProvider)
                 {
-                    SSRC = vtx.SSRC,
+                    Ssrc = vtx.Ssrc,
                     User = vtx.User,
                     PcmData = pcmMem,
                     OpusData = opusMem,
@@ -788,12 +788,12 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Processes the keepalive.
         /// </summary>
-        /// <param name="data">The data.</param>
-        private void ProcessKeepalive(byte[] data)
+        /// <param name="Data">The data.</param>
+        private void ProcessKeepalive(byte[] Data)
         {
             try
             {
-                var keepalive = BinaryPrimitives.ReadUInt64LittleEndian(data);
+                var keepalive = BinaryPrimitives.ReadUInt64LittleEndian(Data);
 
                 if (!this.KeepaliveTimestamps.TryRemove(keepalive, out var timestamp))
                     return;
@@ -819,7 +819,7 @@ namespace DisCatSharp.VoiceNext
 
             while (!token.IsCancellationRequested)
             {
-                var data = await client.ReceiveAsync().ConfigureAwait(false);
+                var data = await client.Receive().ConfigureAwait(false);
                 if (data.Length == 8)
                     this.ProcessKeepalive(data);
                 else if (this.Configuration.EnableIncoming)
@@ -830,43 +830,43 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Sends a speaking status to the connected voice channel.
         /// </summary>
-        /// <param name="speaking">Whether the current user is speaking or not.</param>
+        /// <param name="Speaking">Whether the current user is speaking or not.</param>
         /// <returns>A task representing the sending operation.</returns>
-        public async Task SendSpeakingAsync(bool speaking = true)
+        public async Task SendSpeakingAsync(bool Speaking = true)
         {
             if (!this.IsInitialized)
                 throw new InvalidOperationException("The connection is not initialized");
 
-            if (this._isSpeaking != speaking)
+            if (this._isSpeaking != Speaking)
             {
-                this._isSpeaking = speaking;
+                this._isSpeaking = Speaking;
                 var pld = new VoiceDispatch
                 {
                     OpCode = 5,
                     Payload = new VoiceSpeakingPayload
                     {
-                        Speaking = speaking,
+                        Speaking = Speaking,
                         Delay = 0
                     }
                 };
 
                 var plj = JsonConvert.SerializeObject(pld, Formatting.None);
-                await this.WsSendAsync(plj).ConfigureAwait(false);
+                await this.WsSend(plj).ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Gets a transmit stream for this connection, optionally specifying a packet size to use with the stream. If a stream is already configured, it will return the existing one.
         /// </summary>
-        /// <param name="sampleDuration">Duration, in ms, to use for audio packets.</param>
+        /// <param name="SampleDuration">Duration, in ms, to use for audio packets.</param>
         /// <returns>Transmit stream.</returns>
-        public VoiceTransmitSink GetTransmitSink(int sampleDuration = 20)
+        public VoiceTransmitSink GetTransmitSink(int SampleDuration = 20)
         {
-            if (!AudioFormat.AllowedSampleDurations.Contains(sampleDuration))
-                throw new ArgumentOutOfRangeException(nameof(sampleDuration), "Invalid PCM sample duration specified.");
+            if (!AudioFormat.AllowedSampleDurations.Contains(SampleDuration))
+                throw new ArgumentOutOfRangeException(nameof(SampleDuration), "Invalid PCM sample duration specified.");
 
             if (this.TransmitStream == null)
-                this.TransmitStream = new VoiceTransmitSink(this, sampleDuration);
+                this.TransmitStream = new VoiceTransmitSink(this, SampleDuration);
 
             return this.TransmitStream;
         }
@@ -892,7 +892,7 @@ namespace DisCatSharp.VoiceNext
         /// </summary>
         /// <returns></returns>
         public async Task ResumeAsync()
-            => await this.PauseEvent.SetAsync().ConfigureAwait(false);
+            => await this.PauseEvent.Set().ConfigureAwait(false);
 
         /// <summary>
         /// Disconnects and disposes this voice connection.
@@ -923,7 +923,7 @@ namespace DisCatSharp.VoiceNext
 
             try
             {
-                this.VoiceWs.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                this.VoiceWs.Disconnect().ConfigureAwait(false).GetAwaiter().GetResult();
                 this.UdpClient.Close();
             }
             catch { }
@@ -954,7 +954,7 @@ namespace DisCatSharp.VoiceNext
         /// Heartbeats .
         /// </summary>
         /// <returns>A Task.</returns>
-        private async Task HeartbeatAsync()
+        private async Task Heartbeat()
         {
             await Task.Yield();
 
@@ -974,7 +974,7 @@ namespace DisCatSharp.VoiceNext
                         Payload = UnixTimestamp(dt)
                     };
                     var hbj = JsonConvert.SerializeObject(hbd);
-                    await this.WsSendAsync(hbj).ConfigureAwait(false);
+                    await this.WsSend(hbj).ConfigureAwait(false);
 
                     this.LastHeartbeat = dt;
                     await Task.Delay(this.HeartbeatInterval).ConfigureAwait(false);
@@ -990,7 +990,7 @@ namespace DisCatSharp.VoiceNext
         /// Keepalives .
         /// </summary>
         /// <returns>A Task.</returns>
-        private async Task KeepaliveAsync()
+        private async Task Keepalive()
         {
             await Task.Yield();
 
@@ -1007,7 +1007,7 @@ namespace DisCatSharp.VoiceNext
                 var packet = new byte[8];
                 BinaryPrimitives.WriteUInt64LittleEndian(packet, keepalive);
 
-                await client.SendAsync(packet, packet.Length).ConfigureAwait(false);
+                await client.Send(packet, packet.Length).ConfigureAwait(false);
 
                 await Task.Delay(5000, token).ConfigureAwait(false);
             }
@@ -1016,18 +1016,18 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Stage1S .
         /// </summary>
-        /// <param name="voiceReady">The voice ready.</param>
+        /// <param name="VoiceReady">The voice ready.</param>
         /// <returns>A Task.</returns>
-        private async Task Stage1(VoiceReadyPayload voiceReady)
+        private async Task Stage1(VoiceReadyPayload VoiceReady)
         {
             // IP Discovery
             this.UdpClient.Setup(this.UdpEndpoint);
 
             var pck = new byte[70];
             PreparePacket(pck);
-            await this.UdpClient.SendAsync(pck, pck.Length).ConfigureAwait(false);
+            await this.UdpClient.Send(pck, pck.Length).ConfigureAwait(false);
 
-            var ipd = await this.UdpClient.ReceiveAsync().ConfigureAwait(false);
+            var ipd = await this.UdpClient.Receive().ConfigureAwait(false);
             ReadPacket(ipd, out var ip, out var port);
             this.DiscoveredEndpoint = new IpEndpoint
             {
@@ -1036,26 +1036,26 @@ namespace DisCatSharp.VoiceNext
             };
             this.Discord.Logger.LogTrace(VoiceNextEvents.VoiceHandshake, "Endpoint dicovery finished - discovered endpoint is {0}:{1}", ip, port);
 
-            void PreparePacket(byte[] packet)
+            void PreparePacket(byte[] Packet)
             {
-                var ssrc = this.SSRC;
-                var packetSpan = packet.AsSpan();
+                var ssrc = this.Ssrc;
+                var packetSpan = Packet.AsSpan();
                 MemoryMarshal.Write(packetSpan, ref ssrc);
                 Helpers.ZeroFill(packetSpan);
             }
 
-            void ReadPacket(byte[] packet, out System.Net.IPAddress decodedIp, out ushort decodedPort)
+            void ReadPacket(byte[] Packet, out System.Net.IPAddress DecodedIp, out ushort DecodedPort)
             {
-                var packetSpan = packet.AsSpan();
+                var packetSpan = Packet.AsSpan();
 
-                var ipString = Utilities.UTF8.GetString(packet, 4, 64 /* 70 - 6 */).TrimEnd('\0');
-                decodedIp = System.Net.IPAddress.Parse(ipString);
+                var ipString = Utilities.Utf8.GetString(Packet, 4, 64 /* 70 - 6 */).TrimEnd('\0');
+                DecodedIp = System.Net.IPAddress.Parse(ipString);
 
-                decodedPort = BinaryPrimitives.ReadUInt16LittleEndian(packetSpan[68 /* 70 - 2 */..]);
+                DecodedPort = BinaryPrimitives.ReadUInt16LittleEndian(packetSpan[68 /* 70 - 2 */..]);
             }
 
             // Select voice encryption mode
-            var selectedEncryptionMode = Sodium.SelectMode(voiceReady.Modes);
+            var selectedEncryptionMode = Sodium.SelectMode(VoiceReady.Modes);
             this.SelectedEncryptionMode = selectedEncryptionMode.Value;
 
             // Ready
@@ -1075,7 +1075,7 @@ namespace DisCatSharp.VoiceNext
                 }
             };
             var vsj = JsonConvert.SerializeObject(vsp, Formatting.None);
-            await this.WsSendAsync(vsj).ConfigureAwait(false);
+            await this.WsSend(vsj).ConfigureAwait(false);
 
             this.SenderTokenSource = new CancellationTokenSource();
             this.SenderTask = Task.Run(this.VoiceSenderTask, this.SenderToken);
@@ -1087,16 +1087,16 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Stage2S .
         /// </summary>
-        /// <param name="voiceSessionDescription">The voice session description.</param>
+        /// <param name="VoiceSessionDescription">The voice session description.</param>
         /// <returns>A Task.</returns>
-        private async Task Stage2(VoiceSessionDescriptionPayload voiceSessionDescription)
+        private async Task Stage2(VoiceSessionDescriptionPayload VoiceSessionDescription)
         {
-            this.SelectedEncryptionMode = Sodium.SupportedModes[voiceSessionDescription.Mode.ToLowerInvariant()];
+            this.SelectedEncryptionMode = Sodium.SupportedModes[VoiceSessionDescription.Mode.ToLowerInvariant()];
             this.Discord.Logger.LogTrace(VoiceNextEvents.VoiceHandshake, "Discord updated encryption mode - new mode is {0}", this.SelectedEncryptionMode);
 
             // start keepalive
             this.KeepaliveTokenSource = new CancellationTokenSource();
-            this.KeepaliveTask = this.KeepaliveAsync();
+            this.KeepaliveTask = this.Keepalive();
 
             // send 3 packets of silence to get things going
             var nullpcm = new byte[this.AudioFormat.CalculateSampleSize(20)];
@@ -1114,24 +1114,24 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Handles the dispatch.
         /// </summary>
-        /// <param name="jo">The jo.</param>
+        /// <param name="Jo">The jo.</param>
         /// <returns>A Task.</returns>
-        private async Task HandleDispatch(JObject jo)
+        private async Task HandleDispatch(JObject Jo)
         {
-            var opc = (int)jo["op"];
-            var opp = jo["d"] as JObject;
+            var opc = (int)Jo["op"];
+            var opp = Jo["d"] as JObject;
 
             switch (opc)
             {
                 case 2: // READY
                     this.Discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received READY (OP2)");
                     var vrp = opp.ToObject<VoiceReadyPayload>();
-                    this.SSRC = vrp.SSRC;
+                    this.Ssrc = vrp.Ssrc;
                     this.UdpEndpoint = new ConnectionEndpoint(vrp.Address, vrp.Port);
                     // this is not the valid interval
                     // oh, discord
                     //this.HeartbeatInterval = vrp.HeartbeatInterval;
-                    this.HeartbeatTask = Task.Run(this.HeartbeatAsync);
+                    this.HeartbeatTask = Task.Run(this.Heartbeat);
                     await this.Stage1(vrp).ConfigureAwait(false);
                     break;
 
@@ -1152,23 +1152,23 @@ namespace DisCatSharp.VoiceNext
                     var spk = new UserSpeakingEventArgs(this.Discord.ServiceProvider)
                     {
                         Speaking = spd.Speaking,
-                        SSRC = spd.SSRC.Value,
+                        Ssrc = spd.Ssrc.Value,
                         User = resolvedUser,
                     };
 
-                    if (foundUserInCache && this.TransmittingSSRCs.TryGetValue(spk.SSRC, out var txssrc5) && txssrc5.Id == 0)
+                    if (foundUserInCache && this.TransmittingSsrCs.TryGetValue(spk.Ssrc, out var txssrc5) && txssrc5.Id == 0)
                     {
                         txssrc5.User = spk.User;
                     }
                     else
                     {
                         var opus = this.Opus.CreateDecoder();
-                        var vtx = new AudioSender(spk.SSRC, opus)
+                        var vtx = new AudioSender(spk.Ssrc, opus)
                         {
                             User = await this.Discord.GetUserAsync(spd.UserId.Value).ConfigureAwait(false)
                         };
 
-                        if (!this.TransmittingSSRCs.TryAdd(spk.SSRC, vtx))
+                        if (!this.TransmittingSsrCs.TryAdd(spk.Ssrc, vtx))
                             this.Opus.DestroyDecoder(opus);
                     }
 
@@ -1191,7 +1191,7 @@ namespace DisCatSharp.VoiceNext
 
                 case 9: // RESUMED
                     this.Discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received RESUMED (OP9)");
-                    this.HeartbeatTask = Task.Run(this.HeartbeatAsync);
+                    this.HeartbeatTask = Task.Run(this.Heartbeat);
                     break;
 
                 case 12: // CLIENT_CONNECTED
@@ -1200,25 +1200,25 @@ namespace DisCatSharp.VoiceNext
                     var usrj = await this.Discord.GetUserAsync(ujpd.UserId).ConfigureAwait(false);
                     {
                         var opus = this.Opus.CreateDecoder();
-                        var vtx = new AudioSender(ujpd.SSRC, opus)
+                        var vtx = new AudioSender(ujpd.Ssrc, opus)
                         {
                             User = usrj
                         };
 
-                        if (!this.TransmittingSSRCs.TryAdd(vtx.SSRC, vtx))
+                        if (!this.TransmittingSsrCs.TryAdd(vtx.Ssrc, vtx))
                             this.Opus.DestroyDecoder(opus);
                     }
 
-                    await this._userJoined.InvokeAsync(this, new VoiceUserJoinEventArgs(this.Discord.ServiceProvider) { User = usrj, SSRC = ujpd.SSRC }).ConfigureAwait(false);
+                    await this._userJoined.InvokeAsync(this, new VoiceUserJoinEventArgs(this.Discord.ServiceProvider) { User = usrj, Ssrc = ujpd.Ssrc }).ConfigureAwait(false);
                     break;
 
                 case 13: // CLIENT_DISCONNECTED
                     this.Discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received CLIENT_DISCONNECTED (OP13)");
                     var ulpd = opp.ToObject<VoiceUserLeavePayload>();
-                    var txssrc = this.TransmittingSSRCs.FirstOrDefault(x => x.Value.Id == ulpd.UserId);
-                    if (this.TransmittingSSRCs.ContainsKey(txssrc.Key))
+                    var txssrc = this.TransmittingSsrCs.FirstOrDefault(X => X.Value.Id == ulpd.UserId);
+                    if (this.TransmittingSsrCs.ContainsKey(txssrc.Key))
                     {
-                        this.TransmittingSSRCs.TryRemove(txssrc.Key, out var txssrc13);
+                        this.TransmittingSsrCs.TryRemove(txssrc.Key, out var txssrc13);
                         this.Opus.DestroyDecoder(txssrc13.Decoder);
                     }
 
@@ -1226,7 +1226,7 @@ namespace DisCatSharp.VoiceNext
                     await this._userLeft.InvokeAsync(this, new VoiceUserLeaveEventArgs(this.Discord.ServiceProvider)
                     {
                         User = usrl,
-                        SSRC = txssrc.Key
+                        Ssrc = txssrc.Key
                     }).ConfigureAwait(false);
                     break;
 
@@ -1239,19 +1239,19 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Voices the w s_ socket closed.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="e">The e.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="E">The e.</param>
         /// <returns>A Task.</returns>
-        private async Task VoiceWS_SocketClosed(IWebSocketClient client, SocketCloseEventArgs e)
+        private async Task VoiceWS_SocketClosed(IWebSocketClient Client, SocketCloseEventArgs E)
         {
-            this.Discord.Logger.LogDebug(VoiceNextEvents.VoiceConnectionClose, "Voice WebSocket closed ({0}, '{1}')", e.CloseCode, e.CloseMessage);
+            this.Discord.Logger.LogDebug(VoiceNextEvents.VoiceConnectionClose, "Voice WebSocket closed ({0}, '{1}')", E.CloseCode, E.CloseMessage);
 
             // generally this should not be disposed on all disconnects, only on requested ones
             // or something
             // otherwise problems happen
             //this.Dispose();
 
-            if (e.CloseCode == 4006 || e.CloseCode == 4009)
+            if (E.CloseCode == 4006 || E.CloseCode == 4009)
                 this.Resume = false;
 
             if (!this.IsDisposed)
@@ -1264,19 +1264,19 @@ namespace DisCatSharp.VoiceNext
                 this.VoiceWs.Connected += this.VoiceWS_SocketOpened;
 
                 if (this.Resume) // emzi you dipshit
-                    await this.ConnectAsync().ConfigureAwait(false);
+                    await this.Connect().ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Voices the w s_ socket message.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="e">The e.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="E">The e.</param>
         /// <returns>A Task.</returns>
-        private Task VoiceWS_SocketMessage(IWebSocketClient client, SocketMessageEventArgs e)
+        private Task VoiceWS_SocketMessage(IWebSocketClient Client, SocketMessageEventArgs E)
         {
-            if (e is not SocketTextMessageEventArgs et)
+            if (E is not SocketTextMessageEventArgs et)
             {
                 this.Discord.Logger.LogCritical(VoiceNextEvents.VoiceGatewayError, "Discord Voice Gateway sent binary data - unable to process");
                 return Task.CompletedTask;
@@ -1289,39 +1289,39 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Voices the w s_ socket opened.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="e">The e.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="E">The e.</param>
         /// <returns>A Task.</returns>
-        private Task VoiceWS_SocketOpened(IWebSocketClient client, SocketEventArgs e)
+        private Task VoiceWS_SocketOpened(IWebSocketClient Client, SocketEventArgs E)
             => this.StartAsync();
 
         /// <summary>
         /// Voices the ws_ socket exception.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="e">The e.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="E">The e.</param>
         /// <returns>A Task.</returns>
-        private Task VoiceWs_SocketException(IWebSocketClient client, SocketErrorEventArgs e)
-            => this._voiceSocketError.InvokeAsync(this, new SocketErrorEventArgs(this.Discord.ServiceProvider) { Exception = e.Exception });
+        private Task VoiceWs_SocketException(IWebSocketClient Client, SocketErrorEventArgs E)
+            => this._voiceSocketError.InvokeAsync(this, new SocketErrorEventArgs(this.Discord.ServiceProvider) { Exception = E.Exception });
 
         /// <summary>
         /// Ws the send async.
         /// </summary>
-        /// <param name="payload">The payload.</param>
+        /// <param name="Payload">The payload.</param>
         /// <returns>A Task.</returns>
-        private async Task WsSendAsync(string payload)
+        private async Task WsSend(string Payload)
         {
-            this.Discord.Logger.LogTrace(VoiceNextEvents.VoiceWsTx, payload);
-            await this.VoiceWs.SendMessageAsync(payload).ConfigureAwait(false);
+            this.Discord.Logger.LogTrace(VoiceNextEvents.VoiceWsTx, Payload);
+            await this.VoiceWs.SendMessage(Payload).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Gets the unix timestamp.
         /// </summary>
-        /// <param name="dt">The datetine.</param>
-        private static uint UnixTimestamp(DateTime dt)
+        /// <param name="Dt">The datetine.</param>
+        private static uint UnixTimestamp(DateTime Dt)
         {
-            var ts = dt - UnixEpoch;
+            var ts = Dt - UnixEpoch;
             var sd = ts.TotalSeconds;
             var si = (uint)sd;
             return si;

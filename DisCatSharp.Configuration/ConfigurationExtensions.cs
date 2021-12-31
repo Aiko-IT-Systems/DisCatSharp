@@ -51,19 +51,19 @@ namespace DisCatSharp.Configuration
         /// <summary>
         /// Easily piece together paths that will work within <see cref="IConfiguration"/>
         /// </summary>
-        /// <param name="config">(not used - only for adding context based functionality)</param>
-        /// <param name="values">The strings to piece together</param>
+        /// <param name="Config">(not used - only for adding context based functionality)</param>
+        /// <param name="Values">The strings to piece together</param>
         /// <returns>Strings joined together via ':'</returns>
-        public static string ConfigPath(this IConfiguration config, params string[] values) => string.Join(":", values);
+        public static string ConfigPath(this IConfiguration Config, params string[] Values) => string.Join(":", Values);
 
         /// <summary>
         /// Skims over the configuration section and only overrides values that are explicitly defined within the config
         /// </summary>
-        /// <param name="config">Instance of config</param>
-        /// <param name="section">Section which contains values for <paramref name="config"/></param>
-        private static void HydrateInstance(ref object config, ConfigSection section)
+        /// <param name="Config">Instance of config</param>
+        /// <param name="Section">Section which contains values for <paramref name="Config"/></param>
+        private static void HydrateInstance(ref object Config, ConfigSection Section)
         {
-            var props = config.GetType().GetProperties();
+            var props = Config.GetType().GetProperties();
 
             foreach (var prop in props)
             {
@@ -71,14 +71,14 @@ namespace DisCatSharp.Configuration
                 if (prop.SetMethod == null)
                     continue;
 
-                var entry = section.GetValue(prop.Name);
+                var entry = Section.GetValue(prop.Name);
                 object? value = null;
 
                 if (typeof(string) == prop.PropertyType)
                 {
                     // We do NOT want to override value if nothing was provided
                     if (!string.IsNullOrEmpty(entry))
-                        prop.SetValue(config, entry);
+                        prop.SetValue(Config, entry);
 
                     continue;
                 }
@@ -88,15 +88,15 @@ namespace DisCatSharp.Configuration
                 // "root:section:name:0"  <--- this is not detectable when checking the above path
                 if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
                 {
-                    value = string.IsNullOrEmpty(section.GetValue(prop.Name))
-                        ? section.Config
-                            .GetSection(section.GetPath(prop.Name)).Get(prop.PropertyType)
+                    value = string.IsNullOrEmpty(Section.GetValue(prop.Name))
+                        ? Section.Config
+                            .GetSection(Section.GetPath(prop.Name)).Get(prop.PropertyType)
                         : Newtonsoft.Json.JsonConvert.DeserializeObject(entry, prop.PropertyType);
 
                     if (value == null)
                         continue;
 
-                    prop.SetValue(config, value);
+                    prop.SetValue(Config, value);
                 }
 
                 // From this point onward we require the 'entry' value to have something useful
@@ -122,104 +122,104 @@ namespace DisCatSharp.Configuration
                     }
 
                     // Update value within our config instance
-                    prop.SetValue(config, value);
+                    prop.SetValue(Config, value);
                 }
                 catch (Exception ex)
                 {
                     Console.Error.WriteLine(
-                        $"Unable to convert value of '{entry}' to type '{prop.PropertyType.Name}' for prop '{prop.Name}' in config '{config.GetType().Name}'\n\t\t{ex.Message}");
+                        $"Unable to convert value of '{entry}' to type '{prop.PropertyType.Name}' for prop '{prop.Name}' in config '{Config.GetType().Name}'\n\t\t{ex.Message}");
                 }
             }
         }
 
         /// <summary>
-        /// Instantiate an entity using <paramref name="factory"/> then walk through the specified <paramref name="section"/>
-        /// and translate user-defined config values to the instantiated instance from <paramref name="factory"/>
+        /// Instantiate an entity using <paramref name="Factory"/> then walk through the specified <paramref name="Section"/>
+        /// and translate user-defined config values to the instantiated instance from <paramref name="Factory"/>
         /// </summary>
-        /// <param name="section">Section containing values for targeted config</param>
-        /// <param name="factory">Function which generates a default entity</param>
+        /// <param name="Section">Section containing values for targeted config</param>
+        /// <param name="Factory">Function which generates a default entity</param>
         /// <returns>Hydrated instance of an entity which contains user-defined values (if any)</returns>
-        /// <exception cref="ArgumentNullException">When <paramref name="factory"/> is null</exception>
-        public static object ExtractConfig(this ConfigSection section, Func<object> factory)
+        /// <exception cref="ArgumentNullException">When <paramref name="Factory"/> is null</exception>
+        public static object ExtractConfig(this ConfigSection Section, Func<object> Factory)
         {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory), FactoryErrorMessage);
+            if (Factory == null)
+                throw new ArgumentNullException(nameof(Factory), FactoryErrorMessage);
 
             // Create default instance
-            var config = factory();
+            var config = Factory();
 
-            HydrateInstance(ref config, section);
+            HydrateInstance(ref config, Section);
 
             return config;
         }
 
         /// <summary>
-        /// Instantiate an entity using <paramref name="factory"/> then walk through the specified <paramref name="sectionName"/>
-        /// in <paramref name="config"/>. Translate user-defined config values to the instantiated instance from <paramref name="factory"/>
+        /// Instantiate an entity using <paramref name="Factory"/> then walk through the specified <paramref name="SectionName"/>
+        /// in <paramref name="Config"/>. Translate user-defined config values to the instantiated instance from <paramref name="Factory"/>
         /// </summary>
-        /// <param name="config">Loaded App Configuration</param>
-        /// <param name="sectionName">Name of section to load</param>
-        /// <param name="factory">Function which creates a default entity to work with</param>
-        /// <param name="rootSectionName">(Optional) Used when section is nested within another. Default value is <see cref="DefaultRootLib"/></param>
+        /// <param name="Config">Loaded App Configuration</param>
+        /// <param name="SectionName">Name of section to load</param>
+        /// <param name="Factory">Function which creates a default entity to work with</param>
+        /// <param name="RootSectionName">(Optional) Used when section is nested within another. Default value is <see cref="DefaultRootLib"/></param>
         /// <returns>Hydrated instance of an entity which contains user-defined values (if any)</returns>
-        /// <exception cref="ArgumentNullException">When <paramref name="factory"/> is null</exception>
-        public static object ExtractConfig(this IConfiguration config, string sectionName, Func<object> factory,
-            string? rootSectionName = DefaultRootLib)
+        /// <exception cref="ArgumentNullException">When <paramref name="Factory"/> is null</exception>
+        public static object ExtractConfig(this IConfiguration Config, string SectionName, Func<object> Factory,
+            string? RootSectionName = DefaultRootLib)
         {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory), FactoryErrorMessage);
+            if (Factory == null)
+                throw new ArgumentNullException(nameof(Factory), FactoryErrorMessage);
 
             // create default instance
-            var instance = factory();
+            var instance = Factory();
 
-            HydrateInstance(ref instance, new ConfigSection(ref config, sectionName, rootSectionName));
+            HydrateInstance(ref instance, new ConfigSection(ref Config, SectionName, RootSectionName));
 
             return instance;
         }
 
         /// <summary>
-        /// Instantiate a new instance of <typeparamref name="TConfig"/>, then walk through the specified <paramref name="sectionName"/>
-        /// in <paramref name="config"/>. Translate user-defined config values to the <typeparamref name="TConfig"/> instance.
+        /// Instantiate a new instance of <typeparamref name="TConfig"/>, then walk through the specified <paramref name="SectionName"/>
+        /// in <paramref name="Config"/>. Translate user-defined config values to the <typeparamref name="TConfig"/> instance.
         /// </summary>
-        /// <param name="config">Loaded App Configuration</param>
-        /// <param name="serviceProvider"></param>
-        /// <param name="sectionName">Name of section to load</param>
-        /// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DefaultRootLib"/></param>
-        /// <typeparam name="TConfig">Type of instance that <paramref name="sectionName"/> represents</typeparam>
+        /// <param name="Config">Loaded App Configuration</param>
+        /// <param name="ServiceProvider"></param>
+        /// <param name="SectionName">Name of section to load</param>
+        /// <param name="RootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DefaultRootLib"/></param>
+        /// <typeparam name="TConfig">Type of instance that <paramref name="SectionName"/> represents</typeparam>
         /// <returns>Hydrated instance of <typeparamref name="TConfig"/> which contains the user-defined values (if any).</returns>
-        public static TConfig ExtractConfig<TConfig>(this IConfiguration config, IServiceProvider serviceProvider, string sectionName, string? rootSectionName = DefaultRootLib)
+        public static TConfig ExtractConfig<TConfig>(this IConfiguration Config, IServiceProvider ServiceProvider, string SectionName, string? RootSectionName = DefaultRootLib)
             where TConfig : new()
         {
             // Default values should hopefully be provided from the constructor
-            object configInstance = ActivatorUtilities.CreateInstance(serviceProvider, typeof(TConfig));
+            object configInstance = ActivatorUtilities.CreateInstance(ServiceProvider, typeof(TConfig));
 
-            HydrateInstance(ref configInstance, new ConfigSection(ref config, sectionName, rootSectionName));
+            HydrateInstance(ref configInstance, new ConfigSection(ref Config, SectionName, RootSectionName));
 
             return (TConfig)configInstance;
         }
 
         /// <summary>
-        /// Instantiate a new instance of <typeparamref name="TConfig"/>, then walk through the specified <paramref name="sectionName"/>
-        /// in <paramref name="config"/>. Translate user-defined config values to the <typeparamref name="TConfig"/> instance.
+        /// Instantiate a new instance of <typeparamref name="TConfig"/>, then walk through the specified <paramref name="SectionName"/>
+        /// in <paramref name="Config"/>. Translate user-defined config values to the <typeparamref name="TConfig"/> instance.
         /// </summary>
-        /// <param name="config">Loaded App Configuration</param>
-        /// <param name="sectionName">Name of section to load</param>
-        /// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DefaultRootLib"/></param>
-        /// <typeparam name="TConfig">Type of instance that <paramref name="sectionName"/> represents</typeparam>
+        /// <param name="Config">Loaded App Configuration</param>
+        /// <param name="SectionName">Name of section to load</param>
+        /// <param name="RootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DefaultRootLib"/></param>
+        /// <typeparam name="TConfig">Type of instance that <paramref name="SectionName"/> represents</typeparam>
         /// <returns>Hydrated instance of <typeparamref name="TConfig"/> which contains the user-defined values (if any).</returns>
-        public static TConfig ExtractConfig<TConfig>(this IConfiguration config, string sectionName, string? rootSectionName = DefaultRootLib)
+        public static TConfig ExtractConfig<TConfig>(this IConfiguration Config, string SectionName, string? RootSectionName = DefaultRootLib)
             where TConfig : new()
         {
             // Default values should hopefully be provided from the constructor
             object configInstance = new TConfig();
 
-            HydrateInstance(ref configInstance, new ConfigSection(ref config, sectionName, rootSectionName));
+            HydrateInstance(ref configInstance, new ConfigSection(ref Config, SectionName, RootSectionName));
 
             return (TConfig)configInstance;
         }
 
         /// <summary>
-        /// Determines if <paramref name="config"/> contains a particular section/object (not value)
+        /// Determines if <paramref name="Config"/> contains a particular section/object (not value)
         /// </summary>
         /// <remarks>
         /// <code>
@@ -231,36 +231,36 @@ namespace DisCatSharp.Configuration
         /// }
         /// </code>
         /// </remarks>
-        /// <param name="config"></param>
-        /// <param name="values"></param>
+        /// <param name="Config"></param>
+        /// <param name="Values"></param>
         /// <returns>True if section exists, otherwise false</returns>
-        public static bool HasSection(this IConfiguration config, params string[] values)
+        public static bool HasSection(this IConfiguration Config, params string[] Values)
         {
-            if (!values.Any())
+            if (!Values.Any())
                 return false;
 
-            if (values.Length == 1)
-                return config.GetChildren().Any(x => x.Key == values[0]);
+            if (Values.Length == 1)
+                return Config.GetChildren().Any(X => X.Key == Values[0]);
 
-            if (config.GetChildren().All(x => x.Key != values[0]))
+            if (Config.GetChildren().All(X => X.Key != Values[0]))
                 return false;
 
-            var current = config.GetSection(values[0]);
+            var current = Config.GetSection(Values[0]);
 
-            for (var i = 1; i < values.Length - 1; i++)
+            for (var i = 1; i < Values.Length - 1; i++)
             {
-                if (current.GetChildren().All(x => x.Key != values[i]))
+                if (current.GetChildren().All(X => X.Key != Values[i]))
                     return false;
 
-                current = current.GetSection(values[i]);
+                current = current.GetSection(Values[i]);
             }
 
-            return current.GetChildren().Any(x => x.Key == values[^1]);
+            return current.GetChildren().Any(X => X.Key == Values[^1]);
         }
 
         /// <summary>
         /// Instantiates an instance of <see cref="DiscordClient"/>, then consumes any custom
-        /// configuration from user/developer from <paramref name="config"/>. <br/>
+        /// configuration from user/developer from <paramref name="Config"/>. <br/>
         /// View remarks for more info
         /// </summary>
         /// <remarks>
@@ -290,22 +290,22 @@ namespace DisCatSharp.Configuration
         /// }
         /// </code>
         /// </remarks>
-        /// <param name="config"></param>
-        /// <param name="serviceProvider"></param>
-        /// <param name="botSectionName"></param>
+        /// <param name="Config"></param>
+        /// <param name="ServiceProvider"></param>
+        /// <param name="BotSectionName"></param>
         /// <returns>Instance of <see cref="DiscordClient"/></returns>
-        public static DiscordClient BuildClient(this IConfiguration config, IServiceProvider serviceProvider,
-            string botSectionName = DefaultRootLib)
+        public static DiscordClient BuildClient(this IConfiguration Config, IServiceProvider ServiceProvider,
+            string BotSectionName = DefaultRootLib)
         {
-            var section = config.HasSection(botSectionName, "Discord")
+            var section = Config.HasSection(BotSectionName, "Discord")
                 ? "Discord"
-                : config.HasSection(botSectionName, $"Discord{ConfigSuffix}")
+                : Config.HasSection(BotSectionName, $"Discord{ConfigSuffix}")
                     ? $"Discord:{ConfigSuffix}"
                     : null;
 
             return string.IsNullOrEmpty(section)
-                ? new DiscordClient(new(serviceProvider))
-                : new DiscordClient(config.ExtractConfig<DiscordConfiguration>(serviceProvider, section, botSectionName));
+                ? new DiscordClient(new(ServiceProvider))
+                : new DiscordClient(Config.ExtractConfig<DiscordConfiguration>(ServiceProvider, section, BotSectionName));
         }
     }
 }

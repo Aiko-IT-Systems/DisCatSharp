@@ -48,43 +48,43 @@ namespace DisCatSharp.Hosting
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseHostedService"/> class.
         /// </summary>
-        /// <param name="config">The config.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="applicationLifetime">The application lifetime.</param>
-        /// <param name="configBotSection">The config bot section.</param>
-        internal BaseHostedService(IConfiguration config,
-            ILogger<BaseHostedService> logger,
-            IServiceProvider serviceProvider,
-            IHostApplicationLifetime applicationLifetime,
-            string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
+        /// <param name="Config">The config.</param>
+        /// <param name="Logger">The logger.</param>
+        /// <param name="ServiceProvider">The service provider.</param>
+        /// <param name="ApplicationLifetime">The application lifetime.</param>
+        /// <param name="ConfigBotSection">The config bot section.</param>
+        internal BaseHostedService(IConfiguration Config,
+            ILogger<BaseHostedService> Logger,
+            IServiceProvider ServiceProvider,
+            IHostApplicationLifetime ApplicationLifetime,
+            string ConfigBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
         {
-            this.Configuration = config;
-            this.Logger = logger;
-            this.ApplicationLifetime = applicationLifetime;
-            this.ServiceProvider = serviceProvider;
-            this.BotSection = configBotSection;
+            this.Configuration = Config;
+            this.Logger = Logger;
+            this.ApplicationLifetime = ApplicationLifetime;
+            this.ServiceProvider = ServiceProvider;
+            this.BotSection = ConfigBotSection;
         }
 
         /// <summary>
         /// When the bot(s) fail to start, this method will be invoked. (Default behavior is to shutdown)
         /// </summary>
-        /// <param name="ex">The exception/reason for not starting</param>
-        protected virtual void OnInitializationError(Exception ex) => this.ApplicationLifetime.StopApplication();
+        /// <param name="Ex">The exception/reason for not starting</param>
+        protected virtual void OnInitializationError(Exception Ex) => this.ApplicationLifetime.StopApplication();
 
         /// <summary>
         /// Connect your client(s) to Discord
         /// </summary>
         /// <returns>Task</returns>
-        protected abstract Task ConnectAsync();
+        protected abstract Task Connect();
 
         /// <summary>
         /// Dynamically load extensions by using <see cref="Configuration"/> and
         /// <see cref="ServiceProvider"/>
         /// </summary>
-        /// <param name="client">Client to add extension method(s) to</param>
+        /// <param name="Client">Client to add extension method(s) to</param>
         /// <returns>Task</returns>
-        protected Task InitializeExtensions(DiscordClient client)
+        protected Task InitializeExtensions(DiscordClient Client)
         {
             var typeMap = this.Configuration.FindImplementedExtensions(this.BotSection);
 
@@ -115,7 +115,7 @@ namespace DisCatSharp.Hosting
                     var flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
                     var ctors = typePair.Value.ImplementationType.GetConstructors(flags);
 
-                    var instance = ctors.Any(x => x.GetParameters().Length == 1 && x.GetParameters().First().ParameterType == typePair.Value.ConfigType)
+                    var instance = ctors.Any(X => X.GetParameters().Length == 1 && X.GetParameters().First().ParameterType == typePair.Value.ConfigType)
                         ? Activator.CreateInstance(typePair.Value.ImplementationType, flags, null,
                                                     new[] { configInstance }, null)
                         : Activator.CreateInstance(typePair.Value.ImplementationType, true);
@@ -136,7 +136,7 @@ namespace DisCatSharp.Hosting
                     }
 
                     // Add an easy reference to our extensions for later use
-                    client.AddExtension((BaseExtension)instance);
+                    Client.AddExtension((BaseExtension)instance);
                 }
                 catch (Exception ex)
                 {
@@ -152,36 +152,36 @@ namespace DisCatSharp.Hosting
         /// <see cref="DiscordShardedClient"/>
         /// </summary>
         /// <returns></returns>
-        protected abstract Task ConfigureAsync();
+        protected abstract Task Configure();
 
         /// <summary>
         /// Configure the extensions for your <see cref="DiscordShardedClient"/> or
         /// <see cref="DiscordClient"/>
         /// </summary>
         /// <returns></returns>
-        protected abstract Task ConfigureExtensionsAsync();
+        protected abstract Task ConfigureExtensions();
 
         /// <summary>
-        /// Runs just prior to <see cref="ConnectAsync"/>.
+        /// Runs just prior to <see cref="Connect"/>.
         /// </summary>
         /// <returns></returns>
-        protected virtual Task PreConnectAsync() => Task.CompletedTask;
+        protected virtual Task PreConnect() => Task.CompletedTask;
 
         /// <summary>
-        /// Runs immediately after <see cref="ConnectAsync"/>.
+        /// Runs immediately after <see cref="Connect"/>.
         /// </summary>
         /// <returns>Task</returns>
-        protected virtual Task PostConnectAsync() => Task.CompletedTask;
+        protected virtual Task PostConnect() => Task.CompletedTask;
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken StoppingToken)
         {
             try
             {
-                await this.ConfigureAsync();
-                await this.PreConnectAsync();
-                await this.ConnectAsync();
-                await this.ConfigureExtensionsAsync();
-                await this.PostConnectAsync();
+                await this.Configure();
+                await this.PreConnect();
+                await this.Connect();
+                await this.ConfigureExtensions();
+                await this.PostConnect();
             }
             catch (Exception ex)
             {
@@ -198,7 +198,7 @@ namespace DisCatSharp.Hosting
             }
 
             // Wait indefinitely -- but use stopping token so we can properly cancel if needed
-            await Task.Delay(-1, stoppingToken);
+            await Task.Delay(-1, StoppingToken);
         }
     }
 }

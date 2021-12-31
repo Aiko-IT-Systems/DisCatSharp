@@ -86,20 +86,20 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Constructs a new <see cref="DiscordSelectComponent"/>.
         /// </summary>
-        /// <param name="customId">The Id to assign to the button. This is sent back when a user presses it.</param>
-        /// <param name="options">Array of options</param>
-        /// <param name="placeholder">Text to show if no option is slected.</param>
-        /// <param name="minOptions">Minmum count of selectable options.</param>
-        /// <param name="maxOptions">Maximum count of selectable options.</param>
-        /// <param name="disabled">Whether this button should be initialized as being disabled. User sees a greyed out button that cannot be interacted with.</param>
-        public DiscordSelectComponent(string customId, string placeholder, IEnumerable<DiscordSelectComponentOption> options, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
+        /// <param name="CustomId">The Id to assign to the button. This is sent back when a user presses it.</param>
+        /// <param name="Options">Array of options</param>
+        /// <param name="Placeholder">Text to show if no option is slected.</param>
+        /// <param name="MinOptions">Minmum count of selectable options.</param>
+        /// <param name="MaxOptions">Maximum count of selectable options.</param>
+        /// <param name="Disabled">Whether this button should be initialized as being disabled. User sees a greyed out button that cannot be interacted with.</param>
+        public DiscordSelectComponent(string CustomId, string Placeholder, IEnumerable<DiscordSelectComponentOption> Options, int MinOptions = 1, int MaxOptions = 1, bool Disabled = false) : this()
         {
-            this.CustomId = customId;
-            this.Disabled = disabled;
-            this.Options = options.ToArray();
-            this.Placeholder = placeholder;
-            this.MinimumSelectedValues = minOptions;
-            this.MaximumSelectedValues = maxOptions;
+            this.CustomId = CustomId;
+            this.Disabled = Disabled;
+            this.Options = Options.ToArray();
+            this.Placeholder = Placeholder;
+            this.MinimumSelectedValues = MinOptions;
+            this.MaximumSelectedValues = MaxOptions;
         }
 
         /// <summary>

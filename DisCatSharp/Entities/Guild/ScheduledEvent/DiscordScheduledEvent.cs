@@ -189,15 +189,15 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Modifies the current scheduled event.
         /// </summary>
-        /// <param name="action">Action to perform on this thread</param>
+        /// <param name="Action">Action to perform on this thread</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task ModifyAsync(Action<ScheduledEventEditModel> action)
+        public async Task ModifyAsync(Action<ScheduledEventEditModel> Action)
         {
             var mdl = new ScheduledEventEditModel();
-            action(mdl);
+            Action(mdl);
 
             var channelId = Optional.FromNoValue<ulong?>();
             if (mdl.Channel.HasValue && (mdl.Channel.Value.Type != ChannelType.Voice || mdl.Channel.Value.Type != ChannelType.Stage) && mdl.Channel.Value != null)
@@ -228,73 +228,73 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> StartAsync(string reason = null)
-            => this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Active, reason) : throw new InvalidOperationException("You can only start scheduled events");
+        public async Task<DiscordScheduledEvent> StartAsync(string Reason = null)
+            => this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Active, Reason) : throw new InvalidOperationException("You can only start scheduled events");
 
         /// <summary>
         /// Cancels the current scheduled event.
         /// </summary>
-        /// <param name="reason">The audit log reason.</param>
+        /// <param name="Reason">The audit log reason.</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> CancelAsync(string reason = null)
-            => this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Canceled, reason) : throw new InvalidOperationException("You can only cancel scheduled events");
+        public async Task<DiscordScheduledEvent> CancelAsync(string Reason = null)
+            => this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Canceled, Reason) : throw new InvalidOperationException("You can only cancel scheduled events");
 
         /// <summary>
         /// Ends the current scheduled event.
         /// </summary>
-        /// <param name="reason">The audit log reason.</param>
+        /// <param name="Reason">The audit log reason.</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordScheduledEvent> EndAsync(string reason = null)
-            => this.Status == ScheduledEventStatus.Active ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Completed, reason) : throw new InvalidOperationException("You can only stop active events");
+        public async Task<DiscordScheduledEvent> EndAsync(string Reason = null)
+            => this.Status == ScheduledEventStatus.Active ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Completed, Reason) : throw new InvalidOperationException("You can only stop active events");
 
         /// <summary>
         /// Gets a list of users RSVP'd to the scheduled event.
         /// </summary>
-        /// <param name="limit">The limit how many users to receive from the event.</param>
-        /// <param name="before">Get results of <see cref="DiscordScheduledEventUser"/> before the given snowflake.</param>
-        /// <param name="after">Get results of <see cref="DiscordScheduledEventUser"/> after the given snowflake.</param>
-        /// <param name="withMember">Wether to include guild member data.</param>
+        /// <param name="Limit">The limit how many users to receive from the event.</param>
+        /// <param name="Before">Get results of <see cref="DiscordScheduledEventUser"/> before the given snowflake.</param>
+        /// <param name="After">Get results of <see cref="DiscordScheduledEventUser"/> after the given snowflake.</param>
+        /// <param name="WithMember">Wether to include guild member data.</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null)
-            => await this.Discord.ApiClient.GetGuildScheduledEventRSPVUsersAsync(this.GuildId, this.Id, limit, before, after, withMember);
+        public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? Limit = null, ulong? Before = null, ulong? After = null, bool? WithMember = null)
+            => await this.Discord.ApiClient.GetGuildScheduledEventRspvUsersAsync(this.GuildId, this.Id, Limit, Before, After, WithMember);
 
         /// <summary>
         /// Deletes a scheduled event.
         /// </summary>
-        /// <param name="reason">The audit log reason.</param>
+        /// <param name="Reason">The audit log reason.</param>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task DeleteAsync(string reason = null)
-            => await this.Discord.ApiClient.DeleteGuildScheduledEventAsync(this.GuildId, this.Id, reason);
+        public async Task DeleteAsync(string Reason = null)
+            => await this.Discord.ApiClient.DeleteGuildScheduledEvent(this.GuildId, this.Id, Reason);
 
         #endregion
 
         /// <summary>
         /// Checks whether this <see cref="DiscordScheduledEvent"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="DiscordScheduledEvent"/>.</returns>
-        public override bool Equals(object obj)
-            => this.Equals(obj as DiscordScheduledEvent);
+        public override bool Equals(object Obj)
+            => this.Equals(Obj as DiscordScheduledEvent);
 
         /// <summary>
         /// Checks whether this <see cref="DiscordScheduledEvent"/> is equal to another <see cref="DiscordScheduledEvent"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordScheduledEvent"/> to compare to.</param>
+        /// <param name="E"><see cref="DiscordScheduledEvent"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordScheduledEvent"/> is equal to this <see cref="DiscordScheduledEvent"/>.</returns>
-        public bool Equals(DiscordScheduledEvent e)
-            => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+        public bool Equals(DiscordScheduledEvent E)
+            => E is not null && (ReferenceEquals(this, E) || this.Id == E.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordScheduledEvent"/>.
@@ -305,24 +305,24 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordScheduledEvent"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First event to compare.</param>
-        /// <param name="e2">Second ecent to compare.</param>
+        /// <param name="E1">First event to compare.</param>
+        /// <param name="E2">Second ecent to compare.</param>
         /// <returns>Whether the two events are equal.</returns>
-        public static bool operator ==(DiscordScheduledEvent e1, DiscordScheduledEvent e2)
+        public static bool operator ==(DiscordScheduledEvent E1, DiscordScheduledEvent E2)
         {
-            var o1 = e1 as object;
-            var o2 = e2 as object;
+            var o1 = E1 as object;
+            var o2 = E2 as object;
 
-            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || E1.Id == E2.Id);
         }
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordScheduledEvent"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First event to compare.</param>
-        /// <param name="e2">Second event to compare.</param>
+        /// <param name="E1">First event to compare.</param>
+        /// <param name="E2">Second event to compare.</param>
         /// <returns>Whether the two events are not equal.</returns>
-        public static bool operator !=(DiscordScheduledEvent e1, DiscordScheduledEvent e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordScheduledEvent E1, DiscordScheduledEvent E2)
+            => !(E1 == E2);
     }
 }

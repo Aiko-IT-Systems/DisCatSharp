@@ -35,22 +35,22 @@ namespace DisCatSharp.Common
         /// Safely tries to get the first match out of a list.
         /// </summary>
         /// <typeparam name="TSource">Value type of list.</typeparam>
-        /// <param name="list">The list to use.</param>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="value">The value to get if succeeded</param>
+        /// <param name="List">The list to use.</param>
+        /// <param name="Predicate">The predicate.</param>
+        /// <param name="Value">The value to get if succeeded</param>
         /// <returns>Whether a value was found.</returns>
 #nullable enable
-        public static bool GetFirstValueWhere<TSource>(this List<TSource?>? list, Func<TSource?, bool> predicate, out TSource? value)
+        public static bool GetFirstValueWhere<TSource>(this List<TSource?>? List, Func<TSource?, bool> Predicate, out TSource? Value)
         {
-            if (list == null || !list.Any())
+            if (List == null || !List.Any())
             {
-                value = default;
+                Value = default;
                 return false;
             }
 
-            value = list.Where(predicate).FirstOrDefault();
+            Value = List.Where(Predicate).FirstOrDefault();
 
-            return value is not null;
+            return Value is not null;
         }
 #nullable disable
 
@@ -59,20 +59,20 @@ namespace DisCatSharp.Common
         /// </summary>
         /// <typeparam name="TKey">Key type of dictionary.</typeparam>
         /// <typeparam name="TValue">Value type of dictionary.</typeparam>
-        /// <param name="dict">The dictionary to use.</param>
-        /// <param name="key">The key to search for.</param>
-        /// <param name="value">The value to get if succeeded.</param>
+        /// <param name="Dict">The dictionary to use.</param>
+        /// <param name="Key">The key to search for.</param>
+        /// <param name="Value">The value to get if succeeded.</param>
         /// <returns>Whether a value was found through the key.</returns>
 #nullable enable
-        public static bool GetFirstValueByKey<TKey, TValue>(this Dictionary<TKey?, TValue?>? dict, TKey? key, out TValue? value)
+        public static bool GetFirstValueByKey<TKey, TValue>(this Dictionary<TKey?, TValue?>? Dict, TKey? Key, out TValue? Value)
         {
-            if (dict == null)
+            if (Dict == null)
             {
-                value = default;
+                Value = default;
                 return false;
             }
 
-            return dict.TryGetValue(key, out value);
+            return Dict.TryGetValue(Key, out Value);
         }
 #nullable disable
     }

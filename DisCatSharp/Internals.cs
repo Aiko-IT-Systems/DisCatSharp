@@ -46,8 +46,8 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the utf8 encoding
         /// </summary>
-        internal static UTF8Encoding UTF8
-            => Utilities.UTF8;
+        internal static UTF8Encoding Utf8
+            => Utilities.Utf8;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Internals"/> class.
@@ -57,37 +57,37 @@ namespace DisCatSharp
         /// <summary>
         /// Whether the <see cref="DiscordChannel"/> is joinable via voice.
         /// </summary>
-        /// <param name="channel">The channel.</param>
-        internal static bool IsVoiceJoinable(this DiscordChannel channel) => channel.Type == ChannelType.Voice || channel.Type == ChannelType.Stage;
+        /// <param name="Channel">The channel.</param>
+        internal static bool IsVoiceJoinable(this DiscordChannel Channel) => Channel.Type == ChannelType.Voice || Channel.Type == ChannelType.Stage;
 
         /// <summary>
         /// Whether the <see cref="DiscordChannel"/> can have threads.
         /// </summary>
-        /// <param name="channel">The channel.</param>
-        internal static bool IsThreadHolder(this DiscordChannel channel) => channel.Type == ChannelType.Text || channel.Type == ChannelType.News || channel.Type == ChannelType.GuildForum;
+        /// <param name="Channel">The channel.</param>
+        internal static bool IsThreadHolder(this DiscordChannel Channel) => Channel.Type == ChannelType.Text || Channel.Type == ChannelType.News || Channel.Type == ChannelType.GuildForum;
 
         /// <summary>
         /// Whether the <see cref="DiscordChannel"/> is related to threads.
         /// </summary>
-        /// <param name="channel">The channel.</param>
-        internal static bool IsThread(this DiscordChannel channel) => channel.Type == ChannelType.PublicThread || channel.Type == ChannelType.PrivateThread || channel.Type == ChannelType.NewsThread;
+        /// <param name="Channel">The channel.</param>
+        internal static bool IsThread(this DiscordChannel Channel) => Channel.Type == ChannelType.PublicThread || Channel.Type == ChannelType.PrivateThread || Channel.Type == ChannelType.NewsThread;
 
         /// <summary>
         /// Whether users can write the <see cref="DiscordChannel"/>.
         /// </summary>
-        /// <param name="channel">The channel.</param>
-        internal static bool IsWriteable(this DiscordChannel channel) => channel.Type == ChannelType.PublicThread || channel.Type == ChannelType.PrivateThread || channel.Type == ChannelType.NewsThread || channel.Type == ChannelType.Text || channel.Type == ChannelType.News || channel.Type == ChannelType.Group || channel.Type == ChannelType.Private || channel.Type == ChannelType.Voice;
+        /// <param name="Channel">The channel.</param>
+        internal static bool IsWriteable(this DiscordChannel Channel) => Channel.Type == ChannelType.PublicThread || Channel.Type == ChannelType.PrivateThread || Channel.Type == ChannelType.NewsThread || Channel.Type == ChannelType.Text || Channel.Type == ChannelType.News || Channel.Type == ChannelType.Group || Channel.Type == ChannelType.Private || Channel.Type == ChannelType.Voice;
 
         /// <summary>
         /// Whether the <see cref="DiscordChannel"/> is moveable in a parent.
         /// </summary>
-        /// <param name="channel">The channel.</param>
-        internal static bool IsMovableInParent(this DiscordChannel channel) => channel.Type == ChannelType.Voice || channel.Type == ChannelType.Stage || channel.Type == ChannelType.Text || channel.Type == ChannelType.GuildForum || channel.Type == ChannelType.News || channel.Type == ChannelType.Store;
+        /// <param name="Channel">The channel.</param>
+        internal static bool IsMovableInParent(this DiscordChannel Channel) => Channel.Type == ChannelType.Voice || Channel.Type == ChannelType.Stage || Channel.Type == ChannelType.Text || Channel.Type == ChannelType.GuildForum || Channel.Type == ChannelType.News || Channel.Type == ChannelType.Store;
 
         /// <summary>
         /// Whether the <see cref="DiscordChannel"/> is moveable.
         /// </summary>
-        /// <param name="channel">The channel.</param>
-        internal static bool IsMovable(this DiscordChannel channel) => channel.Type == ChannelType.Voice || channel.Type == ChannelType.Stage || channel.Type == ChannelType.Text || channel.Type == ChannelType.Category || channel.Type == ChannelType.GuildForum || channel.Type == ChannelType.News || channel.Type == ChannelType.Store;
+        /// <param name="Channel">The channel.</param>
+        internal static bool IsMovable(this DiscordChannel Channel) => Channel.Type == ChannelType.Voice || Channel.Type == ChannelType.Stage || Channel.Type == ChannelType.Text || Channel.Type == ChannelType.Category || Channel.Type == ChannelType.GuildForum || Channel.Type == ChannelType.News || Channel.Type == ChannelType.Store;
     }
 }

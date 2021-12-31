@@ -49,6 +49,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="GuildEmojisUpdateEventArgs"/> class.
         /// </summary>
-        internal GuildEmojisUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+        internal GuildEmojisUpdateEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

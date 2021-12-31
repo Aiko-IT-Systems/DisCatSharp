@@ -42,14 +42,14 @@ namespace DisCatSharp.Common.Utilities
         /// <summary>
         /// Prevents a default instance of the <see cref="AsyncEventTimeoutException"/> class from being created.
         /// </summary>
-        /// <param name="asyncEvent">The async event.</param>
-        /// <param name="eventHandler">The event handler.</param>
-        /// <param name="message">The message.</param>
-        private protected AsyncEventTimeoutException(AsyncEvent asyncEvent, AsyncEventHandler<object, AsyncEventArgs> eventHandler, string message)
-            : base(message)
+        /// <param name="AsyncEvent">The async event.</param>
+        /// <param name="EventHandler">The event handler.</param>
+        /// <param name="Message">The message.</param>
+        private protected AsyncEventTimeoutException(AsyncEvent AsyncEvent, AsyncEventHandler<object, AsyncEventArgs> EventHandler, string Message)
+            : base(Message)
         {
-            this.Event = asyncEvent;
-            this.Handler = eventHandler;
+            this.Event = AsyncEvent;
+            this.Handler = EventHandler;
         }
     }
 
@@ -75,10 +75,10 @@ namespace DisCatSharp.Common.Utilities
         /// <summary>
         /// Creates a new timeout exception for specified event and handler.
         /// </summary>
-        /// <param name="asyncEvent">Event the execution of which timed out.</param>
-        /// <param name="eventHandler">Handler which timed out.</param>
-        public AsyncEventTimeoutException(AsyncEvent<TSender, TArgs> asyncEvent, AsyncEventHandler<TSender, TArgs> eventHandler)
-            : base(asyncEvent, eventHandler as AsyncEventHandler<object, AsyncEventArgs>, "An event handler caused the invocation of an asynchronous event to time out.")
+        /// <param name="AsyncEvent">Event the execution of which timed out.</param>
+        /// <param name="EventHandler">Handler which timed out.</param>
+        public AsyncEventTimeoutException(AsyncEvent<TSender, TArgs> AsyncEvent, AsyncEventHandler<TSender, TArgs> EventHandler)
+            : base(AsyncEvent, EventHandler as AsyncEventHandler<object, AsyncEventArgs>, "An event handler caused the invocation of an asynchronous event to time out.")
         { }
     }
 }

@@ -34,21 +34,21 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// Fills the buffer with 0.
         /// </summary>
-        /// <param name="buff">The buffer.</param>
+        /// <param name="Buff">The buffer.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ZeroFill(Span<byte> buff)
+        public static void ZeroFill(Span<byte> Buff)
         {
             var zero = 0;
             var i = 0;
-            for (; i < buff.Length / 4; i++)
-                MemoryMarshal.Write(buff, ref zero);
+            for (; i < Buff.Length / 4; i++)
+                MemoryMarshal.Write(Buff, ref zero);
 
-            var remainder = buff.Length % 4;
+            var remainder = Buff.Length % 4;
             if (remainder == 0)
                 return;
 
-            for (; i < buff.Length; i++)
-                buff[i] = 0;
+            for (; i < Buff.Length; i++)
+                Buff[i] = 0;
         }
     }
 }

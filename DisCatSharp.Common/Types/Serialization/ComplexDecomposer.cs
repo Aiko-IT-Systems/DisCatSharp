@@ -35,69 +35,69 @@ namespace DisCatSharp.Common.Serialization
         /// <summary>
         /// Gets the t complex.
         /// </summary>
-        private static Type TComplex { get; } = typeof(Complex);
+        private static Type Complex { get; } = typeof(Complex);
         /// <summary>
         /// Gets the t double array.
         /// </summary>
-        private static Type TDoubleArray { get; } = typeof(double[]);
+        private static Type DoubleArray { get; } = typeof(double[]);
         /// <summary>
         /// Gets the t double enumerable.
         /// </summary>
-        private static Type TDoubleEnumerable { get; } = typeof(IEnumerable<double>);
+        private static Type DoubleEnumerable { get; } = typeof(IEnumerable<double>);
         /// <summary>
         /// Gets the t object array.
         /// </summary>
-        private static Type TObjectArray { get; } = typeof(object[]);
+        private static Type ObjectArray { get; } = typeof(object[]);
         /// <summary>
         /// Gets the t object enumerable.
         /// </summary>
-        private static Type TObjectEnumerable { get; } = typeof(IEnumerable<object>);
+        private static Type ObjectEnumerable { get; } = typeof(IEnumerable<object>);
 
         /// <inheritdoc />
-        public bool CanDecompose(Type t)
-            => t == TComplex;
+        public bool CanDecompose(Type T)
+            => T == Complex;
 
         /// <inheritdoc />
-        public bool CanRecompose(Type t)
-            => t == TDoubleArray
-            || t == TObjectArray
-            || TDoubleEnumerable.IsAssignableFrom(t)
-            || TObjectEnumerable.IsAssignableFrom(t);
+        public bool CanRecompose(Type T)
+            => T == DoubleArray
+            || T == ObjectArray
+            || DoubleEnumerable.IsAssignableFrom(T)
+            || ObjectEnumerable.IsAssignableFrom(T);
 
         /// <inheritdoc />
-        public bool TryDecompose(object obj, Type tobj, out object decomposed, out Type tdecomposed)
+        public bool TryDecompose(object Obj, Type Tobj, out object Decomposed, out Type Tdecomposed)
         {
-            decomposed = null;
-            tdecomposed = TDoubleArray;
+            Decomposed = null;
+            Tdecomposed = DoubleArray;
 
-            if (tobj != TComplex || obj is not Complex c)
+            if (Tobj != Complex || Obj is not Complex c)
                 return false;
 
-            decomposed = new[] { c.Real, c.Imaginary };
+            Decomposed = new[] { c.Real, c.Imaginary };
             return true;
         }
 
         /// <inheritdoc />
-        public bool TryRecompose(object obj, Type tobj, Type trecomposed, out object recomposed)
+        public bool TryRecompose(object Obj, Type Tobj, Type Trecomposed, out object Recomposed)
         {
-            recomposed = null;
+            Recomposed = null;
 
-            if (trecomposed != TComplex)
+            if (Trecomposed != Complex)
                 return false;
 
             // ie<double>
-            if (TDoubleEnumerable.IsAssignableFrom(tobj) && obj is IEnumerable<double> ied)
+            if (DoubleEnumerable.IsAssignableFrom(Tobj) && Obj is IEnumerable<double> ied)
             {
                 if (ied.Count() < 2)
                     return false;
 
                 var (real, imag) = ied.FirstTwoOrDefault();
-                recomposed = new Complex(real, imag);
+                Recomposed = new Complex(real, imag);
                 return true;
             }
 
             // ie<obj>
-            if (TObjectEnumerable.IsAssignableFrom(tobj) && obj is IEnumerable<object> ieo)
+            if (ObjectEnumerable.IsAssignableFrom(Tobj) && Obj is IEnumerable<object> ieo)
             {
                 if (ieo.Count() < 2)
                     return false;
@@ -106,7 +106,7 @@ namespace DisCatSharp.Common.Serialization
                 if (real is not double dreal || imag is not double dimag)
                     return false;
 
-                recomposed = new Complex(dreal, dimag);
+                Recomposed = new Complex(dreal, dimag);
                 return true;
             }
 

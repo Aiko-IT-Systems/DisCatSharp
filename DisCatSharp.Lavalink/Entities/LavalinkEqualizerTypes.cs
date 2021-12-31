@@ -46,18 +46,18 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Creates a new band adjustment with specified parameters.
         /// </summary>
-        /// <param name="bandId">Which band to adjust. Must be in 0-14 range.</param>
-        /// <param name="gain">By how much to adjust the band. Must be greater than or equal to -0.25 (muted), and less than or equal to +1.0. +0.25 means the band is doubled.</param>
-        public LavalinkBandAdjustment(int bandId, float gain)
+        /// <param name="BandId">Which band to adjust. Must be in 0-14 range.</param>
+        /// <param name="Gain">By how much to adjust the band. Must be greater than or equal to -0.25 (muted), and less than or equal to +1.0. +0.25 means the band is doubled.</param>
+        public LavalinkBandAdjustment(int BandId, float Gain)
         {
-            if (bandId < 0 || bandId > 14)
-                throw new ArgumentOutOfRangeException(nameof(bandId), "Band ID cannot be lower than 0 or greater than 14.");
+            if (BandId < 0 || BandId > 14)
+                throw new ArgumentOutOfRangeException(nameof(BandId), "Band ID cannot be lower than 0 or greater than 14.");
 
-            if (gain < -0.25 || gain > 1.0)
-                throw new ArgumentOutOfRangeException(nameof(gain), "Gain cannot be lower than -0.25 or greater than 1.0.");
+            if (Gain < -0.25 || Gain > 1.0)
+                throw new ArgumentOutOfRangeException(nameof(Gain), "Gain cannot be lower than -0.25 or greater than 1.0.");
 
-            this.BandId = bandId;
-            this.Gain = gain;
+            this.BandId = BandId;
+            this.Gain = Gain;
         }
     }
 
@@ -69,16 +69,16 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Whether two band adjustments are equal.
         /// </summary>
-        /// <param name="x">The first band adjustments.</param>
-        /// <param name="y">The seconed band adjustments.</param>
-        public bool Equals(LavalinkBandAdjustment x, LavalinkBandAdjustment y)
-            => x.BandId == y.BandId;
+        /// <param name="X">The first band adjustments.</param>
+        /// <param name="Y">The seconed band adjustments.</param>
+        public bool Equals(LavalinkBandAdjustment X, LavalinkBandAdjustment Y)
+            => X.BandId == Y.BandId;
 
         /// <summary>
         /// Gets the hash code.
         /// </summary>
-        /// <param name="obj">The band adjustments.</param>
-        public int GetHashCode(LavalinkBandAdjustment obj)
-            => obj.BandId;
+        /// <param name="Obj">The band adjustments.</param>
+        public int GetHashCode(LavalinkBandAdjustment Obj)
+            => Obj.BandId;
     }
 }

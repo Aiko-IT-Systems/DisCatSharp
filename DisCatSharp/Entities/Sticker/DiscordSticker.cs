@@ -92,7 +92,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public IEnumerable<string> Tags
-            => this._internalTags != null ? this._internalTags.Split(',') : Array.Empty<string>();
+            => this.InternalTags != null ? this.InternalTags.Split(',') : Array.Empty<string>();
 
         /// <summary>
         /// Gets the asset hash of the sticker.
@@ -117,13 +117,13 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-        internal string _internalTags { get; set; }
+        internal string InternalTags { get; set; }
 
         /// <summary>
         /// Gets the url of the sticker.
         /// </summary>
         [JsonIgnore]
-        public string Url => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.STICKERS}/{this.Id}.{(this.FormatType == StickerFormat.LOTTIE ? "json" : "png")}";
+        public string Url => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Stickers}/{this.Id}.{(this.FormatType == StickerFormat.Lottie ? "json" : "png")}";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordSticker"/> class.
@@ -133,9 +133,9 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Whether to stickers are equal.
         /// </summary>
-        /// <param name="other">DiscordSticker</param>
+        /// <param name="Other">DiscordSticker</param>
         /// <returns></returns>
-        public bool Equals(DiscordSticker other) => this.Id == other.Id;
+        public bool Equals(DiscordSticker Other) => this.Id == Other.Id;
 
         /// <summary>
         /// Gets the sticker in readable format.
@@ -145,38 +145,38 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Modifies the sticker
         /// </summary>
-        /// <param name="name">The name of the sticker</param>
-        /// <param name="description">The description of the sticker</param>
-        /// <param name="tags">The name of a unicode emoji representing the sticker's expression</param>
-        /// <param name="reason">Audit log reason</param>
+        /// <param name="Name">The name of the sticker</param>
+        /// <param name="Description">The description of the sticker</param>
+        /// <param name="Tags">The name of a unicode emoji representing the sticker's expression</param>
+        /// <param name="Reason">Audit log reason</param>
         /// <returns>A sticker object</returns>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the sticker could not be found.</exception>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         /// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
-        public Task<DiscordSticker> ModifyAsync(Optional<string> name, Optional<string> description, Optional<string> tags, string reason = null)
+        public Task<DiscordSticker> Modify(Optional<string> Name, Optional<string> Description, Optional<string> Tags, string Reason = null)
         {
             return !this.GuildId.HasValue
                 ? throw new ArgumentException("This sticker does not belong to a guild.")
-                : name.HasValue && (name.Value.Length < 2 || name.Value.Length > 30)
+                : Name.HasValue && (Name.Value.Length < 2 || Name.Value.Length > 30)
                 ? throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.")
-                : description.HasValue && (description.Value.Length < 1 || description.Value.Length > 100)
+                : Description.HasValue && (Description.Value.Length < 1 || Description.Value.Length > 100)
                 ? throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.")
-                : tags.HasValue && !DiscordEmoji.TryFromUnicode(this.Discord, tags.Value, out var emoji)
+                : Tags.HasValue && !DiscordEmoji.TryFromUnicode(this.Discord, Tags.Value, out var emoji)
                 ? throw new ArgumentException("Sticker tags needs to be a unicode emoji.")
-                : this.Discord.ApiClient.ModifyGuildStickerAsync(this.GuildId.Value, this.Id, name, description, tags, reason);
+                : this.Discord.ApiClient.ModifyGuildStickerAsync(this.GuildId.Value, this.Id, Name, Description, Tags, Reason);
         }
 
         /// <summary>
         /// Deletes the sticker
         /// </summary>
-        /// <param name="reason">Audit log reason</param>
+        /// <param name="Reason">Audit log reason</param>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the sticker could not be found.</exception>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         /// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
-        public Task DeleteAsync(string reason = null)
-            => this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildStickerAsync(this.GuildId.Value, this.Id, reason) : throw new ArgumentException("The requested sticker is no guild sticker.");
+        public Task Delete(string Reason = null)
+            => this.GuildId.HasValue ? this.Discord.ApiClient.DeleteGuildStickerAsync(this.GuildId.Value, this.Id, Reason) : throw new ArgumentException("The requested sticker is no guild sticker.");
     }
 
     /// <summary>
@@ -202,14 +202,14 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sticker is a png
         /// </summary>
-        PNG = 1,
+        Png = 1,
         /// <summary>
         /// Sticker is a animated png
         /// </summary>
-        APNG = 2,
+        Apng = 2,
         /// <summary>
         /// Sticker is lottie
         /// </summary>
-        LOTTIE = 3
+        Lottie = 3
     }
 }

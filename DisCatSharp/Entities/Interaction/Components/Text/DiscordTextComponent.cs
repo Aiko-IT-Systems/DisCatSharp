@@ -111,42 +111,42 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Constucts a new text component based on another text component.
         /// </summary>
-        /// <param name="other">The button to copy.</param>
-        public DiscordTextComponent(DiscordTextComponent other) : this()
+        /// <param name="Other">The button to copy.</param>
+        public DiscordTextComponent(DiscordTextComponent Other) : this()
         {
-            this.CustomId = other.CustomId;
-            this.Style = other.Style;
-            this.Label = other.Label;
+            this.CustomId = Other.CustomId;
+            this.Style = Other.Style;
+            this.Label = Other.Label;
             //this.Disabled = other.Disabled;
-            this.MinLength = other.MinLength;
-            this.MaxLength = other.MaxLength;
-            this.Placeholder = other.Placeholder;
-            this.Required = other.Required;
-            this.Value = other.Value;
+            this.MinLength = Other.MinLength;
+            this.MaxLength = Other.MaxLength;
+            this.Placeholder = Other.Placeholder;
+            this.Required = Other.Required;
+            this.Value = Other.Value;
         }
 
         /// <summary>
         /// Constructs a new text component field with the specified options.
         /// </summary>
-        /// <param name="style">The style of the text component.</param>
-        /// <param name="customId">The Id to assign to the text component. This is sent back when a user presses it.</param>
-        /// <param name="label">The text to display before the text component, up to 80 characters.</param>
-        /// <param name="placeholder">The placeholder for the text input.</param>
-        /// <param name="minLength">The minimal length of text input.</param>
-        /// <param name="maxLength">The maximal length of text input.</param>
-        /// <param name="required">Whether this text component should be required.</param>
+        /// <param name="Style">The style of the text component.</param>
+        /// <param name="CustomId">The Id to assign to the text component. This is sent back when a user presses it.</param>
+        /// <param name="Label">The text to display before the text component, up to 80 characters.</param>
+        /// <param name="Placeholder">The placeholder for the text input.</param>
+        /// <param name="MinLength">The minimal length of text input.</param>
+        /// <param name="MaxLength">The maximal length of text input.</param>
+        /// <param name="Required">Whether this text component should be required.</param>
         /// <param name="default_value">Pre-filled value for text field.</param>
-        public DiscordTextComponent(TextComponentStyle style, string customId, string label, string placeholder = null, int? minLength = null, int? maxLength = null, bool required = true, string default_value = null)
+        public DiscordTextComponent(TextComponentStyle Style, string CustomId, string Label, string Placeholder = null, int? MinLength = null, int? MaxLength = null, bool Required = true, string DefaultValue = null)
         {
-            this.Style = style;
-            this.Label = label;
-            this.CustomId = customId;
-            this.MinLength = minLength;
-            this.MaxLength = maxLength;
-            this.Placeholder = placeholder;
+            this.Style = Style;
+            this.Label = Label;
+            this.CustomId = CustomId;
+            this.MinLength = MinLength;
+            this.MaxLength = MaxLength;
+            this.Placeholder = Placeholder;
             //this.Disabled = disabled;
-            this.Required = required;
-            this.Value = default_value;
+            this.Required = Required;
+            this.Value = DefaultValue;
             this.Type = ComponentType.InputText;
         }
     }

@@ -38,13 +38,13 @@ namespace DisCatSharp.Common.Serialization
         /// <summary>
         /// Specifies a decomposer for given type or property.
         /// </summary>
-        /// <param name="type">Type of decomposer to use.</param>
-        public DecomposerAttribute(Type type)
+        /// <param name="Type">Type of decomposer to use.</param>
+        public DecomposerAttribute(Type Type)
         {
-            if (!typeof(IDecomposer).IsAssignableFrom(type) || !type.IsClass || type.IsAbstract) // abstract covers static - static = abstract + sealed
-                throw new ArgumentException("Invalid type specified. Must be a non-abstract class which implements DisCatSharp.Common.Serialization.IDecomposer interface.", nameof(type));
+            if (!typeof(IDecomposer).IsAssignableFrom(Type) || !Type.IsClass || Type.IsAbstract) // abstract covers static - static = abstract + sealed
+                throw new ArgumentException("Invalid type specified. Must be a non-abstract class which implements DisCatSharp.Common.Serialization.IDecomposer interface.", nameof(Type));
 
-            this.DecomposerType = type;
+            this.DecomposerType = Type;
         }
     }
 }

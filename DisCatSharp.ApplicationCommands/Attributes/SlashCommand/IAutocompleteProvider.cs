@@ -34,7 +34,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
         /// <summary>
         /// Provider the autocompletion.
         /// </summary>
-        /// <param name="context">The context.</param>
-        Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context);
+        /// <param name="Context">The context.</param>
+        Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext Context);
     }
 }

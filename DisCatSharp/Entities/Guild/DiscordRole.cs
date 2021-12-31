@@ -100,7 +100,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public string IconUrl
-            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ROLE_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=64" : null;
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.RoleIcons}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=64" : null;
 
         /// <summary>
         /// Gets the role unicode_emoji.
@@ -115,7 +115,7 @@ namespace DisCatSharp.Entities
             => this._unicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this._unicodeEmojiString}:", false) : null;
 
         [JsonIgnore]
-        internal ulong _guild_id = 0;
+        internal ulong _guildId = 0;
 
         /// <summary>
         /// Gets a mention string for this role. If the role is mentionable, this string will mention all the users that belong to this role.
@@ -127,62 +127,62 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Modifies this role's position.
         /// </summary>
-        /// <param name="position">New position</param>
-        /// <param name="reason">Reason why we moved it</param>
+        /// <param name="Position">New position</param>
+        /// <param name="Reason">Reason why we moved it</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the role does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task ModifyPositionAsync(int position, string reason = null)
+        public Task ModifyPosition(int Position, string Reason = null)
         {
-            var roles = this.Discord.Guilds[this._guild_id].Roles.Values.OrderByDescending(xr => xr.Position).ToArray();
+            var roles = this.Discord.Guilds[this._guildId].Roles.Values.OrderByDescending(Xr => Xr.Position).ToArray();
             var pmds = new RestGuildRoleReorderPayload[roles.Length];
             for (var i = 0; i < roles.Length; i++)
             {
                 pmds[i] = new RestGuildRoleReorderPayload { RoleId = roles[i].Id };
 
-                pmds[i].Position = roles[i].Id == this.Id ? position : roles[i].Position <= position ? roles[i].Position - 1 : roles[i].Position;
+                pmds[i].Position = roles[i].Id == this.Id ? Position : roles[i].Position <= Position ? roles[i].Position - 1 : roles[i].Position;
             }
 
-            return this.Discord.ApiClient.ModifyGuildRolePositionAsync(this._guild_id, pmds, reason);
+            return this.Discord.ApiClient.ModifyGuildRolePosition(this._guildId, pmds, Reason);
         }
 
         /// <summary>
         /// Updates this role.
         /// </summary>
-        /// <param name="name">New role name</param>
-        /// <param name="permissions">New role permissions</param>
-        /// <param name="color">New role color</param>
-        /// <param name="hoist">New role hoist</param>
-        /// <param name="mentionable">Whether this role is mentionable</param>
-        /// <param name="reason">Reason why we made this change</param>
+        /// <param name="Name">New role name</param>
+        /// <param name="Permissions">New role permissions</param>
+        /// <param name="Color">New role color</param>
+        /// <param name="Hoist">New role hoist</param>
+        /// <param name="Mentionable">Whether this role is mentionable</param>
+        /// <param name="Reason">Reason why we made this change</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the role does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task ModifyAsync(string name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string reason = null)
-            => this.Discord.ApiClient.ModifyGuildRoleAsync(this._guild_id, this.Id, name, permissions, color?.Value, hoist, mentionable, null, null, reason);
+        public Task Modify(string Name = null, Permissions? Permissions = null, DiscordColor? Color = null, bool? Hoist = null, bool? Mentionable = null, string Reason = null)
+            => this.Discord.ApiClient.ModifyGuildRoleAsync(this._guildId, this.Id, Name, Permissions, Color?.Value, Hoist, Mentionable, null, null, Reason);
 
         /// <summary>
         /// Updates this role.
         /// </summary>
-        /// <param name="action">The action.</param>
+        /// <param name="Action">The action.</param>
         /// <exception cref = "Exceptions.UnauthorizedException" > Thrown when the client does not have the<see cref="Permissions.ManageRoles"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the role does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task ModifyAsync(Action<RoleEditModel> action)
+        public Task Modify(Action<RoleEditModel> Action)
         {
             var mdl = new RoleEditModel();
-            action(mdl);
+            Action(mdl);
 
             var iconb64 = Optional.FromNoValue<string>();
             var emoji = Optional.FromNoValue<string>();
-            var can_continue = true;
+            var canContinue = true;
             if (mdl.Icon.HasValue || mdl.UnicodeEmoji.HasValue)
-                can_continue = this.Discord.Guilds[this._guild_id].Features.CanSetRoleIcons;
+                canContinue = this.Discord.Guilds[this._guildId].Features.CanSetRoleIcons;
 
             if (mdl.Icon.HasValue && mdl.Icon.Value != null)
                 using (var imgtool = new ImageTool(mdl.Icon.Value))
@@ -195,19 +195,19 @@ namespace DisCatSharp.Entities
             else if (mdl.UnicodeEmoji.HasValue)
                 emoji = null;
 
-            return can_continue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this._guild_id, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
+            return canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this._guildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
         }
 
         /// <summary>
         /// Deletes this role.
         /// </summary>
-        /// <param name="reason">Reason as to why this role has been deleted.</param>
+        /// <param name="Reason">Reason as to why this role has been deleted.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the role does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task DeleteAsync(string reason = null) => this.Discord.ApiClient.DeleteRoleAsync(this._guild_id, this.Id, reason);
+        public Task Delete(string Reason = null) => this.Discord.ApiClient.DeleteRole(this._guildId, this.Id, Reason);
         #endregion
 
         /// <summary>
@@ -218,10 +218,10 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Checks whether this role has specific permissions.
         /// </summary>
-        /// <param name="permission">Permissions to check for.</param>
+        /// <param name="Permission">Permissions to check for.</param>
         /// <returns>Whether the permissions are allowed or not.</returns>
-        public PermissionLevel CheckPermission(Permissions permission)
-            => (this.Permissions & permission) != 0 ? PermissionLevel.Allowed : PermissionLevel.Unset;
+        public PermissionLevel CheckPermission(Permissions Permission)
+            => (this.Permissions & Permission) != 0 ? PermissionLevel.Allowed : PermissionLevel.Unset;
 
         /// <summary>
         /// Returns a string representation of this role.
@@ -232,20 +232,20 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Checks whether this <see cref="DiscordRole"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="DiscordRole"/>.</returns>
-        public override bool Equals(object obj) => this.Equals(obj as DiscordRole);
+        public override bool Equals(object Obj) => this.Equals(Obj as DiscordRole);
 
         /// <summary>
         /// Checks whether this <see cref="DiscordRole"/> is equal to another <see cref="DiscordRole"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordRole"/> to compare to.</param>
+        /// <param name="E"><see cref="DiscordRole"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordRole"/> is equal to this <see cref="DiscordRole"/>.</returns>
-        public bool Equals(DiscordRole e)
-            => e switch
+        public bool Equals(DiscordRole E)
+            => E switch
             {
                 null => false,
-                _ => ReferenceEquals(this, e) || this.Id == e.Id
+                _ => ReferenceEquals(this, E) || this.Id == E.Id
             };
 
         /// <summary>
@@ -257,20 +257,20 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordRole"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First role to compare.</param>
-        /// <param name="e2">Second role to compare.</param>
+        /// <param name="E1">First role to compare.</param>
+        /// <param name="E2">Second role to compare.</param>
         /// <returns>Whether the two roles are equal.</returns>
-        public static bool operator ==(DiscordRole e1, DiscordRole e2)
-            => e1 is null == e2 is null
-            && ((e1 is null && e2 is null) || e1.Id == e2.Id);
+        public static bool operator ==(DiscordRole E1, DiscordRole E2)
+            => E1 is null == E2 is null
+            && ((E1 is null && E2 is null) || E1.Id == E2.Id);
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordRole"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First role to compare.</param>
-        /// <param name="e2">Second role to compare.</param>
+        /// <param name="E1">First role to compare.</param>
+        /// <param name="E2">Second role to compare.</param>
         /// <returns>Whether the two roles are not equal.</returns>
-        public static bool operator !=(DiscordRole e1, DiscordRole e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordRole E1, DiscordRole E2)
+            => !(E1 == E2);
     }
 }

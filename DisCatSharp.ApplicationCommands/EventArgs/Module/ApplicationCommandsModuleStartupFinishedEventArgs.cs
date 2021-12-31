@@ -50,8 +50,8 @@ namespace DisCatSharp.ApplicationCommands.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCommandsModuleStartupFinishedEventArgs"/> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        internal ApplicationCommandsModuleStartupFinishedEventArgs(IServiceProvider provider) : base(provider)
+        /// <param name="Provider">The provider.</param>
+        internal ApplicationCommandsModuleStartupFinishedEventArgs(IServiceProvider Provider) : base(Provider)
         { }
     }
 }

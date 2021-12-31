@@ -47,30 +47,30 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Creates a new Pagination request
         /// </summary>
-        /// <param name="message">Message to paginate</param>
-        /// <param name="user">User to allow control for</param>
-        /// <param name="behaviour">Behaviour during pagination</param>
-        /// <param name="deletion">Behavior on pagination end</param>
-        /// <param name="emojis">Emojis for this pagination object</param>
-        /// <param name="timeout">Timeout time</param>
-        /// <param name="pages">Pagination pages</param>
-        internal PaginationRequest(DiscordMessage message, DiscordUser user, PaginationBehaviour behaviour, PaginationDeletion deletion,
-            PaginationEmojis emojis, TimeSpan timeout, params Page[] pages)
+        /// <param name="Message">Message to paginate</param>
+        /// <param name="User">User to allow control for</param>
+        /// <param name="Behaviour">Behaviour during pagination</param>
+        /// <param name="Deletion">Behavior on pagination end</param>
+        /// <param name="Emojis">Emojis for this pagination object</param>
+        /// <param name="Timeout">Timeout time</param>
+        /// <param name="Pages">Pagination pages</param>
+        internal PaginationRequest(DiscordMessage Message, DiscordUser User, PaginationBehaviour Behaviour, PaginationDeletion Deletion,
+            PaginationEmojis Emojis, TimeSpan Timeout, params Page[] Pages)
         {
             this._tcs = new();
-            this._ct = new(timeout);
+            this._ct = new(Timeout);
             this._ct.Token.Register(() => this._tcs.TrySetResult(true));
-            this._timeout = timeout;
+            this._timeout = Timeout;
 
-            this._message = message;
-            this._user = user;
+            this._message = Message;
+            this._user = User;
 
-            this.PaginationDeletion = deletion;
-            this._behaviour = behaviour;
-            this._emojis = emojis;
+            this.PaginationDeletion = Deletion;
+            this._behaviour = Behaviour;
+            this._emojis = Emojis;
 
             this._pages = new List<Page>();
-            foreach (var p in pages)
+            foreach (var p in Pages)
             {
                 this._pages.Add(p);
             }
@@ -90,7 +90,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Gets the page async.
         /// </summary>
         /// <returns>A Task.</returns>
-        public async Task<Page> GetPageAsync()
+        public async Task<Page> GetPage()
         {
             await Task.Yield();
 
@@ -101,7 +101,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Skips the left async.
         /// </summary>
         /// <returns>A Task.</returns>
-        public async Task SkipLeftAsync()
+        public async Task SkipLeft()
         {
             await Task.Yield();
 
@@ -112,7 +112,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Skips the right async.
         /// </summary>
         /// <returns>A Task.</returns>
-        public async Task SkipRightAsync()
+        public async Task SkipRight()
         {
             await Task.Yield();
 
@@ -123,7 +123,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Nexts the page async.
         /// </summary>
         /// <returns>A Task.</returns>
-        public async Task NextPageAsync()
+        public async Task NextPage()
         {
             await Task.Yield();
 
@@ -151,7 +151,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Previous the page async.
         /// </summary>
         /// <returns>A Task.</returns>
-        public async Task PreviousPageAsync()
+        public async Task PreviousPage()
         {
             await Task.Yield();
 
@@ -180,7 +180,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// </summary>
         /// <returns><see cref="System.NotSupportedException"/></returns>
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task<IEnumerable<DiscordButtonComponent>> GetButtonsAsync()
+        public async Task<IEnumerable<DiscordButtonComponent>> GetButtons()
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
             => throw new NotSupportedException("This request does not support buttons.");
 
@@ -188,7 +188,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Gets the emojis async.
         /// </summary>
         /// <returns>A Task.</returns>
-        public async Task<PaginationEmojis> GetEmojisAsync()
+        public async Task<PaginationEmojis> GetEmojis()
         {
             await Task.Yield();
 
@@ -199,7 +199,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Gets the message async.
         /// </summary>
         /// <returns>A Task.</returns>
-        public async Task<DiscordMessage> GetMessageAsync()
+        public async Task<DiscordMessage> GetMessage()
         {
             await Task.Yield();
 
@@ -210,7 +210,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Gets the user async.
         /// </summary>
         /// <returns>A Task.</returns>
-        public async Task<DiscordUser> GetUserAsync()
+        public async Task<DiscordUser> GetUser()
         {
             await Task.Yield();
 
@@ -221,16 +221,16 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Dos the cleanup async.
         /// </summary>
         /// <returns>A Task.</returns>
-        public async Task DoCleanupAsync()
+        public async Task DoCleanup()
         {
             switch (this.PaginationDeletion)
             {
                 case PaginationDeletion.DeleteEmojis:
-                    await this._message.DeleteAllReactionsAsync().ConfigureAwait(false);
+                    await this._message.DeleteAllReactions().ConfigureAwait(false);
                     break;
 
                 case PaginationDeletion.DeleteMessage:
-                    await this._message.DeleteAsync().ConfigureAwait(false);
+                    await this._message.Delete().ConfigureAwait(false);
                     break;
 
                 case PaginationDeletion.KeepEmojis:
@@ -242,7 +242,7 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// Gets the task completion source async.
         /// </summary>
         /// <returns>A Task.</returns>
-        public async Task<TaskCompletionSource<bool>> GetTaskCompletionSourceAsync()
+        public async Task<TaskCompletionSource<bool>> GetTaskCompletionSource()
         {
             await Task.Yield();
 
@@ -308,12 +308,12 @@ namespace DisCatSharp.Interactivity
         /// <summary>
         /// Initializes a new instance of the <see cref="Page"/> class.
         /// </summary>
-        /// <param name="content">The content.</param>
-        /// <param name="embed">The embed.</param>
-        public Page(string content = "", DiscordEmbedBuilder embed = null)
+        /// <param name="Content">The content.</param>
+        /// <param name="Embed">The embed.</param>
+        public Page(string Content = "", DiscordEmbedBuilder Embed = null)
         {
-            this.Content = content;
-            this.Embed = embed?.Build();
+            this.Content = Content;
+            this.Embed = Embed?.Build();
         }
     }
 }

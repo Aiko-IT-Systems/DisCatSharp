@@ -48,6 +48,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageDeleteEventArgs"/> class.
         /// </summary>
-        internal MessageDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+        internal MessageDeleteEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

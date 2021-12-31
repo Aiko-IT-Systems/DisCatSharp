@@ -34,7 +34,7 @@ namespace DisCatSharp.VoiceNext.Entities
         /// Gets or sets the s s r c.
         /// </summary>
         [JsonProperty("ssrc")]
-        public uint SSRC { get; set; }
+        public uint Ssrc { get; set; }
 
         /// <summary>
         /// Gets or sets the address.

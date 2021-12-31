@@ -115,105 +115,105 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Creates a response to this interaction.
         /// </summary>
-        /// <param name="type">The type of the response.</param>
-        /// <param name="builder">The data, if any, to send.</param>
-        public Task CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder builder = null)
-            => this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, type, builder);
+        /// <param name="Type">The type of the response.</param>
+        /// <param name="Builder">The data, if any, to send.</param>
+        public Task CreateResponse(InteractionResponseType Type, DiscordInteractionResponseBuilder Builder = null)
+            => this.Discord.ApiClient.CreateInteractionResponseAsync(this.Id, this.Token, Type, Builder);
 
         /// <summary>
         /// Creates a modal response to this interaction.
         /// </summary>
-        /// <param name="builder">The data to send.</param>
-        public Task CreateInteractionModalResponseAsync(DiscordInteractionModalBuilder builder)
-            => this.Type != InteractionType.Ping && this.Type != InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, builder) : throw new NotSupportedException("You can't respond to an PING with a modal.");
+        /// <param name="Builder">The data to send.</param>
+        public Task CreateInteractionModalResponse(DiscordInteractionModalBuilder Builder)
+            => this.Type != InteractionType.Ping && this.Type != InteractionType.ModalSubmit ? this.Discord.ApiClient.CreateInteractionModalResponseAsync(this.Id, this.Token, InteractionResponseType.Modal, Builder) : throw new NotSupportedException("You can't respond to an PING with a modal.");
 
         /// <summary>
         /// Gets the original interaction response.
         /// </summary>
         /// <returns>The origingal message that was sent. This <b>does not work on ephemeral messages.</b></returns>
-        public Task<DiscordMessage> GetOriginalResponseAsync()
-            => this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
+        public Task<DiscordMessage> GetOriginalResponse()
+            => this.Discord.ApiClient.GetOriginalInteractionResponse(this.Discord.CurrentApplication.Id, this.Token);
 
         /// <summary>
         /// Edits the original interaction response.
         /// </summary>
-        /// <param name="builder">The webhook builder.</param>
+        /// <param name="Builder">The webhook builder.</param>
         /// <returns>The edited <see cref="DiscordMessage"/>.</returns>
-        public async Task<DiscordMessage> EditOriginalResponseAsync(DiscordWebhookBuilder builder)
+        public async Task<DiscordMessage> EditOriginalResponseAsync(DiscordWebhookBuilder Builder)
         {
-            builder.Validate(isInteractionResponse: true);
-            if (builder._keepAttachments.HasValue && builder._keepAttachments.Value)
+            Builder.Validate(IsInteractionResponse: true);
+            if (Builder._keepAttachments.HasValue && Builder._keepAttachments.Value)
             {
-                var attachments = this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token).Result.Attachments;
+                var attachments = this.Discord.ApiClient.GetOriginalInteractionResponse(this.Discord.CurrentApplication.Id, this.Token).Result.Attachments;
                 if (attachments?.Count > 0)
                 {
-                    builder._attachments.AddRange(attachments);
+                    Builder._attachments.AddRange(attachments);
                 }
             }
-            else if (builder._keepAttachments.HasValue)
+            else if (Builder._keepAttachments.HasValue)
             {
-                builder._attachments.Clear();
+                Builder._attachments.Clear();
             }
 
-            return await this.Discord.ApiClient.EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
+            return await this.Discord.ApiClient.EditOriginalInteractionResponse(this.Discord.CurrentApplication.Id, this.Token, Builder).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Deletes the original interaction response.
         /// </summary>>
-        public Task DeleteOriginalResponseAsync()
-            => this.Discord.ApiClient.DeleteOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
+        public Task DeleteOriginalResponse()
+            => this.Discord.ApiClient.DeleteOriginalInteractionResponse(this.Discord.CurrentApplication.Id, this.Token);
 
         /// <summary>
         /// Creates a follow up message to this interaction.
         /// </summary>
-        /// <param name="builder">The webhook builder.</param>
+        /// <param name="Builder">The webhook builder.</param>
         /// <returns>The created <see cref="DiscordMessage"/>.</returns>
-        public async Task<DiscordMessage> CreateFollowupMessageAsync(DiscordFollowupMessageBuilder builder)
+        public async Task<DiscordMessage> CreateFollowupMessageAsync(DiscordFollowupMessageBuilder Builder)
         {
-            builder.Validate();
+            Builder.Validate();
 
-            return await this.Discord.ApiClient.CreateFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
+            return await this.Discord.ApiClient.CreateFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, Builder).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Gets a follow up message.
         /// </summary>
-        /// <param name="messageId">The id of the follow up message.</param>
-        public Task<DiscordMessage> GetFollowupMessageAsync(ulong messageId)
-            => this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
+        /// <param name="MessageId">The id of the follow up message.</param>
+        public Task<DiscordMessage> GetFollowupMessage(ulong MessageId)
+            => this.Discord.ApiClient.GetFollowupMessage(this.Discord.CurrentApplication.Id, this.Token, MessageId);
 
         /// <summary>
         /// Edits a follow up message.
         /// </summary>
-        /// <param name="messageId">The id of the follow up message.</param>
-        /// <param name="builder">The webhook builder.</param>
+        /// <param name="MessageId">The id of the follow up message.</param>
+        /// <param name="Builder">The webhook builder.</param>
         /// <returns>The edited <see cref="DiscordMessage"/>.</returns>
-        public async Task<DiscordMessage> EditFollowupMessageAsync(ulong messageId, DiscordWebhookBuilder builder)
+        public async Task<DiscordMessage> EditFollowupMessageAsync(ulong MessageId, DiscordWebhookBuilder Builder)
         {
-            builder.Validate(isFollowup: true);
+            Builder.Validate(IsFollowup: true);
 
-            if (builder._keepAttachments.HasValue && builder._keepAttachments.Value)
+            if (Builder._keepAttachments.HasValue && Builder._keepAttachments.Value)
             {
-                var attachments = this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId).Result.Attachments;
+                var attachments = this.Discord.ApiClient.GetFollowupMessage(this.Discord.CurrentApplication.Id, this.Token, MessageId).Result.Attachments;
                 if (attachments?.Count > 0)
                 {
-                    builder._attachments.AddRange(attachments);
+                    Builder._attachments.AddRange(attachments);
                 }
             }
-            else if (builder._keepAttachments.HasValue)
+            else if (Builder._keepAttachments.HasValue)
             {
-                builder._attachments.Clear();
+                Builder._attachments.Clear();
             }
 
-            return await this.Discord.ApiClient.EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder).ConfigureAwait(false);
+            return await this.Discord.ApiClient.EditFollowupMessage(this.Discord.CurrentApplication.Id, this.Token, MessageId, Builder).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Deletes a follow up message.
         /// </summary>
-        /// <param name="messageId">The id of the follow up message.</param>
-        public Task DeleteFollowupMessageAsync(ulong messageId)
-            => this.Discord.ApiClient.DeleteFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId);
+        /// <param name="MessageId">The id of the follow up message.</param>
+        public Task DeleteFollowupMessage(ulong MessageId)
+            => this.Discord.ApiClient.DeleteFollowupMessage(this.Discord.CurrentApplication.Id, this.Token, MessageId);
     }
 }

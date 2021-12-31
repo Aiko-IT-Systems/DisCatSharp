@@ -34,20 +34,20 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        async Task<Optional<Nullable<T>>> IArgumentConverter<Nullable<T>>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        async Task<Optional<Nullable<T>>> IArgumentConverter<Nullable<T>>.Convert(string Value, CommandContext Ctx)
         {
-            if (!ctx.Config.CaseSensitive)
-                value = value.ToLowerInvariant();
+            if (!Ctx.Config.CaseSensitive)
+                Value = Value.ToLowerInvariant();
 
-            if (value == "null")
+            if (Value == "null")
                 return Optional.FromValue<Nullable<T>>(null);
 
-            if (ctx.CommandsNext.ArgumentConverters.TryGetValue(typeof(T), out var cv))
+            if (Ctx.CommandsNext.ArgumentConverters.TryGetValue(typeof(T), out var cv))
             {
                 var cvx = cv as IArgumentConverter<T>;
-                var val = await cvx.ConvertAsync(value, ctx).ConfigureAwait(false);
+                var val = await cvx.Convert(Value, Ctx).ConfigureAwait(false);
                 return val.HasValue ? Optional.FromValue<Nullable<T>>(val.Value) : Optional.FromNoValue<Nullable<T>>();
             }
 

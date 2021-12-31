@@ -44,21 +44,21 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkPayload"/> class.
         /// </summary>
-        /// <param name="opcode">The opcode.</param>
-        internal LavalinkPayload(string opcode)
+        /// <param name="Opcode">The opcode.</param>
+        internal LavalinkPayload(string Opcode)
         {
-            this.Operation = opcode;
+            this.Operation = Opcode;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LavalinkPayload"/> class.
         /// </summary>
-        /// <param name="opcode">The opcode.</param>
-        /// <param name="guildId">The guild id.</param>
-        internal LavalinkPayload(string opcode, string guildId)
+        /// <param name="Opcode">The opcode.</param>
+        /// <param name="GuildId">The guild id.</param>
+        internal LavalinkPayload(string Opcode, string GuildId)
         {
-            this.Operation = opcode;
-            this.GuildId = guildId;
+            this.Operation = Opcode;
+            this.GuildId = GuildId;
         }
     }
 }

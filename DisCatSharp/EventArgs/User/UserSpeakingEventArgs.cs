@@ -38,7 +38,7 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Gets the SSRC of the audio source.
         /// </summary>
-        public uint SSRC { get; internal set; }
+        public uint Ssrc { get; internal set; }
 
         /// <summary>
         /// Gets whether this user is speaking.
@@ -48,6 +48,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="UserSpeakingEventArgs"/> class.
         /// </summary>
-        internal UserSpeakingEventArgs(IServiceProvider provider) : base(provider) { }
+        internal UserSpeakingEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

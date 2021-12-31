@@ -922,22 +922,22 @@ namespace DisCatSharp
         /// <summary>
         /// Events the error handler.
         /// </summary>
-        /// <param name="asyncEvent">The async event.</param>
-        /// <param name="ex">The ex.</param>
-        /// <param name="handler">The handler.</param>
-        /// <param name="sender">The sender.</param>
-        /// <param name="eventArgs">The event args.</param>
-        internal void EventErrorHandler<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
+        /// <param name="AsyncEvent">The async event.</param>
+        /// <param name="Ex">The ex.</param>
+        /// <param name="Handler">The handler.</param>
+        /// <param name="Sender">The sender.</param>
+        /// <param name="EventArgs">The event args.</param>
+        internal void EventErrorHandler<TSender, TArgs>(AsyncEvent<TSender, TArgs> AsyncEvent, Exception Ex, AsyncEventHandler<TSender, TArgs> Handler, TSender Sender, TArgs EventArgs)
             where TArgs : AsyncEventArgs
         {
-            if (ex is AsyncEventTimeoutException)
+            if (Ex is AsyncEventTimeoutException)
             {
-                this.Logger.LogWarning(LoggerEvents.EventHandlerException, $"An event handler for {asyncEvent.Name} took too long to execute. Defined as \"{handler.Method.ToString().Replace(handler.Method.ReturnType.ToString(), "").TrimStart()}\" located in \"{handler.Method.DeclaringType}\".");
+                this.Logger.LogWarning(LoggerEvents.EventHandlerException, $"An event handler for {AsyncEvent.Name} took too long to execute. Defined as \"{Handler.Method.ToString().Replace(Handler.Method.ReturnType.ToString(), "").TrimStart()}\" located in \"{Handler.Method.DeclaringType}\".");
                 return;
             }
 
-            this.Logger.LogError(LoggerEvents.EventHandlerException, ex, "Event handler exception for event {0} thrown from {1} (defined in {2})", asyncEvent.Name, handler.Method, handler.Method.DeclaringType);
-            this._clientErrored.InvokeAsync(this, new ClientErrorEventArgs(this.ServiceProvider) { EventName = asyncEvent.Name, Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
+            this.Logger.LogError(LoggerEvents.EventHandlerException, Ex, "Event handler exception for event {0} thrown from {1} (defined in {2})", AsyncEvent.Name, Handler.Method, Handler.Method.DeclaringType);
+            this._clientErrored.InvokeAsync(this, new ClientErrorEventArgs(this.ServiceProvider) { EventName = AsyncEvent.Name, Exception = Ex }).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -963,13 +963,13 @@ namespace DisCatSharp
         /// <summary>
         /// Goofing.
         /// </summary>
-        /// <param name="asyncEvent">The async event.</param>
-        /// <param name="ex">The ex.</param>
-        /// <param name="handler">The handler.</param>
-        /// <param name="sender">The sender.</param>
-        /// <param name="eventArgs">The event args.</param>
-        private void Goof<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
-            where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, ex, "Exception event handler {0} (defined in {1}) threw an exception", handler.Method, handler.Method.DeclaringType);
+        /// <param name="AsyncEvent">The async event.</param>
+        /// <param name="Ex">The ex.</param>
+        /// <param name="Handler">The handler.</param>
+        /// <param name="Sender">The sender.</param>
+        /// <param name="EventArgs">The event args.</param>
+        private void Goof<TSender, TArgs>(AsyncEvent<TSender, TArgs> AsyncEvent, Exception Ex, AsyncEventHandler<TSender, TArgs> Handler, TSender Sender, TArgs EventArgs)
+            where TArgs : AsyncEventArgs => this.Logger.LogCritical(LoggerEvents.EventHandlerException, Ex, "Exception event handler {0} (defined in {1}) threw an exception", Handler.Method, Handler.Method.DeclaringType);
 
         #endregion
     }

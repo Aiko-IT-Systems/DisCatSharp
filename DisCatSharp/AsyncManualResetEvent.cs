@@ -49,23 +49,23 @@ namespace DisCatSharp
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncManualResetEvent"/> class.
         /// </summary>
-        /// <param name="initialState">If true, initial state.</param>
-        public AsyncManualResetEvent(bool initialState)
+        /// <param name="InitialState">If true, initial state.</param>
+        public AsyncManualResetEvent(bool InitialState)
         {
             this._tsc = new TaskCompletionSource<bool>();
 
-            if (initialState) this._tsc.TrySetResult(true);
+            if (InitialState) this._tsc.TrySetResult(true);
         }
 
         /// <summary>
         /// Waits async.
         /// </summary>
-        public Task WaitAsync() => this._tsc.Task;
+        public Task Wait() => this._tsc.Task;
 
         /// <summary>
         /// Sets async.
         /// </summary>
-        public Task SetAsync() => Task.Run(() => this._tsc.TrySetResult(true));
+        public Task Set() => Task.Run(() => this._tsc.TrySetResult(true));
 
         /// <summary>
         /// Resets.

@@ -30,32 +30,32 @@ namespace DisCatSharp.Enums
         /// <summary>
         /// The default scopes for bots.
         /// </summary>
-        private const string BOT_DEFAULT = "bot applications.commands applications.commands.permissions.update";
+        private const string BotDefault = "bot applications.commands applications.commands.permissions.update";
 
         /// <summary>
         /// The bot minimal scopes.
         /// </summary>
-        private const string BOT_MINIMAL = "bot applications.commands";
+        private const string BotMinimal = "bot applications.commands";
 
         /// <summary>
         /// The bot only scope.
         /// </summary>
-        private const string BOT_ONLY = "bot";
+        private const string BotOnly = "bot";
 
         /// <summary>
         /// The basic identify scopes.
         /// </summary>
-        private const string IDENTIFY_BASIC = "identify email";
+        private const string IdentifyBasic = "identify email";
 
         /// <summary>
         /// The extended identify scopes.
         /// </summary>
-        private const string IDENTIFY_EXTENDED = "identify email guilds connections";
+        private const string IdentifyExtended = "identify email guilds connections";
 
         /// <summary>
         /// All scopes for bots and identify.
         /// </summary>
-        private const string ALL = BOT_DEFAULT + " " + IDENTIFY_EXTENDED;
+        private const string All = BotDefault + " " + IdentifyExtended;
 
         /// <summary>
         /// The oauth scope.
@@ -65,19 +65,19 @@ namespace DisCatSharp.Enums
         /// <summary>
         /// Resolves the scopes.
         /// </summary>
-        /// <param name="scope">The scope.</param>
+        /// <param name="Scope">The scope.</param>
         /// <returns>A string representing the scopes.</returns>
-        public static string ResolveScopes(OAuthScopes scope)
+        public static string ResolveScopes(OAuthScopes Scope)
         {
-            return scope switch
+            return Scope switch
             {
-                OAuthScopes.BOT_DEFAULT => BOT_DEFAULT,
-                OAuthScopes.BOT_MINIMAL => BOT_MINIMAL,
-                OAuthScopes.BOT_ONLY => BOT_ONLY,
-                OAuthScopes.IDENTIFY_BASIC => IDENTIFY_BASIC,
-                OAuthScopes.IDENTIFY_EXTENDED => IDENTIFY_EXTENDED,
-                OAuthScopes.ALL => ALL,
-                _ => BOT_DEFAULT,
+                OAuthScopes.BotDefault => BotDefault,
+                OAuthScopes.BotMinimal => BotMinimal,
+                OAuthScopes.BotOnly => BotOnly,
+                OAuthScopes.IdentifyBasic => IdentifyBasic,
+                OAuthScopes.IdentifyExtended => IdentifyExtended,
+                OAuthScopes.All => All,
+                _ => BotDefault,
             };
         }
     }
@@ -89,31 +89,31 @@ namespace DisCatSharp.Enums
         /// <summary>
         /// Scopes: bot applications.commands applications.commands.permissions.update
         /// </summary>
-        BOT_DEFAULT = 0,
+        BotDefault = 0,
 
         /// <summary>
         /// Scopes: bot applications.commands
         /// </summary>
-        BOT_MINIMAL = 1,
+        BotMinimal = 1,
 
         /// <summary>
         /// Scopes: bot
         /// </summary>
-        BOT_ONLY = 2,
+        BotOnly = 2,
 
         /// <summary>
         /// Scopes: identify email
         /// </summary>
-        IDENTIFY_BASIC = 3,
+        IdentifyBasic = 3,
 
         /// <summary>
         /// Scopes: identify email guilds connections
         /// </summary>
-        IDENTIFY_EXTENDED = 4,
+        IdentifyExtended = 4,
 
         /// <summary>
         /// Scopes: bot applications.commands applications.commands.permissions.update identify email guilds connections
         /// </summary>
-        ALL = 5
+        All = 5
     }
 }

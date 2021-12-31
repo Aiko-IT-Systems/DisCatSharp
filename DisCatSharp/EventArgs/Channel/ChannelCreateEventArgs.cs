@@ -43,6 +43,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="ChannelCreateEventArgs"/> class.
         /// </summary>
-        internal ChannelCreateEventArgs(IServiceProvider provider) : base(provider) { }
+        internal ChannelCreateEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

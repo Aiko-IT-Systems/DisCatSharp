@@ -36,25 +36,25 @@ namespace DisCatSharp.Lavalink
         /// Indicates whether a new track should be started after reciving this TrackEndReason. If this is false, either this event is
         /// already triggered because another track started (REPLACED) or because the player is stopped (STOPPED, CLEANUP).
         /// </summary>
-        public static bool MayStartNext(this TrackEndReason reason)
-            => reason == TrackEndReason.Finished || reason == TrackEndReason.LoadFailed;
+        public static bool MayStartNext(this TrackEndReason Reason)
+            => Reason == TrackEndReason.Finished || Reason == TrackEndReason.LoadFailed;
 
         /// <summary>
         /// Decodes a Lavalink track string.
         /// </summary>
-        /// <param name="track">Track string to decode.</param>
+        /// <param name="Track">Track string to decode.</param>
         /// <returns>Decoded Lavalink track.</returns>
-        public static LavalinkTrack DecodeTrack(string track)
+        public static LavalinkTrack DecodeTrack(string Track)
         {
             // https://github.com/sedmelluq/lavaplayer/blob/804cd1038229230052d9b1dee5e6d1741e30e284/main/src/main/java/com/sedmelluq/discord/lavaplayer/player/DefaultAudioPlayerManager.java#L63-L64
-            const int TRACK_INFO_VERSIONED = 1;
+            const int trackInfoVersioned = 1;
             //const int TRACK_INFO_VERSION = 2;
 
-            var raw = Convert.FromBase64String(track);
+            var raw = Convert.FromBase64String(Track);
 
             var decoded = new LavalinkTrack
             {
-                TrackString = track
+                TrackString = Track
             };
 
             using (var ms = new MemoryStream(raw))
@@ -71,7 +71,7 @@ namespace DisCatSharp.Lavalink
 
                 // java bytes are signed
                 // https://docs.oracle.com/javase/7/docs/api/java/io/DataInput.html#readByte()
-                var version = (messageFlags & TRACK_INFO_VERSIONED) != 0 ? (br.ReadSByte() & 0xFF) : 1;
+                var version = (messageFlags & trackInfoVersioned) != 0 ? (br.ReadSByte() & 0xFF) : 1;
                 //if (version != TRACK_INFO_VERSION)
                 //    Warn($"Version conflict: Expected {TRACK_INFO_VERSION} but got {version}");
 
@@ -106,8 +106,8 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Initializes a new instance of the <see cref="JavaBinaryReader"/> class.
         /// </summary>
-        /// <param name="ms">The ms.</param>
-        public JavaBinaryReader(Stream ms) : base(ms, _utf8NoBom)
+        /// <param name="Ms">The ms.</param>
+        public JavaBinaryReader(Stream Ms) : base(Ms, _utf8NoBom)
         {
         }
 
@@ -236,30 +236,30 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Reads the.
         /// </summary>
-        /// <param name="size">The size.</param>
-        /// <param name="converter">The converter.</param>
+        /// <param name="Size">The size.</param>
+        /// <param name="Converter">The converter.</param>
         /// <returns>A T.</returns>
-        private T Read<T>(int size, Func<byte[], int, T> converter) where T : struct
+        private T Read<T>(int Size, Func<byte[], int, T> Converter) where T : struct
         {
             //Contract.Requires(size >= 0);
             //Contract.Requires(converter != null);
 
-            var bytes = this.GetNextBytesNativeEndian(size);
-            return converter(bytes, 0);
+            var bytes = this.GetNextBytesNativeEndian(Size);
+            return Converter(bytes, 0);
         }
 
         /// <summary>
         /// Gets the next bytes native endian.
         /// </summary>
-        /// <param name="count">The count.</param>
+        /// <param name="Count">The count.</param>
         /// <returns>An array of byte.</returns>
-        private byte[] GetNextBytesNativeEndian(int count)
+        private byte[] GetNextBytesNativeEndian(int Count)
         {
             //Contract.Requires(count >= 0);
             //Contract.Ensures(Contract.Result<Byte[]>() != null);
             //Contract.Ensures(Contract.Result<Byte[]>().Length == count);
 
-            var bytes = this.GetNextBytes(count);
+            var bytes = this.GetNextBytes(Count);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(bytes);
             return bytes;
@@ -268,18 +268,18 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Gets the next bytes.
         /// </summary>
-        /// <param name="count">The count.</param>
+        /// <param name="Count">The count.</param>
         /// <returns>An array of byte.</returns>
-        private byte[] GetNextBytes(int count)
+        private byte[] GetNextBytes(int Count)
         {
             //Contract.Requires(count >= 0);
             //Contract.Ensures(Contract.Result<Byte[]>() != null);
             //Contract.Ensures(Contract.Result<Byte[]>().Length == count);
 
-            var buffer = new byte[count];
-            var bytesRead = this.BaseStream.Read(buffer, 0, count);
+            var buffer = new byte[Count];
+            var bytesRead = this.BaseStream.Read(buffer, 0, Count);
 
-            return bytesRead != count ? throw new EndOfStreamException() : buffer;
+            return bytesRead != Count ? throw new EndOfStreamException() : buffer;
         }
     }
 }

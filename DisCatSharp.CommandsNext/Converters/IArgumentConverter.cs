@@ -40,9 +40,9 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts the raw value into the specified type.
         /// </summary>
-        /// <param name="value">Value to convert.</param>
-        /// <param name="ctx">Context in which the value will be converted.</param>
+        /// <param name="Value">Value to convert.</param>
+        /// <param name="Ctx">Context in which the value will be converted.</param>
         /// <returns>A structure containing information whether the value was converted, and, if so, the converted value.</returns>
-        Task<Optional<T>> ConvertAsync(string value, CommandContext ctx);
+        Task<Optional<T>> Convert(string Value, CommandContext Ctx);
     }
 }

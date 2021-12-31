@@ -62,36 +62,36 @@ namespace DisCatSharp.Entities
         /// </summary>
         public DiscordInteractionModalBuilder() { }
 
-        public DiscordInteractionModalBuilder WithTitle(string title)
+        public DiscordInteractionModalBuilder WithTitle(string Title)
         {
-            this.Title = title;
+            this.Title = Title;
             return this;
         }
 
-        public DiscordInteractionModalBuilder WithCustomId(string customId)
+        public DiscordInteractionModalBuilder WithCustomId(string CustomId)
         {
-            this.CustomId = customId;
+            this.CustomId = CustomId;
             return this;
         }
 
         /// <summary>
         /// Appends a collection of components to the builder. Each call will append to a new row.
         /// </summary>
-        /// <param name="components">The components to append. Up to five.</param>
+        /// <param name="Components">The components to append. Up to five.</param>
         /// <returns>The current builder to chain calls with.</returns>
         /// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
-        public DiscordInteractionModalBuilder AddModalComponents(params DiscordTextComponent[] components)
-            => this.AddModalComponents((IEnumerable<DiscordTextComponent>)components);
+        public DiscordInteractionModalBuilder AddModalComponents(params DiscordTextComponent[] Components)
+            => this.AddModalComponents((IEnumerable<DiscordTextComponent>)Components);
 
         /// <summary>
         /// Appends a text component to the builder.
         /// </summary>
-        /// <param name="component">The component to append.</param>
+        /// <param name="Component">The component to append.</param>
         /// <returns>The current builder to chain calls with.</returns>
-        public DiscordInteractionModalBuilder AddTextComponent(DiscordTextComponent component)
+        public DiscordInteractionModalBuilder AddTextComponent(DiscordTextComponent Component)
         {
             List<DiscordTextComponent> comp = new(1);
-            comp.Add(component);
+            comp.Add(Component);
 
             return this.AddModalComponents(comp);
         }
@@ -99,11 +99,11 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Appends several rows of components to the message
         /// </summary>
-        /// <param name="components">The rows of components to add, holding up to five each.</param>
+        /// <param name="Components">The rows of components to add, holding up to five each.</param>
         /// <returns></returns>
-        public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordActionRowComponent> components)
+        public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordActionRowComponent> Components)
         {
-            var ara = components.ToArray();
+            var ara = Components.ToArray();
 
             if (ara.Length + this._components.Count > 5)
                 throw new ArgumentException("ActionRow count exceeds maximum of five.");
@@ -118,18 +118,18 @@ namespace DisCatSharp.Entities
         /// Appends a collection of components to the builder. Each call will append to a new row.
         /// If you add a <see cref="DiscordTextComponent"></see> you can only add one.
         /// </summary>
-        /// <param name="components">The components to append. Up to five.</param>
+        /// <param name="Components">The components to append. Up to five.</param>
         /// <returns>The current builder to chain calls with.</returns>
         /// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
-        public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordTextComponent> components)
+        public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordTextComponent> Components)
         {
-            var compArr = components.ToArray();
+            var compArr = Components.ToArray();
             var count = compArr.Length;
 
             if (count > 5)
                 throw new ArgumentException("Cannot add more than 5 components per action row!");
 
-            if (components.Where(c => c.Type == Enums.ComponentType.InputText).Any() && count < 1)
+            if (Components.Where(C => C.Type == Enums.ComponentType.InputText).Any() && count < 1)
                 throw new ArgumentException("Cannot add more than 1 text components per action row!");
 
             var arc = new DiscordActionRowComponent(compArr);

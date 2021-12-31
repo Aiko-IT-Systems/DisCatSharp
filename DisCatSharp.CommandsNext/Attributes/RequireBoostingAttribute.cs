@@ -44,40 +44,40 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Initializes a new instance of the <see cref="RequireBoostingAttribute"/> class.
         /// </summary>
-        /// <param name="days">Boosting since days.</param>
-        public RequireBoostingAttribute(int days = 0)
+        /// <param name="Days">Boosting since days.</param>
+        public RequireBoostingAttribute(int Days = 0)
         {
             this.GuildId = 0;
-            this.Since = days;
+            this.Since = Days;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequireBoostingAttribute"/> class.
         /// </summary>
         /// <param name="guild_id">Target guild id.</param>
-        /// <param name="days">Boosting since days.</param>
-        public RequireBoostingAttribute(ulong guild_id, int days = 0)
+        /// <param name="Days">Boosting since days.</param>
+        public RequireBoostingAttribute(ulong GuildId, int Days = 0)
         {
-            this.GuildId = guild_id;
-            this.Since = days;
+            this.GuildId = GuildId;
+            this.Since = Days;
         }
 
         /// <summary>
         /// Executes the a check.
         /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
+        /// <param name="Ctx">The command context.</param>
+        /// <param name="Help">If true, help - returns true.</param>
+        public override async Task<bool> ExecuteCheck(CommandContext Ctx, bool Help)
         {
             if (this.GuildId != 0)
             {
-                var guild = await ctx.Client.GetGuildAsync(this.GuildId);
-                var member = await guild.GetMemberAsync(ctx.User.Id);
+                var guild = await Ctx.Client.GetGuildAsync(this.GuildId);
+                var member = await guild.GetMemberAsync(Ctx.User.Id);
                 return member != null && member.PremiumSince.HasValue ? await Task.FromResult(member.PremiumSince.Value.UtcDateTime.Date < DateTime.UtcNow.Date.AddDays(-this.Since)) : await Task.FromResult(false);
             }
             else
             {
-                return ctx.Member != null && ctx.Member.PremiumSince.HasValue ? await Task.FromResult(ctx.Member.PremiumSince.Value.UtcDateTime.Date < DateTime.UtcNow.Date.AddDays(-this.Since)) : await Task.FromResult(false);
+                return Ctx.Member != null && Ctx.Member.PremiumSince.HasValue ? await Task.FromResult(Ctx.Member.PremiumSince.Value.UtcDateTime.Date < DateTime.UtcNow.Date.AddDays(-this.Since)) : await Task.FromResult(false);
             }
         }
     }

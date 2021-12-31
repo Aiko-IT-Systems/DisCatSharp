@@ -32,9 +32,9 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Transforms the supplied PCM data using this filter.
         /// </summary>
-        /// <param name="pcmData">PCM data to transform. The transformation happens in-place.</param>
-        /// <param name="pcmFormat">Format of the supplied PCM data.</param>
-        /// <param name="duration">Millisecond duration of the supplied PCM data.</param>
-        void Transform(Span<short> pcmData, AudioFormat pcmFormat, int duration);
+        /// <param name="PcmData">PCM data to transform. The transformation happens in-place.</param>
+        /// <param name="PcmFormat">Format of the supplied PCM data.</param>
+        /// <param name="Duration">Millisecond duration of the supplied PCM data.</param>
+        void Transform(Span<short> PcmData, AudioFormat PcmFormat, int Duration);
     }
 }

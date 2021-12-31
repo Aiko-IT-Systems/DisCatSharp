@@ -44,30 +44,30 @@ namespace DisCatSharp.ApplicationCommands.Attributes
         /// <summary>
         /// Defines that usage of this application command is only possible when the bot is granted a specific permission.
         /// </summary>
-        /// <param name="permissions">Permissions required to execute this command.</param>
-        /// <param name="ignoreDms">Sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that it will always fail.</param>
-        public ApplicationCommandRequireBotPermissionsAttribute(Permissions permissions, bool ignoreDms = true)
+        /// <param name="Permissions">Permissions required to execute this command.</param>
+        /// <param name="IgnoreDms">Sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that it will always fail.</param>
+        public ApplicationCommandRequireBotPermissionsAttribute(Permissions Permissions, bool IgnoreDms = true)
         {
-            this.Permissions = permissions;
-            this.IgnoreDms = ignoreDms;
+            this.Permissions = Permissions;
+            this.IgnoreDms = IgnoreDms;
         }
 
         /// <summary>
         /// Runs checks.
         /// </summary>
-        public override async Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+        public override async Task<bool> ExecuteChecks(InteractionContext Ctx)
         {
-            if (ctx.Guild == null)
+            if (Ctx.Guild == null)
                 return this.IgnoreDms;
 
-            var bot = await ctx.Guild.GetMemberAsync(ctx.Client.CurrentUser.Id).ConfigureAwait(false);
+            var bot = await Ctx.Guild.GetMemberAsync(Ctx.Client.CurrentUser.Id).ConfigureAwait(false);
             if (bot == null)
                 return false;
 
-            if (bot.Id == ctx.Guild.OwnerId)
+            if (bot.Id == Ctx.Guild.OwnerId)
                 return true;
 
-            var pbot = ctx.Channel.PermissionsFor(bot);
+            var pbot = Ctx.Channel.PermissionsFor(bot);
 
             return (pbot & Permissions.Administrator) != 0 || (pbot & this.Permissions) == this.Permissions;
         }

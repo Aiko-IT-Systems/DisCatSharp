@@ -48,15 +48,15 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="WebSocketCloseEventArgs"/> class.
         /// </summary>
-        /// <param name="code">The code.</param>
-        /// <param name="reason">The reason.</param>
-        /// <param name="remote">If true, remote.</param>
-        /// <param name="provider">Service provider.</param>
-        internal WebSocketCloseEventArgs(int code, string reason, bool remote, IServiceProvider provider) : base(provider)
+        /// <param name="Code">The code.</param>
+        /// <param name="Reason">The reason.</param>
+        /// <param name="Remote">If true, remote.</param>
+        /// <param name="Provider">Service provider.</param>
+        internal WebSocketCloseEventArgs(int Code, string Reason, bool Remote, IServiceProvider Provider) : base(Provider)
         {
-            this.Code = code;
-            this.Reason = reason;
-            this.Remote = remote;
+            this.Code = Code;
+            this.Reason = Reason;
+            this.Remote = Remote;
         }
     }
 }

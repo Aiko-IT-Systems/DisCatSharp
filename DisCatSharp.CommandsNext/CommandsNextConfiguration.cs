@@ -37,9 +37,9 @@ namespace DisCatSharp.CommandsNext
     /// be used internally for checking. Their output can be passed through.
     /// </para>
     /// </summary>
-    /// <param name="msg">Message to check for prefix.</param>
+    /// <param name="Msg">Message to check for prefix.</param>
     /// <returns>Position of the command invocation or -1 if not present.</returns>
-    public delegate Task<int> PrefixResolverDelegate(DiscordMessage msg);
+    public delegate Task<int> PrefixResolverDelegate(DiscordMessage Msg);
 
     /// <summary>
     /// Represents a configuration for <see cref="CommandsNextExtension"/>.
@@ -130,30 +130,30 @@ namespace DisCatSharp.CommandsNext
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandsNextConfiguration"/> class.
         /// </summary>
-        /// <param name="provider">The service provider.</param>
+        /// <param name="Provider">The service provider.</param>
         [ActivatorUtilitiesConstructor]
-        public CommandsNextConfiguration(IServiceProvider provider)
+        public CommandsNextConfiguration(IServiceProvider Provider)
         {
-            this.ServiceProvider = provider;
+            this.ServiceProvider = Provider;
         }
 
         /// <summary>
         /// Creates a new instance of <see cref="CommandsNextConfiguration"/>, copying the properties of another configuration.
         /// </summary>
-        /// <param name="other">Configuration the properties of which are to be copied.</param>
-        public CommandsNextConfiguration(CommandsNextConfiguration other)
+        /// <param name="Other">Configuration the properties of which are to be copied.</param>
+        public CommandsNextConfiguration(CommandsNextConfiguration Other)
         {
-            this.CaseSensitive = other.CaseSensitive;
-            this.PrefixResolver = other.PrefixResolver;
-            this.DefaultHelpChecks = other.DefaultHelpChecks;
-            this.EnableDefaultHelp = other.EnableDefaultHelp;
-            this.EnableDms = other.EnableDms;
-            this.EnableMentionPrefix = other.EnableMentionPrefix;
-            this.IgnoreExtraArguments = other.IgnoreExtraArguments;
-            this.UseDefaultCommandHandler = other.UseDefaultCommandHandler;
-            this.ServiceProvider = other.ServiceProvider;
-            this.StringPrefixes = other.StringPrefixes?.ToArray();
-            this.DmHelp = other.DmHelp;
+            this.CaseSensitive = Other.CaseSensitive;
+            this.PrefixResolver = Other.PrefixResolver;
+            this.DefaultHelpChecks = Other.DefaultHelpChecks;
+            this.EnableDefaultHelp = Other.EnableDefaultHelp;
+            this.EnableDms = Other.EnableDms;
+            this.EnableMentionPrefix = Other.EnableMentionPrefix;
+            this.IgnoreExtraArguments = Other.IgnoreExtraArguments;
+            this.UseDefaultCommandHandler = Other.UseDefaultCommandHandler;
+            this.ServiceProvider = Other.ServiceProvider;
+            this.StringPrefixes = Other.StringPrefixes?.ToArray();
+            this.DmHelp = Other.DmHelp;
         }
     }
 }

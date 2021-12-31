@@ -34,19 +34,19 @@ namespace DisCatSharp.Hosting.Tests
 {
     public sealed class Bot : DiscordHostedService
     {
-        public Bot(IConfiguration config, ILogger<Bot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime)
+        public Bot(IConfiguration Config, ILogger<Bot> Logger, IServiceProvider Provider, IHostApplicationLifetime Lifetime) : base(Config, Logger, Provider, Lifetime)
         {
-            this.ConfigureAsync().GetAwaiter().GetResult();
-            this.ConfigureExtensionsAsync().GetAwaiter().GetResult();
+            this.Configure().GetAwaiter().GetResult();
+            this.ConfigureExtensions().GetAwaiter().GetResult();
         }
     }
 
     public sealed class MyCustomBot : DiscordHostedService
     {
-        public MyCustomBot(IConfiguration config, ILogger<MyCustomBot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "MyCustomBot")
+        public MyCustomBot(IConfiguration Config, ILogger<MyCustomBot> Logger, IServiceProvider Provider, IHostApplicationLifetime Lifetime) : base(Config, Logger, Provider, Lifetime, "MyCustomBot")
         {
-            this.ConfigureAsync().GetAwaiter().GetResult();
-            this.ConfigureExtensionsAsync().GetAwaiter().GetResult();
+            this.Configure().GetAwaiter().GetResult();
+            this.ConfigureExtensions().GetAwaiter().GetResult();
         }
     }
 
@@ -58,10 +58,10 @@ namespace DisCatSharp.Hosting.Tests
 
     public sealed class BotTwoService : DiscordHostedService, IBotTwoService
     {
-        public BotTwoService(IConfiguration config, ILogger<BotTwoService> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "BotTwo")
+        public BotTwoService(IConfiguration Config, ILogger<BotTwoService> Logger, IServiceProvider Provider, IHostApplicationLifetime Lifetime) : base(Config, Logger, Provider, Lifetime, "BotTwo")
         {
-            this.ConfigureAsync().GetAwaiter().GetResult();
-            this.ConfigureExtensionsAsync().GetAwaiter().GetResult();
+            this.Configure().GetAwaiter().GetResult();
+            this.ConfigureExtensions().GetAwaiter().GetResult();
         }
 
         public string GiveMeAResponse() => "I'm working";
@@ -102,22 +102,22 @@ namespace DisCatSharp.Hosting.Tests
             { "DisCatSharp:Using", "[\"DisCatSharp.Interactivity\", \"DisCatSharp.Lavalink\"]" },
         };
 
-        IHostBuilder Create(Dictionary<string, string> configValues) =>
+        IHostBuilder Create(Dictionary<string, string> ConfigValues) =>
             Host.CreateDefaultBuilder()
-                .ConfigureServices(services => services.AddSingleton<IDiscordHostedService, Bot>())
-                .ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(configValues));
+                .ConfigureServices(Services => Services.AddSingleton<IDiscordHostedService, Bot>())
+                .ConfigureHostConfiguration(Builder => Builder.AddInMemoryCollection(ConfigValues));
 
-        IHostBuilder Create(string filename) =>
+        IHostBuilder Create(string Filename) =>
             Host.CreateDefaultBuilder()
-                .ConfigureServices(services => services.AddSingleton<IDiscordHostedService, MyCustomBot>())
-                .ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
+                .ConfigureServices(Services => Services.AddSingleton<IDiscordHostedService, MyCustomBot>())
+                .ConfigureHostConfiguration(Builder => Builder.AddJsonFile(Filename));
 
-        IHostBuilder Create<TInterface, TBot>(string filename)
+        IHostBuilder Create<TInterface, TBot>(string Filename)
             where TInterface : class, IDiscordHostedService
             where TBot : class, TInterface, IDiscordHostedService =>
             Host.CreateDefaultBuilder()
-                .ConfigureServices(services => services.AddSingleton<TInterface, TBot>())
-                .ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
+                .ConfigureServices(Services => Services.AddSingleton<TInterface, TBot>())
+                .ConfigureHostConfiguration(Builder => Builder.AddJsonFile(Filename));
 
 
         [Fact]

@@ -40,14 +40,14 @@ namespace DisCatSharp.Common.Utilities
         /// <summary>
         /// Executes a specified task in an asynchronous manner, waiting for its completion.
         /// </summary>
-        /// <param name="task">Task to execute.</param>
-        public void Execute(Task task)
+        /// <param name="Task">Task to execute.</param>
+        public void Execute(Task Task)
         {
             // create state object
             var taskState = new StateRef<object>(new AutoResetEvent(false));
 
             // queue a task and wait for it to finish executing
-            task.ContinueWith(TaskCompletionHandler, taskState);
+            Task.ContinueWith(TaskCompletionHandler, taskState);
             taskState.Lock.WaitOne();
 
             // check for and rethrow any exceptions
@@ -55,22 +55,22 @@ namespace DisCatSharp.Common.Utilities
                 throw taskState.Exception;
 
             // completion method
-            void TaskCompletionHandler(Task t, object state)
+            void TaskCompletionHandler(Task T, object State)
             {
                 // retrieve state data
-                var stateRef = state as StateRef<object>;
+                var stateRef = State as StateRef<object>;
 
                 // retrieve any exceptions or cancellation status
-                if (t.IsFaulted)
+                if (T.IsFaulted)
                 {
-                    if (t.Exception.InnerExceptions.Count == 1) // unwrap if 1
-                        stateRef.Exception = t.Exception.InnerException;
+                    if (T.Exception.InnerExceptions.Count == 1) // unwrap if 1
+                        stateRef.Exception = T.Exception.InnerException;
                     else
-                        stateRef.Exception = t.Exception;
+                        stateRef.Exception = T.Exception;
                 }
-                else if (t.IsCanceled)
+                else if (T.IsCanceled)
                 {
-                    stateRef.Exception = new TaskCanceledException(t);
+                    stateRef.Exception = new TaskCanceledException(T);
                 }
 
                 // signal that the execution is done
@@ -82,15 +82,15 @@ namespace DisCatSharp.Common.Utilities
         /// Executes a specified task in an asynchronous manner, waiting for its completion, and returning the result.
         /// </summary>
         /// <typeparam name="T">Type of the Task's return value.</typeparam>
-        /// <param name="task">Task to execute.</param>
+        /// <param name="Task">Task to execute.</param>
         /// <returns>Task's result.</returns>
-        public T Execute<T>(Task<T> task)
+        public T Execute<T>(Task<T> Task)
         {
             // create state object
             var taskState = new StateRef<T>(new AutoResetEvent(false));
 
             // queue a task and wait for it to finish executing
-            task.ContinueWith(TaskCompletionHandler, taskState);
+            Task.ContinueWith(TaskCompletionHandler, taskState);
             taskState.Lock.WaitOne();
 
             // check for and rethrow any exceptions
@@ -105,29 +105,29 @@ namespace DisCatSharp.Common.Utilities
             throw new Exception("Task returned no result.");
 
             // completion method
-            void TaskCompletionHandler(Task<T> t, object state)
+            void TaskCompletionHandler(Task<T> T, object State)
             {
                 // retrieve state data
-                var stateRef = state as StateRef<T>;
+                var stateRef = State as StateRef<T>;
 
                 // retrieve any exceptions or cancellation status
-                if (t.IsFaulted)
+                if (T.IsFaulted)
                 {
-                    if (t.Exception.InnerExceptions.Count == 1) // unwrap if 1
-                        stateRef.Exception = t.Exception.InnerException;
+                    if (T.Exception.InnerExceptions.Count == 1) // unwrap if 1
+                        stateRef.Exception = T.Exception.InnerException;
                     else
-                        stateRef.Exception = t.Exception;
+                        stateRef.Exception = T.Exception;
                 }
-                else if (t.IsCanceled)
+                else if (T.IsCanceled)
                 {
-                    stateRef.Exception = new TaskCanceledException(t);
+                    stateRef.Exception = new TaskCanceledException(T);
                 }
 
                 // return the result from the task, if any
-                if (t.IsCompleted && !t.IsFaulted)
+                if (T.IsCompleted && !T.IsFaulted)
                 {
                     stateRef.HasResult = true;
-                    stateRef.Result = t.Result;
+                    stateRef.Result = T.Result;
                 }
 
                 // signal that the execution is done
@@ -163,10 +163,10 @@ namespace DisCatSharp.Common.Utilities
             /// <summary>
             /// Initializes a new instance of the <see cref="StateRef{T}"/> class.
             /// </summary>
-            /// <param name="lock">The lock.</param>
-            public StateRef(AutoResetEvent @lock)
+            /// <param name="Lock">The lock.</param>
+            public StateRef(AutoResetEvent Lock)
             {
-                this.Lock = @lock;
+                this.Lock = Lock;
             }
         }
     }

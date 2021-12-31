@@ -73,38 +73,38 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Writes the json.
         /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        /// <param name="Writer">The writer.</param>
+        /// <param name="Value">The value.</param>
+        /// <param name="Serializer">The serializer.</param>
+        public override void WriteJson(JsonWriter Writer, object Value, JsonSerializer Serializer)
         {
-            if (value is UserStatus status)
+            if (Value is UserStatus status)
             {
                 switch (status) // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
                 {
                     case UserStatus.Online:
-                        writer.WriteValue("online");
+                        Writer.WriteValue("online");
                         return;
 
                     case UserStatus.Idle:
-                        writer.WriteValue("idle");
+                        Writer.WriteValue("idle");
                         return;
 
                     case UserStatus.DoNotDisturb:
-                        writer.WriteValue("dnd");
+                        Writer.WriteValue("dnd");
                         return;
 
                     case UserStatus.Invisible:
-                        writer.WriteValue("invisible");
+                        Writer.WriteValue("invisible");
                         return;
 
                     case UserStatus.Streaming:
-                        writer.WriteValue("streaming");
+                        Writer.WriteValue("streaming");
                         return;
 
                     case UserStatus.Offline:
                     default:
-                        writer.WriteValue("offline");
+                        Writer.WriteValue("offline");
                         return;
                 }
             }
@@ -113,15 +113,15 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Reads the json.
         /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="objectType">The object type.</param>
-        /// <param name="existingValue">The existing value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        /// <param name="Reader">The reader.</param>
+        /// <param name="ObjectType">The object type.</param>
+        /// <param name="ExistingValue">The existing value.</param>
+        /// <param name="Serializer">The serializer.</param>
+        public override object ReadJson(JsonReader Reader, Type ObjectType, object ExistingValue, JsonSerializer Serializer)
         {
             // Active sessions are indicated with an "online", "idle", or "dnd" string per platform. If a user is
             // offline or invisible, the corresponding field is not present.
-            return (reader.Value?.ToString().ToLowerInvariant()) switch // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
+            return (Reader.Value?.ToString().ToLowerInvariant()) switch // reader.Value can be a string, DateTime or DateTimeOffset (yes, it's weird)
             {
                 "online" => UserStatus.Online,
                 "idle" => UserStatus.Idle,
@@ -135,9 +135,9 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Whether this user5 status can be converted.
         /// </summary>
-        /// <param name="objectType">The object type.</param>
+        /// <param name="ObjectType">The object type.</param>
         /// <returns>A bool.</returns>
-        public override bool CanConvert(Type objectType) => objectType == typeof(UserStatus);
+        public override bool CanConvert(Type ObjectType) => ObjectType == typeof(UserStatus);
     }
 
     /// <summary>
@@ -201,76 +201,76 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Creates a new instance of a <see cref="DiscordActivity"/> with specified name.
         /// </summary>
-        /// <param name="name">Name of the activity.</param>
-        public DiscordActivity(string name)
+        /// <param name="Name">Name of the activity.</param>
+        public DiscordActivity(string Name)
         {
-            this.Name = name;
+            this.Name = Name;
             this.ActivityType = ActivityType.Playing;
         }
 
         /// <summary>
         /// Creates a new instance of a <see cref="DiscordActivity"/> with specified name.
         /// </summary>
-        /// <param name="name">Name of the activity.</param>
-        /// <param name="type">Type of the activity.</param>
-        public DiscordActivity(string name, ActivityType type)
+        /// <param name="Name">Name of the activity.</param>
+        /// <param name="Type">Type of the activity.</param>
+        public DiscordActivity(string Name, ActivityType Type)
         {
-            if (type == ActivityType.Custom)
+            if (Type == ActivityType.Custom)
                 throw new InvalidOperationException("Bots cannot use a custom status.");
 
-            this.Name = name;
-            this.ActivityType = type;
+            this.Name = Name;
+            this.ActivityType = Type;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordActivity"/> class.
         /// </summary>
-        /// <param name="rawActivity">The raw activity.</param>
-        internal DiscordActivity(TransportActivity rawActivity)
+        /// <param name="RawActivity">The raw activity.</param>
+        internal DiscordActivity(TransportActivity RawActivity)
         {
-            this.UpdateWith(rawActivity);
+            this.UpdateWith(RawActivity);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordActivity"/> class.
         /// </summary>
-        /// <param name="other">The other.</param>
-        internal DiscordActivity(DiscordActivity other)
+        /// <param name="Other">The other.</param>
+        internal DiscordActivity(DiscordActivity Other)
         {
-            this.Name = other.Name;
-            this.ActivityType = other.ActivityType;
-            this.StreamUrl = other.StreamUrl;
-            this.SessionId = other.SessionId;
-            this.SyncId = other.SyncId;
-            this.Platform = other.Platform;
-            this.RichPresence = new DiscordRichPresence(other.RichPresence);
-            this.CustomStatus = new DiscordCustomStatus(other.CustomStatus);
+            this.Name = Other.Name;
+            this.ActivityType = Other.ActivityType;
+            this.StreamUrl = Other.StreamUrl;
+            this.SessionId = Other.SessionId;
+            this.SyncId = Other.SyncId;
+            this.Platform = Other.Platform;
+            this.RichPresence = new DiscordRichPresence(Other.RichPresence);
+            this.CustomStatus = new DiscordCustomStatus(Other.CustomStatus);
         }
 
         /// <summary>
         /// Updates a activity with an transport activity.
         /// </summary>
-        /// <param name="rawActivity">The raw activity.</param>
-        internal void UpdateWith(TransportActivity rawActivity)
+        /// <param name="RawActivity">The raw activity.</param>
+        internal void UpdateWith(TransportActivity RawActivity)
         {
-            this.Name = rawActivity?.Name;
-            this.ActivityType = rawActivity != null ? rawActivity.ActivityType : ActivityType.Playing;
-            this.StreamUrl = rawActivity?.StreamUrl;
-            this.SessionId = rawActivity?.SessionId;
-            this.SyncId = rawActivity?.SyncId;
-            this.Platform = rawActivity?.Platform;
+            this.Name = RawActivity?.Name;
+            this.ActivityType = RawActivity != null ? RawActivity.ActivityType : ActivityType.Playing;
+            this.StreamUrl = RawActivity?.StreamUrl;
+            this.SessionId = RawActivity?.SessionId;
+            this.SyncId = RawActivity?.SyncId;
+            this.Platform = RawActivity?.Platform;
 
-            if (rawActivity?.IsRichPresence() == true && this.RichPresence != null)
-                this.RichPresence.UpdateWith(rawActivity);
-            else this.RichPresence = rawActivity?.IsRichPresence() == true ? new DiscordRichPresence(rawActivity) : null;
+            if (RawActivity?.IsRichPresence() == true && this.RichPresence != null)
+                this.RichPresence.UpdateWith(RawActivity);
+            else this.RichPresence = RawActivity?.IsRichPresence() == true ? new DiscordRichPresence(RawActivity) : null;
 
-            if (rawActivity?.IsCustomStatus() == true && this.CustomStatus != null)
-                this.CustomStatus.UpdateWith(rawActivity.State, rawActivity.Emoji);
-            else this.CustomStatus = rawActivity?.IsCustomStatus() == true
+            if (RawActivity?.IsCustomStatus() == true && this.CustomStatus != null)
+                this.CustomStatus.UpdateWith(RawActivity.State, RawActivity.Emoji);
+            else this.CustomStatus = RawActivity?.IsCustomStatus() == true
                 ? new DiscordCustomStatus
                 {
-                    Name = rawActivity.State,
-                    Emoji = rawActivity.Emoji
+                    Name = RawActivity.State,
+                    Emoji = RawActivity.Emoji
                 }
                 : null;
         }
@@ -299,22 +299,22 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordCustomStatus"/> class.
         /// </summary>
-        /// <param name="other">The other.</param>
-        internal DiscordCustomStatus(DiscordCustomStatus other)
+        /// <param name="Other">The other.</param>
+        internal DiscordCustomStatus(DiscordCustomStatus Other)
         {
-            this.Name = other.Name;
-            this.Emoji = other.Emoji;
+            this.Name = Other.Name;
+            this.Emoji = Other.Emoji;
         }
 
         /// <summary>
         /// Updates a discord status.
         /// </summary>
-        /// <param name="state">The state.</param>
-        /// <param name="emoji">The emoji.</param>
-        internal void UpdateWith(string state, DiscordEmoji emoji)
+        /// <param name="State">The state.</param>
+        /// <param name="Emoji">The emoji.</param>
+        internal void UpdateWith(string State, DiscordEmoji Emoji)
         {
-            this.Name = state;
-            this.Emoji = emoji;
+            this.Name = State;
+            this.Emoji = Emoji;
         }
     }
 
@@ -416,61 +416,61 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
         /// </summary>
-        /// <param name="rawGame">The raw game.</param>
-        internal DiscordRichPresence(TransportActivity rawGame)
+        /// <param name="RawGame">The raw game.</param>
+        internal DiscordRichPresence(TransportActivity RawGame)
         {
-            this.UpdateWith(rawGame);
+            this.UpdateWith(RawGame);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordRichPresence"/> class.
         /// </summary>
-        /// <param name="other">The other.</param>
-        internal DiscordRichPresence(DiscordRichPresence other)
+        /// <param name="Other">The other.</param>
+        internal DiscordRichPresence(DiscordRichPresence Other)
         {
-            this.Details = other.Details;
-            this.State = other.State;
-            this.Application = other.Application;
-            this.Instance = other.Instance;
-            this.LargeImageText = other.LargeImageText;
-            this.SmallImageText = other.SmallImageText;
-            this.LargeImage = other.LargeImage;
-            this.SmallImage = other.SmallImage;
-            this.CurrentPartySize = other.CurrentPartySize;
-            this.MaximumPartySize = other.MaximumPartySize;
-            this.PartyId = other.PartyId;
-            this.Buttons = other.Buttons;
-            this.StartTimestamp = other.StartTimestamp;
-            this.EndTimestamp = other.EndTimestamp;
-            this.JoinSecret = other.JoinSecret;
-            this.MatchSecret = other.MatchSecret;
-            this.SpectateSecret = other.SpectateSecret;
+            this.Details = Other.Details;
+            this.State = Other.State;
+            this.Application = Other.Application;
+            this.Instance = Other.Instance;
+            this.LargeImageText = Other.LargeImageText;
+            this.SmallImageText = Other.SmallImageText;
+            this.LargeImage = Other.LargeImage;
+            this.SmallImage = Other.SmallImage;
+            this.CurrentPartySize = Other.CurrentPartySize;
+            this.MaximumPartySize = Other.MaximumPartySize;
+            this.PartyId = Other.PartyId;
+            this.Buttons = Other.Buttons;
+            this.StartTimestamp = Other.StartTimestamp;
+            this.EndTimestamp = Other.EndTimestamp;
+            this.JoinSecret = Other.JoinSecret;
+            this.MatchSecret = Other.MatchSecret;
+            this.SpectateSecret = Other.SpectateSecret;
         }
 
         /// <summary>
         /// Updates a game activity with an transport activity.
         /// </summary>
-        /// <param name="rawGame">The raw game.</param>
-        internal void UpdateWith(TransportActivity rawGame)
+        /// <param name="RawGame">The raw game.</param>
+        internal void UpdateWith(TransportActivity RawGame)
         {
-            this.Details = rawGame?.Details;
-            this.State = rawGame?.State;
-            this.Application = rawGame?.ApplicationId != null ? new DiscordApplication { Id = rawGame.ApplicationId.Value } : null;
-            this.Instance = rawGame?.Instance;
-            this.LargeImageText = rawGame?.Assets?.LargeImageText;
-            this.SmallImageText = rawGame?.Assets?.SmallImageText;
-            this.CurrentPartySize = rawGame?.Party?.Size?.Current;
-            this.MaximumPartySize = rawGame?.Party?.Size?.Maximum;
-            if (rawGame?.Party != null && ulong.TryParse(rawGame.Party.Id, NumberStyles.Number, CultureInfo.InvariantCulture, out var partyId))
+            this.Details = RawGame?.Details;
+            this.State = RawGame?.State;
+            this.Application = RawGame?.ApplicationId != null ? new DiscordApplication { Id = RawGame.ApplicationId.Value } : null;
+            this.Instance = RawGame?.Instance;
+            this.LargeImageText = RawGame?.Assets?.LargeImageText;
+            this.SmallImageText = RawGame?.Assets?.SmallImageText;
+            this.CurrentPartySize = RawGame?.Party?.Size?.Current;
+            this.MaximumPartySize = RawGame?.Party?.Size?.Maximum;
+            if (RawGame?.Party != null && ulong.TryParse(RawGame.Party.Id, NumberStyles.Number, CultureInfo.InvariantCulture, out var partyId))
                 this.PartyId = partyId;
-            this.Buttons = rawGame?.Buttons;
-            this.StartTimestamp = rawGame?.Timestamps?.Start;
-            this.EndTimestamp = rawGame?.Timestamps?.End;
-            this.JoinSecret = rawGame?.Secrets?.Join;
-            this.MatchSecret = rawGame?.Secrets?.Match;
-            this.SpectateSecret = rawGame?.Secrets?.Spectate;
+            this.Buttons = RawGame?.Buttons;
+            this.StartTimestamp = RawGame?.Timestamps?.Start;
+            this.EndTimestamp = RawGame?.Timestamps?.End;
+            this.JoinSecret = RawGame?.Secrets?.Join;
+            this.MatchSecret = RawGame?.Secrets?.Match;
+            this.SpectateSecret = RawGame?.Secrets?.Spectate;
 
-            var lid = rawGame?.Assets?.LargeImage;
+            var lid = RawGame?.Assets?.LargeImage;
             if (lid != null)
             {
                 if (lid.StartsWith("spotify:"))
@@ -479,7 +479,7 @@ namespace DisCatSharp.Entities
                     this.LargeImage = new DiscordApplicationAsset { Id = lid, Application = this.Application, Type = ApplicationAssetType.LargeImage };
             }
 
-            var sid = rawGame?.Assets?.SmallImage;
+            var sid = RawGame?.Assets?.SmallImage;
             if (sid != null)
             {
                 if (sid.StartsWith("spotify:"))

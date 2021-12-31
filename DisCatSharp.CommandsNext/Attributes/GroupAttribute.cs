@@ -47,16 +47,16 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Marks this class as a command group with specified name.
         /// </summary>
-        /// <param name="name">Name of this group.</param>
-        public GroupAttribute(string name)
+        /// <param name="Name">Name of this group.</param>
+        public GroupAttribute(string Name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException(nameof(name), "Group names cannot be null, empty, or all-whitespace.");
+            if (string.IsNullOrWhiteSpace(Name))
+                throw new ArgumentNullException(nameof(Name), "Group names cannot be null, empty, or all-whitespace.");
 
-            if (name.Any(xc => char.IsWhiteSpace(xc)))
-                throw new ArgumentException("Group names cannot contain whitespace characters.", nameof(name));
+            if (Name.Any(Xc => char.IsWhiteSpace(Xc)))
+                throw new ArgumentException("Group names cannot contain whitespace characters.", nameof(Name));
 
-            this.Name = name;
+            this.Name = Name;
         }
     }
 }

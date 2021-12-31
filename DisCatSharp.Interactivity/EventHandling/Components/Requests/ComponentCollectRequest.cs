@@ -41,9 +41,9 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentCollectRequest"/> class.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="predicate">The predicate.</param>
-        /// <param name="cancellation">The cancellation token.</param>
-        public ComponentCollectRequest(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation) : base(message, predicate, cancellation) { }
+        /// <param name="Message"></param>
+        /// <param name="Predicate">The predicate.</param>
+        /// <param name="Cancellation">The cancellation token.</param>
+        public ComponentCollectRequest(DiscordMessage Message, Func<ComponentInteractionCreateEventArgs, bool> Predicate, CancellationToken Cancellation) : base(Message, Predicate, Cancellation) { }
     }
 }

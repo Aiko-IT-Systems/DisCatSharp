@@ -255,13 +255,13 @@ namespace DisCatSharp.Enums
         /// <summary>
         /// Defines a description and URIs for this domain.
         /// </summary>
-        /// <param name="desc">Description for this domain.</param>
-        /// <param name="domain">Url for this domain.</param>
-        public DomainHelpAttribute(string desc, string domain)
+        /// <param name="Desc">Description for this domain.</param>
+        /// <param name="Domain">Url for this domain.</param>
+        public DomainHelpAttribute(string Desc, string Domain)
         {
-            this.Description = desc;
-            this.Domain = domain;
-            var url = $"https://{domain}";
+            this.Description = Desc;
+            this.Domain = Domain;
+            var url = $"https://{Domain}";
             this.Url = url;
             this.Uri = new(url);
         }

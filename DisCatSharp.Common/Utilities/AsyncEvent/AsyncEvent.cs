@@ -40,10 +40,10 @@ namespace DisCatSharp.Common.Utilities
         /// <summary>
         /// Prevents a default instance of the <see cref="AsyncEvent"/> class from being created.
         /// </summary>
-        /// <param name="name">The name.</param>
-        private protected AsyncEvent(string name)
+        /// <param name="Name">The name.</param>
+        private protected AsyncEvent(string Name)
         {
-            this.Name = name;
+            this.Name = Name;
         }
     }
 
@@ -56,7 +56,7 @@ namespace DisCatSharp.Common.Utilities
         where TArgs : AsyncEventArgs
     {
         /// <summary>
-        /// Gets the maximum alloted execution time for all handlers. Any event which causes the handler to time out 
+        /// Gets the maximum alloted execution time for all handlers. Any event which causes the handler to time out
         /// will raise a non-fatal <see cref="AsyncEventTimeoutException{TSender, TArgs}"/>.
         /// </summary>
         public TimeSpan MaximumExecutionTime { get; }
@@ -68,42 +68,42 @@ namespace DisCatSharp.Common.Utilities
         /// <summary>
         /// Creates a new asynchronous event with specified name and exception handler.
         /// </summary>
-        /// <param name="name">Name of this event.</param>
-        /// <param name="maxExecutionTime">Maximum handler execution time. A value of <see cref="System.TimeSpan.Zero"/> means infinite.</param>
-        /// <param name="exceptionHandler">Delegate which handles exceptions caused by this event.</param>
-        public AsyncEvent(string name, TimeSpan maxExecutionTime, AsyncEventExceptionHandler<TSender, TArgs> exceptionHandler)
-            : base(name)
+        /// <param name="Name">Name of this event.</param>
+        /// <param name="MaxExecutionTime">Maximum handler execution time. A value of <see cref="System.TimeSpan.Zero"/> means infinite.</param>
+        /// <param name="ExceptionHandler">Delegate which handles exceptions caused by this event.</param>
+        public AsyncEvent(string Name, TimeSpan MaxExecutionTime, AsyncEventExceptionHandler<TSender, TArgs> ExceptionHandler)
+            : base(Name)
         {
             this._handlers = ImmutableArray<AsyncEventHandler<TSender, TArgs>>.Empty;
-            this._exceptionHandler = exceptionHandler;
+            this._exceptionHandler = ExceptionHandler;
 
-            this.MaximumExecutionTime = maxExecutionTime;
+            this.MaximumExecutionTime = MaxExecutionTime;
         }
 
         /// <summary>
         /// Registers a new handler for this event.
         /// </summary>
-        /// <param name="handler">Handler to register for this event.</param>
-        public void Register(AsyncEventHandler<TSender, TArgs> handler)
+        /// <param name="Handler">Handler to register for this event.</param>
+        public void Register(AsyncEventHandler<TSender, TArgs> Handler)
         {
-            if (handler == null)
-                throw new ArgumentNullException(nameof(handler));
+            if (Handler == null)
+                throw new ArgumentNullException(nameof(Handler));
 
             lock (this._lock)
-                this._handlers = this._handlers.Add(handler);
+                this._handlers = this._handlers.Add(Handler);
         }
 
         /// <summary>
         /// Unregisters an existing handler from this event.
         /// </summary>
-        /// <param name="handler">Handler to unregister from the event.</param>
-        public void Unregister(AsyncEventHandler<TSender, TArgs> handler)
+        /// <param name="Handler">Handler to unregister from the event.</param>
+        public void Unregister(AsyncEventHandler<TSender, TArgs> Handler)
         {
-            if (handler == null)
-                throw new ArgumentNullException(nameof(handler));
+            if (Handler == null)
+                throw new ArgumentNullException(nameof(Handler));
 
             lock (this._lock)
-                this._handlers = this._handlers.Remove(handler);
+                this._handlers = this._handlers.Remove(Handler);
         }
 
         /// <summary>
@@ -118,11 +118,11 @@ namespace DisCatSharp.Common.Utilities
         /// <para>Raises this event by invoking all of its registered handlers, in order of registration.</para>
         /// <para>All exceptions throw during invocation will be handled by the event's registered exception handler.</para>
         /// </summary>
-        /// <param name="sender">Object which raised this event.</param>
-        /// <param name="e">Arguments for this event.</param>
-        /// <param name="exceptionMode">Defines what to do with exceptions caught from handlers.</param>
+        /// <param name="Sender">Object which raised this event.</param>
+        /// <param name="E">Arguments for this event.</param>
+        /// <param name="ExceptionMode">Defines what to do with exceptions caught from handlers.</param>
         /// <returns></returns>
-        public async Task InvokeAsync(TSender sender, TArgs e, AsyncEventExceptionMode exceptionMode = AsyncEventExceptionMode.Default)
+        public async Task InvokeAsync(TSender Sender, TArgs E, AsyncEventExceptionMode ExceptionMode = AsyncEventExceptionMode.Default)
         {
             var handlers = this._handlers;
             if (handlers.Length == 0)
@@ -130,7 +130,7 @@ namespace DisCatSharp.Common.Utilities
 
             // Collect exceptions
             List<Exception> exceptions = null;
-            if ((exceptionMode & AsyncEventExceptionMode.ThrowAll) != 0)
+            if ((ExceptionMode & AsyncEventExceptionMode.ThrowAll) != 0)
                 exceptions = new List<Exception>(handlers.Length * 2 /* timeout + regular */);
 
             // If we have a timeout configured, start the timeout task
@@ -141,7 +141,7 @@ namespace DisCatSharp.Common.Utilities
                 try
                 {
                     // Start the handler execution
-                    var handlerTask = handler(sender, e);
+                    var handlerTask = handler(Sender, E);
                     if (handlerTask != null && timeout != null)
                     {
                         // If timeout is configured, wait for any task to finish
@@ -154,10 +154,10 @@ namespace DisCatSharp.Common.Utilities
                             var timeoutEx = new AsyncEventTimeoutException<TSender, TArgs>(this, handler);
 
                             // Notify about the timeout and complete execution
-                            if ((exceptionMode & AsyncEventExceptionMode.HandleNonFatal) == AsyncEventExceptionMode.HandleNonFatal)
-                                this.HandleException(timeoutEx, handler, sender, e);
+                            if ((ExceptionMode & AsyncEventExceptionMode.HandleNonFatal) == AsyncEventExceptionMode.HandleNonFatal)
+                                this.HandleException(timeoutEx, handler, Sender, E);
 
-                            if ((exceptionMode & AsyncEventExceptionMode.ThrowNonFatal) == AsyncEventExceptionMode.ThrowNonFatal)
+                            if ((ExceptionMode & AsyncEventExceptionMode.ThrowNonFatal) == AsyncEventExceptionMode.ThrowNonFatal)
                                 exceptions.Add(timeoutEx);
 
                             await handlerTask.ConfigureAwait(false);
@@ -169,36 +169,36 @@ namespace DisCatSharp.Common.Utilities
                         await handlerTask.ConfigureAwait(false);
                     }
 
-                    if (e.Handled)
+                    if (E.Handled)
                         break;
                 }
                 catch (Exception ex)
                 {
-                    e.Handled = false;
+                    E.Handled = false;
 
-                    if ((exceptionMode & AsyncEventExceptionMode.HandleFatal) == AsyncEventExceptionMode.HandleFatal)
-                        this.HandleException(ex, handler, sender, e);
+                    if ((ExceptionMode & AsyncEventExceptionMode.HandleFatal) == AsyncEventExceptionMode.HandleFatal)
+                        this.HandleException(ex, handler, Sender, E);
 
-                    if ((exceptionMode & AsyncEventExceptionMode.ThrowFatal) == AsyncEventExceptionMode.ThrowFatal)
+                    if ((ExceptionMode & AsyncEventExceptionMode.ThrowFatal) == AsyncEventExceptionMode.ThrowFatal)
                         exceptions.Add(ex);
                 }
             }
 
-            if ((exceptionMode & AsyncEventExceptionMode.ThrowAll) != 0 && exceptions.Count > 0)
+            if ((ExceptionMode & AsyncEventExceptionMode.ThrowAll) != 0 && exceptions.Count > 0)
                 throw new AggregateException("Exceptions were thrown during execution of the event's handlers.", exceptions);
         }
 
         /// <summary>
         /// Handles the exception.
         /// </summary>
-        /// <param name="ex">The ex.</param>
-        /// <param name="handler">The handler.</param>
-        /// <param name="sender">The sender.</param>
-        /// <param name="args">The args.</param>
-        private void HandleException(Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs args)
+        /// <param name="Ex">The ex.</param>
+        /// <param name="Handler">The handler.</param>
+        /// <param name="Sender">The sender.</param>
+        /// <param name="Args">The args.</param>
+        private void HandleException(Exception Ex, AsyncEventHandler<TSender, TArgs> Handler, TSender Sender, TArgs Args)
         {
             if (this._exceptionHandler != null)
-                this._exceptionHandler(this, ex, handler, sender, args);
+                this._exceptionHandler(this, Ex, Handler, Sender, Args);
         }
     }
 }

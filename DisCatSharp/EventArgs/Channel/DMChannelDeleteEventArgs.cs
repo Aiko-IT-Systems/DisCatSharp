@@ -38,6 +38,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="DmChannelDeleteEventArgs"/> class.
         /// </summary>
-        internal DmChannelDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+        internal DmChannelDeleteEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

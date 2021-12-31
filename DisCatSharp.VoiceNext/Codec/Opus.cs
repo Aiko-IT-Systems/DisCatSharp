@@ -48,13 +48,13 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// Initializes a new instance of the <see cref="Opus"/> class.
         /// </summary>
-        /// <param name="audioFormat">The audio format.</param>
-        public Opus(AudioFormat audioFormat)
+        /// <param name="AudioFormat">The audio format.</param>
+        public Opus(AudioFormat AudioFormat)
         {
-            if (!audioFormat.IsValid())
-                throw new ArgumentException("Invalid audio format specified.", nameof(audioFormat));
+            if (!AudioFormat.IsValid())
+                throw new ArgumentException("Invalid audio format specified.", nameof(AudioFormat));
 
-            this.AudioFormat = audioFormat;
+            this.AudioFormat = AudioFormat;
             this.Encoder = Interop.OpusCreateEncoder(this.AudioFormat);
 
             // Set appropriate encoder options
@@ -80,64 +80,64 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// Encodes the Opus.
         /// </summary>
-        /// <param name="pcm">The pcm.</param>
-        /// <param name="target">The target.</param>
-        public void Encode(ReadOnlySpan<byte> pcm, ref Span<byte> target)
+        /// <param name="Pcm">The pcm.</param>
+        /// <param name="Target">The target.</param>
+        public void Encode(ReadOnlySpan<byte> Pcm, ref Span<byte> Target)
         {
-            if (pcm.Length != target.Length)
-                throw new ArgumentException("PCM and Opus buffer lengths need to be equal.", nameof(target));
+            if (Pcm.Length != Target.Length)
+                throw new ArgumentException("PCM and Opus buffer lengths need to be equal.", nameof(Target));
 
-            var duration = this.AudioFormat.CalculateSampleDuration(pcm.Length);
+            var duration = this.AudioFormat.CalculateSampleDuration(Pcm.Length);
             var frameSize = this.AudioFormat.CalculateFrameSize(duration);
             var sampleSize = this.AudioFormat.CalculateSampleSize(duration);
 
-            if (pcm.Length != sampleSize)
-                throw new ArgumentException("Invalid PCM sample size.", nameof(target));
+            if (Pcm.Length != sampleSize)
+                throw new ArgumentException("Invalid PCM sample size.", nameof(Target));
 
-            Interop.OpusEncode(this.Encoder, pcm, frameSize, ref target);
+            Interop.OpusEncode(this.Encoder, Pcm, frameSize, ref Target);
         }
 
         /// <summary>
         /// Decodes the Opus.
         /// </summary>
-        /// <param name="decoder">The decoder.</param>
-        /// <param name="opus">The opus.</param>
-        /// <param name="target">The target.</param>
-        /// <param name="useFec">If true, use fec.</param>
-        /// <param name="outputFormat">The output format.</param>
-        public void Decode(OpusDecoder decoder, ReadOnlySpan<byte> opus, ref Span<byte> target, bool useFec, out AudioFormat outputFormat)
+        /// <param name="Decoder">The decoder.</param>
+        /// <param name="Opus">The opus.</param>
+        /// <param name="Target">The target.</param>
+        /// <param name="UseFec">If true, use fec.</param>
+        /// <param name="OutputFormat">The output format.</param>
+        public void Decode(OpusDecoder Decoder, ReadOnlySpan<byte> Opus, ref Span<byte> Target, bool UseFec, out AudioFormat OutputFormat)
         {
             //if (target.Length != this.AudioFormat.CalculateMaximumFrameSize())
             //    throw new ArgumentException("PCM target buffer size needs to be equal to maximum buffer size for specified audio format.", nameof(target));
 
-            Interop.OpusGetPacketMetrics(opus, this.AudioFormat.SampleRate, out var channels, out var frames, out var samplesPerFrame, out var frameSize);
-            outputFormat = this.AudioFormat.ChannelCount != channels ? new AudioFormat(this.AudioFormat.SampleRate, channels, this.AudioFormat.VoiceApplication) : this.AudioFormat;
+            Interop.OpusGetPacketMetrics(Opus, this.AudioFormat.SampleRate, out var channels, out var frames, out var samplesPerFrame, out var frameSize);
+            OutputFormat = this.AudioFormat.ChannelCount != channels ? new AudioFormat(this.AudioFormat.SampleRate, channels, this.AudioFormat.VoiceApplication) : this.AudioFormat;
 
-            if (decoder.AudioFormat.ChannelCount != channels)
-                decoder.Initialize(outputFormat);
+            if (Decoder.AudioFormat.ChannelCount != channels)
+                Decoder.Initialize(OutputFormat);
 
-            var sampleCount = Interop.OpusDecode(decoder.Decoder, opus, frameSize, target, useFec);
+            var sampleCount = Interop.OpusDecode(Decoder.Decoder, Opus, frameSize, Target, UseFec);
 
-            var sampleSize = outputFormat.SampleCountToSampleSize(sampleCount);
-            target = target[..sampleSize];
+            var sampleSize = OutputFormat.SampleCountToSampleSize(sampleCount);
+            Target = Target[..sampleSize];
         }
 
         /// <summary>
         /// Processes the packet loss.
         /// </summary>
-        /// <param name="decoder">The decoder.</param>
-        /// <param name="frameSize">The frame size.</param>
-        /// <param name="target">The target.</param>
-        public void ProcessPacketLoss(OpusDecoder decoder, int frameSize, ref Span<byte> target) => Interop.OpusDecode(decoder.Decoder, frameSize, target);
+        /// <param name="Decoder">The decoder.</param>
+        /// <param name="FrameSize">The frame size.</param>
+        /// <param name="Target">The target.</param>
+        public void ProcessPacketLoss(OpusDecoder Decoder, int FrameSize, ref Span<byte> Target) => Interop.OpusDecode(Decoder.Decoder, FrameSize, Target);
 
         /// <summary>
         /// Gets the last packet sample count.
         /// </summary>
-        /// <param name="decoder">The decoder.</param>
+        /// <param name="Decoder">The decoder.</param>
         /// <returns>An int.</returns>
-        public int GetLastPacketSampleCount(OpusDecoder decoder)
+        public int GetLastPacketSampleCount(OpusDecoder Decoder)
         {
-            Interop.OpusGetLastPacketDuration(decoder.Decoder, out var sampleCount);
+            Interop.OpusGetLastPacketDuration(Decoder.Decoder, out var sampleCount);
             return sampleCount;
         }
 
@@ -158,16 +158,16 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// Destroys the decoder.
         /// </summary>
-        /// <param name="decoder">The decoder.</param>
-        public void DestroyDecoder(OpusDecoder decoder)
+        /// <param name="Decoder">The decoder.</param>
+        public void DestroyDecoder(OpusDecoder Decoder)
         {
             lock (this.ManagedDecoders)
             {
-                if (!this.ManagedDecoders.Contains(decoder))
+                if (!this.ManagedDecoders.Contains(Decoder))
                     return;
 
-                this.ManagedDecoders.Remove(decoder);
-                decoder.Dispose();
+                this.ManagedDecoders.Remove(Decoder);
+                Decoder.Dispose();
             }
         }
 
@@ -210,10 +210,10 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// Initializes a new instance of the <see cref="OpusDecoder"/> class.
         /// </summary>
-        /// <param name="managedOpus">The managed opus.</param>
-        internal OpusDecoder(Opus managedOpus)
+        /// <param name="ManagedOpus">The managed opus.</param>
+        internal OpusDecoder(Opus ManagedOpus)
         {
-            this.Opus = managedOpus;
+            this.Opus = ManagedOpus;
         }
 
         /// <summary>
@@ -221,15 +221,15 @@ namespace DisCatSharp.VoiceNext.Codec
         /// using the correct output format, this way we don't end up
         /// creating more decoders than we need.
         /// </summary>
-        /// <param name="outputFormat"></param>
-        internal void Initialize(AudioFormat outputFormat)
+        /// <param name="OutputFormat"></param>
+        internal void Initialize(AudioFormat OutputFormat)
         {
             if (this.Decoder != IntPtr.Zero)
                 Interop.OpusDestroyDecoder(this.Decoder);
 
-            this.AudioFormat = outputFormat;
+            this.AudioFormat = OutputFormat;
 
-            this.Decoder = Interop.OpusCreateDecoder(outputFormat);
+            this.Decoder = Interop.OpusCreateDecoder(OutputFormat);
         }
 
         /// <summary>

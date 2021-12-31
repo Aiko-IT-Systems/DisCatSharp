@@ -37,11 +37,11 @@ namespace DisCatSharp.CommandsNext.Exceptions
         /// <summary>
         /// Creates a new <see cref="CommandNotFoundException"/>.
         /// </summary>
-        /// <param name="command">Name of the command that was not found.</param>
-        public CommandNotFoundException(string command)
+        /// <param name="Command">Name of the command that was not found.</param>
+        public CommandNotFoundException(string Command)
             : base("Specified command was not found.")
         {
-            this.CommandName = command;
+            this.CommandName = Command;
         }
 
         /// <summary>

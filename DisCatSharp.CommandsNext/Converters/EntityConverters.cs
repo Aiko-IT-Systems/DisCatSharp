@@ -51,36 +51,36 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        async Task<Optional<DiscordUser>> IArgumentConverter<DiscordUser>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        async Task<Optional<DiscordUser>> IArgumentConverter<DiscordUser>.Convert(string Value, CommandContext Ctx)
         {
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var uid))
+            if (ulong.TryParse(Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var uid))
             {
-                var result = await ctx.Client.GetUserAsync(uid).ConfigureAwait(false);
+                var result = await Ctx.Client.GetUserAsync(uid).ConfigureAwait(false);
                 var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordUser>();
                 return ret;
             }
 
-            var m = UserRegex.Match(value);
+            var m = UserRegex.Match(Value);
             if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out uid))
             {
-                var result = await ctx.Client.GetUserAsync(uid).ConfigureAwait(false);
+                var result = await Ctx.Client.GetUserAsync(uid).ConfigureAwait(false);
                 var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordUser>();
                 return ret;
             }
 
-            var cs = ctx.Config.CaseSensitive;
+            var cs = Ctx.Config.CaseSensitive;
             if (!cs)
-                value = value.ToLowerInvariant();
+                Value = Value.ToLowerInvariant();
 
-            var di = value.IndexOf('#');
-            var un = di != -1 ? value[..di] : value;
-            var dv = di != -1 ? value[(di + 1)..] : null;
+            var di = Value.IndexOf('#');
+            var un = di != -1 ? Value[..di] : Value;
+            var dv = di != -1 ? Value[(di + 1)..] : null;
 
-            var us = ctx.Client.Guilds.Values
-                .SelectMany(xkvp => xkvp.Members.Values)
-                .Where(xm => (cs ? xm.Username : xm.Username.ToLowerInvariant()) == un && ((dv != null && xm.Discriminator == dv) || dv == null));
+            var us = Ctx.Client.Guilds.Values
+                .SelectMany(Xkvp => Xkvp.Members.Values)
+                .Where(Xm => (cs ? Xm.Username : Xm.Username.ToLowerInvariant()) == un && ((dv != null && Xm.Discriminator == dv) || dv == null));
 
             var usr = us.FirstOrDefault();
             return usr != null ? Optional.FromValue<DiscordUser>(usr) : Optional.FromNoValue<DiscordUser>();
@@ -108,43 +108,43 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        async Task<Optional<DiscordMember>> IArgumentConverter<DiscordMember>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        async Task<Optional<DiscordMember>> IArgumentConverter<DiscordMember>.Convert(string Value, CommandContext Ctx)
         {
-            if (ctx.Guild == null)
+            if (Ctx.Guild == null)
                 return Optional.FromNoValue<DiscordMember>();
 
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var uid))
+            if (ulong.TryParse(Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var uid))
             {
-                var result = await ctx.Guild.GetMemberAsync(uid).ConfigureAwait(false);
+                var result = await Ctx.Guild.GetMemberAsync(uid).ConfigureAwait(false);
                 var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordMember>();
                 return ret;
             }
 
-            var m = UserRegex.Match(value);
+            var m = UserRegex.Match(Value);
             if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out uid))
             {
-                var result = await ctx.Guild.GetMemberAsync(uid).ConfigureAwait(false);
+                var result = await Ctx.Guild.GetMemberAsync(uid).ConfigureAwait(false);
                 var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordMember>();
                 return ret;
             }
 
-            var searchResult = await ctx.Guild.SearchMembersAsync(value).ConfigureAwait(false);
+            var searchResult = await Ctx.Guild.SearchMembers(Value).ConfigureAwait(false);
             if (searchResult.Any())
                 return Optional.FromValue(searchResult.First());
 
-            var cs = ctx.Config.CaseSensitive;
+            var cs = Ctx.Config.CaseSensitive;
             if (!cs)
-                value = value.ToLowerInvariant();
+                Value = Value.ToLowerInvariant();
 
-            var di = value.IndexOf('#');
-            var un = di != -1 ? value[..di] : value;
-            var dv = di != -1 ? value[(di + 1)..] : null;
+            var di = Value.IndexOf('#');
+            var un = di != -1 ? Value[..di] : Value;
+            var dv = di != -1 ? Value[(di + 1)..] : null;
 
-            var us = ctx.Guild.Members.Values
-                .Where(xm => ((cs ? xm.Username : xm.Username.ToLowerInvariant()) == un && ((dv != null && xm.Discriminator == dv) || dv == null))
-                          || (cs ? xm.Nickname : xm.Nickname?.ToLowerInvariant()) == value);
+            var us = Ctx.Guild.Members.Values
+                .Where(Xm => ((cs ? Xm.Username : Xm.Username.ToLowerInvariant()) == un && ((dv != null && Xm.Discriminator == dv) || dv == null))
+                          || (cs ? Xm.Nickname : Xm.Nickname?.ToLowerInvariant()) == Value);
 
             var mbr = us.FirstOrDefault();
             return mbr != null ? Optional.FromValue(mbr) : Optional.FromNoValue<DiscordMember>();
@@ -172,30 +172,30 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        async Task<Optional<DiscordChannel>> IArgumentConverter<DiscordChannel>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        async Task<Optional<DiscordChannel>> IArgumentConverter<DiscordChannel>.Convert(string Value, CommandContext Ctx)
         {
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var cid))
+            if (ulong.TryParse(Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var cid))
             {
-                var result = await ctx.Client.GetChannelAsync(cid).ConfigureAwait(false);
+                var result = await Ctx.Client.GetChannelAsync(cid).ConfigureAwait(false);
                 var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordChannel>();
                 return ret;
             }
 
-            var m = ChannelRegex.Match(value);
+            var m = ChannelRegex.Match(Value);
             if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out cid))
             {
-                var result = await ctx.Client.GetChannelAsync(cid).ConfigureAwait(false);
+                var result = await Ctx.Client.GetChannelAsync(cid).ConfigureAwait(false);
                 var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordChannel>();
                 return ret;
             }
 
-            var cs = ctx.Config.CaseSensitive;
+            var cs = Ctx.Config.CaseSensitive;
             if (!cs)
-                value = value.ToLowerInvariant();
+                Value = Value.ToLowerInvariant();
 
-            var chn = ctx.Guild?.Channels.Values.FirstOrDefault(xc => (cs ? xc.Name : xc.Name.ToLowerInvariant()) == value);
+            var chn = Ctx.Guild?.Channels.Values.FirstOrDefault(Xc => (cs ? Xc.Name : Xc.Name.ToLowerInvariant()) == Value);
             return chn != null ? Optional.FromValue(chn) : Optional.FromNoValue<DiscordChannel>();
         }
     }
@@ -221,30 +221,30 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        async Task<Optional<DiscordThreadChannel>> IArgumentConverter<DiscordThreadChannel>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        async Task<Optional<DiscordThreadChannel>> IArgumentConverter<DiscordThreadChannel>.Convert(string Value, CommandContext Ctx)
         {
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var tid))
+            if (ulong.TryParse(Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var tid))
             {
-                var result = await ctx.Client.GetThreadAsync(tid).ConfigureAwait(false);
+                var result = await Ctx.Client.GetThreadAsync(tid).ConfigureAwait(false);
                 var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordThreadChannel>();
                 return ret;
             }
 
-            var m = ChannelRegex.Match(value);
+            var m = ChannelRegex.Match(Value);
             if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out tid))
             {
-                var result = await ctx.Client.GetThreadAsync(tid).ConfigureAwait(false);
+                var result = await Ctx.Client.GetThreadAsync(tid).ConfigureAwait(false);
                 var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordThreadChannel>();
                 return ret;
             }
 
-            var cs = ctx.Config.CaseSensitive;
+            var cs = Ctx.Config.CaseSensitive;
             if (!cs)
-                value = value.ToLowerInvariant();
+                Value = Value.ToLowerInvariant();
 
-            var tchn = ctx.Guild?.Threads.Values.FirstOrDefault(xc => (cs ? xc.Name : xc.Name.ToLowerInvariant()) == value);
+            var tchn = Ctx.Guild?.Threads.Values.FirstOrDefault(Xc => (cs ? Xc.Name : Xc.Name.ToLowerInvariant()) == Value);
             return tchn != null ? Optional.FromValue(tchn) : Optional.FromNoValue<DiscordThreadChannel>();
         }
     }
@@ -270,33 +270,33 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        Task<Optional<DiscordRole>> IArgumentConverter<DiscordRole>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        Task<Optional<DiscordRole>> IArgumentConverter<DiscordRole>.Convert(string Value, CommandContext Ctx)
         {
-            if (ctx.Guild == null)
+            if (Ctx.Guild == null)
                 return Task.FromResult(Optional.FromNoValue<DiscordRole>());
 
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var rid))
+            if (ulong.TryParse(Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var rid))
             {
-                var result = ctx.Guild.GetRole(rid);
+                var result = Ctx.Guild.GetRole(rid);
                 var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordRole>();
                 return Task.FromResult(ret);
             }
 
-            var m = RoleRegex.Match(value);
+            var m = RoleRegex.Match(Value);
             if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out rid))
             {
-                var result = ctx.Guild.GetRole(rid);
+                var result = Ctx.Guild.GetRole(rid);
                 var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordRole>();
                 return Task.FromResult(ret);
             }
 
-            var cs = ctx.Config.CaseSensitive;
+            var cs = Ctx.Config.CaseSensitive;
             if (!cs)
-                value = value.ToLowerInvariant();
+                Value = Value.ToLowerInvariant();
 
-            var rol = ctx.Guild.Roles.Values.FirstOrDefault(xr => (cs ? xr.Name : xr.Name.ToLowerInvariant()) == value);
+            var rol = Ctx.Guild.Roles.Values.FirstOrDefault(Xr => (cs ? Xr.Name : Xr.Name.ToLowerInvariant()) == Value);
             return Task.FromResult(rol != null ? Optional.FromValue(rol) : Optional.FromNoValue<DiscordRole>());
         }
     }
@@ -309,22 +309,22 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        Task<Optional<DiscordGuild>> IArgumentConverter<DiscordGuild>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        Task<Optional<DiscordGuild>> IArgumentConverter<DiscordGuild>.Convert(string Value, CommandContext Ctx)
         {
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var gid))
+            if (ulong.TryParse(Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var gid))
             {
-                return ctx.Client.Guilds.TryGetValue(gid, out var result)
+                return Ctx.Client.Guilds.TryGetValue(gid, out var result)
                     ? Task.FromResult(Optional.FromValue(result))
                     : Task.FromResult(Optional.FromNoValue<DiscordGuild>());
             }
 
-            var cs = ctx.Config.CaseSensitive;
+            var cs = Ctx.Config.CaseSensitive;
             if (!cs)
-                value = value?.ToLowerInvariant();
+                Value = Value?.ToLowerInvariant();
 
-            var gld = ctx.Client.Guilds.Values.FirstOrDefault(xg => (cs ? xg.Name : xg.Name.ToLowerInvariant()) == value);
+            var gld = Ctx.Client.Guilds.Values.FirstOrDefault(Xg => (cs ? Xg.Name : Xg.Name.ToLowerInvariant()) == Value);
             return Task.FromResult(gld != null ? Optional.FromValue(gld) : Optional.FromNoValue<DiscordGuild>());
         }
     }
@@ -351,23 +351,23 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        async Task<Optional<DiscordInvite>> IArgumentConverter<DiscordInvite>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        async Task<Optional<DiscordInvite>> IArgumentConverter<DiscordInvite>.Convert(string Value, CommandContext Ctx)
         {
-            var m = InviteRegex.Match(value);
+            var m = InviteRegex.Match(Value);
             if (m.Success)
             {
-                var result = await ctx.Client.GetInviteByCodeAsync(m.Groups[5].Value).ConfigureAwait(false);
+                var result = await Ctx.Client.GetInviteByCode(m.Groups[5].Value).ConfigureAwait(false);
                 var ret = result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordInvite>();
                 return ret;
             }
 
-            var cs = ctx.Config.CaseSensitive;
+            var cs = Ctx.Config.CaseSensitive;
             if (!cs)
-                value = value?.ToLowerInvariant();
+                Value = Value?.ToLowerInvariant();
 
-            var inv  = await ctx.Client.GetInviteByCodeAsync(value);
+            var inv  = await Ctx.Client.GetInviteByCode(Value);
             return inv != null ? Optional.FromValue(inv) : Optional.FromNoValue<DiscordInvite>();
         }
     }
@@ -393,14 +393,14 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        async Task<Optional<DiscordMessage>> IArgumentConverter<DiscordMessage>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        async Task<Optional<DiscordMessage>> IArgumentConverter<DiscordMessage>.Convert(string Value, CommandContext Ctx)
         {
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(Value))
                 return Optional.FromNoValue<DiscordMessage>();
 
-            var msguri = value.StartsWith("<") && value.EndsWith(">") ? value[1..^1] : value;
+            var msguri = Value.StartsWith("<") && Value.EndsWith(">") ? Value[1..^1] : Value;
             ulong mid;
             if (Uri.TryCreate(msguri, UriKind.Absolute, out var uri))
             {
@@ -413,7 +413,7 @@ namespace DisCatSharp.CommandsNext.Converters
                     || !ulong.TryParse(uripath.Groups["message"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out mid))
                     return Optional.FromNoValue<DiscordMessage>();
 
-                var chn = await ctx.Client.GetChannelAsync(cid).ConfigureAwait(false);
+                var chn = await Ctx.Client.GetChannelAsync(cid).ConfigureAwait(false);
                 if (chn == null)
                     return Optional.FromNoValue<DiscordMessage>();
 
@@ -421,9 +421,9 @@ namespace DisCatSharp.CommandsNext.Converters
                 return msg != null ? Optional.FromValue(msg) : Optional.FromNoValue<DiscordMessage>();
             }
 
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out mid))
+            if (ulong.TryParse(Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out mid))
             {
-                var result = await ctx.Channel.GetMessageAsync(mid).ConfigureAwait(false);
+                var result = await Ctx.Channel.GetMessageAsync(mid).ConfigureAwait(false);
                 return result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordMessage>();
             }
 
@@ -452,14 +452,14 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        async Task<Optional<DiscordScheduledEvent>> IArgumentConverter<DiscordScheduledEvent>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        async Task<Optional<DiscordScheduledEvent>> IArgumentConverter<DiscordScheduledEvent>.Convert(string Value, CommandContext Ctx)
         {
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(Value))
                 return Optional.FromNoValue<DiscordScheduledEvent>();
 
-            var msguri = value.StartsWith("<") && value.EndsWith(">") ? value[1..^1] : value;
+            var msguri = Value.StartsWith("<") && Value.EndsWith(">") ? Value[1..^1] : Value;
             ulong seid;
             if (Uri.TryCreate(msguri, UriKind.Absolute, out var uri))
             {
@@ -472,7 +472,7 @@ namespace DisCatSharp.CommandsNext.Converters
                     || !ulong.TryParse(uripath.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out seid))
                     return Optional.FromNoValue<DiscordScheduledEvent>();
 
-                var guild = await ctx.Client.GetGuildAsync(gid).ConfigureAwait(false);
+                var guild = await Ctx.Client.GetGuildAsync(gid).ConfigureAwait(false);
                 if (guild == null)
                     return Optional.FromNoValue<DiscordScheduledEvent>();
 
@@ -480,9 +480,9 @@ namespace DisCatSharp.CommandsNext.Converters
                 return ev != null ? Optional.FromValue(ev) : Optional.FromNoValue<DiscordScheduledEvent>();
             }
 
-            if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out seid))
+            if (ulong.TryParse(Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out seid))
             {
-                var result = await ctx.Guild.GetScheduledEventAsync(seid).ConfigureAwait(false);
+                var result = await Ctx.Guild.GetScheduledEventAsync(seid).ConfigureAwait(false);
                 return result != null ? Optional.FromValue(result) : Optional.FromNoValue<DiscordScheduledEvent>();
             }
 
@@ -511,18 +511,18 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        Task<Optional<DiscordEmoji>> IArgumentConverter<DiscordEmoji>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        Task<Optional<DiscordEmoji>> IArgumentConverter<DiscordEmoji>.Convert(string Value, CommandContext Ctx)
         {
-            if (DiscordEmoji.TryFromUnicode(ctx.Client, value, out var emoji))
+            if (DiscordEmoji.TryFromUnicode(Ctx.Client, Value, out var emoji))
             {
                 var result = emoji;
                 var ret = Optional.FromValue(result);
                 return Task.FromResult(ret);
             }
 
-            var m = EmoteRegex.Match(value);
+            var m = EmoteRegex.Match(Value);
             if (m.Success)
             {
                 var sid = m.Groups["id"].Value;
@@ -531,11 +531,11 @@ namespace DisCatSharp.CommandsNext.Converters
 
                 return !ulong.TryParse(sid, NumberStyles.Integer, CultureInfo.InvariantCulture, out var id)
                     ? Task.FromResult(Optional.FromNoValue<DiscordEmoji>())
-                    : DiscordEmoji.TryFromGuildEmote(ctx.Client, id, out emoji)
+                    : DiscordEmoji.TryFromGuildEmote(Ctx.Client, id, out emoji)
                     ? Task.FromResult(Optional.FromValue(emoji))
                     : Task.FromResult(Optional.FromValue(new DiscordEmoji
                     {
-                        Discord = ctx.Client,
+                        Discord = Ctx.Client,
                         Id = id,
                         Name = name,
                         IsAnimated = anim,
@@ -574,15 +574,15 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Converts a string.
         /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        Task<Optional<DiscordColor>> IArgumentConverter<DiscordColor>.ConvertAsync(string value, CommandContext ctx)
+        /// <param name="Value">The string to convert.</param>
+        /// <param name="Ctx">The command context.</param>
+        Task<Optional<DiscordColor>> IArgumentConverter<DiscordColor>.Convert(string Value, CommandContext Ctx)
         {
-            var m = ColorRegexHex.Match(value);
+            var m = ColorRegexHex.Match(Value);
             if (m.Success && int.TryParse(m.Groups[1].Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var clr))
                 return Task.FromResult(Optional.FromValue<DiscordColor>(clr));
 
-            m = ColorRegexRgb.Match(value);
+            m = ColorRegexRgb.Match(Value);
             if (m.Success)
             {
                 var p1 = byte.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var r);

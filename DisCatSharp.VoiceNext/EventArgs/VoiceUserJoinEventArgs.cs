@@ -39,11 +39,11 @@ namespace DisCatSharp.VoiceNext.EventArgs
         /// <summary>
         /// Gets the SSRC of the user who joined.
         /// </summary>
-        public uint SSRC { get; internal set; }
+        public uint Ssrc { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VoiceUserJoinEventArgs"/> class.
         /// </summary>
-        internal VoiceUserJoinEventArgs(IServiceProvider provider) : base(provider) { }
+        internal VoiceUserJoinEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

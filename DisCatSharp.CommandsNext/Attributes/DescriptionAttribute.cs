@@ -38,10 +38,10 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Gives this command, group, or argument a description, which is used when listing help.
         /// </summary>
-        /// <param name="description"></param>
-        public DescriptionAttribute(string description)
+        /// <param name="Description"></param>
+        public DescriptionAttribute(string Description)
         {
-            this.Description = description;
+            this.Description = Description;
         }
     }
 }

@@ -35,14 +35,14 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Executes the a check.
         /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
+        /// <param name="Ctx">The command context.</param>
+        /// <param name="Help">If true, help - returns true.</param>
+        public override Task<bool> ExecuteCheck(CommandContext Ctx, bool Help)
         {
-            var app = ctx.Client.CurrentApplication;
-            var me = ctx.Client.CurrentUser;
+            var app = Ctx.Client.CurrentApplication;
+            var me = Ctx.Client.CurrentUser;
 
-            return app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
+            return app != null ? Task.FromResult(app.Owners.Any(X => X.Id == Ctx.User.Id)) : Task.FromResult(Ctx.User.Id == me.Id);
         }
     }
 }

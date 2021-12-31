@@ -44,40 +44,40 @@ namespace DisCatSharp.Net.Serialization
         /// <summary>
         /// Writes the json.
         /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        /// <param name="Writer">The writer.</param>
+        /// <param name="Value">The value.</param>
+        /// <param name="Serializer">The serializer.</param>
+        public override void WriteJson(JsonWriter Writer, object Value, JsonSerializer Serializer)
         {
-            if (value == null)
+            if (Value == null)
             {
-                writer.WriteNull();
+                Writer.WriteNull();
             }
             else
             {
-                var type = value.GetType().GetTypeInfo();
-                JToken.FromObject(type.GetDeclaredProperty("Values").GetValue(value)).WriteTo(writer);
+                var type = Value.GetType().GetTypeInfo();
+                JToken.FromObject(type.GetDeclaredProperty("Values").GetValue(Value)).WriteTo(Writer);
             }
         }
 
         /// <summary>
         /// Reads the json.
         /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="objectType">The object type.</param>
-        /// <param name="existingValue">The existing value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        /// <param name="Reader">The reader.</param>
+        /// <param name="ObjectType">The object type.</param>
+        /// <param name="ExistingValue">The existing value.</param>
+        /// <param name="Serializer">The serializer.</param>
+        public override object ReadJson(JsonReader Reader, Type ObjectType, object ExistingValue, JsonSerializer Serializer)
         {
-            var constructor = objectType.GetTypeInfo().DeclaredConstructors
-                .FirstOrDefault(e => !e.IsStatic && e.GetParameters().Length == 0);
+            var constructor = ObjectType.GetTypeInfo().DeclaredConstructors
+                .FirstOrDefault(E => !E.IsStatic && E.GetParameters().Length == 0);
 
             var dict = constructor.Invoke(new object[] {});
 
             // the default name of an indexer is "Item"
-            var properties = objectType.GetTypeInfo().GetDeclaredProperty("Item");
+            var properties = ObjectType.GetTypeInfo().GetDeclaredProperty("Item");
 
-            var entries = (IEnumerable) serializer.Deserialize(reader, objectType.GenericTypeArguments[1].MakeArrayType());
+            var entries = (IEnumerable) Serializer.Deserialize(Reader, ObjectType.GenericTypeArguments[1].MakeArrayType());
             foreach (var entry in entries)
             {
                 properties.SetValue(dict, entry, new object[]
@@ -94,14 +94,14 @@ namespace DisCatSharp.Net.Serialization
         /// <summary>
         /// Whether the snowflake can be converted.
         /// </summary>
-        /// <param name="objectType">The object type.</param>
-        public override bool CanConvert(Type objectType)
+        /// <param name="ObjectType">The object type.</param>
+        public override bool CanConvert(Type ObjectType)
         {
-            var genericTypedef = objectType.GetGenericTypeDefinition();
+            var genericTypedef = ObjectType.GetGenericTypeDefinition();
             if (genericTypedef != typeof(Dictionary<,>) && genericTypedef != typeof(ConcurrentDictionary<,>)) return false;
-            if (objectType.GenericTypeArguments[0] != typeof(ulong)) return false;
+            if (ObjectType.GenericTypeArguments[0] != typeof(ulong)) return false;
 
-            var valueParam = objectType.GenericTypeArguments[1];
+            var valueParam = ObjectType.GenericTypeArguments[1];
             return typeof(SnowflakeObject).GetTypeInfo().IsAssignableFrom(valueParam.GetTypeInfo()) ||
                    valueParam == typeof(DiscordVoiceState);
         }

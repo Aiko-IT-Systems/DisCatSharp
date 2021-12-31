@@ -50,33 +50,33 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCommandsPermissionContext"/> class.
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="name">The name.</param>
-        internal ApplicationCommandsPermissionContext(Type type, string name)
+        /// <param name="Type">The type.</param>
+        /// <param name="Name">The name.</param>
+        internal ApplicationCommandsPermissionContext(Type Type, string Name)
         {
-            this.Type = type;
-            this.Name = name;
+            this.Type = Type;
+            this.Name = Name;
         }
 
         /// <summary>
         /// Adds a user to the permission system.
         /// </summary>
-        /// <param name="userId">The Id of the user to give this permission.</param>
-        /// <param name="permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
-        public void AddUser(ulong userId, bool permission) => _permissions.Add(new DiscordApplicationCommandPermission(userId, ApplicationCommandPermissionType.User, permission));
+        /// <param name="UserId">The Id of the user to give this permission.</param>
+        /// <param name="Permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
+        public void AddUser(ulong UserId, bool Permission) => _permissions.Add(new DiscordApplicationCommandPermission(UserId, ApplicationCommandPermissionType.User, Permission));
 
         /// <summary>
         /// Adds a user to the permission system.
         /// </summary>
-        /// <param name="roleId">The Id of the role to give this permission.</param>
-        /// <param name="permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
-        public void AddRole(ulong roleId, bool permission) => _permissions.Add(new DiscordApplicationCommandPermission(roleId, ApplicationCommandPermissionType.Role, permission));
+        /// <param name="RoleId">The Id of the role to give this permission.</param>
+        /// <param name="Permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
+        public void AddRole(ulong RoleId, bool Permission) => _permissions.Add(new DiscordApplicationCommandPermission(RoleId, ApplicationCommandPermissionType.Role, Permission));
 
         /// <summary>
         /// Adds a channel to the permission system.
         /// </summary>
-        /// <param name="channelId">The Id of the channel to give this permission.</param>
-        /// <param name="permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
-        public void AddChannel(ulong channelId, bool permission) => _permissions.Add(new DiscordApplicationCommandPermission(channelId, ApplicationCommandPermissionType.Channel, permission));
+        /// <param name="ChannelId">The Id of the channel to give this permission.</param>
+        /// <param name="Permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
+        public void AddChannel(ulong ChannelId, bool Permission) => _permissions.Add(new DiscordApplicationCommandPermission(ChannelId, ApplicationCommandPermissionType.Channel, Permission));
     }
 }

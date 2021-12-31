@@ -65,38 +65,38 @@ namespace DisCatSharp.CommandsNext.Builders
         /// <summary>
         /// Creates a new command overload builder from specified method.
         /// </summary>
-        /// <param name="method">Method to use for this overload.</param>
-        public CommandOverloadBuilder(MethodInfo method)
-            : this(method, null)
+        /// <param name="Method">Method to use for this overload.</param>
+        public CommandOverloadBuilder(MethodInfo Method)
+            : this(Method, null)
         { }
 
         /// <summary>
         /// Creates a new command overload builder from specified delegate.
         /// </summary>
-        /// <param name="method">Delegate to use for this overload.</param>
-        public CommandOverloadBuilder(Delegate method)
-            : this(method.GetMethodInfo(), method.Target)
+        /// <param name="Method">Delegate to use for this overload.</param>
+        public CommandOverloadBuilder(Delegate Method)
+            : this(Method.GetMethodInfo(), Method.Target)
         { }
 
         /// <summary>
         /// Prevents a default instance of the <see cref="CommandOverloadBuilder"/> class from being created.
         /// </summary>
-        /// <param name="method">The method.</param>
-        /// <param name="target">The target.</param>
-        private CommandOverloadBuilder(MethodInfo method, object target)
+        /// <param name="Method">The method.</param>
+        /// <param name="Target">The target.</param>
+        private CommandOverloadBuilder(MethodInfo Method, object Target)
         {
-            if (!method.IsCommandCandidate(out var prms))
-                throw new ArgumentException("Specified method is not suitable for a command.", nameof(method));
+            if (!Method.IsCommandCandidate(out var prms))
+                throw new ArgumentException("Specified method is not suitable for a command.", nameof(Method));
 
-            this.InvocationTarget = target;
+            this.InvocationTarget = Target;
 
             // create the argument array
             var ea = new ParameterExpression[prms.Length + 1];
-            var iep = Expression.Parameter(target?.GetType() ?? method.DeclaringType, "instance");
+            var iep = Expression.Parameter(Target?.GetType() ?? Method.DeclaringType, "instance");
             ea[0] = iep;
             ea[1] = Expression.Parameter(typeof(CommandContext), "ctx");
 
-            var pri = method.GetCustomAttribute<PriorityAttribute>();
+            var pri = Method.GetCustomAttribute<PriorityAttribute>();
             if (pri != null)
                 this.Priority = pri.Priority;
 
@@ -143,10 +143,10 @@ namespace DisCatSharp.CommandsNext.Builders
                 }
 
                 if (i > 2 && !ca.IsOptional && !ca.IsCatchAll && args[i - 3].IsOptional)
-                    throw new InvalidOverloadException("Non-optional argument cannot appear after an optional one", method, arg);
+                    throw new InvalidOverloadException("Non-optional argument cannot appear after an optional one", Method, arg);
 
                 if (arg.ParameterType.IsArray && !isParams)
-                    throw new InvalidOverloadException("Cannot use array arguments without params modifier.", method, arg);
+                    throw new InvalidOverloadException("Cannot use array arguments without params modifier.", Method, arg);
 
                 ca.CustomAttributes = new ReadOnlyCollection<Attribute>(attrsCustom);
                 args.Add(ca);
@@ -154,7 +154,7 @@ namespace DisCatSharp.CommandsNext.Builders
             }
 
             //var ec = Expression.Call(iev, method, ea.Skip(2));
-            var ec = Expression.Call(iep, method, ea.Skip(1));
+            var ec = Expression.Call(iep, Method, ea.Skip(1));
             var el = Expression.Lambda(ec, ea);
 
             this.ArgumentSet = setb.ToString();
@@ -165,11 +165,11 @@ namespace DisCatSharp.CommandsNext.Builders
         /// <summary>
         /// Sets the priority for this command overload.
         /// </summary>
-        /// <param name="priority">Priority for this command overload.</param>
+        /// <param name="Priority">Priority for this command overload.</param>
         /// <returns>This builder.</returns>
-        public CommandOverloadBuilder WithPriority(int priority)
+        public CommandOverloadBuilder WithPriority(int Priority)
         {
-            this.Priority = priority;
+            this.Priority = Priority;
 
             return this;
         }

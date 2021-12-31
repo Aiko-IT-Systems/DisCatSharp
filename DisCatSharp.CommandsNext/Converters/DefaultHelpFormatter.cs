@@ -45,9 +45,9 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Creates a new default help formatter.
         /// </summary>
-        /// <param name="ctx">Context in which this formatter is being invoked.</param>
-        public DefaultHelpFormatter(CommandContext ctx)
-            : base(ctx)
+        /// <param name="Ctx">Context in which this formatter is being invoked.</param>
+        public DefaultHelpFormatter(CommandContext Ctx)
+            : base(Ctx)
         {
             this.EmbedBuilder = new DiscordEmbedBuilder()
                 .WithTitle("Help")
@@ -57,27 +57,27 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Sets the command this help message will be for.
         /// </summary>
-        /// <param name="command">Command for which the help message is being produced.</param>
+        /// <param name="Command">Command for which the help message is being produced.</param>
         /// <returns>This help formatter.</returns>
-        public override BaseHelpFormatter WithCommand(Command command)
+        public override BaseHelpFormatter WithCommand(Command Command)
         {
-            this.Command = command;
+            this.Command = Command;
 
-            this.EmbedBuilder.WithDescription($"{Formatter.InlineCode(command.Name)}: {command.Description ?? "No description provided."}");
+            this.EmbedBuilder.WithDescription($"{Formatter.InlineCode(Command.Name)}: {Command.Description ?? "No description provided."}");
 
-            if (command is CommandGroup cgroup && cgroup.IsExecutableWithoutSubcommands)
+            if (Command is CommandGroup cgroup && cgroup.IsExecutableWithoutSubcommands)
                 this.EmbedBuilder.WithDescription($"{this.EmbedBuilder.Description}\n\nThis group can be executed as a standalone command.");
 
-            if (command.Aliases?.Any() == true)
-                this.EmbedBuilder.AddField("Aliases", string.Join(", ", command.Aliases.Select(Formatter.InlineCode)), false);
+            if (Command.Aliases?.Any() == true)
+                this.EmbedBuilder.AddField("Aliases", string.Join(", ", Command.Aliases.Select(Formatter.InlineCode)), false);
 
-            if (command.Overloads?.Any() == true)
+            if (Command.Overloads?.Any() == true)
             {
                 var sb = new StringBuilder();
 
-                foreach (var ovl in command.Overloads.OrderByDescending(x => x.Priority))
+                foreach (var ovl in Command.Overloads.OrderByDescending(X => X.Priority))
                 {
-                    sb.Append('`').Append(command.QualifiedName);
+                    sb.Append('`').Append(Command.QualifiedName);
 
                     foreach (var arg in ovl.Arguments)
                         sb.Append(arg.IsOptional || arg.IsCatchAll ? " [" : " <").Append(arg.Name).Append(arg.IsCatchAll ? "..." : "").Append(arg.IsOptional || arg.IsCatchAll ? ']' : '>');
@@ -99,11 +99,11 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Sets the subcommands for this command, if applicable. This method will be called with filtered data.
         /// </summary>
-        /// <param name="subcommands">Subcommands for this command group.</param>
+        /// <param name="Subcommands">Subcommands for this command group.</param>
         /// <returns>This help formatter.</returns>
-        public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
+        public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> Subcommands)
         {
-            this.EmbedBuilder.AddField(this.Command != null ? "Subcommands" : "Commands", string.Join(", ", subcommands.Select(x => Formatter.InlineCode(x.Name))), false);
+            this.EmbedBuilder.AddField(this.Command != null ? "Subcommands" : "Commands", string.Join(", ", Subcommands.Select(X => Formatter.InlineCode(X.Name))), false);
 
             return this;
         }
@@ -117,7 +117,7 @@ namespace DisCatSharp.CommandsNext.Converters
             if (this.Command == null)
                 this.EmbedBuilder.WithDescription("Listing all top-level commands and groups. Specify a command to see more information.");
 
-            return new CommandHelpMessage(embed: this.EmbedBuilder.Build());
+            return new CommandHelpMessage(Embed: this.EmbedBuilder.Build());
         }
     }
 }

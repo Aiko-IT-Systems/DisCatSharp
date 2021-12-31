@@ -275,29 +275,29 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Updates the stats.
         /// </summary>
-        /// <param name="newStats">The new stats.</param>
-        internal void Update(LavalinkStats newStats)
+        /// <param name="NewStats">The new stats.</param>
+        internal void Update(LavalinkStats NewStats)
         {
             if (!this._updated)
                 this._updated = true;
 
-            this.ActivePlayers = newStats.ActivePlayers;
-            this.TotalPlayers = newStats.TotalPlayers;
-            this.Uptime = newStats.Uptime;
+            this.ActivePlayers = NewStats.ActivePlayers;
+            this.TotalPlayers = NewStats.TotalPlayers;
+            this.Uptime = NewStats.Uptime;
 
-            this.CpuCoreCount = newStats.Cpu.Cores;
-            this.CpuSystemLoad = newStats.Cpu.SystemLoad;
-            this.CpuLavalinkLoad = newStats.Cpu.LavalinkLoad;
+            this.CpuCoreCount = NewStats.Cpu.Cores;
+            this.CpuSystemLoad = NewStats.Cpu.SystemLoad;
+            this.CpuLavalinkLoad = NewStats.Cpu.LavalinkLoad;
 
-            this.RamReservable = newStats.Memory.Reservable;
-            this.RamUsed = newStats.Memory.Used;
-            this.RamFree = newStats.Memory.Free;
-            this.RamAllocated = newStats.Memory.Allocated;
-            this.RamReservable = newStats.Memory.Reservable;
+            this.RamReservable = NewStats.Memory.Reservable;
+            this.RamUsed = NewStats.Memory.Used;
+            this.RamFree = NewStats.Memory.Free;
+            this.RamAllocated = NewStats.Memory.Allocated;
+            this.RamReservable = NewStats.Memory.Reservable;
 
-            this.AverageSentFramesPerMinute = newStats.Frames?.Sent ?? 0;
-            this.AverageNulledFramesPerMinute = newStats.Frames?.Nulled ?? 0;
-            this.AverageDeficitFramesPerMinute = newStats.Frames?.Deficit ?? 0;
+            this.AverageSentFramesPerMinute = NewStats.Frames?.Sent ?? 0;
+            this.AverageNulledFramesPerMinute = NewStats.Frames?.Nulled ?? 0;
+            this.AverageDeficitFramesPerMinute = NewStats.Frames?.Deficit ?? 0;
         }
     }
 }

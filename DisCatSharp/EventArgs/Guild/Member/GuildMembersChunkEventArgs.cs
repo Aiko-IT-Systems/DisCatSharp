@@ -69,6 +69,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="GuildMembersChunkEventArgs"/> class.
         /// </summary>
-        internal GuildMembersChunkEventArgs(IServiceProvider provider) : base(provider) { }
+        internal GuildMembersChunkEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

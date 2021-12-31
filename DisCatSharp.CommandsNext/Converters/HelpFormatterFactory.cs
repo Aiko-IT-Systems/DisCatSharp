@@ -47,7 +47,7 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Creates the help formatter.
         /// </summary>
-        /// <param name="ctx">The command context.</param>
-        public BaseHelpFormatter Create(CommandContext ctx) => this.Factory(ctx.Services, new object[] { ctx }) as BaseHelpFormatter;
+        /// <param name="Ctx">The command context.</param>
+        public BaseHelpFormatter Create(CommandContext Ctx) => this.Factory(Ctx.Services, new object[] { Ctx }) as BaseHelpFormatter;
     }
 }

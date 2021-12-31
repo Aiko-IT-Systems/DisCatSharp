@@ -47,16 +47,16 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Marks this method as a command with specified name.
         /// </summary>
-        /// <param name="name">Name of this command.</param>
-        public CommandAttribute(string name)
+        /// <param name="Name">Name of this command.</param>
+        public CommandAttribute(string Name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException(nameof(name), "Command names cannot be null, empty, or all-whitespace.");
+            if (string.IsNullOrWhiteSpace(Name))
+                throw new ArgumentNullException(nameof(Name), "Command names cannot be null, empty, or all-whitespace.");
 
-            if (name.Any(xc => char.IsWhiteSpace(xc)))
-                throw new ArgumentException("Command names cannot contain whitespace characters.", nameof(name));
+            if (Name.Any(Xc => char.IsWhiteSpace(Xc)))
+                throw new ArgumentException("Command names cannot contain whitespace characters.", nameof(Name));
 
-            this.Name = name;
+            this.Name = Name;
         }
     }
 

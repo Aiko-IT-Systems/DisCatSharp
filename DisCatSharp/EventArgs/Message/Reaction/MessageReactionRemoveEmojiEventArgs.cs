@@ -53,6 +53,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageReactionRemoveEmojiEventArgs"/> class.
         /// </summary>
-        internal MessageReactionRemoveEmojiEventArgs(IServiceProvider provider) : base(provider) { }
+        internal MessageReactionRemoveEmojiEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

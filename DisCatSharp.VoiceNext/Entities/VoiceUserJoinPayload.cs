@@ -39,6 +39,6 @@ namespace DisCatSharp.VoiceNext.Entities
         /// Gets the s s r c.
         /// </summary>
         [JsonProperty("audio_ssrc")]
-        public uint SSRC { get; private set; }
+        public uint Ssrc { get; private set; }
     }
 }

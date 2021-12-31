@@ -43,10 +43,10 @@ namespace DisCatSharp
         /// <summary>
         /// Creates a new read-only view of the given dictionary.
         /// </summary>
-        /// <param name="underlyingDict">Dictionary to create a view over.</param>
-        public ReadOnlyConcurrentDictionary(ConcurrentDictionary<TKey, TValue> underlyingDict)
+        /// <param name="UnderlyingDict">Dictionary to create a view over.</param>
+        public ReadOnlyConcurrentDictionary(ConcurrentDictionary<TKey, TValue> UnderlyingDict)
         {
-            this._underlyingDict = underlyingDict;
+            this._underlyingDict = UnderlyingDict;
         }
 
         /// <summary>
@@ -69,19 +69,19 @@ namespace DisCatSharp
         /// <summary>
         /// Contains the key.
         /// </summary>
-        /// <param name="key">The key.</param>
+        /// <param name="Key">The key.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool ContainsKey(TKey key) => this._underlyingDict.ContainsKey(key);
+        public bool ContainsKey(TKey Key) => this._underlyingDict.ContainsKey(Key);
 
         /// <summary>
         /// Tries the get value.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="Key">The key.</param>
+        /// <param name="Value">The value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryGetValue(TKey key, out TValue value) => this._underlyingDict.TryGetValue(key, out value);
+        public bool TryGetValue(TKey Key, out TValue Value) => this._underlyingDict.TryGetValue(Key, out Value);
 
-        public TValue this[TKey key] => this._underlyingDict[key];
+        public TValue this[TKey Key] => this._underlyingDict[Key];
 
         /// <summary>
         /// Gets the keys.

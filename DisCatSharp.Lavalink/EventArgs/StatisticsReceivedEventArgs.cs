@@ -40,11 +40,11 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="StatisticsReceivedEventArgs"/> class.
         /// </summary>
-        /// <param name="provider">Service provider.</param>
-        /// <param name="stats">The stats.</param>
-        internal StatisticsReceivedEventArgs(IServiceProvider provider, LavalinkStatistics stats) : base(provider)
+        /// <param name="Provider">Service provider.</param>
+        /// <param name="Stats">The stats.</param>
+        internal StatisticsReceivedEventArgs(IServiceProvider Provider, LavalinkStatistics Stats) : base(Provider)
         {
-            this.Statistics = stats;
+            this.Statistics = Stats;
         }
     }
 }

@@ -36,15 +36,15 @@ namespace DisCatSharp.Hosting.DependencyInjection
         /// <see cref="IDiscordHostedService"/> is scoped to ServiceLifetime.Singleton. <br/>
         /// Maps to Implementation of <typeparamref name="TService"/>
         /// </remarks>
-        /// <param name="services"></param>
+        /// <param name="Services"></param>
         /// <typeparam name="TService"></typeparam>
-        /// <returns>Reference to <paramref name="services"/> for chaining purposes</returns>
-        public static IServiceCollection AddDiscordHostedService<TService>(this IServiceCollection services)
+        /// <returns>Reference to <paramref name="Services"/> for chaining purposes</returns>
+        public static IServiceCollection AddDiscordHostedService<TService>(this IServiceCollection Services)
             where TService : class, IDiscordHostedService
         {
-            services.AddSingleton<TService>();
-            services.AddHostedService(provider => provider.GetRequiredService<TService>());
-            return services;
+            Services.AddSingleton<TService>();
+            Services.AddHostedService(Provider => Provider.GetRequiredService<TService>());
+            return Services;
         }
 
         /// <summary>
@@ -54,15 +54,15 @@ namespace DisCatSharp.Hosting.DependencyInjection
         /// <see cref="IDiscordHostedShardService"/> is scoped to ServiceLifetime.Singleton. <br/>
         /// Maps to Implementation of <typeparamref name="TService"/>
         /// </remarks>
-        /// <param name="services"></param>
+        /// <param name="Services"></param>
         /// <typeparam name="TService"></typeparam>
-        /// <returns>Reference to <paramref name="services"/> for chaining purposes</returns>
-        public static IServiceCollection AddDiscordHostedShardService<TService>(this IServiceCollection services)
+        /// <returns>Reference to <paramref name="Services"/> for chaining purposes</returns>
+        public static IServiceCollection AddDiscordHostedShardService<TService>(this IServiceCollection Services)
             where TService : class, IDiscordHostedShardService
         {
-            services.AddSingleton<TService>();
-            services.AddHostedService(provider => provider.GetRequiredService<TService>());
-            return services;
+            Services.AddSingleton<TService>();
+            Services.AddHostedService(Provider => Provider.GetRequiredService<TService>());
+            return Services;
         }
 
         /// <summary>
@@ -72,18 +72,18 @@ namespace DisCatSharp.Hosting.DependencyInjection
         /// <remarks>
         /// To retrieve your bot via Dependency Injection you can reference it via <typeparamref name="TInterface"/>
         /// </remarks>
-        /// <param name="services"></param>
+        /// <param name="Services"></param>
         /// <typeparam name="TInterface">Interface which <typeparamref name="TService"/> inherits from</typeparam>
         /// <typeparam name="TService">Your custom bot</typeparam>
-        /// <returns>Reference to <paramref name="services"/> for chaining purposes</returns>
-        public static IServiceCollection AddDiscordHostedService<TInterface, TService>(this IServiceCollection services)
+        /// <returns>Reference to <paramref name="Services"/> for chaining purposes</returns>
+        public static IServiceCollection AddDiscordHostedService<TInterface, TService>(this IServiceCollection Services)
             where TInterface : class, IDiscordHostedService
             where TService : class, TInterface, IDiscordHostedService
         {
-            services.AddSingleton<TInterface, TService>();
-            services.AddHostedService(provider => provider.GetRequiredService<TInterface>());
+            Services.AddSingleton<TInterface, TService>();
+            Services.AddHostedService(Provider => Provider.GetRequiredService<TInterface>());
 
-            return services;
+            return Services;
         }
 
         /// <summary>
@@ -93,18 +93,18 @@ namespace DisCatSharp.Hosting.DependencyInjection
         /// <remarks>
         /// To retrieve your bot via Dependency Injection you can reference it via <typeparamref name="TInterface"/>
         /// </remarks>
-        /// <param name="services"></param>
+        /// <param name="Services"></param>
         /// <typeparam name="TInterface">Interface which <typeparamref name="TService"/> inherits from</typeparam>
         /// <typeparam name="TService">Your custom bot</typeparam>
-        /// <returns>Reference to <paramref name="services"/> for chaining purposes</returns>
+        /// <returns>Reference to <paramref name="Services"/> for chaining purposes</returns>
         public static IServiceCollection AddDiscordHostedShardService<TInterface, TService>(
-            this IServiceCollection services)
+            this IServiceCollection Services)
             where TInterface : class, IDiscordHostedShardService
             where TService : class, TInterface, IDiscordHostedShardService
         {
-            services.AddSingleton<TInterface, TService>();
-            services.AddHostedService(provider => provider.GetRequiredService<TInterface>());
-            return services;
+            Services.AddSingleton<TInterface, TService>();
+            Services.AddHostedService(Provider => Provider.GetRequiredService<TInterface>());
+            return Services;
         }
     }
 }

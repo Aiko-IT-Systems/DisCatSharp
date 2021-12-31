@@ -43,23 +43,23 @@ namespace DisCatSharp.CommandsNext.Exceptions
         /// <summary>
         /// Creates a new <see cref="InvalidOverloadException"/>.
         /// </summary>
-        /// <param name="message">Exception message.</param>
-        /// <param name="method">Method that caused the problem.</param>
-        /// <param name="parameter">Method argument that caused the problem.</param>
-        public InvalidOverloadException(string message, MethodInfo method, ParameterInfo parameter)
-            : base(message)
+        /// <param name="Message">Exception message.</param>
+        /// <param name="Method">Method that caused the problem.</param>
+        /// <param name="Parameter">Method argument that caused the problem.</param>
+        public InvalidOverloadException(string Message, MethodInfo Method, ParameterInfo Parameter)
+            : base(Message)
         {
-            this.Method = method;
-            this.Parameter = parameter;
+            this.Method = Method;
+            this.Parameter = Parameter;
         }
 
         /// <summary>
         /// Creates a new <see cref="InvalidOverloadException"/>.
         /// </summary>
-        /// <param name="message">Exception message.</param>
-        /// <param name="method">Method that caused the problem.</param>
-        public InvalidOverloadException(string message, MethodInfo method)
-            : this(message, method, null)
+        /// <param name="Message">Exception message.</param>
+        /// <param name="Method">Method that caused the problem.</param>
+        public InvalidOverloadException(string Message, MethodInfo Method)
+            : this(Message, Method, null)
         { }
 
         /// <summary>

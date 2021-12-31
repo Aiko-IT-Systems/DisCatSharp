@@ -39,12 +39,12 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="GuildDownloadCompletedEventArgs"/> class.
         /// </summary>
-        /// <param name="guilds">The guilds.</param>
-        /// <param name="provider">Service provider.</param>
-        internal GuildDownloadCompletedEventArgs(IReadOnlyDictionary<ulong, DiscordGuild> guilds, IServiceProvider provider)
-            : base(provider)
+        /// <param name="Guilds">The guilds.</param>
+        /// <param name="Provider">Service provider.</param>
+        internal GuildDownloadCompletedEventArgs(IReadOnlyDictionary<ulong, DiscordGuild> Guilds, IServiceProvider Provider)
+            : base(Provider)
         {
-            this.Guilds = guilds;
+            this.Guilds = Guilds;
         }
     }
 }

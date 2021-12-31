@@ -38,10 +38,10 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Defines a lifespan for this command module.
         /// </summary>
-        /// <param name="lifespan">Lifespan for this module.</param>
-        public ModuleLifespanAttribute(ModuleLifespan lifespan)
+        /// <param name="Lifespan">Lifespan for this module.</param>
+        public ModuleLifespanAttribute(ModuleLifespan Lifespan)
         {
-            this.Lifespan = lifespan;
+            this.Lifespan = Lifespan;
         }
     }
 

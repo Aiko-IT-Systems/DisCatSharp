@@ -135,58 +135,58 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Deletes a thread.
         /// </summary>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task DeleteAsync(string reason = null)
-            => this.Discord.ApiClient.DeleteThreadAsync(this.Id, reason);
+        public new Task Delete(string Reason = null)
+            => this.Discord.ApiClient.DeleteThread(this.Id, Reason);
 
 
         /// <summary>
         /// Modifies the current thread.
         /// </summary>
-        /// <param name="action">Action to perform on this thread</param>
+        /// <param name="Action">Action to perform on this thread</param>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         /// <exception cref="System.NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>.</exception>
-        public Task ModifyAsync(Action<ThreadEditModel> action)
+        public Task Modify(Action<ThreadEditModel> Action)
         {
             var mdl = new ThreadEditModel();
-            action(mdl);
+            Action(mdl);
 
-            var can_continue = !mdl.AutoArchiveDuration.HasValue || !mdl.AutoArchiveDuration.Value.HasValue || Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.AutoArchiveDuration.Value.Value);
+            var canContinue = !mdl.AutoArchiveDuration.HasValue || !mdl.AutoArchiveDuration.Value.HasValue || Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.AutoArchiveDuration.Value.Value);
             if (mdl.Invitable.HasValue)
             {
-                can_continue = this.Guild.Features.CanCreatePrivateThreads;
+                canContinue = this.Guild.Features.CanCreatePrivateThreads;
             }
-            return can_continue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, mdl.Name, mdl.Locked, mdl.Archived, mdl.AutoArchiveDuration, mdl.PerUserRateLimit, mdl.Invitable, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+            return canContinue ? this.Discord.ApiClient.ModifyThread(this.Id, mdl.Name, mdl.Locked, mdl.Archived, mdl.AutoArchiveDuration, mdl.PerUserRateLimit, mdl.Invitable, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
         }
 
         /// <summary>
         /// Archives a thread.
         /// </summary>
-        /// <param name="locked">Whether the thread should be locked.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Locked">Whether the thread should be locked.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task ArchiveAsync(bool locked = true, string reason = null)
-            => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, locked, true, null, null, null, reason: reason);
+        public Task Archive(bool Locked = true, string Reason = null)
+            => this.Discord.ApiClient.ModifyThread(this.Id, null, Locked, true, null, null, null, Reason: Reason);
 
         /// <summary>
         /// Unarchives a thread.
         /// </summary>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task UnarchiveAsync(string reason = null)
-            => this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, false, null, null, null, reason: reason);
+        public Task Unarchive(string Reason = null)
+            => this.Discord.ApiClient.ModifyThread(this.Id, null, null, false, null, null, null, Reason: Reason);
 
         /// <summary>
         /// Gets the members of a thread. Needs the <see cref="DiscordIntents.GuildMembers"/> intent.
@@ -204,18 +204,18 @@ namespace DisCatSharp.Entities
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task AddMemberAsync(ulong member_id)
-            => this.Discord.ApiClient.AddThreadMemberAsync(this.Id, member_id);
+        public Task AddMember(ulong MemberId)
+            => this.Discord.ApiClient.AddThreadMemberAsync(this.Id, MemberId);
 
         /// <summary>
         /// Adds a member to this thread.
         /// </summary>
-        /// <param name="member">The member to be added.</param>
+        /// <param name="Member">The member to be added.</param>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task AddMemberAsync(DiscordMember member)
-            => this.AddMemberAsync(member.Id);
+        public Task AddMember(DiscordMember Member)
+            => this.AddMember(Member.Id);
 
         /// <summary>
         /// Gets a member in this thread.
@@ -224,18 +224,18 @@ namespace DisCatSharp.Entities
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member is not part of the thread.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordThreadChannelMember> GetMemberAsync(ulong member_id)
-            => this.Discord.ApiClient.GetThreadMemberAsync(this.Id, member_id);
+        public Task<DiscordThreadChannelMember> GetMember(ulong MemberId)
+            => this.Discord.ApiClient.GetThreadMemberAsync(this.Id, MemberId);
 
         /// <summary>
         /// Gets a member in this thread.
         /// </summary>
-        /// <param name="member">The member to be added.</param>
+        /// <param name="Member">The member to be added.</param>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member is not part of the thread.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordThreadChannelMember> GetMemberAsync(DiscordMember member)
-            => this.Discord.ApiClient.GetThreadMemberAsync(this.Id, member.Id);
+        public Task<DiscordThreadChannelMember> GetMember(DiscordMember Member)
+            => this.Discord.ApiClient.GetThreadMemberAsync(this.Id, Member.Id);
 
         /// <summary>
         /// Removes a member from this thread.
@@ -244,18 +244,18 @@ namespace DisCatSharp.Entities
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task RemoveMemberAsync(ulong member_id)
-            => this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, member_id);
+        public Task RemoveMember(ulong MemberId)
+            => this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, MemberId);
 
         /// <summary>
         /// Removes a member from this thread. Only applicable to private threads.
         /// </summary>
-        /// <param name="member">The member to be removed.</param>
+        /// <param name="Member">The member to be removed.</param>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task RemoveMemberAsync(DiscordMember member)
-            => this.RemoveMemberAsync(member.Id);
+        public Task RemoveMember(DiscordMember Member)
+            => this.RemoveMember(Member.Id);
 
         /// <summary>
         /// Adds a role to this thread. Only applicable to private threads.
@@ -264,11 +264,11 @@ namespace DisCatSharp.Entities
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task AddRoleAsync(ulong role_id)
+        public async Task AddRoleAsync(ulong RoleId)
         {
-            var role = this.Guild.GetRole(role_id);
+            var role = this.Guild.GetRole(RoleId);
             var members = await this.Guild.GetAllMembersAsync();
-            var roleMembers = members.Where(m => m.Roles.Contains(role));
+            var roleMembers = members.Where(M => M.Roles.Contains(role));
             foreach (var member in roleMembers)
             {
                 await this.Discord.ApiClient.AddThreadMemberAsync(this.Id, member.Id);
@@ -278,12 +278,12 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds a role to this thread. Only applicable to private threads.
         /// </summary>
-        /// <param name="role">The role to be added.</param>
+        /// <param name="Role">The role to be added.</param>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task AddRoleAsync(DiscordRole role)
-            => this.AddRoleAsync(role.Id);
+        public Task AddRole(DiscordRole Role)
+            => this.AddRoleAsync(Role.Id);
 
         /// <summary>
         /// Removes a role from this thread. Only applicable to private threads.
@@ -292,11 +292,11 @@ namespace DisCatSharp.Entities
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task RemoveRoleAsync(ulong role_id)
+        public async Task RemoveRoleAsync(ulong RoleId)
         {
-            var role = this.Guild.GetRole(role_id);
+            var role = this.Guild.GetRole(RoleId);
             var members = await this.Guild.GetAllMembersAsync();
-            var roleMembers = members.Where(m => m.Roles.Contains(role));
+            var roleMembers = members.Where(M => M.Roles.Contains(role));
             foreach (var member in roleMembers)
             {
                 await this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, member.Id);
@@ -306,12 +306,12 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Removes a role to from thread. Only applicable to private threads.
         /// </summary>
-        /// <param name="role">The role to be removed.</param>
+        /// <param name="Role">The role to be removed.</param>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task RemoveRoleAsync(DiscordRole role)
-            => this.RemoveRoleAsync(role.Id);
+        public Task RemoveRole(DiscordRole Role)
+            => this.RemoveRoleAsync(Role.Id);
 
         /// <summary>
         /// Joins a thread.
@@ -320,7 +320,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task JoinAsync()
+        public Task Join()
             => this.Discord.ApiClient.JoinThreadAsync(this.Id);
 
         /// <summary>
@@ -330,84 +330,84 @@ namespace DisCatSharp.Entities
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task LeaveAsync()
+        public Task Leave()
             => this.Discord.ApiClient.LeaveThreadAsync(this.Id);
 
 
         /// <summary>
         /// Sends a message to this thread.
         /// </summary>
-        /// <param name="content">Content of the message to send.</param>
+        /// <param name="Content">Content of the message to send.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task<DiscordMessage> SendMessageAsync(string content)
+        public new Task<DiscordMessage> SendMessage(string Content)
         {
             return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, Content, null, Sticker: null, ReplyMessageId: null, MentionReply: false, FailOnInvalidReply: false);
         }
 
         /// <summary>
         /// Sends a message to this thread.
         /// </summary>
-        /// <param name="embed">Embed to attach to the message.</param>
+        /// <param name="Embed">Embed to attach to the message.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
+        public new Task<DiscordMessage> SendMessage(DiscordEmbed Embed)
         {
             return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] { embed }, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] { Embed }, Sticker: null, ReplyMessageId: null, MentionReply: false, FailOnInvalidReply: false);
         }
 
         /// <summary>
         /// Sends a message to this thread.
         /// </summary>
-        /// <param name="content">Content of the message to send.</param>
-        /// <param name="embed">Embed to attach to the message.</param>
+        /// <param name="Content">Content of the message to send.</param>
+        /// <param name="Embed">Embed to attach to the message.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
+        public new Task<DiscordMessage> SendMessage(string Content, DiscordEmbed Embed)
         {
             return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
-                : this.Discord.ApiClient.CreateMessageAsync(this.Id, content, new[] { embed }, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
+                : this.Discord.ApiClient.CreateMessageAsync(this.Id, Content, new[] { Embed }, Sticker: null, ReplyMessageId: null, MentionReply: false, FailOnInvalidReply: false);
         }
 
         /// <summary>
         /// Sends a message to this thread.
         /// </summary>
-        /// <param name="builder">The builder with all the items to thread.</param>
+        /// <param name="Builder">The builder with all the items to thread.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
-            => this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
+        public new Task<DiscordMessage> SendMessage(DiscordMessageBuilder Builder)
+            => this.Discord.ApiClient.CreateMessageAsync(this.Id, Builder);
 
         /// <summary>
         /// Sends a message to this channel.
         /// </summary>
-        /// <param name="action">The builder with all the items to send.</param>
+        /// <param name="Action">The builder with all the items to send.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task<DiscordMessage> SendMessageAsync(Action<DiscordMessageBuilder> action)
+        public new Task<DiscordMessage> SendMessage(Action<DiscordMessageBuilder> Action)
         {
             var builder = new DiscordMessageBuilder();
-            action(builder);
+            Action(builder);
 
             return !this.IsWriteable()
                 ? throw new ArgumentException("Cannot send a text message to a non-text channel.")
@@ -417,100 +417,100 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Returns a specific message
         /// </summary>
-        /// <param name="id">The id of the message</param>
+        /// <param name="Id">The id of the message</param>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessagesInThreads"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true or the thread is locked.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new async Task<DiscordMessage> GetMessageAsync(ulong id)
+        public new async Task<DiscordMessage> GetMessageAsync(ulong Id)
         {
             return this.Discord.Configuration.MessageCacheSize > 0
                 && this.Discord is DiscordClient dc
                 && dc.MessageCache != null
-                && dc.MessageCache.TryGet(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)
+                && dc.MessageCache.TryGet(Xm => Xm.Id == Id && Xm.ChannelId == this.Id, out var msg)
                 ? msg
-                : await this.Discord.ApiClient.GetMessageAsync(this.Id, id).ConfigureAwait(false);
+                : await this.Discord.ApiClient.GetMessageAsync(this.Id, Id).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Returns a list of messages before a certain message.
-        /// <param name="limit">The amount of messages to fetch.</param>
-        /// <param name="before">Message to fetch before from.</param>
+        /// <param name="Limit">The amount of messages to fetch.</param>
+        /// <param name="Before">Message to fetch before from.</param>
         /// </summary>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task<IReadOnlyList<DiscordMessage>> GetMessagesBeforeAsync(ulong before, int limit = 100)
-            => this.GetMessagesInternalAsync(limit, before, null, null);
+        public new Task<IReadOnlyList<DiscordMessage>> GetMessagesBefore(ulong Before, int Limit = 100)
+            => this.GetMessagesInternal(Limit, Before, null, null);
 
         /// <summary>
         /// Returns a list of messages after a certain message.
-        /// <param name="limit">The amount of messages to fetch.</param>
-        /// <param name="after">Message to fetch after from.</param>
+        /// <param name="Limit">The amount of messages to fetch.</param>
+        /// <param name="After">Message to fetch after from.</param>
         /// </summary>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task<IReadOnlyList<DiscordMessage>> GetMessagesAfterAsync(ulong after, int limit = 100)
-            => this.GetMessagesInternalAsync(limit, null, after, null);
+        public new Task<IReadOnlyList<DiscordMessage>> GetMessagesAfter(ulong After, int Limit = 100)
+            => this.GetMessagesInternal(Limit, null, After, null);
 
         /// <summary>
         /// Returns a list of messages around a certain message.
-        /// <param name="limit">The amount of messages to fetch.</param>
-        /// <param name="around">Message to fetch around from.</param>
+        /// <param name="Limit">The amount of messages to fetch.</param>
+        /// <param name="Around">Message to fetch around from.</param>
         /// </summary>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task<IReadOnlyList<DiscordMessage>> GetMessagesAroundAsync(ulong around, int limit = 100)
-            => this.GetMessagesInternalAsync(limit, null, null, around);
+        public new Task<IReadOnlyList<DiscordMessage>> GetMessagesAround(ulong Around, int Limit = 100)
+            => this.GetMessagesInternal(Limit, null, null, Around);
 
         /// <summary>
         /// Returns a list of messages from the last message in the thread.
-        /// <param name="limit">The amount of messages to fetch.</param>
+        /// <param name="Limit">The amount of messages to fetch.</param>
         /// </summary>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task<IReadOnlyList<DiscordMessage>> GetMessagesAsync(int limit = 100) =>
-            this.GetMessagesInternalAsync(limit, null, null, null);
+        public new Task<IReadOnlyList<DiscordMessage>> GetMessages(int Limit = 100) =>
+            this.GetMessagesInternal(Limit, null, null, null);
 
         /// <summary>
         /// Returns a list of messages
         /// </summary>
-        /// <param name="limit">How many messages should be returned.</param>
-        /// <param name="before">Get messages before snowflake.</param>
-        /// <param name="after">Get messages after snowflake.</param>
-        /// <param name="around">Get messages around snowflake.</param>
-        private async Task<IReadOnlyList<DiscordMessage>> GetMessagesInternalAsync(int limit = 100, ulong? before = null, ulong? after = null, ulong? around = null)
+        /// <param name="Limit">How many messages should be returned.</param>
+        /// <param name="Before">Get messages before snowflake.</param>
+        /// <param name="After">Get messages after snowflake.</param>
+        /// <param name="Around">Get messages around snowflake.</param>
+        private async Task<IReadOnlyList<DiscordMessage>> GetMessagesInternal(int Limit = 100, ulong? Before = null, ulong? After = null, ulong? Around = null)
         {
             if (this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread)
                 throw new ArgumentException("Cannot get the messages of a non-thread channel.");
 
-            if (limit < 0)
+            if (Limit < 0)
                 throw new ArgumentException("Cannot get a negative number of messages.");
 
-            if (limit == 0)
+            if (Limit == 0)
                 return Array.Empty<DiscordMessage>();
 
             //return this.Discord.ApiClient.GetChannelMessagesAsync(this.Id, limit, before, after, around);
-            if (limit > 100 && around != null)
+            if (Limit > 100 && Around != null)
                 throw new InvalidOperationException("Cannot get more than 100 messages around the specified ID.");
 
-            var msgs = new List<DiscordMessage>(limit);
-            var remaining = limit;
+            var msgs = new List<DiscordMessage>(Limit);
+            var remaining = Limit;
             ulong? last = null;
-            var isAfter = after != null;
+            var isAfter = After != null;
 
             int lastCount;
             do
             {
                 var fetchSize = remaining > 100 ? 100 : remaining;
-                var fetch = await this.Discord.ApiClient.GetChannelMessagesAsync(this.Id, fetchSize, !isAfter ? last ?? before : null, isAfter ? last ?? after : null, around).ConfigureAwait(false);
+                var fetch = await this.Discord.ApiClient.GetChannelMessagesAsync(this.Id, fetchSize, !isAfter ? last ?? Before : null, isAfter ? last ?? After : null, Around).ConfigureAwait(false);
 
                 lastCount = fetch.Count;
                 remaining -= lastCount;
@@ -534,40 +534,40 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Deletes multiple messages if they are less than 14 days old.  If they are older, none of the messages will be deleted and you will receive a <see cref="DisCatSharp.Exceptions.BadRequestException"/> error.
         /// </summary>
-        /// <param name="messages">A collection of messages to delete.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Messages">A collection of messages to delete.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new async Task DeleteMessagesAsync(IEnumerable<DiscordMessage> messages, string reason = null)
+        public new async Task DeleteMessagesAsync(IEnumerable<DiscordMessage> Messages, string Reason = null)
         {
             // don't enumerate more than once
-            var msgs = messages.Where(x => x.Channel.Id == this.Id).Select(x => x.Id).ToArray();
-            if (messages == null || !msgs.Any())
+            var msgs = Messages.Where(X => X.Channel.Id == this.Id).Select(X => X.Id).ToArray();
+            if (Messages == null || !msgs.Any())
                 throw new ArgumentException("You need to specify at least one message to delete.");
 
             if (msgs.Count() < 2)
             {
-                await this.Discord.ApiClient.DeleteMessageAsync(this.Id, msgs.Single(), reason).ConfigureAwait(false);
+                await this.Discord.ApiClient.DeleteMessage(this.Id, msgs.Single(), Reason).ConfigureAwait(false);
                 return;
             }
 
             for (var i = 0; i < msgs.Count(); i += 100)
-                await this.Discord.ApiClient.DeleteMessagesAsync(this.Id, msgs.Skip(i).Take(100), reason).ConfigureAwait(false);
+                await this.Discord.ApiClient.DeleteMessages(this.Id, msgs.Skip(i).Take(100), Reason).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Deletes a message
         /// </summary>
-        /// <param name="message">The message to be deleted.</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Message">The message to be deleted.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task DeleteMessageAsync(DiscordMessage message, string reason = null)
-            => this.Discord.ApiClient.DeleteMessageAsync(this.Id, message.Id, reason);
+        public new Task DeleteMessage(DiscordMessage Message, string Reason = null)
+            => this.Discord.ApiClient.DeleteMessage(this.Id, Message.Id, Reason);
 
 
         /// <summary>
@@ -576,11 +576,11 @@ namespace DisCatSharp.Entities
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task TriggerTypingAsync()
+        public new Task TriggerTyping()
         {
             return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.NewsThread
                 ? throw new ArgumentException("Cannot start typing in a non-text channel.")
-                : this.Discord.ApiClient.TriggerTypingAsync(this.Id);
+                : this.Discord.ApiClient.TriggerTyping(this.Id);
         }
 
         /// <summary>
@@ -590,7 +590,7 @@ namespace DisCatSharp.Entities
         /// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
         /// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public new Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync()
+        public new Task<IReadOnlyList<DiscordMessage>> GetPinnedMessages()
         {
             return this.Type != ChannelType.PublicThread && this.Type != ChannelType.PrivateThread && this.Type != ChannelType.News
                 ? throw new ArgumentException("A non-thread channel does not have pinned messages.")
@@ -617,16 +617,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Checks whether this <see cref="DiscordThreadChannel"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="DiscordThreadChannel"/>.</returns>
-        public override bool Equals(object obj) => this.Equals(obj as DiscordThreadChannel);
+        public override bool Equals(object Obj) => this.Equals(Obj as DiscordThreadChannel);
 
         /// <summary>
         /// Checks whether this <see cref="DiscordThreadChannel"/> is equal to another <see cref="DiscordThreadChannel"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordThreadChannel"/> to compare to.</param>
+        /// <param name="E"><see cref="DiscordThreadChannel"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordThreadChannel"/> is equal to this <see cref="DiscordThreadChannel"/>.</returns>
-        public bool Equals(DiscordThreadChannel e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+        public bool Equals(DiscordThreadChannel E) => E is not null && (ReferenceEquals(this, E) || this.Id == E.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordThreadChannel"/>.
@@ -637,24 +637,24 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordThreadChannel"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First channel to compare.</param>
-        /// <param name="e2">Second channel to compare.</param>
+        /// <param name="E1">First channel to compare.</param>
+        /// <param name="E2">Second channel to compare.</param>
         /// <returns>Whether the two channels are equal.</returns>
-        public static bool operator ==(DiscordThreadChannel e1, DiscordThreadChannel e2)
+        public static bool operator ==(DiscordThreadChannel E1, DiscordThreadChannel E2)
         {
-            var o1 = e1 as object;
-            var o2 = e2 as object;
+            var o1 = E1 as object;
+            var o2 = E2 as object;
 
-            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || E1.Id == E2.Id);
         }
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordThreadChannel"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First channel to compare.</param>
-        /// <param name="e2">Second channel to compare.</param>
+        /// <param name="E1">First channel to compare.</param>
+        /// <param name="E2">Second channel to compare.</param>
         /// <returns>Whether the two channels are not equal.</returns>
-        public static bool operator !=(DiscordThreadChannel e1, DiscordThreadChannel e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordThreadChannel E1, DiscordThreadChannel E2)
+            => !(E1 == E2);
     }
 }

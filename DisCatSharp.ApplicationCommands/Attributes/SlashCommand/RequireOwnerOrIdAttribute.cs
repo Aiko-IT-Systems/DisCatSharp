@@ -43,23 +43,23 @@ namespace DisCatSharp.ApplicationCommands.Attributes
         /// Defines that usage of this command is restricted to the owner or whitelisted ids of the bot.
         /// </summary>
         /// <param name="user_ids">List of allowed user ids</param>
-        public ApplicationCommandRequireOwnerOrIdAttribute(params ulong[] user_ids)
+        public ApplicationCommandRequireOwnerOrIdAttribute(params ulong[] UserIds)
         {
-            this.UserIds = new ReadOnlyCollection<ulong>(user_ids);
+            this.UserIds = new ReadOnlyCollection<ulong>(UserIds);
         }
 
         /// <summary>
         /// Executes the a check.
         /// </summary>
-        /// <param name="ctx">The command context.</param>s
-        public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+        /// <param name="Ctx">The command context.</param>s
+        public override Task<bool> ExecuteChecks(InteractionContext Ctx)
         {
-            var app = ctx.Client.CurrentApplication;
-            var me = ctx.Client.CurrentUser;
+            var app = Ctx.Client.CurrentApplication;
+            var me = Ctx.Client.CurrentUser;
 
-            var owner = app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
+            var owner = app != null ? Task.FromResult(app.Owners.Any(X => X.Id == Ctx.User.Id)) : Task.FromResult(Ctx.User.Id == me.Id);
 
-            var allowed = this.UserIds.Contains(ctx.User.Id);
+            var allowed = this.UserIds.Contains(Ctx.User.Id);
 
             return allowed ? Task.FromResult(true) : owner;
         }

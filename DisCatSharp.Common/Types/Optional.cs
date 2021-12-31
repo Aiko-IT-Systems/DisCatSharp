@@ -58,11 +58,11 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Creates a new <see cref="Optional{T}"/> property with specified value.
         /// </summary>
-        /// <param name="value">Value of this property.</param>
-        public Optional(T value)
+        /// <param name="Value">Value of this property.</param>
+        public Optional(T Value)
         {
             this.HasValue = true;
-            this._value = value;
+            this._value = Value;
         }
 
         /// <summary>
@@ -75,21 +75,21 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Checks whether the value of this property is equal to another value.
         /// </summary>
-        /// <param name="obj">Object to compare against.</param>
+        /// <param name="Obj">Object to compare against.</param>
         /// <returns>Whether the supplied object is equal to the value of this property.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object Obj)
         {
-            if (obj is Optional<T> opt)
+            if (Obj is Optional<T> opt)
                 return this.Equals(opt);
 
-            if (obj is T val)
+            if (Obj is T val)
                 return this.Equals(val);
 
-            if (!this.HasValue && obj == null)
+            if (!this.HasValue && Obj == null)
                 return true;
 
             if (this.HasValue)
-                return object.Equals(this._value, obj);
+                return object.Equals(this._value, Obj);
 
             return false;
         }
@@ -97,30 +97,30 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Checks whether this property is equal to another property.
         /// </summary>
-        /// <param name="other">Property to compare against.</param>
+        /// <param name="Other">Property to compare against.</param>
         /// <returns>Whether the supplied property is equal to this property.</returns>
-        public bool Equals(Optional<T> other)
+        public bool Equals(Optional<T> Other)
         {
-            if (!this.HasValue && !other.HasValue)
+            if (!this.HasValue && !Other.HasValue)
                 return true;
-            else if (this.HasValue != other.HasValue)
+            else if (this.HasValue != Other.HasValue)
                 return false;
             else
-                return object.Equals(this._value, other._value);
+                return object.Equals(this._value, Other._value);
         }
 
         /// <summary>
         /// Checks whether this proerty's value is equal to another value.
         /// </summary>
-        /// <param name="other">Value to compare this property's value against.</param>
+        /// <param name="Other">Value to compare this property's value against.</param>
         /// <returns>Whether the supplied value is equal to the value of this property.</returns>
-        public bool Equals(T other)
+        public bool Equals(T Other)
         {
-            if (!this.HasValue && other == null)
+            if (!this.HasValue && Other == null)
                 return true;
 
             if (this.HasValue)
-                return object.Equals(this._value, other);
+                return object.Equals(this._value, Other);
 
             return false;
         }
@@ -136,61 +136,61 @@ namespace DisCatSharp.Common
         /// Converts a specified value into an optional property of the value's type. The resulting property will have
         /// its value set to the supplied one.
         /// </summary>
-        /// <param name="value">Value to convert into an optional property.</param>
-        public static implicit operator Optional<T>(T value)
-            => new Optional<T>(value);
+        /// <param name="Value">Value to convert into an optional property.</param>
+        public static implicit operator Optional<T>(T Value)
+            => new Optional<T>(Value);
 
         /// <summary>
         /// Compares two properties and returns whether they are equal.
         /// </summary>
-        /// <param name="left">Property to compare against.</param>
-        /// <param name="right">Property to compare.</param>
+        /// <param name="Left">Property to compare against.</param>
+        /// <param name="Right">Property to compare.</param>
         /// <returns>Whether the two properties are equal.</returns>
-        public static bool operator ==(Optional<T> left, Optional<T> right)
-            => left.Equals(right);
+        public static bool operator ==(Optional<T> Left, Optional<T> Right)
+            => Left.Equals(Right);
 
         /// <summary>
         /// Compares two properties and returns whether they are not equal.
         /// </summary>
-        /// <param name="left">Property to compare against.</param>
-        /// <param name="right">Property to compare.</param>
+        /// <param name="Left">Property to compare against.</param>
+        /// <param name="Right">Property to compare.</param>
         /// <returns>Whether the two properties are not equal.</returns>
-        public static bool operator !=(Optional<T> left, Optional<T> right)
-            => !left.Equals(right);
+        public static bool operator !=(Optional<T> Left, Optional<T> Right)
+            => !Left.Equals(Right);
 
         /// <summary>
         /// Compares a property's value against another value, and returns whether they are equal.
         /// </summary>
-        /// <param name="left">Property to compare against.</param>
-        /// <param name="right">Value to compare.</param>
+        /// <param name="Left">Property to compare against.</param>
+        /// <param name="Right">Value to compare.</param>
         /// <returns>Whether the property's value is equal to the specified value.</returns>
-        public static bool operator ==(Optional<T> left, T right)
-            => left.Equals(right);
+        public static bool operator ==(Optional<T> Left, T Right)
+            => Left.Equals(Right);
 
         /// <summary>
         /// Compares a property's value against another value, and returns whether they are not equal.
         /// </summary>
-        /// <param name="left">Property to compare against.</param>
-        /// <param name="right">Value to compare.</param>
+        /// <param name="Left">Property to compare against.</param>
+        /// <param name="Right">Value to compare.</param>
         /// <returns>Whether this property's value is not equal to the specified value.</returns>
-        public static bool operator !=(Optional<T> left, T right)
-            => !left.Equals(right);
+        public static bool operator !=(Optional<T> Left, T Right)
+            => !Left.Equals(Right);
 
         /// <summary>
         /// Checks whether specified property has a value.
         /// </summary>
-        /// <param name="opt">Property to check.</param>
+        /// <param name="Opt">Property to check.</param>
         /// <returns>Whether the property has a value.</returns>
-        public static bool operator true(Optional<T> opt)
-            => opt.HasValue;
+        public static bool operator true(Optional<T> Opt)
+            => Opt.HasValue;
 
         /// <summary>
         /// Checks whether specified property has no value.
         /// </summary>
-        /// <param name="opt">Property to check.</param>
+        /// <param name="Opt">Property to check.</param>
         /// <returns>Whether the property has no value.</returns>
-        public static bool operator false(Optional<T> opt)
-            => !opt.HasValue;
+        public static bool operator false(Optional<T> Opt)
+            => !Opt.HasValue;
     }
 
     /// <summary>
@@ -202,10 +202,10 @@ namespace DisCatSharp.Common
         /// Creates a new <see cref="Optional{T}"/> from a value of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">Type of the value to create an optional property for.</typeparam>
-        /// <param name="value">Value to set the property to.</param>
+        /// <param name="Value">Value to set the property to.</param>
         /// <returns>Created optional property, which has a specified value set.</returns>
-        public static Optional<T> FromValue<T>(T value)
-            => new Optional<T>(value);
+        public static Optional<T> FromValue<T>(T Value)
+            => new Optional<T>(Value);
 
         /// <summary>
         /// Creates a new <see cref="Optional{T}"/> from a default value for type <typeparamref name="T"/>.

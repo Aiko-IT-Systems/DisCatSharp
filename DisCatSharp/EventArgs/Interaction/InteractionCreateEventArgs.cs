@@ -38,8 +38,8 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="InteractionCreateEventArgs"/> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        public InteractionCreateEventArgs(IServiceProvider provider) : base(provider)
+        /// <param name="Provider">The provider.</param>
+        public InteractionCreateEventArgs(IServiceProvider Provider) : base(Provider)
         { }
     }
 }

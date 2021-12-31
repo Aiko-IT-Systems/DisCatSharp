@@ -49,19 +49,19 @@ namespace DisCatSharp.ApplicationCommands
         /// Gets the command name translations.
         /// </summary>
         [JsonProperty("name_translations")]
-        internal Dictionary<string, string> NT { get; set; }
+        internal Dictionary<string, string> Nt { get; set; }
         [JsonIgnore]
         public DiscordApplicationCommandLocalization NameTranslations
-            => new(this.NT);
+            => new(this.Nt);
 
         /// <summary>
         /// Gets the command description translations.
         /// </summary>
         [JsonProperty("description_translations")]
-        internal Dictionary<string, string> DT { get; set; }
+        internal Dictionary<string, string> Dt { get; set; }
         [JsonIgnore]
         public DiscordApplicationCommandLocalization DescriptionTranslations
-            => new(this.DT);
+            => new(this.Dt);
 
         /// <summary>
         /// Gets the option translators, if applicable.

@@ -77,9 +77,9 @@ namespace DisCatSharp.Configuration.Tests
             public TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(7);
             public string Name { get; set; } = "Sample";
             public string ConstructorValue { get; }
-            public SampleClass2(string value)
+            public SampleClass2(string Value)
             {
-                this.ConstructorValue = value;
+                this.ConstructorValue = Value;
             }
         }
         #endregion

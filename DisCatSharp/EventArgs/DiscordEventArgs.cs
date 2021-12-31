@@ -44,10 +44,10 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordEventArgs"/> class.
         /// </summary>
-        protected DiscordEventArgs(IServiceProvider provider)
+        protected DiscordEventArgs(IServiceProvider Provider)
         {
-            if (provider != null)
-                this.ServiceProvider = provider.CreateScope().ServiceProvider;
+            if (Provider != null)
+                this.ServiceProvider = Provider.CreateScope().ServiceProvider;
         }
     }
 }

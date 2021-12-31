@@ -43,25 +43,25 @@ namespace DisCatSharp.CommandsNext.Converters
         /// <summary>
         /// Creates a new help formatter for specified CommandsNext extension instance.
         /// </summary>
-        /// <param name="ctx">Context in which this formatter is being invoked.</param>
-        public BaseHelpFormatter(CommandContext ctx)
+        /// <param name="Ctx">Context in which this formatter is being invoked.</param>
+        public BaseHelpFormatter(CommandContext Ctx)
         {
-            this.Context = ctx;
+            this.Context = Ctx;
         }
 
         /// <summary>
         /// Sets the command this help message will be for.
         /// </summary>
-        /// <param name="command">Command for which the help message is being produced.</param>
+        /// <param name="Command">Command for which the help message is being produced.</param>
         /// <returns>This help formatter.</returns>
-        public abstract BaseHelpFormatter WithCommand(Command command);
+        public abstract BaseHelpFormatter WithCommand(Command Command);
 
         /// <summary>
         /// Sets the subcommands for this command, if applicable. This method will be called with filtered data.
         /// </summary>
-        /// <param name="subcommands">Subcommands for this command group.</param>
+        /// <param name="Subcommands">Subcommands for this command group.</param>
         /// <returns>This help formatter.</returns>
-        public abstract BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands);
+        public abstract BaseHelpFormatter WithSubcommands(IEnumerable<Command> Subcommands);
 
         /// <summary>
         /// Constructs the help message.

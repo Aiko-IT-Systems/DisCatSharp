@@ -62,11 +62,11 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Initializes a new instance of the <see cref="VoiceNextExtension"/> class.
         /// </summary>
-        /// <param name="config">The config.</param>
-        internal VoiceNextExtension(VoiceNextConfiguration config)
+        /// <param name="Config">The config.</param>
+        internal VoiceNextExtension(VoiceNextConfiguration Config)
         {
-            this.Configuration = new VoiceNextConfiguration(config);
-            this.IsIncomingEnabled = config.EnableIncoming;
+            this.Configuration = new VoiceNextConfiguration(Config);
+            this.IsIncomingEnabled = Config.EnableIncoming;
 
             this.ActiveConnections = new ConcurrentDictionary<ulong, VoiceNextConnection>();
             this.VoiceStateUpdates = new ConcurrentDictionary<ulong, TaskCompletionSource<VoiceStateUpdateEventArgs>>();
@@ -76,14 +76,14 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// DO NOT USE THIS MANUALLY.
         /// </summary>
-        /// <param name="client">DO NOT USE THIS MANUALLY.</param>
+        /// <param name="Client">DO NOT USE THIS MANUALLY.</param>
         /// <exception cref="System.InvalidOperationException"/>
-        protected internal override void Setup(DiscordClient client)
+        protected internal override void Setup(DiscordClient Client)
         {
             if (this.Client != null)
                 throw new InvalidOperationException("What did I tell you?");
 
-            this.Client = client;
+            this.Client = Client;
 
             this.Client.VoiceStateUpdated += this.Client_VoiceStateUpdate;
             this.Client.VoiceServerUpdated += this.Client_VoiceServerUpdate;
@@ -92,20 +92,20 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Create a VoiceNext connection for the specified channel.
         /// </summary>
-        /// <param name="channel">Channel to connect to.</param>
+        /// <param name="Channel">Channel to connect to.</param>
         /// <returns>VoiceNext connection for this channel.</returns>
-        public async Task<VoiceNextConnection> ConnectAsync(DiscordChannel channel)
+        public async Task<VoiceNextConnection> ConnectAsync(DiscordChannel Channel)
         {
-            if (channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage)
-                throw new ArgumentException(nameof(channel), "Invalid channel specified; needs to be voice or stage channel");
+            if (Channel.Type != ChannelType.Voice && Channel.Type != ChannelType.Stage)
+                throw new ArgumentException(nameof(Channel), "Invalid channel specified; needs to be voice or stage channel");
 
-            if (channel.Guild == null)
-                throw new ArgumentException(nameof(channel), "Invalid channel specified; needs to be guild channel");
+            if (Channel.Guild == null)
+                throw new ArgumentException(nameof(Channel), "Invalid channel specified; needs to be guild channel");
 
-            if (!channel.PermissionsFor(channel.Guild.CurrentMember).HasPermission(Permissions.AccessChannels | Permissions.UseVoice))
+            if (!Channel.PermissionsFor(Channel.Guild.CurrentMember).HasPermission(Permissions.AccessChannels | Permissions.UseVoice))
                 throw new InvalidOperationException("You need AccessChannels and UseVoice permission to connect to this voice channel");
 
-            var gld = channel.Guild;
+            var gld = Channel.Guild;
             if (this.ActiveConnections.ContainsKey(gld.Id))
                 throw new InvalidOperationException("This guild already has a voice connection");
 
@@ -120,13 +120,13 @@ namespace DisCatSharp.VoiceNext
                 Payload = new VoiceStateUpdatePayload
                 {
                     GuildId = gld.Id,
-                    ChannelId = channel.Id,
+                    ChannelId = Channel.Id,
                     Deafened = false,
                     Muted = false
                 }
             };
             var vsj = JsonConvert.SerializeObject(vsd, Formatting.None);
-            await (channel.Discord as DiscordClient).WsSendAsync(vsj).ConfigureAwait(false);
+            await (Channel.Discord as DiscordClient).WsSendAsync(vsj).ConfigureAwait(false);
 
             var vstu = await vstut.Task.ConfigureAwait(false);
             var vstup = new VoiceStateUpdatePayload
@@ -142,10 +142,10 @@ namespace DisCatSharp.VoiceNext
                 Token = vsru.VoiceToken
             };
 
-            var vnc = new VoiceNextConnection(this.Client, gld, channel, this.Configuration, vsrup, vstup);
+            var vnc = new VoiceNextConnection(this.Client, gld, Channel, this.Configuration, vsrup, vstup);
             vnc.VoiceDisconnected += this.Vnc_VoiceDisconnected;
-            await vnc.ConnectAsync().ConfigureAwait(false);
-            await vnc.WaitForReadyAsync().ConfigureAwait(false);
+            await vnc.Connect().ConfigureAwait(false);
+            await vnc.WaitForReady().ConfigureAwait(false);
             this.ActiveConnections[gld.Id] = vnc;
             return vnc;
         }
@@ -153,59 +153,59 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Gets a VoiceNext connection for specified guild.
         /// </summary>
-        /// <param name="guild">Guild to get VoiceNext connection for.</param>
+        /// <param name="Guild">Guild to get VoiceNext connection for.</param>
         /// <returns>VoiceNext connection for the specified guild.</returns>
-        public VoiceNextConnection GetConnection(DiscordGuild guild) => this.ActiveConnections.ContainsKey(guild.Id) ? this.ActiveConnections[guild.Id] : null;
+        public VoiceNextConnection GetConnection(DiscordGuild Guild) => this.ActiveConnections.ContainsKey(Guild.Id) ? this.ActiveConnections[Guild.Id] : null;
 
         /// <summary>
         /// Vnc_S the voice disconnected.
         /// </summary>
-        /// <param name="guild">The guild.</param>
+        /// <param name="Guild">The guild.</param>
         /// <returns>A Task.</returns>
-        private async Task Vnc_VoiceDisconnected(DiscordGuild guild)
+        private async Task Vnc_VoiceDisconnected(DiscordGuild Guild)
         {
             VoiceNextConnection vnc = null;
-            if (this.ActiveConnections.ContainsKey(guild.Id))
-                this.ActiveConnections.TryRemove(guild.Id, out vnc);
+            if (this.ActiveConnections.ContainsKey(Guild.Id))
+                this.ActiveConnections.TryRemove(Guild.Id, out vnc);
 
             var vsd = new VoiceDispatch
             {
                 OpCode = 4,
                 Payload = new VoiceStateUpdatePayload
                 {
-                    GuildId = guild.Id,
+                    GuildId = Guild.Id,
                     ChannelId = null
                 }
             };
             var vsj = JsonConvert.SerializeObject(vsd, Formatting.None);
-            await (guild.Discord as DiscordClient).WsSendAsync(vsj).ConfigureAwait(false);
+            await (Guild.Discord as DiscordClient).WsSendAsync(vsj).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Client_S the voice state update.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="e">The e.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="E">The e.</param>
         /// <returns>A Task.</returns>
-        private Task Client_VoiceStateUpdate(DiscordClient client, VoiceStateUpdateEventArgs e)
+        private Task Client_VoiceStateUpdate(DiscordClient Client, VoiceStateUpdateEventArgs E)
         {
-            var gld = e.Guild;
+            var gld = E.Guild;
             if (gld == null)
                 return Task.CompletedTask;
 
-            if (e.User == null)
+            if (E.User == null)
                 return Task.CompletedTask;
 
-            if (e.User.Id == this.Client.CurrentUser.Id)
+            if (E.User.Id == this.Client.CurrentUser.Id)
             {
-                if (e.After.Channel == null && this.ActiveConnections.TryRemove(gld.Id, out var ac))
+                if (E.After.Channel == null && this.ActiveConnections.TryRemove(gld.Id, out var ac))
                     ac.Disconnect();
 
-                if (this.ActiveConnections.TryGetValue(e.Guild.Id, out var vnc))
-                    vnc.TargetChannel = e.Channel;
+                if (this.ActiveConnections.TryGetValue(E.Guild.Id, out var vnc))
+                    vnc.TargetChannel = E.Channel;
 
-                if (!string.IsNullOrWhiteSpace(e.SessionId) && e.Channel != null && this.VoiceStateUpdates.TryRemove(gld.Id, out var xe))
-                    xe.SetResult(e);
+                if (!string.IsNullOrWhiteSpace(E.SessionId) && E.Channel != null && this.VoiceStateUpdates.TryRemove(gld.Id, out var xe))
+                    xe.SetResult(E);
             }
 
             return Task.CompletedTask;
@@ -214,25 +214,25 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Client_S the voice server update.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="e">The e.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="E">The e.</param>
         /// <returns>A Task.</returns>
-        private async Task Client_VoiceServerUpdate(DiscordClient client, VoiceServerUpdateEventArgs e)
+        private async Task Client_VoiceServerUpdate(DiscordClient Client, VoiceServerUpdateEventArgs E)
         {
-            var gld = e.Guild;
+            var gld = E.Guild;
             if (gld == null)
                 return;
 
-            if (this.ActiveConnections.TryGetValue(e.Guild.Id, out var vnc))
+            if (this.ActiveConnections.TryGetValue(E.Guild.Id, out var vnc))
             {
                 vnc.ServerData = new VoiceServerUpdatePayload
                 {
-                    Endpoint = e.Endpoint,
-                    GuildId = e.Guild.Id,
-                    Token = e.VoiceToken
+                    Endpoint = E.Endpoint,
+                    GuildId = E.Guild.Id,
+                    Token = E.VoiceToken
                 };
 
-                var eps = e.Endpoint;
+                var eps = E.Endpoint;
                 var epi = eps.LastIndexOf(':');
                 var eph = string.Empty;
                 var epp = 443;
@@ -248,13 +248,13 @@ namespace DisCatSharp.VoiceNext
                 vnc.WebSocketEndpoint = new ConnectionEndpoint { Hostname = eph, Port = epp };
 
                 vnc.Resume = false;
-                await vnc.ReconnectAsync().ConfigureAwait(false);
+                await vnc.Reconnect().ConfigureAwait(false);
             }
 
             if (this.VoiceServerUpdates.ContainsKey(gld.Id))
             {
                 this.VoiceServerUpdates.TryRemove(gld.Id, out var xe);
-                xe.SetResult(e);
+                xe.SetResult(E);
             }
         }
     }

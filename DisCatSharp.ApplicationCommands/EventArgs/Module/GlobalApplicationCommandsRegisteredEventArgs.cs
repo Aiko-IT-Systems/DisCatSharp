@@ -40,8 +40,8 @@ namespace DisCatSharp.ApplicationCommands.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalApplicationCommandsRegisteredEventArgs"/> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        internal GlobalApplicationCommandsRegisteredEventArgs(IServiceProvider provider) : base(provider)
+        /// <param name="Provider">The provider.</param>
+        internal GlobalApplicationCommandsRegisteredEventArgs(IServiceProvider Provider) : base(Provider)
         { }
     }
 }

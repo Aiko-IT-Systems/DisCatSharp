@@ -40,10 +40,10 @@ namespace DisCatSharp.Common.Utilities
         /// <remarks>
         /// This method is intended for reflection use only.
         /// </remarks>
-        /// <param name="t">Type of the object to instantiate.</param>
+        /// <param name="T">Type of the object to instantiate.</param>
         /// <returns>Empty, uninitialized object of specified type.</returns>
-        public static object CreateEmpty(this Type t)
-            => FormatterServices.GetUninitializedObject(t);
+        public static object CreateEmpty(this Type T)
+            => FormatterServices.GetUninitializedObject(T);
 
         /// <summary>
         /// <para>Creates an empty, uninitialized instance of type <typeparamref name="T"/>.</para>
@@ -61,15 +61,15 @@ namespace DisCatSharp.Common.Utilities
         /// Converts a given object into a dictionary of property name to property value mappings.
         /// </summary>
         /// <typeparam name="T">Type of object to convert.</typeparam>
-        /// <param name="obj">Object to convert.</param>
+        /// <param name="Obj">Object to convert.</param>
         /// <returns>Converted dictionary.</returns>
-        public static IReadOnlyDictionary<string, object> ToDictionary<T>(this T obj)
+        public static IReadOnlyDictionary<string, object> ToDictionary<T>(this T Obj)
         {
-            if (obj == null)
+            if (Obj == null)
                 throw new NullReferenceException();
 
             return new CharSpanLookupReadOnlyDictionary<object>(typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Select(x => new KeyValuePair<string, object>(x.Name, x.GetValue(obj))));
+                .Select(X => new KeyValuePair<string, object>(X.Name, X.GetValue(Obj))));
         }
     }
 }

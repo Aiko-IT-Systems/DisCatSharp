@@ -58,16 +58,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordGuildMembershipScreeningField"/> class.
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="label">The label.</param>
-        /// <param name="values">The values.</param>
-        /// <param name="required">If true, required.</param>
-        public DiscordGuildMembershipScreeningField(MembershipScreeningFieldType type, string label, IEnumerable<string> values, bool required = true)
+        /// <param name="Type">The type.</param>
+        /// <param name="Label">The label.</param>
+        /// <param name="Values">The values.</param>
+        /// <param name="Required">If true, required.</param>
+        public DiscordGuildMembershipScreeningField(MembershipScreeningFieldType Type, string Label, IEnumerable<string> Values, bool Required = true)
         {
-            this.Type = type;
-            this.Label = label;
-            this.Values = values.ToList();
-            this.IsRequired = required;
+            this.Type = Type;
+            this.Label = Label;
+            this.Values = Values.ToList();
+            this.IsRequired = Required;
         }
 
         /// <summary>

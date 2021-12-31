@@ -89,27 +89,27 @@ namespace DisCatSharp.Lavalink
         /// <summary>
         /// Creates a new instance of <see cref="LavalinkConfiguration"/>, copying the properties of another configuration.
         /// </summary>
-        /// <param name="other">Configuration the properties of which are to be copied.</param>
-        public LavalinkConfiguration(LavalinkConfiguration other)
+        /// <param name="Other">Configuration the properties of which are to be copied.</param>
+        public LavalinkConfiguration(LavalinkConfiguration Other)
         {
             this.RestEndpoint = new ConnectionEndpoint
             {
-                Hostname = other.RestEndpoint.Hostname,
-                Port = other.RestEndpoint.Port,
-                Secured = other.RestEndpoint.Secured
+                Hostname = Other.RestEndpoint.Hostname,
+                Port = Other.RestEndpoint.Port,
+                Secured = Other.RestEndpoint.Secured
             };
             this.SocketEndpoint = new ConnectionEndpoint
             {
-                Hostname = other.SocketEndpoint.Hostname,
-                Port = other.SocketEndpoint.Port,
-                Secured = other.SocketEndpoint.Secured
+                Hostname = Other.SocketEndpoint.Hostname,
+                Port = Other.SocketEndpoint.Port,
+                Secured = Other.SocketEndpoint.Secured
             };
-            this.Password = other.Password;
-            this.ResumeKey = other.ResumeKey;
-            this.ResumeTimeout = other.ResumeTimeout;
-            this.SocketAutoReconnect = other.SocketAutoReconnect;
-            this.Region = other.Region;
-            this.WebSocketCloseTimeout = other.WebSocketCloseTimeout;
+            this.Password = Other.Password;
+            this.ResumeKey = Other.ResumeKey;
+            this.ResumeTimeout = Other.ResumeTimeout;
+            this.SocketAutoReconnect = Other.SocketAutoReconnect;
+            this.Region = Other.Region;
+            this.WebSocketCloseTimeout = Other.WebSocketCloseTimeout;
         }
     }
 }

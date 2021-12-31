@@ -38,8 +38,8 @@ namespace DisCatSharp.ApplicationCommands.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="SlashCommandExecutedEventArgs"/> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        public SlashCommandExecutedEventArgs(IServiceProvider provider) : base(provider)
+        /// <param name="Provider">The provider.</param>
+        public SlashCommandExecutedEventArgs(IServiceProvider Provider) : base(Provider)
         { }
     }
 }

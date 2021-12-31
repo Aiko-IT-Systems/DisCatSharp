@@ -33,12 +33,12 @@ namespace DisCatSharp.Common.Serialization
         /// <summary>
         /// Gets the ISO 8601 format string of "yyyy-MM-ddTHH:mm:ss.fffzzz".
         /// </summary>
-        public const string FormatISO8601 = "yyyy-MM-ddTHH:mm:ss.fffzzz";
+        public const string FormatIso8601 = "yyyy-MM-ddTHH:mm:ss.fffzzz";
 
         /// <summary>
         /// Gets the RFC 1123 format string of "R".
         /// </summary>
-        public const string FormatRFC1123 = "R";
+        public const string FormatRfc1123 = "R";
 
         /// <summary>
         /// Gets the general long format.
@@ -63,13 +63,13 @@ namespace DisCatSharp.Common.Serialization
         /// <summary>
         /// Specifies a predefined format to use.
         /// </summary>
-        /// <param name="kind">Predefined format kind to use.</param>
-        public DateTimeFormatAttribute(DateTimeFormatKind kind)
+        /// <param name="Kind">Predefined format kind to use.</param>
+        public DateTimeFormatAttribute(DateTimeFormatKind Kind)
         {
-            if (kind < 0 || kind > DateTimeFormatKind.InvariantLocaleShort)
-                throw new ArgumentOutOfRangeException(nameof(kind), "Specified format kind is not legal or supported.");
+            if (Kind < 0 || Kind > DateTimeFormatKind.InvariantLocaleShort)
+                throw new ArgumentOutOfRangeException(nameof(Kind), "Specified format kind is not legal or supported.");
 
-            this.Kind = kind;
+            this.Kind = Kind;
             this.Format = null;
         }
 
@@ -77,14 +77,14 @@ namespace DisCatSharp.Common.Serialization
         /// <para>Specifies a custom format to use.</para>
         /// <para>See https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings for more details.</para>
         /// </summary>
-        /// <param name="format">Custom format string to use.</param>
-        public DateTimeFormatAttribute(string format)
+        /// <param name="Format">Custom format string to use.</param>
+        public DateTimeFormatAttribute(string Format)
         {
-            if (string.IsNullOrWhiteSpace(format))
-                throw new ArgumentNullException(nameof(format), "Specified format cannot be null or empty.");
+            if (string.IsNullOrWhiteSpace(Format))
+                throw new ArgumentNullException(nameof(Format), "Specified format cannot be null or empty.");
 
             this.Kind = DateTimeFormatKind.Custom;
-            this.Format = format;
+            this.Format = Format;
         }
     }
 
@@ -97,12 +97,12 @@ namespace DisCatSharp.Common.Serialization
         /// <summary>
         /// Specifies ISO 8601 format, which is equivalent to .NET format string of "yyyy-MM-ddTHH:mm:ss.fffzzz".
         /// </summary>
-        ISO8601 = 0,
+        Iso8601 = 0,
 
         /// <summary>
         /// Specifies RFC 1123 format, which is equivalent to .NET format string of "R".
         /// </summary>
-        RFC1123 = 1,
+        Rfc1123 = 1,
 
         /// <summary>
         /// Specifies a format defined by <see cref="System.Globalization.CultureInfo.CurrentCulture"/>, with a format string of "G". This format is not recommended for portability reasons.

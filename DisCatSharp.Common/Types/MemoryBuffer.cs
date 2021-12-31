@@ -37,7 +37,7 @@ namespace DisCatSharp.Common.Types
     public sealed class MemoryBuffer<T> : IMemoryBuffer<T> where T : unmanaged
     {
         /// <inheritdoc />
-        public ulong Capacity => this._segments.Aggregate(0UL, (a, x) => a + (ulong)x.Memory.Length); // .Sum() does only int
+        public ulong Capacity => this._segments.Aggregate(0UL, (A, X) => A + (ulong)X.Memory.Length); // .Sum() does only int
 
         /// <inheritdoc />
         public ulong Length { get; private set; }
@@ -57,25 +57,25 @@ namespace DisCatSharp.Common.Types
         /// <summary>
         /// Creates a new buffer with a specified segment size, specified number of initially-allocated segments, and supplied memory pool.
         /// </summary>
-        /// <param name="segmentSize">Byte size of an individual segment. Defaults to 64KiB.</param>
-        /// <param name="initialSegmentCount">Number of segments to allocate. Defaults to 0.</param>
-        /// <param name="memPool">Memory pool to use for renting buffers. Defaults to <see cref="System.Buffers.MemoryPool{T}.Shared"/>.</param>
-        /// <param name="clearOnDispose">Determines whether the underlying buffers should be cleared on exit. If dealing with sensitive data, it might be a good idea to set this option to true.</param>
-        public MemoryBuffer(int segmentSize = 65536, int initialSegmentCount = 0, MemoryPool<byte> memPool = default, bool clearOnDispose = false)
+        /// <param name="SegmentSize">Byte size of an individual segment. Defaults to 64KiB.</param>
+        /// <param name="InitialSegmentCount">Number of segments to allocate. Defaults to 0.</param>
+        /// <param name="MemPool">Memory pool to use for renting buffers. Defaults to <see cref="System.Buffers.MemoryPool{T}.Shared"/>.</param>
+        /// <param name="ClearOnDispose">Determines whether the underlying buffers should be cleared on exit. If dealing with sensitive data, it might be a good idea to set this option to true.</param>
+        public MemoryBuffer(int SegmentSize = 65536, int InitialSegmentCount = 0, MemoryPool<byte> MemPool = default, bool ClearOnDispose = false)
         {
             this._itemSize = Unsafe.SizeOf<T>();
-            if (segmentSize % this._itemSize != 0)
+            if (SegmentSize % this._itemSize != 0)
                 throw new ArgumentException("Segment size must match size of individual item.");
 
-            this._pool = memPool ?? MemoryPool<byte>.Shared;
+            this._pool = MemPool ?? MemoryPool<byte>.Shared;
 
-            this._segmentSize = segmentSize;
+            this._segmentSize = SegmentSize;
             this._segNo = 0;
             this._lastSegmentLength = 0;
-            this._clear = clearOnDispose;
+            this._clear = ClearOnDispose;
 
-            this._segments = new List<IMemoryOwner<byte>>(initialSegmentCount + 1);
-            for (var i = 0; i < initialSegmentCount; i++)
+            this._segments = new List<IMemoryOwner<byte>>(InitialSegmentCount + 1);
+            for (var i = 0; i < InitialSegmentCount; i++)
                 this._segments.Add(this._pool.Rent(this._segmentSize));
 
             this.Length = 0;
@@ -84,12 +84,12 @@ namespace DisCatSharp.Common.Types
         }
 
         /// <inheritdoc />
-        public void Write(ReadOnlySpan<T> data)
+        public void Write(ReadOnlySpan<T> Data)
         {
             if (this._isDisposed)
                 throw new ObjectDisposedException("This buffer is disposed.");
 
-            var src = MemoryMarshal.AsBytes(data);
+            var src = MemoryMarshal.AsBytes(Data);
             this.Grow(src.Length);
 
             while (this._segNo < this._segments.Count && src.Length > 0)
@@ -117,32 +117,32 @@ namespace DisCatSharp.Common.Types
         }
 
         /// <inheritdoc />
-        public void Write(T[] data, int start, int count)
-            => this.Write(data.AsSpan(start, count));
+        public void Write(T[] Data, int Start, int Count)
+            => this.Write(Data.AsSpan(Start, Count));
 
         /// <inheritdoc />
-        public void Write(ArraySegment<T> data)
-            => this.Write(data.AsSpan());
+        public void Write(ArraySegment<T> Data)
+            => this.Write(Data.AsSpan());
 
         /// <inheritdoc />
-        public void Write(Stream stream)
+        public void Write(Stream Stream)
         {
             if (this._isDisposed)
                 throw new ObjectDisposedException("This buffer is disposed.");
 
-            if (stream.CanSeek)
-                this.WriteStreamSeekable(stream);
+            if (Stream.CanSeek)
+                this.WriteStreamSeekable(Stream);
             else
-                this.WriteStreamUnseekable(stream);
+                this.WriteStreamUnseekable(Stream);
         }
 
         /// <summary>
         /// Writes the stream seekable.
         /// </summary>
-        /// <param name="stream">The stream.</param>
-        private void WriteStreamSeekable(Stream stream)
+        /// <param name="Stream">The stream.</param>
+        private void WriteStreamSeekable(Stream Stream)
         {
-            var len = (int)(stream.Length - stream.Position);
+            var len = (int)(Stream.Length - Stream.Position);
             this.Grow(len);
 
 #if !HAS_SPAN_STREAM_OVERLOADS
@@ -164,7 +164,7 @@ namespace DisCatSharp.Common.Types
 #else
                 var lsl = this._lastSegmentLength;
                 var slen = dmem.Span.Length - lsl;
-                stream.Read(buff, 0, slen);
+                Stream.Read(buff, 0, slen);
                 buff.AsSpan(0, slen).CopyTo(dmem.Span);
 #endif
                 len -= dmem.Span.Length;
@@ -183,8 +183,8 @@ namespace DisCatSharp.Common.Types
         /// <summary>
         /// Writes the stream unseekable.
         /// </summary>
-        /// <param name="stream">The stream.</param>
-        private void WriteStreamUnseekable(Stream stream)
+        /// <param name="Stream">The stream.</param>
+        private void WriteStreamUnseekable(Stream Stream)
         {
             var read = 0;
 #if HAS_SPAN_STREAM_OVERLOADS
@@ -193,21 +193,21 @@ namespace DisCatSharp.Common.Types
 #else
             var buff = new byte[this._segmentSize];
             var buffs = buff.AsSpan();
-            while ((read = stream.Read(buff, 0, buff.Length - this._lastSegmentLength)) != 0)
+            while ((read = Stream.Read(buff, 0, buff.Length - this._lastSegmentLength)) != 0)
 #endif
                 this.Write(MemoryMarshal.Cast<byte, T>(buffs[..read]));
         }
 
         /// <inheritdoc />
-        public bool Read(Span<T> destination, ulong source, out int itemsWritten)
+        public bool Read(Span<T> Destination, ulong Source, out int ItemsWritten)
         {
-            itemsWritten = 0;
+            ItemsWritten = 0;
             if (this._isDisposed)
                 throw new ObjectDisposedException("This buffer is disposed.");
 
-            source *= (ulong)this._itemSize;
-            if (source > this.Count)
-                throw new ArgumentOutOfRangeException(nameof(source), "Cannot copy data from beyond the buffer.");
+            Source *= (ulong)this._itemSize;
+            if (Source > this.Count)
+                throw new ArgumentOutOfRangeException(nameof(Source), "Cannot copy data from beyond the buffer.");
 
             // Find where to begin
             var i = 0;
@@ -215,16 +215,16 @@ namespace DisCatSharp.Common.Types
             {
                 var seg = this._segments[i];
                 var mem = seg.Memory;
-                if ((ulong)mem.Length > source)
+                if ((ulong)mem.Length > Source)
                     break;
 
-                source -= (ulong)mem.Length;
+                Source -= (ulong)mem.Length;
             }
 
             // Do actual copy
-            var dl = (int)(this.Length - source);
-            var sri = (int)source;
-            var dst = MemoryMarshal.AsBytes(destination);
+            var dl = (int)(this.Length - Source);
+            var sri = (int)Source;
+            var dst = MemoryMarshal.AsBytes(Destination);
             for (; i < this._segments.Count && dst.Length > 0; i++)
             {
                 var seg = this._segments[i];
@@ -237,28 +237,28 @@ namespace DisCatSharp.Common.Types
                     sri = 0;
                 }
 
-                if (itemsWritten + src.Length > dl)
-                    src = src[..(dl - itemsWritten)];
+                if (ItemsWritten + src.Length > dl)
+                    src = src[..(dl - ItemsWritten)];
 
                 if (src.Length > dst.Length)
                     src = src[..dst.Length];
 
                 src.CopyTo(dst);
                 dst = dst[src.Length..];
-                itemsWritten += src.Length;
+                ItemsWritten += src.Length;
             }
 
-            itemsWritten /= this._itemSize;
-            return (this.Length - source) != (ulong)itemsWritten;
+            ItemsWritten /= this._itemSize;
+            return (this.Length - Source) != (ulong)ItemsWritten;
         }
 
         /// <inheritdoc />
-        public bool Read(T[] data, int start, int count, ulong source, out int itemsWritten)
-            => this.Read(data.AsSpan(start, count), source, out itemsWritten);
+        public bool Read(T[] Data, int Start, int Count, ulong Source, out int ItemsWritten)
+            => this.Read(Data.AsSpan(Start, Count), Source, out ItemsWritten);
 
         /// <inheritdoc />
-        public bool Read(ArraySegment<T> data, ulong source, out int itemsWritten)
-            => this.Read(data.AsSpan(), source, out itemsWritten);
+        public bool Read(ArraySegment<T> Data, ulong Source, out int ItemsWritten)
+            => this.Read(Data.AsSpan(), Source, out ItemsWritten);
 
         /// <inheritdoc />
         public T[] ToArray()
@@ -272,7 +272,7 @@ namespace DisCatSharp.Common.Types
         }
 
         /// <inheritdoc />
-        public void CopyTo(Stream destination)
+        public void CopyTo(Stream Destination)
         {
             if (this._isDisposed)
                 throw new ObjectDisposedException("This buffer is disposed.");
@@ -281,7 +281,7 @@ namespace DisCatSharp.Common.Types
             foreach (var seg in this._segments)
                 destination.Write(seg.Memory.Span);
 #else
-            var longest = this._segments.Max(x => x.Memory.Length);
+            var longest = this._segments.Max(X => X.Memory.Length);
             var buff = new byte[longest];
 
             foreach (var seg in this._segments)
@@ -290,7 +290,7 @@ namespace DisCatSharp.Common.Types
                 var spn = buff.AsSpan(0, mem.Length);
 
                 mem.CopyTo(spn);
-                destination.Write(buff, 0, spn.Length);
+                Destination.Write(buff, 0, spn.Length);
             }
 #endif
         }
@@ -327,12 +327,12 @@ namespace DisCatSharp.Common.Types
         /// <summary>
         /// Grows the.
         /// </summary>
-        /// <param name="minAmount">The min amount.</param>
-        private void Grow(int minAmount)
+        /// <param name="MinAmount">The min amount.</param>
+        private void Grow(int MinAmount)
         {
             var capacity = this.Capacity;
             var length = this.Length;
-            var totalAmt = (length + (ulong)minAmount);
+            var totalAmt = (length + (ulong)MinAmount);
             if (capacity >= totalAmt)
                 return; // we're good
 

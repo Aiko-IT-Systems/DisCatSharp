@@ -178,15 +178,15 @@ namespace DisCatSharp.Net.Abstractions
         /// <summary>
         /// Initializes a new instance of the <see cref="TransportActivity"/> class.
         /// </summary>
-        /// <param name="game">The game.</param>
-        internal TransportActivity(DiscordActivity game)
+        /// <param name="Game">The game.</param>
+        internal TransportActivity(DiscordActivity Game)
         {
-            if (game == null)
+            if (Game == null)
                 return;
 
-            this.Name = game.Name;
-            this.ActivityType = game.ActivityType;
-            this.StreamUrl = game.StreamUrl;
+            this.Name = Game.Name;
+            this.ActivityType = Game.ActivityType;
+            this.StreamUrl = Game.StreamUrl;
         }
 
         /// <summary>
@@ -325,27 +325,27 @@ namespace DisCatSharp.Net.Abstractions
         /// <summary>
         /// Writes the json.
         /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        /// <param name="Writer">The writer.</param>
+        /// <param name="Value">The value.</param>
+        /// <param name="Serializer">The serializer.</param>
+        public override void WriteJson(JsonWriter Writer, object Value, JsonSerializer Serializer)
         {
-            var obj = value is TransportActivity.GameParty.GamePartySize sinfo
+            var obj = Value is TransportActivity.GameParty.GamePartySize sinfo
                 ? new object[] { sinfo.Current, sinfo.Maximum }
                 : null;
-            serializer.Serialize(writer, obj);
+            Serializer.Serialize(Writer, obj);
         }
 
         /// <summary>
         /// Reads the json.
         /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="objectType">The object type.</param>
-        /// <param name="existingValue">The existing value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        /// <param name="Reader">The reader.</param>
+        /// <param name="ObjectType">The object type.</param>
+        /// <param name="ExistingValue">The existing value.</param>
+        /// <param name="Serializer">The serializer.</param>
+        public override object ReadJson(JsonReader Reader, Type ObjectType, object ExistingValue, JsonSerializer Serializer)
         {
-            var arr = this.ReadArrayObject(reader, serializer);
+            var arr = this.ReadArrayObject(Reader, Serializer);
             return new TransportActivity.GameParty.GamePartySize
             {
                 Current = (long)arr[0],
@@ -356,11 +356,11 @@ namespace DisCatSharp.Net.Abstractions
         /// <summary>
         /// Reads the array object.
         /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="serializer">The serializer.</param>
-        private JArray ReadArrayObject(JsonReader reader, JsonSerializer serializer)
+        /// <param name="Reader">The reader.</param>
+        /// <param name="Serializer">The serializer.</param>
+        private JArray ReadArrayObject(JsonReader Reader, JsonSerializer Serializer)
         {
-            return serializer.Deserialize<JToken>(reader) is not JArray arr || arr.Count != 2
+            return Serializer.Deserialize<JToken>(Reader) is not JArray arr || arr.Count != 2
                 ? throw new JsonSerializationException("Expected array of length 2")
                 : arr;
         }
@@ -368,7 +368,7 @@ namespace DisCatSharp.Net.Abstractions
         /// <summary>
         /// Whether it can convert.
         /// </summary>
-        /// <param name="objectType">The object type.</param>
-        public override bool CanConvert(Type objectType) => objectType == typeof(TransportActivity.GameParty.GamePartySize);
+        /// <param name="ObjectType">The object type.</param>
+        public override bool CanConvert(Type ObjectType) => ObjectType == typeof(TransportActivity.GameParty.GamePartySize);
     }
 }

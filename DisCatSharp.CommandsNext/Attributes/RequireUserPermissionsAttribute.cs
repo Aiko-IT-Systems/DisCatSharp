@@ -44,33 +44,33 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Defines that usage of this command is restricted to members with specified permissions.
         /// </summary>
-        /// <param name="permissions">Permissions required to execute this command.</param>
+        /// <param name="Permissions">Permissions required to execute this command.</param>
 
-        /// <param name="ignoreDms">Sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that it will always fail.</param>
-        public RequireUserPermissionsAttribute(Permissions permissions, bool ignoreDms = true)
+        /// <param name="IgnoreDms">Sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that it will always fail.</param>
+        public RequireUserPermissionsAttribute(Permissions Permissions, bool IgnoreDms = true)
         {
-            this.Permissions = permissions;
-            this.IgnoreDms = ignoreDms;
+            this.Permissions = Permissions;
+            this.IgnoreDms = IgnoreDms;
         }
 
         /// <summary>
         /// Executes the a check.
         /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
+        /// <param name="Ctx">The command context.</param>
+        /// <param name="Help">If true, help - returns true.</param>
+        public override Task<bool> ExecuteCheck(CommandContext Ctx, bool Help)
         {
-            if (ctx.Guild == null)
+            if (Ctx.Guild == null)
                 return Task.FromResult(this.IgnoreDms);
 
-            var usr = ctx.Member;
+            var usr = Ctx.Member;
             if (usr == null)
                 return Task.FromResult(false);
 
-            if (usr.Id == ctx.Guild.OwnerId)
+            if (usr.Id == Ctx.Guild.OwnerId)
                 return Task.FromResult(true);
 
-            var pusr = ctx.Channel.PermissionsFor(usr);
+            var pusr = Ctx.Channel.PermissionsFor(usr);
 
             if ((pusr & Permissions.Administrator) != 0)
                 return Task.FromResult(true);

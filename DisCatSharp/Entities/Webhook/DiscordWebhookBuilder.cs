@@ -46,7 +46,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Whether this webhook request is text-to-speech.
         /// </summary>
-        public bool IsTTS { get; set; }
+        public bool IsTts { get; set; }
 
         /// <summary>
         /// Message to send on this webhook request.
@@ -108,21 +108,21 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds a row of components to the builder, up to 5 components per row, and up to 5 rows per message.
         /// </summary>
-        /// <param name="components">The components to add to the builder.</param>
+        /// <param name="Components">The components to add to the builder.</param>
         /// <returns>The current builder to be chained.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">No components were passed.</exception>
-        public DiscordWebhookBuilder AddComponents(params DiscordComponent[] components)
-            => this.AddComponents((IEnumerable<DiscordComponent>)components);
+        public DiscordWebhookBuilder AddComponents(params DiscordComponent[] Components)
+            => this.AddComponents((IEnumerable<DiscordComponent>)Components);
 
 
         /// <summary>
         /// Appends several rows of components to the builder
         /// </summary>
-        /// <param name="components">The rows of components to add, holding up to five each.</param>
+        /// <param name="Components">The rows of components to add, holding up to five each.</param>
         /// <returns></returns>
-        public DiscordWebhookBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
+        public DiscordWebhookBuilder AddComponents(IEnumerable<DiscordActionRowComponent> Components)
         {
-            var ara = components.ToArray();
+            var ara = Components.ToArray();
 
             if (ara.Length + this._components.Count > 5)
                 throw new ArgumentException("ActionRow count exceeds maximum of five.");
@@ -136,16 +136,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds a row of components to the builder, up to 5 components per row, and up to 5 rows per message.
         /// </summary>
-        /// <param name="components">The components to add to the builder.</param>
+        /// <param name="Components">The components to add to the builder.</param>
         /// <returns>The current builder to be chained.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">No components were passed.</exception>
-        public DiscordWebhookBuilder AddComponents(IEnumerable<DiscordComponent> components)
+        public DiscordWebhookBuilder AddComponents(IEnumerable<DiscordComponent> Components)
         {
-            var cmpArr = components.ToArray();
+            var cmpArr = Components.ToArray();
             var count = cmpArr.Length;
 
             if (!cmpArr.Any())
-                throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+                throw new ArgumentOutOfRangeException(nameof(Components), "You must provide at least one component");
 
             if (count > 5)
                 throw new ArgumentException("Cannot add more than 5 components per action row!");
@@ -159,51 +159,51 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sets the username for this webhook builder.
         /// </summary>
-        /// <param name="username">Username of the webhook</param>
-        public DiscordWebhookBuilder WithUsername(string username)
+        /// <param name="Username">Username of the webhook</param>
+        public DiscordWebhookBuilder WithUsername(string Username)
         {
-            this.Username = username;
+            this.Username = Username;
             return this;
         }
 
         /// <summary>
         /// Sets the avatar of this webhook builder from its url.
         /// </summary>
-        /// <param name="avatarUrl">Avatar url of the webhook</param>
-        public DiscordWebhookBuilder WithAvatarUrl(string avatarUrl)
+        /// <param name="AvatarUrl">Avatar url of the webhook</param>
+        public DiscordWebhookBuilder WithAvatarUrl(string AvatarUrl)
         {
-            this.AvatarUrl = avatarUrl;
+            this.AvatarUrl = AvatarUrl;
             return this;
         }
 
         /// <summary>
         /// Indicates if the webhook must use text-to-speech.
         /// </summary>
-        /// <param name="tts">Text-to-speech</param>
-        public DiscordWebhookBuilder WithTTS(bool tts)
+        /// <param name="Tts">Text-to-speech</param>
+        public DiscordWebhookBuilder WithTts(bool Tts)
         {
-            this.IsTTS = tts;
+            this.IsTts = Tts;
             return this;
         }
 
         /// <summary>
         /// Sets the message to send at the execution of the webhook.
         /// </summary>
-        /// <param name="content">Message to send.</param>
-        public DiscordWebhookBuilder WithContent(string content)
+        /// <param name="Content">Message to send.</param>
+        public DiscordWebhookBuilder WithContent(string Content)
         {
-            this.Content = content;
+            this.Content = Content;
             return this;
         }
 
         /// <summary>
         /// Adds an embed to send at the execution of the webhook.
         /// </summary>
-        /// <param name="embed">Embed to add.</param>
-        public DiscordWebhookBuilder AddEmbed(DiscordEmbed embed)
+        /// <param name="Embed">Embed to add.</param>
+        public DiscordWebhookBuilder AddEmbed(DiscordEmbed Embed)
         {
-            if (embed != null)
-                this._embeds.Add(embed);
+            if (Embed != null)
+                this._embeds.Add(Embed);
 
             return this;
         }
@@ -211,32 +211,32 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds the given embeds to send at the execution of the webhook.
         /// </summary>
-        /// <param name="embeds">Embeds to add.</param>
-        public DiscordWebhookBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
+        /// <param name="Embeds">Embeds to add.</param>
+        public DiscordWebhookBuilder AddEmbeds(IEnumerable<DiscordEmbed> Embeds)
         {
-            this._embeds.AddRange(embeds);
+            this._embeds.AddRange(Embeds);
             return this;
         }
 
         /// <summary>
         /// Adds a file to send at the execution of the webhook.
         /// </summary>
-        /// <param name="filename">Name of the file.</param>
-        /// <param name="data">File data.</param>
-        /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
-        /// <param name="description">Description of the file.</param>
-        public DiscordWebhookBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
+        /// <param name="Filename">Name of the file.</param>
+        /// <param name="Data">File data.</param>
+        /// <param name="ResetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="Description">Description of the file.</param>
+        public DiscordWebhookBuilder AddFile(string Filename, Stream Data, bool ResetStreamPosition = false, string Description = null)
         {
             if (this.Files.Count() > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-            if (this._files.Any(x => x.FileName == filename))
+            if (this._files.Any(X => X.FileName == Filename))
                 throw new ArgumentException("A File with that filename already exists");
 
-            if (resetStreamPosition)
-                this._files.Add(new DiscordMessageFile(filename, data, data.Position, description: description));
+            if (ResetStreamPosition)
+                this._files.Add(new DiscordMessageFile(Filename, Data, Data.Position, Description: Description));
             else
-                this._files.Add(new DiscordMessageFile(filename, data, null, description: description));
+                this._files.Add(new DiscordMessageFile(Filename, Data, null, Description: Description));
 
             return this;
         }
@@ -244,22 +244,22 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sets if the message has files to be sent.
         /// </summary>
-        /// <param name="stream">The Stream to the file.</param>
-        /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
-        /// <param name="description">Description of the file.</param>
+        /// <param name="Stream">The Stream to the file.</param>
+        /// <param name="ResetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="Description">Description of the file.</param>
         /// <returns></returns>
-        public DiscordWebhookBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+        public DiscordWebhookBuilder AddFile(FileStream Stream, bool ResetStreamPosition = false, string Description = null)
         {
             if (this.Files.Count() > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-            if (this._files.Any(x => x.FileName == stream.Name))
+            if (this._files.Any(X => X.FileName == Stream.Name))
                 throw new ArgumentException("A File with that filename already exists");
 
-            if (resetStreamPosition)
-                this._files.Add(new DiscordMessageFile(stream.Name, stream, stream.Position, description: description));
+            if (ResetStreamPosition)
+                this._files.Add(new DiscordMessageFile(Stream.Name, Stream, Stream.Position, Description: Description));
             else
-                this._files.Add(new DiscordMessageFile(stream.Name, stream, null, description: description));
+                this._files.Add(new DiscordMessageFile(Stream.Name, Stream, null, Description: Description));
 
             return this;
         }
@@ -267,19 +267,19 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds the given files to send at the execution of the webhook.
         /// </summary>
-        /// <param name="files">Dictionary of file name and file data.</param>
-        /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
-        public DiscordWebhookBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
+        /// <param name="Files">Dictionary of file name and file data.</param>
+        /// <param name="ResetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        public DiscordWebhookBuilder AddFiles(Dictionary<string, Stream> Files, bool ResetStreamPosition = false)
         {
-            if (this.Files.Count() + files.Count() > 10)
+            if (this.Files.Count() + Files.Count() > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-            foreach (var file in files)
+            foreach (var file in Files)
             {
-                if (this._files.Any(x => x.FileName == file.Key))
+                if (this._files.Any(X => X.FileName == file.Key))
                     throw new ArgumentException("A File with that filename already exists");
 
-                if (resetStreamPosition)
+                if (ResetStreamPosition)
                     this._files.Add(new DiscordMessageFile(file.Key, file.Value, file.Value.Position));
                 else
                     this._files.Add(new DiscordMessageFile(file.Key, file.Value, null));
@@ -292,11 +292,11 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Modifies the given attachments on edit.
         /// </summary>
-        /// <param name="attachments">Attachments to edit.</param>
+        /// <param name="Attachments">Attachments to edit.</param>
         /// <returns></returns>
-        public DiscordWebhookBuilder ModifyAttachments(IEnumerable<DiscordAttachment> attachments)
+        public DiscordWebhookBuilder ModifyAttachments(IEnumerable<DiscordAttachment> Attachments)
         {
-            this._attachments.AddRange(attachments);
+            this._attachments.AddRange(Attachments);
             return this;
         }
 
@@ -304,80 +304,80 @@ namespace DisCatSharp.Entities
         /// Whether to keep the message attachments, if new ones are added.
         /// </summary>
         /// <returns></returns>
-        public DiscordWebhookBuilder KeepAttachments(bool keep)
+        public DiscordWebhookBuilder KeepAttachments(bool Keep)
         {
-            this._keepAttachments = keep;
+            this._keepAttachments = Keep;
             return this;
         }
 
         /// <summary>
         /// Adds the mention to the mentions to parse, etc. at the execution of the webhook.
         /// </summary>
-        /// <param name="mention">Mention to add.</param>
-        public DiscordWebhookBuilder AddMention(IMention mention)
+        /// <param name="Mention">Mention to add.</param>
+        public DiscordWebhookBuilder AddMention(IMention Mention)
         {
-            this._mentions.Add(mention);
+            this._mentions.Add(Mention);
             return this;
         }
 
         /// <summary>
         /// Adds the mentions to the mentions to parse, etc. at the execution of the webhook.
         /// </summary>
-        /// <param name="mentions">Mentions to add.</param>
-        public DiscordWebhookBuilder AddMentions(IEnumerable<IMention> mentions)
+        /// <param name="Mentions">Mentions to add.</param>
+        public DiscordWebhookBuilder AddMentions(IEnumerable<IMention> Mentions)
         {
-            this._mentions.AddRange(mentions);
+            this._mentions.AddRange(Mentions);
             return this;
         }
 
         /// <summary>
         /// Executes a webhook.
         /// </summary>
-        /// <param name="webhook">The webhook that should be executed.</param>
+        /// <param name="Webhook">The webhook that should be executed.</param>
         /// <returns>The message sent</returns>
-        public async Task<DiscordMessage> SendAsync(DiscordWebhook webhook) => await webhook.ExecuteAsync(this).ConfigureAwait(false);
+        public async Task<DiscordMessage> SendAsync(DiscordWebhook Webhook) => await Webhook.Execute(this).ConfigureAwait(false);
 
         /// <summary>
         /// Executes a webhook.
         /// </summary>
-        /// <param name="webhook">The webhook that should be executed.</param>
-        /// <param name="threadId">Target thread id.</param>
+        /// <param name="Webhook">The webhook that should be executed.</param>
+        /// <param name="ThreadId">Target thread id.</param>
         /// <returns>The message sent</returns>
-        public async Task<DiscordMessage> SendAsync(DiscordWebhook webhook, ulong threadId) => await webhook.ExecuteAsync(this, threadId.ToString()).ConfigureAwait(false);
+        public async Task<DiscordMessage> SendAsync(DiscordWebhook Webhook, ulong ThreadId) => await Webhook.Execute(this, ThreadId.ToString()).ConfigureAwait(false);
 
         /// <summary>
         /// Sends the modified webhook message.
         /// </summary>
-        /// <param name="webhook">The webhook that should be executed.</param>
-        /// <param name="message">The message to modify.</param>
+        /// <param name="Webhook">The webhook that should be executed.</param>
+        /// <param name="Message">The message to modify.</param>
         /// <returns>The modified message</returns>
-        public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message) => await this.ModifyAsync(webhook, message.Id).ConfigureAwait(false);
+        public async Task<DiscordMessage> ModifyAsync(DiscordWebhook Webhook, DiscordMessage Message) => await this.ModifyAsync(Webhook, Message.Id).ConfigureAwait(false);
 
         /// <summary>
         /// Sends the modified webhook message.
         /// </summary>
-        /// <param name="webhook">The webhook that should be executed.</param>
-        /// <param name="messageId">The id of the message to modify.</param>
+        /// <param name="Webhook">The webhook that should be executed.</param>
+        /// <param name="MessageId">The id of the message to modify.</param>
         /// <returns>The modified message</returns>
-        public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId) => await webhook.EditMessageAsync(messageId, this).ConfigureAwait(false);
+        public async Task<DiscordMessage> ModifyAsync(DiscordWebhook Webhook, ulong MessageId) => await Webhook.EditMessageAsync(MessageId, this).ConfigureAwait(false);
 
         /// <summary>
         /// Sends the modified webhook message.
         /// </summary>
-        /// <param name="webhook">The webhook that should be executed.</param>
-        /// <param name="message">The message to modify.</param>
-        /// <param name="thread">Target thread.</param>
+        /// <param name="Webhook">The webhook that should be executed.</param>
+        /// <param name="Message">The message to modify.</param>
+        /// <param name="Thread">Target thread.</param>
         /// <returns>The modified message</returns>
-        public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, DiscordMessage message, DiscordThreadChannel thread) => await this.ModifyAsync(webhook, message.Id, thread.Id).ConfigureAwait(false);
+        public async Task<DiscordMessage> ModifyAsync(DiscordWebhook Webhook, DiscordMessage Message, DiscordThreadChannel Thread) => await this.ModifyAsync(Webhook, Message.Id, Thread.Id).ConfigureAwait(false);
 
         /// <summary>
         /// Sends the modified webhook message.
         /// </summary>
-        /// <param name="webhook">The webhook that should be executed.</param>
-        /// <param name="messageId">The id of the message to modify.</param>
-        /// <param name="threadId">Target thread id.</param>
+        /// <param name="Webhook">The webhook that should be executed.</param>
+        /// <param name="MessageId">The id of the message to modify.</param>
+        /// <param name="ThreadId">Target thread id.</param>
         /// <returns>The modified message</returns>
-        public async Task<DiscordMessage> ModifyAsync(DiscordWebhook webhook, ulong messageId, ulong threadId) => await webhook.EditMessageAsync(messageId, this, threadId.ToString()).ConfigureAwait(false);
+        public async Task<DiscordMessage> ModifyAsync(DiscordWebhook Webhook, ulong MessageId, ulong ThreadId) => await Webhook.EditMessageAsync(MessageId, this, ThreadId.ToString()).ConfigureAwait(false);
 
         /// <summary>
         /// Clears all message components on this builder.
@@ -392,7 +392,7 @@ namespace DisCatSharp.Entities
         {
             this.Content = "";
             this._embeds.Clear();
-            this.IsTTS = false;
+            this.IsTts = false;
             this._mentions.Clear();
             this._files.Clear();
             this._attachments.Clear();
@@ -403,12 +403,12 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Does the validation before we send a the Create/Modify request.
         /// </summary>
-        /// <param name="isModify">Tells the method to perform the Modify Validation or Create Validation.</param>
-        /// <param name="isFollowup">Tells the method to perform the follow up message validation.</param>
-        /// <param name="isInteractionResponse">Tells the method to perform the interaction response validation.</param>
-        internal void Validate(bool isModify = false, bool isFollowup = false, bool isInteractionResponse = false)
+        /// <param name="IsModify">Tells the method to perform the Modify Validation or Create Validation.</param>
+        /// <param name="IsFollowup">Tells the method to perform the follow up message validation.</param>
+        /// <param name="IsInteractionResponse">Tells the method to perform the interaction response validation.</param>
+        internal void Validate(bool IsModify = false, bool IsFollowup = false, bool IsInteractionResponse = false)
         {
-            if (isModify)
+            if (IsModify)
             {
                 if (this.Username.HasValue)
                     throw new ArgumentException("You cannot change the username of a message.");
@@ -416,7 +416,7 @@ namespace DisCatSharp.Entities
                 if (this.AvatarUrl.HasValue)
                     throw new ArgumentException("You cannot change the avatar of a message.");
             }
-            else if (isFollowup)
+            else if (IsFollowup)
             {
                 if (this.Username.HasValue)
                     throw new ArgumentException("You cannot change the username of a follow up message.");
@@ -424,7 +424,7 @@ namespace DisCatSharp.Entities
                 if (this.AvatarUrl.HasValue)
                     throw new ArgumentException("You cannot change the avatar of a follow up message.");
             }
-            else if (isInteractionResponse)
+            else if (IsInteractionResponse)
             {
                 if (this.Username.HasValue)
                     throw new ArgumentException("You cannot change the username of an interaction response.");

@@ -59,22 +59,22 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Creates a new instance of a <see cref="DiscordApplicationCommandOptionChoice"/>.
         /// </summary>
-        /// <param name="name">The name of the parameter choice.</param>
-        /// <param name="value">The value of the parameter choice.</param>
-        /// <param name="nameLocalizations">The localizations of the parameter choice name.</param>
-        public DiscordApplicationCommandOptionChoice(string name, object value, DiscordApplicationCommandLocalization nameLocalizations = null)
+        /// <param name="Name">The name of the parameter choice.</param>
+        /// <param name="Value">The value of the parameter choice.</param>
+        /// <param name="NameLocalizations">The localizations of the parameter choice name.</param>
+        public DiscordApplicationCommandOptionChoice(string Name, object Value, DiscordApplicationCommandLocalization NameLocalizations = null)
         {
-            if (!(value is string || value is long || value is int || value is double))
+            if (!(Value is string || Value is long || Value is int || Value is double))
                 throw new InvalidOperationException($"Only {typeof(string)}, {typeof(long)}, {typeof(double)} or {typeof(int)} types may be passed to a command option choice.");
 
-            if (name.Length > 100)
-                throw new ArgumentException("Application command choice name cannot exceed 100 characters.", nameof(name));
-            if (value is string val && val.Length > 100)
-                throw new ArgumentException("Application command choice value cannot exceed 100 characters.", nameof(value));
+            if (Name.Length > 100)
+                throw new ArgumentException("Application command choice name cannot exceed 100 characters.", nameof(Name));
+            if (Value is string val && val.Length > 100)
+                throw new ArgumentException("Application command choice value cannot exceed 100 characters.", nameof(Value));
 
-            this.Name = name;
-            this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
-            this.Value = value;
+            this.Name = Name;
+            this.RawNameLocalizations = NameLocalizations?.GetKeyValuePairs();
+            this.Value = Value;
         }
     }
 }

@@ -87,16 +87,16 @@ namespace DisCatSharp.Net.WebSocket
         /// <summary>
         /// Instantiates a new WebSocket client with specified proxy settings.
         /// </summary>
-        /// <param name="proxy">Proxy settings for the client.</param>
-        /// <param name="provider">Service provider.</param>
-        private WebSocketClient(IWebProxy proxy, IServiceProvider provider)
+        /// <param name="Proxy">Proxy settings for the client.</param>
+        /// <param name="Provider">Service provider.</param>
+        private WebSocketClient(IWebProxy Proxy, IServiceProvider Provider)
         {
             this._connected = new AsyncEvent<WebSocketClient, SocketEventArgs>("WS_CONNECT", TimeSpan.Zero, this.EventErrorHandler);
             this._disconnected = new AsyncEvent<WebSocketClient, SocketCloseEventArgs>("WS_DISCONNECT", TimeSpan.Zero, this.EventErrorHandler);
             this._messageReceived = new AsyncEvent<WebSocketClient, SocketMessageEventArgs>("WS_MESSAGE", TimeSpan.Zero, this.EventErrorHandler);
             this._exceptionThrown = new AsyncEvent<WebSocketClient, SocketErrorEventArgs>("WS_ERROR", TimeSpan.Zero, null);
 
-            this.Proxy = proxy;
+            this.Proxy = Proxy;
             this._defaultHeaders = new Dictionary<string, string>();
             this.DefaultHeaders = new ReadOnlyDictionary<string, string>(this._defaultHeaders);
 
@@ -107,17 +107,17 @@ namespace DisCatSharp.Net.WebSocket
             this._socketTokenSource = null;
             this._socketToken = CancellationToken.None;
 
-            this._serviceProvider = provider;
+            this._serviceProvider = Provider;
         }
 
         /// <summary>
         /// Connects to a specified remote WebSocket endpoint.
         /// </summary>
-        /// <param name="uri">The URI of the WebSocket endpoint.</param>
-        public async Task ConnectAsync(Uri uri)
+        /// <param name="Uri">The URI of the WebSocket endpoint.</param>
+        public async Task Connect(Uri Uri)
         {
             // Disconnect first
-            try { await this.DisconnectAsync().ConfigureAwait(false); } catch { }
+            try { await this.Disconnect().ConfigureAwait(false); } catch { }
 
             // Disallow sending messages
             await this._senderLock.WaitAsync().ConfigureAwait(false);
@@ -144,7 +144,7 @@ namespace DisCatSharp.Net.WebSocket
 
                 this._isClientClose = false;
                 this._isDisposed = false;
-                await this._ws.ConnectAsync(uri, this._socketToken).ConfigureAwait(false);
+                await this._ws.ConnectAsync(Uri, this._socketToken).ConfigureAwait(false);
                 this._receiverTask = Task.Run(this.ReceiverLoopAsync, this._receiverToken);
             }
             finally
@@ -156,11 +156,11 @@ namespace DisCatSharp.Net.WebSocket
         /// <summary>
         /// Disconnects the WebSocket connection.
         /// </summary>
-        /// <param name="code">The code</param>
-        /// <param name="message">The message</param>
+        /// <param name="Code">The code</param>
+        /// <param name="Message">The message</param>
         /// <created>Lala Sabathil,06.07.2021</created>
         /// <changed>Lala Sabathil,06.07.2021</changed>
-        public async Task DisconnectAsync(int code = 1000, string message = "")
+        public async Task Disconnect(int Code = 1000, string Message = "")
         {
             // Ensure that messages cannot be sent
             await this._senderLock.WaitAsync().ConfigureAwait(false);
@@ -169,7 +169,7 @@ namespace DisCatSharp.Net.WebSocket
             {
                 this._isClientClose = true;
                 if (this._ws != null && (this._ws.State == WebSocketState.Open || this._ws.State == WebSocketState.CloseReceived))
-                    await this._ws.CloseOutputAsync((WebSocketCloseStatus)code, message, CancellationToken.None).ConfigureAwait(false);
+                    await this._ws.CloseOutputAsync((WebSocketCloseStatus)Code, Message, CancellationToken.None).ConfigureAwait(false);
 
                 if (this._receiverTask != null)
                     await this._receiverTask.ConfigureAwait(false); // Ensure that receiving completed
@@ -201,8 +201,8 @@ namespace DisCatSharp.Net.WebSocket
         /// <summary>
         /// Send a message to the WebSocket server.
         /// </summary>
-        /// <param name="message">The message to send.</param>
-        public async Task SendMessageAsync(string message)
+        /// <param name="Message">The message to send.</param>
+        public async Task SendMessage(string Message)
         {
             if (this._ws == null)
                 return;
@@ -210,7 +210,7 @@ namespace DisCatSharp.Net.WebSocket
             if (this._ws.State != WebSocketState.Open && this._ws.State != WebSocketState.CloseReceived)
                 return;
 
-            var bytes = Utilities.UTF8.GetBytes(message);
+            var bytes = Utilities.Utf8.GetBytes(Message);
             await this._senderLock.WaitAsync().ConfigureAwait(false);
             try
             {
@@ -236,22 +236,22 @@ namespace DisCatSharp.Net.WebSocket
         /// <summary>
         /// Adds a header to the default header collection.
         /// </summary>
-        /// <param name="name">Name of the header to add.</param>
-        /// <param name="value">Value of the header to add.</param>
+        /// <param name="Name">Name of the header to add.</param>
+        /// <param name="Value">Value of the header to add.</param>
         /// <returns>Whether the operation succeeded.</returns>
-        public bool AddDefaultHeader(string name, string value)
+        public bool AddDefaultHeader(string Name, string Value)
         {
-            this._defaultHeaders[name] = value;
+            this._defaultHeaders[Name] = Value;
             return true;
         }
 
         /// <summary>
         /// Removes a header from the default header collection.
         /// </summary>
-        /// <param name="name">Name of the header to remove.</param>
+        /// <param name="Name">Name of the header to remove.</param>
         /// <returns>Whether the operation succeeded.</returns>
-        public bool RemoveDefaultHeader(string name)
-            => this._defaultHeaders.Remove(name);
+        public bool RemoveDefaultHeader(string Name)
+            => this._defaultHeaders.Remove(Name);
 
         /// <summary>
         /// Disposes of resources used by this WebSocket client instance.
@@ -263,7 +263,7 @@ namespace DisCatSharp.Net.WebSocket
 
             this._isDisposed = true;
 
-            this.DisconnectAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            this.Disconnect().ConfigureAwait(false).GetAwaiter().GetResult();
 
             this._receiverTokenSource?.Dispose();
             this._socketTokenSource?.Dispose();
@@ -318,7 +318,7 @@ namespace DisCatSharp.Net.WebSocket
                     }
                     else if (result.MessageType == WebSocketMessageType.Text)
                     {
-                        await this._messageReceived.InvokeAsync(this, new SocketTextMessageEventArgs(Utilities.UTF8.GetString(resultBytes))).ConfigureAwait(false);
+                        await this._messageReceived.InvokeAsync(this, new SocketTextMessageEventArgs(Utilities.Utf8.GetString(resultBytes))).ConfigureAwait(false);
                     }
                     else // close
                     {
@@ -345,17 +345,17 @@ namespace DisCatSharp.Net.WebSocket
 
             // Don't await or you deadlock
             // DisconnectAsync waits for this method
-            _ = this.DisconnectAsync().ConfigureAwait(false);
+            _ = this.Disconnect().ConfigureAwait(false);
         }
 
         /// <summary>
         /// Creates a new instance of <see cref="WebSocketClient"/>.
         /// </summary>
-        /// <param name="proxy">Proxy to use for this client instance.</param>
-        /// <param name="provider">Service provider.</param>
+        /// <param name="Proxy">Proxy to use for this client instance.</param>
+        /// <param name="Provider">Service provider.</param>
         /// <returns>An instance of <see cref="WebSocketClient"/>.</returns>
-        public static IWebSocketClient CreateNew(IWebProxy proxy, IServiceProvider provider)
-            => new WebSocketClient(proxy, provider);
+        public static IWebSocketClient CreateNew(IWebProxy Proxy, IServiceProvider Provider)
+            => new WebSocketClient(Proxy, Provider);
 
         #region Events
         /// <summary>
@@ -402,14 +402,14 @@ namespace DisCatSharp.Net.WebSocket
         /// <summary>
         /// Events the error handler.
         /// </summary>
-        /// <param name="asyncEvent">The event.</param>
-        /// <param name="ex">The exeption.</param>
-        /// <param name="handler">The handler.</param>
-        /// <param name="sender">The sender.</param>
-        /// <param name="eventArgs">The event args.</param>
-        private void EventErrorHandler<TArgs>(AsyncEvent<WebSocketClient, TArgs> asyncEvent, Exception ex, AsyncEventHandler<WebSocketClient, TArgs> handler, WebSocketClient sender, TArgs eventArgs)
+        /// <param name="AsyncEvent">The event.</param>
+        /// <param name="Ex">The exeption.</param>
+        /// <param name="Handler">The handler.</param>
+        /// <param name="Sender">The sender.</param>
+        /// <param name="EventArgs">The event args.</param>
+        private void EventErrorHandler<TArgs>(AsyncEvent<WebSocketClient, TArgs> AsyncEvent, Exception Ex, AsyncEventHandler<WebSocketClient, TArgs> Handler, WebSocketClient Sender, TArgs EventArgs)
             where TArgs : AsyncEventArgs
-            => this._exceptionThrown.InvokeAsync(this, new SocketErrorEventArgs(this._serviceProvider) { Exception = ex }).ConfigureAwait(false).GetAwaiter().GetResult();
+            => this._exceptionThrown.InvokeAsync(this, new SocketErrorEventArgs(this._serviceProvider) { Exception = Ex }).ConfigureAwait(false).GetAwaiter().GetResult();
         #endregion
     }
 }

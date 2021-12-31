@@ -38,18 +38,18 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Initializes a new instance of the <see cref="RestRequest"/> class.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="bucket">The bucket.</param>
-        /// <param name="url">The url.</param>
-        /// <param name="method">The method.</param>
-        /// <param name="route">The route.</param>
-        /// <param name="headers">The headers.</param>
-        /// <param name="payload">The payload.</param>
-        /// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-        internal RestRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, string payload = null, double? ratelimitWaitOverride = null)
-            : base(client, bucket, url, method, route, headers, ratelimitWaitOverride)
+        /// <param name="Client">The client.</param>
+        /// <param name="Bucket">The bucket.</param>
+        /// <param name="Url">The url.</param>
+        /// <param name="Method">The method.</param>
+        /// <param name="Route">The route.</param>
+        /// <param name="Headers">The headers.</param>
+        /// <param name="Payload">The payload.</param>
+        /// <param name="RatelimitWaitOverride">The ratelimit wait override.</param>
+        internal RestRequest(BaseDiscordClient Client, RateLimitBucket Bucket, Uri Url, RestRequestMethod Method, string Route, IReadOnlyDictionary<string, string> Headers = null, string Payload = null, double? RatelimitWaitOverride = null)
+            : base(Client, Bucket, Url, Method, Route, Headers, RatelimitWaitOverride)
         {
-            this.Payload = payload;
+            this.Payload = Payload;
         }
     }
 }

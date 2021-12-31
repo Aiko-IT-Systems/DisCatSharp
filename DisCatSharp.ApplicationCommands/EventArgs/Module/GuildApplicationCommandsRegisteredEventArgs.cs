@@ -45,8 +45,8 @@ namespace DisCatSharp.ApplicationCommands.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="GuildApplicationCommandsRegisteredEventArgs"/> class.
         /// </summary>
-        /// <param name="provider">The provider.</param>
-        internal GuildApplicationCommandsRegisteredEventArgs(IServiceProvider provider) : base(provider)
+        /// <param name="Provider">The provider.</param>
+        internal GuildApplicationCommandsRegisteredEventArgs(IServiceProvider Provider) : base(Provider)
         { }
     }
 }

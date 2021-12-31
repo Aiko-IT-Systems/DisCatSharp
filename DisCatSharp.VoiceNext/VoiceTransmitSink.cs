@@ -97,13 +97,13 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Initializes a new instance of the <see cref="VoiceTransmitSink"/> class.
         /// </summary>
-        /// <param name="vnc">The vnc.</param>
-        /// <param name="pcmBufferDuration">The pcm buffer duration.</param>
-        internal VoiceTransmitSink(VoiceNextConnection vnc, int pcmBufferDuration)
+        /// <param name="Vnc">The vnc.</param>
+        /// <param name="PcmBufferDuration">The pcm buffer duration.</param>
+        internal VoiceTransmitSink(VoiceNextConnection Vnc, int PcmBufferDuration)
         {
-            this.Connection = vnc;
-            this.PcmBufferDuration = pcmBufferDuration;
-            this.PcmBuffer = new byte[vnc.AudioFormat.CalculateSampleSize(pcmBufferDuration)];
+            this.Connection = Vnc;
+            this.PcmBufferDuration = PcmBufferDuration;
+            this.PcmBuffer = new byte[Vnc.AudioFormat.CalculateSampleSize(PcmBufferDuration)];
             this.PcmMemory = this.PcmBuffer.AsMemory();
             this.PcmBufferLength = 0;
             this.WriteSemaphore = new SemaphoreSlim(1, 1);
@@ -113,25 +113,25 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Writes PCM data to the sink. The data is prepared for transmission, and enqueued.
         /// </summary>
-        /// <param name="buffer">PCM data buffer to send.</param>
-        /// <param name="offset">Start of the data in the buffer.</param>
-        /// <param name="count">Number of bytes from the buffer.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default) => await this.WriteAsync(new ReadOnlyMemory<byte>(buffer, offset, count), cancellationToken).ConfigureAwait(false);
+        /// <param name="Buffer">PCM data buffer to send.</param>
+        /// <param name="Offset">Start of the data in the buffer.</param>
+        /// <param name="Count">Number of bytes from the buffer.</param>
+        /// <param name="CancellationToken">The token to monitor for cancellation requests.</param>
+        public async Task WriteAsync(byte[] Buffer, int Offset, int Count, CancellationToken CancellationToken = default) => await this.WriteAsync(new ReadOnlyMemory<byte>(Buffer, Offset, Count), CancellationToken).ConfigureAwait(false);
 
         /// <summary>
         /// Writes PCM data to the sink. The data is prepared for transmission, and enqueued.
         /// </summary>
-        /// <param name="buffer">PCM data buffer to send.</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public async Task WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
+        /// <param name="Buffer">PCM data buffer to send.</param>
+        /// <param name="CancellationToken">The token to monitor for cancellation requests.</param>
+        public async Task WriteAsync(ReadOnlyMemory<byte> Buffer, CancellationToken CancellationToken = default)
         {
-            await this.WriteSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+            await this.WriteSemaphore.WaitAsync(CancellationToken).ConfigureAwait(false);
 
             try
             {
-                var remaining = buffer.Length;
-                var buffSpan = buffer;
+                var remaining = Buffer.Length;
+                var buffSpan = Buffer;
                 var pcmSpan = this.PcmMemory;
 
                 while (remaining > 0)
@@ -156,7 +156,7 @@ namespace DisCatSharp.VoiceNext
                         var packetMemory = packet.AsMemory()[..this.PcmMemory.Length];
                         this.PcmMemory.CopyTo(packetMemory);
 
-                        await this.Connection.EnqueuePacketAsync(new RawVoicePacket(packetMemory, this.PcmBufferDuration, false, packet), cancellationToken).ConfigureAwait(false);
+                        await this.Connection.EnqueuePacketAsync(new RawVoicePacket(packetMemory, this.PcmBufferDuration, false, packet), CancellationToken).ConfigureAwait(false);
                     }
                 }
             }
@@ -169,8 +169,8 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Flushes the rest of the PCM data in this buffer to VoiceNext packet queue.
         /// </summary>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public async Task FlushAsync(CancellationToken cancellationToken = default)
+        /// <param name="CancellationToken">The token to monitor for cancellation requests.</param>
+        public async Task FlushAsync(CancellationToken CancellationToken = default)
         {
             var pcm = this.PcmMemory;
             Helpers.ZeroFill(pcm[this.PcmBufferLength..].Span);
@@ -181,7 +181,7 @@ namespace DisCatSharp.VoiceNext
             var packetMemory = packet.AsMemory()[..pcm.Length];
             pcm.CopyTo(packetMemory);
 
-            await this.Connection.EnqueuePacketAsync(new RawVoicePacket(packetMemory, this.PcmBufferDuration, false, packet), cancellationToken).ConfigureAwait(false);
+            await this.Connection.EnqueuePacketAsync(new RawVoicePacket(packetMemory, this.PcmBufferDuration, false, packet), CancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -210,50 +210,50 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Installs a new PCM filter, with specified execution order.
         /// </summary>
-        /// <param name="filter">Filter to install.</param>
-        /// <param name="order">Order of the new filter. This determines where the filter will be inserted in the filter pipeline.</param>
-        public void InstallFilter(IVoiceFilter filter, int order = int.MaxValue)
+        /// <param name="Filter">Filter to install.</param>
+        /// <param name="Order">Order of the new filter. This determines where the filter will be inserted in the filter pipeline.</param>
+        public void InstallFilter(IVoiceFilter Filter, int Order = int.MaxValue)
         {
-            if (filter == null)
-                throw new ArgumentNullException(nameof(filter));
+            if (Filter == null)
+                throw new ArgumentNullException(nameof(Filter));
 
-            if (order < 0)
-                throw new ArgumentOutOfRangeException(nameof(order), "Filter order must be greater than or equal to 0.");
+            if (Order < 0)
+                throw new ArgumentOutOfRangeException(nameof(Order), "Filter order must be greater than or equal to 0.");
 
             lock (this.Filters)
             {
                 var filters = this.Filters;
-                if (order >= filters.Count)
-                    filters.Add(filter);
+                if (Order >= filters.Count)
+                    filters.Add(Filter);
                 else
-                    filters.Insert(order, filter);
+                    filters.Insert(Order, Filter);
             }
         }
 
         /// <summary>
         /// Uninstalls an installed PCM filter.
         /// </summary>
-        /// <param name="filter">Filter to uninstall.</param>
+        /// <param name="Filter">Filter to uninstall.</param>
         /// <returns>Whether the filter was uninstalled.</returns>
-        public bool UninstallFilter(IVoiceFilter filter)
+        public bool UninstallFilter(IVoiceFilter Filter)
         {
-            if (filter == null)
-                throw new ArgumentNullException(nameof(filter));
+            if (Filter == null)
+                throw new ArgumentNullException(nameof(Filter));
 
             lock (this.Filters)
             {
                 var filters = this.Filters;
-                return filters.Contains(filter) && filters.Remove(filter);
+                return filters.Contains(Filter) && filters.Remove(Filter);
             }
         }
 
         /// <summary>
         /// Applies the filters sync.
         /// </summary>
-        /// <param name="pcmSpan">The pcm span.</param>
-        private void ApplyFiltersSync(Memory<byte> pcmSpan)
+        /// <param name="PcmSpan">The pcm span.</param>
+        private void ApplyFiltersSync(Memory<byte> PcmSpan)
         {
-            var pcm16 = MemoryMarshal.Cast<byte, short>(pcmSpan.Span);
+            var pcm16 = MemoryMarshal.Cast<byte, short>(PcmSpan.Span);
 
             // pass through any filters, if applicable
             lock (this.Filters)

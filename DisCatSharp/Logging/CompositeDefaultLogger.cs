@@ -40,10 +40,10 @@ namespace DisCatSharp
         /// <summary>
         /// Initializes a new instance of the <see cref="CompositeDefaultLogger"/> class.
         /// </summary>
-        /// <param name="providers">The providers.</param>
-        public CompositeDefaultLogger(IEnumerable<ILoggerProvider> providers)
+        /// <param name="Providers">The providers.</param>
+        public CompositeDefaultLogger(IEnumerable<ILoggerProvider> Providers)
         {
-            this.Loggers = providers.Select(x => x.CreateLogger(typeof(BaseDiscordClient).FullName))
+            this.Loggers = Providers.Select(X => X.CreateLogger(typeof(BaseDiscordClient).FullName))
                 .OfType<ILogger<BaseDiscordClient>>()
                 .ToList();
         }
@@ -51,28 +51,28 @@ namespace DisCatSharp
         /// <summary>
         /// Whether the logger is enabled.
         /// </summary>
-        /// <param name="logLevel">The log level.</param>
-        public bool IsEnabled(LogLevel logLevel)
+        /// <param name="LogLevel">The log level.</param>
+        public bool IsEnabled(LogLevel LogLevel)
             => true;
 
         /// <summary>
         /// Logs an event.
         /// </summary>
-        /// <param name="logLevel">The log level.</param>
-        /// <param name="eventId">The event id.</param>
-        /// <param name="state">The state.</param>
-        /// <param name="exception">The exception.</param>
-        /// <param name="formatter">The formatter.</param>
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        /// <param name="LogLevel">The log level.</param>
+        /// <param name="EventId">The event id.</param>
+        /// <param name="State">The state.</param>
+        /// <param name="Exception">The exception.</param>
+        /// <param name="Formatter">The formatter.</param>
+        public void Log<TState>(LogLevel LogLevel, EventId EventId, TState State, Exception Exception, Func<TState, Exception, string> Formatter)
         {
             foreach (var logger in this.Loggers)
-                logger.Log(logLevel, eventId, state, exception, formatter);
+                logger.Log(LogLevel, EventId, State, Exception, Formatter);
         }
 
         /// <summary>
         /// Begins the scope.
         /// </summary>
-        /// <param name="state">The state.</param>
-        public IDisposable BeginScope<TState>(TState state) => throw new NotImplementedException();
+        /// <param name="State">The state.</param>
+        public IDisposable BeginScope<TState>(TState State) => throw new NotImplementedException();
     }
 }

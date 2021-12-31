@@ -93,27 +93,27 @@ namespace DisCatSharp.CommandsNext
         /// <summary>
         /// Executes this command with specified context.
         /// </summary>
-        /// <param name="ctx">Context to execute the command in.</param>
+        /// <param name="Ctx">Context to execute the command in.</param>
         /// <returns>Command's execution results.</returns>
-        public virtual async Task<CommandResult> ExecuteAsync(CommandContext ctx)
+        public virtual async Task<CommandResult> ExecuteAsync(CommandContext Ctx)
         {
             CommandResult res = default;
             try
             {
                 var executed = false;
-                foreach (var ovl in this.Overloads.OrderByDescending(x => x.Priority))
+                foreach (var ovl in this.Overloads.OrderByDescending(X => X.Priority))
                 {
-                    ctx.Overload = ovl;
-                    var args = await CommandsNextUtilities.BindArguments(ctx, ctx.Config.IgnoreExtraArguments).ConfigureAwait(false);
+                    Ctx.Overload = ovl;
+                    var args = await CommandsNextUtilities.BindArgumentsAsync(Ctx, Ctx.Config.IgnoreExtraArguments).ConfigureAwait(false);
 
                     if (!args.IsSuccessful)
                         continue;
 
-                    ctx.RawArguments = args.Raw;
+                    Ctx.RawArguments = args.Raw;
 
-                    var mdl = ovl.InvocationTarget ?? this.Module?.GetInstance(ctx.Services);
+                    var mdl = ovl.InvocationTarget ?? this.Module?.GetInstance(Ctx.Services);
                     if (mdl is BaseCommandModule bcmBefore)
-                        await bcmBefore.BeforeExecutionAsync(ctx).ConfigureAwait(false);
+                        await bcmBefore.BeforeExecution(Ctx).ConfigureAwait(false);
 
                     args.Converted[0] = mdl;
                     var ret = (Task)ovl.Callable.DynamicInvoke(args.Converted);
@@ -122,11 +122,11 @@ namespace DisCatSharp.CommandsNext
                     res = new CommandResult
                     {
                         IsSuccessful = true,
-                        Context = ctx
+                        Context = Ctx
                     };
 
                     if (mdl is BaseCommandModule bcmAfter)
-                        await bcmAfter.AfterExecutionAsync(ctx).ConfigureAwait(false);
+                        await bcmAfter.AfterExecution(Ctx).ConfigureAwait(false);
                     break;
                 }
 
@@ -139,7 +139,7 @@ namespace DisCatSharp.CommandsNext
                 {
                     IsSuccessful = false,
                     Exception = ex,
-                    Context = ctx
+                    Context = Ctx
                 };
             }
 
@@ -149,15 +149,15 @@ namespace DisCatSharp.CommandsNext
         /// <summary>
         /// Runs pre-execution checks for this command and returns any that fail for given context.
         /// </summary>
-        /// <param name="ctx">Context in which the command is executed.</param>
-        /// <param name="help">Whether this check is being executed from help or not. This can be used to probe whether command can be run without setting off certain fail conditions (such as cooldowns).</param>
+        /// <param name="Ctx">Context in which the command is executed.</param>
+        /// <param name="Help">Whether this check is being executed from help or not. This can be used to probe whether command can be run without setting off certain fail conditions (such as cooldowns).</param>
         /// <returns>Pre-execution checks that fail for given context.</returns>
-        public async Task<IEnumerable<CheckBaseAttribute>> RunChecksAsync(CommandContext ctx, bool help)
+        public async Task<IEnumerable<CheckBaseAttribute>> RunChecksAsync(CommandContext Ctx, bool Help)
         {
             var fchecks = new List<CheckBaseAttribute>();
             if (this.ExecutionChecks != null && this.ExecutionChecks.Any())
                 foreach (var ec in this.ExecutionChecks)
-                    if (!await ec.ExecuteCheckAsync(ctx, help).ConfigureAwait(false))
+                    if (!await ec.ExecuteCheck(Ctx, Help).ConfigureAwait(false))
                         fchecks.Add(ec);
 
             return fchecks;
@@ -166,13 +166,13 @@ namespace DisCatSharp.CommandsNext
         /// <summary>
         /// Checks whether this command is equal to another one.
         /// </summary>
-        /// <param name="cmd1">Command to compare to.</param>
-        /// <param name="cmd2">Command to compare.</param>
+        /// <param name="Cmd1">Command to compare to.</param>
+        /// <param name="Cmd2">Command to compare.</param>
         /// <returns>Whether the two commands are equal.</returns>
-        public static bool operator ==(Command cmd1, Command cmd2)
+        public static bool operator ==(Command Cmd1, Command Cmd2)
         {
-            var o1 = cmd1 as object;
-            var o2 = cmd2 as object;
+            var o1 = Cmd1 as object;
+            var o2 = Cmd2 as object;
 
             if (o1 == null && o2 != null)
                 return false;
@@ -181,26 +181,26 @@ namespace DisCatSharp.CommandsNext
             else if (o1 == null && o2 == null)
                 return true;
 
-            return cmd1.QualifiedName == cmd2.QualifiedName;
+            return Cmd1.QualifiedName == Cmd2.QualifiedName;
         }
 
         /// <summary>
         /// Checks whether this command is not equal to another one.
         /// </summary>
-        /// <param name="cmd1">Command to compare to.</param>
-        /// <param name="cmd2">Command to compare.</param>
+        /// <param name="Cmd1">Command to compare to.</param>
+        /// <param name="Cmd2">Command to compare.</param>
         /// <returns>Whether the two commands are not equal.</returns>
-        public static bool operator !=(Command cmd1, Command cmd2)
-            => !(cmd1 == cmd2);
+        public static bool operator !=(Command Cmd1, Command Cmd2)
+            => !(Cmd1 == Cmd2);
 
         /// <summary>
         /// Checks whether this command equals another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether this command is equal to another object.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object Obj)
         {
-            var o1 = obj as object;
+            var o1 = Obj as object;
             var o2 = this as object;
 
             if (o1 == null && o2 != null)
@@ -210,7 +210,7 @@ namespace DisCatSharp.CommandsNext
             else if (o1 == null && o2 == null)
                 return true;
 
-            return obj is Command cmd
+            return Obj is Command cmd
 && cmd.QualifiedName == this.QualifiedName;
         }
 

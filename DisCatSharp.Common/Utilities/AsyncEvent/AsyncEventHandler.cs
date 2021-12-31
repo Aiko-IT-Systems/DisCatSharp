@@ -29,8 +29,8 @@ namespace DisCatSharp.Common.Utilities
     /// </summary>
     /// <typeparam name="TSender">Type of the object that dispatches this event.</typeparam>
     /// <typeparam name="TArgs">Type of the object which holds arguments for this event.</typeparam>
-    /// <param name="sender">Object which raised this event.</param>
-    /// <param name="e">Arguments for this event.</param>
+    /// <param name="Sender">Object which raised this event.</param>
+    /// <param name="E">Arguments for this event.</param>
     /// <returns></returns>
-    public delegate Task AsyncEventHandler<in TSender, in TArgs>(TSender sender, TArgs e) where TArgs : AsyncEventArgs;
+    public delegate Task AsyncEventHandler<in TSender, in TArgs>(TSender Sender, TArgs E) where TArgs : AsyncEventArgs;
 }

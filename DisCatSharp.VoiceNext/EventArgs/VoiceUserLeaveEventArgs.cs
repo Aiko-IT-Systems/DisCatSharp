@@ -39,11 +39,11 @@ namespace DisCatSharp.VoiceNext.EventArgs
         /// <summary>
         /// Gets the SSRC of the user who left.
         /// </summary>
-        public uint SSRC { get; internal set; }
+        public uint Ssrc { get; internal set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VoiceUserLeaveEventArgs"/> class.
         /// </summary>
-        internal VoiceUserLeaveEventArgs(IServiceProvider provider) : base(provider) { }
+        internal VoiceUserLeaveEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

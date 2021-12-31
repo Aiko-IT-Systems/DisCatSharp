@@ -74,16 +74,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether two <see cref="DiscordVoiceRegion"/>s are equal.
         /// </summary>
-        /// <param name="region">The region to compare with.</param>
+        /// <param name="Region">The region to compare with.</param>
         /// <returns></returns>
-        public bool Equals(DiscordVoiceRegion region)
-            => this == region;
+        public bool Equals(DiscordVoiceRegion Region)
+            => this == Region;
 
         /// <summary>
         /// Whether two regions are equal.
         /// </summary>
-        /// <param name="obj">A voice region.</param>
-        public override bool Equals(object obj) => this.Equals(obj as DiscordVoiceRegion);
+        /// <param name="Obj">A voice region.</param>
+        public override bool Equals(object Obj) => this.Equals(Obj as DiscordVoiceRegion);
 
         /// <summary>
         /// Gets the hash code.
@@ -93,25 +93,25 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordVoiceRegion"/> objects are equal.
         /// </summary>
-        /// <param name="left">First voice region to compare.</param>
-        /// <param name="right">Second voice region to compare.</param>
+        /// <param name="Left">First voice region to compare.</param>
+        /// <param name="Right">Second voice region to compare.</param>
         /// <returns>Whether the two voice regions are equal.</returns>
-        public static bool operator ==(DiscordVoiceRegion left, DiscordVoiceRegion right)
+        public static bool operator ==(DiscordVoiceRegion Left, DiscordVoiceRegion Right)
         {
-            var o1 = left as object;
-            var o2 = right as object;
+            var o1 = Left as object;
+            var o2 = Right as object;
 
-            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || left.Id == right.Id);
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || Left.Id == Right.Id);
         }
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordVoiceRegion"/> objects are not equal.
         /// </summary>
-        /// <param name="left">First voice region to compare.</param>
-        /// <param name="right">Second voice region to compare.</param>
+        /// <param name="Left">First voice region to compare.</param>
+        /// <param name="Right">Second voice region to compare.</param>
         /// <returns>Whether the two voice regions are not equal.</returns>
-        public static bool operator !=(DiscordVoiceRegion left, DiscordVoiceRegion right)
-            => !(left == right);
+        public static bool operator !=(DiscordVoiceRegion Left, DiscordVoiceRegion Right)
+            => !(Left == Right);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordVoiceRegion"/> class.

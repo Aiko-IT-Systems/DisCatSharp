@@ -47,7 +47,7 @@ namespace DisCatSharp
         /// Gets the number of items in this ring buffer.
         /// </summary>
         public int Count
-            => this._reached_end ? this.Capacity : this.CurrentIndex;
+            => this._reachedEnd ? this.Capacity : this.CurrentIndex;
 
         /// <summary>
         /// Gets whether this ring buffer is read-only.
@@ -59,94 +59,94 @@ namespace DisCatSharp
         /// Gets or sets the internal collection of items.
         /// </summary>
         protected T[] InternalBuffer { get; set; }
-        private bool _reached_end = false;
+        private bool _reachedEnd = false;
 
         /// <summary>
         /// Creates a new ring buffer with specified size.
         /// </summary>
-        /// <param name="size">Size of the buffer to create.</param>
+        /// <param name="Size">Size of the buffer to create.</param>
         /// <exception cref="System.ArgumentOutOfRangeException" />
-        public RingBuffer(int size)
+        public RingBuffer(int Size)
         {
-            if (size <= 0)
-                throw new ArgumentOutOfRangeException(nameof(size), "Size must be positive.");
+            if (Size <= 0)
+                throw new ArgumentOutOfRangeException(nameof(Size), "Size must be positive.");
 
             this.CurrentIndex = 0;
-            this.Capacity = size;
+            this.Capacity = Size;
             this.InternalBuffer = new T[this.Capacity];
         }
 
         /// <summary>
         /// Creates a new ring buffer, filled with specified elements.
         /// </summary>
-        /// <param name="elements">Elements to fill the buffer with.</param>
+        /// <param name="Elements">Elements to fill the buffer with.</param>
         /// <exception cref="System.ArgumentException" />
         /// <exception cref="System.ArgumentOutOfRangeException" />
-        public RingBuffer(IEnumerable<T> elements)
-            : this(elements, 0)
+        public RingBuffer(IEnumerable<T> Elements)
+            : this(Elements, 0)
         { }
 
         /// <summary>
         /// Creates a new ring buffer, filled with specified elements, and starting at specified index.
         /// </summary>
-        /// <param name="elements">Elements to fill the buffer with.</param>
-        /// <param name="index">Starting element index.</param>
+        /// <param name="Elements">Elements to fill the buffer with.</param>
+        /// <param name="Index">Starting element index.</param>
         /// <exception cref="System.ArgumentException" />
         /// <exception cref="System.ArgumentOutOfRangeException" />
-        public RingBuffer(IEnumerable<T> elements, int index)
+        public RingBuffer(IEnumerable<T> Elements, int Index)
         {
-            if (elements == null || !elements.Any())
-                throw new ArgumentException(nameof(elements), "The collection cannot be null or empty.");
+            if (Elements == null || !Elements.Any())
+                throw new ArgumentException(nameof(Elements), "The collection cannot be null or empty.");
 
-            this.CurrentIndex = index;
-            this.InternalBuffer = elements.ToArray();
+            this.CurrentIndex = Index;
+            this.InternalBuffer = Elements.ToArray();
             this.Capacity = this.InternalBuffer.Length;
 
             if (this.CurrentIndex >= this.InternalBuffer.Length || this.CurrentIndex < 0)
-                throw new ArgumentOutOfRangeException(nameof(index), "Index must be less than buffer capacity, and greater than zero.");
+                throw new ArgumentOutOfRangeException(nameof(Index), "Index must be less than buffer capacity, and greater than zero.");
         }
 
         /// <summary>
         /// Inserts an item into this ring buffer.
         /// </summary>
-        /// <param name="item">Item to insert.</param>
-        public void Add(T item)
+        /// <param name="Item">Item to insert.</param>
+        public void Add(T Item)
         {
-            this.InternalBuffer[this.CurrentIndex++] = item;
+            this.InternalBuffer[this.CurrentIndex++] = Item;
 
             if (this.CurrentIndex == this.Capacity)
             {
                 this.CurrentIndex = 0;
-                this._reached_end = true;
+                this._reachedEnd = true;
             }
         }
 
         /// <summary>
         /// Gets first item from the buffer that matches the predicate.
         /// </summary>
-        /// <param name="predicate">Predicate used to find the item.</param>
-        /// <param name="item">Item that matches the predicate, or default value for the type of the items in this ring buffer, if one is not found.</param>
+        /// <param name="Predicate">Predicate used to find the item.</param>
+        /// <param name="Item">Item that matches the predicate, or default value for the type of the items in this ring buffer, if one is not found.</param>
         /// <returns>Whether an item that matches the predicate was found or not.</returns>
-        public bool TryGet(Func<T, bool> predicate, out T item)
+        public bool TryGet(Func<T, bool> Predicate, out T Item)
         {
             for (var i = this.CurrentIndex; i < this.InternalBuffer.Length; i++)
             {
-                if (this.InternalBuffer[i] != null && predicate(this.InternalBuffer[i]))
+                if (this.InternalBuffer[i] != null && Predicate(this.InternalBuffer[i]))
                 {
-                    item = this.InternalBuffer[i];
+                    Item = this.InternalBuffer[i];
                     return true;
                 }
             }
             for (var i = 0; i < this.CurrentIndex; i++)
             {
-                if (this.InternalBuffer[i] != null && predicate(this.InternalBuffer[i]))
+                if (this.InternalBuffer[i] != null && Predicate(this.InternalBuffer[i]))
                 {
-                    item = this.InternalBuffer[i];
+                    Item = this.InternalBuffer[i];
                     return true;
                 }
             }
 
-            item = default;
+            Item = default;
             return false;
         }
 
@@ -164,52 +164,52 @@ namespace DisCatSharp
         /// <summary>
         /// Checks whether given item is present in the buffer. This method is not implemented. Use <see cref="Contains(Func{T, bool})"/> instead.
         /// </summary>
-        /// <param name="item">Item to check for.</param>
+        /// <param name="Item">Item to check for.</param>
         /// <returns>Whether the buffer contains the item.</returns>
         /// <exception cref="System.NotImplementedException" />
-        public bool Contains(T item) => throw new NotImplementedException("This method is not implemented. Use .Contains(predicate) instead.");
+        public bool Contains(T Item) => throw new NotImplementedException("This method is not implemented. Use .Contains(predicate) instead.");
 
         /// <summary>
         /// Checks whether given item is present in the buffer using given predicate to find it.
         /// </summary>
-        /// <param name="predicate">Predicate used to check for the item.</param>
+        /// <param name="Predicate">Predicate used to check for the item.</param>
         /// <returns>Whether the buffer contains the item.</returns>
-        public bool Contains(Func<T, bool> predicate) => this.InternalBuffer.Any(predicate);
+        public bool Contains(Func<T, bool> Predicate) => this.InternalBuffer.Any(Predicate);
 
         /// <summary>
         /// Copies this ring buffer to target array, attempting to maintain the order of items within.
         /// </summary>
-        /// <param name="array">Target array.</param>
-        /// <param name="index">Index starting at which to copy the items to.</param>
-        public void CopyTo(T[] array, int index)
+        /// <param name="Array">Target array.</param>
+        /// <param name="Index">Index starting at which to copy the items to.</param>
+        public void CopyTo(T[] Array, int Index)
         {
-            if (array.Length - index < 1)
-                throw new ArgumentException("Target array is too small to contain the elements from this buffer.", nameof(array));
+            if (Array.Length - Index < 1)
+                throw new ArgumentException("Target array is too small to contain the elements from this buffer.", nameof(Array));
 
             var ci = 0;
             for (var i = this.CurrentIndex; i < this.InternalBuffer.Length; i++)
-                array[ci++] = this.InternalBuffer[i];
+                Array[ci++] = this.InternalBuffer[i];
             for (var i = 0; i < this.CurrentIndex; i++)
-                array[ci++] = this.InternalBuffer[i];
+                Array[ci++] = this.InternalBuffer[i];
         }
 
         /// <summary>
         /// Removes an item from the buffer. This method is not implemented. Use <see cref="Remove(Func{T, bool})"/> instead.
         /// </summary>
-        /// <param name="item">Item to remove.</param>
+        /// <param name="Item">Item to remove.</param>
         /// <returns>Whether an item was removed or not.</returns>
-        public bool Remove(T item) => throw new NotImplementedException("This method is not implemented. Use .Remove(predicate) instead.");
+        public bool Remove(T Item) => throw new NotImplementedException("This method is not implemented. Use .Remove(predicate) instead.");
 
         /// <summary>
         /// Removes an item from the buffer using given predicate to find it.
         /// </summary>
-        /// <param name="predicate">Predicate used to find the item.</param>
+        /// <param name="Predicate">Predicate used to find the item.</param>
         /// <returns>Whether an item was removed or not.</returns>
-        public bool Remove(Func<T, bool> predicate)
+        public bool Remove(Func<T, bool> Predicate)
         {
             for (var i = 0; i < this.InternalBuffer.Length; i++)
             {
-                if (this.InternalBuffer[i] != null && predicate(this.InternalBuffer[i]))
+                if (this.InternalBuffer[i] != null && Predicate(this.InternalBuffer[i]))
                 {
                     this.InternalBuffer[i] = default;
                     return true;
@@ -225,7 +225,7 @@ namespace DisCatSharp
         /// <returns>Enumerator for this ring buffer.</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            return !this._reached_end
+            return !this._reachedEnd
                 ? this.InternalBuffer.AsEnumerable().GetEnumerator()
                 : this.InternalBuffer.Skip(this.CurrentIndex)
                 .Concat(this.InternalBuffer.Take(this.CurrentIndex))

@@ -44,7 +44,7 @@ namespace DisCatSharp.Entities
         /// Gets the application's icon.
         /// </summary>
         public override string Icon
-            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AppIcons}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets the application's icon hash.
@@ -100,7 +100,7 @@ namespace DisCatSharp.Entities
         /// Gets this application's cover image URL.
         /// </summary>
         public override string CoverImageUrl
-            => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png?size=1024";
+            => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AppIcons}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png?size=1024";
 
         /// <summary>
         /// Gets the team which owns this application.
@@ -156,33 +156,33 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets the application's cover image URL, in requested format and size.
         /// </summary>
-        /// <param name="fmt">Format of the image to get.</param>
-        /// <param name="size">Maximum size of the cover image. Must be a power of two, minimum 16, maximum 2048.</param>
+        /// <param name="Fmt">Format of the image to get.</param>
+        /// <param name="Size">Maximum size of the cover image. Must be a power of two, minimum 16, maximum 2048.</param>
         /// <returns>URL of the application's cover image.</returns>
-        public string GetAvatarUrl(ImageFormat fmt, ushort size = 1024)
+        public string GetAvatarUrl(ImageFormat Fmt, ushort Size = 1024)
         {
-            if (fmt == ImageFormat.Unknown)
-                throw new ArgumentException("You must specify valid image format.", nameof(fmt));
+            if (Fmt == ImageFormat.Unknown)
+                throw new ArgumentException("You must specify valid image format.", nameof(Fmt));
 
-            if (size < 16 || size > 2048)
-                throw new ArgumentOutOfRangeException(nameof(size));
+            if (Size < 16 || Size > 2048)
+                throw new ArgumentOutOfRangeException(nameof(Size));
 
-            var log = Math.Log(size, 2);
+            var log = Math.Log(Size, 2);
             if (log < 4 || log > 11 || log % 1 != 0)
-                throw new ArgumentOutOfRangeException(nameof(size));
+                throw new ArgumentOutOfRangeException(nameof(Size));
 
             var sfmt = "";
-            sfmt = fmt switch
+            sfmt = Fmt switch
             {
                 ImageFormat.Gif => "gif",
                 ImageFormat.Jpeg => "jpg",
                 ImageFormat.Auto or ImageFormat.Png => "png",
                 ImageFormat.WebP => "webp",
-                _ => throw new ArgumentOutOfRangeException(nameof(fmt)),
+                _ => throw new ArgumentOutOfRangeException(nameof(Fmt)),
             };
-            var ssize = size.ToString(CultureInfo.InvariantCulture);
+            var ssize = Size.ToString(CultureInfo.InvariantCulture);
             return !string.IsNullOrWhiteSpace(this.CoverImageHash)
-                ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{sfmt}?size={ssize}"
+                ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Avatars}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.{sfmt}?size={ssize}"
                 : null;
         }
 
@@ -201,32 +201,32 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Generates an oauth url for the application.
         /// </summary>
-        /// <param name="permissions">The permissions.</param>
+        /// <param name="Permissions">The permissions.</param>
         /// <returns>OAuth Url</returns>
-        public string GenerateBotOAuth(Permissions permissions = Permissions.None)
+        public string GenerateBotOAuth(Permissions Permissions = Permissions.None)
         {
-            permissions &= PermissionMethods.FULL_PERMS;
+            Permissions &= PermissionMethods.FullPerms;
             // hey look, it's not all annoying and blue :P
-            return new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
+            return new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.Oauth2}{Endpoints.Authorize}")
                 .AddParameter("client_id", this.Id.ToString(CultureInfo.InvariantCulture))
                 .AddParameter("scope", "bot")
-                .AddParameter("permissions", ((long)permissions).ToString(CultureInfo.InvariantCulture))
+                .AddParameter("permissions", ((long)Permissions).ToString(CultureInfo.InvariantCulture))
                 .ToString();
         }
 
         /// <summary>
         /// Checks whether this <see cref="DiscordApplication"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="DiscordApplication"/>.</returns>
-        public override bool Equals(object obj) => this.Equals(obj as DiscordApplication);
+        public override bool Equals(object Obj) => this.Equals(Obj as DiscordApplication);
 
         /// <summary>
         /// Checks whether this <see cref="DiscordApplication"/> is equal to another <see cref="DiscordApplication"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordApplication"/> to compare to.</param>
+        /// <param name="E"><see cref="DiscordApplication"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordApplication"/> is equal to this <see cref="DiscordApplication"/>.</returns>
-        public bool Equals(DiscordApplication e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+        public bool Equals(DiscordApplication E) => E is not null && (ReferenceEquals(this, E) || this.Id == E.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordApplication"/>.
@@ -237,25 +237,25 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordApplication"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First application to compare.</param>
-        /// <param name="e2">Second application to compare.</param>
+        /// <param name="E1">First application to compare.</param>
+        /// <param name="E2">Second application to compare.</param>
         /// <returns>Whether the two applications are equal.</returns>
-        public static bool operator ==(DiscordApplication e1, DiscordApplication e2)
+        public static bool operator ==(DiscordApplication E1, DiscordApplication E2)
         {
-            var o1 = e1 as object;
-            var o2 = e2 as object;
+            var o1 = E1 as object;
+            var o2 = E2 as object;
 
-            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || E1.Id == E2.Id);
         }
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordApplication"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First application to compare.</param>
-        /// <param name="e2">Second application to compare.</param>
+        /// <param name="E1">First application to compare.</param>
+        /// <param name="E2">Second application to compare.</param>
         /// <returns>Whether the two applications are not equal.</returns>
-        public static bool operator !=(DiscordApplication e1, DiscordApplication e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordApplication E1, DiscordApplication E2)
+            => !(E1 == E2);
     }
 
     /// <summary>
@@ -305,7 +305,7 @@ namespace DisCatSharp.Entities
         /// Gets the Url of this asset.
         /// </summary>
         public override Uri Url
-            => new($"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.APP_ASSETS}/{this.Application.Id.ToString(CultureInfo.InvariantCulture)}/{this.Id}.png");
+            => new($"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AppAssets}/{this.Application.Id.ToString(CultureInfo.InvariantCulture)}/{this.Id}.png");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
@@ -315,25 +315,25 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
         /// </summary>
-        /// <param name="app">The app.</param>
-        internal DiscordApplicationAsset(DiscordApplication app)
+        /// <param name="App">The app.</param>
+        internal DiscordApplicationAsset(DiscordApplication App)
         {
-            this.Discord = app.Discord;
+            this.Discord = App.Discord;
         }
 
         /// <summary>
         /// Checks whether this <see cref="DiscordApplicationAsset"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="DiscordApplicationAsset"/>.</returns>
-        public override bool Equals(object obj) => this.Equals(obj as DiscordApplicationAsset);
+        public override bool Equals(object Obj) => this.Equals(Obj as DiscordApplicationAsset);
 
         /// <summary>
         /// Checks whether this <see cref="DiscordApplicationAsset"/> is equal to another <see cref="DiscordApplicationAsset"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordApplicationAsset"/> to compare to.</param>
+        /// <param name="E"><see cref="DiscordApplicationAsset"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordApplicationAsset"/> is equal to this <see cref="DiscordApplicationAsset"/>.</returns>
-        public bool Equals(DiscordApplicationAsset e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+        public bool Equals(DiscordApplicationAsset E) => E is not null && (ReferenceEquals(this, E) || this.Id == E.Id);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordApplication"/>.
@@ -344,25 +344,25 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordApplicationAsset"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First application asset to compare.</param>
-        /// <param name="e2">Second application asset to compare.</param>
+        /// <param name="E1">First application asset to compare.</param>
+        /// <param name="E2">Second application asset to compare.</param>
         /// <returns>Whether the two application assets not equal.</returns>
-        public static bool operator ==(DiscordApplicationAsset e1, DiscordApplicationAsset e2)
+        public static bool operator ==(DiscordApplicationAsset E1, DiscordApplicationAsset E2)
         {
-            var o1 = e1 as object;
-            var o2 = e2 as object;
+            var o1 = E1 as object;
+            var o2 = E2 as object;
 
-            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || e1.Id == e2.Id);
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || E1.Id == E2.Id);
         }
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordApplicationAsset"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First application asset to compare.</param>
-        /// <param name="e2">Second application asset to compare.</param>
+        /// <param name="E1">First application asset to compare.</param>
+        /// <param name="E2">Second application asset to compare.</param>
         /// <returns>Whether the two application assets are not equal.</returns>
-        public static bool operator !=(DiscordApplicationAsset e1, DiscordApplicationAsset e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordApplicationAsset E1, DiscordApplicationAsset E2)
+            => !(E1 == E2);
     }
 
     /// <summary>

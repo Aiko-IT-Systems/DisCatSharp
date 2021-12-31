@@ -43,10 +43,10 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
         /// </summary>
-        /// <param name="location">The location.</param>
-        public DiscordScheduledEventEntityMetadata(string location)
+        /// <param name="Location">The location.</param>
+        public DiscordScheduledEventEntityMetadata(string Location)
         {
-            this.Location = location;
+            this.Location = Location;
         }
     }
 }

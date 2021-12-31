@@ -42,15 +42,15 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Creates a new MatchRequest object.
         /// </summary>
-        /// <param name="predicate">Predicate to match</param>
-        /// <param name="timeout">Timeout time</param>
-        public MatchRequest(Func<T, bool> predicate, TimeSpan timeout)
+        /// <param name="Predicate">Predicate to match</param>
+        /// <param name="Timeout">Timeout time</param>
+        public MatchRequest(Func<T, bool> Predicate, TimeSpan Timeout)
         {
             this._tcs = new TaskCompletionSource<T>();
-            this._ct = new CancellationTokenSource(timeout);
-            this._predicate = predicate;
+            this._ct = new CancellationTokenSource(Timeout);
+            this._predicate = Predicate;
             this._ct.Token.Register(() => this._tcs.TrySetResult(null));
-            this._timeout = timeout;
+            this._timeout = Timeout;
         }
 
         ~MatchRequest()

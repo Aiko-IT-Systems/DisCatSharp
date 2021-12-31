@@ -42,12 +42,12 @@ namespace DisCatSharp.Lavalink.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="NodeDisconnectedEventArgs"/> class.
         /// </summary>
-        /// <param name="node">The node.</param>
-        /// <param name="isClean">If true, is clean.</param>
-        internal NodeDisconnectedEventArgs(LavalinkNodeConnection node, bool isClean) : base(node.Discord.ServiceProvider)
+        /// <param name="Node">The node.</param>
+        /// <param name="IsClean">If true, is clean.</param>
+        internal NodeDisconnectedEventArgs(LavalinkNodeConnection Node, bool IsClean) : base(Node.Discord.ServiceProvider)
         {
-            this.LavalinkNode = node;
-            this.IsCleanClose = isClean;
+            this.LavalinkNode = Node;
+            this.IsCleanClose = IsClean;
         }
     }
 }

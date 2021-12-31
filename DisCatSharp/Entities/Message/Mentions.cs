@@ -73,16 +73,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Allows the specific user to be mentioned
         /// </summary>
-        /// <param name="id"></param>
-        public UserMention(ulong id) { this.Id = id; }
+        /// <param name="Id"></param>
+        public UserMention(ulong Id) { this.Id = Id; }
 
         /// <summary>
         /// Allows the specific user to be mentioned
         /// </summary>
-        /// <param name="user"></param>
-        public UserMention(DiscordUser user) : this(user.Id) { }
+        /// <param name="User"></param>
+        public UserMention(DiscordUser User) : this(User.Id) { }
 
-        public static implicit operator UserMention(DiscordUser user) => new(user.Id);
+        public static implicit operator UserMention(DiscordUser User) => new(User.Id);
     }
 
     /// <summary>
@@ -103,16 +103,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Allows the specific id to be mentioned
         /// </summary>
-        /// <param name="id"></param>
-        public RoleMention(ulong id) { this.Id = id; }
+        /// <param name="Id"></param>
+        public RoleMention(ulong Id) { this.Id = Id; }
 
         /// <summary>
         /// Allows the specific role to be mentioned
         /// </summary>
-        /// <param name="role"></param>
-        public RoleMention(DiscordRole role) : this(role.Id) { }
+        /// <param name="Role"></param>
+        public RoleMention(DiscordRole Role) : this(Role.Id) { }
 
-        public static implicit operator RoleMention(DiscordRole role) => new(role.Id);
+        public static implicit operator RoleMention(DiscordRole Role) => new(Role.Id);
     }
 
     /// <summary>

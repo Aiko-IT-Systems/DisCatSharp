@@ -64,35 +64,35 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordMessage"/> class.
         /// </summary>
-        /// <param name="other">The other.</param>
-        internal DiscordMessage(DiscordMessage other)
+        /// <param name="Other">The other.</param>
+        internal DiscordMessage(DiscordMessage Other)
             : this()
         {
-            this.Discord = other.Discord;
+            this.Discord = Other.Discord;
 
-            this._attachments = other._attachments; // the attachments cannot change, thus no need to copy and reallocate.
-            this._embeds = new List<DiscordEmbed>(other._embeds);
+            this._attachments = Other._attachments; // the attachments cannot change, thus no need to copy and reallocate.
+            this._embeds = new List<DiscordEmbed>(Other._embeds);
 
-            if (other._mentionedChannels != null)
-                this._mentionedChannels = new List<DiscordChannel>(other._mentionedChannels);
-            if (other._mentionedRoles != null)
-                this._mentionedRoles = new List<DiscordRole>(other._mentionedRoles);
-            if (other._mentionedRoleIds != null)
-                this._mentionedRoleIds = new List<ulong>(other._mentionedRoleIds);
-            this._mentionedUsers = new List<DiscordUser>(other._mentionedUsers);
-            this._reactions = new List<DiscordReaction>(other._reactions);
-            this._stickers = new List<DiscordSticker>(other._stickers);
+            if (Other._mentionedChannels != null)
+                this._mentionedChannels = new List<DiscordChannel>(Other._mentionedChannels);
+            if (Other._mentionedRoles != null)
+                this._mentionedRoles = new List<DiscordRole>(Other._mentionedRoles);
+            if (Other._mentionedRoleIds != null)
+                this._mentionedRoleIds = new List<ulong>(Other._mentionedRoleIds);
+            this._mentionedUsers = new List<DiscordUser>(Other._mentionedUsers);
+            this._reactions = new List<DiscordReaction>(Other._reactions);
+            this._stickers = new List<DiscordSticker>(Other._stickers);
 
-            this.Author = other.Author;
-            this.ChannelId = other.ChannelId;
-            this.Content = other.Content;
-            this.EditedTimestampRaw = other.EditedTimestampRaw;
-            this.Id = other.Id;
-            this.IsTTS = other.IsTTS;
-            this.MessageType = other.MessageType;
-            this.Pinned = other.Pinned;
-            this.TimestampRaw = other.TimestampRaw;
-            this.WebhookId = other.WebhookId;
+            this.Author = Other.Author;
+            this.ChannelId = Other.ChannelId;
+            this.Content = Other.Content;
+            this.EditedTimestampRaw = Other.EditedTimestampRaw;
+            this.Id = Other.Id;
+            this.IsTts = Other.IsTts;
+            this.MessageType = Other.MessageType;
+            this.Pinned = Other.Pinned;
+            this.TimestampRaw = Other.TimestampRaw;
+            this.WebhookId = Other.WebhookId;
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace DisCatSharp.Entities
         /// Gets whether the message is a text-to-speech message.
         /// </summary>
         [JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
-        public bool IsTTS { get; internal set; }
+        public bool IsTts { get; internal set; }
 
         /// <summary>
         /// Gets whether the message mentions everyone.
@@ -420,7 +420,7 @@ namespace DisCatSharp.Entities
 
             else reference.Channel = channel;
 
-            if (client.MessageCache != null && client.MessageCache.TryGet(m => m.Id == messageId.Value && m.ChannelId == channelId, out var msg))
+            if (client.MessageCache != null && client.MessageCache.TryGet(M => M.Id == messageId.Value && M.ChannelId == channelId, out var msg))
                 reference.Message = msg;
 
             else
@@ -451,10 +451,10 @@ namespace DisCatSharp.Entities
                 mentions.Add(new RepliedUserMention()); // Return null to allow all mentions
 
             if (this._mentionedUsers.Any())
-                mentions.AddRange(this._mentionedUsers.Select(m => (IMention)new UserMention(m)));
+                mentions.AddRange(this._mentionedUsers.Select(M => (IMention)new UserMention(M)));
 
             if (this._mentionedRoleIds.Any())
-                mentions.AddRange(this._mentionedRoleIds.Select(r => (IMention)new RoleMention(r)));
+                mentions.AddRange(this._mentionedRoleIds.Select(R => (IMention)new RoleMention(R)));
 
             return mentions.ToArray();
         }
@@ -475,12 +475,12 @@ namespace DisCatSharp.Entities
                 foreach (var usr in this._mentionedUsers)
                 {
                     usr.Discord = this.Discord;
-                    this.Discord.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
+                    this.Discord.UserCache.AddOrUpdate(usr.Id, usr, (Id, Old) =>
                     {
-                        old.Username = usr.Username;
-                        old.Discriminator = usr.Discriminator;
-                        old.AvatarHash = usr.AvatarHash;
-                        return old;
+                        Old.Username = usr.Username;
+                        Old.Discriminator = usr.Discriminator;
+                        Old.AvatarHash = usr.AvatarHash;
+                        return Old;
                     });
 
                     mentionedUsers.Add(guild._members.TryGetValue(usr.Id, out var member) ? member : usr);
@@ -492,8 +492,8 @@ namespace DisCatSharp.Entities
                 if (guild != null)
                 {
                     //this._mentionedRoles = this._mentionedRoles.Union(Utilities.GetRoleMentions(this).Select(xid => guild.GetRole(xid))).ToList();
-                    this._mentionedRoles = this._mentionedRoles.Union(this._mentionedRoleIds.Select(xid => guild.GetRole(xid))).ToList();
-                    this._mentionedChannels = this._mentionedChannels.Union(Utilities.GetChannelMentions(this).Select(xid => guild.GetChannel(xid))).ToList();
+                    this._mentionedRoles = this._mentionedRoles.Union(this._mentionedRoleIds.Select(Xid => guild.GetRole(Xid))).ToList();
+                    this._mentionedChannels = this._mentionedChannels.Union(Utilities.GetChannelMentions(this).Select(Xid => guild.GetChannel(Xid))).ToList();
                 }
             }
 
@@ -503,100 +503,100 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Edits the message.
         /// </summary>
-        /// <param name="content">New content.</param>
+        /// <param name="Content">New content.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> ModifyAsync(Optional<string> content)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, default, this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
+        public Task<DiscordMessage> Modify(Optional<string> Content)
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, Content, default, this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
 
         /// <summary>
         /// Edits the message.
         /// </summary>
-        /// <param name="embed">New embed.</param>
+        /// <param name="Embed">New embed.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> ModifyAsync(Optional<DiscordEmbed> embed = default)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, embed.HasValue ? new[] { embed.Value } : Array.Empty<DiscordEmbed>(), this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
+        public Task<DiscordMessage> Modify(Optional<DiscordEmbed> Embed = default)
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, Embed.HasValue ? new[] { Embed.Value } : Array.Empty<DiscordEmbed>(), this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
 
         /// <summary>
         /// Edits the message.
         /// </summary>
-        /// <param name="content">New content.</param>
-        /// <param name="embed">New embed.</param>
+        /// <param name="Content">New content.</param>
+        /// <param name="Embed">New embed.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> ModifyAsync(Optional<string> content, Optional<DiscordEmbed> embed = default)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embed.HasValue ? new[] { embed.Value } : Array.Empty<DiscordEmbed>(), this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
+        public Task<DiscordMessage> Modify(Optional<string> Content, Optional<DiscordEmbed> Embed = default)
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, Content, Embed.HasValue ? new[] { Embed.Value } : Array.Empty<DiscordEmbed>(), this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
 
         /// <summary>
         /// Edits the message.
         /// </summary>
-        /// <param name="content">New content.</param>
-        /// <param name="embeds">New embeds.</param>
+        /// <param name="Content">New content.</param>
+        /// <param name="Embeds">New embeds.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> ModifyAsync(Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds = default)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, content, embeds, this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
+        public Task<DiscordMessage> Modify(Optional<string> Content, Optional<IEnumerable<DiscordEmbed>> Embeds = default)
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, Content, Embeds, this.GetMentions(), default, default, Array.Empty<DiscordMessageFile>(), default);
 
         /// <summary>
         /// Edits the message.
         /// </summary>
-        /// <param name="builder">The builder of the message to edit.</param>
+        /// <param name="Builder">The builder of the message to edit.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder)
+        public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder Builder)
         {
-            builder.Validate(true);
-            return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? new Optional<IEnumerable<DiscordAttachment>>(builder.Attachments) : builder._keepAttachments.HasValue ? builder._keepAttachments.Value ? new Optional<IEnumerable<DiscordAttachment>>(this.Attachments) : Array.Empty<DiscordAttachment>() : null);
+            Builder.Validate(true);
+            return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, Builder.Content, new Optional<IEnumerable<DiscordEmbed>>(Builder.Embeds), Builder.Mentions, Builder.Components, Builder.Suppressed, Builder.Files, Builder.Attachments.Count > 0 ? new Optional<IEnumerable<DiscordAttachment>>(Builder.Attachments) : Builder._keepAttachments.HasValue ? Builder._keepAttachments.Value ? new Optional<IEnumerable<DiscordAttachment>>(this.Attachments) : Array.Empty<DiscordAttachment>() : null);
         }
 
         /// <summary>
         /// Edits the message embed suppression.
         /// </summary>
-        /// <param name="suppress">Suppress embeds.</param>
+        /// <param name="Suppress">Suppress embeds.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> ModifySuppressionAsync(bool suppress = false)
-            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, this.GetMentions(), default, suppress, default, default);
+        public Task<DiscordMessage> ModifySuppression(bool Suppress = false)
+            => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, this.GetMentions(), default, Suppress, default, default);
 
         /// <summary>
         /// Clears all attachments from the message.
         /// </summary>
         /// <returns></returns>
-        public Task<DiscordMessage> ClearAttachmentsAsync()
+        public Task<DiscordMessage> ClearAttachments()
             => this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, default, default, this.GetMentions(), default, default, default, Array.Empty<DiscordAttachment>());
 
         /// <summary>
         /// Edits the message.
         /// </summary>
-        /// <param name="action">The builder of the message to edit.</param>
+        /// <param name="Action">The builder of the message to edit.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public async Task<DiscordMessage> ModifyAsync(Action<DiscordMessageBuilder> action)
+        public async Task<DiscordMessage> ModifyAsync(Action<DiscordMessageBuilder> Action)
         {
             var builder = new DiscordMessageBuilder();
-            action(builder);
+            Action(builder);
             builder.Validate(true);
             return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? new Optional<IEnumerable<DiscordAttachment>>(builder.Attachments) : builder._keepAttachments.HasValue ? builder._keepAttachments.Value ? new Optional<IEnumerable<DiscordAttachment>>(this.Attachments) : Array.Empty<DiscordAttachment>() : null);
         }
@@ -609,28 +609,28 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task DeleteAsync(string reason = null)
-            => this.Discord.ApiClient.DeleteMessageAsync(this.ChannelId, this.Id, reason);
+        public Task Delete(string Reason = null)
+            => this.Discord.ApiClient.DeleteMessage(this.ChannelId, this.Id, Reason);
 
         /// <summary>
         /// Creates a thread.
         /// Depending on the <see cref="ChannelType"/> of the parent channel it's either a <see cref="ChannelType.PublicThread"/> or a <see cref="ChannelType.NewsThread"/>.
         /// </summary>
-        /// <param name="name">The name of the thread.</param>
+        /// <param name="Name">The name of the thread.</param>
         /// <param name="auto_archive_duration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/></param>
         /// <param name="rate_limit_per_user">The per user ratelimit, aka slowdown.</param>
-        /// <param name="reason">The reason.</param>
+        /// <param name="Reason">The reason.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePrivateThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
         /// <exception cref="System.NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified.</exception>
-        public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration auto_archive_duration = ThreadAutoArchiveDuration.OneHour, int? rate_limit_per_user = null, string reason = null)
+        public async Task<DiscordThreadChannel> CreateThreadAsync(string Name, ThreadAutoArchiveDuration AutoArchiveDuration = ThreadAutoArchiveDuration.OneHour, int? RateLimitPerUser = null, string Reason = null)
         {
-            return Utilities.CheckThreadAutoArchiveDurationFeature(this.Channel.Guild, auto_archive_duration)
-                    ? await this.Discord.ApiClient.CreateThreadWithMessageAsync(this.ChannelId, this.Id, name, auto_archive_duration, rate_limit_per_user, reason)
-                    : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(auto_archive_duration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+            return Utilities.CheckThreadAutoArchiveDurationFeature(this.Channel.Guild, AutoArchiveDuration)
+                    ? await this.Discord.ApiClient.CreateThreadWithMessageAsync(this.ChannelId, this.Id, Name, AutoArchiveDuration, RateLimitPerUser, Reason)
+                    : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(AutoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
         }
 
         /// <summary>
@@ -641,8 +641,8 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task PinAsync()
-            => this.Discord.ApiClient.PinMessageAsync(this.ChannelId, this.Id);
+        public Task Pin()
+            => this.Discord.ApiClient.PinMessage(this.ChannelId, this.Id);
 
         /// <summary>
         /// Unpins the message in its channel.
@@ -652,171 +652,171 @@ namespace DisCatSharp.Entities
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task UnpinAsync()
-            => this.Discord.ApiClient.UnpinMessageAsync(this.ChannelId, this.Id);
+        public Task Unpin()
+            => this.Discord.ApiClient.UnpinMessage(this.ChannelId, this.Id);
 
         /// <summary>
         /// Responds to the message. This produces a reply.
         /// </summary>
-        /// <param name="content">Message content to respond with.</param>
+        /// <param name="Content">Message content to respond with.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> RespondAsync(string content)
-            => this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, null, sticker: null, replyMessageId: this.Id, mentionReply: false, failOnInvalidReply: false);
+        public Task<DiscordMessage> Respond(string Content)
+            => this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, Content, null, Sticker: null, ReplyMessageId: this.Id, MentionReply: false, FailOnInvalidReply: false);
 
         /// <summary>
         /// Responds to the message. This produces a reply.
         /// </summary>
-        /// <param name="embed">Embed to attach to the message.</param>
+        /// <param name="Embed">Embed to attach to the message.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> RespondAsync(DiscordEmbed embed)
-            => this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, null, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: this.Id, mentionReply: false, failOnInvalidReply: false);
+        public Task<DiscordMessage> Respond(DiscordEmbed Embed)
+            => this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, null, Embed != null ? new[] { Embed } : null, Sticker: null, ReplyMessageId: this.Id, MentionReply: false, FailOnInvalidReply: false);
 
         /// <summary>
         /// Responds to the message. This produces a reply.
         /// </summary>
-        /// <param name="content">Message content to respond with.</param>
-        /// <param name="embed">Embed to attach to the message.</param>
+        /// <param name="Content">Message content to respond with.</param>
+        /// <param name="Embed">Embed to attach to the message.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> RespondAsync(string content, DiscordEmbed embed)
-            => this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, content, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: this.Id, mentionReply: false, failOnInvalidReply: false);
+        public Task<DiscordMessage> Respond(string Content, DiscordEmbed Embed)
+            => this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, Content, Embed != null ? new[] { Embed } : null, Sticker: null, ReplyMessageId: this.Id, MentionReply: false, FailOnInvalidReply: false);
 
         /// <summary>
         /// Responds to the message. This produces a reply.
         /// </summary>
-        /// <param name="builder">The Discord message builder.</param>
+        /// <param name="Builder">The Discord message builder.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> RespondAsync(DiscordMessageBuilder builder)
-            => this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, mention: false, failOnInvalidReply: false));
+        public Task<DiscordMessage> Respond(DiscordMessageBuilder Builder)
+            => this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, Builder.WithReply(this.Id, Mention: false, FailOnInvalidReply: false));
 
         /// <summary>
         /// Responds to the message. This produces a reply.
         /// </summary>
-        /// <param name="action">The Discord message builder.</param>
+        /// <param name="Action">The Discord message builder.</param>
         /// <returns>The sent message.</returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<DiscordMessage> RespondAsync(Action<DiscordMessageBuilder> action)
+        public Task<DiscordMessage> Respond(Action<DiscordMessageBuilder> Action)
         {
             var builder = new DiscordMessageBuilder();
-            action(builder);
-            return this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, mention: false, failOnInvalidReply: false));
+            Action(builder);
+            return this.Discord.ApiClient.CreateMessageAsync(this.ChannelId, builder.WithReply(this.Id, Mention: false, FailOnInvalidReply: false));
         }
 
         /// <summary>
         /// Creates a reaction to this message.
         /// </summary>
-        /// <param name="emoji">The emoji you want to react with, either an emoji or name:id</param>
+        /// <param name="Emoji">The emoji you want to react with, either an emoji or name:id</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AddReactions"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task CreateReactionAsync(DiscordEmoji emoji)
-            => this.Discord.ApiClient.CreateReactionAsync(this.ChannelId, this.Id, emoji.ToReactionString());
+        public Task CreateReaction(DiscordEmoji Emoji)
+            => this.Discord.ApiClient.CreateReaction(this.ChannelId, this.Id, Emoji.ToReactionString());
 
         /// <summary>
         /// Deletes your own reaction
         /// </summary>
-        /// <param name="emoji">Emoji for the reaction you want to remove, either an emoji or name:id</param>
+        /// <param name="Emoji">Emoji for the reaction you want to remove, either an emoji or name:id</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task DeleteOwnReactionAsync(DiscordEmoji emoji)
-            => this.Discord.ApiClient.DeleteOwnReactionAsync(this.ChannelId, this.Id, emoji.ToReactionString());
+        public Task DeleteOwnReaction(DiscordEmoji Emoji)
+            => this.Discord.ApiClient.DeleteOwnReaction(this.ChannelId, this.Id, Emoji.ToReactionString());
 
         /// <summary>
         /// Deletes another user's reaction.
         /// </summary>
-        /// <param name="emoji">Emoji for the reaction you want to remove, either an emoji or name:id.</param>
-        /// <param name="user">Member you want to remove the reaction for</param>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Emoji">Emoji for the reaction you want to remove, either an emoji or name:id.</param>
+        /// <param name="User">Member you want to remove the reaction for</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task DeleteReactionAsync(DiscordEmoji emoji, DiscordUser user, string reason = null)
-            => this.Discord.ApiClient.DeleteUserReactionAsync(this.ChannelId, this.Id, user.Id, emoji.ToReactionString(), reason);
+        public Task DeleteReaction(DiscordEmoji Emoji, DiscordUser User, string Reason = null)
+            => this.Discord.ApiClient.DeleteUserReaction(this.ChannelId, this.Id, User.Id, Emoji.ToReactionString(), Reason);
 
         /// <summary>
         /// Gets users that reacted with this emoji.
         /// </summary>
-        /// <param name="emoji">Emoji to react with.</param>
-        /// <param name="limit">Limit of users to fetch.</param>
-        /// <param name="after">Fetch users after this user's id.</param>
+        /// <param name="Emoji">Emoji to react with.</param>
+        /// <param name="Limit">Limit of users to fetch.</param>
+        /// <param name="After">Fetch users after this user's id.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<IReadOnlyList<DiscordUser>> GetReactionsAsync(DiscordEmoji emoji, int limit = 25, ulong? after = null)
-            => this.GetReactionsInternalAsync(emoji, limit, after);
+        public Task<IReadOnlyList<DiscordUser>> GetReactions(DiscordEmoji Emoji, int Limit = 25, ulong? After = null)
+            => this.GetReactionsInternal(Emoji, Limit, After);
 
         /// <summary>
         /// Deletes all reactions for this message.
         /// </summary>
-        /// <param name="reason">Reason for audit logs.</param>
+        /// <param name="Reason">Reason for audit logs.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task DeleteAllReactionsAsync(string reason = null)
-            => this.Discord.ApiClient.DeleteAllReactionsAsync(this.ChannelId, this.Id, reason);
+        public Task DeleteAllReactions(string Reason = null)
+            => this.Discord.ApiClient.DeleteAllReactions(this.ChannelId, this.Id, Reason);
 
         /// <summary>
         /// Deletes all reactions of a specific reaction for this message.
         /// </summary>
-        /// <param name="emoji">The emoji to clear, either an emoji or name:id.</param>
+        /// <param name="Emoji">The emoji to clear, either an emoji or name:id.</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
         /// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
         /// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
         /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task DeleteReactionsEmojiAsync(DiscordEmoji emoji)
-            => this.Discord.ApiClient.DeleteReactionsEmojiAsync(this.ChannelId, this.Id, emoji.ToReactionString());
+        public Task DeleteReactionsEmoji(DiscordEmoji Emoji)
+            => this.Discord.ApiClient.DeleteReactionsEmoji(this.ChannelId, this.Id, Emoji.ToReactionString());
 
         /// <summary>
         /// Gets the reactions.
         /// </summary>
-        /// <param name="emoji">The emoji to search for.</param>
-        /// <param name="limit">The limit of results.</param>
-        /// <param name="after">Get the reasctions after snowflake.</param>
-        private async Task<IReadOnlyList<DiscordUser>> GetReactionsInternalAsync(DiscordEmoji emoji, int limit = 25, ulong? after = null)
+        /// <param name="Emoji">The emoji to search for.</param>
+        /// <param name="Limit">The limit of results.</param>
+        /// <param name="After">Get the reasctions after snowflake.</param>
+        private async Task<IReadOnlyList<DiscordUser>> GetReactionsInternal(DiscordEmoji Emoji, int Limit = 25, ulong? After = null)
         {
-            if (limit < 0)
+            if (Limit < 0)
                 throw new ArgumentException("Cannot get a negative number of reactions' users.");
 
-            if (limit == 0)
+            if (Limit == 0)
                 return Array.Empty<DiscordUser>();
 
-            var users = new List<DiscordUser>(limit);
-            var remaining = limit;
-            var last = after;
+            var users = new List<DiscordUser>(Limit);
+            var remaining = Limit;
+            var last = After;
 
             int lastCount;
             do
             {
                 var fetchSize = remaining > 100 ? 100 : remaining;
-                var fetch = await this.Discord.ApiClient.GetReactionsAsync(this.Channel.Id, this.Id, emoji.ToReactionString(), last, fetchSize).ConfigureAwait(false);
+                var fetch = await this.Discord.ApiClient.GetReactionsAsync(this.Channel.Id, this.Id, Emoji.ToReactionString(), last, fetchSize).ConfigureAwait(false);
 
                 lastCount = fetch.Count;
                 remaining -= lastCount;
@@ -837,16 +837,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Checks whether this <see cref="DiscordMessage"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="DiscordMessage"/>.</returns>
-        public override bool Equals(object obj) => this.Equals(obj as DiscordMessage);
+        public override bool Equals(object Obj) => this.Equals(Obj as DiscordMessage);
 
         /// <summary>
         /// Checks whether this <see cref="DiscordMessage"/> is equal to another <see cref="DiscordMessage"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordMessage"/> to compare to.</param>
+        /// <param name="E"><see cref="DiscordMessage"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordMessage"/> is equal to this <see cref="DiscordMessage"/>.</returns>
-        public bool Equals(DiscordMessage e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.ChannelId == e.ChannelId));
+        public bool Equals(DiscordMessage E) => E is not null && (ReferenceEquals(this, E) || (this.Id == E.Id && this.ChannelId == E.ChannelId));
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordMessage"/>.
@@ -865,24 +865,24 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordMessage"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First message to compare.</param>
-        /// <param name="e2">Second message to compare.</param>
+        /// <param name="E1">First message to compare.</param>
+        /// <param name="E2">Second message to compare.</param>
         /// <returns>Whether the two messages are equal.</returns>
-        public static bool operator ==(DiscordMessage e1, DiscordMessage e2)
+        public static bool operator ==(DiscordMessage E1, DiscordMessage E2)
         {
-            var o1 = e1 as object;
-            var o2 = e2 as object;
+            var o1 = E1 as object;
+            var o2 = E2 as object;
 
-            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.ChannelId == e2.ChannelId));
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (E1.Id == E2.Id && E1.ChannelId == E2.ChannelId));
         }
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordMessage"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First message to compare.</param>
-        /// <param name="e2">Second message to compare.</param>
+        /// <param name="E1">First message to compare.</param>
+        /// <param name="E2">Second message to compare.</param>
         /// <returns>Whether the two messages are not equal.</returns>
-        public static bool operator !=(DiscordMessage e1, DiscordMessage e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordMessage E1, DiscordMessage E2)
+            => !(E1 == E2);
     }
 }

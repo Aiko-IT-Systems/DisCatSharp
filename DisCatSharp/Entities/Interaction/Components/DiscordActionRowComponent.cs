@@ -47,10 +47,10 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Constructs a new <see cref="DiscordActionRowComponent"/>.
         /// </summary>
-        /// <param name="components">List of components</param>
-        public DiscordActionRowComponent(IEnumerable<DiscordComponent> components) : this()
+        /// <param name="Components">List of components</param>
+        public DiscordActionRowComponent(IEnumerable<DiscordComponent> Components) : this()
         {
-            this.Components = components.ToList().AsReadOnly();
+            this.Components = Components.ToList().AsReadOnly();
         }
 
         /// <summary>

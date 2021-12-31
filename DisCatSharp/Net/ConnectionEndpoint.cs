@@ -45,14 +45,14 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Creates a new endpoint structure.
         /// </summary>
-        /// <param name="hostname">Hostname to connect to.</param>
-        /// <param name="port">Port to use for connection.</param>
-        /// <param name="secured">Whether the connection should be secured (https/wss).</param>
-        public ConnectionEndpoint(string hostname, int port, bool secured = false)
+        /// <param name="Hostname">Hostname to connect to.</param>
+        /// <param name="Port">Port to use for connection.</param>
+        /// <param name="Secured">Whether the connection should be secured (https/wss).</param>
+        public ConnectionEndpoint(string Hostname, int Port, bool Secured = false)
         {
-            this.Hostname = hostname;
-            this.Port = port;
-            this.Secured = secured;
+            this.Hostname = Hostname;
+            this.Port = Port;
+            this.Secured = Secured;
         }
 
         /// <summary>

@@ -54,6 +54,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="TypingStartEventArgs"/> class.
         /// </summary>
-        internal TypingStartEventArgs(IServiceProvider provider) : base(provider) { }
+        internal TypingStartEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

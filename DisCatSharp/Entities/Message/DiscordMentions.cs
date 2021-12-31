@@ -75,27 +75,27 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordMentions"/> class.
         /// </summary>
-        /// <param name="mentions">The mentions.</param>
-        /// <param name="mention">If true, mention.</param>
-        /// <param name="repliedUser">If true, replied user.</param>
-        internal DiscordMentions(IEnumerable<IMention> mentions, bool mention = false, bool repliedUser = false)
+        /// <param name="Mentions">The mentions.</param>
+        /// <param name="Mention">If true, mention.</param>
+        /// <param name="RepliedUser">If true, replied user.</param>
+        internal DiscordMentions(IEnumerable<IMention> Mentions, bool Mention = false, bool RepliedUser = false)
         {
             //Null check just to be safe
-            if (mentions == null) return;
+            if (Mentions == null) return;
 
             //If we have no item in our mentions, its likely to be a empty array.
             // This is a special case were we want parse to be a empty array
             // Doing this allows for "no parsing"
-            if (!mentions.Any())
+            if (!Mentions.Any())
             {
                 this.Parse = Array.Empty<string>();
-                this.RepliedUser = repliedUser;
+                this.RepliedUser = RepliedUser;
                 return;
             }
 
-            if (mention)
+            if (Mention)
             {
-                this.RepliedUser = repliedUser;
+                this.RepliedUser = RepliedUser;
             }
 
 
@@ -104,7 +104,7 @@ namespace DisCatSharp.Entities
             var users = new HashSet<ulong>();
             var parse = new HashSet<string>();
 
-            foreach (var m in mentions)
+            foreach (var m in Mentions)
             {
                 switch (m)
                 {
@@ -129,7 +129,7 @@ namespace DisCatSharp.Entities
                         break;
 
                     case RepliedUserMention _:
-                        this.RepliedUser = repliedUser;
+                        this.RepliedUser = RepliedUser;
                         break;
                 }
             }

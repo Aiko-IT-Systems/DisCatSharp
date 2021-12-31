@@ -166,41 +166,41 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordVoiceState"/> class.
         /// </summary>
-        /// <param name="other">The other.</param>
-        internal DiscordVoiceState(DiscordVoiceState other)
+        /// <param name="Other">The other.</param>
+        internal DiscordVoiceState(DiscordVoiceState Other)
         {
-            this.Discord = other.Discord;
+            this.Discord = Other.Discord;
 
-            this.UserId = other.UserId;
-            this.ChannelId = other.ChannelId;
-            this.GuildId = other.GuildId;
+            this.UserId = Other.UserId;
+            this.ChannelId = Other.ChannelId;
+            this.GuildId = Other.GuildId;
 
-            this.IsServerDeafened = other.IsServerDeafened;
-            this.IsServerMuted = other.IsServerMuted;
-            this.IsSuppressed = other.IsSuppressed;
-            this.IsSelfDeafened = other.IsSelfDeafened;
-            this.IsSelfMuted = other.IsSelfMuted;
-            this.IsSelfStream = other.IsSelfStream;
-            this.IsSelfVideo = other.IsSelfVideo;
+            this.IsServerDeafened = Other.IsServerDeafened;
+            this.IsServerMuted = Other.IsServerMuted;
+            this.IsSuppressed = Other.IsSuppressed;
+            this.IsSelfDeafened = Other.IsSelfDeafened;
+            this.IsSelfMuted = Other.IsSelfMuted;
+            this.IsSelfStream = Other.IsSelfStream;
+            this.IsSelfVideo = Other.IsSelfVideo;
 
-            this.SessionId = other.SessionId;
-            this.RequestToSpeakTimestamp = other.RequestToSpeakTimestamp;
+            this.SessionId = Other.SessionId;
+            this.RequestToSpeakTimestamp = Other.RequestToSpeakTimestamp;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordVoiceState"/> class.
         /// </summary>
-        /// <param name="m">The m.</param>
-        internal DiscordVoiceState(DiscordMember m)
+        /// <param name="M">The m.</param>
+        internal DiscordVoiceState(DiscordMember M)
         {
-            this.Discord = m.Discord as DiscordClient;
+            this.Discord = M.Discord as DiscordClient;
 
-            this.UserId = m.Id;
+            this.UserId = M.Id;
             this.ChannelId = 0;
-            this.GuildId = m._guild_id;
+            this.GuildId = M._guildId;
 
-            this.IsServerDeafened = m.IsDeafened;
-            this.IsServerMuted = m.IsMuted;
+            this.IsServerDeafened = M.IsDeafened;
+            this.IsServerMuted = M.IsMuted;
 
             // Values not filled out are values that are not known from a DiscordMember
         }

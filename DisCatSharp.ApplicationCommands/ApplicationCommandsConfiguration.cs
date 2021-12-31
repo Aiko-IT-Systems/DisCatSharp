@@ -54,22 +54,22 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
         /// </summary>
-        /// <param name="provider">The service provider.</param>
+        /// <param name="Provider">The service provider.</param>
         [ActivatorUtilitiesConstructor]
-        public ApplicationCommandsConfiguration(IServiceProvider provider = null)
+        public ApplicationCommandsConfiguration(IServiceProvider Provider = null)
         {
-            this.ServiceProvider = provider;
+            this.ServiceProvider = Provider;
         }
 
         /// <summary>
         /// Creates a new instance of <see cref="ApplicationCommandsConfiguration"/>, copying the properties of another configuration.
         /// </summary>
-        /// <param name="acc">Configuration the properties of which are to be copied.</param>
-        public ApplicationCommandsConfiguration(ApplicationCommandsConfiguration acc)
+        /// <param name="Acc">Configuration the properties of which are to be copied.</param>
+        public ApplicationCommandsConfiguration(ApplicationCommandsConfiguration Acc)
         {
-            this.EnableDefaultHelp = acc.EnableDefaultHelp;
-            this.ServiceProvider = acc.ServiceProvider;
-            this.DebugStartupCounts = acc.DebugStartupCounts;
+            this.EnableDefaultHelp = Acc.EnableDefaultHelp;
+            this.ServiceProvider = Acc.ServiceProvider;
+            this.DebugStartupCounts = Acc.DebugStartupCounts;
         }
     }
 }

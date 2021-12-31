@@ -48,7 +48,7 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// Gets the c s p r n g.
         /// </summary>
-        private RandomNumberGenerator CSPRNG { get; }
+        private RandomNumberGenerator Csprng { get; }
         /// <summary>
         /// Gets the buffer.
         /// </summary>
@@ -65,186 +65,186 @@ namespace DisCatSharp.VoiceNext.Codec
         {
             SupportedModes = new ReadOnlyDictionary<string, EncryptionMode>(new Dictionary<string, EncryptionMode>()
             {
-                ["xsalsa20_poly1305_lite"] = EncryptionMode.XSalsa20_Poly1305_Lite,
-                ["xsalsa20_poly1305_suffix"] = EncryptionMode.XSalsa20_Poly1305_Suffix,
-                ["xsalsa20_poly1305"] = EncryptionMode.XSalsa20_Poly1305
+                ["xsalsa20_poly1305_lite"] = EncryptionMode.XSalsa20Poly1305Lite,
+                ["xsalsa20_poly1305_suffix"] = EncryptionMode.XSalsa20Poly1305Suffix,
+                ["xsalsa20_poly1305"] = EncryptionMode.XSalsa20Poly1305
             });
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Sodium"/> class.
         /// </summary>
-        /// <param name="key">The key.</param>
-        public Sodium(ReadOnlyMemory<byte> key)
+        /// <param name="Key">The key.</param>
+        public Sodium(ReadOnlyMemory<byte> Key)
         {
-            if (key.Length != Interop.SodiumKeySize)
-                throw new ArgumentException($"Invalid Sodium key size. Key needs to have a length of {Interop.SodiumKeySize} bytes.", nameof(key));
+            if (Key.Length != Interop.SodiumKeySize)
+                throw new ArgumentException($"Invalid Sodium key size. Key needs to have a length of {Interop.SodiumKeySize} bytes.", nameof(Key));
 
-            this.Key = key;
+            this.Key = Key;
 
-            this.CSPRNG = RandomNumberGenerator.Create();
+            this.Csprng = RandomNumberGenerator.Create();
             this.Buffer = new byte[Interop.SodiumNonceSize];
         }
 
         /// <summary>
         /// Generates the nonce.
         /// </summary>
-        /// <param name="rtpHeader">The rtp header.</param>
-        /// <param name="target">The target.</param>
-        public void GenerateNonce(ReadOnlySpan<byte> rtpHeader, Span<byte> target)
+        /// <param name="RtpHeader">The rtp header.</param>
+        /// <param name="Target">The target.</param>
+        public void GenerateNonce(ReadOnlySpan<byte> RtpHeader, Span<byte> Target)
         {
-            if (rtpHeader.Length != Rtp.HeaderSize)
-                throw new ArgumentException($"RTP header needs to have a length of exactly {Rtp.HeaderSize} bytes.", nameof(rtpHeader));
+            if (RtpHeader.Length != Rtp.HeaderSize)
+                throw new ArgumentException($"RTP header needs to have a length of exactly {Rtp.HeaderSize} bytes.", nameof(RtpHeader));
 
-            if (target.Length != Interop.SodiumNonceSize)
-                throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
+            if (Target.Length != Interop.SodiumNonceSize)
+                throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(Target));
 
             // Write the header to the beginning of the span.
-            rtpHeader.CopyTo(target);
+            RtpHeader.CopyTo(Target);
 
             // Zero rest of the span.
-            Helpers.ZeroFill(target[rtpHeader.Length..]);
+            Helpers.ZeroFill(Target[RtpHeader.Length..]);
         }
 
         /// <summary>
         /// Generates the nonce.
         /// </summary>
-        /// <param name="target">The target.</param>
-        public void GenerateNonce(Span<byte> target)
+        /// <param name="Target">The target.</param>
+        public void GenerateNonce(Span<byte> Target)
         {
-            if (target.Length != Interop.SodiumNonceSize)
-                throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
+            if (Target.Length != Interop.SodiumNonceSize)
+                throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(Target));
 
-            this.CSPRNG.GetBytes(this.Buffer);
-            this.Buffer.AsSpan().CopyTo(target);
+            this.Csprng.GetBytes(this.Buffer);
+            this.Buffer.AsSpan().CopyTo(Target);
         }
 
         /// <summary>
         /// Generates the nonce.
         /// </summary>
-        /// <param name="nonce">The nonce.</param>
-        /// <param name="target">The target.</param>
-        public void GenerateNonce(uint nonce, Span<byte> target)
+        /// <param name="Nonce">The nonce.</param>
+        /// <param name="Target">The target.</param>
+        public void GenerateNonce(uint Nonce, Span<byte> Target)
         {
-            if (target.Length != Interop.SodiumNonceSize)
-                throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
+            if (Target.Length != Interop.SodiumNonceSize)
+                throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(Target));
 
             // Write the uint to memory
-            BinaryPrimitives.WriteUInt32BigEndian(target, nonce);
+            BinaryPrimitives.WriteUInt32BigEndian(Target, Nonce);
 
             // Zero rest of the buffer.
-            Helpers.ZeroFill(target[4..]);
+            Helpers.ZeroFill(Target[4..]);
         }
 
         /// <summary>
         /// Appends the nonce.
         /// </summary>
-        /// <param name="nonce">The nonce.</param>
-        /// <param name="target">The target.</param>
-        /// <param name="encryptionMode">The encryption mode.</param>
-        public void AppendNonce(ReadOnlySpan<byte> nonce, Span<byte> target, EncryptionMode encryptionMode)
+        /// <param name="Nonce">The nonce.</param>
+        /// <param name="Target">The target.</param>
+        /// <param name="EncryptionMode">The encryption mode.</param>
+        public void AppendNonce(ReadOnlySpan<byte> Nonce, Span<byte> Target, EncryptionMode EncryptionMode)
         {
-            switch (encryptionMode)
+            switch (EncryptionMode)
             {
-                case EncryptionMode.XSalsa20_Poly1305:
+                case EncryptionMode.XSalsa20Poly1305:
                     return;
 
-                case EncryptionMode.XSalsa20_Poly1305_Suffix:
-                    nonce.CopyTo(target[^12..]);
+                case EncryptionMode.XSalsa20Poly1305Suffix:
+                    Nonce.CopyTo(Target[^12..]);
                     return;
 
-                case EncryptionMode.XSalsa20_Poly1305_Lite:
-                    nonce[..4].CopyTo(target[^4..]);
+                case EncryptionMode.XSalsa20Poly1305Lite:
+                    Nonce[..4].CopyTo(Target[^4..]);
                     return;
 
                 default:
-                    throw new ArgumentException("Unsupported encryption mode.", nameof(encryptionMode));
+                    throw new ArgumentException("Unsupported encryption mode.", nameof(EncryptionMode));
             }
         }
 
         /// <summary>
         /// Gets the nonce.
         /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="target">The target.</param>
-        /// <param name="encryptionMode">The encryption mode.</param>
-        public void GetNonce(ReadOnlySpan<byte> source, Span<byte> target, EncryptionMode encryptionMode)
+        /// <param name="Source">The source.</param>
+        /// <param name="Target">The target.</param>
+        /// <param name="EncryptionMode">The encryption mode.</param>
+        public void GetNonce(ReadOnlySpan<byte> Source, Span<byte> Target, EncryptionMode EncryptionMode)
         {
-            if (target.Length != Interop.SodiumNonceSize)
-                throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
+            if (Target.Length != Interop.SodiumNonceSize)
+                throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(Target));
 
-            switch (encryptionMode)
+            switch (EncryptionMode)
             {
-                case EncryptionMode.XSalsa20_Poly1305:
-                    source[..12].CopyTo(target);
+                case EncryptionMode.XSalsa20Poly1305:
+                    Source[..12].CopyTo(Target);
                     return;
 
-                case EncryptionMode.XSalsa20_Poly1305_Suffix:
-                    source[^Interop.SodiumNonceSize..].CopyTo(target);
+                case EncryptionMode.XSalsa20Poly1305Suffix:
+                    Source[^Interop.SodiumNonceSize..].CopyTo(Target);
                     return;
 
-                case EncryptionMode.XSalsa20_Poly1305_Lite:
-                    source[^4..].CopyTo(target);
+                case EncryptionMode.XSalsa20Poly1305Lite:
+                    Source[^4..].CopyTo(Target);
                     return;
 
                 default:
-                    throw new ArgumentException("Unsupported encryption mode.", nameof(encryptionMode));
+                    throw new ArgumentException("Unsupported encryption mode.", nameof(EncryptionMode));
             }
         }
 
         /// <summary>
         /// Encrypts the Sodium.
         /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="target">The target.</param>
-        /// <param name="nonce">The nonce.</param>
-        public void Encrypt(ReadOnlySpan<byte> source, Span<byte> target, ReadOnlySpan<byte> nonce)
+        /// <param name="Source">The source.</param>
+        /// <param name="Target">The target.</param>
+        /// <param name="Nonce">The nonce.</param>
+        public void Encrypt(ReadOnlySpan<byte> Source, Span<byte> Target, ReadOnlySpan<byte> Nonce)
         {
-            if (nonce.Length != Interop.SodiumNonceSize)
-                throw new ArgumentException($"Invalid nonce size. Nonce needs to have a length of {Interop.SodiumNonceSize} bytes.", nameof(nonce));
+            if (Nonce.Length != Interop.SodiumNonceSize)
+                throw new ArgumentException($"Invalid nonce size. Nonce needs to have a length of {Interop.SodiumNonceSize} bytes.", nameof(Nonce));
 
-            if (target.Length != Interop.SodiumMacSize + source.Length)
-                throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is a sum of input buffer length and Sodium MAC size ({Interop.SodiumMacSize} bytes).", nameof(target));
+            if (Target.Length != Interop.SodiumMacSize + Source.Length)
+                throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is a sum of input buffer length and Sodium MAC size ({Interop.SodiumMacSize} bytes).", nameof(Target));
 
             int result;
-            if ((result = Interop.Encrypt(source, target, this.Key.Span, nonce)) != 0)
+            if ((result = Interop.Encrypt(Source, Target, this.Key.Span, Nonce)) != 0)
                 throw new CryptographicException($"Could not encrypt the buffer. Sodium returned code {result}.");
         }
 
         /// <summary>
         /// Decrypts the Sodium.
         /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="target">The target.</param>
-        /// <param name="nonce">The nonce.</param>
-        public void Decrypt(ReadOnlySpan<byte> source, Span<byte> target, ReadOnlySpan<byte> nonce)
+        /// <param name="Source">The source.</param>
+        /// <param name="Target">The target.</param>
+        /// <param name="Nonce">The nonce.</param>
+        public void Decrypt(ReadOnlySpan<byte> Source, Span<byte> Target, ReadOnlySpan<byte> Nonce)
         {
-            if (nonce.Length != Interop.SodiumNonceSize)
-                throw new ArgumentException($"Invalid nonce size. Nonce needs to have a length of {Interop.SodiumNonceSize} bytes.", nameof(nonce));
+            if (Nonce.Length != Interop.SodiumNonceSize)
+                throw new ArgumentException($"Invalid nonce size. Nonce needs to have a length of {Interop.SodiumNonceSize} bytes.", nameof(Nonce));
 
-            if (target.Length != source.Length - Interop.SodiumMacSize)
-                throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is input buffer decreased by Sodium MAC size ({Interop.SodiumMacSize} bytes).", nameof(target));
+            if (Target.Length != Source.Length - Interop.SodiumMacSize)
+                throw new ArgumentException($"Invalid target buffer size. Target buffer needs to have a length that is input buffer decreased by Sodium MAC size ({Interop.SodiumMacSize} bytes).", nameof(Target));
 
             int result;
-            if ((result = Interop.Decrypt(source, target, this.Key.Span, nonce)) != 0)
+            if ((result = Interop.Decrypt(Source, Target, this.Key.Span, Nonce)) != 0)
                 throw new CryptographicException($"Could not decrypt the buffer. Sodium returned code {result}.");
         }
 
         /// <summary>
         /// Disposes the Sodium.
         /// </summary>
-        public void Dispose() => this.CSPRNG.Dispose();
+        public void Dispose() => this.Csprng.Dispose();
 
         /// <summary>
         /// Selects the mode.
         /// </summary>
-        /// <param name="availableModes">The available modes.</param>
+        /// <param name="AvailableModes">The available modes.</param>
         /// <returns>A KeyValuePair.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static KeyValuePair<string, EncryptionMode> SelectMode(IEnumerable<string> availableModes)
+        public static KeyValuePair<string, EncryptionMode> SelectMode(IEnumerable<string> AvailableModes)
         {
             foreach (var kvMode in SupportedModes)
-                if (availableModes.Contains(kvMode.Key))
+                if (AvailableModes.Contains(kvMode.Key))
                     return kvMode;
 
             throw new CryptographicException("Could not negotiate Sodium encryption modes, as none of the modes offered by Discord are supported. This is usually an indicator that something went very wrong.");
@@ -253,20 +253,20 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// Calculates the target size.
         /// </summary>
-        /// <param name="source">The source.</param>
+        /// <param name="Source">The source.</param>
         /// <returns>An int.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int CalculateTargetSize(ReadOnlySpan<byte> source)
-            => source.Length + Interop.SodiumMacSize;
+        public static int CalculateTargetSize(ReadOnlySpan<byte> Source)
+            => Source.Length + Interop.SodiumMacSize;
 
         /// <summary>
         /// Calculates the source size.
         /// </summary>
-        /// <param name="source">The source.</param>
+        /// <param name="Source">The source.</param>
         /// <returns>An int.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int CalculateSourceSize(ReadOnlySpan<byte> source)
-            => source.Length - Interop.SodiumMacSize;
+        public static int CalculateSourceSize(ReadOnlySpan<byte> Source)
+            => Source.Length - Interop.SodiumMacSize;
     }
 
     /// <summary>
@@ -277,16 +277,16 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// The nonce is an incrementing uint32 value. It is encoded as big endian value at the beginning of the nonce buffer. The 4 bytes are also appended at the end of the packet.
         /// </summary>
-        XSalsa20_Poly1305_Lite,
+        XSalsa20Poly1305Lite,
 
         /// <summary>
         /// The nonce consists of random bytes. It is appended at the end of a packet.
         /// </summary>
-        XSalsa20_Poly1305_Suffix,
+        XSalsa20Poly1305Suffix,
 
         /// <summary>
         /// The nonce consists of the RTP header. Nothing is appended to the packet.
         /// </summary>
-        XSalsa20_Poly1305
+        XSalsa20Poly1305
     }
 }

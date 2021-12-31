@@ -41,13 +41,13 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Adds aliases to this command or group.
         /// </summary>
-        /// <param name="aliases">Aliases to add to this command or group.</param>
-        public AliasesAttribute(params string[] aliases)
+        /// <param name="Aliases">Aliases to add to this command or group.</param>
+        public AliasesAttribute(params string[] Aliases)
         {
-            if (aliases.Any(xa => xa == null || xa.Any(xc => char.IsWhiteSpace(xc))))
-                throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.", nameof(aliases));
+            if (Aliases.Any(Xa => Xa == null || Xa.Any(Xc => char.IsWhiteSpace(Xc))))
+                throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.", nameof(Aliases));
 
-            this.Aliases = new ReadOnlyCollection<string>(aliases);
+            this.Aliases = new ReadOnlyCollection<string>(Aliases);
         }
     }
 }

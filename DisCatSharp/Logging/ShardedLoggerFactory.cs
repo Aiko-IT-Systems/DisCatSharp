@@ -38,26 +38,26 @@ namespace DisCatSharp
         /// <summary>
         /// Initializes a new instance of the <see cref="ShardedLoggerFactory"/> class.
         /// </summary>
-        /// <param name="instance">The instance.</param>
-        public ShardedLoggerFactory(ILogger<BaseDiscordClient> instance)
+        /// <param name="Instance">The instance.</param>
+        public ShardedLoggerFactory(ILogger<BaseDiscordClient> Instance)
         {
-            this.Logger = instance;
+            this.Logger = Instance;
         }
 
         /// <summary>
         /// Adds a provider.
         /// </summary>
-        /// <param name="provider">The provider to be added.</param>
-        public void AddProvider(ILoggerProvider provider) => throw new InvalidOperationException("This is a passthrough logger container, it cannot register new providers.");
+        /// <param name="Provider">The provider to be added.</param>
+        public void AddProvider(ILoggerProvider Provider) => throw new InvalidOperationException("This is a passthrough logger container, it cannot register new providers.");
 
         /// <summary>
         /// Creates a logger.
         /// </summary>
-        /// <param name="categoryName">The category name.</param>
-        public ILogger CreateLogger(string categoryName)
+        /// <param name="CategoryName">The category name.</param>
+        public ILogger CreateLogger(string CategoryName)
         {
-            return categoryName != typeof(BaseDiscordClient).FullName
-                ? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}.", nameof(categoryName))
+            return CategoryName != typeof(BaseDiscordClient).FullName
+                ? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName}.", nameof(CategoryName))
                 : this.Logger;
         }
 

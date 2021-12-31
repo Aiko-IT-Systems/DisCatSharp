@@ -31,7 +31,7 @@ namespace DisCatSharp.Entities
     /// </summary>
     public partial struct DiscordColor
     {
-        private static char[] HexAlphabet = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+        private static char[] _hexAlphabet = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
         /// <summary>
         /// Gets the integer representation of this color.
@@ -59,37 +59,37 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Creates a new color with specified value.
         /// </summary>
-        /// <param name="color">Value of the color.</param>
-        public DiscordColor(int color)
+        /// <param name="Color">Value of the color.</param>
+        public DiscordColor(int Color)
         {
-            this.Value = color;
+            this.Value = Color;
         }
 
         /// <summary>
         /// Creates a new color with specified values for red, green, and blue components.
         /// </summary>
-        /// <param name="r">Value of the red component.</param>
-        /// <param name="g">Value of the green component.</param>
-        /// <param name="b">Value of the blue component.</param>
-        public DiscordColor(byte r, byte g, byte b)
+        /// <param name="R">Value of the red component.</param>
+        /// <param name="G">Value of the green component.</param>
+        /// <param name="B">Value of the blue component.</param>
+        public DiscordColor(byte R, byte G, byte B)
         {
-            this.Value = (r << 16) | (g << 8) | b;
+            this.Value = (R << 16) | (G << 8) | B;
         }
 
         /// <summary>
         /// Creates a new color with specified values for red, green, and blue components.
         /// </summary>
-        /// <param name="r">Value of the red component.</param>
-        /// <param name="g">Value of the green component.</param>
-        /// <param name="b">Value of the blue component.</param>
-        public DiscordColor(float r, float g, float b)
+        /// <param name="R">Value of the red component.</param>
+        /// <param name="G">Value of the green component.</param>
+        /// <param name="B">Value of the blue component.</param>
+        public DiscordColor(float R, float G, float B)
         {
-            if (r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1)
+            if (R < 0 || R > 1 || G < 0 || G > 1 || B < 0 || B > 1)
                 throw new ArgumentOutOfRangeException("Each component must be between 0.0 and 1.0 inclusive.");
 
-            var rb = (byte)(r * 255);
-            var gb = (byte)(g * 255);
-            var bb = (byte)(b * 255);
+            var rb = (byte)(R * 255);
+            var gb = (byte)(G * 255);
+            var bb = (byte)(B * 255);
 
             this.Value = (rb << 16) | (gb << 8) | bb;
         }
@@ -97,25 +97,25 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Creates a new color from specified string representation.
         /// </summary>
-        /// <param name="color">String representation of the color. Must be 6 hexadecimal characters, optionally with # prefix.</param>
-        public DiscordColor(string color)
+        /// <param name="Color">String representation of the color. Must be 6 hexadecimal characters, optionally with # prefix.</param>
+        public DiscordColor(string Color)
         {
-            if (string.IsNullOrWhiteSpace(color))
-                throw new ArgumentNullException(nameof(color), "Null or empty values are not allowed!");
+            if (string.IsNullOrWhiteSpace(Color))
+                throw new ArgumentNullException(nameof(Color), "Null or empty values are not allowed!");
 
-            if (color.Length != 6 && color.Length != 7)
-                throw new ArgumentException(nameof(color), "Color must be 6 or 7 characters in length.");
+            if (Color.Length != 6 && Color.Length != 7)
+                throw new ArgumentException(nameof(Color), "Color must be 6 or 7 characters in length.");
 
-            color = color.ToUpper();
-            if (color.Length == 7 && color[0] != '#')
-                throw new ArgumentException(nameof(color), "7-character colors must begin with #.");
-            else if (color.Length == 7)
-                color = color[1..];
+            Color = Color.ToUpper();
+            if (Color.Length == 7 && Color[0] != '#')
+                throw new ArgumentException(nameof(Color), "7-character colors must begin with #.");
+            else if (Color.Length == 7)
+                Color = Color[1..];
 
-            if (color.Any(xc => !HexAlphabet.Contains(xc)))
-                throw new ArgumentException(nameof(color), "Colors must consist of hexadecimal characters only.");
+            if (Color.Any(Xc => !_hexAlphabet.Contains(Xc)))
+                throw new ArgumentException(nameof(Color), "Colors must consist of hexadecimal characters only.");
 
-            this.Value = int.Parse(color, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            this.Value = int.Parse(Color, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace DisCatSharp.Entities
         /// <returns>String representation of this color.</returns>
         public override string ToString() => $"#{this.Value:X6}";
 
-        public static implicit operator DiscordColor(int value)
-            => new(value);
+        public static implicit operator DiscordColor(int Value)
+            => new(Value);
     }
 }

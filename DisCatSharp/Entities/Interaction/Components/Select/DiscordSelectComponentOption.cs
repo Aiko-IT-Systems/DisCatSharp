@@ -64,23 +64,23 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Constructs a new <see cref="DiscordSelectComponentOption"/>.
         /// </summary>
-        /// <param name="label">The label of this option..</param>
-        /// <param name="value">The value of this option.</param>
-        /// <param name="description">Description of the option.</param>
-        /// <param name="isDefault">Whether this option is default. If true, this option will be pre-selected.</param>
-        /// <param name="emoji">The emoji to set with this option.</param>
-        public DiscordSelectComponentOption(string label, string value, string description = null, bool isDefault = false, DiscordComponentEmoji emoji = null)
+        /// <param name="Label">The label of this option..</param>
+        /// <param name="Value">The value of this option.</param>
+        /// <param name="Description">Description of the option.</param>
+        /// <param name="IsDefault">Whether this option is default. If true, this option will be pre-selected.</param>
+        /// <param name="Emoji">The emoji to set with this option.</param>
+        public DiscordSelectComponentOption(string Label, string Value, string Description = null, bool IsDefault = false, DiscordComponentEmoji Emoji = null)
         {
-            if (label.Length > 100)
+            if (Label.Length > 100)
                 throw new NotSupportedException("Select label can't be longer then 100 chars.");
-            if (value.Length > 100)
+            if (Value.Length > 100)
                 throw new NotSupportedException("Select label can't be longer then 100 chars.");
 
-            this.Label = label;
-            this.Value = value;
-            this.Description = description;
-            this.Default = isDefault;
-            this.Emoji = emoji;
+            this.Label = Label;
+            this.Value = Value;
+            this.Description = Description;
+            this.Default = IsDefault;
+            this.Emoji = Emoji;
         }
     }
 }

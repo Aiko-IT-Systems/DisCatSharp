@@ -41,23 +41,23 @@ namespace DisCatSharp.Hosting
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordHostedService"/> class.
         /// </summary>
-        /// <param name="config">IConfiguration provided via Dependency Injection. Aggregate method to access configuration files </param>
-        /// <param name="logger">An ILogger to work with, provided via Dependency Injection</param>
-        /// <param name="serviceProvider">ServiceProvider reference which contains all items currently registered for Dependency Injection</param>
-        /// <param name="applicationLifetime">Contains the appropriate methods for disposing / stopping BackgroundServices during runtime</param>
-        /// <param name="configBotSection">The name of the JSON/Config Key which contains the configuration for this Discord Service</param>
-        protected DiscordHostedService(IConfiguration config,
-            ILogger<DiscordHostedService> logger,
-            IServiceProvider serviceProvider,
-            IHostApplicationLifetime applicationLifetime,
-            string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
-            : base(config, logger, serviceProvider, applicationLifetime, configBotSection)
+        /// <param name="Config">IConfiguration provided via Dependency Injection. Aggregate method to access configuration files </param>
+        /// <param name="Logger">An ILogger to work with, provided via Dependency Injection</param>
+        /// <param name="ServiceProvider">ServiceProvider reference which contains all items currently registered for Dependency Injection</param>
+        /// <param name="ApplicationLifetime">Contains the appropriate methods for disposing / stopping BackgroundServices during runtime</param>
+        /// <param name="ConfigBotSection">The name of the JSON/Config Key which contains the configuration for this Discord Service</param>
+        protected DiscordHostedService(IConfiguration Config,
+            ILogger<DiscordHostedService> Logger,
+            IServiceProvider ServiceProvider,
+            IHostApplicationLifetime ApplicationLifetime,
+            string ConfigBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
+            : base(Config, Logger, ServiceProvider, ApplicationLifetime, ConfigBotSection)
         {
 
         }
 #pragma warning restore 8618
 
-        protected override Task ConfigureAsync()
+        protected override Task Configure()
         {
             try
             {
@@ -71,9 +71,9 @@ namespace DisCatSharp.Hosting
 
             return Task.CompletedTask;
         }
-        protected sealed override async Task ConnectAsync() => await this.Client.ConnectAsync();
+        protected sealed override async Task Connect() => await this.Client.ConnectAsync();
 
-        protected override Task ConfigureExtensionsAsync()
+        protected override Task ConfigureExtensions()
         {
             this.InitializeExtensions(this.Client);
             return Task.CompletedTask;

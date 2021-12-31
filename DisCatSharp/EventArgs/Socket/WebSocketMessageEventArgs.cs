@@ -43,10 +43,10 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Creates a new instance of text message event arguments.
         /// </summary>
-        /// <param name="message">Received message string.</param>
-        public SocketTextMessageEventArgs(string message)
+        /// <param name="Message">Received message string.</param>
+        public SocketTextMessageEventArgs(string Message)
         {
-            this.Message = message;
+            this.Message = Message;
         }
     }
 
@@ -63,10 +63,10 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Creates a new instance of binary message event arguments.
         /// </summary>
-        /// <param name="message">Received message bytes.</param>
-        public SocketBinaryMessageEventArgs(byte[] message)
+        /// <param name="Message">Received message bytes.</param>
+        public SocketBinaryMessageEventArgs(byte[] Message)
         {
-            this.Message = message;
+            this.Message = Message;
         }
     }
 }

@@ -47,27 +47,27 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Defines that usage of this command is restricted to members with specified role. Note that it's much preferred to restrict access using <see cref="RequirePermissionsAttribute"/>.
         /// </summary>
-        /// <param name="checkMode">Role checking mode.</param>
-        /// <param name="roleNames">Names of the role to be verified by this check.</param>
-        public RequireRolesAttribute(RoleCheckMode checkMode, params string[] roleNames)
+        /// <param name="CheckMode">Role checking mode.</param>
+        /// <param name="RoleNames">Names of the role to be verified by this check.</param>
+        public RequireRolesAttribute(RoleCheckMode CheckMode, params string[] RoleNames)
         {
-            this.CheckMode = checkMode;
-            this.RoleNames = new ReadOnlyCollection<string>(roleNames);
+            this.CheckMode = CheckMode;
+            this.RoleNames = new ReadOnlyCollection<string>(RoleNames);
         }
 
         /// <summary>
         /// Executes the a check.
         /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
+        /// <param name="Ctx">The command context.</param>
+        /// <param name="Help">If true, help - returns true.</param>
+        public override Task<bool> ExecuteCheck(CommandContext Ctx, bool Help)
         {
-            if (ctx.Guild == null || ctx.Member == null)
+            if (Ctx.Guild == null || Ctx.Member == null)
                 return Task.FromResult(false);
 
-            var rns = ctx.Member.Roles.Select(xr => xr.Name);
+            var rns = Ctx.Member.Roles.Select(Xr => Xr.Name);
             var rnc = rns.Count();
-            var ins = rns.Intersect(this.RoleNames, ctx.CommandsNext.GetStringComparer());
+            var ins = rns.Intersect(this.RoleNames, Ctx.CommandsNext.GetStringComparer());
             var inc = ins.Count();
 
             return this.CheckMode switch

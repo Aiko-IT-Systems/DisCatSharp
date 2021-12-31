@@ -38,8 +38,8 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Executes the a check.
         /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => Task.FromResult(ctx.Guild != null && ctx.Guild.HasMemberVerificationGate);
+        /// <param name="Ctx">The command context.</param>
+        /// <param name="Help">If true, help - returns true.</param>
+        public override Task<bool> ExecuteCheck(CommandContext Ctx, bool Help) => Task.FromResult(Ctx.Guild != null && Ctx.Guild.HasMemberVerificationGate);
     }
 }

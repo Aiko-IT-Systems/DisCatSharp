@@ -31,7 +31,7 @@ namespace DisCatSharp.Net.Udp
     /// <summary>
     /// The default, native-based UDP client implementation.
     /// </summary>
-    internal class DCSUdpClient : BaseUdpClient
+    internal class DcsUdpClient : BaseUdpClient
     {
         /// <summary>
         /// Gets the client.
@@ -68,7 +68,7 @@ namespace DisCatSharp.Net.Udp
         /// <summary>
         /// Creates a new UDP client instance.
         /// </summary>
-        public DCSUdpClient()
+        public DcsUdpClient()
         {
             this.PacketQueue = new BlockingCollection<byte[]>();
             this.TokenSource = new CancellationTokenSource();
@@ -77,28 +77,28 @@ namespace DisCatSharp.Net.Udp
         /// <summary>
         /// Configures the UDP client.
         /// </summary>
-        /// <param name="endpoint">Endpoint that the client will be communicating with.</param>
-        public override void Setup(ConnectionEndpoint endpoint)
+        /// <param name="Endpoint">Endpoint that the client will be communicating with.</param>
+        public override void Setup(ConnectionEndpoint Endpoint)
         {
-            this.EndPoint = endpoint;
+            this.EndPoint = Endpoint;
             this.Client = new UdpClient();
-            this.ReceiverTask = Task.Run(this.ReceiverLoopAsync, this.Token);
+            this.ReceiverTask = Task.Run(this.ReceiverLoop, this.Token);
         }
 
         /// <summary>
         /// Sends a datagram.
         /// </summary>
-        /// <param name="data">Datagram.</param>
-        /// <param name="dataLength">Length of the datagram.</param>
+        /// <param name="Data">Datagram.</param>
+        /// <param name="DataLength">Length of the datagram.</param>
         /// <returns></returns>
-        public override Task SendAsync(byte[] data, int dataLength)
-            => this.Client.SendAsync(data, dataLength, this.EndPoint.Hostname, this.EndPoint.Port);
+        public override Task Send(byte[] Data, int DataLength)
+            => this.Client.SendAsync(Data, DataLength, this.EndPoint.Hostname, this.EndPoint.Port);
 
         /// <summary>
         /// Receives a datagram.
         /// </summary>
         /// <returns>The received bytes.</returns>
-        public override Task<byte[]> ReceiveAsync() => Task.FromResult(this.PacketQueue.Take(this.Token));
+        public override Task<byte[]> Receive() => Task.FromResult(this.PacketQueue.Take(this.Token));
 
         /// <summary>
         /// Closes and disposes the client.
@@ -119,7 +119,7 @@ namespace DisCatSharp.Net.Udp
         /// <summary>
         /// Receivers the loop.
         /// </summary>
-        private async Task ReceiverLoopAsync()
+        private async Task ReceiverLoop()
         {
             while (!this.Token.IsCancellationRequested)
             {
@@ -136,6 +136,6 @@ namespace DisCatSharp.Net.Udp
         /// Creates a new instance of <see cref="BaseUdpClient"/>.
         /// </summary>
         public static BaseUdpClient CreateNew()
-            => new DCSUdpClient();
+            => new DcsUdpClient();
     }
 }

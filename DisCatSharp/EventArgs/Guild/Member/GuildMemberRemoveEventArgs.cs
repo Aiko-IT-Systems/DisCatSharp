@@ -43,6 +43,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="GuildMemberRemoveEventArgs"/> class.
         /// </summary>
-        internal GuildMemberRemoveEventArgs(IServiceProvider provider) : base(provider) { }
+        internal GuildMemberRemoveEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

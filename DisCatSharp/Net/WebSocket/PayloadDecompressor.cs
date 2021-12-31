@@ -60,13 +60,13 @@ namespace DisCatSharp.Net.WebSocket
         /// <summary>
         /// Initializes a new instance of the <see cref="PayloadDecompressor"/> class.
         /// </summary>
-        /// <param name="compressionLevel">The compression level.</param>
-        public PayloadDecompressor(GatewayCompressionLevel compressionLevel)
+        /// <param name="CompressionLevel">The compression level.</param>
+        public PayloadDecompressor(GatewayCompressionLevel CompressionLevel)
         {
-            if (compressionLevel == GatewayCompressionLevel.None)
+            if (CompressionLevel == GatewayCompressionLevel.None)
                 throw new InvalidOperationException("Decompressor requires a valid compression mode.");
 
-            this.CompressionLevel = compressionLevel;
+            this.CompressionLevel = CompressionLevel;
             this.CompressedStream = new MemoryStream();
             if (this.CompressionLevel == GatewayCompressionLevel.Stream)
                 this.DecompressorStream = new DeflateStream(this.CompressedStream, CompressionMode.Decompress);
@@ -75,23 +75,23 @@ namespace DisCatSharp.Net.WebSocket
         /// <summary>
         /// Tries the decompress.
         /// </summary>
-        /// <param name="compressed">The compressed bytes.</param>
-        /// <param name="decompressed">The decompressed memory stream.</param>
-        public bool TryDecompress(ArraySegment<byte> compressed, MemoryStream decompressed)
+        /// <param name="Compressed">The compressed bytes.</param>
+        /// <param name="Decompressed">The decompressed memory stream.</param>
+        public bool TryDecompress(ArraySegment<byte> Compressed, MemoryStream Decompressed)
         {
             var zlib = this.CompressionLevel == GatewayCompressionLevel.Stream
                 ? this.DecompressorStream
                 : new DeflateStream(this.CompressedStream, CompressionMode.Decompress, true);
 
-            if (compressed.Array[0] == ZlibPrefix)
-                this.CompressedStream.Write(compressed.Array, compressed.Offset + 2, compressed.Count - 2);
+            if (Compressed.Array[0] == ZlibPrefix)
+                this.CompressedStream.Write(Compressed.Array, Compressed.Offset + 2, Compressed.Count - 2);
             else
-                this.CompressedStream.Write(compressed.Array, compressed.Offset, compressed.Count);
+                this.CompressedStream.Write(Compressed.Array, Compressed.Offset, Compressed.Count);
 
             this.CompressedStream.Flush();
             this.CompressedStream.Position = 0;
 
-            var cspan = compressed.AsSpan();
+            var cspan = Compressed.AsSpan();
             var suffix = BinaryPrimitives.ReadUInt32BigEndian(cspan[^4..]);
             if (this.CompressionLevel == GatewayCompressionLevel.Stream && suffix != ZlibFlush)
             {
@@ -103,7 +103,7 @@ namespace DisCatSharp.Net.WebSocket
 
             try
             {
-                zlib.CopyTo(decompressed);
+                zlib.CopyTo(Decompressed);
                 return true;
             }
             catch { return false; }

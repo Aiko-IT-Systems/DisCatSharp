@@ -103,12 +103,12 @@ namespace DisCatSharp
         /// <summary>
         /// Represents the embedded application CG3 Prod.
         /// </summary>
-        CG3Prod = 832013003968348200,
+        Cg3Prod = 832013003968348200,
 
         /// <summary>
         /// Represents the embedded application CG4 Prod.
         /// </summary>
-        CG4Prod = 832025144389533716,
+        Cg4Prod = 832025144389533716,
 
         /// <summary>
         /// Represents the embedded application Sketchy Artist.
@@ -145,13 +145,13 @@ namespace DisCatSharp
         /// Represents the embedded application CG3 Dev.
         /// This is the dev version.
         /// </summary>
-        CG3Dev = 832012682520428625,
+        Cg3Dev = 832012682520428625,
 
         /// <summary>
         /// Represents the embedded application CG4 Dev.
         /// This is the dev version.
         /// </summary>
-        CG4kDev = 832013108234289153,
+        Cg4KDev = 832013108234289153,
 
         /// <summary>
         /// Represents the embedded application Decoders.
@@ -165,25 +165,25 @@ namespace DisCatSharp
         /// Represents the embedded application PN.
         /// This is the staging version.
         /// </summary>
-        PNStaging = 763116274876022855,
+        PnStaging = 763116274876022855,
 
         /// <summary>
         /// Represents the embedded application CG2.
         /// This is the staging version.
         /// </summary>
-        CG2Staging = 832012730599735326,
+        Cg2Staging = 832012730599735326,
 
         /// <summary>
         /// Represents the embedded application CG3.
         /// This is the staging version.
         /// </summary>
-        CG3Staging = 832012938398400562,
+        Cg3Staging = 832012938398400562,
 
         /// <summary>
         /// Represents the embedded application CG4.
         /// This is the staging version.
         /// </summary>
-        CG4Staging = 832025061657280566,
+        Cg4Staging = 832025061657280566,
         #endregion
 
         #region New QA
@@ -191,25 +191,25 @@ namespace DisCatSharp
         /// Represents the embedded application Poker.
         /// This is the QA version.
         /// </summary>
-        PokerQA = 801133024841957428,
+        PokerQa = 801133024841957428,
 
         /// <summary>
         /// Represents the embedded application CG2.
         /// This is the QA version.
         /// </summary>
-        CG2QA = 832012815819604009,
+        Cg2Qa = 832012815819604009,
 
         /// <summary>
         /// Represents the embedded application CG 3.
         /// This is the QA version.
         /// </summary>
-        CG3QA = 832012894068801636,
+        Cg3Qa = 832012894068801636,
 
         /// <summary>
         /// Represents the embedded application CG 4.
         /// This is the QA version.
         /// </summary>
-        CG4QA = 832025114077298718,
+        Cg4Qa = 832025114077298718,
         #endregion
     }
 }

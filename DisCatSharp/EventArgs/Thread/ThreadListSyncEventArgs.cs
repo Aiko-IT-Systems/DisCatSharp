@@ -54,6 +54,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="ThreadListSyncEventArgs"/> class.
         /// </summary>
-        internal ThreadListSyncEventArgs(IServiceProvider provider) : base(provider) { }
+        internal ThreadListSyncEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

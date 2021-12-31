@@ -109,7 +109,7 @@ namespace DisCatSharp.Entities
         public bool? DmPermission { get; internal set; }
 
         /// <summary>
-        /// Gets the version number for this command. 
+        /// Gets the version number for this command.
         /// </summary>
         [JsonProperty("version")]
         public ulong Version { get; internal set; }
@@ -117,80 +117,80 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Creates a new instance of a <see cref="DiscordApplicationCommand"/>.
         /// </summary>
-        /// <param name="name">The name of the command.</param>
-        /// <param name="description">The description of the command.</param>
-        /// <param name="options">Optional parameters for this command.</param>
+        /// <param name="Name">The name of the command.</param>
+        /// <param name="Description">The description of the command.</param>
+        /// <param name="Options">Optional parameters for this command.</param>
         /// <param name="default_permission">Optional default permission for this command.</param>
-        /// <param name="type">The type of the command. Defaults to ChatInput.</param>
-        /// <param name="nameLocalizations">The localizations of the command name.</param>
-        /// <param name="descriptionLocalizations">The localizations of the command description.</param>
-        public DiscordApplicationCommand(string name, string description, IEnumerable<DiscordApplicationCommandOption> options = null, bool default_permission = true, ApplicationCommandType type = ApplicationCommandType.ChatInput, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null)
+        /// <param name="Type">The type of the command. Defaults to ChatInput.</param>
+        /// <param name="NameLocalizations">The localizations of the command name.</param>
+        /// <param name="DescriptionLocalizations">The localizations of the command description.</param>
+        public DiscordApplicationCommand(string Name, string Description, IEnumerable<DiscordApplicationCommandOption> Options = null, bool DefaultPermission = true, ApplicationCommandType Type = ApplicationCommandType.ChatInput, DiscordApplicationCommandLocalization NameLocalizations = null, DiscordApplicationCommandLocalization DescriptionLocalizations = null)
         {
-            if (type is ApplicationCommandType.ChatInput)
+            if (Type is ApplicationCommandType.ChatInput)
             {
-                if (!Utilities.IsValidSlashCommandName(name))
-                    throw new ArgumentException("Invalid slash command name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
-                if (name.Any(ch => char.IsUpper(ch)))
-                    throw new ArgumentException("Slash command name cannot have any upper case characters.", nameof(name));
-                if (description.Length > 100)
-                    throw new ArgumentException("Slash command description cannot exceed 100 characters.", nameof(description));
+                if (!Utilities.IsValidSlashCommandName(Name))
+                    throw new ArgumentException("Invalid slash command name specified. It must be below 32 characters and not contain any whitespace.", nameof(Name));
+                if (Name.Any(Ch => char.IsUpper(Ch)))
+                    throw new ArgumentException("Slash command name cannot have any upper case characters.", nameof(Name));
+                if (Description.Length > 100)
+                    throw new ArgumentException("Slash command description cannot exceed 100 characters.", nameof(Description));
 
-                this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
-                this.RawDescriptionLocalizations = descriptionLocalizations?.GetKeyValuePairs();
+                this.RawNameLocalizations = NameLocalizations?.GetKeyValuePairs();
+                this.RawDescriptionLocalizations = DescriptionLocalizations?.GetKeyValuePairs();
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(description))
+                if (!string.IsNullOrWhiteSpace(Description))
                     throw new ArgumentException("Context menus do not support descriptions.");
-                if (options?.Any() ?? false)
+                if (Options?.Any() ?? false)
                     throw new ArgumentException("Context menus do not support options.");
-                description = string.Empty;
+                Description = string.Empty;
 
-                this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
+                this.RawNameLocalizations = NameLocalizations?.GetKeyValuePairs();
             }
 
-            var optionsList = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;
+            var optionsList = Options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(Options.ToList()) : null;
 
-            this.Type = type;
-            this.Name = name;
-            this.Description = description;
+            this.Type = Type;
+            this.Name = Name;
+            this.Description = Description;
             this.Options = optionsList;
-            this.DefaultPermission = default_permission;
+            this.DefaultPermission = DefaultPermission;
         }
 
         /// <summary>
         /// Checks whether this <see cref="DiscordApplicationCommand"/> object is equal to another object.
         /// </summary>
-        /// <param name="other">The command to compare to.</param>
+        /// <param name="Other">The command to compare to.</param>
         /// <returns>Whether the command is equal to this <see cref="DiscordApplicationCommand"/>.</returns>
-        public bool Equals(DiscordApplicationCommand other)
-            => this.Id == other.Id;
+        public bool Equals(DiscordApplicationCommand Other)
+            => this.Id == Other.Id;
 
         /// <summary>
         /// Determines if two <see cref="DiscordApplicationCommand"/> objects are equal.
         /// </summary>
-        /// <param name="e1">The first command object.</param>
-        /// <param name="e2">The second command object.</param>
+        /// <param name="E1">The first command object.</param>
+        /// <param name="E2">The second command object.</param>
         /// <returns>Whether the two <see cref="DiscordApplicationCommand"/> objects are equal.</returns>
-        public static bool operator ==(DiscordApplicationCommand e1, DiscordApplicationCommand e2)
-            => e1.Equals(e2);
+        public static bool operator ==(DiscordApplicationCommand E1, DiscordApplicationCommand E2)
+            => E1.Equals(E2);
 
         /// <summary>
         /// Determines if two <see cref="DiscordApplicationCommand"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">The first command object.</param>
-        /// <param name="e2">The second command object.</param>
+        /// <param name="E1">The first command object.</param>
+        /// <param name="E2">The second command object.</param>
         /// <returns>Whether the two <see cref="DiscordApplicationCommand"/> objects are not equal.</returns>
-        public static bool operator !=(DiscordApplicationCommand e1, DiscordApplicationCommand e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordApplicationCommand E1, DiscordApplicationCommand E2)
+            => !(E1 == E2);
 
         /// <summary>
         /// Determines if a <see cref="object"/> is equal to the current <see cref="DiscordApplicationCommand"/>.
         /// </summary>
-        /// <param name="other">The object to compare to.</param>
+        /// <param name="Other">The object to compare to.</param>
         /// <returns>Whether the two <see cref="DiscordApplicationCommand"/> objects are not equal.</returns>
-        public override bool Equals(object other)
-            => other is DiscordApplicationCommand dac && this.Equals(dac);
+        public override bool Equals(object Other)
+            => Other is DiscordApplicationCommand dac && this.Equals(dac);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordApplicationCommand"/>.

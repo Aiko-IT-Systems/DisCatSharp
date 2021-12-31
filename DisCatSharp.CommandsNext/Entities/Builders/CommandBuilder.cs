@@ -105,8 +105,8 @@ namespace DisCatSharp.CommandsNext.Builders
         /// <summary>
         /// Creates a new command builder.
         /// </summary>
-        /// <param name="module">Module on which this command is to be defined.</param>
-        public CommandBuilder(ICommandModule module)
+        /// <param name="Module">Module on which this command is to be defined.</param>
+        public CommandBuilder(ICommandModule Module)
         {
             this.AliasList = new List<string>();
             this.Aliases = new ReadOnlyCollection<string>(this.AliasList);
@@ -118,7 +118,7 @@ namespace DisCatSharp.CommandsNext.Builders
             this.OverloadList = new List<CommandOverloadBuilder>();
             this.Overloads = new ReadOnlyCollection<CommandOverloadBuilder>(this.OverloadList);
 
-            this.Module = module;
+            this.Module = Module;
 
             this.CustomAttributeList = new List<Attribute>();
             this.CustomAttributes = new ReadOnlyCollection<Attribute>(this.CustomAttributeList);
@@ -127,34 +127,34 @@ namespace DisCatSharp.CommandsNext.Builders
         /// <summary>
         /// Sets the name for this command.
         /// </summary>
-        /// <param name="name">Name for this command.</param>
+        /// <param name="Name">Name for this command.</param>
         /// <returns>This builder.</returns>
-        public CommandBuilder WithName(string name)
+        public CommandBuilder WithName(string Name)
         {
-            if (name == null || name.ToCharArray().Any(xc => char.IsWhiteSpace(xc)))
-                throw new ArgumentException("Command name cannot be null or contain any whitespace characters.", nameof(name));
+            if (Name == null || Name.ToCharArray().Any(Xc => char.IsWhiteSpace(Xc)))
+                throw new ArgumentException("Command name cannot be null or contain any whitespace characters.", nameof(Name));
 
             if (this.Name != null)
                 throw new InvalidOperationException("This command already has a name.");
 
-            if (this.AliasList.Contains(name))
-                throw new ArgumentException("Command name cannot be one of its aliases.", nameof(name));
+            if (this.AliasList.Contains(Name))
+                throw new ArgumentException("Command name cannot be one of its aliases.", nameof(Name));
 
-            this.Name = name;
+            this.Name = Name;
             return this;
         }
 
         /// <summary>
         /// Adds aliases to this command.
         /// </summary>
-        /// <param name="aliases">Aliases to add to the command.</param>
+        /// <param name="Aliases">Aliases to add to the command.</param>
         /// <returns>This builder.</returns>
-        public CommandBuilder WithAliases(params string[] aliases)
+        public CommandBuilder WithAliases(params string[] Aliases)
         {
-            if (aliases == null || !aliases.Any())
-                throw new ArgumentException("You need to pass at least one alias.", nameof(aliases));
+            if (Aliases == null || !Aliases.Any())
+                throw new ArgumentException("You need to pass at least one alias.", nameof(Aliases));
 
-            foreach (var alias in aliases)
+            foreach (var alias in Aliases)
                 this.WithAlias(alias);
 
             return this;
@@ -163,73 +163,73 @@ namespace DisCatSharp.CommandsNext.Builders
         /// <summary>
         /// Adds an alias to this command.
         /// </summary>
-        /// <param name="alias">Alias to add to the command.</param>
+        /// <param name="Alias">Alias to add to the command.</param>
         /// <returns>This builder.</returns>
-        public CommandBuilder WithAlias(string alias)
+        public CommandBuilder WithAlias(string Alias)
         {
-            if (alias.ToCharArray().Any(xc => char.IsWhiteSpace(xc)))
-                throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.", nameof(alias));
+            if (Alias.ToCharArray().Any(Xc => char.IsWhiteSpace(Xc)))
+                throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.", nameof(Alias));
 
-            if (this.Name == alias || this.AliasList.Contains(alias))
-                throw new ArgumentException("Aliases cannot contain the command name, and cannot be duplicate.", nameof(alias));
+            if (this.Name == Alias || this.AliasList.Contains(Alias))
+                throw new ArgumentException("Aliases cannot contain the command name, and cannot be duplicate.", nameof(Alias));
 
-            this.AliasList.Add(alias);
+            this.AliasList.Add(Alias);
             return this;
         }
 
         /// <summary>
         /// Sets the description for this command.
         /// </summary>
-        /// <param name="description">Description to use for this command.</param>
+        /// <param name="Description">Description to use for this command.</param>
         /// <returns>This builder.</returns>
-        public CommandBuilder WithDescription(string description)
+        public CommandBuilder WithDescription(string Description)
         {
-            this.Description = description;
+            this.Description = Description;
             return this;
         }
 
         /// <summary>
         /// Sets whether this command is to be hidden.
         /// </summary>
-        /// <param name="hidden">Whether the command is to be hidden.</param>
+        /// <param name="Hidden">Whether the command is to be hidden.</param>
         /// <returns>This builder.</returns>
-        public CommandBuilder WithHiddenStatus(bool hidden)
+        public CommandBuilder WithHiddenStatus(bool Hidden)
         {
-            this.IsHidden = hidden;
+            this.IsHidden = Hidden;
             return this;
         }
 
         /// <summary>
         /// Adds pre-execution checks to this command.
         /// </summary>
-        /// <param name="checks">Pre-execution checks to add to this command.</param>
+        /// <param name="Checks">Pre-execution checks to add to this command.</param>
         /// <returns>This builder.</returns>
-        public CommandBuilder WithExecutionChecks(params CheckBaseAttribute[] checks)
+        public CommandBuilder WithExecutionChecks(params CheckBaseAttribute[] Checks)
         {
-            this.ExecutionCheckList.AddRange(checks.Except(this.ExecutionCheckList));
+            this.ExecutionCheckList.AddRange(Checks.Except(this.ExecutionCheckList));
             return this;
         }
 
         /// <summary>
         /// Adds a pre-execution check to this command.
         /// </summary>
-        /// <param name="check">Pre-execution check to add to this command.</param>
+        /// <param name="Check">Pre-execution check to add to this command.</param>
         /// <returns>This builder.</returns>
-        public CommandBuilder WithExecutionCheck(CheckBaseAttribute check)
+        public CommandBuilder WithExecutionCheck(CheckBaseAttribute Check)
         {
-            if (!this.ExecutionCheckList.Contains(check))
-                this.ExecutionCheckList.Add(check);
+            if (!this.ExecutionCheckList.Contains(Check))
+                this.ExecutionCheckList.Add(Check);
             return this;
         }
 
         /// <summary>
         /// Adds overloads to this command. An executable command needs to have at least one overload.
         /// </summary>
-        /// <param name="overloads">Overloads to add to this command.</param>
+        /// <param name="Overloads">Overloads to add to this command.</param>
         /// <returns>This builder.</returns>
-        public CommandBuilder WithOverloads(params CommandOverloadBuilder[] overloads)
+        public CommandBuilder WithOverloads(params CommandOverloadBuilder[] Overloads)
         {
-            foreach (var overload in overloads)
+            foreach (var overload in Overloads)
                 this.WithOverload(overload);
 
             return this;
@@ -238,15 +238,15 @@ namespace DisCatSharp.CommandsNext.Builders
         /// <summary>
         /// Adds an overload to this command. An executable command needs to have at least one overload.
         /// </summary>
-        /// <param name="overload">Overload to add to this command.</param>
+        /// <param name="Overload">Overload to add to this command.</param>
         /// <returns>This builder.</returns>
-        public CommandBuilder WithOverload(CommandOverloadBuilder overload)
+        public CommandBuilder WithOverload(CommandOverloadBuilder Overload)
         {
-            if (this.OverloadArgumentSets.Contains(overload.ArgumentSet))
-                throw new DuplicateOverloadException(this.Name, overload.Arguments.Select(x => x.Type).ToList(), overload.ArgumentSet);
+            if (this.OverloadArgumentSets.Contains(Overload.ArgumentSet))
+                throw new DuplicateOverloadException(this.Name, Overload.Arguments.Select(X => X.Type).ToList(), Overload.ArgumentSet);
 
-            this.OverloadArgumentSets.Add(overload.ArgumentSet);
-            this.OverloadList.Add(overload);
+            this.OverloadArgumentSets.Add(Overload.ArgumentSet);
+            this.OverloadList.Add(Overload);
 
             return this;
         }
@@ -254,22 +254,22 @@ namespace DisCatSharp.CommandsNext.Builders
         /// <summary>
         /// Adds a custom attribute to this command. This can be used to indicate various custom information about a command.
         /// </summary>
-        /// <param name="attribute">Attribute to add.</param>
+        /// <param name="Attribute">Attribute to add.</param>
         /// <returns>This builder.</returns>
-        public CommandBuilder WithCustomAttribute(Attribute attribute)
+        public CommandBuilder WithCustomAttribute(Attribute Attribute)
         {
-            this.CustomAttributeList.Add(attribute);
+            this.CustomAttributeList.Add(Attribute);
             return this;
         }
 
         /// <summary>
         /// Adds multiple custom attributes to this command. This can be used to indicate various custom information about a command.
         /// </summary>
-        /// <param name="attributes">Attributes to add.</param>
+        /// <param name="Attributes">Attributes to add.</param>
         /// <returns>This builder.</returns>
-        public CommandBuilder WithCustomAttributes(params Attribute[] attributes)
+        public CommandBuilder WithCustomAttributes(params Attribute[] Attributes)
         {
-            foreach (var attr in attributes)
+            foreach (var attr in Attributes)
                 this.WithCustomAttribute(attr);
 
             return this;
@@ -278,8 +278,8 @@ namespace DisCatSharp.CommandsNext.Builders
         /// <summary>
         /// Builds the command.
         /// </summary>
-        /// <param name="parent">The parent command group.</param>
-        internal virtual Command Build(CommandGroup parent)
+        /// <param name="Parent">The parent command group.</param>
+        internal virtual Command Build(CommandGroup Parent)
         {
             var cmd = new Command
             {
@@ -288,8 +288,8 @@ namespace DisCatSharp.CommandsNext.Builders
                 Aliases = this.Aliases,
                 ExecutionChecks = this.ExecutionChecks,
                 IsHidden = this.IsHidden,
-                Parent = parent,
-                Overloads = new ReadOnlyCollection<CommandOverload>(this.Overloads.Select(xo => xo.Build()).ToList()),
+                Parent = Parent,
+                Overloads = new ReadOnlyCollection<CommandOverload>(this.Overloads.Select(Xo => Xo.Build()).ToList()),
                 Module = this.Module,
                 CustomAttributes = this.CustomAttributes
             };

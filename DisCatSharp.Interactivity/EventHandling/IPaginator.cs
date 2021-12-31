@@ -33,9 +33,9 @@ namespace DisCatSharp.Interactivity.EventHandling
         /// <summary>
         /// Paginates.
         /// </summary>
-        /// <param name="request">The request to paginate.</param>
+        /// <param name="Request">The request to paginate.</param>
         /// <returns>A task that completes when the pagination finishes or times out.</returns>
-        Task DoPaginationAsync(IPaginationRequest request);
+        Task DoPagination(IPaginationRequest Request);
 
         /// <summary>
         /// Disposes this EventWaiter

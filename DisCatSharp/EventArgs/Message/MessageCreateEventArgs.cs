@@ -72,6 +72,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageCreateEventArgs"/> class.
         /// </summary>
-        internal MessageCreateEventArgs(IServiceProvider provider) : base(provider) { }
+        internal MessageCreateEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

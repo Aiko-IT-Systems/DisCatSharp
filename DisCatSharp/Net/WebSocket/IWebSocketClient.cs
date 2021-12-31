@@ -32,10 +32,10 @@ namespace DisCatSharp.Net.WebSocket
     /// <summary>
     /// Creates an instance of a WebSocket client implementation.
     /// </summary>
-    /// <param name="proxy">Proxy settings to use for the new WebSocket client instance.</param>
-    /// <param name="provider">Service provider.</param>
+    /// <param name="Proxy">Proxy settings to use for the new WebSocket client instance.</param>
+    /// <param name="Provider">Service provider.</param>
     /// <returns>Constructed WebSocket client implementation.</returns>
-    public delegate IWebSocketClient WebSocketClientFactoryDelegate(IWebProxy proxy, IServiceProvider provider);
+    public delegate IWebSocketClient WebSocketClientFactoryDelegate(IWebProxy Proxy, IServiceProvider Provider);
 
     /// <summary>
     /// Represents a base abstraction for all WebSocket client implementations.
@@ -60,38 +60,38 @@ namespace DisCatSharp.Net.WebSocket
         /// <summary>
         /// Connects to a specified remote WebSocket endpoint.
         /// </summary>
-        /// <param name="uri">The URI of the WebSocket endpoint.</param>
-        Task ConnectAsync(Uri uri);
+        /// <param name="Uri">The URI of the WebSocket endpoint.</param>
+        Task Connect(Uri Uri);
 
         /// <summary>
         /// Disconnects the WebSocket connection.
         /// </summary>
-        /// <param name="code">The code</param>
-        /// <param name="message">The message</param>
+        /// <param name="Code">The code</param>
+        /// <param name="Message">The message</param>
         /// <created>Lala Sabathil,06.07.2021</created>
         /// <changed>Lala Sabathil,06.07.2021</changed>
-        Task DisconnectAsync(int code = 1000, string message = "");
+        Task Disconnect(int Code = 1000, string Message = "");
 
         /// <summary>
         /// Send a message to the WebSocket server.
         /// </summary>
-        /// <param name="message">The message to send.</param>
-        Task SendMessageAsync(string message);
+        /// <param name="Message">The message to send.</param>
+        Task SendMessage(string Message);
 
         /// <summary>
         /// Adds a header to the default header collection.
         /// </summary>
-        /// <param name="name">Name of the header to add.</param>
-        /// <param name="value">Value of the header to add.</param>
+        /// <param name="Name">Name of the header to add.</param>
+        /// <param name="Value">Value of the header to add.</param>
         /// <returns>Whether the operation succeeded.</returns>
-        bool AddDefaultHeader(string name, string value);
+        bool AddDefaultHeader(string Name, string Value);
 
         /// <summary>
         /// Removes a header from the default header collection.
         /// </summary>
-        /// <param name="name">Name of the header to remove.</param>
+        /// <param name="Name">Name of the header to remove.</param>
         /// <returns>Whether the operation succeeded.</returns>
-        bool RemoveDefaultHeader(string name);
+        bool RemoveDefaultHeader(string Name);
 
         /// <summary>
         /// Triggered when the client connects successfully.

@@ -49,15 +49,15 @@ namespace DisCatSharp.CommandsNext.Exceptions
         /// <summary>
         /// Creates a new exception indicating given argument set already exists as an overload for specified command.
         /// </summary>
-        /// <param name="name">Name of the command with duplicated argument sets.</param>
-        /// <param name="argumentTypes">Collection of ordered argument types for the command.</param>
-        /// <param name="argumentSetKey">Overload identifier.</param>
-        internal DuplicateOverloadException(string name, IList<Type> argumentTypes, string argumentSetKey)
+        /// <param name="Name">Name of the command with duplicated argument sets.</param>
+        /// <param name="ArgumentTypes">Collection of ordered argument types for the command.</param>
+        /// <param name="ArgumentSetKey">Overload identifier.</param>
+        internal DuplicateOverloadException(string Name, IList<Type> ArgumentTypes, string ArgumentSetKey)
             : base("An overload with specified argument types exists.")
         {
-            this.CommandName = name;
-            this.ArgumentTypes = new ReadOnlyCollection<Type>(argumentTypes);
-            this.ArgumentSetKey = argumentSetKey;
+            this.CommandName = Name;
+            this.ArgumentTypes = new ReadOnlyCollection<Type>(ArgumentTypes);
+            this.ArgumentSetKey = ArgumentSetKey;
         }
 
         /// <summary>

@@ -38,22 +38,22 @@ namespace DisCatSharp.Net.Udp
         /// <summary>
         /// Configures the UDP client.
         /// </summary>
-        /// <param name="endpoint">Endpoint that the client will be communicating with.</param>
-        public abstract void Setup(ConnectionEndpoint endpoint);
+        /// <param name="Endpoint">Endpoint that the client will be communicating with.</param>
+        public abstract void Setup(ConnectionEndpoint Endpoint);
 
         /// <summary>
         /// Sends a datagram.
         /// </summary>
-        /// <param name="data">Datagram.</param>
-        /// <param name="dataLength">Length of the datagram.</param>
+        /// <param name="Data">Datagram.</param>
+        /// <param name="DataLength">Length of the datagram.</param>
         /// <returns></returns>
-        public abstract Task SendAsync(byte[] data, int dataLength);
+        public abstract Task Send(byte[] Data, int DataLength);
 
         /// <summary>
         /// Receives a datagram.
         /// </summary>
         /// <returns>The received bytes.</returns>
-        public abstract Task<byte[]> ReceiveAsync();
+        public abstract Task<byte[]> Receive();
 
         /// <summary>
         /// Closes and disposes the client.

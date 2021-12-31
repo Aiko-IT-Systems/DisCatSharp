@@ -45,35 +45,35 @@ namespace DisCatSharp
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryUriBuilder"/> class.
         /// </summary>
-        /// <param name="uri">The uri.</param>
-        public QueryUriBuilder(string uri)
+        /// <param name="Uri">The uri.</param>
+        public QueryUriBuilder(string Uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            if (Uri == null)
+                throw new ArgumentNullException(nameof(Uri));
 
-            this.SourceUri = new Uri(uri);
+            this.SourceUri = new Uri(Uri);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryUriBuilder"/> class.
         /// </summary>
-        /// <param name="uri">The uri.</param>
-        public QueryUriBuilder(Uri uri)
+        /// <param name="Uri">The uri.</param>
+        public QueryUriBuilder(Uri Uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            if (Uri == null)
+                throw new ArgumentNullException(nameof(Uri));
 
-            this.SourceUri = uri;
+            this.SourceUri = Uri;
         }
 
         /// <summary>
         /// Adds a parameter.
         /// </summary>
-        /// <param name="key">The key to be added.</param>
-        /// <param name="value">The value to be added.</param>
-        public QueryUriBuilder AddParameter(string key, string value)
+        /// <param name="Key">The key to be added.</param>
+        /// <param name="Value">The value to be added.</param>
+        public QueryUriBuilder AddParameter(string Key, string Value)
         {
-            this._queryParams.Add(new KeyValuePair<string, string>(key, value));
+            this._queryParams.Add(new KeyValuePair<string, string>(Key, Value));
             return this;
         }
 
@@ -84,7 +84,7 @@ namespace DisCatSharp
         {
             return new UriBuilder(this.SourceUri)
             {
-                Query = string.Join("&", this._queryParams.Select(e => Uri.EscapeDataString(e.Key) + '=' + Uri.EscapeDataString(e.Value)))
+                Query = string.Join("&", this._queryParams.Select(E => Uri.EscapeDataString(E.Key) + '=' + Uri.EscapeDataString(E.Value)))
             }.Uri;
         }
 

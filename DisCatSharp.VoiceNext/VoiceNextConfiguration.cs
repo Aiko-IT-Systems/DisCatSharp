@@ -56,11 +56,11 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Creates a new instance of <see cref="VoiceNextConfiguration"/>, copying the properties of another configuration.
         /// </summary>
-        /// <param name="other">Configuration the properties of which are to be copied.</param>
-        public VoiceNextConfiguration(VoiceNextConfiguration other)
+        /// <param name="Other">Configuration the properties of which are to be copied.</param>
+        public VoiceNextConfiguration(VoiceNextConfiguration Other)
         {
-            this.AudioFormat = new AudioFormat(other.AudioFormat.SampleRate, other.AudioFormat.ChannelCount, other.AudioFormat.VoiceApplication);
-            this.EnableIncoming = other.EnableIncoming;
+            this.AudioFormat = new AudioFormat(Other.AudioFormat.SampleRate, Other.AudioFormat.ChannelCount, Other.AudioFormat.VoiceApplication);
+            this.EnableIncoming = Other.EnableIncoming;
         }
     }
 }

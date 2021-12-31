@@ -50,31 +50,31 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Constructs a new component emoji from an emoji Id.
         /// </summary>
-        /// <param name="id">The Id of the emoji to use. Any valid emoji Id can be passed.</param>
-        public DiscordComponentEmoji(ulong id)
+        /// <param name="Id">The Id of the emoji to use. Any valid emoji Id can be passed.</param>
+        public DiscordComponentEmoji(ulong Id)
         {
-            this.Id = id;
+            this.Id = Id;
         }
 
         /// <summary>
         /// Constructs a new component emoji from unicode.
         /// </summary>
-        /// <param name="name">The unicode emoji to set.</param>
-        public DiscordComponentEmoji(string name)
+        /// <param name="Name">The unicode emoji to set.</param>
+        public DiscordComponentEmoji(string Name)
         {
-            if (!DiscordEmoji.IsValidUnicode(name))
+            if (!DiscordEmoji.IsValidUnicode(Name))
                 throw new ArgumentException("Only unicode emojis can be passed.");
-            this.Name = name;
+            this.Name = Name;
         }
 
         /// <summary>
         /// Constructs a new component emoji from an existing <see cref="DiscordEmoji"/>.
         /// </summary>
-        /// <param name="emoji">The emoji to use.</param>
-        public DiscordComponentEmoji(DiscordEmoji emoji)
+        /// <param name="Emoji">The emoji to use.</param>
+        public DiscordComponentEmoji(DiscordEmoji Emoji)
         {
-            this.Id = emoji.Id;
-            this.Name = emoji.Name; // Name is ignored if the Id is present. //
+            this.Id = Emoji.Id;
+            this.Name = Emoji.Name; // Name is ignored if the Id is present. //
         }
     }
 }

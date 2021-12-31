@@ -44,40 +44,40 @@ namespace DisCatSharp
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultLoggerProvider"/> class.
         /// </summary>
-        /// <param name="client">The client.</param>
-        internal DefaultLoggerProvider(BaseDiscordClient client)
-            : this(client.Configuration.MinimumLogLevel, client.Configuration.LogTimestampFormat)
+        /// <param name="Client">The client.</param>
+        internal DefaultLoggerProvider(BaseDiscordClient Client)
+            : this(Client.Configuration.MinimumLogLevel, Client.Configuration.LogTimestampFormat)
         { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultLoggerProvider"/> class.
         /// </summary>
-        /// <param name="client">The client.</param>
-        internal DefaultLoggerProvider(DiscordWebhookClient client)
-            : this(client._minimumLogLevel, client._logTimestampFormat)
+        /// <param name="Client">The client.</param>
+        internal DefaultLoggerProvider(DiscordWebhookClient Client)
+            : this(Client._minimumLogLevel, Client._logTimestampFormat)
         { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultLoggerProvider"/> class.
         /// </summary>
-        /// <param name="minLevel">The min level.</param>
-        /// <param name="timestampFormat">The timestamp format.</param>
-        internal DefaultLoggerProvider(LogLevel minLevel = LogLevel.Information, string timestampFormat = "yyyy-MM-dd HH:mm:ss zzz")
+        /// <param name="MinLevel">The min level.</param>
+        /// <param name="TimestampFormat">The timestamp format.</param>
+        internal DefaultLoggerProvider(LogLevel MinLevel = LogLevel.Information, string TimestampFormat = "yyyy-MM-dd HH:mm:ss zzz")
         {
-            this.MinimumLevel = minLevel;
-            this.TimestampFormat = timestampFormat;
+            this.MinimumLevel = MinLevel;
+            this.TimestampFormat = TimestampFormat;
         }
 
         /// <summary>
         /// Creates the logger.
         /// </summary>
-        /// <param name="categoryName">The category name.</param>
-        public ILogger CreateLogger(string categoryName)
+        /// <param name="CategoryName">The category name.</param>
+        public ILogger CreateLogger(string CategoryName)
         {
             return this._isDisposed
                 ? throw new InvalidOperationException("This logger provider is already disposed.")
-                : categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName
-                ? throw new ArgumentException($"This provider can only provide instances of loggers for {typeof(BaseDiscordClient).FullName} or {typeof(DiscordWebhookClient).FullName}.", nameof(categoryName))
+                : CategoryName != typeof(BaseDiscordClient).FullName && CategoryName != typeof(DiscordWebhookClient).FullName
+                ? throw new ArgumentException($"This provider can only provide instances of loggers for {typeof(BaseDiscordClient).FullName} or {typeof(DiscordWebhookClient).FullName}.", nameof(CategoryName))
                 : new DefaultLogger(this.MinimumLevel, this.TimestampFormat);
         }
 

@@ -51,9 +51,9 @@ namespace DisCatSharp.CommandsNext.Builders
         /// <summary>
         /// Creates a new command group builder.
         /// </summary>
-        /// <param name="module">Module on which this group is to be defined.</param>
-        public CommandGroupBuilder(ICommandModule module)
-            : base(module)
+        /// <param name="Module">Module on which this group is to be defined.</param>
+        public CommandGroupBuilder(ICommandModule Module)
+            : base(Module)
         {
             this.ChildrenList = new List<CommandBuilder>();
             this.Children = new ReadOnlyCollection<CommandBuilder>(this.ChildrenList);
@@ -62,19 +62,19 @@ namespace DisCatSharp.CommandsNext.Builders
         /// <summary>
         /// Adds a command to the collection of child commands for this group.
         /// </summary>
-        /// <param name="child">Command to add to the collection of child commands for this group.</param>
+        /// <param name="Child">Command to add to the collection of child commands for this group.</param>
         /// <returns>This builder.</returns>
-        public CommandGroupBuilder WithChild(CommandBuilder child)
+        public CommandGroupBuilder WithChild(CommandBuilder Child)
         {
-            this.ChildrenList.Add(child);
+            this.ChildrenList.Add(Child);
             return this;
         }
 
         /// <summary>
         /// Builds the command group.
         /// </summary>
-        /// <param name="parent">The parent command group.</param>
-        internal override Command Build(CommandGroup parent)
+        /// <param name="Parent">The parent command group.</param>
+        internal override Command Build(CommandGroup Parent)
         {
             var cmd = new CommandGroup
             {
@@ -83,8 +83,8 @@ namespace DisCatSharp.CommandsNext.Builders
                 Aliases = this.Aliases,
                 ExecutionChecks = this.ExecutionChecks,
                 IsHidden = this.IsHidden,
-                Parent = parent,
-                Overloads = new ReadOnlyCollection<CommandOverload>(this.Overloads.Select(xo => xo.Build()).ToList()),
+                Parent = Parent,
+                Overloads = new ReadOnlyCollection<CommandOverload>(this.Overloads.Select(Xo => Xo.Build()).ToList()),
                 Module = this.Module,
                 CustomAttributes = this.CustomAttributes
             };

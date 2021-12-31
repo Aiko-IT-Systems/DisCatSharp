@@ -70,35 +70,35 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Checks whether this <see cref="DiscordGuildApplicationCommandPermission"/> object is equal to another object.
         /// </summary>
-        /// <param name="other">The command to compare to.</param>
+        /// <param name="Other">The command to compare to.</param>
         /// <returns>Whether the command is equal to this <see cref="DiscordGuildApplicationCommandPermission"/>.</returns>
-        public bool Equals(DiscordGuildApplicationCommandPermission other)
-            => this.Id == other.Id;
+        public bool Equals(DiscordGuildApplicationCommandPermission Other)
+            => this.Id == Other.Id;
 
         /// <summary>
         /// Determines if two <see cref="DiscordGuildApplicationCommandPermission"/> objects are equal.
         /// </summary>
-        /// <param name="e1">The first command object.</param>
-        /// <param name="e2">The second command object.</param>
+        /// <param name="E1">The first command object.</param>
+        /// <param name="E2">The second command object.</param>
         /// <returns>Whether the two <see cref="DiscordGuildApplicationCommandPermission"/> objects are equal.</returns>
-        public static bool operator ==(DiscordGuildApplicationCommandPermission e1, DiscordGuildApplicationCommandPermission e2)
-            => e1.Equals(e2);
+        public static bool operator ==(DiscordGuildApplicationCommandPermission E1, DiscordGuildApplicationCommandPermission E2)
+            => E1.Equals(E2);
 
         /// <summary>
         /// Determines if two <see cref="DiscordGuildApplicationCommandPermission"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">The first command object.</param>
-        /// <param name="e2">The second command object.</param>
+        /// <param name="E1">The first command object.</param>
+        /// <param name="E2">The second command object.</param>
         /// <returns>Whether the two <see cref="DiscordGuildApplicationCommandPermission"/> objects are not equal.</returns>
-        public static bool operator !=(DiscordGuildApplicationCommandPermission e1, DiscordGuildApplicationCommandPermission e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordGuildApplicationCommandPermission E1, DiscordGuildApplicationCommandPermission E2)
+            => !(E1 == E2);
 
         /// <summary>
         /// Determines if a <see cref="object"/> is equal to the current <see cref="DiscordApplicationCommand"/>.
         /// </summary>
-        /// <param name="other">The object to compare to.</param>
+        /// <param name="Other">The object to compare to.</param>
         /// <returns>Whether the two <see cref="DiscordGuildApplicationCommandPermission"/> objects are not equal.</returns>
-        public override bool Equals(object other) => other is DiscordGuildApplicationCommandPermission dgacp && this.Equals(dgacp);
+        public override bool Equals(object Other) => Other is DiscordGuildApplicationCommandPermission dgacp && this.Equals(dgacp);
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordGuildApplicationCommandPermission"/>.

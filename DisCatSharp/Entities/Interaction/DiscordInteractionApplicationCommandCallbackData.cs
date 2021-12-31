@@ -34,7 +34,7 @@ namespace DisCatSharp.Entities
         /// Wheter this message is tts
         /// </summary>
         [JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? IsTTS { get; internal set; }
+        public bool? IsTts { get; internal set; }
 
         /// <summary>
         /// Gets the content.

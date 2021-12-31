@@ -35,7 +35,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Whether this followup message is text-to-speech.
         /// </summary>
-        public bool IsTTS { get; set; }
+        public bool IsTts { get; set; }
 
         /// <summary>
         /// Whether this followup message should be ephemeral.
@@ -91,20 +91,20 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Appends a collection of components to the message.
         /// </summary>
-        /// <param name="components">The collection of components to add.</param>
+        /// <param name="Components">The collection of components to add.</param>
         /// <returns>The builder to chain calls with.</returns>
-        /// <exception cref="System.ArgumentException"><paramref name="components"/> contained more than 5 components.</exception>
-        public DiscordFollowupMessageBuilder AddComponents(params DiscordComponent[] components)
-            => this.AddComponents((IEnumerable<DiscordComponent>)components);
+        /// <exception cref="System.ArgumentException"><paramref name="Components"/> contained more than 5 components.</exception>
+        public DiscordFollowupMessageBuilder AddComponents(params DiscordComponent[] Components)
+            => this.AddComponents((IEnumerable<DiscordComponent>)Components);
 
         /// <summary>
         /// Appends several rows of components to the message
         /// </summary>
-        /// <param name="components">The rows of components to add, holding up to five each.</param>
+        /// <param name="Components">The rows of components to add, holding up to five each.</param>
         /// <returns></returns>
-        public DiscordFollowupMessageBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
+        public DiscordFollowupMessageBuilder AddComponents(IEnumerable<DiscordActionRowComponent> Components)
         {
-            var ara = components.ToArray();
+            var ara = Components.ToArray();
 
             if (ara.Length + this._components.Count > 5)
                 throw new ArgumentException("ActionRow count exceeds maximum of five.");
@@ -118,12 +118,12 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Appends a collection of components to the message.
         /// </summary>
-        /// <param name="components">The collection of components to add.</param>
+        /// <param name="Components">The collection of components to add.</param>
         /// <returns>The builder to chain calls with.</returns>
-        /// <exception cref="System.ArgumentException"><paramref name="components"/> contained more than 5 components.</exception>
-        public DiscordFollowupMessageBuilder AddComponents(IEnumerable<DiscordComponent> components)
+        /// <exception cref="System.ArgumentException"><paramref name="Components"/> contained more than 5 components.</exception>
+        public DiscordFollowupMessageBuilder AddComponents(IEnumerable<DiscordComponent> Components)
         {
-            var compArr = components.ToArray();
+            var compArr = Components.ToArray();
             var count = compArr.Length;
 
             if (count > 5)
@@ -136,67 +136,67 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Indicates if the followup message must use text-to-speech.
         /// </summary>
-        /// <param name="tts">Text-to-speech</param>
+        /// <param name="Tts">Text-to-speech</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordFollowupMessageBuilder WithTTS(bool tts)
+        public DiscordFollowupMessageBuilder WithTts(bool Tts)
         {
-            this.IsTTS = tts;
+            this.IsTts = Tts;
             return this;
         }
 
         /// <summary>
         /// Sets the message to send with the followup message..
         /// </summary>
-        /// <param name="content">Message to send.</param>
+        /// <param name="Content">Message to send.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordFollowupMessageBuilder WithContent(string content)
+        public DiscordFollowupMessageBuilder WithContent(string Content)
         {
-            this.Content = content;
+            this.Content = Content;
             return this;
         }
 
         /// <summary>
         /// Adds an embed to the followup message.
         /// </summary>
-        /// <param name="embed">Embed to add.</param>
+        /// <param name="Embed">Embed to add.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordFollowupMessageBuilder AddEmbed(DiscordEmbed embed)
+        public DiscordFollowupMessageBuilder AddEmbed(DiscordEmbed Embed)
         {
-            this._embeds.Add(embed);
+            this._embeds.Add(Embed);
             return this;
         }
 
         /// <summary>
         /// Adds the given embeds to the followup message.
         /// </summary>
-        /// <param name="embeds">Embeds to add.</param>
+        /// <param name="Embeds">Embeds to add.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordFollowupMessageBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
+        public DiscordFollowupMessageBuilder AddEmbeds(IEnumerable<DiscordEmbed> Embeds)
         {
-            this._embeds.AddRange(embeds);
+            this._embeds.AddRange(Embeds);
             return this;
         }
 
         /// <summary>
         /// Adds a file to the followup message.
         /// </summary>
-        /// <param name="filename">Name of the file.</param>
-        /// <param name="data">File data.</param>
-        /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
-        /// <param name="description">Description of the file.</param>
+        /// <param name="Filename">Name of the file.</param>
+        /// <param name="Data">File data.</param>
+        /// <param name="ResetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="Description">Description of the file.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordFollowupMessageBuilder AddFile(string filename, Stream data, bool resetStreamPosition = false, string description = null)
+        public DiscordFollowupMessageBuilder AddFile(string Filename, Stream Data, bool ResetStreamPosition = false, string Description = null)
         {
             if (this.Files.Count >= 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-            if (this._files.Any(x => x.FileName == filename))
+            if (this._files.Any(X => X.FileName == Filename))
                 throw new ArgumentException("A File with that filename already exists");
 
-            if (resetStreamPosition)
-                this._files.Add(new DiscordMessageFile(filename, data, data.Position, description: description));
+            if (ResetStreamPosition)
+                this._files.Add(new DiscordMessageFile(Filename, Data, Data.Position, Description: Description));
             else
-                this._files.Add(new DiscordMessageFile(filename, data, null, description: description));
+                this._files.Add(new DiscordMessageFile(Filename, Data, null, Description: Description));
 
             return this;
         }
@@ -204,22 +204,22 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sets if the message has files to be sent.
         /// </summary>
-        /// <param name="stream">The Stream to the file.</param>
-        /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
-        /// <param name="description">Description of the file.</param>
+        /// <param name="Stream">The Stream to the file.</param>
+        /// <param name="ResetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="Description">Description of the file.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordFollowupMessageBuilder AddFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+        public DiscordFollowupMessageBuilder AddFile(FileStream Stream, bool ResetStreamPosition = false, string Description = null)
         {
             if (this.Files.Count >= 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-            if (this._files.Any(x => x.FileName == stream.Name))
+            if (this._files.Any(X => X.FileName == Stream.Name))
                 throw new ArgumentException("A File with that filename already exists");
 
-            if (resetStreamPosition)
-                this._files.Add(new DiscordMessageFile(stream.Name, stream, stream.Position, description: description));
+            if (ResetStreamPosition)
+                this._files.Add(new DiscordMessageFile(Stream.Name, Stream, Stream.Position, Description: Description));
             else
-                this._files.Add(new DiscordMessageFile(stream.Name, stream, null, description: description));
+                this._files.Add(new DiscordMessageFile(Stream.Name, Stream, null, Description: Description));
 
             return this;
         }
@@ -227,20 +227,20 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds the given files to the followup message.
         /// </summary>
-        /// <param name="files">Dictionary of file name and file data.</param>
-        /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="Files">Dictionary of file name and file data.</param>
+        /// <param name="ResetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordFollowupMessageBuilder AddFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
+        public DiscordFollowupMessageBuilder AddFiles(Dictionary<string, Stream> Files, bool ResetStreamPosition = false)
         {
-            if (this.Files.Count + files.Count > 10)
+            if (this.Files.Count + Files.Count > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-            foreach (var file in files)
+            foreach (var file in Files)
             {
-                if (this._files.Any(x => x.FileName == file.Key))
+                if (this._files.Any(X => X.FileName == file.Key))
                     throw new ArgumentException("A File with that filename already exists");
 
-                if (resetStreamPosition)
+                if (ResetStreamPosition)
                     this._files.Add(new DiscordMessageFile(file.Key, file.Value, file.Value.Position));
                 else
                     this._files.Add(new DiscordMessageFile(file.Key, file.Value, null));
@@ -253,33 +253,33 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds the mention to the mentions to parse, etc. with the followup message.
         /// </summary>
-        /// <param name="mention">Mention to add.</param>
+        /// <param name="Mention">Mention to add.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordFollowupMessageBuilder AddMention(IMention mention)
+        public DiscordFollowupMessageBuilder AddMention(IMention Mention)
         {
-            this._mentions.Add(mention);
+            this._mentions.Add(Mention);
             return this;
         }
 
         /// <summary>
         /// Adds the mentions to the mentions to parse, etc. with the followup message.
         /// </summary>
-        /// <param name="mentions">Mentions to add.</param>
+        /// <param name="Mentions">Mentions to add.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordFollowupMessageBuilder AddMentions(IEnumerable<IMention> mentions)
+        public DiscordFollowupMessageBuilder AddMentions(IEnumerable<IMention> Mentions)
         {
-            this._mentions.AddRange(mentions);
+            this._mentions.AddRange(Mentions);
             return this;
         }
 
         /// <summary>
         /// Sets the followup message to be ephemeral.
         /// </summary>
-        /// <param name="ephemeral">Ephemeral.</param>
+        /// <param name="Ephemeral">Ephemeral.</param>
         /// <returns>The builder to chain calls with.</returns>
-        public DiscordFollowupMessageBuilder AsEphemeral(bool ephemeral)
+        public DiscordFollowupMessageBuilder AsEphemeral(bool Ephemeral)
         {
-            this.IsEphemeral = ephemeral;
+            this.IsEphemeral = Ephemeral;
             return this;
         }
 
@@ -296,7 +296,7 @@ namespace DisCatSharp.Entities
         {
             this.Content = "";
             this._embeds.Clear();
-            this.IsTTS = false;
+            this.IsTts = false;
             this._mentions.Clear();
             this._files.Clear();
             this.IsEphemeral = false;

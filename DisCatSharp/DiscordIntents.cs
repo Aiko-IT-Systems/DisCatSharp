@@ -32,36 +32,36 @@ namespace DisCatSharp
         /// <summary>
         /// Calculates whether these intents have a certain intent.
         /// </summary>
-        /// <param name="intents">The base intents.</param>
-        /// <param name="search">The intents to search for.</param>
+        /// <param name="Intents">The base intents.</param>
+        /// <param name="Search">The intents to search for.</param>
         /// <returns></returns>
-        public static bool HasIntent(this DiscordIntents intents, DiscordIntents search)
-            => (intents & search) == search;
+        public static bool HasIntent(this DiscordIntents Intents, DiscordIntents Search)
+            => (Intents & Search) == Search;
 
         /// <summary>
         /// Adds an intent to these intents.
         /// </summary>
-        /// <param name="intents">The base intents.</param>
-        /// <param name="toAdd">The intents to add.</param>
+        /// <param name="Intents">The base intents.</param>
+        /// <param name="ToAdd">The intents to add.</param>
         /// <returns></returns>
-        public static DiscordIntents AddIntent(this DiscordIntents intents, DiscordIntents toAdd)
-            => intents |= toAdd;
+        public static DiscordIntents AddIntent(this DiscordIntents Intents, DiscordIntents ToAdd)
+            => Intents |= ToAdd;
 
         /// <summary>
         /// Removes an intent from these intents.
         /// </summary>
-        /// <param name="intents">The base intents.</param>
-        /// <param name="toRemove">The intents to remove.</param>
+        /// <param name="Intents">The base intents.</param>
+        /// <param name="ToRemove">The intents to remove.</param>
         /// <returns></returns>
-        public static DiscordIntents RemoveIntent(this DiscordIntents intents, DiscordIntents toRemove)
-            => intents &= ~toRemove;
+        public static DiscordIntents RemoveIntent(this DiscordIntents Intents, DiscordIntents ToRemove)
+            => Intents &= ~ToRemove;
 
         /// <summary>
         /// Whether it has all privileged intents.
         /// </summary>
-        /// <param name="intents">The intents.</param>
-        internal static bool HasAllPrivilegedIntents(this DiscordIntents intents)
-            => intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences);
+        /// <param name="Intents">The intents.</param>
+        internal static bool HasAllPrivilegedIntents(this DiscordIntents Intents)
+            => Intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences);
         //    => intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences | DiscordIntents.GuildMessages);
     }
 

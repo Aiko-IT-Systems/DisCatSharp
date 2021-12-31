@@ -47,15 +47,15 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationCommandsTranslationContext"/> class.
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="name">The name.</param>
-        internal ApplicationCommandsTranslationContext(Type type, string name)
+        /// <param name="Type">The type.</param>
+        /// <param name="Name">The name.</param>
+        internal ApplicationCommandsTranslationContext(Type Type, string Name)
         {
-            this.Type = type;
-            this.Name = name;
+            this.Type = Type;
+            this.Name = Name;
         }
 
-        public void AddTranslation(string translation_json)
-            => this.Translations = translation_json;
+        public void AddTranslation(string TranslationJson)
+            => this.Translations = TranslationJson;
     }
 }

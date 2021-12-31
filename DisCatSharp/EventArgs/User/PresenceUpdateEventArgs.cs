@@ -68,6 +68,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="PresenceUpdateEventArgs"/> class.
         /// </summary>
-        internal PresenceUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+        internal PresenceUpdateEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

@@ -41,12 +41,12 @@ namespace DisCatSharp.ApplicationCommands.Attributes
         /// <summary>
         /// Runs checks.
         /// </summary>
-        public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+        public override Task<bool> ExecuteChecks(InteractionContext Ctx)
         {
-            var app = ctx.Client.CurrentApplication;
-            var me = ctx.Client.CurrentUser;
+            var app = Ctx.Client.CurrentApplication;
+            var me = Ctx.Client.CurrentUser;
 
-            return app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
+            return app != null ? Task.FromResult(app.Owners.Any(X => X.Id == Ctx.User.Id)) : Task.FromResult(Ctx.User.Id == me.Id);
         }
     }
 }

@@ -52,10 +52,10 @@ namespace DisCatSharp.Lavalink.Entities
         /// <summary>
         /// Gets the lavalink route planner type.
         /// </summary>
-        /// <param name="type">The type.</param>
-        private LavalinkRoutePlannerType? GetLavalinkRoutePlannerType(string type)
+        /// <param name="Type">The type.</param>
+        private LavalinkRoutePlannerType? GetLavalinkRoutePlannerType(string Type)
         {
-            return type switch
+            return Type switch
             {
                 "RotatingIpRoutePlanner" => LavalinkRoutePlannerType.RotatingIpRoutePlanner,
                 "BalancingIpRoutePlanner" => LavalinkRoutePlannerType.BalancingIpRoutePlanner,

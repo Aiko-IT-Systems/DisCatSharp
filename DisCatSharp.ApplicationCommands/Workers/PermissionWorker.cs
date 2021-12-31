@@ -33,31 +33,31 @@ namespace DisCatSharp.ApplicationCommands
     /// </summary>
     internal class PermissionWorker
     {
-        internal static async Task UpdateCommandPermissionAsync(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildid, ulong commandId, string commandName, Type commandDeclaringType, Type commandRootType)
+        internal static async Task UpdateCommandPermissionAsync(IEnumerable<ApplicationCommandsModuleConfiguration> Types, ulong? Guildid, ulong CommandId, string CommandName, Type CommandDeclaringType, Type CommandRootType)
         {
-            if (!guildid.HasValue)
+            if (!Guildid.HasValue)
             {
                 ApplicationCommandsExtension._client.Logger.LogTrace("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
                 return;
             }
 
-            var ctx = new ApplicationCommandsPermissionContext(commandDeclaringType, commandName);
-            var conf = types.First(t => t.Type == commandRootType);
+            var ctx = new ApplicationCommandsPermissionContext(CommandDeclaringType, CommandName);
+            var conf = Types.First(T => T.Type == CommandRootType);
             conf.Setup?.Invoke(ctx);
 
             if (ctx.Permissions.Count == 0)
                 return;
 
-            await ApplicationCommandsExtension._client.OverwriteGuildApplicationCommandPermissionsAsync(guildid.Value, commandId, ctx.Permissions);
+            await ApplicationCommandsExtension._client.OverwriteGuildApplicationCommandPermissions(Guildid.Value, CommandId, ctx.Permissions);
         }
 
-        internal static async Task UpdateCommandPermissionGroupAsync(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildid, List<KeyValuePair<Type, Type>> commandTypeSources, GroupCommand groupCommand)
+        internal static async Task UpdateCommandPermissionGroupAsync(IEnumerable<ApplicationCommandsModuleConfiguration> Types, ulong? Guildid, List<KeyValuePair<Type, Type>> CommandTypeSources, GroupCommand GroupCommand)
         {
-            foreach (var com in groupCommand.Methods)
+            foreach (var com in GroupCommand.Methods)
             {
-                var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Value.DeclaringType);
+                var source = CommandTypeSources.FirstOrDefault(F => F.Key == com.Value.DeclaringType);
 
-                await UpdateCommandPermissionAsync(types, guildid, groupCommand.CommandId, com.Key, source.Key, source.Value);
+                await UpdateCommandPermissionAsync(Types, Guildid, GroupCommand.CommandId, com.Key, source.Key, source.Value);
             }
         }
     }

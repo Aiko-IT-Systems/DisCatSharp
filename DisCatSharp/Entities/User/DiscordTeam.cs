@@ -48,7 +48,7 @@ namespace DisCatSharp.Entities
         /// Gets the team's icon.
         /// </summary>
         public string Icon
-            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TEAM_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
+            => !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TeamIcons}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
 
         /// <summary>
         /// Gets the owner of the team.
@@ -63,29 +63,29 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordTeam"/> class.
         /// </summary>
-        /// <param name="tt">The tt.</param>
-        internal DiscordTeam(TransportTeam tt)
+        /// <param name="Tt">The tt.</param>
+        internal DiscordTeam(TransportTeam Tt)
         {
-            this.Id = tt.Id;
-            this.Name = tt.Name;
-            this.IconHash = tt.IconHash;
+            this.Id = Tt.Id;
+            this.Name = Tt.Name;
+            this.IconHash = Tt.IconHash;
         }
 
         /// <summary>
         /// Compares this team to another object and returns whether they are equal.
         /// </summary>
-        /// <param name="obj">Object to compare this team to.</param>
+        /// <param name="Obj">Object to compare this team to.</param>
         /// <returns>Whether this team is equal to the given object.</returns>
-        public override bool Equals(object obj)
-            => obj is DiscordTeam other && this == other;
+        public override bool Equals(object Obj)
+            => Obj is DiscordTeam other && this == other;
 
         /// <summary>
         /// Compares this team to another team and returns whether they are equal.
         /// </summary>
-        /// <param name="other">Team to compare to.</param>
+        /// <param name="Other">Team to compare to.</param>
         /// <returns>Whether the teams are equal.</returns>
-        public bool Equals(DiscordTeam other)
-            => this == other;
+        public bool Equals(DiscordTeam Other)
+            => this == Other;
 
         /// <summary>
         /// Gets the hash code of this team.
@@ -101,11 +101,11 @@ namespace DisCatSharp.Entities
         public override string ToString()
             => $"Team: {this.Name} ({this.Id})";
 
-        public static bool operator ==(DiscordTeam left, DiscordTeam right)
-            => left?.Id == right?.Id;
+        public static bool operator ==(DiscordTeam Left, DiscordTeam Right)
+            => Left?.Id == Right?.Id;
 
-        public static bool operator !=(DiscordTeam left, DiscordTeam right)
-            => left?.Id != right?.Id;
+        public static bool operator !=(DiscordTeam Left, DiscordTeam Right)
+            => Left?.Id != Right?.Id;
     }
 
     /// <summary>
@@ -136,28 +136,28 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscordTeamMember"/> class.
         /// </summary>
-        /// <param name="ttm">The ttm.</param>
-        internal DiscordTeamMember(TransportTeamMember ttm)
+        /// <param name="Ttm">The ttm.</param>
+        internal DiscordTeamMember(TransportTeamMember Ttm)
         {
-            this.MembershipStatus = (DiscordTeamMembershipStatus)ttm.MembershipState;
-            this.Permissions = new ReadOnlySet<string>(new HashSet<string>(ttm.Permissions));
+            this.MembershipStatus = (DiscordTeamMembershipStatus)Ttm.MembershipState;
+            this.Permissions = new ReadOnlySet<string>(new HashSet<string>(Ttm.Permissions));
         }
 
         /// <summary>
         /// Compares this team member to another object and returns whether they are equal.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether this team is equal to given object.</returns>
-        public override bool Equals(object obj)
-            => obj is DiscordTeamMember other && this == other;
+        public override bool Equals(object Obj)
+            => Obj is DiscordTeamMember other && this == other;
 
         /// <summary>
         /// Compares this team member to another team member and returns whether they are equal.
         /// </summary>
-        /// <param name="other">Team member to compare to.</param>
+        /// <param name="Other">Team member to compare to.</param>
         /// <returns>Whether this team member is equal to the given one.</returns>
-        public bool Equals(DiscordTeamMember other)
-            => this == other;
+        public bool Equals(DiscordTeamMember Other)
+            => this == Other;
 
         /// <summary>
         /// Gets a hash code of this team member.
@@ -172,11 +172,11 @@ namespace DisCatSharp.Entities
         public override string ToString()
             => $"Team member: {this.User.Username}#{this.User.Discriminator} ({this.User.Id}), part of team {this.Team.Name} ({this.Team.Id})";
 
-        public static bool operator ==(DiscordTeamMember left, DiscordTeamMember right)
-            => left?.Team?.Id == right?.Team?.Id && left?.User?.Id == right?.User?.Id;
+        public static bool operator ==(DiscordTeamMember Left, DiscordTeamMember Right)
+            => Left?.Team?.Id == Right?.Team?.Id && Left?.User?.Id == Right?.User?.Id;
 
-        public static bool operator !=(DiscordTeamMember left, DiscordTeamMember right)
-            => left?.Team?.Id != right?.Team?.Id || left?.User?.Id != right?.User?.Id;
+        public static bool operator !=(DiscordTeamMember Left, DiscordTeamMember Right)
+            => Left?.Team?.Id != Right?.Team?.Id || Left?.User?.Id != Right?.User?.Id;
     }
 
     /// <summary>

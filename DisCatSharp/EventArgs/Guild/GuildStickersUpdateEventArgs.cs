@@ -49,6 +49,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="GuildStickersUpdateEventArgs"/> class.
         /// </summary>
-        internal GuildStickersUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+        internal GuildStickersUpdateEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

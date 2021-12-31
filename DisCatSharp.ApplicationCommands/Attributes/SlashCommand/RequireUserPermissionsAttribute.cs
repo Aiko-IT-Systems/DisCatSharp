@@ -44,30 +44,30 @@ namespace DisCatSharp.ApplicationCommands.Attributes
         /// <summary>
         /// Defines that usage of this command is restricted to members with specified permissions.
         /// </summary>
-        /// <param name="permissions">Permissions required to execute this command.</param>
-        /// <param name="ignoreDms">Sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that it will always fail.</param>
-        public ApplicationCommandRequireUserPermissionsAttribute(Permissions permissions, bool ignoreDms = true)
+        /// <param name="Permissions">Permissions required to execute this command.</param>
+        /// <param name="IgnoreDms">Sets this check's behaviour in DMs. True means the check will always pass in DMs, whereas false means that it will always fail.</param>
+        public ApplicationCommandRequireUserPermissionsAttribute(Permissions Permissions, bool IgnoreDms = true)
         {
-            this.Permissions = permissions;
-            this.IgnoreDms = ignoreDms;
+            this.Permissions = Permissions;
+            this.IgnoreDms = IgnoreDms;
         }
 
         /// <summary>
         /// Runs checks.
         /// </summary>
-        public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+        public override Task<bool> ExecuteChecks(InteractionContext Ctx)
         {
-            if (ctx.Guild == null)
+            if (Ctx.Guild == null)
                 return Task.FromResult(this.IgnoreDms);
 
-            var usr = ctx.Member;
+            var usr = Ctx.Member;
             if (usr == null)
                 return Task.FromResult(false);
 
-            if (usr.Id == ctx.Guild.OwnerId)
+            if (usr.Id == Ctx.Guild.OwnerId)
                 return Task.FromResult(true);
 
-            var pusr = ctx.Channel.PermissionsFor(usr);
+            var pusr = Ctx.Channel.PermissionsFor(usr);
 
             return (pusr & Permissions.Administrator) != 0
                 ? Task.FromResult(true)

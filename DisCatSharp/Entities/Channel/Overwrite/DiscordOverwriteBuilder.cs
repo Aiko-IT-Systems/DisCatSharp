@@ -54,17 +54,17 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Creates a new Discord permission overwrite builder for a member. This class can be used to construct permission overwrites for guild channels, used when creating channels.
         /// </summary>
-        public DiscordOverwriteBuilder(DiscordMember member)
+        public DiscordOverwriteBuilder(DiscordMember Member)
         {
-            this.Target = member;
+            this.Target = Member;
             this.Type = OverwriteType.Member;
         }
         /// <summary>
         /// Creates a new Discord permission overwrite builder for a role. This class can be used to construct permission overwrites for guild channels, used when creating channels.
         /// </summary>
-        public DiscordOverwriteBuilder(DiscordRole role)
+        public DiscordOverwriteBuilder(DiscordRole Role)
         {
-            this.Target = role;
+            this.Target = Role;
             this.Type = OverwriteType.Role;
         }
 
@@ -80,33 +80,33 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Allows a permission for this overwrite.
         /// </summary>
-        /// <param name="permission">Permission or permission set to allow for this overwrite.</param>
+        /// <param name="Permission">Permission or permission set to allow for this overwrite.</param>
         /// <returns>This builder.</returns>
-        public DiscordOverwriteBuilder Allow(Permissions permission)
+        public DiscordOverwriteBuilder Allow(Permissions Permission)
         {
-            this.Allowed |= permission;
+            this.Allowed |= Permission;
             return this;
         }
 
         /// <summary>
         /// Denies a permission for this overwrite.
         /// </summary>
-        /// <param name="permission">Permission or permission set to deny for this overwrite.</param>
+        /// <param name="Permission">Permission or permission set to deny for this overwrite.</param>
         /// <returns>This builder.</returns>
-        public DiscordOverwriteBuilder Deny(Permissions permission)
+        public DiscordOverwriteBuilder Deny(Permissions Permission)
         {
-            this.Denied |= permission;
+            this.Denied |= Permission;
             return this;
         }
 
         /// <summary>
         /// Sets the member to which this overwrite applies.
         /// </summary>
-        /// <param name="member">Member to which apply this overwrite's permissions.</param>
+        /// <param name="Member">Member to which apply this overwrite's permissions.</param>
         /// <returns>This builder.</returns>
-        public DiscordOverwriteBuilder For(DiscordMember member)
+        public DiscordOverwriteBuilder For(DiscordMember Member)
         {
-            this.Target = member;
+            this.Target = Member;
             this.Type = OverwriteType.Member;
             return this;
         }
@@ -114,11 +114,11 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sets the role to which this overwrite applies.
         /// </summary>
-        /// <param name="role">Role to which apply this overwrite's permissions.</param>
+        /// <param name="Role">Role to which apply this overwrite's permissions.</param>
         /// <returns>This builder.</returns>
-        public DiscordOverwriteBuilder For(DiscordRole role)
+        public DiscordOverwriteBuilder For(DiscordRole Role)
         {
-            this.Target = role;
+            this.Target = Role;
             this.Type = OverwriteType.Role;
             return this;
         }
@@ -126,14 +126,14 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Populates this builder with data from another overwrite object.
         /// </summary>
-        /// <param name="other">Overwrite from which data will be used.</param>
+        /// <param name="Other">Overwrite from which data will be used.</param>
         /// <returns>This builder.</returns>
-        public async Task<DiscordOverwriteBuilder> FromAsync(DiscordOverwrite other)
+        public async Task<DiscordOverwriteBuilder> FromAsync(DiscordOverwrite Other)
         {
-            this.Allowed = other.Allowed;
-            this.Denied = other.Denied;
-            this.Type = other.Type;
-            this.Target = this.Type == OverwriteType.Member ? await other.GetMemberAsync().ConfigureAwait(false) as SnowflakeObject : await other.GetRoleAsync().ConfigureAwait(false) as SnowflakeObject;
+            this.Allowed = Other.Allowed;
+            this.Denied = Other.Denied;
+            this.Type = Other.Type;
+            this.Target = this.Type == OverwriteType.Member ? await Other.GetMemberAsync().ConfigureAwait(false) as SnowflakeObject : await Other.GetRoleAsync().ConfigureAwait(false) as SnowflakeObject;
 
             return this;
         }

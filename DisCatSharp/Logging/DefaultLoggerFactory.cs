@@ -40,19 +40,19 @@ namespace DisCatSharp
         /// <summary>
         /// Adds a provider.
         /// </summary>
-        /// <param name="provider">The provider to be added.</param>
-        public void AddProvider(ILoggerProvider provider) => this.Providers.Add(provider);
+        /// <param name="Provider">The provider to be added.</param>
+        public void AddProvider(ILoggerProvider Provider) => this.Providers.Add(Provider);
 
         /// <summary>
         /// Creates the logger.
         /// </summary>
-        /// <param name="categoryName">The category name.</param>
-        public ILogger CreateLogger(string categoryName)
+        /// <param name="CategoryName">The category name.</param>
+        public ILogger CreateLogger(string CategoryName)
         {
             return this._isDisposed
                 ? throw new InvalidOperationException("This logger factory is already disposed.")
-                : categoryName != typeof(BaseDiscordClient).FullName && categoryName != typeof(DiscordWebhookClient).FullName
-                ? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName} or {typeof(DiscordWebhookClient).FullName}.", nameof(categoryName))
+                : CategoryName != typeof(BaseDiscordClient).FullName && CategoryName != typeof(DiscordWebhookClient).FullName
+                ? throw new ArgumentException($"This factory can only provide instances of loggers for {typeof(BaseDiscordClient).FullName} or {typeof(DiscordWebhookClient).FullName}.", nameof(CategoryName))
                 : new CompositeDefaultLogger(this.Providers);
         }
 

@@ -71,35 +71,35 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Creates a new audio format for use with Opus encoder.
         /// </summary>
-        /// <param name="sampleRate">Audio sampling rate in Hz.</param>
-        /// <param name="channelCount">Number of audio channels in the data.</param>
-        /// <param name="voiceApplication">Encoder preset to use.</param>
-        public AudioFormat(int sampleRate = 48000, int channelCount = 2, VoiceApplication voiceApplication = VoiceApplication.Music)
+        /// <param name="SampleRate">Audio sampling rate in Hz.</param>
+        /// <param name="ChannelCount">Number of audio channels in the data.</param>
+        /// <param name="VoiceApplication">Encoder preset to use.</param>
+        public AudioFormat(int SampleRate = 48000, int ChannelCount = 2, VoiceApplication VoiceApplication = VoiceApplication.Music)
         {
-            if (!AllowedSampleRates.Contains(sampleRate))
-                throw new ArgumentOutOfRangeException(nameof(sampleRate), "Invalid sample rate specified.");
+            if (!AllowedSampleRates.Contains(SampleRate))
+                throw new ArgumentOutOfRangeException(nameof(SampleRate), "Invalid sample rate specified.");
 
-            if (!AllowedChannelCounts.Contains(channelCount))
-                throw new ArgumentOutOfRangeException(nameof(channelCount), "Invalid channel count specified.");
+            if (!AllowedChannelCounts.Contains(ChannelCount))
+                throw new ArgumentOutOfRangeException(nameof(ChannelCount), "Invalid channel count specified.");
 
-            if (voiceApplication != VoiceApplication.Music && voiceApplication != VoiceApplication.Voice && voiceApplication != VoiceApplication.LowLatency)
-                throw new ArgumentOutOfRangeException(nameof(voiceApplication), "Invalid voice application specified.");
+            if (VoiceApplication != VoiceApplication.Music && VoiceApplication != VoiceApplication.Voice && VoiceApplication != VoiceApplication.LowLatency)
+                throw new ArgumentOutOfRangeException(nameof(VoiceApplication), "Invalid voice application specified.");
 
-            this.SampleRate = sampleRate;
-            this.ChannelCount = channelCount;
-            this.VoiceApplication = voiceApplication;
+            this.SampleRate = SampleRate;
+            this.ChannelCount = ChannelCount;
+            this.VoiceApplication = VoiceApplication;
         }
 
         /// <summary>
         /// Calculates a sample size in bytes.
         /// </summary>
-        /// <param name="sampleDuration">Millsecond duration of a sample.</param>
+        /// <param name="SampleDuration">Millsecond duration of a sample.</param>
         /// <returns>Calculated sample size in bytes.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int CalculateSampleSize(int sampleDuration)
+        public int CalculateSampleSize(int SampleDuration)
         {
-            if (!AllowedSampleDurations.Contains(sampleDuration))
-                throw new ArgumentOutOfRangeException(nameof(sampleDuration), "Invalid sample duration specified.");
+            if (!AllowedSampleDurations.Contains(SampleDuration))
+                throw new ArgumentOutOfRangeException(nameof(SampleDuration), "Invalid sample duration specified.");
 
             // Sample size in bytes is a product of the following:
             // - duration in milliseconds
@@ -107,7 +107,7 @@ namespace DisCatSharp.VoiceNext
             // - sample rate in kHz
             // - size of data (in this case, sizeof(int16_t))
             // which comes down to below:
-            return sampleDuration * this.ChannelCount * (this.SampleRate / 1000) * 2;
+            return SampleDuration * this.ChannelCount * (this.SampleRate / 1000) * 2;
         }
 
         /// <summary>
@@ -121,20 +121,20 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Calculates the sample duration.
         /// </summary>
-        /// <param name="sampleSize">The sample size.</param>
+        /// <param name="SampleSize">The sample size.</param>
         /// <returns>An int.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal int CalculateSampleDuration(int sampleSize)
-            => sampleSize / (this.SampleRate / 1000) / this.ChannelCount / 2 /* sizeof(int16_t) */;
+        internal int CalculateSampleDuration(int SampleSize)
+            => SampleSize / (this.SampleRate / 1000) / this.ChannelCount / 2 /* sizeof(int16_t) */;
 
         /// <summary>
         /// Calculates the frame size.
         /// </summary>
-        /// <param name="sampleDuration">The sample duration.</param>
+        /// <param name="SampleDuration">The sample duration.</param>
         /// <returns>An int.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal int CalculateFrameSize(int sampleDuration)
-            => sampleDuration * (this.SampleRate / 1000);
+        internal int CalculateFrameSize(int SampleDuration)
+            => SampleDuration * (this.SampleRate / 1000);
 
         /// <summary>
         /// Calculates the maximum frame size.
@@ -147,11 +147,11 @@ namespace DisCatSharp.VoiceNext
         /// <summary>
         /// Samples the count to sample size.
         /// </summary>
-        /// <param name="sampleCount">The sample count.</param>
+        /// <param name="SampleCount">The sample count.</param>
         /// <returns>An int.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal int SampleCountToSampleSize(int sampleCount)
-            => sampleCount * this.ChannelCount * 2 /* sizeof(int16_t) */;
+        internal int SampleCountToSampleSize(int SampleCount)
+            => SampleCount * this.ChannelCount * 2 /* sizeof(int16_t) */;
 
         /// <summary>
         /// Are the valid.

@@ -37,43 +37,43 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Enables application commands on this <see cref="DiscordClient"/>.
         /// </summary>
-        /// <param name="client">Client to enable application commands for.</param>
-        /// <param name="config">Configuration to use.</param>
+        /// <param name="Client">Client to enable application commands for.</param>
+        /// <param name="Config">Configuration to use.</param>
         /// <returns>Created <see cref="ApplicationCommandsExtension"/>.</returns>
-        public static ApplicationCommandsExtension UseApplicationCommands(this DiscordClient client,
-            ApplicationCommandsConfiguration config = null)
+        public static ApplicationCommandsExtension UseApplicationCommands(this DiscordClient Client,
+            ApplicationCommandsConfiguration Config = null)
         {
-            if (client.GetExtension<ApplicationCommandsExtension>() != null)
+            if (Client.GetExtension<ApplicationCommandsExtension>() != null)
                 throw new InvalidOperationException("Application commands are already enabled for that client.");
 
-            var scomm = new ApplicationCommandsExtension(config);
-            client.AddExtension(scomm);
+            var scomm = new ApplicationCommandsExtension(Config);
+            Client.AddExtension(scomm);
             return scomm;
         }
 
         /// <summary>
         /// Gets the application commands module for this client.
         /// </summary>
-        /// <param name="client">Client to get application commands for.</param>
+        /// <param name="Client">Client to get application commands for.</param>
         /// <returns>The module, or null if not activated.</returns>
-        public static ApplicationCommandsExtension GetApplicationCommands(this DiscordClient client)
-            => client.GetExtension<ApplicationCommandsExtension>();
+        public static ApplicationCommandsExtension GetApplicationCommands(this DiscordClient Client)
+            => Client.GetExtension<ApplicationCommandsExtension>();
 
         /// <summary>
         /// Enables application commands on this <see cref="DiscordShardedClient"/>.
         /// </summary>
-        /// <param name="client">Client to enable application commands on.</param>
-        /// <param name="config">Configuration to use.</param>
+        /// <param name="Client">Client to enable application commands on.</param>
+        /// <param name="Config">Configuration to use.</param>
         /// <returns>A dictionary of created <see cref="ApplicationCommandsExtension"/> with the key being the shard id.</returns>
-        public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> UseApplicationCommandsAsync(this DiscordShardedClient client, ApplicationCommandsConfiguration config = null)
+        public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> UseApplicationCommandsAsync(this DiscordShardedClient Client, ApplicationCommandsConfiguration Config = null)
         {
             var modules = new Dictionary<int, ApplicationCommandsExtension>();
-            await (Task)client.GetType().GetMethod("InitializeShardsAsync", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(client, null);
-            foreach (var shard in client.ShardClients.Values)
+            await (Task)Client.GetType().GetMethod("InitializeShardsAsync", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(Client, null);
+            foreach (var shard in Client.ShardClients.Values)
             {
                 var scomm = shard.GetApplicationCommands();
                 if (scomm == null)
-                    scomm = shard.UseApplicationCommands(config);
+                    scomm = shard.UseApplicationCommands(Config);
 
                 modules[shard.ShardId] = scomm;
             }
@@ -85,40 +85,40 @@ namespace DisCatSharp.ApplicationCommands
         /// Registers a commands class.
         /// </summary>
         /// <typeparam name="T">The command class to register.</typeparam>
-        /// <param name="modules">The modules to register it on.</param>
-        /// <param name="guildId">The guild id to register it on. If you want global commands, leave it null.</param>
-        public static void RegisterCommands<T>(this IReadOnlyDictionary<int, ApplicationCommandsExtension> modules, ulong? guildId = null) where T : ApplicationCommandsModule
+        /// <param name="Modules">The modules to register it on.</param>
+        /// <param name="GuildId">The guild id to register it on. If you want global commands, leave it null.</param>
+        public static void RegisterCommands<T>(this IReadOnlyDictionary<int, ApplicationCommandsExtension> Modules, ulong? GuildId = null) where T : ApplicationCommandsModule
         {
-            foreach (var module in modules.Values)
-                module.RegisterCommands<T>(guildId);
+            foreach (var module in Modules.Values)
+                module.RegisterCommands<T>(GuildId);
         }
 
         /// <summary>
         /// Registers a command class.
         /// </summary>
-        /// <param name="modules">The modules to register it on.</param>
-        /// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
-        /// <param name="guildId">The guild id to register it on. If you want global commands, leave it null.</param>
-        public static void RegisterCommands(this IReadOnlyDictionary<int, ApplicationCommandsExtension> modules, Type type, ulong? guildId = null)
+        /// <param name="Modules">The modules to register it on.</param>
+        /// <param name="Type">The <see cref="System.Type"/> of the command class to register.</param>
+        /// <param name="GuildId">The guild id to register it on. If you want global commands, leave it null.</param>
+        public static void RegisterCommands(this IReadOnlyDictionary<int, ApplicationCommandsExtension> Modules, Type Type, ulong? GuildId = null)
         {
-            foreach (var module in modules.Values)
-                module.RegisterCommands(type, guildId);
+            foreach (var module in Modules.Values)
+                module.RegisterCommands(Type, GuildId);
         }
 
         /// <summary>
         /// Gets the name from the <see cref="ChoiceNameAttribute"/> for this enum value.
         /// </summary>
         /// <returns>The name.</returns>
-        public static string GetName<T>(this T e) where T : IConvertible
+        public static string GetName<T>(this T E) where T : IConvertible
         {
-            if (e is Enum)
+            if (E is Enum)
             {
-                var type = e.GetType();
+                var type = E.GetType();
                 var values = Enum.GetValues(type);
 
                 foreach (int val in values)
                 {
-                    if (val == e.ToInt32(CultureInfo.InvariantCulture))
+                    if (val == E.ToInt32(CultureInfo.InvariantCulture))
                     {
                         var memInfo = type.GetMember(type.GetEnumName(val));
 

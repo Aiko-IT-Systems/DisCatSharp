@@ -76,18 +76,18 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Checks whether this <see cref="DiscordScheduledEventUser"/> is equal to another object.
         /// </summary>
-        /// <param name="obj">Object to compare to.</param>
+        /// <param name="Obj">Object to compare to.</param>
         /// <returns>Whether the object is equal to this <see cref="DiscordScheduledEventUser"/>.</returns>
-        public override bool Equals(object obj)
-            => this.Equals(obj as DiscordScheduledEventUser);
+        public override bool Equals(object Obj)
+            => this.Equals(Obj as DiscordScheduledEventUser);
 
         /// <summary>
         /// Checks whether this <see cref="DiscordScheduledEventUser"/> is equal to another <see cref="DiscordScheduledEventUser"/>.
         /// </summary>
-        /// <param name="e"><see cref="DiscordScheduledEventUser"/> to compare to.</param>
+        /// <param name="E"><see cref="DiscordScheduledEventUser"/> to compare to.</param>
         /// <returns>Whether the <see cref="DiscordScheduledEventUser"/> is equal to this <see cref="DiscordScheduledEventUser"/>.</returns>
-        public bool Equals(DiscordScheduledEventUser e)
-            => e is not null && (ReferenceEquals(this, e) || HashCode.Combine(this.User.Id, this.EventId) == HashCode.Combine(e.User.Id, e.EventId));
+        public bool Equals(DiscordScheduledEventUser E)
+            => E is not null && (ReferenceEquals(this, E) || HashCode.Combine(this.User.Id, this.EventId) == HashCode.Combine(E.User.Id, E.EventId));
 
         /// <summary>
         /// Gets the hash code for this <see cref="DiscordScheduledEventUser"/>.
@@ -98,24 +98,24 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets whether the two <see cref="DiscordScheduledEventUser"/> objects are equal.
         /// </summary>
-        /// <param name="e1">First event to compare.</param>
-        /// <param name="e2">Second ecent to compare.</param>
+        /// <param name="E1">First event to compare.</param>
+        /// <param name="E2">Second ecent to compare.</param>
         /// <returns>Whether the two events are equal.</returns>
-        public static bool operator ==(DiscordScheduledEventUser e1, DiscordScheduledEventUser e2)
+        public static bool operator ==(DiscordScheduledEventUser E1, DiscordScheduledEventUser E2)
         {
-            var o1 = e1 as object;
-            var o2 = e2 as object;
+            var o1 = E1 as object;
+            var o2 = E2 as object;
 
-            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || HashCode.Combine(e1.User.Id, e1.EventId) == HashCode.Combine(e2.User.Id, e2.EventId));
+            return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || HashCode.Combine(E1.User.Id, E1.EventId) == HashCode.Combine(E2.User.Id, E2.EventId));
         }
 
         /// <summary>
         /// Gets whether the two <see cref="DiscordScheduledEventUser"/> objects are not equal.
         /// </summary>
-        /// <param name="e1">First event to compare.</param>
-        /// <param name="e2">Second event to compare.</param>
+        /// <param name="E1">First event to compare.</param>
+        /// <param name="E2">Second event to compare.</param>
         /// <returns>Whether the two events are not equal.</returns>
-        public static bool operator !=(DiscordScheduledEventUser e1, DiscordScheduledEventUser e2)
-            => !(e1 == e2);
+        public static bool operator !=(DiscordScheduledEventUser E1, DiscordScheduledEventUser E2)
+            => !(E1 == E2);
     }
 }

@@ -70,10 +70,10 @@ namespace DisCatSharp.Net.Abstractions
         /// <summary>
         /// Initializes a new instance of the <see cref="GatewayRequestGuildMembers"/> class.
         /// </summary>
-        /// <param name="guild">The guild.</param>
-        public GatewayRequestGuildMembers(DiscordGuild guild)
+        /// <param name="Guild">The guild.</param>
+        public GatewayRequestGuildMembers(DiscordGuild Guild)
         {
-            this.GuildId = guild.Id;
+            this.GuildId = Guild.Id;
         }
     }
 }

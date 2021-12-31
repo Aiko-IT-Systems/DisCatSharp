@@ -39,10 +39,10 @@ namespace DisCatSharp.ApplicationCommands
         /// <summary>
         /// Defines this application command module's lifespan.
         /// </summary>
-        /// <param name="lifespan">The lifespan of the module. Module lifespans are transient by default.</param>
-        public ApplicationCommandModuleLifespanAttribute(ApplicationCommandModuleLifespan lifespan)
+        /// <param name="Lifespan">The lifespan of the module. Module lifespans are transient by default.</param>
+        public ApplicationCommandModuleLifespanAttribute(ApplicationCommandModuleLifespan Lifespan)
         {
-            this.Lifespan = lifespan;
+            this.Lifespan = Lifespan;
         }
     }
 

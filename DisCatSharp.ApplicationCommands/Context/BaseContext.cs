@@ -110,71 +110,71 @@ namespace DisCatSharp.ApplicationCommands
         /// Creates a response to this interaction.
         /// <para>You must create a response within 3 seconds of this interaction being executed; if the command has the potential to take more than 3 seconds, create a <see cref="InteractionResponseType.DeferredChannelMessageWithSource"/> at the start, and edit the response later.</para>
         /// </summary>
-        /// <param name="type">The type of the response.</param>
-        /// <param name="builder">The data to be sent, if any.</param>
+        /// <param name="Type">The type of the response.</param>
+        /// <param name="Builder">The data to be sent, if any.</param>
         /// <returns></returns>
-        public Task CreateResponseAsync(InteractionResponseType type, DiscordInteractionResponseBuilder builder = null)
-            => this.Interaction.CreateResponseAsync(type, builder);
+        public Task CreateResponse(InteractionResponseType Type, DiscordInteractionResponseBuilder Builder = null)
+            => this.Interaction.CreateResponse(Type, Builder);
 
         /// <summary>
         /// Creates a modal response to this interaction.
         /// </summary>
-        /// <param name="builder">The data to send.</param>
-        public Task CreateModalResponseAsync(DiscordInteractionModalBuilder builder)
-            => this.Interaction.Type != InteractionType.Ping && this.Interaction.Type != InteractionType.ModalSubmit ? this.Interaction.CreateInteractionModalResponseAsync(builder) : throw new NotSupportedException("You can't respond to an PING with a modal.");
+        /// <param name="Builder">The data to send.</param>
+        public Task CreateModalResponse(DiscordInteractionModalBuilder Builder)
+            => this.Interaction.Type != InteractionType.Ping && this.Interaction.Type != InteractionType.ModalSubmit ? this.Interaction.CreateInteractionModalResponse(Builder) : throw new NotSupportedException("You can't respond to an PING with a modal.");
 
         /// <summary>
         /// Edits the interaction response.
         /// </summary>
-        /// <param name="builder">The data to edit the response with.</param>
+        /// <param name="Builder">The data to edit the response with.</param>
         /// <returns></returns>
-        public Task<DiscordMessage> EditResponseAsync(DiscordWebhookBuilder builder)
-            => this.Interaction.EditOriginalResponseAsync(builder);
+        public Task<DiscordMessage> EditResponse(DiscordWebhookBuilder Builder)
+            => this.Interaction.EditOriginalResponseAsync(Builder);
 
         /// <summary>
         /// Deletes the interaction response.
         /// </summary>
         /// <returns></returns>
-        public Task DeleteResponseAsync()
-            => this.Interaction.DeleteOriginalResponseAsync();
+        public Task DeleteResponse()
+            => this.Interaction.DeleteOriginalResponse();
 
         /// <summary>
         /// Creates a follow up message to the interaction.
         /// </summary>
-        /// <param name="builder">The message to be sent, in the form of a webhook.</param>
+        /// <param name="Builder">The message to be sent, in the form of a webhook.</param>
         /// <returns>The created message.</returns>
-        public Task<DiscordMessage> FollowUpAsync(DiscordFollowupMessageBuilder builder)
-            => this.Interaction.CreateFollowupMessageAsync(builder);
+        public Task<DiscordMessage> FollowUp(DiscordFollowupMessageBuilder Builder)
+            => this.Interaction.CreateFollowupMessageAsync(Builder);
 
         /// <summary>
         /// Edits a followup message.
         /// </summary>
-        /// <param name="followupMessageId">The id of the followup message to edit.</param>
-        /// <param name="builder">The webhook builder.</param>
+        /// <param name="FollowupMessageId">The id of the followup message to edit.</param>
+        /// <param name="Builder">The webhook builder.</param>
         /// <returns></returns>
-        public Task<DiscordMessage> EditFollowupAsync(ulong followupMessageId, DiscordWebhookBuilder builder)
-            => this.Interaction.EditFollowupMessageAsync(followupMessageId, builder);
+        public Task<DiscordMessage> EditFollowup(ulong FollowupMessageId, DiscordWebhookBuilder Builder)
+            => this.Interaction.EditFollowupMessageAsync(FollowupMessageId, Builder);
 
         /// <summary>
         /// Deletes a followup message.
         /// </summary>
-        /// <param name="followupMessageId">The id of the followup message to delete.</param>
+        /// <param name="FollowupMessageId">The id of the followup message to delete.</param>
         /// <returns></returns>
-        public Task DeleteFollowupAsync(ulong followupMessageId)
-            => this.Interaction.DeleteFollowupMessageAsync(followupMessageId);
+        public Task DeleteFollowup(ulong FollowupMessageId)
+            => this.Interaction.DeleteFollowupMessage(FollowupMessageId);
 
         /// <summary>
         /// Gets the followup message.
         /// </summary>
-        /// <param name="followupMessageId">The followup message id.</param>
-        public Task<DiscordMessage> GetFollowupMessageAsync(ulong followupMessageId)
-            => this.Interaction.GetFollowupMessageAsync(followupMessageId);
+        /// <param name="FollowupMessageId">The followup message id.</param>
+        public Task<DiscordMessage> GetFollowupMessage(ulong FollowupMessageId)
+            => this.Interaction.GetFollowupMessage(FollowupMessageId);
 
         /// <summary>
         /// Gets the original interaction response.
         /// </summary>
         /// <returns>The original interaction response.</returns>
-        public Task<DiscordMessage> GetOriginalResponseAsync()
-             => this.Interaction.GetOriginalResponseAsync();
+        public Task<DiscordMessage> GetOriginalResponse()
+             => this.Interaction.GetOriginalResponse();
     }
 }

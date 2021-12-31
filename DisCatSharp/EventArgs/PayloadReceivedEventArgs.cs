@@ -57,6 +57,6 @@ namespace DisCatSharp.EventArgs
         /// <summary>
         /// Initializes a new instance of the <see cref="PayloadReceivedEventArgs"/> class.
         /// </summary>
-        internal PayloadReceivedEventArgs(IServiceProvider provider) : base(provider) { }
+        internal PayloadReceivedEventArgs(IServiceProvider Provider) : base(Provider) { }
     }
 }

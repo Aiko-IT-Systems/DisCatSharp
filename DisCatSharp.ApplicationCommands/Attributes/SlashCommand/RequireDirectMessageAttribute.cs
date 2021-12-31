@@ -41,7 +41,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
         /// <summary>
         /// Runs checks.
         /// </summary>
-        public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-            => Task.FromResult(ctx.Channel is DiscordDmChannel);
+        public override Task<bool> ExecuteChecks(InteractionContext Ctx)
+            => Task.FromResult(Ctx.Channel is DiscordDmChannel);
     }
 }

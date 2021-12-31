@@ -51,23 +51,23 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Initializes a new instance of the <see cref="MultipartWebRequest"/> class.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="bucket">The bucket.</param>
-        /// <param name="url">The url.</param>
-        /// <param name="method">The method.</param>
-        /// <param name="route">The route.</param>
-        /// <param name="headers">The headers.</param>
-        /// <param name="values">The values.</param>
-        /// <param name="files">The files.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="Bucket">The bucket.</param>
+        /// <param name="Url">The url.</param>
+        /// <param name="Method">The method.</param>
+        /// <param name="Route">The route.</param>
+        /// <param name="Headers">The headers.</param>
+        /// <param name="Values">The values.</param>
+        /// <param name="Files">The files.</param>
         /// <param name="ratelimit_wait_override">The ratelimit_wait_override.</param>
         /// <param name="overwrite_file_id_start">The file id start.</param>
-        internal MultipartWebRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, IReadOnlyDictionary<string, string> values = null,
-            IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimit_wait_override = null, int? overwrite_file_id_start = null)
-            : base(client, bucket, url, method, route, headers, ratelimit_wait_override)
+        internal MultipartWebRequest(BaseDiscordClient Client, RateLimitBucket Bucket, Uri Url, RestRequestMethod Method, string Route, IReadOnlyDictionary<string, string> Headers = null, IReadOnlyDictionary<string, string> Values = null,
+            IReadOnlyCollection<DiscordMessageFile> Files = null, double? RatelimitWaitOverride = null, int? OverwriteFileIdStart = null)
+            : base(Client, Bucket, Url, Method, Route, Headers, RatelimitWaitOverride)
         {
-            this.Values = values;
-            this.OverwriteFileIdStart = overwrite_file_id_start;
-            this.Files = files.ToDictionary(x => x.FileName, x => x.Stream);
+            this.Values = Values;
+            this.OverwriteFileIdStart = OverwriteFileIdStart;
+            this.Files = Files.ToDictionary(X => X.FileName, X => X.Stream);
         }
     }
 
@@ -100,25 +100,25 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Initializes a new instance of the <see cref="MultipartStickerWebRequest"/> class.
         /// </summary>
-        /// <param name="client">The client.</param>
-        /// <param name="bucket">The bucket.</param>
-        /// <param name="url">The url.</param>
-        /// <param name="method">The method.</param>
-        /// <param name="route">The route.</param>
-        /// <param name="headers">The headers.</param>
-        /// <param name="file">The file.</param>
-        /// <param name="name">The sticker name.</param>
-        /// <param name="tags">The sticker tag.</param>
-        /// <param name="description">The sticker description.</param>
+        /// <param name="Client">The client.</param>
+        /// <param name="Bucket">The bucket.</param>
+        /// <param name="Url">The url.</param>
+        /// <param name="Method">The method.</param>
+        /// <param name="Route">The route.</param>
+        /// <param name="Headers">The headers.</param>
+        /// <param name="File">The file.</param>
+        /// <param name="Name">The sticker name.</param>
+        /// <param name="Tags">The sticker tag.</param>
+        /// <param name="Description">The sticker description.</param>
         /// <param name="ratelimit_wait_override">The ratelimit_wait_override.</param>
-        internal MultipartStickerWebRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null,
-            DiscordMessageFile file = null, string name = "", string tags = "", string description = "", double? ratelimit_wait_override = null)
-            : base(client, bucket, url, method, route, headers, ratelimit_wait_override)
+        internal MultipartStickerWebRequest(BaseDiscordClient Client, RateLimitBucket Bucket, Uri Url, RestRequestMethod Method, string Route, IReadOnlyDictionary<string, string> Headers = null,
+            DiscordMessageFile File = null, string Name = "", string Tags = "", string Description = "", double? RatelimitWaitOverride = null)
+            : base(Client, Bucket, Url, Method, Route, Headers, RatelimitWaitOverride)
         {
-            this.File = file;
-            this.Name = name;
-            this.Description = description;
-            this.Tags = tags;
+            this.File = File;
+            this.Name = Name;
+            this.Description = Description;
+            this.Tags = Tags;
         }
     }
 }

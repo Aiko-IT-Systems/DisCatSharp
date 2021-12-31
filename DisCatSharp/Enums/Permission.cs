@@ -32,32 +32,32 @@ namespace DisCatSharp
         /// <summary>
         /// Gets the full permissions enum (long).
         /// </summary>
-        internal static Permissions FULL_PERMS { get; } = (Permissions)2199023255551L;
+        internal static Permissions FullPerms { get; } = (Permissions)2199023255551L;
 
         /// <summary>
         /// Calculates whether this permission set contains the given permission.
         /// </summary>
-        /// <param name="p">The permissions to calculate from</param>
-        /// <param name="permission">permission you want to check</param>
+        /// <param name="P">The permissions to calculate from</param>
+        /// <param name="Permission">permission you want to check</param>
         /// <returns></returns>
-        public static bool HasPermission(this Permissions p, Permissions permission)
-            => p.HasFlag(Permissions.Administrator) || (p & permission) == permission;
+        public static bool HasPermission(this Permissions P, Permissions Permission)
+            => P.HasFlag(Permissions.Administrator) || (P & Permission) == Permission;
 
         /// <summary>
         /// Grants permissions.
         /// </summary>
-        /// <param name="p">The permissions to add to.</param>
-        /// <param name="grant">Permission to add.</param>
+        /// <param name="P">The permissions to add to.</param>
+        /// <param name="Grant">Permission to add.</param>
         /// <returns></returns>
-        public static Permissions Grant(this Permissions p, Permissions grant) => p | grant;
+        public static Permissions Grant(this Permissions P, Permissions Grant) => P | Grant;
 
         /// <summary>
         /// Revokes permissions.
         /// </summary>
-        /// <param name="p">The permissions to take from.</param>
-        /// <param name="revoke">Permission to take.</param>
+        /// <param name="P">The permissions to take from.</param>
+        /// <param name="Revoke">Permission to take.</param>
         /// <returns></returns>
-        public static Permissions Revoke(this Permissions p, Permissions revoke) => p & ~revoke;
+        public static Permissions Revoke(this Permissions P, Permissions Revoke) => P & ~Revoke;
     }
 
     /// <summary>
@@ -328,13 +328,13 @@ namespace DisCatSharp
         SendMessagesInThreads = 0x0000004000000000,
 
         /// <summary>
-        /// Allows for launching activities (applications with the `EMBEDDED` flag) in a voice channel.     
+        /// Allows for launching activities (applications with the `EMBEDDED` flag) in a voice channel.
         /// </summary>
         [PermissionString("Start Embedded Activities")]
         StartEmbeddedActivities = 0x0000008000000000,
 
         /// <summary>
-        /// Allows to perform limited moderation actions (timeout).     
+        /// Allows to perform limited moderation actions (timeout).
         /// </summary>
         [PermissionString("Moderate Members")]
         ModerateMembers = 0x0000010000000000
@@ -354,10 +354,10 @@ namespace DisCatSharp
         /// <summary>
         /// Defines a readable name for this permission.
         /// </summary>
-        /// <param name="str">Readable name for this permission.</param>
-        public PermissionStringAttribute(string str)
+        /// <param name="Str">Readable name for this permission.</param>
+        public PermissionStringAttribute(string Str)
         {
-            this.String = str;
+            this.String = Str;
         }
     }
 }

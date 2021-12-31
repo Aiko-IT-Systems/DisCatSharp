@@ -42,14 +42,14 @@ namespace DisCatSharp.VoiceNext.Entities
         /// <summary>
         /// Initializes a new instance of the <see cref="VoicePacket"/> class.
         /// </summary>
-        /// <param name="bytes">The bytes.</param>
-        /// <param name="msDuration">The ms duration.</param>
-        /// <param name="isSilence">If true, is silence.</param>
-        public VoicePacket(ReadOnlyMemory<byte> bytes, int msDuration, bool isSilence = false)
+        /// <param name="Bytes">The bytes.</param>
+        /// <param name="MsDuration">The ms duration.</param>
+        /// <param name="IsSilence">If true, is silence.</param>
+        public VoicePacket(ReadOnlyMemory<byte> Bytes, int MsDuration, bool IsSilence = false)
         {
-            this.Bytes = bytes;
-            this.MillisecondDuration = msDuration;
-            this.IsSilence = isSilence;
+            this.Bytes = Bytes;
+            this.MillisecondDuration = MsDuration;
+            this.IsSilence = IsSilence;
         }
     }
 }

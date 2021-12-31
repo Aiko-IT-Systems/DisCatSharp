@@ -52,17 +52,17 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Gets a value corresponding to given key in this dictionary.
         /// </summary>
-        /// <param name="key">Key to get or set the value for.</param>
+        /// <param name="Key">Key to get or set the value for.</param>
         /// <returns>Value matching the supplied key, if applicable.</returns>
-        public TValue this[string key]
+        public TValue this[string Key]
         {
             get
             {
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
+                if (Key == null)
+                    throw new ArgumentNullException(nameof(Key));
 
-                if (!this.TryRetrieveInternal(key.AsSpan(), out var value))
-                    throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.");
+                if (!this.TryRetrieveInternal(Key.AsSpan(), out var value))
+                    throw new KeyNotFoundException($"The given key '{Key}' was not present in the dictionary.");
 
                 return value;
             }
@@ -71,13 +71,13 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Gets a value corresponding to given key in this dictionary.
         /// </summary>
-        /// <param name="key">Key to get or set the value for.</param>
+        /// <param name="Key">Key to get or set the value for.</param>
         /// <returns>Value matching the supplied key, if applicable.</returns>
-        public TValue this[ReadOnlySpan<char> key]
+        public TValue this[ReadOnlySpan<char> Key]
         {
             get
             {
-                if (!this.TryRetrieveInternal(key, out var value))
+                if (!this.TryRetrieveInternal(Key, out var value))
                     throw new KeyNotFoundException($"The given key was not present in the dictionary.");
 
                 return value;
@@ -92,67 +92,67 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Creates a new <see cref="CharSpanLookupReadOnlyDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied dictionary.
         /// </summary>
-        /// <param name="values">Dictionary containing items to populate this dictionary with.</param>
-        public CharSpanLookupReadOnlyDictionary(IDictionary<string, TValue> values)
-            : this(values as IEnumerable<KeyValuePair<string, TValue>>)
+        /// <param name="Values">Dictionary containing items to populate this dictionary with.</param>
+        public CharSpanLookupReadOnlyDictionary(IDictionary<string, TValue> Values)
+            : this(Values as IEnumerable<KeyValuePair<string, TValue>>)
         { }
 
         /// <summary>
         /// Creates a new <see cref="CharSpanLookupReadOnlyDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied dictionary.
         /// </summary>
-        /// <param name="values">Dictionary containing items to populate this dictionary with.</param>
-        public CharSpanLookupReadOnlyDictionary(IReadOnlyDictionary<string, TValue> values)
-            : this(values as IEnumerable<KeyValuePair<string, TValue>>)
+        /// <param name="Values">Dictionary containing items to populate this dictionary with.</param>
+        public CharSpanLookupReadOnlyDictionary(IReadOnlyDictionary<string, TValue> Values)
+            : this(Values as IEnumerable<KeyValuePair<string, TValue>>)
         { }
 
         /// <summary>
         /// Creates a new <see cref="CharSpanLookupReadOnlyDictionary{TValue}"/> with string keys and items of type <typeparamref name="TValue"/> and populates it with key-value pairs from supplied key-value collection.
         /// </summary>
-        /// <param name="values">Dictionary containing items to populate this dictionary with.</param>
-        public CharSpanLookupReadOnlyDictionary(IEnumerable<KeyValuePair<string, TValue>> values)
+        /// <param name="Values">Dictionary containing items to populate this dictionary with.</param>
+        public CharSpanLookupReadOnlyDictionary(IEnumerable<KeyValuePair<string, TValue>> Values)
         {
-            this.InternalBuckets = PrepareItems(values, out var count);
+            this.InternalBuckets = PrepareItems(Values, out var count);
             this.Count = count;
         }
 
         /// <summary>
         /// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
         /// </summary>
-        /// <param name="key">Key to retrieve the value for.</param>
-        /// <param name="value">Retrieved value.</param>
+        /// <param name="Key">Key to retrieve the value for.</param>
+        /// <param name="Value">Retrieved value.</param>
         /// <returns>Whether the operation was successful.</returns>
-        public bool TryGetValue(string key, out TValue value)
+        public bool TryGetValue(string Key, out TValue Value)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
+            if (Key == null)
+                throw new ArgumentNullException(nameof(Key));
 
-            return this.TryRetrieveInternal(key.AsSpan(), out value);
+            return this.TryRetrieveInternal(Key.AsSpan(), out Value);
         }
 
         /// <summary>
         /// Attempts to retrieve a value corresponding to the supplied key from this dictionary.
         /// </summary>
-        /// <param name="key">Key to retrieve the value for.</param>
-        /// <param name="value">Retrieved value.</param>
+        /// <param name="Key">Key to retrieve the value for.</param>
+        /// <param name="Value">Retrieved value.</param>
         /// <returns>Whether the operation was successful.</returns>
-        public bool TryGetValue(ReadOnlySpan<char> key, out TValue value)
-            => this.TryRetrieveInternal(key, out value);
+        public bool TryGetValue(ReadOnlySpan<char> Key, out TValue Value)
+            => this.TryRetrieveInternal(Key, out Value);
 
         /// <summary>
         /// Checks whether this dictionary contains the specified key.
         /// </summary>
-        /// <param name="key">Key to check for in this dictionary.</param>
+        /// <param name="Key">Key to check for in this dictionary.</param>
         /// <returns>Whether the key was present in the dictionary.</returns>
-        public bool ContainsKey(string key)
-            => this.ContainsKeyInternal(key.AsSpan());
+        public bool ContainsKey(string Key)
+            => this.ContainsKeyInternal(Key.AsSpan());
 
         /// <summary>
         /// Checks whether this dictionary contains the specified key.
         /// </summary>
-        /// <param name="key">Key to check for in this dictionary.</param>
+        /// <param name="Key">Key to check for in this dictionary.</param>
         /// <returns>Whether the key was present in the dictionary.</returns>
-        public bool ContainsKey(ReadOnlySpan<char> key)
-            => this.ContainsKeyInternal(key);
+        public bool ContainsKey(ReadOnlySpan<char> Key)
+            => this.ContainsKeyInternal(Key);
 
         /// <summary>
         /// Gets an enumerator over key-value pairs in this dictionary.
@@ -171,22 +171,22 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Tries the retrieve internal.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="Key">The key.</param>
+        /// <param name="Value">The value.</param>
         /// <returns>A bool.</returns>
-        private bool TryRetrieveInternal(ReadOnlySpan<char> key, out TValue value)
+        private bool TryRetrieveInternal(ReadOnlySpan<char> Key, out TValue Value)
         {
-            value = default;
+            Value = default;
 
-            var hash = key.CalculateKnuthHash();
+            var hash = Key.CalculateKnuthHash();
             if (!this.InternalBuckets.TryGetValue(hash, out var kdv))
                 return false;
 
             while (kdv != null)
             {
-                if (key.SequenceEqual(kdv.Key.AsSpan()))
+                if (Key.SequenceEqual(kdv.Key.AsSpan()))
                 {
-                    value = kdv.Value;
+                    Value = kdv.Value;
                     return true;
                 }
             }
@@ -197,17 +197,17 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Contains the key internal.
         /// </summary>
-        /// <param name="key">The key.</param>
+        /// <param name="Key">The key.</param>
         /// <returns>A bool.</returns>
-        private bool ContainsKeyInternal(ReadOnlySpan<char> key)
+        private bool ContainsKeyInternal(ReadOnlySpan<char> Key)
         {
-            var hash = key.CalculateKnuthHash();
+            var hash = Key.CalculateKnuthHash();
             if (!this.InternalBuckets.TryGetValue(hash, out var kdv))
                 return false;
 
             while (kdv != null)
             {
-                if (key.SequenceEqual(kdv.Key.AsSpan()))
+                if (Key.SequenceEqual(kdv.Key.AsSpan()))
                     return true;
 
                 kdv = kdv.Next;
@@ -259,23 +259,23 @@ namespace DisCatSharp.Common
         /// <summary>
         /// Prepares the items.
         /// </summary>
-        /// <param name="items">The items.</param>
-        /// <param name="count">The count.</param>
+        /// <param name="Items">The items.</param>
+        /// <param name="Count">The count.</param>
         /// <returns>An IReadOnlyDictionary.</returns>
-        private static IReadOnlyDictionary<ulong, KeyedValue> PrepareItems(IEnumerable<KeyValuePair<string, TValue>> items, out int count)
+        private static IReadOnlyDictionary<ulong, KeyedValue> PrepareItems(IEnumerable<KeyValuePair<string, TValue>> Items, out int Count)
         {
-            count = 0;
+            Count = 0;
             var dict = new Dictionary<ulong, KeyedValue>();
-            foreach (var (k, v) in items)
+            foreach (var (k, v) in Items)
             {
                 if (k == null)
-                    throw new ArgumentException("Keys cannot be null.", nameof(items));
+                    throw new ArgumentException("Keys cannot be null.", nameof(Items));
 
                 var hash = k.CalculateKnuthHash();
                 if (!dict.ContainsKey(hash))
                 {
                     dict.Add(hash, new KeyedValue(k, hash, v));
-                    count++;
+                    Count++;
                     continue;
                 }
 
@@ -284,14 +284,14 @@ namespace DisCatSharp.Common
                 while (kdv != null)
                 {
                     if (kdv.Key == k)
-                        throw new ArgumentException("Given key is already present in the dictionary.", nameof(items));
+                        throw new ArgumentException("Given key is already present in the dictionary.", nameof(Items));
 
                     kdvLast = kdv;
                     kdv = kdv.Next;
                 }
 
                 kdvLast.Next = new KeyedValue(k, hash, v);
-                count++;
+                Count++;
             }
 
             return new ReadOnlyDictionary<ulong, KeyedValue>(dict);
@@ -323,14 +323,14 @@ namespace DisCatSharp.Common
             /// <summary>
             /// Initializes a new instance of the <see cref="KeyedValue"/> class.
             /// </summary>
-            /// <param name="key">The key.</param>
-            /// <param name="keyHash">The key hash.</param>
-            /// <param name="value">The value.</param>
-            public KeyedValue(string key, ulong keyHash, TValue value)
+            /// <param name="Key">The key.</param>
+            /// <param name="KeyHash">The key hash.</param>
+            /// <param name="Value">The value.</param>
+            public KeyedValue(string Key, ulong KeyHash, TValue Value)
             {
-                this.KeyHash = keyHash;
-                this.Key = key;
-                this.Value = value;
+                this.KeyHash = KeyHash;
+                this.Key = Key;
+                this.Value = Value;
             }
         }
 
@@ -364,10 +364,10 @@ namespace DisCatSharp.Common
             /// <summary>
             /// Initializes a new instance of the <see cref="Enumerator"/> class.
             /// </summary>
-            /// <param name="spDict">The sp dict.</param>
-            public Enumerator(CharSpanLookupReadOnlyDictionary<TValue> spDict)
+            /// <param name="SpDict">The sp dict.</param>
+            public Enumerator(CharSpanLookupReadOnlyDictionary<TValue> SpDict)
             {
-                this.InternalDictionary = spDict;
+                this.InternalDictionary = SpDict;
                 this.InternalEnumerator = this.InternalDictionary.InternalBuckets.GetEnumerator();
             }
 

@@ -59,7 +59,7 @@ namespace DisCatSharp.Entities
         /// Gets the user's banner url
         /// </summary>
         public string BannerUrl
-            => string.IsNullOrWhiteSpace(this.BannerHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
+            => string.IsNullOrWhiteSpace(this.BannerHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Banners}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}?size=4096";
 
         /// <summary>
         /// Gets the user's profile banner hash. Mutually exclusive with <see cref="BannerColor"/>.
@@ -75,13 +75,13 @@ namespace DisCatSharp.Entities
         /// Gets the user's avatar URL.
         /// </summary>
         public string AvatarUrl
-            => string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+            => string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Avatars}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
         /// <summary>
         /// Gets the URL of default avatar for this user.
         /// </summary>
         public string DefaultAvatarUrl
-            => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.EMBED}{Endpoints.AVATARS}/{(this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture)}.png?size=1024";
+            => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.Embed}{Endpoints.Avatars}/{(this.DiscriminatorInt % 5).ToString(CultureInfo.InvariantCulture)}.png?size=1024";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DisCatSharpTeamMember"/> class.

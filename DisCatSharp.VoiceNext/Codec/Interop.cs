@@ -78,43 +78,43 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// _S the sodium secret box create.
         /// </summary>
-        /// <param name="buffer">The buffer.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="messageLength">The message length.</param>
-        /// <param name="nonce">The nonce.</param>
-        /// <param name="key">The key.</param>
+        /// <param name="Buffer">The buffer.</param>
+        /// <param name="Message">The message.</param>
+        /// <param name="MessageLength">The message length.</param>
+        /// <param name="Nonce">The nonce.</param>
+        /// <param name="Key">The key.</param>
         /// <returns>An int.</returns>
         [DllImport(SodiumLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_easy")]
-        private static unsafe extern int _SodiumSecretBoxCreate(byte* buffer, byte* message, ulong messageLength, byte* nonce, byte* key);
+        private static unsafe extern int _SodiumSecretBoxCreate(byte* Buffer, byte* Message, ulong MessageLength, byte* Nonce, byte* Key);
 
         /// <summary>
         /// _S the sodium secret box open.
         /// </summary>
-        /// <param name="buffer">The buffer.</param>
-        /// <param name="encryptedMessage">The encrypted message.</param>
-        /// <param name="encryptedLength">The encrypted length.</param>
-        /// <param name="nonce">The nonce.</param>
-        /// <param name="key">The key.</param>
+        /// <param name="Buffer">The buffer.</param>
+        /// <param name="EncryptedMessage">The encrypted message.</param>
+        /// <param name="EncryptedLength">The encrypted length.</param>
+        /// <param name="Nonce">The nonce.</param>
+        /// <param name="Key">The key.</param>
         /// <returns>An int.</returns>
         [DllImport(SodiumLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_open_easy")]
-        private static unsafe extern int _SodiumSecretBoxOpen(byte* buffer, byte* encryptedMessage, ulong encryptedLength, byte* nonce, byte* key);
+        private static unsafe extern int _SodiumSecretBoxOpen(byte* Buffer, byte* EncryptedMessage, ulong EncryptedLength, byte* Nonce, byte* Key);
 
         /// <summary>
         /// Encrypts supplied buffer using xsalsa20_poly1305 algorithm, using supplied key and nonce to perform encryption.
         /// </summary>
-        /// <param name="source">Contents to encrypt.</param>
-        /// <param name="target">Buffer to encrypt to.</param>
-        /// <param name="key">Key to use for encryption.</param>
-        /// <param name="nonce">Nonce to use for encryption.</param>
+        /// <param name="Source">Contents to encrypt.</param>
+        /// <param name="Target">Buffer to encrypt to.</param>
+        /// <param name="Key">Key to use for encryption.</param>
+        /// <param name="Nonce">Nonce to use for encryption.</param>
         /// <returns>Encryption status.</returns>
-        public static unsafe int Encrypt(ReadOnlySpan<byte> source, Span<byte> target, ReadOnlySpan<byte> key, ReadOnlySpan<byte> nonce)
+        public static unsafe int Encrypt(ReadOnlySpan<byte> Source, Span<byte> Target, ReadOnlySpan<byte> Key, ReadOnlySpan<byte> Nonce)
         {
             var status = 0;
-            fixed (byte* sourcePtr = &source.GetPinnableReference())
-            fixed (byte* targetPtr = &target.GetPinnableReference())
-            fixed (byte* keyPtr = &key.GetPinnableReference())
-            fixed (byte* noncePtr = &nonce.GetPinnableReference())
-                status = _SodiumSecretBoxCreate(targetPtr, sourcePtr, (ulong)source.Length, noncePtr, keyPtr);
+            fixed (byte* sourcePtr = &Source.GetPinnableReference())
+            fixed (byte* targetPtr = &Target.GetPinnableReference())
+            fixed (byte* keyPtr = &Key.GetPinnableReference())
+            fixed (byte* noncePtr = &Nonce.GetPinnableReference())
+                status = _SodiumSecretBoxCreate(targetPtr, sourcePtr, (ulong)Source.Length, noncePtr, keyPtr);
 
             return status;
         }
@@ -122,19 +122,19 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// Decrypts supplied buffer using xsalsa20_poly1305 algorithm, using supplied key and nonce to perform decryption.
         /// </summary>
-        /// <param name="source">Buffer to decrypt from.</param>
-        /// <param name="target">Decrypted message buffer.</param>
-        /// <param name="key">Key to use for decryption.</param>
-        /// <param name="nonce">Nonce to use for decryption.</param>
+        /// <param name="Source">Buffer to decrypt from.</param>
+        /// <param name="Target">Decrypted message buffer.</param>
+        /// <param name="Key">Key to use for decryption.</param>
+        /// <param name="Nonce">Nonce to use for decryption.</param>
         /// <returns>Decryption status.</returns>
-        public static unsafe int Decrypt(ReadOnlySpan<byte> source, Span<byte> target, ReadOnlySpan<byte> key, ReadOnlySpan<byte> nonce)
+        public static unsafe int Decrypt(ReadOnlySpan<byte> Source, Span<byte> Target, ReadOnlySpan<byte> Key, ReadOnlySpan<byte> Nonce)
         {
             var status = 0;
-            fixed (byte* sourcePtr = &source.GetPinnableReference())
-            fixed (byte* targetPtr = &target.GetPinnableReference())
-            fixed (byte* keyPtr = &key.GetPinnableReference())
-            fixed (byte* noncePtr = &nonce.GetPinnableReference())
-                status = _SodiumSecretBoxOpen(targetPtr, sourcePtr, (ulong)source.Length, noncePtr, keyPtr);
+            fixed (byte* sourcePtr = &Source.GetPinnableReference())
+            fixed (byte* targetPtr = &Target.GetPinnableReference())
+            fixed (byte* keyPtr = &Key.GetPinnableReference())
+            fixed (byte* noncePtr = &Nonce.GetPinnableReference())
+                status = _SodiumSecretBoxOpen(targetPtr, sourcePtr, (ulong)Source.Length, noncePtr, keyPtr);
 
             return status;
         }
@@ -149,147 +149,147 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// _S the opus create encoder.
         /// </summary>
-        /// <param name="sampleRate">The sample rate.</param>
-        /// <param name="channels">The channels.</param>
-        /// <param name="application">The application.</param>
-        /// <param name="error">The error.</param>
+        /// <param name="SampleRate">The sample rate.</param>
+        /// <param name="Channels">The channels.</param>
+        /// <param name="Application">The application.</param>
+        /// <param name="Error">The error.</param>
         /// <returns>An IntPtr.</returns>
         [DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_create")]
-        private static extern IntPtr _OpusCreateEncoder(int sampleRate, int channels, int application, out OpusError error);
+        private static extern IntPtr _OpusCreateEncoder(int SampleRate, int Channels, int Application, out OpusError Error);
 
         /// <summary>
         /// Opuses the destroy encoder.
         /// </summary>
-        /// <param name="encoder">The encoder.</param>
+        /// <param name="Encoder">The encoder.</param>
         [DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_destroy")]
-        public static extern void OpusDestroyEncoder(IntPtr encoder);
+        public static extern void OpusDestroyEncoder(IntPtr Encoder);
 
         /// <summary>
         /// _S the opus encode.
         /// </summary>
-        /// <param name="encoder">The encoder.</param>
-        /// <param name="pcmData">The pcm data.</param>
-        /// <param name="frameSize">The frame size.</param>
-        /// <param name="data">The data.</param>
-        /// <param name="maxDataBytes">The max data bytes.</param>
+        /// <param name="Encoder">The encoder.</param>
+        /// <param name="PcmData">The pcm data.</param>
+        /// <param name="FrameSize">The frame size.</param>
+        /// <param name="Data">The data.</param>
+        /// <param name="MaxDataBytes">The max data bytes.</param>
         /// <returns>An int.</returns>
         [DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encode")]
-        private static unsafe extern int _OpusEncode(IntPtr encoder, byte* pcmData, int frameSize, byte* data, int maxDataBytes);
+        private static unsafe extern int _OpusEncode(IntPtr Encoder, byte* PcmData, int FrameSize, byte* Data, int MaxDataBytes);
 
         /// <summary>
         /// _S the opus encoder control.
         /// </summary>
-        /// <param name="encoder">The encoder.</param>
-        /// <param name="request">The request.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="Encoder">The encoder.</param>
+        /// <param name="Request">The request.</param>
+        /// <param name="Value">The value.</param>
         /// <returns>An OpusError.</returns>
         [DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_ctl")]
-        private static extern OpusError _OpusEncoderControl(IntPtr encoder, OpusControl request, int value);
+        private static extern OpusError _OpusEncoderControl(IntPtr Encoder, OpusControl Request, int Value);
 
         /// <summary>
         /// _S the opus create decoder.
         /// </summary>
-        /// <param name="sampleRate">The sample rate.</param>
-        /// <param name="channels">The channels.</param>
-        /// <param name="error">The error.</param>
+        /// <param name="SampleRate">The sample rate.</param>
+        /// <param name="Channels">The channels.</param>
+        /// <param name="Error">The error.</param>
         /// <returns>An IntPtr.</returns>
         [DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_create")]
-        private static extern IntPtr _OpusCreateDecoder(int sampleRate, int channels, out OpusError error);
+        private static extern IntPtr _OpusCreateDecoder(int SampleRate, int Channels, out OpusError Error);
 
         /// <summary>
         /// Opuses the destroy decoder.
         /// </summary>
-        /// <param name="decoder">The decoder.</param>
+        /// <param name="Decoder">The decoder.</param>
         [DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_destroy")]
-        public static extern void OpusDestroyDecoder(IntPtr decoder);
+        public static extern void OpusDestroyDecoder(IntPtr Decoder);
 
         /// <summary>
         /// _S the opus decode.
         /// </summary>
-        /// <param name="decoder">The decoder.</param>
-        /// <param name="opusData">The opus data.</param>
-        /// <param name="opusDataLength">The opus data length.</param>
-        /// <param name="data">The data.</param>
-        /// <param name="frameSize">The frame size.</param>
-        /// <param name="decodeFec">The decode fec.</param>
+        /// <param name="Decoder">The decoder.</param>
+        /// <param name="OpusData">The opus data.</param>
+        /// <param name="OpusDataLength">The opus data length.</param>
+        /// <param name="Data">The data.</param>
+        /// <param name="FrameSize">The frame size.</param>
+        /// <param name="DecodeFec">The decode fec.</param>
         /// <returns>An int.</returns>
         [DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decode")]
-        private static unsafe extern int _OpusDecode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize, int decodeFec);
+        private static unsafe extern int _OpusDecode(IntPtr Decoder, byte* OpusData, int OpusDataLength, byte* Data, int FrameSize, int DecodeFec);
 
         /// <summary>
         /// _S the opus get packet chanel count.
         /// </summary>
-        /// <param name="opusData">The opus data.</param>
+        /// <param name="OpusData">The opus data.</param>
         /// <returns>An int.</returns>
         [DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_nb_channels")]
-        private static unsafe extern int _OpusGetPacketChanelCount(byte* opusData);
+        private static unsafe extern int _OpusGetPacketChanelCount(byte* OpusData);
 
         /// <summary>
         /// _S the opus get packet frame count.
         /// </summary>
-        /// <param name="opusData">The opus data.</param>
-        /// <param name="length">The length.</param>
+        /// <param name="OpusData">The opus data.</param>
+        /// <param name="Length">The length.</param>
         /// <returns>An int.</returns>
         [DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_nb_frames")]
-        private static unsafe extern int _OpusGetPacketFrameCount(byte* opusData, int length);
+        private static unsafe extern int _OpusGetPacketFrameCount(byte* OpusData, int Length);
 
         /// <summary>
         /// _S the opus get packet sample per frame count.
         /// </summary>
-        /// <param name="opusData">The opus data.</param>
-        /// <param name="samplingRate">The sampling rate.</param>
+        /// <param name="OpusData">The opus data.</param>
+        /// <param name="SamplingRate">The sampling rate.</param>
         /// <returns>An int.</returns>
         [DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_samples_per_frame")]
-        private static unsafe extern int _OpusGetPacketSamplePerFrameCount(byte* opusData, int samplingRate);
+        private static unsafe extern int _OpusGetPacketSamplePerFrameCount(byte* OpusData, int SamplingRate);
 
         /// <summary>
         /// _S the opus decoder control.
         /// </summary>
-        /// <param name="decoder">The decoder.</param>
-        /// <param name="request">The request.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="Decoder">The decoder.</param>
+        /// <param name="Request">The request.</param>
+        /// <param name="Value">The value.</param>
         /// <returns>An int.</returns>
         [DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_ctl")]
-        private static extern int _OpusDecoderControl(IntPtr decoder, OpusControl request, out int value);
+        private static extern int _OpusDecoderControl(IntPtr Decoder, OpusControl Request, out int Value);
 
         /// <summary>
         /// Opuses the create encoder.
         /// </summary>
-        /// <param name="audioFormat">The audio format.</param>
+        /// <param name="AudioFormat">The audio format.</param>
         /// <returns>An IntPtr.</returns>
-        public static IntPtr OpusCreateEncoder(AudioFormat audioFormat)
+        public static IntPtr OpusCreateEncoder(AudioFormat AudioFormat)
         {
-            var encoder = _OpusCreateEncoder(audioFormat.SampleRate, audioFormat.ChannelCount, (int)audioFormat.VoiceApplication, out var error);
+            var encoder = _OpusCreateEncoder(AudioFormat.SampleRate, AudioFormat.ChannelCount, (int)AudioFormat.VoiceApplication, out var error);
             return error != OpusError.Ok ? throw new Exception($"Could not instantiate Opus encoder: {error} ({(int)error}).") : encoder;
         }
 
         /// <summary>
         /// Opuses the set encoder option.
         /// </summary>
-        /// <param name="encoder">The encoder.</param>
-        /// <param name="option">The option.</param>
-        /// <param name="value">The value.</param>
-        public static void OpusSetEncoderOption(IntPtr encoder, OpusControl option, int value)
+        /// <param name="Encoder">The encoder.</param>
+        /// <param name="Option">The option.</param>
+        /// <param name="Value">The value.</param>
+        public static void OpusSetEncoderOption(IntPtr Encoder, OpusControl Option, int Value)
         {
             var error = OpusError.Ok;
-            if ((error = _OpusEncoderControl(encoder, option, value)) != OpusError.Ok)
+            if ((error = _OpusEncoderControl(Encoder, Option, Value)) != OpusError.Ok)
                 throw new Exception($"Could not set Opus encoder option: {error} ({(int)error}).");
         }
 
         /// <summary>
         /// Opuses the encode.
         /// </summary>
-        /// <param name="encoder">The encoder.</param>
-        /// <param name="pcm">The pcm.</param>
-        /// <param name="frameSize">The frame size.</param>
-        /// <param name="opus">The opus.</param>
-        public static unsafe void OpusEncode(IntPtr encoder, ReadOnlySpan<byte> pcm, int frameSize, ref Span<byte> opus)
+        /// <param name="Encoder">The encoder.</param>
+        /// <param name="Pcm">The pcm.</param>
+        /// <param name="FrameSize">The frame size.</param>
+        /// <param name="Opus">The opus.</param>
+        public static unsafe void OpusEncode(IntPtr Encoder, ReadOnlySpan<byte> Pcm, int FrameSize, ref Span<byte> Opus)
         {
             var len = 0;
 
-            fixed (byte* pcmPtr = &pcm.GetPinnableReference())
-            fixed (byte* opusPtr = &opus.GetPinnableReference())
-                len = _OpusEncode(encoder, pcmPtr, frameSize, opusPtr, opus.Length);
+            fixed (byte* pcmPtr = &Pcm.GetPinnableReference())
+            fixed (byte* opusPtr = &Opus.GetPinnableReference())
+                len = _OpusEncode(Encoder, pcmPtr, FrameSize, opusPtr, Opus.Length);
 
             if (len < 0)
             {
@@ -297,36 +297,36 @@ namespace DisCatSharp.VoiceNext.Codec
                 throw new Exception($"Could not encode PCM data to Opus: {error} ({(int)error}).");
             }
 
-            opus = opus[..len];
+            Opus = Opus[..len];
         }
 
         /// <summary>
         /// Opuses the create decoder.
         /// </summary>
-        /// <param name="audioFormat">The audio format.</param>
+        /// <param name="AudioFormat">The audio format.</param>
         /// <returns>An IntPtr.</returns>
-        public static IntPtr OpusCreateDecoder(AudioFormat audioFormat)
+        public static IntPtr OpusCreateDecoder(AudioFormat AudioFormat)
         {
-            var decoder = _OpusCreateDecoder(audioFormat.SampleRate, audioFormat.ChannelCount, out var error);
+            var decoder = _OpusCreateDecoder(AudioFormat.SampleRate, AudioFormat.ChannelCount, out var error);
             return error != OpusError.Ok ? throw new Exception($"Could not instantiate Opus decoder: {error} ({(int)error}).") : decoder;
         }
 
         /// <summary>
         /// Opuses the decode.
         /// </summary>
-        /// <param name="decoder">The decoder.</param>
-        /// <param name="opus">The opus.</param>
-        /// <param name="frameSize">The frame size.</param>
-        /// <param name="pcm">The pcm.</param>
-        /// <param name="useFec">If true, use fec.</param>
+        /// <param name="Decoder">The decoder.</param>
+        /// <param name="Opus">The opus.</param>
+        /// <param name="FrameSize">The frame size.</param>
+        /// <param name="Pcm">The pcm.</param>
+        /// <param name="UseFec">If true, use fec.</param>
         /// <returns>An int.</returns>
-        public static unsafe int OpusDecode(IntPtr decoder, ReadOnlySpan<byte> opus, int frameSize, Span<byte> pcm, bool useFec)
+        public static unsafe int OpusDecode(IntPtr Decoder, ReadOnlySpan<byte> Opus, int FrameSize, Span<byte> Pcm, bool UseFec)
         {
             var len = 0;
 
-            fixed (byte* opusPtr = &opus.GetPinnableReference())
-            fixed (byte* pcmPtr = &pcm.GetPinnableReference())
-                len = _OpusDecode(decoder, opusPtr, opus.Length, pcmPtr, frameSize, useFec ? 1 : 0);
+            fixed (byte* opusPtr = &Opus.GetPinnableReference())
+            fixed (byte* pcmPtr = &Pcm.GetPinnableReference())
+                len = _OpusDecode(Decoder, opusPtr, Opus.Length, pcmPtr, FrameSize, UseFec ? 1 : 0);
 
             if (len < 0)
             {
@@ -340,16 +340,16 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// Opuses the decode.
         /// </summary>
-        /// <param name="decoder">The decoder.</param>
-        /// <param name="frameSize">The frame size.</param>
-        /// <param name="pcm">The pcm.</param>
+        /// <param name="Decoder">The decoder.</param>
+        /// <param name="FrameSize">The frame size.</param>
+        /// <param name="Pcm">The pcm.</param>
         /// <returns>An int.</returns>
-        public static unsafe int OpusDecode(IntPtr decoder, int frameSize, Span<byte> pcm)
+        public static unsafe int OpusDecode(IntPtr Decoder, int FrameSize, Span<byte> Pcm)
         {
             var len = 0;
 
-            fixed (byte* pcmPtr = &pcm.GetPinnableReference())
-                len = _OpusDecode(decoder, null, 0, pcmPtr, frameSize, 1);
+            fixed (byte* pcmPtr = &Pcm.GetPinnableReference())
+                len = _OpusDecode(Decoder, null, 0, pcmPtr, FrameSize, 1);
 
             if (len < 0)
             {
@@ -363,30 +363,30 @@ namespace DisCatSharp.VoiceNext.Codec
         /// <summary>
         /// Opuses the get packet metrics.
         /// </summary>
-        /// <param name="opus">The opus.</param>
-        /// <param name="samplingRate">The sampling rate.</param>
-        /// <param name="channels">The channels.</param>
-        /// <param name="frames">The frames.</param>
-        /// <param name="samplesPerFrame">The samples per frame.</param>
-        /// <param name="frameSize">The frame size.</param>
-        public static unsafe void OpusGetPacketMetrics(ReadOnlySpan<byte> opus, int samplingRate, out int channels, out int frames, out int samplesPerFrame, out int frameSize)
+        /// <param name="Opus">The opus.</param>
+        /// <param name="SamplingRate">The sampling rate.</param>
+        /// <param name="Channels">The channels.</param>
+        /// <param name="Frames">The frames.</param>
+        /// <param name="SamplesPerFrame">The samples per frame.</param>
+        /// <param name="FrameSize">The frame size.</param>
+        public static unsafe void OpusGetPacketMetrics(ReadOnlySpan<byte> Opus, int SamplingRate, out int Channels, out int Frames, out int SamplesPerFrame, out int FrameSize)
         {
-            fixed (byte* opusPtr = &opus.GetPinnableReference())
+            fixed (byte* opusPtr = &Opus.GetPinnableReference())
             {
-                frames = _OpusGetPacketFrameCount(opusPtr, opus.Length);
-                samplesPerFrame = _OpusGetPacketSamplePerFrameCount(opusPtr, samplingRate);
-                channels = _OpusGetPacketChanelCount(opusPtr);
+                Frames = _OpusGetPacketFrameCount(opusPtr, Opus.Length);
+                SamplesPerFrame = _OpusGetPacketSamplePerFrameCount(opusPtr, SamplingRate);
+                Channels = _OpusGetPacketChanelCount(opusPtr);
             }
 
-            frameSize = frames * samplesPerFrame;
+            FrameSize = Frames * SamplesPerFrame;
         }
 
         /// <summary>
         /// Opuses the get last packet duration.
         /// </summary>
-        /// <param name="decoder">The decoder.</param>
-        /// <param name="sampleCount">The sample count.</param>
-        public static void OpusGetLastPacketDuration(IntPtr decoder, out int sampleCount) => _OpusDecoderControl(decoder, OpusControl.GetLastPacketDuration, out sampleCount);
+        /// <param name="Decoder">The decoder.</param>
+        /// <param name="SampleCount">The sample count.</param>
+        public static void OpusGetLastPacketDuration(IntPtr Decoder, out int SampleCount) => _OpusDecoderControl(Decoder, OpusControl.GetLastPacketDuration, out SampleCount);
         #endregion
     }
 }

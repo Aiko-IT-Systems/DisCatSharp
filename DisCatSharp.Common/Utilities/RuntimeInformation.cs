@@ -44,10 +44,10 @@ namespace DisCatSharp.Common.Utilities
         static RuntimeInformation()
         {
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-            var mscorlib = loadedAssemblies.Select(x => new { Assembly = x, AssemblyName = x.GetName() })
-                .FirstOrDefault(x => x.AssemblyName.Name == "mscorlib"
+            var mscorlib = loadedAssemblies.Select(X => new { Assembly = X, AssemblyName = X.GetName() })
+                .FirstOrDefault(X => X.AssemblyName.Name == "mscorlib"
 #if NETCOREAPP || NETSTANDARD
-                     || x.AssemblyName.Name == "System.Private.CoreLib"
+                     || X.AssemblyName.Name == "System.Private.CoreLib"
 #endif
                 );
 

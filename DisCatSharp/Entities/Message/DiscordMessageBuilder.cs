@@ -75,7 +75,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets or Sets if the message should be TTS.
         /// </summary>
-        public bool IsTTS { get; set; } = false;
+        public bool IsTts { get; set; } = false;
 
         /// <summary>
         /// Whether to keep previous attachments.
@@ -130,43 +130,43 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sets the Content of the Message.
         /// </summary>
-        /// <param name="content">The content to be set.</param>
+        /// <param name="Content">The content to be set.</param>
         /// <returns>The current builder to be chained.</returns>
-        public DiscordMessageBuilder WithContent(string content)
+        public DiscordMessageBuilder WithContent(string Content)
         {
-            this.Content = content;
+            this.Content = Content;
             return this;
         }
 
         /// <summary>
         /// Adds a sticker to the message. Sticker must be from current guild.
         /// </summary>
-        /// <param name="sticker">The sticker to add.</param>
+        /// <param name="Sticker">The sticker to add.</param>
         /// <returns>The current builder to be chained.</returns>
-        public DiscordMessageBuilder WithSticker(DiscordSticker sticker)
+        public DiscordMessageBuilder WithSticker(DiscordSticker Sticker)
         {
-            this.Sticker = sticker;
+            this.Sticker = Sticker;
             return this;
         }
 
         /// <summary>
         /// Adds a row of components to a message, up to 5 components per row, and up to 5 rows per message.
         /// </summary>
-        /// <param name="components">The components to add to the message.</param>
+        /// <param name="Components">The components to add to the message.</param>
         /// <returns>The current builder to be chained.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">No components were passed.</exception>
-        public DiscordMessageBuilder AddComponents(params DiscordComponent[] components)
-            => this.AddComponents((IEnumerable<DiscordComponent>)components);
+        public DiscordMessageBuilder AddComponents(params DiscordComponent[] Components)
+            => this.AddComponents((IEnumerable<DiscordComponent>)Components);
 
 
         /// <summary>
         /// Appends several rows of components to the message
         /// </summary>
-        /// <param name="components">The rows of components to add, holding up to five each.</param>
+        /// <param name="Components">The rows of components to add, holding up to five each.</param>
         /// <returns></returns>
-        public DiscordMessageBuilder AddComponents(IEnumerable<DiscordActionRowComponent> components)
+        public DiscordMessageBuilder AddComponents(IEnumerable<DiscordActionRowComponent> Components)
         {
-            var ara = components.ToArray();
+            var ara = Components.ToArray();
 
             if (ara.Length + this._components.Count > 5)
                 throw new ArgumentException("ActionRow count exceeds maximum of five.");
@@ -180,16 +180,16 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Adds a row of components to a message, up to 5 components per row, and up to 5 rows per message.
         /// </summary>
-        /// <param name="components">The components to add to the message.</param>
+        /// <param name="Components">The components to add to the message.</param>
         /// <returns>The current builder to be chained.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">No components were passed.</exception>
-        public DiscordMessageBuilder AddComponents(IEnumerable<DiscordComponent> components)
+        public DiscordMessageBuilder AddComponents(IEnumerable<DiscordComponent> Components)
         {
-            var cmpArr = components.ToArray();
+            var cmpArr = Components.ToArray();
             var count = cmpArr.Length;
 
             if (!cmpArr.Any())
-                throw new ArgumentOutOfRangeException(nameof(components), "You must provide at least one component");
+                throw new ArgumentOutOfRangeException(nameof(Components), "You must provide at least one component");
 
             if (count > 5)
                 throw new ArgumentException("Cannot add more than 5 components per action row!");
@@ -203,63 +203,63 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sets if the message should be TTS.
         /// </summary>
-        /// <param name="isTTS">If TTS should be set.</param>
+        /// <param name="IsTts">If TTS should be set.</param>
         /// <returns>The current builder to be chained.</returns>
-        public DiscordMessageBuilder HasTTS(bool isTTS)
+        public DiscordMessageBuilder HasTts(bool IsTts)
         {
-            this.IsTTS = isTTS;
+            this.IsTts = IsTts;
             return this;
         }
 
         /// <summary>
         /// Sets the embed for the current builder.
         /// </summary>
-        /// <param name="embed">The embed that should be set.</param>
+        /// <param name="Embed">The embed that should be set.</param>
         /// <returns>The current builder to be chained.</returns>
-        public DiscordMessageBuilder WithEmbed(DiscordEmbed embed)
+        public DiscordMessageBuilder WithEmbed(DiscordEmbed Embed)
         {
-            if (embed == null)
+            if (Embed == null)
                 return this;
 
-            this.Embed = embed;
+            this.Embed = Embed;
             return this;
         }
 
         /// <summary>
         /// Appends an embed to the current builder.
         /// </summary>
-        /// <param name="embed">The embed that should be appended.</param>
+        /// <param name="Embed">The embed that should be appended.</param>
         /// <returns>The current builder to be chained.</returns>
-        public DiscordMessageBuilder AddEmbed(DiscordEmbed embed)
+        public DiscordMessageBuilder AddEmbed(DiscordEmbed Embed)
         {
-            if (embed == null)
+            if (Embed == null)
                 return this; //Providing null embeds will produce a 400 response from Discord.//
-            this._embeds.Add(embed);
+            this._embeds.Add(Embed);
             return this;
         }
 
         /// <summary>
         /// Appends several embeds to the current builder.
         /// </summary>
-        /// <param name="embeds">The embeds that should be appended.</param>
+        /// <param name="Embeds">The embeds that should be appended.</param>
         /// <returns>The current builder to be chained.</returns>
-        public DiscordMessageBuilder AddEmbeds(IEnumerable<DiscordEmbed> embeds)
+        public DiscordMessageBuilder AddEmbeds(IEnumerable<DiscordEmbed> Embeds)
         {
-            this._embeds.AddRange(embeds);
+            this._embeds.AddRange(Embeds);
             return this;
         }
 
         /// <summary>
         /// Sets if the message has allowed mentions.
         /// </summary>
-        /// <param name="allowedMention">The allowed Mention that should be sent.</param>
+        /// <param name="AllowedMention">The allowed Mention that should be sent.</param>
         /// <returns>The current builder to be chained.</returns>
-        public DiscordMessageBuilder WithAllowedMention(IMention allowedMention)
+        public DiscordMessageBuilder WithAllowedMention(IMention AllowedMention)
         {
             if (this.Mentions != null)
-                this.Mentions.Add(allowedMention);
+                this.Mentions.Add(AllowedMention);
             else
-                this.Mentions = new List<IMention> { allowedMention };
+                this.Mentions = new List<IMention> { AllowedMention };
 
             return this;
         }
@@ -267,14 +267,14 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sets if the message has allowed mentions.
         /// </summary>
-        /// <param name="allowedMentions">The allowed Mentions that should be sent.</param>
+        /// <param name="AllowedMentions">The allowed Mentions that should be sent.</param>
         /// <returns>The current builder to be chained.</returns>
-        public DiscordMessageBuilder WithAllowedMentions(IEnumerable<IMention> allowedMentions)
+        public DiscordMessageBuilder WithAllowedMentions(IEnumerable<IMention> AllowedMentions)
         {
             if (this.Mentions != null)
-                this.Mentions.AddRange(allowedMentions);
+                this.Mentions.AddRange(AllowedMentions);
             else
-                this.Mentions = allowedMentions.ToList();
+                this.Mentions = AllowedMentions.ToList();
 
             return this;
         }
@@ -282,23 +282,23 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sets if the message has files to be sent.
         /// </summary>
-        /// <param name="fileName">The fileName that the file should be sent as.</param>
-        /// <param name="stream">The Stream to the file.</param>
-        /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
-        /// <param name="description">Description of the file.</param>
+        /// <param name="FileName">The fileName that the file should be sent as.</param>
+        /// <param name="Stream">The Stream to the file.</param>
+        /// <param name="ResetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="Description">Description of the file.</param>
         /// <returns>The current builder to be chained.</returns>
-        public DiscordMessageBuilder WithFile(string fileName, Stream stream, bool resetStreamPosition = false, string description = null)
+        public DiscordMessageBuilder WithFile(string FileName, Stream Stream, bool ResetStreamPosition = false, string Description = null)
         {
             if (this.Files.Count > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-            if (this._files.Any(x => x.FileName == fileName))
+            if (this._files.Any(X => X.FileName == FileName))
                 throw new ArgumentException("A File with that filename already exists");
 
-            if (resetStreamPosition)
-                this._files.Add(new DiscordMessageFile(fileName, stream, stream.Position, description: description));
+            if (ResetStreamPosition)
+                this._files.Add(new DiscordMessageFile(FileName, Stream, Stream.Position, Description: Description));
             else
-                this._files.Add(new DiscordMessageFile(fileName, stream, null, description: description));
+                this._files.Add(new DiscordMessageFile(FileName, Stream, null, Description: Description));
 
             return this;
         }
@@ -306,22 +306,22 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sets if the message has files to be sent.
         /// </summary>
-        /// <param name="stream">The Stream to the file.</param>
-        /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
-        /// <param name="description">Description of the file.</param>
+        /// <param name="Stream">The Stream to the file.</param>
+        /// <param name="ResetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="Description">Description of the file.</param>
         /// <returns>The current builder to be chained.</returns>
-        public DiscordMessageBuilder WithFile(FileStream stream, bool resetStreamPosition = false, string description = null)
+        public DiscordMessageBuilder WithFile(FileStream Stream, bool ResetStreamPosition = false, string Description = null)
         {
             if (this.Files.Count > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-            if (this._files.Any(x => x.FileName == stream.Name))
+            if (this._files.Any(X => X.FileName == Stream.Name))
                 throw new ArgumentException("A File with that filename already exists");
 
-            if (resetStreamPosition)
-                this._files.Add(new DiscordMessageFile(stream.Name, stream, stream.Position, description: description));
+            if (ResetStreamPosition)
+                this._files.Add(new DiscordMessageFile(Stream.Name, Stream, Stream.Position, Description: Description));
             else
-                this._files.Add(new DiscordMessageFile(stream.Name, stream, null, description: description));
+                this._files.Add(new DiscordMessageFile(Stream.Name, Stream, null, Description: Description));
 
             return this;
         }
@@ -329,20 +329,20 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sets if the message has files to be sent.
         /// </summary>
-        /// <param name="files">The Files that should be sent.</param>
-        /// <param name="resetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
+        /// <param name="Files">The Files that should be sent.</param>
+        /// <param name="ResetStreamPosition">Tells the API Client to reset the stream position to what it was after the file is sent.</param>
         /// <returns>The current builder to be chained.</returns>
-        public DiscordMessageBuilder WithFiles(Dictionary<string, Stream> files, bool resetStreamPosition = false)
+        public DiscordMessageBuilder WithFiles(Dictionary<string, Stream> Files, bool ResetStreamPosition = false)
         {
-            if (this.Files.Count + files.Count > 10)
+            if (this.Files.Count + Files.Count > 10)
                 throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-            foreach (var file in files)
+            foreach (var file in Files)
             {
-                if (this._files.Any(x => x.FileName == file.Key))
+                if (this._files.Any(X => X.FileName == file.Key))
                     throw new ArgumentException("A File with that filename already exists");
 
-                if (resetStreamPosition)
+                if (ResetStreamPosition)
                     this._files.Add(new DiscordMessageFile(file.Key, file.Value, file.Value.Position));
                 else
                     this._files.Add(new DiscordMessageFile(file.Key, file.Value, null));
@@ -354,11 +354,11 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Modifies the given attachments on edit.
         /// </summary>
-        /// <param name="attachments">Attachments to edit.</param>
+        /// <param name="Attachments">Attachments to edit.</param>
         /// <returns></returns>
-        public DiscordMessageBuilder ModifyAttachments(IEnumerable<DiscordAttachment> attachments)
+        public DiscordMessageBuilder ModifyAttachments(IEnumerable<DiscordAttachment> Attachments)
         {
-            this._attachments.AddRange(attachments);
+            this._attachments.AddRange(Attachments);
             return this;
         }
 
@@ -366,26 +366,26 @@ namespace DisCatSharp.Entities
         /// Whether to keep the message attachments, if new ones are added.
         /// </summary>
         /// <returns></returns>
-        public DiscordMessageBuilder KeepAttachments(bool keep)
+        public DiscordMessageBuilder KeepAttachments(bool Keep)
         {
-            this._keepAttachments = keep;
+            this._keepAttachments = Keep;
             return this;
         }
 
         /// <summary>
         /// Sets if the message is a reply
         /// </summary>
-        /// <param name="messageId">The ID of the message to reply to.</param>
-        /// <param name="mention">If we should mention the user in the reply.</param>
-        /// <param name="failOnInvalidReply">Whether sending a reply that references an invalid message should be </param>
+        /// <param name="MessageId">The ID of the message to reply to.</param>
+        /// <param name="Mention">If we should mention the user in the reply.</param>
+        /// <param name="FailOnInvalidReply">Whether sending a reply that references an invalid message should be </param>
         /// <returns>The current builder to be chained.</returns>
-        public DiscordMessageBuilder WithReply(ulong messageId, bool mention = false, bool failOnInvalidReply = false)
+        public DiscordMessageBuilder WithReply(ulong MessageId, bool Mention = false, bool FailOnInvalidReply = false)
         {
-            this.ReplyId = messageId;
-            this.MentionOnReply = mention;
-            this.FailOnInvalidReply = failOnInvalidReply;
+            this.ReplyId = MessageId;
+            this.MentionOnReply = Mention;
+            this.FailOnInvalidReply = FailOnInvalidReply;
 
-            if (mention)
+            if (Mention)
             {
                 this.Mentions ??= new List<IMention>();
                 this.Mentions.Add(new RepliedUserMention());
@@ -398,17 +398,17 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Sends the Message to a specific channel
         /// </summary>
-        /// <param name="channel">The channel the message should be sent to.</param>
+        /// <param name="Channel">The channel the message should be sent to.</param>
         /// <returns>The current builder to be chained.</returns>
-        public Task<DiscordMessage> SendAsync(DiscordChannel channel) => channel.SendMessageAsync(this);
+        public Task<DiscordMessage> Send(DiscordChannel Channel) => Channel.SendMessage(this);
 
         /// <summary>
         /// Sends the modified message.
         /// <para>Note: Message replies cannot be modified. To clear the reply, simply pass <see langword="null"/> to <see cref="WithReply"/>.</para>
         /// </summary>
-        /// <param name="msg">The original Message to modify.</param>
+        /// <param name="Msg">The original Message to modify.</param>
         /// <returns>The current builder to be chained.</returns>
-        public Task<DiscordMessage> ModifyAsync(DiscordMessage msg) => msg.ModifyAsync(this);
+        public Task<DiscordMessage> Modify(DiscordMessage Msg) => Msg.ModifyAsync(this);
 
         /// <summary>
         /// Clears all message components on this builder.
@@ -423,7 +423,7 @@ namespace DisCatSharp.Entities
         {
             this.Content = "";
             this._embeds.Clear();
-            this.IsTTS = false;
+            this.IsTts = false;
             this.Mentions = null;
             this._files.Clear();
             this.ReplyId = null;
@@ -438,13 +438,13 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Does the validation before we send a the Create/Modify request.
         /// </summary>
-        /// <param name="isModify">Tells the method to perform the Modify Validation or Create Validation.</param>
-        internal void Validate(bool isModify = false)
+        /// <param name="IsModify">Tells the method to perform the Modify Validation or Create Validation.</param>
+        internal void Validate(bool IsModify = false)
         {
             if (this._embeds.Count > 10)
                 throw new ArgumentException("A message can only have up to 10 embeds.");
 
-            if (!isModify)
+            if (!IsModify)
             {
                 if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null)
                     throw new ArgumentException("You must specify content, an embed, a sticker or at least one file.");
@@ -452,7 +452,7 @@ namespace DisCatSharp.Entities
                 if (this.Components.Count > 5)
                     throw new InvalidOperationException("You can only have 5 action rows per message.");
 
-                if (this.Components.Any(c => c.Components.Count > 5))
+                if (this.Components.Any(C => C.Components.Count > 5))
                     throw new InvalidOperationException("Action rows can only have 5 components");
             }
         }

@@ -42,12 +42,12 @@ namespace DisCatSharp.Net
         /// <summary>
         /// Creates a new IP endpoint structure.
         /// </summary>
-        /// <param name="address">IP address to connect to.</param>
-        /// <param name="port">Port to use for connection.</param>
-        public IpEndpoint(IPAddress address, int port)
+        /// <param name="Address">IP address to connect to.</param>
+        /// <param name="Port">Port to use for connection.</param>
+        public IpEndpoint(IPAddress Address, int Port)
         {
-            this.Address = address;
-            this.Port = port;
+            this.Address = Address;
+            this.Port = Port;
         }
     }
 }

@@ -46,21 +46,21 @@ namespace DisCatSharp.CommandsNext.Attributes
         /// <summary>
         /// Defines that usage of this command is only allowed with specific prefixes.
         /// </summary>
-        /// <param name="prefixes">Prefixes with which the execution of this command is allowed.</param>
-        public RequirePrefixesAttribute(params string[] prefixes)
+        /// <param name="Prefixes">Prefixes with which the execution of this command is allowed.</param>
+        public RequirePrefixesAttribute(params string[] Prefixes)
         {
-            if (prefixes?.Any() != true)
-                throw new ArgumentNullException(nameof(prefixes), "The allowed prefix collection cannot be null or empty.");
+            if (Prefixes?.Any() != true)
+                throw new ArgumentNullException(nameof(Prefixes), "The allowed prefix collection cannot be null or empty.");
 
-            this.Prefixes = prefixes;
+            this.Prefixes = Prefixes;
         }
 
         /// <summary>
         /// Executes the a check.
         /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
-            => Task.FromResult((help && this.ShowInHelp) || this.Prefixes.Contains(ctx.Prefix, ctx.CommandsNext.GetStringComparer()));
+        /// <param name="Ctx">The command context.</param>
+        /// <param name="Help">If true, help - returns true.</param>
+        public override Task<bool> ExecuteCheck(CommandContext Ctx, bool Help)
+            => Task.FromResult((Help && this.ShowInHelp) || this.Prefixes.Contains(Ctx.Prefix, Ctx.CommandsNext.GetStringComparer()));
     }
 }

@@ -49,16 +49,16 @@ namespace DisCatSharp.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="DisCatSharp.Exceptions.UnauthorizedException"/> class.
         /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="response">The response.</param>
-        internal UnauthorizedException(BaseRestRequest request, RestResponse response) : base("Unauthorized: " + response.ResponseCode)
+        /// <param name="Request">The request.</param>
+        /// <param name="Response">The response.</param>
+        internal UnauthorizedException(BaseRestRequest Request, RestResponse Response) : base("Unauthorized: " + Response.ResponseCode)
         {
-            this.WebRequest = request;
-            this.WebResponse = response;
+            this.WebRequest = Request;
+            this.WebResponse = Response;
 
             try
             {
-                var j = JObject.Parse(response.Response);
+                var j = JObject.Parse(Response.Response);
 
                 if (j["message"] != null)
                     this.JsonMessage = j["message"].ToString();
