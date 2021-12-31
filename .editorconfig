@@ -192,6 +192,10 @@ dotnet_naming_rule.interface_should_be_begins_with_i.severity = error
 dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
 dotnet_naming_rule.interface_should_be_begins_with_i.style = begins_with_i
 
+dotnet_naming_rule.private_static_readonly_fields_convention.severity = error
+dotnet_naming_rule.private_static_readonly_fields_convention.symbols = private_static_fields_readonly
+dotnet_naming_rule.private_static_readonly_fields_convention.style = private_static_camel_case
+
 dotnet_naming_rule.private_static_fields_convention.severity = error
 dotnet_naming_rule.private_static_fields_convention.symbols = private_static_field_props
 dotnet_naming_rule.private_static_fields_convention.style = private_static_camel_case
@@ -225,6 +229,10 @@ dotnet_naming_rule.private_props_not_allowed.style = constant_style
 dotnet_naming_symbols.interface.applicable_kinds = interface
 dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.interface.required_modifiers =
+
+dotnet_naming_symbols.private_static_fields_readonly.applicable_kinds = field
+dotnet_naming_symbols.private_static_fields_readonly.applicable_accessibilities = private
+dotnet_naming_symbols.private_static_fields_readonly.required_modifiers = static, readonly
 
 dotnet_naming_symbols.private_static_field_props.applicable_kinds = field, property
 dotnet_naming_symbols.private_static_field_props.applicable_accessibilities = private

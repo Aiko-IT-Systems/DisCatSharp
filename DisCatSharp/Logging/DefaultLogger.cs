@@ -30,7 +30,7 @@ namespace DisCatSharp
 	/// </summary>
 	public class DefaultLogger : ILogger<BaseDiscordClient>
 	{
-		private static readonly object _lock = new();
+		private static readonly object s_lock = new();
 
 		/// <summary>
 		/// Gets the minimum log level.
@@ -74,7 +74,7 @@ namespace DisCatSharp
 			if (!this.IsEnabled(logLevel))
 				return;
 
-			lock (_lock)
+			lock (s_lock)
 			{
 				var ename = eventId.Name;
 				ename = ename?.Length > 12 ? ename?[..12] : ename;
