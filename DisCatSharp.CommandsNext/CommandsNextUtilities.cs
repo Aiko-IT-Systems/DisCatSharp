@@ -200,14 +200,12 @@ namespace DisCatSharp.CommandsNext
 			return s.Remove(li - ll + 1, ll);
 		}
 
-#pragma warning disable IDE1006 // Naming Styles
 		/// <summary>
 		/// Binds the arguments.
 		/// </summary>
 		/// <param name="ctx">The command context.</param>
 		/// <param name="ignoreSurplus">If true, ignore further text in string.</param>
 		internal static async Task<ArgumentBindingResult> BindArguments(CommandContext ctx, bool ignoreSurplus)
-#pragma warning restore IDE1006 // Naming Styles
 		{
 			var command = ctx.Command;
 			var overload = ctx.Overload;

@@ -41,7 +41,6 @@ namespace DisCatSharp.Interactivity
 	public class InteractivityExtension : BaseExtension
 	{
 
-#pragma warning disable IDE1006 // Naming Styles
 		/// <summary>
 		/// Gets the config.
 		/// </summary>
@@ -67,8 +66,6 @@ namespace DisCatSharp.Interactivity
 
 		private Paginator _paginator;
 		private  ComponentPaginator _compPaginator;
-
-#pragma warning restore IDE1006 // Naming Styles
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="InteractivityExtension"/> class.

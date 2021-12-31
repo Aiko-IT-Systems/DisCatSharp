@@ -899,9 +899,7 @@ namespace DisCatSharp.CommandsNext
 		/// <param name="value">Value to convert.</param>
 		/// <param name="ctx">Context in which to convert to.</param>
 		/// <returns>Converted object.</returns>
-#pragma warning disable IDE1006 // Naming Styles
 		public async Task<object> ConvertArgument<T>(string value, CommandContext ctx)
-#pragma warning restore IDE1006 // Naming Styles
 		{
 			var t = typeof(T);
 			if (!this.ArgumentConverters.ContainsKey(t))
@@ -921,9 +919,7 @@ namespace DisCatSharp.CommandsNext
 		/// <param name="ctx">Context in which to convert to.</param>
 		/// <param name="type">Type to convert to.</param>
 		/// <returns>Converted object.</returns>
-#pragma warning disable IDE1006 // Naming Styles
 		public async Task<object> ConvertArgument(string value, CommandContext ctx, Type type)
-#pragma warning restore IDE1006 // Naming Styles
 		{
 			var m = this.ConvertGeneric.MakeGenericMethod(type);
 			try
