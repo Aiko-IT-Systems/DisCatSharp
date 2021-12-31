@@ -1579,9 +1579,12 @@ namespace DisCatSharp.ApplicationCommands
 			{
 				var options = new List<DiscordApplicationCommandAutocompleteChoice>();
 
-				var globalCommands = await context.Client.GetGlobalApplicationCommandsAsync();
-				var guildCommands = await context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
-				var slashCommands = globalCommands.Concat(guildCommands)
+				var globalCommandsTask = context.Client.GetGlobalApplicationCommandsAsync();
+				var guildCommandsTask= context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+
+				await Task.WhenAll(globalCommandsTask, guildCommandsTask);
+
+				var slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 					.GroupBy(ac => ac.Name).Select(x => x.First()).Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase));
 				var list = slashCommands.ToList();
@@ -1598,9 +1601,12 @@ namespace DisCatSharp.ApplicationCommands
 			public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
 			{
 				var options = new List<DiscordApplicationCommandAutocompleteChoice>();
-				var globalCommands = await context.Client.GetGlobalApplicationCommandsAsync();
-				var guildCommands = await context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
-				var slashCommands = globalCommands.Concat(guildCommands)
+				var globalCommandsTask = context.Client.GetGlobalApplicationCommandsAsync();
+				var guildCommandsTask= context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+
+				await Task.WhenAll(globalCommandsTask, guildCommandsTask);
+
+				var slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
 				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 				.GroupBy(ac => ac.Name).Select(x => x.First());
 				var command = slashCommands.FirstOrDefault(ac =>
@@ -1627,9 +1633,12 @@ namespace DisCatSharp.ApplicationCommands
 			public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
 			{
 				var options = new List<DiscordApplicationCommandAutocompleteChoice>();
-				var globalCommands = await context.Client.GetGlobalApplicationCommandsAsync();
-				var guildCommands = await context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
-				var slashCommands = globalCommands.Concat(guildCommands)
+				var globalCommandsTask = context.Client.GetGlobalApplicationCommandsAsync();
+				var guildCommandsTask= context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+
+				await Task.WhenAll(globalCommandsTask, guildCommandsTask);
+
+				var slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
 				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 				.GroupBy(ac => ac.Name).Select(x => x.First());
 				var command = slashCommands.FirstOrDefault(ac =>
@@ -1666,9 +1675,12 @@ namespace DisCatSharp.ApplicationCommands
 			[Autocomplete(typeof(DefaultHelpAutoCompleteLevelTwoProvider))]
 			[Option("option_three", "command to provide help for", true)] string commandTwoName = null)
 		{
-			var globalCommands = await ctx.Client.GetGlobalApplicationCommandsAsync();
-			var guildCommands = await ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
-			var applicationCommands = globalCommands.Concat(guildCommands)
+			var globalCommandsTask = ctx.Client.GetGlobalApplicationCommandsAsync();
+			var guildCommandsTask= ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
+
+			await Task.WhenAll(globalCommandsTask, guildCommandsTask);
+
+			var applicationCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
 				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 				.GroupBy(ac => ac.Name).Select(x => x.First())
 				.ToList();
