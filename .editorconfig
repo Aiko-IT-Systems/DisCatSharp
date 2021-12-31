@@ -259,3 +259,16 @@ dotnet_naming_style.async_suffix.required_prefix =
 dotnet_naming_style.async_suffix.required_suffix = Async
 dotnet_naming_style.async_suffix.word_separator =
 dotnet_naming_style.async_suffix.capitalization = pascal_case
+
+# Constants are UPPERCASE
+dotnet_naming_rule.constants_should_be_upper_case.severity = error
+dotnet_naming_rule.constants_should_be_upper_case.symbols = constants
+dotnet_naming_rule.constants_should_be_upper_case.style = constant_style
+
+dotnet_naming_symbols.constants.applicable_kinds = field, local
+dotnet_naming_symbols.constants.required_modifiers = const
+
+dotnet_naming_style.constant_style.required_prefix =
+dotnet_naming_style.constant_style.required_suffix =
+dotnet_naming_style.constant_style.word_separator = _
+dotnet_naming_style.constant_style.capitalization = all_upper
