@@ -1586,9 +1586,9 @@ namespace DisCatSharp.ApplicationCommands
 
 				var slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
 					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-					.GroupBy(ac => ac.Name).Select(x => x.First()).Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase));
-				var list = slashCommands.ToList();
-				foreach (var sc in list.Take(25))
+					.GroupBy(ac => ac.Name).Select(x => x.First()).
+					Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+				foreach (var sc in slashCommands.Take(25))
 				{
 					options.Add(new DiscordApplicationCommandAutocompleteChoice(sc.Name, sc.Name.Trim()));
 				}
