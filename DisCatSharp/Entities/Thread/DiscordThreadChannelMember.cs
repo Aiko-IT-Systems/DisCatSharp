@@ -74,17 +74,17 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonIgnore]
 		public DiscordChannel Thread
-			=> this.Guild != null ? (this.Guild._threads.TryGetValue(this.Id, out var thread) ? thread : null) : null;
+			=> this.Guild != null ? (this.Guild.ThreadsInternal.TryGetValue(this.Id, out var thread) ? thread : null) : null;
 
 		/// <summary>
 		/// Gets the guild to which this channel belongs.
 		/// </summary>
 		[JsonIgnore]
 		public DiscordGuild Guild
-			=> this.Discord.Guilds.TryGetValue(this._guild_id, out var guild) ? guild : null;
+			=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
 
 		[JsonIgnore]
-		internal ulong _guild_id;
+		internal ulong GuildId;
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordThreadChannelMember"/> is equal to another object.

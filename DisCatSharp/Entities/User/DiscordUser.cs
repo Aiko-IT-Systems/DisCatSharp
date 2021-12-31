@@ -52,7 +52,7 @@ namespace DisCatSharp.Entities
 			this.Discriminator = transport.Discriminator;
 			this.AvatarHash = transport.AvatarHash;
 			this.BannerHash = transport.BannerHash;
-			this._bannerColor = transport.BannerColor;
+			this.BannerColorInternal = transport.BannerColor;
 			this.IsBot = transport.IsBot;
 			this.MfaEnabled = transport.MfaEnabled;
 			this.Verified = transport.Verified;
@@ -95,10 +95,10 @@ namespace DisCatSharp.Entities
 		/// Gets the user's banner color, if set. Mutually exclusive with <see cref="BannerHash"/>.
 		/// </summary>
 		public virtual DiscordColor? BannerColor
-			=> !this._bannerColor.HasValue ? null : new DiscordColor(this._bannerColor.Value);
+			=> !this.BannerColorInternal.HasValue ? null : new DiscordColor(this.BannerColorInternal.Value);
 
 		[JsonProperty("accent_color")]
-		internal int? _bannerColor;
+		internal int? BannerColorInternal;
 
 		/// <summary>
 		/// Gets the user's banner url
@@ -127,12 +127,12 @@ namespace DisCatSharp.Entities
 		public virtual string AvatarHash { get; internal set; }
 
 		/// <summary>
-		/// Returns a uri to this users profile. 
+		/// Returns a uri to this users profile.
 		/// </summary>
 		public Uri ProfileUri => new($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.USERS}/{this.Id}");
 
 		/// <summary>
-		/// Returns a string representing the direct URL to this users profile. 
+		/// Returns a string representing the direct URL to this users profile.
 		/// </summary>
 		/// <returns>The URL of this users profile.</returns>
 		public string ProfileUrl => this.ProfileUri.AbsoluteUri;

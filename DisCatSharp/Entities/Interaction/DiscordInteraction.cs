@@ -142,17 +142,17 @@ namespace DisCatSharp.Entities
 		public async Task<DiscordMessage> EditOriginalResponseAsync(DiscordWebhookBuilder builder)
 		{
 			builder.Validate(isInteractionResponse: true);
-			if (builder._keepAttachments.HasValue && builder._keepAttachments.Value)
+			if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 			{
 				var attachments = this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token).Result.Attachments;
 				if (attachments?.Count > 0)
 				{
-					builder._attachments.AddRange(attachments);
+					builder.AttachmentsInternal.AddRange(attachments);
 				}
 			}
-			else if (builder._keepAttachments.HasValue)
+			else if (builder.KeepAttachmentsInternal.HasValue)
 			{
-				builder._attachments.Clear();
+				builder.AttachmentsInternal.Clear();
 			}
 
 			return await this.Discord.ApiClient.EditOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token, builder).ConfigureAwait(false);
@@ -193,17 +193,17 @@ namespace DisCatSharp.Entities
 		{
 			builder.Validate(isFollowup: true);
 
-			if (builder._keepAttachments.HasValue && builder._keepAttachments.Value)
+			if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 			{
 				var attachments = this.Discord.ApiClient.GetFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId).Result.Attachments;
 				if (attachments?.Count > 0)
 				{
-					builder._attachments.AddRange(attachments);
+					builder.AttachmentsInternal.AddRange(attachments);
 				}
 			}
-			else if (builder._keepAttachments.HasValue)
+			else if (builder.KeepAttachmentsInternal.HasValue)
 			{
-				builder._attachments.Clear();
+				builder.AttachmentsInternal.Clear();
 			}
 
 			return await this.Discord.ApiClient.EditFollowupMessageAsync(this.Discord.CurrentApplication.Id, this.Token, messageId, builder).ConfigureAwait(false);

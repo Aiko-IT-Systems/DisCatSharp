@@ -54,7 +54,7 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="client">The client.</param>
 		internal DefaultLoggerProvider(DiscordWebhookClient client)
-			: this(client._minimumLogLevel, client._logTimestampFormat)
+			: this(client.MinimumLogLevel, client.LogTimestampFormat)
 		{ }
 
 		/// <summary>

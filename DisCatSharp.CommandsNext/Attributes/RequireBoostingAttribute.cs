@@ -56,9 +56,9 @@ namespace DisCatSharp.CommandsNext.Attributes
 		/// </summary>
 		/// <param name="guild_id">Target guild id.</param>
 		/// <param name="days">Boosting since days.</param>
-		public RequireBoostingAttribute(ulong guild_id, int days = 0)
+		public RequireBoostingAttribute(ulong guildId, int days = 0)
 		{
-			this.GuildId = guild_id;
+			this.GuildId = guildId;
 			this.Since = days;
 		}
 

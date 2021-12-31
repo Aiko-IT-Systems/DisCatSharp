@@ -38,7 +38,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets valid [locales](xref:application_commands_translations_reference#valid-locales) for Discord.
 		/// </summary>
-		internal List<string> _validLocales = new() { "ru", "fi", "hr", "de", "hu", "sv-SE", "cs", "fr", "it", "en-GB", "pt-BR", "ja", "tr", "en-US", "es-ES", "uk", "hi", "th", "el", "no", "ro", "ko", "zh-TW", "vi", "zh-CN", "pl", "bg", "da", "nl", "lt" };
+		internal List<string> ValidLocales = new() { "ru", "fi", "hr", "de", "hu", "sv-SE", "cs", "fr", "it", "en-GB", "pt-BR", "ja", "tr", "en-US", "es-ES", "uk", "hi", "th", "el", "no", "ro", "ko", "zh-TW", "vi", "zh-CN", "pl", "bg", "da", "nl", "lt" };
 
 		/// <summary>
 		/// Adds a localization.
@@ -54,7 +54,7 @@ namespace DisCatSharp.Entities
 			else
 			{
 				throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
-					$"Valid locales: {string.Join(", ", this._validLocales.ToArray())}");
+					$"Valid locales: {string.Join(", ", this.ValidLocales.ToArray())}");
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace DisCatSharp.Entities
 				{
 					if (!this.Validate(locale))
 						throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
-							$"Valid locales: {string.Join(", ", this._validLocales.ToArray())}");
+							$"Valid locales: {string.Join(", ", this.ValidLocales.ToArray())}");
 				}
 			}
 
@@ -101,6 +101,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="lang">[Locale](xref:application_commands_translations_reference#valid-locales) string.</param>
 		public bool Validate(string lang)
-			=> this._validLocales.Contains(lang);
+			=> this.ValidLocales.Contains(lang);
 	}
 }

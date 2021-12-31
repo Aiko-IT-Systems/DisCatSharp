@@ -49,7 +49,7 @@ namespace DisCatSharp.Entities
 		public IReadOnlyList<ulong> Roles => this._rolesLazy.Value;
 
 		[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-		internal List<ulong> _roles;
+		public List<ulong> RolesInternal;
 		private readonly Lazy<IReadOnlyList<ulong>> _rolesLazy;
 
 		/// <summary>
@@ -98,7 +98,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordEmoji()
 		{
-			this._rolesLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._roles));
+			this._rolesLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RolesInternal));
 		}
 
 		/// <summary>

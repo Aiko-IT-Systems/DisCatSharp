@@ -108,7 +108,7 @@ namespace DisCatSharp.VoiceNext
 		/// <summary>
 		/// Gets the unix epoch.
 		/// </summary>
-		private static DateTimeOffset UnixEpoch { get; } = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+		private static DateTimeOffset s_unixEpoch { get; } = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
 		/// <summary>
 		/// Gets the discord.
@@ -121,7 +121,7 @@ namespace DisCatSharp.VoiceNext
 		/// <summary>
 		/// Gets the transmitting s s r cs.
 		/// </summary>
-		private ConcurrentDictionary<uint, AudioSender> TransmittingSSRCs { get; }
+		private ConcurrentDictionary<uint, AudioSender> TransmittingSsrCs { get; }
 
 		/// <summary>
 		/// Gets the udp client.
@@ -203,7 +203,7 @@ namespace DisCatSharp.VoiceNext
 		/// <summary>
 		/// Gets or sets the s s r c.
 		/// </summary>
-		private uint SSRC { get; set; }
+		private uint Ssrc { get; set; }
 		/// <summary>
 		/// Gets or sets the key.
 		/// </summary>
@@ -347,7 +347,7 @@ namespace DisCatSharp.VoiceNext
 			this.Discord = client;
 			this.Guild = guild;
 			this.TargetChannel = channel;
-			this.TransmittingSSRCs = new ConcurrentDictionary<uint, AudioSender>();
+			this.TransmittingSsrCs = new ConcurrentDictionary<uint, AudioSender>();
 
 			this._userSpeaking = new AsyncEvent<VoiceNextConnection, UserSpeakingEventArgs>("VNEXT_USER_SPEAKING", TimeSpan.Zero, this.Discord.EventErrorHandler);
 			this._userJoined = new AsyncEvent<VoiceNextConnection, VoiceUserJoinEventArgs>("VNEXT_USER_JOINED", TimeSpan.Zero, this.Discord.EventErrorHandler);
@@ -498,7 +498,7 @@ namespace DisCatSharp.VoiceNext
 			var packetArray = ArrayPool<byte>.Shared.Rent(this.Rtp.CalculatePacketSize(audioFormat.SampleCountToSampleSize(audioFormat.CalculateMaximumFrameSize()), this.SelectedEncryptionMode));
 			var packet = packetArray.AsSpan();
 
-			this.Rtp.EncodeHeader(this.Sequence, this.Timestamp, this.SSRC, packet);
+			this.Rtp.EncodeHeader(this.Sequence, this.Timestamp, this.Ssrc, packet);
 			var opus = packet.Slice(Rtp.HEADER_SIZE, pcm.Length);
 			this.Opus.Encode(pcm, ref opus);
 
@@ -508,15 +508,15 @@ namespace DisCatSharp.VoiceNext
 			Span<byte> nonce = stackalloc byte[Sodium.NonceSize];
 			switch (this.SelectedEncryptionMode)
 			{
-				case EncryptionMode.XSalsa20_Poly1305:
+				case EncryptionMode.XSalsa20Poly1305:
 					this.Sodium.GenerateNonce(packet[..Rtp.HEADER_SIZE], nonce);
 					break;
 
-				case EncryptionMode.XSalsa20_Poly1305_Suffix:
+				case EncryptionMode.XSalsa20Poly1305Suffix:
 					this.Sodium.GenerateNonce(nonce);
 					break;
 
-				case EncryptionMode.XSalsa20_Poly1305_Lite:
+				case EncryptionMode.XSalsa20Poly1305Lite:
 					this.Sodium.GenerateNonce(this.Nonce++, nonce);
 					break;
 
@@ -639,7 +639,7 @@ namespace DisCatSharp.VoiceNext
 
 			this.Rtp.DecodeHeader(data, out var sequence, out var timestamp, out var ssrc, out var hasExtension);
 
-			if (!this.TransmittingSSRCs.TryGetValue(ssrc, out var vtx))
+			if (!this.TransmittingSsrCs.TryGetValue(ssrc, out var vtx))
 			{
 				var decoder = this.Opus.CreateDecoder();
 
@@ -761,7 +761,7 @@ namespace DisCatSharp.VoiceNext
 				foreach (var pcmFiller in pcmFillers)
 					await this._voiceReceived.InvokeAsync(this, new VoiceReceiveEventArgs(this.Discord.ServiceProvider)
 					{
-						SSRC = vtx.SSRC,
+						Ssrc = vtx.Ssrc,
 						User = vtx.User,
 						PcmData = pcmFiller,
 						OpusData = new byte[0].AsMemory(),
@@ -771,7 +771,7 @@ namespace DisCatSharp.VoiceNext
 
 				await this._voiceReceived.InvokeAsync(this, new VoiceReceiveEventArgs(this.Discord.ServiceProvider)
 				{
-					SSRC = vtx.SSRC,
+					Ssrc = vtx.Ssrc,
 					User = vtx.User,
 					PcmData = pcmMem,
 					OpusData = opusMem,
@@ -1038,7 +1038,7 @@ namespace DisCatSharp.VoiceNext
 
 			void PreparePacket(byte[] packet)
 			{
-				var ssrc = this.SSRC;
+				var ssrc = this.Ssrc;
 				var packetSpan = packet.AsSpan();
 				MemoryMarshal.Write(packetSpan, ref ssrc);
 				Helpers.ZeroFill(packetSpan);
@@ -1126,7 +1126,7 @@ namespace DisCatSharp.VoiceNext
 				case 2: // READY
 					this.Discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received READY (OP2)");
 					var vrp = opp.ToObject<VoiceReadyPayload>();
-					this.SSRC = vrp.SSRC;
+					this.Ssrc = vrp.Ssrc;
 					this.UdpEndpoint = new ConnectionEndpoint(vrp.Address, vrp.Port);
 					// this is not the valid interval
 					// oh, discord
@@ -1152,23 +1152,23 @@ namespace DisCatSharp.VoiceNext
 					var spk = new UserSpeakingEventArgs(this.Discord.ServiceProvider)
 					{
 						Speaking = spd.Speaking,
-						SSRC = spd.SSRC.Value,
+						Ssrc = spd.Ssrc.Value,
 						User = resolvedUser,
 					};
 
-					if (foundUserInCache && this.TransmittingSSRCs.TryGetValue(spk.SSRC, out var txssrc5) && txssrc5.Id == 0)
+					if (foundUserInCache && this.TransmittingSsrCs.TryGetValue(spk.Ssrc, out var txssrc5) && txssrc5.Id == 0)
 					{
 						txssrc5.User = spk.User;
 					}
 					else
 					{
 						var opus = this.Opus.CreateDecoder();
-						var vtx = new AudioSender(spk.SSRC, opus)
+						var vtx = new AudioSender(spk.Ssrc, opus)
 						{
 							User = await this.Discord.GetUserAsync(spd.UserId.Value).ConfigureAwait(false)
 						};
 
-						if (!this.TransmittingSSRCs.TryAdd(spk.SSRC, vtx))
+						if (!this.TransmittingSsrCs.TryAdd(spk.Ssrc, vtx))
 							this.Opus.DestroyDecoder(opus);
 					}
 
@@ -1200,25 +1200,25 @@ namespace DisCatSharp.VoiceNext
 					var usrj = await this.Discord.GetUserAsync(ujpd.UserId).ConfigureAwait(false);
 					{
 						var opus = this.Opus.CreateDecoder();
-						var vtx = new AudioSender(ujpd.SSRC, opus)
+						var vtx = new AudioSender(ujpd.Ssrc, opus)
 						{
 							User = usrj
 						};
 
-						if (!this.TransmittingSSRCs.TryAdd(vtx.SSRC, vtx))
+						if (!this.TransmittingSsrCs.TryAdd(vtx.Ssrc, vtx))
 							this.Opus.DestroyDecoder(opus);
 					}
 
-					await this._userJoined.InvokeAsync(this, new VoiceUserJoinEventArgs(this.Discord.ServiceProvider) { User = usrj, SSRC = ujpd.SSRC }).ConfigureAwait(false);
+					await this._userJoined.InvokeAsync(this, new VoiceUserJoinEventArgs(this.Discord.ServiceProvider) { User = usrj, Ssrc = ujpd.Ssrc }).ConfigureAwait(false);
 					break;
 
 				case 13: // CLIENT_DISCONNECTED
 					this.Discord.Logger.LogTrace(VoiceNextEvents.VoiceDispatch, "Received CLIENT_DISCONNECTED (OP13)");
 					var ulpd = opp.ToObject<VoiceUserLeavePayload>();
-					var txssrc = this.TransmittingSSRCs.FirstOrDefault(x => x.Value.Id == ulpd.UserId);
-					if (this.TransmittingSSRCs.ContainsKey(txssrc.Key))
+					var txssrc = this.TransmittingSsrCs.FirstOrDefault(x => x.Value.Id == ulpd.UserId);
+					if (this.TransmittingSsrCs.ContainsKey(txssrc.Key))
 					{
-						this.TransmittingSSRCs.TryRemove(txssrc.Key, out var txssrc13);
+						this.TransmittingSsrCs.TryRemove(txssrc.Key, out var txssrc13);
 						this.Opus.DestroyDecoder(txssrc13.Decoder);
 					}
 
@@ -1226,7 +1226,7 @@ namespace DisCatSharp.VoiceNext
 					await this._userLeft.InvokeAsync(this, new VoiceUserLeaveEventArgs(this.Discord.ServiceProvider)
 					{
 						User = usrl,
-						SSRC = txssrc.Key
+						Ssrc = txssrc.Key
 					}).ConfigureAwait(false);
 					break;
 
@@ -1321,7 +1321,7 @@ namespace DisCatSharp.VoiceNext
 		/// <param name="dt">The datetine.</param>
 		private static uint UnixTimestamp(DateTime dt)
 		{
-			var ts = dt - UnixEpoch;
+			var ts = dt - s_unixEpoch;
 			var sd = ts.TotalSeconds;
 			var si = (uint)sd;
 			return si;

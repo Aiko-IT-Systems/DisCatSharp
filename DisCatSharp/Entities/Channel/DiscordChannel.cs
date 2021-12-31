@@ -157,7 +157,7 @@ namespace DisCatSharp.Entities
 			=> this._permissionOverwritesLazy.Value;
 
 		[JsonProperty("permission_overwrites", NullValueHandling = NullValueHandling.Ignore)]
-		internal List<DiscordOverwrite> _permissionOverwrites = new();
+		internal List<DiscordOverwrite> PermissionOverwritesInternal = new();
 		[JsonIgnore]
 		private readonly Lazy<IReadOnlyList<DiscordOverwrite>> _permissionOverwritesLazy;
 
@@ -235,7 +235,7 @@ namespace DisCatSharp.Entities
 			{
 				return !this.IsCategory
 					? throw new ArgumentException("Only channel categories contain children.")
-					: this.Guild._channels.Values.Where(e => e.ParentId == this.Id).ToList();
+					: this.Guild.ChannelsInternal.Values.Where(e => e.ParentId == this.Id).ToList();
 			}
 		}
 
@@ -259,7 +259,7 @@ namespace DisCatSharp.Entities
 		/// Gets whether this channel is an NSFW channel.
 		/// </summary>
 		[JsonProperty("nsfw")]
-		public bool IsNSFW { get; internal set; }
+		public bool IsNsfw { get; internal set; }
 
 		/// <summary>
 		/// Gets this channel's region id (if voice channel).
@@ -286,7 +286,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordChannel()
 		{
-			this._permissionOverwritesLazy = new Lazy<IReadOnlyList<DiscordOverwrite>>(() => new ReadOnlyCollection<DiscordOverwrite>(this._permissionOverwrites));
+			this._permissionOverwritesLazy = new Lazy<IReadOnlyList<DiscordOverwrite>>(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
 		}
 
 		#region Methods
@@ -399,7 +399,7 @@ namespace DisCatSharp.Entities
 				throw new InvalidOperationException("Non-guild channels cannot be cloned.");
 
 			var ovrs = new List<DiscordOverwriteBuilder>();
-			foreach (var ovr in this._permissionOverwrites)
+			foreach (var ovr in this.PermissionOverwritesInternal)
 #pragma warning disable CS0618 // Type or member is obsolete
 				ovrs.Add(await new DiscordOverwriteBuilder().FromAsync(ovr).ConfigureAwait(false));
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -423,7 +423,7 @@ namespace DisCatSharp.Entities
 				perUserRateLimit = Optional.FromNoValue<int?>();
 			}
 
-			return await this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNSFW, perUserRateLimit, this.QualityMode, reason).ConfigureAwait(false);
+			return await this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNsfw, perUserRateLimit, this.QualityMode, reason).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -485,7 +485,7 @@ namespace DisCatSharp.Entities
 
 		/// <summary>
 		/// Updates the channel position when it doesn't have a category.
-		/// 
+		///
 		/// Use <see cref="ModifyParentAsync"/> for moving to other categories.
 		/// Use <see cref="RemoveParentAsync"/> to move out of a category.
 		/// Use <see cref="ModifyPositionInCategoryAsync"/> for moving within a category.
@@ -505,7 +505,7 @@ namespace DisCatSharp.Entities
 			if (this.ParentId != null)
 				throw new ArgumentException("Cannot modify order of channels within a category. Use ModifyPositionInCategoryAsync instead.");
 
-			var chns = this.Guild._channels.Values.Where(xc => xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray();
+			var chns = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray();
 			var pmds = new RestGuildChannelReorderPayload[chns.Length];
 			for (var i = 0; i < chns.Length; i++)
 			{
@@ -623,23 +623,23 @@ namespace DisCatSharp.Entities
 		public async Task RefreshPositionsAsync()
 		{
 			var channels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Guild.Id);
-			this.Guild._channels.Clear();
+			this.Guild.ChannelsInternal.Clear();
 			foreach (var channel in channels.ToList())
 			{
 				channel.Discord = this.Discord;
-				foreach (var xo in channel._permissionOverwrites)
+				foreach (var xo in channel.PermissionOverwritesInternal)
 				{
 					xo.Discord = this.Discord;
-					xo._channel_id = channel.Id;
+					xo.ChannelId = channel.Id;
 				}
-				this.Guild._channels[channel.Id] = channel;
+				this.Guild.ChannelsInternal[channel.Id] = channel;
 			}
 		}
 
 		/// <summary>
 		/// Updates the channel position within it's own category.
 		/// Valid modes: '+' or 'down' to move a channel down | '-' or 'up' to move a channel up.
-		/// 
+		///
 		/// Use <see cref="ModifyParentAsync"/> for moving to other categories.
 		/// Use <see cref="RemoveParentAsync"/> to move out of a category.
 		/// Use <see cref="ModifyPositionAsync"/> to move channels outside a category.
@@ -678,14 +678,14 @@ namespace DisCatSharp.Entities
 		/// Updates the channel parent, moving the channel to the bottom of the new category.
 		/// </summary>
 		/// <param name="newParent">New parent for channel. Will move out of parent if null.</param>
-		/// <param name="lock_permissions">Sync permissions with parent. Defaults to null.</param>
+		/// <param name="lockPermissions">Sync permissions with parent. Defaults to null.</param>
 		/// <param name="reason">Reason for audit logs.</param>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		public Task ModifyParentAsync(DiscordChannel? newParent = null, bool? lock_permissions = null, string reason = null)
+		public Task ModifyParentAsync(DiscordChannel? newParent = null, bool? lockPermissions = null, string reason = null)
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		{
 			if (this.Guild == null)
@@ -696,10 +696,10 @@ namespace DisCatSharp.Entities
 				throw new ArgumentException("Only category type channels can be parents.");
 
 
-			var position = this.Guild._channels.Values.Where(xc => xc.Type == this.Type && xc.ParentId == newParent.Id) // gets list same type channels in parent
+			var position = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type && xc.ParentId == newParent.Id) // gets list same type channels in parent
                             .Select(xc => xc.Position).DefaultIfEmpty(-1).Max() + 1; // returns highest position of list +1, default val: 0
 
-			var chns = this.Guild._channels.Values.Where(xc => xc.Type == this.Type)
+			var chns = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type)
 							.OrderBy(xc => xc.Position).ToArray();
 
 			var pmds = new RestGuildChannelNewParentPayload[chns.Length];
@@ -715,7 +715,7 @@ namespace DisCatSharp.Entities
 				{
 					pmds[i].Position = position;
 					pmds[i].ParentId = newParent is not null ? newParent.Id : null;
-					pmds[i].LockPermissions = lock_permissions;
+					pmds[i].LockPermissions = lockPermissions;
 				}
 			}
 
@@ -738,10 +738,10 @@ namespace DisCatSharp.Entities
 			if (!this.IsMovableInParent())
 				throw new NotSupportedException("You can't move this type of channel in categories.");
 
-			var position = this.Guild._channels.Values.Where(xc => xc.Type == this.Type && xc.Parent is null) //gets list of same type channels with no parent
+			var position = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type && xc.Parent is null) //gets list of same type channels with no parent
                             .Select(xc => xc.Position).DefaultIfEmpty(-1).Max() + 1; // returns highest position of list +1, default val: 0
 
-			var chns = this.Guild._channels.Values.Where(xc => xc.Type == this.Type)
+			var chns = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type)
 				.OrderBy(xc => xc.Position).ToArray();
 
 			var pmds = new RestGuildChannelNoParentPayload[chns.Length];
@@ -923,20 +923,20 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Create a new invite object
 		/// </summary>
-		/// <param name="max_age">Duration of invite in seconds before expiry, or 0 for never.  Defaults to 86400.</param>
-		/// <param name="max_uses">Max number of uses or 0 for unlimited. Defaults to 0</param>
+		/// <param name="maxAge">Duration of invite in seconds before expiry, or 0 for never.  Defaults to 86400.</param>
+		/// <param name="maxUses">Max number of uses or 0 for unlimited. Defaults to 0</param>
 		/// <param name="temporary">Whether this invite should be temporary. Defaults to false.</param>
 		/// <param name="unique">Whether this invite should be unique. Defaults to false.</param>
-		/// <param name="target_type">The target type. Defaults to null.</param>
-		/// <param name="target_application">The target activity. Defaults to null.</param>
-		/// <param name="target_user">The target user id. Defaults to null.</param>
+		/// <param name="targetType">The target type. Defaults to null.</param>
+		/// <param name="targetApplication">The target activity. Defaults to null.</param>
+		/// <param name="targetUser">The target user id. Defaults to null.</param>
 		/// <param name="reason">The audit log reason.</param>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task<DiscordInvite> CreateInviteAsync(int max_age = 86400, int max_uses = 0, bool temporary = false, bool unique = false, TargetType? target_type = null, TargetActivity? target_application = null, ulong? target_user = null, string reason = null)
-			=> this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, max_age, max_uses, target_type, target_application, target_user, temporary, unique, reason);
+		public Task<DiscordInvite> CreateInviteAsync(int maxAge = 86400, int maxUses = 0, bool temporary = false, bool unique = false, TargetType? targetType = null, TargetActivity? targetApplication = null, ulong? targetUser = null, string reason = null)
+			=> this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, maxAge, maxUses, targetType, targetApplication, targetUser, temporary, unique, reason);
 
 		#region Stage
 
@@ -944,29 +944,29 @@ namespace DisCatSharp.Entities
 		/// Opens a stage.
 		/// </summary>
 		/// <param name="topic">Topic of the stage.</param>
-		/// <param name="send_start_notification">Whether @everyone should be notified.</param>
-		/// <param name="privacy_level">Privacy level of the stage (Defaults to <see cref="StagePrivacyLevel.GuildOnly"/>.</param>
+		/// <param name="sendStartNotification">Whether @everyone should be notified.</param>
+		/// <param name="privacyLevel">Privacy level of the stage (Defaults to <see cref="StagePrivacyLevel.GuildOnly"/>.</param>
 		/// <param name="reason">Audit log reason.</param>
 		/// <returns>Stage instance</returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool send_start_notification = false, StagePrivacyLevel privacy_level = StagePrivacyLevel.GuildOnly, string reason = null)
-			=> await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, send_start_notification, privacy_level, reason);
+		public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool sendStartNotification = false, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly, string reason = null)
+			=> await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, sendStartNotification, privacyLevel, reason);
 
 		/// <summary>
 		/// Modifies a stage topic.
 		/// </summary>
 		/// <param name="topic">New topic of the stage.</param>
-		/// <param name="privacy_level">New privacy level of the stage.</param>
+		/// <param name="privacyLevel">New privacy level of the stage.</param>
 		/// <param name="reason">Audit log reason.</param>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public async Task ModifyStageAsync(Optional<string> topic, Optional<StagePrivacyLevel> privacy_level, string reason = null)
-			=> await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, privacy_level, reason);
+		public async Task ModifyStageAsync(Optional<string> topic, Optional<StagePrivacyLevel> privacyLevel, string reason = null)
+			=> await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, privacyLevel, reason);
 
 		/// <summary>
 		/// Closes a stage.
@@ -1000,9 +1000,9 @@ namespace DisCatSharp.Entities
 		/// Depending on whether the <see cref="ChannelType"/> is set to <see cref="ChannelType.PrivateThread"/> it is either an <see cref="ChannelType.PrivateThread"/> or an <see cref="ChannelType.PublicThread"/> (default).
 		/// </summary>
 		/// <param name="name">The name of the thread.</param>
-		/// <param name="auto_archive_duration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/>.</param>
+		/// <param name="autoArchiveDuration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/>.</param>
 		/// <param name="type">Can be either an <see cref="ChannelType.PrivateThread"/>, <see cref="ChannelType.NewsThread"/> or an <see cref="ChannelType.PublicThread"/>.</param>
-		/// <param name="rate_limit_per_user">The per user ratelimit, aka slowdown.</param>
+		/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
 		/// <param name="reason">Audit log reason.</param>
 		/// <returns>The created thread.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePublicThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> or if creating a private thread the <see cref="Permissions.CreatePrivateThreads"/> permission.</exception>
@@ -1010,7 +1010,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <exception cref="System.NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>. Or if <see cref="GuildFeatures.CanCreatePrivateThreads"/> is not enabled for guild. This happens, if the guild does not have <see cref="PremiumTier.TierTwo"/></exception>
-		public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration auto_archive_duration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, int? rate_limit_per_user = null, string reason = null)
+		public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, int? rateLimitPerUser = null, string reason = null)
 		{
 			return (type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread)
 				? throw new NotSupportedException("Wrong thread type given.")
@@ -1018,13 +1018,13 @@ namespace DisCatSharp.Entities
 				? throw new NotSupportedException("Parent channel can't have threads.")
 				: type == ChannelType.PrivateThread
 				? Utilities.CheckThreadPrivateFeature(this.Guild)
-				? Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, auto_archive_duration)
-					? await this.Discord.ApiClient.CreateThreadWithoutMessageAsync(this.Id, name, auto_archive_duration, type, rate_limit_per_user, reason)
-					: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(auto_archive_duration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.")
+				? Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
+					? await this.Discord.ApiClient.CreateThreadWithoutMessageAsync(this.Id, name, autoArchiveDuration, type, rateLimitPerUser, reason)
+					: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.")
 				: throw new NotSupportedException($"Cannot create a private thread. Guild needs to be boost tier two.")
-				: Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, auto_archive_duration)
-					? await this.Discord.ApiClient.CreateThreadWithoutMessageAsync(this.Id, name, auto_archive_duration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rate_limit_per_user, reason)
-				: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(auto_archive_duration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+				: Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
+					? await this.Discord.ApiClient.CreateThreadWithoutMessageAsync(this.Id, name, autoArchiveDuration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, reason)
+				: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 		}
 
 		/// <summary>
@@ -1292,7 +1292,7 @@ namespace DisCatSharp.Entities
 				return Permissions.None;
 
 			if (this.Guild.OwnerId == mbr.Id)
-				return PermissionMethods.FULL_PERMS;
+				return PermissionMethods.FullPerms;
 
 			Permissions perms;
 
@@ -1308,16 +1308,16 @@ namespace DisCatSharp.Entities
 
 			// Adminstrator grants all permissions and cannot be overridden
 			if ((perms & Permissions.Administrator) == Permissions.Administrator)
-				return PermissionMethods.FULL_PERMS;
+				return PermissionMethods.FullPerms;
 
 			// channel overrides for roles that member is in
 			var mbRoleOverrides = mbRoles
-				.Select(xr => this._permissionOverwrites.FirstOrDefault(xo => xo.Id == xr.Id))
+				.Select(xr => this.PermissionOverwritesInternal.FirstOrDefault(xo => xo.Id == xr.Id))
 				.Where(xo => xo != null)
 				.ToList();
 
 			// assign channel permission overwrites for @everyone pseudo-role
-			var everyoneOverwrites = this._permissionOverwrites.FirstOrDefault(xo => xo.Id == everyoneRole.Id);
+			var everyoneOverwrites = this.PermissionOverwritesInternal.FirstOrDefault(xo => xo.Id == everyoneRole.Id);
 			if (everyoneOverwrites != null)
 			{
 				perms &= ~everyoneOverwrites.Denied;
@@ -1330,7 +1330,7 @@ namespace DisCatSharp.Entities
 			perms |= mbRoleOverrides.Aggregate(Permissions.None, (c, overs) => c | overs.Allowed);
 
 			// channel overrides for just this member
-			var mbOverrides = this._permissionOverwrites.FirstOrDefault(xo => xo.Id == mbr.Id);
+			var mbOverrides = this.PermissionOverwritesInternal.FirstOrDefault(xo => xo.Id == mbr.Id);
 			if (mbOverrides == null) return perms;
 
 			// assign channel permission overwrites for just this member

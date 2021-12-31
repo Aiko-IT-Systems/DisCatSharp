@@ -38,7 +38,7 @@ namespace DisCatSharp.EventArgs
 		/// <summary>
 		/// Gets the SSRC of the audio source.
 		/// </summary>
-		public uint SSRC { get; internal set; }
+		public uint Ssrc { get; internal set; }
 
 		/// <summary>
 		/// Gets whether this user is speaking.

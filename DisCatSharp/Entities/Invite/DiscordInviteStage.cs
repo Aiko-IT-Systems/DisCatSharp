@@ -40,7 +40,7 @@ namespace DisCatSharp.Entities
 
 		[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-		internal ConcurrentDictionary<ulong, DiscordMember> _members = new();
+		internal ConcurrentDictionary<ulong, DiscordMember> MembersInternal = new();
 
 		/// <summary>
 		/// Gets the number of users in the Stage.
@@ -65,7 +65,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordInviteStage()
 		{
-			this.Members = new ReadOnlyConcurrentDictionary<ulong, DiscordMember>(this._members);
+			this.Members = new ReadOnlyConcurrentDictionary<ulong, DiscordMember>(this.MembersInternal);
 		}
 	}
 }

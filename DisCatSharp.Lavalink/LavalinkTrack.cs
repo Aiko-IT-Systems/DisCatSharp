@@ -63,9 +63,9 @@ namespace DisCatSharp.Lavalink
 		/// Gets the track's duration.
 		/// </summary>
 		[JsonIgnore]
-		public TimeSpan Length => !this.IsStream ? TimeSpan.FromMilliseconds(this._length) : TimeSpan.Zero;
+		public TimeSpan Length => !this.IsStream ? TimeSpan.FromMilliseconds(this.LengthInternal) : TimeSpan.Zero;
 		[JsonProperty("length")]
-		internal long _length;
+		internal long LengthInternal;
 
 		/// <summary>
 		/// Gets whether the track is a stream.
@@ -77,9 +77,9 @@ namespace DisCatSharp.Lavalink
 		/// Gets the starting position of the track.
 		/// </summary>
 		[JsonIgnore]
-		public TimeSpan Position => TimeSpan.FromMilliseconds(this._position);
+		public TimeSpan Position => TimeSpan.FromMilliseconds(this.PositionInternal);
 		[JsonProperty("position")]
-		internal long _position;
+		internal long PositionInternal;
 
 		/// <summary>
 		/// Gets the title of the track.

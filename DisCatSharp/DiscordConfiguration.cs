@@ -176,15 +176,15 @@ namespace DisCatSharp
 
 		/// <summary>
 		/// <para>Sets the factory method used to create instances of UDP clients.</para>
-		/// <para>Use <see cref="DisCatSharp.Net.Udp.DCSUdpClient.CreateNew"/> and equivalents on other implementations to switch out client implementations.</para>
-		/// <para>Defaults to <see cref="DisCatSharp.Net.Udp.DCSUdpClient.CreateNew"/>.</para>
+		/// <para>Use <see cref="DcsUdpClient.CreateNew"/> and equivalents on other implementations to switch out client implementations.</para>
+		/// <para>Defaults to <see cref="DcsUdpClient.CreateNew"/>.</para>
 		/// </summary>
 		public UdpClientFactoryDelegate UdpClientFactory
 		{
 			internal get => this._udpClientFactory;
 			set => this._udpClientFactory = value ?? throw new InvalidOperationException("You need to supply a valid UDP client factory method.");
 		}
-		private UdpClientFactoryDelegate _udpClientFactory = DCSUdpClient.CreateNew;
+		private UdpClientFactoryDelegate _udpClientFactory = DcsUdpClient.CreateNew;
 
 		/// <summary>
 		/// <para>Sets the logger implementation to use.</para>

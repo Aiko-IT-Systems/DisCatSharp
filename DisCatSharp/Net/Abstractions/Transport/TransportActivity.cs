@@ -276,20 +276,20 @@ namespace DisCatSharp.Net.Abstractions
 			/// </summary>
 			[JsonIgnore]
 			public DateTimeOffset? Start
-				=> this._start != null ? (DateTimeOffset?)Utilities.GetDateTimeOffsetFromMilliseconds(this._start.Value, false) : null;
+				=> this.StartInternal != null ? (DateTimeOffset?)Utilities.GetDateTimeOffsetFromMilliseconds(this.StartInternal.Value, false) : null;
 
 			[JsonProperty("start", NullValueHandling = NullValueHandling.Ignore)]
-			internal long? _start;
+			internal long? StartInternal;
 
 			/// <summary>
 			/// Gets the time the game is going to end.
 			/// </summary>
 			[JsonIgnore]
 			public DateTimeOffset? End
-				=> this._end != null ? (DateTimeOffset?)Utilities.GetDateTimeOffsetFromMilliseconds(this._end.Value, false) : null;
+				=> this.EndInternal != null ? (DateTimeOffset?)Utilities.GetDateTimeOffsetFromMilliseconds(this.EndInternal.Value, false) : null;
 
 			[JsonProperty("end", NullValueHandling = NullValueHandling.Ignore)]
-			internal long? _end;
+			internal long? EndInternal;
 		}
 
 		/// <summary>

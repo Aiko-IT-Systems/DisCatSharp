@@ -145,7 +145,7 @@ namespace DisCatSharp.Lavalink
 		public LavalinkGuildConnection GetGuildConnection(DiscordGuild guild)
 		{
 			var nodes = this._connectedNodes.Values;
-			var node = nodes.FirstOrDefault(x => x._connectedGuilds.ContainsKey(guild.Id));
+			var node = nodes.FirstOrDefault(x => x.ConnectedGuildsInternal.ContainsKey(guild.Id));
 			return node?.GetGuildConnection(guild);
 		}
 
@@ -157,7 +157,7 @@ namespace DisCatSharp.Lavalink
 		{
 			Array.Sort(nodes, (a, b) =>
 			{
-				if (!a.Statistics._updated || !b.Statistics._updated)
+				if (!a.Statistics.Updated || !b.Statistics.Updated)
 					return 0;
 
 				//https://github.com/FredBoat/Lavalink-Client/blob/48bc27784f57be5b95d2ff2eff6665451b9366f5/src/main/java/lavalink/client/io/LavalinkLoadBalancer.java#L122

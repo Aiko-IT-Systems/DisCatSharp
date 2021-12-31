@@ -43,9 +43,9 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 		/// Defines that usage of this command is restricted to the owner or whitelisted ids of the bot.
 		/// </summary>
 		/// <param name="user_ids">List of allowed user ids</param>
-		public ApplicationCommandRequireOwnerOrIdAttribute(params ulong[] user_ids)
+		public ApplicationCommandRequireOwnerOrIdAttribute(params ulong[] userIds)
 		{
-			this.UserIds = new ReadOnlyCollection<ulong>(user_ids);
+			this.UserIds = new ReadOnlyCollection<ulong>(userIds);
 		}
 
 		/// <summary>

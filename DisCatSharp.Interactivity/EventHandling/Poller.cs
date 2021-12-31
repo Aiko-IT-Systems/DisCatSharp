@@ -64,7 +64,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			this._requests.Add(request);
 			try
 			{
-				await request._tcs.Task.ConfigureAwait(false);
+				await request.Tcs.Task.ConfigureAwait(false);
 			}
 			catch (Exception ex)
 			{
@@ -72,7 +72,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			}
 			finally
 			{
-				result = new ReadOnlyCollection<PollEmoji>(new HashSet<PollEmoji>(request._collected).ToList());
+				result = new ReadOnlyCollection<PollEmoji>(new HashSet<PollEmoji>(request.Collected).ToList());
 				request.Dispose();
 				this._requests.TryRemove(request);
 			}
@@ -95,9 +95,9 @@ namespace DisCatSharp.Interactivity.EventHandling
 				foreach (var req in this._requests)
 				{
 					// match message
-					if (req._message.Id == eventargs.Message.Id && req._message.ChannelId == eventargs.Channel.Id)
+					if (req.Message.Id == eventargs.Message.Id && req.Message.ChannelId == eventargs.Channel.Id)
 					{
-						if (req._emojis.Contains(eventargs.Emoji) && !req._collected.Any(x => x.Voted.Contains(eventargs.User)))
+						if (req.Emojis.Contains(eventargs.Emoji) && !req.Collected.Any(x => x.Voted.Contains(eventargs.User)))
 						{
 							if (eventargs.User.Id != this._client.CurrentUser.Id)
 								req.AddReaction(eventargs.Emoji, eventargs.User);
@@ -125,7 +125,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			foreach (var req in this._requests)
 			{
 				// match message
-				if (req._message.Id == eventargs.Message.Id && req._message.ChannelId == eventargs.Channel.Id)
+				if (req.Message.Id == eventargs.Message.Id && req.Message.ChannelId == eventargs.Channel.Id)
 				{
 					if (eventargs.User.Id != this._client.CurrentUser.Id)
 						req.RemoveReaction(eventargs.Emoji, eventargs.User);
@@ -145,7 +145,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			foreach (var req in this._requests)
 			{
 				// match message
-				if (req._message.Id == eventargs.Message.Id && req._message.ChannelId == eventargs.Channel.Id)
+				if (req.Message.Id == eventargs.Message.Id && req.Message.ChannelId == eventargs.Channel.Id)
 				{
 					req.ClearCollected();
 				}

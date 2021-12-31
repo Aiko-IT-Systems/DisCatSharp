@@ -118,7 +118,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			}
 
 			if (req is InteractionPaginationRequest ipr)
-				ipr.RegenerateCTS(e.Interaction); // Necessary to ensure we don't prematurely yeet the CTS //
+				ipr.RegenerateCts(e.Interaction); // Necessary to ensure we don't prematurely yeet the CTS //
 
 			await this.HandlePaginationAsync(req, e).ConfigureAwait(false);
 		}

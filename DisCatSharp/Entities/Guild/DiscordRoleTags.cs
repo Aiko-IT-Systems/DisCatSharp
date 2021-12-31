@@ -46,10 +46,10 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonIgnore]
 		public bool IsPremiumSubscriber
-			=> this._premiumSubscriber.HasValue && this._premiumSubscriber.Value is null;
+			=> this.PremiumSubscriber.HasValue && this.PremiumSubscriber.Value is null;
 
 		[JsonProperty("premium_subscriber", NullValueHandling = NullValueHandling.Include)]
-		internal Optional<bool?> _premiumSubscriber = false;
+		internal Optional<bool?> PremiumSubscriber = false;
 
 	}
 }

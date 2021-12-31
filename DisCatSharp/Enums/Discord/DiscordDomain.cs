@@ -205,17 +205,17 @@ namespace DisCatSharp.Enums
 		/// Gets a domain.
 		/// Valid types: <see cref="CoreDomain"/>, <see cref="OtherDomain"/> and <see cref="UnusedDomain"/>.
 		/// </summary>
-		/// <param name="DomainEnum">The domain type.</param>
+		/// <param name="domainEnum">The domain type.</param>
 		/// <returns>A DomainHelpAttribute.</returns>
-		public static DomainHelpAttribute GetDomain(Enum DomainEnum)
+		public static DomainHelpAttribute GetDomain(Enum domainEnum)
 		{
-			if (DomainEnum is not CoreDomain && DomainEnum is not OtherDomain && DomainEnum is not UnusedDomain)
-				throw new NotSupportedException($"Invalid type. Found: {DomainEnum.GetType()} Expected: CoreDomain or OtherDomain or UnusedDomain");
+			if (domainEnum is not CoreDomain && domainEnum is not OtherDomain && domainEnum is not UnusedDomain)
+				throw new NotSupportedException($"Invalid type. Found: {domainEnum.GetType()} Expected: CoreDomain or OtherDomain or UnusedDomain");
 
-			if (DomainEnum is CoreDomain domain && (domain == CoreDomain.DiscordAdmin || domain == CoreDomain.DiscordTools))
+			if (domainEnum is CoreDomain domain && (domain == CoreDomain.DiscordAdmin || domain == CoreDomain.DiscordTools))
 				throw new UnauthorizedAccessException("You don't have access to this domains");
 
-			var memberInfo = DomainEnum.GetType().GetMember(DomainEnum.ToString()).FirstOrDefault();
+			var memberInfo = domainEnum.GetType().GetMember(domainEnum.ToString()).FirstOrDefault();
 			if (memberInfo != null)
 			{
 				var attribute = (DomainHelpAttribute)memberInfo.GetCustomAttributes(typeof(DomainHelpAttribute), false).FirstOrDefault();

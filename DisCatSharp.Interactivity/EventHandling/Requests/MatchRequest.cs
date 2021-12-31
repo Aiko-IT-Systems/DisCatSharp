@@ -34,10 +34,10 @@ namespace DisCatSharp.Interactivity.EventHandling
 	/// <typeparam name="T"></typeparam>
 	internal class MatchRequest<T> : IDisposable where T : AsyncEventArgs
 	{
-		internal TaskCompletionSource<T> _tcs;
-		internal CancellationTokenSource _ct;
-		internal Func<T, bool> _predicate;
-		internal TimeSpan _timeout;
+		internal TaskCompletionSource<T> Tcs;
+		internal CancellationTokenSource Ct;
+		internal Func<T, bool> Predicate;
+		internal TimeSpan Timeout;
 
 		/// <summary>
 		/// Creates a new MatchRequest object.
@@ -46,11 +46,11 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <param name="timeout">Timeout time</param>
 		public MatchRequest(Func<T, bool> predicate, TimeSpan timeout)
 		{
-			this._tcs = new TaskCompletionSource<T>();
-			this._ct = new CancellationTokenSource(timeout);
-			this._predicate = predicate;
-			this._ct.Token.Register(() => this._tcs.TrySetResult(null));
-			this._timeout = timeout;
+			this.Tcs = new TaskCompletionSource<T>();
+			this.Ct = new CancellationTokenSource(timeout);
+			this.Predicate = predicate;
+			this.Ct.Token.Register(() => this.Tcs.TrySetResult(null));
+			this.Timeout = timeout;
 		}
 
 		~MatchRequest()
@@ -63,9 +63,9 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// </summary>
 		public void Dispose()
 		{
-			this._ct.Dispose();
-			this._tcs = null;
-			this._predicate = null;
+			this.Ct.Dispose();
+			this.Tcs = null;
+			this.Predicate = null;
 		}
 	}
 }

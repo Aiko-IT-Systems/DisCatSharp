@@ -46,7 +46,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Whether this webhook request is text-to-speech.
 		/// </summary>
-		public bool IsTTS { get; set; }
+		public bool IsTts { get; set; }
 
 		/// <summary>
 		/// Message to send on this webhook request.
@@ -66,7 +66,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Whether to keep previous attachments.
 		/// </summary>
-		internal bool? _keepAttachments = null;
+		internal bool? KeepAttachmentsInternal = null;
 
 		/// <summary>
 		/// Embeds to send on this webhook request.
@@ -96,8 +96,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Attachments to keep on this webhook request.
 		/// </summary>
-		public IEnumerable<DiscordAttachment> Attachments => this._attachments;
-		internal readonly List<DiscordAttachment> _attachments = new();
+		public IEnumerable<DiscordAttachment> Attachments => this.AttachmentsInternal;
+		internal readonly List<DiscordAttachment> AttachmentsInternal = new();
 
 		/// <summary>
 		/// Constructs a new empty webhook request builder.
@@ -180,9 +180,9 @@ namespace DisCatSharp.Entities
 		/// Indicates if the webhook must use text-to-speech.
 		/// </summary>
 		/// <param name="tts">Text-to-speech</param>
-		public DiscordWebhookBuilder WithTTS(bool tts)
+		public DiscordWebhookBuilder WithTts(bool tts)
 		{
-			this.IsTTS = tts;
+			this.IsTts = tts;
 			return this;
 		}
 
@@ -296,7 +296,7 @@ namespace DisCatSharp.Entities
 		/// <returns></returns>
 		public DiscordWebhookBuilder ModifyAttachments(IEnumerable<DiscordAttachment> attachments)
 		{
-			this._attachments.AddRange(attachments);
+			this.AttachmentsInternal.AddRange(attachments);
 			return this;
 		}
 
@@ -306,7 +306,7 @@ namespace DisCatSharp.Entities
 		/// <returns></returns>
 		public DiscordWebhookBuilder KeepAttachments(bool keep)
 		{
-			this._keepAttachments = keep;
+			this.KeepAttachmentsInternal = keep;
 			return this;
 		}
 
@@ -392,12 +392,12 @@ namespace DisCatSharp.Entities
 		{
 			this.Content = "";
 			this._embeds.Clear();
-			this.IsTTS = false;
+			this.IsTts = false;
 			this._mentions.Clear();
 			this._files.Clear();
-			this._attachments.Clear();
+			this.AttachmentsInternal.Clear();
 			this._components.Clear();
-			this._keepAttachments = false;
+			this.KeepAttachmentsInternal = false;
 		}
 
 		/// <summary>

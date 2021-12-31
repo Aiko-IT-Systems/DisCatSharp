@@ -75,12 +75,12 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets or Sets if the message should be TTS.
 		/// </summary>
-		public bool IsTTS { get; set; } = false;
+		public bool IsTts { get; set; } = false;
 
 		/// <summary>
 		/// Whether to keep previous attachments.
 		/// </summary>
-		internal bool? _keepAttachments = null;
+		internal bool? KeepAttachmentsInternal = null;
 
 		/// <summary>
 		/// Gets the Allowed Mentions for the message to be sent.
@@ -90,20 +90,20 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the Files to be sent in the Message.
 		/// </summary>
-		public IReadOnlyCollection<DiscordMessageFile> Files => this._files;
-		internal readonly List<DiscordMessageFile> _files = new();
+		public IReadOnlyCollection<DiscordMessageFile> Files => this.FilesInternal;
+		internal readonly List<DiscordMessageFile> FilesInternal = new();
 
 		/// <summary>
 		/// Gets the components that will be attached to the message.
 		/// </summary>
-		public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
-		internal readonly List<DiscordActionRowComponent> _components = new(5);
+		public IReadOnlyList<DiscordActionRowComponent> Components => this.ComponentsInternal;
+		internal readonly List<DiscordActionRowComponent> ComponentsInternal = new(5);
 
 		/// <summary>
 		/// Gets the Attachments to be sent in the Message.
 		/// </summary>
-		public IReadOnlyList<DiscordAttachment> Attachments => this._attachments;
-		internal readonly List<DiscordAttachment> _attachments = new();
+		public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
+		internal readonly List<DiscordAttachment> AttachmentsInternal = new();
 
 		/// <summary>
 		/// Gets the Reply Message ID.
@@ -168,11 +168,11 @@ namespace DisCatSharp.Entities
 		{
 			var ara = components.ToArray();
 
-			if (ara.Length + this._components.Count > 5)
+			if (ara.Length + this.ComponentsInternal.Count > 5)
 				throw new ArgumentException("ActionRow count exceeds maximum of five.");
 
 			foreach (var ar in ara)
-				this._components.Add(ar);
+				this.ComponentsInternal.Add(ar);
 
 			return this;
 		}
@@ -195,7 +195,7 @@ namespace DisCatSharp.Entities
 				throw new ArgumentException("Cannot add more than 5 components per action row!");
 
 			var comp = new DiscordActionRowComponent(cmpArr);
-			this._components.Add(comp);
+			this.ComponentsInternal.Add(comp);
 
 			return this;
 		}
@@ -203,11 +203,11 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Sets if the message should be TTS.
 		/// </summary>
-		/// <param name="isTTS">If TTS should be set.</param>
+		/// <param name="isTts">If TTS should be set.</param>
 		/// <returns>The current builder to be chained.</returns>
-		public DiscordMessageBuilder HasTTS(bool isTTS)
+		public DiscordMessageBuilder HasTts(bool isTts)
 		{
-			this.IsTTS = isTTS;
+			this.IsTts = isTts;
 			return this;
 		}
 
@@ -292,13 +292,13 @@ namespace DisCatSharp.Entities
 			if (this.Files.Count > 10)
 				throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-			if (this._files.Any(x => x.FileName == fileName))
+			if (this.FilesInternal.Any(x => x.FileName == fileName))
 				throw new ArgumentException("A File with that filename already exists");
 
 			if (resetStreamPosition)
-				this._files.Add(new DiscordMessageFile(fileName, stream, stream.Position, description: description));
+				this.FilesInternal.Add(new DiscordMessageFile(fileName, stream, stream.Position, description: description));
 			else
-				this._files.Add(new DiscordMessageFile(fileName, stream, null, description: description));
+				this.FilesInternal.Add(new DiscordMessageFile(fileName, stream, null, description: description));
 
 			return this;
 		}
@@ -315,13 +315,13 @@ namespace DisCatSharp.Entities
 			if (this.Files.Count > 10)
 				throw new ArgumentException("Cannot send more than 10 files with a single message.");
 
-			if (this._files.Any(x => x.FileName == stream.Name))
+			if (this.FilesInternal.Any(x => x.FileName == stream.Name))
 				throw new ArgumentException("A File with that filename already exists");
 
 			if (resetStreamPosition)
-				this._files.Add(new DiscordMessageFile(stream.Name, stream, stream.Position, description: description));
+				this.FilesInternal.Add(new DiscordMessageFile(stream.Name, stream, stream.Position, description: description));
 			else
-				this._files.Add(new DiscordMessageFile(stream.Name, stream, null, description: description));
+				this.FilesInternal.Add(new DiscordMessageFile(stream.Name, stream, null, description: description));
 
 			return this;
 		}
@@ -339,13 +339,13 @@ namespace DisCatSharp.Entities
 
 			foreach (var file in files)
 			{
-				if (this._files.Any(x => x.FileName == file.Key))
+				if (this.FilesInternal.Any(x => x.FileName == file.Key))
 					throw new ArgumentException("A File with that filename already exists");
 
 				if (resetStreamPosition)
-					this._files.Add(new DiscordMessageFile(file.Key, file.Value, file.Value.Position));
+					this.FilesInternal.Add(new DiscordMessageFile(file.Key, file.Value, file.Value.Position));
 				else
-					this._files.Add(new DiscordMessageFile(file.Key, file.Value, null));
+					this.FilesInternal.Add(new DiscordMessageFile(file.Key, file.Value, null));
 			}
 
 			return this;
@@ -358,7 +358,7 @@ namespace DisCatSharp.Entities
 		/// <returns></returns>
 		public DiscordMessageBuilder ModifyAttachments(IEnumerable<DiscordAttachment> attachments)
 		{
-			this._attachments.AddRange(attachments);
+			this.AttachmentsInternal.AddRange(attachments);
 			return this;
 		}
 
@@ -368,7 +368,7 @@ namespace DisCatSharp.Entities
 		/// <returns></returns>
 		public DiscordMessageBuilder KeepAttachments(bool keep)
 		{
-			this._keepAttachments = keep;
+			this.KeepAttachmentsInternal = keep;
 			return this;
 		}
 
@@ -414,7 +414,7 @@ namespace DisCatSharp.Entities
 		/// Clears all message components on this builder.
 		/// </summary>
 		public void ClearComponents()
-			=> this._components.Clear();
+			=> this.ComponentsInternal.Clear();
 
 		/// <summary>
 		/// Allows for clearing the Message Builder so that it can be used again to send a new message.
@@ -423,16 +423,16 @@ namespace DisCatSharp.Entities
 		{
 			this.Content = "";
 			this._embeds.Clear();
-			this.IsTTS = false;
+			this.IsTts = false;
 			this.Mentions = null;
-			this._files.Clear();
+			this.FilesInternal.Clear();
 			this.ReplyId = null;
 			this.MentionOnReply = false;
-			this._components.Clear();
+			this.ComponentsInternal.Clear();
 			this.Suppressed = false;
 			this.Sticker = null;
-			this._attachments.Clear();
-			this._keepAttachments = false;
+			this.AttachmentsInternal.Clear();
+			this.KeepAttachmentsInternal = false;
 		}
 
 		/// <summary>

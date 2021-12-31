@@ -42,8 +42,8 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// </summary>
 		public TaskCompletionSource<ComponentInteractionCreateEventArgs> Tcs { get; private set; } = new();
 
-		protected readonly CancellationToken _cancellation;
-		protected readonly Func<ComponentInteractionCreateEventArgs, bool> _predicate;
+		protected readonly CancellationToken Cancellation;
+		protected readonly Func<ComponentInteractionCreateEventArgs, bool> Predicate;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ModalMatchRequest"/> class.
@@ -51,18 +51,18 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <param name="custom_id">The custom id.</param>
 		/// <param name="predicate">The predicate.</param>
 		/// <param name="cancellation">The cancellation token.</param>
-		public ModalMatchRequest(string custom_id, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation)
+		public ModalMatchRequest(string customId, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken cancellation)
 		{
-			this.CustomId = custom_id;
-			this._predicate = predicate;
-			this._cancellation = cancellation;
-			this._cancellation.Register(() => this.Tcs.TrySetResult(null)); // TrySetCancelled would probably be better but I digress ~Velvet //
+			this.CustomId = customId;
+			this.Predicate = predicate;
+			this.Cancellation = cancellation;
+			this.Cancellation.Register(() => this.Tcs.TrySetResult(null)); // TrySetCancelled would probably be better but I digress ~Velvet //
 		}
 
 		/// <summary>
 		/// Whether it is a match.
 		/// </summary>
 		/// <param name="args">The arguments.</param>
-		public bool IsMatch(ComponentInteractionCreateEventArgs args) => this._predicate(args);
+		public bool IsMatch(ComponentInteractionCreateEventArgs args) => this.Predicate(args);
 	}
 }

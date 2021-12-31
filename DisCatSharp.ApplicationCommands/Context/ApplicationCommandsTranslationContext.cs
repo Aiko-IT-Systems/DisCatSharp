@@ -55,7 +55,7 @@ namespace DisCatSharp.ApplicationCommands
 			this.Name = name;
 		}
 
-		public void AddTranslation(string translation_json)
-			=> this.Translations = translation_json;
+		public void AddTranslation(string translationJson)
+			=> this.Translations = translationJson;
 	}
 }

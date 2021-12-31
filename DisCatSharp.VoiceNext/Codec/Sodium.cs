@@ -48,7 +48,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <summary>
 		/// Gets the c s p r n g.
 		/// </summary>
-		private RandomNumberGenerator CSPRNG { get; }
+		private RandomNumberGenerator Csprng { get; }
 		/// <summary>
 		/// Gets the buffer.
 		/// </summary>
@@ -65,9 +65,9 @@ namespace DisCatSharp.VoiceNext.Codec
 		{
 			SupportedModes = new ReadOnlyDictionary<string, EncryptionMode>(new Dictionary<string, EncryptionMode>()
 			{
-				["xsalsa20_poly1305_lite"] = EncryptionMode.XSalsa20_Poly1305_Lite,
-				["xsalsa20_poly1305_suffix"] = EncryptionMode.XSalsa20_Poly1305_Suffix,
-				["xsalsa20_poly1305"] = EncryptionMode.XSalsa20_Poly1305
+				["xsalsa20_poly1305_lite"] = EncryptionMode.XSalsa20Poly1305Lite,
+				["xsalsa20_poly1305_suffix"] = EncryptionMode.XSalsa20Poly1305Suffix,
+				["xsalsa20_poly1305"] = EncryptionMode.XSalsa20Poly1305
 			});
 		}
 
@@ -82,7 +82,7 @@ namespace DisCatSharp.VoiceNext.Codec
 
 			this.Key = key;
 
-			this.CSPRNG = RandomNumberGenerator.Create();
+			this.Csprng = RandomNumberGenerator.Create();
 			this.Buffer = new byte[Interop.SodiumNonceSize];
 		}
 
@@ -115,7 +115,7 @@ namespace DisCatSharp.VoiceNext.Codec
 			if (target.Length != Interop.SodiumNonceSize)
 				throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));
 
-			this.CSPRNG.GetBytes(this.Buffer);
+			this.Csprng.GetBytes(this.Buffer);
 			this.Buffer.AsSpan().CopyTo(target);
 		}
 
@@ -146,14 +146,14 @@ namespace DisCatSharp.VoiceNext.Codec
 		{
 			switch (encryptionMode)
 			{
-				case EncryptionMode.XSalsa20_Poly1305:
+				case EncryptionMode.XSalsa20Poly1305:
 					return;
 
-				case EncryptionMode.XSalsa20_Poly1305_Suffix:
+				case EncryptionMode.XSalsa20Poly1305Suffix:
 					nonce.CopyTo(target[^12..]);
 					return;
 
-				case EncryptionMode.XSalsa20_Poly1305_Lite:
+				case EncryptionMode.XSalsa20Poly1305Lite:
 					nonce[..4].CopyTo(target[^4..]);
 					return;
 
@@ -175,15 +175,15 @@ namespace DisCatSharp.VoiceNext.Codec
 
 			switch (encryptionMode)
 			{
-				case EncryptionMode.XSalsa20_Poly1305:
+				case EncryptionMode.XSalsa20Poly1305:
 					source[..12].CopyTo(target);
 					return;
 
-				case EncryptionMode.XSalsa20_Poly1305_Suffix:
+				case EncryptionMode.XSalsa20Poly1305Suffix:
 					source[^Interop.SodiumNonceSize..].CopyTo(target);
 					return;
 
-				case EncryptionMode.XSalsa20_Poly1305_Lite:
+				case EncryptionMode.XSalsa20Poly1305Lite:
 					source[^4..].CopyTo(target);
 					return;
 
@@ -233,7 +233,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <summary>
 		/// Disposes the Sodium.
 		/// </summary>
-		public void Dispose() => this.CSPRNG.Dispose();
+		public void Dispose() => this.Csprng.Dispose();
 
 		/// <summary>
 		/// Selects the mode.
@@ -277,16 +277,16 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <summary>
 		/// The nonce is an incrementing uint32 value. It is encoded as big endian value at the beginning of the nonce buffer. The 4 bytes are also appended at the end of the packet.
 		/// </summary>
-		XSalsa20_Poly1305_Lite,
+		XSalsa20Poly1305Lite,
 
 		/// <summary>
 		/// The nonce consists of random bytes. It is appended at the end of a packet.
 		/// </summary>
-		XSalsa20_Poly1305_Suffix,
+		XSalsa20Poly1305Suffix,
 
 		/// <summary>
 		/// The nonce consists of the RTP header. Nothing is appended to the packet.
 		/// </summary>
-		XSalsa20_Poly1305
+		XSalsa20Poly1305
 	}
 }

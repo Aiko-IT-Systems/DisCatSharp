@@ -35,11 +35,11 @@ namespace DisCatSharp.Interactivity.EventHandling
 	/// <typeparam name="T"></typeparam>
 	internal class CollectRequest<T> : IDisposable where T : AsyncEventArgs
 	{
-		internal TaskCompletionSource<bool> _tcs;
-		internal CancellationTokenSource _ct;
-		internal Func<T, bool> _predicate;
-		internal TimeSpan _timeout;
-		internal ConcurrentHashSet<T> _collected;
+		internal TaskCompletionSource<bool> Tcs;
+		internal CancellationTokenSource Ct;
+		internal Func<T, bool> Predicate;
+		internal TimeSpan Timeout;
+		internal ConcurrentHashSet<T> Collected;
 
 		/// <summary>
 		/// Creates a new CollectRequest object.
@@ -48,12 +48,12 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <param name="timeout">Timeout time</param>
 		public CollectRequest(Func<T, bool> predicate, TimeSpan timeout)
 		{
-			this._tcs = new TaskCompletionSource<bool>();
-			this._ct = new CancellationTokenSource(timeout);
-			this._predicate = predicate;
-			this._ct.Token.Register(() => this._tcs.TrySetResult(true));
-			this._timeout = timeout;
-			this._collected = new ConcurrentHashSet<T>();
+			this.Tcs = new TaskCompletionSource<bool>();
+			this.Ct = new CancellationTokenSource(timeout);
+			this.Predicate = predicate;
+			this.Ct.Token.Register(() => this.Tcs.TrySetResult(true));
+			this.Timeout = timeout;
+			this.Collected = new ConcurrentHashSet<T>();
 		}
 
 		~CollectRequest()
@@ -66,14 +66,14 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// </summary>
 		public void Dispose()
 		{
-			this._ct.Dispose();
-			this._tcs = null;
-			this._predicate = null;
+			this.Ct.Dispose();
+			this.Tcs = null;
+			this.Predicate = null;
 
-			if (this._collected != null)
+			if (this.Collected != null)
 			{
-				this._collected.Clear();
-				this._collected = null;
+				this.Collected.Clear();
+				this.Collected = null;
 			}
 		}
 	}

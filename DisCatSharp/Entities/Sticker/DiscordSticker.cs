@@ -92,7 +92,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonIgnore]
 		public IEnumerable<string> Tags
-			=> this._internalTags != null ? this._internalTags.Split(',') : Array.Empty<string>();
+			=> this.InternalTags != null ? this.InternalTags.Split(',') : Array.Empty<string>();
 
 		/// <summary>
 		/// Gets the asset hash of the sticker.
@@ -117,13 +117,13 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-		internal string _internalTags { get; set; }
+		internal string InternalTags { get; set; }
 
 		/// <summary>
 		/// Gets the url of the sticker.
 		/// </summary>
 		[JsonIgnore]
-		public string Url => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.STICKERS}/{this.Id}.{(this.FormatType == StickerFormat.LOTTIE ? "json" : "png")}";
+		public string Url => $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.STICKERS}/{this.Id}.{(this.FormatType == StickerFormat.Lottie ? "json" : "png")}";
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordSticker"/> class.
@@ -202,14 +202,14 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Sticker is a png
 		/// </summary>
-		PNG = 1,
+		Png = 1,
 		/// <summary>
 		/// Sticker is a animated png
 		/// </summary>
-		APNG = 2,
+		Apng = 2,
 		/// <summary>
 		/// Sticker is lottie
 		/// </summary>
-		LOTTIE = 3
+		Lottie = 3
 	}
 }

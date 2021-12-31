@@ -47,7 +47,7 @@ namespace DisCatSharp
 		/// Gets the number of items in this ring buffer.
 		/// </summary>
 		public int Count
-			=> this._reached_end ? this.Capacity : this.CurrentIndex;
+			=> this._reachedEnd ? this.Capacity : this.CurrentIndex;
 
 		/// <summary>
 		/// Gets whether this ring buffer is read-only.
@@ -59,7 +59,7 @@ namespace DisCatSharp
 		/// Gets or sets the internal collection of items.
 		/// </summary>
 		protected T[] InternalBuffer { get; set; }
-		private bool _reached_end = false;
+		private bool _reachedEnd = false;
 
 		/// <summary>
 		/// Creates a new ring buffer with specified size.
@@ -117,7 +117,7 @@ namespace DisCatSharp
 			if (this.CurrentIndex == this.Capacity)
 			{
 				this.CurrentIndex = 0;
-				this._reached_end = true;
+				this._reachedEnd = true;
 			}
 		}
 
@@ -225,7 +225,7 @@ namespace DisCatSharp
 		/// <returns>Enumerator for this ring buffer.</returns>
 		public IEnumerator<T> GetEnumerator()
 		{
-			return !this._reached_end
+			return !this._reachedEnd
 				? this.InternalBuffer.AsEnumerable().GetEnumerator()
 				: this.InternalBuffer.Skip(this.CurrentIndex)
 				.Concat(this.InternalBuffer.Take(this.CurrentIndex))

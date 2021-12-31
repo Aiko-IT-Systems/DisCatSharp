@@ -81,7 +81,7 @@ namespace DisCatSharp.Entities
 				var usr = null as DiscordUser;
 
 				if (this.Guild != null)
-					usr = this.Guild._members.TryGetValue(this.UserId, out var member) ? member : null;
+					usr = this.Guild.MembersInternal.TryGetValue(this.UserId, out var member) ? member : null;
 
 				if (usr == null)
 					usr = this.Discord.GetCachedOrEmptyUserInternal(this.UserId);
@@ -197,7 +197,7 @@ namespace DisCatSharp.Entities
 
 			this.UserId = m.Id;
 			this.ChannelId = 0;
-			this.GuildId = m._guild_id;
+			this.GuildId = m.GuildId;
 
 			this.IsServerDeafened = m.IsDeafened;
 			this.IsServerMuted = m.IsMuted;

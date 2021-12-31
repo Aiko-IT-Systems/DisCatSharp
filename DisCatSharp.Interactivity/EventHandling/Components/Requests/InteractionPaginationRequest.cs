@@ -75,7 +75,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			this._behaviorBehavior = behaviorBehavior;
 			this._pages.AddRange(pages);
 
-			this.RegenerateCTS(interaction);
+			this.RegenerateCts(interaction);
 			this._token.Register(() => this._tcs.TrySetResult(false));
 		}
 
@@ -88,7 +88,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// Regenerates the cts.
 		/// </summary>
 		/// <param name="interaction">The interaction.</param>
-		internal void RegenerateCTS(DiscordInteraction interaction)
+		internal void RegenerateCts(DiscordInteraction interaction)
 		{
 			this._interactionCts?.Dispose();
 			this._lastInteraction = interaction;

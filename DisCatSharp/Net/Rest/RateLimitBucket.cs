@@ -57,11 +57,11 @@ namespace DisCatSharp.Net
 		/// </summary>
 		public string Hash
 		{
-			get => Volatile.Read(ref this._hash);
+			get => Volatile.Read(ref this.HashInternal);
 
 			internal set
 			{
-				this._isUnlimited = value.Contains(_unlimitedHash);
+				this.IsUnlimited = value.Contains(_unlimitedHash);
 
 				if (this.BucketId != null && !this.BucketId.StartsWith(value))
 				{
@@ -70,11 +70,11 @@ namespace DisCatSharp.Net
 					this.RouteHashes.Add(id);
 				}
 
-				Volatile.Write(ref this._hash, value);
+				Volatile.Write(ref this.HashInternal, value);
 			}
 		}
 
-		internal string _hash;
+		internal string HashInternal;
 
 		/// <summary>
 		/// Gets the past route hashes associated with this bucket.
@@ -90,7 +90,7 @@ namespace DisCatSharp.Net
 		/// Gets the number of uses left before pre-emptive rate limit is triggered.
 		/// </summary>
 		public int Remaining
-			=> this._remaining;
+			=> this.RemainingInternal;
 
 		/// <summary>
 		/// Gets the maximum number of uses within a single bucket.
@@ -122,42 +122,42 @@ namespace DisCatSharp.Net
 		/// </summary>
 		internal DateTimeOffset ResetAfterOffset { get; set; }
 
-		internal volatile int _remaining;
+		internal volatile int RemainingInternal;
 
 		/// <summary>
 		/// Gets whether this bucket has it's ratelimit determined.
 		/// <para>This will be <see langword="false"/> if the ratelimit is determined.</para>
 		/// </summary>
-		internal volatile bool _isUnlimited;
+		internal volatile bool IsUnlimited;
 
 		/// <summary>
 		/// If the initial request for this bucket that is deterternining the rate limits is currently executing
 		/// This is a int because booleans can't be accessed atomically
 		/// 0 => False, all other values => True
 		/// </summary>
-		internal volatile int _limitTesting;
+		internal volatile int LimitTesting;
 
 		/// <summary>
 		/// Task to wait for the rate limit test to finish
 		/// </summary>
-		internal volatile Task _limitTestFinished;
+		internal volatile Task LimitTestFinished;
 
 		/// <summary>
 		/// If the rate limits have been determined
 		/// </summary>
-		internal volatile bool _limitValid;
+		internal volatile bool LimitValid;
 
 		/// <summary>
 		/// Rate limit reset in ticks, UTC on the next response after the rate limit has been reset
 		/// </summary>
-		internal long _nextReset;
+		internal long NextReset;
 
 		/// <summary>
 		/// If the rate limit is currently being reset.
 		/// This is a int because booleans can't be accessed atomically.
 		/// 0 => False, all other values => True
 		/// </summary>
-		internal volatile int _limitResetting;
+		internal volatile int LimitResetting;
 
 		private static readonly string _unlimitedHash = "unlimited";
 
@@ -165,17 +165,17 @@ namespace DisCatSharp.Net
 		/// Initializes a new instance of the <see cref="RateLimitBucket"/> class.
 		/// </summary>
 		/// <param name="hash">The hash.</param>
-		/// <param name="guild_id">The guild_id.</param>
-		/// <param name="channel_id">The channel_id.</param>
-		/// <param name="webhook_id">The webhook_id.</param>
-		internal RateLimitBucket(string hash, string guild_id, string channel_id, string webhook_id)
+		/// <param name="guildId">The guild_id.</param>
+		/// <param name="channelId">The channel_id.</param>
+		/// <param name="webhookId">The webhook_id.</param>
+		internal RateLimitBucket(string hash, string guildId, string channelId, string webhookId)
 		{
 			this.Hash = hash;
-			this.ChannelId = channel_id;
-			this.GuildId = guild_id;
-			this.WebhookId = webhook_id;
+			this.ChannelId = channelId;
+			this.GuildId = guildId;
+			this.WebhookId = webhookId;
 
-			this.BucketId = GenerateBucketId(hash, guild_id, channel_id, webhook_id);
+			this.BucketId = GenerateBucketId(hash, guildId, channelId, webhookId);
 			this.RouteHashes = new ConcurrentBag<string>();
 		}
 
@@ -183,12 +183,12 @@ namespace DisCatSharp.Net
 		/// Generates an ID for this request bucket.
 		/// </summary>
 		/// <param name="hash">Hash for this bucket.</param>
-		/// <param name="guild_id">Guild Id for this bucket.</param>
-		/// <param name="channel_id">Channel Id for this bucket.</param>
-		/// <param name="webhook_id">Webhook Id for this bucket.</param>
+		/// <param name="guildId">Guild Id for this bucket.</param>
+		/// <param name="channelId">Channel Id for this bucket.</param>
+		/// <param name="webhookId">Webhook Id for this bucket.</param>
 		/// <returns>Bucket Id.</returns>
-		public static string GenerateBucketId(string hash, string guild_id, string channel_id, string webhook_id)
-			=> $"{hash}:{guild_id}:{channel_id}:{webhook_id}";
+		public static string GenerateBucketId(string hash, string guildId, string channelId, string webhookId)
+			=> $"{hash}:{guildId}:{channelId}:{webhookId}";
 
 		/// <summary>
 		/// Generates the hash key.
@@ -252,23 +252,23 @@ namespace DisCatSharp.Net
 			if (this.ResetAfter.HasValue)
 				this.ResetAfter = this.ResetAfterOffset - now;
 
-			if (this._nextReset == 0)
+			if (this.NextReset == 0)
 				return;
 
-			if (this._nextReset > now.UtcTicks)
+			if (this.NextReset > now.UtcTicks)
 				return;
 
-			while (Interlocked.CompareExchange(ref this._limitResetting, 1, 0) != 0)
+			while (Interlocked.CompareExchange(ref this.LimitResetting, 1, 0) != 0)
 #pragma warning restore 420
 				await Task.Yield();
 
-			if (this._nextReset != 0)
+			if (this.NextReset != 0)
 			{
-				this._remaining = this.Maximum;
-				this._nextReset = 0;
+				this.RemainingInternal = this.Maximum;
+				this.NextReset = 0;
 			}
 
-			this._limitResetting = 0;
+			this.LimitResetting = 0;
 		}
 
 		/// <summary>
@@ -280,12 +280,12 @@ namespace DisCatSharp.Net
 		internal void SetInitialValues(int max, int usesLeft, DateTimeOffset newReset)
 		{
 			this.Maximum = max;
-			this._remaining = usesLeft;
-			this._nextReset = newReset.UtcTicks;
+			this.RemainingInternal = usesLeft;
+			this.NextReset = newReset.UtcTicks;
 
-			this._limitValid = true;
-			this._limitTestFinished = null;
-			this._limitTesting = 0;
+			this.LimitValid = true;
+			this.LimitTestFinished = null;
+			this.LimitTesting = 0;
 		}
 	}
 }

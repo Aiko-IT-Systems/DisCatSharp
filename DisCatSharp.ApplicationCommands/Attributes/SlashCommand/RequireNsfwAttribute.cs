@@ -41,6 +41,6 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 		/// Runs checks.
 		/// </summary>
 		public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-			=> Task.FromResult(ctx.Channel.Guild == null || ctx.Channel.IsNSFW);
+			=> Task.FromResult(ctx.Channel.Guild == null || ctx.Channel.IsNsfw);
 	}
 }

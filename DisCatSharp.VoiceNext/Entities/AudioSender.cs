@@ -34,7 +34,7 @@ namespace DisCatSharp.VoiceNext.Entities
 		/// <summary>
 		/// Gets the s s r c.
 		/// </summary>
-		public uint SSRC { get; }
+		public uint Ssrc { get; }
 		/// <summary>
 		/// Gets the id.
 		/// </summary>
@@ -59,7 +59,7 @@ namespace DisCatSharp.VoiceNext.Entities
 		/// <param name="decoder">The decoder.</param>
 		public AudioSender(uint ssrc, OpusDecoder decoder)
 		{
-			this.SSRC = ssrc;
+			this.Ssrc = ssrc;
 			this.Decoder = decoder;
 		}
 

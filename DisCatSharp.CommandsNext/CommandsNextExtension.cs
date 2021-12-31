@@ -839,11 +839,11 @@ namespace DisCatSharp.CommandsNext
 				Id = timeSpan << 22,
 				Pinned = false,
 				MentionEveryone = messageContents.Contains("@everyone"),
-				IsTTS = false,
-				_attachments = new List<DiscordAttachment>(),
-				_embeds = new List<DiscordEmbed>(),
+				IsTts = false,
+				AttachmentsInternal = new List<DiscordAttachment>(),
+				EmbedsInternal = new List<DiscordEmbed>(),
 				TimestampRaw = now.ToString("yyyy-MM-ddTHH:mm:sszzz"),
-				_reactions = new List<DiscordReaction>()
+				ReactionsInternal = new List<DiscordReaction>()
 			};
 
 			var mentionedUsers = new List<DiscordUser>();
@@ -854,7 +854,7 @@ namespace DisCatSharp.CommandsNext
 			{
 				if (msg.Channel.Guild != null)
 				{
-					mentionedUsers = Utilities.GetUserMentions(msg).Select(xid => msg.Channel.Guild._members.TryGetValue(xid, out var member) ? member : null).Cast<DiscordUser>().ToList();
+					mentionedUsers = Utilities.GetUserMentions(msg).Select(xid => msg.Channel.Guild.MembersInternal.TryGetValue(xid, out var member) ? member : null).Cast<DiscordUser>().ToList();
 					mentionedRoles = Utilities.GetRoleMentions(msg).Select(xid => msg.Channel.Guild.GetRole(xid)).ToList();
 					mentionedChannels = Utilities.GetChannelMentions(msg).Select(xid => msg.Channel.Guild.GetChannel(xid)).ToList();
 				}
@@ -864,9 +864,9 @@ namespace DisCatSharp.CommandsNext
 				}
 			}
 
-			msg._mentionedUsers = mentionedUsers;
-			msg._mentionedRoles = mentionedRoles;
-			msg._mentionedChannels = mentionedChannels;
+			msg.MentionedUsersInternal = mentionedUsers;
+			msg.MentionedRolesInternal = mentionedRoles;
+			msg.MentionedChannelsInternal = mentionedChannels;
 
 			var ctx = new CommandContext
 			{

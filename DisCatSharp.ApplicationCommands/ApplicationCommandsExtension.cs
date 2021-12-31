@@ -48,88 +48,88 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// A list of methods for top level commands.
 		/// </summary>
-		private static List<CommandMethod> _commandMethods { get; set; } = new List<CommandMethod>();
+		private static List<CommandMethod> s_commandMethods { get; set; } = new List<CommandMethod>();
 
 		/// <summary>
 		/// List of groups.
 		/// </summary>
-		private static List<GroupCommand> _groupCommands { get; set; } = new List<GroupCommand>();
+		private static List<GroupCommand> s_groupCommands { get; set; } = new List<GroupCommand>();
 
 		/// <summary>
 		/// List of groups with subgroups.
 		/// </summary>
-		private static List<SubGroupCommand> _subGroupCommands { get; set; } = new List<SubGroupCommand>();
+		private static List<SubGroupCommand> s_subGroupCommands { get; set; } = new List<SubGroupCommand>();
 
 		/// <summary>
 		/// List of context menus.
 		/// </summary>
-		private static List<ContextMenuCommand> _contextMenuCommands { get; set; } = new List<ContextMenuCommand>();
+		private static List<ContextMenuCommand> s_contextMenuCommands { get; set; } = new List<ContextMenuCommand>();
 
 		/// <summary>
 		/// List of global commands on discords backend.
 		/// </summary>
-		internal static List<DiscordApplicationCommand> _globalDiscordCommands { get; set; } = null;
+		internal static List<DiscordApplicationCommand> GlobalDiscordCommands { get; set; } = null;
 
 		/// <summary>
 		/// List of guild commands on discords backend.
 		/// </summary>
-		internal static Dictionary<ulong, List<DiscordApplicationCommand>> _guildDiscordCommands { get; set; } = null;
+		internal static Dictionary<ulong, List<DiscordApplicationCommand>> GuildDiscordCommands { get; set; } = null;
 
 		/// <summary>
 		/// Singleton modules.
 		/// </summary>
-		private static List<object> _singletonModules { get; set; } = new List<object>();
+		private static List<object> s_singletonModules { get; set; } = new List<object>();
 
 		/// <summary>
 		/// List of modules to register.
 		/// </summary>
-		private List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>> _updateList { get; set; } = new List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>>();
+		private List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>> UpdateList { get; set; } = new List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>>();
 
 		/// <summary>
 		/// Configuration for Discord.
 		/// </summary>
-		internal static ApplicationCommandsConfiguration _configuration;
+		internal static ApplicationCommandsConfiguration Configuration;
 
 		/// <summary>
 		/// Discord client.
 		/// </summary>
-		internal static DiscordClient _client;
+		internal static DiscordClient ClientInternal;
 
 		/// <summary>
 		/// Set to true if anything fails when registering.
 		/// </summary>
-		private static bool _errored { get; set; } = false;
+		private static bool s_errored { get; set; } = false;
 
 		/// <summary>
 		/// Gets a list of registered commands. The key is the guild id (null if global).
 		/// </summary>
 		public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> RegisteredCommands
-			=> _registeredCommands;
-		private static List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> _registeredCommands = new();
+			=> s_registeredCommands;
+		private static List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
 
 		/// <summary>
 		/// Gets a list of registered global commands.
 		/// </summary>
 		public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
-			=> _globalCommands;
-		internal static readonly List<DiscordApplicationCommand> _globalCommands = new();
+			=> GlobalCommandsInternal;
+		internal static readonly List<DiscordApplicationCommand> GlobalCommandsInternal = new();
 
 		/// <summary>
 		/// Gets a list of registered guild commands mapped by guild id.
 		/// </summary>
 		public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
-		=> _guildCommands;
-		internal static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> _guildCommands = new();
+		=> GuildCommandsInternal;
+		internal static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommandsInternal = new();
 
 		/// <summary>
 		/// Gets the registration count.
 		/// </summary>
-		private static int RegistrationCount { get; set; } = 0;
+		private static int s_registrationCount { get; set; } = 0;
 
 		/// <summary>
 		/// Gets the expected count.
 		/// </summary>
-		private static int ExpectedCount { get; set; } = 0;
+		private static int s_expectedCount { get; set; } = 0;
 
 		/// <summary>
 		/// Gets the guild ids where the applications.commands scope is missing.
@@ -139,7 +139,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Gets whether debug is enabled.
 		/// </summary>
-		private static bool DebugEnabled { get; set; }
+		private static bool s_debugEnabled { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
@@ -147,8 +147,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// <param name="configuration">The configuration.</param>
 		internal ApplicationCommandsExtension(ApplicationCommandsConfiguration configuration)
 		{
-			_configuration = configuration;
-			DebugEnabled = configuration.DebugStartupCounts;
+			Configuration = configuration;
+			s_debugEnabled = configuration.DebugStartupCounts;
 		}
 
 		/// <summary>
@@ -161,7 +161,7 @@ namespace DisCatSharp.ApplicationCommands
 				throw new InvalidOperationException("What did I tell you?");
 
 			this.Client = client;
-			_client = client;
+			ClientInternal = client;
 
 			this._slashError = new AsyncEvent<ApplicationCommandsExtension, SlashCommandErrorEventArgs>("SLASHCOMMAND_ERRORED", TimeSpan.Zero, null);
 			this._slashExecuted = new AsyncEvent<ApplicationCommandsExtension, SlashCommandExecutedEventArgs>("SLASHCOMMAND_EXECUTED", TimeSpan.Zero, null);
@@ -200,7 +200,7 @@ namespace DisCatSharp.ApplicationCommands
 		public void RegisterCommands<T>(ulong? guildId = null) where T : ApplicationCommandsModule
 		{
 			if (this.Client.ShardId == 0)
-				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T))));
+				this.UpdateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T))));
 		}
 
 		/// <summary>
@@ -214,7 +214,7 @@ namespace DisCatSharp.ApplicationCommands
 				throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
 			//If sharding, only register for shard 0
 			if (this.Client.ShardId == 0)
-				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type)));
+				this.UpdateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type)));
 		}
 
 		/// <summary>
@@ -244,7 +244,7 @@ namespace DisCatSharp.ApplicationCommands
 		public void RegisterCommands<T>(ulong guildId, Action<ApplicationCommandsPermissionContext> permissionSetup = null, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
 		{
 			if (this.Client.ShardId == 0)
-				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T), permissionSetup, translationSetup)));
+				this.UpdateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T), permissionSetup, translationSetup)));
 		}
 
 		/// <summary>
@@ -260,7 +260,7 @@ namespace DisCatSharp.ApplicationCommands
 				throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
 			//If sharding, only register for shard 0
 			if (this.Client.ShardId == 0)
-				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type, permissionSetup, translationSetup)));
+				this.UpdateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type, permissionSetup, translationSetup)));
 		}
 
 		/*
@@ -339,25 +339,25 @@ namespace DisCatSharp.ApplicationCommands
 			//Only update for shard 0
 			if (this.Client.ShardId == 0)
 			{
-				_globalDiscordCommands = new();
-				_guildDiscordCommands = new();
+				GlobalDiscordCommands = new();
+				GuildDiscordCommands = new();
 
-				var commands_pending = this._updateList.Select(x => x.Key).Distinct();
-				ExpectedCount = commands_pending.Count();
+				var commandsPending = this.UpdateList.Select(x => x.Key).Distinct();
+				s_expectedCount = commandsPending.Count();
 
-				if (DebugEnabled)
-					this.Client.Logger.LogDebug($"Expected Count: {ExpectedCount}");
+				if (s_debugEnabled)
+					this.Client.Logger.LogDebug($"Expected Count: {s_expectedCount}");
 
-				List<ulong> FailedGuilds = new();
-				IEnumerable<DiscordApplicationCommand> GlobalCommands = null;
-				GlobalCommands = await this.Client.GetGlobalApplicationCommandsAsync() ?? null;
+				List<ulong> failedGuilds = new();
+				IEnumerable<DiscordApplicationCommand> globalCommands = null;
+				globalCommands = await this.Client.GetGlobalApplicationCommandsAsync() ?? null;
 				foreach (var guild in this.Client.Guilds.Keys)
 				{
-					IEnumerable<DiscordApplicationCommand> Commands = null;
+					IEnumerable<DiscordApplicationCommand> commands = null;
 					var unauthorized = false;
 					try
 					{
-						Commands = await this.Client.GetGuildApplicationCommandsAsync(guild) ?? null;
+						commands = await this.Client.GetGuildApplicationCommandsAsync(guild) ?? null;
 					}
 					catch (UnauthorizedException)
 					{
@@ -365,38 +365,38 @@ namespace DisCatSharp.ApplicationCommands
 					}
 					finally
 					{
-						if (!unauthorized && Commands != null && Commands.Any())
-							_guildDiscordCommands.Add(guild, Commands.ToList());
+						if (!unauthorized && commands != null && commands.Any())
+							GuildDiscordCommands.Add(guild, commands.ToList());
 						else if (!unauthorized)
-							_guildDiscordCommands.Add(guild, null);
+							GuildDiscordCommands.Add(guild, null);
 						else
-							FailedGuilds.Add(guild);
+							failedGuilds.Add(guild);
 					}
 				}
 				//Default should be to add the help and slash commands can be added without setting any configuration
 				//so this should still add the default help
-				if (_configuration is null || (_configuration is not null && _configuration.EnableDefaultHelp))
+				if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
 				{
-					foreach (var key in commands_pending.ToList())
+					foreach (var key in commandsPending.ToList())
 					{
-						this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
+						this.UpdateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
 							(key, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
 					}
 				}
-				if (GlobalCommands != null && GlobalCommands.Any())
-					_globalDiscordCommands.AddRange(GlobalCommands);
-				foreach (var key in commands_pending.ToList())
+				if (globalCommands != null && globalCommands.Any())
+					GlobalDiscordCommands.AddRange(globalCommands);
+				foreach (var key in commandsPending.ToList())
 				{
 					this.Client.Logger.LogDebug(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
-					this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
+					this.RegisterCommands(this.UpdateList.Where(x => x.Key == key).Select(x => x.Value), key);
 				}
 
-				this.MissingScopeGuildIds = FailedGuilds;
+				this.MissingScopeGuildIds = failedGuilds;
 
-				await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(_configuration?.ServiceProvider)
+				await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(Configuration?.ServiceProvider)
 				{
 					Handled = true,
-					GuildsWithoutScope = FailedGuilds
+					GuildsWithoutScope = failedGuilds
 				});
 			}
 		}
@@ -458,7 +458,7 @@ namespace DisCatSharp.ApplicationCommands
 							commandTypeSources.AddRange(slashGroupsTulpe.commandTypeSources);
 
 						if (slashGroupsTulpe.singletonModules != null && slashGroupsTulpe.singletonModules.Any())
-							_singletonModules.AddRange(slashGroupsTulpe.singletonModules);
+							s_singletonModules.AddRange(slashGroupsTulpe.singletonModules);
 
 						if (slashGroupsTulpe.groupCommands != null && slashGroupsTulpe.groupCommands.Any())
 							groupCommands.AddRange(slashGroupsTulpe.groupCommands);
@@ -507,7 +507,7 @@ namespace DisCatSharp.ApplicationCommands
 							//Accounts for lifespans
 							if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
 							{
-								_singletonModules.Add(CreateInstance(module, _configuration?.ServiceProvider));
+								s_singletonModules.Add(CreateInstance(module, Configuration?.ServiceProvider));
 							}
 						}
 					}
@@ -517,14 +517,14 @@ namespace DisCatSharp.ApplicationCommands
 							this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.JsonMessage}");
 						else
 							this.Client.Logger.LogCritical(ex, $"There was an error registering application commands");
-						_errored = true;
+						s_errored = true;
 					}
 				}
-				if (!_errored)
+				if (!s_errored)
 				{
 					try
 					{
-						List<DiscordApplicationCommand> Commands = new();
+						List<DiscordApplicationCommand> commands = new();
 
 						try
 						{
@@ -532,14 +532,14 @@ namespace DisCatSharp.ApplicationCommands
 							{
 								if (updateList != null && updateList.Any())
 								{
-									var RegCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(updateList);
-									var ActualCommands = RegCommands.Distinct().ToList();
-									Commands.AddRange(ActualCommands);
-									_globalCommands.AddRange(ActualCommands);
+									var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(updateList);
+									var actualCommands = regCommands.Distinct().ToList();
+									commands.AddRange(actualCommands);
+									GlobalCommandsInternal.AddRange(actualCommands);
 								}
 								else
 								{
-									foreach (var cmd in _globalDiscordCommands)
+									foreach (var cmd in GlobalDiscordCommands)
 									{
 										try
 										{
@@ -556,20 +556,20 @@ namespace DisCatSharp.ApplicationCommands
 							{
 								if (updateList != null && updateList.Any())
 								{
-									var RegCommands = await RegistrationWorker.RegisterGuilldCommandsAsync(guildid.Value, updateList);
-									var ActualCommands = RegCommands.Distinct().ToList();
-									Commands.AddRange(ActualCommands);
-									_guildCommands.Add(guildid.Value, ActualCommands);
+									var regCommands = await RegistrationWorker.RegisterGuilldCommandsAsync(guildid.Value, updateList);
+									var actualCommands = regCommands.Distinct().ToList();
+									commands.AddRange(actualCommands);
+									GuildCommandsInternal.Add(guildid.Value, actualCommands);
 									if (this.Client.Guilds.TryGetValue(guildid.Value, out var guild))
 									{
 										guild.InternalRegisteredApplicationCommands = new();
-										guild.InternalRegisteredApplicationCommands.AddRange(ActualCommands);
+										guild.InternalRegisteredApplicationCommands.AddRange(actualCommands);
 									}
 
 								}
 								else
 								{
-									foreach (var cmd in _guildDiscordCommands[guildid.Value])
+									foreach (var cmd in GuildDiscordCommands[guildid.Value])
 									{
 										try
 										{
@@ -591,7 +591,7 @@ namespace DisCatSharp.ApplicationCommands
 
 						//Creates a guild command if a guild id is specified, otherwise global
 						//Checks against the ids and adds them to the command method lists
-						foreach (var command in Commands)
+						foreach (var command in commands)
 						{
 							if (commandMethods.GetFirstValueWhere(x => x.Name == command.Name, out var com))
 							{
@@ -632,37 +632,37 @@ namespace DisCatSharp.ApplicationCommands
 						}
 
 						//Adds to the global lists finally
-						_commandMethods.AddRange(commandMethods);
-						_groupCommands.AddRange(groupCommands);
-						_subGroupCommands.AddRange(subGroupCommands);
-						_contextMenuCommands.AddRange(contextMenuCommands);
+						s_commandMethods.AddRange(commandMethods);
+						s_groupCommands.AddRange(groupCommands);
+						s_subGroupCommands.AddRange(subGroupCommands);
+						s_contextMenuCommands.AddRange(contextMenuCommands);
 
-						_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildid, Commands.ToList()));
+						s_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildid, commands.ToList()));
 
 						foreach (var command in commandMethods)
 						{
 							var app = types.First(t => t.Type == command.Method.DeclaringType);
 						}
 
-						RegistrationCount++;
-						if (DebugEnabled)
-							this.Client.Logger.LogDebug($"Expected Count: {ExpectedCount}\nCurrent Count: {RegistrationCount}");
+						s_registrationCount++;
+						if (s_debugEnabled)
+							this.Client.Logger.LogDebug($"Expected Count: {s_expectedCount}\nCurrent Count: {s_registrationCount}");
 
 						if (guildid.HasValue)
 						{
-							await this._guildApplicationCommandsRegistered.InvokeAsync(this, new GuildApplicationCommandsRegisteredEventArgs(_configuration?.ServiceProvider)
+							await this._guildApplicationCommandsRegistered.InvokeAsync(this, new GuildApplicationCommandsRegisteredEventArgs(Configuration?.ServiceProvider)
 							{
 								Handled = true,
 								GuildId = guildid.Value,
-								RegisteredCommands = _guildCommands.Any(c => c.Key == guildid.Value) ? _guildCommands.Single(c => c.Key == guildid.Value).Value : null
+								RegisteredCommands = GuildCommandsInternal.Any(c => c.Key == guildid.Value) ? GuildCommandsInternal.Single(c => c.Key == guildid.Value).Value : null
 							});
 						}
 						else
 						{
-							await this._globalApplicationCommandsRegistered.InvokeAsync(this, new GlobalApplicationCommandsRegisteredEventArgs(_configuration?.ServiceProvider)
+							await this._globalApplicationCommandsRegistered.InvokeAsync(this, new GlobalApplicationCommandsRegisteredEventArgs(Configuration?.ServiceProvider)
 							{
 								Handled = true,
-								RegisteredCommands = _globalCommands
+								RegisteredCommands = GlobalCommandsInternal
 							});
 						}
 
@@ -674,7 +674,7 @@ namespace DisCatSharp.ApplicationCommands
 							this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.JsonMessage}");
 						else
 							this.Client.Logger.LogCritical(ex, $"There was an error registering application commands");
-						_errored = true;
+						s_errored = true;
 					}
 				}
 			});
@@ -682,14 +682,14 @@ namespace DisCatSharp.ApplicationCommands
 
 		private async void CheckRegistrationStartup()
 		{
-			if (DebugEnabled)
-				this.Client.Logger.LogDebug($"Checking counts...\n\nExpected Count: {ExpectedCount}\nCurrent Count: {RegistrationCount}");
-			if (RegistrationCount == ExpectedCount)
+			if (s_debugEnabled)
+				this.Client.Logger.LogDebug($"Checking counts...\n\nExpected Count: {s_expectedCount}\nCurrent Count: {s_registrationCount}");
+			if (s_registrationCount == s_expectedCount)
 			{
-				await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new ApplicationCommandsModuleStartupFinishedEventArgs(_configuration?.ServiceProvider)
+				await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new ApplicationCommandsModuleStartupFinishedEventArgs(Configuration?.ServiceProvider)
 				{
-					RegisteredGlobalCommands = _globalCommands,
-					RegisteredGuildCommands = _guildCommands,
+					RegisteredGlobalCommands = GlobalCommandsInternal,
+					RegisteredGuildCommands = GuildCommandsInternal,
 					GuildsWithoutScope = MissingScopeGuildIds
 				});
 
@@ -720,7 +720,7 @@ namespace DisCatSharp.ApplicationCommands
 						CommandName = e.Interaction.Data.Name,
 						InteractionId = e.Interaction.Id,
 						Token = e.Interaction.Token,
-						Services = _configuration?.ServiceProvider,
+						Services = Configuration?.ServiceProvider,
 						ResolvedUserMentions = e.Interaction.Data.Resolved?.Users?.Values.ToList(),
 						ResolvedRoleMentions = e.Interaction.Data.Resolved?.Roles?.Values.ToList(),
 						ResolvedChannelMentions = e.Interaction.Data.Resolved?.Channels?.Values.ToList(),
@@ -732,12 +732,12 @@ namespace DisCatSharp.ApplicationCommands
 
 					try
 					{
-						if (_errored)
+						if (s_errored)
 							throw new InvalidOperationException("Slash commands failed to register properly on startup.");
 
-						var methods = _commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
-						var groups = _groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
-						var subgroups = _subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+						var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
+						var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+						var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 						if (!methods.Any() && !groups.Any() && !subgroups.Any())
 							throw new InvalidOperationException("A slash command was executed, but no command was registered for it.");
 
@@ -779,12 +779,12 @@ namespace DisCatSharp.ApplicationCommands
 				}
 				else if (e.Interaction.Type == InteractionType.AutoComplete)
 				{
-					if (_errored)
+					if (s_errored)
 						throw new InvalidOperationException("Slash commands failed to register properly on startup.");
 
-					var methods = _commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
-					var groups = _groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
-					var subgroups = _subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+					var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
+					var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+					var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 					if (!methods.Any() && !groups.Any() && !subgroups.Any())
 						throw new InvalidOperationException("An autocomplete interaction was created, but no command was registered for it.");
 
@@ -804,7 +804,7 @@ namespace DisCatSharp.ApplicationCommands
 							{
 								Interaction = e.Interaction,
 								Client = this.Client,
-								Services = _configuration?.ServiceProvider,
+								Services = Configuration?.ServiceProvider,
 								ApplicationCommandsExtension = this,
 								Guild = e.Interaction.Guild,
 								Channel = e.Interaction.Channel,
@@ -832,7 +832,7 @@ namespace DisCatSharp.ApplicationCommands
 							var context = new AutocompleteContext
 							{
 								Interaction = e.Interaction,
-								Services = _configuration?.ServiceProvider,
+								Services = Configuration?.ServiceProvider,
 								ApplicationCommandsExtension = this,
 								Guild = e.Interaction.Guild,
 								Channel = e.Interaction.Channel,
@@ -900,7 +900,7 @@ namespace DisCatSharp.ApplicationCommands
 					Interaction = e.Interaction,
 					Channel = e.Interaction.Channel,
 					Client = client,
-					Services = _configuration?.ServiceProvider,
+					Services = Configuration?.ServiceProvider,
 					CommandName = e.Interaction.Data.Name,
 					ApplicationCommandsExtension = this,
 					Guild = e.Interaction.Guild,
@@ -916,11 +916,11 @@ namespace DisCatSharp.ApplicationCommands
 
 				try
 				{
-					if (_errored)
+					if (s_errored)
 						throw new InvalidOperationException("Context menus failed to register properly on startup.");
 
 					//Gets the method for the command
-					var method = _contextMenuCommands.FirstOrDefault(x => x.CommandId == e.Interaction.Data.Id);
+					var method = s_contextMenuCommands.FirstOrDefault(x => x.CommandId == e.Interaction.Data.Id);
 
 					if (method == null)
 						throw new InvalidOperationException("A context menu was executed, but no command was registered for it.");
@@ -955,17 +955,17 @@ namespace DisCatSharp.ApplicationCommands
 			{
 				case ApplicationCommandModuleLifespan.Scoped:
 					//Accounts for static methods and adds DI
-					classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(_configuration?.ServiceProvider.CreateScope().ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, _configuration?.ServiceProvider.CreateScope().ServiceProvider);
+					classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(Configuration?.ServiceProvider.CreateScope().ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, Configuration?.ServiceProvider.CreateScope().ServiceProvider);
 					break;
 
 				case ApplicationCommandModuleLifespan.Transient:
 					//Accounts for static methods and adds DI
-					classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(_configuration?.ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, _configuration?.ServiceProvider);
+					classInstance = method.IsStatic ? ActivatorUtilities.CreateInstance(Configuration?.ServiceProvider, method.DeclaringType) : CreateInstance(method.DeclaringType, Configuration?.ServiceProvider);
 					break;
 
 				//If singleton, gets it from the singleton list
 				case ApplicationCommandModuleLifespan.Singleton:
-					classInstance = _singletonModules.First(x => ReferenceEquals(x.GetType(), method.DeclaringType));
+					classInstance = s_singletonModules.First(x => ReferenceEquals(x.GetType(), method.DeclaringType));
 					break;
 
 				default:
@@ -1196,7 +1196,7 @@ namespace DisCatSharp.ApplicationCommands
 				if (dict.Any(x => x.Value == false))
 					throw new SlashExecutionChecksFailedException { FailedChecks = dict.Where(x => x.Value == false).Select(x => x.Key).ToList() };
 			}
-			if (context is ContextMenuContext CMctx)
+			if (context is ContextMenuContext cMctx)
 			{
 				var attributes = new List<ContextMenuCheckBaseAttribute>();
 				attributes.AddRange(method.GetCustomAttributes<ContextMenuCheckBaseAttribute>(true));
@@ -1214,7 +1214,7 @@ namespace DisCatSharp.ApplicationCommands
 				foreach (var att in attributes)
 				{
 					//Runs the check and adds the result to a list
-					var result = await att.ExecuteChecksAsync(CMctx);
+					var result = await att.ExecuteChecksAsync(cMctx);
 					dict.Add(att, result);
 				}
 
@@ -1249,7 +1249,7 @@ namespace DisCatSharp.ApplicationCommands
 							?.SetValue(instance, guildId);
 
 						choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.Services))
-							?.SetValue(instance, _configuration.ServiceProvider);
+							?.SetValue(instance, Configuration.ServiceProvider);
 					}
 
 					//Gets the choices from the method
@@ -1378,17 +1378,17 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		public async Task RefreshCommandsAsync()
 		{
-			_commandMethods.Clear();
-			_groupCommands.Clear();
-			_subGroupCommands.Clear();
-			_registeredCommands.Clear();
-			_contextMenuCommands.Clear();
-			_globalDiscordCommands.Clear();
-			_guildDiscordCommands.Clear();
-			_globalDiscordCommands = null;
-			_guildDiscordCommands = null;
-			_guildCommands.Clear();
-			_globalCommands.Clear();
+			s_commandMethods.Clear();
+			s_groupCommands.Clear();
+			s_subGroupCommands.Clear();
+			s_registeredCommands.Clear();
+			s_contextMenuCommands.Clear();
+			GlobalDiscordCommands.Clear();
+			GuildDiscordCommands.Clear();
+			GlobalDiscordCommands = null;
+			GuildDiscordCommands = null;
+			GuildCommandsInternal.Clear();
+			GlobalCommandsInternal.Clear();
 
 			await this.UpdateAsync();
 		}

@@ -36,10 +36,10 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the stickers contained in this pack.
 		/// </summary>
-		public IReadOnlyList<DiscordSticker> Stickers => this._stickers;
+		public IReadOnlyList<DiscordSticker> Stickers => this.StickersInternal;
 
 		[JsonProperty("stickers")]
-		internal List<DiscordSticker> _stickers = new();
+		internal List<DiscordSticker> StickersInternal = new();
 
 		/// <summary>
 		/// Gets the name of this sticker pack.

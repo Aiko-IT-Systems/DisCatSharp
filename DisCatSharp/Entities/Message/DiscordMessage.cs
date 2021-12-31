@@ -40,15 +40,15 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordMessage()
 		{
-			this._attachmentsLazy = new Lazy<IReadOnlyList<DiscordAttachment>>(() => new ReadOnlyCollection<DiscordAttachment>(this._attachments));
-			this._embedsLazy = new Lazy<IReadOnlyList<DiscordEmbed>>(() => new ReadOnlyCollection<DiscordEmbed>(this._embeds));
-			this._mentionedChannelsLazy = new Lazy<IReadOnlyList<DiscordChannel>>(() => this._mentionedChannels != null
-					? new ReadOnlyCollection<DiscordChannel>(this._mentionedChannels)
+			this._attachmentsLazy = new Lazy<IReadOnlyList<DiscordAttachment>>(() => new ReadOnlyCollection<DiscordAttachment>(this.AttachmentsInternal));
+			this._embedsLazy = new Lazy<IReadOnlyList<DiscordEmbed>>(() => new ReadOnlyCollection<DiscordEmbed>(this.EmbedsInternal));
+			this._mentionedChannelsLazy = new Lazy<IReadOnlyList<DiscordChannel>>(() => this.MentionedChannelsInternal != null
+					? new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal)
 					: Array.Empty<DiscordChannel>());
-			this._mentionedRolesLazy = new Lazy<IReadOnlyList<DiscordRole>>(() => this._mentionedRoles != null ? new ReadOnlyCollection<DiscordRole>(this._mentionedRoles) : Array.Empty<DiscordRole>());
-			this._mentionedUsersLazy = new Lazy<IReadOnlyList<DiscordUser>>(() => new ReadOnlyCollection<DiscordUser>(this._mentionedUsers));
-			this._reactionsLazy = new Lazy<IReadOnlyList<DiscordReaction>>(() => new ReadOnlyCollection<DiscordReaction>(this._reactions));
-			this._stickersLazy = new Lazy<IReadOnlyList<DiscordSticker>>(() => new ReadOnlyCollection<DiscordSticker>(this._stickers));
+			this._mentionedRolesLazy = new Lazy<IReadOnlyList<DiscordRole>>(() => this.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal) : Array.Empty<DiscordRole>());
+			this.MentionedUsersLazy = new Lazy<IReadOnlyList<DiscordUser>>(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
+			this._reactionsLazy = new Lazy<IReadOnlyList<DiscordReaction>>(() => new ReadOnlyCollection<DiscordReaction>(this.ReactionsInternal));
+			this._stickersLazy = new Lazy<IReadOnlyList<DiscordSticker>>(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
 			this._jumpLink = new Lazy<Uri>(() =>
 			{
 				var gid = this.Channel != null
@@ -70,25 +70,25 @@ namespace DisCatSharp.Entities
 		{
 			this.Discord = other.Discord;
 
-			this._attachments = other._attachments; // the attachments cannot change, thus no need to copy and reallocate.
-			this._embeds = new List<DiscordEmbed>(other._embeds);
+			this.AttachmentsInternal = other.AttachmentsInternal; // the attachments cannot change, thus no need to copy and reallocate.
+			this.EmbedsInternal = new List<DiscordEmbed>(other.EmbedsInternal);
 
-			if (other._mentionedChannels != null)
-				this._mentionedChannels = new List<DiscordChannel>(other._mentionedChannels);
-			if (other._mentionedRoles != null)
-				this._mentionedRoles = new List<DiscordRole>(other._mentionedRoles);
-			if (other._mentionedRoleIds != null)
-				this._mentionedRoleIds = new List<ulong>(other._mentionedRoleIds);
-			this._mentionedUsers = new List<DiscordUser>(other._mentionedUsers);
-			this._reactions = new List<DiscordReaction>(other._reactions);
-			this._stickers = new List<DiscordSticker>(other._stickers);
+			if (other.MentionedChannelsInternal != null)
+				this.MentionedChannelsInternal = new List<DiscordChannel>(other.MentionedChannelsInternal);
+			if (other.MentionedRolesInternal != null)
+				this.MentionedRolesInternal = new List<DiscordRole>(other.MentionedRolesInternal);
+			if (other.MentionedRoleIds != null)
+				this.MentionedRoleIds = new List<ulong>(other.MentionedRoleIds);
+			this.MentionedUsersInternal = new List<DiscordUser>(other.MentionedUsersInternal);
+			this.ReactionsInternal = new List<DiscordReaction>(other.ReactionsInternal);
+			this.StickersInternal = new List<DiscordSticker>(other.StickersInternal);
 
 			this.Author = other.Author;
 			this.ChannelId = other.ChannelId;
 			this.Content = other.Content;
 			this.EditedTimestampRaw = other.EditedTimestampRaw;
 			this.Id = other.Id;
-			this.IsTTS = other.IsTTS;
+			this.IsTts = other.IsTts;
 			this.MessageType = other.MessageType;
 			this.Pinned = other.Pinned;
 			this.TimestampRaw = other.TimestampRaw;
@@ -183,7 +183,7 @@ namespace DisCatSharp.Entities
 		/// Gets whether the message is a text-to-speech message.
 		/// </summary>
 		[JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
-		public bool IsTTS { get; internal set; }
+		public bool IsTts { get; internal set; }
 
 		/// <summary>
 		/// Gets whether the message mentions everyone.
@@ -196,12 +196,12 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonIgnore]
 		public IReadOnlyList<DiscordUser> MentionedUsers
-			=> this._mentionedUsersLazy.Value;
+			=> this.MentionedUsersLazy.Value;
 
 		[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
-		internal List<DiscordUser> _mentionedUsers;
+		internal List<DiscordUser> MentionedUsersInternal;
 		[JsonIgnore]
-		internal readonly Lazy<IReadOnlyList<DiscordUser>> _mentionedUsersLazy;
+		internal readonly Lazy<IReadOnlyList<DiscordUser>> MentionedUsersLazy;
 
 		// TODO this will probably throw an exception in DMs since it tries to wrap around a null List...
 		// this is probably low priority but need to find out a clean way to solve it...
@@ -213,10 +213,10 @@ namespace DisCatSharp.Entities
 			=> this._mentionedRolesLazy.Value;
 
 		[JsonIgnore]
-		internal List<DiscordRole> _mentionedRoles;
+		internal List<DiscordRole> MentionedRolesInternal;
 
 		[JsonProperty("mention_roles")]
-		internal List<ulong> _mentionedRoleIds;
+		internal List<ulong> MentionedRoleIds;
 
 		[JsonIgnore]
 		private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
@@ -229,7 +229,7 @@ namespace DisCatSharp.Entities
 			=> this._mentionedChannelsLazy.Value;
 
 		[JsonIgnore]
-		internal List<DiscordChannel> _mentionedChannels;
+		internal List<DiscordChannel> MentionedChannelsInternal;
 		[JsonIgnore]
 		private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
 
@@ -241,7 +241,7 @@ namespace DisCatSharp.Entities
 			=> this._attachmentsLazy.Value;
 
 		[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-		internal List<DiscordAttachment> _attachments = new();
+		internal List<DiscordAttachment> AttachmentsInternal = new();
 		[JsonIgnore]
 		private readonly Lazy<IReadOnlyList<DiscordAttachment>> _attachmentsLazy;
 
@@ -253,7 +253,7 @@ namespace DisCatSharp.Entities
 			=> this._embedsLazy.Value;
 
 		[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-		internal List<DiscordEmbed> _embeds = new();
+		internal List<DiscordEmbed> EmbedsInternal = new();
 		[JsonIgnore]
 		private readonly Lazy<IReadOnlyList<DiscordEmbed>> _embedsLazy;
 
@@ -265,7 +265,7 @@ namespace DisCatSharp.Entities
 			=> this._reactionsLazy.Value;
 
 		[JsonProperty("reactions", NullValueHandling = NullValueHandling.Ignore)]
-		internal List<DiscordReaction> _reactions = new();
+		internal List<DiscordReaction> ReactionsInternal = new();
 		[JsonIgnore]
 		private readonly Lazy<IReadOnlyList<DiscordReaction>> _reactionsLazy;
 
@@ -355,7 +355,7 @@ namespace DisCatSharp.Entities
 			=> this._stickersLazy.Value;
 
 		[JsonProperty("sticker_items", NullValueHandling = NullValueHandling.Ignore)]
-		internal List<DiscordSticker> _stickers = new();
+		internal List<DiscordSticker> StickersInternal = new();
 		[JsonIgnore]
 		private readonly Lazy<IReadOnlyList<DiscordSticker>> _stickersLazy;
 
@@ -396,7 +396,7 @@ namespace DisCatSharp.Entities
 			var reference = new DiscordMessageReference();
 
 			if (guildId.HasValue)
-				reference.Guild = client._guilds.TryGetValue(guildId.Value, out var g)
+				reference.Guild = client.GuildsInternal.TryGetValue(guildId.Value, out var g)
 					? g
 					: new DiscordGuild
 					{
@@ -447,14 +447,14 @@ namespace DisCatSharp.Entities
 		{
 			var mentions = new List<IMention>();
 
-			if (this.ReferencedMessage != null && this._mentionedUsers.Contains(this.ReferencedMessage.Author))
+			if (this.ReferencedMessage != null && this.MentionedUsersInternal.Contains(this.ReferencedMessage.Author))
 				mentions.Add(new RepliedUserMention()); // Return null to allow all mentions
 
-			if (this._mentionedUsers.Any())
-				mentions.AddRange(this._mentionedUsers.Select(m => (IMention)new UserMention(m)));
+			if (this.MentionedUsersInternal.Any())
+				mentions.AddRange(this.MentionedUsersInternal.Select(m => (IMention)new UserMention(m)));
 
-			if (this._mentionedRoleIds.Any())
-				mentions.AddRange(this._mentionedRoleIds.Select(r => (IMention)new RoleMention(r)));
+			if (this.MentionedRoleIds.Any())
+				mentions.AddRange(this.MentionedRoleIds.Select(r => (IMention)new RoleMention(r)));
 
 			return mentions.ToArray();
 		}
@@ -465,14 +465,14 @@ namespace DisCatSharp.Entities
 		internal void PopulateMentions()
 		{
 			var guild = this.Channel?.Guild;
-			this._mentionedUsers ??= new List<DiscordUser>();
-			this._mentionedRoles ??= new List<DiscordRole>();
-			this._mentionedChannels ??= new List<DiscordChannel>();
+			this.MentionedUsersInternal ??= new List<DiscordUser>();
+			this.MentionedRolesInternal ??= new List<DiscordRole>();
+			this.MentionedChannelsInternal ??= new List<DiscordChannel>();
 
 			var mentionedUsers = new HashSet<DiscordUser>(new DiscordUserComparer());
 			if (guild != null)
 			{
-				foreach (var usr in this._mentionedUsers)
+				foreach (var usr in this.MentionedUsersInternal)
 				{
 					usr.Discord = this.Discord;
 					this.Discord.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
@@ -483,7 +483,7 @@ namespace DisCatSharp.Entities
 						return old;
 					});
 
-					mentionedUsers.Add(guild._members.TryGetValue(usr.Id, out var member) ? member : usr);
+					mentionedUsers.Add(guild.MembersInternal.TryGetValue(usr.Id, out var member) ? member : usr);
 				}
 			}
 			if (!string.IsNullOrWhiteSpace(this.Content))
@@ -492,12 +492,12 @@ namespace DisCatSharp.Entities
 				if (guild != null)
 				{
 					//this._mentionedRoles = this._mentionedRoles.Union(Utilities.GetRoleMentions(this).Select(xid => guild.GetRole(xid))).ToList();
-					this._mentionedRoles = this._mentionedRoles.Union(this._mentionedRoleIds.Select(xid => guild.GetRole(xid))).ToList();
-					this._mentionedChannels = this._mentionedChannels.Union(Utilities.GetChannelMentions(this).Select(xid => guild.GetChannel(xid))).ToList();
+					this.MentionedRolesInternal = this.MentionedRolesInternal.Union(this.MentionedRoleIds.Select(xid => guild.GetRole(xid))).ToList();
+					this.MentionedChannelsInternal = this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this).Select(xid => guild.GetChannel(xid))).ToList();
 				}
 			}
 
-			this._mentionedUsers = mentionedUsers.ToList();
+			this.MentionedUsersInternal = mentionedUsers.ToList();
 		}
 
 		/// <summary>
@@ -562,7 +562,7 @@ namespace DisCatSharp.Entities
 		public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder)
 		{
 			builder.Validate(true);
-			return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? new Optional<IEnumerable<DiscordAttachment>>(builder.Attachments) : builder._keepAttachments.HasValue ? builder._keepAttachments.Value ? new Optional<IEnumerable<DiscordAttachment>>(this.Attachments) : Array.Empty<DiscordAttachment>() : null);
+			return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? new Optional<IEnumerable<DiscordAttachment>>(builder.Attachments) : builder.KeepAttachmentsInternal.HasValue ? builder.KeepAttachmentsInternal.Value ? new Optional<IEnumerable<DiscordAttachment>>(this.Attachments) : Array.Empty<DiscordAttachment>() : null);
 		}
 
 		/// <summary>
@@ -598,7 +598,7 @@ namespace DisCatSharp.Entities
 			var builder = new DiscordMessageBuilder();
 			action(builder);
 			builder.Validate(true);
-			return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? new Optional<IEnumerable<DiscordAttachment>>(builder.Attachments) : builder._keepAttachments.HasValue ? builder._keepAttachments.Value ? new Optional<IEnumerable<DiscordAttachment>>(this.Attachments) : Array.Empty<DiscordAttachment>() : null);
+			return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? new Optional<IEnumerable<DiscordAttachment>>(builder.Attachments) : builder.KeepAttachmentsInternal.HasValue ? builder.KeepAttachmentsInternal.Value ? new Optional<IEnumerable<DiscordAttachment>>(this.Attachments) : Array.Empty<DiscordAttachment>() : null);
 		}
 
 		/// <summary>
@@ -617,8 +617,8 @@ namespace DisCatSharp.Entities
 		/// Depending on the <see cref="ChannelType"/> of the parent channel it's either a <see cref="ChannelType.PublicThread"/> or a <see cref="ChannelType.NewsThread"/>.
 		/// </summary>
 		/// <param name="name">The name of the thread.</param>
-		/// <param name="auto_archive_duration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/></param>
-		/// <param name="rate_limit_per_user">The per user ratelimit, aka slowdown.</param>
+		/// <param name="autoArchiveDuration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/></param>
+		/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
 		/// <param name="reason">The reason.</param>
 		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePrivateThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> permission.</exception>
@@ -626,11 +626,11 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <exception cref="System.NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified.</exception>
-		public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration auto_archive_duration = ThreadAutoArchiveDuration.OneHour, int? rate_limit_per_user = null, string reason = null)
+		public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, int? rateLimitPerUser = null, string reason = null)
 		{
-			return Utilities.CheckThreadAutoArchiveDurationFeature(this.Channel.Guild, auto_archive_duration)
-					? await this.Discord.ApiClient.CreateThreadWithMessageAsync(this.ChannelId, this.Id, name, auto_archive_duration, rate_limit_per_user, reason)
-					: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(auto_archive_duration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+			return Utilities.CheckThreadAutoArchiveDurationFeature(this.Channel.Guild, autoArchiveDuration)
+					? await this.Discord.ApiClient.CreateThreadWithMessageAsync(this.ChannelId, this.Id, name, autoArchiveDuration, rateLimitPerUser, reason)
+					: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 		}
 
 		/// <summary>
@@ -832,7 +832,7 @@ namespace DisCatSharp.Entities
 		/// Returns a string representation of this message.
 		/// </summary>
 		/// <returns>String representation of this message.</returns>
-		public override string ToString() => $"Message {this.Id}; Attachment count: {this._attachments.Count}; Embed count: {this._embeds.Count}; Contents: {this.Content}";
+		public override string ToString() => $"Message {this.Id}; Attachment count: {this.AttachmentsInternal.Count}; Embed count: {this.EmbedsInternal.Count}; Contents: {this.Content}";
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordMessage"/> is equal to another object.

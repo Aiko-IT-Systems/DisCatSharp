@@ -46,7 +46,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Gets the route argument regex.
 		/// </summary>
-		private static Regex RouteArgumentRegex { get; } = new Regex(@":([a-z_]+)");
+		private static Regex s_routeArgumentRegex { get; } = new Regex(@":([a-z_]+)");
 
 		/// <summary>
 		/// Gets the http client.
@@ -159,18 +159,18 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="method">The method.</param>
 		/// <param name="route">The route.</param>
-		/// <param name="route_params">The route paramaters.</param>
+		/// <param name="routeParams">The route paramaters.</param>
 		/// <param name="url">The url.</param>
 		/// <returns>A ratelimit bucket.</returns>
-		public RateLimitBucket GetBucket(RestRequestMethod method, string route, object route_params, out string url)
+		public RateLimitBucket GetBucket(RestRequestMethod method, string route, object routeParams, out string url)
 		{
-			var rparams_props = route_params.GetType()
+			var rparamsProps = routeParams.GetType()
 				.GetTypeInfo()
 				.DeclaredProperties;
 			var rparams = new Dictionary<string, string>();
-			foreach (var xp in rparams_props)
+			foreach (var xp in rparamsProps)
 			{
-				var val = xp.GetValue(route_params);
+				var val = xp.GetValue(routeParams);
 				rparams[xp.Name] = val is string xs
 					? xs
 					: val is DateTime dt
@@ -180,9 +180,9 @@ namespace DisCatSharp.Net
 					: val is IFormattable xf ? xf.ToString(null, CultureInfo.InvariantCulture) : val.ToString();
 			}
 
-			var guild_id = rparams.ContainsKey("guild_id") ? rparams["guild_id"] : "";
-			var channel_id = rparams.ContainsKey("channel_id") ? rparams["channel_id"] : "";
-			var webhook_id = rparams.ContainsKey("webhook_id") ? rparams["webhook_id"] : "";
+			var guildId = rparams.ContainsKey("guild_id") ? rparams["guild_id"] : "";
+			var channelId = rparams.ContainsKey("channel_id") ? rparams["channel_id"] : "";
+			var webhookId = rparams.ContainsKey("webhook_id") ? rparams["webhook_id"] : "";
 
 			// Create a generic route (minus major params) key
 			// ex: POST:/channels/channel_id/messages
@@ -198,10 +198,10 @@ namespace DisCatSharp.Net
 			// Next we use the hash to generate the key to obtain the bucket.
 			// ex: 80c17d2f203122d936070c88c8d10f33:guild_id:506128773926879242:webhook_id
 			// or if unlimited: POST:/channels/channel_id/messages:unlimited:guild_id:506128773926879242:webhook_id
-			var bucketId = RateLimitBucket.GenerateBucketId(hash, guild_id, channel_id, webhook_id);
+			var bucketId = RateLimitBucket.GenerateBucketId(hash, guildId, channelId, webhookId);
 
 			// If it's not in cache, create a new bucket and index it by its bucket id.
-			var bucket = this.HashesToBuckets.GetOrAdd(bucketId, new RateLimitBucket(hash, guild_id, channel_id, webhook_id));
+			var bucket = this.HashesToBuckets.GetOrAdd(bucketId, new RateLimitBucket(hash, guildId, channelId, webhookId));
 
 			bucket.LastAttemptAt = DateTimeOffset.UtcNow;
 
@@ -225,7 +225,7 @@ namespace DisCatSharp.Net
 				this.Logger.LogDebug(LoggerEvents.RestCleaner, "Bucket cleaner task started.");
 			}
 
-			url = RouteArgumentRegex.Replace(route, xm => rparams[xm.Groups[1].Value]);
+			url = s_routeArgumentRegex.Replace(route, xm => rparams[xm.Groups[1].Value]);
 			return bucket;
 		}
 
@@ -267,7 +267,7 @@ namespace DisCatSharp.Net
 					await bucket.TryResetLimitAsync(now).ConfigureAwait(false);
 
 					// Decrement the remaining number of requests as there can be other concurrent requests before this one finishes and has a chance to update the bucket
-					if (Interlocked.Decrement(ref bucket._remaining) < 0)
+					if (Interlocked.Decrement(ref bucket.RemainingInternal) < 0)
 					{
 						this.Logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {0} is blocked", bucket.ToString());
 						var delay = bucket.Reset - now;
@@ -282,7 +282,7 @@ namespace DisCatSharp.Net
 						if (delay < new TimeSpan(-TimeSpan.TicksPerMinute))
 						{
 							this.Logger.LogError(LoggerEvents.RatelimitDiag, "Failed to retrieve ratelimits - giving up and allowing next request for bucket");
-							bucket._remaining = 1;
+							bucket.RemainingInternal = 1;
 						}
 
 						if (delay < TimeSpan.Zero)
@@ -407,7 +407,7 @@ namespace DisCatSharp.Net
 				this.Logger.LogError(LoggerEvents.RestError, ex, "Request to {0} triggered an exception", request.Url);
 
 				// if something went wrong and we couldn't get rate limits for the first request here, allow the next request to run
-				if (bucket != null && ratelimitTcs != null && bucket._limitTesting != 0)
+				if (bucket != null && ratelimitTcs != null && bucket.LimitTesting != 0)
 					this.FailInitialRateLimitTest(request, ratelimitTcs);
 
 				if (!request.TrySetFaulted(ex))
@@ -449,16 +449,16 @@ namespace DisCatSharp.Net
 
 			var bucket = request.RateLimitBucket;
 
-			bucket._limitValid = false;
-			bucket._limitTestFinished = null;
-			bucket._limitTesting = 0;
+			bucket.LimitValid = false;
+			bucket.LimitTestFinished = null;
+			bucket.LimitTesting = 0;
 
 			//Reset to initial values.
 			if (resetToInitial)
 			{
 				this.UpdateHashCaches(request, bucket);
 				bucket.Maximum = 0;
-				bucket._remaining = 0;
+				bucket.RemainingInternal = 0;
 				return;
 			}
 
@@ -472,25 +472,25 @@ namespace DisCatSharp.Net
 		/// <param name="bucket">The bucket.</param>
 		private async Task<TaskCompletionSource<bool>> WaitForInitialRateLimit(RateLimitBucket bucket)
 		{
-			while (!bucket._limitValid)
+			while (!bucket.LimitValid)
 			{
-				if (bucket._limitTesting == 0)
+				if (bucket.LimitTesting == 0)
 				{
-					if (Interlocked.CompareExchange(ref bucket._limitTesting, 1, 0) == 0)
+					if (Interlocked.CompareExchange(ref bucket.LimitTesting, 1, 0) == 0)
 					{
 						// if we got here when the first request was just finishing, we must not create the waiter task as it would signel ExecureRequestAsync to bypass rate limiting
-						if (bucket._limitValid)
+						if (bucket.LimitValid)
 							return null;
 
 						// allow exactly one request to go through without having rate limits available
 						var ratelimitsTcs = new TaskCompletionSource<bool>();
-						bucket._limitTestFinished = ratelimitsTcs.Task;
+						bucket.LimitTestFinished = ratelimitsTcs.Task;
 						return ratelimitsTcs;
 					}
 				}
 				// it can take a couple of cycles for the task to be allocated, so wait until it happens or we are no longer probing for the limits
 				Task waitTask = null;
-				while (bucket._limitTesting != 0 && (waitTask = bucket._limitTestFinished) == null)
+				while (bucket.LimitTesting != 0 && (waitTask = bucket.LimitTestFinished) == null)
 					await Task.Yield();
 				if (waitTask != null)
 					await waitTask.ConfigureAwait(false);
@@ -585,11 +585,11 @@ namespace DisCatSharp.Net
 		/// Handles the http 429 status.
 		/// </summary>
 		/// <param name="response">The response.</param>
-		/// <param name="wait_task">The wait task.</param>
+		/// <param name="waitTask">The wait task.</param>
 		/// <param name="global">If true, global.</param>
-		private void Handle429(RestResponse response, out Task wait_task, out bool global)
+		private void Handle429(RestResponse response, out Task waitTask, out bool global)
 		{
-			wait_task = null;
+			waitTask = null;
 			global = false;
 
 			if (response.Headers == null)
@@ -597,10 +597,10 @@ namespace DisCatSharp.Net
 			var hs = response.Headers;
 
 			// handle the wait
-			if (hs.TryGetValue("Retry-After", out var retry_after_raw))
+			if (hs.TryGetValue("Retry-After", out var retryAfterRaw))
 			{
-				var retry_after = TimeSpan.FromSeconds(int.Parse(retry_after_raw, CultureInfo.InvariantCulture));
-				wait_task = Task.Delay(retry_after);
+				var retryAfter = TimeSpan.FromSeconds(int.Parse(retryAfterRaw, CultureInfo.InvariantCulture));
+				waitTask = Task.Delay(retryAfter);
 			}
 
 			// check if global b1nzy
@@ -665,8 +665,8 @@ namespace DisCatSharp.Net
 			var clienttime = DateTimeOffset.UtcNow;
 			var resettime = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).AddSeconds(double.Parse(reset, CultureInfo.InvariantCulture));
 			var servertime = clienttime;
-			if (hs.TryGetValue("Date", out var raw_date))
-				servertime = DateTimeOffset.Parse(raw_date, CultureInfo.InvariantCulture).ToUniversalTime();
+			if (hs.TryGetValue("Date", out var rawDate))
+				servertime = DateTimeOffset.Parse(rawDate, CultureInfo.InvariantCulture).ToUniversalTime();
 
 			var resetdelta = resettime - servertime;
 			//var difference = clienttime - servertime;
@@ -705,8 +705,8 @@ namespace DisCatSharp.Net
 				// only update the bucket values if this request was for a newer interval than the one
 				// currently in the bucket, to avoid issues with concurrent requests in one bucket
 				// remaining is reset by TryResetLimit and not the response, just allow that to happen when it is time
-				if (bucket._nextReset == 0)
-					bucket._nextReset = newReset.UtcTicks;
+				if (bucket.NextReset == 0)
+					bucket.NextReset = newReset.UtcTicks;
 			}
 
 			this.UpdateHashCaches(request, bucket, hash);
@@ -736,7 +736,7 @@ namespace DisCatSharp.Net
 			// Only update the hash once, due to a bug on Discord's end.
 			// This will cause issues if the bucket hashes are dynamically changed from the API while running,
 			// in which case, Dispose will need to be called to clear the caches.
-			if (bucket._isUnlimited && newHash != oldHash)
+			if (bucket.IsUnlimited && newHash != oldHash)
 			{
 				this.Logger.LogDebug(LoggerEvents.RestHashMover, "Updating hash in {0}: \"{1}\" -> \"{2}\"", hashKey, oldHash, newHash);
 				var bucketId = RateLimitBucket.GenerateBucketId(newHash, bucket.GuildId, bucket.ChannelId, bucket.WebhookId);
@@ -795,13 +795,13 @@ namespace DisCatSharp.Net
 					var value = kvp.Value;
 
 					// Don't remove the bucket if it's currently being handled by the rest client, unless it's an unlimited bucket.
-					if (this.RequestQueue.ContainsKey(value.BucketId) && !value._isUnlimited)
+					if (this.RequestQueue.ContainsKey(value.BucketId) && !value.IsUnlimited)
 						continue;
 
 					var resetOffset = this.UseResetAfter ? value.ResetAfterOffset : value.Reset;
 
 					// Don't remove the bucket if it's reset date is less than now + the additional wait time, unless it's an unlimited bucket.
-					if (resetOffset != null && !value._isUnlimited && (resetOffset > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - resetOffset < this._bucketCleanupDelay))
+					if (resetOffset != null && !value.IsUnlimited && (resetOffset > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - resetOffset < this._bucketCleanupDelay))
 						continue;
 
 					_ = this.HashesToBuckets.TryRemove(key, out _);

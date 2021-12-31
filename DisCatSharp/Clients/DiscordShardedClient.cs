@@ -314,8 +314,8 @@ namespace DisCatSharp
 			//There is a delay from parsing here.
 			timer.Stop();
 
-			info.SessionBucket.resetAfter -= (int)timer.ElapsedMilliseconds;
-			info.SessionBucket.ResetAfter = DateTimeOffset.UtcNow + TimeSpan.FromMilliseconds(info.SessionBucket.resetAfter);
+			info.SessionBucket.ResetAfterInternal -= (int)timer.ElapsedMilliseconds;
+			info.SessionBucket.ResetAfter = DateTimeOffset.UtcNow + TimeSpan.FromMilliseconds(info.SessionBucket.ResetAfterInternal);
 
 			return info;
 
@@ -334,8 +334,8 @@ namespace DisCatSharp
 					var hs = msg.Headers.ToDictionary(xh => xh.Key, xh => string.Join("\n", xh.Value), StringComparer.OrdinalIgnoreCase);
 					var waitInterval = 0;
 
-					if (hs.TryGetValue("Retry-After", out var retry_after_raw))
-						waitInterval = int.Parse(retry_after_raw, CultureInfo.InvariantCulture);
+					if (hs.TryGetValue("Retry-After", out var retryAfterRaw))
+						waitInterval = int.Parse(retryAfterRaw, CultureInfo.InvariantCulture);
 
 					await Task.Delay(waitInterval).ConfigureAwait(false);
 					return true;
@@ -400,12 +400,12 @@ namespace DisCatSharp
 			if (this._internalVoiceRegions != null)
 			{
 				client.InternalVoiceRegions = this._internalVoiceRegions;
-				client._voice_regions_lazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(client.InternalVoiceRegions));
+				client.VoiceRegionsLazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(client.InternalVoiceRegions));
 			}
 
 			this.HookEventHandlers(client);
 
-			client._isShard = true;
+			client.IsShard = true;
 			await client.ConnectAsync().ConfigureAwait(false);
 			this.Logger.LogInformation(LoggerEvents.ShardStartup, "Booted shard {0}.", i);
 
@@ -724,7 +724,7 @@ namespace DisCatSharp
 		{
 			foreach (var s in this._shards.Values)
 			{
-				if (s._guilds.TryGetValue(id, out _))
+				if (s.GuildsInternal.TryGetValue(id, out _))
 				{
 					return s.ShardId;
 				}

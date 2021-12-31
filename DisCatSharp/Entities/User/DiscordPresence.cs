@@ -66,10 +66,10 @@ namespace DisCatSharp.Entities
 		/// Gets the user's current activities.
 		/// </summary>
 		[JsonIgnore]
-		public IReadOnlyList<DiscordActivity> Activities => this._internalActivities;
+		public IReadOnlyList<DiscordActivity> Activities => this.InternalActivities;
 
 		[JsonIgnore]
-		internal DiscordActivity[] _internalActivities;
+		internal DiscordActivity[] InternalActivities;
 
 		/// <summary>
 		/// Gets the raw activities.
@@ -94,7 +94,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonIgnore]
 		public DiscordGuild Guild
-			=> this.GuildId != 0 ? this.Discord._guilds[this.GuildId] : null;
+			=> this.GuildId != 0 ? this.Discord.GuildsInternal[this.GuildId] : null;
 
 		/// <summary>
 		/// Gets this user's platform-dependent status.
@@ -116,7 +116,7 @@ namespace DisCatSharp.Entities
 			this.Discord = other.Discord;
 			this.Activity = other.Activity;
 			this.RawActivity = other.RawActivity;
-			this._internalActivities = (DiscordActivity[])other._internalActivities?.Clone();
+			this.InternalActivities = (DiscordActivity[])other.InternalActivities?.Clone();
 			this.RawActivities = (TransportActivity[])other.RawActivities?.Clone();
 			this.Status = other.Status;
 			this.InternalUser = new TransportUser(other.InternalUser);

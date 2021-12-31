@@ -89,7 +89,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// Whether this message is tts.
 		/// </summary>
 		[JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
-		public bool? IsTTS { get; set; }
+		public bool? IsTts { get; set; }
 
 		/// <summary>
 		/// Gets or sets the embeds.

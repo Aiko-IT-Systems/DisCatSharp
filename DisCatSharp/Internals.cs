@@ -34,19 +34,19 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the version of the library
 		/// </summary>
-		private static string VersionHeader
+		private static string s_versionHeader
 			=> Utilities.VersionHeader;
 
 		/// <summary>
 		/// Gets the permission strings.
 		/// </summary>
-		private static Dictionary<Permissions, string> PermissionStrings
+		private static Dictionary<Permissions, string> s_permissionStrings
 			=> Utilities.PermissionStrings;
 
 		/// <summary>
 		/// Gets the utf8 encoding
 		/// </summary>
-		internal static UTF8Encoding UTF8
+		internal static UTF8Encoding Utf8
 			=> Utilities.UTF8;
 
 		/// <summary>

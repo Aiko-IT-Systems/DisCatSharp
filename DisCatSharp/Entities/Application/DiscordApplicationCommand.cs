@@ -109,7 +109,7 @@ namespace DisCatSharp.Entities
 		public bool? DmPermission { get; internal set; }
 
 		/// <summary>
-		/// Gets the version number for this command. 
+		/// Gets the version number for this command.
 		/// </summary>
 		[JsonProperty("version")]
 		public ulong Version { get; internal set; }
@@ -124,7 +124,7 @@ namespace DisCatSharp.Entities
 		/// <param name="type">The type of the command. Defaults to ChatInput.</param>
 		/// <param name="nameLocalizations">The localizations of the command name.</param>
 		/// <param name="descriptionLocalizations">The localizations of the command description.</param>
-		public DiscordApplicationCommand(string name, string description, IEnumerable<DiscordApplicationCommandOption> options = null, bool default_permission = true, ApplicationCommandType type = ApplicationCommandType.ChatInput, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null)
+		public DiscordApplicationCommand(string name, string description, IEnumerable<DiscordApplicationCommandOption> options = null, bool defaultPermission = true, ApplicationCommandType type = ApplicationCommandType.ChatInput, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null)
 		{
 			if (type is ApplicationCommandType.ChatInput)
 			{
@@ -155,7 +155,7 @@ namespace DisCatSharp.Entities
 			this.Name = name;
 			this.Description = description;
 			this.Options = optionsList;
-			this.DefaultPermission = default_permission;
+			this.DefaultPermission = defaultPermission;
 		}
 
 		/// <summary>

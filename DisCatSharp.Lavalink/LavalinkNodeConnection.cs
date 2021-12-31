@@ -157,7 +157,7 @@ namespace DisCatSharp.Lavalink
 		/// Gets a dictionary of Lavalink guild connections for this node.
 		/// </summary>
 		public IReadOnlyDictionary<ulong, LavalinkGuildConnection> ConnectedGuilds { get; }
-		internal ConcurrentDictionary<ulong, LavalinkGuildConnection> _connectedGuilds = new();
+		internal ConcurrentDictionary<ulong, LavalinkGuildConnection> ConnectedGuildsInternal = new();
 
 		/// <summary>
 		/// Gets the REST client for this Lavalink connection.
@@ -212,7 +212,7 @@ namespace DisCatSharp.Lavalink
 			if (config.Region != null && this.Discord.VoiceRegions.Values.Contains(config.Region))
 				this.Region = config.Region;
 
-			this.ConnectedGuilds = new ReadOnlyConcurrentDictionary<ulong, LavalinkGuildConnection>(this._connectedGuilds);
+			this.ConnectedGuilds = new ReadOnlyConcurrentDictionary<ulong, LavalinkGuildConnection>(this.ConnectedGuildsInternal);
 			this.Statistics = new LavalinkStatistics();
 
 			this._lavalinkSocketError = new AsyncEvent<LavalinkNodeConnection, SocketErrorEventArgs>("LAVALINK_SOCKET_ERROR", TimeSpan.Zero, this.Discord.EventErrorHandler);
@@ -300,7 +300,7 @@ namespace DisCatSharp.Lavalink
 		/// <returns></returns>
 		public async Task StopAsync()
 		{
-			foreach (var kvp in this._connectedGuilds)
+			foreach (var kvp in this.ConnectedGuildsInternal)
 				await kvp.Value.DisconnectAsync().ConfigureAwait(false);
 
 			this.NodeDisconnected?.Invoke(this);
@@ -318,8 +318,8 @@ namespace DisCatSharp.Lavalink
 		/// <returns>Channel connection, which allows for playback control.</returns>
 		public async Task<LavalinkGuildConnection> ConnectAsync(DiscordChannel channel)
 		{
-			if (this._connectedGuilds.ContainsKey(channel.Guild.Id))
-				return this._connectedGuilds[channel.Guild.Id];
+			if (this.ConnectedGuildsInternal.ContainsKey(channel.Guild.Id))
+				return this.ConnectedGuildsInternal[channel.Guild.Id];
 
 			if (channel.Guild == null || (channel.Type != ChannelType.Voice && channel.Type != ChannelType.Stage))
 				throw new ArgumentException("Invalid channel specified.", nameof(channel));
@@ -353,7 +353,7 @@ namespace DisCatSharp.Lavalink
 			con.PlaybackFinished += (s, e) => this._playbackFinished.InvokeAsync(s, e);
 			con.TrackStuck += (s, e) => this._trackStuck.InvokeAsync(s, e);
 			con.TrackException += (s, e) => this._trackException.InvokeAsync(s, e);
-			this._connectedGuilds[channel.Guild.Id] = con;
+			this.ConnectedGuildsInternal[channel.Guild.Id] = con;
 
 			return con;
 		}
@@ -364,7 +364,7 @@ namespace DisCatSharp.Lavalink
 		/// <param name="guild">Guild to get connection for.</param>
 		/// <returns>Channel connection, which allows for playback control.</returns>
 		public LavalinkGuildConnection GetGuildConnection(DiscordGuild guild)
-			=> this._connectedGuilds.TryGetValue(guild.Id, out var lgc) && lgc.IsConnected ? lgc : null;
+			=> this.ConnectedGuildsInternal.TryGetValue(guild.Id, out var lgc) && lgc.IsConnected ? lgc : null;
 
 		/// <summary>
 		/// Sends the payload async.
@@ -395,7 +395,7 @@ namespace DisCatSharp.Lavalink
 				case "playerUpdate":
 					var gid = (ulong)jsonData["guildId"];
 					var state = jsonData["state"].ToObject<LavalinkState>();
-					if (this._connectedGuilds.TryGetValue(gid, out var lvl))
+					if (this.ConnectedGuildsInternal.TryGetValue(gid, out var lvl))
 						await lvl.InternalUpdatePlayerStateAsync(state).ConfigureAwait(false);
 					break;
 
@@ -411,8 +411,8 @@ namespace DisCatSharp.Lavalink
 					switch (evtype)
 					{
 						case EventType.TrackStartEvent:
-							if (this._connectedGuilds.TryGetValue(guildId, out var lvl_evtst))
-								await lvl_evtst.InternalPlaybackStartedAsync(jsonData["track"].ToString()).ConfigureAwait(false);
+							if (this.ConnectedGuildsInternal.TryGetValue(guildId, out var lvlEvtst))
+								await lvlEvtst.InternalPlaybackStartedAsync(jsonData["track"].ToString()).ConfigureAwait(false);
 							break;
 
 						case EventType.TrackEndEvent:
@@ -435,25 +435,25 @@ namespace DisCatSharp.Lavalink
 									reason = TrackEndReason.Cleanup;
 									break;
 							}
-							if (this._connectedGuilds.TryGetValue(guildId, out var lvl_evtf))
-								await lvl_evtf.InternalPlaybackFinishedAsync(new TrackFinishData { Track = jsonData["track"].ToString(), Reason = reason }).ConfigureAwait(false);
+							if (this.ConnectedGuildsInternal.TryGetValue(guildId, out var lvlEvtf))
+								await lvlEvtf.InternalPlaybackFinishedAsync(new TrackFinishData { Track = jsonData["track"].ToString(), Reason = reason }).ConfigureAwait(false);
 							break;
 
 						case EventType.TrackStuckEvent:
-							if (this._connectedGuilds.TryGetValue(guildId, out var lvl_evts))
-								await lvl_evts.InternalTrackStuckAsync(new TrackStuckData { Track = jsonData["track"].ToString(), Threshold = (long)jsonData["thresholdMs"] }).ConfigureAwait(false);
+							if (this.ConnectedGuildsInternal.TryGetValue(guildId, out var lvlEvts))
+								await lvlEvts.InternalTrackStuckAsync(new TrackStuckData { Track = jsonData["track"].ToString(), Threshold = (long)jsonData["thresholdMs"] }).ConfigureAwait(false);
 							break;
 
 						case EventType.TrackExceptionEvent:
-							if (this._connectedGuilds.TryGetValue(guildId, out var lvl_evte))
-								await lvl_evte.InternalTrackExceptionAsync(new TrackExceptionData { Track = jsonData["track"].ToString(), Error = jsonData["error"].ToString() }).ConfigureAwait(false);
+							if (this.ConnectedGuildsInternal.TryGetValue(guildId, out var lvlEvte))
+								await lvlEvte.InternalTrackExceptionAsync(new TrackExceptionData { Track = jsonData["track"].ToString(), Error = jsonData["error"].ToString() }).ConfigureAwait(false);
 							break;
 
 						case EventType.WebSocketClosedEvent:
-							if (this._connectedGuilds.TryGetValue(guildId, out var lvl_ewsce))
+							if (this.ConnectedGuildsInternal.TryGetValue(guildId, out var lvlEwsce))
 							{
-								lvl_ewsce.VoiceWsDisconnectTcs.SetResult(true);
-								await lvl_ewsce.InternalWebSocketClosedAsync(new WebSocketCloseEventArgs(jsonData["code"].ToObject<int>(), jsonData["reason"].ToString(), jsonData["byRemote"].ToObject<bool>(), this.Discord.ServiceProvider)).ConfigureAwait(false);
+								lvlEwsce.VoiceWsDisconnectTcs.SetResult(true);
+								await lvlEwsce.InternalWebSocketClosedAsync(new WebSocketCloseEventArgs(jsonData["code"].ToObject<int>(), jsonData["reason"].ToString(), jsonData["byRemote"].ToObject<bool>(), this.Discord.ServiceProvider)).ConfigureAwait(false);
 							}
 							break;
 					}
@@ -494,10 +494,10 @@ namespace DisCatSharp.Lavalink
 			{
 				Volatile.Write(ref this._isDisposed, true);
 				this.Discord.Logger.LogWarning(LavalinkEvents.LavalinkConnectionClosed, "Lavalink died");
-				foreach (var kvp in this._connectedGuilds)
+				foreach (var kvp in this.ConnectedGuildsInternal)
 				{
 					await kvp.Value.SendVoiceUpdateAsync().ConfigureAwait(false);
-					_ = this._connectedGuilds.TryRemove(kvp.Key, out _);
+					_ = this.ConnectedGuildsInternal.TryRemove(kvp.Key, out _);
 				}
 				this.NodeDisconnected?.Invoke(this);
 				await this._disconnected.InvokeAsync(this, new NodeDisconnectedEventArgs(this, false)).ConfigureAwait(false);
@@ -526,7 +526,7 @@ namespace DisCatSharp.Lavalink
 		/// </summary>
 		/// <param name="con">The con.</param>
 		private void Con_ChannelDisconnected(LavalinkGuildConnection con)
-			=> this._connectedGuilds.TryRemove(con.GuildId, out _);
+			=> this.ConnectedGuildsInternal.TryRemove(con.GuildId, out _);
 
 		/// <summary>
 		/// Discord voice state updated.
@@ -544,10 +544,10 @@ namespace DisCatSharp.Lavalink
 
 			if (e.User.Id == this.Discord.CurrentUser.Id)
 			{
-				if (this._connectedGuilds.TryGetValue(e.Guild.Id, out var lvlgc))
+				if (this.ConnectedGuildsInternal.TryGetValue(e.Guild.Id, out var lvlgc))
 					lvlgc.VoiceStateUpdate = e;
 
-				if (e.After.Channel == null && this.IsConnected && this._connectedGuilds.ContainsKey(gld.Id))
+				if (e.After.Channel == null && this.IsConnected && this.ConnectedGuildsInternal.ContainsKey(gld.Id))
 				{
 					_ = Task.Run(async () =>
 					{
@@ -556,7 +556,7 @@ namespace DisCatSharp.Lavalink
 						_ = await Task.WhenAny(delayTask, tcs).ConfigureAwait(false);
 
 						await lvlgc.DisconnectInternalAsync(false, true).ConfigureAwait(false);
-						_ = this._connectedGuilds.TryRemove(gld.Id, out _);
+						_ = this.ConnectedGuildsInternal.TryRemove(gld.Id, out _);
 					});
 				}
 
@@ -578,7 +578,7 @@ namespace DisCatSharp.Lavalink
 			if (gld == null)
 				return Task.CompletedTask;
 
-			if (this._connectedGuilds.TryGetValue(e.Guild.Id, out var lvlgc))
+			if (this.ConnectedGuildsInternal.TryGetValue(e.Guild.Id, out var lvlgc))
 			{
 				var lvlp = new LavalinkVoiceUpdate(lvlgc.VoiceStateUpdate, e);
 				_ = Task.Run(() => this.WsSendAsync(JsonConvert.SerializeObject(lvlp)));

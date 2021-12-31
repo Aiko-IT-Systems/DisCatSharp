@@ -35,7 +35,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Whether this interaction response is text-to-speech.
 		/// </summary>
-		public bool IsTTS { get; set; }
+		public bool IsTts { get; set; }
 
 		/// <summary>
 		/// Whether this interaction response should be ephemeral.
@@ -159,9 +159,9 @@ namespace DisCatSharp.Entities
 		/// Indicates if the interaction response will be text-to-speech.
 		/// </summary>
 		/// <param name="tts">Text-to-speech</param>
-		public DiscordInteractionResponseBuilder WithTTS(bool tts)
+		public DiscordInteractionResponseBuilder WithTts(bool tts)
 		{
-			this.IsTTS = tts;
+			this.IsTts = tts;
 			return this;
 		}
 
@@ -342,7 +342,7 @@ namespace DisCatSharp.Entities
 		{
 			this.Content = "";
 			this._embeds.Clear();
-			this.IsTTS = false;
+			this.IsTts = false;
 			this.IsEphemeral = false;
 			this._mentions.Clear();
 			this._components.Clear();

@@ -37,6 +37,6 @@ namespace DisCatSharp.CommandsNext.Attributes
 		/// <param name="ctx">The command context.</param>
 		/// <param name="help">If true, help - returns true.</param>
 		public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
-			=> Task.FromResult(ctx.Channel.Guild == null || ctx.Channel.IsNSFW);
+			=> Task.FromResult(ctx.Channel.Guild == null || ctx.Channel.IsNsfw);
 	}
 }

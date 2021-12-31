@@ -35,12 +35,12 @@ namespace DisCatSharp.Interactivity.EventHandling
 	/// </summary>
 	public class PollRequest
 	{
-		internal TaskCompletionSource<bool> _tcs;
-		internal CancellationTokenSource _ct;
-		internal TimeSpan _timeout;
-		internal ConcurrentHashSet<PollEmoji> _collected;
-		internal DiscordMessage _message;
-		internal IEnumerable<DiscordEmoji> _emojis;
+		internal TaskCompletionSource<bool> Tcs;
+		internal CancellationTokenSource Ct;
+		internal TimeSpan Timeout;
+		internal ConcurrentHashSet<PollEmoji> Collected;
+		internal DiscordMessage Message;
+		internal IEnumerable<DiscordEmoji> Emojis;
 
 		/// <summary>
 		///
@@ -50,17 +50,17 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <param name="emojis"></param>
 		public PollRequest(DiscordMessage message, TimeSpan timeout, IEnumerable<DiscordEmoji> emojis)
 		{
-			this._tcs = new TaskCompletionSource<bool>();
-			this._ct = new CancellationTokenSource(timeout);
-			this._ct.Token.Register(() => this._tcs.TrySetResult(true));
-			this._timeout = timeout;
-			this._emojis = emojis;
-			this._collected = new ConcurrentHashSet<PollEmoji>();
-			this._message = message;
+			this.Tcs = new TaskCompletionSource<bool>();
+			this.Ct = new CancellationTokenSource(timeout);
+			this.Ct.Token.Register(() => this.Tcs.TrySetResult(true));
+			this.Timeout = timeout;
+			this.Emojis = emojis;
+			this.Collected = new ConcurrentHashSet<PollEmoji>();
+			this.Message = message;
 
 			foreach (var e in emojis)
 			{
-				this._collected.Add(new PollEmoji(e));
+				this.Collected.Add(new PollEmoji(e));
 			}
 		}
 
@@ -69,10 +69,10 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// </summary>
 		internal void ClearCollected()
 		{
-			this._collected.Clear();
-			foreach (var e in this._emojis)
+			this.Collected.Clear();
+			foreach (var e in this.Emojis)
 			{
-				this._collected.Add(new PollEmoji(e));
+				this.Collected.Add(new PollEmoji(e));
 			}
 		}
 
@@ -83,14 +83,14 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <param name="member">The member.</param>
 		internal void RemoveReaction(DiscordEmoji emoji, DiscordUser member)
 		{
-			if (this._collected.Any(x => x.Emoji == emoji))
+			if (this.Collected.Any(x => x.Emoji == emoji))
 			{
-				if (this._collected.Any(x => x.Voted.Contains(member)))
+				if (this.Collected.Any(x => x.Voted.Contains(member)))
 				{
-					var e = this._collected.First(x => x.Emoji == emoji);
-					this._collected.TryRemove(e);
+					var e = this.Collected.First(x => x.Emoji == emoji);
+					this.Collected.TryRemove(e);
 					e.Voted.TryRemove(member);
-					this._collected.Add(e);
+					this.Collected.Add(e);
 				}
 			}
 		}
@@ -102,14 +102,14 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <param name="member">The member.</param>
 		internal void AddReaction(DiscordEmoji emoji, DiscordUser member)
 		{
-			if (this._collected.Any(x => x.Emoji == emoji))
+			if (this.Collected.Any(x => x.Emoji == emoji))
 			{
-				if (!this._collected.Any(x => x.Voted.Contains(member)))
+				if (!this.Collected.Any(x => x.Voted.Contains(member)))
 				{
-					var e = this._collected.First(x => x.Emoji == emoji);
-					this._collected.TryRemove(e);
+					var e = this.Collected.First(x => x.Emoji == emoji);
+					this.Collected.TryRemove(e);
 					e.Voted.Add(member);
-					this._collected.Add(e);
+					this.Collected.Add(e);
 				}
 			}
 		}
@@ -124,8 +124,8 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// </summary>
 		public void Dispose()
 		{
-			this._ct.Dispose();
-			this._tcs = null;
+			this.Ct.Dispose();
+			this.Tcs = null;
 		}
 	}
 

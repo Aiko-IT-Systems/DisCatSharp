@@ -167,8 +167,8 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task<DiscordMessage> ExecuteAsync(DiscordWebhookBuilder builder, string thread_id = null)
-			=> (this.Discord?.ApiClient ?? this.ApiClient).ExecuteWebhookAsync(this.Id, this.Token, builder, thread_id);
+		public Task<DiscordMessage> ExecuteAsync(DiscordWebhookBuilder builder, string threadId = null)
+			=> (this.Discord?.ApiClient ?? this.ApiClient).ExecuteWebhookAsync(this.Id, this.Token, builder, threadId);
 
 		/// <summary>
 		/// Executes this webhook in Slack compatibility mode.
@@ -179,8 +179,8 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task ExecuteSlackAsync(string json, string thread_id = null)
-			=> (this.Discord?.ApiClient ?? this.ApiClient).ExecuteWebhookSlackAsync(this.Id, this.Token, json, thread_id);
+		public Task ExecuteSlackAsync(string json, string threadId = null)
+			=> (this.Discord?.ApiClient ?? this.ApiClient).ExecuteWebhookSlackAsync(this.Id, this.Token, json, threadId);
 
 		/// <summary>
 		/// Executes this webhook in GitHub compatibility mode.
@@ -191,8 +191,8 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task ExecuteGithubAsync(string json, string thread_id = null)
-			=> (this.Discord?.ApiClient ?? this.ApiClient).ExecuteWebhookGithubAsync(this.Id, this.Token, json, thread_id);
+		public Task ExecuteGithubAsync(string json, string threadId = null)
+			=> (this.Discord?.ApiClient ?? this.ApiClient).ExecuteWebhookGithubAsync(this.Id, this.Token, json, threadId);
 
 		/// <summary>
 		/// Edits a previously-sent webhook message.
@@ -204,18 +204,18 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public async Task<DiscordMessage> EditMessageAsync(ulong messageId, DiscordWebhookBuilder builder, string thread_id = null)
+		public async Task<DiscordMessage> EditMessageAsync(ulong messageId, DiscordWebhookBuilder builder, string threadId = null)
 		{
 			builder.Validate(true);
-			if (builder._keepAttachments.HasValue && builder._keepAttachments.Value)
+			if (builder.KeepAttachmentsInternal.HasValue && builder.KeepAttachmentsInternal.Value)
 			{
-				builder._attachments.AddRange(this.ApiClient.GetWebhookMessageAsync(this.Id, this.Token, messageId.ToString(), thread_id).Result.Attachments);
+				builder.AttachmentsInternal.AddRange(this.ApiClient.GetWebhookMessageAsync(this.Id, this.Token, messageId.ToString(), threadId).Result.Attachments);
 			}
-			else if (builder._keepAttachments.HasValue)
+			else if (builder.KeepAttachmentsInternal.HasValue)
 			{
-				builder._attachments.Clear();
+				builder.AttachmentsInternal.Clear();
 			}
-			return await (this.Discord?.ApiClient ?? this.ApiClient).EditWebhookMessageAsync(this.Id, this.Token, messageId.ToString(), builder, thread_id).ConfigureAwait(false);
+			return await (this.Discord?.ApiClient ?? this.ApiClient).EditWebhookMessageAsync(this.Id, this.Token, messageId.ToString(), builder, threadId).ConfigureAwait(false);
 		}
 
 		/// <summary>

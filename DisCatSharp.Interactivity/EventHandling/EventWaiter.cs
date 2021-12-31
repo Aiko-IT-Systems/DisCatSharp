@@ -44,7 +44,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		AsyncEventHandler<DiscordClient, T> _handler;
 		ConcurrentHashSet<MatchRequest<T>> _matchrequests;
 		ConcurrentHashSet<CollectRequest<T>> _collectrequests;
-		bool disposed = false;
+		bool _disposed = false;
 
 		/// <summary>
 		/// Creates a new Eventwaiter object.
@@ -73,7 +73,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			this._matchrequests.Add(request);
 			try
 			{
-				result = await request._tcs.Task.ConfigureAwait(false);
+				result = await request.Tcs.Task.ConfigureAwait(false);
 			}
 			catch (Exception ex)
 			{
@@ -97,7 +97,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			this._collectrequests.Add(request);
 			try
 			{
-				await request._tcs.Task.ConfigureAwait(false);
+				await request.Tcs.Task.ConfigureAwait(false);
 			}
 			catch (Exception ex)
 			{
@@ -105,7 +105,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			}
 			finally
 			{
-				result = new ReadOnlyCollection<T>(new HashSet<T>(request._collected).ToList());
+				result = new ReadOnlyCollection<T>(new HashSet<T>(request.Collected).ToList());
 				request.Dispose();
 				this._collectrequests.TryRemove(request);
 			}
@@ -119,21 +119,21 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <param name="eventargs">The event args.</param>
 		private Task HandleEvent(DiscordClient client, T eventargs)
 		{
-			if (!this.disposed)
+			if (!this._disposed)
 			{
 				foreach (var req in this._matchrequests)
 				{
-					if (req._predicate(eventargs))
+					if (req.Predicate(eventargs))
 					{
-						req._tcs.TrySetResult(eventargs);
+						req.Tcs.TrySetResult(eventargs);
 					}
 				}
 
 				foreach (var req in this._collectrequests)
 				{
-					if (req._predicate(eventargs))
+					if (req.Predicate(eventargs))
 					{
-						req._collected.Add(eventargs);
+						req.Collected.Add(eventargs);
 					}
 				}
 			}
@@ -151,7 +151,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// </summary>
 		public void Dispose()
 		{
-			this.disposed = true;
+			this._disposed = true;
 			if (this._event != null)
 				this._event.Unregister(this._handler);
 

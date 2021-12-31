@@ -119,11 +119,11 @@ namespace DisCatSharp.Entities
 		/// Gets the thread members object.
 		/// </summary>
 		[JsonIgnore]
-		public IReadOnlyDictionary<ulong, DiscordThreadChannelMember> ThreadMembers => new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannelMember>(this._threadMembers);
+		public IReadOnlyDictionary<ulong, DiscordThreadChannelMember> ThreadMembers => new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannelMember>(this.ThreadMembersInternal);
 
 		[JsonProperty("thread_member", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-		internal ConcurrentDictionary<ulong, DiscordThreadChannelMember> _threadMembers;
+		internal ConcurrentDictionary<ulong, DiscordThreadChannelMember> ThreadMembersInternal;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
@@ -158,12 +158,12 @@ namespace DisCatSharp.Entities
 			var mdl = new ThreadEditModel();
 			action(mdl);
 
-			var can_continue = !mdl.AutoArchiveDuration.HasValue || !mdl.AutoArchiveDuration.Value.HasValue || Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.AutoArchiveDuration.Value.Value);
+			var canContinue = !mdl.AutoArchiveDuration.HasValue || !mdl.AutoArchiveDuration.Value.HasValue || Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.AutoArchiveDuration.Value.Value);
 			if (mdl.Invitable.HasValue)
 			{
-				can_continue = this.Guild.Features.CanCreatePrivateThreads;
+				canContinue = this.Guild.Features.CanCreatePrivateThreads;
 			}
-			return can_continue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, mdl.Name, mdl.Locked, mdl.Archived, mdl.AutoArchiveDuration, mdl.PerUserRateLimit, mdl.Invitable, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+			return canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, mdl.Name, mdl.Locked, mdl.Archived, mdl.AutoArchiveDuration, mdl.PerUserRateLimit, mdl.Invitable, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 		}
 
 		/// <summary>
@@ -200,12 +200,12 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Adds a member to this thread.
 		/// </summary>
-		/// <param name="member_id">The member id to be added.</param>
+		/// <param name="memberId">The member id to be added.</param>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task AddMemberAsync(ulong member_id)
-			=> this.Discord.ApiClient.AddThreadMemberAsync(this.Id, member_id);
+		public Task AddMemberAsync(ulong memberId)
+			=> this.Discord.ApiClient.AddThreadMemberAsync(this.Id, memberId);
 
 		/// <summary>
 		/// Adds a member to this thread.
@@ -220,12 +220,12 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets a member in this thread.
 		/// </summary>
-		/// <param name="member_id">The member to be added.</param>
+		/// <param name="memberId">The member to be added.</param>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member is not part of the thread.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task<DiscordThreadChannelMember> GetMemberAsync(ulong member_id)
-			=> this.Discord.ApiClient.GetThreadMemberAsync(this.Id, member_id);
+		public Task<DiscordThreadChannelMember> GetMemberAsync(ulong memberId)
+			=> this.Discord.ApiClient.GetThreadMemberAsync(this.Id, memberId);
 
 		/// <summary>
 		/// Gets a member in this thread.
@@ -240,12 +240,12 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Removes a member from this thread.
 		/// </summary>
-		/// <param name="member_id">The member id to be removed.</param>
+		/// <param name="memberId">The member id to be removed.</param>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task RemoveMemberAsync(ulong member_id)
-			=> this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, member_id);
+		public Task RemoveMemberAsync(ulong memberId)
+			=> this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, memberId);
 
 		/// <summary>
 		/// Removes a member from this thread. Only applicable to private threads.
@@ -260,13 +260,13 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Adds a role to this thread. Only applicable to private threads.
 		/// </summary>
-		/// <param name="role_id">The role id to be added.</param>
+		/// <param name="roleId">The role id to be added.</param>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public async Task AddRoleAsync(ulong role_id)
+		public async Task AddRoleAsync(ulong roleId)
 		{
-			var role = this.Guild.GetRole(role_id);
+			var role = this.Guild.GetRole(roleId);
 			var members = await this.Guild.GetAllMembersAsync();
 			var roleMembers = members.Where(m => m.Roles.Contains(role));
 			foreach (var member in roleMembers)
@@ -288,13 +288,13 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Removes a role from this thread. Only applicable to private threads.
 		/// </summary>
-		/// <param name="role_id">The role id to be removed.</param>
+		/// <param name="roleId">The role id to be removed.</param>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public async Task RemoveRoleAsync(ulong role_id)
+		public async Task RemoveRoleAsync(ulong roleId)
 		{
-			var role = this.Guild.GetRole(role_id);
+			var role = this.Guild.GetRole(roleId);
 			var members = await this.Guild.GetAllMembersAsync();
 			var roleMembers = members.Where(m => m.Roles.Contains(role));
 			foreach (var member in roleMembers)

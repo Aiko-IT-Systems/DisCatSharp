@@ -79,7 +79,7 @@ namespace DisCatSharp
 		public Stream SourceStream { get; }
 
 		private ImageFormat _ifcache;
-		private string _b64cache;
+		private string _b64Cache;
 
 		/// <summary>
 		/// Creates a new image tool from given stream.
@@ -97,7 +97,7 @@ namespace DisCatSharp
 			this.SourceStream.Seek(0, SeekOrigin.Begin);
 
 			this._ifcache = 0;
-			this._b64cache = null;
+			this._b64Cache = null;
 		}
 
 		/// <summary>
@@ -141,8 +141,8 @@ namespace DisCatSharp
 		/// <returns>Data-scheme base64 string.</returns>
 		public string GetBase64()
 		{
-			if (this._b64cache != null)
-				return this._b64cache;
+			if (this._b64Cache != null)
+				return this._b64Cache;
 
 			var fmt = this.GetFormat();
 			var sb = new StringBuilder();
@@ -159,7 +159,7 @@ namespace DisCatSharp
 
 			sb.Append(Convert.ToBase64String(buff));
 
-			return this._b64cache = sb.ToString();
+			return this._b64Cache = sb.ToString();
 		}
 
 		/// <summary>

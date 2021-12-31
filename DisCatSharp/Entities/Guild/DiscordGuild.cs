@@ -264,31 +264,31 @@ namespace DisCatSharp.Entities
 		/// Gets a collection of this guild's roles.
 		/// </summary>
 		[JsonIgnore]
-		public IReadOnlyDictionary<ulong, DiscordRole> Roles => new ReadOnlyConcurrentDictionary<ulong, DiscordRole>(this._roles);
+		public IReadOnlyDictionary<ulong, DiscordRole> Roles => new ReadOnlyConcurrentDictionary<ulong, DiscordRole>(this.RolesInternal);
 
 		[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-		internal ConcurrentDictionary<ulong, DiscordRole> _roles;
+		internal ConcurrentDictionary<ulong, DiscordRole> RolesInternal;
 
 		/// <summary>
 		/// Gets a collection of this guild's stickers.
 		/// </summary>
 		[JsonIgnore]
-		public IReadOnlyDictionary<ulong, DiscordSticker> Stickers => new ReadOnlyConcurrentDictionary<ulong, DiscordSticker>(this._stickers);
+		public IReadOnlyDictionary<ulong, DiscordSticker> Stickers => new ReadOnlyConcurrentDictionary<ulong, DiscordSticker>(this.StickersInternal);
 
 		[JsonProperty("stickers", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-		internal ConcurrentDictionary<ulong, DiscordSticker> _stickers;
+		internal ConcurrentDictionary<ulong, DiscordSticker> StickersInternal;
 
 		/// <summary>
 		/// Gets a collection of this guild's emojis.
 		/// </summary>
 		[JsonIgnore]
-		public IReadOnlyDictionary<ulong, DiscordEmoji> Emojis => new ReadOnlyConcurrentDictionary<ulong, DiscordEmoji>(this._emojis);
+		public IReadOnlyDictionary<ulong, DiscordEmoji> Emojis => new ReadOnlyConcurrentDictionary<ulong, DiscordEmoji>(this.EmojisInternal);
 
 		[JsonProperty("emojis", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-		internal ConcurrentDictionary<ulong, DiscordEmoji> _emojis;
+		internal ConcurrentDictionary<ulong, DiscordEmoji> EmojisInternal;
 
 		/// <summary>
 		/// Gets a collection of this guild's features.
@@ -369,33 +369,33 @@ namespace DisCatSharp.Entities
 		/// the voice state corresponds to.
 		/// </summary>
 		[JsonIgnore]
-		public IReadOnlyDictionary<ulong, DiscordVoiceState> VoiceStates => new ReadOnlyConcurrentDictionary<ulong, DiscordVoiceState>(this._voiceStates);
+		public IReadOnlyDictionary<ulong, DiscordVoiceState> VoiceStates => new ReadOnlyConcurrentDictionary<ulong, DiscordVoiceState>(this.VoiceStatesInternal);
 
 		[JsonProperty("voice_states", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-		internal ConcurrentDictionary<ulong, DiscordVoiceState> _voiceStates;
+		internal ConcurrentDictionary<ulong, DiscordVoiceState> VoiceStatesInternal;
 
 		/// <summary>
 		/// Gets a dictionary of all the members that belong to this guild. The dictionary's key is the member ID.
 		/// </summary>
 		[JsonIgnore] // TODO overhead of => vs Lazy? it's a struct
-		public IReadOnlyDictionary<ulong, DiscordMember> Members => new ReadOnlyConcurrentDictionary<ulong, DiscordMember>(this._members);
+		public IReadOnlyDictionary<ulong, DiscordMember> Members => new ReadOnlyConcurrentDictionary<ulong, DiscordMember>(this.MembersInternal);
 
 		[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-		internal ConcurrentDictionary<ulong, DiscordMember> _members;
+		internal ConcurrentDictionary<ulong, DiscordMember> MembersInternal;
 
 		/// <summary>
 		/// Gets a dictionary of all the channels associated with this guild. The dictionary's key is the channel ID.
 		/// </summary>
 		[JsonIgnore]
-		public IReadOnlyDictionary<ulong, DiscordChannel> Channels => new ReadOnlyConcurrentDictionary<ulong, DiscordChannel>(this._channels);
+		public IReadOnlyDictionary<ulong, DiscordChannel> Channels => new ReadOnlyConcurrentDictionary<ulong, DiscordChannel>(this.ChannelsInternal);
 
 		[JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-		internal ConcurrentDictionary<ulong, DiscordChannel> _channels;
+		internal ConcurrentDictionary<ulong, DiscordChannel> ChannelsInternal;
 
-		internal ConcurrentDictionary<string, DiscordInvite> _invites;
+		internal ConcurrentDictionary<string, DiscordInvite> Invites;
 
 		/// <summary>
 		/// Gets a dictionary of all the active threads associated with this guild the user has permission to view. The dictionary's key is the channel ID.
@@ -405,7 +405,7 @@ namespace DisCatSharp.Entities
 
 		[JsonProperty("threads", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-		internal ConcurrentDictionary<ulong, DiscordThreadChannel> _threads = new();
+		internal ConcurrentDictionary<ulong, DiscordThreadChannel> ThreadsInternal = new();
 
 		/// <summary>
 		/// Gets a dictionary of all active stage instances. The dictionary's key is the stage ID.
@@ -415,7 +415,7 @@ namespace DisCatSharp.Entities
 
 		[JsonProperty("stage_instances", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-		internal ConcurrentDictionary<ulong, DiscordStageInstance> _stageInstances = new();
+		internal ConcurrentDictionary<ulong, DiscordStageInstance> StageInstancesInternal = new();
 
 		/// <summary>
 		/// Gets a dictionary of all scheduled events.
@@ -425,17 +425,17 @@ namespace DisCatSharp.Entities
 
 		[JsonProperty("guild_scheduled_events", NullValueHandling = NullValueHandling.Ignore)]
 		[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
-		internal ConcurrentDictionary<ulong, DiscordScheduledEvent> _scheduledEvents = new();
+		internal ConcurrentDictionary<ulong, DiscordScheduledEvent> ScheduledEventsInternal = new();
 
 		/// <summary>
 		/// Gets the guild member for current user.
 		/// </summary>
 		[JsonIgnore]
 		public DiscordMember CurrentMember
-			=> this._current_member_lazy.Value;
+			=> this._currentMemberLazy.Value;
 
 		[JsonIgnore]
-		private readonly Lazy<DiscordMember> _current_member_lazy;
+		private readonly Lazy<DiscordMember> _currentMemberLazy;
 
 		/// <summary>
 		/// Gets the @everyone role for this guild.
@@ -445,7 +445,7 @@ namespace DisCatSharp.Entities
 			=> this.GetRole(this.Id);
 
 		[JsonIgnore]
-		internal bool _isOwner;
+		internal bool IsOwnerInternal;
 
 		/// <summary>
 		/// Gets whether the current user is the guild's owner.
@@ -453,8 +453,8 @@ namespace DisCatSharp.Entities
 		[JsonProperty("owner", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsOwner
 		{
-			get => this._isOwner || this.OwnerId == this.Discord.CurrentUser.Id;
-			internal set => this._isOwner = value;
+			get => this.IsOwnerInternal || this.OwnerId == this.Discord.CurrentUser.Id;
+			internal set => this.IsOwnerInternal = value;
 		}
 
 		/// <summary>
@@ -522,7 +522,7 @@ namespace DisCatSharp.Entities
 		/// Gets whether this guild is designated as NSFW.
 		/// </summary>
 		[JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
-		public bool IsNSFW { get; internal set; }
+		public bool IsNsfw { get; internal set; }
 
 		/// <summary>
 		/// Gets this guild's hub type, if applicable.
@@ -562,36 +562,36 @@ namespace DisCatSharp.Entities
 		/// <returns>A ordered list of categories with its channels</returns>
 		public Dictionary<ulong, List<DiscordChannel>> GetOrderedChannels()
 		{
-			IReadOnlyList<DiscordChannel> raw_channels = this._channels.Values.ToList();
+			IReadOnlyList<DiscordChannel> rawChannels = this.ChannelsInternal.Values.ToList();
 
-			Dictionary<ulong, List<DiscordChannel>> ordered_channels = new();
+			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new();
 
-			ordered_channels.Add(0, new List<DiscordChannel>());
+			orderedChannels.Add(0, new List<DiscordChannel>());
 
-			foreach (var channel in raw_channels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
+			foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
 			{
-				ordered_channels.Add(channel.Id, new List<DiscordChannel>());
+				orderedChannels.Add(channel.Id, new List<DiscordChannel>());
 			}
 
-			foreach (var channel in raw_channels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
+			foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
 			{
-				ordered_channels[channel.ParentId.Value].Add(channel);
+				orderedChannels[channel.ParentId.Value].Add(channel);
 			}
-			foreach (var channel in raw_channels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
+			foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
 			{
-				ordered_channels[channel.ParentId.Value].Add(channel);
-			}
-
-			foreach (var channel in raw_channels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
-			{
-				ordered_channels[0].Add(channel);
-			}
-			foreach (var channel in raw_channels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
-			{
-				ordered_channels[0].Add(channel);
+				orderedChannels[channel.ParentId.Value].Add(channel);
 			}
 
-			return ordered_channels;
+			foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
+			{
+				orderedChannels[0].Add(channel);
+			}
+			foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
+			{
+				orderedChannels[0].Add(channel);
+			}
+
+			return orderedChannels;
 		}
 
 		/// <summary>
@@ -603,36 +603,36 @@ namespace DisCatSharp.Entities
 		/// <returns>A ordered list of categories with its channels</returns>
 		public async Task<Dictionary<ulong, List<DiscordChannel>>> GetOrderedChannelsAsync()
 		{
-			var raw_channels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Id);
+			var rawChannels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Id);
 
-			Dictionary<ulong, List<DiscordChannel>> ordered_channels = new();
+			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new();
 
-			ordered_channels.Add(0, new List<DiscordChannel>());
+			orderedChannels.Add(0, new List<DiscordChannel>());
 
-			foreach (var channel in raw_channels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
+			foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
 			{
-				ordered_channels.Add(channel.Id, new List<DiscordChannel>());
+				orderedChannels.Add(channel.Id, new List<DiscordChannel>());
 			}
 
-			foreach (var channel in raw_channels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
+			foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
 			{
-				ordered_channels[channel.ParentId.Value].Add(channel);
+				orderedChannels[channel.ParentId.Value].Add(channel);
 			}
-			foreach (var channel in raw_channels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
+			foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
 			{
-				ordered_channels[channel.ParentId.Value].Add(channel);
-			}
-
-			foreach (var channel in raw_channels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
-			{
-				ordered_channels[0].Add(channel);
-			}
-			foreach (var channel in raw_channels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
-			{
-				ordered_channels[0].Add(channel);
+				orderedChannels[channel.ParentId.Value].Add(channel);
 			}
 
-			return ordered_channels;
+			foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
+			{
+				orderedChannels[0].Add(channel);
+			}
+			foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
+			{
+				orderedChannels[0].Add(channel);
+			}
+
+			return orderedChannels;
 		}
 
 		/// <summary>
@@ -646,11 +646,11 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordGuild()
 		{
-			this._current_member_lazy = new Lazy<DiscordMember>(() => (this._members != null && this._members.TryGetValue(this.Discord.CurrentUser.Id, out var member)) ? member : null);
-			this._invites = new ConcurrentDictionary<string, DiscordInvite>();
-			this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this._threads);
-			this.StageInstances = new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this._stageInstances);
-			this.ScheduledEvents = new ReadOnlyConcurrentDictionary<ulong, DiscordScheduledEvent>(this._scheduledEvents);
+			this._currentMemberLazy = new Lazy<DiscordMember>(() => (this.MembersInternal != null && this.MembersInternal.TryGetValue(this.Discord.CurrentUser.Id, out var member)) ? member : null);
+			this.Invites = new ConcurrentDictionary<string, DiscordInvite>();
+			this.Threads = new ReadOnlyConcurrentDictionary<ulong, DiscordThreadChannel>(this.ThreadsInternal);
+			this.StageInstances = new ReadOnlyConcurrentDictionary<ulong, DiscordStageInstance>(this.StageInstancesInternal);
+			this.ScheduledEvents = new ReadOnlyConcurrentDictionary<ulong, DiscordScheduledEvent>(this.ScheduledEventsInternal);
 		}
 
 		#region Guild Methods
@@ -668,19 +668,19 @@ namespace DisCatSharp.Entities
 		/// Adds a new member to this guild
 		/// </summary>
 		/// <param name="user">User to add</param>
-		/// <param name="access_token">User's access token (OAuth2)</param>
+		/// <param name="accessToken">User's access token (OAuth2)</param>
 		/// <param name="nickname">new nickname</param>
 		/// <param name="roles">new roles</param>
 		/// <param name="muted">whether this user has to be muted</param>
 		/// <param name="deaf">whether this user has to be deafened</param>
 		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite" /> permission.</exception>
-		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the <paramref name="user"/> or <paramref name="access_token"/> is not found.</exception>
+		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the <paramref name="user"/> or <paramref name="accessToken"/> is not found.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task AddMemberAsync(DiscordUser user, string access_token, string nickname = null, IEnumerable<DiscordRole> roles = null,
+		public Task AddMemberAsync(DiscordUser user, string accessToken, string nickname = null, IEnumerable<DiscordRole> roles = null,
 			bool muted = false, bool deaf = false)
-			=> this.Discord.ApiClient.AddGuildMemberAsync(this.Id, user.Id, access_token, nickname, roles, muted, deaf);
+			=> this.Discord.ApiClient.AddGuildMemberAsync(this.Id, user.Id, accessToken, nickname, roles, muted, deaf);
 
 		/// <summary>
 		/// Deletes this guild. Requires the caller to be the owner of the guild.
@@ -846,7 +846,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Timeout a specified member in this guild.
 		/// </summary>
-		/// <param name="member_id">Member to timeout.</param>
+		/// <param name="memberId">Member to timeout.</param>
 		/// <param name="until">The datetime offset to time out the user. Up to 28 days.</param>
 		/// <param name="reason">Reason for audit logs.</param>
 		/// <returns></returns>
@@ -854,13 +854,13 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task TimeoutAsync(ulong member_id, DateTimeOffset until, string reason = null)
-			=> until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, member_id, until, reason);
+		public Task TimeoutAsync(ulong memberId, DateTimeOffset until, string reason = null)
+			=> until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, memberId, until, reason);
 
 		/// <summary>
 		/// Timeout a specified member in this guild.
 		/// </summary>
-		/// <param name="member_id">Member to timeout.</param>
+		/// <param name="memberId">Member to timeout.</param>
 		/// <param name="until">The timespan to time out the user. Up to 28 days.</param>
 		/// <param name="reason">Reason for audit logs.</param>
 		/// <returns></returns>
@@ -868,13 +868,13 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task TimeoutAsync(ulong member_id, TimeSpan until, string reason = null)
-			=> this.TimeoutAsync(member_id, DateTimeOffset.UtcNow + until, reason);
+		public Task TimeoutAsync(ulong memberId, TimeSpan until, string reason = null)
+			=> this.TimeoutAsync(memberId, DateTimeOffset.UtcNow + until, reason);
 
 		/// <summary>
 		/// Timeout a specified member in this guild.
 		/// </summary>
-		/// <param name="member_id">Member to timeout.</param>
+		/// <param name="memberId">Member to timeout.</param>
 		/// <param name="until">The datetime to time out the user. Up to 28 days.</param>
 		/// <param name="reason">Reason for audit logs.</param>
 		/// <returns></returns>
@@ -882,48 +882,48 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task TimeoutAsync(ulong member_id, DateTime until, string reason = null)
-			=> this.TimeoutAsync(member_id, until.ToUniversalTime() - DateTime.UtcNow, reason);
+		public Task TimeoutAsync(ulong memberId, DateTime until, string reason = null)
+			=> this.TimeoutAsync(memberId, until.ToUniversalTime() - DateTime.UtcNow, reason);
 
 		/// <summary>
 		/// Removes the timeout from a specified member in this guild.
 		/// </summary>
-		/// <param name="member_id">Member to remove the timeout from.</param>
+		/// <param name="memberId">Member to remove the timeout from.</param>
 		/// <param name="reason">Reason for audit logs.</param>
 		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task RemoveTimeoutAsync(ulong member_id, string reason = null) => this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, member_id, null, reason);
+		public Task RemoveTimeoutAsync(ulong memberId, string reason = null) => this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, memberId, null, reason);
 
 		/// <summary>
 		/// Bans a specified member from this guild.
 		/// </summary>
 		/// <param name="member">Member to ban.</param>
-		/// <param name="delete_message_days">How many days to remove messages from.</param>
+		/// <param name="deleteMessageDays">How many days to remove messages from.</param>
 		/// <param name="reason">Reason for audit logs.</param>
 		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task BanMemberAsync(DiscordMember member, int delete_message_days = 0, string reason = null)
-			=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, member.Id, delete_message_days, reason);
+		public Task BanMemberAsync(DiscordMember member, int deleteMessageDays = 0, string reason = null)
+			=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, member.Id, deleteMessageDays, reason);
 
 		/// <summary>
 		/// Bans a specified user by ID. This doesn't require the user to be in this guild.
 		/// </summary>
-		/// <param name="user_id">ID of the user to ban.</param>
-		/// <param name="delete_message_days">How many days to remove messages from.</param>
+		/// <param name="userId">ID of the user to ban.</param>
+		/// <param name="deleteMessageDays">How many days to remove messages from.</param>
 		/// <param name="reason">Reason for audit logs.</param>
 		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task BanMemberAsync(ulong user_id, int delete_message_days = 0, string reason = null)
-			=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, user_id, delete_message_days, reason);
+		public Task BanMemberAsync(ulong userId, int deleteMessageDays = 0, string reason = null)
+			=> this.Discord.ApiClient.CreateGuildBanAsync(this.Id, userId, deleteMessageDays, reason);
 
 		/// <summary>
 		/// Unbans a user from this guild.
@@ -941,15 +941,15 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Unbans a user by ID.
 		/// </summary>
-		/// <param name="user_id">ID of the user to unban.</param>
+		/// <param name="userId">ID of the user to unban.</param>
 		/// <param name="reason">Reason for audit logs.</param>
 		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the user does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task UnbanMemberAsync(ulong user_id, string reason = null)
-			=> this.Discord.ApiClient.RemoveGuildBanAsync(this.Id, user_id, reason);
+		public Task UnbanMemberAsync(ulong userId, string reason = null)
+			=> this.Discord.ApiClient.RemoveGuildBanAsync(this.Id, userId, reason);
 
 		/// <summary>
 		/// Leaves this guild.
@@ -1033,7 +1033,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordScheduledEvent> GetScheduledEventAsync(ulong scheduledEventId, bool? withUserCount = null)
-			=> this._scheduledEvents.TryGetValue(scheduledEventId, out var ev) ? ev : await this.Discord.ApiClient.GetGuildScheduledEventAsync(this.Id, scheduledEventId, withUserCount);
+			=> this.ScheduledEventsInternal.TryGetValue(scheduledEventId, out var ev) ? ev : await this.Discord.ApiClient.GetGuildScheduledEventAsync(this.Id, scheduledEventId, withUserCount);
 
 		/// <summary>
 		/// Gets a specific scheduled events.
@@ -1127,7 +1127,7 @@ namespace DisCatSharp.Entities
 		/// <param name="name">Name of the new channel.</param>
 		/// <param name="parent">Category to put this channel in.</param>
 		/// <param name="bitrate">Bitrate of the channel.</param>
-		/// <param name="user_limit">Maximum number of users in the channel.</param>
+		/// <param name="userLimit">Maximum number of users in the channel.</param>
 		/// <param name="overwrites">Permission overwrites for this channel.</param>
 		/// <param name="qualityMode">Video quality mode of the channel.</param>
 		/// <param name="reason">Reason for audit logs.</param>
@@ -1136,8 +1136,8 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task<DiscordChannel> CreateVoiceChannelAsync(string name, DiscordChannel parent = null, int? bitrate = null, int? user_limit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, VideoQualityMode? qualityMode = null, string reason = null)
-			=> this.CreateChannelAsync(name, ChannelType.Voice, parent, Optional.FromNoValue<string>(), bitrate, user_limit, overwrites, null, Optional.FromNoValue<int?>(), qualityMode, reason);
+		public Task<DiscordChannel> CreateVoiceChannelAsync(string name, DiscordChannel parent = null, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, VideoQualityMode? qualityMode = null, string reason = null)
+			=> this.CreateChannelAsync(name, ChannelType.Voice, parent, Optional.FromNoValue<string>(), bitrate, userLimit, overwrites, null, Optional.FromNoValue<int?>(), qualityMode, reason);
 
 		/// <summary>
 		/// Creates a new channel in this guild.
@@ -1211,7 +1211,7 @@ namespace DisCatSharp.Entities
 
 				for (var i = 0; i < roleCount; i++)
 				{
-					if (this._roles.ContainsKey(roleArr[i].Id))
+					if (this.RolesInternal.ContainsKey(roleArr[i].Id))
 						rawRoleIds.Add(roleArr[i].Id);
 				}
 
@@ -1244,7 +1244,7 @@ namespace DisCatSharp.Entities
 
 				for (var i = 0; i < roleCount; i++)
 				{
-					if (this._roles.ContainsKey(roleArr[i].Id))
+					if (this.RolesInternal.ContainsKey(roleArr[i].Id))
 						rawRoleIds.Add(roleArr[i].Id);
 				}
 
@@ -1281,16 +1281,16 @@ namespace DisCatSharp.Entities
 		/// Modifies an integration in this guild.
 		/// </summary>
 		/// <param name="integration">Integration to modify.</param>
-		/// <param name="expire_behaviour">Number of days after which the integration expires.</param>
-		/// <param name="expire_grace_period">Length of grace period which allows for renewing the integration.</param>
-		/// <param name="enable_emoticons">Whether emotes should be synced from this integration.</param>
+		/// <param name="expireBehaviour">Number of days after which the integration expires.</param>
+		/// <param name="expireGracePeriod">Length of grace period which allows for renewing the integration.</param>
+		/// <param name="enableEmoticons">Whether emotes should be synced from this integration.</param>
 		/// <returns>The modified integration.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task<DiscordIntegration> ModifyIntegrationAsync(DiscordIntegration integration, int expire_behaviour, int expire_grace_period, bool enable_emoticons)
-			=> this.Discord.ApiClient.ModifyGuildIntegrationAsync(this.Id, integration.Id, expire_behaviour, expire_grace_period, enable_emoticons);
+		public Task<DiscordIntegration> ModifyIntegrationAsync(DiscordIntegration integration, int expireBehaviour, int expireGracePeriod, bool enableEmoticons)
+			=> this.Discord.ApiClient.ModifyGuildIntegrationAsync(this.Id, integration.Id, expireBehaviour, expireGracePeriod, enableEmoticons);
 
 		/// <summary>
 		/// Removes an integration from this guild.
@@ -1336,7 +1336,7 @@ namespace DisCatSharp.Entities
 		/// <param name="code">The invite code</param>
 		/// <returns>An invite, or null if not in cache.</returns>
 		public DiscordInvite GetInvite(string code)
-			=> this._invites.TryGetValue(code, out var invite) ? invite : null;
+			=> this.Invites.TryGetValue(code, out var invite) ? invite : null;
 
 		/// <summary>
 		/// Gets all the invites created for all the channels in this guild.
@@ -1352,7 +1352,7 @@ namespace DisCatSharp.Entities
 			if (!intents.HasIntent(DiscordIntents.GuildInvites))
 			{
 				for (var i = 0; i < res.Count; i++)
-					this._invites[res[i].Code] = res[i];
+					this.Invites[res[i].Code] = res[i];
 			}
 
 			return res;
@@ -1402,7 +1402,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordMember> GetMemberAsync(ulong userId)
 		{
-			if (this._members != null && this._members.TryGetValue(userId, out var mbr))
+			if (this.MembersInternal != null && this.MembersInternal.TryGetValue(userId, out var mbr))
 				return mbr;
 
 			mbr = await this.Discord.ApiClient.GetGuildMemberAsync(this.Id, userId).ConfigureAwait(false);
@@ -1411,9 +1411,9 @@ namespace DisCatSharp.Entities
 
 			if (intents.HasIntent(DiscordIntents.GuildMembers))
 			{
-				if (this._members != null)
+				if (this.MembersInternal != null)
 				{
-					this._members[userId] = mbr;
+					this.MembersInternal[userId] = mbr;
 				}
 			}
 
@@ -1449,7 +1449,7 @@ namespace DisCatSharp.Entities
 						return old;
 					});
 
-					recmbr.Add(new DiscordMember(xtm) { Discord = this.Discord, _guild_id = this.Id });
+					recmbr.Add(new DiscordMember(xtm) { Discord = this.Discord, GuildId = this.Id });
 				}
 
 				var tm = tms.LastOrDefault();
@@ -1529,7 +1529,7 @@ namespace DisCatSharp.Entities
 		/// <returns>Requested role.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public DiscordRole GetRole(ulong id)
-			=> this._roles.TryGetValue(id, out var role) ? role : null;
+			=> this.RolesInternal.TryGetValue(id, out var role) ? role : null;
 
 		/// <summary>
 		/// Gets a channel from this guild by its ID.
@@ -1538,7 +1538,7 @@ namespace DisCatSharp.Entities
 		/// <returns>Requested channel.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public DiscordChannel GetChannel(ulong id)
-			=> (this._channels != null && this._channels.TryGetValue(id, out var channel)) ? channel : null;
+			=> (this.ChannelsInternal != null && this.ChannelsInternal.TryGetValue(id, out var channel)) ? channel : null;
 
 		/// <summary>
 		/// Gets a thread from this guild by its ID.
@@ -1547,18 +1547,18 @@ namespace DisCatSharp.Entities
 		/// <returns>Requested thread.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public DiscordThreadChannel GetThread(ulong id)
-			=> (this._threads != null && this._threads.TryGetValue(id, out var thread)) ? thread : null;
+			=> (this.ThreadsInternal != null && this.ThreadsInternal.TryGetValue(id, out var thread)) ? thread : null;
 
 		/// <summary>
 		/// Gets audit log entries for this guild.
 		/// </summary>
 		/// <param name="limit">Maximum number of entries to fetch.</param>
-		/// <param name="by_member">Filter by member responsible.</param>
-		/// <param name="action_type">Filter by action type.</param>
+		/// <param name="byMember">Filter by member responsible.</param>
+		/// <param name="actionType">Filter by action type.</param>
 		/// <returns>A collection of requested audit log entries.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ViewAuditLog"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public async Task<IReadOnlyList<DiscordAuditLogEntry>> GetAuditLogsAsync(int? limit = null, DiscordMember by_member = null, AuditLogActionType? action_type = null)
+		public async Task<IReadOnlyList<DiscordAuditLogEntry>> GetAuditLogsAsync(int? limit = null, DiscordMember byMember = null, AuditLogActionType? actionType = null)
 		{
 			var alrs = new List<AuditLog>();
 			int ac = 1, tc = 0, rmn = 100;
@@ -1569,7 +1569,7 @@ namespace DisCatSharp.Entities
 				rmn = Math.Min(100, rmn);
 				if (rmn <= 0) break;
 
-				var alr = await this.Discord.ApiClient.GetAuditLogsAsync(this.Id, rmn, null, last == 0 ? null : (ulong?)last, by_member?.Id, (int?)action_type).ConfigureAwait(false);
+				var alr = await this.Discord.ApiClient.GetAuditLogsAsync(this.Id, rmn, null, last == 0 ? null : (ulong?)last, byMember?.Id, (int?)actionType).ConfigureAwait(false);
 				ac = alr.Entries.Count();
 				tc += ac;
 				if (ac > 0)
@@ -1621,7 +1621,7 @@ namespace DisCatSharp.Entities
 				.GroupBy(xh => xh.Id)
 				.Select(xgh => xgh.First());
 
-			var ams = amr.Select(xau => (this._members != null && this._members.TryGetValue(xau.Id, out var member)) ? member : new DiscordMember { Discord = this.Discord, Id = xau.Id, _guild_id = this.Id });
+			var ams = amr.Select(xau => (this.MembersInternal != null && this.MembersInternal.TryGetValue(xau.Id, out var member)) ? member : new DiscordMember { Discord = this.Discord, Id = xau.Id, GuildId = this.Id });
 			var amd = ams.ToDictionary(xm => xm.Id, xm => xm);
 
 #pragma warning disable CS0219
@@ -1673,8 +1673,8 @@ namespace DisCatSharp.Entities
 								case "owner_id":
 									entrygld.OwnerChange = new PropertyChange<DiscordMember>
 									{
-										Before = (this._members != null && this._members.TryGetValue(xc.OldValueUlong, out var oldMember)) ? oldMember : await this.GetMemberAsync(xc.OldValueUlong).ConfigureAwait(false),
-										After = (this._members != null && this._members.TryGetValue(xc.NewValueUlong, out var newMember)) ? newMember : await this.GetMemberAsync(xc.NewValueUlong).ConfigureAwait(false)
+										Before = (this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.OldValueUlong, out var oldMember)) ? oldMember : await this.GetMemberAsync(xc.OldValueUlong).ConfigureAwait(false),
+										After = (this.MembersInternal != null && this.MembersInternal.TryGetValue(xc.NewValueUlong, out var newMember)) ? newMember : await this.GetMemberAsync(xc.NewValueUlong).ConfigureAwait(false)
 									};
 									break;
 
@@ -1934,7 +1934,7 @@ namespace DisCatSharp.Entities
 					case AuditLogActionType.Kick:
 						entry = new DiscordAuditLogKickEntry
 						{
-							Target = amd.TryGetValue(xac.TargetId.Value, out var kickMember) ? kickMember : new DiscordMember { Id = xac.TargetId.Value, Discord = this.Discord, _guild_id = this.Id }
+							Target = amd.TryGetValue(xac.TargetId.Value, out var kickMember) ? kickMember : new DiscordMember { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
 						};
 						break;
 
@@ -1950,7 +1950,7 @@ namespace DisCatSharp.Entities
 					case AuditLogActionType.Unban:
 						entry = new DiscordAuditLogBanEntry
 						{
-							Target = amd.TryGetValue(xac.TargetId.Value, out var unbanMember) ? unbanMember : new DiscordMember { Id = xac.TargetId.Value, Discord = this.Discord, _guild_id = this.Id }
+							Target = amd.TryGetValue(xac.TargetId.Value, out var unbanMember) ? unbanMember : new DiscordMember { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
 						};
 						break;
 
@@ -1958,7 +1958,7 @@ namespace DisCatSharp.Entities
 					case AuditLogActionType.MemberRoleUpdate:
 						entry = new DiscordAuditLogMemberUpdateEntry
 						{
-							Target = amd.TryGetValue(xac.TargetId.Value, out var roleUpdMember) ? roleUpdMember : new DiscordMember { Id = xac.TargetId.Value, Discord = this.Discord, _guild_id = this.Id }
+							Target = amd.TryGetValue(xac.TargetId.Value, out var roleUpdMember) ? roleUpdMember : new DiscordMember { Id = xac.TargetId.Value, Discord = this.Discord, GuildId = this.Id }
 						};
 
 						var entrymbu = entry as DiscordAuditLogMemberUpdateEntry;
@@ -2140,8 +2140,8 @@ namespace DisCatSharp.Entities
 
 									entryinv.InviterChange = new PropertyChange<DiscordMember>
 									{
-										Before = amd.TryGetValue(t1, out var propBeforeMember) ? propBeforeMember : new DiscordMember { Id = t1, Discord = this.Discord, _guild_id = this.Id },
-										After = amd.TryGetValue(t2, out var propAfterMember) ? propAfterMember : new DiscordMember { Id = t1, Discord = this.Discord, _guild_id = this.Id },
+										Before = amd.TryGetValue(t1, out var propBeforeMember) ? propBeforeMember : new DiscordMember { Id = t1, Discord = this.Discord, GuildId = this.Id },
+										After = amd.TryGetValue(t2, out var propAfterMember) ? propAfterMember : new DiscordMember { Id = t1, Discord = this.Discord, GuildId = this.Id },
 									};
 									break;
 
@@ -2262,7 +2262,7 @@ namespace DisCatSharp.Entities
 					case AuditLogActionType.EmojiUpdate:
 						entry = new DiscordAuditLogEmojiEntry
 						{
-							Target = this._emojis.TryGetValue(xac.TargetId.Value, out var target) ? target : new DiscordEmoji { Id = xac.TargetId.Value, Discord = this.Discord }
+							Target = this.EmojisInternal.TryGetValue(xac.TargetId.Value, out var target) ? target : new DiscordEmoji { Id = xac.TargetId.Value, Discord = this.Discord }
 						};
 
 						var entryemo = entry as DiscordAuditLogEmojiEntry;
@@ -2290,7 +2290,7 @@ namespace DisCatSharp.Entities
 					case AuditLogActionType.StageInstanceUpdate:
 						entry = new DiscordAuditLogStageEntry
 						{
-							Target = this._stageInstances.TryGetValue(xac.TargetId.Value, out var stage) ? stage : new DiscordStageInstance { Id = xac.TargetId.Value, Discord = this.Discord }
+							Target = this.StageInstancesInternal.TryGetValue(xac.TargetId.Value, out var stage) ? stage : new DiscordStageInstance { Id = xac.TargetId.Value, Discord = this.Discord }
 						};
 
 						var entrysta = entry as DiscordAuditLogStageEntry;
@@ -2325,7 +2325,7 @@ namespace DisCatSharp.Entities
 					case AuditLogActionType.StickerUpdate:
 						entry = new DiscordAuditLogStickerEntry
 						{
-							Target = this._stickers.TryGetValue(xac.TargetId.Value, out var sticker) ? sticker : new DiscordSticker { Id = xac.TargetId.Value, Discord = this.Discord }
+							Target = this.StickersInternal.TryGetValue(xac.TargetId.Value, out var sticker) ? sticker : new DiscordSticker { Id = xac.TargetId.Value, Discord = this.Discord }
 						};
 
 						var entrysti = entry as DiscordAuditLogStickerEntry;
@@ -2544,7 +2544,7 @@ namespace DisCatSharp.Entities
 					case AuditLogActionType.ThreadUpdate:
 						entry = new DiscordAuditLogThreadEntry
 						{
-							Target = this._threads.TryGetValue(xac.TargetId.Value, out var thread) ? thread : new DiscordThreadChannel { Id = xac.TargetId.Value, Discord = this.Discord }
+							Target = this.ThreadsInternal.TryGetValue(xac.TargetId.Value, out var thread) ? thread : new DiscordThreadChannel { Id = xac.TargetId.Value, Discord = this.Discord }
 						};
 
 						var entrythr = entry as DiscordAuditLogThreadEntry;
@@ -2619,7 +2619,7 @@ namespace DisCatSharp.Entities
 					case AuditLogActionType.GuildScheduledEventUpdate:
 						entry = new DiscordAuditLogGuildScheduledEventEntry
 						{
-							Target = this._scheduledEvents.TryGetValue(xac.TargetId.Value, out var scheduled_event) ? scheduled_event : new DiscordScheduledEvent { Id = xac.TargetId.Value, Discord = this.Discord }
+							Target = this.ScheduledEventsInternal.TryGetValue(xac.TargetId.Value, out var scheduledEvent) ? scheduledEvent : new DiscordScheduledEvent { Id = xac.TargetId.Value, Discord = this.Discord }
 						};
 
 						var entryse = entry as DiscordAuditLogGuildScheduledEventEntry;
@@ -2818,11 +2818,11 @@ namespace DisCatSharp.Entities
 
 			foreach (var xstr in stickers)
 			{
-				this._stickers.AddOrUpdate(xstr.Id, xstr, (id, old) =>
+				this.StickersInternal.AddOrUpdate(xstr.Id, xstr, (id, old) =>
 				{
 					old.Name = xstr.Name;
 					old.Description = xstr.Description;
-					old._internalTags = xstr._internalTags;
+					old.InternalTags = xstr.InternalTags;
 					return old;
 				});
 			}
@@ -2837,8 +2837,8 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
-		public Task<DiscordSticker> GetStickerAsync(ulong sticker_id)
-			=> this.Discord.ApiClient.GetGuildStickerAsync(this.Id, sticker_id);
+		public Task<DiscordSticker> GetStickerAsync(ulong stickerId)
+			=> this.Discord.ApiClient.GetGuildStickerAsync(this.Id, stickerId);
 
 		/// <summary>
 		/// Creates a sticker
@@ -2855,17 +2855,17 @@ namespace DisCatSharp.Entities
 		{
 			var fileExt = format switch
 			{
-				StickerFormat.PNG => "png",
-				StickerFormat.APNG => "png",
-				StickerFormat.LOTTIE => "json",
+				StickerFormat.Png => "png",
+				StickerFormat.Apng => "png",
+				StickerFormat.Lottie => "json",
 				_ => throw new InvalidOperationException("This format is not supported.")
 			};
 
 			var contentType = format switch
 			{
-				StickerFormat.PNG => "image/png",
-				StickerFormat.APNG => "image/png",
-				StickerFormat.LOTTIE => "application/json",
+				StickerFormat.Png => "image/png",
+				StickerFormat.Apng => "image/png",
+				StickerFormat.Lottie => "application/json",
 				_ => throw new InvalidOperationException("This format is not supported.")
 			};
 
@@ -2896,7 +2896,7 @@ namespace DisCatSharp.Entities
 
 			string uemoji = null;
 
-			if (!this._stickers.TryGetValue(sticker, out var stickerobj) || stickerobj.Guild.Id != this.Id)
+			if (!this.StickersInternal.TryGetValue(sticker, out var stickerobj) || stickerobj.Guild.Id != this.Id)
 				throw new ArgumentException("This sticker does not belong to this guild.");
 			if (name.HasValue && (name.Value.Length < 2 || name.Value.Length > 30))
 				throw new ArgumentException("Sticker name needs to be between 2 and 30 characters long.");
@@ -2910,8 +2910,8 @@ namespace DisCatSharp.Entities
 			var usticker = await this.Discord.ApiClient.ModifyGuildStickerAsync(this.Id, sticker, name, description, uemoji, reason).ConfigureAwait(false);
 
 
-			if (this._stickers.TryGetValue(usticker.Id, out var old))
-				this._stickers.TryUpdate(usticker.Id, usticker, old);
+			if (this.StickersInternal.TryGetValue(usticker.Id, out var old))
+				this.StickersInternal.TryUpdate(usticker.Id, usticker, old);
 
 			return usticker;
 		}
@@ -2943,7 +2943,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
 		public Task DeleteStickerAsync(ulong sticker, string reason = null)
 		{
-			return !this._stickers.TryGetValue(sticker, out var stickerobj)
+			return !this.StickersInternal.TryGetValue(sticker, out var stickerobj)
 				? throw new ArgumentNullException(nameof(sticker))
 				: stickerobj.Guild.Id != this.Id
 				? throw new ArgumentException("This sticker does not belong to this guild.")
@@ -2970,7 +2970,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public DiscordChannel GetDefaultChannel()
 		{
-			return this._channels?.Values.Where(xc => xc.Type == ChannelType.Text)
+			return this.ChannelsInternal?.Values.Where(xc => xc.Type == ChannelType.Text)
 					.OrderBy(xc => xc.Position)
 					.FirstOrDefault(xc => (xc.PermissionsFor(this.CurrentMember) & DisCatSharp.Permissions.AccessChannels) == DisCatSharp.Permissions.AccessChannels);
 		}
@@ -3562,12 +3562,12 @@ namespace DisCatSharp.Entities
 			this.IsStaffOnly = guild.RawFeatures.Contains("INTERNAL_EMPLOYEE_ONLY");
 			this.RoleSubscriptionsIsAvaiableForPurchase = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE");
 
-			var _features = guild.RawFeatures.Any() ? "" : "None";
+			var features = guild.RawFeatures.Any() ? "" : "None";
 			foreach (var feature in guild.RawFeatures)
 			{
-				_features += feature + " ";
+				features += feature + " ";
 			}
-			this.FeatureString = _features;
+			this.FeatureString = features;
 
 		}
 	}

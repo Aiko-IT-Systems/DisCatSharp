@@ -51,9 +51,9 @@ namespace DisCatSharp.Entities
 		/// Gets the user's banner color, if set. Mutually exclusive with <see cref="BannerHash"/>.
 		/// </summary>
 		public DiscordColor? BannerColor
-			=> !this._bannerColor.HasValue ? null : new DiscordColor(this._bannerColor.Value);
+			=> !this.BannerColorInternal.HasValue ? null : new DiscordColor(this.BannerColorInternal.Value);
 
-		internal int? _bannerColor;
+		internal int? BannerColorInternal;
 
 		/// <summary>
 		/// Gets the user's banner url

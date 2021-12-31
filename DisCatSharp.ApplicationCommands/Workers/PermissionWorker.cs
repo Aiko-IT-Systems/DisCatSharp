@@ -37,7 +37,7 @@ namespace DisCatSharp.ApplicationCommands
 		{
 			if (!guildid.HasValue)
 			{
-				ApplicationCommandsExtension._client.Logger.LogTrace("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
+				ApplicationCommandsExtension.ClientInternal.Logger.LogTrace("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
 				return;
 			}
 
@@ -48,7 +48,7 @@ namespace DisCatSharp.ApplicationCommands
 			if (ctx.Permissions.Count == 0)
 				return;
 
-			await ApplicationCommandsExtension._client.OverwriteGuildApplicationCommandPermissionsAsync(guildid.Value, commandId, ctx.Permissions);
+			await ApplicationCommandsExtension.ClientInternal.OverwriteGuildApplicationCommandPermissionsAsync(guildid.Value, commandId, ctx.Permissions);
 		}
 	}
 }

@@ -38,14 +38,14 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Gets the user regex.
 		/// </summary>
-		private static Regex UserRegex { get; }
+		private static Regex s_userRegex { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordUserConverter"/> class.
 		/// </summary>
 		static DiscordUserConverter()
 		{
-			UserRegex = DiscordRegEx.User;
+			s_userRegex = DiscordRegEx.User;
 		}
 
 		/// <summary>
@@ -62,7 +62,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				return ret;
 			}
 
-			var m = UserRegex.Match(value);
+			var m = s_userRegex.Match(value);
 			if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out uid))
 			{
 				var result = await ctx.Client.GetUserAsync(uid).ConfigureAwait(false);
@@ -95,14 +95,14 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Gets the user regex.
 		/// </summary>
-		private static Regex UserRegex { get; }
+		private static Regex s_userRegex { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordMemberConverter"/> class.
 		/// </summary>
 		static DiscordMemberConverter()
 		{
-			UserRegex = DiscordRegEx.User;
+			s_userRegex = DiscordRegEx.User;
 		}
 
 		/// <summary>
@@ -122,7 +122,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				return ret;
 			}
 
-			var m = UserRegex.Match(value);
+			var m = s_userRegex.Match(value);
 			if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out uid))
 			{
 				var result = await ctx.Guild.GetMemberAsync(uid).ConfigureAwait(false);
@@ -159,14 +159,14 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Gets the channel regex.
 		/// </summary>
-		private static Regex ChannelRegex { get; }
+		private static Regex s_channelRegex { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordChannelConverter"/> class.
 		/// </summary>
 		static DiscordChannelConverter()
 		{
-			ChannelRegex = DiscordRegEx.Channel;
+			s_channelRegex = DiscordRegEx.Channel;
 		}
 
 		/// <summary>
@@ -183,7 +183,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				return ret;
 			}
 
-			var m = ChannelRegex.Match(value);
+			var m = s_channelRegex.Match(value);
 			if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out cid))
 			{
 				var result = await ctx.Client.GetChannelAsync(cid).ConfigureAwait(false);
@@ -208,14 +208,14 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Gets the channel regex.
 		/// </summary>
-		private static Regex ChannelRegex { get; }
+		private static Regex s_channelRegex { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordThreadChannelConverter"/> class.
 		/// </summary>
 		static DiscordThreadChannelConverter()
 		{
-			ChannelRegex = DiscordRegEx.Channel;
+			s_channelRegex = DiscordRegEx.Channel;
 		}
 
 		/// <summary>
@@ -232,7 +232,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				return ret;
 			}
 
-			var m = ChannelRegex.Match(value);
+			var m = s_channelRegex.Match(value);
 			if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out tid))
 			{
 				var result = await ctx.Client.GetThreadAsync(tid).ConfigureAwait(false);
@@ -257,14 +257,14 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Gets the role regex.
 		/// </summary>
-		private static Regex RoleRegex { get; }
+		private static Regex s_roleRegex { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordRoleConverter"/> class.
 		/// </summary>
 		static DiscordRoleConverter()
 		{
-			RoleRegex = DiscordRegEx.Role;
+			s_roleRegex = DiscordRegEx.Role;
 		}
 
 		/// <summary>
@@ -284,7 +284,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				return Task.FromResult(ret);
 			}
 
-			var m = RoleRegex.Match(value);
+			var m = s_roleRegex.Match(value);
 			if (m.Success && ulong.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out rid))
 			{
 				var result = ctx.Guild.GetRole(rid);
@@ -338,14 +338,14 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Gets the invite regex.
 		/// </summary>
-		private static Regex InviteRegex { get; }
+		private static Regex s_inviteRegex { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordInviteConverter"/> class.
 		/// </summary>
 		static DiscordInviteConverter()
 		{
-			InviteRegex = DiscordRegEx.Invite;
+			s_inviteRegex = DiscordRegEx.Invite;
 		}
 
 		/// <summary>
@@ -355,7 +355,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		async Task<Optional<DiscordInvite>> IArgumentConverter<DiscordInvite>.ConvertAsync(string value, CommandContext ctx)
 		{
-			var m = InviteRegex.Match(value);
+			var m = s_inviteRegex.Match(value);
 			if (m.Success)
 			{
 				var result = await ctx.Client.GetInviteByCodeAsync(m.Groups[5].Value).ConfigureAwait(false);
@@ -380,14 +380,14 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Gets the message path regex.
 		/// </summary>
-		private static Regex MessagePathRegex { get; }
+		private static Regex s_messagePathRegex { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordMessageConverter"/> class.
 		/// </summary>
 		static DiscordMessageConverter()
 		{
-			MessagePathRegex = DiscordRegEx.MessageLink;
+			s_messagePathRegex = DiscordRegEx.MessageLink;
 		}
 
 		/// <summary>
@@ -407,7 +407,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				if (uri.Host != "discordapp.com" && uri.Host != "discord.com" && !uri.Host.EndsWith(".discordapp.com") && !uri.Host.EndsWith(".discord.com"))
 					return Optional.FromNoValue<DiscordMessage>();
 
-				var uripath = MessagePathRegex.Match(uri.AbsolutePath);
+				var uripath = s_messagePathRegex.Match(uri.AbsolutePath);
 				if (!uripath.Success
 					|| !ulong.TryParse(uripath.Groups["channel"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var cid)
 					|| !ulong.TryParse(uripath.Groups["message"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out mid))
@@ -439,14 +439,14 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Gets the event regex.
 		/// </summary>
-		private static Regex EventRegex { get; }
+		private static Regex s_eventRegex { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordScheduledEventConverter"/> class.
 		/// </summary>
 		static DiscordScheduledEventConverter()
 		{
-			EventRegex = DiscordRegEx.Event;
+			s_eventRegex = DiscordRegEx.Event;
 		}
 
 		/// <summary>
@@ -466,7 +466,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				if (uri.Host != "discordapp.com" && uri.Host != "discord.com" && !uri.Host.EndsWith(".discordapp.com") && !uri.Host.EndsWith(".discord.com"))
 					return Optional.FromNoValue<DiscordScheduledEvent>();
 
-				var uripath = EventRegex.Match(uri.AbsolutePath);
+				var uripath = s_eventRegex.Match(uri.AbsolutePath);
 				if (!uripath.Success
 					|| !ulong.TryParse(uripath.Groups["guild"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var gid)
 					|| !ulong.TryParse(uripath.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out seid))
@@ -498,14 +498,14 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Gets the emote regex.
 		/// </summary>
-		private static Regex EmoteRegex { get; }
+		private static Regex s_emoteRegex { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordEmojiConverter"/> class.
 		/// </summary>
 		static DiscordEmojiConverter()
 		{
-			EmoteRegex = DiscordRegEx.Emoji;
+			s_emoteRegex = DiscordRegEx.Emoji;
 		}
 
 		/// <summary>
@@ -522,7 +522,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				return Task.FromResult(ret);
 			}
 
-			var m = EmoteRegex.Match(value);
+			var m = s_emoteRegex.Match(value);
 			if (m.Success)
 			{
 				var sid = m.Groups["id"].Value;
@@ -556,19 +556,19 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Gets the color regex hex.
 		/// </summary>
-		private static Regex ColorRegexHex { get; }
+		private static Regex s_colorRegexHex { get; }
 		/// <summary>
 		/// Gets the color regex rgb.
 		/// </summary>
-		private static Regex ColorRegexRgb { get; }
+		private static Regex s_colorRegexRgb { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordColorConverter"/> class.
 		/// </summary>
 		static DiscordColorConverter()
 		{
-			ColorRegexHex = CommonRegEx.HexColorString;
-			ColorRegexRgb = CommonRegEx.RgbColorString;
+			s_colorRegexHex = CommonRegEx.HexColorString;
+			s_colorRegexRgb = CommonRegEx.RgbColorString;
 		}
 
 		/// <summary>
@@ -578,11 +578,11 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<DiscordColor>> IArgumentConverter<DiscordColor>.ConvertAsync(string value, CommandContext ctx)
 		{
-			var m = ColorRegexHex.Match(value);
+			var m = s_colorRegexHex.Match(value);
 			if (m.Success && int.TryParse(m.Groups[1].Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var clr))
 				return Task.FromResult(Optional.FromValue<DiscordColor>(clr));
 
-			m = ColorRegexRgb.Match(value);
+			m = s_colorRegexRgb.Match(value);
 			if (m.Success)
 			{
 				var p1 = byte.TryParse(m.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var r);

@@ -47,25 +47,25 @@ namespace DisCatSharp.Interactivity
 		/// </summary>
 		internal InteractivityConfiguration Config { get; }
 
-		private EventWaiter<MessageCreateEventArgs> MessageCreatedWaiter;
+		private EventWaiter<MessageCreateEventArgs> _messageCreatedWaiter;
 
-		private EventWaiter<MessageReactionAddEventArgs> MessageReactionAddWaiter;
+		private EventWaiter<MessageReactionAddEventArgs> _messageReactionAddWaiter;
 
-		private EventWaiter<TypingStartEventArgs> TypingStartWaiter;
+		private EventWaiter<TypingStartEventArgs> _typingStartWaiter;
 
-		private EventWaiter<ComponentInteractionCreateEventArgs> ModalInteractionWaiter;
+		private EventWaiter<ComponentInteractionCreateEventArgs> _modalInteractionWaiter;
 
-		private EventWaiter<ComponentInteractionCreateEventArgs> ComponentInteractionWaiter;
+		private EventWaiter<ComponentInteractionCreateEventArgs> _componentInteractionWaiter;
 
-		private ComponentEventWaiter ComponentEventWaiter;
+		private ComponentEventWaiter _componentEventWaiter;
 
-		private ModalEventWaiter ModalEventWaiter;
+		private ModalEventWaiter _modalEventWaiter;
 
-		private ReactionCollector ReactionCollector;
+		private ReactionCollector _reactionCollector;
 
-		private Poller Poller;
+		private Poller _poller;
 
-		private Paginator Paginator;
+		private Paginator _paginator;
 		private  ComponentPaginator _compPaginator;
 
 #pragma warning restore IDE1006 // Naming Styles
@@ -86,17 +86,17 @@ namespace DisCatSharp.Interactivity
 		protected internal override void Setup(DiscordClient client)
 		{
 			this.Client = client;
-			this.MessageCreatedWaiter = new EventWaiter<MessageCreateEventArgs>(this.Client);
-			this.MessageReactionAddWaiter = new EventWaiter<MessageReactionAddEventArgs>(this.Client);
-			this.ComponentInteractionWaiter = new EventWaiter<ComponentInteractionCreateEventArgs>(this.Client);
-			this.ModalInteractionWaiter = new EventWaiter<ComponentInteractionCreateEventArgs>(this.Client);
-			this.TypingStartWaiter = new EventWaiter<TypingStartEventArgs>(this.Client);
-			this.Poller = new Poller(this.Client);
-			this.ReactionCollector = new ReactionCollector(this.Client);
-			this.Paginator = new Paginator(this.Client);
+			this._messageCreatedWaiter = new EventWaiter<MessageCreateEventArgs>(this.Client);
+			this._messageReactionAddWaiter = new EventWaiter<MessageReactionAddEventArgs>(this.Client);
+			this._componentInteractionWaiter = new EventWaiter<ComponentInteractionCreateEventArgs>(this.Client);
+			this._modalInteractionWaiter = new EventWaiter<ComponentInteractionCreateEventArgs>(this.Client);
+			this._typingStartWaiter = new EventWaiter<TypingStartEventArgs>(this.Client);
+			this._poller = new Poller(this.Client);
+			this._reactionCollector = new ReactionCollector(this.Client);
+			this._paginator = new Paginator(this.Client);
 			this._compPaginator = new(this.Client, this.Config);
-			this.ComponentEventWaiter = new(this.Client, this.Config);
-			this.ModalEventWaiter = new(this.Client, this.Config);
+			this._componentEventWaiter = new(this.Client, this.Config);
+			this._modalEventWaiter = new(this.Client, this.Config);
 
 		}
 
@@ -119,7 +119,7 @@ namespace DisCatSharp.Interactivity
 			foreach (var em in emojis)
 				await m.CreateReactionAsync(em).ConfigureAwait(false);
 
-			var res = await this.Poller.DoPollAsync(new PollRequest(m, timeout ?? this.Config.Timeout, emojis)).ConfigureAwait(false);
+			var res = await this._poller.DoPollAsync(new PollRequest(m, timeout ?? this.Config.Timeout, emojis)).ConfigureAwait(false);
 
 			var pollbehaviour = behaviour ?? this.Config.PollBehaviour;
 			var thismember = await m.Channel.Guild.GetMemberAsync(this.Client.CurrentUser.Id).ConfigureAwait(false);
@@ -165,7 +165,7 @@ namespace DisCatSharp.Interactivity
 			if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Button))
 				throw new ArgumentException("Provided Message does not contain any button components.");
 
-			var res = await this.ComponentEventWaiter
+			var res = await this._componentEventWaiter
 				.WaitForMatchAsync(new(message,
 					c =>
 						c.Interaction.Data.ComponentType == ComponentType.Button &&
@@ -180,8 +180,8 @@ namespace DisCatSharp.Interactivity
 		/// <param name="custom_id">The custom id of the modal to wait for.</param>
 		/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
 		/// <returns>A <see cref="InteractivityResult{T}"/> with the result of the modal.</returns>
-		public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string custom_id, TimeSpan? timeoutOverride = null)
-			=> this.WaitForModalAsync(custom_id, this.GetCancellationToken(timeoutOverride));
+		public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string customId, TimeSpan? timeoutOverride = null)
+			=> this.WaitForModalAsync(customId, this.GetCancellationToken(timeoutOverride));
 
 		/// <summary>
 		/// Waits for a user modal submit.
@@ -189,12 +189,12 @@ namespace DisCatSharp.Interactivity
 		/// <param name="custom_id">The custom id of the modal to wait for.</param>
 		/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 		/// <returns>A <see cref="InteractivityResult{T}"/> with the result of the modal.</returns>
-		public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string custom_id, CancellationToken token)
+		public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForModalAsync(string customId, CancellationToken token)
 		{
 			var result =
 				await this
-				.ModalEventWaiter
-				.WaitForModalMatchAsync(new(custom_id, c => c.Interaction.Type == InteractionType.ModalSubmit, token))
+				._modalEventWaiter
+				.WaitForModalMatchAsync(new(customId, c => c.Interaction.Type == InteractionType.ModalSubmit, token))
 				.ConfigureAwait(false);
 
 			return new(result is null, result);
@@ -234,7 +234,7 @@ namespace DisCatSharp.Interactivity
 
 			var result =
 				await this
-				.ComponentEventWaiter
+				._componentEventWaiter
 				.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType == ComponentType.Button && ids.Contains(c.Id), token))
 				.ConfigureAwait(false);
 
@@ -274,7 +274,7 @@ namespace DisCatSharp.Interactivity
 				throw new ArgumentException("Message does not contain any button components.");
 
 			var result = await this
-				.ComponentEventWaiter
+				._componentEventWaiter
 				.WaitForMatchAsync(new(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.User == user, token))
 				.ConfigureAwait(false);
 
@@ -317,7 +317,7 @@ namespace DisCatSharp.Interactivity
 			if (!message.Components.SelectMany(c => c.Components).OfType<DiscordButtonComponent>().Any(c => c.CustomId == id))
 				throw new ArgumentException($"Message does not contain button with Id of '{id}'.");
 			var result = await this
-				.ComponentEventWaiter
+				._componentEventWaiter
 				.WaitForMatchAsync(new(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Button && c.Id == id, token))
 				.ConfigureAwait(false);
 
@@ -351,7 +351,7 @@ namespace DisCatSharp.Interactivity
 				throw new ArgumentException("Message does not contain any button components.");
 
 			var result = await this
-				.ComponentEventWaiter
+				._componentEventWaiter
 				.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType is ComponentType.Button && predicate(c), token))
 				.ConfigureAwait(false);
 
@@ -388,7 +388,7 @@ namespace DisCatSharp.Interactivity
 				throw new ArgumentException("Message does not contain any select components.");
 
 			var result = await this
-				.ComponentEventWaiter
+				._componentEventWaiter
 				.WaitForMatchAsync(new(message, c => c.Interaction.Data.ComponentType is ComponentType.Select && predicate(c), token))
 				.ConfigureAwait(false);
 
@@ -428,7 +428,7 @@ namespace DisCatSharp.Interactivity
 				throw new ArgumentException($"Message does not contain select component with Id of '{id}'.");
 
 			var result = await this
-				.ComponentEventWaiter
+				._componentEventWaiter
 				.WaitForMatchAsync(new(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Select && c.Id == id, token))
 				.ConfigureAwait(false);
 
@@ -469,7 +469,7 @@ namespace DisCatSharp.Interactivity
 				throw new ArgumentException($"Message does not contain select with Id of '{id}'.");
 
 			var result = await this
-				.ComponentEventWaiter
+				._componentEventWaiter
 				.WaitForMatchAsync(new(message, (c) => c.Id == id && c.User == user, token)).ConfigureAwait(false);
 
 			return new(result is null, result);
@@ -488,7 +488,7 @@ namespace DisCatSharp.Interactivity
 				throw new InvalidOperationException("No message intents are enabled.");
 
 			var timeout = timeoutoverride ?? this.Config.Timeout;
-			var returns = await this.MessageCreatedWaiter.WaitForMatchAsync(new MatchRequest<MessageCreateEventArgs>(x => predicate(x.Message), timeout)).ConfigureAwait(false);
+			var returns = await this._messageCreatedWaiter.WaitForMatchAsync(new MatchRequest<MessageCreateEventArgs>(x => predicate(x.Message), timeout)).ConfigureAwait(false);
 
 			return new InteractivityResult<DiscordMessage>(returns == null, returns?.Message);
 		}
@@ -505,7 +505,7 @@ namespace DisCatSharp.Interactivity
 				throw new InvalidOperationException("No reaction intents are enabled.");
 
 			var timeout = timeoutoverride ?? this.Config.Timeout;
-			var returns = await this.MessageReactionAddWaiter.WaitForMatchAsync(new MatchRequest<MessageReactionAddEventArgs>(predicate, timeout)).ConfigureAwait(false);
+			var returns = await this._messageReactionAddWaiter.WaitForMatchAsync(new MatchRequest<MessageReactionAddEventArgs>(predicate, timeout)).ConfigureAwait(false);
 
 			return new InteractivityResult<MessageReactionAddEventArgs>(returns == null, returns);
 		}
@@ -557,7 +557,7 @@ namespace DisCatSharp.Interactivity
 				throw new InvalidOperationException("No typing intents are enabled.");
 
 			var timeout = timeoutoverride ?? this.Config.Timeout;
-			var returns = await this.TypingStartWaiter.WaitForMatchAsync(
+			var returns = await this._typingStartWaiter.WaitForMatchAsync(
 				new MatchRequest<TypingStartEventArgs>(x => x.User.Id == user.Id && x.Channel.Id == channel.Id, timeout))
 				.ConfigureAwait(false);
 
@@ -575,7 +575,7 @@ namespace DisCatSharp.Interactivity
 				throw new InvalidOperationException("No typing intents are enabled.");
 
 			var timeout = timeoutoverride ?? this.Config.Timeout;
-			var returns = await this.TypingStartWaiter.WaitForMatchAsync(
+			var returns = await this._typingStartWaiter.WaitForMatchAsync(
 				new MatchRequest<TypingStartEventArgs>(x => x.User.Id == user.Id, timeout))
 				.ConfigureAwait(false);
 
@@ -593,7 +593,7 @@ namespace DisCatSharp.Interactivity
 				throw new InvalidOperationException("No typing intents are enabled.");
 
 			var timeout = timeoutoverride ?? this.Config.Timeout;
-			var returns = await this.TypingStartWaiter.WaitForMatchAsync(
+			var returns = await this._typingStartWaiter.WaitForMatchAsync(
 				new MatchRequest<TypingStartEventArgs>(x => x.Channel.Id == channel.Id, timeout))
 				.ConfigureAwait(false);
 
@@ -611,7 +611,7 @@ namespace DisCatSharp.Interactivity
 				throw new InvalidOperationException("No reaction intents are enabled.");
 
 			var timeout = timeoutoverride ?? this.Config.Timeout;
-			var collection = await this.ReactionCollector.CollectAsync(new ReactionCollectRequest(m, timeout)).ConfigureAwait(false);
+			var collection = await this._reactionCollector.CollectAsync(new ReactionCollectRequest(m, timeout)).ConfigureAwait(false);
 
 			return collection;
 		}
@@ -750,7 +750,7 @@ namespace DisCatSharp.Interactivity
 
 			var prequest = new PaginationRequest(m, user, bhv, del, ems, timeout, pages.ToArray());
 
-			await this.Paginator.DoPaginationAsync(prequest).ConfigureAwait(false);
+			await this._paginator.DoPaginationAsync(prequest).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -801,7 +801,7 @@ namespace DisCatSharp.Interactivity
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		public async Task WaitForCustomPaginationAsync(IPaginationRequest request) => await this.Paginator.DoPaginationAsync(request).ConfigureAwait(false);
+		public async Task WaitForCustomPaginationAsync(IPaginationRequest request) => await this._paginator.DoPaginationAsync(request).ConfigureAwait(false);
 
 		/// <summary>
 		/// Waits for custom button-based pagination request to finish.

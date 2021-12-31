@@ -41,19 +41,19 @@ namespace DisCatSharp.ApplicationCommands
 		/// Gets the group name translations.
 		/// </summary>
 		[JsonProperty("name_translations")]
-		internal Dictionary<string, string> NT { get; set; }
+		internal Dictionary<string, string> NameTranslationsDictionary { get; set; }
 		[JsonIgnore]
 		public DiscordApplicationCommandLocalization NameTranslations
-			=> new(this.NT);
+			=> new(this.NameTranslationsDictionary);
 
 		/// <summary>
 		/// Gets the group description translations.
 		/// </summary>
 		[JsonProperty("description_translations")]
-		internal Dictionary<string, string> DT { get; set; }
+		internal Dictionary<string, string> DescriptionTranslationsDictionary { get; set; }
 		[JsonIgnore]
 		public DiscordApplicationCommandLocalization DescriptionTranslations
-			=> new(this.DT);
+			=> new(this.DescriptionTranslationsDictionary);
 
 		/// <summary>
 		/// Gets the sub group translators, if applicable.

@@ -205,7 +205,7 @@ namespace DisCatSharp.Entities
 		/// <returns>OAuth Url</returns>
 		public string GenerateBotOAuth(Permissions permissions = Permissions.None)
 		{
-			permissions &= PermissionMethods.FULL_PERMS;
+			permissions &= PermissionMethods.FullPerms;
 			// hey look, it's not all annoying and blue :P
 			return new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 				.AddParameter("client_id", this.Id.ToString(CultureInfo.InvariantCulture))

@@ -262,14 +262,14 @@ namespace DisCatSharp.Lavalink.Entities
 		/// </summary>
 		public int AverageDeficitFramesPerMinute { get; private set; }
 
-		internal bool _updated;
+		internal bool Updated;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="LavalinkStatistics"/> class.
 		/// </summary>
 		internal LavalinkStatistics()
 		{
-			this._updated = false;
+			this.Updated = false;
 		}
 
 		/// <summary>
@@ -278,8 +278,8 @@ namespace DisCatSharp.Lavalink.Entities
 		/// <param name="newStats">The new stats.</param>
 		internal void Update(LavalinkStats newStats)
 		{
-			if (!this._updated)
-				this._updated = true;
+			if (!this.Updated)
+				this.Updated = true;
 
 			this.ActivePlayers = newStats.ActivePlayers;
 			this.TotalPlayers = newStats.TotalPlayers;

@@ -31,7 +31,7 @@ namespace DisCatSharp.Net.Udp
 	/// <summary>
 	/// The default, native-based UDP client implementation.
 	/// </summary>
-	internal class DCSUdpClient : BaseUdpClient
+	internal class DcsUdpClient : BaseUdpClient
 	{
 		/// <summary>
 		/// Gets the client.
@@ -68,7 +68,7 @@ namespace DisCatSharp.Net.Udp
 		/// <summary>
 		/// Creates a new UDP client instance.
 		/// </summary>
-		public DCSUdpClient()
+		public DcsUdpClient()
 		{
 			this.PacketQueue = new BlockingCollection<byte[]>();
 			this.TokenSource = new CancellationTokenSource();
@@ -136,6 +136,6 @@ namespace DisCatSharp.Net.Udp
 		/// Creates a new instance of <see cref="BaseUdpClient"/>.
 		/// </summary>
 		public static BaseUdpClient CreateNew()
-			=> new DCSUdpClient();
+			=> new DcsUdpClient();
 	}
 }

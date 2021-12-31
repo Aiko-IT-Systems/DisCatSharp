@@ -32,7 +32,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the full permissions enum (long).
 		/// </summary>
-		internal static Permissions FULL_PERMS { get; } = (Permissions)2199023255551L;
+		internal static Permissions FullPerms { get; } = (Permissions)2199023255551L;
 
 		/// <summary>
 		/// Calculates whether this permission set contains the given permission.
@@ -328,13 +328,13 @@ namespace DisCatSharp
 		SendMessagesInThreads = 0x0000004000000000,
 
 		/// <summary>
-		/// Allows for launching activities (applications with the `EMBEDDED` flag) in a voice channel.     
+		/// Allows for launching activities (applications with the `EMBEDDED` flag) in a voice channel.
 		/// </summary>
 		[PermissionString("Start Embedded Activities")]
 		StartEmbeddedActivities = 0x0000008000000000,
 
 		/// <summary>
-		/// Allows to perform limited moderation actions (timeout).     
+		/// Allows to perform limited moderation actions (timeout).
 		/// </summary>
 		[PermissionString("Moderate Members")]
 		ModerateMembers = 0x0000010000000000

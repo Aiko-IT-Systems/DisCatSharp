@@ -44,7 +44,7 @@ namespace DisCatSharp.CommandsNext
 		/// <summary>
 		/// Gets the user regex.
 		/// </summary>
-		private static Regex UserRegex { get; } = DiscordRegEx.User;
+		private static Regex s_userRegex { get; } = DiscordRegEx.User;
 
 		/// <summary>
 		/// Checks whether the message has a specified string prefix.
@@ -76,7 +76,7 @@ namespace DisCatSharp.CommandsNext
 				return -1;
 
 			var cnp = content[..(cni + 2)];
-			var m = UserRegex.Match(cnp);
+			var m = s_userRegex.Match(cnp);
 			if (!m.Success)
 				return -1;
 

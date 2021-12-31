@@ -44,7 +44,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordMember()
 		{
-			this._role_ids_lazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._role_ids));
+			this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
 		}
 
 		/// <summary>
@@ -57,8 +57,8 @@ namespace DisCatSharp.Entities
 
 			this.Id = user.Id;
 
-			this._role_ids = new List<ulong>();
-			this._role_ids_lazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._role_ids));
+			this.RoleIdsInternal = new List<ulong>();
+			this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
 		}
 
 		/// <summary>
@@ -78,9 +78,9 @@ namespace DisCatSharp.Entities
 			this.GuildBannerHash = mbr.GuildBannerHash;
 			this.GuildBio = mbr.GuildBio;
 			this.CommunicationDisabledUntil = mbr.CommunicationDisabledUntil;
-			this._avatarHash = mbr.AvatarHash;
-			this._role_ids = mbr.Roles ?? new List<ulong>();
-			this._role_ids_lazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this._role_ids));
+			this.AvatarHashInternal = mbr.AvatarHash;
+			this.RoleIdsInternal = mbr.Roles ?? new List<ulong>();
+			this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonIgnore]
 		public string GuildAvatarUrl
-			=> string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? this.User.AvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this._guild_id.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.AVATARS}/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+			=> string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? this.User.AvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.AVATARS}/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 		/// <summary>
 		/// Gets this member's banner url.
@@ -125,7 +125,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonIgnore]
 		public string GuildBannerUrl
-			=> string.IsNullOrWhiteSpace(this.GuildBannerHash) ? this.User.BannerUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this._guild_id.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.BANNERS}/{this.GuildBannerHash}.{(this.GuildBannerHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+			=> string.IsNullOrWhiteSpace(this.GuildBannerHash) ? this.User.BannerUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.BANNERS}/{this.GuildBannerHash}.{(this.GuildBannerHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 		/// <summary>
 		/// The color of this member's banner. Mutually exclusive with <see cref="BannerHash"/>.
@@ -147,7 +147,7 @@ namespace DisCatSharp.Entities
 		public string GuildBio { get; internal set; }
 
 		[JsonIgnore]
-		internal string _avatarHash;
+		internal string AvatarHashInternal;
 
 		/// <summary>
 		/// Gets this member's display name.
@@ -161,12 +161,12 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonIgnore]
 		internal IReadOnlyList<ulong> RoleIds
-			=> this._role_ids_lazy.Value;
+			=> this._roleIdsLazy.Value;
 
 		[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-		internal List<ulong> _role_ids;
+		internal List<ulong> RoleIdsInternal;
 		[JsonIgnore]
-		private readonly Lazy<IReadOnlyList<ulong>> _role_ids_lazy;
+		private readonly Lazy<IReadOnlyList<ulong>> _roleIdsLazy;
 
 		/// <summary>
 		/// Gets the list of roles associated with this member.
@@ -229,17 +229,17 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonIgnore]
 		public DiscordVoiceState VoiceState
-			=> this.Discord.Guilds[this._guild_id].VoiceStates.TryGetValue(this.Id, out var voiceState) ? voiceState : null;
+			=> this.Discord.Guilds[this.GuildId].VoiceStates.TryGetValue(this.Id, out var voiceState) ? voiceState : null;
 
 		[JsonIgnore]
-		internal ulong _guild_id = 0;
+		internal ulong GuildId = 0;
 
 		/// <summary>
 		/// Gets the guild of which this member is a part of.
 		/// </summary>
 		[JsonIgnore]
 		public DiscordGuild Guild
-			=> this.Discord.Guilds[this._guild_id];
+			=> this.Discord.Guilds[this.GuildId];
 
 		/// <summary>
 		/// Gets whether this member is the Guild owner.
@@ -458,7 +458,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task SetMuteAsync(bool mute, string reason = null)
-			=> this.Discord.ApiClient.ModifyGuildMemberAsync(this._guild_id, this.Id, default, default, mute, default, default, reason);
+			=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, mute, default, default, reason);
 
 		/// <summary>
 		/// Sets this member's voice deaf status.
@@ -471,7 +471,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task SetDeafAsync(bool deaf, string reason = null)
-			=> this.Discord.ApiClient.ModifyGuildMemberAsync(this._guild_id, this.Id, default, default, default, deaf, default, reason);
+			=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, deaf, default, reason);
 
 		/// <summary>
 		/// Modifies this member.
@@ -600,15 +600,15 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Bans this member from their guild.
 		/// </summary>
-		/// <param name="delete_message_days">How many days to remove messages from.</param>
+		/// <param name="deleteMessageDays">How many days to remove messages from.</param>
 		/// <param name="reason">Reason for audit logs.</param>
 		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task BanAsync(int delete_message_days = 0, string reason = null)
-			=> this.Guild.BanMemberAsync(this, delete_message_days, reason);
+		public Task BanAsync(int deleteMessageDays = 0, string reason = null)
+			=> this.Guild.BanMemberAsync(this, deleteMessageDays, reason);
 
 		/// <summary>
 		/// Unbans this member from their guild.
@@ -630,7 +630,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task RemoveAsync(string reason = null)
-			=> this.Discord.ApiClient.RemoveGuildMemberAsync(this._guild_id, this.Id, reason);
+			=> this.Discord.ApiClient.RemoveGuildMemberAsync(this.GuildId, this.Id, reason);
 
 		/// <summary>
 		/// Moves this member to the specified voice channel
@@ -706,7 +706,7 @@ namespace DisCatSharp.Entities
 		private Permissions GetPermissions()
 		{
 			if (this.Guild.OwnerId == this.Id)
-				return PermissionMethods.FULL_PERMS;
+				return PermissionMethods.FullPerms;
 
 			Permissions perms;
 
@@ -718,7 +718,7 @@ namespace DisCatSharp.Entities
 			perms |= this.Roles.Aggregate(Permissions.None, (c, role) => c | role.Permissions);
 
 			// Adminstrator grants all permissions and cannot be overridden
-			return (perms & Permissions.Administrator) == Permissions.Administrator ? PermissionMethods.FULL_PERMS : perms;
+			return (perms & Permissions.Administrator) == Permissions.Administrator ? PermissionMethods.FullPerms : perms;
 		}
 
 		/// <summary>
@@ -739,7 +739,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="e"><see cref="DiscordMember"/> to compare to.</param>
 		/// <returns>Whether the <see cref="DiscordMember"/> is equal to this <see cref="DiscordMember"/>.</returns>
-		public bool Equals(DiscordMember e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this._guild_id == e._guild_id));
+		public bool Equals(DiscordMember e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.GuildId == e.GuildId));
 
 		/// <summary>
 		/// Gets the hash code for this <see cref="DiscordMember"/>.
@@ -750,7 +750,7 @@ namespace DisCatSharp.Entities
 			var hash = 13;
 
 			hash = (hash * 7) + this.Id.GetHashCode();
-			hash = (hash * 7) + this._guild_id.GetHashCode();
+			hash = (hash * 7) + this.GuildId.GetHashCode();
 
 			return hash;
 		}
@@ -766,7 +766,7 @@ namespace DisCatSharp.Entities
 			var o1 = e1 as object;
 			var o2 = e2 as object;
 
-			return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1._guild_id == e2._guild_id));
+			return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.GuildId == e2.GuildId));
 		}
 
 		/// <summary>

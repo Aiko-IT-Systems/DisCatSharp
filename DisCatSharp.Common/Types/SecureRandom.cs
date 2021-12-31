@@ -36,7 +36,7 @@ namespace DisCatSharp.Common
 		/// <summary>
 		/// Gets the r n g.
 		/// </summary>
-		private RandomNumberGenerator RNG { get; } = RandomNumberGenerator.Create();
+		private RandomNumberGenerator Rng { get; } = RandomNumberGenerator.Create();
 
 		private volatile bool _isDisposed = false;
 
@@ -60,7 +60,7 @@ namespace DisCatSharp.Common
 		/// <param name="buffer">Buffer to fill with random bytes.</param>
 		public void GetBytes(byte[] buffer)
 		{
-			this.RNG.GetBytes(buffer);
+			this.Rng.GetBytes(buffer);
 		}
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace DisCatSharp.Common
 		/// <param name="buffer">Buffer to fill with random nonzero bytes.</param>
 		public void GetNonZeroBytes(byte[] buffer)
 		{
-			this.RNG.GetNonZeroBytes(buffer);
+			this.Rng.GetNonZeroBytes(buffer);
 		}
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace DisCatSharp.Common
 			try
 			{
 				var buffSpan = buff.AsSpan(0, buffer.Length);
-				this.RNG.GetBytes(buff);
+				this.Rng.GetBytes(buff);
 				buffSpan.CopyTo(buffer);
 			}
 			finally
@@ -108,7 +108,7 @@ namespace DisCatSharp.Common
 			try
 			{
 				var buffSpan = buff.AsSpan(0, buffer.Length);
-				this.RNG.GetNonZeroBytes(buff);
+				this.Rng.GetNonZeroBytes(buff);
 				buffSpan.CopyTo(buffer);
 			}
 			finally
@@ -309,7 +309,7 @@ namespace DisCatSharp.Common
 		/// </summary>
 		/// <param name="buffer">Memory region to fill with bytes.</param>
 #if NETCOREAPP
-        override 
+        override
 #endif
 		public new void NextBytes(Span<byte> buffer)
 			=> this.GetBytes(buffer);
@@ -323,7 +323,7 @@ namespace DisCatSharp.Common
 				return;
 
 			this._isDisposed = true;
-			this.RNG.Dispose();
+			this.Rng.Dispose();
 		}
 
 		/// <summary>

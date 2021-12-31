@@ -77,7 +77,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonIgnore]
 		public DiscordMember CreatorMember
-			=> this.Guild._members.TryGetValue(this.CreatorId, out var owner)
+			=> this.Guild.MembersInternal.TryGetValue(this.CreatorId, out var owner)
 				? owner
 				: this.Discord.ApiClient.GetGuildMemberAsync(this.GuildId, this.CreatorId).Result;
 
@@ -265,7 +265,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null)
-			=> await this.Discord.ApiClient.GetGuildScheduledEventRSPVUsersAsync(this.GuildId, this.Id, limit, before, after, withMember);
+			=> await this.Discord.ApiClient.GetGuildScheduledEventRspvUsersAsync(this.GuildId, this.Id, limit, before, after, withMember);
 
 		/// <summary>
 		/// Deletes a scheduled event.

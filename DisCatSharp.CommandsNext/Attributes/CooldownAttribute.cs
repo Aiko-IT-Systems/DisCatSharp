@@ -195,9 +195,9 @@ namespace DisCatSharp.CommandsNext.Attributes
 		/// Gets the remaining number of uses before the cooldown is triggered.
 		/// </summary>
 		public int RemainingUses
-			=> Volatile.Read(ref this._remaining_uses);
+			=> Volatile.Read(ref this._remainingUses);
 
-		private int _remaining_uses;
+		private int _remainingUses;
 
 		/// <summary>
 		/// Gets the maximum number of times this command can be used in given timespan.
@@ -229,7 +229,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 		/// <param name="guildId">ID of the guild with which this cooldown is associated.</param>
 		internal CommandCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
 		{
-			this._remaining_uses = maxUses;
+			this._remainingUses = maxUses;
 			this.MaxUses = maxUses;
 			this.ResetsAt = DateTimeOffset.UtcNow + resetAfter;
 			this.Reset = resetAfter;
@@ -253,7 +253,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 			if (now >= this.ResetsAt)
 			{
 				// ...do the reset and set a new reset time
-				Interlocked.Exchange(ref this._remaining_uses, this.MaxUses);
+				Interlocked.Exchange(ref this._remainingUses, this.MaxUses);
 				this.ResetsAt = now + this.Reset;
 			}
 
@@ -262,7 +262,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 			if (this.RemainingUses > 0)
 			{
 				// ...decrement, and return success...
-				Interlocked.Decrement(ref this._remaining_uses);
+				Interlocked.Decrement(ref this._remainingUses);
 				success = true;
 			}
 

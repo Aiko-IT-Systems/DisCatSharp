@@ -97,7 +97,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 
 			try
 			{
-				await request._tcs.Task.ConfigureAwait(false);
+				await request.Tcs.Task.ConfigureAwait(false);
 			}
 			catch (Exception ex)
 			{
@@ -105,7 +105,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			}
 			finally
 			{
-				result = new ReadOnlyCollection<Reaction>(new HashSet<Reaction>(request._collected).ToList());
+				result = new ReadOnlyCollection<Reaction>(new HashSet<Reaction>(request.Collected).ToList());
 				request.Dispose();
 				this._requests.TryRemove(request);
 			}
@@ -123,18 +123,18 @@ namespace DisCatSharp.Interactivity.EventHandling
 			// foreach request add
 			foreach (var req in this._requests)
 			{
-				if (req.message.Id == eventargs.Message.Id)
+				if (req.Message.Id == eventargs.Message.Id)
 				{
-					if (req._collected.Any(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id)))
+					if (req.Collected.Any(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id)))
 					{
-						var reaction = req._collected.First(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id));
-						req._collected.TryRemove(reaction);
+						var reaction = req.Collected.First(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id));
+						req.Collected.TryRemove(reaction);
 						reaction.Users.Add(eventargs.User);
-						req._collected.Add(reaction);
+						req.Collected.Add(reaction);
 					}
 					else
 					{
-						req._collected.Add(new Reaction()
+						req.Collected.Add(new Reaction()
 						{
 							Emoji = eventargs.Emoji,
 							Users = new ConcurrentHashSet<DiscordUser>() { eventargs.User }
@@ -156,15 +156,15 @@ namespace DisCatSharp.Interactivity.EventHandling
 			// foreach request remove
 			foreach (var req in this._requests)
 			{
-				if (req.message.Id == eventargs.Message.Id)
+				if (req.Message.Id == eventargs.Message.Id)
 				{
-					if (req._collected.Any(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id)))
+					if (req.Collected.Any(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id)))
 					{
-						var reaction = req._collected.First(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id));
-						req._collected.TryRemove(reaction);
+						var reaction = req.Collected.First(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id));
+						req.Collected.TryRemove(reaction);
 						reaction.Users.TryRemove(eventargs.User);
 						if (reaction.Users.Count > 0)
-							req._collected.Add(reaction);
+							req.Collected.Add(reaction);
 					}
 				}
 			}
@@ -182,9 +182,9 @@ namespace DisCatSharp.Interactivity.EventHandling
 			// foreach request add
 			foreach (var req in this._requests)
 			{
-				if (req.message.Id == eventargs.Message.Id)
+				if (req.Message.Id == eventargs.Message.Id)
 				{
-					req._collected.Clear();
+					req.Collected.Clear();
 				}
 			}
 			return Task.CompletedTask;
@@ -223,11 +223,11 @@ namespace DisCatSharp.Interactivity.EventHandling
 	/// </summary>
 	public class ReactionCollectRequest : IDisposable
 	{
-		internal TaskCompletionSource<Reaction> _tcs;
-		internal CancellationTokenSource _ct;
-		internal TimeSpan _timeout;
-		internal DiscordMessage message;
-		internal ConcurrentHashSet<Reaction> _collected;
+		internal TaskCompletionSource<Reaction> Tcs;
+		internal CancellationTokenSource Ct;
+		internal TimeSpan Timeout;
+		internal DiscordMessage Message;
+		internal ConcurrentHashSet<Reaction> Collected;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ReactionCollectRequest"/> class.
@@ -236,12 +236,12 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <param name="timeout">The timeout.</param>
 		public ReactionCollectRequest(DiscordMessage msg, TimeSpan timeout)
 		{
-			this.message = msg;
-			this._collected = new ConcurrentHashSet<Reaction>();
-			this._timeout = timeout;
-			this._tcs = new TaskCompletionSource<Reaction>();
-			this._ct = new CancellationTokenSource(this._timeout);
-			this._ct.Token.Register(() => this._tcs.TrySetResult(null));
+			this.Message = msg;
+			this.Collected = new ConcurrentHashSet<Reaction>();
+			this.Timeout = timeout;
+			this.Tcs = new TaskCompletionSource<Reaction>();
+			this.Ct = new CancellationTokenSource(this.Timeout);
+			this.Ct.Token.Register(() => this.Tcs.TrySetResult(null));
 		}
 
 		~ReactionCollectRequest()
@@ -255,11 +255,11 @@ namespace DisCatSharp.Interactivity.EventHandling
 		public void Dispose()
 		{
 			GC.SuppressFinalize(this);
-			this._ct.Dispose();
-			this._tcs = null;
-			this.message = null;
-			this._collected?.Clear();
-			this._collected = null;
+			this.Ct.Dispose();
+			this.Tcs = null;
+			this.Message = null;
+			this.Collected?.Clear();
+			this.Collected = null;
 		}
 	}
 

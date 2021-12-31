@@ -40,7 +40,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// Gets or sets whether the user is AFK.
 		/// </summary>
 		[JsonProperty("afk")]
-		public bool IsAFK { get; set; }
+		public bool IsAfk { get; set; }
 
 		/// <summary>
 		/// Gets or sets the status of the user.
@@ -74,6 +74,6 @@ namespace DisCatSharp.Net.Abstractions
 		[JsonProperty("game", NullValueHandling = NullValueHandling.Ignore)]
 		public TransportActivity Activity { get; set; }
 
-		internal DiscordActivity _activity;
+		internal DiscordActivity ActivityInternal;
 	}
 }

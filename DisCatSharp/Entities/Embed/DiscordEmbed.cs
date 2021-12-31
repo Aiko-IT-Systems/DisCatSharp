@@ -69,7 +69,7 @@ namespace DisCatSharp.Entities
 			=> this._colorLazy.Value;
 
 		[JsonProperty("color", NullValueHandling = NullValueHandling.Include)]
-		internal Optional<int> _color;
+		internal Optional<int> ColorInternal;
 		[JsonIgnore]
 		private readonly Lazy<Optional<DiscordColor>> _colorLazy;
 
@@ -120,7 +120,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordEmbed()
 		{
-			this._colorLazy = new Lazy<Optional<DiscordColor>>(() => this._color.HasValue ? Optional.FromValue<DiscordColor>(this._color.Value) : Optional.FromNoValue<DiscordColor>());
+			this._colorLazy = new Lazy<Optional<DiscordColor>>(() => this.ColorInternal.HasValue ? Optional.FromValue<DiscordColor>(this.ColorInternal.Value) : Optional.FromNoValue<DiscordColor>());
 		}
 	}
 }

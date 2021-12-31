@@ -79,7 +79,7 @@ namespace DisCatSharp.Lavalink
 
 				decoded.Author = br.ReadJavaUtf8();
 
-				decoded._length = br.ReadInt64();
+				decoded.LengthInternal = br.ReadInt64();
 
 				decoded.Identifier = br.ReadJavaUtf8();
 

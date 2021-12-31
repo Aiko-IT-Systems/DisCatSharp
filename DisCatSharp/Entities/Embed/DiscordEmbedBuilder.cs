@@ -306,7 +306,7 @@ namespace DisCatSharp.Entities
 		{
 			this.Thumbnail = new EmbedThumbnail
 			{
-				_uri = new DiscordUri(url),
+				Uri = new DiscordUri(url),
 				Height = height,
 				Width = width
 			};
@@ -440,7 +440,7 @@ namespace DisCatSharp.Entities
 				Title = this._title,
 				Description = this._description,
 				Url = this._url,
-				_color = this.Color.IfPresent(e => e.Value),
+				ColorInternal = this.Color.IfPresent(e => e.Value),
 				Timestamp = this.Timestamp
 			};
 
@@ -448,15 +448,15 @@ namespace DisCatSharp.Entities
 				embed.Footer = new DiscordEmbedFooter
 				{
 					Text = this.Footer.Text,
-					IconUrl = this.Footer._iconUri
+					IconUrl = this.Footer.IconUri
 				};
 
 			if (this.Author != null)
 				embed.Author = new DiscordEmbedAuthor
 				{
 					Name = this.Author.Name,
-					Url = this.Author._uri,
-					IconUrl = this.Author._iconUri
+					Url = this.Author.Uri,
+					IconUrl = this.Author.IconUri
 				};
 
 			if (this._imageUri != null)
@@ -464,36 +464,36 @@ namespace DisCatSharp.Entities
 			if (this.Thumbnail != null)
 				embed.Thumbnail = new DiscordEmbedThumbnail
 				{
-					Url = this.Thumbnail._uri,
+					Url = this.Thumbnail.Uri,
 					Height = this.Thumbnail.Height,
 					Width = this.Thumbnail.Width
 				};
 
 			embed.Fields = new ReadOnlyCollection<DiscordEmbedField>(new List<DiscordEmbedField>(this._fields)); // copy the list, don't wrap it, prevents mutation
 
-			var char_count = 0;
+			var charCount = 0;
 			if (embed.Fields.Any())
 			{
 				foreach (var field in embed.Fields)
 				{
-					char_count += field.Name.Length;
-					char_count += field.Value.Length;
+					charCount += field.Name.Length;
+					charCount += field.Value.Length;
 				}
 			}
 
 			if (embed.Author != null && !string.IsNullOrEmpty(embed.Author.Name))
-				char_count += embed.Author.Name.Length;
+				charCount += embed.Author.Name.Length;
 
 			if (embed.Footer != null && !string.IsNullOrEmpty(embed.Footer.Text))
-				char_count += embed.Footer.Text.Length;
+				charCount += embed.Footer.Text.Length;
 
 			if (!string.IsNullOrEmpty(embed.Title))
-				char_count += embed.Title.Length;
+				charCount += embed.Title.Length;
 
 			if (!string.IsNullOrEmpty(embed.Description))
-				char_count += embed.Description.Length;
+				charCount += embed.Description.Length;
 
-			return char_count >= 6000
+			return charCount >= 6000
 				? throw new NotSupportedException("Total char count can not exceed 6000 chars. See https://discord.com/developers/docs/resources/channel#embed-limits.")
 				: embed;
 		}
@@ -530,20 +530,20 @@ namespace DisCatSharp.Entities
 			/// </summary>
 			public string Url
 			{
-				get => this._uri?.ToString();
-				set => this._uri = string.IsNullOrEmpty(value) ? null : new Uri(value);
+				get => this.Uri?.ToString();
+				set => this.Uri = string.IsNullOrEmpty(value) ? null : new Uri(value);
 			}
-			internal Uri _uri;
+			internal Uri Uri;
 
 			/// <summary>
 			/// Gets or sets the Author's icon url.
 			/// </summary>
 			public string IconUrl
 			{
-				get => this._iconUri?.ToString();
-				set => this._iconUri = string.IsNullOrEmpty(value) ? null : new DiscordUri(value);
+				get => this.IconUri?.ToString();
+				set => this.IconUri = string.IsNullOrEmpty(value) ? null : new DiscordUri(value);
 			}
-			internal DiscordUri _iconUri;
+			internal DiscordUri IconUri;
 		}
 
 		/// <summary>
@@ -571,10 +571,10 @@ namespace DisCatSharp.Entities
 			/// </summary>
 			public string IconUrl
 			{
-				get => this._iconUri?.ToString();
-				set => this._iconUri = string.IsNullOrEmpty(value) ? null : new DiscordUri(value);
+				get => this.IconUri?.ToString();
+				set => this.IconUri = string.IsNullOrEmpty(value) ? null : new DiscordUri(value);
 			}
-			internal DiscordUri _iconUri;
+			internal DiscordUri IconUri;
 		}
 
 		/// <summary>
@@ -587,10 +587,10 @@ namespace DisCatSharp.Entities
 			/// </summary>
 			public string Url
 			{
-				get => this._uri?.ToString();
-				set => this._uri = string.IsNullOrEmpty(value) ? null : new DiscordUri(value);
+				get => this.Uri?.ToString();
+				set => this.Uri = string.IsNullOrEmpty(value) ? null : new DiscordUri(value);
 			}
-			internal DiscordUri _uri;
+			internal DiscordUri Uri;
 
 			/// <summary>
 			/// Gets or sets the thumbnail's height.

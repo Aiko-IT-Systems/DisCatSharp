@@ -48,10 +48,10 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonIgnore]
 		public DiscordColor Color
-			=> new(this._color);
+			=> new(this.ColorInternal);
 
 		[JsonProperty("color", NullValueHandling = NullValueHandling.Ignore)]
-		internal int _color;
+		internal int ColorInternal;
 
 		/// <summary>
 		/// Gets whether this role is hoisted.
@@ -106,16 +106,16 @@ namespace DisCatSharp.Entities
 		/// Gets the role unicode_emoji.
 		/// </summary>
 		[JsonProperty("unicode_emoji", NullValueHandling = NullValueHandling.Ignore)]
-		internal string _unicodeEmojiString;
+		internal string UnicodeEmojiString;
 
 		/// <summary>
 		/// Gets the unicode emoji.
 		/// </summary>
 		public DiscordEmoji UnicodeEmoji
-			=> this._unicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this._unicodeEmojiString}:", false) : null;
+			=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : null;
 
 		[JsonIgnore]
-		internal ulong _guild_id = 0;
+		internal ulong GuildId = 0;
 
 		/// <summary>
 		/// Gets a mention string for this role. If the role is mentionable, this string will mention all the users that belong to this role.
@@ -136,7 +136,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task ModifyPositionAsync(int position, string reason = null)
 		{
-			var roles = this.Discord.Guilds[this._guild_id].Roles.Values.OrderByDescending(xr => xr.Position).ToArray();
+			var roles = this.Discord.Guilds[this.GuildId].Roles.Values.OrderByDescending(xr => xr.Position).ToArray();
 			var pmds = new RestGuildRoleReorderPayload[roles.Length];
 			for (var i = 0; i < roles.Length; i++)
 			{
@@ -145,7 +145,7 @@ namespace DisCatSharp.Entities
 				pmds[i].Position = roles[i].Id == this.Id ? position : roles[i].Position <= position ? roles[i].Position - 1 : roles[i].Position;
 			}
 
-			return this.Discord.ApiClient.ModifyGuildRolePositionAsync(this._guild_id, pmds, reason);
+			return this.Discord.ApiClient.ModifyGuildRolePositionAsync(this.GuildId, pmds, reason);
 		}
 
 		/// <summary>
@@ -163,7 +163,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task ModifyAsync(string name = null, Permissions? permissions = null, DiscordColor? color = null, bool? hoist = null, bool? mentionable = null, string reason = null)
-			=> this.Discord.ApiClient.ModifyGuildRoleAsync(this._guild_id, this.Id, name, permissions, color?.Value, hoist, mentionable, null, null, reason);
+			=> this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, name, permissions, color?.Value, hoist, mentionable, null, null, reason);
 
 		/// <summary>
 		/// Updates this role.
@@ -180,9 +180,9 @@ namespace DisCatSharp.Entities
 
 			var iconb64 = Optional.FromNoValue<string>();
 			var emoji = Optional.FromNoValue<string>();
-			var can_continue = true;
+			var canContinue = true;
 			if (mdl.Icon.HasValue || mdl.UnicodeEmoji.HasValue)
-				can_continue = this.Discord.Guilds[this._guild_id].Features.CanSetRoleIcons;
+				canContinue = this.Discord.Guilds[this.GuildId].Features.CanSetRoleIcons;
 
 			if (mdl.Icon.HasValue && mdl.Icon.Value != null)
 				using (var imgtool = new ImageTool(mdl.Icon.Value))
@@ -195,7 +195,7 @@ namespace DisCatSharp.Entities
 			else if (mdl.UnicodeEmoji.HasValue)
 				emoji = null;
 
-			return can_continue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this._guild_id, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
+			return canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
 		}
 
 		/// <summary>
@@ -207,7 +207,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the role does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task DeleteAsync(string reason = null) => this.Discord.ApiClient.DeleteRoleAsync(this._guild_id, this.Id, reason);
+		public Task DeleteAsync(string reason = null) => this.Discord.ApiClient.DeleteRoleAsync(this.GuildId, this.Id, reason);
 		#endregion
 
 		/// <summary>

@@ -35,7 +35,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Whether this followup message is text-to-speech.
 		/// </summary>
-		public bool IsTTS { get; set; }
+		public bool IsTts { get; set; }
 
 		/// <summary>
 		/// Whether this followup message should be ephemeral.
@@ -138,9 +138,9 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="tts">Text-to-speech</param>
 		/// <returns>The builder to chain calls with.</returns>
-		public DiscordFollowupMessageBuilder WithTTS(bool tts)
+		public DiscordFollowupMessageBuilder WithTts(bool tts)
 		{
-			this.IsTTS = tts;
+			this.IsTts = tts;
 			return this;
 		}
 
@@ -296,7 +296,7 @@ namespace DisCatSharp.Entities
 		{
 			this.Content = "";
 			this._embeds.Clear();
-			this.IsTTS = false;
+			this.IsTts = false;
 			this._mentions.Clear();
 			this._files.Clear();
 			this.IsEphemeral = false;

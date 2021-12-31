@@ -108,13 +108,13 @@ namespace DisCatSharp
 		/// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
 		/// </summary>
 		public IReadOnlyDictionary<string, DiscordVoiceRegion> VoiceRegions
-			=> this._voice_regions_lazy.Value;
+			=> this.VoiceRegionsLazy.Value;
 
 		/// <summary>
 		/// Gets the list of available voice regions. This property is meant as a way to modify <see cref="VoiceRegions"/>.
 		/// </summary>
 		protected internal ConcurrentDictionary<string, DiscordVoiceRegion> InternalVoiceRegions { get; set; }
-		internal Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>> _voice_regions_lazy;
+		internal Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>> VoiceRegionsLazy;
 
 		/// <summary>
 		/// Initializes this Discord API client.
@@ -134,7 +134,7 @@ namespace DisCatSharp
 			this.ApiClient = new DiscordApiClient(this);
 			this.UserCache = new ConcurrentDictionary<ulong, DiscordUser>();
 			this.InternalVoiceRegions = new ConcurrentDictionary<string, DiscordVoiceRegion>();
-			this._voice_regions_lazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this.InternalVoiceRegions));
+			this.VoiceRegionsLazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this.InternalVoiceRegions));
 
 			this.RestClient = this.ApiClient.Rest.HttpClient;
 
@@ -284,24 +284,24 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets a cached user.
 		/// </summary>
-		/// <param name="user_id">The user_id.</param>
-		internal DiscordUser GetCachedOrEmptyUserInternal(ulong user_id)
+		/// <param name="userId">The user_id.</param>
+		internal DiscordUser GetCachedOrEmptyUserInternal(ulong userId)
 		{
-			this.TryGetCachedUserInternal(user_id, out var user);
+			this.TryGetCachedUserInternal(userId, out var user);
 			return user;
 		}
 
 		/// <summary>
 		/// Tries the get a cached user.
 		/// </summary>
-		/// <param name="user_id">The user_id.</param>
+		/// <param name="userId">The user_id.</param>
 		/// <param name="user">The user.</param>
-		internal bool TryGetCachedUserInternal(ulong user_id, out DiscordUser user)
+		internal bool TryGetCachedUserInternal(ulong userId, out DiscordUser user)
 		{
-			if (this.UserCache.TryGetValue(user_id, out user))
+			if (this.UserCache.TryGetValue(userId, out user))
 				return true;
 
-			user = new DiscordUser { Id = user_id, Discord = this };
+			user = new DiscordUser { Id = userId, Discord = this };
 			return false;
 		}
 

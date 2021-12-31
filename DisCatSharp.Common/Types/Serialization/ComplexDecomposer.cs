@@ -35,42 +35,42 @@ namespace DisCatSharp.Common.Serialization
 		/// <summary>
 		/// Gets the t complex.
 		/// </summary>
-		private static Type TComplex { get; } = typeof(Complex);
+		private static Type s_complex { get; } = typeof(Complex);
 		/// <summary>
 		/// Gets the t double array.
 		/// </summary>
-		private static Type TDoubleArray { get; } = typeof(double[]);
+		private static Type s_doubleArray { get; } = typeof(double[]);
 		/// <summary>
 		/// Gets the t double enumerable.
 		/// </summary>
-		private static Type TDoubleEnumerable { get; } = typeof(IEnumerable<double>);
+		private static Type s_doubleEnumerable { get; } = typeof(IEnumerable<double>);
 		/// <summary>
 		/// Gets the t object array.
 		/// </summary>
-		private static Type TObjectArray { get; } = typeof(object[]);
+		private static Type s_objectArray { get; } = typeof(object[]);
 		/// <summary>
 		/// Gets the t object enumerable.
 		/// </summary>
-		private static Type TObjectEnumerable { get; } = typeof(IEnumerable<object>);
+		private static Type s_objectEnumerable { get; } = typeof(IEnumerable<object>);
 
 		/// <inheritdoc />
 		public bool CanDecompose(Type t)
-			=> t == TComplex;
+			=> t == s_complex;
 
 		/// <inheritdoc />
 		public bool CanRecompose(Type t)
-			=> t == TDoubleArray
-			|| t == TObjectArray
-			|| TDoubleEnumerable.IsAssignableFrom(t)
-			|| TObjectEnumerable.IsAssignableFrom(t);
+			=> t == s_doubleArray
+			|| t == s_objectArray
+			|| s_doubleEnumerable.IsAssignableFrom(t)
+			|| s_objectEnumerable.IsAssignableFrom(t);
 
 		/// <inheritdoc />
 		public bool TryDecompose(object obj, Type tobj, out object decomposed, out Type tdecomposed)
 		{
 			decomposed = null;
-			tdecomposed = TDoubleArray;
+			tdecomposed = s_doubleArray;
 
-			if (tobj != TComplex || obj is not Complex c)
+			if (tobj != s_complex || obj is not Complex c)
 				return false;
 
 			decomposed = new[] { c.Real, c.Imaginary };
@@ -82,11 +82,11 @@ namespace DisCatSharp.Common.Serialization
 		{
 			recomposed = null;
 
-			if (trecomposed != TComplex)
+			if (trecomposed != s_complex)
 				return false;
 
 			// ie<double>
-			if (TDoubleEnumerable.IsAssignableFrom(tobj) && obj is IEnumerable<double> ied)
+			if (s_doubleEnumerable.IsAssignableFrom(tobj) && obj is IEnumerable<double> ied)
 			{
 				if (ied.Count() < 2)
 					return false;
@@ -97,7 +97,7 @@ namespace DisCatSharp.Common.Serialization
 			}
 
 			// ie<obj>
-			if (TObjectEnumerable.IsAssignableFrom(tobj) && obj is IEnumerable<object> ieo)
+			if (s_objectEnumerable.IsAssignableFrom(tobj) && obj is IEnumerable<object> ieo)
 			{
 				if (ieo.Count() < 2)
 					return false;

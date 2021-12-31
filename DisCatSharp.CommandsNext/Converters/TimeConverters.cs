@@ -73,14 +73,14 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <summary>
 		/// Gets or sets the time span regex.
 		/// </summary>
-		private static Regex TimeSpanRegex { get; set; }
+		private static Regex s_timeSpanRegex { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TimeSpanConverter"/> class.
 		/// </summary>
 		static TimeSpanConverter()
 		{
-			TimeSpanRegex = CommonRegEx.TimeSpan;
+			s_timeSpanRegex = CommonRegEx.TimeSpan;
 		}
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				return Task.FromResult(Optional.FromValue(result));
 
 			var gps = new string[] { "days", "hours", "minutes", "seconds" };
-			var mtc = TimeSpanRegex.Match(value);
+			var mtc = s_timeSpanRegex.Match(value);
 			if (!mtc.Success)
 				return Task.FromResult(Optional.FromNoValue<TimeSpan>());
 

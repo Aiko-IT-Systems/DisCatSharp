@@ -53,6 +53,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the utf8 encoding
 		/// </summary>
+		// ReSharper disable once InconsistentNaming
 		internal static UTF8Encoding UTF8 { get; } = new UTF8Encoding(false);
 
 		/// <summary>
@@ -395,7 +396,7 @@ namespace DisCatSharp
 		/// <returns>Computed timestamp.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static DateTimeOffset GetSnowflakeTime(this ulong snowflake)
-			=> DiscordClient._discordEpoch.AddMilliseconds(snowflake >> 22);
+			=> DiscordClient.DiscordEpoch.AddMilliseconds(snowflake >> 22);
 
 		/// <summary>
 		/// Converts this <see cref="Permissions"/> into human-readable format.
@@ -407,7 +408,7 @@ namespace DisCatSharp
 			if (perm == Permissions.None)
 				return PermissionStrings[perm];
 
-			perm &= PermissionMethods.FULL_PERMS;
+			perm &= PermissionMethods.FullPerms;
 
 			var strs = PermissionStrings
 				.Where(xkvp => xkvp.Key != Permissions.None && (perm & xkvp.Key) == xkvp.Key)

@@ -59,13 +59,13 @@ namespace DisCatSharp.ApplicationCommands
 			{
 				var contextAttribute = contextMethod.GetCustomAttribute<ContextMenuAttribute>();
 
-				DiscordApplicationCommandLocalization NameLocalizations = null;
+				DiscordApplicationCommandLocalization nameLocalizations = null;
 
-				var command_translation = translator?.Single(c => c.Name == contextAttribute.Name && c.Type == contextAttribute.Type);
-				if (command_translation != null)
-					NameLocalizations = command_translation.NameTranslations;
+				var commandTranslation = translator?.Single(c => c.Name == contextAttribute.Name && c.Type == contextAttribute.Type);
+				if (commandTranslation != null)
+					nameLocalizations = commandTranslation.NameTranslations;
 
-				var command = new DiscordApplicationCommand(contextAttribute.Name, null, null, contextAttribute.DefaultPermission, contextAttribute.Type, NameLocalizations);
+				var command = new DiscordApplicationCommand(contextAttribute.Name, null, null, contextAttribute.DefaultPermission, contextAttribute.Type, nameLocalizations);
 
 				var parameters = contextMethod.GetParameters();
 				if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(ContextMenuContext)))
@@ -114,15 +114,15 @@ namespace DisCatSharp.ApplicationCommands
 
 				commandMethods.Add(new CommandMethod { Method = method, Name = commandattribute.Name });
 
-				DiscordApplicationCommandLocalization NameLocalizations = null;
-				DiscordApplicationCommandLocalization DescriptionLocalizations = null;
-				List<DiscordApplicationCommandOption> LocalizisedOptions = null;
+				DiscordApplicationCommandLocalization nameLocalizations = null;
+				DiscordApplicationCommandLocalization descriptionLocalizations = null;
+				List<DiscordApplicationCommandOption> localizisedOptions = null;
 
-				var command_translation = translator?.Single(c => c.Name == commandattribute.Name && c.Type == ApplicationCommandType.ChatInput);
+				var commandTranslation = translator?.Single(c => c.Name == commandattribute.Name && c.Type == ApplicationCommandType.ChatInput);
 
-				if (command_translation != null && command_translation.Options != null)
+				if (commandTranslation != null && commandTranslation.Options != null)
 				{
-					LocalizisedOptions = new(options.Count);
+					localizisedOptions = new(options.Count);
 					foreach (var option in options)
 					{
 						List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new(option.Choices.Count()) : null;
@@ -130,21 +130,21 @@ namespace DisCatSharp.ApplicationCommands
 						{
 							foreach (var choice in option.Choices)
 							{
-								choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, command_translation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+								choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, commandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
 							}
 						}
 
-						LocalizisedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
+						localizisedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
 							choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
-							command_translation.Options.Single(o => o.Name == option.Name).NameTranslations, command_translation.Options.Single(o => o.Name == option.Name).DescriptionTranslations
+							commandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, commandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations
 						));
 					}
 
-					NameLocalizations = command_translation.NameTranslations;
-					DescriptionLocalizations = command_translation.DescriptionTranslations;
+					nameLocalizations = commandTranslation.NameTranslations;
+					descriptionLocalizations = commandTranslation.DescriptionTranslations;
 				}
 
-				var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, LocalizisedOptions ?? options, commandattribute.DefaultPermission, ApplicationCommandType.ChatInput, NameLocalizations, DescriptionLocalizations);
+				var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, localizisedOptions ?? options, commandattribute.DefaultPermission, ApplicationCommandType.ChatInput, nameLocalizations, descriptionLocalizations);
 				commands.Add(payload);
 				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 			}
@@ -194,21 +194,21 @@ namespace DisCatSharp.ApplicationCommands
 					throw new ArgumentException("Slash command groups cannot have both subcommands and subgroups!");
 				}
 
-				DiscordApplicationCommandLocalization NameLocalizations = null;
-				DiscordApplicationCommandLocalization DescriptionLocalizations = null;
+				DiscordApplicationCommandLocalization nameLocalizations = null;
+				DiscordApplicationCommandLocalization descriptionLocalizations = null;
 
 				if (translator != null)
 				{
-					var command_translation = translator.Single(c => c.Name == groupAttribute.Name);
-					if (command_translation != null)
+					var commandTranslation = translator.Single(c => c.Name == groupAttribute.Name);
+					if (commandTranslation != null)
 					{
-						NameLocalizations = command_translation.NameTranslations;
-						DescriptionLocalizations = command_translation.DescriptionTranslations;
+						nameLocalizations = commandTranslation.NameTranslations;
+						descriptionLocalizations = commandTranslation.DescriptionTranslations;
 					}
 				}
 
 				//Initializes the command
-				var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, default_permission: groupAttribute.DefaultPermission, nameLocalizations: NameLocalizations, descriptionLocalizations: DescriptionLocalizations);
+				var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, defaultPermission: groupAttribute.DefaultPermission, nameLocalizations: nameLocalizations, descriptionLocalizations: descriptionLocalizations);
 				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 
 				var commandmethods = new List<KeyValuePair<string, MethodInfo>>();
@@ -225,19 +225,19 @@ namespace DisCatSharp.ApplicationCommands
 
 					var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters, guildId);
 
-					DiscordApplicationCommandLocalization SubNameLocalizations = null;
-					DiscordApplicationCommandLocalization SubDescriptionLocalizations = null;
-					List<DiscordApplicationCommandOption> LocalizisedOptions = null;
+					DiscordApplicationCommandLocalization subNameLocalizations = null;
+					DiscordApplicationCommandLocalization subDescriptionLocalizations = null;
+					List<DiscordApplicationCommandOption> localizisedOptions = null;
 
-					var command_translation = translator?.Single(c => c.Name == payload.Name);
+					var commandTranslation = translator?.Single(c => c.Name == payload.Name);
 
-					if (command_translation?.Commands != null)
+					if (commandTranslation?.Commands != null)
 					{
 
-						var sub_command_translation = command_translation.Commands.Single(sc => sc.Name == commandAttribute.Name);
-						if (sub_command_translation.Options != null)
+						var subCommandTranslation = commandTranslation.Commands.Single(sc => sc.Name == commandAttribute.Name);
+						if (subCommandTranslation.Options != null)
 						{
-							LocalizisedOptions = new(options.Count);
+							localizisedOptions = new(options.Count);
 							foreach (var option in options)
 							{
 								List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new(option.Choices.Count()) : null;
@@ -245,24 +245,24 @@ namespace DisCatSharp.ApplicationCommands
 								{
 									foreach (var choice in option.Choices)
 									{
-										choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, sub_command_translation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+										choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, subCommandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
 									}
 								}
 
-								LocalizisedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
+								localizisedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
 									choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
-									sub_command_translation.Options.Single(o => o.Name == option.Name).NameTranslations, sub_command_translation.Options.Single(o => o.Name == option.Name).DescriptionTranslations
+									subCommandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, subCommandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations
 								));
 							}
 						}
 
-						SubNameLocalizations = sub_command_translation.NameTranslations;
-						SubDescriptionLocalizations = sub_command_translation.DescriptionTranslations;
+						subNameLocalizations = subCommandTranslation.NameTranslations;
+						subDescriptionLocalizations = subCommandTranslation.DescriptionTranslations;
 					}
 
 
 					//Creates the subcommand and adds it to the main command
-					var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, null, null, LocalizisedOptions ?? options, nameLocalizations: SubNameLocalizations, descriptionLocalizations: SubDescriptionLocalizations);
+					var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, null, null, localizisedOptions ?? options, nameLocalizations: subNameLocalizations, descriptionLocalizations: subDescriptionLocalizations);
 					payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations);
 					commandTypeSources.Add(new KeyValuePair<Type, Type>(subclassinfo, type));
 
@@ -283,21 +283,21 @@ namespace DisCatSharp.ApplicationCommands
 					var currentMethods = new List<KeyValuePair<string, MethodInfo>>();
 
 
-					DiscordApplicationCommandLocalization SubNameLocalizations = null;
-					DiscordApplicationCommandLocalization SubDescriptionLocalizations = null;
+					DiscordApplicationCommandLocalization subNameLocalizations = null;
+					DiscordApplicationCommandLocalization subDescriptionLocalizations = null;
 
 					if (translator != null)
 					{
-						var command_translation = translator.Single(c => c.Name == payload.Name);
-						if (command_translation != null && command_translation.SubGroups != null)
+						var commandTranslation = translator.Single(c => c.Name == payload.Name);
+						if (commandTranslation != null && commandTranslation.SubGroups != null)
 						{
 
-							var sub_command_translation = command_translation.SubGroups.Single(sc => sc.Name == subGroupAttribute.Name);
+							var subCommandTranslation = commandTranslation.SubGroups.Single(sc => sc.Name == subGroupAttribute.Name);
 
-							if (sub_command_translation != null)
+							if (subCommandTranslation != null)
 							{
-								SubNameLocalizations = sub_command_translation.NameTranslations;
-								SubDescriptionLocalizations = sub_command_translation.DescriptionTranslations;
+								subNameLocalizations = subCommandTranslation.NameTranslations;
+								subDescriptionLocalizations = subCommandTranslation.DescriptionTranslations;
 							}
 						}
 					}
@@ -314,19 +314,19 @@ namespace DisCatSharp.ApplicationCommands
 						parameters = parameters.Skip(1).ToArray();
 						suboptions = suboptions.Concat(await ApplicationCommandsExtension.ParseParametersAsync(parameters, guildId)).ToList();
 
-						DiscordApplicationCommandLocalization SubSubNameLocalizations = null;
-						DiscordApplicationCommandLocalization SubSubDescriptionLocalizations = null;
-						List<DiscordApplicationCommandOption> LocalizisedOptions = null;
+						DiscordApplicationCommandLocalization subSubNameLocalizations = null;
+						DiscordApplicationCommandLocalization subSubDescriptionLocalizations = null;
+						List<DiscordApplicationCommandOption> localizisedOptions = null;
 
-						var command_translation = translator?.Single(c => c.Name == payload.Name);
+						var commandTranslation = translator?.Single(c => c.Name == payload.Name);
 
-						var sub_command_translation = command_translation?.SubGroups?.Single(sc => sc.Name == commatt.Name);
+						var subCommandTranslation = commandTranslation?.SubGroups?.Single(sc => sc.Name == commatt.Name);
 
-						var sub_sub_command_translation = sub_command_translation?.Commands.Single(sc => sc.Name == commatt.Name);
+						var subSubCommandTranslation = subCommandTranslation?.Commands.Single(sc => sc.Name == commatt.Name);
 
-						if (sub_sub_command_translation != null && sub_sub_command_translation.Options != null)
+						if (subSubCommandTranslation != null && subSubCommandTranslation.Options != null)
 						{
-							LocalizisedOptions = new(suboptions.Count);
+							localizisedOptions = new(suboptions.Count);
 							foreach (var option in suboptions)
 							{
 								List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new(option.Choices.Count) : null;
@@ -334,28 +334,28 @@ namespace DisCatSharp.ApplicationCommands
 								{
 									foreach (var choice in option.Choices)
 									{
-										choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, sub_sub_command_translation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
+										choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, subSubCommandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
 									}
 								}
 
-								LocalizisedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
+								localizisedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
 									choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
-									sub_sub_command_translation.Options.Single(o => o.Name == option.Name).NameTranslations, sub_sub_command_translation.Options.Single(o => o.Name == option.Name).DescriptionTranslations
+									subSubCommandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, subSubCommandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations
 								));
 							}
 
-							SubSubNameLocalizations = sub_sub_command_translation.NameTranslations;
-							SubSubDescriptionLocalizations = sub_sub_command_translation.DescriptionTranslations;
+							subSubNameLocalizations = subSubCommandTranslation.NameTranslations;
+							subSubDescriptionLocalizations = subSubCommandTranslation.DescriptionTranslations;
 						}
 
-						var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, LocalizisedOptions ?? suboptions, nameLocalizations: SubSubNameLocalizations, descriptionLocalizations: SubSubDescriptionLocalizations);
+						var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, localizisedOptions ?? suboptions, nameLocalizations: subSubNameLocalizations, descriptionLocalizations: subSubDescriptionLocalizations);
 						options.Add(subsubpayload);
 						commandmethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
 						currentMethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
 					}
 
 					//Adds the group to the command and method lists
-					var subpayload = new DiscordApplicationCommandOption(subGroupAttribute.Name, subGroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options, nameLocalizations: SubNameLocalizations, descriptionLocalizations: SubDescriptionLocalizations);
+					var subpayload = new DiscordApplicationCommandOption(subGroupAttribute.Name, subGroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options, nameLocalizations: subNameLocalizations, descriptionLocalizations: subDescriptionLocalizations);
 					command.SubCommands.Add(new GroupCommand { Name = subGroupAttribute.Name, Methods = currentMethods });
 					payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations);
 					commandTypeSources.Add(new KeyValuePair<Type, Type>(subclass, type));
@@ -363,7 +363,7 @@ namespace DisCatSharp.ApplicationCommands
 					//Accounts for lifespans for the sub group
 					if (subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
 					{
-						singletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclass, ApplicationCommandsExtension._configuration?.ServiceProvider));
+						singletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclass, ApplicationCommandsExtension.Configuration?.ServiceProvider));
 					}
 				}
 				if (command.SubCommands.Any()) subGroupCommands.Add(command);
@@ -372,7 +372,7 @@ namespace DisCatSharp.ApplicationCommands
 				//Accounts for lifespans
 				if (subclassinfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && subclassinfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
 				{
-					singletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclassinfo, ApplicationCommandsExtension._configuration?.ServiceProvider));
+					singletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclassinfo, ApplicationCommandsExtension.Configuration?.ServiceProvider));
 				}
 			}
 

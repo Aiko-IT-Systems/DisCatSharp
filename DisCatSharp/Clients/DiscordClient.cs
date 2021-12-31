@@ -50,7 +50,7 @@ namespace DisCatSharp
 	{
 		#region Internal Fields/Properties
 
-		internal bool _isShard = false;
+		internal bool IsShard = false;
 		/// <summary>
 		/// Gets the message cache.
 		/// </summary>
@@ -107,7 +107,7 @@ namespace DisCatSharp
 		/// <see cref="GuildAvailable"/> or <see cref="GuildDownloadCompleted"/> events haven't been fired yet)
 		/// </summary>
 		public override IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
-		internal ConcurrentDictionary<ulong, DiscordGuild> _guilds = new();
+		internal ConcurrentDictionary<ulong, DiscordGuild> GuildsInternal = new();
 
 		/// <summary>
 		/// Gets the WS latency for this client.
@@ -123,7 +123,7 @@ namespace DisCatSharp
 		public IReadOnlyDictionary<ulong, DiscordPresence> Presences
 			=> this._presencesLazy.Value;
 
-		internal Dictionary<ulong, DiscordPresence> _presences = new();
+		internal Dictionary<ulong, DiscordPresence> PresencesInternal = new();
 		private Lazy<IReadOnlyDictionary<ulong, DiscordPresence>> _presencesLazy;
 
 		/// <summary>
@@ -132,7 +132,7 @@ namespace DisCatSharp
 		public IReadOnlyDictionary<string, DiscordActivity> EmbeddedActivities
 			=> this._embeddedActivitiesLazy.Value;
 
-		internal Dictionary<string, DiscordActivity> _embeddedActivities = new();
+		internal Dictionary<string, DiscordActivity> EmbeddedActivitiesInternal = new();
 		private Lazy<IReadOnlyDictionary<string, DiscordActivity>> _embeddedActivitiesLazy;
 		#endregion
 
@@ -155,7 +155,7 @@ namespace DisCatSharp
 
 			this.InternalSetup();
 
-			this.Guilds = new ReadOnlyConcurrentDictionary<ulong, DiscordGuild>(this._guilds);
+			this.Guilds = new ReadOnlyConcurrentDictionary<ulong, DiscordGuild>(this.GuildsInternal);
 		}
 
 		/// <summary>
@@ -241,10 +241,10 @@ namespace DisCatSharp
 			this._guildScheduledEventUserRemoved = new AsyncEvent<DiscordClient, GuildScheduledEventUserRemoveEventArgs>("GUILD_SCHEDULED_EVENT_USER_REMOVED", EventExecutionLimit, this.EventErrorHandler);
 			this._embeddedActivityUpdated = new AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs>("EMBEDDED_ACTIVITY_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 
-			this._guilds.Clear();
+			this.GuildsInternal.Clear();
 
-			this._presencesLazy = new Lazy<IReadOnlyDictionary<ulong, DiscordPresence>>(() => new ReadOnlyDictionary<ulong, DiscordPresence>(this._presences));
-			this._embeddedActivitiesLazy = new Lazy<IReadOnlyDictionary<string, DiscordActivity>>(() => new ReadOnlyDictionary<string, DiscordActivity>(this._embeddedActivities));
+			this._presencesLazy = new Lazy<IReadOnlyDictionary<ulong, DiscordPresence>>(() => new ReadOnlyDictionary<ulong, DiscordPresence>(this.PresencesInternal));
+			this._embeddedActivitiesLazy = new Lazy<IReadOnlyDictionary<string, DiscordActivity>>(() => new ReadOnlyDictionary<string, DiscordActivity>(this.EmbeddedActivitiesInternal));
 		}
 
 		#endregion
@@ -295,18 +295,18 @@ namespace DisCatSharp
 				this._status = null;
 			else
 			{
-				var since_unix = idlesince != null ? (long?)Utilities.GetUnixTime(idlesince.Value) : null;
+				var sinceUnix = idlesince != null ? (long?)Utilities.GetUnixTime(idlesince.Value) : null;
 				this._status = new StatusUpdate()
 				{
 					Activity = new TransportActivity(activity),
 					Status = status ?? UserStatus.Online,
-					IdleSince = since_unix,
-					IsAFK = idlesince != null,
-					_activity = activity
+					IdleSince = sinceUnix,
+					IsAfk = idlesince != null,
+					ActivityInternal = activity
 				};
 			}
 
-			if (!this._isShard)
+			if (!this.IsShard)
 			{
 				if (this.Configuration.TokenType != TokenType.Bot)
 					this.Logger.LogWarning(LoggerEvents.Misc, "You are logging in with a token that is not a bot token. This is not officially supported by Discord, and can result in your account being terminated if you aren't careful.");
@@ -377,8 +377,8 @@ namespace DisCatSharp
 		public async Task DisconnectAsync()
 		{
 			this.Configuration.AutoReconnect = false;
-			if (this._webSocketClient != null)
-				await this._webSocketClient.DisconnectAsync().ConfigureAwait(false);
+			if (this.WebSocketClient != null)
+				await this.WebSocketClient.DisconnectAsync().ConfigureAwait(false);
 		}
 
 		#endregion
@@ -407,7 +407,7 @@ namespace DisCatSharp
 					old.Discriminator = usr.Discriminator;
 					old.AvatarHash = usr.AvatarHash;
 					old.BannerHash = usr.BannerHash;
-					old._bannerColor = usr._bannerColor;
+					old.BannerColorInternal = usr.BannerColorInternal;
 					return old;
 				});
 
@@ -597,12 +597,12 @@ namespace DisCatSharp
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordGuild> GetGuildAsync(ulong id, bool? withCounts = null)
 		{
-			if (this._guilds.TryGetValue(id, out var guild) && (!withCounts.HasValue || !withCounts.Value))
+			if (this.GuildsInternal.TryGetValue(id, out var guild) && (!withCounts.HasValue || !withCounts.Value))
 				return guild;
 
 			guild = await this.ApiClient.GetGuildAsync(id, withCounts).ConfigureAwait(false);
 			var channels = await this.ApiClient.GetGuildChannelsAsync(guild.Id).ConfigureAwait(false);
-			foreach (var channel in channels) guild._channels[channel.Id] = channel;
+			foreach (var channel in channels) guild.ChannelsInternal[channel.Id] = channel;
 
 			return guild;
 		}
@@ -671,7 +671,7 @@ namespace DisCatSharp
 		/// <returns>The OAuth Url</returns>
 		public Uri GetInAppOAuth(Permissions permissions = Permissions.None, OAuthScopes scopes = OAuthScopes.BOT_DEFAULT, string redir = null)
 		{
-			permissions &= PermissionMethods.FULL_PERMS;
+			permissions &= PermissionMethods.FullPerms;
 			// hey look, it's not all annoying and blue :P
 			return new Uri(new QueryUriBuilder($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.OAUTH2}{Endpoints.AUTHORIZE}")
 				.AddParameter("client_id", this.CurrentApplication.Id.ToString(CultureInfo.InvariantCulture))
@@ -947,9 +947,9 @@ namespace DisCatSharp
 		/// <returns>The requested guild.</returns>
 		internal DiscordGuild InternalGetCachedGuild(ulong? guildId)
 		{
-			if (this._guilds != null && guildId.HasValue)
+			if (this.GuildsInternal != null && guildId.HasValue)
 			{
-				if (this._guilds.TryGetValue(guildId.Value, out var guild))
+				if (this.GuildsInternal.TryGetValue(guildId.Value, out var guild))
 					return guild;
 			}
 
@@ -1005,7 +1005,7 @@ namespace DisCatSharp
 		{
 			if (scheduledEvent != null)
 			{
-				_ = guild._scheduledEvents.AddOrUpdate(scheduledEvent.Id, scheduledEvent, (id, old) =>
+				_ = guild.ScheduledEventsInternal.AddOrUpdate(scheduledEvent.Id, scheduledEvent, (id, old) =>
 				{
 					old.Discord = this;
 					old.Description = scheduledEvent.Description;
@@ -1050,7 +1050,7 @@ namespace DisCatSharp
 						return old;
 					});
 
-					usr = new DiscordMember(mbr) { Discord = this, _guild_id = guildId.Value };
+					usr = new DiscordMember(mbr) { Discord = this, GuildId = guildId.Value };
 				}
 
 				var intents = this.Configuration.Intents;
@@ -1059,18 +1059,18 @@ namespace DisCatSharp
 
 				if (!intents.HasAllPrivilegedIntents() || guild.IsLarge) // we have the necessary privileged intents, no need to worry about caching here unless guild is large.
 				{
-					if (guild?._members.TryGetValue(usr.Id, out member) == false)
+					if (guild?.MembersInternal.TryGetValue(usr.Id, out member) == false)
 					{
 						if (intents.HasIntent(DiscordIntents.GuildMembers) || this.Configuration.AlwaysCacheMembers) // member can be updated by events, so cache it
 						{
-							guild._members.TryAdd(usr.Id, (DiscordMember)usr);
+							guild.MembersInternal.TryAdd(usr.Id, (DiscordMember)usr);
 						}
 					}
 					else if (intents.HasIntent(DiscordIntents.GuildPresences) || this.Configuration.AlwaysCacheMembers) // we can attempt to update it if it's already in cache.
 					{
 						if (!intents.HasIntent(DiscordIntents.GuildMembers)) // no need to update if we already have the member events
 						{
-							_ = guild._members.TryUpdate(usr.Id, (DiscordMember)usr, member);
+							_ = guild.MembersInternal.TryUpdate(usr.Id, (DiscordMember)usr, member);
 						}
 					}
 				}
@@ -1101,7 +1101,7 @@ namespace DisCatSharp
 
 			if (rawEvents != null)
 			{
-				guild._scheduledEvents.Clear();
+				guild.ScheduledEventsInternal.Clear();
 
 				foreach (var xj in rawEvents)
 				{
@@ -1109,7 +1109,7 @@ namespace DisCatSharp
 
 					xtm.Discord = this;
 
-					guild._scheduledEvents[xtm.Id] = xtm;
+					guild.ScheduledEventsInternal[xtm.Id] = xtm;
 				}
 			}
 		}
@@ -1124,59 +1124,59 @@ namespace DisCatSharp
 			if (this._disposed)
 				return;
 
-			if (!this._guilds.ContainsKey(newGuild.Id))
-				this._guilds[newGuild.Id] = newGuild;
+			if (!this.GuildsInternal.ContainsKey(newGuild.Id))
+				this.GuildsInternal[newGuild.Id] = newGuild;
 
-			var guild = this._guilds[newGuild.Id];
+			var guild = this.GuildsInternal[newGuild.Id];
 
-			if (newGuild._channels != null && newGuild._channels.Count > 0)
+			if (newGuild.ChannelsInternal != null && newGuild.ChannelsInternal.Count > 0)
 			{
-				foreach (var channel in newGuild._channels.Values)
+				foreach (var channel in newGuild.ChannelsInternal.Values)
 				{
-					if (guild._channels.TryGetValue(channel.Id, out _)) continue;
+					if (guild.ChannelsInternal.TryGetValue(channel.Id, out _)) continue;
 
-					foreach (var overwrite in channel._permissionOverwrites)
+					foreach (var overwrite in channel.PermissionOverwritesInternal)
 					{
 						overwrite.Discord = this;
-						overwrite._channel_id = channel.Id;
+						overwrite.ChannelId = channel.Id;
 					}
 
-					guild._channels[channel.Id] = channel;
+					guild.ChannelsInternal[channel.Id] = channel;
 				}
 			}
 
-			if (newGuild._threads != null && newGuild._threads.Count > 0)
+			if (newGuild.ThreadsInternal != null && newGuild.ThreadsInternal.Count > 0)
 			{
-				foreach (var thread in newGuild._threads.Values)
+				foreach (var thread in newGuild.ThreadsInternal.Values)
 				{
-					if (guild._threads.TryGetValue(thread.Id, out _)) continue;
+					if (guild.ThreadsInternal.TryGetValue(thread.Id, out _)) continue;
 
-					guild._threads[thread.Id] = thread;
+					guild.ThreadsInternal[thread.Id] = thread;
 				}
 			}
 
-			if (newGuild._scheduledEvents != null && newGuild._scheduledEvents.Count > 0)
+			if (newGuild.ScheduledEventsInternal != null && newGuild.ScheduledEventsInternal.Count > 0)
 			{
-				foreach (var s_event in newGuild._scheduledEvents.Values)
+				foreach (var @event in newGuild.ScheduledEventsInternal.Values)
 				{
-					if (guild._scheduledEvents.TryGetValue(s_event.Id, out _)) continue;
+					if (guild.ScheduledEventsInternal.TryGetValue(@event.Id, out _)) continue;
 
-					guild._scheduledEvents[s_event.Id] = s_event;
+					guild.ScheduledEventsInternal[@event.Id] = @event;
 				}
 			}
 
-			foreach (var newEmoji in newGuild._emojis.Values)
-				_ = guild._emojis.GetOrAdd(newEmoji.Id, _ => newEmoji);
+			foreach (var newEmoji in newGuild.EmojisInternal.Values)
+				_ = guild.EmojisInternal.GetOrAdd(newEmoji.Id, _ => newEmoji);
 
-			foreach (var newSticker in newGuild._stickers.Values)
-				_ = guild._stickers.GetOrAdd(newSticker.Id, _ => newSticker);
+			foreach (var newSticker in newGuild.StickersInternal.Values)
+				_ = guild.StickersInternal.GetOrAdd(newSticker.Id, _ => newSticker);
 
-			foreach (var newStageInstance in newGuild._stageInstances.Values)
-				_ = guild._stageInstances.GetOrAdd(newStageInstance.Id, _ => newStageInstance);
+			foreach (var newStageInstance in newGuild.StageInstancesInternal.Values)
+				_ = guild.StageInstancesInternal.GetOrAdd(newStageInstance.Id, _ => newStageInstance);
 
 			if (rawMembers != null)
 			{
-				guild._members.Clear();
+				guild.MembersInternal.Clear();
 
 				foreach (var xj in rawMembers)
 				{
@@ -1192,16 +1192,16 @@ namespace DisCatSharp
 						return old;
 					});
 
-					guild._members[xtm.User.Id] = new DiscordMember(xtm) { Discord = this, _guild_id = guild.Id };
+					guild.MembersInternal[xtm.User.Id] = new DiscordMember(xtm) { Discord = this, GuildId = guild.Id };
 				}
 			}
 
-			foreach (var role in newGuild._roles.Values)
+			foreach (var role in newGuild.RolesInternal.Values)
 			{
-				if (guild._roles.TryGetValue(role.Id, out _)) continue;
+				if (guild.RolesInternal.TryGetValue(role.Id, out _)) continue;
 
-				role._guild_id = guild.Id;
-				guild._roles[role.Id] = role;
+				role.GuildId = guild.Id;
+				guild.RolesInternal[role.Id] = role;
 			}
 
 			guild.Name = newGuild.Name;
@@ -1258,9 +1258,9 @@ namespace DisCatSharp
 
 			this.UpdateMessage(message, author, guild, member);
 
-			if (message._reactions == null)
-				message._reactions = new List<DiscordReaction>();
-			foreach (var xr in message._reactions)
+			if (message.ReactionsInternal == null)
+				message.ReactionsInternal = new List<DiscordReaction>();
+			foreach (var xr in message.ReactionsInternal)
 				xr.Emoji.Discord = this;
 
 			if (this.Configuration.MessageCacheSize > 0 && message.Channel != null)
@@ -1307,7 +1307,7 @@ namespace DisCatSharp
 			}
 			catch { }
 
-			this._guilds = null;
+			this.GuildsInternal = null;
 			this._heartbeatTask = null;
 		}
 

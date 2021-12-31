@@ -116,9 +116,9 @@ namespace DisCatSharp.VoiceNext.Codec
 		{
 			return encryptionMode switch
 			{
-				EncryptionMode.XSalsa20_Poly1305 => HEADER_SIZE + encryptedLength,
-				EncryptionMode.XSalsa20_Poly1305_Suffix => HEADER_SIZE + encryptedLength + Interop.SodiumNonceSize,
-				EncryptionMode.XSalsa20_Poly1305_Lite => HEADER_SIZE + encryptedLength + 4,
+				EncryptionMode.XSalsa20Poly1305 => HEADER_SIZE + encryptedLength,
+				EncryptionMode.XSalsa20Poly1305Suffix => HEADER_SIZE + encryptedLength + Interop.SodiumNonceSize,
+				EncryptionMode.XSalsa20Poly1305Lite => HEADER_SIZE + encryptedLength + 4,
 				_ => throw new ArgumentException("Unsupported encryption mode.", nameof(encryptionMode)),
 			};
 		}
@@ -133,15 +133,15 @@ namespace DisCatSharp.VoiceNext.Codec
 		{
 			switch (encryptionMode)
 			{
-				case EncryptionMode.XSalsa20_Poly1305:
+				case EncryptionMode.XSalsa20Poly1305:
 					data = packet[HEADER_SIZE..];
 					return;
 
-				case EncryptionMode.XSalsa20_Poly1305_Suffix:
+				case EncryptionMode.XSalsa20Poly1305Suffix:
 					data = packet.Slice(HEADER_SIZE, packet.Length - HEADER_SIZE - Interop.SodiumNonceSize);
 					return;
 
-				case EncryptionMode.XSalsa20_Poly1305_Lite:
+				case EncryptionMode.XSalsa20Poly1305Lite:
 					data = packet.Slice(HEADER_SIZE, packet.Length - HEADER_SIZE - 4);
 					break;
 

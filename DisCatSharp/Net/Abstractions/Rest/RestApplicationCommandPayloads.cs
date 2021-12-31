@@ -186,7 +186,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// Get whether the message is tts.
 		/// </summary>
 		[JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
-		public bool? IsTTS { get; set; }
+		public bool? IsTts { get; set; }
 
 		/// <summary>
 		/// Gets the embeds.

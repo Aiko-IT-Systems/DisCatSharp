@@ -35,11 +35,11 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the md sanitize regex.
 		/// </summary>
-		private static Regex MdSanitizeRegex { get; } = new Regex(@"([`\*_~<>\[\]\(\)""@\!\&#:\|])", RegexOptions.ECMAScript);
+		private static Regex s_mdSanitizeRegex { get; } = new Regex(@"([`\*_~<>\[\]\(\)""@\!\&#:\|])", RegexOptions.ECMAScript);
 		/// <summary>
 		/// Gets the md strip regex.
 		/// </summary>
-		private static Regex MdStripRegex { get; } = new Regex(@"([`\*_~\[\]\(\)""\|]|<@\!?\d+>|<#\d+>|<@\&\d+>|<:[a-zA-Z0-9_\-]:\d+>)", RegexOptions.ECMAScript);
+		private static Regex s_mdStripRegex { get; } = new Regex(@"([`\*_~\[\]\(\)""\|]|<@\!?\d+>|<#\d+>|<@\&\d+>|<:[a-zA-Z0-9_\-]:\d+>)", RegexOptions.ECMAScript);
 
 		/// <summary>
 		/// Creates a block of code.
@@ -138,10 +138,10 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="text">Text to display the link as.</param>
 		/// <param name="url">Url that the link will lead to.</param>
-		/// <param name="alt_text">Alt text to display on hover.</param>
+		/// <param name="altText">Alt text to display on hover.</param>
 		/// <returns>Formatted url.</returns>
-		public static string MaskedUrl(string text, Uri url, string alt_text = "")
-			=> $"[{text}]({url}{(!string.IsNullOrWhiteSpace(alt_text) ? $" \"{alt_text}\"" : "")})";
+		public static string MaskedUrl(string text, Uri url, string altText = "")
+			=> $"[{text}]({url}{(!string.IsNullOrWhiteSpace(altText) ? $" \"{altText}\"" : "")})";
 
 		/// <summary>
 		/// Escapes all markdown formatting from specified text.
@@ -149,7 +149,7 @@ namespace DisCatSharp
 		/// <param name="text">Text to sanitize.</param>
 		/// <returns>Sanitized text.</returns>
 		public static string Sanitize(string text)
-			=> MdSanitizeRegex.Replace(text, m => $"\\{m.Groups[1].Value}");
+			=> s_mdSanitizeRegex.Replace(text, m => $"\\{m.Groups[1].Value}");
 
 		/// <summary>
 		/// Removes all markdown formatting from specified text.
@@ -157,7 +157,7 @@ namespace DisCatSharp
 		/// <param name="text">Text to strip of formatting.</param>
 		/// <returns>Formatting-stripped text.</returns>
 		public static string Strip(string text)
-			=> MdStripRegex.Replace(text, m => string.Empty);
+			=> s_mdStripRegex.Replace(text, m => string.Empty);
 
 		/// <summary>
 		/// Creates a mention for specified user or member. Can optionally specify to resolve nicknames.
