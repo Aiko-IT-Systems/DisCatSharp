@@ -61,7 +61,7 @@ namespace DisCatSharp.Net
 
 			internal set
 			{
-				this.IsUnlimited = value.Contains(_unlimitedHash);
+				this.IsUnlimited = value.Contains(s_unlimitedHash);
 
 				if (this.BucketId != null && !this.BucketId.StartsWith(value))
 				{
@@ -159,7 +159,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		internal volatile int LimitResetting;
 
-		private static readonly string _unlimitedHash = "unlimited";
+		private static readonly string s_unlimitedHash = "unlimited";
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RateLimitBucket"/> class.
@@ -206,7 +206,7 @@ namespace DisCatSharp.Net
 		/// <param name="route">The route.</param>
 		/// <returns>A string.</returns>
 		public static string GenerateUnlimitedHash(RestRequestMethod method, string route)
-			=> $"{GenerateHashKey(method, route)}:{_unlimitedHash}";
+			=> $"{GenerateHashKey(method, route)}:{s_unlimitedHash}";
 
 		/// <summary>
 		/// Returns a string representation of this bucket.
