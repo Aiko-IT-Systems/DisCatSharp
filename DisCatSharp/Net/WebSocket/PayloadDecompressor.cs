@@ -35,12 +35,12 @@ namespace DisCatSharp.Net.WebSocket
 		/// <summary>
 		/// The zlib flush.
 		/// </summary>
-		private const uint ZlibFlush = 0x0000FFFF;
+		private const uint ZLIB_FLUSH = 0x0000FFFF;
 
 		/// <summary>
 		/// The zlib prefix.
 		/// </summary>
-		private const byte ZlibPrefix = 0x78;
+		private const byte ZLIB_PREFIX = 0x78;
 
 		/// <summary>
 		/// Gets the compression level.
@@ -83,7 +83,7 @@ namespace DisCatSharp.Net.WebSocket
 				? this.DecompressorStream
 				: new DeflateStream(this.CompressedStream, CompressionMode.Decompress, true);
 
-			if (compressed.Array[0] == ZlibPrefix)
+			if (compressed.Array[0] == ZLIB_PREFIX)
 				this.CompressedStream.Write(compressed.Array, compressed.Offset + 2, compressed.Count - 2);
 			else
 				this.CompressedStream.Write(compressed.Array, compressed.Offset, compressed.Count);
@@ -93,7 +93,7 @@ namespace DisCatSharp.Net.WebSocket
 
 			var cspan = compressed.AsSpan();
 			var suffix = BinaryPrimitives.ReadUInt32BigEndian(cspan[^4..]);
-			if (this.CompressionLevel == GatewayCompressionLevel.Stream && suffix != ZlibFlush)
+			if (this.CompressionLevel == GatewayCompressionLevel.Stream && suffix != ZLIB_FLUSH)
 			{
 				if (this.CompressionLevel == GatewayCompressionLevel.Payload)
 					zlib.Dispose();

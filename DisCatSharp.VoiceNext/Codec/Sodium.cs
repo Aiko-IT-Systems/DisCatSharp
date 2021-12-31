@@ -93,8 +93,8 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="target">The target.</param>
 		public void GenerateNonce(ReadOnlySpan<byte> rtpHeader, Span<byte> target)
 		{
-			if (rtpHeader.Length != Rtp.HeaderSize)
-				throw new ArgumentException($"RTP header needs to have a length of exactly {Rtp.HeaderSize} bytes.", nameof(rtpHeader));
+			if (rtpHeader.Length != Rtp.HEADER_SIZE)
+				throw new ArgumentException($"RTP header needs to have a length of exactly {Rtp.HEADER_SIZE} bytes.", nameof(rtpHeader));
 
 			if (target.Length != Interop.SodiumNonceSize)
 				throw new ArgumentException($"Invalid nonce buffer size. Target buffer for the nonce needs to have a capacity of {Interop.SodiumNonceSize} bytes.", nameof(target));

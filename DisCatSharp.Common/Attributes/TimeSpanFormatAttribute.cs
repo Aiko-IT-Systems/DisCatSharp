@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project, based of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -33,22 +33,22 @@ namespace DisCatSharp.Common.Serialization
 		/// <summary>
 		/// Gets the ISO 8601 format string of @"ddThh\:mm\:ss\.fff".
 		/// </summary>
-		public const string FormatISO8601 = @"ddThh\:mm\:ss\.fff";
+		public const string FORMAT_ISO_8601 = @"ddThh\:mm\:ss\.fff";
 
 		/// <summary>
 		/// Gets the constant format.
 		/// </summary>
-		public const string FormatConstant = "c";
+		public const string FORMAT_CONSTANT = "c";
 
 		/// <summary>
 		/// Gets the general long format.
 		/// </summary>
-		public const string FormatLong = "G";
+		public const string FORMAT_LONG = "G";
 
 		/// <summary>
 		/// Gets the general short format.
 		/// </summary>
-		public const string FormatShort = "g";
+		public const string FORMAT_SHORT = "g";
 
 		/// <summary>
 		/// Gets the custom datetime format string to use.

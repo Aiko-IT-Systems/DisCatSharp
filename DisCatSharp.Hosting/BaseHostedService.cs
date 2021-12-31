@@ -57,7 +57,7 @@ namespace DisCatSharp.Hosting
 			ILogger<BaseHostedService> logger,
 			IServiceProvider serviceProvider,
 			IHostApplicationLifetime applicationLifetime,
-			string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
+			string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
 		{
 			this.Configuration = config;
 			this.Logger = logger;

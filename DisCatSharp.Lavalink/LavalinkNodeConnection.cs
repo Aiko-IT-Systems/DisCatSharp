@@ -142,11 +142,11 @@ namespace DisCatSharp.Lavalink
 		/// <summary>
 		/// The minimum backoff.
 		/// </summary>
-		private const int MinimumBackoff = 7500;
+		private const int MINIMUM_BACKOFF = 7500;
 		/// <summary>
 		/// The maximum backoff.
 		/// </summary>
-		private const int MaximumBackoff = 120000;
+		private const int MAXIMUM_BACKOFF = 120000;
 
 		/// <summary>
 		/// Gets the current resource usage statistics.
@@ -262,11 +262,11 @@ namespace DisCatSharp.Lavalink
 					if (this._backoff != 0)
 					{
 						await Task.Delay(this._backoff).ConfigureAwait(false);
-						this._backoff = Math.Min(this._backoff * 2, MaximumBackoff);
+						this._backoff = Math.Min(this._backoff * 2, MAXIMUM_BACKOFF);
 					}
 					else
 					{
-						this._backoff = MinimumBackoff;
+						this._backoff = MINIMUM_BACKOFF;
 					}
 
 					await this.WebSocket.ConnectAsync(new Uri(this.Configuration.SocketEndpoint.ToWebSocketString())).ConfigureAwait(false);
@@ -278,7 +278,7 @@ namespace DisCatSharp.Lavalink
 				{ throw; }
 				catch (Exception ex)
 				{
-					if (!this.Configuration.SocketAutoReconnect || this._backoff == MaximumBackoff)
+					if (!this.Configuration.SocketAutoReconnect || this._backoff == MAXIMUM_BACKOFF)
 					{
 						this.Discord.Logger.LogCritical(LavalinkEvents.LavalinkConnectionError, ex, "Failed to connect to Lavalink.");
 						throw ex;

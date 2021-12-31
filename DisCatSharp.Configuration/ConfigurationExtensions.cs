@@ -37,15 +37,15 @@ namespace DisCatSharp.Configuration
 		/// <summary>
 		/// The factory error message.
 		/// </summary>
-		private const string FactoryErrorMessage = "Require a function which provides a default entity to work with";
+		private const string FACTORY_ERROR_MESSAGE = "Require a function which provides a default entity to work with";
 		/// <summary>
 		/// The default root lib.
 		/// </summary>
-		public const string DefaultRootLib = "DisCatSharp";
+		public const string DEFAULT_ROOT_LIB = "DisCatSharp";
 		/// <summary>
 		/// The config suffix.
 		/// </summary>
-		private const string ConfigSuffix = "Configuration";
+		private const string CONFIG_SUFFIX = "Configuration";
 
 
 		/// <summary>
@@ -143,7 +143,7 @@ namespace DisCatSharp.Configuration
 		public static object ExtractConfig(this ConfigSection section, Func<object> factory)
 		{
 			if (factory == null)
-				throw new ArgumentNullException(nameof(factory), FactoryErrorMessage);
+				throw new ArgumentNullException(nameof(factory), FACTORY_ERROR_MESSAGE);
 
 			// Create default instance
 			var config = factory();
@@ -160,14 +160,14 @@ namespace DisCatSharp.Configuration
 		/// <param name="config">Loaded App Configuration</param>
 		/// <param name="sectionName">Name of section to load</param>
 		/// <param name="factory">Function which creates a default entity to work with</param>
-		/// <param name="rootSectionName">(Optional) Used when section is nested within another. Default value is <see cref="DefaultRootLib"/></param>
+		/// <param name="rootSectionName">(Optional) Used when section is nested within another. Default value is <see cref="DEFAULT_ROOT_LIB"/></param>
 		/// <returns>Hydrated instance of an entity which contains user-defined values (if any)</returns>
 		/// <exception cref="ArgumentNullException">When <paramref name="factory"/> is null</exception>
 		public static object ExtractConfig(this IConfiguration config, string sectionName, Func<object> factory,
-			string? rootSectionName = DefaultRootLib)
+			string? rootSectionName = DEFAULT_ROOT_LIB)
 		{
 			if (factory == null)
-				throw new ArgumentNullException(nameof(factory), FactoryErrorMessage);
+				throw new ArgumentNullException(nameof(factory), FACTORY_ERROR_MESSAGE);
 
 			// create default instance
 			var instance = factory();
@@ -184,14 +184,14 @@ namespace DisCatSharp.Configuration
 		/// <param name="config">Loaded App Configuration</param>
 		/// <param name="serviceProvider"></param>
 		/// <param name="sectionName">Name of section to load</param>
-		/// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DefaultRootLib"/></param>
+		/// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DEFAULT_ROOT_LIB"/></param>
 		/// <typeparam name="TConfig">Type of instance that <paramref name="sectionName"/> represents</typeparam>
 		/// <returns>Hydrated instance of <typeparamref name="TConfig"/> which contains the user-defined values (if any).</returns>
-		public static TConfig ExtractConfig<TConfig>(this IConfiguration config, IServiceProvider serviceProvider, string sectionName, string? rootSectionName = DefaultRootLib)
+		public static TConfig ExtractConfig<TConfig>(this IConfiguration config, IServiceProvider serviceProvider, string sectionName, string? rootSectionName = DEFAULT_ROOT_LIB)
 			where TConfig : new()
 		{
 			// Default values should hopefully be provided from the constructor
-			object configInstance = ActivatorUtilities.CreateInstance(serviceProvider, typeof(TConfig));
+			var configInstance = ActivatorUtilities.CreateInstance(serviceProvider, typeof(TConfig));
 
 			HydrateInstance(ref configInstance, new ConfigSection(ref config, sectionName, rootSectionName));
 
@@ -204,10 +204,10 @@ namespace DisCatSharp.Configuration
 		/// </summary>
 		/// <param name="config">Loaded App Configuration</param>
 		/// <param name="sectionName">Name of section to load</param>
-		/// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DefaultRootLib"/></param>
+		/// <param name="rootSectionName">(Optional) Used when section is nested with another. Default value is <see cref="DEFAULT_ROOT_LIB"/></param>
 		/// <typeparam name="TConfig">Type of instance that <paramref name="sectionName"/> represents</typeparam>
 		/// <returns>Hydrated instance of <typeparamref name="TConfig"/> which contains the user-defined values (if any).</returns>
-		public static TConfig ExtractConfig<TConfig>(this IConfiguration config, string sectionName, string? rootSectionName = DefaultRootLib)
+		public static TConfig ExtractConfig<TConfig>(this IConfiguration config, string sectionName, string? rootSectionName = DEFAULT_ROOT_LIB)
 			where TConfig : new()
 		{
 			// Default values should hopefully be provided from the constructor
@@ -295,12 +295,12 @@ namespace DisCatSharp.Configuration
 		/// <param name="botSectionName"></param>
 		/// <returns>Instance of <see cref="DiscordClient"/></returns>
 		public static DiscordClient BuildClient(this IConfiguration config, IServiceProvider serviceProvider,
-			string botSectionName = DefaultRootLib)
+			string botSectionName = DEFAULT_ROOT_LIB)
 		{
 			var section = config.HasSection(botSectionName, "Discord")
 				? "Discord"
-				: config.HasSection(botSectionName, $"Discord{ConfigSuffix}")
-					? $"Discord:{ConfigSuffix}"
+				: config.HasSection(botSectionName, $"Discord{CONFIG_SUFFIX}")
+					? $"Discord:{CONFIG_SUFFIX}"
 					: null;
 
 			return string.IsNullOrEmpty(section)

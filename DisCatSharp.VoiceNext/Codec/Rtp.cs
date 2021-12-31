@@ -33,20 +33,20 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <summary>
 		/// The header size.
 		/// </summary>
-		public const int HeaderSize = 12;
+		public const int HEADER_SIZE = 12;
 
 		/// <summary>
 		/// The rtp no extension.
 		/// </summary>
-		private const byte RtpNoExtension = 0x80;
+		private const byte RTP_NO_EXTENSION = 0x80;
 		/// <summary>
 		/// The rtp extension.
 		/// </summary>
-		private const byte RtpExtension = 0x90;
+		private const byte RTP_EXTENSION = 0x90;
 		/// <summary>
 		/// The rtp version.
 		/// </summary>
-		private const byte RtpVersion = 0x78;
+		private const byte RTP_VERSION = 0x78;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Rtp"/> class.
@@ -63,11 +63,11 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="target">The target.</param>
 		public void EncodeHeader(ushort sequence, uint timestamp, uint ssrc, Span<byte> target)
 		{
-			if (target.Length < HeaderSize)
+			if (target.Length < HEADER_SIZE)
 				throw new ArgumentException("Header buffer is too short.", nameof(target));
 
-			target[0] = RtpNoExtension;
-			target[1] = RtpVersion;
+			target[0] = RTP_NO_EXTENSION;
+			target[1] = RTP_VERSION;
 
 			// Write data big endian
 			BinaryPrimitives.WriteUInt16BigEndian(target[2..], sequence);  // header + magic
@@ -80,7 +80,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// </summary>
 		/// <param name="source">The source.</param>
 		/// <returns>A bool.</returns>
-		public bool IsRtpHeader(ReadOnlySpan<byte> source) => source.Length >= HeaderSize && (source[0] == RtpNoExtension || source[0] == RtpExtension) && source[1] == RtpVersion;
+		public bool IsRtpHeader(ReadOnlySpan<byte> source) => source.Length >= HEADER_SIZE && (source[0] == RTP_NO_EXTENSION || source[0] == RTP_EXTENSION) && source[1] == RTP_VERSION;
 
 		/// <summary>
 		/// Decodes the header.
@@ -92,13 +92,13 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="hasExtension">If true, has extension.</param>
 		public void DecodeHeader(ReadOnlySpan<byte> source, out ushort sequence, out uint timestamp, out uint ssrc, out bool hasExtension)
 		{
-			if (source.Length < HeaderSize)
+			if (source.Length < HEADER_SIZE)
 				throw new ArgumentException("Header buffer is too short.", nameof(source));
 
-			if ((source[0] != RtpNoExtension && source[0] != RtpExtension) || source[1] != RtpVersion)
+			if ((source[0] != RTP_NO_EXTENSION && source[0] != RTP_EXTENSION) || source[1] != RTP_VERSION)
 				throw new ArgumentException("Invalid RTP header.", nameof(source));
 
-			hasExtension = source[0] == RtpExtension;
+			hasExtension = source[0] == RTP_EXTENSION;
 
 			// Read data big endian
 			sequence = BinaryPrimitives.ReadUInt16BigEndian(source[2..]);
@@ -116,9 +116,9 @@ namespace DisCatSharp.VoiceNext.Codec
 		{
 			return encryptionMode switch
 			{
-				EncryptionMode.XSalsa20_Poly1305 => HeaderSize + encryptedLength,
-				EncryptionMode.XSalsa20_Poly1305_Suffix => HeaderSize + encryptedLength + Interop.SodiumNonceSize,
-				EncryptionMode.XSalsa20_Poly1305_Lite => HeaderSize + encryptedLength + 4,
+				EncryptionMode.XSalsa20_Poly1305 => HEADER_SIZE + encryptedLength,
+				EncryptionMode.XSalsa20_Poly1305_Suffix => HEADER_SIZE + encryptedLength + Interop.SodiumNonceSize,
+				EncryptionMode.XSalsa20_Poly1305_Lite => HEADER_SIZE + encryptedLength + 4,
 				_ => throw new ArgumentException("Unsupported encryption mode.", nameof(encryptionMode)),
 			};
 		}
@@ -134,15 +134,15 @@ namespace DisCatSharp.VoiceNext.Codec
 			switch (encryptionMode)
 			{
 				case EncryptionMode.XSalsa20_Poly1305:
-					data = packet[HeaderSize..];
+					data = packet[HEADER_SIZE..];
 					return;
 
 				case EncryptionMode.XSalsa20_Poly1305_Suffix:
-					data = packet.Slice(HeaderSize, packet.Length - HeaderSize - Interop.SodiumNonceSize);
+					data = packet.Slice(HEADER_SIZE, packet.Length - HEADER_SIZE - Interop.SodiumNonceSize);
 					return;
 
 				case EncryptionMode.XSalsa20_Poly1305_Lite:
-					data = packet.Slice(HeaderSize, packet.Length - HeaderSize - 4);
+					data = packet.Slice(HEADER_SIZE, packet.Length - HEADER_SIZE - 4);
 					break;
 
 				default:

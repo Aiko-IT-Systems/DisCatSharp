@@ -124,7 +124,7 @@ namespace DisCatSharp.Hosting
 		/// <param name="rootName"></param>
 		/// <returns>Dictionary where Key -> Name of implemented type<br/>Value -> <see cref="ExtensionConfigResult"/></returns>
 		public static Dictionary<string, ExtensionConfigResult> FindImplementedExtensions(this IConfiguration configuration,
-			string rootName = Configuration.ConfigurationExtensions.DefaultRootLib)
+			string rootName = Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
 		{
 			if (string.IsNullOrEmpty(rootName))
 				throw new ArgumentNullException(nameof(rootName), "Root name must be provided");

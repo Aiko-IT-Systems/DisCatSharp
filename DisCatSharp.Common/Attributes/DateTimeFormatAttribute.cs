@@ -33,22 +33,22 @@ namespace DisCatSharp.Common.Serialization
 		/// <summary>
 		/// Gets the ISO 8601 format string of "yyyy-MM-ddTHH:mm:ss.fffzzz".
 		/// </summary>
-		public const string FormatISO8601 = "yyyy-MM-ddTHH:mm:ss.fffzzz";
+		public const string FORMAT_ISO_8601 = "yyyy-MM-ddTHH:mm:ss.fffzzz";
 
 		/// <summary>
 		/// Gets the RFC 1123 format string of "R".
 		/// </summary>
-		public const string FormatRFC1123 = "R";
+		public const string FORMAT_RFC_1123 = "R";
 
 		/// <summary>
 		/// Gets the general long format.
 		/// </summary>
-		public const string FormatLong = "G";
+		public const string FORMAT_LONG = "G";
 
 		/// <summary>
 		/// Gets the general short format.
 		/// </summary>
-		public const string FormatShort = "g";
+		public const string FORMAT_SHORT = "g";
 
 		/// <summary>
 		/// Gets the custom datetime format string to use.

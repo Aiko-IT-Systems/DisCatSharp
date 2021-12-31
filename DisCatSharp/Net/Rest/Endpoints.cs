@@ -380,6 +380,6 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// The ephemeral attachments endpoint.
 		/// </summary>
-		public const string EphemeralAttachments = "/ephemeral-attachments";
+		public const string EPHEMERAL_ATTACHMENTS = "/ephemeral-attachments";
 	}
 }

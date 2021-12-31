@@ -34,7 +34,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <summary>
 		/// The sodium library name.
 		/// </summary>
-		private const string SodiumLibraryName = "libsodium";
+		private const string SODIUM_LIBRARY_NAME = "libsodium";
 
 		/// <summary>
 		/// Gets the Sodium key size for xsalsa20_poly1305 algorithm.
@@ -55,7 +55,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// _S the sodium secret box key size.
 		/// </summary>
 		/// <returns>An UIntPtr.</returns>
-		[DllImport(SodiumLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_keybytes")]
+		[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_keybytes")]
 		[return: MarshalAs(UnmanagedType.SysUInt)]
 		private static extern UIntPtr _SodiumSecretBoxKeySize();
 
@@ -63,7 +63,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// _S the sodium secret box nonce size.
 		/// </summary>
 		/// <returns>An UIntPtr.</returns>
-		[DllImport(SodiumLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_noncebytes")]
+		[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_noncebytes")]
 		[return: MarshalAs(UnmanagedType.SysUInt)]
 		private static extern UIntPtr _SodiumSecretBoxNonceSize();
 
@@ -71,7 +71,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// _S the sodium secret box mac size.
 		/// </summary>
 		/// <returns>An UIntPtr.</returns>
-		[DllImport(SodiumLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_macbytes")]
+		[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_macbytes")]
 		[return: MarshalAs(UnmanagedType.SysUInt)]
 		private static extern UIntPtr _SodiumSecretBoxMacSize();
 
@@ -84,7 +84,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="nonce">The nonce.</param>
 		/// <param name="key">The key.</param>
 		/// <returns>An int.</returns>
-		[DllImport(SodiumLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_easy")]
+		[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_easy")]
 		private static unsafe extern int _SodiumSecretBoxCreate(byte* buffer, byte* message, ulong messageLength, byte* nonce, byte* key);
 
 		/// <summary>
@@ -96,7 +96,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="nonce">The nonce.</param>
 		/// <param name="key">The key.</param>
 		/// <returns>An int.</returns>
-		[DllImport(SodiumLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_open_easy")]
+		[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_open_easy")]
 		private static unsafe extern int _SodiumSecretBoxOpen(byte* buffer, byte* encryptedMessage, ulong encryptedLength, byte* nonce, byte* key);
 
 		/// <summary>
@@ -144,7 +144,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <summary>
 		/// The opus library name.
 		/// </summary>
-		private const string OpusLibraryName = "libopus";
+		private const string OPUS_LIBRARY_NAME = "libopus";
 
 		/// <summary>
 		/// _S the opus create encoder.
@@ -154,14 +154,14 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="application">The application.</param>
 		/// <param name="error">The error.</param>
 		/// <returns>An IntPtr.</returns>
-		[DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_create")]
+		[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_create")]
 		private static extern IntPtr _OpusCreateEncoder(int sampleRate, int channels, int application, out OpusError error);
 
 		/// <summary>
 		/// Opuses the destroy encoder.
 		/// </summary>
 		/// <param name="encoder">The encoder.</param>
-		[DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_destroy")]
+		[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_destroy")]
 		public static extern void OpusDestroyEncoder(IntPtr encoder);
 
 		/// <summary>
@@ -173,7 +173,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="data">The data.</param>
 		/// <param name="maxDataBytes">The max data bytes.</param>
 		/// <returns>An int.</returns>
-		[DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encode")]
+		[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encode")]
 		private static unsafe extern int _OpusEncode(IntPtr encoder, byte* pcmData, int frameSize, byte* data, int maxDataBytes);
 
 		/// <summary>
@@ -183,7 +183,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="request">The request.</param>
 		/// <param name="value">The value.</param>
 		/// <returns>An OpusError.</returns>
-		[DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_ctl")]
+		[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_ctl")]
 		private static extern OpusError _OpusEncoderControl(IntPtr encoder, OpusControl request, int value);
 
 		/// <summary>
@@ -193,14 +193,14 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="channels">The channels.</param>
 		/// <param name="error">The error.</param>
 		/// <returns>An IntPtr.</returns>
-		[DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_create")]
+		[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_create")]
 		private static extern IntPtr _OpusCreateDecoder(int sampleRate, int channels, out OpusError error);
 
 		/// <summary>
 		/// Opuses the destroy decoder.
 		/// </summary>
 		/// <param name="decoder">The decoder.</param>
-		[DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_destroy")]
+		[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_destroy")]
 		public static extern void OpusDestroyDecoder(IntPtr decoder);
 
 		/// <summary>
@@ -213,7 +213,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="frameSize">The frame size.</param>
 		/// <param name="decodeFec">The decode fec.</param>
 		/// <returns>An int.</returns>
-		[DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decode")]
+		[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decode")]
 		private static unsafe extern int _OpusDecode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize, int decodeFec);
 
 		/// <summary>
@@ -221,7 +221,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// </summary>
 		/// <param name="opusData">The opus data.</param>
 		/// <returns>An int.</returns>
-		[DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_nb_channels")]
+		[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_nb_channels")]
 		private static unsafe extern int _OpusGetPacketChanelCount(byte* opusData);
 
 		/// <summary>
@@ -230,7 +230,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="opusData">The opus data.</param>
 		/// <param name="length">The length.</param>
 		/// <returns>An int.</returns>
-		[DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_nb_frames")]
+		[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_nb_frames")]
 		private static unsafe extern int _OpusGetPacketFrameCount(byte* opusData, int length);
 
 		/// <summary>
@@ -239,7 +239,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="opusData">The opus data.</param>
 		/// <param name="samplingRate">The sampling rate.</param>
 		/// <returns>An int.</returns>
-		[DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_samples_per_frame")]
+		[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_samples_per_frame")]
 		private static unsafe extern int _OpusGetPacketSamplePerFrameCount(byte* opusData, int samplingRate);
 
 		/// <summary>
@@ -249,7 +249,7 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// <param name="request">The request.</param>
 		/// <param name="value">The value.</param>
 		/// <returns>An int.</returns>
-		[DllImport(OpusLibraryName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_ctl")]
+		[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_ctl")]
 		private static extern int _OpusDecoderControl(IntPtr decoder, OpusControl request, out int value);
 
 		/// <summary>

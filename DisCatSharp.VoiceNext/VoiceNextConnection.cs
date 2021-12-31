@@ -499,7 +499,7 @@ namespace DisCatSharp.VoiceNext
 			var packet = packetArray.AsSpan();
 
 			this.Rtp.EncodeHeader(this.Sequence, this.Timestamp, this.SSRC, packet);
-			var opus = packet.Slice(Rtp.HeaderSize, pcm.Length);
+			var opus = packet.Slice(Rtp.HEADER_SIZE, pcm.Length);
 			this.Opus.Encode(pcm, ref opus);
 
 			this.Sequence++;
@@ -509,7 +509,7 @@ namespace DisCatSharp.VoiceNext
 			switch (this.SelectedEncryptionMode)
 			{
 				case EncryptionMode.XSalsa20_Poly1305:
-					this.Sodium.GenerateNonce(packet[..Rtp.HeaderSize], nonce);
+					this.Sodium.GenerateNonce(packet[..Rtp.HEADER_SIZE], nonce);
 					break;
 
 				case EncryptionMode.XSalsa20_Poly1305_Suffix:
@@ -527,7 +527,7 @@ namespace DisCatSharp.VoiceNext
 
 			Span<byte> encrypted = stackalloc byte[Sodium.CalculateTargetSize(opus)];
 			this.Sodium.Encrypt(opus, encrypted, nonce);
-			encrypted.CopyTo(packet[Rtp.HeaderSize..]);
+			encrypted.CopyTo(packet[Rtp.HEADER_SIZE..]);
 			packet = packet[..this.Rtp.CalculatePacketSize(encrypted.Length, this.SelectedEncryptionMode)];
 			this.Sodium.AppendNonce(nonce, packet, this.SelectedEncryptionMode);
 

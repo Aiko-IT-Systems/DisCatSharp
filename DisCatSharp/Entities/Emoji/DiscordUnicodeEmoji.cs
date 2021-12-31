@@ -27,7 +27,8 @@ namespace DisCatSharp.Entities
 	/// </summary>
 	public class DiscordUnicodeEmoji
 	{
-#pragma warning disable ConstFieldDocumentationHeader // The field must have a documentation header.
+#pragma warning disable ConstFieldDocumentationHeader
+#pragma warning disable IDE1006
 		public const string _1 = "\U0001f44e";
 		public const string _100 = "\U0001f4af";
 		public const string _1234 = "\U0001f522";
@@ -2141,6 +2142,7 @@ namespace DisCatSharp.Entities
 		public const string ZipperMouth = "\U0001f910";
 		public const string ZipperMouthFace = "\U0001f910";
 		public const string Zzz = "\U0001f4a4";
-#pragma warning restore ConstFieldDocumentationHeader // The field must have a documentation header.
+#pragma warning restore IDE1006
+#pragma warning restore ConstFieldDocumentationHeader
 	}
 }

@@ -43,12 +43,12 @@ namespace DisCatSharp.Net.WebSocket
 		/// <summary>
 		/// The outgoing chunk size.
 		/// </summary>
-		private const int OutgoingChunkSize = 8192; // 8 KiB
+		private const int OUTGOING_CHUNK_SIZE = 8192; // 8 KiB
 
 		/// <summary>
 		/// The incoming chunk size.
 		/// </summary>
-		private const int IncomingChunkSize = 32768; // 32 KiB
+		private const int INCOMING_CHUNK_SIZE = 32768; // 32 KiB
 
 		/// <summary>
 		/// Gets the proxy settings for this client.
@@ -215,14 +215,14 @@ namespace DisCatSharp.Net.WebSocket
 			try
 			{
 				var len = bytes.Length;
-				var segCount = len / OutgoingChunkSize;
-				if (len % OutgoingChunkSize != 0)
+				var segCount = len / OUTGOING_CHUNK_SIZE;
+				if (len % OUTGOING_CHUNK_SIZE != 0)
 					segCount++;
 
 				for (var i = 0; i < segCount; i++)
 				{
-					var segStart = OutgoingChunkSize * i;
-					var segLen = Math.Min(OutgoingChunkSize, len - segStart);
+					var segStart = OUTGOING_CHUNK_SIZE * i;
+					var segLen = Math.Min(OUTGOING_CHUNK_SIZE, len - segStart);
 
 					await this._ws.SendAsync(new ArraySegment<byte>(bytes, segStart, segLen), WebSocketMessageType.Text, i == segCount - 1, CancellationToken.None).ConfigureAwait(false);
 				}
@@ -277,7 +277,7 @@ namespace DisCatSharp.Net.WebSocket
 			await Task.Yield();
 
 			var token = this._receiverToken;
-			var buffer = new ArraySegment<byte>(new byte[IncomingChunkSize]);
+			var buffer = new ArraySegment<byte>(new byte[INCOMING_CHUNK_SIZE]);
 
 			try
 			{

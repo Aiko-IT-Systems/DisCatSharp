@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project, based of DSharpPlus.
+// This file is part of the DisCatSharp project, based of DSharpPlus.
 //
 // Copyright (c) 2021 AITSYS
 //
@@ -35,12 +35,12 @@ namespace DisCatSharp.Common.Serialization
 		/// <para>Gets the maximum safe value representable as an integer by a IEEE754 64-bit binary floating point value.</para>
 		/// <para>This value equals to 9007199254740991.</para>
 		/// </summary>
-		public const long MaxValue = (1L << 53) - 1;
+		public const long MAX_VALUE = (1L << 53) - 1;
 
 		/// <summary>
 		/// <para>Gets the minimum safe value representable as an integer by a IEEE754 64-bit binary floating point value.</para>
 		/// <para>This value equals to -9007199254740991.</para>
 		/// </summary>
-		public const long MinValue = -MaxValue;
+		public const long MIN_VALUE = -MAX_VALUE;
 	}
 }

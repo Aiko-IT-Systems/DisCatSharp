@@ -30,7 +30,7 @@ namespace DisCatSharp.Hosting
 		/// <summary>
 		/// Gets the lib name.
 		/// </summary>
-		public static string LibName => Configuration.ConfigurationExtensions.DefaultRootLib;
+		public static string LibName => Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB;
 		/// <summary>
 		/// Gets the config suffix.
 		/// </summary>

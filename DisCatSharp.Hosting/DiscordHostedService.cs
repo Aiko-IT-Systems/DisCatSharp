@@ -50,7 +50,7 @@ namespace DisCatSharp.Hosting
 			ILogger<DiscordHostedService> logger,
 			IServiceProvider serviceProvider,
 			IHostApplicationLifetime applicationLifetime,
-			string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
+			string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
 			: base(config, logger, serviceProvider, applicationLifetime, configBotSection)
 		{
 
