@@ -187,7 +187,7 @@ namespace DisCatSharp.Entities
 
 	/// <summary>
 	/// Represents an optional json contract resolver.
-	/// <seealso cref="DiscordJson._serializer"/>
+	/// <seealso cref="DiscordJson.s_serializer"/>
 	/// </summary>
 	internal sealed class OptionalJsonContractResolver : DefaultContractResolver
 	{

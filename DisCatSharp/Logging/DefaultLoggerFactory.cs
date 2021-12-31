@@ -34,7 +34,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the providers.
 		/// </summary>
-		private readonly List<ILoggerProvider> _providers = new List<ILoggerProvider>();
+		private readonly List<ILoggerProvider> _providers = new();
 		private bool _isDisposed = false;
 
 		/// <summary>

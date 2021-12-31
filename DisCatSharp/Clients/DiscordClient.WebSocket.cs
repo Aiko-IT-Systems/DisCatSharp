@@ -70,7 +70,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the session lock.
 		/// </summary>
-		private readonly ManualResetEventSlim _sessionLock  = new ManualResetEventSlim(true);
+		private readonly ManualResetEventSlim _sessionLock  = new(true);
 
 		#endregion
 

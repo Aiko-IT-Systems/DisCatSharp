@@ -62,7 +62,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the connection lock.
 		/// </summary>
-		private readonly ManualResetEventSlim _connectionLock = new ManualResetEventSlim(true);
+		private readonly ManualResetEventSlim _connectionLock = new(true);
 
 		#endregion
 

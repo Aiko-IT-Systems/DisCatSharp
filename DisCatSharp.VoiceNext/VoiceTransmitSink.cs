@@ -39,8 +39,7 @@ namespace DisCatSharp.VoiceNext
 		/// <summary>
 		/// Gets the PCM sample duration for this sink.
 		/// </summary>
-		public int SampleDuration
-			=> this._pcmBufferDuration;
+		public int SampleDuration { get; }
 
 		/// <summary>
 		/// Gets the length of the PCM buffer for this sink.
@@ -69,11 +68,6 @@ namespace DisCatSharp.VoiceNext
 		/// Gets the connection.
 		/// </summary>
 		private readonly VoiceNextConnection _connection;
-
-		/// <summary>
-		/// Gets the pcm buffer duration.
-		/// </summary>
-		private readonly int _pcmBufferDuration;
 
 		/// <summary>
 		/// Gets the pcm buffer.
@@ -108,7 +102,7 @@ namespace DisCatSharp.VoiceNext
 		internal VoiceTransmitSink(VoiceNextConnection vnc, int pcmBufferDuration)
 		{
 			this._connection = vnc;
-			this._pcmBufferDuration = pcmBufferDuration;
+			this.SampleDuration = pcmBufferDuration;
 			this._pcmBuffer = new byte[vnc.AudioFormat.CalculateSampleSize(pcmBufferDuration)];
 			this._pcmMemory = this._pcmBuffer.AsMemory();
 			this._pcmBufferLength = 0;
@@ -162,7 +156,7 @@ namespace DisCatSharp.VoiceNext
 						var packetMemory = packet.AsMemory()[..this._pcmMemory.Length];
 						this._pcmMemory.CopyTo(packetMemory);
 
-						await this._connection.EnqueuePacketAsync(new RawVoicePacket(packetMemory, this._pcmBufferDuration, false, packet), cancellationToken).ConfigureAwait(false);
+						await this._connection.EnqueuePacketAsync(new RawVoicePacket(packetMemory, this.SampleDuration, false, packet), cancellationToken).ConfigureAwait(false);
 					}
 				}
 			}
@@ -187,7 +181,7 @@ namespace DisCatSharp.VoiceNext
 			var packetMemory = packet.AsMemory()[..pcm.Length];
 			pcm.CopyTo(packetMemory);
 
-			await this._connection.EnqueuePacketAsync(new RawVoicePacket(packetMemory, this._pcmBufferDuration, false, packet), cancellationToken).ConfigureAwait(false);
+			await this._connection.EnqueuePacketAsync(new RawVoicePacket(packetMemory, this.SampleDuration, false, packet), cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>

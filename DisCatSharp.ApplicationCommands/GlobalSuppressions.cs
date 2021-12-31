@@ -22,7 +22,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._registeredCommands")]
+[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.s_registeredCommands")]
 [assembly: SuppressMessage("Style", "IDE0018:Inline variable declaration", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.ApplicationCommands.RegistrationWorker.BuildGuildCreateList(System.UInt64,System.Collections.Generic.List{DisCatSharp.Entities.DiscordApplicationCommand})~System.Collections.Generic.List{DisCatSharp.Entities.DiscordApplicationCommand}")]
 [assembly: SuppressMessage("Style", "IDE0018:Inline variable declaration", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.ApplicationCommands.RegistrationWorker.BuildGuildOverwriteList(System.UInt64,System.Collections.Generic.List{DisCatSharp.Entities.DiscordApplicationCommand})~System.Collections.Generic.Dictionary{System.UInt64,DisCatSharp.Entities.DiscordApplicationCommand}")]
 [assembly: SuppressMessage("Style", "IDE0018:Inline variable declaration", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.ApplicationCommands.RegistrationWorker.BuildGuildDeleteList(System.UInt64,System.Collections.Generic.List{DisCatSharp.Entities.DiscordApplicationCommand})~System.Collections.Generic.List{System.UInt64}")]

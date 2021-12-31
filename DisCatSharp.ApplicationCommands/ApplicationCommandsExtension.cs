@@ -83,7 +83,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// List of modules to register.
 		/// </summary>
-		private List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>> _updateList = new List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>>();
+		private readonly List<KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>> _updateList = new();
 
 		/// <summary>
 		/// Configuration for Discord.
@@ -104,8 +104,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// Gets a list of registered commands. The key is the guild id (null if global).
 		/// </summary>
 		public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> RegisteredCommands
-			=> _registeredCommands;
-		private static readonly List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> _registeredCommands = new();
+			=> s_registeredCommands;
+		private static readonly List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
 
 		/// <summary>
 		/// Gets a list of registered global commands.
@@ -637,7 +637,7 @@ namespace DisCatSharp.ApplicationCommands
 						s_subGroupCommands.AddRange(subGroupCommands);
 						s_contextMenuCommands.AddRange(contextMenuCommands);
 
-						_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildid, commands.ToList()));
+						s_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildid, commands.ToList()));
 
 						foreach (var command in commandMethods)
 						{
@@ -1381,7 +1381,7 @@ namespace DisCatSharp.ApplicationCommands
 			s_commandMethods.Clear();
 			s_groupCommands.Clear();
 			s_subGroupCommands.Clear();
-			_registeredCommands.Clear();
+			s_registeredCommands.Clear();
 			s_contextMenuCommands.Clear();
 			GlobalDiscordCommands.Clear();
 			GuildDiscordCommands.Clear();

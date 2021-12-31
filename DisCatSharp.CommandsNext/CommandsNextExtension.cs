@@ -423,7 +423,7 @@ namespace DisCatSharp.CommandsNext
 		/// <summary>
 		/// Gets or sets the top level commands.
 		/// </summary>
-		private Dictionary<string, Command> _topLevelCommands;
+		private readonly Dictionary<string, Command> _topLevelCommands;
 		private readonly Lazy<IReadOnlyDictionary<string, Command>> _registeredCommandsLazy;
 
 		/// <summary>
