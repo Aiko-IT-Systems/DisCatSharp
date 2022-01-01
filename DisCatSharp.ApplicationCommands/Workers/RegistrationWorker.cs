@@ -51,11 +51,17 @@ namespace DisCatSharp.ApplicationCommands
 
 			if (globalCommandsCreateList.NotEmptyAndNotNull() && globalCommandsOverwriteList.EmptyOrNull())
 			{
+				if (ApplicationCommandsExtension.s_debugEnabled)
+					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GLOBAL] Creating all application commands.");
+
 				var cmds = await ApplicationCommandsExtension.ClientInternal.BulkOverwriteGlobalApplicationCommandsAsync(globalCommandsCreateList);
 				commands.AddRange(cmds);
 			}
 			else if (globalCommandsCreateList.EmptyOrNull() && globalCommandsOverwriteList.NotEmptyAndNotNull())
 			{
+				if (ApplicationCommandsExtension.s_debugEnabled)
+					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GLOBAL] Overwriting all application commands.");
+
 				List<DiscordApplicationCommand> overwriteList = new();
 				foreach (var overwrite in globalCommandsOverwriteList)
 				{
@@ -68,6 +74,9 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (globalCommandsCreateList.NotEmptyAndNotNull() && globalCommandsOverwriteList.NotEmptyAndNotNull())
 			{
+				if (ApplicationCommandsExtension.s_debugEnabled)
+					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GLOBAL] Creating and overwriting application commands.");
+
 				foreach (var cmd in globalCommandsCreateList)
 				{
 					var discordBackendCommand = await ApplicationCommandsExtension.ClientInternal.CreateGlobalApplicationCommandAsync(cmd);
@@ -94,6 +103,9 @@ namespace DisCatSharp.ApplicationCommands
 
 			if (globalCommandsDeleteList.NotEmptyAndNotNull())
 			{
+				if (ApplicationCommandsExtension.s_debugEnabled)
+					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GLOBAL] Deleting missing application commands.");
+
 				foreach (var cmdId in globalCommandsDeleteList)
 				{
 					try
@@ -124,11 +136,17 @@ namespace DisCatSharp.ApplicationCommands
 
 			if (guildCommandsCreateList.NotEmptyAndNotNull() && guildCommandsOverwriteList.EmptyOrNull())
 			{
+				if (ApplicationCommandsExtension.s_debugEnabled)
+					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GUILD] Creating all application commands. Guild ID: {guildId}");
+
 				var cmds = await ApplicationCommandsExtension.ClientInternal.BulkOverwriteGuildApplicationCommandsAsync(guildId, guildCommandsCreateList);
 				commands.AddRange(cmds);
 			}
 			else if (guildCommandsCreateList.EmptyOrNull() && guildCommandsOverwriteList.NotEmptyAndNotNull())
 			{
+				if (ApplicationCommandsExtension.s_debugEnabled)
+					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GUILD] Overwriting all application commands. Guild ID: {guildId}");
+
 				List<DiscordApplicationCommand> overwriteList = new();
 				foreach (var overwrite in guildCommandsOverwriteList)
 				{
@@ -141,6 +159,8 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (guildCommandsCreateList.NotEmptyAndNotNull() && guildCommandsOverwriteList.NotEmptyAndNotNull())
 			{
+				if (ApplicationCommandsExtension.s_debugEnabled)
+					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GUILD] Creating and overwriting application commands. Guild ID: {guildId}");
 				foreach (var cmd in guildCommandsCreateList)
 				{
 					var discordBackendCommand = await ApplicationCommandsExtension.ClientInternal.CreateGuildApplicationCommandAsync(guildId, cmd);
@@ -169,6 +189,8 @@ namespace DisCatSharp.ApplicationCommands
 			{
 				foreach (var cmdId in guildCommandsDeleteList)
 				{
+					if (ApplicationCommandsExtension.s_debugEnabled)
+						ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GUILD] Deleting missing application commands. Guild ID: {guildId}");
 					try
 					{
 						await ApplicationCommandsExtension.ClientInternal.DeleteGuildApplicationCommandAsync(guildId, cmdId);

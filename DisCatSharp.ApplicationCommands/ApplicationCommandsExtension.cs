@@ -142,7 +142,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Gets whether debug is enabled.
 		/// </summary>
-		private static bool s_debugEnabled { get; set; }
+		internal static bool s_debugEnabled { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
