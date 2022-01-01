@@ -58,17 +58,17 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Waits async.
+		/// Waits the async waiter.
 		/// </summary>
 		public Task WaitAsync() => this._tsc.Task;
 
 		/// <summary>
-		/// Sets async.
+		/// Sets the async task.
 		/// </summary>
 		public Task SetAsync() => Task.Run(() => this._tsc.TrySetResult(true));
 
 		/// <summary>
-		/// Resets.
+		/// Resets the async waiter.
 		/// </summary>
 		public void Reset()
 		{
