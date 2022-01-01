@@ -52,20 +52,25 @@ namespace DisCatSharp.Entities
 			this._stickersLazy = new Lazy<IReadOnlyList<DiscordSticker>>(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
 			this._jumpLink = new Lazy<Uri>(() =>
 			{
-				var gid = this.Channel != null
-					? this.Channel is DiscordDmChannel ? "@me" : this.Channel.GuildId.Value.ToString(CultureInfo.InvariantCulture)
-					: this.INTERNAL_THREAD.GuildId.Value.ToString(CultureInfo.InvariantCulture);
+				string gid = null;
+				if (this.Channel != null)
+					gid = this.Channel is DiscordDmChannel
+						? "@me"
+						: this.Channel is DiscordThreadChannel
+						? this.INTERNAL_THREAD.GuildId.Value.ToString(CultureInfo.InvariantCulture)
+						: this.Channel.GuildId.Value.ToString(CultureInfo.InvariantCulture);
+
 				var cid = this.ChannelId.ToString(CultureInfo.InvariantCulture);
 				var mid = this.Id.ToString(CultureInfo.InvariantCulture);
 
-				return new Uri($"https://{(this.Discord.Configuration.UseCanary ? "canary.discord.com" : "discord.com")}/channels/{gid}/{cid}/{mid}");
+				return new Uri($"https://{(this.Discord.Configuration.UseCanary ? "canary.discord.com" : this.Discord.Configuration.UsePtb ? "ptb.discord.com" : "discord.com")}/channels/{gid}/{cid}/{mid}");
 			});
 		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordMessage"/> class.
 		/// </summary>
-		/// <param name="other">The other.</param>
+		/// <param name="other">The other message.</param>
 		internal DiscordMessage(DiscordMessage other)
 			: this()
 		{
@@ -125,7 +130,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
 		public ulong ChannelId { get; internal set; }
-
 
 		/// <summary>
 		/// Gets the components this message was sent with.
@@ -204,7 +208,7 @@ namespace DisCatSharp.Entities
 		[JsonIgnore]
 		internal readonly Lazy<IReadOnlyList<DiscordUser>> MentionedUsersLazy;
 
-		// TODO this will probably throw an exception in DMs since it tries to wrap around a null List...
+		// TODO: this will probably throw an exception in DMs since it tries to wrap around a null List...
 		// this is probably low priority but need to find out a clean way to solve it...
 		/// <summary>
 		/// Gets roles mentioned by this message.
@@ -270,13 +274,12 @@ namespace DisCatSharp.Entities
 		[JsonIgnore]
 		private readonly Lazy<IReadOnlyList<DiscordReaction>> _reactionsLazy;
 
-		/*
         /// <summary>
         /// Gets the nonce sent with the message, if the message was sent by the client.
         /// </summary>
         [JsonProperty("nonce", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong? Nonce { get; internal set; }
-        */
+        public string Nonce { get; internal set; }
+
 
 		/// <summary>
 		/// Gets whether the message is pinned.
@@ -313,7 +316,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonProperty("application_id", NullValueHandling = NullValueHandling.Ignore)]
 		public ulong ApplicationId { get; internal set; }
-
 
 		/// <summary>
 		/// Gets the internal reference.
@@ -449,7 +451,7 @@ namespace DisCatSharp.Entities
 			var mentions = new List<IMention>();
 
 			if (this.ReferencedMessage != null && this.MentionedUsersInternal.Contains(this.ReferencedMessage.Author))
-				mentions.Add(new RepliedUserMention()); // Return null to allow all mentions
+				mentions.Add(new RepliedUserMention());
 
 			if (this.MentionedUsersInternal.Any())
 				mentions.AddRange(this.MentionedUsersInternal.Select(m => (IMention)new UserMention(m)));
@@ -505,7 +507,6 @@ namespace DisCatSharp.Entities
 		/// Edits the message.
 		/// </summary>
 		/// <param name="content">New content.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -517,7 +518,6 @@ namespace DisCatSharp.Entities
 		/// Edits the message.
 		/// </summary>
 		/// <param name="embed">New embed.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -530,7 +530,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="content">New content.</param>
 		/// <param name="embed">New embed.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -543,7 +542,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="content">New content.</param>
 		/// <param name="embeds">New embeds.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -555,7 +553,6 @@ namespace DisCatSharp.Entities
 		/// Edits the message.
 		/// </summary>
 		/// <param name="builder">The builder of the message to edit.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -570,7 +567,6 @@ namespace DisCatSharp.Entities
 		/// Edits the message embed suppression.
 		/// </summary>
 		/// <param name="suppress">Suppress embeds.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -589,7 +585,6 @@ namespace DisCatSharp.Entities
 		/// Edits the message.
 		/// </summary>
 		/// <param name="action">The builder of the message to edit.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client tried to modify a message not sent by them.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -605,7 +600,6 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Deletes the message.
 		/// </summary>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -621,7 +615,6 @@ namespace DisCatSharp.Entities
 		/// <param name="autoArchiveDuration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/></param>
 		/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePrivateThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -635,7 +628,6 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Pins the message in its channel.
 		/// </summary>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -646,7 +638,6 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Unpins the message in its channel.
 		/// </summary>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -723,7 +714,6 @@ namespace DisCatSharp.Entities
 		/// Creates a reaction to this message.
 		/// </summary>
 		/// <param name="emoji">The emoji you want to react with, either an emoji or name:id</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AddReactions"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -735,7 +725,6 @@ namespace DisCatSharp.Entities
 		/// Deletes your own reaction
 		/// </summary>
 		/// <param name="emoji">Emoji for the reaction you want to remove, either an emoji or name:id</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -748,7 +737,6 @@ namespace DisCatSharp.Entities
 		/// <param name="emoji">Emoji for the reaction you want to remove, either an emoji or name:id.</param>
 		/// <param name="user">Member you want to remove the reaction for</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -762,7 +750,6 @@ namespace DisCatSharp.Entities
 		/// <param name="emoji">Emoji to react with.</param>
 		/// <param name="limit">Limit of users to fetch.</param>
 		/// <param name="after">Fetch users after this user's id.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -773,7 +760,6 @@ namespace DisCatSharp.Entities
 		/// Deletes all reactions for this message.
 		/// </summary>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -785,7 +771,6 @@ namespace DisCatSharp.Entities
 		/// Deletes all reactions of a specific reaction for this message.
 		/// </summary>
 		/// <param name="emoji">The emoji to clear, either an emoji or name:id.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -831,21 +816,24 @@ namespace DisCatSharp.Entities
 		/// Returns a string representation of this message.
 		/// </summary>
 		/// <returns>String representation of this message.</returns>
-		public override string ToString() => $"Message {this.Id}; Attachment count: {this.AttachmentsInternal.Count}; Embed count: {this.EmbedsInternal.Count}; Contents: {this.Content}";
+		public override string ToString()
+			=> $"Message {this.Id}; Attachment count: {this.AttachmentsInternal.Count}; Embed count: {this.EmbedsInternal.Count}; Contents: {this.Content}";
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordMessage"/> is equal to another object.
 		/// </summary>
 		/// <param name="obj">Object to compare to.</param>
 		/// <returns>Whether the object is equal to this <see cref="DiscordMessage"/>.</returns>
-		public override bool Equals(object obj) => this.Equals(obj as DiscordMessage);
+		public override bool Equals(object obj)
+			=> this.Equals(obj as DiscordMessage);
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordMessage"/> is equal to another <see cref="DiscordMessage"/>.
 		/// </summary>
 		/// <param name="e"><see cref="DiscordMessage"/> to compare to.</param>
 		/// <returns>Whether the <see cref="DiscordMessage"/> is equal to this <see cref="DiscordMessage"/>.</returns>
-		public bool Equals(DiscordMessage e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.ChannelId == e.ChannelId));
+		public bool Equals(DiscordMessage e)
+			=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.ChannelId == e.ChannelId));
 
 		/// <summary>
 		/// Gets the hash code for this <see cref="DiscordMessage"/>.
@@ -872,7 +860,9 @@ namespace DisCatSharp.Entities
 			var o1 = e1 as object;
 			var o2 = e2 as object;
 
-			return (o1 != null || o2 == null) && (o1 == null || o2 != null) && ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.ChannelId == e2.ChannelId));
+			return (o1 != null || o2 == null)
+				&& (o1 == null || o2 != null)
+				&& ((o1 == null && o2 == null) || (e1.Id == e2.Id && e1.ChannelId == e2.ChannelId));
 		}
 
 		/// <summary>

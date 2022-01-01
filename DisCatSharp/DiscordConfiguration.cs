@@ -202,10 +202,16 @@ namespace DisCatSharp
 		public bool MobileStatus { internal get; set; }
 
 		/// <summary>
-		/// <para>Use canary.</para>
+		/// <para>Whether to use canary. <see cref="UsePtb"/> has to be false.</para>
 		/// <para>Defaults to false.</para>
 		/// </summary>
 		public bool UseCanary { internal get; set; }
+
+		/// <summary>
+		/// <para>Whether to use ptb. <see cref="UseCanary"/> has to be false.</para>
+		/// <para>Defaults to false.</para>
+		/// </summary>
+		public bool UsePtb { internal get; set; }
 
 		/// <summary>
 		/// <para>Refresh full guild channel cache.</para>
@@ -268,6 +274,7 @@ namespace DisCatSharp
 			this.LoggerFactory = other.LoggerFactory;
 			this.MobileStatus = other.MobileStatus;
 			this.UseCanary = other.UseCanary;
+			this.UsePtb = other.UsePtb;
 			this.AutoRefreshChannelCache = other.AutoRefreshChannelCache;
 			this.ApiVersion = other.ApiVersion;
 			this.ServiceProvider = other.ServiceProvider;
