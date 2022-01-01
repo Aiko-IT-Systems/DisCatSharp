@@ -96,5 +96,12 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonProperty("is_dirty", NullValueHandling = NullValueHandling.Ignore)]
 		public bool? IsDirty { get; internal set; }
+
+		/// <summary>
+		/// Gets whether the template has unsynced changes.
+		/// </summary>
+		/// <remarks><see cref="IsDirty"/></remarks>
+		[JsonIgnore]
+		public bool? IsUnsynced => this.IsDirty;
 	}
 }
