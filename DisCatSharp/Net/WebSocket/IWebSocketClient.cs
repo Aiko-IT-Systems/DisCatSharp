@@ -67,10 +67,8 @@ namespace DisCatSharp.Net.WebSocket
 		/// <summary>
 		/// Disconnects the WebSocket connection.
 		/// </summary>
-		/// <param name="code">The code</param>
-		/// <param name="message">The message</param>
-		/// <created>Lala Sabathil,06.07.2021</created>
-		/// <changed>Lala Sabathil,06.07.2021</changed>
+		/// <param name="code">The code.</param>
+		/// <param name="message">The message.</param>
 		Task DisconnectAsync(int code = 1000, string message = "");
 
 		/// <summary>

@@ -47,7 +47,6 @@ namespace DisCatSharp
 
 		private int _heartbeatInterval;
 		private DateTimeOffset _lastHeartbeat;
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>")]
 		private Task _heartbeatTask;
 
 		internal static DateTimeOffset DiscordEpoch = new(2015, 1, 1, 0, 0, 0, TimeSpan.Zero);
@@ -80,12 +79,11 @@ namespace DisCatSharp
 		#region Internal Connection Methods
 
 		/// <summary>
-		/// Internals the reconnect async.
+		/// Reconnects the websocket client.
 		/// </summary>
-		/// <param name="startNewSession">If true, start new session.</param>
-		/// <param name="code">The code.</param>
-		/// <param name="message">The message.</param>
-		/// <returns>A Task.</returns>
+		/// <param name="startNewSession">Whether to start a new session.</param>
+		/// <param name="code">The reconnect code.</param>
+		/// <param name="message">The reconnect message.</param>
 		private Task InternalReconnectAsync(bool startNewSession = false, int code = 1000, string message = "")
 		{
 			if (startNewSession)
@@ -96,9 +94,8 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Internals the connect async.
+		/// Connects the websocket client.
 		/// </summary>
-		/// <returns>A Task.</returns>
 		internal async Task InternalConnectAsync()
 		{
 			SocketLock socketLock = null;
@@ -242,10 +239,9 @@ namespace DisCatSharp
 		#region WebSocket (Events)
 
 		/// <summary>
-		/// Handles the socket message async.
+		/// Handles the socket message.
 		/// </summary>
 		/// <param name="data">The data.</param>
-		/// <returns>A Task.</returns>
 		internal async Task HandleSocketMessageAsync(string data)
 		{
 			var payload = JsonConvert.DeserializeObject<GatewayPayload>(data);
@@ -283,10 +279,9 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Ons the heartbeat async.
+		/// Handles the heartbeat.
 		/// </summary>
-		/// <param name="seq">The seq.</param>
-		/// <returns>A Task.</returns>
+		/// <param name="seq">The sequence.</param>
 		internal async Task OnHeartbeatAsync(long seq)
 		{
 			this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received HEARTBEAT (OP1)");
@@ -294,9 +289,8 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Ons the reconnect async.
+		/// Handles the reconnect event.
 		/// </summary>
-		/// <returns>A Task.</returns>
 		internal async Task OnReconnectAsync()
 		{
 			this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received RECONNECT (OP7)");
@@ -304,10 +298,9 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Ons the invalidate session async.
+		/// Handles the invalidate session event
 		/// </summary>
-		/// <param name="data">If true, data.</param>
-		/// <returns>A Task.</returns>
+		/// <param name="data">Unknown. Please fill documentation.</param>
 		internal async Task OnInvalidateSessionAsync(bool data)
 		{
 			// begin a session if one is not open already
@@ -334,10 +327,9 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Ons the hello async.
+		/// Handles the hello event.
 		/// </summary>
-		/// <param name="hello">The hello.</param>
-		/// <returns>A Task.</returns>
+		/// <param name="hello">The gateway hello payload.</param>
 		internal async Task OnHelloAsync(GatewayHello hello)
 		{
 			this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received HELLO (OP10)");
@@ -364,9 +356,8 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Ons the heartbeat ack async.
+		/// Handles the heartbeat acknowledge event.
 		/// </summary>
-		/// <returns>A Task.</returns>
 		internal async Task OnHeartbeatAckAsync()
 		{
 			Interlocked.Decrement(ref this._skippedHeartbeats);
@@ -387,9 +378,8 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Heartbeats the loop async.
+		/// Handles the heartbeat loop.
 		/// </summary>
-		/// <returns>A Task.</returns>
 		internal async Task HeartbeatLoopAsync()
 		{
 			this.Logger.LogDebug(LoggerEvents.Heartbeat, "Heartbeat task started");
@@ -411,12 +401,11 @@ namespace DisCatSharp
 		#region Internal Gateway Methods
 
 		/// <summary>
-		/// Internals the update status async.
+		/// Updates the status.
 		/// </summary>
 		/// <param name="activity">The activity.</param>
-		/// <param name="userStatus">The user status.</param>
-		/// <param name="idleSince">The idle since.</param>
-		/// <returns>A Task.</returns>
+		/// <param name="userStatus">The optional user status.</param>
+		/// <param name="idleSince">Since when is the client performing the specified activity.</param>
 		internal async Task InternalUpdateStatusAsync(DiscordActivity activity, UserStatus? userStatus, DateTimeOffset? idleSince)
 		{
 			if (activity != null && activity.Name != null && activity.Name.Length > 128)
@@ -464,10 +453,9 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Sends the heartbeat async.
+		/// Sends the heartbeat.
 		/// </summary>
-		/// <param name="seq">The seq.</param>
-		/// <returns>A Task.</returns>
+		/// <param name="seq">The sequenze.</param>
 		internal async Task SendHeartbeatAsync(long seq)
 		{
 			var moreThan5 = Volatile.Read(ref this._skippedHeartbeats) > 5;
@@ -514,10 +502,9 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Sends the identify async.
+		/// Sends the identify payload.
 		/// </summary>
-		/// <param name="status">The status.</param>
-		/// <returns>A Task.</returns>
+		/// <param name="status">The status update payload.</param>
 		internal async Task SendIdentifyAsync(StatusUpdate status)
 		{
 			var identify = new GatewayIdentify
@@ -546,9 +533,8 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Sends the resume async.
+		/// Sends the resume payload.
 		/// </summary>
-		/// <returns>A Task.</returns>
 		internal async Task SendResumeAsync()
 		{
 			var resume = new GatewayResume
@@ -578,10 +564,9 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Ws the send async.
+		/// Sends a websocket message.
 		/// </summary>
-		/// <param name="payload">The payload.</param>
-		/// <returns>A Task.</returns>
+		/// <param name="payload">The payload to send.</param>
 		internal async Task WsSendAsync(string payload)
 		{
 			this.Logger.LogTrace(LoggerEvents.GatewayWsTx, payload);
@@ -595,7 +580,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the socket lock.
 		/// </summary>
-		/// <returns>A SocketLock.</returns>
+		/// <returns>The added socket lock.</returns>
 		private SocketLock GetSocketLock()
 			=> s_socketLocks.GetOrAdd(this.CurrentApplication.Id, appId => new SocketLock(appId, this.GatewayInfo.SessionBucket.MaxConcurrency));
 

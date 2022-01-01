@@ -35,3 +35,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0150:Prefer 'null' check over type check", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.DiscordClient.OnPresenceUpdateEventAsync(Newtonsoft.Json.Linq.JObject,Newtonsoft.Json.Linq.JObject)~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.Internals.s_permissionStrings")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.Internals.s_versionHeader")]
+[assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.DiscordClient._heartbeatTask")]
