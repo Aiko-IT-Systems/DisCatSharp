@@ -29,7 +29,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 	/// Defines that a command is only usable within a community-enabled guild.
 	/// </summary>
 	/// 
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 	public sealed class RequireCommunityAttribute : CheckBaseAttribute
 	{
 		/// <summary>

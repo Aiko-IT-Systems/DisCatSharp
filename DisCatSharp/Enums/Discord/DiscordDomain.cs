@@ -229,7 +229,7 @@ namespace DisCatSharp.Enums
 	/// <summary>
 	/// Defines a description and url for this domain.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.All)]
 	public class DomainHelpAttribute : Attribute
 	{
 		/// <summary>

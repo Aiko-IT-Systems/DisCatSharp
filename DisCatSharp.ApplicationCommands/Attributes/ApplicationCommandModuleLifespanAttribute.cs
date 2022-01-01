@@ -28,7 +28,7 @@ namespace DisCatSharp.ApplicationCommands
 	/// <summary>
 	/// Defines this application command module's lifespan. Module lifespans are transient by default.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Class)]
 	public class ApplicationCommandModuleLifespanAttribute : Attribute
 	{
 		/// <summary>

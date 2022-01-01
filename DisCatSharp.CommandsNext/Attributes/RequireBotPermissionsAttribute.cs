@@ -28,7 +28,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 	/// <summary>
 	/// Defines that usage of this command is only possible when the bot is granted a specific permission.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 	public sealed class RequireBotPermissionsAttribute : CheckBaseAttribute
 	{
 		/// <summary>

@@ -28,7 +28,7 @@ namespace DisCatSharp.Common.Serialization
 	/// <summary>
 	/// Defines the format for string-serialized <see cref="System.TimeSpan"/> objects.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public sealed class TimeSpanFormatAttribute : SerializationAttribute
 	{
 		/// <summary>

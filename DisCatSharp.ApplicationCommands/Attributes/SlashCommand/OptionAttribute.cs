@@ -27,7 +27,7 @@ namespace DisCatSharp.ApplicationCommands
 	/// <summary>
 	/// Marks this parameter as an option for a slash command
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Parameter)]
 	public class OptionAttribute : Attribute
 	{
 		/// <summary>

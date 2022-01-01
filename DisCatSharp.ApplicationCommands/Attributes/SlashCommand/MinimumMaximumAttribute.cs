@@ -27,7 +27,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 	/// <summary>
 	/// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Parameter)]
 	public class MinimumAttribute : Attribute
 	{
 		/// <summary>
@@ -63,7 +63,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 	/// <summary>
 	/// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Parameter)]
 	public class MaximumAttribute : Attribute
 	{
 		/// <summary>

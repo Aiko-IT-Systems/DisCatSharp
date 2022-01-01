@@ -29,7 +29,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 	/// <summary>
 	/// Defines that this application command is restricted to the owner of the bot.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 	public sealed class ApplicationCommandRequireOwnerAttribute : SlashCheckBaseAttribute
 	{
 		/// <summary>

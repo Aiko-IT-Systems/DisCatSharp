@@ -343,7 +343,7 @@ namespace DisCatSharp
 	/// <summary>
 	/// Defines a readable name for this permission.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Field)]
 	public sealed class PermissionStringAttribute : Attribute
 	{
 		/// <summary>

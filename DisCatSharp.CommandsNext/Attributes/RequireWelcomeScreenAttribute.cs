@@ -28,7 +28,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 	/// <summary>
 	/// Defines that a command is only usable within a guild which has enabled the welcome screen.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 	public sealed class RequireWelcomeScreenAttribute : CheckBaseAttribute
 	{
 		/// <summary>

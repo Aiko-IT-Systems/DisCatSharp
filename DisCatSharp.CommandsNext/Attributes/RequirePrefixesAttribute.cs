@@ -29,7 +29,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 	/// <summary>
 	/// Defines that usage of this command is only allowed with specific prefixes.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
 	public sealed class RequirePrefixesAttribute : CheckBaseAttribute
 	{
 		/// <summary>

@@ -28,7 +28,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 	/// <summary>
 	/// Defines allowed channel types for a channel parameter.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Parameter)]
 	public class ChannelTypesAttribute : Attribute
 	{
 		/// <summary>
