@@ -118,13 +118,14 @@ namespace DisCatSharp.Net
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RestClient"/> class.
+		/// This is for meta-clients, such as the webhook client.
 		/// </summary>
 		/// <param name="proxy">The proxy.</param>
 		/// <param name="timeout">The timeout.</param>
-		/// <param name="useRelativeRatelimit">If true, use relative ratelimit.</param>
+		/// <param name="useRelativeRatelimit">Whether to use relative ratelimit.</param>
 		/// <param name="logger">The logger.</param>
 		internal RestClient(IWebProxy proxy, TimeSpan timeout, bool useRelativeRatelimit,
-			ILogger logger) // This is for meta-clients, such as the webhook client
+			ILogger logger) 
 		{
 			this._logger = logger;
 
@@ -157,7 +158,7 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Gets a bucket.
+		/// Gets a ratelimit bucket.
 		/// </summary>
 		/// <param name="method">The method.</param>
 		/// <param name="route">The route.</param>
@@ -232,14 +233,14 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Executes the request async.
+		/// Executes the request.
 		/// </summary>
 		/// <param name="request">The request to be executed.</param>
 		public Task ExecuteRequestAsync(BaseRestRequest request)
 			=> request == null ? throw new ArgumentNullException(nameof(request)) : this.ExecuteRequestAsync(request, null, null);
 
 		/// <summary>
-		/// Executes the request async.
+		/// Executes the request.
 		/// This is to allow proper rescheduling of the first request from a bucket.
 		/// </summary>
 		/// <param name="request">The request to be executed.</param>
@@ -443,7 +444,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="request">The request.</param>
 		/// <param name="ratelimitTcs">The ratelimit task completion source.</param>
-		/// <param name="resetToInitial">If true, reset to initial.</param>
+		/// <param name="resetToInitial">Whether to reset to initial values.</param>
 		private void FailInitialRateLimitTest(BaseRestRequest request, TaskCompletionSource<bool> ratelimitTcs, bool resetToInitial = false)
 		{
 			if (ratelimitTcs == null && !resetToInitial)
@@ -584,7 +585,7 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Handles the http 429 status.
+		/// Handles the HTTP 429 status.
 		/// </summary>
 		/// <param name="response">The response.</param>
 		/// <param name="waitTask">The wait task.</param>
@@ -761,7 +762,7 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Cleanups the buckets.
+		/// Cleans the buckets.
 		/// </summary>
 		private async Task CleanupBucketsAsync()
 		{
