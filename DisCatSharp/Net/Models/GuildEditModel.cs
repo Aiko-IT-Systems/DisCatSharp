@@ -130,8 +130,6 @@ namespace DisCatSharp.Net.Models
 		/// Initializes a new instance of the <see cref="GuildEditModel"/> class.
 		/// </summary>
 		internal GuildEditModel()
-		{
-
-		}
+		{ }
 	}
 }

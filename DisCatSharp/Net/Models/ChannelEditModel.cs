@@ -97,7 +97,6 @@ namespace DisCatSharp.Net.Models
 		/// </summary>
 		public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { internal get; set; }
 
-
 		/// <summary>
 		/// Sets the channel's permission overwrites.
 		/// </summary>
@@ -111,6 +110,7 @@ namespace DisCatSharp.Net.Models
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ChannelEditModel"/> class.
 		/// </summary>
-		internal ChannelEditModel() { }
+		internal ChannelEditModel()
+		{ }
 	}
 }

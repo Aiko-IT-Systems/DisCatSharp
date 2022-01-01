@@ -62,8 +62,14 @@ namespace DisCatSharp.Net.Models
 		}
 		private Optional<string> _description;
 
+		/// <summary>
+		/// Sets the command's name localizations.
+		/// </summary>
 		public Optional<DiscordApplicationCommandLocalization> NameLocalizations { internal get; set; }
 
+		/// <summary>
+		/// Sets the description's name localizations.
+		/// </summary>
 		public Optional<DiscordApplicationCommandLocalization> DescriptionLocalizations { internal get; set; }
 
 		/// <summary>
