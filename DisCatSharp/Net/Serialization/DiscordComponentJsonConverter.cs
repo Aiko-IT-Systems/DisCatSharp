@@ -60,19 +60,30 @@ namespace DisCatSharp.Net.Serialization
 
             var job = JObject.Load(reader);
             var type = job["type"]?.ToObject<ComponentType>();
+            var style = job["style"]?.ToObject<ButtonStyle>();
 
             if (type == null)
                 throw new ArgumentException($"Value {reader} does not have a component type specifier");
 
-            var cmp = type switch
+            DiscordComponent cmp;
+            if (type is ComponentType.Button && style is not null)
             {
-                ComponentType.ActionRow => new DiscordActionRowComponent(),
-                ComponentType.Button => new DiscordButtonComponent(),
-                ComponentType.Select => new DiscordSelectComponent(),
-                ComponentType.InputText => new DiscordTextComponent(),
-                _ => new DiscordComponent() { Type = type.Value }
-            };
-
+                cmp = style switch
+                {
+                    ButtonStyle.Link => new DiscordLinkButtonComponent(),
+                    _ => new DiscordButtonComponent()
+                };
+            }
+            else
+            {
+                cmp = type switch
+                {
+                    ComponentType.ActionRow => new DiscordActionRowComponent(),
+                    ComponentType.Select => new DiscordSelectComponent(),
+                    ComponentType.InputText => new DiscordTextComponent(),
+                    _ => new DiscordComponent() { Type = type.Value }
+                };
+            }
             // Populate the existing component with the values in the JObject. This avoids a recursive JsonConverter loop
             using var jreader = job.CreateReader();
             serializer.Populate(jreader, cmp);

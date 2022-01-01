@@ -46,5 +46,10 @@ namespace DisCatSharp.Enums
         /// Red button.
         /// </summary>
         Danger = 4,
+
+        /// <summary>
+        /// Link Button.
+        /// </summary>
+        Link = 5
     }
 }
