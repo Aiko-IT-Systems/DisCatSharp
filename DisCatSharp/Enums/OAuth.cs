@@ -31,7 +31,7 @@ namespace DisCatSharp.Enums
 		/// <summary>
 		/// The default scopes for bots.
 		/// </summary>
-		private const string BOT_DEFAULT = "bot applications.commands applications.commands.permissions.update";
+		private const string BOT_DEFAULT = "bot applications.commands"; // applications.commands.permissions.update
 
 		/// <summary>
 		/// The bot minimal scopes.
@@ -86,7 +86,7 @@ namespace DisCatSharp.Enums
 	public enum OAuthScopes
 	{
 		/// <summary>
-		/// Scopes: bot applications.commands applications.commands.permissions.update
+		/// Scopes: bot applications.commands (Excluding applications.commands.permissions.update for now)
 		/// </summary>
 		BOT_DEFAULT = 0,
 
