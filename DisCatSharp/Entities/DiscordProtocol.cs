@@ -35,9 +35,7 @@ namespace DisCatSharp.Entities
 		/// Initializes a new instance of the <see cref="DiscordProtocol"/> class.
 		/// </summary>
 		public DiscordProtocol()
-		{
-
-		}
+		{ }
 
 		#region Methods
 
