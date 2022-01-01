@@ -3170,7 +3170,7 @@ namespace DisCatSharp.Net
 		/// Gets the users connections async.
 		/// </summary>
 		/// <returns>A Task.</returns>
-		internal async Task<IReadOnlyList<DiscordConnection>> GetUsersConnectionsAsync()
+		internal async Task<IReadOnlyList<DiscordConnection>> GetUserConnectionsAsync()
 		{
 			var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CONNECTIONS}";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);

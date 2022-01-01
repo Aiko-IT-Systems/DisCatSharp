@@ -113,7 +113,7 @@ namespace DisCatSharp
 		internal ConcurrentDictionary<ulong, DiscordGuild> GuildsInternal = new();
 
 		/// <summary>
-		/// Gets the WS latency for this client.
+		/// Gets the websocket latency for this client.
 		/// </summary>
 		public int Ping
 			=> Volatile.Read(ref this._ping);
@@ -265,9 +265,9 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Retrieves a previously-registered extension from this client.
+		/// Retrieves a previously registered extension from this client.
 		/// </summary>
-		/// <typeparam name="T">Type of extension to retrieve.</typeparam>
+		/// <typeparam name="T">The type of extension to retrieve.</typeparam>
 		/// <returns>The requested extension.</returns>
 		public T GetExtension<T>() where T : BaseExtension
 			=> this._extensions.FirstOrDefault(x => x.GetType() == typeof(T)) as T;
@@ -279,6 +279,9 @@ namespace DisCatSharp
 		/// <summary>
 		/// Connects to the gateway.
 		/// </summary>
+		/// <param name="activity">The activity to set. Defaults to null.</param>
+		/// <param name="status">The optional status to set. Defaults to null.</param>
+		/// <param name="idlesince">The optional datetime offset since when the client is offline. Defaults to null.</param>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when an invalid token was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -369,14 +372,13 @@ namespace DisCatSharp
 		/// <summary>
 		/// Reconnects to the gateway.
 		/// </summary>
-		/// <param name="startNewSession">If true, start new session.</param>
+		/// <param name="startNewSession">Whether to start a new session.</param>
 		public Task ReconnectAsync(bool startNewSession = false)
 			=> this.InternalReconnectAsync(startNewSession, code: startNewSession ? 1000 : 4002);
 
 		/// <summary>
 		/// Disconnects from the gateway.
 		/// </summary>
-		/// <returns></returns>
 		public async Task DisconnectAsync()
 		{
 			this.Configuration.AutoReconnect = false;
@@ -387,11 +389,12 @@ namespace DisCatSharp
 		#endregion
 
 		#region Public REST Methods
+
 		/// <summary>
 		/// Gets a user.
 		/// </summary>
 		/// <param name="userId">Id of the user</param>
-		/// <param name="fetch">Whether to fetch the user again (Defaults to false).</param>
+		/// <param name="fetch">Whether to fetch the user again. Defaults to true.</param>
 		/// <returns>The requested user.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -443,8 +446,8 @@ namespace DisCatSharp
 		/// <summary>
 		/// Sends a normal message.
 		/// </summary>
-		/// <param name="channel">Channel to send to.</param>
-		/// <param name="content">Message content to send.</param>
+		/// <param name="channel">The channel to send to.</param>
+		/// <param name="content">The message content to send.</param>
 		/// <returns>The message that was sent.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
@@ -456,8 +459,8 @@ namespace DisCatSharp
 		/// <summary>
 		/// Sends a message with an embed.
 		/// </summary>
-		/// <param name="channel">Channel to send to.</param>
-		/// <param name="embed">Embed to attach to the message.</param>
+		/// <param name="channel">The channel to send to.</param>
+		/// <param name="embed">The embed to attach to the message.</param>
 		/// <returns>The message that was sent.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
@@ -470,8 +473,8 @@ namespace DisCatSharp
 		/// Sends a message with content and an embed.
 		/// </summary>
 		/// <param name="channel">Channel to send to.</param>
-		/// <param name="content">Message content to send.</param>
-		/// <param name="embed">Embed to attach to the message.</param>
+		/// <param name="content">The message content to send.</param>
+		/// <param name="embed">The embed to attach to the message.</param>
 		/// <returns>The message that was sent.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
@@ -483,7 +486,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Sends a message with the <see cref="DisCatSharp.Entities.DiscordMessageBuilder"/>.
 		/// </summary>
-		/// <param name="channel">Channel to send the message to.</param>
+		/// <param name="channel">The channel to send the message to.</param>
 		/// <param name="builder">The message builder.</param>
 		/// <returns>The message that was sent.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is false and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
@@ -496,7 +499,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Sends a message with an <see cref="System.Action{DiscordMessageBuilder}"/>.
 		/// </summary>
-		/// <param name="channel">Channel to send the message to.</param>
+		/// <param name="channel">The channel to send the message to.</param>
 		/// <param name="action">The message builder.</param>
 		/// <returns>The message that was sent.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is false and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
@@ -577,9 +580,9 @@ namespace DisCatSharp
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <returns>A awaitable RestResponse</returns>
+		[Obsolete("This is no longer needed. Use DiscordClient.RestClient instead.", false)] 
 		public async Task<RestResponse> ExecuteRawRequestAsync(RestRequestMethod method, string route, object routeParams, string jsonBody = null, Dictionary<string, string> additionalHeaders = null, double? ratelimitWaitOverride = null)
 		{
-
 			var bucket = this.ApiClient.Rest.GetBucket(method, route, routeParams, out var path);
 
 			var url = Utilities.GetApiUriFor(path, this.Configuration);
@@ -636,12 +639,12 @@ namespace DisCatSharp
 			=> this.ApiClient.GetInviteAsync(code, withCounts, withExpiration, scheduledEventId);
 
 		/// <summary>
-		/// Gets a list of connections.
+		/// Gets a list of user connections.
 		/// </summary>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<IReadOnlyList<DiscordConnection>> GetConnectionsAsync()
-			=> this.ApiClient.GetUsersConnectionsAsync();
+			=> this.ApiClient.GetUserConnectionsAsync();
 
 		/// <summary>
 		/// Gets a sticker.
@@ -1093,7 +1096,7 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Updates the cached events in a guild.
+		/// Updates the cached scheduled events in a guild.
 		/// </summary>
 		/// <param name="guild">The guild.</param>
 		/// <param name="rawEvents">The raw events.</param>
@@ -1280,8 +1283,12 @@ namespace DisCatSharp
 			this.Dispose();
 		}
 
+		/// <summary>
+		/// Whether the client is disposed.
+		/// </summary>
 
 		private bool _disposed;
+
 		/// <summary>
 		/// Disposes the client.
 		/// </summary>
