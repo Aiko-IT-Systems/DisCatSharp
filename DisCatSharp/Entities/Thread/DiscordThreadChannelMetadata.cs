@@ -78,6 +78,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordThreadChannelMetadata"/> class.
 		/// </summary>
-		internal DiscordThreadChannelMetadata() { }
+		internal DiscordThreadChannelMetadata()
+		{ }
 	}
 }

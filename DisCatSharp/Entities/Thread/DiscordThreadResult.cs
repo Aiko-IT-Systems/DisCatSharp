@@ -47,6 +47,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordThreadResult"/> class.
 		/// </summary>
-		internal DiscordThreadResult() : base() { }
+		internal DiscordThreadResult()
+			: base()
+		{ }
 	}
 }

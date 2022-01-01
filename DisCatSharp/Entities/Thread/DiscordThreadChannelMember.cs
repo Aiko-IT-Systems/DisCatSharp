@@ -133,6 +133,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordThreadChannelMember"/> class.
 		/// </summary>
-		internal DiscordThreadChannelMember() { }
+		internal DiscordThreadChannelMember()
+		{ }
 	}
 }
