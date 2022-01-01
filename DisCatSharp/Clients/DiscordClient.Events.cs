@@ -922,11 +922,11 @@ namespace DisCatSharp
 		#region Error Handling
 
 		/// <summary>
-		/// Events the error handler.
+		/// Handles event errors.
 		/// </summary>
-		/// <param name="asyncEvent">The async event.</param>
-		/// <param name="ex">The ex.</param>
-		/// <param name="handler">The handler.</param>
+		/// <param name="asyncEvent">The event.</param>
+		/// <param name="ex">The exception.</param>
+		/// <param name="handler">The event handler.</param>
 		/// <param name="sender">The sender.</param>
 		/// <param name="eventArgs">The event args.</param>
 		internal void EventErrorHandler<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
@@ -953,7 +953,7 @@ namespace DisCatSharp
 		private AsyncEvent<DiscordClient, ZombiedEventArgs> _zombied;
 
 		/// <summary>
-		/// Fired when a gateway
+		/// Fired when a gateway payload is received.
 		/// </summary>
 		public event AsyncEventHandler<DiscordClient, PayloadReceivedEventArgs> PayloadReceived
 		{
@@ -963,11 +963,11 @@ namespace DisCatSharp
 		private AsyncEvent<DiscordClient, PayloadReceivedEventArgs> _payloadReceived;
 
 		/// <summary>
-		/// Goofing.
+		/// Handles event handler exceptions.
 		/// </summary>
-		/// <param name="asyncEvent">The async event.</param>
-		/// <param name="ex">The ex.</param>
-		/// <param name="handler">The handler.</param>
+		/// <param name="asyncEvent">The event.</param>
+		/// <param name="ex">The exception.</param>
+		/// <param name="handler">The event handler.</param>
 		/// <param name="sender">The sender.</param>
 		/// <param name="eventArgs">The event args.</param>
 		private void Goof<TSender, TArgs>(AsyncEvent<TSender, TArgs> asyncEvent, Exception ex, AsyncEventHandler<TSender, TArgs> handler, TSender sender, TArgs eventArgs)
