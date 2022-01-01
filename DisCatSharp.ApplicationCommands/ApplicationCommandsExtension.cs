@@ -849,14 +849,12 @@ namespace DisCatSharp.ApplicationCommands
 							var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
 							await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
 						}
-						/*else if (subgroups.Any())
+						else if (subgroups.Any())
                         {
                             var command = e.Interaction.Data.Options.First();
-                            var method = methods.First().Method;
                             var group = subgroups.First().SubCommands.First(x => x.Name == command.Name);
 
                             var focusedOption = command.Options.First(x => x.Name == group.Name).Options.First(o => o.Focused);
-                            this.Client.Logger.LogDebug("SUBGROUP::" + focusedOption.Name + ": " + focusedOption.RawValue);
 
                             var option = group.Methods.First(p => p.Value.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name).Value;
                             var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
@@ -866,18 +864,20 @@ namespace DisCatSharp.ApplicationCommands
                             var context = new AutocompleteContext
                             {
                                 Interaction = e.Interaction,
-                                Services = this._configuration?.Services,
+                                Services = Configuration?.ServiceProvider,
                                 ApplicationCommandsExtension = this,
                                 Guild = e.Interaction.Guild,
                                 Channel = e.Interaction.Channel,
                                 User = e.Interaction.User,
                                 Options = command.Options.First(x => x.Name == group.Name).Options.ToList(),
-                                FocusedOption = focusedOption
-                            };
+                                FocusedOption = focusedOption,
+								Locale = e.Interaction.Locale,
+								GuildLocale = e.Interaction.GuildLocale
+							};
 
                             var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
-                        }*/
+                        }
 					}
 					catch (Exception ex)
 					{
