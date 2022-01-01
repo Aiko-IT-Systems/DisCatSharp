@@ -177,7 +177,7 @@ namespace DisCatSharp.Enums
 	}
 
 	/// <summary>
-	/// Core Domains
+	/// Unused Domains
 	/// </summary>
 	public enum UnusedDomain
 	{
