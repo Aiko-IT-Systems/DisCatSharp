@@ -28,7 +28,7 @@ namespace DisCatSharp
 	public enum ScheduledEventPrivacyLevel : int
 	{
 		/// <summary>
-		/// Indicates that the guild scheduled event is public and available in discovery.
+		/// Indicates that the guild scheduled event is public.
 		/// </summary>
 		Public = 1,
 

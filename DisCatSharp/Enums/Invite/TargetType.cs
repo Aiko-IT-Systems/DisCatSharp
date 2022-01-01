@@ -23,7 +23,7 @@
 namespace DisCatSharp
 {
 	/// <summary>
-	/// Represents the type of user who the invite is for.
+	/// Represents the invite type .
 	/// </summary>
 	public enum TargetType
 	{

@@ -28,7 +28,7 @@ namespace DisCatSharp
 	public enum StagePrivacyLevel : int
 	{
 		/// <summary>
-		/// Indicates that the stage is public visible, i.e. on stage discovery.
+		/// Indicates that the stage is public visible.
 		/// </summary>
 		Public = 1,
 
