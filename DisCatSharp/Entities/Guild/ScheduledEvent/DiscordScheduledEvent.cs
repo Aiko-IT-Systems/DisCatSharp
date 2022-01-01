@@ -185,9 +185,11 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordScheduledEvent"/> class.
 		/// </summary>
-		internal DiscordScheduledEvent() { }
+		internal DiscordScheduledEvent()
+		{ }
 
 		#region Methods
+
 		/// <summary>
 		/// Modifies the current scheduled event.
 		/// </summary>
@@ -258,7 +260,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets a list of users RSVP'd to the scheduled event.
 		/// </summary>
-		/// <param name="limit">The limit how many users to receive from the event.</param>
+		/// <param name="limit">The limit how many users to receive from the event. Defaults to 100. Max 100.</param>
 		/// <param name="before">Get results of <see cref="DiscordScheduledEventUser"/> before the given snowflake.</param>
 		/// <param name="after">Get results of <see cref="DiscordScheduledEventUser"/> after the given snowflake.</param>
 		/// <param name="withMember">Wether to include guild member data.</param>
@@ -302,7 +304,8 @@ namespace DisCatSharp.Entities
 		/// Gets the hash code for this <see cref="DiscordScheduledEvent"/>.
 		/// </summary>
 		/// <returns>The hash code for this <see cref="DiscordScheduledEvent"/>.</returns>
-		public override int GetHashCode() => this.Id.GetHashCode();
+		public override int GetHashCode()
+			=> this.Id.GetHashCode();
 
 		/// <summary>
 		/// Gets whether the two <see cref="DiscordScheduledEvent"/> objects are equal.

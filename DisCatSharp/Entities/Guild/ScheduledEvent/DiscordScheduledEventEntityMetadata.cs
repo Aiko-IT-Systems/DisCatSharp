@@ -38,7 +38,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
 		/// </summary>
-		internal DiscordScheduledEventEntityMetadata() { }
+		internal DiscordScheduledEventEntityMetadata()
+		{ }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.

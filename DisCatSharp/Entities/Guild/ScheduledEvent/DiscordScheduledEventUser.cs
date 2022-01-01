@@ -72,7 +72,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordScheduledEventUser"/> class.
 		/// </summary>
-		internal DiscordScheduledEventUser() { }
+		internal DiscordScheduledEventUser()
+	{ }
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordScheduledEventUser"/> is equal to another object.
@@ -94,7 +95,8 @@ namespace DisCatSharp.Entities
 		/// Gets the hash code for this <see cref="DiscordScheduledEventUser"/>.
 		/// </summary>
 		/// <returns>The hash code for this <see cref="DiscordScheduledEventUser"/>.</returns>
-		public override int GetHashCode() => HashCode.Combine(this.User.Id, this.EventId);
+		public override int GetHashCode()
+			=> HashCode.Combine(this.User.Id, this.EventId);
 
 		/// <summary>
 		/// Gets whether the two <see cref="DiscordScheduledEventUser"/> objects are equal.
