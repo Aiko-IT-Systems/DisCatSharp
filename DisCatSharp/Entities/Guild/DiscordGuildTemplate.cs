@@ -102,6 +102,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <remarks><see cref="IsDirty"/></remarks>
 		[JsonIgnore]
-		public bool? IsUnsynced => this.IsDirty;
+		public bool? IsUnsynced
+			=> this.IsDirty;
 	}
 }
