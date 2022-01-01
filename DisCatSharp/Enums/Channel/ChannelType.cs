@@ -73,7 +73,8 @@ namespace DisCatSharp
 		PublicThread = 11,
 
 		/// <summary>
-		/// Indicates that this is a temporary sub-channel within a text channel that is only viewable by those invited and those with the MANAGE_THREADS permission.
+		/// Indicates that this is a temporary sub-channel within a text channel that is only viewable
+		/// by those invited and those with the MANAGE_THREADS permission.
 		/// </summary>
 		PrivateThread = 12,
 

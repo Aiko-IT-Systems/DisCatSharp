@@ -30,11 +30,11 @@ namespace DisCatSharp
 		/// <summary>
 		/// Specifies that this overwrite applies to a role.
 		/// </summary>
-		Role,
+		Role = 0,
 
 		/// <summary>
 		/// Specifies that this overwrite applies to a member.
 		/// </summary>
-		Member
+		Member = 1,
 	}
 }
