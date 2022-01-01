@@ -33,12 +33,12 @@ namespace DisCatSharp
 		None = 0,
 
 		/// <summary>
-		/// Includes app perks like animated emojis and avatars, but not games.
+		/// Includes basic app perks like animated emojis and avatars.
 		/// </summary>
 		NitroClassic = 1,
 
 		/// <summary>
-		/// Includes app perks as well as the games subscription service.
+		/// Includes all app perks.
 		/// </summary>
 		Nitro = 2
 	}
