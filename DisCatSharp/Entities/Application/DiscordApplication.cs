@@ -151,6 +151,17 @@ namespace DisCatSharp.Entities
 		public IReadOnlyList<string> Tags { get; internal set; }
 
 		/// <summary>
+		/// Whether the application is hooked.
+		/// </summary>
+		public bool IsHook { get; internal set; }
+
+		/// <summary>
+		/// Gets the application type.
+		/// Mostly null.
+		/// </summary>
+		public string Type { get; internal set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordApplication"/> class.
 		/// </summary>
 		internal DiscordApplication() { }

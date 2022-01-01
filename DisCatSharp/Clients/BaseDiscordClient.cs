@@ -179,6 +179,8 @@ namespace DisCatSharp
 				Flags = tapp.Flags,
 				RequiresCodeGrant = tapp.BotRequiresCodeGrant,
 				IsPublic = tapp.IsPublicBot,
+				IsHook = tapp.IsHook,
+				Type = tapp.Type,
 				PrivacyPolicyUrl = tapp.PrivacyPolicyUrl,
 				TermsOfServiceUrl = tapp.TermsOfServiceUrl,
 				CustomInstallUrl = tapp.CustomInstallUrl,

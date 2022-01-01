@@ -93,7 +93,18 @@ namespace DisCatSharp.Net.Abstractions
 		[JsonProperty("bot_require_code_grant", NullValueHandling = NullValueHandling.Include)]
 		public bool BotRequiresCodeGrant { get; set; }
 
-		// Json.NET can figure the type out
+		/// <summary>
+		/// Gets or sets a value indicating whether the bot is a hook.
+		/// </summary>
+		[JsonProperty("hook", NullValueHandling = NullValueHandling.Ignore)]
+		public bool IsHook { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the bot requires code grant.
+		/// </summary>
+		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+		public string Type { get; set; }
+
 		/// <summary>
 		/// Gets or sets the rpc origins.
 		/// </summary>
@@ -163,6 +174,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TransportApplication"/> class.
 		/// </summary>
-		internal TransportApplication() { }
+		internal TransportApplication()
+		{ }
 	}
 }
