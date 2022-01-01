@@ -39,7 +39,7 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp
 {
 	/// <summary>
-	/// Represents a common base for various Discord client implementations.
+	/// Represents a common base for various Discord Client implementations.
 	/// </summary>
 	public abstract class BaseDiscordClient : IDisposable
 	{
@@ -164,7 +164,6 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the current API application.
 		/// </summary>
-		/// <returns>Current API application.</returns>
 		public async Task<DiscordApplication> GetCurrentApplicationAsync()
 		{
 			var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync().ConfigureAwait(false);
@@ -187,20 +186,14 @@ namespace DisCatSharp
 				Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray()
 			};
 
-			// do team and owners
-			// tbh fuck doing this properly
 			if (tapp.Team == null)
 			{
-				// singular owner
-
 				app.Owners = new ReadOnlyCollection<DiscordUser>(new[] { new DiscordUser(tapp.Owner) });
 				app.Team = null;
 				app.TeamName = null;
 			}
 			else
 			{
-				// team owner
-
 				app.Team = new DiscordTeam(tapp.Team);
 
 				var members = tapp.Team.Members
@@ -228,9 +221,8 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Gets a list of regions
+		/// Gets a list of voice regions.
 		/// </summary>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync()
 			=> this.ApiClient.ListVoiceRegionsAsync();
@@ -238,7 +230,6 @@ namespace DisCatSharp
 		/// <summary>
 		/// Initializes this client. This method fetches information about current user, application, and voice regions.
 		/// </summary>
-		/// <returns></returns>
 		public virtual async Task InitializeAsync()
 		{
 			if (this.CurrentUser == null)
@@ -286,7 +277,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets a cached user.
 		/// </summary>
-		/// <param name="userId">The user_id.</param>
+		/// <param name="userId">The user id.</param>
 		internal DiscordUser GetCachedOrEmptyUserInternal(ulong userId)
 		{
 			this.TryGetCachedUserInternal(userId, out var user);
@@ -296,7 +287,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Tries the get a cached user.
 		/// </summary>
-		/// <param name="userId">The user_id.</param>
+		/// <param name="userId">The user id.</param>
 		/// <param name="user">The user.</param>
 		internal bool TryGetCachedUserInternal(ulong userId, out DiscordUser user)
 		{
