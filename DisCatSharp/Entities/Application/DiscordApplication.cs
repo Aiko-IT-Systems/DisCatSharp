@@ -164,7 +164,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordApplication"/> class.
 		/// </summary>
-		internal DiscordApplication() { }
+		internal DiscordApplication()
+		{ }
 
 		/// <summary>
 		/// Gets the application's cover image URL, in requested format and size.
@@ -232,20 +233,23 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="obj">Object to compare to.</param>
 		/// <returns>Whether the object is equal to this <see cref="DiscordApplication"/>.</returns>
-		public override bool Equals(object obj) => this.Equals(obj as DiscordApplication);
+		public override bool Equals(object obj)
+			=> this.Equals(obj as DiscordApplication);
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordApplication"/> is equal to another <see cref="DiscordApplication"/>.
 		/// </summary>
 		/// <param name="e"><see cref="DiscordApplication"/> to compare to.</param>
 		/// <returns>Whether the <see cref="DiscordApplication"/> is equal to this <see cref="DiscordApplication"/>.</returns>
-		public bool Equals(DiscordApplication e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+		public bool Equals(DiscordApplication e)
+			=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
 		/// <summary>
 		/// Gets the hash code for this <see cref="DiscordApplication"/>.
 		/// </summary>
 		/// <returns>The hash code for this <see cref="DiscordApplication"/>.</returns>
-		public override int GetHashCode() => this.Id.GetHashCode();
+		public override int GetHashCode()
+			=> this.Id.GetHashCode();
 
 		/// <summary>
 		/// Gets whether the two <see cref="DiscordApplication"/> objects are equal.
@@ -323,7 +327,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
 		/// </summary>
-		internal DiscordApplicationAsset() { }
+		internal DiscordApplicationAsset()
+		{ }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordApplicationAsset"/> class.
@@ -339,20 +344,23 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="obj">Object to compare to.</param>
 		/// <returns>Whether the object is equal to this <see cref="DiscordApplicationAsset"/>.</returns>
-		public override bool Equals(object obj) => this.Equals(obj as DiscordApplicationAsset);
+		public override bool Equals(object obj)
+			=> this.Equals(obj as DiscordApplicationAsset);
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordApplicationAsset"/> is equal to another <see cref="DiscordApplicationAsset"/>.
 		/// </summary>
 		/// <param name="e"><see cref="DiscordApplicationAsset"/> to compare to.</param>
 		/// <returns>Whether the <see cref="DiscordApplicationAsset"/> is equal to this <see cref="DiscordApplicationAsset"/>.</returns>
-		public bool Equals(DiscordApplicationAsset e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+		public bool Equals(DiscordApplicationAsset e)
+			=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
 		/// <summary>
 		/// Gets the hash code for this <see cref="DiscordApplication"/>.
 		/// </summary>
 		/// <returns>The hash code for this <see cref="DiscordApplication"/>.</returns>
-		public override int GetHashCode() => this.Id.GetHashCode();
+		public override int GetHashCode()
+			=> this.Id.GetHashCode();
 
 		/// <summary>
 		/// Gets whether the two <see cref="DiscordApplicationAsset"/> objects are equal.
