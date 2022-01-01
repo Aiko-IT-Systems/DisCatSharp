@@ -1,6 +1,6 @@
 // This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,13 @@
 
 using System;
 using System.Threading.Tasks;
+
 using ConcurrentCollections;
+
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Interactivity.Enums;
+
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.Interactivity.EventHandling

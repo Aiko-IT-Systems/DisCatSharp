@@ -1,6 +1,6 @@
 // This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+
 using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.ApplicationCommands.EventArgs;
 using DisCatSharp.Common;
@@ -34,8 +35,10 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Exceptions;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
@@ -846,14 +849,12 @@ namespace DisCatSharp.ApplicationCommands
 							var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
 							await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
 						}
-						/*else if (subgroups.Any())
+						else if (subgroups.Any())
                         {
                             var command = e.Interaction.Data.Options.First();
-                            var method = methods.First().Method;
                             var group = subgroups.First().SubCommands.First(x => x.Name == command.Name);
 
                             var focusedOption = command.Options.First(x => x.Name == group.Name).Options.First(o => o.Focused);
-                            this.Client.Logger.LogDebug("SUBGROUP::" + focusedOption.Name + ": " + focusedOption.RawValue);
 
                             var option = group.Methods.First(p => p.Value.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name).Value;
                             var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
@@ -863,18 +864,20 @@ namespace DisCatSharp.ApplicationCommands
                             var context = new AutocompleteContext
                             {
                                 Interaction = e.Interaction,
-                                Services = this._configuration?.Services,
+                                Services = Configuration?.ServiceProvider,
                                 ApplicationCommandsExtension = this,
                                 Guild = e.Interaction.Guild,
                                 Channel = e.Interaction.Channel,
                                 User = e.Interaction.User,
                                 Options = command.Options.First(x => x.Name == group.Name).Options.ToList(),
-                                FocusedOption = focusedOption
-                            };
+                                FocusedOption = focusedOption,
+								Locale = e.Interaction.Locale,
+								GuildLocale = e.Interaction.GuildLocale
+							};
 
                             var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
                             await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
-                        }*/
+                        }
 					}
 					catch (Exception ex)
 					{
