@@ -42,6 +42,8 @@ namespace DisCatSharp.EventArgs
 		/// <summary>
 		/// Initializes a new instance of the <see cref="UnknownEventArgs"/> class.
 		/// </summary>
-		internal UnknownEventArgs(IServiceProvider provider) : base(provider) { }
+		internal UnknownEventArgs(IServiceProvider provider)
+			: base(provider)
+		{ }
 	}
 }
