@@ -533,7 +533,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild bans async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordBan>> GetGuildBansAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}";
@@ -598,7 +598,6 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="userId">The user_id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
 		internal Task RemoveGuildBanAsync(ulong guildId, ulong userId, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -616,7 +615,7 @@ namespace DisCatSharp.Net
 		/// Leaves the guild async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task LeaveGuildAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}/:guild_id";
@@ -636,7 +635,7 @@ namespace DisCatSharp.Net
 		/// <param name="roles">The roles.</param>
 		/// <param name="muted">If true, muted.</param>
 		/// <param name="deafened">If true, deafened.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMember> AddGuildMemberAsync(ulong guildId, ulong userId, string accessToken, string nick, IEnumerable<DiscordRole> roles, bool muted, bool deafened)
 		{
 			var pld = new RestGuildMemberAddPayload
@@ -665,7 +664,7 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="limit">The limit.</param>
 		/// <param name="after">The after.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<TransportMember>> ListGuildMembersAsync(ulong guildId, int? limit, ulong? after)
 		{
 			var urlparams = new Dictionary<string, string>();
@@ -691,7 +690,7 @@ namespace DisCatSharp.Net
 		/// <param name="userId">The user_id.</param>
 		/// <param name="roleId">The role_id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task AddGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -712,7 +711,7 @@ namespace DisCatSharp.Net
 		/// <param name="userId">The user_id.</param>
 		/// <param name="roleId">The role_id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task RemoveGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -732,7 +731,7 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="pld">The pld.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task ModifyGuildChannelPositionAsync(ulong guildId, IEnumerable<RestGuildChannelReorderPayload> pld, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -752,7 +751,7 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="pld">The pld.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task ModifyGuildChannelParentAsync(ulong guildId, IEnumerable<RestGuildChannelNewParentPayload> pld, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -772,7 +771,7 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="pld">The pld.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DetachGuildChannelParentAsync(ulong guildId, IEnumerable<RestGuildChannelNoParentPayload> pld, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -792,7 +791,7 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="pld">The pld.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task ModifyGuildRolePositionAsync(ulong guildId, IEnumerable<RestGuildRoleReorderPayload> pld, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -815,7 +814,7 @@ namespace DisCatSharp.Net
 		/// <param name="before">The before.</param>
 		/// <param name="responsible">The responsible.</param>
 		/// <param name="actionType">The action_type.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<AuditLog> GetAuditLogsAsync(ulong guildId, int limit, ulong? after, ulong? before, ulong? responsible, int? actionType)
 		{
 			var urlparams = new Dictionary<string, string>
@@ -846,7 +845,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild vanity url async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordInvite> GetGuildVanityUrlAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.VANITY_URL}";
@@ -864,7 +863,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild widget async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordWidget> GetGuildWidgetAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WIDGET_JSON}";
@@ -901,7 +900,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild widget settings async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordWidgetSettings> GetGuildWidgetSettingsAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WIDGET}";
@@ -923,7 +922,7 @@ namespace DisCatSharp.Net
 		/// <param name="isEnabled">If true, is enabled.</param>
 		/// <param name="channelId">The channel id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordWidgetSettings> ModifyGuildWidgetSettingsAsync(ulong guildId, bool? isEnabled, ulong? channelId, string reason)
 		{
 			var pld = new RestGuildWidgetSettingsPayload
@@ -952,7 +951,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild templates async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordGuildTemplate>> GetGuildTemplatesAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}";
@@ -972,7 +971,7 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="name">The name.</param>
 		/// <param name="description">The description.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildTemplate> CreateGuildTemplateAsync(ulong guildId, string name, string description)
 		{
 			var pld = new RestGuildTemplateCreateOrModifyPayload
@@ -997,7 +996,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="templateCode">The template_code.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildTemplate> SyncGuildTemplateAsync(ulong guildId, string templateCode)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}/:template_code";
@@ -1018,7 +1017,7 @@ namespace DisCatSharp.Net
 		/// <param name="templateCode">The template_code.</param>
 		/// <param name="name">The name.</param>
 		/// <param name="description">The description.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildTemplate> ModifyGuildTemplateAsync(ulong guildId, string templateCode, string name, string description)
 		{
 			var pld = new RestGuildTemplateCreateOrModifyPayload
@@ -1043,7 +1042,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="templateCode">The template_code.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildTemplate> DeleteGuildTemplateAsync(ulong guildId, string templateCode)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.TEMPLATES}/:template_code";
@@ -1061,7 +1060,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild membership screening form async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildMembershipScreening> GetGuildMembershipScreeningFormAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBER_VERIFICATION}";
@@ -1082,7 +1081,7 @@ namespace DisCatSharp.Net
 		/// <param name="enabled">The enabled.</param>
 		/// <param name="fields">The fields.</param>
 		/// <param name="description">The description.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildMembershipScreening> ModifyGuildMembershipScreeningFormAsync(ulong guildId, Optional<bool> enabled, Optional<DiscordGuildMembershipScreeningField[]> fields, Optional<string> description)
 		{
 			var pld = new RestGuildMembershipScreeningFormModifyPayload
@@ -1107,7 +1106,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild welcome screen async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildWelcomeScreen> GetGuildWelcomeScreenAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WELCOME_SCREEN}";
@@ -1127,7 +1126,7 @@ namespace DisCatSharp.Net
 		/// <param name="enabled">The enabled.</param>
 		/// <param name="welcomeChannels">The welcome channels.</param>
 		/// <param name="description">The description.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildWelcomeScreen> ModifyGuildWelcomeScreenAsync(ulong guildId, Optional<bool> enabled, Optional<IEnumerable<DiscordGuildWelcomeScreenChannel>> welcomeChannels, Optional<string> description)
 		{
 			var pld = new RestGuildWelcomeScreenModifyPayload
@@ -1154,7 +1153,7 @@ namespace DisCatSharp.Net
 		/// <param name="channelId">The channel id.</param>
 		/// <param name="suppress">If true, suppress.</param>
 		/// <param name="requestToSpeakTimestamp">The request to speak timestamp.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task UpdateCurrentUserVoiceStateAsync(ulong guildId, ulong channelId, bool? suppress, DateTimeOffset? requestToSpeakTimestamp)
 		{
 			var pld = new RestGuildUpdateCurrentUserVoiceStatePayload
@@ -1178,7 +1177,7 @@ namespace DisCatSharp.Net
 		/// <param name="userId">The user_id.</param>
 		/// <param name="channelId">The channel id.</param>
 		/// <param name="suppress">If true, suppress.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task UpdateUserVoiceStateAsync(ulong guildId, ulong userId, ulong channelId, bool? suppress)
 		{
 			var pld = new RestGuildUpdateUserVoiceStatePayload
@@ -1511,7 +1510,7 @@ namespace DisCatSharp.Net
 		/// <param name="perUserRateLimit">The per user rate limit.</param>
 		/// <param name="qualityMode">The quality mode.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, string reason)
 		{
 			var restoverwrites = new List<DiscordRestOverwrite>();
@@ -1617,7 +1616,7 @@ namespace DisCatSharp.Net
 		/// Gets the channel async.
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordChannel> GetChannelAsync(ulong channelId)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id";
@@ -1642,7 +1641,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteChannelAsync(ulong channelId, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -1661,7 +1660,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="messageId">The message_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMessage> GetMessageAsync(ulong channelId, ulong messageId)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
@@ -1685,7 +1684,7 @@ namespace DisCatSharp.Net
 		/// <param name="replyMessageId">The reply message id.</param>
 		/// <param name="mentionReply">If true, mention reply.</param>
 		/// <param name="failOnInvalidReply">If true, fail on invalid reply.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply)
 		{
 			if (content != null && content.Length > 2000)
@@ -1736,7 +1735,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="builder">The builder.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, DiscordMessageBuilder builder)
 		{
 			builder.Validate();
@@ -1817,7 +1816,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild channels async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordChannel>> GetGuildChannelsAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CHANNELS}";
@@ -1937,7 +1936,7 @@ namespace DisCatSharp.Net
 		/// <param name="before">The before.</param>
 		/// <param name="after">The after.</param>
 		/// <param name="around">The around.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordMessage>> GetChannelMessagesAsync(ulong channelId, int limit, ulong? before, ulong? after, ulong? around)
 		{
 			var urlparams = new Dictionary<string, string>();
@@ -1969,7 +1968,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="messageId">The message_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMessage> GetChannelMessageAsync(ulong channelId, ulong messageId)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
@@ -1995,7 +1994,7 @@ namespace DisCatSharp.Net
 		/// <param name="suppressEmbed">The suppress_embed.</param>
 		/// <param name="files">The files.</param>
 		/// <param name="attachments">The attachments to keep.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, IEnumerable<IMention> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppressEmbed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
 		{
 			if (embeds.HasValue && embeds.Value != null)
@@ -2078,7 +2077,7 @@ namespace DisCatSharp.Net
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="messageId">The message_id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteMessageAsync(ulong channelId, ulong messageId, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -2098,7 +2097,7 @@ namespace DisCatSharp.Net
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="messageIds">The message_ids.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteMessagesAsync(ulong channelId, IEnumerable<ulong> messageIds, string reason)
 		{
 			var pld = new RestChannelMessageBulkDeletePayload
@@ -2121,7 +2120,7 @@ namespace DisCatSharp.Net
 		/// Gets the channel invites async.
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordInvite>> GetChannelInvitesAsync(ulong channelId)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.INVITES}";
@@ -2147,7 +2146,7 @@ namespace DisCatSharp.Net
 		/// <param name="temporary">If true, temporary.</param>
 		/// <param name="unique">If true, unique.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channelId, int maxAge, int maxUses, TargetType? targetType, TargetActivity? targetApplication, ulong? targetUser, bool temporary, bool unique, string reason)
 		{
 			var pld = new RestChannelInviteCreatePayload
@@ -2183,7 +2182,7 @@ namespace DisCatSharp.Net
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="overwriteId">The overwrite_id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteChannelPermissionAsync(ulong channelId, ulong overwriteId, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -2206,7 +2205,7 @@ namespace DisCatSharp.Net
 		/// <param name="deny">The deny.</param>
 		/// <param name="type">The type.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task EditChannelPermissionsAsync(ulong channelId, ulong overwriteId, Permissions allow, Permissions deny, string type, string reason)
 		{
 			var pld = new RestChannelPermissionEditPayload
@@ -2231,7 +2230,7 @@ namespace DisCatSharp.Net
 		/// Triggers the typing async.
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task TriggerTypingAsync(ulong channelId)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.TYPING}";
@@ -2245,7 +2244,7 @@ namespace DisCatSharp.Net
 		/// Gets the pinned messages async.
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync(ulong channelId)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}";
@@ -2267,7 +2266,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="messageId">The message_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task PinMessageAsync(ulong channelId, ulong messageId)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}/:message_id";
@@ -2282,7 +2281,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="messageId">The message_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task UnpinMessageAsync(ulong channelId, ulong messageId)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.PINS}/:message_id";
@@ -2299,7 +2298,7 @@ namespace DisCatSharp.Net
 		/// <param name="userId">The user_id.</param>
 		/// <param name="accessToken">The access_token.</param>
 		/// <param name="nickname">The nickname.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task AddGroupDmRecipientAsync(ulong channelId, ulong userId, string accessToken, string nickname)
 		{
 			var pld = new RestChannelGroupDmRecipientAddPayload
@@ -2320,7 +2319,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="userId">The user_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task RemoveGroupDmRecipientAsync(ulong channelId, ulong userId)
 		{
 			var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CHANNELS}/:channel_id{Endpoints.RECIPIENTS}/:user_id";
@@ -2335,7 +2334,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="accessTokens">The access_tokens.</param>
 		/// <param name="nicks">The nicks.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordDmChannel> CreateGroupDmAsync(IEnumerable<string> accessTokens, IDictionary<ulong, string> nicks)
 		{
 			var pld = new RestUserGroupDmCreatePayload
@@ -2360,7 +2359,7 @@ namespace DisCatSharp.Net
 		/// Creates the dm async.
 		/// </summary>
 		/// <param name="recipientId">The recipient_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordDmChannel> CreateDmAsync(ulong recipientId)
 		{
 			var pld = new RestUserDmCreatePayload
@@ -2385,7 +2384,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="webhookChannelId">The webhook_channel_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordFollowedChannel> FollowChannelAsync(ulong channelId, ulong webhookChannelId)
 		{
 			var pld = new FollowedChannelAddPayload
@@ -2407,7 +2406,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="messageId">The message_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMessage> CrosspostMessageAsync(ulong channelId, ulong messageId)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.CROSSPOST}";
@@ -2424,7 +2423,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Gets the current user async.
 		/// </summary>
-		/// <returns>A Task.</returns>
+
 		internal Task<DiscordUser> GetCurrentUserAsync()
 			=> this.GetUserAsync("@me");
 
@@ -2432,7 +2431,7 @@ namespace DisCatSharp.Net
 		/// Gets the user async.
 		/// </summary>
 		/// <param name="userId">The user_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task<DiscordUser> GetUserAsync(ulong userId)
 			=> this.GetUserAsync(userId.ToString(CultureInfo.InvariantCulture));
 
@@ -2440,7 +2439,7 @@ namespace DisCatSharp.Net
 		/// Gets the user async.
 		/// </summary>
 		/// <param name="userId">The user_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordUser> GetUserAsync(string userId)
 		{
 			var route = $"{Endpoints.USERS}/:user_id";
@@ -2460,7 +2459,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="userId">The user_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMember> GetGuildMemberAsync(ulong guildId, ulong userId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MEMBERS}/:user_id";
@@ -2493,7 +2492,7 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="userId">The user_id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task RemoveGuildMemberAsync(ulong guildId, ulong userId, string reason)
 		{
 			var urlparams = new Dictionary<string, string>();
@@ -2512,7 +2511,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="username">The username.</param>
 		/// <param name="base64Avatar">The base64_avatar.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<TransportUser> ModifyCurrentUserAsync(string username, Optional<string> base64Avatar)
 		{
 			var pld = new RestUserUpdateCurrentPayload
@@ -2539,7 +2538,7 @@ namespace DisCatSharp.Net
 		/// <param name="limit">The limit.</param>
 		/// <param name="before">The before.</param>
 		/// <param name="after">The after.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordGuild>> GetCurrentUserGuildsAsync(int limit = 100, ulong? before = null, ulong? after = null)
 		{
 			var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.GUILDS}";
@@ -2579,7 +2578,7 @@ namespace DisCatSharp.Net
 		/// <param name="deaf">The deaf.</param>
 		/// <param name="voiceChannelId">The voice_channel_id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task ModifyGuildMemberAsync(ulong guildId, ulong userId, Optional<string> nick,
 			Optional<IEnumerable<ulong>> roleIds, Optional<bool> mute, Optional<bool> deaf,
 			Optional<ulong?> voiceChannelId, string reason)
@@ -2611,7 +2610,7 @@ namespace DisCatSharp.Net
 		/// <param name="userId">The user_id.</param>
 		/// <param name="until">Datetime offset.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task ModifyTimeoutAsync(ulong guildId, ulong userId, DateTimeOffset? until, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -2636,7 +2635,7 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="nick">The nick.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task ModifyCurrentMemberNicknameAsync(ulong guildId, string nick, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -2661,7 +2660,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild roles async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordRole>> GetGuildRolesAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.ROLES}";
@@ -2680,7 +2679,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="guildId">The guild id.</param>
 		/// <param name="withCounts">If true, with_counts.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuild> GetGuildAsync(ulong guildId, bool? withCounts)
 		{
 			var urlparams = new Dictionary<string, string>();
@@ -2770,7 +2769,7 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="roleId">The role_id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteRoleAsync(ulong guildId, ulong roleId, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -2794,7 +2793,7 @@ namespace DisCatSharp.Net
 		/// <param name="hoist">If true, hoist.</param>
 		/// <param name="mentionable">If true, mentionable.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordRole> CreateGuildRoleAsync(ulong guildId, string name, Permissions? permissions, int? color, bool? hoist, bool? mentionable, string reason)
 		{
 			var pld = new RestGuildRolePayload
@@ -2831,7 +2830,7 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="days">The days.</param>
 		/// <param name="includeRoles">The include_roles.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<int> GetGuildPruneCountAsync(ulong guildId, int days, IEnumerable<ulong> includeRoles)
 		{
 			if (days < 0 || days > 30)
@@ -2871,7 +2870,7 @@ namespace DisCatSharp.Net
 		/// <param name="computePruneCount">If true, compute_prune_count.</param>
 		/// <param name="includeRoles">The include_roles.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<int?> BeginGuildPruneAsync(ulong guildId, int days, bool computePruneCount, IEnumerable<ulong> includeRoles, string reason)
 		{
 			if (days < 0 || days > 30)
@@ -2915,7 +2914,7 @@ namespace DisCatSharp.Net
 		/// Gets the template async.
 		/// </summary>
 		/// <param name="code">The code.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildTemplate> GetTemplateAsync(string code)
 		{
 			var route = $"{Endpoints.GUILDS}{Endpoints.TEMPLATES}/:code";
@@ -2933,7 +2932,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild integrations async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordIntegration>> GetGuildIntegrationsAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INTEGRATIONS}";
@@ -2951,7 +2950,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild preview async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildPreview> GetGuildPreviewAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PREVIEW}";
@@ -2972,7 +2971,7 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="type">The type.</param>
 		/// <param name="id">The id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordIntegration> CreateGuildIntegrationAsync(ulong guildId, string type, ulong id)
 		{
 			var pld = new RestGuildIntegrationAttachPayload
@@ -3001,7 +3000,7 @@ namespace DisCatSharp.Net
 		/// <param name="expireBehaviour">The expire_behaviour.</param>
 		/// <param name="expireGracePeriod">The expire_grace_period.</param>
 		/// <param name="enableEmoticons">If true, enable_emoticons.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordIntegration> ModifyGuildIntegrationAsync(ulong guildId, ulong integrationId, int expireBehaviour, int expireGracePeriod, bool enableEmoticons)
 		{
 			var pld = new RestGuildIntegrationModifyPayload
@@ -3028,7 +3027,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="integration">The integration.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteGuildIntegrationAsync(ulong guildId, DiscordIntegration integration)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INTEGRATIONS}/:integration_id";
@@ -3043,7 +3042,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="integrationId">The integration_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task SyncGuildIntegrationAsync(ulong guildId, ulong integrationId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INTEGRATIONS}/:integration_id{Endpoints.SYNC}";
@@ -3057,7 +3056,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild voice regions async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordVoiceRegion>> GetGuildVoiceRegionsAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.REGIONS}";
@@ -3075,7 +3074,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild invites async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordInvite>> GetGuildInvitesAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.INVITES}";
@@ -3098,7 +3097,7 @@ namespace DisCatSharp.Net
 		/// <param name="withCounts">If true, with_counts.</param>
 		/// <param name="withExpiration">If true, with_expiration.</param>
 		/// <param name="guildScheduledEventId">The scheduled event id to get.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordInvite> GetInviteAsync(string inviteCode, bool? withCounts, bool? withExpiration, ulong? guildScheduledEventId)
 		{
 			var urlparams = new Dictionary<string, string>();
@@ -3126,7 +3125,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="inviteCode">The invite_code.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordInvite> DeleteInviteAsync(string inviteCode, string reason)
 		{
 			var headers = Utilities.GetBaseHeaders();
@@ -3168,7 +3167,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Gets the users connections async.
 		/// </summary>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordConnection>> GetUserConnectionsAsync()
 		{
 			var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CONNECTIONS}";
@@ -3187,7 +3186,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Lists the voice regions async.
 		/// </summary>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync()
 		{
 			var route = $"{Endpoints.VOICE}{Endpoints.REGIONS}";
@@ -3210,7 +3209,7 @@ namespace DisCatSharp.Net
 		/// <param name="name">The name.</param>
 		/// <param name="base64Avatar">The base64_avatar.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordWebhook> CreateWebhookAsync(ulong channelId, string name, Optional<string> base64Avatar, string reason)
 		{
 			var pld = new RestWebhookPayload
@@ -3241,7 +3240,7 @@ namespace DisCatSharp.Net
 		/// Gets the channel webhooks async.
 		/// </summary>
 		/// <param name="channelId">The channel_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordWebhook>> GetChannelWebhooksAsync(ulong channelId)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.WEBHOOKS}";
@@ -3259,7 +3258,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild webhooks async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordWebhook>> GetGuildWebhooksAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.WEBHOOKS}";
@@ -3277,7 +3276,7 @@ namespace DisCatSharp.Net
 		/// Gets the webhook async.
 		/// </summary>
 		/// <param name="webhookId">The webhook_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordWebhook> GetWebhookAsync(ulong webhookId)
 		{
 			var route = $"{Endpoints.WEBHOOKS}/:webhook_id";
@@ -3298,7 +3297,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="webhookId">The webhook_id.</param>
 		/// <param name="webhookToken">The webhook_token.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordWebhook> GetWebhookWithTokenAsync(ulong webhookId, string webhookToken)
 		{
 			var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
@@ -3324,7 +3323,7 @@ namespace DisCatSharp.Net
 		/// <param name="name">The name.</param>
 		/// <param name="base64Avatar">The base64_avatar.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordWebhook> ModifyWebhookAsync(ulong webhookId, ulong channelId, string name, Optional<string> base64Avatar, string reason)
 		{
 			var pld = new RestWebhookPayload
@@ -3360,7 +3359,7 @@ namespace DisCatSharp.Net
 		/// <param name="base64Avatar">The base64_avatar.</param>
 		/// <param name="webhookToken">The webhook_token.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordWebhook> ModifyWebhookAsync(ulong webhookId, string name, string base64Avatar, string webhookToken, string reason)
 		{
 			var pld = new RestWebhookPayload
@@ -3391,7 +3390,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="webhookId">The webhook_id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteWebhookAsync(ulong webhookId, string reason)
 		{
 			var headers = new Dictionary<string, string>();
@@ -3411,7 +3410,7 @@ namespace DisCatSharp.Net
 		/// <param name="webhookId">The webhook_id.</param>
 		/// <param name="webhookToken">The webhook_token.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteWebhookAsync(ulong webhookId, string webhookToken, string reason)
 		{
 			var headers = new Dictionary<string, string>();
@@ -3432,7 +3431,7 @@ namespace DisCatSharp.Net
 		/// <param name="webhookToken">The webhook_token.</param>
 		/// <param name="builder">The builder.</param>
 		/// <param name="threadId">The thread_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMessage> ExecuteWebhookAsync(ulong webhookId, string webhookToken, DiscordWebhookBuilder builder, string threadId)
 		{
 			builder.Validate();
@@ -3510,7 +3509,7 @@ namespace DisCatSharp.Net
 		/// <param name="webhookToken">The webhook_token.</param>
 		/// <param name="jsonPayload">The json_payload.</param>
 		/// <param name="threadId">The thread_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMessage> ExecuteWebhookSlackAsync(ulong webhookId, string webhookToken, string jsonPayload, string threadId)
 		{
 			var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.SLACK}";
@@ -3533,7 +3532,7 @@ namespace DisCatSharp.Net
 		/// <param name="webhookToken">The webhook_token.</param>
 		/// <param name="jsonPayload">The json_payload.</param>
 		/// <param name="threadId">The thread_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMessage> ExecuteWebhookGithubAsync(ulong webhookId, string webhookToken, string jsonPayload, string threadId)
 		{
 			var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.GITHUB}";
@@ -3557,7 +3556,7 @@ namespace DisCatSharp.Net
 		/// <param name="messageId">The message_id.</param>
 		/// <param name="builder">The builder.</param>
 		/// <param name="threadId">The thread_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMessage> EditWebhookMessageAsync(ulong webhookId, string webhookToken, string messageId, DiscordWebhookBuilder builder, string threadId)
 		{
 			builder.Validate(true);
@@ -3653,7 +3652,7 @@ namespace DisCatSharp.Net
 		/// <param name="messageId">The message_id.</param>
 		/// <param name="builder">The builder.</param>
 		/// <param name="threadId">The thread_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task<DiscordMessage> EditWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, DiscordWebhookBuilder builder, ulong threadId) =>
 			this.EditWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), builder, threadId.ToString());
 
@@ -3664,7 +3663,7 @@ namespace DisCatSharp.Net
 		/// <param name="webhookToken">The webhook_token.</param>
 		/// <param name="messageId">The message_id.</param>
 		/// <param name="threadId">The thread_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMessage> GetWebhookMessageAsync(ulong webhookId, string webhookToken, string messageId, string threadId)
 		{
 			var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
@@ -3687,7 +3686,7 @@ namespace DisCatSharp.Net
 		/// <param name="webhookId">The webhook_id.</param>
 		/// <param name="webhookToken">The webhook_token.</param>
 		/// <param name="messageId">The message_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task<DiscordMessage> GetWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId) =>
 			this.GetWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), null);
 
@@ -3698,7 +3697,7 @@ namespace DisCatSharp.Net
 		/// <param name="webhookToken">The webhook_token.</param>
 		/// <param name="messageId">The message_id.</param>
 		/// <param name="threadId">The thread_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task<DiscordMessage> GetWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, ulong threadId) =>
 			this.GetWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString());
 
@@ -3709,7 +3708,7 @@ namespace DisCatSharp.Net
 		/// <param name="webhookToken">The webhook_token.</param>
 		/// <param name="messageId">The message_id.</param>
 		/// <param name="threadId">The thread_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, string messageId, string threadId)
 		{
 			var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token{Endpoints.MESSAGES}/:message_id";
@@ -3728,7 +3727,7 @@ namespace DisCatSharp.Net
 		/// <param name="webhookId">The webhook_id.</param>
 		/// <param name="webhookToken">The webhook_token.</param>
 		/// <param name="messageId">The message_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId) =>
 			this.DeleteWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), null);
 
@@ -3739,7 +3738,7 @@ namespace DisCatSharp.Net
 		/// <param name="webhookToken">The webhook_token.</param>
 		/// <param name="messageId">The message_id.</param>
 		/// <param name="threadId">The thread_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteWebhookMessageAsync(ulong webhookId, string webhookToken, ulong messageId, ulong threadId) =>
 			this.DeleteWebhookMessageAsync(webhookId, webhookToken, messageId.ToString(), threadId.ToString());
 		#endregion
@@ -3751,7 +3750,7 @@ namespace DisCatSharp.Net
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="messageId">The message_id.</param>
 		/// <param name="emoji">The emoji.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task CreateReactionAsync(ulong channelId, ulong messageId, string emoji)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji{Endpoints.ME}";
@@ -3767,7 +3766,7 @@ namespace DisCatSharp.Net
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="messageId">The message_id.</param>
 		/// <param name="emoji">The emoji.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteOwnReactionAsync(ulong channelId, ulong messageId, string emoji)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji{Endpoints.ME}";
@@ -3785,7 +3784,7 @@ namespace DisCatSharp.Net
 		/// <param name="userId">The user_id.</param>
 		/// <param name="emoji">The emoji.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteUserReactionAsync(ulong channelId, ulong messageId, ulong userId, string emoji, string reason)
 		{
 			var headers = new Dictionary<string, string>();
@@ -3807,7 +3806,7 @@ namespace DisCatSharp.Net
 		/// <param name="emoji">The emoji.</param>
 		/// <param name="afterId">The after_id.</param>
 		/// <param name="limit">The limit.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordUser>> GetReactionsAsync(ulong channelId, ulong messageId, string emoji, ulong? afterId = null, int limit = 25)
 		{
 			var urlparams = new Dictionary<string, string>();
@@ -3847,7 +3846,7 @@ namespace DisCatSharp.Net
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="messageId">The message_id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteAllReactionsAsync(ulong channelId, ulong messageId, string reason)
 		{
 			var headers = new Dictionary<string, string>();
@@ -3867,7 +3866,7 @@ namespace DisCatSharp.Net
 		/// <param name="channelId">The channel_id.</param>
 		/// <param name="messageId">The message_id.</param>
 		/// <param name="emoji">The emoji.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteReactionsEmojiAsync(ulong channelId, ulong messageId, string emoji)
 		{
 			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.REACTIONS}/:emoji";
@@ -4205,7 +4204,7 @@ namespace DisCatSharp.Net
 		/// Gets the guild emojis async.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordGuildEmoji>> GetGuildEmojisAsync(ulong guildId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.EMOJIS}";
@@ -4247,7 +4246,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="emojiId">The emoji_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildEmoji> GetGuildEmojiAsync(ulong guildId, ulong emojiId)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.EMOJIS}/:emoji_id";
@@ -4277,7 +4276,7 @@ namespace DisCatSharp.Net
 		/// <param name="imageb64">The imageb64.</param>
 		/// <param name="roles">The roles.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildEmoji> CreateGuildEmojiAsync(ulong guildId, string name, string imageb64, IEnumerable<ulong> roles, string reason)
 		{
 			var pld = new RestGuildEmojiCreatePayload
@@ -4319,7 +4318,7 @@ namespace DisCatSharp.Net
 		/// <param name="name">The name.</param>
 		/// <param name="roles">The roles.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordGuildEmoji> ModifyGuildEmojiAsync(ulong guildId, ulong emojiId, string name, IEnumerable<ulong> roles, string reason)
 		{
 			var pld = new RestGuildEmojiModifyPayload
@@ -4357,7 +4356,7 @@ namespace DisCatSharp.Net
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="emojiId">The emoji_id.</param>
 		/// <param name="reason">The reason.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteGuildEmojiAsync(ulong guildId, ulong emojiId, string reason)
 		{
 			var headers = new Dictionary<string, string>();
@@ -4566,7 +4565,7 @@ namespace DisCatSharp.Net
 		/// Gets the global application commands async.
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync(ulong applicationId)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -4586,7 +4585,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="commands">The commands.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGlobalApplicationCommandsAsync(ulong applicationId, IEnumerable<DiscordApplicationCommand> commands)
 		{
 			var pld = new List<RestApplicationCommandCreatePayload>();
@@ -4623,7 +4622,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="command">The command.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordApplicationCommand> CreateGlobalApplicationCommandAsync(ulong applicationId, DiscordApplicationCommand command)
 		{
 			var pld = new RestApplicationCommandCreatePayload
@@ -4654,7 +4653,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="commandId">The command_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordApplicationCommand> GetGlobalApplicationCommandAsync(ulong applicationId, ulong commandId)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -4680,7 +4679,7 @@ namespace DisCatSharp.Net
 		/// <param name="defaultPermission">The default_permission.</param>
 		/// <param name="nameLocalization">The localizations of the name.</param>
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> defaultPermission, Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization)
 		{
 			var pld = new RestApplicationCommandEditPayload
@@ -4710,7 +4709,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="commandId">The command_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task DeleteGlobalApplicationCommandAsync(ulong applicationId, ulong commandId)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -4725,7 +4724,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="guildId">The guild_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong applicationId, ulong guildId)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
@@ -4746,7 +4745,7 @@ namespace DisCatSharp.Net
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="commands">The commands.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGuildApplicationCommandsAsync(ulong applicationId, ulong guildId, IEnumerable<DiscordApplicationCommand> commands)
 		{
 			var pld = new List<RestApplicationCommandCreatePayload>();
@@ -4783,7 +4782,7 @@ namespace DisCatSharp.Net
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="guildId">The guild_id.</param>
 		/// <param name="command">The command.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordApplicationCommand> CreateGuildApplicationCommandAsync(ulong applicationId, ulong guildId, DiscordApplicationCommand command)
 		{
 			var pld = new RestApplicationCommandCreatePayload
@@ -4997,7 +4996,7 @@ namespace DisCatSharp.Net
 		/// <param name="interactionToken">The interaction_token.</param>
 		/// <param name="type">The type.</param>
 		/// <param name="builder">The builder.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task CreateInteractionResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionResponseBuilder builder)
 		{
 			if (builder?.Embeds != null)
@@ -5101,7 +5100,7 @@ namespace DisCatSharp.Net
 		/// <param name="interactionToken">The interaction_token.</param>
 		/// <param name="type">The type.</param>
 		/// <param name="builder">The builder.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task CreateInteractionModalResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionModalBuilder builder)
 		{
 			if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type != Enums.ComponentType.InputText)))
@@ -5132,7 +5131,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="interactionToken">The interaction_token.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task<DiscordMessage> GetOriginalInteractionResponseAsync(ulong applicationId, string interactionToken) =>
 			this.GetWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, null);
 
@@ -5142,7 +5141,7 @@ namespace DisCatSharp.Net
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="interactionToken">The interaction_token.</param>
 		/// <param name="builder">The builder.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task<DiscordMessage> EditOriginalInteractionResponseAsync(ulong applicationId, string interactionToken, DiscordWebhookBuilder builder) =>
 			this.EditWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, builder, null);
 
@@ -5151,7 +5150,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="interactionToken">The interaction_token.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteOriginalInteractionResponseAsync(ulong applicationId, string interactionToken) =>
 			this.DeleteWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, null);
 
@@ -5161,7 +5160,7 @@ namespace DisCatSharp.Net
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="interactionToken">The interaction_token.</param>
 		/// <param name="builder">The builder.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<DiscordMessage> CreateFollowupMessageAsync(ulong applicationId, string interactionToken, DiscordFollowupMessageBuilder builder)
 		{
 			builder.Validate();
@@ -5235,7 +5234,7 @@ namespace DisCatSharp.Net
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="interactionToken">The interaction_token.</param>
 		/// <param name="messageId">The message_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task<DiscordMessage> GetFollowupMessageAsync(ulong applicationId, string interactionToken, ulong messageId) =>
 			this.GetWebhookMessageAsync(applicationId, interactionToken, messageId);
 
@@ -5246,7 +5245,7 @@ namespace DisCatSharp.Net
 		/// <param name="interactionToken">The interaction_token.</param>
 		/// <param name="messageId">The message_id.</param>
 		/// <param name="builder">The builder.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task<DiscordMessage> EditFollowupMessageAsync(ulong applicationId, string interactionToken, ulong messageId, DiscordWebhookBuilder builder) =>
 			this.EditWebhookMessageAsync(applicationId, interactionToken, messageId.ToString(), builder, null);
 
@@ -5256,7 +5255,7 @@ namespace DisCatSharp.Net
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="interactionToken">The interaction_token.</param>
 		/// <param name="messageId">The message_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task DeleteFollowupMessageAsync(ulong applicationId, string interactionToken, ulong messageId) =>
 			this.DeleteWebhookMessageAsync(applicationId, interactionToken, messageId);
 		#endregion
@@ -5265,7 +5264,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Gets the current application info async.
 		/// </summary>
-		/// <returns>A Task.</returns>
+
 		internal Task<TransportApplication> GetCurrentApplicationInfoAsync()
 			=> this.GetApplicationInfoAsync("@me");
 
@@ -5273,7 +5272,7 @@ namespace DisCatSharp.Net
 		/// Gets the application info async.
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
-		/// <returns>A Task.</returns>
+
 		internal Task<TransportApplication> GetApplicationInfoAsync(ulong applicationId)
 			=> this.GetApplicationInfoAsync(applicationId.ToString(CultureInfo.InvariantCulture));
 
@@ -5281,7 +5280,7 @@ namespace DisCatSharp.Net
 		/// Gets the application info async.
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
-		/// <returns>A Task.</returns>
+
 		private async Task<TransportApplication> GetApplicationInfoAsync(string applicationId)
 		{
 			var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id";
@@ -5297,7 +5296,7 @@ namespace DisCatSharp.Net
 		/// Gets the application assets async.
 		/// </summary>
 		/// <param name="application">The application.</param>
-		/// <returns>A Task.</returns>
+
 		internal async Task<IReadOnlyList<DiscordApplicationAsset>> GetApplicationAssetsAsync(DiscordApplication application)
 		{
 			var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id{Endpoints.ASSETS}";
@@ -5319,7 +5318,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Gets the gateway info async.
 		/// </summary>
-		/// <returns>A Task.</returns>
+
 		internal async Task<GatewayInfo> GetGatewayInfoAsync()
 		{
 			var headers = Utilities.GetBaseHeaders();
