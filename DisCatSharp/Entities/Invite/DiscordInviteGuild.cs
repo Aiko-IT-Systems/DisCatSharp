@@ -125,6 +125,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordInviteGuild"/> class.
 		/// </summary>
-		internal DiscordInviteGuild() { }
+		internal DiscordInviteGuild()
+		{ }
 	}
 }

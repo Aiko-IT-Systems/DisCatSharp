@@ -175,7 +175,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordInvite"/> class.
 		/// </summary>
-		internal DiscordInvite() { }
+		internal DiscordInvite()
+		{ }
 
 		/// <summary>
 		/// Deletes the invite.
@@ -193,6 +194,7 @@ namespace DisCatSharp.Entities
 		/// Converts this invite into an invite link.
 		/// </summary>
 		/// <returns>A discord.gg invite link.</returns>
-		public override string ToString() => $"{DiscordDomain.GetDomain(CoreDomain.DiscordShortlink).Url}/{this.Code}";
+		public override string ToString()
+			=> $"{DiscordDomain.GetDomain(CoreDomain.DiscordShortlink).Url}/{this.Code}";
 	}
 }

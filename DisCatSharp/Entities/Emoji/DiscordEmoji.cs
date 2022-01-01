@@ -112,8 +112,8 @@ namespace DisCatSharp.Entities
 		/// Returns a string representation of this emoji.
 		/// </summary>
 		/// <returns>String representation of this emoji.</returns>
-		public override string ToString() =>
-			this.Id != 0
+		public override string ToString()
+			=> this.Id != 0
 				? this.IsAnimated
 					? $"<a:{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}>"
 					: $"<:{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}>"
@@ -124,14 +124,16 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="obj">Object to compare to.</param>
 		/// <returns>Whether the object is equal to this <see cref="DiscordEmoji"/>.</returns>
-		public override bool Equals(object obj) => this.Equals(obj as DiscordEmoji);
+		public override bool Equals(object obj)
+			=> this.Equals(obj as DiscordEmoji);
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordEmoji"/> is equal to another <see cref="DiscordEmoji"/>.
 		/// </summary>
 		/// <param name="e"><see cref="DiscordEmoji"/> to compare to.</param>
 		/// <returns>Whether the <see cref="DiscordEmoji"/> is equal to this <see cref="DiscordEmoji"/>.</returns>
-		public bool Equals(DiscordEmoji e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.Name == e.Name));
+		public bool Equals(DiscordEmoji e)
+			=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.Name == e.Name));
 
 		/// <summary>
 		/// Gets the hash code for this <see cref="DiscordEmoji"/>.
@@ -149,7 +151,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the reactions string.
 		/// </summary>
-		internal string ToReactionString() => this.Id != 0 ? $"{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}" : this.Name;
+		internal string ToReactionString()
+			=> this.Id != 0 ? $"{this.Name}:{this.Id.ToString(CultureInfo.InvariantCulture)}" : this.Name;
 
 		/// <summary>
 		/// Gets whether the two <see cref="DiscordEmoji"/> objects are equal.
@@ -195,8 +198,8 @@ namespace DisCatSharp.Entities
 		/// <param name="client"><see cref="BaseDiscordClient"/> to attach to the object.</param>
 		/// <param name="unicodeEntity">Unicode entity to create the object from.</param>
 		/// <returns>Create <see cref="DiscordEmoji"/> object.</returns>
-		public static DiscordEmoji FromUnicode(BaseDiscordClient client, string unicodeEntity) =>
-			!IsValidUnicode(unicodeEntity)
+		public static DiscordEmoji FromUnicode(BaseDiscordClient client, string unicodeEntity)
+			=> !IsValidUnicode(unicodeEntity)
 				? throw new ArgumentException("Specified unicode entity is not a valid unicode emoji.", nameof(unicodeEntity))
 				: new DiscordEmoji { Name = unicodeEntity, Discord = client };
 
