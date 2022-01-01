@@ -42,11 +42,13 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordUser"/> class.
 		/// </summary>
-		internal DiscordUser() { }
+		internal DiscordUser()
+		{ }
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordUser"/> class.
 		/// </summary>
-		/// <param name="transport">The transport.</param>
+		/// <param name="transport">The transport user.</param>
 		internal DiscordUser(TransportUser transport)
 		{
 			this.Id = transport.Id;
@@ -99,6 +101,9 @@ namespace DisCatSharp.Entities
 		public virtual DiscordColor? BannerColor
 			=> !this.BannerColorInternal.HasValue ? null : new DiscordColor(this.BannerColorInternal.Value);
 
+		/// <summary>
+		/// Gets the user's banner color integer.
+		/// </summary>
 		[JsonProperty("accent_color")]
 		internal int? BannerColorInternal;
 
@@ -131,12 +136,14 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Returns a uri to this users profile.
 		/// </summary>
+		[JsonIgnore]
 		public Uri ProfileUri => new($"{DiscordDomain.GetDomain(CoreDomain.Discord).Url}{Endpoints.USERS}/{this.Id}");
 
 		/// <summary>
 		/// Returns a string representing the direct URL to this users profile.
 		/// </summary>
 		/// <returns>The URL of this users profile.</returns>
+		[JsonIgnore]
 		public string ProfileUrl => this.ProfileUri.AbsoluteUri;
 
 		/// <summary>
@@ -300,15 +307,14 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="guild"><see cref="DiscordGuild"/></param>
 		/// <returns><see cref="bool"/></returns>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-		public async Task<bool> IsNotInGuild(DiscordGuild guild) => !await this.IsInGuild(guild);
+		public async Task<bool> IsNotInGuild(DiscordGuild guild)
+			=> !await this.IsInGuild(guild);
 
 		/// <summary>
 		/// Unbans this user from a guild.
 		/// </summary>
 		/// <param name="guild">Guild to unban this user from.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the user does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
