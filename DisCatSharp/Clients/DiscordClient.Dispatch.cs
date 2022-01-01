@@ -58,7 +58,7 @@ namespace DisCatSharp
 		#region Dispatch Handler
 
 		/// <summary>
-		/// Handles the dispatch.
+		/// Handles the dispatch payloads.
 		/// </summary>
 		/// <param name="payload">The payload.</param>
 
@@ -76,6 +76,7 @@ namespace DisCatSharp
 				PayloadObject = dat
 			}).ConfigureAwait(false);
 
+			#region Default objects
 			DiscordChannel chn;
 			ulong gid;
 			ulong cid;
@@ -91,6 +92,7 @@ namespace DisCatSharp
 			TransportMember refMbr = default;
 			JToken rawMbr = default;
 			var rawRefMsg = dat["referenced_message"];
+			#endregion
 
 			switch (payload.EventName.ToLowerInvariant())
 			{
@@ -157,8 +159,9 @@ namespace DisCatSharp
 					break;
 
 				case "guild_stickers_update":
+					gid = (ulong)dat["guild_id"];
 					var strs = dat["stickers"].ToDiscordObject<IEnumerable<DiscordSticker>>();
-					await this.OnStickersUpdatedAsync(strs, dat).ConfigureAwait(false);
+					await this.OnStickersUpdatedAsync(strs, gid).ConfigureAwait(false);
 					break;
 
 				case "guild_integrations_update":
@@ -171,18 +174,12 @@ namespace DisCatSharp
 					await this.OnGuildIntegrationsUpdateEventAsync(this.GuildsInternal[gid]).ConfigureAwait(false);
 					break;
 
-				/*
-                 Ok soooo.. this isn't documented yet
-                 It seems to be part of the next version of membership screening (https://discord.com/channels/641574644578648068/689591708962652289/845836910991507486)
+				case "guild_join_request_create":
+					break;
 
-                 advaith said the following (https://discord.com/channels/641574644578648068/689591708962652289/845838160047112202):
-                 > iirc it happens when a user leaves a server where they havent completed screening yet
+				case "guild_join_request_update":
+					break;
 
-                 We have to wait till it's documented, but the fields are:
-                 { "user_id": "snowflake_user", "guild_id": "snowflake_guild" }
-
-                 We could handle it rn, but due to the fact that it isn't documented, it's not an good idea.
-                 */
 				case "guild_join_request_delete":
 					break;
 
@@ -607,9 +604,8 @@ namespace DisCatSharp
 		/// <summary>
 		/// Handles the ready event.
 		/// </summary>
-		/// <param name="ready">The ready.</param>
+		/// <param name="ready">The ready payload.</param>
 		/// <param name="rawGuilds">The raw guilds.</param>
-
 		internal async Task OnReadyEventAsync(ReadyPayload ready, JArray rawGuilds)
 		{
 			//ready.CurrentUser.Discord = this;
@@ -621,6 +617,7 @@ namespace DisCatSharp
 			this.CurrentUser.MfaEnabled = rusr.MfaEnabled;
 			this.CurrentUser.Verified = rusr.Verified;
 			this.CurrentUser.IsBot = rusr.IsBot;
+			this.CurrentUser.Flags = rusr.Flags;
 
 			this.GatewayVersion = ready.GatewayVersion;
 			this._sessionId = ready.SessionId;
@@ -687,11 +684,35 @@ namespace DisCatSharp
 				foreach (var xe in guild.Emojis.Values)
 					xe.Discord = this;
 
+				if (guild.StickersInternal == null)
+					guild.StickersInternal = new ConcurrentDictionary<ulong, DiscordSticker>();
+
+				foreach (var xs in guild.Stickers.Values)
+					xs.Discord = this;
+
 				if (guild.VoiceStatesInternal == null)
 					guild.VoiceStatesInternal = new ConcurrentDictionary<ulong, DiscordVoiceState>();
 
 				foreach (var xvs in guild.VoiceStates.Values)
 					xvs.Discord = this;
+
+				if (guild.ThreadsInternal == null)
+					guild.ThreadsInternal = new ConcurrentDictionary<ulong, DiscordThreadChannel>();
+
+				foreach (var xt in guild.ThreadsInternal.Values)
+					xt.Discord = this;
+
+				if (guild.StageInstancesInternal == null)
+					guild.StageInstancesInternal = new ConcurrentDictionary<ulong, DiscordStageInstance>();
+
+				foreach (var xsi in guild.StageInstancesInternal.Values)
+					xsi.Discord = this;
+
+				if (guild.ScheduledEventsInternal == null)
+					guild.ScheduledEventsInternal = new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
+
+				foreach (var xse in guild.ScheduledEventsInternal.Values)
+					xse.Discord = this;
 
 				this.GuildsInternal[guild.Id] = guild;
 			}
@@ -700,9 +721,8 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Handles the resumed.
+		/// Handles the resumed event.
 		/// </summary>
-
 		internal Task OnResumedAsync()
 		{
 			this.Logger.LogInformation(LoggerEvents.SessionUpdate, "Session resumed");
@@ -717,7 +737,6 @@ namespace DisCatSharp
 		/// Handles the channel create event.
 		/// </summary>
 		/// <param name="channel">The channel.</param>
-
 		internal async Task OnChannelCreateEventAsync(DiscordChannel channel)
 		{
 			channel.Discord = this;
@@ -741,7 +760,6 @@ namespace DisCatSharp
 		/// Handles the channel update event.
 		/// </summary>
 		/// <param name="channel">The channel.</param>
-
 		internal async Task OnChannelUpdateEventAsync(DiscordChannel channel)
 		{
 			if (channel == null)
@@ -762,7 +780,6 @@ namespace DisCatSharp
 					Discord = this,
 					GuildId = channelNew.GuildId,
 					Id = channelNew.Id,
-					//IsPrivate = channel_new.IsPrivate,
 					LastMessageId = channelNew.LastMessageId,
 					Name = channelNew.Name,
 					PermissionOverwritesInternal = new List<DiscordOverwrite>(channelNew.PermissionOverwritesInternal),
@@ -823,7 +840,6 @@ namespace DisCatSharp
 		/// Handles the channel delete event.
 		/// </summary>
 		/// <param name="channel">The channel.</param>
-
 		internal async Task OnChannelDeleteEventAsync(DiscordChannel channel)
 		{
 			if (channel == null)
@@ -875,12 +891,11 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Handles the channel pins update.
+		/// Handles the channel pins update event.
 		/// </summary>
-		/// <param name="guildId">The guild id.</param>
+		/// <param name="guildId">The optional guild id.</param>
 		/// <param name="channelId">The channel id.</param>
-		/// <param name="lastPinTimestamp">The last pin timestamp.</param>
-
+		/// <param name="lastPinTimestamp">The optional last pin timestamp.</param>
 		internal async Task OnChannelPinsUpdateAsync(ulong? guildId, ulong channelId, DateTimeOffset? lastPinTimestamp)
 		{
 			var guild = this.InternalGetCachedGuild(guildId);
@@ -905,7 +920,6 @@ namespace DisCatSharp
 		/// <param name="guild">The guild.</param>
 		/// <param name="rawMembers">The raw members.</param>
 		/// <param name="presences">The presences.</param>
-
 		internal async Task OnGuildCreateEventAsync(DiscordGuild guild, JArray rawMembers, IEnumerable<DiscordPresence> presences)
 		{
 			if (presences != null)
@@ -1031,7 +1045,6 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="guild">The guild.</param>
 		/// <param name="rawMembers">The raw members.</param>
-
 		internal async Task OnGuildUpdateEventAsync(DiscordGuild guild, JArray rawMembers)
 		{
 			DiscordGuild oldGuild;
@@ -1179,7 +1192,6 @@ namespace DisCatSharp
 		/// Handles the guild delete event.
 		/// </summary>
 		/// <param name="guild">The guild.</param>
-
 		internal async Task OnGuildDeleteEventAsync(DiscordGuild guild)
 		{
 			if (guild.IsUnavailable)
@@ -1204,10 +1216,9 @@ namespace DisCatSharp
 		/// Handles the guild sync event.
 		/// </summary>
 		/// <param name="guild">The guild.</param>
-		/// <param name="isLarge">If true, is large.</param>
+		/// <param name="isLarge">Whether the guild is a large guild..</param>
 		/// <param name="rawMembers">The raw members.</param>
 		/// <param name="presences">The presences.</param>
-
 		internal async Task OnGuildSyncEventAsync(DiscordGuild guild, bool isLarge, JArray rawMembers, IEnumerable<DiscordPresence> presences)
 		{
 			presences = presences.Select(xp => { xp.Discord = this; xp.Activity = new DiscordActivity(xp.RawActivity); return xp; });
@@ -1227,7 +1238,6 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="guild">The guild.</param>
 		/// <param name="newEmojis">The new emojis.</param>
-
 		internal async Task OnGuildEmojisUpdateEventAsync(DiscordGuild guild, IEnumerable<DiscordEmoji> newEmojis)
 		{
 			var oldEmojis = new ConcurrentDictionary<ulong, DiscordEmoji>(guild.EmojisInternal);
@@ -1252,11 +1262,10 @@ namespace DisCatSharp
 		/// Handles the stickers updated.
 		/// </summary>
 		/// <param name="newStickers">The new stickers.</param>
-		/// <param name="raw">The raw.</param>
-
-		internal async Task OnStickersUpdatedAsync(IEnumerable<DiscordSticker> newStickers, JObject raw)
+		/// <param name="guildId">The guild id.</param>
+		internal async Task OnStickersUpdatedAsync(IEnumerable<DiscordSticker> newStickers, ulong guildId)
 		{
-			var guild = this.InternalGetCachedGuild((ulong)raw["guild_id"]);
+			var guild = this.InternalGetCachedGuild(guildId);
 			var oldStickers = new ConcurrentDictionary<ulong, DiscordSticker>(guild.StickersInternal);
 			guild.StickersInternal.Clear();
 
@@ -1282,20 +1291,6 @@ namespace DisCatSharp
 			await this._guildStickersUpdated.InvokeAsync(this, sea).ConfigureAwait(false);
 		}
 
-		/// <summary>
-		/// Handles the guild integrations update event.
-		/// </summary>
-		/// <param name="guild">The guild.</param>
-
-		internal async Task OnGuildIntegrationsUpdateEventAsync(DiscordGuild guild)
-		{
-			var ea = new GuildIntegrationsUpdateEventArgs(this.ServiceProvider)
-			{
-				Guild = guild
-			};
-			await this._guildIntegrationsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
-		}
-
 		#endregion
 
 		#region Guild Ban
@@ -1303,9 +1298,8 @@ namespace DisCatSharp
 		/// <summary>
 		/// Handles the guild ban add event.
 		/// </summary>
-		/// <param name="user">The user.</param>
+		/// <param name="user">The transport user.</param>
 		/// <param name="guild">The guild.</param>
-
 		internal async Task OnGuildBanAddEventAsync(TransportUser user, DiscordGuild guild)
 		{
 			var usr = new DiscordUser(user) { Discord = this };
@@ -1330,9 +1324,8 @@ namespace DisCatSharp
 		/// <summary>
 		/// Handles the guild ban remove event.
 		/// </summary>
-		/// <param name="user">The user.</param>
+		/// <param name="user">The transport user.</param>
 		/// <param name="guild">The guild.</param>
-
 		internal async Task OnGuildBanRemoveEventAsync(TransportUser user, DiscordGuild guild)
 		{
 			var usr = new DiscordUser(user) { Discord = this };
@@ -1359,10 +1352,10 @@ namespace DisCatSharp
 		#region Guild Scheduled Event
 
 		/// <summary>
-		/// Dispatches the <see cref="GuildScheduledEventCreated"/> event.
+		/// Handles the scheduled event create event.
 		/// </summary>
 		/// <param name="scheduledEvent">The created event.</param>
-		/// <param name="guild">The target guild.</param>
+		/// <param name="guild">The guild.</param>
 		internal async Task OnGuildScheduledEventCreateEventAsync(DiscordScheduledEvent scheduledEvent, DiscordGuild guild)
 		{
 			scheduledEvent.Discord = this;
@@ -1386,10 +1379,10 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Dispatches the <see cref="GuildScheduledEventUpdated"/> event.
+		/// Handles the scheduled event update event.
 		/// </summary>
 		/// <param name="scheduledEvent">The updated event.</param>
-		/// <param name="guild">The target guild.</param>
+		/// <param name="guild">The guild.</param>
 		internal async Task OnGuildScheduledEventUpdateEventAsync(DiscordScheduledEvent scheduledEvent, DiscordGuild guild)
 		{
 			if (guild == null)
@@ -1455,10 +1448,10 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Dispatches the <see cref="GuildScheduledEventDeleted"/> event.
+		/// Handles the scheduled event delete event.
 		/// </summary>
 		/// <param name="scheduledEvent">The deleted event.</param>
-		/// <param name="guild">The target guild.</param>
+		/// <param name="guild">The guild.</param>
 		internal async Task OnGuildScheduledEventDeleteEventAsync(DiscordScheduledEvent scheduledEvent, DiscordGuild guild)
 		{
 			scheduledEvent.Discord = this;
@@ -1484,10 +1477,10 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Dispatches the <see cref="GuildScheduledEventUserAdded"/> event.
-		/// <param name="guildScheduledEventId">The target event.</param>
+		/// Handles the scheduled event user add event.
+		/// <param name="guildScheduledEventId">The event.</param>
 		/// <param name="userId">The added user id.</param>
-		/// <param name="guild">The target guild.</param>
+		/// <param name="guild">The guild.</param>
 		/// </summary>
 		internal async Task OnGuildScheduledEventUserAddedEventAsync(ulong guildScheduledEventId, ulong userId, DiscordGuild guild)
 		{
@@ -1512,10 +1505,10 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Dispatches the <see cref="GuildScheduledEventUserRemoved"/> event.
-		/// <param name="guildScheduledEventId">The target event.</param>
+		/// Handles the scheduled event user remove event.
+		/// <param name="guildScheduledEventId">The event.</param>
 		/// <param name="userId">The removed user id.</param>
-		/// <param name="guild">The target guild.</param>
+		/// <param name="guild">The guild.</param>
 		/// </summary>
 		internal async Task OnGuildScheduledEventUserRemovedEventAsync(ulong guildScheduledEventId, ulong userId, DiscordGuild guild)
 		{
@@ -1548,7 +1541,6 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="guild">The guild.</param>
 		/// <param name="integration">The integration.</param>
-
 		internal async Task OnGuildIntegrationCreateEventAsync(DiscordGuild guild, DiscordIntegration integration)
 		{
 			integration.Discord = this;
@@ -1561,7 +1553,6 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="guild">The guild.</param>
 		/// <param name="integration">The integration.</param>
-
 		internal async Task OnGuildIntegrationUpdateEventAsync(DiscordGuild guild, DiscordIntegration integration)
 		{
 			integration.Discord = this;
@@ -1570,12 +1561,24 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
+		/// Handles the guild integrations update event.
+		/// </summary>
+		/// <param name="guild">The guild.</param>
+		internal async Task OnGuildIntegrationsUpdateEventAsync(DiscordGuild guild)
+		{
+			var ea = new GuildIntegrationsUpdateEventArgs(this.ServiceProvider)
+			{
+				Guild = guild
+			};
+			await this._guildIntegrationsUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+		}
+
+		/// <summary>
 		/// Handles the guild integration delete event.
 		/// </summary>
 		/// <param name="guild">The guild.</param>
-		/// <param name="integrationId">The integration_id.</param>
-		/// <param name="applicationId">The application_id.</param>
-
+		/// <param name="integrationId">The integration id.</param>
+		/// <param name="applicationId">The optional application id.</param>
 		internal async Task OnGuildIntegrationDeleteEventAsync(DiscordGuild guild, ulong integrationId, ulong? applicationId)
 			=> await this._guildIntegrationDeleted.InvokeAsync(this, new GuildIntegrationDeleteEventArgs(this.ServiceProvider) { Guild = guild, IntegrationId = integrationId, ApplicationId = applicationId }).ConfigureAwait(false);
 
@@ -1586,9 +1589,8 @@ namespace DisCatSharp
 		/// <summary>
 		/// Handles the guild member add event.
 		/// </summary>
-		/// <param name="member">The member.</param>
+		/// <param name="member">The transport member.</param>
 		/// <param name="guild">The guild.</param>
-
 		internal async Task OnGuildMemberAddEventAsync(TransportMember member, DiscordGuild guild)
 		{
 			var usr = new DiscordUser(member.User) { Discord = this };
@@ -1620,9 +1622,8 @@ namespace DisCatSharp
 		/// <summary>
 		/// Handles the guild member remove event.
 		/// </summary>
-		/// <param name="user">The user.</param>
+		/// <param name="user">The transport user.</param>
 		/// <param name="guild">The guild.</param>
-
 		internal async Task OnGuildMemberRemoveEventAsync(TransportUser user, DiscordGuild guild)
 		{
 			var usr = new DiscordUser(user);
@@ -1644,12 +1645,11 @@ namespace DisCatSharp
 		/// <summary>
 		/// Handles the guild member update event.
 		/// </summary>
-		/// <param name="member">The member.</param>
+		/// <param name="member">The transport member.</param>
 		/// <param name="guild">The guild.</param>
 		/// <param name="roles">The roles.</param>
 		/// <param name="nick">The nick.</param>
-		/// <param name="pending">If true, pending.</param>
-
+		/// <param name="pending">Whether the member is pending.</param>
 		internal async Task OnGuildMemberUpdateEventAsync(TransportMember member, DiscordGuild guild, IEnumerable<ulong> roles, string nick, bool? pending)
 		{
 			var usr = new DiscordUser(member.User) { Discord = this };
@@ -1697,8 +1697,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Handles the guild members chunk event.
 		/// </summary>
-		/// <param name="dat">The dat.</param>
-
+		/// <param name="dat">The raw chunk data.</param>
 		internal async Task OnGuildMembersChunkEventAsync(JObject dat)
 		{
 			var guild = this.Guilds[(ulong)dat["guild_id"]];
@@ -1777,7 +1776,6 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="role">The role.</param>
 		/// <param name="guild">The guild.</param>
-
 		internal async Task OnGuildRoleCreateEventAsync(DiscordRole role, DiscordGuild guild)
 		{
 			role.Discord = this;
@@ -1798,7 +1796,6 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="role">The role.</param>
 		/// <param name="guild">The guild.</param>
-
 		internal async Task OnGuildRoleUpdateEventAsync(DiscordRole role, DiscordGuild guild)
 		{
 			var newRole = guild.GetRole(role.Id);
@@ -1813,7 +1810,10 @@ namespace DisCatSharp
 				IsMentionable = newRole.IsMentionable,
 				Name = newRole.Name,
 				Permissions = newRole.Permissions,
-				Position = newRole.Position
+				Position = newRole.Position,
+				IconHash = newRole.IconHash,
+				Tags = newRole.Tags ?? null,
+				UnicodeEmojiString = newRole.UnicodeEmojiString
 			};
 
 			newRole.GuildId = guild.Id;
@@ -1824,6 +1824,9 @@ namespace DisCatSharp
 			newRole.Name = role.Name;
 			newRole.Permissions = role.Permissions;
 			newRole.Position = role.Position;
+			newRole.IconHash = role.IconHash;
+			newRole.Tags = role.Tags ?? null;
+			newRole.UnicodeEmojiString = role.UnicodeEmojiString;
 
 			var ea = new GuildRoleUpdateEventArgs(this.ServiceProvider)
 			{
@@ -1839,7 +1842,6 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="roleId">The role id.</param>
 		/// <param name="guild">The guild.</param>
-
 		internal async Task OnGuildRoleDeleteEventAsync(ulong roleId, DiscordGuild guild)
 		{
 			if (!guild.RolesInternal.TryRemove(roleId, out var role))
@@ -1863,7 +1865,6 @@ namespace DisCatSharp
 		/// <param name="channelId">The channel id.</param>
 		/// <param name="guildId">The guild id.</param>
 		/// <param name="invite">The invite.</param>
-
 		internal async Task OnInviteCreateEventAsync(ulong channelId, ulong guildId, DiscordInvite invite)
 		{
 			var guild = this.InternalGetCachedGuild(guildId);
@@ -1893,8 +1894,7 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="channelId">The channel id.</param>
 		/// <param name="guildId">The guild id.</param>
-		/// <param name="dat">The dat.</param>
-
+		/// <param name="dat">The raw invite.</param>
 		internal async Task OnInviteDeleteEventAsync(ulong channelId, ulong guildId, JToken dat)
 		{
 			var guild = this.InternalGetCachedGuild(guildId);
@@ -1922,11 +1922,10 @@ namespace DisCatSharp
 		#region Message
 
 		/// <summary>
-		/// Handles the message ack event.
+		/// Handles the message acknowledge event.
 		/// </summary>
-		/// <param name="chn">The chn.</param>
+		/// <param name="chn">The channel.</param>
 		/// <param name="messageId">The message id.</param>
-
 		internal async Task OnMessageAckEventAsync(DiscordChannel chn, ulong messageId)
 		{
 			if (this.MessageCache == null || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == chn.Id, out var msg))
@@ -1946,11 +1945,10 @@ namespace DisCatSharp
 		/// Handles the message create event.
 		/// </summary>
 		/// <param name="message">The message.</param>
-		/// <param name="author">The author.</param>
-		/// <param name="member">The member.</param>
-		/// <param name="referenceAuthor">The reference author.</param>
-		/// <param name="referenceMember">The reference member.</param>
-
+		/// <param name="author">The transport user (author).</param>
+		/// <param name="member">The transport member.</param>
+		/// <param name="referenceAuthor">The reference transport user (author).</param>
+		/// <param name="referenceMember">The reference transport member.</param>
 		internal async Task OnMessageCreateEventAsync(DiscordMessage message, TransportUser author, TransportMember member, TransportUser referenceAuthor, TransportMember referenceMember)
 		{
 			message.Discord = this;
@@ -1985,11 +1983,10 @@ namespace DisCatSharp
 		/// Handles the message update event.
 		/// </summary>
 		/// <param name="message">The message.</param>
-		/// <param name="author">The author.</param>
-		/// <param name="member">The member.</param>
-		/// <param name="referenceAuthor">The reference author.</param>
-		/// <param name="referenceMember">The reference member.</param>
-
+		/// <param name="author">The transport user (author).</param>
+		/// <param name="member">The transport member.</param>
+		/// <param name="referenceAuthor">The reference transport user (author).</param>
+		/// <param name="referenceMember">The reference transport member.</param>
 		internal async Task OnMessageUpdateEventAsync(DiscordMessage message, TransportUser author, TransportMember member, TransportUser referenceAuthor, TransportMember referenceMember)
 		{
 			DiscordGuild guild;
@@ -2045,8 +2042,7 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="messageId">The message id.</param>
 		/// <param name="channelId">The channel id.</param>
-		/// <param name="guildId">The guild id.</param>
-
+		/// <param name="guildId">The optional guild id.</param>
 		internal async Task OnMessageDeleteEventAsync(ulong messageId, ulong channelId, ulong? guildId)
 		{
 			var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
@@ -2083,8 +2079,7 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="messageIds">The message ids.</param>
 		/// <param name="channelId">The channel id.</param>
-		/// <param name="guildId">The guild id.</param>
-
+		/// <param name="guildId">The optional guild id.</param>
 		internal async Task OnMessageBulkDeleteEventAsync(ulong[] messageIds, ulong channelId, ulong? guildId)
 		{
 			var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
@@ -2125,15 +2120,14 @@ namespace DisCatSharp
 		#region Message Reaction
 
 		/// <summary>
-		/// Handles the message reaction add.
+		/// Handles the message reaction add event.
 		/// </summary>
 		/// <param name="userId">The user id.</param>
 		/// <param name="messageId">The message id.</param>
 		/// <param name="channelId">The channel id.</param>
-		/// <param name="guildId">The guild id.</param>
-		/// <param name="mbr">The mbr.</param>
+		/// <param name="guildId">The optional guild id.</param>
+		/// <param name="mbr">The transport member.</param>
 		/// <param name="emoji">The emoji.</param>
-
 		internal async Task OnMessageReactionAddAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, TransportMember mbr, DiscordEmoji emoji)
 		{
 			var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
@@ -2183,14 +2177,13 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Handles the message reaction remove.
+		/// Handles the message reaction remove event.
 		/// </summary>
 		/// <param name="userId">The user id.</param>
 		/// <param name="messageId">The message id.</param>
 		/// <param name="channelId">The channel id.</param>
 		/// <param name="guildId">The guild id.</param>
 		/// <param name="emoji">The emoji.</param>
-
 		internal async Task OnMessageReactionRemoveAsync(ulong userId, ulong messageId, ulong channelId, ulong? guildId, DiscordEmoji emoji)
 		{
 			var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
@@ -2246,12 +2239,12 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Handles the message reaction remove all.
+		/// Handles the message reaction remove event.
+		/// Fired when all message reactions were removed.
 		/// </summary>
 		/// <param name="messageId">The message id.</param>
 		/// <param name="channelId">The channel id.</param>
-		/// <param name="guildId">The guild id.</param>
-
+		/// <param name="guildId">The optional guild id.</param>
 		internal async Task OnMessageReactionRemoveAllAsync(ulong messageId, ulong channelId, ulong? guildId)
 		{
 			var channel = this.InternalGetCachedChannel(channelId) ?? this.InternalGetCachedThread(channelId);
@@ -2282,13 +2275,13 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Handles the message reaction remove emoji.
+		/// Handles the message reaction remove event.
+		/// Fired when a emoji got removed.
 		/// </summary>
 		/// <param name="messageId">The message id.</param>
 		/// <param name="channelId">The channel id.</param>
 		/// <param name="guildId">The guild id.</param>
-		/// <param name="dat">The dat.</param>
-
+		/// <param name="dat">The raw discord emoji.</param>
 		internal async Task OnMessageReactionRemoveEmojiAsync(ulong messageId, ulong channelId, ulong guildId, JToken dat)
 		{
 			var guild = this.InternalGetCachedGuild(guildId);
@@ -2333,7 +2326,7 @@ namespace DisCatSharp
 		#region Stage Instance
 
 		/// <summary>
-		/// Dispatches the <see cref="StageInstanceCreated"/> event.
+		/// Handles the stage instance create event.
 		/// </summary>
 		/// <param name="stage">The created stage instance.</param>
 		internal async Task OnStageInstanceCreateEventAsync(DiscordStageInstance stage)
@@ -2347,7 +2340,7 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Dispatches the <see cref="StageInstanceUpdated"/> event.
+		/// Handles the stage instance update event.
 		/// </summary>
 		/// <param name="stage">The updated stage instance.</param>
 		internal async Task OnStageInstanceUpdateEventAsync(DiscordStageInstance stage)
@@ -2360,7 +2353,7 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Dispatches the <see cref="StageInstanceDeleted"/> event.
+		/// Handles the stage instance delete event.
 		/// </summary>
 		/// <param name="stage">The deleted stage instance.</param>
 		internal async Task OnStageInstanceDeleteEventAsync(DiscordStageInstance stage)
@@ -2377,7 +2370,7 @@ namespace DisCatSharp
 		#region Thread
 
 		/// <summary>
-		/// Dispatches the <see cref="ThreadCreated"/> event.
+		/// Handles the thread create event.
 		/// </summary>
 		/// <param name="thread">The created thread.</param>
 		internal async Task OnThreadCreateEventAsync(DiscordThreadChannel thread)
@@ -2389,7 +2382,7 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Dispatches the <see cref="DiscordClient.ThreadUpdated"/> event.
+		/// Handles the thread update event.
 		/// </summary>
 		/// <param name="thread">The updated thread.</param>
 		internal async Task OnThreadUpdateEventAsync(DiscordThreadChannel thread)
@@ -2456,7 +2449,7 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Dispatches the <see cref="ThreadDeleted"/> event.
+		/// Handles the thread delete event.
 		/// </summary>
 		/// <param name="thread">The deleted thread.</param>
 		internal async Task OnThreadDeleteEventAsync(DiscordThreadChannel thread)
@@ -2474,12 +2467,12 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Dispatches the <see cref="ThreadListSynced"/> event.
+		/// Handles the thread list sync event.
 		/// </summary>
 		/// <param name="guild">The synced guild.</param>
 		/// <param name="channelIds">The synced channel ids.</param>
 		/// <param name="threads">The synced threads.</param>
-		/// <param name="members">The synced members.</param>
+		/// <param name="members">The synced thread members.</param>
 		internal async Task OnThreadListSyncEventAsync(DiscordGuild guild, IReadOnlyList<ulong?> channelIds, IReadOnlyList<DiscordThreadChannel> threads, IReadOnlyList<DiscordThreadChannelMember> members)
 		{
 			guild.Discord = this;
@@ -2495,7 +2488,7 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Dispatches the <see cref="ThreadMemberUpdated"/> event.
+		/// Handles the thread member update event.
 		/// </summary>
 		/// <param name="member">The updated member.</param>
 		internal async Task OnThreadMemberUpdateEventAsync(DiscordThreadChannelMember member)
@@ -2516,7 +2509,7 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Dispatches the <see cref="ThreadMembersUpdated"/> event.
+		/// Handles the thread members update event.
 		/// </summary>
 		/// <param name="guild">The target guild.</param>
 		/// <param name="threadId">The thread id of the target thread this update belongs to.</param>
@@ -2589,7 +2582,6 @@ namespace DisCatSharp
 		/// <param name="channelId">The channel id.</param>
 		/// <param name="jUsers">The users in the activity.</param>
 		/// <param name="appId">The application id.</param>
-		/// <returns>A Task.</returns>
 		internal async Task OnEmbeddedActivityUpdateAsync(JObject trActivity, DiscordGuild guild, ulong channelId, JArray jUsers, ulong appId)
 			=> await Task.Delay(20);
 
@@ -2731,7 +2723,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Handles the user settings update event.
 		/// </summary>
-		/// <param name="user">The user.</param>
+		/// <param name="user">The transport user.</param>
 
 		internal async Task OnUserSettingsUpdateEventAsync(TransportUser user)
 		{
@@ -2747,7 +2739,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Handles the user update event.
 		/// </summary>
-		/// <param name="user">The user.</param>
+		/// <param name="user">The transport user.</param>
 
 		internal async Task OnUserUpdateEventAsync(TransportUser user)
 		{
@@ -2788,7 +2780,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Handles the voice state update event.
 		/// </summary>
-		/// <param name="raw">The raw.</param>
+		/// <param name="raw">The raw voice state update object.</param>
 
 		internal async Task OnVoiceStateUpdateEventAsync(JObject raw)
 		{
@@ -2833,8 +2825,8 @@ namespace DisCatSharp
 		/// <summary>
 		/// Handles the voice server update event.
 		/// </summary>
-		/// <param name="endpoint">The endpoint.</param>
-		/// <param name="token">The token.</param>
+		/// <param name="endpoint">The new endpoint.</param>
+		/// <param name="token">The new token.</param>
 		/// <param name="guild">The guild.</param>
 
 		internal async Task OnVoiceServerUpdateEventAsync(string endpoint, string token, DiscordGuild guild)
@@ -2853,10 +2845,10 @@ namespace DisCatSharp
 		#region Commands
 
 		/// <summary>
-		/// Handles the application command create.
+		/// Handles the application command create event.
 		/// </summary>
-		/// <param name="cmd">The cmd.</param>
-		/// <param name="guildId">The guild_id.</param>
+		/// <param name="cmd">The application command.</param>
+		/// <param name="guildId">The optional guild id.</param>
 
 		internal async Task OnApplicationCommandCreateAsync(DiscordApplicationCommand cmd, ulong? guildId)
 		{
@@ -2883,10 +2875,10 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Handles the application command update.
+		/// Handles the application command update event.
 		/// </summary>
-		/// <param name="cmd">The cmd.</param>
-		/// <param name="guildId">The guild_id.</param>
+		/// <param name="cmd">The application command.</param>
+		/// <param name="guildId">The optional guild id.</param>
 
 		internal async Task OnApplicationCommandUpdateAsync(DiscordApplicationCommand cmd, ulong? guildId)
 		{
@@ -2913,10 +2905,10 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Handles the application command delete.
+		/// Handles the application command delete event.
 		/// </summary>
-		/// <param name="cmd">The cmd.</param>
-		/// <param name="guildId">The guild_id.</param>
+		/// <param name="cmd">The application command.</param>
+		/// <param name="guildId">The optional guild id.</param>
 
 		internal async Task OnApplicationCommandDeleteAsync(DiscordApplicationCommand cmd, ulong? guildId)
 		{
@@ -2943,14 +2935,14 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Handles the guild application command counts update.
+		/// Handles the guild application command counts update event.
 		/// </summary>
-		/// <param name="sc">The <see cref="ApplicationCommandType.ChatInput"/> count.</param>
-		/// <param name="ucmc">The <see cref="ApplicationCommandType.User"/> count.</param>
-		/// <param name="mcmc">The <see cref="ApplicationCommandType.Message"/> count.</param>
-		/// <param name="guildId">The guild_id.</param>
+		/// <param name="chatInputCommandCount">The <see cref="ApplicationCommandType.ChatInput"/> count.</param>
+		/// <param name="userContextMenuCommandCount">The <see cref="ApplicationCommandType.User"/> count.</param>
+		/// <param name="messageContextMenuCount">The <see cref="ApplicationCommandType.Message"/> count.</param>
+		/// <param name="guildId">The guild id.</param>
 		/// <returns>Count of application commands.</returns>
-		internal async Task OnGuildApplicationCommandCountsUpdateAsync(int sc, int ucmc, int mcmc, ulong guildId)
+		internal async Task OnGuildApplicationCommandCountsUpdateAsync(int chatInputCommandCount, int userContextMenuCommandCount, int messageContextMenuCount, ulong guildId)
 		{
 			var guild = this.InternalGetCachedGuild(guildId);
 
@@ -2965,9 +2957,9 @@ namespace DisCatSharp
 
 			var ea = new GuildApplicationCommandCountEventArgs(this.ServiceProvider)
 			{
-				SlashCommands = sc,
-				UserContextMenuCommands = ucmc,
-				MessageContextMenuCommands = mcmc,
+				SlashCommands = chatInputCommandCount,
+				UserContextMenuCommands = userContextMenuCommandCount,
+				MessageContextMenuCommands = messageContextMenuCount,
 				Guild = guild
 			};
 
@@ -2975,15 +2967,15 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Handles the application command permissions update.
+		/// Handles the application command permissions update event.
 		/// </summary>
 		/// <param name="perms">The new permissions.</param>
-		/// <param name="cId">The command id.</param>
+		/// <param name="channelId">The command id.</param>
 		/// <param name="guildId">The guild id.</param>
-		/// <param name="aId">The application id.</param>
-		internal async Task OnApplicationCommandPermissionsUpdateAsync(IEnumerable<DiscordApplicationCommandPermission> perms, ulong cId, ulong guildId, ulong aId)
+		/// <param name="applicationId">The application id.</param>
+		internal async Task OnApplicationCommandPermissionsUpdateAsync(IEnumerable<DiscordApplicationCommandPermission> perms, ulong channelId, ulong guildId, ulong applicationId)
 		{
-			if (aId != this.CurrentApplication.Id)
+			if (applicationId != this.CurrentApplication.Id)
 				return;
 
 			var guild = this.InternalGetCachedGuild(guildId);
@@ -2991,11 +2983,11 @@ namespace DisCatSharp
 			DiscordApplicationCommand cmd;
 			try
 			{
-				cmd = await this.GetGuildApplicationCommandAsync(guildId, cId);
+				cmd = await this.GetGuildApplicationCommandAsync(guildId, channelId);
 			}
 			catch (NotFoundException)
 			{
-				cmd = await this.GetGlobalApplicationCommandAsync(cId);
+				cmd = await this.GetGlobalApplicationCommandAsync(channelId);
 			}
 
 			if (guild == null)
@@ -3011,7 +3003,7 @@ namespace DisCatSharp
 			{
 				Permissions = perms.ToList(),
 				Command = cmd,
-				ApplicationId = aId,
+				ApplicationId = applicationId,
 				Guild = guild
 			};
 
@@ -3023,12 +3015,12 @@ namespace DisCatSharp
 		#region Interaction
 
 		/// <summary>
-		/// Handles the interaction create.
+		/// Handles the interaction create event.
 		/// </summary>
 		/// <param name="guildId">The guild id.</param>
 		/// <param name="channelId">The channel id.</param>
-		/// <param name="user">The user.</param>
-		/// <param name="member">The member.</param>
+		/// <param name="user">The transport user.</param>
+		/// <param name="member">The transport member.</param>
 		/// <param name="interaction">The interaction.</param>
 		internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction)
 		{
@@ -3169,10 +3161,9 @@ namespace DisCatSharp
 		/// <param name="userId">The user id.</param>
 		/// <param name="channelId">The channel id.</param>
 		/// <param name="channel">The channel.</param>
-		/// <param name="guildId">The guild id.</param>
-		/// <param name="started">The started.</param>
-		/// <param name="mbr">The mbr.</param>
-
+		/// <param name="guildId">The optional guild id.</param>
+		/// <param name="started">The time when the user started typing.</param>
+		/// <param name="mbr">The transport member.</param>
 		internal async Task OnTypingStartEventAsync(ulong userId, ulong channelId, DiscordChannel channel, ulong? guildId, DateTimeOffset started, TransportMember mbr)
 		{
 			if (channel == null)
@@ -3203,7 +3194,6 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="channel">The channel.</param>
 		/// <param name="guild">The guild.</param>
-
 		internal async Task OnWebhooksUpdateAsync(DiscordChannel channel, DiscordGuild guild)
 		{
 			var ea = new WebhooksUpdateEventArgs(this.ServiceProvider)
@@ -3215,10 +3205,9 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Handles the unknown event.
+		/// Handles all unknown events.
 		/// </summary>
 		/// <param name="payload">The payload.</param>
-
 		internal async Task OnUnknownEventAsync(GatewayPayload payload)
 		{
 			var ea = new UnknownEventArgs(this.ServiceProvider) { EventName = payload.EventName, Json = (payload.Data as JObject)?.ToString() };
