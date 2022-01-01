@@ -99,24 +99,6 @@ namespace DisCatSharp.Entities
 			=> string.IsNullOrWhiteSpace(this.GuildAvatarHash) ? this.User.AvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.AVATARS}/{this.GuildAvatarHash}.{(this.GuildAvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 		/// <summary>
-		/// Gets this member's banner url.
-		/// </summary>
-		[JsonIgnore]
-#pragma warning disable CS0108 // Member hides inherited member; missing new keyword
-		public string BannerUrl => this.User.BannerUrl;
-#pragma warning restore CS0108 // Member hides inherited member; missing new keyword
-
-		/// <summary>
-		/// Gets the member's banner hash.
-		/// </summary>
-		[JsonIgnore]
-		public override string BannerHash
-		{
-			get => this.User.BannerHash;
-			internal set => this.User.BannerHash = value;
-		}
-
-		/// <summary>
 		/// Gets the members banner hash.
 		/// </summary>
 		[JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
@@ -130,7 +112,7 @@ namespace DisCatSharp.Entities
 			=> string.IsNullOrWhiteSpace(this.GuildBannerHash) ? this.User.BannerUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.GUILDS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}{Endpoints.USERS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.BANNERS}/{this.GuildBannerHash}.{(this.GuildBannerHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 		/// <summary>
-		/// The color of this member's banner. Mutually exclusive with <see cref="BannerHash"/>.
+		/// The color of this member's banner. Mutually exclusive with <see cref="GuildBannerHash"/>.
 		/// </summary>
 		[JsonIgnore]
 		public override DiscordColor? BannerColor => this.User.BannerColor;
@@ -264,6 +246,7 @@ namespace DisCatSharp.Entities
 		public Permissions Permissions => this.GetPermissions();
 
 		#region Overridden user properties
+
 		/// <summary>
 		/// Gets the user.
 		/// </summary>
@@ -297,6 +280,16 @@ namespace DisCatSharp.Entities
 		{
 			get => this.User.AvatarHash;
 			internal set => this.User.AvatarHash = value;
+		}
+
+		/// <summary>
+		/// Gets the member's banner hash.
+		/// </summary>
+		[JsonIgnore]
+		public override string BannerHash
+		{
+			get => this.User.BannerHash;
+			internal set => this.User.BannerHash = value;
 		}
 
 		/// <summary>
@@ -363,6 +356,7 @@ namespace DisCatSharp.Entities
 			get => this.User.Flags;
 			internal set => this.User.Flags = value;
 		}
+
 		#endregion
 
 		/// <summary>
@@ -454,7 +448,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="mute">Whether the member is to be muted.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -467,7 +460,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="deaf">Whether the member is to be deafened.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.DeafenMembers"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -479,7 +471,6 @@ namespace DisCatSharp.Entities
 		/// Modifies this member.
 		/// </summary>
 		/// <param name="action">Action to perform on this member.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageNicknames"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -514,7 +505,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="until">The datetime offset to time out the user. Up to 28 days.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -527,7 +517,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="until">The timespan to time out the user. Up to 28 days.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -540,7 +529,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="until">The datetime to time out the user. Up to 28 days.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -552,7 +540,6 @@ namespace DisCatSharp.Entities
 		/// Removes the timeout from a member.
 		/// </summary>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -564,7 +551,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="role">Role to grant.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -577,7 +563,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="role">Role to revoke.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -590,7 +575,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="roles">Roles to set.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -604,7 +588,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="deleteMessageDays">How many days to remove messages from.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -638,7 +621,7 @@ namespace DisCatSharp.Entities
 		/// Moves this member to the specified voice channel
 		/// </summary>
 		/// <param name="channel"></param>
-		/// <returns></returns>
+
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MoveMembers"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -727,21 +710,24 @@ namespace DisCatSharp.Entities
 		/// Returns a string representation of this member.
 		/// </summary>
 		/// <returns>String representation of this member.</returns>
-		public override string ToString() => $"Member {this.Id}; {this.Username}#{this.Discriminator} ({this.DisplayName})";
+		public override string ToString()
+			=> $"Member {this.Id}; {this.Username}#{this.Discriminator} ({this.DisplayName})";
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordMember"/> is equal to another object.
 		/// </summary>
 		/// <param name="obj">Object to compare to.</param>
 		/// <returns>Whether the object is equal to this <see cref="DiscordMember"/>.</returns>
-		public override bool Equals(object obj) => this.Equals(obj as DiscordMember);
+		public override bool Equals(object obj)
+			=> this.Equals(obj as DiscordMember);
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordMember"/> is equal to another <see cref="DiscordMember"/>.
 		/// </summary>
 		/// <param name="e"><see cref="DiscordMember"/> to compare to.</param>
 		/// <returns>Whether the <see cref="DiscordMember"/> is equal to this <see cref="DiscordMember"/>.</returns>
-		public bool Equals(DiscordMember e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.GuildId == e.GuildId));
+		public bool Equals(DiscordMember e)
+			=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.GuildId == e.GuildId));
 
 		/// <summary>
 		/// Gets the hash code for this <see cref="DiscordMember"/>.
