@@ -854,7 +854,6 @@ namespace DisCatSharp.ApplicationCommands
                             var command = e.Interaction.Data.Options.First();
                             var group = subgroups.First().SubCommands.First(x => x.Name == command.Name).Methods.First(x => x.Key == command.Options.First().Name).Value;
 							
-							this.Client.Logger.LogDebug(JsonConvert.SerializeObject(command));
                             var focusedOption = command.Options.First().Options.First(o => o.Focused);
 
                             var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
