@@ -60,14 +60,14 @@ namespace DisCatSharp.Net.Serialization
 
             var job = JObject.Load(reader);
             var type = job["type"]?.ToObject<ComponentType>();
-            var style = job["style"]?.ToObject<ButtonStyle>();
 
             if (type == null)
                 throw new ArgumentException($"Value {reader} does not have a component type specifier");
 
             DiscordComponent cmp;
-            if (type is ComponentType.Button && style is not null)
+            if (type is ComponentType.Button)
             {
+                var style = job["style"]?.ToObject<ButtonStyle>();
                 cmp = style switch
                 {
                     ButtonStyle.Link => new DiscordLinkButtonComponent(),
