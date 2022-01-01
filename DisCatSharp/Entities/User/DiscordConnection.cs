@@ -41,13 +41,13 @@ namespace DisCatSharp.Entities
 		/// Gets the username of the connection account.
 		/// </summary>
 		[JsonProperty("name")]
-		public string Name { get; set; }
+		public string Name { get; internal set; }
 
 		/// <summary>
 		/// Gets the service of the connection (twitch, youtube, steam, twitter, facebook, spotify, leagueoflegends, reddit)
 		/// </summary>
 		[JsonProperty("type")]
-		public string Type { get; set; }
+		public string Type { get; internal set; }
 
 		/// <summary>
 		/// Gets whether the connection is revoked.
@@ -62,28 +62,28 @@ namespace DisCatSharp.Entities
 		public IReadOnlyList<DiscordIntegration> Integrations { get; internal set; }
 
 		/// <summary>
-		/// Gets the connection is verified or not.
+		/// Gets whether the connection is verified.
 		/// </summary>
 		[JsonProperty("verified", NullValueHandling = NullValueHandling.Ignore)]
-		public bool? Verified { get; set; }
+		public bool? Verified { get; internal set; }
 
 		/// <summary>
-		/// Gets the connection will show activity or not.
+		/// Gets whether the connection will show a activity.
 		/// </summary>
 		[JsonProperty("show_activity", NullValueHandling = NullValueHandling.Ignore)]
-		public bool? ShowActivity { get; set; }
+		public bool? ShowActivity { get; internal set; }
 
 		/// <summary>
-		/// Gets the connection will sync friends or not.
+		/// Whether the connection will sync friends.
 		/// </summary>
 		[JsonProperty("friend_sync", NullValueHandling = NullValueHandling.Ignore)]
-		public bool? FriendSync { get; set; }
+		public bool? FriendSync { get; internal set; }
 
 		/// <summary>
 		/// Gets the visibility of the connection.
 		/// </summary>
 		[JsonProperty("visibility", NullValueHandling = NullValueHandling.Ignore)]
-		public long? Visibility { get; set; }
+		public long? Visibility { get; internal set; }
 
 		/// <summary>
 		/// Gets the client instance this object is tied to.
@@ -94,6 +94,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordConnection"/> class.
 		/// </summary>
-		internal DiscordConnection() { }
+		internal DiscordConnection()
+		{ }
 	}
 }
