@@ -27,7 +27,7 @@ namespace DisCatSharp.Common.Serialization
 	/// <summary>
 	/// Specifies a decomposer for a given type or property.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Property | AttributeTargets.Field)]
 	public sealed class DecomposerAttribute : SerializationAttribute
 	{
 		/// <summary>

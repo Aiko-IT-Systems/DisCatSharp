@@ -28,7 +28,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 	/// <summary>
 	/// Defines that usage of this application command is restricted to members with specified permissions.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 	public sealed class ApplicationCommandRequireUserPermissionsAttribute : SlashCheckBaseAttribute
 	{
 		/// <summary>

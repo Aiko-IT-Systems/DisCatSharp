@@ -28,7 +28,7 @@ namespace DisCatSharp.Common.Serialization
 	/// <para>Specifies that this <see cref="System.DateTime"/> or <see cref="System.DateTimeOffset"/> will be serialized as Unix timestamp seconds.</para>
 	/// <para>This value will always be serialized as a number.</para>
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public sealed class UnixSecondsAttribute : SerializationAttribute
 	{ }
 
@@ -36,7 +36,7 @@ namespace DisCatSharp.Common.Serialization
 	/// <para>Specifies that this <see cref="System.DateTime"/> or <see cref="System.DateTimeOffset"/> will be serialized as Unix timestamp milliseconds.</para>
 	/// <para>This value will always be serialized as a number.</para>
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public sealed class UnixMillisecondsAttribute : SerializationAttribute
 	{ }
 }

@@ -29,7 +29,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 	/// <summary>
 	/// Defines that usage of this command is restricted to boosters.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 	public sealed class RequireDisCatSharpDeveloperAttribute : CheckBaseAttribute
 	{
 		/// <summary>

@@ -27,7 +27,7 @@ namespace DisCatSharp.ApplicationCommands
 	/// <summary>
 	/// Marks this class a slash command group
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Class)]
 	public class SlashCommandGroupAttribute : Attribute
 	{
 		/// <summary>

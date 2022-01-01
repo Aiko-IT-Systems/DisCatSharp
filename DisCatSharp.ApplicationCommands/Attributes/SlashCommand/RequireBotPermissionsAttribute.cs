@@ -28,7 +28,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 	/// <summary>
 	/// Defines that usage of this application command is only possible when the bot is granted a specific permission.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 	public sealed class ApplicationCommandRequireBotPermissionsAttribute : SlashCheckBaseAttribute
 	{
 		/// <summary>

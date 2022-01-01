@@ -27,7 +27,7 @@ namespace DisCatSharp.ApplicationCommands
 	/// <summary>
 	/// Marks this method as a slash command
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Method)]
 	public class SlashCommandAttribute : Attribute
 	{
 		/// <summary>

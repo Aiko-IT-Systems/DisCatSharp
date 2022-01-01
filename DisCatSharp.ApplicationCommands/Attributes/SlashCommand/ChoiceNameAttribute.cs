@@ -27,7 +27,7 @@ namespace DisCatSharp.ApplicationCommands
 	/// <summary>
 	/// Sets the name for this enum choice.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.All)]
 	public class ChoiceNameAttribute : Attribute
 	{
 		/// <summary>

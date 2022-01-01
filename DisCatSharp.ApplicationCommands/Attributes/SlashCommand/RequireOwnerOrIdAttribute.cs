@@ -31,7 +31,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 	/// <summary>
 	/// Requires ownership of the bot or a whitelisted id to execute this command.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 	public sealed class ApplicationCommandRequireOwnerOrIdAttribute : SlashCheckBaseAttribute
 	{
 		/// <summary>

@@ -31,7 +31,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 	/// <summary>
 	/// Defines that usage of this command is restricted to members with specified role. Note that it's much preferred to restrict access using <see cref="RequirePermissionsAttribute"/>.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 	public sealed class RequireRolesAttribute : CheckBaseAttribute
 	{
 		/// <summary>

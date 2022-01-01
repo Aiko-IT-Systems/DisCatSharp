@@ -28,7 +28,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 	/// <summary>
 	/// The autocomplete attribute.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Parameter)]
 	public class AutocompleteAttribute : Attribute
 	{
 		/// <summary>

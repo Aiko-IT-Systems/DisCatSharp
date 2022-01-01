@@ -30,7 +30,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 	/// <summary>
 	/// Defines that this application command is only usable within a direct message channel.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 	public sealed class ApplicationCommandRequireDirectMessageAttribute : SlashCheckBaseAttribute
 	{
 		/// <summary>
