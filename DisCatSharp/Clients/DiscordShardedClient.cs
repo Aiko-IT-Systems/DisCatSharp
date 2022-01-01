@@ -101,9 +101,24 @@ namespace DisCatSharp
 		/// </summary>
 		private ConcurrentDictionary<string, DiscordVoiceRegion> _internalVoiceRegions;
 
+		/// <summary>
+		/// Gets a list of shards.
+		/// </summary>
 		private readonly ConcurrentDictionary<int, DiscordClient> _shards = new();
+
+		/// <summary>
+		/// Gets a lazy list of voice regions.
+		/// </summary>
 		private Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>> _voiceRegionsLazy;
+
+		/// <summary>
+		/// Whether the shard client is started.
+		/// </summary>
 		private bool _isStarted;
+
+		/// <summary>
+		/// Whether manual sharding is enabled.
+		/// </summary>
 		private readonly bool _manuallySharding;
 
 		#endregion
@@ -111,9 +126,9 @@ namespace DisCatSharp
 		#region Constructor
 
 		/// <summary>
-		/// Initializes new auto-sharding Discord client.
+		/// Initializes a new auto-sharding Discord client.
 		/// </summary>
-		/// <param name="config">Configuration to use.</param>
+		/// <param name="config">The configuration to use.</param>
 		public DiscordShardedClient(DiscordConfiguration config)
 		{
 			this.InternalSetup();
@@ -141,7 +156,6 @@ namespace DisCatSharp
 		/// </summary>
 		/// <exception cref="System.AggregateException"></exception>
 		/// <exception cref="System.InvalidOperationException"></exception>
-		/// <returns></returns>
 		public async Task StartAsync()
 		{
 			if (this._isStarted)
@@ -190,23 +204,23 @@ namespace DisCatSharp
 				throw new AggregateException(message, ex);
 			}
 		}
+
 		/// <summary>
-		/// Disconnects and disposes of all shards.
+		/// Disconnects and disposes all shards.
 		/// </summary>
-		/// <returns></returns>
 		/// <exception cref="System.InvalidOperationException"></exception>
 		public Task StopAsync()
 			=> this.InternalStopAsync();
 
 		/// <summary>
-		/// Gets a shard from a guild ID.
+		/// Gets a shard from a guild id.
 		/// <para>
 		///     If automatically sharding, this will use the <see cref="Utilities.GetShardId(ulong, int)"/> method.
 		///     Otherwise if manually sharding, it will instead iterate through each shard's guild caches.
 		/// </para>
 		/// </summary>
 		/// <param name="guildId">The guild ID for the shard.</param>
-		/// <returns>The found <see cref="DiscordClient"/> shard. Otherwise <see langword="null"/> if the shard was not found for the guild ID.</returns>
+		/// <returns>The found <see cref="DiscordClient"/> shard. Otherwise null if the shard was not found for the guild id.</returns>
 		public DiscordClient GetShard(ulong guildId)
 		{
 			var index = this._manuallySharding ? this.GetShardIdFromGuilds(guildId) : Utilities.GetShardId(guildId, this.ShardClients.Count);
@@ -222,16 +236,16 @@ namespace DisCatSharp
 		/// </para>
 		/// </summary>
 		/// <param name="guild">The guild for the shard.</param>
-		/// <returns>The found <see cref="DiscordClient"/> shard. Otherwise <see langword="null"/> if the shard was not found for the guild.</returns>
+		/// <returns>The found <see cref="DiscordClient"/> shard. Otherwise null if the shard was not found for the guild.</returns>
 		public DiscordClient GetShard(DiscordGuild guild)
 			=> this.GetShard(guild.Id);
 
 		/// <summary>
-		/// Updates playing statuses on all shards.
+		/// Updates the status on all shards.
 		/// </summary>
-		/// <param name="activity">Activity to set.</param>
-		/// <param name="userStatus">Status of the user.</param>
-		/// <param name="idleSince">Since when is the client performing the specified activity.</param>
+		/// <param name="activity">The activity to set. Defaults to null.</param>
+		/// <param name="userStatus">The optional status to set. Defaults to null.</param>
+		/// <param name="idleSince">Since when is the client performing the specified activity. Defaults to null.</param>
 		/// <returns>Asynchronous operation.</returns>
 		public async Task UpdateStatusAsync(DiscordActivity activity = null, UserStatus? userStatus = null, DateTimeOffset? idleSince = null)
 		{
@@ -247,23 +261,23 @@ namespace DisCatSharp
 		#region Internal Methods
 
 		/// <summary>
-		/// Initializes the shards async.
+		/// Initializes the shards.
 		/// </summary>
-		/// <returns>A Task.</returns>
+		/// <returns>The count of initialized shards.</returns>
 		internal async Task<int> InitializeShardsAsync()
 		{
 			if (this._shards.Count != 0)
 				return this._shards.Count;
 
 			this.GatewayInfo = await this.GetGatewayInfoAsync().ConfigureAwait(false);
-			var shardc = this._configuration.ShardCount == 1 ? this.GatewayInfo.ShardCount : this._configuration.ShardCount;
+			var shardCount = this._configuration.ShardCount == 1 ? this.GatewayInfo.ShardCount : this._configuration.ShardCount;
 			var lf = new ShardedLoggerFactory(this.Logger);
-			for (var i = 0; i < shardc; i++)
+			for (var i = 0; i < shardCount; i++)
 			{
 				var cfg = new DiscordConfiguration(this._configuration)
 				{
 					ShardId = i,
-					ShardCount = shardc,
+					ShardCount = shardCount,
 					LoggerFactory = lf
 				};
 
@@ -272,17 +286,16 @@ namespace DisCatSharp
 					throw new InvalidOperationException("Could not initialize shards.");
 			}
 
-			return shardc;
+			return shardCount;
 		}
 
 		#endregion
 
-		#region Private Methods/Version Property
+		#region Private Methods & Version Property
 
 		/// <summary>
-		/// Gets the gateway info async.
+		/// Gets the gateway info.
 		/// </summary>
-		/// <returns>A Task.</returns>
 		private async Task<GatewayInfo> GetGatewayInfoAsync()
 		{
 			var url = $"{Utilities.GetApiBaseUri(this._configuration)}{Endpoints.GATEWAY}{Endpoints.BOT}";
@@ -354,7 +367,9 @@ namespace DisCatSharp
 			}
 		}
 
-
+		/// <summary>
+		/// Gets the version string.
+		/// </summary>
 		private readonly Lazy<string> _versionString = new(() =>
 		{
 			var a = typeof(DiscordShardedClient).GetTypeInfo().Assembly;
@@ -372,6 +387,9 @@ namespace DisCatSharp
 			return vs;
 		});
 
+		/// <summary>
+		/// Gets the name of the used bot library.
+		/// </summary>
 		private readonly string _botLibrary = "DisCatSharp";
 
 		#endregion
@@ -379,10 +397,9 @@ namespace DisCatSharp
 		#region Private Connection Methods
 
 		/// <summary>
-		/// Connects the shard async.
+		/// Connects a shard.
 		/// </summary>
-		/// <param name="i">The i.</param>
-		/// <returns>A Task.</returns>
+		/// <param name="i">The shard id.</param>
 		private async Task ConnectShardAsync(int i)
 		{
 			if (!this._shards.TryGetValue(i, out var client))
@@ -426,10 +443,9 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Internals the stop async.
+		/// Stops all shards.
 		/// </summary>
-		/// <param name="enableLogger">If true, enable logger.</param>
-		/// <returns>A Task.</returns>
+		/// <param name="enableLogger">Whether to enable the logger.</param>
 		private Task InternalStopAsync(bool enableLogger = true)
 		{
 			if (!this._isStarted)
@@ -468,7 +484,7 @@ namespace DisCatSharp
 		#region Event Handler Initialization/Registering
 
 		/// <summary>
-		/// Internals the setup.
+		/// Sets the shard client up internally..
 		/// </summary>
 		private void InternalSetup()
 		{

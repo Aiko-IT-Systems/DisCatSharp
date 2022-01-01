@@ -281,7 +281,7 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="activity">The activity to set. Defaults to null.</param>
 		/// <param name="status">The optional status to set. Defaults to null.</param>
-		/// <param name="idlesince">The optional datetime offset since when the client is offline. Defaults to null.</param>
+		/// <param name="idlesince">Since when is the client performing the specified activity. Defaults to null.</param>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when an invalid token was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
