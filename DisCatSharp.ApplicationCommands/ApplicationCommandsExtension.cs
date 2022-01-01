@@ -519,7 +519,7 @@ namespace DisCatSharp.ApplicationCommands
 						if (ex is BadRequestException brex)
 							this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.JsonMessage}");
 						else
-							this.Client.Logger.LogCritical(ex, $"There was an error registering application commands");
+							this.Client.Logger.LogCritical(ex, $"There was an error parsing the application commands");
 						s_errored = true;
 					}
 				}
@@ -676,7 +676,7 @@ namespace DisCatSharp.ApplicationCommands
 						if (ex is BadRequestException brex)
 							this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.JsonMessage}");
 						else
-							this.Client.Logger.LogCritical(ex, $"There was an error registering application commands");
+							this.Client.Logger.LogCritical(ex, $"There was an general error registering application commands");
 						s_errored = true;
 					}
 				}

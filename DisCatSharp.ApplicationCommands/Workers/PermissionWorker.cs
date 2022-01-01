@@ -34,6 +34,15 @@ namespace DisCatSharp.ApplicationCommands
 	/// </summary>
 	internal class PermissionWorker
 	{
+		/// <summary>
+		/// Updates the application command permissions.
+		/// </summary>
+		/// <param name="types">The types.</param>
+		/// <param name="guildid">The optional guild id.</param>
+		/// <param name="commandId">The command id.</param>
+		/// <param name="commandName">The command name.</param>
+		/// <param name="commandDeclaringType">The declaring command type.</param>
+		/// <param name="commandRootType">The root command type.</param>
 		internal static async Task UpdateCommandPermissionAsync(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildid, ulong commandId, string commandName, Type commandDeclaringType, Type commandRootType)
 		{
 			if (!guildid.HasValue)

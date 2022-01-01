@@ -45,7 +45,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Gets the permissions.
 		/// </summary>
-		public IReadOnlyCollection<DiscordApplicationCommandPermission> Permissions => _permissions;
+		public IReadOnlyCollection<DiscordApplicationCommandPermission> Permissions => this._permissions;
 		private readonly List<DiscordApplicationCommandPermission> _permissions = new();
 
 		/// <summary>
@@ -64,20 +64,20 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="userId">The Id of the user to give this permission.</param>
 		/// <param name="permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
-		public void AddUser(ulong userId, bool permission) => _permissions.Add(new DiscordApplicationCommandPermission(userId, ApplicationCommandPermissionType.User, permission));
+		public void AddUser(ulong userId, bool permission) => this._permissions.Add(new DiscordApplicationCommandPermission(userId, ApplicationCommandPermissionType.User, permission));
 
 		/// <summary>
 		/// Adds a user to the permission system.
 		/// </summary>
 		/// <param name="roleId">The Id of the role to give this permission.</param>
 		/// <param name="permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
-		public void AddRole(ulong roleId, bool permission) => _permissions.Add(new DiscordApplicationCommandPermission(roleId, ApplicationCommandPermissionType.Role, permission));
+		public void AddRole(ulong roleId, bool permission) => this._permissions.Add(new DiscordApplicationCommandPermission(roleId, ApplicationCommandPermissionType.Role, permission));
 
 		/// <summary>
 		/// Adds a channel to the permission system.
 		/// </summary>
 		/// <param name="channelId">The Id of the channel to give this permission.</param>
 		/// <param name="permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
-		public void AddChannel(ulong channelId, bool permission) => _permissions.Add(new DiscordApplicationCommandPermission(channelId, ApplicationCommandPermissionType.Channel, permission));
+		public void AddChannel(ulong channelId, bool permission) => this._permissions.Add(new DiscordApplicationCommandPermission(channelId, ApplicationCommandPermissionType.Channel, permission));
 	}
 }

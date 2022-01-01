@@ -28,6 +28,9 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
+	/// <summary>
+	/// Represents a option translator.
+	/// </summary>
 	public class OptionTranslator
 	{
 		/// <summary>
