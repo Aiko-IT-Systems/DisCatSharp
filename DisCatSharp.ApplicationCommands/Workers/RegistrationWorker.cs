@@ -258,7 +258,7 @@ namespace DisCatSharp.ApplicationCommands
 			List<DiscordApplicationCommand> discord;
 
 			if (ApplicationCommandsExtension.GuildDiscordCommands == null || !ApplicationCommandsExtension.GuildDiscordCommands.Any()
-				|| !ApplicationCommandsExtension.GuildDiscordCommands.Any(l => l.Key == guildId) || updateList == null
+				|| ApplicationCommandsExtension.GuildDiscordCommands.All(l => l.Key != guildId) || updateList == null
 				|| !ApplicationCommandsExtension.GuildDiscordCommands.GetFirstValueByKey(guildId, out discord)
 			)
 				return null;
@@ -301,7 +301,7 @@ namespace DisCatSharp.ApplicationCommands
 			{
 				foreach (var cmd in discord)
 				{
-					if (!updateList.Any(ul => ul.Name == cmd.Name))
+					if (updateList.All(ul => ul.Name != cmd.Name))
 						invalidCommandIds.Add(cmd.Id);
 				}
 			}

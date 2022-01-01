@@ -126,7 +126,7 @@ namespace DisCatSharp.ApplicationCommands
 					localizisedOptions = new List<DiscordApplicationCommandOption>(options.Count);
 					foreach (var option in options)
 					{
-						List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count()) : null;
+						List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
 						if (option.Choices != null)
 						{
 							foreach (var choice in option.Choices)
@@ -241,7 +241,7 @@ namespace DisCatSharp.ApplicationCommands
 							localizisedOptions = new List<DiscordApplicationCommandOption>(options.Count);
 							foreach (var option in options)
 							{
-								List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count()) : null;
+								List<DiscordApplicationCommandOptionChoice> choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
 								if (option.Choices != null)
 								{
 									foreach (var choice in option.Choices)
