@@ -73,9 +73,8 @@ namespace DisCatSharp.Net
 			}
 		}
 
-		// can be changed in future
 		/// <summary>
-		/// If the uri is a standard uri
+		/// Whether the uri is a standard uri
 		/// </summary>
 		/// <param name="value">Uri string</param>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
