@@ -75,7 +75,7 @@ namespace DisCatSharp.Entities
 		public DiscordComponentEmoji(DiscordEmoji emoji)
 		{
 			this.Id = emoji.Id;
-			this.Name = emoji.Name; // Name is ignored if the Id is present. //
+			this.Name = emoji.Name;
 		}
 	}
 }

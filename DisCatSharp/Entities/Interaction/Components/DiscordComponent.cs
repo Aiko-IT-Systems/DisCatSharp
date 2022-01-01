@@ -48,6 +48,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordComponent"/> class.
 		/// </summary>
-		internal DiscordComponent() { }
+		internal DiscordComponent()
+		{ }
 	}
 }

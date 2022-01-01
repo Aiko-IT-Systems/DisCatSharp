@@ -37,6 +37,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// The components contained within the action row.
 		/// </summary>
+		[JsonIgnore]
 		public IReadOnlyCollection<DiscordComponent> Components
 		{
 			get => this._components ?? new List<DiscordComponent>();
@@ -50,7 +51,8 @@ namespace DisCatSharp.Entities
 		/// Constructs a new <see cref="DiscordActionRowComponent"/>.
 		/// </summary>
 		/// <param name="components">List of components</param>
-		public DiscordActionRowComponent(IEnumerable<DiscordComponent> components) : this()
+		public DiscordActionRowComponent(IEnumerable<DiscordComponent> components)
+			: this()
 		{
 			this.Components = components.ToList().AsReadOnly();
 		}
@@ -61,6 +63,6 @@ namespace DisCatSharp.Entities
 		internal DiscordActionRowComponent()
 		{
 			this.Type = ComponentType.ActionRow;
-		} // For Json.NET
+		}
 	}
 }

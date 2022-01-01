@@ -60,6 +60,7 @@ namespace DisCatSharp.Entities
 			this.Target = member;
 			this.Type = OverwriteType.Member;
 		}
+
 		/// <summary>
 		/// Creates a new Discord permission overwrite builder for a role. This class can be used to construct permission overwrites for guild channels, used when creating channels.
 		/// </summary>
@@ -72,11 +73,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Creates a new Discord permission overwrite builder. This class can be used to construct permission overwrites for guild channels, used when creating channels.
 		/// </summary>
-		[Obsolete("Will be removed in 10.0. Use specialized constructors instead", false)]
 		public DiscordOverwriteBuilder()
-		{
-
-		}
+		{ }
 
 		/// <summary>
 		/// Allows a permission for this overwrite.

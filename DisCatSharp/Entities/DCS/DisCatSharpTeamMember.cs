@@ -87,6 +87,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DisCatSharpTeamMember"/> class.
 		/// </summary>
-		internal DisCatSharpTeamMember() { }
+		internal DisCatSharpTeamMember()
+		{ }
 	}
 }

@@ -58,9 +58,10 @@ namespace DisCatSharp.Entities
 
 		/// <summary>
 		/// The minimal length of text input.
+		/// Defaults to 0.
 		/// </summary>
 		[JsonProperty("min_length", NullValueHandling = NullValueHandling.Ignore)]
-		public int? MinLength { get; internal set; }
+		public int? MinLength { get; internal set; } = 0;
 
 		/// <summary>
 		/// The maximal length of text input.
@@ -77,6 +78,7 @@ namespace DisCatSharp.Entities
 
 		/// <summary>
 		/// Whether this text component is required.
+		/// Defaults to true.
 		/// </summary>
 		[JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
 		public bool Required { get; internal set; }

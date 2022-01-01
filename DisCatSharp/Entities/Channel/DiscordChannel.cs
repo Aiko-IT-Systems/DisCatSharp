@@ -268,9 +268,10 @@ namespace DisCatSharp.Entities
 
 
 		/// <summary>
-		/// Only sent on the resolved channels of interaction responses for application commands. Gets the permissions of the user in this channel who invoked the command.
+		/// Only sent on the resolved channels of interaction responses for application commands.
+		/// Gets the permissions of the user in this channel who invoked the command.
 		/// </summary>
-		[JsonProperty("permissions")]
+		[JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
 		public Permissions? UserPermissions { get; internal set; }
 
 		/// <summary>
@@ -362,7 +363,6 @@ namespace DisCatSharp.Entities
 		/// Deletes a guild channel
 		/// </summary>
 		/// <param name="reason">Reason for audit logs.</param>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -386,9 +386,7 @@ namespace DisCatSharp.Entities
 
 			var ovrs = new List<DiscordOverwriteBuilder>();
 			foreach (var ovr in this.PermissionOverwritesInternal)
-#pragma warning disable CS0618 // Type or member is obsolete
 				ovrs.Add(await new DiscordOverwriteBuilder().FromAsync(ovr).ConfigureAwait(false));
-#pragma warning restore CS0618 // Type or member is obsolete
 
 			var bitrate = this.Bitrate;
 			var userLimit = this.UserLimit;
@@ -416,7 +414,6 @@ namespace DisCatSharp.Entities
 		/// Returns a specific message
 		/// </summary>
 		/// <param name="id">The id of the message</param>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -433,7 +430,6 @@ namespace DisCatSharp.Entities
 		/// Modifies the current channel.
 		/// </summary>
 		/// <param name="action">Action to perform on this channel</param>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
 		/// <exception cref="System.NotSupportedException">Thrown when the client does not have the correct <see cref="PremiumTier"/> for modifying the <see cref="ThreadAutoArchiveDuration"/>.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
@@ -469,7 +465,7 @@ namespace DisCatSharp.Entities
 
 		/// <summary>
 		/// Updates the channel position when it doesn't have a category.
-		///
+		/// 
 		/// Use <see cref="ModifyParentAsync"/> for moving to other categories.
 		/// Use <see cref="RemoveParentAsync"/> to move out of a category.
 		/// Use <see cref="ModifyPositionInCategoryAsync"/> for moving within a category.
@@ -506,7 +502,7 @@ namespace DisCatSharp.Entities
 
 		/// <summary>
 		/// Updates the channel position within it's own category.
-		///
+		/// 
 		/// Use <see cref="ModifyParentAsync"/> for moving to other categories.
 		/// Use <see cref="RemoveParentAsync"/> to move out of a category.
 		/// Use <see cref="ModifyPositionAsync"/> to move channels outside a category.
@@ -521,9 +517,6 @@ namespace DisCatSharp.Entities
 		/// <exception cref="System.ArgumentException">Thrown when function is called on a channel without a parent channel.</exception>
 		public async Task ModifyPositionInCategoryAsync(int position, string reason = null)
 		{
-			//if (this.ParentId == null)
-			//    throw new ArgumentException("You can call this function only on channels in categories.");
-
 			if (!this.IsMovableInParent())
 				throw new NotSupportedException("You can't move this type of channel in categories.");
 
@@ -661,16 +654,14 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Updates the channel parent, moving the channel to the bottom of the new category.
 		/// </summary>
-		/// <param name="newParent">New parent for channel. Will move out of parent if null.</param>
+		/// <param name="newParent">New parent for channel. Use <see cref="RemoveParentAsync(string)"/> to remove from parent.</param>
 		/// <param name="lockPermissions">Sync permissions with parent. Defaults to null.</param>
 		/// <param name="reason">Reason for audit logs.</param>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-		public Task ModifyParentAsync(DiscordChannel? newParent = null, bool? lockPermissions = null, string reason = null)
-#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+		public Task ModifyParentAsync(DiscordChannel newParent, bool? lockPermissions = null, string reason = null)
 		{
 			if (this.Guild == null)
 				throw new ArgumentException("Cannot modify parent of non-guild channels.");
@@ -710,7 +701,6 @@ namespace DisCatSharp.Entities
 		/// Moves the channel out of a category.
 		/// </summary>
 		/// <param name="reason">Reason for audit logs.</param>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -854,7 +844,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="messages">A collection of messages to delete.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -881,7 +870,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="message">The message to be deleted.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -892,7 +880,6 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Returns a list of invite objects
 		/// </summary>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -974,6 +961,31 @@ namespace DisCatSharp.Entities
 
 		#endregion
 
+		#region Scheduled Events
+
+		/// <summary>
+		/// Creates a scheduled event based on the channel type.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="scheduledStartTime">The scheduled start time.</param>
+		/// <param name="description">The description.</param>
+		/// <param name="reason">The reason.</param>
+		/// <returns>A scheduled event.</returns>
+		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the ressource does not exist.</exception>
+		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+		public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, string description = null, string reason = null)
+		{
+			if (!this.IsVoiceJoinable())
+				throw new NotSupportedException("Cannot create a scheduled event for this type of channel. Channel type must be either voice or stage.");
+
+			var type = this.Type == ChannelType.Voice ? ScheduledEventEntityType.Voice : ScheduledEventEntityType.StageInstance;
+
+			return await this.Guild.CreateScheduledEventAsync(name, scheduledStartTime, null, this, null, description, type, reason);
+		}
+
+		#endregion
+
 		#region Threads
 
 		/// <summary>
@@ -1006,28 +1018,6 @@ namespace DisCatSharp.Entities
 						: Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
 							? await this.Discord.ApiClient.CreateThreadWithoutMessageAsync(this.Id, name, autoArchiveDuration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, reason)
 							: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
-
-		/// <summary>
-		/// Creates a scheduled event based on the channel type.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="scheduledStartTime">The scheduled start time.</param>
-		/// <param name="description">The description.</param>
-		/// <param name="reason">The reason.</param>
-		/// <returns>A scheduled event.</returns>
-		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the ressource does not exist.</exception>
-		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, string description = null, string reason = null)
-		{
-			if (!this.IsVoiceJoinable())
-				throw new NotSupportedException("Cannot create a scheduled event for this type of channel. Channel type must be either voice or stage.");
-
-			var type = this.Type == ChannelType.Voice ? ScheduledEventEntityType.Voice : ScheduledEventEntityType.StageInstance;
-
-			return await this.Guild.CreateScheduledEventAsync(name, scheduledStartTime, null, this, null, description, type, reason);
-		}
-
 
 		/// <summary>
 		/// Gets joined archived private threads. Can contain more threads.
@@ -1077,7 +1067,6 @@ namespace DisCatSharp.Entities
 		/// <param name="allow">The permissions to allow.</param>
 		/// <param name="deny">The permissions to deny.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1093,7 +1082,6 @@ namespace DisCatSharp.Entities
 		/// <param name="allow">The permissions to allow.</param>
 		/// <param name="deny">The permissions to deny.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1106,7 +1094,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="member">The member to have the permission deleted.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1119,7 +1106,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="role">The role to have the permission deleted.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1130,7 +1116,6 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Post a typing indicator
 		/// </summary>
-
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1142,7 +1127,6 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Returns all pinned messages
 		/// </summary>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1158,7 +1142,6 @@ namespace DisCatSharp.Entities
 		/// <param name="name">The name of the webhook.</param>
 		/// <param name="avatar">The image for the default webhook avatar.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageWebhooks"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1178,7 +1161,6 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Returns a list of webhooks
 		/// </summary>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageWebhooks"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1189,7 +1171,6 @@ namespace DisCatSharp.Entities
 		/// Moves a member to this voice channel
 		/// </summary>
 		/// <param name="member">The member to be moved.</param>
-
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MoveMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exists or if the Member does not exists.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1248,17 +1229,10 @@ namespace DisCatSharp.Entities
 		/// <returns>Calculated permissions for a given member.</returns>
 		public Permissions PermissionsFor(DiscordMember mbr)
 		{
-			// future note: might be able to simplify @everyone role checks to just check any role ... but I'm not sure
-			// xoxo, ~uwx
-			//
-			// you should use a single tilde
-			// ~emzi
-
 			// user > role > everyone
 			// allow > deny > undefined
 			// =>
 			// user allow > user deny > role allow > role deny > everyone allow > everyone deny
-			// thanks to meew0
 
 			if (this.IsPrivate || this.Guild == null)
 				return Permissions.None;
@@ -1332,20 +1306,23 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="obj">Object to compare to.</param>
 		/// <returns>Whether the object is equal to this <see cref="DiscordChannel"/>.</returns>
-		public override bool Equals(object obj) => this.Equals(obj as DiscordChannel);
+		public override bool Equals(object obj)
+			=> this.Equals(obj as DiscordChannel);
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordChannel"/> is equal to another <see cref="DiscordChannel"/>.
 		/// </summary>
 		/// <param name="e"><see cref="DiscordChannel"/> to compare to.</param>
 		/// <returns>Whether the <see cref="DiscordChannel"/> is equal to this <see cref="DiscordChannel"/>.</returns>
-		public bool Equals(DiscordChannel e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+		public bool Equals(DiscordChannel e)
+			=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
 		/// <summary>
 		/// Gets the hash code for this <see cref="DiscordChannel"/>.
 		/// </summary>
 		/// <returns>The hash code for this <see cref="DiscordChannel"/>.</returns>
-		public override int GetHashCode() => this.Id.GetHashCode();
+		public override int GetHashCode()
+			=> this.Id.GetHashCode();
 
 		/// <summary>
 		/// Gets whether the two <see cref="DiscordChannel"/> objects are equal.

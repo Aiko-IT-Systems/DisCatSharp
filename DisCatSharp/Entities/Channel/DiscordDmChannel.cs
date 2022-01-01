@@ -80,7 +80,7 @@ namespace DisCatSharp.Entities
 			=> this.Discord.ApiClient.AddGroupDmRecipientAsync(this.Id, userId, accesstoken, nickname);
 
 		/// <summary>
-		/// Only use for Group DMs!
+		/// Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token
 		/// </summary>
 		/// <param name="userId">The id of the User to remove.</param>
 		/// <param name="accesstoken">The OAuth2 access token.</param>

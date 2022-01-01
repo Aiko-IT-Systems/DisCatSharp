@@ -51,13 +51,13 @@ namespace DisCatSharp.Entities
 		/// The minimum amount of options that can be selected. Must be less than or equal to <see cref="MaximumSelectedValues"/>. Defaults to one.
 		/// </summary>
 		[JsonProperty("min_values", NullValueHandling = NullValueHandling.Ignore)]
-		public int? MinimumSelectedValues { get; internal set; }
+		public int? MinimumSelectedValues { get; internal set; } = 1;
 
 		/// <summary>
 		/// The maximum amount of options that can be selected. Must be greater than or equal to zero or <see cref="MinimumSelectedValues"/>. Defaults to one.
 		/// </summary>
 		[JsonProperty("max_values", NullValueHandling = NullValueHandling.Ignore)]
-		public int? MaximumSelectedValues { get; internal set; }
+		public int? MaximumSelectedValues { get; internal set; } = 1;
 
 		/// <summary>
 		/// Whether this select can be used.

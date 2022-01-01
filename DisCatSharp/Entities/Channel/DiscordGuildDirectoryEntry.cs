@@ -60,7 +60,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordGuildDirectoryEntry"/> class.
 		/// </summary>
-		internal DiscordGuildDirectoryEntry() { }
+		internal DiscordGuildDirectoryEntry()
+		{ }
 
 		#region Methods
 
@@ -71,20 +72,23 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="obj">Object to compare to.</param>
 		/// <returns>Whether the object is equal to this <see cref="DiscordGuildDirectoryEntry"/>.</returns>
-		public override bool Equals(object obj) => this.Equals(obj as DiscordGuildDirectoryEntry);
+		public override bool Equals(object obj)
+			=> this.Equals(obj as DiscordGuildDirectoryEntry);
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordGuildDirectoryEntry"/> is equal to another <see cref="DiscordGuildDirectoryEntry"/>.
 		/// </summary>
 		/// <param name="e"><see cref="DiscordGuildDirectoryEntry"/> to compare to.</param>
 		/// <returns>Whether the <see cref="DiscordGuildDirectoryEntry"/> is equal to this <see cref="DiscordGuildDirectoryEntry"/>.</returns>
-		public bool Equals(DiscordGuildDirectoryEntry e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+		public bool Equals(DiscordGuildDirectoryEntry e)
+			=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
 		/// <summary>
 		/// Gets the hash code for this <see cref="DiscordGuildDirectoryEntry"/>.
 		/// </summary>
 		/// <returns>The hash code for this <see cref="DiscordGuildDirectoryEntry"/>.</returns>
-		public override int GetHashCode() => this.Id.GetHashCode();
+		public override int GetHashCode()
+			=> this.Id.GetHashCode();
 
 		/// <summary>
 		/// Gets whether the two <see cref="DiscordGuildDirectoryEntry"/> objects are equal.

@@ -61,11 +61,10 @@ namespace DisCatSharp.Entities
 		[JsonProperty("emoji", NullValueHandling = NullValueHandling.Ignore)]
 		public DiscordComponentEmoji Emoji { get; internal set; }
 
-
 		/// <summary>
 		/// Constructs a new <see cref="DiscordSelectComponentOption"/>.
 		/// </summary>
-		/// <param name="label">The label of this option..</param>
+		/// <param name="label">The label of this option.</param>
 		/// <param name="value">The value of this option.</param>
 		/// <param name="description">Description of the option.</param>
 		/// <param name="isDefault">Whether this option is default. If true, this option will be pre-selected.</param>
@@ -75,7 +74,9 @@ namespace DisCatSharp.Entities
 			if (label.Length > 100)
 				throw new NotSupportedException("Select label can't be longer then 100 chars.");
 			if (value.Length > 100)
-				throw new NotSupportedException("Select label can't be longer then 100 chars.");
+				throw new NotSupportedException("Select value can't be longer then 100 chars.");
+			if (description.Length > 100)
+				throw new NotSupportedException("Select description can't be longer then 100 chars.");
 
 			this.Label = label;
 			this.Value = value;

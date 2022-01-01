@@ -58,7 +58,10 @@ namespace DisCatSharp.Entities
 		/// Deletes this channel overwrite.
 		/// </summary>
 		/// <param name="reason">Reason as to why this overwrite gets deleted.</param>
-		/// <returns></returns>
+		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+		/// <exception cref="Exceptions.NotFoundException">Thrown when the overwrite does not exist.</exception>
+		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task DeleteAsync(string reason = null) => this.Discord.ApiClient.DeleteChannelPermissionAsync(this.ChannelId, this.Id, reason);
 
 		/// <summary>
@@ -67,14 +70,12 @@ namespace DisCatSharp.Entities
 		/// <param name="allow">Permissions that are allowed.</param>
 		/// <param name="deny">Permissions that are denied.</param>
 		/// <param name="reason">Reason as to why you made this change.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the overwrite does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task UpdateAsync(Permissions? allow = null, Permissions? deny = null, string reason = null)
 			=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.ChannelId, this.Id, allow ?? this.Allowed, deny ?? this.Denied, this.Type.ToString().ToLowerInvariant(), reason);
-		#endregion
 
 		/// <summary>
 		/// Gets the DiscordMember that is affected by this overwrite.
@@ -100,11 +101,13 @@ namespace DisCatSharp.Entities
 			this.Type != OverwriteType.Role
 				? throw new ArgumentException(nameof(this.Type), "This overwrite is for a member, not a role.")
 				: (await this.Discord.ApiClient.GetChannelAsync(this.ChannelId).ConfigureAwait(false)).Guild.GetRole(this.Id);
+		#endregion
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordOverwrite"/> class.
 		/// </summary>
-		internal DiscordOverwrite() { }
+		internal DiscordOverwrite()
+		{ }
 
 		/// <summary>
 		/// Checks whether given permissions are allowed, denied, or not set.
