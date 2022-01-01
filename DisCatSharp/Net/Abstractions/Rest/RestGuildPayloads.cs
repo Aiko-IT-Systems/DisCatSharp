@@ -458,7 +458,7 @@ namespace DisCatSharp.Net.Abstractions
 	internal sealed class RestGuildMemberTimeoutModifyPayload
 	{
 		/// <summary>
-		/// Date until the can communicate again.
+		/// Gets or sets the date until the member can communicate again.
 		/// </summary>
 		[JsonProperty("communication_disabled_until")]
 		public DateTimeOffset? CommunicationDisabledUntil { get; internal set; }
