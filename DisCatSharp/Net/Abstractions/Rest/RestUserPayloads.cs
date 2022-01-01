@@ -92,34 +92,40 @@ namespace DisCatSharp.Net.Abstractions
 	internal sealed class RestUserGuild
 	{
 		/// <summary>
-		/// Gets or sets the id.
+		/// Gets the id.
 		/// </summary>
-		[JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
 		public ulong Id { get; set; }
 
 		/// <summary>
-		/// Gets or sets the name.
+		/// Gets the name.
 		/// </summary>
-		[JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Gets or sets the icon hash.
+		/// Gets the icon hash.
 		/// </summary>
-		[JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("icon", NullValueHandling = NullValueHandling.Ignore)]
 		public string IconHash { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether is owner.
+		/// Gets a value indicating whether is owner.
 		/// </summary>
-		[JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("owner", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsOwner { get; set; }
 
 		/// <summary>
-		/// Gets or sets the permissions.
+		/// Gets the permissions.
 		/// </summary>
-		[JsonProperty("avatar", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
 		public Permissions Permissions { get; set; }
+
+		/// <summary>
+		/// Gets the guild features.
+		/// </summary>
+		[JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
+		public List<string> Features { get; set; }
 	}
 
 	/// <summary>

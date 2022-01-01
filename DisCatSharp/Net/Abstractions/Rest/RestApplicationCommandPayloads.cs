@@ -46,6 +46,9 @@ namespace DisCatSharp.Net.Abstractions
 		[JsonProperty("name")]
 		public string Name { get; set; }
 
+		/// <summary>
+		/// Gets the name localizations.
+		/// </summary>
 		[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
 		public Optional<Dictionary<string, string>> NameLocalizations { get; set; }
 
@@ -55,6 +58,9 @@ namespace DisCatSharp.Net.Abstractions
 		[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
 		public string Description { get; set; }
 
+		/// <summary>
+		/// Gets the description localizations.
+		/// </summary>
 		[JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
 		public Optional<Dictionary<string, string>> DescriptionLocalizations { get; set; }
 
@@ -94,6 +100,9 @@ namespace DisCatSharp.Net.Abstractions
 		[JsonProperty("name")]
 		public Optional<string> Name { get; set; }
 
+		/// <summary>
+		/// Gets the name localizations.
+		/// </summary>
 		[JsonProperty("name_localizations")]
 		public Optional<Dictionary<string, string>> NameLocalizations { get; set; }
 
@@ -103,6 +112,9 @@ namespace DisCatSharp.Net.Abstractions
 		[JsonProperty("description")]
 		public Optional<string> Description { get; set; }
 
+		/// <summary>
+		/// Gets the description localizations.
+		/// </summary>
 		[JsonProperty("description_localizations")]
 		public Optional<Dictionary<string, string>> DescriptionLocalizations { get; set; }
 
