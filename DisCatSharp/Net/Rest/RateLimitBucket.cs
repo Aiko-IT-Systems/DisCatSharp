@@ -246,7 +246,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Sets remaining number of requests to the maximum when the ratelimit is reset
 		/// </summary>
-		/// <param name="now"></param>
+		/// <param name="now">The datetime offset.</param>
 		internal async Task TryResetLimitAsync(DateTimeOffset now)
 		{
 			if (this.ResetAfter.HasValue)
