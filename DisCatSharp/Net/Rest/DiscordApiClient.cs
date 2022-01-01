@@ -85,8 +85,7 @@ namespace DisCatSharp.Net
 		/// Builds the query string.
 		/// </summary>
 		/// <param name="values">The values.</param>
-		/// <param name="post">If true, post.</param>
-		/// <returns>A string.</returns>
+		/// <param name="post">Whether this query will be transmitted via POST.</param>
 		private static string BuildQueryString(IDictionary<string, string> values, bool post = false)
 		{
 			if (values == null || values.Count == 0)
@@ -146,7 +145,7 @@ namespace DisCatSharp.Net
 		/// Populates the message.
 		/// </summary>
 		/// <param name="author">The author.</param>
-		/// <param name="ret">The ret.</param>
+		/// <param name="ret">The message.</param>
 		private void PopulateMessage(TransportUser author, DiscordMessage ret)
 		{
 			var guild = ret.Channel?.Guild;
@@ -5346,9 +5345,8 @@ namespace DisCatSharp.Net
 		{
 			try
 			{
-				var wc = new WebClient();
-				var dcs = await wc.DownloadStringTaskAsync(new Uri("https://dcs.aitsys.dev/api/devs/"));
-				var dcsGuild = await wc.DownloadStringTaskAsync(new Uri("https://dcs.aitsys.dev/api/guild/"));
+				var dcs = await this.Discord.RestClient.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/devs/"));
+				var dcsGuild = await this.Discord.RestClient.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/guild/"));
 
 				var app = JsonConvert.DeserializeObject<TransportApplication>(dcs);
 				var guild = JsonConvert.DeserializeObject<DiscordGuild>(dcsGuild);
