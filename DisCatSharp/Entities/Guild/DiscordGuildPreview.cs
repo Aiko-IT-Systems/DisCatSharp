@@ -131,6 +131,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordGuildPreview"/> class.
 		/// </summary>
-		internal DiscordGuildPreview() { }
+		internal DiscordGuildPreview()
+		{ }
 	}
 }

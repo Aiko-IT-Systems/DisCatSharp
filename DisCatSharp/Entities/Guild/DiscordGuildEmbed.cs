@@ -22,6 +22,8 @@
 
 using Newtonsoft.Json;
 
+// TODO: What the fuck is this?
+
 namespace DisCatSharp.Entities
 {
 	/// <summary>
@@ -30,7 +32,7 @@ namespace DisCatSharp.Entities
 	public class DiscordGuildEmbed
 	{
 		/// <summary>
-		/// Gets whether the embed is enabled.
+		/// Gets whether the widget is enabled.
 		/// </summary>
 		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsEnabled { get; set; }

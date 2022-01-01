@@ -47,7 +47,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordGuildEmoji"/> class.
 		/// </summary>
-		internal DiscordGuildEmoji() { }
+		internal DiscordGuildEmoji()
+		{ }
 
 		/// <summary>
 		/// Modifies this emoji.
@@ -67,7 +68,6 @@ namespace DisCatSharp.Entities
 		/// Deletes this emoji.
 		/// </summary>
 		/// <param name="reason">Reason for audit log.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the emoji does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
