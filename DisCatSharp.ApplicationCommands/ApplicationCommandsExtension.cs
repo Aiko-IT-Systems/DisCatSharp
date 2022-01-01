@@ -852,11 +852,12 @@ namespace DisCatSharp.ApplicationCommands
 						else if (subgroups.Any())
                         {
                             var command = e.Interaction.Data.Options.First();
-                            var group = subgroups.First().SubCommands.First(x => x.Name == command.Name);
-
+                            var group = subgroups.First().SubCommands.First(x => x.Name == command.Name).Methods.First(x => x.Key == command.Options.First().Name).Value;
+							
+							this.Client.Logger.LogDebug(JsonConvert.SerializeObject(command));
                             var focusedOption = command.Options.First(x => x.Name == group.Name).Options.First(o => o.Focused);
 
-                            var option = group.Methods.First(p => p.Value.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name).Value;
+                            var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
                             var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
                             var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
                             var providerInstance = Activator.CreateInstance(provider);
