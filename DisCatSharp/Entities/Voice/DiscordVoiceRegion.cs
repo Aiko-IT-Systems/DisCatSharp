@@ -75,7 +75,6 @@ namespace DisCatSharp.Entities
 		/// Gets whether two <see cref="DiscordVoiceRegion"/>s are equal.
 		/// </summary>
 		/// <param name="region">The region to compare with.</param>
-		/// <returns></returns>
 		public bool Equals(DiscordVoiceRegion region)
 			=> this == region;
 
@@ -116,6 +115,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordVoiceRegion"/> class.
 		/// </summary>
-		internal DiscordVoiceRegion() { }
+		internal DiscordVoiceRegion()
+		{ }
 	}
 }

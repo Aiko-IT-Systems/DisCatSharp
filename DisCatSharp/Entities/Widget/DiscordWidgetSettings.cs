@@ -47,7 +47,7 @@ namespace DisCatSharp.Entities
 			=> this.Guild?.GetChannel(this.ChannelId);
 
 		/// <summary>
-		/// Gets if the guild's widget is enabled.
+		/// Whether if the guild's widget is enabled.
 		/// </summary>
 		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
 		public bool IsEnabled { get; internal set; }

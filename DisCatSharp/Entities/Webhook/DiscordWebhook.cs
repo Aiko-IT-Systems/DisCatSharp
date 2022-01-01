@@ -42,7 +42,7 @@ namespace DisCatSharp.Entities
 		internal DiscordApiClient ApiClient { get; set; }
 
 		/// <summary>
-		/// Gets the ID of the guild this webhook belongs to.
+		/// Gets the id of the guild this webhook belongs to.
 		/// </summary>
 		[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
 		public ulong GuildId { get; internal set; }
@@ -104,7 +104,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordWebhook"/> class.
 		/// </summary>
-		internal DiscordWebhook() { }
+		internal DiscordWebhook()
+		{ }
 
 		/// <summary>
 		/// Modifies this webhook.
@@ -153,7 +154,6 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Permanently deletes this webhook.
 		/// </summary>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageWebhooks"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -177,7 +177,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="json">JSON containing Slack-compatible payload for this webhook.</param>
 		/// <param name="threadId">Target thread id (Optional). Defaults to null.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -189,7 +188,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="json">JSON containing GitHub-compatible payload for this webhook.</param>
 		/// <param name="threadId">Target thread id (Optional). Defaults to null.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -224,7 +222,6 @@ namespace DisCatSharp.Entities
 		/// Deletes a message that was created by the webhook.
 		/// </summary>
 		/// <param name="messageId">The id of the message to delete</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -236,7 +233,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="messageId">The id of the message to delete</param>
 		/// <param name="threadId">Target thread id (Optional). Defaults to null.</param>
-		/// <returns></returns>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the webhook does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>

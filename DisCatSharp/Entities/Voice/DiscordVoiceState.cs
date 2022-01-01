@@ -162,7 +162,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordVoiceState"/> class.
 		/// </summary>
-		internal DiscordVoiceState() { }
+		internal DiscordVoiceState()
+		{ }
 
 		// copy constructor for reduced boilerplate
 		/// <summary>
