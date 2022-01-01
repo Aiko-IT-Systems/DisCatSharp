@@ -39,7 +39,6 @@ namespace DisCatSharp.Entities
 		[JsonIgnore]
 		internal DiscordClient Discord { get; set; }
 
-		// "The user object within this event can be partial, the only field which must be sent is the id field, everything else is optional."
 		/// <summary>
 		/// Gets the internal user.
 		/// </summary>
@@ -107,7 +106,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordPresence"/> class.
 		/// </summary>
-		internal DiscordPresence() { }
+		internal DiscordPresence()
+		{ }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordPresence"/> class.
