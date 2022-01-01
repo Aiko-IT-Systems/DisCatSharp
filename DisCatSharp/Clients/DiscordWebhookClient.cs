@@ -38,11 +38,10 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp
 {
 	/// <summary>
-	/// Represents a webhook-only client. This client can be used to execute Discord webhooks.
+	/// Represents a webhook-only client. This client can be used to execute Discord Webhooks.
 	/// </summary>
 	public class DiscordWebhookClient
 	{
-
 		/// <summary>
 		/// Gets the logger for this client.
 		/// </summary>
@@ -50,7 +49,7 @@ namespace DisCatSharp
 
 		/// <summary>
 		/// Gets the webhook regex.
-		/// this regex has 2 named capture groups: "id" and "token".
+		/// This regex has 2 named capture groups: "id" and "token".
 		/// </summary>
 		private static Regex s_webhookRegex { get; } = new(@"(?:https?:\/\/)?discord(?:app)?.com\/api\/(?:v\d\/)?webhooks\/(?<id>\d+)\/(?<token>[A-Za-z0-9_\-]+)", RegexOptions.ECMAScript);
 
@@ -60,12 +59,12 @@ namespace DisCatSharp
 		public IReadOnlyList<DiscordWebhook> Webhooks { get; }
 
 		/// <summary>
-		/// Gets or sets the username override for registered webhooks. Note that this only takes effect when broadcasting.
+		/// Gets or sets the username for registered webhooks. Note that this only takes effect when broadcasting.
 		/// </summary>
 		public string Username { get; set; }
 
 		/// <summary>
-		/// Gets or set the avatar override for registered webhooks. Note that this only takes effect when broadcasting.
+		/// Gets or set the avatar for registered webhooks. Note that this only takes effect when broadcasting.
 		/// </summary>
 		public string AvatarUrl { get; set; }
 
@@ -85,11 +84,11 @@ namespace DisCatSharp
 		/// <summary>
 		/// Creates a new webhook client, with specified HTTP proxy, timeout, and logging settings.
 		/// </summary>
-		/// <param name="proxy">Proxy to use for HTTP connections.</param>
-		/// <param name="timeout">Timeout to use for HTTP requests. Set to <see cref="System.Threading.Timeout.InfiniteTimeSpan"/> to disable timeouts.</param>
-		/// <param name="useRelativeRateLimit">Whether to use the system clock for computing rate limit resets. See <see cref="DiscordConfiguration.UseRelativeRatelimit"/> for more details.</param>
-		/// <param name="loggerFactory">The optional logging factory to use for this client.</param>
-		/// <param name="minimumLogLevel">The minimum logging level for messages.</param>
+		/// <param name="proxy">The proxy to use for HTTP connections. Defaults to null.</param>
+		/// <param name="timeout">The optional timeout to use for HTTP requests. Set to <see cref="System.Threading.Timeout.InfiniteTimeSpan"/> to disable timeouts. Defaults to null.</param>
+		/// <param name="useRelativeRateLimit">Whether to use the system clock for computing rate limit resets. See <see cref="DiscordConfiguration.UseRelativeRatelimit"/> for more details. Defaults to true.</param>
+		/// <param name="loggerFactory">The optional logging factory to use for this client. Defaults to null.</param>
+		/// <param name="minimumLogLevel">The minimum logging level for messages. Defaults to information.</param>
 		/// <param name="logTimestampFormat">The timestamp format to use for the logger.</param>
 		public DiscordWebhookClient(IWebProxy proxy = null, TimeSpan? timeout = null, bool useRelativeRateLimit = true,
 			ILoggerFactory loggerFactory = null, LogLevel minimumLogLevel = LogLevel.Information, string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz")
@@ -171,6 +170,7 @@ namespace DisCatSharp
 				throw new ArgumentException("This webhook is already registered with this client.");
 
 			var wh = await client.ApiClient.GetWebhookAsync(id).ConfigureAwait(false);
+
 			// personally I don't think we need to override anything.
 			// it would even make sense to keep the hook as-is, in case
 			// it's returned without a token for some bizarre reason
@@ -205,8 +205,6 @@ namespace DisCatSharp
 			if (this.Hooks.Any(x => x.Id == webhook.Id))
 				throw new ArgumentException("This webhook is already registered with this client.");
 
-			// see line 128-131 for explanation
-			// For christ's sake, update the line numbers if they change.
 			//var nwh = new DiscordWebhook()
 			//{
 			//    ApiClient = _apiclient,
@@ -251,7 +249,7 @@ namespace DisCatSharp
 		/// Broadcasts a message to all registered webhooks.
 		/// </summary>
 		/// <param name="builder">Webhook builder filled with data to send.</param>
-		/// <returns></returns>
+		/// <returns>A dictionary of <see cref="DisCatSharp.Entities.DiscordWebhook"/>s and <see cref="DisCatSharp.Entities.DiscordMessage"/>s.</returns>
 		public async Task<Dictionary<DiscordWebhook, DiscordMessage>> BroadcastMessageAsync(DiscordWebhookBuilder builder)
 		{
 			var deadhooks = new List<DiscordWebhook>();
