@@ -38,6 +38,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the stickers contained in this pack.
 		/// </summary>
+		[JsonIgnore]
 		public IReadOnlyList<DiscordSticker> Stickers => this.StickersInternal;
 
 		[JsonProperty("stickers")]
@@ -80,6 +81,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordStickerPack"/> class.
 		/// </summary>
-		internal DiscordStickerPack() { }
+		internal DiscordStickerPack()
+		{ }
 	}
 }

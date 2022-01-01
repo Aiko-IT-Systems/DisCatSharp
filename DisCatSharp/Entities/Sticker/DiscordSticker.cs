@@ -130,13 +130,13 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordSticker"/> class.
 		/// </summary>
-		internal DiscordSticker() { }
+		internal DiscordSticker()
+		{ }
 
 		/// <summary>
 		/// Whether to stickers are equal.
 		/// </summary>
 		/// <param name="other">DiscordSticker</param>
-		/// <returns></returns>
 		public bool Equals(DiscordSticker other) => this.Id == other.Id;
 
 		/// <summary>
@@ -188,6 +188,7 @@ namespace DisCatSharp.Entities
 		/// Standard nitro sticker
 		/// </summary>
 		Standard = 1,
+
 		/// <summary>
 		/// Custom guild sticker
 		/// </summary>
@@ -203,10 +204,12 @@ namespace DisCatSharp.Entities
 		/// Sticker is a png
 		/// </summary>
 		Png = 1,
+
 		/// <summary>
 		/// Sticker is a animated png
 		/// </summary>
 		Apng = 2,
+
 		/// <summary>
 		/// Sticker is lottie
 		/// </summary>

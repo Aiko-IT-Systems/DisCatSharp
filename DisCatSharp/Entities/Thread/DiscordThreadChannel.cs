@@ -130,7 +130,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
 		/// </summary>
-		internal DiscordThreadChannel() { }
+		internal DiscordThreadChannel()
+		{ }
 
 		#region Methods
 
@@ -144,7 +145,6 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public new Task DeleteAsync(string reason = null)
 			=> this.Discord.ApiClient.DeleteThreadAsync(this.Id, reason);
-
 
 		/// <summary>
 		/// Modifies the current thread.
@@ -334,7 +334,6 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task LeaveAsync()
 			=> this.Discord.ApiClient.LeaveThreadAsync(this.Id);
-
 
 		/// <summary>
 		/// Sends a message to this thread.
@@ -562,7 +561,6 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public new Task DeleteMessageAsync(DiscordMessage message, string reason = null)
 			=> this.Discord.ApiClient.DeleteMessageAsync(this.Id, message.Id, reason);
-
 
 		/// <summary>
 		/// Post a typing indicator
