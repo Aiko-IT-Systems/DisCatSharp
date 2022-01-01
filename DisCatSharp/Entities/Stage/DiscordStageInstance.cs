@@ -59,13 +59,13 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the topic of the Stage instance.
 		/// </summary>
-		[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore), Obsolete("Will be static due to the discovery removal.")]
 		public StagePrivacyLevel PrivacyLevel { get; internal set; }
 
 		/// <summary>
 		/// Gets whether or not stage discovery is disabled.
 		/// </summary>
-		[JsonProperty("discoverable_disabled", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("discoverable_disabled", NullValueHandling = NullValueHandling.Ignore), Obsolete("Will be removed due to the discovery removal.", true)]
 		public bool DiscoverableDisabled { get; internal set; }
 
 		/// <summary>
