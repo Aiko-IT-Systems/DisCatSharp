@@ -56,8 +56,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordMessageApplication"/> class.
 		/// </summary>
-		internal DiscordMessageApplication() { }
-
-
+		internal DiscordMessageApplication()
+		{ }
 	}
 }

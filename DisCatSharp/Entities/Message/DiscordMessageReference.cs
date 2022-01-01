@@ -47,7 +47,6 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets a readable message reference string.
 		/// </summary>
-		/// <returns>A string.</returns>
 		public override string ToString()
 			=> $"Guild: {this.Guild.Id}, Channel: {this.Channel.Id}, Message: {this.Message.Id}";
 

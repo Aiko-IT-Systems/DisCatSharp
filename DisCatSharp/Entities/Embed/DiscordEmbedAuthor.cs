@@ -60,6 +60,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordEmbedAuthor"/> class.
 		/// </summary>
-		internal DiscordEmbedAuthor() { }
+		internal DiscordEmbedAuthor()
+		{ }
 	}
 }

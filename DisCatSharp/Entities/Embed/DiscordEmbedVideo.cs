@@ -52,6 +52,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordEmbedVideo"/> class.
 		/// </summary>
-		internal DiscordEmbedVideo() { }
+		internal DiscordEmbedVideo()
+		{ }
 	}
 }

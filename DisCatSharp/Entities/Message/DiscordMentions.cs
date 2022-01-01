@@ -33,16 +33,16 @@ namespace DisCatSharp.Entities
 	/// </summary>
 	internal class DiscordMentions
 	{
-		//https://discord.com/developers/docs/resources/channel#allowed-mentions-object
-
 		/// <summary>
 		/// Parse users.
 		/// </summary>
 		private const string PARSE_USERS = "users";
+
 		/// <summary>
 		/// Parse roles.
 		/// </summary>
 		private const string PARSE_ROLES = "roles";
+
 		/// <summary>
 		/// Parse everyone.
 		/// </summary>
@@ -80,12 +80,9 @@ namespace DisCatSharp.Entities
 		/// <param name="repliedUser">If true, replied user.</param>
 		internal DiscordMentions(IEnumerable<IMention> mentions, bool mention = false, bool repliedUser = false)
 		{
-			//Null check just to be safe
-			if (mentions == null) return;
+			if (mentions == null)
+				return;
 
-			//If we have no item in our mentions, its likely to be a empty array.
-			// This is a special case were we want parse to be a empty array
-			// Doing this allows for "no parsing"
 			if (!mentions.Any())
 			{
 				this.Parse = Array.Empty<string>();
@@ -98,8 +95,6 @@ namespace DisCatSharp.Entities
 				this.RepliedUser = repliedUser;
 			}
 
-
-			//Prepare a list of allowed IDs. We will be adding to these IDs.
 			var roles = new HashSet<ulong>();
 			var users = new HashSet<ulong>();
 			var parse = new HashSet<string>();
@@ -108,20 +103,21 @@ namespace DisCatSharp.Entities
 			{
 				switch (m)
 				{
-					default: throw new NotSupportedException("Type not supported in mentions.");
+					default:
+						throw new NotSupportedException("Type not supported in mentions.");
 					case UserMention u:
 						if (u.Id.HasValue)
-							users.Add(u.Id.Value);      //We have a user ID so we will add them to the implicit
+							users.Add(u.Id.Value);
 						else
-							parse.Add(PARSE_USERS);      //We have no ID, so let all users through
+							parse.Add(PARSE_USERS);
 
 						break;
 
 					case RoleMention r:
 						if (r.Id.HasValue)
-							roles.Add(r.Id.Value);      //We have a role ID so we will add them to the implicit
+							roles.Add(r.Id.Value);
 						else
-							parse.Add(PARSE_ROLES);      //We have role ID, so let all users through
+							parse.Add(PARSE_ROLES);
 						break;
 
 					case EveryoneMention e:
@@ -134,14 +130,12 @@ namespace DisCatSharp.Entities
 				}
 			}
 
-			//Check the validity of each item. If it isn't in the explicit allow list and they have items, then add them.
 			if (!parse.Contains(PARSE_USERS) && users.Count > 0)
 				this.Users = users;
 
 			if (!parse.Contains(PARSE_ROLES) && roles.Count > 0)
 				this.Roles = roles;
 
-			//If we have a empty parse aray, we don't want to add it.
 			if (parse.Count > 0)
 				this.Parse = parse;
 		}

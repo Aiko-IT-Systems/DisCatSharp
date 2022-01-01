@@ -58,6 +58,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordEmbedThumbnail"/> class.
 		/// </summary>
-		internal DiscordEmbedThumbnail() { }
+		internal DiscordEmbedThumbnail()
+		{ }
 	}
 }

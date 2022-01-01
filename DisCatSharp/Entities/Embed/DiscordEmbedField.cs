@@ -50,6 +50,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordEmbedField"/> class.
 		/// </summary>
-		internal DiscordEmbedField() { }
+		internal DiscordEmbedField()
+		{ }
 	}
 }
