@@ -166,7 +166,7 @@ namespace DisCatSharp.Entities
 		public string Platform { get; set; }
 
 		/// <summary>
-		/// Gets or sets sync_id in this rich presence.
+		/// Gets or sets sync id in this rich presence.
 		/// </summary>
 		public string SyncId { get; set; }
 
@@ -294,7 +294,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordCustomStatus"/> class.
 		/// </summary>
-		internal DiscordCustomStatus() { }
+		internal DiscordCustomStatus()
+		{ }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordCustomStatus"/> class.
