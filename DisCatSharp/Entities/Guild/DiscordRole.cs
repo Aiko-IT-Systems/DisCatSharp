@@ -126,6 +126,7 @@ namespace DisCatSharp.Entities
 			=> Formatter.Mention(this);
 
 		#region Methods
+
 		/// <summary>
 		/// Modifies this role's position.
 		/// </summary>
@@ -153,13 +154,12 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Updates this role.
 		/// </summary>
-		/// <param name="name">New role name</param>
-		/// <param name="permissions">New role permissions</param>
-		/// <param name="color">New role color</param>
-		/// <param name="hoist">New role hoist</param>
-		/// <param name="mentionable">Whether this role is mentionable</param>
-		/// <param name="reason">Reason why we made this change</param>
-		/// <returns></returns>
+		/// <param name="name">New role name.</param>
+		/// <param name="permissions">New role permissions.</param>
+		/// <param name="color">New role color.</param>
+		/// <param name="hoist">New role hoist.</param>
+		/// <param name="mentionable">Whether this role is mentionable.</param>
+		/// <param name="reason">Audit log reason.</param>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the role does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -209,13 +209,16 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the role does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task DeleteAsync(string reason = null) => this.Discord.ApiClient.DeleteRoleAsync(this.GuildId, this.Id, reason);
+		public Task DeleteAsync(string reason = null)
+			=> this.Discord.ApiClient.DeleteRoleAsync(this.GuildId, this.Id, reason);
+
 		#endregion
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordRole"/> class.
 		/// </summary>
-		internal DiscordRole() { }
+		internal DiscordRole()
+		{ }
 
 		/// <summary>
 		/// Checks whether this role has specific permissions.
@@ -229,14 +232,16 @@ namespace DisCatSharp.Entities
 		/// Returns a string representation of this role.
 		/// </summary>
 		/// <returns>String representation of this role.</returns>
-		public override string ToString() => $"Role {this.Id}; {this.Name}";
+		public override string ToString()
+			=> $"Role {this.Id}; {this.Name}";
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordRole"/> is equal to another object.
 		/// </summary>
 		/// <param name="obj">Object to compare to.</param>
 		/// <returns>Whether the object is equal to this <see cref="DiscordRole"/>.</returns>
-		public override bool Equals(object obj) => this.Equals(obj as DiscordRole);
+		public override bool Equals(object obj)
+			=> this.Equals(obj as DiscordRole);
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordRole"/> is equal to another <see cref="DiscordRole"/>.
@@ -254,7 +259,8 @@ namespace DisCatSharp.Entities
 		/// Gets the hash code for this <see cref="DiscordRole"/>.
 		/// </summary>
 		/// <returns>The hash code for this <see cref="DiscordRole"/>.</returns>
-		public override int GetHashCode() => this.Id.GetHashCode();
+		public override int GetHashCode()
+			=> this.Id.GetHashCode();
 
 		/// <summary>
 		/// Gets whether the two <see cref="DiscordRole"/> objects are equal.
