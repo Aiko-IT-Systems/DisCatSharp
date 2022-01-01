@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma warning disable CS0618
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -95,7 +94,7 @@ namespace DisCatSharp.Entities
 
 		/// <summary>
 		/// Gets the preferred locale of this guild.
-		/// <para>This is used for server discovery and notices from Discord. Defaults to en-US.</para>
+		/// <para>This is used for server discovery, interactions and notices from Discord. Defaults to en-US.</para>
 		/// </summary>
 		[JsonProperty("preferred_locale", NullValueHandling = NullValueHandling.Ignore)]
 		public string PreferredLocale { get; internal set; }
@@ -347,20 +346,18 @@ namespace DisCatSharp.Entities
 		[JsonProperty("max_presences")]
 		public int? MaxPresences { get; internal set; }
 
-#pragma warning disable CS1734
 		/// <summary>
-		/// Gets the approximate number of members in this guild, when using <see cref="DiscordClient.GetGuildAsync(ulong, bool?)"/> and having <paramref name = "withCounts"></paramref> set to true.
+		/// Gets the approximate number of members in this guild, when using <see cref="DiscordClient.GetGuildAsync(ulong, bool?)"/> and having withCounts set to true.
 		/// </summary>
 		[JsonProperty("approximate_member_count", NullValueHandling = NullValueHandling.Ignore)]
 		public int? ApproximateMemberCount { get; internal set; }
 
 		/// <summary>
-		/// Gets the approximate number of presences in this guild, when using <see cref="DiscordClient.GetGuildAsync(ulong, bool?)"/> and having <paramref name = "withCounts"></paramref> set to true.
+		/// Gets the approximate number of presences in this guild, when using <see cref="DiscordClient.GetGuildAsync(ulong, bool?)"/> and having withCounts set to true.
 		/// </summary>
 		[JsonProperty("approximate_presence_count", NullValueHandling = NullValueHandling.Ignore)]
 		public int? ApproximatePresenceCount { get; internal set; }
 
-#pragma warning restore CS1734
 		/// <summary>
 		/// Gets the maximum amount of users allowed per video channel.
 		/// </summary>
@@ -381,7 +378,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets a dictionary of all the members that belong to this guild. The dictionary's key is the member ID.
 		/// </summary>
-		[JsonIgnore] // TODO overhead of => vs Lazy? it's a struct
+		[JsonIgnore]
 		public IReadOnlyDictionary<ulong, DiscordMember> Members => new ReadOnlyConcurrentDictionary<ulong, DiscordMember>(this.MembersInternal);
 
 		[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
@@ -676,7 +673,6 @@ namespace DisCatSharp.Entities
 		/// <param name="roles">new roles</param>
 		/// <param name="muted">whether this user has to be muted</param>
 		/// <param name="deaf">whether this user has to be deafened</param>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite" /> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the <paramref name="user"/> or <paramref name="accessToken"/> is not found.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -688,7 +684,6 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Deletes this guild. Requires the caller to be the owner of the guild.
 		/// </summary>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client is not the owner of the guild.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task DeleteAsync()
@@ -852,13 +847,14 @@ namespace DisCatSharp.Entities
 		/// <param name="memberId">Member to timeout.</param>
 		/// <param name="until">The datetime offset to time out the user. Up to 28 days.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task TimeoutAsync(ulong memberId, DateTimeOffset until, string reason = null)
-			=> until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, memberId, until, reason);
+			=> until.Subtract(DateTimeOffset.UtcNow).Days > 28
+				? throw new ArgumentException("Timeout can not be longer than 28 days")
+				: this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, memberId, until, reason);
 
 		/// <summary>
 		/// Timeout a specified member in this guild.
@@ -866,7 +862,6 @@ namespace DisCatSharp.Entities
 		/// <param name="memberId">Member to timeout.</param>
 		/// <param name="until">The timespan to time out the user. Up to 28 days.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -880,7 +875,6 @@ namespace DisCatSharp.Entities
 		/// <param name="memberId">Member to timeout.</param>
 		/// <param name="until">The datetime to time out the user. Up to 28 days.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -893,12 +887,12 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="memberId">Member to remove the timeout from.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task RemoveTimeoutAsync(ulong memberId, string reason = null) => this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, memberId, null, reason);
+		public Task RemoveTimeoutAsync(ulong memberId, string reason = null)
+			=> this.Discord.ApiClient.ModifyTimeoutAsync(this.Id, memberId, null, reason);
 
 		/// <summary>
 		/// Bans a specified member from this guild.
@@ -906,7 +900,6 @@ namespace DisCatSharp.Entities
 		/// <param name="member">Member to ban.</param>
 		/// <param name="deleteMessageDays">How many days to remove messages from.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -920,7 +913,6 @@ namespace DisCatSharp.Entities
 		/// <param name="userId">ID of the user to ban.</param>
 		/// <param name="deleteMessageDays">How many days to remove messages from.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -933,7 +925,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="user">User to unban.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the user does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -946,7 +937,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="userId">ID of the user to unban.</param>
 		/// <param name="reason">Reason for audit logs.</param>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the user does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -957,7 +947,6 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Leaves this guild.
 		/// </summary>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task LeaveAsync()
 			=> this.Discord.ApiClient.LeaveGuildAsync(this.Id);
@@ -1179,7 +1168,6 @@ namespace DisCatSharp.Entities
 		public Task<DiscordThreadResult> GetActiveThreadsAsync()
 			=> this.Discord.ApiClient.GetActiveThreadsAsync(this.Id);
 
-		// this is to commemorate the Great DAPI Channel Massacre of 2017-11-19.
 		/// <summary>
 		/// <para>Deletes all channels in this guild.</para>
 		/// <para>Note that this is irreversible. Use carefully!</para>
@@ -1297,7 +1285,6 @@ namespace DisCatSharp.Entities
 		/// Removes an integration from this guild.
 		/// </summary>
 		/// <param name="integration">Integration to remove.</param>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1309,7 +1296,6 @@ namespace DisCatSharp.Entities
 		/// Forces re-synchronization of an integration for this guild.
 		/// </summary>
 		/// <param name="integration">Integration to synchronize.</param>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -1550,6 +1536,7 @@ namespace DisCatSharp.Entities
 		public DiscordThreadChannel GetThread(ulong id)
 			=> this.ThreadsInternal != null && this.ThreadsInternal.TryGetValue(id, out var thread) ? thread : null;
 
+		// TODO: Rework audit logs!
 		/// <summary>
 		/// Gets audit log entries for this guild.
 		/// </summary>
@@ -2796,7 +2783,6 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="emoji">Emoji to delete.</param>
 		/// <param name="reason">Reason for audit log.</param>
-		/// <returns></returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEmojisAndStickers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task DeleteEmojiAsync(DiscordGuildEmoji emoji, string reason = null) =>
@@ -3135,27 +3121,31 @@ namespace DisCatSharp.Entities
 		/// Returns a string representation of this guild.
 		/// </summary>
 		/// <returns>String representation of this guild.</returns>
-		public override string ToString() => $"Guild {this.Id}; {this.Name}";
+		public override string ToString()
+			=> $"Guild {this.Id}; {this.Name}";
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordGuild"/> is equal to another object.
 		/// </summary>
 		/// <param name="obj">Object to compare to.</param>
 		/// <returns>Whether the object is equal to this <see cref="DiscordGuild"/>.</returns>
-		public override bool Equals(object obj) => this.Equals(obj as DiscordGuild);
+		public override bool Equals(object obj)
+			=> this.Equals(obj as DiscordGuild);
 
 		/// <summary>
 		/// Checks whether this <see cref="DiscordGuild"/> is equal to another <see cref="DiscordGuild"/>.
 		/// </summary>
 		/// <param name="e"><see cref="DiscordGuild"/> to compare to.</param>
 		/// <returns>Whether the <see cref="DiscordGuild"/> is equal to this <see cref="DiscordGuild"/>.</returns>
-		public bool Equals(DiscordGuild e) => e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
+		public bool Equals(DiscordGuild e)
+			=> e is not null && (ReferenceEquals(this, e) || this.Id == e.Id);
 
 		/// <summary>
 		/// Gets the hash code for this <see cref="DiscordGuild"/>.
 		/// </summary>
 		/// <returns>The hash code for this <see cref="DiscordGuild"/>.</returns>
-		public override int GetHashCode() => this.Id.GetHashCode();
+		public override int GetHashCode()
+			=> this.Id.GetHashCode();
 
 		/// <summary>
 		/// Gets whether the two <see cref="DiscordGuild"/> objects are equal.

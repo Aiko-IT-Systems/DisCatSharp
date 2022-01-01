@@ -52,6 +52,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordBan"/> class.
 		/// </summary>
-		internal DiscordBan() { }
+		internal DiscordBan()
+		{ }
 	}
 }
