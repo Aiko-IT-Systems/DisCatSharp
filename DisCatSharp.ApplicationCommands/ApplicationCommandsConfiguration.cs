@@ -48,9 +48,15 @@ namespace DisCatSharp.ApplicationCommands
 		public bool EnableDefaultHelp { internal get; set; } = true;
 
 		/// <summary>
-		/// Debugs the startups expected and actual count.
+		/// Debugs the startup.
 		/// </summary>
 		public bool DebugStartup { internal get; set; } = false;
+
+		/// <summary>
+		/// Checks through all guilds.
+		/// <note type="warning">This will take quite a while, when the bot is on more than 1k guilds.</note>
+		/// </summary>
+		public bool CheckAllGuilds { internal get; set; } = false;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
@@ -71,6 +77,7 @@ namespace DisCatSharp.ApplicationCommands
 			this.EnableDefaultHelp = acc.EnableDefaultHelp;
 			this.ServiceProvider = acc.ServiceProvider;
 			this.DebugStartup = acc.DebugStartup;
+			this.CheckAllGuilds = acc.CheckAllGuilds;
 		}
 	}
 }

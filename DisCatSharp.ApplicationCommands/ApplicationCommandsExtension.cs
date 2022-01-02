@@ -148,6 +148,11 @@ namespace DisCatSharp.ApplicationCommands
 			=> DebugEnabled ? LogLevel.Debug : LogLevel.Trace;
 
 		/// <summary>
+		/// Gets whether check through all guilds is enabled.
+		/// </summary>
+		internal static bool CheckAllGuilds { get; set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
 		/// </summary>
 		/// <param name="configuration">The configuration.</param>
@@ -155,6 +160,7 @@ namespace DisCatSharp.ApplicationCommands
 		{
 			Configuration = configuration;
 			DebugEnabled = configuration.DebugStartup;
+			CheckAllGuilds = configuration.CheckAllGuilds;
 		}
 
 		/// <summary>
@@ -356,7 +362,9 @@ namespace DisCatSharp.ApplicationCommands
 				List<ulong> failedGuilds = new();
 				IEnumerable<DiscordApplicationCommand> globalCommands = null;
 				globalCommands = await this.Client.GetGlobalApplicationCommandsAsync() ?? null;
-				foreach (var guild in this.Client.Guilds.Keys)
+				IEnumerable<ulong> guilds = CheckAllGuilds ? this.Client.Guilds.Keys : this._updateList.Select(x => x.Key).Distinct().Where(x => x != null).Select(x => x.Value);
+
+				foreach (var guild in guilds)
 				{
 					IEnumerable<DiscordApplicationCommand> commands = null;
 					var unauthorized = false;
