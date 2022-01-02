@@ -20,7 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.Linq;
+
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
+using DisCatSharp.Common;
+using System.Collections.Generic;
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -42,7 +48,7 @@ namespace DisCatSharp.ApplicationCommands
 				ac1.NameLocalizations, ac1.DescriptionLocalizations
 			);
 
-			return sourceApplicationCommand.SoftEqual(targetApplicationCommand);
+			return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand, ac1.Type);
 		}
 
 		/// <summary>
@@ -51,11 +57,155 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="source">Source application command.</param>
 		/// <param name="target">Application command to check against.</param>
-		internal static bool SoftEqual(this DiscordApplicationCommand source, DiscordApplicationCommand target)
-			=> (source.Name == target.Name) && (source.Description == target.Description)
-			&& (source.Options == target.Options) && (source.DefaultPermission == target.DefaultPermission)
-			//&& (source.NameLocalizations == target.NameLocalizations) && (source.DescriptionLocalizations == target.DescriptionLocalizations)
-			&& (source.Type == target.Type);
+		/// <param name="type">The application command type.</param>
+		internal static bool SoftEqual(this DiscordApplicationCommand source, DiscordApplicationCommand target, ApplicationCommandType type)
+		{
+			return type switch {
+				ApplicationCommandType.ChatInput => DeepEqual(source, target),
+				_ => (source.Name == target.Name) && (source.DefaultPermission == target.DefaultPermission)
+			&& (source.Type == target.Type)
+			};
+		}
+
+		private static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target)
+		{
+			var rootCheck = (source.Name == target.Name) && (source.Description == target.Description) && (source.DefaultPermission == target.DefaultPermission) && (source.Type == target.Type);
+
+			if (source.Options == null && target.Options == null)
+				return rootCheck;
+			else if (source.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommandGroup))
+			{
+				List<DiscordApplicationCommandOption> minimalSourceOptions = new();
+				List<DiscordApplicationCommandOption> minimalTargetOptions = new();
+
+				foreach (var option in source.Options)
+				{
+					List<DiscordApplicationCommandOption> minimalSubSourceOptions = new();
+
+					foreach (var subOption in option.Options)
+					{
+						List<DiscordApplicationCommandOption> minimalSubSubSourceOptions = new();
+
+						foreach (var subSubOption in subOption.Options)
+						{
+							minimalSubSubSourceOptions.Add(new DiscordApplicationCommandOption(
+								subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required,
+								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete,
+								subSubOption.MinimumValue, subSubOption.MaximumValue, null, null
+							));
+						}
+
+						minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
+						subOption.Name, subOption.Description, subOption.Type, null, null,
+						minimalSubSubSourceOptions, null, null, null, null, null, null
+					));
+					}
+
+					minimalSourceOptions.Add(new DiscordApplicationCommandOption(
+						option.Name, option.Description, option.Type, null, null,
+						minimalSubSourceOptions, null, null, null, null, null, null
+					));
+				}
+
+				foreach (var option in target.Options)
+				{
+					List<DiscordApplicationCommandOption> minimalSubTargetOptions = new();
+
+					foreach (var subOption in option.Options)
+					{
+						List<DiscordApplicationCommandOption> minimalSubSubTargetOptions = new();
+
+						foreach (var subSubOption in subOption.Options)
+						{
+							minimalSubSubTargetOptions.Add(new DiscordApplicationCommandOption(
+								subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required,
+								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete,
+								subSubOption.MinimumValue, subSubOption.MaximumValue, null, null
+							));
+						}
+
+						minimalSubTargetOptions.Add(new DiscordApplicationCommandOption(
+						subOption.Name, subOption.Description, subOption.Type, null, null,
+						minimalSubSubTargetOptions, null, null, null, null, null, null
+					));
+					}
+
+					minimalTargetOptions.Add(new DiscordApplicationCommandOption(
+						option.Name, option.Description, option.Type, null, null,
+						minimalSubTargetOptions, null, null, null, null, null, null
+					));
+				}
+
+				return rootCheck && minimalSourceOptions == minimalTargetOptions;
+			}
+			else if (source.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand))
+			{
+				List<DiscordApplicationCommandOption> minimalSourceOptions = new();
+				List<DiscordApplicationCommandOption> minimalTargetOptions = new();
+
+				foreach (var option in source.Options)
+				{
+					List<DiscordApplicationCommandOption> minimalSubSourceOptions = new();
+
+					foreach (var subOption in option.Options)
+					{
+						minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
+							subOption.Name, subOption.Description, subOption.Type, subOption.Required,
+							subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete,
+							subOption.MinimumValue, subOption.MaximumValue, null, null
+						));
+					}
+
+					minimalSourceOptions.Add(new DiscordApplicationCommandOption(
+						option.Name, option.Description, option.Type, null, null,
+						minimalSubSourceOptions, null, null, null, null, null, null
+					));
+				}
+
+				foreach (var option in target.Options)
+				{
+					List<DiscordApplicationCommandOption> minimalSubTargetOptions = new();
+
+					foreach (var subOption in option.Options)
+					{
+						minimalSubTargetOptions.Add(new DiscordApplicationCommandOption(
+							subOption.Name, subOption.Description, subOption.Type, subOption.Required,
+							subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete,
+							subOption.MinimumValue, subOption.MaximumValue, null, null
+						));
+					}
+
+					minimalTargetOptions.Add(new DiscordApplicationCommandOption(
+						option.Name, option.Description, option.Type, null, null,
+						minimalSubTargetOptions, null, null, null, null, null, null
+					));
+				}
+
+				return rootCheck && minimalSourceOptions == minimalTargetOptions;
+			}
+			else
+			{
+				List<DiscordApplicationCommandOption> minimalSourceOptions = new();
+				List<DiscordApplicationCommandOption> minimalTargetOptions = new();
+
+				foreach (var option in source.Options)
+					minimalSourceOptions.Add(new DiscordApplicationCommandOption(
+						option.Name, option.Description, option.Type, option.Required,
+						option.Choices, null, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
+						null, null
+					));
+				foreach (var option in target.Options)
+					minimalTargetOptions.Add(new DiscordApplicationCommandOption(
+						option.Name, option.Description, option.Type, option.Required,
+						option.Choices, null, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
+						null, null
+					));
+				return rootCheck && minimalSourceOptions == minimalTargetOptions;
+			}
+		}
+
+		// TODO: Later
+		//&& (source.NameLocalizations == target.NameLocalizations) && (source.DescriptionLocalizations == target.DescriptionLocalizations)
 		// && (source.Permission == other.Permission) && (source.DmPermission == other.DmPermission)
 	}
 }
