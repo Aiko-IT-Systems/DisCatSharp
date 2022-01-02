@@ -4561,11 +4561,11 @@ namespace DisCatSharp.Net
 		#endregion
 
 		#region Application Commands
-		/// <summary>
-		/// Gets the global application commands async.
-		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
 
+		/// <summary>
+		/// Gets the global application commands.
+		/// </summary>
+		/// <param name="applicationId">The application id.</param>
 		internal async Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync(ulong applicationId)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -4581,11 +4581,10 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Bulks the overwrite global application commands async.
+		/// Bulk overwrites the global application commands.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
+		/// <param name="applicationId">The application id.</param>
 		/// <param name="commands">The commands.</param>
-
 		internal async Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGlobalApplicationCommandsAsync(ulong applicationId, IEnumerable<DiscordApplicationCommand> commands)
 		{
 			var pld = new List<RestApplicationCommandCreatePayload>();
@@ -4618,11 +4617,10 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Creates the global application command async.
+		/// Creates a global application command.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
+		/// <param name="applicationId">The applicationid.</param>
 		/// <param name="command">The command.</param>
-
 		internal async Task<DiscordApplicationCommand> CreateGlobalApplicationCommandAsync(ulong applicationId, DiscordApplicationCommand command)
 		{
 			var pld = new RestApplicationCommandCreatePayload
@@ -4649,11 +4647,10 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Gets the global application command async.
+		/// Gets a global application command.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="commandId">The command_id.</param>
-
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="commandId">The command id.</param>
 		internal async Task<DiscordApplicationCommand> GetGlobalApplicationCommandAsync(ulong applicationId, ulong commandId)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -4669,17 +4666,16 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Edits the global application command async.
+		/// Edits a global application command.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="commandId">The command_id.</param>
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="commandId">The command id.</param>
 		/// <param name="name">The name.</param>
 		/// <param name="description">The description.</param>
 		/// <param name="options">The options.</param>
-		/// <param name="defaultPermission">The default_permission.</param>
+		/// <param name="defaultPermission">The default permission.</param>
 		/// <param name="nameLocalization">The localizations of the name.</param>
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
-
 		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> defaultPermission, Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization)
 		{
 			var pld = new RestApplicationCommandEditPayload
@@ -4705,7 +4701,7 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Deletes the global application command async.
+		/// Deletes a global application command.
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
 		/// <param name="commandId">The command_id.</param>
@@ -4720,11 +4716,10 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Gets the guild application commands async.
+		/// Gets the guild application commands.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="guildId">The guild_id.</param>
-
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="guildId">The guild id.</param>
 		internal async Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong applicationId, ulong guildId)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
@@ -4740,12 +4735,11 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Bulks the overwrite guild application commands async.
+		/// Bulk overwrites the guild application commands.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="guildId">The guild_id.</param>
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="guildId">The guild id.</param>
 		/// <param name="commands">The commands.</param>
-
 		internal async Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGuildApplicationCommandsAsync(ulong applicationId, ulong guildId, IEnumerable<DiscordApplicationCommand> commands)
 		{
 			var pld = new List<RestApplicationCommandCreatePayload>();
@@ -4777,12 +4771,11 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Creates the guild application command async.
+		/// Creates a guild application command.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="guildId">The guild_id.</param>
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="guildId">The guild id.</param>
 		/// <param name="command">The command.</param>
-
 		internal async Task<DiscordApplicationCommand> CreateGuildApplicationCommandAsync(ulong applicationId, ulong guildId, DiscordApplicationCommand command)
 		{
 			var pld = new RestApplicationCommandCreatePayload
@@ -4810,11 +4803,11 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Gets the guild application command async.
+		/// Gets a guild application command.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="guildId">The guild_id.</param>
-		/// <param name="commandId">The command_id.</param>
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="guildId">The guild id.</param>
+		/// <param name="commandId">The command id.</param>
 		internal async Task<DiscordApplicationCommand> GetGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
@@ -4830,15 +4823,15 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Edits the guild application command async.
+		/// Edits a guild application command.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="guildId">The guild_id.</param>
-		/// <param name="commandId">The command_id.</param>
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="guildId">The guild id.</param>
+		/// <param name="commandId">The command id.</param>
 		/// <param name="name">The name.</param>
 		/// <param name="description">The description.</param>
 		/// <param name="options">The options.</param>
-		/// <param name="defaultPermission">The default_permission.</param>
+		/// <param name="defaultPermission">The default permission.</param>
 		/// <param name="nameLocalization">The localizations of the name.</param>
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
 		internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> defaultPermission, Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization)
@@ -4866,11 +4859,11 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Deletes the guild application command async.
+		/// Deletes a guild application command.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="guildId">The guild_id.</param>
-		/// <param name="commandId">The command_id.</param>
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="guildId">The guild id.</param>
+		/// <param name="commandId">The command id.</param>
 		internal async Task DeleteGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
@@ -4902,12 +4895,12 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Gets the application command permission.
+		/// Gets a guild application command permission.
 		/// </summary>
 		/// <param name="applicationId">The target application id.</param>
 		/// <param name="guildId">The target guild id.</param>
 		/// <param name="commandId">The target command id.</param>
-		internal async Task<DiscordGuildApplicationCommandPermission> GetApplicationCommandPermissionAsync(ulong applicationId, ulong guildId, ulong commandId)
+		internal async Task<DiscordGuildApplicationCommandPermission> GetGuildApplicationCommandPermissionAsync(ulong applicationId, ulong guildId, ulong commandId)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id{Endpoints.PERMISSIONS}";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {application_id = applicationId, guild_id = guildId, command_id = commandId }, out var path);
@@ -4958,8 +4951,8 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="applicationId">The target application id.</param>
 		/// <param name="guildId">The target guild id.</param>
-		/// <param name="permissionOverwrites"></param>
-		internal async Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> BulkOverwriteApplicationCommandPermissionsAsync(ulong applicationId, ulong guildId, IEnumerable<DiscordGuildApplicationCommandPermission> permissionOverwrites)
+		/// <param name="permissionOverwrites">List of overwrites.</param>
+		internal async Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> BulkOverwriteGuildApplicationCommandPermissionsAsync(ulong applicationId, ulong guildId, IEnumerable<DiscordGuildApplicationCommandPermission> permissionOverwrites)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}{Endpoints.PERMISSIONS}";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {application_id = applicationId, guild_id = guildId }, out var path);
@@ -4990,13 +4983,12 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Creates the interaction response async.
+		/// Creates the interaction response.
 		/// </summary>
-		/// <param name="interactionId">The interaction_id.</param>
-		/// <param name="interactionToken">The interaction_token.</param>
+		/// <param name="interactionId">The interaction id.</param>
+		/// <param name="interactionToken">The interaction token.</param>
 		/// <param name="type">The type.</param>
 		/// <param name="builder">The builder.</param>
-
 		internal async Task CreateInteractionResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionResponseBuilder builder)
 		{
 			if (builder?.Embeds != null)
@@ -5094,13 +5086,12 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Creates the interaction response async.
+		/// Creates the interaction response.
 		/// </summary>
-		/// <param name="interactionId">The interaction_id.</param>
-		/// <param name="interactionToken">The interaction_token.</param>
+		/// <param name="interactionId">The interaction id.</param>
+		/// <param name="interactionToken">The interaction token.</param>
 		/// <param name="type">The type.</param>
 		/// <param name="builder">The builder.</param>
-
 		internal async Task CreateInteractionModalResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionModalBuilder builder)
 		{
 			if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type != Enums.ComponentType.InputText)))
@@ -5127,40 +5118,36 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Gets the original interaction response async.
+		/// Gets the original interaction response.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="interactionToken">The interaction_token.</param>
-
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="interactionToken">The interaction token.</param>
 		internal Task<DiscordMessage> GetOriginalInteractionResponseAsync(ulong applicationId, string interactionToken) =>
 			this.GetWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, null);
 
 		/// <summary>
-		/// Edits the original interaction response async.
+		/// Edits the original interaction response.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="interactionToken">The interaction_token.</param>
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="interactionToken">The interaction token.</param>
 		/// <param name="builder">The builder.</param>
-
 		internal Task<DiscordMessage> EditOriginalInteractionResponseAsync(ulong applicationId, string interactionToken, DiscordWebhookBuilder builder) =>
 			this.EditWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, builder, null);
 
 		/// <summary>
-		/// Deletes the original interaction response async.
+		/// Deletes the original interaction response.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="interactionToken">The interaction_token.</param>
-
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="interactionToken">The interaction token.</param>
 		internal Task DeleteOriginalInteractionResponseAsync(ulong applicationId, string interactionToken) =>
 			this.DeleteWebhookMessageAsync(applicationId, interactionToken, Endpoints.ORIGINAL, null);
 
 		/// <summary>
-		/// Creates the followup message async.
+		/// Creates the followup message.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="interactionToken">The interaction_token.</param>
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="interactionToken">The interaction token.</param>
 		/// <param name="builder">The builder.</param>
-
 		internal async Task<DiscordMessage> CreateFollowupMessageAsync(ulong applicationId, string interactionToken, DiscordFollowupMessageBuilder builder)
 		{
 			builder.Validate();
@@ -5229,33 +5216,30 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Gets the followup message async.
+		/// Gets the followup message.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="interactionToken">The interaction_token.</param>
-		/// <param name="messageId">The message_id.</param>
-
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="interactionToken">The interaction token.</param>
+		/// <param name="messageId">The message id.</param>
 		internal Task<DiscordMessage> GetFollowupMessageAsync(ulong applicationId, string interactionToken, ulong messageId) =>
 			this.GetWebhookMessageAsync(applicationId, interactionToken, messageId);
 
 		/// <summary>
-		/// Edits the followup message async.
+		/// Edits the followup message.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="interactionToken">The interaction_token.</param>
-		/// <param name="messageId">The message_id.</param>
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="interactionToken">The interaction token.</param>
+		/// <param name="messageId">The message id.</param>
 		/// <param name="builder">The builder.</param>
-
 		internal Task<DiscordMessage> EditFollowupMessageAsync(ulong applicationId, string interactionToken, ulong messageId, DiscordWebhookBuilder builder) =>
 			this.EditWebhookMessageAsync(applicationId, interactionToken, messageId.ToString(), builder, null);
 
 		/// <summary>
-		/// Deletes the followup message async.
+		/// Deletes the followup message.
 		/// </summary>
-		/// <param name="applicationId">The application_id.</param>
-		/// <param name="interactionToken">The interaction_token.</param>
-		/// <param name="messageId">The message_id.</param>
-
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="interactionToken">The interaction token.</param>
+		/// <param name="messageId">The message id.</param>
 		internal Task DeleteFollowupMessageAsync(ulong applicationId, string interactionToken, ulong messageId) =>
 			this.DeleteWebhookMessageAsync(applicationId, interactionToken, messageId);
 		#endregion
