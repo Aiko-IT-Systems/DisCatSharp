@@ -72,9 +72,6 @@ namespace DisCatSharp.Common
 		/// <param name="buffer">Memmory region to fill with random bytes.</param>
 		public void GetBytes(Span<byte> buffer)
 		{
-#if NETCOREAPP
-            this.RNG.GetBytes(buffer);
-#else
 			var buff = ArrayPool<byte>.Shared.Rent(buffer.Length);
 			try
 			{
@@ -86,7 +83,6 @@ namespace DisCatSharp.Common
 			{
 				ArrayPool<byte>.Shared.Return(buff);
 			}
-#endif
 		}
 
 		/// <summary>
@@ -95,9 +91,6 @@ namespace DisCatSharp.Common
 		/// <param name="buffer">Memmory region to fill with random nonzero bytes.</param>
 		public void GetNonZeroBytes(Span<byte> buffer)
 		{
-#if NETCOREAPP
-            this.RNG.GetNonZeroBytes(buffer);
-#else
 			var buff = ArrayPool<byte>.Shared.Rent(buffer.Length);
 			try
 			{
@@ -109,7 +102,6 @@ namespace DisCatSharp.Common
 			{
 				ArrayPool<byte>.Shared.Return(buff);
 			}
-#endif
 		}
 
 		/// <summary>
@@ -302,9 +294,6 @@ namespace DisCatSharp.Common
 		/// Fills specified memory region with random bytes.
 		/// </summary>
 		/// <param name="buffer">Memory region to fill with bytes.</param>
-#if NETCOREAPP
-        override
-#endif
 		public new void NextBytes(Span<byte> buffer)
 			=> this.GetBytes(buffer);
 
