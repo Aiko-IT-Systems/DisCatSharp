@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Entities;
+
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.ApplicationCommands
@@ -63,5 +65,38 @@ namespace DisCatSharp.ApplicationCommands
 
 			await ApplicationCommandsExtension.ClientInternal.OverwriteGuildApplicationCommandPermissionsAsync(guildid.Value, commandId, ctx.Permissions);
 		}
+
+		/// <summary>
+		/// Gets the permissions.
+		/// </summary>
+		/// <param name="types">The types.</param>
+		/// <param name="commandId">The command id.</param>
+		/// <param name="commandName">The command name.</param>
+		/// <param name="commandDeclaringType">The declaring command type.</param>
+		/// <param name="commandRootType">The root command type.</param>
+		/// <returns>Permissions on success.</returns>
+		internal static (
+			bool success,
+			ulong? commandId,
+			IReadOnlyList<DiscordApplicationCommandPermission> permissions
+		) ResolvePermissions(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong commandId, string commandName, Type commandDeclaringType, Type commandRootType)
+		{
+			var ctx = new ApplicationCommandsPermissionContext(commandDeclaringType, commandName);
+			var conf = types.First(t => t.Type == commandRootType);
+			conf.Setup?.Invoke(ctx);
+
+			return ctx.Permissions.Count == 0
+				? (false, null, null)
+				: (true, commandId, ctx.Permissions.ToList());
+		}
+
+		/// <summary>
+		/// Updates the permissions.
+		/// </summary>
+		/// <param name="applicationId">The application id.</param>
+		/// <param name="guildId">The guild id.</param>
+		/// <param name="permissionOverwrites">The permission overwrites.</param>
+		internal static async Task BulkOverwriteCommandPermissionsAsync(ulong applicationId, ulong guildId, IEnumerable<DiscordGuildApplicationCommandPermission> permissionOverwrites)
+			=> await ApplicationCommandsExtension.ClientInternal.ApiClient.BulkOverwriteGuildApplicationCommandPermissionsAsync(applicationId, guildId, permissionOverwrites);
 	}
 }
