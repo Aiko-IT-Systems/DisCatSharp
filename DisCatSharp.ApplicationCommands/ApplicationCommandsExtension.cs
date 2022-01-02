@@ -592,6 +592,8 @@ namespace DisCatSharp.ApplicationCommands
 							return;
 						}
 
+						// TODO: Rework permission and minimize put/post/patch calls
+
 						//Creates a guild command if a guild id is specified, otherwise global
 						//Checks against the ids and adds them to the command method lists
 						foreach (var command in commands)
@@ -1340,9 +1342,9 @@ namespace DisCatSharp.ApplicationCommands
 
 
 				var autocompleteAttribute = parameter.GetCustomAttribute<AutocompleteAttribute>();
-				if (optionattribute.Autocomplete.HasValue && optionattribute.Autocomplete.Value && autocompleteAttribute == null)
+				if (optionattribute.Autocomplete && autocompleteAttribute == null)
 					throw new ArgumentException("Autocomplete options must have the Autocomplete attribute!");
-				if ((!optionattribute.Autocomplete.HasValue || !optionattribute.Autocomplete.Value) && autocompleteAttribute != null)
+				if (!optionattribute.Autocomplete && autocompleteAttribute != null)
 					throw new ArgumentException("Setting an autocomplete provider requires the option to have autocomplete set to true!");
 
 				//Sets the type
