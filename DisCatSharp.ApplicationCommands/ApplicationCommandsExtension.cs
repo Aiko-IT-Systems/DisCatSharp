@@ -178,7 +178,6 @@ namespace DisCatSharp.ApplicationCommands
 			this.Client.GuildDownloadCompleted += async (c, e) => await this.UpdateAsync();
 			this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
 			this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
-
 		}
 
 		private async Task CatchInteractionsOnStartup(DiscordClient sender, InteractionCreateEventArgs e)
