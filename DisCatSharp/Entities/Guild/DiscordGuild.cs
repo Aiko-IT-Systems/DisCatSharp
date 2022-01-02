@@ -157,6 +157,16 @@ namespace DisCatSharp.Entities
 		internal List<DiscordApplicationCommand> InternalRegisteredApplicationCommands { get; set; } = null;
 
 		/// <summary>
+		/// List of <see cref="DisCatSharp.Entities.DiscordGuildApplicationCommandPermission"/>.
+		/// Null if DisCatSharp.ApplicationCommands is not used or no guild commands or permissions are registered.
+		/// </summary>
+		[JsonIgnore]
+		public ReadOnlyCollection<DiscordGuildApplicationCommandPermission> GuildApplicationCommandPermissions
+			=> new(this.InternalGuildApplicationCommandPermissions);
+		[JsonIgnore]
+		internal List<DiscordGuildApplicationCommandPermission> InternalGuildApplicationCommandPermissions { get; set; } = null;
+
+		/// <summary>
 		/// Gets the guild's AFK timeout.
 		/// </summary>
 		[JsonProperty("afk_timeout", NullValueHandling = NullValueHandling.Ignore)]

@@ -565,7 +565,7 @@ namespace DisCatSharp.ApplicationCommands
 									GuildCommandsInternal.Add(guildid.Value, actualCommands);
 									if (this.Client.Guilds.TryGetValue(guildid.Value, out var guild))
 									{
-										guild.InternalRegisteredApplicationCommands = new List<DiscordApplicationCommand>();
+										guild.InternalRegisteredApplicationCommands = new();
 										guild.InternalRegisteredApplicationCommands.AddRange(actualCommands);
 									}
 
@@ -613,9 +613,6 @@ namespace DisCatSharp.ApplicationCommands
 									if (success)
 										overwrites.Add(new DiscordGuildApplicationCommandPermission()
 										{
-											Discord = this.Client.ApiClient.Discord,
-											ApplicationId = this.Client.CurrentApplication.Id,
-											GuildId = guildid.Value,
 											Id = commandId.Value,
 											Permissions = permissions
 										});
@@ -635,9 +632,6 @@ namespace DisCatSharp.ApplicationCommands
 										if (success)
 											overwrites.Add(new DiscordGuildApplicationCommandPermission()
 											{
-												Discord = this.Client.ApiClient.Discord,
-												ApplicationId = this.Client.CurrentApplication.Id,
-												GuildId = guildid.Value,
 												Id = commandId.Value,
 												Permissions = permissions
 											});
@@ -661,9 +655,6 @@ namespace DisCatSharp.ApplicationCommands
 											if (success)
 												overwrites.Add(new DiscordGuildApplicationCommandPermission()
 												{
-													Discord = this.Client.ApiClient.Discord,
-													ApplicationId = this.Client.CurrentApplication.Id,
-													GuildId = guildid.Value,
 													Id = commandId.Value,
 													Permissions = permissions
 												});
@@ -684,9 +675,6 @@ namespace DisCatSharp.ApplicationCommands
 									if (success)
 										overwrites.Add(new DiscordGuildApplicationCommandPermission()
 										{
-											Discord = this.Client.ApiClient.Discord,
-											ApplicationId = this.Client.CurrentApplication.Id,
-											GuildId = guildid.Value,
 											Id = commandId.Value,
 											Permissions = permissions
 										});
@@ -698,7 +686,12 @@ namespace DisCatSharp.ApplicationCommands
 						{
 							try
 							{
-								await PermissionWorker.BulkOverwriteCommandPermissionsAsync(this.Client.CurrentApplication.Id, guildid.Value, overwrites);
+								var perms = await PermissionWorker.BulkOverwriteCommandPermissionsAsync(guildid.Value, overwrites);
+								if (this.Client.Guilds.TryGetValue(guildid.Value, out var guild))
+								{
+									guild.InternalGuildApplicationCommandPermissions = new();
+									guild.InternalGuildApplicationCommandPermissions.AddRange(perms);
+								}
 							}
 							catch (Exception ex)
 							{
