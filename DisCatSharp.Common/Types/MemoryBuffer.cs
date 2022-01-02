@@ -145,9 +145,7 @@ namespace DisCatSharp.Common.Types
 			var len = (int)(stream.Length - stream.Position);
 			this.Grow(len);
 
-#if !HAS_SPAN_STREAM_OVERLOADS
 			var buff = new byte[this._segmentSize];
-#endif
 
 			while (this._segNo < this._segments.Count && len > 0)
 			{
@@ -159,14 +157,10 @@ namespace DisCatSharp.Common.Types
 					: avs;
 				var dmem = mem[this._lastSegmentLength..];
 
-#if HAS_SPAN_STREAM_OVERLOADS
-                stream.Read(dmem.Span);
-#else
 				var lsl = this._lastSegmentLength;
 				var slen = dmem.Span.Length - lsl;
 				stream.Read(buff, 0, slen);
 				buff.AsSpan(0, slen).CopyTo(dmem.Span);
-#endif
 				len -= dmem.Span.Length;
 
 				this.Length += (ulong)avs;
@@ -187,14 +181,9 @@ namespace DisCatSharp.Common.Types
 		private void WriteStreamUnseekable(Stream stream)
 		{
 			var read = 0;
-#if HAS_SPAN_STREAM_OVERLOADS
-            Span<byte> buffs = stackalloc byte[this._segmentSize];
-            while ((read = stream.Read(buffs)) != 0)
-#else
 			var buff = new byte[this._segmentSize];
 			var buffs = buff.AsSpan();
 			while ((read = stream.Read(buff, 0, buff.Length - this._lastSegmentLength)) != 0)
-#endif
 				this.Write(MemoryMarshal.Cast<byte, T>(buffs[..read]));
 		}
 
@@ -277,10 +266,6 @@ namespace DisCatSharp.Common.Types
 			if (this._isDisposed)
 				throw new ObjectDisposedException("This buffer is disposed.");
 
-#if HAS_SPAN_STREAM_OVERLOADS
-            foreach (var seg in this._segments)
-                destination.Write(seg.Memory.Span);
-#else
 			var longest = this._segments.Max(x => x.Memory.Length);
 			var buff = new byte[longest];
 
@@ -292,7 +277,6 @@ namespace DisCatSharp.Common.Types
 				mem.CopyTo(spn);
 				destination.Write(buff, 0, spn.Length);
 			}
-#endif
 		}
 
 		/// <inheritdoc />
