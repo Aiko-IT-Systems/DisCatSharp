@@ -73,7 +73,7 @@ namespace DisCatSharp.ApplicationCommands
 
 			if (source.Options == null && target.Options == null)
 				return rootCheck;
-			else if (source.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommandGroup))
+			else if (source.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommandGroup) && target.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommandGroup))
 			{
 				List<DiscordApplicationCommandOption> minimalSourceOptions = new();
 				List<DiscordApplicationCommandOption> minimalTargetOptions = new();
@@ -138,7 +138,7 @@ namespace DisCatSharp.ApplicationCommands
 
 				return rootCheck && minimalSourceOptions == minimalTargetOptions;
 			}
-			else if (source.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand))
+			else if (source.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand) && target.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand))
 			{
 				List<DiscordApplicationCommandOption> minimalSourceOptions = new();
 				List<DiscordApplicationCommandOption> minimalTargetOptions = new();
