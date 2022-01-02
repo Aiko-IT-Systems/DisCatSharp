@@ -596,43 +596,46 @@ namespace DisCatSharp.ApplicationCommands
 
 						//Creates a guild command if a guild id is specified, otherwise global
 						//Checks against the ids and adds them to the command method lists
-						foreach (var command in commands)
+						if (guildid != null && GuildCommandsInternal.GetFirstValueByKey(guildid.Value, out var cmds))
 						{
-							if (commandMethods.GetFirstValueWhere(x => x.Name == command.Name, out var com))
+							foreach (var command in cmds)
 							{
-								com.CommandId = command.Id;
-
-								var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Method.DeclaringType);
-								await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, command.Id, com.Name, source.Value, source.Key);
-							}
-							else if (groupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
-							{
-								groupCom.CommandId = command.Id;
-								foreach (var gCom in groupCom.Methods)
+								if (commandMethods.GetFirstValueWhere(x => x.Name == command.Name, out var com))
 								{
-									var source = commandTypeSources.FirstOrDefault(f => f.Key == gCom.Value.DeclaringType);
-									await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, groupCom.CommandId, gCom.Key, source.Key, source.Value);
+									com.CommandId = command.Id;
+
+									var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Method.DeclaringType);
+									await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, command.Id, com.Name, source.Value, source.Key);
 								}
-							}
-							else if (subGroupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var subCom))
-							{
-								subCom.CommandId = command.Id;
-
-								foreach (var groupComs in subCom.SubCommands)
+								else if (groupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
 								{
-									foreach (var gCom in groupComs.Methods)
+									groupCom.CommandId = command.Id;
+									foreach (var gCom in groupCom.Methods)
 									{
 										var source = commandTypeSources.FirstOrDefault(f => f.Key == gCom.Value.DeclaringType);
-										await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, subCom.CommandId, gCom.Key, source.Key, source.Value);
+										await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, groupCom.CommandId, gCom.Key, source.Key, source.Value);
 									}
 								}
-							}
-							else if (contextMenuCommands.GetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
-							{
-								cmCom.CommandId = command.Id;
+								else if (subGroupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var subCom))
+								{
+									subCom.CommandId = command.Id;
 
-								var source = commandTypeSources.First(f => f.Key == cmCom.Method.DeclaringType);
-								await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, command.Id, cmCom.Name, source.Value, source.Key);
+									foreach (var groupComs in subCom.SubCommands)
+									{
+										foreach (var gCom in groupComs.Methods)
+										{
+											var source = commandTypeSources.FirstOrDefault(f => f.Key == gCom.Value.DeclaringType);
+											await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, subCom.CommandId, gCom.Key, source.Key, source.Value);
+										}
+									}
+								}
+								else if (contextMenuCommands.GetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
+								{
+									cmCom.CommandId = command.Id;
+
+									var source = commandTypeSources.First(f => f.Key == cmCom.Method.DeclaringType);
+									await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, command.Id, cmCom.Name, source.Value, source.Key);
+								}
 							}
 						}
 
