@@ -145,7 +145,7 @@ namespace DisCatSharp.ApplicationCommands
 					descriptionLocalizations = commandTranslation.DescriptionTranslations;
 				}
 
-				var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, localizisedOptions ?? options, commandattribute.DefaultPermission, ApplicationCommandType.ChatInput, nameLocalizations, descriptionLocalizations);
+				var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, (localizisedOptions != null && localizisedOptions.Any() ? localizisedOptions : null) ?? (options != null && options.Any() ? options : null), commandattribute.DefaultPermission, ApplicationCommandType.ChatInput, nameLocalizations, descriptionLocalizations);
 				commands.Add(payload);
 				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 			}
@@ -349,7 +349,7 @@ namespace DisCatSharp.ApplicationCommands
 							subSubDescriptionLocalizations = subSubCommandTranslation.DescriptionTranslations;
 						}
 
-						var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, localizisedOptions ?? suboptions, nameLocalizations: subSubNameLocalizations, descriptionLocalizations: subSubDescriptionLocalizations);
+						var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, (localizisedOptions != null && localizisedOptions.Any() ? localizisedOptions : null) ?? (options != null && options.Any() ? options : null), nameLocalizations: subSubNameLocalizations, descriptionLocalizations: subSubDescriptionLocalizations);
 						options.Add(subsubpayload);
 						commandmethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
 						currentMethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));

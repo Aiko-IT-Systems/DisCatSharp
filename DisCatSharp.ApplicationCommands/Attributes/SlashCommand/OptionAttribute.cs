@@ -43,7 +43,24 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Whether to autocomplete this option.
 		/// </summary>
-		public bool Autocomplete;
+		public bool? Autocomplete;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OptionAttribute"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="description">The description.</param>
+		public OptionAttribute(string name, string description)
+		{
+			if (name.Length > 32)
+				throw new ArgumentException("Slash command option names cannot go over 32 characters.");
+			else if (description.Length > 100)
+				throw new ArgumentException("Slash command option descriptions cannot go over 100 characters.");
+
+			this.Name = name.ToLower();
+			this.Description = description;
+			this.Autocomplete = null;
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OptionAttribute"/> class.
@@ -58,9 +75,9 @@ namespace DisCatSharp.ApplicationCommands
 			else if (description.Length > 100)
 				throw new ArgumentException("Slash command option descriptions cannot go over 100 characters.");
 
-			Name = name.ToLower();
-			Description = description;
-			Autocomplete = autocomplete;
+			this.Name = name.ToLower();
+			this.Description = description;
+			this.Autocomplete = autocomplete;
 		}
 	}
 }
