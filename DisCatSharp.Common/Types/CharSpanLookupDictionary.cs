@@ -129,9 +129,6 @@ namespace DisCatSharp.Common
 				return value;
 			}
 
-#if NETCOREAPP
-            set => this.TryInsertInternal(new string(key), value, true);
-#else
 			set
 			{
 				unsafe
@@ -140,7 +137,6 @@ namespace DisCatSharp.Common
 						this.TryInsertInternal(new string(chars, 0, key.Length), value, true);
 				}
 			}
-#endif
 		}
 
 		object IDictionary.this[object key]
@@ -244,12 +240,6 @@ namespace DisCatSharp.Common
 		/// <param name="key">Key to insert.</param>
 		/// <param name="value">Value corresponding to this key.</param>
 		public void Add(ReadOnlySpan<char> key, TValue value)
-#if NETCOREAPP
-        {
-            if (!this.TryInsertInternal(new string(key), value, false))
-                throw new ArgumentException("Given key is already present in the dictionary.", nameof(key));
-        }
-#else
 		{
 			unsafe
 			{
@@ -258,7 +248,6 @@ namespace DisCatSharp.Common
 						throw new ArgumentException("Given key is already present in the dictionary.", nameof(key));
 			}
 		}
-#endif
 
 		/// <summary>
 		/// Attempts to insert a specific key and corresponding value into this dictionary.
@@ -276,9 +265,6 @@ namespace DisCatSharp.Common
 		/// <param name="value">Value corresponding to this key.</param>
 		/// <returns>Whether the operation was successful.</returns>
 		public bool TryAdd(ReadOnlySpan<char> key, TValue value)
-#if NETCOREAPP
-            => this.TryInsertInternal(new string(key), value, false);
-#else
 		{
 			unsafe
 			{
@@ -286,7 +272,6 @@ namespace DisCatSharp.Common
 					return this.TryInsertInternal(new string(chars, 0, key.Length), value, false);
 			}
 		}
-#endif
 
 		/// <summary>
 		/// Attempts to retrieve a value corresponding to the supplied key from this dictionary.

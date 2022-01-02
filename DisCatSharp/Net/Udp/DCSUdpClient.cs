@@ -107,11 +107,14 @@ namespace DisCatSharp.Net.Udp
 		public override void Close()
 		{
 			this._tokenSource.Cancel();
-#if !NETSTANDARD1_3
 			try
-			{ this._client.Close(); }
-			catch (Exception) { }
-#endif
+			{
+				this._client.Close();
+			}
+			catch (Exception)
+			{
+				// Nothing
+			}
 
 			// dequeue all the packets
 			this._packetQueue.Dispose();
