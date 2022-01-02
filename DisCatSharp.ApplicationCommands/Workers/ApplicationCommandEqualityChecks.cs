@@ -24,10 +24,41 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DisCatSharp.ApplicationCommands.Workers
+using DisCatSharp.Entities;
+
+namespace DisCatSharp.ApplicationCommands
 {
 	internal static class ApplicationCommandEqualityChecks
 	{
+		public static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand)
+		{
+			if (ac1 == null && targetApplicationCommand == null)
+				return false;
+
+			if (targetApplicationCommand == null)
+				return false;
+
+			DiscordApplicationCommand sourceApplicationCommand = new(
+				ac1.Name, ac1.Description, ac1.Options,
+				ac1.DefaultPermission, ac1.Type,
+				ac1.NameLocalizations, ac1.DescriptionLocalizations
+			);
+
+			return sourceApplicationCommand.SoftEqual(targetApplicationCommand);
+		}
+
+		/// <summary>
+		/// Checks if two <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/>s are the same.
+		/// Excluding id, application id and version here.
+		/// </summary>
+		/// <param name="source">Source application command.</param>
+		/// <param name="other">Application command to check against.</param>
+		private static bool SoftEqual(this DiscordApplicationCommand source, DiscordApplicationCommand other)
+			=> (source.Name == other.Name) && (source.Description == other.Description)
+			&& (source.Options == other.Options) && (source.DefaultPermission == other.DefaultPermission)
+			&& (source.NameLocalizations == other.NameLocalizations) && (source.DescriptionLocalizations == other.DescriptionLocalizations)
+			&& (source.Type == other.Type);
+		// && (source.Permission == other.Permission) && (source.DmPermission == other.DmPermission)
 
 	}
 }
