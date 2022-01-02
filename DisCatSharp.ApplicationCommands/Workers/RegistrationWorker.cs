@@ -103,7 +103,12 @@ namespace DisCatSharp.ApplicationCommands
 			}
 
 			if (unchangedCommands.NotEmptyAndNotNull())
+			{
+				if (ApplicationCommandsExtension.s_debugEnabled)
+					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GLOBAL] Re-using application commands.");
+
 				commands.AddRange(unchangedCommands);
+			}
 
 			if (globalCommandsDeleteList.NotEmptyAndNotNull())
 			{
@@ -190,7 +195,12 @@ namespace DisCatSharp.ApplicationCommands
 			}
 
 			if (unchangedCommands.NotEmptyAndNotNull())
+			{
+				if (ApplicationCommandsExtension.s_debugEnabled)
+					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GUILD] Re-using application commands. Guild ID: {guildId}");
+
 				commands.AddRange(unchangedCommands);
+			}
 
 			if (guildCommandsDeleteList.NotEmptyAndNotNull())
 			{
