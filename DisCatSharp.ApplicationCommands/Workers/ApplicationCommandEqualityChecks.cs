@@ -54,7 +54,7 @@ namespace DisCatSharp.ApplicationCommands
 		internal static bool SoftEqual(this DiscordApplicationCommand source, DiscordApplicationCommand target)
 			=> (source.Name == target.Name) && (source.Description == target.Description)
 			&& (source.Options == target.Options) && (source.DefaultPermission == target.DefaultPermission)
-			&& (source.NameLocalizations == target.NameLocalizations) && (source.DescriptionLocalizations == target.DescriptionLocalizations)
+			//&& (source.NameLocalizations == target.NameLocalizations) && (source.DescriptionLocalizations == target.DescriptionLocalizations)
 			&& (source.Type == target.Type);
 		// && (source.Permission == other.Permission) && (source.DmPermission == other.DmPermission)
 	}
