@@ -53,7 +53,7 @@ namespace DisCatSharp.ApplicationCommands
 
 			if (globalCommandsCreateList.NotEmptyAndNotNull() && unchangedCommands.NotEmptyAndNotNull() && changedCommands.NotEmptyAndNotNull())
 			{
-				if (ApplicationCommandsExtension.s_debugEnabled)
+				if (ApplicationCommandsExtension.DebugEnabled)
 					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GLOBAL] Creating, re-using and overwriting application commands.");
 
 				foreach (var cmd in globalCommandsCreateList)
@@ -83,7 +83,7 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (globalCommandsCreateList.EmptyOrNull() && unchangedCommands.NotEmptyAndNotNull() && changedCommands.NotEmptyAndNotNull())
 			{
-				if (ApplicationCommandsExtension.s_debugEnabled)
+				if (ApplicationCommandsExtension.DebugEnabled)
 					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GLOBAL] Editing & re-using application commands.");
 
 				foreach (var cmd in changedCommands)
@@ -107,7 +107,7 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (globalCommandsCreateList.EmptyOrNull() && changedCommands.NotEmptyAndNotNull() && unchangedCommands.EmptyOrNull())
 			{
-				if (ApplicationCommandsExtension.s_debugEnabled)
+				if (ApplicationCommandsExtension.DebugEnabled)
 					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GLOBAL] Overwriting all application commands.");
 
 				List<DiscordApplicationCommand> overwriteList = new();
@@ -122,7 +122,7 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (globalCommandsCreateList.NotEmptyAndNotNull() && changedCommands.EmptyOrNull() && unchangedCommands.EmptyOrNull())
 			{
-				if (ApplicationCommandsExtension.s_debugEnabled)
+				if (ApplicationCommandsExtension.DebugEnabled)
 					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GLOBAL] Creating all application commands.");
 
 				var cmds = await ApplicationCommandsExtension.ClientInternal.BulkOverwriteGlobalApplicationCommandsAsync(globalCommandsCreateList);
@@ -130,7 +130,7 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (globalCommandsCreateList.EmptyOrNull() && changedCommands.EmptyOrNull() && unchangedCommands.NotEmptyAndNotNull())
 			{
-				if (ApplicationCommandsExtension.s_debugEnabled)
+				if (ApplicationCommandsExtension.DebugEnabled)
 					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GUILD] Re-using all application commands.");
 
 				commands.AddRange(unchangedCommands);
@@ -138,7 +138,7 @@ namespace DisCatSharp.ApplicationCommands
 
 			if (globalCommandsDeleteList.NotEmptyAndNotNull())
 			{
-				if (ApplicationCommandsExtension.s_debugEnabled)
+				if (ApplicationCommandsExtension.DebugEnabled)
 					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GLOBAL] Deleting missing application commands.");
 
 				foreach (var cmdId in globalCommandsDeleteList)
@@ -171,7 +171,7 @@ namespace DisCatSharp.ApplicationCommands
 
 			if (guildCommandsCreateList.NotEmptyAndNotNull() && unchangedCommands.NotEmptyAndNotNull() && changedCommands.NotEmptyAndNotNull())
 			{
-				if (ApplicationCommandsExtension.s_debugEnabled)
+				if (ApplicationCommandsExtension.DebugEnabled)
 					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GUILD] Creating, re-using and overwriting application commands. Guild ID: {guildId}");
 
 				foreach (var cmd in guildCommandsCreateList)
@@ -201,7 +201,7 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (guildCommandsCreateList.EmptyOrNull() && unchangedCommands.NotEmptyAndNotNull() && changedCommands.NotEmptyAndNotNull())
 			{
-				if (ApplicationCommandsExtension.s_debugEnabled)
+				if (ApplicationCommandsExtension.DebugEnabled)
 					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GUILD] Editing & re-using application commands. Guild ID: {guildId}");
 
 				foreach (var cmd in changedCommands)
@@ -225,7 +225,7 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (guildCommandsCreateList.EmptyOrNull() && changedCommands.NotEmptyAndNotNull() && unchangedCommands.EmptyOrNull())
 			{
-				if (ApplicationCommandsExtension.s_debugEnabled)
+				if (ApplicationCommandsExtension.DebugEnabled)
 					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GUILD] Overwriting all application commands. Guild ID: {guildId}");
 
 				List<DiscordApplicationCommand> overwriteList = new();
@@ -240,7 +240,7 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (guildCommandsCreateList.NotEmptyAndNotNull() && changedCommands.EmptyOrNull() && unchangedCommands.EmptyOrNull())
 			{
-				if (ApplicationCommandsExtension.s_debugEnabled)
+				if (ApplicationCommandsExtension.DebugEnabled)
 					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GUILD] Creating all application commands. Guild ID: {guildId}");
 
 				var cmds = await ApplicationCommandsExtension.ClientInternal.BulkOverwriteGuildApplicationCommandsAsync(guildId, guildCommandsCreateList);
@@ -248,7 +248,7 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (guildCommandsCreateList.EmptyOrNull() && changedCommands.EmptyOrNull() && unchangedCommands.NotEmptyAndNotNull())
 			{
-				if (ApplicationCommandsExtension.s_debugEnabled)
+				if (ApplicationCommandsExtension.DebugEnabled)
 					ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GUILD] Re-using all application commands Guild ID: {guildId}.");
 
 				commands.AddRange(unchangedCommands);
@@ -258,7 +258,7 @@ namespace DisCatSharp.ApplicationCommands
 			{
 				foreach (var cmdId in guildCommandsDeleteList)
 				{
-					if (ApplicationCommandsExtension.s_debugEnabled)
+					if (ApplicationCommandsExtension.DebugEnabled)
 						ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC GUILD] Deleting missing application commands. Guild ID: {guildId}");
 					try
 					{
@@ -366,7 +366,7 @@ namespace DisCatSharp.ApplicationCommands
 				{
 					if (command.IsEqualTo(cmd))
 					{
-						if (ApplicationCommandsExtension.s_debugEnabled)
+						if (ApplicationCommandsExtension.DebugEnabled)
 							ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC] Command {cmd.Name} unchanged");
 						cmd.Id = command.Id;
 						cmd.ApplicationId = command.ApplicationId;
@@ -375,7 +375,7 @@ namespace DisCatSharp.ApplicationCommands
 					}
 					else
 					{
-						if (ApplicationCommandsExtension.s_debugEnabled)
+						if (ApplicationCommandsExtension.DebugEnabled)
 							ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC] Command {cmd.Name} changed");
 						updateCommands.Add(command.Id, cmd);
 					}
@@ -470,7 +470,7 @@ namespace DisCatSharp.ApplicationCommands
 				{
 					if (command.IsEqualTo(cmd))
 					{
-						if (ApplicationCommandsExtension.s_debugEnabled)
+						if (ApplicationCommandsExtension.DebugEnabled)
 							ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC] Command {cmd.Name} unchanged");
 						cmd.Id = command.Id;
 						cmd.ApplicationId = command.ApplicationId;
@@ -479,7 +479,7 @@ namespace DisCatSharp.ApplicationCommands
 					}
 					else
 					{
-						if (ApplicationCommandsExtension.s_debugEnabled)
+						if (ApplicationCommandsExtension.DebugEnabled)
 							ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC] Command {cmd.Name} changed");
 						updateCommands.Add(command.Id, cmd);
 					}
