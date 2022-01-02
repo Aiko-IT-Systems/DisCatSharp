@@ -366,7 +366,10 @@ namespace DisCatSharp.ApplicationCommands
 					{
 						if (ApplicationCommandsExtension.s_debugEnabled)
 							ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC] Command {cmd.Name} unchanged");
-						unchangedCommands.Add(command);
+						cmd.Id = command.Id;
+						cmd.ApplicationId = command.ApplicationId;
+						cmd.Version = command.Version;
+						unchangedCommands.Add(cmd);
 					}
 					else
 					{
@@ -467,7 +470,10 @@ namespace DisCatSharp.ApplicationCommands
 					{
 						if (ApplicationCommandsExtension.s_debugEnabled)
 							ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC] Command {cmd.Name} unchanged");
-						unchangedCommands.Add(command);
+						cmd.Id = command.Id;
+						cmd.ApplicationId = command.ApplicationId;
+						cmd.Version = command.Version;
+						unchangedCommands.Add(cmd);
 					}
 					else
 					{
