@@ -48,6 +48,10 @@ namespace DisCatSharp.ApplicationCommands
 
 			var scomm = new ApplicationCommandsExtension(config);
 			client.AddExtension(scomm);
+
+			if (config is null || (config is not null && config.EnableDefaultHelp))
+				scomm.RegisterCommands<DefaultHelpModule>();
+
 			return scomm;
 		}
 
@@ -77,6 +81,9 @@ namespace DisCatSharp.ApplicationCommands
 
 				modules[shard.ShardId] = scomm;
 			}
+
+			if (config is null || (config is not null && config.EnableDefaultHelp))
+				modules[0].RegisterCommands<DefaultHelpModule>();
 
 			return modules;
 		}

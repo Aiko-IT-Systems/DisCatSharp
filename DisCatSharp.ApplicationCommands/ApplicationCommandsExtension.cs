@@ -178,6 +178,7 @@ namespace DisCatSharp.ApplicationCommands
 			this.Client.GuildDownloadCompleted += async (c, e) => await this.UpdateAsync();
 			this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
 			this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
+
 		}
 
 		private async Task CatchInteractionsOnStartup(DiscordClient sender, InteractionCreateEventArgs e)
@@ -376,16 +377,7 @@ namespace DisCatSharp.ApplicationCommands
 							failedGuilds.Add(guild);
 					}
 				}
-				//Default should be to add the help and slash commands can be added without setting any configuration
-				//so this should still add the default help
-				if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
-				{
-					foreach (var key in commandsPending.ToList())
-					{
-						this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
-							(key, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
-					}
-				}
+				
 				if (globalCommands != null && globalCommands.Any())
 					GlobalDiscordCommands.AddRange(globalCommands);
 				foreach (var key in commandsPending.ToList())
@@ -1651,15 +1643,28 @@ namespace DisCatSharp.ApplicationCommands
 			{
 				var options = new List<DiscordApplicationCommandAutocompleteChoice>();
 
+				IEnumerable<DiscordApplicationCommand> slashCommands = null;
 				var globalCommandsTask = context.Client.GetGlobalApplicationCommandsAsync();
-				var guildCommandsTask= context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+				if (context.Guild != null)
+				{
+					var guildCommandsTask = context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+					await Task.WhenAll(globalCommandsTask, guildCommandsTask);
+					slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+						.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+						.GroupBy(ac => ac.Name).Select(x => x.First())
+						.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase))
+						.ToList();
+				}
+				else
+				{
+					await Task.WhenAll(globalCommandsTask);
+					slashCommands = globalCommandsTask.Result
+						.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+						.GroupBy(ac => ac.Name).Select(x => x.First())
+						.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase))
+						.ToList();
+				}
 
-				await Task.WhenAll(globalCommandsTask, guildCommandsTask);
-
-				var slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
-					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-					.GroupBy(ac => ac.Name).Select(x => x.First()).
-					Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
 				foreach (var sc in slashCommands.Take(25))
 				{
 					options.Add(new DiscordApplicationCommandAutocompleteChoice(sc.Name, sc.Name.Trim()));
@@ -1673,14 +1678,24 @@ namespace DisCatSharp.ApplicationCommands
 			public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
 			{
 				var options = new List<DiscordApplicationCommandAutocompleteChoice>();
+				IEnumerable<DiscordApplicationCommand> slashCommands = null;
 				var globalCommandsTask = context.Client.GetGlobalApplicationCommandsAsync();
-				var guildCommandsTask= context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+				if (context.Guild != null)
+				{
+					var guildCommandsTask = context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+					await Task.WhenAll(globalCommandsTask, guildCommandsTask);
+					slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+						.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+						.GroupBy(ac => ac.Name).Select(x => x.First());
+				}
+				else
+				{
+					await Task.WhenAll(globalCommandsTask);
+					slashCommands = globalCommandsTask.Result
+						.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+						.GroupBy(ac => ac.Name).Select(x => x.First());
+				}
 
-				await Task.WhenAll(globalCommandsTask, guildCommandsTask);
-
-				var slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
-				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-				.GroupBy(ac => ac.Name).Select(x => x.First());
 				var command = slashCommands.FirstOrDefault(ac =>
 					ac.Name.Equals(context.Options[0].Value.ToString().Trim(),StringComparison.OrdinalIgnoreCase));
 				if (command is null || command.Options is null)
@@ -1705,14 +1720,23 @@ namespace DisCatSharp.ApplicationCommands
 			public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
 			{
 				var options = new List<DiscordApplicationCommandAutocompleteChoice>();
+				IEnumerable<DiscordApplicationCommand> slashCommands = null;
 				var globalCommandsTask = context.Client.GetGlobalApplicationCommandsAsync();
-				var guildCommandsTask= context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+				if(context.Guild != null)
+				{
+					var guildCommandsTask = context.Client.GetGuildApplicationCommandsAsync(context.Guild.Id);
+					await Task.WhenAll(globalCommandsTask, guildCommandsTask);
+					slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+						.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+						.GroupBy(ac => ac.Name).Select(x => x.First());
+				} else
+				{
+					await Task.WhenAll(globalCommandsTask);
+					slashCommands = globalCommandsTask.Result
+						.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+						.GroupBy(ac => ac.Name).Select(x => x.First());
+				}
 
-				await Task.WhenAll(globalCommandsTask, guildCommandsTask);
-
-				var slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
-				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-				.GroupBy(ac => ac.Name).Select(x => x.First());
 				var command = slashCommands.FirstOrDefault(ac =>
 					ac.Name.Equals(context.Options[0].Value.ToString().Trim(), StringComparison.OrdinalIgnoreCase));
 				if (command.Options is null)
@@ -1741,33 +1765,48 @@ namespace DisCatSharp.ApplicationCommands
 		[SlashCommand("help", "Displays command help")]
 		public async Task DefaultHelpAsync(InteractionContext ctx,
 			[Autocomplete(typeof(DefaultHelpAutoCompleteProvider))]
-			[Option("option_one", "top level command to provide help for", true)] string commandName,
+			[Option("option_one", "top level command to provide help for", true)] string option_one,
 			[Autocomplete(typeof(DefaultHelpAutoCompleteLevelOneProvider))]
-			[Option("option_two", "subgroup or command to provide help for", true)] string commandOneName = null,
+			[Option("option_two", "subgroup or command to provide help for", true)] string option_two = null,
 			[Autocomplete(typeof(DefaultHelpAutoCompleteLevelTwoProvider))]
-			[Option("option_three", "command to provide help for", true)] string commandTwoName = null)
+			[Option("option_three", "command to provide help for", true)] string option_three = null)
 		{
+			List<DiscordApplicationCommand> applicationCommands = null;
+
 			var globalCommandsTask = ctx.Client.GetGlobalApplicationCommandsAsync();
-			var guildCommandsTask= ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
+			if(ctx.Guild != null)
+			{
+				var guildCommandsTask= ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
 
-			await Task.WhenAll(globalCommandsTask, guildCommandsTask);
+				await Task.WhenAll(globalCommandsTask, guildCommandsTask);
 
-			var applicationCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
-				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-				.GroupBy(ac => ac.Name).Select(x => x.First())
-				.ToList();
+				applicationCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+					.GroupBy(ac => ac.Name).Select(x => x.First())
+					.ToList();
+			}
+			else
+			{
+				await Task.WhenAll(globalCommandsTask);
+
+				applicationCommands = globalCommandsTask.Result
+					.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+					.GroupBy(ac => ac.Name).Select(x => x.First())
+					.ToList();
+			}
+
 			if (applicationCommands.Count < 1)
 			{
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
 					.WithContent($"There are no slash commands for guild {ctx.Guild.Name}").AsEphemeral(true));
 				return;
 			}
-			if (commandTwoName is not null && !commandTwoName.Equals("no_options_for_this_command"))
+			if (option_three is not null && !option_three.Equals("no_options_for_this_command"))
 			{
 				var commandsWithSubCommands = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.Any(op => op.Type == ApplicationCommandOptionType.SubCommandGroup));
-				var cmdParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Options.Any(op => op.Name.Equals(commandOneName))).Options
-						.FirstOrDefault(opt => opt.Name.Equals(commandOneName,StringComparison.OrdinalIgnoreCase));
-				var cmd = cmdParent.Options.FirstOrDefault(op => op.Name.Equals(commandTwoName,StringComparison.OrdinalIgnoreCase));
+				var cmdParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Options.Any(op => op.Name.Equals(option_two))).Options
+						.FirstOrDefault(opt => opt.Name.Equals(option_two,StringComparison.OrdinalIgnoreCase));
+				var cmd = cmdParent.Options.FirstOrDefault(op => op.Name.Equals(option_three,StringComparison.OrdinalIgnoreCase));
 				var discordEmbed = new DiscordEmbedBuilder
 				{
 					Title = "Help",
@@ -1787,11 +1826,11 @@ namespace DisCatSharp.ApplicationCommands
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
 					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
 			}
-			else if (commandOneName is not null && commandTwoName is null && !commandOneName.Equals("no_options_for_this_command"))
+			else if (option_two is not null && option_three is null && !option_two.Equals("no_options_for_this_command"))
 			{
 				var commandsWithOptions = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.All(op => op.Type == ApplicationCommandOptionType.SubCommand));
-				var subCommandParent = commandsWithOptions.FirstOrDefault(cm => cm.Name.Equals(commandName,StringComparison.OrdinalIgnoreCase));
-				var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.Equals(commandOneName,StringComparison.OrdinalIgnoreCase));
+				var subCommandParent = commandsWithOptions.FirstOrDefault(cm => cm.Name.Equals(option_one,StringComparison.OrdinalIgnoreCase));
+				var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.Equals(option_two,StringComparison.OrdinalIgnoreCase));
 				var discordEmbed = new DiscordEmbedBuilder
 				{
 					Title = "Help",
@@ -1813,11 +1852,11 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else
 			{
-				var command = applicationCommands.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
+				var command = applicationCommands.FirstOrDefault(cm => cm.Name.Equals(option_one, StringComparison.OrdinalIgnoreCase));
 				if (command is null)
 				{
 					await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-							.WithContent($"No command called {commandName} in guild {ctx.Guild.Name}").AsEphemeral(true));
+							.WithContent($"No command called {option_one} in guild {ctx.Guild.Name}").AsEphemeral(true));
 					return;
 				}
 				var discordEmbed = new DiscordEmbedBuilder
