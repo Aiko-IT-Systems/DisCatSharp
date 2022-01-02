@@ -112,9 +112,6 @@ namespace DisCatSharp.Common.Types
 				throw new ArgumentException("Stream is too long.", nameof(stream));
 
 			this.EnsureSize(this._pos + (int)stream.Length);
-#if HAS_SPAN_STREAM_OVERLOADS
-            stream.Read(this._buff.Slice(this._pos).Span);
-#else
 			var memo = ArrayPool<byte>.Shared.Rent((int)stream.Length);
 			try
 			{
@@ -125,7 +122,6 @@ namespace DisCatSharp.Common.Types
 			{
 				ArrayPool<byte>.Shared.Return(memo);
 			}
-#endif
 
 			this._pos += (int)stream.Length;
 		}
@@ -136,16 +132,6 @@ namespace DisCatSharp.Common.Types
 		/// <param name="stream">The stream.</param>
 		private void WriteStreamUnseekable(Stream stream)
 		{
-#if HAS_SPAN_STREAM_OVERLOADS
-            var br = 0;
-            do
-            {
-                this.EnsureSize(this._pos + 4096);
-                br = stream.Read(this._buff.Slice(this._pos).Span);
-                this._pos += br;
-            }
-            while (br != 0);
-#else
 			var memo = ArrayPool<byte>.Shared.Rent(4096);
 			try
 			{
@@ -161,7 +147,6 @@ namespace DisCatSharp.Common.Types
 			{
 				ArrayPool<byte>.Shared.Return(memo);
 			}
-#endif
 		}
 
 		/// <inheritdoc />
@@ -210,12 +195,8 @@ namespace DisCatSharp.Common.Types
 			if (this._isDisposed)
 				throw new ObjectDisposedException("This buffer is disposed.");
 
-#if HAS_SPAN_STREAM_OVERLOADS
-            destination.Write(this._buff.Slice(0, this._pos).Span);
-#else
 			var buff = this._buff[..this._pos].ToArray();
 			destination.Write(buff, 0, buff.Length);
-#endif
 		}
 
 		/// <inheritdoc />
