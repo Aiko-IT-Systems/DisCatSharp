@@ -426,8 +426,8 @@ namespace DisCatSharp.ApplicationCommands
 				foreach (var config in types)
 				{
 					var type = config.Type;
-					try
-					{
+					/*try
+					{*/
 						var module = type.GetTypeInfo();
 						var classes = new List<TypeInfo>();
 
@@ -452,7 +452,7 @@ namespace DisCatSharp.ApplicationCommands
 							groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
 						}
 
-						var slashGroupsTulpe = NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildid, groupTranslations).Result;
+						var slashGroupsTulpe = await NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildid, groupTranslations);
 
 						if (slashGroupsTulpe.applicationCommands != null && slashGroupsTulpe.applicationCommands.Any())
 							updateList.AddRange(slashGroupsTulpe.applicationCommands);
@@ -482,7 +482,7 @@ namespace DisCatSharp.ApplicationCommands
 							//Slash commands
 							var methods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
 
-							var slashCommands = CommandWorker.ParseBasicSlashCommandsAsync(type, methods, guildid, commandTranslations).Result;
+							var slashCommands = await CommandWorker.ParseBasicSlashCommandsAsync(type, methods, guildid, commandTranslations);
 
 							if (slashCommands.applicationCommands != null && slashCommands.applicationCommands.Any())
 								updateList.AddRange(slashCommands.applicationCommands);
@@ -513,7 +513,7 @@ namespace DisCatSharp.ApplicationCommands
 								s_singletonModules.Add(CreateInstance(module, Configuration?.ServiceProvider));
 							}
 						}
-					}
+					/*}
 					catch (Exception ex)
 					{
 						if (ex is BadRequestException brex)
@@ -521,7 +521,7 @@ namespace DisCatSharp.ApplicationCommands
 						else
 							this.Client.Logger.LogCritical(ex, $"There was an error parsing the application commands");
 						s_errored = true;
-					}
+					}*/
 				}
 				if (!s_errored)
 				{

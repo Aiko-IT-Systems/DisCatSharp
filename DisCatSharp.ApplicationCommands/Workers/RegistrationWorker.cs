@@ -327,7 +327,7 @@ namespace DisCatSharp.ApplicationCommands
 
 			foreach (var cmd in updateList)
 			{
-				if (!discord.Any(d => d.Name == cmd.Name))
+				if (!discord.GetFirstValueWhere(d => d.Name == cmd.Name, out var command))
 				{
 					newCommands.Add(cmd);
 				}
@@ -434,7 +434,7 @@ namespace DisCatSharp.ApplicationCommands
 
 			foreach (var cmd in updateList)
 			{
-				if (discord.Any(d => d.Name == cmd.Name))
+				if (!discord.GetFirstValueWhere(d => d.Name == cmd.Name, out var command))
 				{
 					newCommands.Add(cmd);
 				}
