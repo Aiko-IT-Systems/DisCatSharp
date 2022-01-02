@@ -596,6 +596,8 @@ namespace DisCatSharp.ApplicationCommands
 
 						//Creates a guild command if a guild id is specified, otherwise global
 						//Checks against the ids and adds them to the command method lists
+						List<DiscordGuildApplicationCommandPermission> overwrites = new();
+
 						foreach (var command in commands)
 						{
 							if (commandMethods.GetFirstValueWhere(x => x.Name == command.Name, out var com))
@@ -603,8 +605,21 @@ namespace DisCatSharp.ApplicationCommands
 								com.CommandId = command.Id;
 
 								var source = commandTypeSources.FirstOrDefault(f => f.Key == com.Method.DeclaringType);
+
 								if(guildid != null)
-									await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, command.Id, com.Name, source.Value, source.Key);
+								{
+									var (success, commandId, permissions) = PermissionWorker.ResolvePermissions(types, command.Id, com.Name, source.Value, source.Key);
+
+									if (success)
+										overwrites.Add(new DiscordGuildApplicationCommandPermission()
+										{
+											Discord = this.Client.ApiClient.Discord,
+											ApplicationId = this.Client.CurrentApplication.Id,
+											GuildId = guildid.Value,
+											Id = commandId.Value,
+											Permissions = permissions
+										});
+								}
 							}
 							else if (groupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
 							{
@@ -612,8 +627,21 @@ namespace DisCatSharp.ApplicationCommands
 								foreach (var gCom in groupCom.Methods)
 								{
 									var source = commandTypeSources.FirstOrDefault(f => f.Key == gCom.Value.DeclaringType);
+
 									if (guildid != null)
-										await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, groupCom.CommandId, gCom.Key, source.Key, source.Value);
+									{
+										var (success, commandId, permissions) = PermissionWorker.ResolvePermissions(types, groupCom.CommandId, gCom.Key, source.Key, source.Value);
+
+										if (success)
+											overwrites.Add(new DiscordGuildApplicationCommandPermission()
+											{
+												Discord = this.Client.ApiClient.Discord,
+												ApplicationId = this.Client.CurrentApplication.Id,
+												GuildId = guildid.Value,
+												Id = commandId.Value,
+												Permissions = permissions
+											});
+									}
 								}
 							}
 							else if (subGroupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var subCom))
@@ -625,8 +653,21 @@ namespace DisCatSharp.ApplicationCommands
 									foreach (var gCom in groupComs.Methods)
 									{
 										var source = commandTypeSources.FirstOrDefault(f => f.Key == gCom.Value.DeclaringType);
+
 										if (guildid != null)
-											await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, subCom.CommandId, gCom.Key, source.Key, source.Value);
+										{
+											var (success, commandId, permissions) = PermissionWorker.ResolvePermissions(types, subCom.CommandId, gCom.Key, source.Key, source.Value);
+
+											if (success)
+												overwrites.Add(new DiscordGuildApplicationCommandPermission()
+												{
+													Discord = this.Client.ApiClient.Discord,
+													ApplicationId = this.Client.CurrentApplication.Id,
+													GuildId = guildid.Value,
+													Id = commandId.Value,
+													Permissions = permissions
+												});
+										}
 									}
 								}
 							}
@@ -635,7 +676,38 @@ namespace DisCatSharp.ApplicationCommands
 								cmCom.CommandId = command.Id;
 
 								var source = commandTypeSources.First(f => f.Key == cmCom.Method.DeclaringType);
-								await PermissionWorker.UpdateCommandPermissionAsync(types, guildid, command.Id, cmCom.Name, source.Value, source.Key);
+
+								if (guildid != null)
+								{
+									var (success, commandId, permissions) = PermissionWorker.ResolvePermissions(types, command.Id, cmCom.Name, source.Value, source.Key);
+
+									if (success)
+										overwrites.Add(new DiscordGuildApplicationCommandPermission()
+										{
+											Discord = this.Client.ApiClient.Discord,
+											ApplicationId = this.Client.CurrentApplication.Id,
+											GuildId = guildid.Value,
+											Id = commandId.Value,
+											Permissions = permissions
+										});
+								}
+							}
+						}
+
+						if (guildid != null)
+						{
+							try
+							{
+								await PermissionWorker.BulkOverwriteCommandPermissionsAsync(this.Client.CurrentApplication.Id, guildid.Value, overwrites);
+							}
+							catch (Exception ex)
+							{
+								if (ex is NotFoundException)
+									this.Client.Logger.LogError($"[AC Perms] Command not found");
+								else if (ex is BadRequestException)
+									this.Client.Logger.LogError($"[AC Perms] Bad Request: {(ex as BadRequestException).JsonMessage}");
+								else
+									this.Client.Logger.LogError($"[AC Perms] General exception: {ex.Message}\n{ex.StackTrace}");
 							}
 						}
 
