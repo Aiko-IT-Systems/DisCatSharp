@@ -20,19 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands
 {
 	internal static class ApplicationCommandEqualityChecks
 	{
+		/// <summary>
+		/// Whether two application commands are equal.
+		/// </summary>
+		/// <param name="ac1">Source command.</param>
+		/// <param name="targetApplicationCommand">Command to check agains.</param>
 		public static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand)
 		{
-			if (targetApplicationCommand == null || ac1 == null)
+			if (targetApplicationCommand is null || ac1 is null)
 				return false;
 
 			DiscordApplicationCommand sourceApplicationCommand = new(
@@ -49,13 +50,12 @@ namespace DisCatSharp.ApplicationCommands
 		/// Excluding id, application id and version here.
 		/// </summary>
 		/// <param name="source">Source application command.</param>
-		/// <param name="other">Application command to check against.</param>
-		private static bool SoftEqual(this DiscordApplicationCommand source, DiscordApplicationCommand other)
-			=> (source.Name == other.Name) && (source.Description == other.Description)
-			&& (source.Options == other.Options) && (source.DefaultPermission == other.DefaultPermission)
-			&& (source.NameLocalizations == other.NameLocalizations) && (source.DescriptionLocalizations == other.DescriptionLocalizations)
-			&& (source.Type == other.Type);
+		/// <param name="target">Application command to check against.</param>
+		internal static bool SoftEqual(this DiscordApplicationCommand source, DiscordApplicationCommand target)
+			=> (source.Name == target.Name) && (source.Description == target.Description)
+			&& (source.Options == target.Options) && (source.DefaultPermission == target.DefaultPermission)
+			&& (source.NameLocalizations == target.NameLocalizations) && (source.DescriptionLocalizations == target.DescriptionLocalizations)
+			&& (source.Type == target.Type);
 		// && (source.Permission == other.Permission) && (source.DmPermission == other.DmPermission)
-
 	}
 }

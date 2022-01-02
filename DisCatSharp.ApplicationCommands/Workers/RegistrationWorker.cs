@@ -313,9 +313,17 @@ namespace DisCatSharp.ApplicationCommands
 				if (discord.GetFirstValueWhere(d => d.Name == cmd.Name, out var command))
 				{
 					if (command.IsEqualTo(cmd))
+					{
+						if (ApplicationCommandsExtension.s_debugEnabled)
+							ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC] Command {cmd.Name} unchanged");
 						unchangedCommands.Add(command);
+					}
 					else
+					{
+						if (ApplicationCommandsExtension.s_debugEnabled)
+							ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC] Command {cmd.Name} changed");
 						updateCommands.Add(command.Id, cmd);
+					}
 				}
 			}
 
@@ -406,9 +414,17 @@ namespace DisCatSharp.ApplicationCommands
 				if (discord.GetFirstValueWhere(d => d.Name == cmd.Name, out var command))
 				{
 					if (command.IsEqualTo(cmd))
+					{
+						if (ApplicationCommandsExtension.s_debugEnabled)
+							ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC] Command {cmd.Name} unchanged");
 						unchangedCommands.Add(command);
+					}
 					else
+					{
+						if (ApplicationCommandsExtension.s_debugEnabled)
+							ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC] Command {cmd.Name} changed");
 						updateCommands.Add(command.Id, cmd);
+					}
 				}
 			}
 
