@@ -93,10 +93,9 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Updates the permissions.
 		/// </summary>
-		/// <param name="applicationId">The application id.</param>
 		/// <param name="guildId">The guild id.</param>
 		/// <param name="permissionOverwrites">The permission overwrites.</param>
-		internal static async Task BulkOverwriteCommandPermissionsAsync(ulong applicationId, ulong guildId, IEnumerable<DiscordGuildApplicationCommandPermission> permissionOverwrites)
-			=> await ApplicationCommandsExtension.ClientInternal.ApiClient.BulkOverwriteGuildApplicationCommandPermissionsAsync(applicationId, guildId, permissionOverwrites);
+		internal static async Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> BulkOverwriteCommandPermissionsAsync(ulong guildId, IEnumerable<DiscordGuildApplicationCommandPermission> permissionOverwrites)
+			=> await ApplicationCommandsExtension.ClientInternal.BulkOverwriteGuildApplicationCommandsAsync(guildId, permissionOverwrites);
 	}
 }
