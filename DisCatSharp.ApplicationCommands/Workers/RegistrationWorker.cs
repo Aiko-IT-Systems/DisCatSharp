@@ -30,6 +30,8 @@ using DisCatSharp.Exceptions;
 
 using Microsoft.Extensions.Logging;
 
+using Newtonsoft.Json;
+
 namespace DisCatSharp.ApplicationCommands
 {
 	/// <summary>

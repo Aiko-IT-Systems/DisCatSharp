@@ -27,6 +27,8 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Common;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
@@ -47,6 +49,9 @@ namespace DisCatSharp.ApplicationCommands
 				ac1.DefaultPermission, ac1.Type,
 				ac1.NameLocalizations, ac1.DescriptionLocalizations
 			);
+
+			if (ApplicationCommandsExtension.s_debugEnabled)
+				ApplicationCommandsExtension.ClientInternal.Logger.LogTrace($"[AC Change Check] Command {ac1.Name}\n\n[{JsonConvert.SerializeObject(sourceApplicationCommand)},{JsonConvert.SerializeObject(targetApplicationCommand)}]\n\n");
 
 			return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand, ac1.Type);
 		}
@@ -95,8 +100,8 @@ namespace DisCatSharp.ApplicationCommands
 							foreach (var subSubOption in subOption.Options)
 							{
 								minimalSubSubSourceOptions.Add(new DiscordApplicationCommandOption(
-									subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required,
-									subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete,
+									subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required ?? false,
+									subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
 									subSubOption.MinimumValue, subSubOption.MaximumValue, null, null
 								));
 							}
@@ -123,15 +128,15 @@ namespace DisCatSharp.ApplicationCommands
 					{
 						List<DiscordApplicationCommandOption> minimalSubSubTargetOptions = null;
 
-						if (subOption.Options != null)
+						if (subOption.Options != null && subOption.Options.Any())
 						{
 							minimalSubSubTargetOptions = new();
 
 							foreach (var subSubOption in subOption.Options)
 							{
 								minimalSubSubTargetOptions.Add(new DiscordApplicationCommandOption(
-									subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required,
-									subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete,
+									subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required ?? false,
+									subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
 									subSubOption.MinimumValue, subSubOption.MaximumValue, null, null
 								));
 							}
@@ -149,7 +154,7 @@ namespace DisCatSharp.ApplicationCommands
 					));
 				}
 
-				return rootCheck && minimalSourceOptions == minimalTargetOptions;
+				return rootCheck && JsonConvert.SerializeObject(minimalSourceOptions) == JsonConvert.SerializeObject(minimalTargetOptions);
 			}
 			else if (source.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand) && target.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand))
 			{
@@ -167,8 +172,8 @@ namespace DisCatSharp.ApplicationCommands
 						foreach (var subOption in option.Options)
 						{
 							minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
-								subOption.Name, subOption.Description, subOption.Type, subOption.Required,
-								subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete,
+								subOption.Name, subOption.Description, subOption.Type, subOption.Required ?? false,
+								subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
 								subOption.MinimumValue, subOption.MaximumValue, null, null
 							));
 						}
@@ -184,15 +189,15 @@ namespace DisCatSharp.ApplicationCommands
 				{
 					List<DiscordApplicationCommandOption> minimalSubTargetOptions = null;
 
-					if (option.Options != null)
+					if (option.Options != null && option.Options.Any())
 					{
 						minimalSubTargetOptions = new();
 
 						foreach (var subOption in option.Options)
 						{
 							minimalSubTargetOptions.Add(new DiscordApplicationCommandOption(
-								subOption.Name, subOption.Description, subOption.Type, subOption.Required,
-								subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete,
+								subOption.Name, subOption.Description, subOption.Type, subOption.Required ?? false,
+								subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
 								subOption.MinimumValue, subOption.MaximumValue, null, null
 							));
 						}
@@ -204,7 +209,7 @@ namespace DisCatSharp.ApplicationCommands
 					));
 				}
 
-				return rootCheck && minimalSourceOptions == minimalTargetOptions;
+				return rootCheck && JsonConvert.SerializeObject(minimalSourceOptions) == JsonConvert.SerializeObject(minimalTargetOptions);
 			}
 			else
 			{
@@ -213,19 +218,19 @@ namespace DisCatSharp.ApplicationCommands
 
 				foreach (var option in source.Options)
 					minimalSourceOptions.Add(new DiscordApplicationCommandOption(
-						option.Name, option.Description, option.Type, option.Required,
-						option.Choices, null, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
+						option.Name, option.Description, option.Type, option.Required ?? false,
+						option.Choices, null, option.ChannelTypes, option.AutoComplete ?? false, option.MinimumValue, option.MaximumValue,
 						null, null
 					));
 
 				foreach (var option in target.Options)
 					minimalTargetOptions.Add(new DiscordApplicationCommandOption(
-						option.Name, option.Description, option.Type, option.Required,
-						option.Choices, null, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
+						option.Name, option.Description, option.Type, option.Required ?? false,
+						option.Choices, null, option.ChannelTypes, option.AutoComplete ?? false, option.MinimumValue, option.MaximumValue,
 						null, null
 					));
 
-				return rootCheck && minimalSourceOptions == minimalTargetOptions;
+				return rootCheck && JsonConvert.SerializeObject(minimalSourceOptions) == JsonConvert.SerializeObject(minimalTargetOptions);
 			}
 		}
 

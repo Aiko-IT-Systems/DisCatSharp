@@ -1340,9 +1340,9 @@ namespace DisCatSharp.ApplicationCommands
 
 
 				var autocompleteAttribute = parameter.GetCustomAttribute<AutocompleteAttribute>();
-				if (optionattribute.Autocomplete && autocompleteAttribute == null)
+				if (optionattribute.Autocomplete.HasValue && optionattribute.Autocomplete.Value && autocompleteAttribute == null)
 					throw new ArgumentException("Autocomplete options must have the Autocomplete attribute!");
-				if (!optionattribute.Autocomplete && autocompleteAttribute != null)
+				if ((!optionattribute.Autocomplete.HasValue || !optionattribute.Autocomplete.Value) && autocompleteAttribute != null)
 					throw new ArgumentException("Setting an autocomplete provider requires the option to have autocomplete set to true!");
 
 				//Sets the type
