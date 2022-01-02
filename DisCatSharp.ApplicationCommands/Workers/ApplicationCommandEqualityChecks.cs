@@ -32,10 +32,7 @@ namespace DisCatSharp.ApplicationCommands
 	{
 		public static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand)
 		{
-			if (ac1 == null && targetApplicationCommand == null)
-				return false;
-
-			if (targetApplicationCommand == null)
+			if (targetApplicationCommand == null || ac1 == null)
 				return false;
 
 			DiscordApplicationCommand sourceApplicationCommand = new(
