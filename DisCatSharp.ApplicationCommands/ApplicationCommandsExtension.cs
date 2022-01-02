@@ -142,7 +142,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Gets whether debug is enabled.
 		/// </summary>
-		internal static bool s_debugEnabled { get; set; }
+		internal static bool DebugEnabled { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
@@ -151,7 +151,7 @@ namespace DisCatSharp.ApplicationCommands
 		internal ApplicationCommandsExtension(ApplicationCommandsConfiguration configuration)
 		{
 			Configuration = configuration;
-			s_debugEnabled = configuration.DebugStartupCounts;
+			DebugEnabled = configuration.DebugStartupCounts;
 		}
 
 		/// <summary>
@@ -348,7 +348,7 @@ namespace DisCatSharp.ApplicationCommands
 				var commandsPending = this._updateList.Select(x => x.Key).Distinct();
 				s_expectedCount = commandsPending.Count();
 
-				if (s_debugEnabled)
+				if (DebugEnabled)
 					this.Client.Logger.LogDebug($"Expected Count: {s_expectedCount}");
 
 				List<ulong> failedGuilds = new();
@@ -648,7 +648,7 @@ namespace DisCatSharp.ApplicationCommands
 						}
 
 						s_registrationCount++;
-						if (s_debugEnabled)
+						if (DebugEnabled)
 							this.Client.Logger.LogDebug($"Expected Count: {s_expectedCount}\nCurrent Count: {s_registrationCount}");
 
 						if (guildid.HasValue)
@@ -685,7 +685,7 @@ namespace DisCatSharp.ApplicationCommands
 
 		private async void CheckRegistrationStartup()
 		{
-			if (s_debugEnabled)
+			if (DebugEnabled)
 				this.Client.Logger.LogDebug($"Checking counts...\n\nExpected Count: {s_expectedCount}\nCurrent Count: {s_registrationCount}");
 			if (s_registrationCount == s_expectedCount)
 			{
@@ -853,7 +853,7 @@ namespace DisCatSharp.ApplicationCommands
                         {
                             var command = e.Interaction.Data.Options.First();
                             var group = subgroups.First().SubCommands.First(x => x.Name == command.Name).Methods.First(x => x.Key == command.Options.First().Name).Value;
-							
+
                             var focusedOption = command.Options.First().Options.First(o => o.Focused);
 
                             var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);

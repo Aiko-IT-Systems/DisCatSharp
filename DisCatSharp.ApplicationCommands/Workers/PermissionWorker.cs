@@ -58,7 +58,7 @@ namespace DisCatSharp.ApplicationCommands
 			if (ctx.Permissions.Count == 0)
 				return;
 
-			if (ApplicationCommandsExtension.s_debugEnabled)
+			if (ApplicationCommandsExtension.DebugEnabled)
 				ApplicationCommandsExtension.ClientInternal.Logger.LogDebug($"[AC Perms] Command {commandName} permission update on {guildid.Value}");
 
 			await ApplicationCommandsExtension.ClientInternal.OverwriteGuildApplicationCommandPermissionsAsync(guildid.Value, commandId, ctx.Permissions);
