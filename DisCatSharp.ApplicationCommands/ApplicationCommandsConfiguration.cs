@@ -50,7 +50,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Debugs the startups expected and actual count.
 		/// </summary>
-		public bool DebugStartupCounts { internal get; set; }
+		public bool DebugStartup { internal get; set; } = false;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
@@ -70,7 +70,7 @@ namespace DisCatSharp.ApplicationCommands
 		{
 			this.EnableDefaultHelp = acc.EnableDefaultHelp;
 			this.ServiceProvider = acc.ServiceProvider;
-			this.DebugStartupCounts = acc.DebugStartupCounts;
+			this.DebugStartup = acc.DebugStartup;
 		}
 	}
 }

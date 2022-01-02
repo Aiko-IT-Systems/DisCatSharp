@@ -50,8 +50,7 @@ namespace DisCatSharp.ApplicationCommands
 				ac1.NameLocalizations, ac1.DescriptionLocalizations
 			);
 
-			if (ApplicationCommandsExtension.DebugEnabled)
-				ApplicationCommandsExtension.ClientInternal.Logger.LogTrace($"[AC Change Check] Command {ac1.Name}\n\n[{JsonConvert.SerializeObject(sourceApplicationCommand)},{JsonConvert.SerializeObject(targetApplicationCommand)}]\n\n");
+			ApplicationCommandsExtension.ClientInternal.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC Change Check] Command {ac1.Name}\n\n[{JsonConvert.SerializeObject(sourceApplicationCommand)},{JsonConvert.SerializeObject(targetApplicationCommand)}]\n\n");
 
 			return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand, ac1.Type);
 		}
