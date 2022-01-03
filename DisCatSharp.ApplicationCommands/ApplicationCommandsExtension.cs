@@ -164,7 +164,8 @@ namespace DisCatSharp.ApplicationCommands
 		}
 
 		/// <summary>
-		/// Runs setup. DO NOT RUN THIS MANUALLY. DO NOT DO ANYTHING WITH THIS.
+		/// Runs setup.
+		/// <note type="caution">DO NOT RUN THIS MANUALLY. DO NOT DO ANYTHING WITH THIS.</note>
 		/// </summary>
 		/// <param name="client">The client to setup on.</param>
 		protected internal override void Setup(DiscordClient client)
@@ -231,6 +232,7 @@ namespace DisCatSharp.ApplicationCommands
 
 		/// <summary>
 		/// Cleans all guild application commands.
+		/// <note type="caution">You normally don't need to execute it.</note>
 		/// </summary>
 		public async Task CleanGuildCommandsAsync()
 		{
@@ -242,6 +244,7 @@ namespace DisCatSharp.ApplicationCommands
 
 		/// <summary>
 		/// Cleans the global application commands.
+		/// <note type="caution">You normally don't need to execute it.</note>
 		/// </summary>
 		public async Task CleanGlobalCommandsAsync()
 			=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(Array.Empty<DiscordApplicationCommand>());
@@ -549,7 +552,7 @@ namespace DisCatSharp.ApplicationCommands
 							{
 								if (updateList != null && updateList.Any())
 								{
-									var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(updateList);
+									var regCommands = RegistrationWorker.RegisterGlobalCommandsAsync(updateList).Result;
 									var actualCommands = regCommands.Distinct().ToList();
 									commands.AddRange(actualCommands);
 									GlobalCommandsInternal.AddRange(actualCommands);
@@ -573,7 +576,7 @@ namespace DisCatSharp.ApplicationCommands
 							{
 								if (updateList != null && updateList.Any())
 								{
-									var regCommands = await RegistrationWorker.RegisterGuilldCommandsAsync(guildid.Value, updateList);
+									var regCommands = RegistrationWorker.RegisterGuilldCommandsAsync(guildid.Value, updateList).Result;
 									var actualCommands = regCommands.Distinct().ToList();
 									commands.AddRange(actualCommands);
 									GuildCommandsInternal.Add(guildid.Value, actualCommands);
@@ -712,9 +715,13 @@ namespace DisCatSharp.ApplicationCommands
 								if (ex is NotFoundException)
 									this.Client.Logger.LogError($"[AC Perms] Command not found");
 								else if (ex is BadRequestException)
-									this.Client.Logger.LogError($"[AC Perms] Bad Request: {(ex as BadRequestException).JsonMessage}");
+								{
+									var exc = ex as BadRequestException;
+									this.Client.Logger.LogError($"[AC Perms] Bad Request: {exc.JsonMessage}\nRestarting could help.\n" +
+										$"{exc.WebResponse.Response}");
+								}
 								else
-									this.Client.Logger.LogError($"[AC Perms] General exception: {ex.Message}\n{ex.StackTrace}");
+									this.Client.Logger.LogError($"[AC Perms] General exception: {ex.Message}\n{ex.StackTrace}\nRestarting could help.");
 							}
 						}
 
@@ -1658,7 +1665,7 @@ namespace DisCatSharp.ApplicationCommands
 	/// <summary>
 	/// Represents the default help module.
 	/// </summary>
-	public class DefaultHelpModule : ApplicationCommandsModule
+	internal class DefaultHelpModule : ApplicationCommandsModule
 	{
 		public class DefaultHelpAutoCompleteProvider : IAutocompleteProvider
 		{
@@ -1787,7 +1794,7 @@ namespace DisCatSharp.ApplicationCommands
 		}
 
 		[SlashCommand("help", "Displays command help")]
-		public async Task DefaultHelpAsync(InteractionContext ctx,
+		internal async Task DefaultHelpAsync(InteractionContext ctx,
 			[Autocomplete(typeof(DefaultHelpAutoCompleteProvider))]
 			[Option("option_one", "top level command to provide help for", true)] string commandName,
 			[Autocomplete(typeof(DefaultHelpAutoCompleteLevelOneProvider))]

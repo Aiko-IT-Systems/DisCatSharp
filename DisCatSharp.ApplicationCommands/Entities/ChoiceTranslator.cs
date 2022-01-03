@@ -31,7 +31,7 @@ namespace DisCatSharp.ApplicationCommands
 	/// <summary>
 	/// Represents a choice translator.
 	/// </summary>
-	public class ChoiceTranslator
+	internal class ChoiceTranslator
 	{
 		/// <summary>
 		/// Gets the choice name.

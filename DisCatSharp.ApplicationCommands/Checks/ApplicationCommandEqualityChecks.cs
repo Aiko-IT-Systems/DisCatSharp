@@ -39,7 +39,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="ac1">Source command.</param>
 		/// <param name="targetApplicationCommand">Command to check agains.</param>
-		public static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand)
+		internal static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand)
 		{
 			if (targetApplicationCommand is null || ac1 is null)
 				return false;
@@ -71,7 +71,7 @@ namespace DisCatSharp.ApplicationCommands
 			};
 		}
 
-		private static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target)
+		internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target)
 		{
 			var rootCheck = (source.Name == target.Name) && (source.Description == target.Description) && (source.DefaultPermission == target.DefaultPermission) && (source.Type == target.Type);
 
