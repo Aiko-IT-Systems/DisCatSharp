@@ -30,7 +30,7 @@ namespace DisCatSharp.ApplicationCommands
 	/// <summary>
 	/// The application commands permission context.
 	/// </summary>
-	public class ApplicationCommandsPermissionContext
+	public class ApplicationCommandsGlobalPermissionContext
 	{
 		/// <summary>
 		/// Gets the type.
@@ -45,15 +45,14 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Gets the permissions.
 		/// </summary>
-		public IReadOnlyCollection<DiscordApplicationCommandPermission> Permissions => this._permissions;
-		private readonly List<DiscordApplicationCommandPermission> _permissions = new();
+		public List<KeyValuePair<ulong, DiscordApplicationCommandPermission>> GuildPermissions = new();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApplicationCommandsPermissionContext"/> class.
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <param name="name">The name.</param>
-		internal ApplicationCommandsPermissionContext(Type type, string name)
+		internal ApplicationCommandsGlobalPermissionContext(Type type, string name)
 		{
 			this.Type = type;
 			this.Name = name;
@@ -62,25 +61,28 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Adds a user to the permission system.
 		/// </summary>
+		/// <param name="guildId">The id of the guild to apply this permission to.</param>
 		/// <param name="userId">The Id of the user to give this permission.</param>
 		/// <param name="permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
-		public void AddUser(ulong userId, bool permission)
-			=> this._permissions.Add(new DiscordApplicationCommandPermission(userId, ApplicationCommandPermissionType.User, permission));
+		public void AddUser(ulong guildId, ulong userId, bool permission)
+			=> this.GuildPermissions.Add(new KeyValuePair<ulong, DiscordApplicationCommandPermission>(guildId, new DiscordApplicationCommandPermission(userId, ApplicationCommandPermissionType.User, permission)));
 
 		/// <summary>
 		/// Adds a user to the permission system.
 		/// </summary>
+		/// <param name="guildId">The id of the guild to apply this permission to.</param>
 		/// <param name="roleId">The Id of the role to give this permission.</param>
 		/// <param name="permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
-		public void AddRole(ulong roleId, bool permission)
-			=> this._permissions.Add(new DiscordApplicationCommandPermission(roleId, ApplicationCommandPermissionType.Role, permission));
+		public void AddRole(ulong guildId, ulong roleId, bool permission)
+			=> this.GuildPermissions.Add(new KeyValuePair<ulong, DiscordApplicationCommandPermission>(guildId, new DiscordApplicationCommandPermission(roleId, ApplicationCommandPermissionType.Role, permission)));
 
 		/// <summary>
 		/// Adds a channel to the permission system.
 		/// </summary>
+		/// <param name="guildId">The id of the guild to apply this permission to.</param>
 		/// <param name="channelId">The Id of the channel to give this permission.</param>
 		/// <param name="permission">The permission for the application command. If set to true, they can use the command. If set to false, they can't use the command.</param>
-		public void AddChannel(ulong channelId, bool permission)
-			=> this._permissions.Add(new DiscordApplicationCommandPermission(channelId, ApplicationCommandPermissionType.Channel, permission));
+		public void AddChannel(ulong guildId, ulong channelId, bool permission)
+			=> this.GuildPermissions.Add(new KeyValuePair<ulong, DiscordApplicationCommandPermission>(guildId, new DiscordApplicationCommandPermission(channelId, ApplicationCommandPermissionType.Channel, permission)));
 	}
 }
