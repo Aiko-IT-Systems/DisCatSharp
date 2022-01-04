@@ -342,6 +342,9 @@ namespace DisCatSharp.ApplicationCommands
 
 			List<ulong> invalidCommandIds = new();
 
+			if (discord == null)
+				return null;
+
 			if (updateList == null)
 			{
 				foreach (var cmd in discord)
@@ -378,6 +381,9 @@ namespace DisCatSharp.ApplicationCommands
 
 			List<DiscordApplicationCommand> newCommands = new();
 
+			if (discord == null)
+				return updateList;
+
 			foreach (var cmd in updateList)
 			{
 				if (discord.All(d => d.Name != cmd.Name))
@@ -410,6 +416,9 @@ namespace DisCatSharp.ApplicationCommands
 
 			Dictionary<ulong, DiscordApplicationCommand> updateCommands = new();
 			List<DiscordApplicationCommand> unchangedCommands = new();
+
+			if (discord == null)
+				return (null, null);
 
 			foreach (var cmd in updateList)
 			{
@@ -452,6 +461,9 @@ namespace DisCatSharp.ApplicationCommands
 
 			List<ulong> invalidCommandIds = new();
 
+			if (discord == null)
+				return null;
+
 			if (updateList == null)
 			{
 				foreach (var cmd in discord)
@@ -485,6 +497,9 @@ namespace DisCatSharp.ApplicationCommands
 
 			List<DiscordApplicationCommand> newCommands = new();
 
+			if (discord == null)
+				return updateList;
+
 			foreach (var cmd in updateList)
 			{
 				if (discord.All(d => d.Name != cmd.Name))
@@ -512,6 +527,9 @@ namespace DisCatSharp.ApplicationCommands
 				return (null, null);
 
 			var discord = ApplicationCommandsExtension.GlobalDiscordCommands;
+
+			if (discord == null)
+				return (null, null);
 
 			Dictionary<ulong, DiscordApplicationCommand> updateCommands = new();
 			List<DiscordApplicationCommand> unchangedCommands = new();
