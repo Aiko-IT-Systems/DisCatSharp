@@ -59,7 +59,7 @@ namespace DisCatSharp.Entities
 		/// Gets the style.
 		/// </summary>
 		[JsonProperty("style", NullValueHandling = NullValueHandling.Ignore)]
-		internal int Style { get; } = 5; // Link = 5; Discord throws 400 otherwise //
+		internal int Style { get; set; } = 5; // Link = 5; Discord throws 400 otherwise //
 
 		/// <summary>
 		/// Enables this component if it was disabled before.
