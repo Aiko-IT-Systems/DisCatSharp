@@ -84,7 +84,7 @@ namespace DisCatSharp.ApplicationCommands
 			var conf = types.First(t => t.Type == commandRootType);
 			conf.Setup?.Invoke(ctx);
 
-			return ctx.Permissions.Count == 0
+			return ctx.Permissions.Count == 0 || commandId == 0
 				? (false, null, null)
 				: (true, commandId, ctx.Permissions.ToList());
 		}

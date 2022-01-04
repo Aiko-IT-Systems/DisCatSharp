@@ -148,6 +148,11 @@ namespace DisCatSharp.ApplicationCommands
 			=> DebugEnabled ? LogLevel.Debug : LogLevel.Trace;
 
 		/// <summary>
+		/// Whether the permission failed to register.
+		/// </summary>
+		private static bool s_permError { get; set; } = false;
+
+		/// <summary>
 		/// Gets whether check through all guilds is enabled.
 		/// </summary>
 		internal static bool CheckAllGuilds { get; set; }
@@ -354,8 +359,8 @@ namespace DisCatSharp.ApplicationCommands
 			//Only update for shard 0
 			if (this.Client.ShardId == 0)
 			{
-				GlobalDiscordCommands = new List<DiscordApplicationCommand>();
-				GuildDiscordCommands = new Dictionary<ulong, List<DiscordApplicationCommand>>();
+				GlobalDiscordCommands = new();
+				GuildDiscordCommands = new();
 
 				var commandsPending = this._updateList.Select(x => x.Key).Distinct();
 				s_expectedCount = commandsPending.Count();
@@ -365,7 +370,7 @@ namespace DisCatSharp.ApplicationCommands
 				List<ulong> failedGuilds = new();
 				IEnumerable<DiscordApplicationCommand> globalCommands = null;
 				globalCommands = await this.Client.GetGlobalApplicationCommandsAsync() ?? null;
-				IEnumerable<ulong> guilds = CheckAllGuilds ? this.Client.Guilds.Keys : this._updateList.Select(x => x.Key).Distinct().Where(x => x != null).Select(x => x.Value);
+				var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys : this._updateList.Select(x => x.Key)?.Distinct().Where(x => x != null)?.Select(x => x.Value);
 
 				foreach (var guild in guilds)
 				{
@@ -628,11 +633,13 @@ namespace DisCatSharp.ApplicationCommands
 									var (success, commandId, permissions) = PermissionWorker.ResolvePermissions(types, command.Id, com.Name, source.Value, source.Key);
 
 									if (success)
+									{
 										overwrites.Add(new DiscordGuildApplicationCommandPermission()
 										{
 											Id = commandId.Value,
 											Permissions = permissions
 										});
+									}
 								}
 							}
 							else if (groupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
@@ -701,6 +708,13 @@ namespace DisCatSharp.ApplicationCommands
 
 						if (guildid != null)
 						{
+							if (overwrites.Any(x => x.Id == 0))
+							{
+								s_errored = true;
+								s_permError = true;
+								throw new ArgumentException("Overwrites has a value with command id 0. Seems like an error. Aborting.");
+							}
+
 							try
 							{
 								var perms = await PermissionWorker.BulkOverwriteCommandPermissionsAsync(guildid.Value, overwrites);
@@ -716,6 +730,7 @@ namespace DisCatSharp.ApplicationCommands
 									this.Client.Logger.LogError($"[AC Perms] Command not found");
 								else if (ex is BadRequestException)
 								{
+									s_permError = true;
 									var exc = ex as BadRequestException;
 									this.Client.Logger.LogError($"[AC Perms] Bad Request: {exc.JsonMessage}\nRestarting could help.\n" +
 										$"{exc.WebResponse.Response}");
@@ -778,7 +793,7 @@ namespace DisCatSharp.ApplicationCommands
 		{
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Checking counts...\n\nExpected Count: {s_expectedCount}\nCurrent Count: {s_registrationCount}");
 
-			if (s_registrationCount == s_expectedCount)
+			if (s_registrationCount == s_expectedCount && !s_permError)
 			{
 				await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new ApplicationCommandsModuleStartupFinishedEventArgs(Configuration?.ServiceProvider)
 				{
@@ -789,6 +804,11 @@ namespace DisCatSharp.ApplicationCommands
 				});
 
 				this.FinishedRegistration();
+			}
+			else if(s_permError)
+			{
+				this.Client.Logger.LogWarning($"We had problems to register the permissions. Shutting down ...");
+				await this.Client.DisconnectAsync();
 			}
 		}
 
@@ -1359,6 +1379,7 @@ namespace DisCatSharp.ApplicationCommands
 
 			return choices;
 		}
+
 		/// <summary>
 		/// Gets the choice attributes from enum parameter.
 		/// </summary>
@@ -1480,6 +1501,15 @@ namespace DisCatSharp.ApplicationCommands
 			GuildDiscordCommands.Clear();
 			GuildCommandsInternal.Clear();
 			GlobalCommandsInternal.Clear();
+			GlobalDiscordCommands = null;
+			GuildDiscordCommands = null;
+			s_permError = false;
+			s_errored = false;
+
+			if (Configuration.EnableDefaultHelp)
+			{
+				this._updateList.RemoveAll(x => x.Value.Type == typeof(DefaultHelpModule));
+			}
 
 			await this.UpdateAsync();
 		}
