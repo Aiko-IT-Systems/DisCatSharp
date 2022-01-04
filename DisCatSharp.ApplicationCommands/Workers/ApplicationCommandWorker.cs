@@ -349,7 +349,7 @@ namespace DisCatSharp.ApplicationCommands
 							subSubDescriptionLocalizations = subSubCommandTranslation.DescriptionTranslations;
 						}
 
-						var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, (localizisedOptions != null && localizisedOptions.Any() ? localizisedOptions : null) ?? (options != null && options.Any() ? options : null), nameLocalizations: subSubNameLocalizations, descriptionLocalizations: subSubDescriptionLocalizations);
+						var subsubpayload = new DiscordApplicationCommandOption(commatt.Name, commatt.Description, ApplicationCommandOptionType.SubCommand, null, null, (localizisedOptions != null && localizisedOptions.Any() ? localizisedOptions : null) ?? (suboptions != null && suboptions.Any() ? suboptions : null), nameLocalizations: subSubNameLocalizations, descriptionLocalizations: subSubDescriptionLocalizations);
 						options.Add(subsubpayload);
 						commandmethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
 						currentMethods.Add(new KeyValuePair<string, MethodInfo>(commatt.Name, subsubmethod));
