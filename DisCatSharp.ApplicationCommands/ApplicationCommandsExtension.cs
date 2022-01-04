@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -214,25 +215,23 @@ namespace DisCatSharp.ApplicationCommands
 		/// Registers a command class.
 		/// </summary>
 		/// <typeparam name="T">The command class to register.</typeparam>
-		/// <param name="guildId">The guild id to register it on. If you want global commands, leave it null.</param>
-		public void RegisterCommands<T>(ulong? guildId = null) where T : ApplicationCommandsModule
+		public void RegisterGlobalCommands<T>() where T : ApplicationCommandsModule
 		{
 			if (this.Client.ShardId == 0)
-				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T))));
+				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(typeof(T), true)));
 		}
 
 		/// <summary>
 		/// Registers a command class.
 		/// </summary>
 		/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
-		/// <param name="guildId">The guild id to register it on. If you want global commands, leave it null.</param>
-		public void RegisterCommands(Type type, ulong? guildId = null)
+		public void RegisterGlobalCommands(Type type)
 		{
 			if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 				throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
 			//If sharding, only register for shard 0
 			if (this.Client.ShardId == 0)
-				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type)));
+				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(type, true)));
 		}
 
 		/// <summary>
@@ -261,7 +260,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <param name="guildId">The guild id to register it on.</param>
 		/// <param name="permissionSetup">A callback to setup permissions with.</param>
 		/// <param name="translationSetup">A callback to setup translations with.</param>
-		public void RegisterCommands<T>(ulong guildId, Action<ApplicationCommandsPermissionContext> permissionSetup = null, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
+		public void RegisterGuildCommands<T>(ulong guildId, Action<ApplicationCommandsPermissionContext> permissionSetup = null, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
 		{
 			if (this.Client.ShardId == 0)
 				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T), permissionSetup, translationSetup)));
@@ -274,7 +273,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <param name="guildId">The guild id to register it on.</param>
 		/// <param name="permissionSetup">A callback to setup permissions with.</param>
 		/// <param name="translationSetup">A callback to setup translations with.</param>
-		public void RegisterCommands(Type type, ulong guildId, Action<ApplicationCommandsPermissionContext> permissionSetup = null, Action<ApplicationCommandsTranslationContext> translationSetup = null)
+		public void RegisterGuildCommands(Type type, ulong guildId, Action<ApplicationCommandsPermissionContext> permissionSetup = null, Action<ApplicationCommandsTranslationContext> translationSetup = null)
 		{
 			if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 				throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
@@ -283,32 +282,32 @@ namespace DisCatSharp.ApplicationCommands
 				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type, permissionSetup, translationSetup)));
 		}
 
-		/*
-        /// <summary>
-        /// Registers a command class with permission setup but without a guild id.
-        /// </summary>
-        /// <typeparam name="T">The command class to register.</typeparam>
-        /// <param name="permissionSetup">A callback to setup permissions with.</param>
-        public void RegisterCommands<T>(Action<ApplicationCommandsPermissionContext> permissionSetup = null) where T : ApplicationCommandsModule
+		/// <summary>
+		/// Registers a command class with permission setup but without a guild id.
+		/// </summary>
+		/// <typeparam name="T">The command class to register.</typeparam>
+		/// <param name="globalGuildPermissionSetup">A callback to setup permissions with.</param>
+		/// <param name="translationSetup">A callback to setup translations with.</param>
+		public void RegisterGlobalCommands<T>(Action<ApplicationCommandsGlobalPermissionContext> globalGuildPermissionSetup = null, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
         {
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(typeof(T), permissionSetup)));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(typeof(T), true, globalGuildPermissionSetup, translationSetup)));
         }
 
-        /// <summary>
-        /// Registers a command class with permission setup but without a guild id.
-        /// </summary>
-        /// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
-        /// <param name="permissionSetup">A callback to setup permissions with.</param>
-        public void RegisterCommands(Type type, Action<ApplicationCommandsPermissionContext> permissionSetup = null)
+		/// <summary>
+		/// Registers a command class with permission setup but without a guild id.
+		/// </summary>
+		/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
+		/// <param name="globalGuildPermissionSetup">A callback to setup permissions with.</param>
+		/// <param name="translationSetup">A callback to setup translations with.</param>
+		public void RegisterGlobalCommands(Type type, Action<ApplicationCommandsGlobalPermissionContext> globalGuildPermissionSetup = null, Action<ApplicationCommandsTranslationContext> translationSetup = null)
         {
             if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
                 throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
             //If sharding, only register for shard 0
             if (this.Client.ShardId == 0)
-                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(type, permissionSetup)));
+                this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(type, true, globalGuildPermissionSetup, translationSetup)));
         }
-        */
 
 		/// <summary>
 		/// Fired when the application commands module is ready.
@@ -400,7 +399,7 @@ namespace DisCatSharp.ApplicationCommands
 				if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
 				{
 					this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
-						(null, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
+						(null, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule), true)));
 					commandsPending = this._updateList.Select(x => x.Key).Distinct();
 				}
 
@@ -616,6 +615,7 @@ namespace DisCatSharp.ApplicationCommands
 						//Creates a guild command if a guild id is specified, otherwise global
 						//Checks against the ids and adds them to the command method lists
 						List<DiscordGuildApplicationCommandPermission> overwrites = new();
+						List< KeyValuePair<ulong, DiscordGuildApplicationCommandPermission>> guildOverwrites = new();
 
 						foreach (var command in commands)
 						{
@@ -638,6 +638,24 @@ namespace DisCatSharp.ApplicationCommands
 										});
 									}
 								}
+								else
+								{
+									var (success, commandId, permissions) = PermissionWorker.ResolveGlobalPermissions(types, command.Id, com.Name, source.Value, source.Key);
+
+									if (success)
+									{
+										var perms = permissions.Select(x => x.Key).Distinct();
+										foreach(var guild in perms)
+										{
+											guildOverwrites.Add(new KeyValuePair<ulong, DiscordGuildApplicationCommandPermission>(guild, new DiscordGuildApplicationCommandPermission()
+											{
+												Id = commandId.Value,
+												Permissions = permissions.Where(x => x.Key == guild).Select(x => x.Value).ToList(),
+												GuildId = guild
+											}));
+										}
+									}
+								}
 							}
 							else if (groupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
 							{
@@ -656,6 +674,24 @@ namespace DisCatSharp.ApplicationCommands
 												Id = commandId.Value,
 												Permissions = permissions
 											});
+									}
+									else
+									{
+										var (success, commandId, permissions) = PermissionWorker.ResolveGlobalPermissions(types, groupCom.CommandId, gCom.Key, source.Key, source.Value);
+
+										if (success)
+										{
+											var perms = permissions.Select(x => x.Key).Distinct();
+											foreach (var guild in perms)
+											{
+												guildOverwrites.Add(new KeyValuePair<ulong, DiscordGuildApplicationCommandPermission>(guild, new DiscordGuildApplicationCommandPermission()
+												{
+													Id = commandId.Value,
+													Permissions = permissions.Where(x => x.Key == guild).Select(x => x.Value).ToList(),
+													GuildId = guild
+												}));
+											}
+										}
 									}
 								}
 							}
@@ -680,6 +716,24 @@ namespace DisCatSharp.ApplicationCommands
 													Permissions = permissions
 												});
 										}
+										else
+										{
+											var (success, commandId, permissions) = PermissionWorker.ResolveGlobalPermissions(types, subCom.CommandId, gCom.Key, source.Key, source.Value);
+
+											if (success)
+											{
+												var perms = permissions.Select(x => x.Key).Distinct();
+												foreach (var guild in perms)
+												{
+													guildOverwrites.Add(new KeyValuePair<ulong, DiscordGuildApplicationCommandPermission>(guild, new DiscordGuildApplicationCommandPermission()
+													{
+														Id = commandId.Value,
+														Permissions = permissions.Where(x => x.Key == guild).Select(x => x.Value).ToList(),
+														GuildId = guild
+													}));
+												}
+											}
+										}
 									}
 								}
 							}
@@ -700,6 +754,24 @@ namespace DisCatSharp.ApplicationCommands
 											Permissions = permissions
 										});
 								}
+								else
+								{
+									var (success, commandId, permissions) = PermissionWorker.ResolveGlobalPermissions(types, command.Id, cmCom.Name, source.Value, source.Key);
+
+									if (success)
+									{
+										var perms = permissions.Select(x => x.Key).Distinct();
+										foreach (var guild in perms)
+										{
+											guildOverwrites.Add(new KeyValuePair<ulong, DiscordGuildApplicationCommandPermission>(guild, new DiscordGuildApplicationCommandPermission()
+											{
+												Id = commandId.Value,
+												Permissions = permissions.Where(x => x.Key == guild).Select(x => x.Value).ToList(),
+												GuildId = guild
+											}));
+										}
+									}
+								}
 							}
 						}
 
@@ -719,6 +791,43 @@ namespace DisCatSharp.ApplicationCommands
 								{
 									guild.InternalGuildApplicationCommandPermissions = new();
 									guild.InternalGuildApplicationCommandPermissions.AddRange(perms);
+								}
+							}
+							catch (Exception ex)
+							{
+								if (ex is NotFoundException)
+									this.Client.Logger.LogError($"[AC Perms] Command not found");
+								else if (ex is BadRequestException)
+								{
+									s_permError = true;
+									var exc = ex as BadRequestException;
+									this.Client.Logger.LogError($"[AC Perms] Bad Request: {exc.JsonMessage}\nRestarting could help.\n" +
+										$"{exc.WebResponse.Response}");
+								}
+								else
+									this.Client.Logger.LogError($"[AC Perms] General exception: {ex.Message}\n{ex.StackTrace}\nRestarting could help.");
+							}
+						}
+						else if (guildOverwrites != null && guildOverwrites.Any())
+						{
+							if (guildOverwrites.Select(x=> x.Value).Any(x => x.Id == 0))
+							{
+								s_errored = true;
+								s_permError = true;
+								throw new ArgumentException("Overwrites has a value with command id 0. Seems like an error. Aborting.");
+							}
+
+							try
+							{
+								var gOv = guildOverwrites.Select(x => x.Key).Distinct();
+								foreach(var gid in gOv)
+{
+									var perms = await PermissionWorker.BulkOverwriteCommandPermissionsAsync(gid, guildOverwrites.Where(x => x.Key == gid).Select(x => x.Value).ToList());
+									if (this.Client.Guilds.TryGetValue(gid, out var guild))
+									{
+										guild.InternalGuildApplicationCommandPermissions = new();
+										guild.InternalGuildApplicationCommandPermissions.AddRange(perms);
+									}
 								}
 							}
 							catch (Exception ex)
@@ -1565,21 +1674,51 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// The permission setup.
 		/// </summary>
-		public Action<ApplicationCommandsPermissionContext> Setup { get; }
+		public Action<ApplicationCommandsPermissionContext> Permissions { get; }
 
+		/// <summary>
+		/// The global permission setup.
+		/// </summary>
+		public Action<ApplicationCommandsGlobalPermissionContext> GlobalGuildPermissions { get; }
+
+		/// <summary>
+		/// The translation setup.
+		/// </summary>
 		public Action<ApplicationCommandsTranslationContext> Translations { get; }
+
+		/// <summary>
+		/// Whether this config is global.
+		/// </summary>
+		internal bool IsGlobal = false;
 
 		/// <summary>
 		/// Creates a new command configuration.
 		/// </summary>
 		/// <param name="type">The type of the command module.</param>
-		/// <param name="setup">The permission setup callback.</param>
+		/// <param name="permissions">The permission setup callback.</param>
 		/// <param name="translations">The translation setup callback.</param>
-		public ApplicationCommandsModuleConfiguration(Type type, Action<ApplicationCommandsPermissionContext> setup = null, Action<ApplicationCommandsTranslationContext> translations = null)
+		public ApplicationCommandsModuleConfiguration(Type type, Action<ApplicationCommandsPermissionContext> permissions = null, Action<ApplicationCommandsTranslationContext> translations = null)
 		{
 			this.Type = type;
-			this.Setup = setup;
+			this.Permissions = permissions;
 			this.Translations = translations;
+			this.GlobalGuildPermissions = null;
+		}
+
+		/// <summary>
+		/// Creates a new command configuration.
+		/// </summary>
+		/// <param name="type">The type of the command module.</param>
+		/// <param name="global">Don't change that. Just set to true if you use global commands here.</param>
+		/// <param name="globalGuildPermissions">The global permission setup callback.</param>
+		/// <param name="translations">The translation setup callback.</param>
+		public ApplicationCommandsModuleConfiguration(Type type, bool global = true, Action<ApplicationCommandsGlobalPermissionContext> globalGuildPermissions = null, Action<ApplicationCommandsTranslationContext> translations = null)
+		{
+			this.Type = type;
+			this.Permissions = null;
+			this.Translations = translations;
+			this.GlobalGuildPermissions = globalGuildPermissions;
+			this.IsGlobal = global;
 		}
 	}
 

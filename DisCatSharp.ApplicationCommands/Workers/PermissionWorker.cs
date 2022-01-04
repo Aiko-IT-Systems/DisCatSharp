@@ -55,7 +55,7 @@ namespace DisCatSharp.ApplicationCommands
 
 			var ctx = new ApplicationCommandsPermissionContext(commandDeclaringType, commandName);
 			var conf = types.First(t => t.Type == commandRootType);
-			conf.Setup?.Invoke(ctx);
+			conf.Permissions?.Invoke(ctx);
 
 			if (ctx.Permissions.Count == 0)
 				return;
@@ -82,11 +82,35 @@ namespace DisCatSharp.ApplicationCommands
 		{
 			var ctx = new ApplicationCommandsPermissionContext(commandDeclaringType, commandName);
 			var conf = types.First(t => t.Type == commandRootType);
-			conf.Setup?.Invoke(ctx);
+			conf.Permissions?.Invoke(ctx);
 
 			return ctx.Permissions.Count == 0 || commandId == 0
 				? (false, null, null)
 				: (true, commandId, ctx.Permissions.ToList());
+		}
+
+		/// <summary>
+		/// Gets the global permissions.
+		/// </summary>
+		/// <param name="types">The types.</param>
+		/// <param name="commandId">The command id.</param>
+		/// <param name="commandName">The command name.</param>
+		/// <param name="commandDeclaringType">The declaring command type.</param>
+		/// <param name="commandRootType">The root command type.</param>
+		/// <returns>Permissions on success.</returns>
+		internal static (
+			bool success,
+			ulong? commandId,
+			IReadOnlyList<KeyValuePair<ulong, DiscordApplicationCommandPermission>> permissions
+		) ResolveGlobalPermissions(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong commandId, string commandName, Type commandDeclaringType, Type commandRootType)
+		{
+			var ctx = new ApplicationCommandsGlobalPermissionContext(commandDeclaringType, commandName);
+			var conf = types.First(t => t.Type == commandRootType);
+			conf.GlobalGuildPermissions?.Invoke(ctx);
+
+			return ctx.GuildPermissions.Count == 0 || commandId == 0
+				? (false, null, null)
+				: (true, commandId, ctx.GuildPermissions);
 		}
 
 		/// <summary>

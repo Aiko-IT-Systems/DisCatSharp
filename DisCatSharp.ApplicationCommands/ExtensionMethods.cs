@@ -82,30 +82,6 @@ namespace DisCatSharp.ApplicationCommands
 		}
 
 		/// <summary>
-		/// Registers a commands class.
-		/// </summary>
-		/// <typeparam name="T">The command class to register.</typeparam>
-		/// <param name="modules">The modules to register it on.</param>
-		/// <param name="guildId">The guild id to register it on. If you want global commands, leave it null.</param>
-		public static void RegisterCommands<T>(this IReadOnlyDictionary<int, ApplicationCommandsExtension> modules, ulong? guildId = null) where T : ApplicationCommandsModule
-		{
-			foreach (var module in modules.Values)
-				module.RegisterCommands<T>(guildId);
-		}
-
-		/// <summary>
-		/// Registers a command class.
-		/// </summary>
-		/// <param name="modules">The modules to register it on.</param>
-		/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
-		/// <param name="guildId">The guild id to register it on. If you want global commands, leave it null.</param>
-		public static void RegisterCommands(this IReadOnlyDictionary<int, ApplicationCommandsExtension> modules, Type type, ulong? guildId = null)
-		{
-			foreach (var module in modules.Values)
-				module.RegisterCommands(type, guildId);
-		}
-
-		/// <summary>
 		/// Gets the name from the <see cref="ChoiceNameAttribute"/> for this enum value.
 		/// </summary>
 		/// <returns>The name.</returns>
