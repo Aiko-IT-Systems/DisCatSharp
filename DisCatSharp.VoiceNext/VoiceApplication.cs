@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,24 +22,24 @@
 
 namespace DisCatSharp.VoiceNext
 {
-    /// <summary>
-    /// Represents encoder settings preset for Opus.
-    /// </summary>
-    public enum VoiceApplication : int
-    {
-        /// <summary>
-        /// Defines that the encoder must optimize settings for voice data.
-        /// </summary>
-        Voice = 2048,
+	/// <summary>
+	/// Represents encoder settings preset for Opus.
+	/// </summary>
+	public enum VoiceApplication : int
+	{
+		/// <summary>
+		/// Defines that the encoder must optimize settings for voice data.
+		/// </summary>
+		Voice = 2048,
 
-        /// <summary>
-        /// Defines that the encoder must optimize settings for music data.
-        /// </summary>
-        Music = 2049,
+		/// <summary>
+		/// Defines that the encoder must optimize settings for music data.
+		/// </summary>
+		Music = 2049,
 
-        /// <summary>
-        /// Defines that the encoder must optimize settings for low latency applications.
-        /// </summary>
-        LowLatency = 2051
-    }
+		/// <summary>
+		/// Defines that the encoder must optimize settings for low latency applications.
+		/// </summary>
+		LowLatency = 2051
+	}
 }

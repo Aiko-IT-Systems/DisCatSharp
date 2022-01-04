@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,34 +22,34 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Type of mention being made
-    /// </summary>
-    public enum MentionType
-    {
-        /// <summary>
-        /// No mention (wtf?)
-        /// </summary>
-        None = 0,
+	/// <summary>
+	/// Type of mention being made
+	/// </summary>
+	public enum MentionType
+	{
+		/// <summary>
+		/// No mention (wtf?)
+		/// </summary>
+		None = 0,
 
-        /// <summary>
-        /// Mentioned Username
-        /// </summary>
-        Username = 1,
+		/// <summary>
+		/// Mentioned Username
+		/// </summary>
+		Username = 1,
 
-        /// <summary>
-        /// Mentioned Nickname
-        /// </summary>
-        Nickname = 2,
+		/// <summary>
+		/// Mentioned Nickname
+		/// </summary>
+		Nickname = 2,
 
-        /// <summary>
-        /// Mentioned Channel
-        /// </summary>
-        Channel = 4,
+		/// <summary>
+		/// Mentioned Channel
+		/// </summary>
+		Channel = 4,
 
-        /// <summary>
-        /// Mentioned Role
-        /// </summary>
-        Role = 8
-    }
+		/// <summary>
+		/// Mentioned Role
+		/// </summary>
+		Role = 8
+	}
 }

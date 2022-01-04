@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,40 +24,41 @@ using System.Threading.Tasks;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Represents a base class for application command modules
-    /// </summary>
-    public abstract class ApplicationCommandsModule
-    {        /// <summary>
-        /// Called before the execution of a slash command in the module.
-        /// </summary>
-        /// <param name="ctx">The context.</param>
-        /// <returns> Whether or not to execute the slash command.</returns>
-        public virtual Task<bool> BeforeSlashExecutionAsync(InteractionContext ctx)
-            => Task.FromResult(true);
+	/// <summary>
+	/// Represents a base class for application command modules
+	/// </summary>
+	public abstract class ApplicationCommandsModule
+	{
+		/// <summary>
+		/// Called before the execution of a slash command in the module.
+		/// </summary>
+		/// <param name="ctx">The context.</param>
+		/// <returns> Whether or not to execute the slash command.</returns>
+		public virtual Task<bool> BeforeSlashExecutionAsync(InteractionContext ctx)
+			=> Task.FromResult(true);
 
-        /// <summary>
-        /// Called after the execution of a slash command in the module.
-        /// </summary>
-        /// <param name="ctx">The context.</param>
-        /// <returns></returns>
-        public virtual Task AfterSlashExecutionAsync(InteractionContext ctx)
-            => Task.CompletedTask;
+		/// <summary>
+		/// Called after the execution of a slash command in the module.
+		/// </summary>
+		/// <param name="ctx">The context.</param>
+		/// <returns></returns>
+		public virtual Task AfterSlashExecutionAsync(InteractionContext ctx)
+			=> Task.CompletedTask;
 
-        /// <summary>
-        /// Called before the execution of a context menu in the module.
-        /// </summary>
-        /// <param name="ctx">The context.</param>
-        /// <returns> Whether or not to execute the slash command. </returns>
-        public virtual Task<bool> BeforeContextMenuExecutionAsync(ContextMenuContext ctx)
-            => Task.FromResult(true);
+		/// <summary>
+		/// Called before the execution of a context menu in the module.
+		/// </summary>
+		/// <param name="ctx">The context.</param>
+		/// <returns> Whether or not to execute the slash command. </returns>
+		public virtual Task<bool> BeforeContextMenuExecutionAsync(ContextMenuContext ctx)
+			=> Task.FromResult(true);
 
-        /// <summary>
-        /// Called after the execution of a context menu in the module.
-        /// </summary>
-        /// <param name="ctx">The context.</param>
-        /// <returns></returns>
-        public virtual Task AfterContextMenuExecutionAsync(ContextMenuContext ctx)
-            => Task.CompletedTask;
-    }
+		/// <summary>
+		/// Called after the execution of a context menu in the module.
+		/// </summary>
+		/// <param name="ctx">The context.</param>
+		/// <returns></returns>
+		public virtual Task AfterContextMenuExecutionAsync(ContextMenuContext ctx)
+			=> Task.CompletedTask;
+	}
 }

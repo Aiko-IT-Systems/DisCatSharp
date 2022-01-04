@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,38 +24,38 @@ using System;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// The application commands translation context.
-    /// </summary>
-    public class ApplicationCommandsTranslationContext
-    {
-        /// <summary>
-        /// Gets the type.
-        /// </summary>
-        public Type Type { get; }
+	/// <summary>
+	/// The application commands translation context.
+	/// </summary>
+	public class ApplicationCommandsTranslationContext
+	{
+		/// <summary>
+		/// Gets the type.
+		/// </summary>
+		public Type Type { get; }
 
-        /// <summary>
-        /// Gets the name.
-        /// </summary>
-        public string Name { get; }
+		/// <summary>
+		/// Gets the name.
+		/// </summary>
+		public string Name { get; }
 
-        /// <summary>
-        /// Gets the translation json.
-        /// </summary>
-        internal string Translations { get; set; }
+		/// <summary>
+		/// Gets the translation json.
+		/// </summary>
+		internal string Translations { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApplicationCommandsTranslationContext"/> class.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="name">The name.</param>
-        internal ApplicationCommandsTranslationContext(Type type, string name)
-        {
-            this.Type = type;
-            this.Name = name;
-        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ApplicationCommandsTranslationContext"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="name">The name.</param>
+		internal ApplicationCommandsTranslationContext(Type type, string name)
+		{
+			this.Type = type;
+			this.Name = name;
+		}
 
-        public void AddTranslation(string translation_json)
-            => this.Translations = translation_json;
-    }
+		public void AddTranslation(string translationJson)
+			=> this.Translations = translationJson;
+	}
 }

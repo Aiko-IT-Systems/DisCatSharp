@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,27 +21,26 @@
 // SOFTWARE.
 
 using System.Threading.Tasks;
-using DisCatSharp.Entities;
 
 namespace DisCatSharp.CommandsNext.Attributes
 {
-    /// <summary>
-    /// Defines that a command is only usable within a guild.
-    /// </summary>
-    public sealed class RequireGuildAttribute : CheckBaseAttribute
-    {
-        /// <summary>
-        /// Defines that this command is only usable within a guild.
-        /// </summary>
-        public RequireGuildAttribute()
-        { }
+	/// <summary>
+	/// Defines that a command is only usable within a guild.
+	/// </summary>
+	public sealed class RequireGuildAttribute : CheckBaseAttribute
+	{
+		/// <summary>
+		/// Defines that this command is only usable within a guild.
+		/// </summary>
+		public RequireGuildAttribute()
+		{ }
 
-        /// <summary>
-        /// Executes the a check.
-        /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
-            => Task.FromResult(ctx.Guild != null);
-    }
+		/// <summary>
+		/// Executes the a check.
+		/// </summary>
+		/// <param name="ctx">The command context.</param>
+		/// <param name="help">If true, help - returns true.</param>
+		public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
+			=> Task.FromResult(ctx.Guild != null);
+	}
 }

@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,26 +24,26 @@ using System;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Sets a IChoiceProvider for a command options. ChoiceProviders can be used to provide
-    /// DiscordApplicationCommandOptionChoice from external sources such as a database.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true)]
-    public class ChoiceProviderAttribute : Attribute
-    {
+	/// <summary>
+	/// Sets a IChoiceProvider for a command options. ChoiceProviders can be used to provide
+	/// DiscordApplicationCommandOptionChoice from external sources such as a database.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true)]
+	public class ChoiceProviderAttribute : Attribute
+	{
 
-        /// <summary>
-        /// The type of the provider.
-        /// </summary>
-        public Type ProviderType { get; }
+		/// <summary>
+		/// The type of the provider.
+		/// </summary>
+		public Type ProviderType { get; }
 
-        /// <summary>
-        /// Adds a choice provider to this command.
-        /// </summary>
-        /// <param name="providerType">The type of the provider.</param>
-        public ChoiceProviderAttribute(Type providerType)
-        {
-            this.ProviderType = providerType;
-        }
-    }
+		/// <summary>
+		/// Adds a choice provider to this command.
+		/// </summary>
+		/// <param name="providerType">The type of the provider.</param>
+		public ChoiceProviderAttribute(Type providerType)
+		{
+			this.ProviderType = providerType;
+		}
+	}
 }

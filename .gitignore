@@ -303,4 +303,6 @@ appveyor-test.ps1
 *.diff
 CodeMap1.dgml
 .vscode/launch.json
+*.diff
+*.patch
 dcs-docs-preview.tar.xz

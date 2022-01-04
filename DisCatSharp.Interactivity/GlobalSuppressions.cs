@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Interactivity.EventHandling.EventWaiter`1.disposed")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Interactivity.EventHandling.ReactionCollectRequest.message")]
-[assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Interactivity.InteractivityExtension.ComponentInteractionWaiter")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Interactivity.InteractivityExtension.HandleInvalidInteraction(DisCatSharp.Entities.DiscordInteraction)~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Interactivity.EventHandling.PaginationRequest._timeout")]
+[assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Interactivity.InteractivityExtension._componentInteractionWaiter")]
+[assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Interactivity.InteractivityExtension._modalInteractionWaiter")]

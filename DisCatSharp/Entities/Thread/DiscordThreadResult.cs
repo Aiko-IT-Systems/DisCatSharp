@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,29 +24,31 @@ using System.Collections.Generic;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents a discord thread result.
-    /// </summary>
-    public class DiscordThreadResult
-    {
-        /// <summary>
-        /// Gets the returned threads.
-        /// </summary>
-        public Dictionary<ulong, DiscordThreadChannel> ReturnedThreads { get; internal set; }
+	/// <summary>
+	/// Represents a discord thread result.
+	/// </summary>
+	public class DiscordThreadResult
+	{
+		/// <summary>
+		/// Gets the returned threads.
+		/// </summary>
+		public Dictionary<ulong, DiscordThreadChannel> ReturnedThreads { get; internal set; }
 
-        /// <summary>
-        /// Gets the active members.
-        /// </summary>
-        public List<DiscordThreadChannelMember> ActiveMembers { get; internal set; }
+		/// <summary>
+		/// Gets the active members.
+		/// </summary>
+		public List<DiscordThreadChannelMember> ActiveMembers { get; internal set; }
 
-        /// <summary>
-        /// Whether there are more results.
-        /// </summary>
-        public bool HasMore { get; internal set; }
+		/// <summary>
+		/// Whether there are more results.
+		/// </summary>
+		public bool HasMore { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordThreadResult"/> class.
-        /// </summary>
-        internal DiscordThreadResult() : base() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordThreadResult"/> class.
+		/// </summary>
+		internal DiscordThreadResult()
+			: base()
+		{ }
+	}
 }

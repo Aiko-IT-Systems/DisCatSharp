@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,20 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents base for all DisCatSharp extensions. To implement your own extension, extend this class, and implement its abstract members.
-    /// </summary>
-    public abstract class BaseExtension
-    {
-        /// <summary>
-        /// Gets the instance of <see cref="DiscordClient"/> this extension is attached to.
-        /// </summary>
-        public DiscordClient Client { get; protected set; }
+	/// <summary>
+	/// Represents base for all DisCatSharp extensions. To implement your own extension, extend this class, and implement its abstract members.
+	/// </summary>
+	public abstract class BaseExtension
+	{
+		/// <summary>
+		/// Gets the instance of <see cref="DiscordClient"/> this extension is attached to.
+		/// </summary>
+		public DiscordClient Client { get; protected set; }
 
-        /// <summary>
-        /// Initializes this extension for given <see cref="DiscordClient"/> instance.
-        /// </summary>
-        /// <param name="client">Discord client to initialize for.</param>
-        protected internal abstract void Setup(DiscordClient client);
-    }
+		/// <summary>
+		/// Initializes this extension for given <see cref="DiscordClient"/> instance.
+		/// </summary>
+		/// <param name="client">Discord client to initialize for.</param>
+		protected internal abstract void Setup(DiscordClient client);
+	}
 }

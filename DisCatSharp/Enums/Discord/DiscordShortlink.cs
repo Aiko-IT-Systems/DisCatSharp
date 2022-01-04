@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,19 @@
 
 namespace DisCatSharp.Enums
 {
-    /// <summary>
-    /// Discord short links
-    /// </summary>
-    public class DiscordShortlink
-    {
-        public string Support = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/support";
-        public string TrustAndSafety = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/request";
-        public string Contact = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/contact";
-        public string BugReport = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/bugreport";
-        public string TranslationError = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/lang-feedback";
-        public string Status = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/status";
-        public string Terms = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/terms";
-        public string Guidlines = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/guidelines";
-        public string Moderation = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/moderation";
-    }
+	/// <summary>
+	/// Discord short links
+	/// </summary>
+	public class DiscordShortlink
+	{
+		public string Support = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/support";
+		public string TrustAndSafety = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/request";
+		public string Contact = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/contact";
+		public string BugReport = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/bugreport";
+		public string TranslationError = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/lang-feedback";
+		public string Status = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/status";
+		public string Terms = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/terms";
+		public string Guidlines = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/guidelines";
+		public string Moderation = $"{DiscordDomain.GetDomain(CoreDomain.DiscordMarketing).Url}/moderation";
+	}
 }

@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,15 +24,15 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions
 {
-    /// <summary>
-    /// Represents a followed channel add payload.
-    /// </summary>
-    internal sealed class FollowedChannelAddPayload
-    {
-        /// <summary>
-        /// Gets or sets the webhook channel id.
-        /// </summary>
-        [JsonProperty("webhook_channel_id")]
-        public ulong WebhookChannelId { get; set; }
-    }
+	/// <summary>
+	/// Represents a followed channel add payload.
+	/// </summary>
+	internal sealed class FollowedChannelAddPayload
+	{
+		/// <summary>
+		/// Gets or sets the webhook channel id.
+		/// </summary>
+		[JsonProperty("webhook_channel_id")]
+		public ulong WebhookChannelId { get; set; }
+	}
 }

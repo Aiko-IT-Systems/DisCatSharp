@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,243 +22,246 @@
 
 using System;
 using System.Collections.Generic;
+
 using DisCatSharp.Interactivity;
 using DisCatSharp.Lavalink;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+
 using Xunit;
 
 namespace DisCatSharp.Hosting.Tests
 {
-    public sealed class Bot : DiscordHostedService
-    {
-        public Bot(IConfiguration config, ILogger<Bot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime)
-        {
-            this.ConfigureAsync().GetAwaiter().GetResult();
-            this.ConfigureExtensionsAsync().GetAwaiter().GetResult();
-        }
-    }
+	public sealed class Bot : DiscordHostedService
+	{
+		public Bot(IConfiguration config, ILogger<Bot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime)
+		{
+			this.ConfigureAsync().GetAwaiter().GetResult();
+			this.ConfigureExtensionsAsync().GetAwaiter().GetResult();
+		}
+	}
 
-    public sealed class MyCustomBot : DiscordHostedService
-    {
-        public MyCustomBot(IConfiguration config, ILogger<MyCustomBot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "MyCustomBot")
-        {
-            this.ConfigureAsync().GetAwaiter().GetResult();
-            this.ConfigureExtensionsAsync().GetAwaiter().GetResult();
-        }
-    }
+	public sealed class MyCustomBot : DiscordHostedService
+	{
+		public MyCustomBot(IConfiguration config, ILogger<MyCustomBot> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "MyCustomBot")
+		{
+			this.ConfigureAsync().GetAwaiter().GetResult();
+			this.ConfigureExtensionsAsync().GetAwaiter().GetResult();
+		}
+	}
 
-    public interface IBotTwoService : IDiscordHostedService
-    {
-        string GiveMeAResponse();
-    }
-
-
-    public sealed class BotTwoService : DiscordHostedService, IBotTwoService
-    {
-        public BotTwoService(IConfiguration config, ILogger<BotTwoService> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "BotTwo")
-        {
-            this.ConfigureAsync().GetAwaiter().GetResult();
-            this.ConfigureExtensionsAsync().GetAwaiter().GetResult();
-        }
-
-        public string GiveMeAResponse() => "I'm working";
-    }
-
-    public class HostTests
-    {
-        private Dictionary<string, string> DefaultDiscord() =>
-            new()
-            {
-                { "DisCatSharp:Discord:Token", "1234567890" },
-                { "DisCatSharp:Discord:TokenType", "Bot" },
-                { "DisCatSharp:Discord:MinimumLogLevel", "Information" },
-                { "DisCatSharp:Discord:UseRelativeRateLimit", "true" },
-                { "DisCatSharp:Discord:LogTimestampFormat", "yyyy-MM-dd HH:mm:ss zzz" },
-                { "DisCatSharp:Discord:LargeThreshold", "250" },
-                { "DisCatSharp:Discord:AutoReconnect", "true" },
-                { "DisCatSharp:Discord:ShardId", "123123" },
-                { "DisCatSharp:Discord:GatewayCompressionLevel", "Stream" },
-                { "DisCatSharp:Discord:MessageCacheSize", "1024" },
-                { "DisCatSharp:Discord:HttpTimeout", "00:00:20" },
-                { "DisCatSharp:Discord:ReconnectIndefinitely", "false" },
-                { "DisCatSharp:Discord:AlwaysCacheMembers", "true" },
-                { "DisCatSharp:Discord:DiscordIntents", "AllUnprivileged" },
-                { "DisCatSharp:Discord:MobileStatus", "false" },
-                { "DisCatSharp:Discord:UseCanary", "false" },
-                { "DisCatSharp:Discord:AutoRefreshChannelCache", "false" },
-                { "DisCatSharp:Discord:Intents", "AllUnprivileged" }
-            };
-
-        public Dictionary<string, string> DiscordInteractivity() => new (this.DefaultDiscord())
-        {
-            {"DisCatSharp:Using","[\"DisCatSharp.Interactivity\"]"},
-        };
-
-        public Dictionary<string, string> DiscordInteractivityAndLavalink() => new (this.DefaultDiscord())
-        {
-            {"DisCatSharp:Using","[\"DisCatSharp.Interactivity\", \"DisCatSharp.Lavalink\"]"},
-        };
-
-        IHostBuilder Create(Dictionary<string, string> configValues) =>
-            Host.CreateDefaultBuilder()
-                .ConfigureServices(services => services.AddSingleton<IDiscordHostedService, Bot>())
-                .ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(configValues));
-
-        IHostBuilder Create(string filename) =>
-            Host.CreateDefaultBuilder()
-                .ConfigureServices(services => services.AddSingleton<IDiscordHostedService, MyCustomBot>())
-                .ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
-
-        IHostBuilder Create<TInterface, TBot>(string filename)
-            where TInterface : class, IDiscordHostedService
-            where TBot : class, TInterface, IDiscordHostedService =>
-            Host.CreateDefaultBuilder()
-                .ConfigureServices(services => services.AddSingleton<TInterface, TBot>())
-                .ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
+	public interface IBotTwoService : IDiscordHostedService
+	{
+		string GiveMeAResponse();
+	}
 
 
-        [Fact]
-        public void TestBotCustomInterface()
-        {
-            IHost? host = null;
+	public sealed class BotTwoService : DiscordHostedService, IBotTwoService
+	{
+		public BotTwoService(IConfiguration config, ILogger<BotTwoService> logger, IServiceProvider provider, IHostApplicationLifetime lifetime) : base(config, logger, provider, lifetime, "BotTwo")
+		{
+			this.ConfigureAsync().GetAwaiter().GetResult();
+			this.ConfigureExtensionsAsync().GetAwaiter().GetResult();
+		}
 
-            try
-            {
-                host = this.Create<IBotTwoService, BotTwoService>("BotTwo.json").Build();
-                var service = host.Services.GetRequiredService<IBotTwoService>();
+		public string GiveMeAResponse() => "I'm working";
+	}
 
-                Assert.NotNull(service);
+	public class HostTests
+	{
+		private Dictionary<string, string> DefaultDiscord() =>
+			new()
+			{
+				{ "DisCatSharp:Discord:Token", "1234567890" },
+				{ "DisCatSharp:Discord:TokenType", "Bot" },
+				{ "DisCatSharp:Discord:MinimumLogLevel", "Information" },
+				{ "DisCatSharp:Discord:UseRelativeRateLimit", "true" },
+				{ "DisCatSharp:Discord:LogTimestampFormat", "yyyy-MM-dd HH:mm:ss zzz" },
+				{ "DisCatSharp:Discord:LargeThreshold", "250" },
+				{ "DisCatSharp:Discord:AutoReconnect", "true" },
+				{ "DisCatSharp:Discord:ShardId", "123123" },
+				{ "DisCatSharp:Discord:GatewayCompressionLevel", "Stream" },
+				{ "DisCatSharp:Discord:MessageCacheSize", "1024" },
+				{ "DisCatSharp:Discord:HttpTimeout", "00:00:20" },
+				{ "DisCatSharp:Discord:ReconnectIndefinitely", "false" },
+				{ "DisCatSharp:Discord:AlwaysCacheMembers", "true" },
+				{ "DisCatSharp:Discord:DiscordIntents", "AllUnprivileged" },
+				{ "DisCatSharp:Discord:MobileStatus", "false" },
+				{ "DisCatSharp:Discord:UseCanary", "false" },
+				{ "DisCatSharp:Discord:AutoRefreshChannelCache", "false" },
+				{ "DisCatSharp:Discord:Intents", "AllUnprivileged" }
+			};
 
-                var response = service.GiveMeAResponse();
-                Assert.Equal("I'm working", response);
-            }
-            finally
-            {
-                host?.Dispose();
-            }
-        }
+		public Dictionary<string, string> DiscordInteractivity() => new(this.DefaultDiscord())
+		{
+			{ "DisCatSharp:Using", "[\"DisCatSharp.Interactivity\"]" },
+		};
 
-        [Fact]
-        public void TestDifferentSection_InteractivityOnly()
-        {
-            IHost? host = null;
+		public Dictionary<string, string> DiscordInteractivityAndLavalink() => new(this.DefaultDiscord())
+		{
+			{ "DisCatSharp:Using", "[\"DisCatSharp.Interactivity\", \"DisCatSharp.Lavalink\"]" },
+		};
 
-            try
-            {
-                host = this.Create("interactivity-different-section.json").Build();
-                var service = host.Services.GetRequiredService<IDiscordHostedService>();
+		IHostBuilder Create(Dictionary<string, string> configValues) =>
+			Host.CreateDefaultBuilder()
+				.ConfigureServices(services => services.AddSingleton<IDiscordHostedService, Bot>())
+				.ConfigureHostConfiguration(builder => builder.AddInMemoryCollection(configValues));
 
-                Assert.NotNull(service);
-                Assert.NotNull(service.Client);
-                Assert.Null(service.Client.GetExtension<LavalinkExtension>());
+		IHostBuilder Create(string filename) =>
+			Host.CreateDefaultBuilder()
+				.ConfigureServices(services => services.AddSingleton<IDiscordHostedService, MyCustomBot>())
+				.ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
 
-                var intents = DiscordIntents.GuildEmojisAndStickers | DiscordIntents.GuildMembers |
-                              DiscordIntents.Guilds;
-                Assert.Equal(intents, service.Client.Intents);
+		IHostBuilder Create<TInterface, TBot>(string filename)
+			where TInterface : class, IDiscordHostedService
+			where TBot : class, TInterface, IDiscordHostedService =>
+			Host.CreateDefaultBuilder()
+				.ConfigureServices(services => services.AddSingleton<TInterface, TBot>())
+				.ConfigureHostConfiguration(builder => builder.AddJsonFile(filename));
 
 
-                var interactivity = service.Client.GetExtension<InteractivityExtension>();
-                Assert.NotNull(interactivity);
+		[Fact]
+		public void TestBotCustomInterface()
+		{
+			IHost? host = null;
 
-                Assert.NotNull(host.Services);
-                Assert.NotNull(service.Client.ServiceProvider);
-            }
-            finally
-            {
-                host?.Dispose();
-            }
-        }
+			try
+			{
+				host = this.Create<IBotTwoService, BotTwoService>("BotTwo.json").Build();
+				var service = host.Services.GetRequiredService<IBotTwoService>();
 
-        [Fact]
-        public void TestDifferentSection_LavalinkOnly()
-        {
-            IHost? host = null;
+				Assert.NotNull(service);
 
-            try
-            {
-                host = this.Create("lavalink-different-section.json").Build();
-                var service = host.Services.GetRequiredService<IDiscordHostedService>();
+				var response = service.GiveMeAResponse();
+				Assert.Equal("I'm working", response);
+			}
+			finally
+			{
+				host?.Dispose();
+			}
+		}
 
-                Assert.NotNull(service);
-                Assert.NotNull(service.Client);
-                Assert.NotNull(service.Client.GetExtension<LavalinkExtension>());
-                Assert.Null(service.Client.GetExtension<InteractivityExtension>());
+		[Fact]
+		public void TestDifferentSection_InteractivityOnly()
+		{
+			IHost? host = null;
 
-                var intents = DiscordIntents.Guilds;
-                Assert.Equal(intents, service.Client.Intents);
-                Assert.NotNull(service.Client.ServiceProvider);
-            }
-            finally
-            {
-                host?.Dispose();
-            }
-        }
+			try
+			{
+				host = this.Create("interactivity-different-section.json").Build();
+				var service = host.Services.GetRequiredService<IDiscordHostedService>();
 
-        [Fact]
-        public void TestNoExtensions()
-        {
-            IHost? host = null;
+				Assert.NotNull(service);
+				Assert.NotNull(service.Client);
+				Assert.Null(service.Client.GetExtension<LavalinkExtension>());
 
-            try
-            {
-                host = this.Create(this.DefaultDiscord()).Build();
+				var intents = DiscordIntents.GuildEmojisAndStickers | DiscordIntents.GuildMembers |
+							  DiscordIntents.Guilds;
+				Assert.Equal(intents, service.Client.Intents);
 
-                var service = host.Services.GetRequiredService<IDiscordHostedService>();
-                Assert.NotNull(service);
-                Assert.NotNull(service.Client);
-                Assert.NotNull(service.Client.ServiceProvider);
-            }
-            finally
-            {
-                host?.Dispose();
-            }
-        }
 
-        [Fact]
-        public void TestInteractivityExtension()
-        {
-            IHost? host = null;
+				var interactivity = service.Client.GetExtension<InteractivityExtension>();
+				Assert.NotNull(interactivity);
 
-            try
-            {
-                host = this.Create(this.DiscordInteractivity()).Build();
+				Assert.NotNull(host.Services);
+				Assert.NotNull(service.Client.ServiceProvider);
+			}
+			finally
+			{
+				host?.Dispose();
+			}
+		}
 
-                var service = host.Services.GetRequiredService<IDiscordHostedService>();
-                Assert.NotNull(service);
-                Assert.NotNull(service.Client);
-                Assert.NotNull(service.Client.GetExtension<InteractivityExtension>());
-                Assert.NotNull(service.Client.ServiceProvider);
-            }
-            finally
-            {
-                host?.Dispose();
-            }
-        }
+		[Fact]
+		public void TestDifferentSection_LavalinkOnly()
+		{
+			IHost? host = null;
 
-        [Fact]
-        public void TestInteractivityLavalinkExtensions()
-        {
-            IHost? host = null;
+			try
+			{
+				host = this.Create("lavalink-different-section.json").Build();
+				var service = host.Services.GetRequiredService<IDiscordHostedService>();
 
-            try
-            {
-                host = this.Create(this.DiscordInteractivityAndLavalink()).Build();
+				Assert.NotNull(service);
+				Assert.NotNull(service.Client);
+				Assert.NotNull(service.Client.GetExtension<LavalinkExtension>());
+				Assert.Null(service.Client.GetExtension<InteractivityExtension>());
 
-                var service = host.Services.GetRequiredService<IDiscordHostedService>();
+				var intents = DiscordIntents.Guilds;
+				Assert.Equal(intents, service.Client.Intents);
+				Assert.NotNull(service.Client.ServiceProvider);
+			}
+			finally
+			{
+				host?.Dispose();
+			}
+		}
 
-                Assert.NotNull(service);
-                Assert.NotNull(service.Client);
-                Assert.NotNull(service.Client.GetExtension<InteractivityExtension>());
-                Assert.NotNull(service.Client.GetExtension<LavalinkExtension>());
-                Assert.NotNull(service.Client.ServiceProvider);
-            }
-            finally
-            {
-                host?.Dispose();
-            }
-        }
-    }
+		[Fact]
+		public void TestNoExtensions()
+		{
+			IHost? host = null;
+
+			try
+			{
+				host = this.Create(this.DefaultDiscord()).Build();
+
+				var service = host.Services.GetRequiredService<IDiscordHostedService>();
+				Assert.NotNull(service);
+				Assert.NotNull(service.Client);
+				Assert.NotNull(service.Client.ServiceProvider);
+			}
+			finally
+			{
+				host?.Dispose();
+			}
+		}
+
+		[Fact]
+		public void TestInteractivityExtension()
+		{
+			IHost? host = null;
+
+			try
+			{
+				host = this.Create(this.DiscordInteractivity()).Build();
+
+				var service = host.Services.GetRequiredService<IDiscordHostedService>();
+				Assert.NotNull(service);
+				Assert.NotNull(service.Client);
+				Assert.NotNull(service.Client.GetExtension<InteractivityExtension>());
+				Assert.NotNull(service.Client.ServiceProvider);
+			}
+			finally
+			{
+				host?.Dispose();
+			}
+		}
+
+		[Fact]
+		public void TestInteractivityLavalinkExtensions()
+		{
+			IHost? host = null;
+
+			try
+			{
+				host = this.Create(this.DiscordInteractivityAndLavalink()).Build();
+
+				var service = host.Services.GetRequiredService<IDiscordHostedService>();
+
+				Assert.NotNull(service);
+				Assert.NotNull(service.Client);
+				Assert.NotNull(service.Client.GetExtension<InteractivityExtension>());
+				Assert.NotNull(service.Client.GetExtension<LavalinkExtension>());
+				Assert.NotNull(service.Client.ServiceProvider);
+			}
+			finally
+			{
+				host?.Dispose();
+			}
+		}
+	}
 }

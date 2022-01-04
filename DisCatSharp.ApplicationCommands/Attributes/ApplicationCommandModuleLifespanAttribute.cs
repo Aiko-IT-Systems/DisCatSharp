@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,45 +25,45 @@ using System;
 namespace DisCatSharp.ApplicationCommands
 {
 
-    /// <summary>
-    /// Defines this application command module's lifespan. Module lifespans are transient by default.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class ApplicationCommandModuleLifespanAttribute : Attribute
-    {
-        /// <summary>
-        /// Gets the lifespan.
-        /// </summary>
-        public ApplicationCommandModuleLifespan Lifespan { get; }
+	/// <summary>
+	/// Defines this application command module's lifespan. Module lifespans are transient by default.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Class)]
+	public class ApplicationCommandModuleLifespanAttribute : Attribute
+	{
+		/// <summary>
+		/// Gets the lifespan.
+		/// </summary>
+		public ApplicationCommandModuleLifespan Lifespan { get; }
 
-        /// <summary>
-        /// Defines this application command module's lifespan.
-        /// </summary>
-        /// <param name="lifespan">The lifespan of the module. Module lifespans are transient by default.</param>
-        public ApplicationCommandModuleLifespanAttribute(ApplicationCommandModuleLifespan lifespan)
-        {
-            this.Lifespan = lifespan;
-        }
-    }
+		/// <summary>
+		/// Defines this application command module's lifespan.
+		/// </summary>
+		/// <param name="lifespan">The lifespan of the module. Module lifespans are transient by default.</param>
+		public ApplicationCommandModuleLifespanAttribute(ApplicationCommandModuleLifespan lifespan)
+		{
+			this.Lifespan = lifespan;
+		}
+	}
 
-    /// <summary>
-    /// Represents a application command module lifespan.
-    /// </summary>
-    public enum ApplicationCommandModuleLifespan
-    {
-        /// <summary>
-        /// Whether this module should be initiated every time a command is run, with dependencies injected from a scope.
-        /// </summary>
-        Scoped,
+	/// <summary>
+	/// Represents a application command module lifespan.
+	/// </summary>
+	public enum ApplicationCommandModuleLifespan
+	{
+		/// <summary>
+		/// Whether this module should be initiated every time a command is run, with dependencies injected from a scope.
+		/// </summary>
+		Scoped,
 
-        /// <summary>
-        /// Whether this module should be initiated every time a command is run.
-        /// </summary>
-        Transient,
+		/// <summary>
+		/// Whether this module should be initiated every time a command is run.
+		/// </summary>
+		Transient,
 
-        /// <summary>
-        /// Whether this module should be initiated at startup.
-        /// </summary>
-        Singleton
-    }
+		/// <summary>
+		/// Whether this module should be initiated at startup.
+		/// </summary>
+		Singleton
+	}
 }

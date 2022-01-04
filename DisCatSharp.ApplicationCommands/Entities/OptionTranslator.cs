@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,41 +21,46 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+
 using DisCatSharp.Entities;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    public class OptionTranslator
-    {
-        /// <summary>
-        /// Gets the option name.
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name { get; set; }
+	/// <summary>
+	/// Represents a option translator.
+	/// </summary>
+	internal class OptionTranslator
+	{
+		/// <summary>
+		/// Gets the option name.
+		/// </summary>
+		[JsonProperty("name")]
+		public string Name { get; set; }
 
-        /// <summary>
-        /// Gets the option name translations.
-        /// </summary>
-        [JsonProperty("name_translations")]
-        internal Dictionary<string, string> NT { get; set; }
-        [JsonIgnore]
-        public DiscordApplicationCommandLocalization NameTranslations
-            => new(this.NT);
+		/// <summary>
+		/// Gets the option name translations.
+		/// </summary>
+		[JsonProperty("name_translations")]
+		internal Dictionary<string, string> NameTranslationsDictionary { get; set; }
+		[JsonIgnore]
+		public DiscordApplicationCommandLocalization NameTranslations
+			=> new(this.NameTranslationsDictionary);
 
-        /// <summary>
-        /// Gets the option description translations.
-        /// </summary>
-        [JsonProperty("description_translations")]
-        internal Dictionary<string, string> DT { get; set; }
-        [JsonIgnore]
-        public DiscordApplicationCommandLocalization DescriptionTranslations
-            => new(this.DT);
+		/// <summary>
+		/// Gets the option description translations.
+		/// </summary>
+		[JsonProperty("description_translations")]
+		internal Dictionary<string, string> DescriptionTranslationsDictionary { get; set; }
+		[JsonIgnore]
+		public DiscordApplicationCommandLocalization DescriptionTranslations
+			=> new(this.DescriptionTranslationsDictionary);
 
-        /// <summary>
-        /// Gets the choice translators, if applicable.
-        /// </summary>
-        [JsonProperty("choices")]
-        public List<ChoiceTranslator> Choices { get; set; }
-    }
+		/// <summary>
+		/// Gets the choice translators, if applicable.
+		/// </summary>
+		[JsonProperty("choices")]
+		public List<ChoiceTranslator> Choices { get; set; }
+	}
 }

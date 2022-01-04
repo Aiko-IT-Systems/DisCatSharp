@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,30 +21,63 @@
 // SOFTWARE.
 
 using System;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// A configuration for a <see cref="ApplicationCommandsExtension"/>
-    /// </summary>
-    public class ApplicationCommandsConfiguration
-    {
-        /// <summary>
-        /// <para>Sets the service provider.</para>
-        /// <para>Objects in this provider are used when instantiating application command modules. This allows passing data around without resorting to static members.</para>
-        /// <para>Defaults to null.</para>
-        /// </summary>
-        public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
+	/// <summary>
+	/// A configuration for a <see cref="ApplicationCommandsExtension"/>
+	/// </summary>
+	public class ApplicationCommandsConfiguration
+	{
+		/// <summary>
+		/// <para>Sets the service provider.</para>
+		/// <para>Objects in this provider are used when instantiating application command modules. This allows passing data around without resorting to static members.</para>
+		/// <para>Defaults to null.</para>
+		/// </summary>
+		public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
-        /// </summary>
-        /// <param name="provider">The service provider.</param>
-        [ActivatorUtilitiesConstructor]
-        public ApplicationCommandsConfiguration(IServiceProvider provider)
-        {
-            this.ServiceProvider = provider;
-        }
-    }
+		/// <summary>
+		/// <para>Sets whether to enable default help command.</para>
+		/// <para>Disabling this will allow you to make your own help command.</para>
+		/// <para>
+		/// </para>
+		/// <para>Defaults to true.</para>
+		/// </summary>
+		public bool EnableDefaultHelp { internal get; set; } = true;
+
+		/// <summary>
+		/// Debugs the startup.
+		/// </summary>
+		public bool DebugStartup { internal get; set; } = false;
+
+		/// <summary>
+		/// Checks through all guilds.
+		/// <note type="warning">This will take quite a while, when the bot is on more than 1k guilds.</note>
+		/// </summary>
+		public bool CheckAllGuilds { internal get; set; } = false;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
+		/// </summary>
+		/// <param name="provider">The service provider.</param>
+		[ActivatorUtilitiesConstructor]
+		public ApplicationCommandsConfiguration(IServiceProvider provider = null)
+		{
+			this.ServiceProvider = provider;
+		}
+
+		/// <summary>
+		/// Creates a new instance of <see cref="ApplicationCommandsConfiguration"/>, copying the properties of another configuration.
+		/// </summary>
+		/// <param name="acc">Configuration the properties of which are to be copied.</param>
+		public ApplicationCommandsConfiguration(ApplicationCommandsConfiguration acc)
+		{
+			this.EnableDefaultHelp = acc.EnableDefaultHelp;
+			this.ServiceProvider = acc.ServiceProvider;
+			this.DebugStartup = acc.DebugStartup;
+			this.CheckAllGuilds = acc.CheckAllGuilds;
+		}
+	}
 }

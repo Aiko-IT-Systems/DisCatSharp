@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,277 +24,283 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+
 using DisCatSharp.CommandsNext.Attributes;
 using DisCatSharp.CommandsNext.Entities;
 using DisCatSharp.CommandsNext.Exceptions;
 
 namespace DisCatSharp.CommandsNext.Builders
 {
-    /// <summary>
-    /// Represents an interface to build a command.
-    /// </summary>
-    public class CommandBuilder
-    {
-        /// <summary>
-        /// Gets the name set for this command.
-        /// </summary>
-        public string Name { get; private set; }
+	/// <summary>
+	/// Represents an interface to build a command.
+	/// </summary>
+	public class CommandBuilder
+	{
+		/// <summary>
+		/// Gets the name set for this command.
+		/// </summary>
+		public string Name { get; private set; }
 
-        /// <summary>
-        /// Gets the aliases set for this command.
-        /// </summary>
-        public IReadOnlyList<string> Aliases { get; }
-        /// <summary>
-        /// Gets the alias list.
-        /// </summary>
-        private List<string> AliasList { get; }
+		/// <summary>
+		/// Gets the aliases set for this command.
+		/// </summary>
+		public IReadOnlyList<string> Aliases { get; }
 
-        /// <summary>
-        /// Gets the description set for this command.
-        /// </summary>
-        public string Description { get; private set; }
+		/// <summary>
+		/// Gets the alias list.
+		/// </summary>
+		private readonly List<string> _aliasList;
 
-        /// <summary>
-        /// Gets whether this command will be hidden or not.
-        /// </summary>
-        public bool IsHidden { get; private set; }
+		/// <summary>
+		/// Gets the description set for this command.
+		/// </summary>
+		public string Description { get; private set; }
 
-        /// <summary>
-        /// Gets the execution checks defined for this command.
-        /// </summary>
-        public IReadOnlyList<CheckBaseAttribute> ExecutionChecks { get; }
-        /// <summary>
-        /// Gets the execution check list.
-        /// </summary>
-        private List<CheckBaseAttribute> ExecutionCheckList { get; }
+		/// <summary>
+		/// Gets whether this command will be hidden or not.
+		/// </summary>
+		public bool IsHidden { get; private set; }
 
-        /// <summary>
-        /// Gets the collection of this command's overloads.
-        /// </summary>
-        public IReadOnlyList<CommandOverloadBuilder> Overloads { get; }
-        /// <summary>
-        /// Gets the overload list.
-        /// </summary>
-        private List<CommandOverloadBuilder> OverloadList { get; }
-        /// <summary>
-        /// Gets the overload argument sets.
-        /// </summary>
-        private HashSet<string> OverloadArgumentSets { get; }
+		/// <summary>
+		/// Gets the execution checks defined for this command.
+		/// </summary>
+		public IReadOnlyList<CheckBaseAttribute> ExecutionChecks { get; }
 
-        /// <summary>
-        /// Gets the module on which this command is to be defined.
-        /// </summary>
-        public ICommandModule Module { get; }
+		/// <summary>
+		/// Gets the execution check list.
+		/// </summary>
+		private readonly List<CheckBaseAttribute> _executionCheckList;
 
-        /// <summary>
-        /// Gets custom attributes defined on this command.
-        /// </summary>
-        public IReadOnlyList<Attribute> CustomAttributes { get; }
-        /// <summary>
-        /// Gets the custom attribute list.
-        /// </summary>
-        private List<Attribute> CustomAttributeList { get; }
+		/// <summary>
+		/// Gets the collection of this command's overloads.
+		/// </summary>
+		public IReadOnlyList<CommandOverloadBuilder> Overloads { get; }
 
-        /// <summary>
-        /// Creates a new module-less command builder.
-        /// </summary>
-        public CommandBuilder()
-            : this(null)
-        { }
+		/// <summary>
+		/// Gets the overload list.
+		/// </summary>
+		private readonly List<CommandOverloadBuilder> _overloadList;
 
-        /// <summary>
-        /// Creates a new command builder.
-        /// </summary>
-        /// <param name="module">Module on which this command is to be defined.</param>
-        public CommandBuilder(ICommandModule module)
-        {
-            this.AliasList = new List<string>();
-            this.Aliases = new ReadOnlyCollection<string>(this.AliasList);
+		/// <summary>
+		/// Gets the overload argument sets.
+		/// </summary>
+		private readonly HashSet<string> _overloadArgumentSets;
 
-            this.ExecutionCheckList = new List<CheckBaseAttribute>();
-            this.ExecutionChecks = new ReadOnlyCollection<CheckBaseAttribute>(this.ExecutionCheckList);
+		/// <summary>
+		/// Gets the module on which this command is to be defined.
+		/// </summary>
+		public ICommandModule Module { get; }
 
-            this.OverloadArgumentSets = new HashSet<string>();
-            this.OverloadList = new List<CommandOverloadBuilder>();
-            this.Overloads = new ReadOnlyCollection<CommandOverloadBuilder>(this.OverloadList);
+		/// <summary>
+		/// Gets custom attributes defined on this command.
+		/// </summary>
+		public IReadOnlyList<Attribute> CustomAttributes { get; }
 
-            this.Module = module;
+		/// <summary>
+		/// Gets the custom attribute list.
+		/// </summary>
+		private readonly List<Attribute> _customAttributeList;
 
-            this.CustomAttributeList = new List<Attribute>();
-            this.CustomAttributes = new ReadOnlyCollection<Attribute>(this.CustomAttributeList);
-        }
+		/// <summary>
+		/// Creates a new module-less command builder.
+		/// </summary>
+		public CommandBuilder()
+			: this(null)
+		{ }
 
-        /// <summary>
-        /// Sets the name for this command.
-        /// </summary>
-        /// <param name="name">Name for this command.</param>
-        /// <returns>This builder.</returns>
-        public CommandBuilder WithName(string name)
-        {
-            if (name == null || name.ToCharArray().Any(xc => char.IsWhiteSpace(xc)))
-                throw new ArgumentException("Command name cannot be null or contain any whitespace characters.", nameof(name));
+		/// <summary>
+		/// Creates a new command builder.
+		/// </summary>
+		/// <param name="module">Module on which this command is to be defined.</param>
+		public CommandBuilder(ICommandModule module)
+		{
+			this._aliasList = new List<string>();
+			this.Aliases = new ReadOnlyCollection<string>(this._aliasList);
 
-            if (this.Name != null)
-                throw new InvalidOperationException("This command already has a name.");
+			this._executionCheckList = new List<CheckBaseAttribute>();
+			this.ExecutionChecks = new ReadOnlyCollection<CheckBaseAttribute>(this._executionCheckList);
 
-            if (this.AliasList.Contains(name))
-                throw new ArgumentException("Command name cannot be one of its aliases.", nameof(name));
+			this._overloadArgumentSets = new HashSet<string>();
+			this._overloadList = new List<CommandOverloadBuilder>();
+			this.Overloads = new ReadOnlyCollection<CommandOverloadBuilder>(this._overloadList);
 
-            this.Name = name;
-            return this;
-        }
+			this.Module = module;
 
-        /// <summary>
-        /// Adds aliases to this command.
-        /// </summary>
-        /// <param name="aliases">Aliases to add to the command.</param>
-        /// <returns>This builder.</returns>
-        public CommandBuilder WithAliases(params string[] aliases)
-        {
-            if (aliases == null || !aliases.Any())
-                throw new ArgumentException("You need to pass at least one alias.", nameof(aliases));
+			this._customAttributeList = new List<Attribute>();
+			this.CustomAttributes = new ReadOnlyCollection<Attribute>(this._customAttributeList);
+		}
 
-            foreach (var alias in aliases)
-                this.WithAlias(alias);
+		/// <summary>
+		/// Sets the name for this command.
+		/// </summary>
+		/// <param name="name">Name for this command.</param>
+		/// <returns>This builder.</returns>
+		public CommandBuilder WithName(string name)
+		{
+			if (name == null || name.ToCharArray().Any(xc => char.IsWhiteSpace(xc)))
+				throw new ArgumentException("Command name cannot be null or contain any whitespace characters.", nameof(name));
 
-            return this;
-        }
+			if (this.Name != null)
+				throw new InvalidOperationException("This command already has a name.");
 
-        /// <summary>
-        /// Adds an alias to this command.
-        /// </summary>
-        /// <param name="alias">Alias to add to the command.</param>
-        /// <returns>This builder.</returns>
-        public CommandBuilder WithAlias(string alias)
-        {
-            if (alias.ToCharArray().Any(xc => char.IsWhiteSpace(xc)))
-                throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.", nameof(alias));
+			if (this._aliasList.Contains(name))
+				throw new ArgumentException("Command name cannot be one of its aliases.", nameof(name));
 
-            if (this.Name == alias || this.AliasList.Contains(alias))
-                throw new ArgumentException("Aliases cannot contain the command name, and cannot be duplicate.", nameof(alias));
+			this.Name = name;
+			return this;
+		}
 
-            this.AliasList.Add(alias);
-            return this;
-        }
+		/// <summary>
+		/// Adds aliases to this command.
+		/// </summary>
+		/// <param name="aliases">Aliases to add to the command.</param>
+		/// <returns>This builder.</returns>
+		public CommandBuilder WithAliases(params string[] aliases)
+		{
+			if (aliases == null || !aliases.Any())
+				throw new ArgumentException("You need to pass at least one alias.", nameof(aliases));
 
-        /// <summary>
-        /// Sets the description for this command.
-        /// </summary>
-        /// <param name="description">Description to use for this command.</param>
-        /// <returns>This builder.</returns>
-        public CommandBuilder WithDescription(string description)
-        {
-            this.Description = description;
-            return this;
-        }
+			foreach (var alias in aliases)
+				this.WithAlias(alias);
 
-        /// <summary>
-        /// Sets whether this command is to be hidden.
-        /// </summary>
-        /// <param name="hidden">Whether the command is to be hidden.</param>
-        /// <returns>This builder.</returns>
-        public CommandBuilder WithHiddenStatus(bool hidden)
-        {
-            this.IsHidden = hidden;
-            return this;
-        }
+			return this;
+		}
 
-        /// <summary>
-        /// Adds pre-execution checks to this command.
-        /// </summary>
-        /// <param name="checks">Pre-execution checks to add to this command.</param>
-        /// <returns>This builder.</returns>
-        public CommandBuilder WithExecutionChecks(params CheckBaseAttribute[] checks)
-        {
-            this.ExecutionCheckList.AddRange(checks.Except(this.ExecutionCheckList));
-            return this;
-        }
+		/// <summary>
+		/// Adds an alias to this command.
+		/// </summary>
+		/// <param name="alias">Alias to add to the command.</param>
+		/// <returns>This builder.</returns>
+		public CommandBuilder WithAlias(string alias)
+		{
+			if (alias.ToCharArray().Any(xc => char.IsWhiteSpace(xc)))
+				throw new ArgumentException("Aliases cannot contain whitespace characters or null strings.", nameof(alias));
 
-        /// <summary>
-        /// Adds a pre-execution check to this command.
-        /// </summary>
-        /// <param name="check">Pre-execution check to add to this command.</param>
-        /// <returns>This builder.</returns>
-        public CommandBuilder WithExecutionCheck(CheckBaseAttribute check)
-        {
-            if (!this.ExecutionCheckList.Contains(check))
-                this.ExecutionCheckList.Add(check);
-            return this;
-        }
+			if (this.Name == alias || this._aliasList.Contains(alias))
+				throw new ArgumentException("Aliases cannot contain the command name, and cannot be duplicate.", nameof(alias));
 
-        /// <summary>
-        /// Adds overloads to this command. An executable command needs to have at least one overload.
-        /// </summary>
-        /// <param name="overloads">Overloads to add to this command.</param>
-        /// <returns>This builder.</returns>
-        public CommandBuilder WithOverloads(params CommandOverloadBuilder[] overloads)
-        {
-            foreach (var overload in overloads)
-                this.WithOverload(overload);
+			this._aliasList.Add(alias);
+			return this;
+		}
 
-            return this;
-        }
+		/// <summary>
+		/// Sets the description for this command.
+		/// </summary>
+		/// <param name="description">Description to use for this command.</param>
+		/// <returns>This builder.</returns>
+		public CommandBuilder WithDescription(string description)
+		{
+			this.Description = description;
+			return this;
+		}
 
-        /// <summary>
-        /// Adds an overload to this command. An executable command needs to have at least one overload.
-        /// </summary>
-        /// <param name="overload">Overload to add to this command.</param>
-        /// <returns>This builder.</returns>
-        public CommandBuilder WithOverload(CommandOverloadBuilder overload)
-        {
-            if (this.OverloadArgumentSets.Contains(overload.ArgumentSet))
-                throw new DuplicateOverloadException(this.Name, overload.Arguments.Select(x => x.Type).ToList(), overload.ArgumentSet);
+		/// <summary>
+		/// Sets whether this command is to be hidden.
+		/// </summary>
+		/// <param name="hidden">Whether the command is to be hidden.</param>
+		/// <returns>This builder.</returns>
+		public CommandBuilder WithHiddenStatus(bool hidden)
+		{
+			this.IsHidden = hidden;
+			return this;
+		}
 
-            this.OverloadArgumentSets.Add(overload.ArgumentSet);
-            this.OverloadList.Add(overload);
+		/// <summary>
+		/// Adds pre-execution checks to this command.
+		/// </summary>
+		/// <param name="checks">Pre-execution checks to add to this command.</param>
+		/// <returns>This builder.</returns>
+		public CommandBuilder WithExecutionChecks(params CheckBaseAttribute[] checks)
+		{
+			this._executionCheckList.AddRange(checks.Except(this._executionCheckList));
+			return this;
+		}
 
-            return this;
-        }
+		/// <summary>
+		/// Adds a pre-execution check to this command.
+		/// </summary>
+		/// <param name="check">Pre-execution check to add to this command.</param>
+		/// <returns>This builder.</returns>
+		public CommandBuilder WithExecutionCheck(CheckBaseAttribute check)
+		{
+			if (!this._executionCheckList.Contains(check))
+				this._executionCheckList.Add(check);
+			return this;
+		}
 
-        /// <summary>
-        /// Adds a custom attribute to this command. This can be used to indicate various custom information about a command.
-        /// </summary>
-        /// <param name="attribute">Attribute to add.</param>
-        /// <returns>This builder.</returns>
-        public CommandBuilder WithCustomAttribute(Attribute attribute)
-        {
-            this.CustomAttributeList.Add(attribute);
-            return this;
-        }
+		/// <summary>
+		/// Adds overloads to this command. An executable command needs to have at least one overload.
+		/// </summary>
+		/// <param name="overloads">Overloads to add to this command.</param>
+		/// <returns>This builder.</returns>
+		public CommandBuilder WithOverloads(params CommandOverloadBuilder[] overloads)
+		{
+			foreach (var overload in overloads)
+				this.WithOverload(overload);
 
-        /// <summary>
-        /// Adds multiple custom attributes to this command. This can be used to indicate various custom information about a command.
-        /// </summary>
-        /// <param name="attributes">Attributes to add.</param>
-        /// <returns>This builder.</returns>
-        public CommandBuilder WithCustomAttributes(params Attribute[] attributes)
-        {
-            foreach (var attr in attributes)
-                this.WithCustomAttribute(attr);
+			return this;
+		}
 
-            return this;
-        }
+		/// <summary>
+		/// Adds an overload to this command. An executable command needs to have at least one overload.
+		/// </summary>
+		/// <param name="overload">Overload to add to this command.</param>
+		/// <returns>This builder.</returns>
+		public CommandBuilder WithOverload(CommandOverloadBuilder overload)
+		{
+			if (this._overloadArgumentSets.Contains(overload.ArgumentSet))
+				throw new DuplicateOverloadException(this.Name, overload.Arguments.Select(x => x.Type).ToList(), overload.ArgumentSet);
 
-        /// <summary>
-        /// Builds the command.
-        /// </summary>
-        /// <param name="parent">The parent command group.</param>
-        internal virtual Command Build(CommandGroup parent)
-        {
-            var cmd = new Command
-            {
-                Name = this.Name,
-                Description = this.Description,
-                Aliases = this.Aliases,
-                ExecutionChecks = this.ExecutionChecks,
-                IsHidden = this.IsHidden,
-                Parent = parent,
-                Overloads = new ReadOnlyCollection<CommandOverload>(this.Overloads.Select(xo => xo.Build()).ToList()),
-                Module = this.Module,
-                CustomAttributes = this.CustomAttributes
-            };
+			this._overloadArgumentSets.Add(overload.ArgumentSet);
+			this._overloadList.Add(overload);
 
-            return cmd;
-        }
-    }
+			return this;
+		}
+
+		/// <summary>
+		/// Adds a custom attribute to this command. This can be used to indicate various custom information about a command.
+		/// </summary>
+		/// <param name="attribute">Attribute to add.</param>
+		/// <returns>This builder.</returns>
+		public CommandBuilder WithCustomAttribute(Attribute attribute)
+		{
+			this._customAttributeList.Add(attribute);
+			return this;
+		}
+
+		/// <summary>
+		/// Adds multiple custom attributes to this command. This can be used to indicate various custom information about a command.
+		/// </summary>
+		/// <param name="attributes">Attributes to add.</param>
+		/// <returns>This builder.</returns>
+		public CommandBuilder WithCustomAttributes(params Attribute[] attributes)
+		{
+			foreach (var attr in attributes)
+				this.WithCustomAttribute(attr);
+
+			return this;
+		}
+
+		/// <summary>
+		/// Builds the command.
+		/// </summary>
+		/// <param name="parent">The parent command group.</param>
+		internal virtual Command Build(CommandGroup parent)
+		{
+			var cmd = new Command
+			{
+				Name = this.Name,
+				Description = this.Description,
+				Aliases = this.Aliases,
+				ExecutionChecks = this.ExecutionChecks,
+				IsHidden = this.IsHidden,
+				Parent = parent,
+				Overloads = new ReadOnlyCollection<CommandOverload>(this.Overloads.Select(xo => xo.Build()).ToList()),
+				Module = this.Module,
+				CustomAttributes = this.CustomAttributes
+			};
+
+			return cmd;
+		}
+	}
 }

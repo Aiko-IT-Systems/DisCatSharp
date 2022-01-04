@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,24 +24,24 @@ using System;
 
 namespace DisCatSharp.CommandsNext.Attributes
 {
-    /// <summary>
-    /// Defines this command overload's priority. This determines the order in which overloads will be attempted to be called. Commands will be attempted in order of priority, in descending order.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public sealed class PriorityAttribute : Attribute
-    {
-        /// <summary>
-        /// Gets the priority of this command overload.
-        /// </summary>
-        public int Priority { get; }
+	/// <summary>
+	/// Defines this command overload's priority. This determines the order in which overloads will be attempted to be called. Commands will be attempted in order of priority, in descending order.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method, Inherited = false)]
+	public sealed class PriorityAttribute : Attribute
+	{
+		/// <summary>
+		/// Gets the priority of this command overload.
+		/// </summary>
+		public int Priority { get; }
 
-        /// <summary>
-        /// Defines this command overload's priority. This determines the order in which overloads will be attempted to be called. Commands will be attempted in order of priority, in descending order.
-        /// </summary>
-        /// <param name="priority">Priority of this command overload.</param>
-        public PriorityAttribute(int priority)
-        {
-            this.Priority = priority;
-        }
-    }
+		/// <summary>
+		/// Defines this command overload's priority. This determines the order in which overloads will be attempted to be called. Commands will be attempted in order of priority, in descending order.
+		/// </summary>
+		/// <param name="priority">Priority of this command overload.</param>
+		public PriorityAttribute(int priority)
+		{
+			this.Priority = priority;
+		}
+	}
 }

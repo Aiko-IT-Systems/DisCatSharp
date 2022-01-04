@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,37 +21,38 @@
 // SOFTWARE.
 
 using System;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents an object in Discord API.
-    /// </summary>
-    public abstract class SnowflakeObject
-    {
-        /// <summary>
-        /// Gets the ID of this object.
-        /// </summary>
-        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong Id { get; internal set; }
+	/// <summary>
+	/// Represents an object in Discord API.
+	/// </summary>
+	public abstract class SnowflakeObject
+	{
+		/// <summary>
+		/// Gets the ID of this object.
+		/// </summary>
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		public ulong Id { get; internal set; }
 
-        /// <summary>
-        /// Gets the date and time this object was created.
-        /// </summary>
-        [JsonIgnore]
-        public DateTimeOffset CreationTimestamp
-            => this.Id.GetSnowflakeTime();
+		/// <summary>
+		/// Gets the date and time this object was created.
+		/// </summary>
+		[JsonIgnore]
+		public DateTimeOffset CreationTimestamp
+			=> this.Id.GetSnowflakeTime();
 
-        /// <summary>
-        /// Gets the client instance this object is tied to.
-        /// </summary>
-        [JsonIgnore]
-        internal BaseDiscordClient Discord { get; set; }
+		/// <summary>
+		/// Gets the client instance this object is tied to.
+		/// </summary>
+		[JsonIgnore]
+		internal BaseDiscordClient Discord { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SnowflakeObject"/> class.
-        /// </summary>
-        internal SnowflakeObject() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SnowflakeObject"/> class.
+		/// </summary>
+		internal SnowflakeObject() { }
+	}
 }

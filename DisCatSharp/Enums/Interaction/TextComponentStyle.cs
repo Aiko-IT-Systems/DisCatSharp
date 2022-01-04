@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,19 @@
 
 namespace DisCatSharp.Enums
 {
-    /// <summary>
-    /// Represents a button's style/color.
-    /// </summary>
-    public enum TextComponentStyle : int
-    {
-        /// <summary>
-        /// A small text input.
-        /// </summary>
-        Small = 1,
+	/// <summary>
+	/// Represents a button's style/color.
+	/// </summary>
+	public enum TextComponentStyle : int
+	{
+		/// <summary>
+		/// A small text input.
+		/// </summary>
+		Small = 1,
 
-        /// <summary>
-        /// A paragraph text input.
-        /// </summary>
-        Paragraph = 2
-    }
+		/// <summary>
+		/// A paragraph text input.
+		/// </summary>
+		Paragraph = 2
+	}
 }

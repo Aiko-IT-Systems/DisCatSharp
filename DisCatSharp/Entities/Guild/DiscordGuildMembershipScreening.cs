@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,31 +22,32 @@
 
 using System;
 using System.Collections.Generic;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents a guild's membership screening form.
-    /// </summary>
-    public class DiscordGuildMembershipScreening
-    {
-        /// <summary>
-        /// Gets when the fields were last updated.
-        /// </summary>
-        [JsonProperty("version")]
-        public DateTimeOffset Version { get; internal set; }
+	/// <summary>
+	/// Represents a guild's membership screening form.
+	/// </summary>
+	public class DiscordGuildMembershipScreening
+	{
+		/// <summary>
+		/// Gets when the fields were last updated.
+		/// </summary>
+		[JsonProperty("version")]
+		public DateTimeOffset Version { get; internal set; }
 
-        /// <summary>
-        /// Gets the steps in the screening form.
-        /// </summary>
-        [JsonProperty("form_fields")]
-        public IReadOnlyList<DiscordGuildMembershipScreeningField> Fields { get; internal set; }
+		/// <summary>
+		/// Gets the steps in the screening form.
+		/// </summary>
+		[JsonProperty("form_fields")]
+		public IReadOnlyList<DiscordGuildMembershipScreeningField> Fields { get; internal set; }
 
-        /// <summary>
-        /// Gets the server description shown in the screening form.
-        /// </summary>
-        [JsonProperty("description")]
-        public string Description { get; internal set; }
-    }
+		/// <summary>
+		/// Gets the server description shown in the screening form.
+		/// </summary>
+		[JsonProperty("description")]
+		public string Description { get; internal set; }
+	}
 }

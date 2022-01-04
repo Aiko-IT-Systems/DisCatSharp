@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,36 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using DisCatSharp.Common.Utilities;
 using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.Lavalink.EventArgs
 {
-    /// <summary>
-    /// Represents event arguments for Lavalink node disconnection.
-    /// </summary>
-    public sealed class NodeDisconnectedEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the node that was disconnected.
-        /// </summary>
-        public LavalinkNodeConnection LavalinkNode { get; }
+	/// <summary>
+	/// Represents event arguments for Lavalink node disconnection.
+	/// </summary>
+	public sealed class NodeDisconnectedEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the node that was disconnected.
+		/// </summary>
+		public LavalinkNodeConnection LavalinkNode { get; }
 
-        /// <summary>
-        /// Gets whether disconnect was clean.
-        /// </summary>
-        public bool IsCleanClose { get; }
+		/// <summary>
+		/// Gets whether disconnect was clean.
+		/// </summary>
+		public bool IsCleanClose { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NodeDisconnectedEventArgs"/> class.
-        /// </summary>
-        /// <param name="node">The node.</param>
-        /// <param name="isClean">If true, is clean.</param>
-        internal NodeDisconnectedEventArgs(LavalinkNodeConnection node, bool isClean) : base(node.Discord.ServiceProvider)
-        {
-            this.LavalinkNode = node;
-            this.IsCleanClose = isClean;
-        }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="NodeDisconnectedEventArgs"/> class.
+		/// </summary>
+		/// <param name="node">The node.</param>
+		/// <param name="isClean">If true, is clean.</param>
+		internal NodeDisconnectedEventArgs(LavalinkNodeConnection node, bool isClean) : base(node.Discord.ServiceProvider)
+		{
+			this.LavalinkNode = node;
+			this.IsCleanClose = isClean;
+		}
+	}
 }

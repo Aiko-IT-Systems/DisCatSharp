@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,24 +23,24 @@
 namespace DisCatSharp.Lavalink
 {
 
-    /// <summary>
-    /// The lavalink search type.
-    /// </summary>
-    public enum LavalinkSearchType
-    {
-        /// <summary>
-        /// Search on SoundCloud
-        /// </summary>
-        SoundCloud,
+	/// <summary>
+	/// The lavalink search type.
+	/// </summary>
+	public enum LavalinkSearchType
+	{
+		/// <summary>
+		/// Search on SoundCloud
+		/// </summary>
+		SoundCloud,
 
-        /// <summary>
-        /// Search on Youtube.
-        /// </summary>
-        Youtube,
+		/// <summary>
+		/// Search on Youtube.
+		/// </summary>
+		Youtube,
 
-        /// <summary>
-        /// Provide Lavalink with a plain URL.
-        /// </summary>
-        Plain
-    }
+		/// <summary>
+		/// Provide Lavalink with a plain URL.
+		/// </summary>
+		Plain
+	}
 }

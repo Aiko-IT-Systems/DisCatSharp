@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,19 @@
 
 namespace DisCatSharp.Interactivity.Enums
 {
-    /// <summary>
-    /// Specifies how to split a string.
-    /// </summary>
-    public enum SplitType
-    {
-        /// <summary>
-        /// Splits string per 500 characters.
-        /// </summary>
-        Character,
+	/// <summary>
+	/// Specifies how to split a string.
+	/// </summary>
+	public enum SplitType
+	{
+		/// <summary>
+		/// Splits string per 500 characters.
+		/// </summary>
+		Character,
 
-        /// <summary>
-        /// Splits string per 15 lines.
-        /// </summary>
-        Line
-    }
+		/// <summary>
+		/// Splits string per 15 lines.
+		/// </summary>
+		Line
+	}
 }

@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DisCatSharp.Common.RegularExpressions
 {
-    /// <summary>
-    /// Provides common regex.
-    /// </summary>
-    public static class CommonRegEx
-    {
-        /// <summary>
-        /// Represents a hex color string.
-        /// </summary>
-        public static Regex HexColorString
-            => new(@"^#?([a-fA-F0-9]{6})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	/// <summary>
+	/// Provides common regex.
+	/// </summary>
+	public static class CommonRegEx
+	{
+		/// <summary>
+		/// Represents a hex color string.
+		/// </summary>
+		public static Regex HexColorString
+			=> new(@"^#?([a-fA-F0-9]{6})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
 
-        /// <summary>
-        /// Represents a rgb color string.
-        /// </summary>
-        public static Regex RgbColorString
-            => new(@"^(\d{1,3})\s*?,\s*?(\d{1,3}),\s*?(\d{1,3})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+		/// <summary>
+		/// Represents a rgb color string.
+		/// </summary>
+		public static Regex RgbColorString
+			=> new(@"^(\d{1,3})\s*?,\s*?(\d{1,3}),\s*?(\d{1,3})$", RegexOptions.ECMAScript | RegexOptions.Compiled);
 
-        /// <summary>
-        /// Represents a timespan.
-        /// </summary>
-        public static Regex TimeSpan
-            => new(@"^(?<days>\d+d\s*)?(?<hours>\d{1,2}h\s*)?(?<minutes>\d{1,2}m\s*)?(?<seconds>\d{1,2}s\s*)?$", RegexOptions.ECMAScript | RegexOptions.Compiled);
-    }
+		/// <summary>
+		/// Represents a timespan.
+		/// </summary>
+		public static Regex TimeSpan
+			=> new(@"^(?<days>\d+d\s*)?(?<hours>\d{1,2}h\s*)?(?<minutes>\d{1,2}m\s*)?(?<seconds>\d{1,2}s\s*)?$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+	}
 }

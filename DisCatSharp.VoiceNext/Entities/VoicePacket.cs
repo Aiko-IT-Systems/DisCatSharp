@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,32 +24,32 @@ using System;
 
 namespace DisCatSharp.VoiceNext.Entities
 {
-    internal struct VoicePacket
-    {
-        /// <summary>
-        /// Gets the bytes.
-        /// </summary>
-        public ReadOnlyMemory<byte> Bytes { get; }
-        /// <summary>
-        /// Gets the millisecond duration.
-        /// </summary>
-        public int MillisecondDuration { get; }
-        /// <summary>
-        /// Gets or sets a value indicating whether is silence.
-        /// </summary>
-        public bool IsSilence { get; set; }
+	internal struct VoicePacket
+	{
+		/// <summary>
+		/// Gets the bytes.
+		/// </summary>
+		public ReadOnlyMemory<byte> Bytes { get; }
+		/// <summary>
+		/// Gets the millisecond duration.
+		/// </summary>
+		public int MillisecondDuration { get; }
+		/// <summary>
+		/// Gets or sets a value indicating whether is silence.
+		/// </summary>
+		public bool IsSilence { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VoicePacket"/> class.
-        /// </summary>
-        /// <param name="bytes">The bytes.</param>
-        /// <param name="msDuration">The ms duration.</param>
-        /// <param name="isSilence">If true, is silence.</param>
-        public VoicePacket(ReadOnlyMemory<byte> bytes, int msDuration, bool isSilence = false)
-        {
-            this.Bytes = bytes;
-            this.MillisecondDuration = msDuration;
-            this.IsSilence = isSilence;
-        }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="VoicePacket"/> class.
+		/// </summary>
+		/// <param name="bytes">The bytes.</param>
+		/// <param name="msDuration">The ms duration.</param>
+		/// <param name="isSilence">If true, is silence.</param>
+		public VoicePacket(ReadOnlyMemory<byte> bytes, int msDuration, bool isSilence = false)
+		{
+			this.Bytes = bytes;
+			this.MillisecondDuration = msDuration;
+			this.IsSilence = isSilence;
+		}
+	}
 }

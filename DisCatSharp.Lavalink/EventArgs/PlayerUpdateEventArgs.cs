@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,43 +21,43 @@
 // SOFTWARE.
 
 using System;
-using DisCatSharp.Common.Utilities;
+
 using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.Lavalink.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for player update event.
-    /// </summary>
-    public sealed class PlayerUpdateEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the timestamp at which this event was emitted.
-        /// </summary>
-        public DateTimeOffset Timestamp { get; }
+	/// <summary>
+	/// Represents arguments for player update event.
+	/// </summary>
+	public sealed class PlayerUpdateEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the timestamp at which this event was emitted.
+		/// </summary>
+		public DateTimeOffset Timestamp { get; }
 
-        /// <summary>
-        /// Gets the position in the playback stream.
-        /// </summary>
-        public TimeSpan Position { get; }
+		/// <summary>
+		/// Gets the position in the playback stream.
+		/// </summary>
+		public TimeSpan Position { get; }
 
-        /// <summary>
-        /// Gets the player that emitted this event.
-        /// </summary>
-        public LavalinkGuildConnection Player { get; }
+		/// <summary>
+		/// Gets the player that emitted this event.
+		/// </summary>
+		public LavalinkGuildConnection Player { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PlayerUpdateEventArgs"/> class.
-        /// </summary>
-        /// <param name="lvl">The lvl.</param>
-        /// <param name="timestamp">The timestamp.</param>
-        /// <param name="position">The position.</param>
-        internal PlayerUpdateEventArgs(LavalinkGuildConnection lvl, DateTimeOffset timestamp,
-            TimeSpan position) : base(lvl.Node.Discord.ServiceProvider)
-        {
-            this.Player = lvl;
-            this.Timestamp = timestamp;
-            this.Position = position;
-        }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PlayerUpdateEventArgs"/> class.
+		/// </summary>
+		/// <param name="lvl">The lvl.</param>
+		/// <param name="timestamp">The timestamp.</param>
+		/// <param name="position">The position.</param>
+		internal PlayerUpdateEventArgs(LavalinkGuildConnection lvl, DateTimeOffset timestamp,
+			TimeSpan position) : base(lvl.Node.Discord.ServiceProvider)
+		{
+			this.Player = lvl;
+			this.Timestamp = timestamp;
+			this.Position = position;
+		}
+	}
 }

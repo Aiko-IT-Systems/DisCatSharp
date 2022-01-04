@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,24 +25,24 @@ using System.Collections.Generic;
 
 namespace DisCatSharp.ApplicationCommands.Attributes
 {
-    /// <summary>
-    /// Defines allowed channel types for a channel parameter.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-    public class ChannelTypesAttribute : Attribute
-    {
-        /// <summary>
-        /// Allowed channel types.
-        /// </summary>
-        public IEnumerable<ChannelType> ChannelTypes { get; }
+	/// <summary>
+	/// Defines allowed channel types for a channel parameter.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Parameter)]
+	public class ChannelTypesAttribute : Attribute
+	{
+		/// <summary>
+		/// Allowed channel types.
+		/// </summary>
+		public IEnumerable<ChannelType> ChannelTypes { get; }
 
-        /// <summary>
-        /// Defines allowed channel types for a channel parameter.
-        /// </summary>
-        /// <param name="channelTypes">The channel types to allow.</param>
-        public ChannelTypesAttribute(params ChannelType[] channelTypes)
-        {
-            this.ChannelTypes = channelTypes;
-        }
-    }
+		/// <summary>
+		/// Defines allowed channel types for a channel parameter.
+		/// </summary>
+		/// <param name="channelTypes">The channel types to allow.</param>
+		public ChannelTypesAttribute(params ChannelType[] channelTypes)
+		{
+			this.ChannelTypes = channelTypes;
+		}
+	}
 }

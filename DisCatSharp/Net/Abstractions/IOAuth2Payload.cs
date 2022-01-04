@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,14 @@
 
 namespace DisCatSharp.Net.Abstractions
 {
-    /// <summary>
-    /// Represents a OAuth2 payload.
-    /// </summary>
-    internal interface IOAuth2Payload
-    {
-        /// <summary>
-        /// Gets or sets the access token.
-        /// </summary>
-        string AccessToken { get; set; }
-    }
+	/// <summary>
+	/// Represents a OAuth2 payload.
+	/// </summary>
+	internal interface IOAuth2Payload
+	{
+		/// <summary>
+		/// Gets or sets the access token.
+		/// </summary>
+		string AccessToken { get; set; }
+	}
 }

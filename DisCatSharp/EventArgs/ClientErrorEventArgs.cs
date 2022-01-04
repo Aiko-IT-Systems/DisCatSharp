@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,24 +24,24 @@ using System;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.ClientErrored"/> event.
-    /// </summary>
-    public class ClientErrorEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the exception thrown by the client.
-        /// </summary>
-        public Exception Exception { get; internal set; }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.ClientErrored"/> event.
+	/// </summary>
+	public class ClientErrorEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the exception thrown by the client.
+		/// </summary>
+		public Exception Exception { get; internal set; }
 
-        /// <summary>
-        /// Gets the name of the event that threw the exception.
-        /// </summary>
-        public string EventName { get; internal set; }
+		/// <summary>
+		/// Gets the name of the event that threw the exception.
+		/// </summary>
+		public string EventName { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ClientErrorEventArgs"/> class.
-        /// </summary>
-        internal ClientErrorEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ClientErrorEventArgs"/> class.
+		/// </summary>
+		internal ClientErrorEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

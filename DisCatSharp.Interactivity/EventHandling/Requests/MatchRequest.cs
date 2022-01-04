@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,49 +23,50 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+
 using DisCatSharp.Common.Utilities;
 
 namespace DisCatSharp.Interactivity.EventHandling
 {
-    /// <summary>
-    /// MatchRequest is a class that serves as a representation of a
-    /// match that is being waited for.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    internal class MatchRequest<T> : IDisposable where T : AsyncEventArgs
-    {
-        internal TaskCompletionSource<T> _tcs;
-        internal CancellationTokenSource _ct;
-        internal Func<T, bool> _predicate;
-        internal TimeSpan _timeout;
+	/// <summary>
+	/// MatchRequest is a class that serves as a representation of a
+	/// match that is being waited for.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	internal class MatchRequest<T> : IDisposable where T : AsyncEventArgs
+	{
+		internal TaskCompletionSource<T> Tcs;
+		internal CancellationTokenSource Ct;
+		internal Func<T, bool> Predicate;
+		internal TimeSpan Timeout;
 
-        /// <summary>
-        /// Creates a new MatchRequest object.
-        /// </summary>
-        /// <param name="predicate">Predicate to match</param>
-        /// <param name="timeout">Timeout time</param>
-        public MatchRequest(Func<T, bool> predicate, TimeSpan timeout)
-        {
-            this._tcs = new TaskCompletionSource<T>();
-            this._ct = new CancellationTokenSource(timeout);
-            this._predicate = predicate;
-            this._ct.Token.Register(() => this._tcs.TrySetResult(null));
-            this._timeout = timeout;
-        }
+		/// <summary>
+		/// Creates a new MatchRequest object.
+		/// </summary>
+		/// <param name="predicate">Predicate to match</param>
+		/// <param name="timeout">Timeout time</param>
+		public MatchRequest(Func<T, bool> predicate, TimeSpan timeout)
+		{
+			this.Tcs = new TaskCompletionSource<T>();
+			this.Ct = new CancellationTokenSource(timeout);
+			this.Predicate = predicate;
+			this.Ct.Token.Register(() => this.Tcs.TrySetResult(null));
+			this.Timeout = timeout;
+		}
 
-        ~MatchRequest()
-        {
-            this.Dispose();
-        }
+		~MatchRequest()
+		{
+			this.Dispose();
+		}
 
-        /// <summary>
-        /// Disposes this MatchRequest.
-        /// </summary>
-        public void Dispose()
-        {
-            this._ct.Dispose();
-            this._tcs = null;
-            this._predicate = null;
-        }
-    }
+		/// <summary>
+		/// Disposes this MatchRequest.
+		/// </summary>
+		public void Dispose()
+		{
+			this.Ct.Dispose();
+			this.Tcs = null;
+			this.Predicate = null;
+		}
+	}
 }

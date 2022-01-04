@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,33 +24,33 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.Lavalink.Entities
 {
-    /// <summary>
-    /// The voice dispatch.
-    /// </summary>
-    internal sealed class VoiceDispatch
-    {
-        /// <summary>
-        /// Gets or sets the op code.
-        /// </summary>
-        [JsonProperty("op")]
-        public int OpCode { get; set; }
+	/// <summary>
+	/// The voice dispatch.
+	/// </summary>
+	internal sealed class VoiceDispatch
+	{
+		/// <summary>
+		/// Gets or sets the op code.
+		/// </summary>
+		[JsonProperty("op")]
+		public int OpCode { get; set; }
 
-        /// <summary>
-        /// Gets or sets the payload.
-        /// </summary>
-        [JsonProperty("d")]
-        public object Payload { get; set; }
+		/// <summary>
+		/// Gets or sets the payload.
+		/// </summary>
+		[JsonProperty("d")]
+		public object Payload { get; set; }
 
-        /// <summary>
-        /// Gets or sets the sequence.
-        /// </summary>
-        [JsonProperty("s", NullValueHandling = NullValueHandling.Ignore)]
-        public int? Sequence { get; set; }
+		/// <summary>
+		/// Gets or sets the sequence.
+		/// </summary>
+		[JsonProperty("s", NullValueHandling = NullValueHandling.Ignore)]
+		public int? Sequence { get; set; }
 
-        /// <summary>
-        /// Gets or sets the event name.
-        /// </summary>
-        [JsonProperty("t", NullValueHandling = NullValueHandling.Ignore)]
-        public string EventName { get; set; }
-    }
+		/// <summary>
+		/// Gets or sets the event name.
+		/// </summary>
+		[JsonProperty("t", NullValueHandling = NullValueHandling.Ignore)]
+		public string EventName { get; set; }
+	}
 }

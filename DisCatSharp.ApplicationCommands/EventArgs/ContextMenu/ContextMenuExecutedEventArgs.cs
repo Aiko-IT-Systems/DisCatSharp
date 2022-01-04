@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,26 @@
 // SOFTWARE.
 
 using System;
-using DisCatSharp.Common.Utilities;
+
 using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.ApplicationCommands.EventArgs
 {
-    /// <summary>
-    /// Represents the arguments for a <see cref="ApplicationCommandsExtension.ContextMenuExecuted"/> event
-    /// </summary>
-    public sealed class ContextMenuExecutedEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// The context of the command.
-        /// </summary>
-        public ContextMenuContext Context { get; internal set; }
+	/// <summary>
+	/// Represents the arguments for a <see cref="ApplicationCommandsExtension.ContextMenuExecuted"/> event
+	/// </summary>
+	public sealed class ContextMenuExecutedEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// The context of the command.
+		/// </summary>
+		public ContextMenuContext Context { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ContextMenuExecutedEventArgs"/> class.
-        /// </summary>
-        /// <param name="provider">The provider.</param>
-        public ContextMenuExecutedEventArgs(IServiceProvider provider) : base(provider)
-        { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ContextMenuExecutedEventArgs"/> class.
+		/// </summary>
+		/// <param name="provider">The provider.</param>
+		public ContextMenuExecutedEventArgs(IServiceProvider provider) : base(provider)
+		{ }
+	}
 }
