@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,49 +21,51 @@
 // SOFTWARE.
 
 using System;
+
 using DisCatSharp.Net;
+
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.Exceptions
 {
-    /// <summary>
-    /// Represents an exception thrown when Discord returns an Internal Server Error.
-    /// </summary>
-    public class ServerErrorException : Exception
-    {
-        /// <summary>
-        /// Gets the request that caused the exception.
-        /// </summary>
-        public BaseRestRequest WebRequest { get; internal set; }
+	/// <summary>
+	/// Represents an exception thrown when Discord returns an Internal Server Error.
+	/// </summary>
+	public class ServerErrorException : Exception
+	{
+		/// <summary>
+		/// Gets the request that caused the exception.
+		/// </summary>
+		public BaseRestRequest WebRequest { get; internal set; }
 
-        /// <summary>
-        /// Gets the response to the request.
-        /// </summary>
-        public RestResponse WebResponse { get; internal set; }
+		/// <summary>
+		/// Gets the response to the request.
+		/// </summary>
+		public RestResponse WebResponse { get; internal set; }
 
-        /// <summary>
-        /// Gets the JSON received.
-        /// </summary>
-        public string JsonMessage { get; internal set; }
+		/// <summary>
+		/// Gets the JSON received.
+		/// </summary>
+		public string JsonMessage { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DisCatSharp.Exceptions.ServerErrorException"/> class.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="response">The response.</param>
-        internal ServerErrorException(BaseRestRequest request, RestResponse response) : base("Internal Server Error: " + response.ResponseCode)
-        {
-            this.WebRequest = request;
-            this.WebResponse = response;
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DisCatSharp.Exceptions.ServerErrorException"/> class.
+		/// </summary>
+		/// <param name="request">The request.</param>
+		/// <param name="response">The response.</param>
+		internal ServerErrorException(BaseRestRequest request, RestResponse response) : base("Internal Server Error: " + response.ResponseCode)
+		{
+			this.WebRequest = request;
+			this.WebResponse = response;
 
-            try
-            {
-                var j = JObject.Parse(response.Response);
+			try
+			{
+				var j = JObject.Parse(response.Response);
 
-                if (j["message"] != null)
-                    this.JsonMessage = j["message"].ToString();
-            }
-            catch (Exception) { }
-        }
-    }
+				if (j["message"] != null)
+					this.JsonMessage = j["message"].ToString();
+			}
+			catch (Exception) { }
+		}
+	}
 }

@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,10 +24,10 @@ using System;
 
 namespace DisCatSharp.CommandsNext.Attributes
 {
-    /// <summary>
-    /// Indicates that the command argument takes the rest of the input without parsing.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-    public class RemainingTextAttribute : Attribute
-    { }
+	/// <summary>
+	/// Indicates that the command argument takes the rest of the input without parsing.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Parameter)]
+	public class RemainingTextAttribute : Attribute
+	{ }
 }

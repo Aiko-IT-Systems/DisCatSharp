@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,44 +24,44 @@ using System;
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents a system channel flags extension.
-    /// </summary>
-    public static class SystemChannelFlagsExtension
-    {
-        /// <summary>
-        /// Calculates whether these system channel flags contain a specific flag.
-        /// </summary>
-        /// <param name="baseFlags">The existing flags.</param>
-        /// <param name="flag">The flag to search for.</param>
-        /// <returns></returns>
-        public static bool HasSystemChannelFlag(this SystemChannelFlags baseFlags, SystemChannelFlags flag) => (baseFlags & flag) == flag;
-    }
+	/// <summary>
+	/// Represents a system channel flags extension.
+	/// </summary>
+	public static class SystemChannelFlagsExtension
+	{
+		/// <summary>
+		/// Calculates whether these system channel flags contain a specific flag.
+		/// </summary>
+		/// <param name="baseFlags">The existing flags.</param>
+		/// <param name="flag">The flag to search for.</param>
+		/// <returns></returns>
+		public static bool HasSystemChannelFlag(this SystemChannelFlags baseFlags, SystemChannelFlags flag) => (baseFlags & flag) == flag;
+	}
 
-    /// <summary>
-    /// Represents settings for a guild's system channel.
-    /// </summary>
-    [Flags]
-    public enum SystemChannelFlags
-    {
-        /// <summary>
-        /// Member join messages are disabled.
-        /// </summary>
-        SuppressJoinNotifications = 1 << 0,
+	/// <summary>
+	/// Represents settings for a guild's system channel.
+	/// </summary>
+	[Flags]
+	public enum SystemChannelFlags
+	{
+		/// <summary>
+		/// Member join messages are disabled.
+		/// </summary>
+		SuppressJoinNotifications = 1 << 0,
 
-        /// <summary>
-        /// Server boost messages are disabled.
-        /// </summary>
-        SuppressPremiumSubscriptions = 1 << 1,
+		/// <summary>
+		/// Server boost messages are disabled.
+		/// </summary>
+		SuppressPremiumSubscriptions = 1 << 1,
 
-        /// <summary>
-        /// Server setup tips are disabled.
-        /// </summary>
-        SuppressGuildReminderNotifications = 1 << 2,
+		/// <summary>
+		/// Server setup tips are disabled.
+		/// </summary>
+		SuppressGuildReminderNotifications = 1 << 2,
 
-        /// <summary>
-        /// Suppress member join sticker replies.
-        /// </summary>
-        SuppressJoinNotificationReplies = 1 << 3
-    }
+		/// <summary>
+		/// Suppress member join sticker replies.
+		/// </summary>
+		SuppressJoinNotificationReplies = 1 << 3
+	}
 }

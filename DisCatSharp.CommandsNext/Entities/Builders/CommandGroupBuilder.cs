@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,78 +23,80 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+
 using DisCatSharp.CommandsNext.Entities;
 
 namespace DisCatSharp.CommandsNext.Builders
 {
-    /// <summary>
-    /// Represents an interface to build a command group.
-    /// </summary>
-    public sealed class CommandGroupBuilder : CommandBuilder
-    {
-        /// <summary>
-        /// Gets the list of child commands registered for this group.
-        /// </summary>
-        public IReadOnlyList<CommandBuilder> Children { get; }
-        /// <summary>
-        /// Gets the children list.
-        /// </summary>
-        private List<CommandBuilder> ChildrenList { get; }
+	/// <summary>
+	/// Represents an interface to build a command group.
+	/// </summary>
+	public sealed class CommandGroupBuilder : CommandBuilder
+	{
+		/// <summary>
+		/// Gets the list of child commands registered for this group.
+		/// </summary>
+		public IReadOnlyList<CommandBuilder> Children { get; }
 
-        /// <summary>
-        /// Creates a new module-less command group builder.
-        /// </summary>
-        public CommandGroupBuilder()
-            : this(null)
-        { }
+		/// <summary>
+		/// Gets the children list.
+		/// </summary>
+		private readonly List<CommandBuilder> _childrenList;
 
-        /// <summary>
-        /// Creates a new command group builder.
-        /// </summary>
-        /// <param name="module">Module on which this group is to be defined.</param>
-        public CommandGroupBuilder(ICommandModule module)
-            : base(module)
-        {
-            this.ChildrenList = new List<CommandBuilder>();
-            this.Children = new ReadOnlyCollection<CommandBuilder>(this.ChildrenList);
-        }
+		/// <summary>
+		/// Creates a new module-less command group builder.
+		/// </summary>
+		public CommandGroupBuilder()
+			: this(null)
+		{ }
 
-        /// <summary>
-        /// Adds a command to the collection of child commands for this group.
-        /// </summary>
-        /// <param name="child">Command to add to the collection of child commands for this group.</param>
-        /// <returns>This builder.</returns>
-        public CommandGroupBuilder WithChild(CommandBuilder child)
-        {
-            this.ChildrenList.Add(child);
-            return this;
-        }
+		/// <summary>
+		/// Creates a new command group builder.
+		/// </summary>
+		/// <param name="module">Module on which this group is to be defined.</param>
+		public CommandGroupBuilder(ICommandModule module)
+			: base(module)
+		{
+			this._childrenList = new List<CommandBuilder>();
+			this.Children = new ReadOnlyCollection<CommandBuilder>(this._childrenList);
+		}
 
-        /// <summary>
-        /// Builds the command group.
-        /// </summary>
-        /// <param name="parent">The parent command group.</param>
-        internal override Command Build(CommandGroup parent)
-        {
-            var cmd = new CommandGroup
-            {
-                Name = this.Name,
-                Description = this.Description,
-                Aliases = this.Aliases,
-                ExecutionChecks = this.ExecutionChecks,
-                IsHidden = this.IsHidden,
-                Parent = parent,
-                Overloads = new ReadOnlyCollection<CommandOverload>(this.Overloads.Select(xo => xo.Build()).ToList()),
-                Module = this.Module,
-                CustomAttributes = this.CustomAttributes
-            };
+		/// <summary>
+		/// Adds a command to the collection of child commands for this group.
+		/// </summary>
+		/// <param name="child">Command to add to the collection of child commands for this group.</param>
+		/// <returns>This builder.</returns>
+		public CommandGroupBuilder WithChild(CommandBuilder child)
+		{
+			this._childrenList.Add(child);
+			return this;
+		}
 
-            var cs = new List<Command>();
-            foreach (var xc in this.Children)
-                cs.Add(xc.Build(cmd));
+		/// <summary>
+		/// Builds the command group.
+		/// </summary>
+		/// <param name="parent">The parent command group.</param>
+		internal override Command Build(CommandGroup parent)
+		{
+			var cmd = new CommandGroup
+			{
+				Name = this.Name,
+				Description = this.Description,
+				Aliases = this.Aliases,
+				ExecutionChecks = this.ExecutionChecks,
+				IsHidden = this.IsHidden,
+				Parent = parent,
+				Overloads = new ReadOnlyCollection<CommandOverload>(this.Overloads.Select(xo => xo.Build()).ToList()),
+				Module = this.Module,
+				CustomAttributes = this.CustomAttributes
+			};
 
-            cmd.Children = new ReadOnlyCollection<Command>(cs);
-            return cmd;
-        }
-    }
+			var cs = new List<Command>();
+			foreach (var xc in this.Children)
+				cs.Add(xc.Build(cmd));
+
+			cmd.Children = new ReadOnlyCollection<Command>(cs);
+			return cmd;
+		}
+	}
 }

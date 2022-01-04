@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,52 +21,53 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+
 using DisCatSharp.CommandsNext.Entities;
 
 namespace DisCatSharp.CommandsNext.Converters
 {
-    /// <summary>
-    /// Represents a base class for all default help formatters.
-    /// </summary>
-    public abstract class BaseHelpFormatter
-    {
-        /// <summary>
-        /// Gets the context in which this formatter is being invoked.
-        /// </summary>
-        protected CommandContext Context { get; }
+	/// <summary>
+	/// Represents a base class for all default help formatters.
+	/// </summary>
+	public abstract class BaseHelpFormatter
+	{
+		/// <summary>
+		/// Gets the context in which this formatter is being invoked.
+		/// </summary>
+		protected CommandContext Context { get; }
 
-        /// <summary>
-        /// Gets the CommandsNext extension which constructed this help formatter.
-        /// </summary>
-        protected CommandsNextExtension CommandsNext => this.Context.CommandsNext;
+		/// <summary>
+		/// Gets the CommandsNext extension which constructed this help formatter.
+		/// </summary>
+		protected CommandsNextExtension CommandsNext => this.Context.CommandsNext;
 
-        /// <summary>
-        /// Creates a new help formatter for specified CommandsNext extension instance.
-        /// </summary>
-        /// <param name="ctx">Context in which this formatter is being invoked.</param>
-        public BaseHelpFormatter(CommandContext ctx)
-        {
-            this.Context = ctx;
-        }
+		/// <summary>
+		/// Creates a new help formatter for specified CommandsNext extension instance.
+		/// </summary>
+		/// <param name="ctx">Context in which this formatter is being invoked.</param>
+		public BaseHelpFormatter(CommandContext ctx)
+		{
+			this.Context = ctx;
+		}
 
-        /// <summary>
-        /// Sets the command this help message will be for.
-        /// </summary>
-        /// <param name="command">Command for which the help message is being produced.</param>
-        /// <returns>This help formatter.</returns>
-        public abstract BaseHelpFormatter WithCommand(Command command);
+		/// <summary>
+		/// Sets the command this help message will be for.
+		/// </summary>
+		/// <param name="command">Command for which the help message is being produced.</param>
+		/// <returns>This help formatter.</returns>
+		public abstract BaseHelpFormatter WithCommand(Command command);
 
-        /// <summary>
-        /// Sets the subcommands for this command, if applicable. This method will be called with filtered data.
-        /// </summary>
-        /// <param name="subcommands">Subcommands for this command group.</param>
-        /// <returns>This help formatter.</returns>
-        public abstract BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands);
+		/// <summary>
+		/// Sets the subcommands for this command, if applicable. This method will be called with filtered data.
+		/// </summary>
+		/// <param name="subcommands">Subcommands for this command group.</param>
+		/// <returns>This help formatter.</returns>
+		public abstract BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands);
 
-        /// <summary>
-        /// Constructs the help message.
-        /// </summary>
-        /// <returns>Data for the help message.</returns>
-        public abstract CommandHelpMessage Build();
-    }
+		/// <summary>
+		/// Constructs the help message.
+		/// </summary>
+		/// <returns>Data for the help message.</returns>
+		public abstract CommandHelpMessage Build();
+	}
 }

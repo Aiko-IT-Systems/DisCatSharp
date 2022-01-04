@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,83 +21,84 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions
 {
-    /// <summary>
-    /// The transport team.
-    /// </summary>
-    internal sealed class TransportTeam
-    {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        [JsonProperty("id")]
-        public ulong Id { get; set; }
+	/// <summary>
+	/// The transport team.
+	/// </summary>
+	internal sealed class TransportTeam
+	{
+		/// <summary>
+		/// Gets or sets the id.
+		/// </summary>
+		[JsonProperty("id")]
+		public ulong Id { get; set; }
 
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        [JsonProperty("name", NullValueHandling = NullValueHandling.Include)]
-        public string Name { get; set; }
+		/// <summary>
+		/// Gets or sets the name.
+		/// </summary>
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Include)]
+		public string Name { get; set; }
 
-        /// <summary>
-        /// Gets or sets the icon hash.
-        /// </summary>
-        [JsonProperty("icon", NullValueHandling = NullValueHandling.Include)]
-        public string IconHash { get; set; }
+		/// <summary>
+		/// Gets or sets the icon hash.
+		/// </summary>
+		[JsonProperty("icon", NullValueHandling = NullValueHandling.Include)]
+		public string IconHash { get; set; }
 
-        /// <summary>
-        /// Gets or sets the owner id.
-        /// </summary>
-        [JsonProperty("owner_user_id")]
-        public ulong OwnerId { get; set; }
+		/// <summary>
+		/// Gets or sets the owner id.
+		/// </summary>
+		[JsonProperty("owner_user_id")]
+		public ulong OwnerId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the members.
-        /// </summary>
-        [JsonProperty("members", NullValueHandling = NullValueHandling.Include)]
-        public IEnumerable<TransportTeamMember> Members { get; set; }
+		/// <summary>
+		/// Gets or sets the members.
+		/// </summary>
+		[JsonProperty("members", NullValueHandling = NullValueHandling.Include)]
+		public IEnumerable<TransportTeamMember> Members { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TransportTeam"/> class.
-        /// </summary>
-        internal TransportTeam() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TransportTeam"/> class.
+		/// </summary>
+		internal TransportTeam() { }
+	}
 
-    /// <summary>
-    /// The transport team member.
-    /// </summary>
-    internal sealed class TransportTeamMember
-    {
-        /// <summary>
-        /// Gets or sets the membership state.
-        /// </summary>
-        [JsonProperty("membership_state")]
-        public int MembershipState { get; set; }
+	/// <summary>
+	/// The transport team member.
+	/// </summary>
+	internal sealed class TransportTeamMember
+	{
+		/// <summary>
+		/// Gets or sets the membership state.
+		/// </summary>
+		[JsonProperty("membership_state")]
+		public int MembershipState { get; set; }
 
-        /// <summary>
-        /// Gets or sets the permissions.
-        /// </summary>
-        [JsonProperty("permissions", NullValueHandling = NullValueHandling.Include)]
-        public IEnumerable<string> Permissions { get; set; }
+		/// <summary>
+		/// Gets or sets the permissions.
+		/// </summary>
+		[JsonProperty("permissions", NullValueHandling = NullValueHandling.Include)]
+		public IEnumerable<string> Permissions { get; set; }
 
-        /// <summary>
-        /// Gets or sets the team id.
-        /// </summary>
-        [JsonProperty("team_id")]
-        public ulong TeamId { get; set; }
+		/// <summary>
+		/// Gets or sets the team id.
+		/// </summary>
+		[JsonProperty("team_id")]
+		public ulong TeamId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the user.
-        /// </summary>
-        [JsonProperty("user", NullValueHandling = NullValueHandling.Include)]
-        public TransportUser User { get; set; }
+		/// <summary>
+		/// Gets or sets the user.
+		/// </summary>
+		[JsonProperty("user", NullValueHandling = NullValueHandling.Include)]
+		public TransportUser User { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TransportTeamMember"/> class.
-        /// </summary>
-        internal TransportTeamMember() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TransportTeamMember"/> class.
+		/// </summary>
+		internal TransportTeamMember() { }
+	}
 }

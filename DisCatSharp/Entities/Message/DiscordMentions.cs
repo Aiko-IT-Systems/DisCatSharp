@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,127 +23,121 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Handles mentionables
-    /// </summary>
-    internal class DiscordMentions
-    {
-        //https://discord.com/developers/docs/resources/channel#allowed-mentions-object
+	/// <summary>
+	/// Handles mentionables
+	/// </summary>
+	internal class DiscordMentions
+	{
+		/// <summary>
+		/// Parse users.
+		/// </summary>
+		private const string PARSE_USERS = "users";
 
-        /// <summary>
-        /// Parse users.
-        /// </summary>
-        private const string ParseUsers = "users";
-        /// <summary>
-        /// Parse roles.
-        /// </summary>
-        private const string ParseRoles = "roles";
-        /// <summary>
-        /// Parse everyone.
-        /// </summary>
-        private const string ParseEveryone = "everyone";
+		/// <summary>
+		/// Parse roles.
+		/// </summary>
+		private const string PARSE_ROLES = "roles";
 
-        /// <summary>
-        /// Collection roles to serialize
-        /// </summary>
-        [JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-        public IEnumerable<ulong> Roles { get; }
+		/// <summary>
+		/// Parse everyone.
+		/// </summary>
+		private const string PARSE_EVERYONE = "everyone";
 
-        /// <summary>
-        /// Collection of users to serialize
-        /// </summary>
-        [JsonProperty("users", NullValueHandling = NullValueHandling.Ignore)]
-        public IEnumerable<ulong> Users { get; }
+		/// <summary>
+		/// Collection roles to serialize
+		/// </summary>
+		[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
+		public IEnumerable<ulong> Roles { get; }
 
-        /// <summary>
-        /// The values to be parsed
-        /// </summary>
-        [JsonProperty("parse", NullValueHandling = NullValueHandling.Ignore)]
-        public IEnumerable<string> Parse { get; }
+		/// <summary>
+		/// Collection of users to serialize
+		/// </summary>
+		[JsonProperty("users", NullValueHandling = NullValueHandling.Ignore)]
+		public IEnumerable<ulong> Users { get; }
 
-        // WHY IS THERE NO DOCSTRING HERE
-        /// <summary>
-        /// For replies, whether to mention the author of the message being replied to.
-        /// </summary>
-        [JsonProperty("replied_user", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? RepliedUser { get; }
+		/// <summary>
+		/// The values to be parsed
+		/// </summary>
+		[JsonProperty("parse", NullValueHandling = NullValueHandling.Ignore)]
+		public IEnumerable<string> Parse { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordMentions"/> class.
-        /// </summary>
-        /// <param name="mentions">The mentions.</param>
-        /// <param name="mention">If true, mention.</param>
-        /// <param name="repliedUser">If true, replied user.</param>
-        internal DiscordMentions(IEnumerable<IMention> mentions, bool mention = false, bool repliedUser = false)
-        {
-            //Null check just to be safe
-            if (mentions == null) return;
+		/// <summary>
+		/// For replies, whether to mention the author of the message being replied to.
+		/// </summary>
+		[JsonProperty("replied_user", NullValueHandling = NullValueHandling.Ignore)]
+		public bool? RepliedUser { get; }
 
-            //If we have no item in our mentions, its likely to be a empty array.
-            // This is a special case were we want parse to be a empty array
-            // Doing this allows for "no parsing"
-            if (!mentions.Any())
-            {
-                this.Parse = Array.Empty<string>();
-                this.RepliedUser = repliedUser;
-                return;
-            }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordMentions"/> class.
+		/// </summary>
+		/// <param name="mentions">The mentions.</param>
+		/// <param name="mention">If true, mention.</param>
+		/// <param name="repliedUser">If true, replied user.</param>
+		internal DiscordMentions(IEnumerable<IMention> mentions, bool mention = false, bool repliedUser = false)
+		{
+			if (mentions == null)
+				return;
 
-            if (mention)
-            {
-                this.RepliedUser = repliedUser;
-            }
+			if (!mentions.Any())
+			{
+				this.Parse = Array.Empty<string>();
+				this.RepliedUser = repliedUser;
+				return;
+			}
 
+			if (mention)
+			{
+				this.RepliedUser = repliedUser;
+			}
 
-            //Prepare a list of allowed IDs. We will be adding to these IDs.
-            var roles = new HashSet<ulong>();
-            var users = new HashSet<ulong>();
-            var parse = new HashSet<string>();
+			var roles = new HashSet<ulong>();
+			var users = new HashSet<ulong>();
+			var parse = new HashSet<string>();
 
-            foreach (var m in mentions)
-            {
-                switch (m)
-                {
-                    default: throw new NotSupportedException("Type not supported in mentions.");
-                    case UserMention u:
-                        if (u.Id.HasValue)
-                            users.Add(u.Id.Value);      //We have a user ID so we will add them to the implicit
-                        else
-                            parse.Add(ParseUsers);      //We have no ID, so let all users through
+			foreach (var m in mentions)
+			{
+				switch (m)
+				{
+					default:
+						throw new NotSupportedException("Type not supported in mentions.");
+					case UserMention u:
+						if (u.Id.HasValue)
+							users.Add(u.Id.Value);
+						else
+							parse.Add(PARSE_USERS);
 
-                        break;
+						break;
 
-                    case RoleMention r:
-                        if (r.Id.HasValue)
-                            roles.Add(r.Id.Value);      //We have a role ID so we will add them to the implicit
-                        else
-                            parse.Add(ParseRoles);      //We have role ID, so let all users through
-                        break;
+					case RoleMention r:
+						if (r.Id.HasValue)
+							roles.Add(r.Id.Value);
+						else
+							parse.Add(PARSE_ROLES);
+						break;
 
-                    case EveryoneMention e:
-                        parse.Add(ParseEveryone);
-                        break;
+					case EveryoneMention e:
+						parse.Add(PARSE_EVERYONE);
+						break;
 
-                    case RepliedUserMention _:
-                        this.RepliedUser = repliedUser;
-                        break;
-                }
-            }
+					case RepliedUserMention _:
+						this.RepliedUser = repliedUser;
+						break;
+				}
+			}
 
-            //Check the validity of each item. If it isn't in the explicit allow list and they have items, then add them.
-            if (!parse.Contains(ParseUsers) && users.Count > 0)
-                this.Users = users;
+			if (!parse.Contains(PARSE_USERS) && users.Count > 0)
+				this.Users = users;
 
-            if (!parse.Contains(ParseRoles) && roles.Count > 0)
-                this.Roles = roles;
+			if (!parse.Contains(PARSE_ROLES) && roles.Count > 0)
+				this.Roles = roles;
 
-            //If we have a empty parse aray, we don't want to add it.
-            if (parse.Count > 0)
-                this.Parse = parse;
-        }
-    }
+			if (parse.Count > 0)
+				this.Parse = parse;
+		}
+	}
 }

@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,34 +25,34 @@ using System.Collections.Generic;
 
 namespace DisCatSharp.CommandsNext
 {
-    /// <summary>
-    /// Represents a specific overload of a command.
-    /// </summary>
-    public sealed class CommandOverload
-    {
-        /// <summary>
-        /// Gets this command overload's arguments.
-        /// </summary>
-        public IReadOnlyList<CommandArgument> Arguments { get; internal set; }
+	/// <summary>
+	/// Represents a specific overload of a command.
+	/// </summary>
+	public sealed class CommandOverload
+	{
+		/// <summary>
+		/// Gets this command overload's arguments.
+		/// </summary>
+		public IReadOnlyList<CommandArgument> Arguments { get; internal set; }
 
-        /// <summary>
-        /// Gets this command overload's priority.
-        /// </summary>
-        public int Priority { get; internal set; }
+		/// <summary>
+		/// Gets this command overload's priority.
+		/// </summary>
+		public int Priority { get; internal set; }
 
-        /// <summary>
-        /// Gets this command overload's delegate.
-        /// </summary>
-        internal Delegate Callable { get; set; }
+		/// <summary>
+		/// Gets this command overload's delegate.
+		/// </summary>
+		internal Delegate Callable { get; set; }
 
-        /// <summary>
-        /// Gets or sets the invocation target.
-        /// </summary>
-        internal object InvocationTarget { get; set; }
+		/// <summary>
+		/// Gets or sets the invocation target.
+		/// </summary>
+		internal object InvocationTarget { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandOverload"/> class.
-        /// </summary>
-        internal CommandOverload() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CommandOverload"/> class.
+		/// </summary>
+		internal CommandOverload() { }
+	}
 }

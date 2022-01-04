@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,29 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Indicates the type of MessageActivity for the Rich Presence.
-    /// </summary>
-    public enum MessageActivityType
-    {
-        /// <summary>
-        /// Invites the user to join.
-        /// </summary>
-        Join = 1,
+	/// <summary>
+	/// Indicates the type of MessageActivity for the Rich Presence.
+	/// </summary>
+	public enum MessageActivityType
+	{
+		/// <summary>
+		/// Invites the user to join.
+		/// </summary>
+		Join = 1,
 
-        /// <summary>
-        /// Invites the user to spectate.
-        /// </summary>
-        Spectate = 2,
+		/// <summary>
+		/// Invites the user to spectate.
+		/// </summary>
+		Spectate = 2,
 
-        /// <summary>
-        /// Invites the user to listen.
-        /// </summary>
-        Listen = 3,
+		/// <summary>
+		/// Invites the user to listen.
+		/// </summary>
+		Listen = 3,
 
-        /// <summary>
-        /// Allows the user to request to join.
-        /// </summary>
-        JoinRequest = 4
-    }
+		/// <summary>
+		/// Allows the user to request to join.
+		/// </summary>
+		JoinRequest = 4
+	}
 }

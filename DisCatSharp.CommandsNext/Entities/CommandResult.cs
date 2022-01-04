@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,24 +24,24 @@ using System;
 
 namespace DisCatSharp.CommandsNext
 {
-    /// <summary>
-    /// Represents a command's execution result.
-    /// </summary>
-    public struct CommandResult
-    {
-        /// <summary>
-        /// Gets whether the command execution succeeded.
-        /// </summary>
-        public bool IsSuccessful { get; internal set; }
+	/// <summary>
+	/// Represents a command's execution result.
+	/// </summary>
+	public struct CommandResult
+	{
+		/// <summary>
+		/// Gets whether the command execution succeeded.
+		/// </summary>
+		public bool IsSuccessful { get; internal set; }
 
-        /// <summary>
-        /// Gets the exception (if any) that occurred when executing the command.
-        /// </summary>
-        public Exception Exception { get; internal set; }
+		/// <summary>
+		/// Gets the exception (if any) that occurred when executing the command.
+		/// </summary>
+		public Exception Exception { get; internal set; }
 
-        /// <summary>
-        /// Gets the context in which the command was executed.
-        /// </summary>
-        public CommandContext Context { get; internal set; }
-    }
+		/// <summary>
+		/// Gets the context in which the command was executed.
+		/// </summary>
+		public CommandContext Context { get; internal set; }
+	}
 }

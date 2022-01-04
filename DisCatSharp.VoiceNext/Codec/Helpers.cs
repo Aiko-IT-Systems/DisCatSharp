@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,29 +26,29 @@ using System.Runtime.InteropServices;
 
 namespace DisCatSharp.VoiceNext.Codec
 {
-    /// <summary>
-    /// The helpers.
-    /// </summary>
-    internal static class Helpers
-    {
-        /// <summary>
-        /// Fills the buffer with 0.
-        /// </summary>
-        /// <param name="buff">The buffer.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ZeroFill(Span<byte> buff)
-        {
-            var zero = 0;
-            var i = 0;
-            for (; i < buff.Length / 4; i++)
-                MemoryMarshal.Write(buff, ref zero);
+	/// <summary>
+	/// The helpers.
+	/// </summary>
+	internal static class Helpers
+	{
+		/// <summary>
+		/// Fills the buffer with 0.
+		/// </summary>
+		/// <param name="buff">The buffer.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void ZeroFill(Span<byte> buff)
+		{
+			var zero = 0;
+			var i = 0;
+			for (; i < buff.Length / 4; i++)
+				MemoryMarshal.Write(buff, ref zero);
 
-            var remainder = buff.Length % 4;
-            if (remainder == 0)
-                return;
+			var remainder = buff.Length % 4;
+			if (remainder == 0)
+				return;
 
-            for (; i < buff.Length; i++)
-                buff[i] = 0;
-        }
-    }
+			for (; i < buff.Length; i++)
+				buff[i] = 0;
+		}
+	}
 }

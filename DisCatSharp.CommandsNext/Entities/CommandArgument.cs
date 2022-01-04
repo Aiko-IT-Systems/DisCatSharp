@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,49 +25,49 @@ using System.Collections.Generic;
 
 namespace DisCatSharp.CommandsNext
 {
-    /// <summary>
-    /// Represents a command argument.
-    /// </summary>
-    public sealed class CommandArgument
-    {
-        /// <summary>
-        /// Gets this argument's name.
-        /// </summary>
-        public string Name { get; internal set; }
+	/// <summary>
+	/// Represents a command argument.
+	/// </summary>
+	public sealed class CommandArgument
+	{
+		/// <summary>
+		/// Gets this argument's name.
+		/// </summary>
+		public string Name { get; internal set; }
 
-        /// <summary>
-        /// Gets this argument's type.
-        /// </summary>
-        public Type Type { get; internal set; }
+		/// <summary>
+		/// Gets this argument's type.
+		/// </summary>
+		public Type Type { get; internal set; }
 
-        /// <summary>
-        /// Gets or sets whether this argument is an array argument.
-        /// </summary>
-        internal bool IsArray { get; set; } = false;
+		/// <summary>
+		/// Gets or sets whether this argument is an array argument.
+		/// </summary>
+		internal bool IsArray { get; set; } = false;
 
-        /// <summary>
-        /// Gets whether this argument is optional.
-        /// </summary>
-        public bool IsOptional { get; internal set; }
+		/// <summary>
+		/// Gets whether this argument is optional.
+		/// </summary>
+		public bool IsOptional { get; internal set; }
 
-        /// <summary>
-        /// Gets this argument's default value.
-        /// </summary>
-        public object DefaultValue { get; internal set; }
+		/// <summary>
+		/// Gets this argument's default value.
+		/// </summary>
+		public object DefaultValue { get; internal set; }
 
-        /// <summary>
-        /// Gets whether this argument catches all remaining arguments.
-        /// </summary>
-        public bool IsCatchAll { get; internal set; }
+		/// <summary>
+		/// Gets whether this argument catches all remaining arguments.
+		/// </summary>
+		public bool IsCatchAll { get; internal set; }
 
-        /// <summary>
-        /// Gets this argument's description.
-        /// </summary>
-        public string Description { get; internal set; }
+		/// <summary>
+		/// Gets this argument's description.
+		/// </summary>
+		public string Description { get; internal set; }
 
-        /// <summary>
-        /// Gets the custom attributes attached to this argument.
-        /// </summary>
-        public IReadOnlyCollection<Attribute> CustomAttributes { get; internal set; }
-    }
+		/// <summary>
+		/// Gets the custom attributes attached to this argument.
+		/// </summary>
+		public IReadOnlyCollection<Attribute> CustomAttributes { get; internal set; }
+	}
 }

@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,24 +24,26 @@ using System;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.UnknownEvent"/> event.
-    /// </summary>
-    public class UnknownEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the event's name.
-        /// </summary>
-        public string EventName { get; internal set; }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.UnknownEvent"/> event.
+	/// </summary>
+	public class UnknownEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the event's name.
+		/// </summary>
+		public string EventName { get; internal set; }
 
-        /// <summary>
-        /// Gets the event's data.
-        /// </summary>
-        public string Json { get; internal set; }
+		/// <summary>
+		/// Gets the event's data.
+		/// </summary>
+		public string Json { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownEventArgs"/> class.
-        /// </summary>
-        internal UnknownEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="UnknownEventArgs"/> class.
+		/// </summary>
+		internal UnknownEventArgs(IServiceProvider provider)
+			: base(provider)
+		{ }
+	}
 }

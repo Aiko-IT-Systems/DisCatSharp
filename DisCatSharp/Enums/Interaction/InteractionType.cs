@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,34 +22,34 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents the type of interaction used.
-    /// </summary>
-    public enum InteractionType
-    {
-        /// <summary>
-        /// Sent when registering an HTTP interaction endpoint with Discord. Must be replied to with a Pong.
-        /// </summary>
-        Ping = 1,
+	/// <summary>
+	/// Represents the type of interaction used.
+	/// </summary>
+	public enum InteractionType
+	{
+		/// <summary>
+		/// Sent when registering an HTTP interaction endpoint with Discord. Must be replied to with a Pong.
+		/// </summary>
+		Ping = 1,
 
-        /// <summary>
-        /// An application command.
-        /// </summary>
-        ApplicationCommand = 2,
+		/// <summary>
+		/// An application command.
+		/// </summary>
+		ApplicationCommand = 2,
 
-        /// <summary>
-        /// A component.
-        /// </summary>
-        Component = 3,
+		/// <summary>
+		/// A component.
+		/// </summary>
+		Component = 3,
 
-        /// <summary>
-        /// An autocomplete field.
-        /// </summary>
-        AutoComplete = 4,
+		/// <summary>
+		/// An autocomplete field.
+		/// </summary>
+		AutoComplete = 4,
 
-        /// <summary>
-        /// A modal component.
-        /// </summary>
-        ModalSubmit = 5
-    }
+		/// <summary>
+		/// A modal component.
+		/// </summary>
+		ModalSubmit = 5
+	}
 }

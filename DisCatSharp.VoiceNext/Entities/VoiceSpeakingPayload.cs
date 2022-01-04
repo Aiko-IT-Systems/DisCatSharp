@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,33 +24,33 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.VoiceNext.Entities
 {
-    /// <summary>
-    /// The voice speaking payload.
-    /// </summary>
-    internal sealed class VoiceSpeakingPayload
-    {
-        /// <summary>
-        /// Gets or sets a value indicating whether speaking.
-        /// </summary>
-        [JsonProperty("speaking")]
-        public bool Speaking { get; set; }
+	/// <summary>
+	/// The voice speaking payload.
+	/// </summary>
+	internal sealed class VoiceSpeakingPayload
+	{
+		/// <summary>
+		/// Gets or sets a value indicating whether speaking.
+		/// </summary>
+		[JsonProperty("speaking")]
+		public bool Speaking { get; set; }
 
-        /// <summary>
-        /// Gets or sets the delay.
-        /// </summary>
-        [JsonProperty("delay", NullValueHandling = NullValueHandling.Ignore)]
-        public int? Delay { get; set; }
+		/// <summary>
+		/// Gets or sets the delay.
+		/// </summary>
+		[JsonProperty("delay", NullValueHandling = NullValueHandling.Ignore)]
+		public int? Delay { get; set; }
 
-        /// <summary>
-        /// Gets or sets the s s r c.
-        /// </summary>
-        [JsonProperty("ssrc", NullValueHandling = NullValueHandling.Ignore)]
-        public uint? SSRC { get; set; }
+		/// <summary>
+		/// Gets or sets the s s r c.
+		/// </summary>
+		[JsonProperty("ssrc", NullValueHandling = NullValueHandling.Ignore)]
+		public uint? Ssrc { get; set; }
 
-        /// <summary>
-        /// Gets or sets the user id.
-        /// </summary>
-        [JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
-        public ulong? UserId { get; set; }
-    }
+		/// <summary>
+		/// Gets or sets the user id.
+		/// </summary>
+		[JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
+		public ulong? UserId { get; set; }
+	}
 }

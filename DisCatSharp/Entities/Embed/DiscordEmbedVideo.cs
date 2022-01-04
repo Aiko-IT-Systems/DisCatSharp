@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,36 +21,38 @@
 // SOFTWARE.
 
 using System;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents a video inside an embed.
-    /// </summary>
-    public sealed class DiscordEmbedVideo
-    {
-        /// <summary>
-        /// Gets the source url of the video.
-        /// </summary>
-        [JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
-        public Uri Url { get; internal set; }
+	/// <summary>
+	/// Represents a video inside an embed.
+	/// </summary>
+	public sealed class DiscordEmbedVideo
+	{
+		/// <summary>
+		/// Gets the source url of the video.
+		/// </summary>
+		[JsonProperty("url", NullValueHandling = NullValueHandling.Ignore)]
+		public Uri Url { get; internal set; }
 
-        /// <summary>
-        /// Gets the height of the video.
-        /// </summary>
-        [JsonProperty("height", NullValueHandling = NullValueHandling.Ignore)]
-        public int Height { get; internal set; }
+		/// <summary>
+		/// Gets the height of the video.
+		/// </summary>
+		[JsonProperty("height", NullValueHandling = NullValueHandling.Ignore)]
+		public int Height { get; internal set; }
 
-        /// <summary>
-        /// Gets the width of the video.
-        /// </summary>
-        [JsonProperty("width", NullValueHandling = NullValueHandling.Ignore)]
-        public int Width { get; internal set; }
+		/// <summary>
+		/// Gets the width of the video.
+		/// </summary>
+		[JsonProperty("width", NullValueHandling = NullValueHandling.Ignore)]
+		public int Width { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordEmbedVideo"/> class.
-        /// </summary>
-        internal DiscordEmbedVideo() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordEmbedVideo"/> class.
+		/// </summary>
+		internal DiscordEmbedVideo()
+		{ }
+	}
 }

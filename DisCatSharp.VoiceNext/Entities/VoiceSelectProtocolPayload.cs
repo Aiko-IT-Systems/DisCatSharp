@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +24,21 @@ using Newtonsoft.Json;
 
 namespace DisCatSharp.VoiceNext.Entities
 {
-    /// <summary>
-    /// The voice select protocol payload.
-    /// </summary>
-    internal sealed class VoiceSelectProtocolPayload
-    {
-        /// <summary>
-        /// Gets or sets the protocol.
-        /// </summary>
-        [JsonProperty("protocol")]
-        public string Protocol { get; set; }
+	/// <summary>
+	/// The voice select protocol payload.
+	/// </summary>
+	internal sealed class VoiceSelectProtocolPayload
+	{
+		/// <summary>
+		/// Gets or sets the protocol.
+		/// </summary>
+		[JsonProperty("protocol")]
+		public string Protocol { get; set; }
 
-        /// <summary>
-        /// Gets or sets the data.
-        /// </summary>
-        [JsonProperty("data")]
-        public VoiceSelectProtocolPayloadData Data { get; set; }
-    }
+		/// <summary>
+		/// Gets or sets the data.
+		/// </summary>
+		[JsonProperty("data")]
+		public VoiceSelectProtocolPayloadData Data { get; set; }
+	}
 }

@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,26 +22,27 @@
 
 using System;
 using System.Threading.Tasks;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands.Attributes
 {
-    /// <summary>
-    /// Defines that this application command is only usable within a direct message channel.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class ApplicationCommandRequireDirectMessageAttribute : SlashCheckBaseAttribute
-    {
-        /// <summary>
-        /// Defines that this command is only usable within a direct message channel.
-        /// </summary>
-        public ApplicationCommandRequireDirectMessageAttribute()
-        { }
+	/// <summary>
+	/// Defines that this application command is only usable within a direct message channel.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+	public sealed class ApplicationCommandRequireDirectMessageAttribute : SlashCheckBaseAttribute
+	{
+		/// <summary>
+		/// Defines that this command is only usable within a direct message channel.
+		/// </summary>
+		public ApplicationCommandRequireDirectMessageAttribute()
+		{ }
 
-        /// <summary>
-        /// Runs checks.
-        /// </summary>
-        public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-            => Task.FromResult(ctx.Channel is DiscordDmChannel);
-    }
+		/// <summary>
+		/// Runs checks.
+		/// </summary>
+		public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+			=> Task.FromResult(ctx.Channel is DiscordDmChannel);
+	}
 }

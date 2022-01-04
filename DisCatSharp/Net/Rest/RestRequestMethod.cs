@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,41 +20,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// ReSharper disable InconsistentNaming
 namespace DisCatSharp.Net
 {
-    /// <summary>
-    /// Defines the HTTP method to use for an HTTP request.
-    /// </summary>
-    public enum RestRequestMethod : int
-    {
-        /// <summary>
-        /// Defines that the request is a GET request.
-        /// </summary>
-        GET = 0,
+	/// <summary>
+	/// Defines the HTTP method to use for an HTTP request.
+	/// </summary>
+	public enum RestRequestMethod : int
+	{
+		/// <summary>
+		/// Defines that the request is a GET request.
+		/// </summary>
+		GET = 0,
 
-        /// <summary>
-        /// Defines that the request is a POST request.
-        /// </summary>
-        POST = 1,
+		/// <summary>
+		/// Defines that the request is a POST request.
+		/// </summary>
+		POST = 1,
 
-        /// <summary>
-        /// Defines that the request is a DELETE request.
-        /// </summary>
-        DELETE = 2,
+		/// <summary>
+		/// Defines that the request is a DELETE request.
+		/// </summary>
+		DELETE = 2,
 
-        /// <summary>
-        /// Defines that the request is a PATCH request.
-        /// </summary>
-        PATCH = 3,
+		/// <summary>
+		/// Defines that the request is a PATCH request.
+		/// </summary>
+		PATCH = 3,
 
-        /// <summary>
-        /// Defines that the request is a PUT request.
-        /// </summary>
-        PUT = 4,
+		/// <summary>
+		/// Defines that the request is a PUT request.
+		/// </summary>
+		PUT = 4,
 
-        /// <summary>
-        /// Defines that the request is a HEAD request.
-        /// </summary>
-        HEAD = 5
-    }
+		/// <summary>
+		/// Defines that the request is a HEAD request.
+		/// </summary>
+		HEAD = 5
+	}
 }

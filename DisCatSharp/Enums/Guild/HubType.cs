@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,24 +22,24 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents a guilds hub type.
-    /// </summary>
-    public enum HubType : int
-    {
-        /// <summary>
-        /// Indicates that the hub is a default one.
-        /// </summary>
-        Default = 0,
+	/// <summary>
+	/// Represents a guilds hub type.
+	/// </summary>
+	public enum HubType : int
+	{
+		/// <summary>
+		/// Indicates that the hub is a default one.
+		/// </summary>
+		Default = 0,
 
-        /// <summary>
-        /// Indicates that the hub is a high school.
-        /// </summary>
-        HighSchool = 1,
+		/// <summary>
+		/// Indicates that the hub is a high school.
+		/// </summary>
+		HighSchool = 1,
 
-        /// <summary>
-        /// Indicates that the hub is a college.
-        /// </summary>
-        College = 2
-    }
+		/// <summary>
+		/// Indicates that the hub is a college.
+		/// </summary>
+		College = 2
+	}
 }

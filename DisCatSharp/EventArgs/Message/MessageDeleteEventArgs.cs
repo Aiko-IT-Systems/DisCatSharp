@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,33 +21,34 @@
 // SOFTWARE.
 
 using System;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.MessageDeleted"/> event.
-    /// </summary>
-    public class MessageDeleteEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the message that was deleted.
-        /// </summary>
-        public DiscordMessage Message { get; internal set; }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.MessageDeleted"/> event.
+	/// </summary>
+	public class MessageDeleteEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the message that was deleted.
+		/// </summary>
+		public DiscordMessage Message { get; internal set; }
 
-        /// <summary>
-        /// Gets the channel this message belonged to.
-        /// </summary>
-        public DiscordChannel Channel { get; internal set; }
+		/// <summary>
+		/// Gets the channel this message belonged to.
+		/// </summary>
+		public DiscordChannel Channel { get; internal set; }
 
-        /// <summary>
-        /// Gets the guild this message belonged to.
-        /// </summary>
-        public DiscordGuild Guild { get; internal set; }
+		/// <summary>
+		/// Gets the guild this message belonged to.
+		/// </summary>
+		public DiscordGuild Guild { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MessageDeleteEventArgs"/> class.
-        /// </summary>
-        internal MessageDeleteEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="MessageDeleteEventArgs"/> class.
+		/// </summary>
+		internal MessageDeleteEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

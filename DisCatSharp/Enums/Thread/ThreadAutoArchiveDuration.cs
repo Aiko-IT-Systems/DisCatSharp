@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,29 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents the auto-archive duration for a thread.
-    /// </summary>
-    public enum ThreadAutoArchiveDuration : int
-    {
-        /// <summary>
-        /// Indicates that the thread will be auto archived after one hour.
-        /// </summary>
-        OneHour = 60,
+	/// <summary>
+	/// Represents the auto-archive duration for a thread.
+	/// </summary>
+	public enum ThreadAutoArchiveDuration : int
+	{
+		/// <summary>
+		/// Indicates that the thread will be auto archived after one hour.
+		/// </summary>
+		OneHour = 60,
 
-        /// <summary>
-        /// Indicates that the thread will be auto archived after one day / twentyfour hours.
-        /// </summary>
-        OneDay = 1440,
+		/// <summary>
+		/// Indicates that the thread will be auto archived after one day / twentyfour hours.
+		/// </summary>
+		OneDay = 1440,
 
-        /// <summary>
-        /// Indicates that the thread will be auto archived after three days. Needs boost level 1 for guild.
-        /// </summary>
-        ThreeDays = 4320,
+		/// <summary>
+		/// Indicates that the thread will be auto archived after three days. Needs boost level 1 for guild.
+		/// </summary>
+		ThreeDays = 4320,
 
-        /// <summary>
-        /// Indicates that the thread will be auto archived after a week. Needs boost level 2 for guild.
-        /// </summary>
-        OneWeek = 10080
-    }
+		/// <summary>
+		/// Indicates that the thread will be auto archived after a week. Needs boost level 2 for guild.
+		/// </summary>
+		OneWeek = 10080
+	}
 }

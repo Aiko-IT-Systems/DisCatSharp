@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,49 +21,46 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Marks this parameter as an option for a slash command
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-    public class OptionAttribute : Attribute
-    {
-        /// <summary>
-        /// Gets the name of this option.
-        /// </summary>
-        public string Name;
+	/// <summary>
+	/// Marks this parameter as an option for a slash command
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Parameter)]
+	public class OptionAttribute : Attribute
+	{
+		/// <summary>
+		/// Gets the name of this option.
+		/// </summary>
+		public string Name;
 
-        /// <summary>
-        /// Gets the description of this option.
-        /// </summary>
-        public string Description;
+		/// <summary>
+		/// Gets the description of this option.
+		/// </summary>
+		public string Description;
 
-        /// <summary>
-        /// Whether to autocomplete this option.
-        /// </summary>
-        public bool Autocomplete;
+		/// <summary>
+		/// Whether to autocomplete this option.
+		/// </summary>
+		public bool Autocomplete;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OptionAttribute"/> class.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="description">The description.</param>
-        /// <param name="autocomplete">If true, autocomplete.</param>
-        public OptionAttribute(string name, string description, bool autocomplete = false)
-        {
-            if (name.Length > 32)
-                throw new ArgumentException("Slash command option names cannot go over 32 characters.");
-            else if (description.Length > 100)
-                throw new ArgumentException("Slash command option descriptions cannot go over 100 characters.");
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OptionAttribute"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="description">The description.</param>
+		/// <param name="autocomplete">If true, autocomplete.</param>
+		public OptionAttribute(string name, string description, bool autocomplete = false)
+		{
+			if (name.Length > 32)
+				throw new ArgumentException("Slash command option names cannot go over 32 characters.");
+			else if (description.Length > 100)
+				throw new ArgumentException("Slash command option descriptions cannot go over 100 characters.");
 
-            Name = name.ToLower();
-            Description = description;
-            Autocomplete = autocomplete;
-        }
-    }
+			this.Name = name.ToLower();
+			this.Description = description;
+			this.Autocomplete = autocomplete;
+		}
+	}
 }

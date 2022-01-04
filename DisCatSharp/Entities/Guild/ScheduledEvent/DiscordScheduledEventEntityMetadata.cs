@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,36 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using DisCatSharp.Net.Serialization;
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents an scheduled event.
-    /// </summary>
-    public class DiscordScheduledEventEntityMetadata
-    {
-        /// <summary>
-        /// External location if event type is <see cref="ScheduledEventEntityType.External"/>.
-        /// </summary>
-        [JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
-        public string Location { get; internal set; }
+	/// <summary>
+	/// Represents an scheduled event.
+	/// </summary>
+	public class DiscordScheduledEventEntityMetadata
+	{
+		/// <summary>
+		/// External location if event type is <see cref="ScheduledEventEntityType.External"/>.
+		/// </summary>
+		[JsonProperty("location", NullValueHandling = NullValueHandling.Ignore)]
+		public string Location { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
-        /// </summary>
-        internal DiscordScheduledEventEntityMetadata() { }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
+		/// </summary>
+		internal DiscordScheduledEventEntityMetadata()
+		{ }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
-        /// </summary>
-        /// <param name="location">The location.</param>
-        public DiscordScheduledEventEntityMetadata(string location)
-        {
-            this.Location = location;
-        }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordScheduledEventEntityMetadata"/> class.
+		/// </summary>
+		/// <param name="location">The location.</param>
+		public DiscordScheduledEventEntityMetadata(string location)
+		{
+			this.Location = location;
+		}
+	}
 }

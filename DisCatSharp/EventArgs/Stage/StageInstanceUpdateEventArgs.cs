@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,28 +21,29 @@
 // SOFTWARE.
 
 using System;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.StageInstanceUpdated"/> event.
-    /// </summary>
-    public class StageInstanceUpdateEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the stage instance that was updated.
-        /// </summary>
-        public DiscordStageInstance StageInstance { get; internal set; }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.StageInstanceUpdated"/> event.
+	/// </summary>
+	public class StageInstanceUpdateEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the stage instance that was updated.
+		/// </summary>
+		public DiscordStageInstance StageInstance { get; internal set; }
 
-        /// <summary>
-        /// Gets the guild in which the stage instance was updated.
-        /// </summary>
-        public DiscordGuild Guild { get; internal set; }
+		/// <summary>
+		/// Gets the guild in which the stage instance was updated.
+		/// </summary>
+		public DiscordGuild Guild { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StageInstanceUpdateEventArgs"/> class.
-        /// </summary>
-        internal StageInstanceUpdateEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StageInstanceUpdateEventArgs"/> class.
+		/// </summary>
+		internal StageInstanceUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,38 +21,39 @@
 // SOFTWARE.
 
 using System;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.ThreadUpdated"/> event.
-    /// </summary>
-    public class ThreadUpdateEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the post-update thread.
-        /// </summary>
-        public DiscordThreadChannel ThreadAfter { get; internal set; }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.ThreadUpdated"/> event.
+	/// </summary>
+	public class ThreadUpdateEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the post-update thread.
+		/// </summary>
+		public DiscordThreadChannel ThreadAfter { get; internal set; }
 
-        /// <summary>
-        /// Gets the pre-update thread.
-        /// </summary>
-        public DiscordThreadChannel ThreadBefore { get; internal set; }
+		/// <summary>
+		/// Gets the pre-update thread.
+		/// </summary>
+		public DiscordThreadChannel ThreadBefore { get; internal set; }
 
-        /// <summary>
-        /// Gets the threads parent channel.
-        /// </summary>
-        public DiscordChannel Parent { get; internal set; }
+		/// <summary>
+		/// Gets the threads parent channel.
+		/// </summary>
+		public DiscordChannel Parent { get; internal set; }
 
-        /// <summary>
-        /// Gets the guild in which the thread was updated.
-        /// </summary>
-        public DiscordGuild Guild { get; internal set; }
+		/// <summary>
+		/// Gets the guild in which the thread was updated.
+		/// </summary>
+		public DiscordGuild Guild { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThreadUpdateEventArgs"/> class.
-        /// </summary>
-        internal ThreadUpdateEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ThreadUpdateEventArgs"/> class.
+		/// </summary>
+		internal ThreadUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

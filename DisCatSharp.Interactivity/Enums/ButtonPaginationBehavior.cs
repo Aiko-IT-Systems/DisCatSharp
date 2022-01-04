@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,26 +22,26 @@
 
 namespace DisCatSharp.Interactivity.Enums
 {
-    /// <summary>
-    /// Represents options of how to handle pagination timing out.
-    /// </summary>
-    public enum ButtonPaginationBehavior
-    {
-        /// <summary>
-        /// The buttons should be disabled when pagination times out.
-        /// </summary>
-        Disable,
-        /// <summary>
-        /// The buttons should be left as is when pagination times out.
-        /// </summary>
-        Ignore,
-        /// <summary>
-        /// The entire message should be deleted when pagination times out.
-        /// </summary>
-        DeleteMessage,
-        /// <summary>
-        /// The buttons should be removed entirely when pagination times out.
-        /// </summary>
-        DeleteButtons
-    }
+	/// <summary>
+	/// Represents options of how to handle pagination timing out.
+	/// </summary>
+	public enum ButtonPaginationBehavior
+	{
+		/// <summary>
+		/// The buttons should be disabled when pagination times out.
+		/// </summary>
+		Disable,
+		/// <summary>
+		/// The buttons should be left as is when pagination times out.
+		/// </summary>
+		Ignore,
+		/// <summary>
+		/// The entire message should be deleted when pagination times out.
+		/// </summary>
+		DeleteMessage,
+		/// <summary>
+		/// The buttons should be removed entirely when pagination times out.
+		/// </summary>
+		DeleteButtons
+	}
 }

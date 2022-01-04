@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,88 +20,87 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-using System.Linq;
 using System;
-using System.Text;
+using System.Collections.Generic;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents a application command localization.
-    /// </summary>
-    public sealed class DiscordApplicationCommandLocalization
-    {
-        /// <summary>
-        /// Gets the localization dict.
-        /// </summary>
-        public Dictionary<string, string> Localizations { get; internal set; }
+	/// <summary>
+	/// Represents a application command localization.
+	/// </summary>
+	public sealed class DiscordApplicationCommandLocalization
+	{
+		/// <summary>
+		/// Gets the localization dict.
+		/// </summary>
+		public Dictionary<string, string> Localizations { get; internal set; }
 
-        /// <summary>
-        /// Gets valid [locales](xref:application_commands_translations_reference#valid-locales) for Discord.
-        /// </summary>
-        internal List<string> _validLocales = new() { "ru", "fi", "hr", "de", "hu", "sv-SE", "cs", "fr", "it", "en-GB", "pt-BR", "ja", "tr", "en-US", "es-ES", "uk", "hi", "th", "el", "no", "ro", "ko", "zh-TW", "vi", "zh-CN", "pl", "bg", "da", "nl", "lt" };
+		/// <summary>
+		/// Gets valid [locales](xref:application_commands_translations_reference#valid-locales) for Discord.
+		/// </summary>
+		internal List<string> ValidLocales = new() { "ru", "fi", "hr", "de", "hu", "sv-SE", "cs", "fr", "it", "en-GB", "pt-BR", "ja", "tr", "en-US", "es-ES", "uk", "hi", "th", "el", "no", "ro", "ko", "zh-TW", "vi", "zh-CN", "pl", "bg", "da", "nl", "lt" };
 
-        /// <summary>
-        /// Adds a localization.
-        /// </summary>
-        /// <param name="locale">The [locale](xref:application_commands_translations_reference#valid-locales) to add.</param>
-        /// <param name="value">The translation to add.</param>
-        public void AddLocalization(string locale, string value)
-        {
-            if (this.Validate(locale))
-            {
-                this.Localizations.Add(locale, value);
-            } else
-            {
-                throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
-                    $"Valid locales: {string.Join(", ", this._validLocales.ToArray())}");
-            }
-        }
+		/// <summary>
+		/// Adds a localization.
+		/// </summary>
+		/// <param name="locale">The [locale](xref:application_commands_translations_reference#valid-locales) to add.</param>
+		/// <param name="value">The translation to add.</param>
+		public void AddLocalization(string locale, string value)
+		{
+			if (this.Validate(locale))
+			{
+				this.Localizations.Add(locale, value);
+			}
+			else
+			{
+				throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
+					$"Valid locales: {string.Join(", ", this.ValidLocales.ToArray())}");
+			}
+		}
 
-        /// <summary>
-        /// Removes a localization.
-        /// </summary>
-        /// <param name="locale">The [locale](xref:application_commands_translations_reference#valid-locales) to remove.</param>
-        public void RemoveLocalization(string locale)
-            => this.Localizations.Remove(locale);
+		/// <summary>
+		/// Removes a localization.
+		/// </summary>
+		/// <param name="locale">The [locale](xref:application_commands_translations_reference#valid-locales) to remove.</param>
+		public void RemoveLocalization(string locale)
+			=> this.Localizations.Remove(locale);
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.
-        /// </summary>
-        public DiscordApplicationCommandLocalization() { }
+		/// <summary>
+		/// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.
+		/// </summary>
+		public DiscordApplicationCommandLocalization() { }
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.
-        /// </summary>
-        /// <param name="localizations">Localizations.</param>
-        public DiscordApplicationCommandLocalization(Dictionary<string, string> localizations)
-        {
-            if (localizations != null)
-            {
-                foreach (var locale in localizations.Keys)
-                {
-                    if (!this.Validate(locale))
-                        throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
-                            $"Valid locales: {string.Join(", ", this._validLocales.ToArray())}");
-                }
-            }
+		/// <summary>
+		/// Initializes a new instance of <see cref="DiscordApplicationCommandLocalization"/>.
+		/// </summary>
+		/// <param name="localizations">Localizations.</param>
+		public DiscordApplicationCommandLocalization(Dictionary<string, string> localizations)
+		{
+			if (localizations != null)
+			{
+				foreach (var locale in localizations.Keys)
+				{
+					if (!this.Validate(locale))
+						throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
+							$"Valid locales: {string.Join(", ", this.ValidLocales.ToArray())}");
+				}
+			}
 
-            this.Localizations = localizations;
-        }
+			this.Localizations = localizations;
+		}
 
-        /// <summary>
-        /// Gets the KVPs.
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<string, string> GetKeyValuePairs()
-                => this.Localizations;
+		/// <summary>
+		/// Gets the KVPs.
+		/// </summary>
+		/// <returns></returns>
+		public Dictionary<string, string> GetKeyValuePairs()
+				=> this.Localizations;
 
-        /// <summary>
-        /// Whether the [locale](xref:application_commands_translations_reference#valid-locales) to be added is valid for Discord.
-        /// </summary>
-        /// <param name="lang">[Locale](xref:application_commands_translations_reference#valid-locales) string.</param>
-        public bool Validate(string lang)
-            => this._validLocales.Contains(lang);
-    }
+		/// <summary>
+		/// Whether the [locale](xref:application_commands_translations_reference#valid-locales) to be added is valid for Discord.
+		/// </summary>
+		/// <param name="lang">[Locale](xref:application_commands_translations_reference#valid-locales) string.</param>
+		public bool Validate(string lang)
+			=> this.ValidLocales.Contains(lang);
+	}
 }

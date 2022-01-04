@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +30,9 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordUnicodeEmoji._1SkinTone4")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordUnicodeEmoji._1SkinTone5")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordUnicodeEmoji._8ball")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordColor.HexAlphabet")]
-[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.Entities.DiscordColor.HexAlphabet")]
-[assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.Internals.PermissionStrings")]
-[assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.Internals.VersionHeader")]
 [assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.DiscordClient.OnEmbeddedActivityUpdateAsync(Newtonsoft.Json.Linq.JObject,DisCatSharp.Entities.DiscordGuild,System.UInt64,Newtonsoft.Json.Linq.JArray,System.UInt64)~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.DiscordClient.UpdateCachedScheduledEvent(DisCatSharp.Entities.DiscordGuild,Newtonsoft.Json.Linq.JArray)")]
 [assembly: SuppressMessage("Style", "IDE0150:Prefer 'null' check over type check", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.DiscordClient.OnPresenceUpdateEventAsync(Newtonsoft.Json.Linq.JObject,Newtonsoft.Json.Linq.JObject)~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.Internals.s_permissionStrings")]
+[assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.Internals.s_versionHeader")]
+[assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.DiscordClient._heartbeatTask")]

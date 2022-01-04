@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,24 +22,24 @@
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// The type of Nitro subscription on a user's account.
-    /// </summary>
-    public enum PremiumType
-    {
-        /// <summary>
-        /// User does not have any perks.
-        /// </summary>
-        None = 0,
-        
-        /// <summary>
-        /// Includes app perks like animated emojis and avatars, but not games.
-        /// </summary>
-        NitroClassic = 1,
-        
-        /// <summary>
-        /// Includes app perks as well as the games subscription service.
-        /// </summary>
-        Nitro = 2
-    }
+	/// <summary>
+	/// The type of Nitro subscription on a user's account.
+	/// </summary>
+	public enum PremiumType
+	{
+		/// <summary>
+		/// User does not have any perks.
+		/// </summary>
+		None = 0,
+
+		/// <summary>
+		/// Includes basic app perks like animated emojis and avatars.
+		/// </summary>
+		NitroClassic = 1,
+
+		/// <summary>
+		/// Includes all app perks.
+		/// </summary>
+		Nitro = 2
+	}
 }

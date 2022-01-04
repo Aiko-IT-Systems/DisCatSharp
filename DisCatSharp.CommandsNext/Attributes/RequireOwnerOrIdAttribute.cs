@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,42 +28,42 @@ using System.Threading.Tasks;
 
 namespace DisCatSharp.CommandsNext.Attributes
 {
-    /// <summary>
-    /// Requires ownership of the bot or a whitelisted id to execute this command.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class RequireOwnerOrIdAttribute : CheckBaseAttribute
-    {
-        /// <summary>
-        /// Allowed user ids
-        /// </summary>
-        public IReadOnlyList<ulong> UserIds { get; }
+	/// <summary>
+	/// Requires ownership of the bot or a whitelisted id to execute this command.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+	public sealed class RequireOwnerOrIdAttribute : CheckBaseAttribute
+	{
+		/// <summary>
+		/// Allowed user ids
+		/// </summary>
+		public IReadOnlyList<ulong> UserIds { get; }
 
-        /// <summary>
-        /// Defines that usage of this command is restricted to the owner or whitelisted ids of the bot.
-        /// </summary>
-        /// <param name="user_ids">List of allowed user ids</param>
-        public RequireOwnerOrIdAttribute(params ulong[] user_ids)
-        {
-            this.UserIds = new ReadOnlyCollection<ulong>(user_ids);
-        }
+		/// <summary>
+		/// Defines that usage of this command is restricted to the owner or whitelisted ids of the bot.
+		/// </summary>
+		/// <param name="userIds">List of allowed user ids</param>
+		public RequireOwnerOrIdAttribute(params ulong[] userIds)
+		{
+			this.UserIds = new ReadOnlyCollection<ulong>(userIds);
+		}
 
-        /// <summary>
-        /// Executes the a check.
-        /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
-        {
-            var app = ctx.Client.CurrentApplication;
-            var me = ctx.Client.CurrentUser;
+		/// <summary>
+		/// Executes the a check.
+		/// </summary>
+		/// <param name="ctx">The command context.</param>
+		/// <param name="help">If true, help - returns true.</param>
+		public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
+		{
+			var app = ctx.Client.CurrentApplication;
+			var me = ctx.Client.CurrentUser;
 
-            var owner = app != null ? await Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : await Task.FromResult(ctx.User.Id == me.Id);
+			var owner = app != null ? await Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : await Task.FromResult(ctx.User.Id == me.Id);
 
-            var allowed = this.UserIds.Contains(ctx.User.Id);
+			var allowed = this.UserIds.Contains(ctx.User.Id);
 
-            return owner || allowed;
+			return owner || allowed;
 
-        }
-    }
+		}
+	}
 }

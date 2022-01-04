@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,30 +21,31 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// The application install params.
-    /// </summary>
-    public sealed class DiscordApplicationInstallParams
-    {
-        /// <summary>
-        /// Gets the scopes.
-        /// </summary>
-        [JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
-        public IReadOnlyList<string> Scopes { get; internal set; }
+	/// <summary>
+	/// The application install params.
+	/// </summary>
+	public sealed class DiscordApplicationInstallParams
+	{
+		/// <summary>
+		/// Gets the scopes.
+		/// </summary>
+		[JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
+		public IReadOnlyList<string> Scopes { get; internal set; }
 
-        /// <summary>
-        /// Gets or sets the permissions.
-        /// </summary>
-        [JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
-        public Permissions? Permissions { get; internal set; }
+		/// <summary>
+		/// Gets or sets the permissions.
+		/// </summary>
+		[JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
+		public Permissions? Permissions { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordApplicationInstallParams"/> class.
-        /// </summary>
-        internal DiscordApplicationInstallParams() { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordApplicationInstallParams"/> class.
+		/// </summary>
+		internal DiscordApplicationInstallParams() { }
+	}
 }
