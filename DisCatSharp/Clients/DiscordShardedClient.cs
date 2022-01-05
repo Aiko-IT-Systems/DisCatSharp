@@ -564,6 +564,9 @@ namespace DisCatSharp
 			this._guildScheduledEventUserAdded = new AsyncEvent<DiscordClient, GuildScheduledEventUserAddEventArgs>("GUILD_SCHEDULED_EVENT_USER_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 			this._guildScheduledEventUserRemoved = new AsyncEvent<DiscordClient, GuildScheduledEventUserRemoveEventArgs>("GUILD_SCHEDULED_EVENT_USER_REMOVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 			this._embeddedActivityUpdated = new AsyncEvent<DiscordClient, EmbeddedActivityUpdateEventArgs>("EMBEDDED_ACTIVITY_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+			this._guildMemberTimeoutAdded = new AsyncEvent<DiscordClient, GuildMemberTimeoutAddEventArgs>("GUILD_MEMBER_TIMEOUT_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+			this._guildMemberTimeoutChanged = new AsyncEvent<DiscordClient, GuildMemberTimeoutUpdateEventArgs>("GUILD_MEMBER_TIMEOUT_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+			this._guildMemberTimeoutRemoved = new AsyncEvent<DiscordClient, GuildMemberTimeoutRemoveEventArgs>("GUILD_MEMBER_TIMEOUT_REMOVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		}
 
 		/// <summary>
@@ -648,6 +651,9 @@ namespace DisCatSharp
 			client.GuildScheduledEventUserAdded += this.Client_GuildScheduledEventUserAdded; ;
 			client.GuildScheduledEventUserRemoved += this.Client_GuildScheduledEventUserRemoved;
 			client.EmbeddedActivityUpdated += this.Client_EmbeddedActivityUpdated;
+			client.GuildMemberTimeoutAdded += this.Client_GuildMemberTimeoutAdded;
+			client.GuildMemberTimeoutChanged += this.Client_GuildMemberTimeoutChanged;
+			client.GuildMemberTimeoutRemoved += this.Client_GuildMemberTimeoutRemoved;
 		}
 
 		/// <summary>
@@ -732,6 +738,9 @@ namespace DisCatSharp
 			client.GuildScheduledEventUserAdded -= this.Client_GuildScheduledEventUserAdded; ;
 			client.GuildScheduledEventUserRemoved -= this.Client_GuildScheduledEventUserRemoved;
 			client.EmbeddedActivityUpdated -= this.Client_EmbeddedActivityUpdated;
+			client.GuildMemberTimeoutAdded -= this.Client_GuildMemberTimeoutAdded;
+			client.GuildMemberTimeoutChanged -= this.Client_GuildMemberTimeoutChanged;
+			client.GuildMemberTimeoutRemoved -= this.Client_GuildMemberTimeoutRemoved;
 		}
 
 		/// <summary>
