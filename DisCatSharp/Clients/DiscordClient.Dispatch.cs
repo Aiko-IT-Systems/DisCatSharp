@@ -1720,7 +1720,7 @@ namespace DisCatSharp
 
 			var timeoutUntil = member.CommunicationDisabledUntil;
 
-			if ((cduOld.HasValue && timeoutUntil == null) || (cduOld == null || timeoutUntil.HasValue) || (cduOld.HasValue && timeoutUntil.HasValue))
+			if ((cduOld.HasValue && timeoutUntil == null) || (cduOld == null && timeoutUntil.HasValue) || (cduOld.HasValue && timeoutUntil.HasValue))
 			{
 				// We are going to add a scheduled timer to assure that we get a auditlog entry.
 
@@ -1744,7 +1744,7 @@ namespace DisCatSharp
 					)
 				);
 
-				this.Logger.LogDebug("Scheduling timeout event.");
+				this.Logger.LogTrace("Scheduling timeout event.");
 
 				return;
 			}
