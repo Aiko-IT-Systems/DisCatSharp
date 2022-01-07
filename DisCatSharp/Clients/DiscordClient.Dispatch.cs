@@ -337,7 +337,8 @@ namespace DisCatSharp
 
 				case "guild_member_update":
 					gid = (ulong)dat["guild_id"];
-					await this.OnGuildMemberUpdateEventAsync(dat.ToDiscordObject<TransportMember>(), this.GuildsInternal[gid], dat["roles"].ToObject<IEnumerable<ulong>>(), (string)dat["nick"], (bool?)dat["pending"], (DateTimeOffset?)dat["communication_disabled_until"]).ConfigureAwait(false);
+					this.Logger.LogDebug("Firing OnGuildMemberUpdateEvent");
+					await this.OnGuildMemberUpdateEventAsync(dat.ToDiscordObject<TransportMember>(), this.GuildsInternal[gid], dat["roles"].ToObject<IEnumerable<ulong>>(), (string)dat["nick"], (bool?)dat["pending"]).ConfigureAwait(false);
 					break;
 
 				case "guild_members_chunk":
@@ -1693,9 +1694,9 @@ namespace DisCatSharp
 		/// <param name="roles">The roles.</param>
 		/// <param name="nick">The nick.</param>
 		/// <param name="pending">Whether the member is pending.</param>
-		/// <param name="timeoutUntil">The timeout.</param>
-		internal async Task OnGuildMemberUpdateEventAsync(TransportMember member, DiscordGuild guild, IEnumerable<ulong> roles, string nick, bool? pending, DateTimeOffset? timeoutUntil)
+		internal async Task OnGuildMemberUpdateEventAsync(TransportMember member, DiscordGuild guild, IEnumerable<ulong> roles, string nick, bool? pending)
 		{
+			this.Logger.LogDebug("Fired update");
 			var usr = new DiscordUser(member.User) { Discord = this };
 			usr = this.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
 			{
@@ -1704,23 +1705,37 @@ namespace DisCatSharp
 				old.AvatarHash = usr.AvatarHash;
 				return old;
 			});
+			this.Logger.LogDebug("Cached user");
 
 			if (!guild.Members.TryGetValue(member.User.Id, out var mbr))
 				mbr = new DiscordMember(usr) { Discord = this, GuildId = guild.Id };
-
+			this.Logger.LogDebug("Caching member");
 			var nickOld = mbr.Nickname;
 			var pendingOld = mbr.IsPending;
 			var rolesOld = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles));
 			var cduOld = mbr.CommunicationDisabledUntil;
+			this.Logger.LogDebug("Assigning new values to member");
 			mbr.AvatarHashInternal = member.AvatarHash;
 			mbr.GuildAvatarHash = member.GuildAvatarHash;
 			mbr.Nickname = nick;
 			mbr.IsPending = pending;
-			mbr.CommunicationDisabledUntil = timeoutUntil;
+			mbr.CommunicationDisabledUntil = member.CommunicationDisabledUntil;
 			mbr.RoleIdsInternal.Clear();
 			mbr.RoleIdsInternal.AddRange(roles);
 
-			if (cduOld.HasValue || timeoutUntil.HasValue)
+			var timeoutUntil = member.CommunicationDisabledUntil;
+			this.Logger.LogDebug("Checking timeout change");
+			/*
+			Timeouts:
+
+			Add: Cache should be null, Payload should be not null.
+			Update: Cache should have a value and payload too.
+			Remove: Cache should have a value, Payload should be null.
+
+			Actual: Remove does have null but gateway event is not fired in dispatch.
+			*/
+
+			if ((cduOld.HasValue || timeoutUntil.HasValue) && cduOld != timeoutUntil)
 			{
 				// We are going to add a scheduled timer to assure that we get a auditlog entry.
 
@@ -1749,6 +1764,8 @@ namespace DisCatSharp
 				return;
 			}
 
+			this.Logger.LogDebug("No timeout detected. Continuing on normal operation.");
+
 			var eargs = new GuildMemberUpdateEventArgs(this.ServiceProvider)
 			{
 				Guild = guild,
@@ -1765,6 +1782,7 @@ namespace DisCatSharp
 				TimeoutBefore = cduOld
 			};
 			await this._guildMemberUpdated.InvokeAsync(this, eargs).ConfigureAwait(false);
+			this.Logger.LogDebug("Bye bye.");
 		}
 
 		private async void TimeoutTimer (object state)
