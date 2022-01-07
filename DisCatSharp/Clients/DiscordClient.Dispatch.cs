@@ -337,7 +337,6 @@ namespace DisCatSharp
 
 				case "guild_member_update":
 					gid = (ulong)dat["guild_id"];
-					this.Logger.LogDebug("Firing OnGuildMemberUpdateEvent");
 					await this.OnGuildMemberUpdateEventAsync(dat.ToDiscordObject<TransportMember>(), this.GuildsInternal[gid], dat["roles"].ToObject<IEnumerable<ulong>>(), (string)dat["nick"], (bool?)dat["pending"]).ConfigureAwait(false);
 					break;
 
@@ -1696,7 +1695,6 @@ namespace DisCatSharp
 		/// <param name="pending">Whether the member is pending.</param>
 		internal async Task OnGuildMemberUpdateEventAsync(TransportMember member, DiscordGuild guild, IEnumerable<ulong> roles, string nick, bool? pending)
 		{
-			this.Logger.LogDebug("Fired update");
 			var usr = new DiscordUser(member.User) { Discord = this };
 			usr = this.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
 			{
@@ -1705,16 +1703,13 @@ namespace DisCatSharp
 				old.AvatarHash = usr.AvatarHash;
 				return old;
 			});
-			this.Logger.LogDebug("Cached user");
 
 			if (!guild.Members.TryGetValue(member.User.Id, out var mbr))
 				mbr = new DiscordMember(usr) { Discord = this, GuildId = guild.Id };
-			this.Logger.LogDebug("Caching member");
 			var nickOld = mbr.Nickname;
 			var pendingOld = mbr.IsPending;
 			var rolesOld = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles));
 			var cduOld = mbr.CommunicationDisabledUntil;
-			this.Logger.LogDebug("Assigning new values to member");
 			mbr.AvatarHashInternal = member.AvatarHash;
 			mbr.GuildAvatarHash = member.GuildAvatarHash;
 			mbr.Nickname = nick;
@@ -1724,18 +1719,8 @@ namespace DisCatSharp
 			mbr.RoleIdsInternal.AddRange(roles);
 
 			var timeoutUntil = member.CommunicationDisabledUntil;
-			this.Logger.LogDebug("Checking timeout change");
-			/*
-			Timeouts:
 
-			Add: Cache should be null, Payload should be not null.
-			Update: Cache should have a value and payload too.
-			Remove: Cache should have a value, Payload should be null.
-
-			Actual: Remove does have null but gateway event is not fired in dispatch.
-			*/
-
-			if ((cduOld.HasValue || timeoutUntil.HasValue) && cduOld != timeoutUntil)
+			if ((cduOld.HasValue && timeoutUntil == null) || (cduOld == null || timeoutUntil.HasValue) || (cduOld.HasValue && timeoutUntil.HasValue))
 			{
 				// We are going to add a scheduled timer to assure that we get a auditlog entry.
 
@@ -1764,7 +1749,7 @@ namespace DisCatSharp
 				return;
 			}
 
-			this.Logger.LogDebug("No timeout detected. Continuing on normal operation.");
+			this.Logger.LogTrace("No timeout detected. Continuing on normal operation.");
 
 			var eargs = new GuildMemberUpdateEventArgs(this.ServiceProvider)
 			{
@@ -1782,7 +1767,6 @@ namespace DisCatSharp
 				TimeoutBefore = cduOld
 			};
 			await this._guildMemberUpdated.InvokeAsync(this, eargs).ConfigureAwait(false);
-			this.Logger.LogDebug("Bye bye.");
 		}
 
 		private async void TimeoutTimer (object state)
@@ -1794,7 +1778,7 @@ namespace DisCatSharp
 			DiscordAuditLogMemberUpdateEntry audit = null;
 			IReadOnlyList<DiscordAuditLogEntry> entries = null;
 
-			this.Logger.LogDebug("Trying to execute timeout event.");
+			this.Logger.LogTrace("Trying to execute timeout event.");
 
 			if (data._timeoutUntilOld.HasValue && data._timeoutUntilNew.HasValue)
 			{
@@ -1815,7 +1799,7 @@ namespace DisCatSharp
 				catch (Exception)
 				{
 					timer.Change(2000, Timeout.Infinite);
-					this.Logger.LogDebug("Re-cheduling timeout event.");
+					this.Logger.LogTrace("Re-cheduling timeout event.");
 					return;
 				}
 
@@ -1849,7 +1833,7 @@ namespace DisCatSharp
 				catch (Exception)
 				{
 					timer.Change(2000, Timeout.Infinite);
-					this.Logger.LogDebug("Re-cheduling timeout event.");
+					this.Logger.LogTrace("Re-cheduling timeout event.");
 					return;
 				}
 
@@ -1882,7 +1866,7 @@ namespace DisCatSharp
 				catch (Exception)
 				{
 					timer.Change(2000, Timeout.Infinite);
-					this.Logger.LogDebug("Re-cheduling timeout event.");
+					this.Logger.LogTrace("Re-cheduling timeout event.");
 					return;
 				}
 
@@ -1898,7 +1882,7 @@ namespace DisCatSharp
 			}
 
 			// Ending timer because it worked.
-			this.Logger.LogDebug("Removing timeout event.");
+			this.Logger.LogTrace("Removing timeout event.");
 			await timer.DisposeAsync();
 			this._tempTimers.Remove(tid);
 		}
