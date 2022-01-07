@@ -53,6 +53,49 @@ namespace DisCatSharp
 		private string _sessionId;
 		private bool _guildDownloadCompleted;
 
+		private readonly Dictionary<string, KeyValuePair<TimeoutHandler, Timer>> _tempTimers = new();
+
+		/// <summary>
+		/// Represents a timeout handler.
+		/// </summary>
+		internal class TimeoutHandler
+		{
+			/// <summary>
+			/// Gets the member.
+			/// </summary>
+			internal DiscordMember _member;
+
+			/// <summary>
+			/// Gets the guild.
+			/// </summary>
+			internal DiscordGuild _guild;
+
+			/// <summary>
+			/// Gets the old timeout value.
+			/// </summary>
+			internal DateTimeOffset? _timeoutUntilOld;
+
+			/// <summary>
+			/// Gets the new timeout value.
+			/// </summary>
+			internal DateTimeOffset? _timeoutUntilNew;
+
+			/// <summary>
+			/// Constructs a new <see cref="TimeoutHandler"/>.
+			/// </summary>
+			/// <param name="mbr">The affected member.</param>
+			/// <param name="guild">The affected guild.</param>
+			/// <param name="too">The old timeout value.</param>
+			/// <param name="ton">The new timeout value.</param>
+			internal TimeoutHandler(DiscordMember mbr, DiscordGuild guild, DateTimeOffset? too, DateTimeOffset? ton)
+			{
+				this._guild = guild;
+				this._member = mbr;
+				this._timeoutUntilOld = too;
+				this._timeoutUntilNew = ton;
+			}
+		}
+
 		#endregion
 
 		#region Dispatch Handler
@@ -294,7 +337,7 @@ namespace DisCatSharp
 
 				case "guild_member_update":
 					gid = (ulong)dat["guild_id"];
-					await this.OnGuildMemberUpdateEventAsync(dat.ToDiscordObject<TransportMember>(), this.GuildsInternal[gid], dat["roles"].ToObject<IEnumerable<ulong>>(), (string)dat["nick"], (bool?)dat["pending"]).ConfigureAwait(false);
+					await this.OnGuildMemberUpdateEventAsync(dat.ToDiscordObject<TransportMember>(), this.GuildsInternal[gid], dat["roles"].ToObject<IEnumerable<ulong>>(), (string)dat["nick"], (bool?)dat["pending"], (DateTimeOffset?)dat["communication_disabled_until"]).ConfigureAwait(false);
 					break;
 
 				case "guild_members_chunk":
@@ -1650,7 +1693,8 @@ namespace DisCatSharp
 		/// <param name="roles">The roles.</param>
 		/// <param name="nick">The nick.</param>
 		/// <param name="pending">Whether the member is pending.</param>
-		internal async Task OnGuildMemberUpdateEventAsync(TransportMember member, DiscordGuild guild, IEnumerable<ulong> roles, string nick, bool? pending)
+		/// <param name="timeoutUntil">The timeout.</param>
+		internal async Task OnGuildMemberUpdateEventAsync(TransportMember member, DiscordGuild guild, IEnumerable<ulong> roles, string nick, bool? pending, DateTimeOffset? timeoutUntil)
 		{
 			var usr = new DiscordUser(member.User) { Discord = this };
 			usr = this.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
@@ -1672,95 +1716,33 @@ namespace DisCatSharp
 			mbr.GuildAvatarHash = member.GuildAvatarHash;
 			mbr.Nickname = nick;
 			mbr.IsPending = pending;
-			mbr.CommunicationDisabledUntil = member.CommunicationDisabledUntil;
+			mbr.CommunicationDisabledUntil = timeoutUntil;
 			mbr.RoleIdsInternal.Clear();
 			mbr.RoleIdsInternal.AddRange(roles);
 
-			if (cduOld.HasValue || mbr.CommunicationDisabledUntil.HasValue)
+			if (cduOld.HasValue || timeoutUntil.HasValue)
 			{
-				await Task.Delay(3000);
-				var tob = cduOld;
-				var toa = mbr.CommunicationDisabledUntil;
-				DiscordAuditLogMemberUpdateEntry audit = null;
-				IReadOnlyList<DiscordAuditLogEntry> entries = null;
+				// We are going to add a scheduled timer to assure that we get a auditlog entry.
 
-				if (tob.HasValue && toa.HasValue)
-				{
-					try
-					{
-						entries = await guild.GetAuditLogsAsync(30, null, AuditLogActionType.MemberUpdate);
-						audit = entries.Select(x => x as DiscordAuditLogMemberUpdateEntry).First(x =>
-							x.Target == mbr
-							&& x.CommunicationDisabledUntilChange != null
-							&& x.CommunicationDisabledUntilChange.Before.HasValue
-							&& x.CommunicationDisabledUntilChange.Before.Value == tob.Value
-							&& x.CommunicationDisabledUntilChange.After.HasValue
-							&& x.CommunicationDisabledUntilChange.After.Value == toa.Value
-						);
-					} catch (UnauthorizedException) { }
+				var id = $"tt-{mbr.Id}-{guild.Id}-{DateTime.Now.ToLongTimeString()}";
 
-					var ea = new GuildMemberTimeoutUpdateEventArgs(this.ServiceProvider)
-					{
-						Guild = guild,
-						Target = mbr,
-						TimeoutBefore = tob.Value,
-						TimeoutAfter = toa.Value,
-						AuditLogEntry = audit,
-						Actor = audit?.UserResponsible as DiscordMember
-					};
-					await this._guildMemberTimeoutChanged.InvokeAsync(this, ea).ConfigureAwait(false);
-				}
-				else if (!tob.HasValue && toa.HasValue)
-				{
-					try
-					{
-						entries = await guild.GetAuditLogsAsync(30, null, AuditLogActionType.MemberUpdate);
-						audit = entries.Select(x => x as DiscordAuditLogMemberUpdateEntry).First(x =>
-							x.Target == mbr
-							&& x.CommunicationDisabledUntilChange != null
-							&& !x.CommunicationDisabledUntilChange.Before.HasValue
-							&& x.CommunicationDisabledUntilChange.Before == null
-							&& x.CommunicationDisabledUntilChange.After.HasValue
-							&& x.CommunicationDisabledUntilChange.After.Value == toa.Value
-						);
-					} catch (UnauthorizedException) { }
-
-					var ea = new GuildMemberTimeoutAddEventArgs(this.ServiceProvider)
-					{
-						Guild = guild,
-						Target = mbr,
-						Timeout = toa.Value,
-						AuditLogEntry = audit,
-						Actor = audit?.UserResponsible as DiscordMember
-					};
-					await this._guildMemberTimeoutAdded.InvokeAsync(this, ea).ConfigureAwait(false);
-				}
-				else if (tob.HasValue && !toa.HasValue)
-				{
-					try
-					{
-						entries = await guild.GetAuditLogsAsync(30, null, AuditLogActionType.MemberUpdate);
-						audit = entries.Select(x => x as DiscordAuditLogMemberUpdateEntry).First(x =>
-							x.Target == mbr
-							&& x.CommunicationDisabledUntilChange != null
-							&& x.CommunicationDisabledUntilChange.Before.HasValue
-							&& x.CommunicationDisabledUntilChange.Before.Value == tob.Value
-							&& !x.CommunicationDisabledUntilChange.After.HasValue
-							&& x.CommunicationDisabledUntilChange.After == null
-						);
-					}
-					catch (UnauthorizedException) { }
-
-					var ea = new GuildMemberTimeoutRemoveEventArgs(this.ServiceProvider)
-					{
-						Guild = guild,
-						Target = mbr,
-						TimeoutBefore = tob.Value,
-						AuditLogEntry = audit,
-						Actor = audit?.UserResponsible as DiscordMember
-					};
-					await this._guildMemberTimeoutRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
-				}
+				this._tempTimers.Add(
+					id,
+					new(
+						new TimeoutHandler(
+							mbr,
+							guild,
+							cduOld,
+							timeoutUntil
+						),
+						new Timer(
+							this.TimeoutTimer,
+							id,
+							10000,
+							Timeout.Infinite
+						)
+					)
+				);
 
 				return;
 			}
@@ -1781,6 +1763,118 @@ namespace DisCatSharp
 				TimeoutBefore = cduOld
 			};
 			await this._guildMemberUpdated.InvokeAsync(this, eargs).ConfigureAwait(false);
+		}
+
+		private async void TimeoutTimer (object state)
+		{
+			var tid = (string)state;
+			var data = this._tempTimers.First(x=> x.Key == tid).Value.Key;
+			var timer = this._tempTimers.First(x=> x.Key == tid).Value.Value;
+
+			DiscordAuditLogMemberUpdateEntry audit = null;
+			IReadOnlyList<DiscordAuditLogEntry> entries = null;
+
+			if (data._timeoutUntilOld.HasValue && data._timeoutUntilNew.HasValue)
+			{
+				// A timeout was updated.
+				try
+				{
+					entries = await data._guild.GetAuditLogsAsync(30, null, AuditLogActionType.MemberUpdate);
+					audit = entries.Select(x => x as DiscordAuditLogMemberUpdateEntry).First(x =>
+						x.Target == data._member
+						&& x.CommunicationDisabledUntilChange != null
+						&& x.CommunicationDisabledUntilChange.Before.HasValue
+						&& x.CommunicationDisabledUntilChange.Before.Value == data._timeoutUntilOld.Value
+						&& x.CommunicationDisabledUntilChange.After.HasValue
+						&& x.CommunicationDisabledUntilChange.After.Value == data._timeoutUntilNew.Value
+					);
+				}
+				catch (UnauthorizedException) { }
+				catch (Exception)
+				{
+					timer.Change(2000, Timeout.Infinite);
+					return;
+				}
+
+				var ea = new GuildMemberTimeoutUpdateEventArgs(this.ServiceProvider)
+				{
+					Guild = data._guild,
+					Target = data._member,
+					TimeoutBefore = data._timeoutUntilOld.Value,
+					TimeoutAfter = data._timeoutUntilNew.Value,
+					AuditLogEntry = audit,
+					Actor = audit?.UserResponsible as DiscordMember
+				};
+				await this._guildMemberTimeoutChanged.InvokeAsync(this, ea).ConfigureAwait(false);
+			}
+			else if (!data._timeoutUntilOld.HasValue && data._timeoutUntilNew.HasValue)
+			{
+				// A timeout was added.
+				try
+				{
+					entries = await data._guild.GetAuditLogsAsync(30, null, AuditLogActionType.MemberUpdate);
+					audit = entries.Select(x => x as DiscordAuditLogMemberUpdateEntry).First(x =>
+						x.Target == data._member
+						&& x.CommunicationDisabledUntilChange != null
+						&& !x.CommunicationDisabledUntilChange.Before.HasValue
+						&& x.CommunicationDisabledUntilChange.Before == null
+						&& x.CommunicationDisabledUntilChange.After.HasValue
+						&& x.CommunicationDisabledUntilChange.After.Value == data._timeoutUntilNew.Value
+					);
+				}
+				catch (UnauthorizedException) { }
+				catch (Exception)
+				{
+					timer.Change(2000, Timeout.Infinite);
+					return;
+				}
+
+				var ea = new GuildMemberTimeoutAddEventArgs(this.ServiceProvider)
+				{
+					Guild = data._guild,
+					Target = data._member,
+					Timeout = data._timeoutUntilNew.Value,
+					AuditLogEntry = audit,
+					Actor = audit?.UserResponsible as DiscordMember
+				};
+				await this._guildMemberTimeoutAdded.InvokeAsync(this, ea).ConfigureAwait(false);
+			}
+			else if (data._timeoutUntilOld.HasValue && !data._timeoutUntilNew.HasValue)
+			{
+				// A timeout was removed.
+				try
+				{
+					entries = await data._guild.GetAuditLogsAsync(30, null, AuditLogActionType.MemberUpdate);
+					audit = entries.Select(x => x as DiscordAuditLogMemberUpdateEntry).First(x =>
+						x.Target == data._member
+						&& x.CommunicationDisabledUntilChange != null
+						&& x.CommunicationDisabledUntilChange.Before.HasValue
+						&& x.CommunicationDisabledUntilChange.Before.Value == data._timeoutUntilOld.Value
+						&& !x.CommunicationDisabledUntilChange.After.HasValue
+						&& x.CommunicationDisabledUntilChange.After == null
+					);
+				}
+				catch (UnauthorizedException) { }
+				catch (Exception)
+				{
+					timer.Change(2000, Timeout.Infinite);
+					return;
+				}
+
+				var ea = new GuildMemberTimeoutRemoveEventArgs(this.ServiceProvider)
+				{
+					Guild = data._guild,
+					Target = data._member,
+					TimeoutBefore = data._timeoutUntilOld.Value,
+					AuditLogEntry = audit,
+					Actor = audit?.UserResponsible as DiscordMember
+				};
+				await this._guildMemberTimeoutRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
+			}
+
+			// Ending timer because it worked.
+			await timer.DisposeAsync();
+			this._tempTimers.Remove(tid);
 		}
 
 		/// <summary>
