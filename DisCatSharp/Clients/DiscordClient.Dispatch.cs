@@ -1738,11 +1738,13 @@ namespace DisCatSharp
 						new Timer(
 							this.TimeoutTimer,
 							id,
-							10000,
+							3000,
 							Timeout.Infinite
 						)
 					)
 				);
+
+				this.Logger.LogDebug("Scheduling timeout event.");
 
 				return;
 			}
@@ -1774,6 +1776,8 @@ namespace DisCatSharp
 			DiscordAuditLogMemberUpdateEntry audit = null;
 			IReadOnlyList<DiscordAuditLogEntry> entries = null;
 
+			this.Logger.LogDebug("Trying to execute timeout event.");
+
 			if (data._timeoutUntilOld.HasValue && data._timeoutUntilNew.HasValue)
 			{
 				// A timeout was updated.
@@ -1793,6 +1797,7 @@ namespace DisCatSharp
 				catch (Exception)
 				{
 					timer.Change(2000, Timeout.Infinite);
+					this.Logger.LogDebug("Re-cheduling timeout event.");
 					return;
 				}
 
@@ -1826,6 +1831,7 @@ namespace DisCatSharp
 				catch (Exception)
 				{
 					timer.Change(2000, Timeout.Infinite);
+					this.Logger.LogDebug("Re-cheduling timeout event.");
 					return;
 				}
 
@@ -1858,6 +1864,7 @@ namespace DisCatSharp
 				catch (Exception)
 				{
 					timer.Change(2000, Timeout.Infinite);
+					this.Logger.LogDebug("Re-cheduling timeout event.");
 					return;
 				}
 
@@ -1873,6 +1880,7 @@ namespace DisCatSharp
 			}
 
 			// Ending timer because it worked.
+			this.Logger.LogDebug("Removing timeout event.");
 			await timer.DisposeAsync();
 			this._tempTimers.Remove(tid);
 		}
