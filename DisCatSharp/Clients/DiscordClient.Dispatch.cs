@@ -29,7 +29,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
@@ -63,22 +62,22 @@ namespace DisCatSharp
 			/// <summary>
 			/// Gets the member.
 			/// </summary>
-			internal DiscordMember _member;
+			internal readonly DiscordMember Member;
 
 			/// <summary>
 			/// Gets the guild.
 			/// </summary>
-			internal DiscordGuild _guild;
+			internal readonly DiscordGuild Guild;
 
 			/// <summary>
 			/// Gets the old timeout value.
 			/// </summary>
-			internal DateTime? _timeoutUntilOld;
+			internal DateTime? TimeoutUntilOld;
 
 			/// <summary>
 			/// Gets the new timeout value.
 			/// </summary>
-			internal DateTime? _timeoutUntilNew;
+			internal DateTime? TimeoutUntilNew;
 
 			/// <summary>
 			/// Constructs a new <see cref="TimeoutHandler"/>.
@@ -89,10 +88,10 @@ namespace DisCatSharp
 			/// <param name="ton">The new timeout value.</param>
 			internal TimeoutHandler(DiscordMember mbr, DiscordGuild guild, DateTime? too, DateTime? ton)
 			{
-				this._guild = guild;
-				this._member = mbr;
-				this._timeoutUntilOld = too;
-				this._timeoutUntilNew = ton;
+				this.Guild = guild;
+				this.Member = mbr;
+				this.TimeoutUntilOld = too;
+				this.TimeoutUntilNew = ton;
 			}
 		}
 
@@ -1793,9 +1792,9 @@ namespace DisCatSharp
 			DiscordAuditLogMemberUpdateEntry filtered = null;
 			try
 			{
-				auditlog = await data._guild.GetAuditLogsAsync(10, null, AuditLogActionType.MemberUpdate);
-				var pre_filtered = auditlog.Select(x => x as DiscordAuditLogMemberUpdateEntry).Where(x => x.Target.Id == data._member.Id);
-				filtered = pre_filtered.First();
+				auditlog = await data.Guild.GetAuditLogsAsync(10, null, AuditLogActionType.MemberUpdate);
+				var preFiltered = auditlog.Select(x => x as DiscordAuditLogMemberUpdateEntry).Where(x => x.Target.Id == data.Member.Id);
+				filtered = preFiltered.First();
 			}
 			catch (UnauthorizedException) { }
 			catch (Exception)
@@ -1810,7 +1809,7 @@ namespace DisCatSharp
 
 			this.Logger.LogTrace("Trying to execute timeout event.");
 
-			if (data._timeoutUntilOld.HasValue && data._timeoutUntilNew.HasValue)
+			if (data.TimeoutUntilOld.HasValue && data.TimeoutUntilNew.HasValue)
 			{
 				// A timeout was updated.
 
@@ -1823,17 +1822,17 @@ namespace DisCatSharp
 
 				var ea = new GuildMemberTimeoutUpdateEventArgs(this.ServiceProvider)
 				{
-					Guild = data._guild,
-					Target = data._member,
-					TimeoutBefore = data._timeoutUntilOld.Value,
-					TimeoutAfter = data._timeoutUntilNew.Value,
+					Guild = data.Guild,
+					Target = data.Member,
+					TimeoutBefore = data.TimeoutUntilOld.Value,
+					TimeoutAfter = data.TimeoutUntilNew.Value,
 					Actor = actor,
 					AuditLogId = filtered?.Id,
 					AuditLogReason = filtered?.Reason
 				};
 				await this._guildMemberTimeoutChanged.InvokeAsync(this, ea).ConfigureAwait(false);
 			}
-			else if (!data._timeoutUntilOld.HasValue && data._timeoutUntilNew.HasValue)
+			else if (!data.TimeoutUntilOld.HasValue && data.TimeoutUntilNew.HasValue)
 			{
 				// A timeout was added.
 
@@ -1846,16 +1845,16 @@ namespace DisCatSharp
 
 				var ea = new GuildMemberTimeoutAddEventArgs(this.ServiceProvider)
 				{
-					Guild = data._guild,
-					Target = data._member,
-					Timeout = data._timeoutUntilNew.Value,
+					Guild = data.Guild,
+					Target = data.Member,
+					Timeout = data.TimeoutUntilNew.Value,
 					Actor = actor,
 					AuditLogId = filtered?.Id,
 					AuditLogReason = filtered?.Reason
 				};
 				await this._guildMemberTimeoutAdded.InvokeAsync(this, ea).ConfigureAwait(false);
 			}
-			else if (data._timeoutUntilOld.HasValue && !data._timeoutUntilNew.HasValue)
+			else if (data.TimeoutUntilOld.HasValue && !data.TimeoutUntilNew.HasValue)
 			{
 				// A timeout was removed.
 
@@ -1868,9 +1867,9 @@ namespace DisCatSharp
 
 				var ea = new GuildMemberTimeoutRemoveEventArgs(this.ServiceProvider)
 				{
-					Guild = data._guild,
-					Target = data._member,
-					TimeoutBefore = data._timeoutUntilOld.Value,
+					Guild = data.Guild,
+					Target = data.Member,
+					TimeoutBefore = data.TimeoutUntilOld.Value,
 					Actor = actor,
 					AuditLogId = filtered?.Id,
 					AuditLogReason = filtered?.Reason
