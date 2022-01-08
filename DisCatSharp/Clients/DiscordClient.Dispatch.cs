@@ -1708,6 +1708,8 @@ namespace DisCatSharp
 				mbr = new DiscordMember(usr) { Discord = this, GuildId = guild.Id };
 			var old = mbr;
 
+			var gAvOld = old.GuildAvatarHash;
+			var avOld = old.AvatarHash;
 			var nickOld = mbr.Nickname;
 			var pendingOld = mbr.IsPending;
 			var rolesOld = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles));
@@ -1764,11 +1766,15 @@ namespace DisCatSharp
 				RolesAfter = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles)),
 				PendingAfter = mbr.IsPending,
 				TimeoutAfter = mbr.CommunicationDisabledUntil,
+				AvatarHashAfter = mbr.AvatarHash,
+				GuildAvatarHashAfter = mbr.GuildAvatarHash,
 
 				NicknameBefore = nickOld,
 				RolesBefore = rolesOld,
 				PendingBefore = pendingOld,
-				TimeoutBefore = cduOld
+				TimeoutBefore = cduOld,
+				AvatarHashBefore = avOld,
+				GuildAvatarHashBefore = gAvOld
 			};
 			await this._guildMemberUpdated.InvokeAsync(this, eargs).ConfigureAwait(false);
 		}
@@ -1794,8 +1800,9 @@ namespace DisCatSharp
 			catch (UnauthorizedException) { }
 			catch (Exception)
 			{
-				this.Logger.LogTrace("Re-scheduling timeout event.");
-				timer.Change(2000, Timeout.Infinite);
+				this.Logger.LogTrace("Failing timeout event.");
+				await timer.DisposeAsync();
+				this._tempTimers.Remove(tid);
 				return;
 			}
 
