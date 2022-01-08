@@ -289,6 +289,44 @@ namespace DisCatSharp
 
 		#endregion
 
+		#region Guild Timeout
+
+		/// <summary>
+		/// Fired when a guild member timeout gets added.
+		/// For this Event you need the <see cref="DiscordIntents.GuildBans"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+		/// </summary>
+		public event AsyncEventHandler<DiscordClient, GuildMemberTimeoutAddEventArgs> GuildMemberTimeoutAdded
+		{
+			add => this._guildMemberTimeoutAdded.Register(value);
+			remove => this._guildMemberTimeoutAdded.Unregister(value);
+		}
+		private AsyncEvent<DiscordClient, GuildMemberTimeoutAddEventArgs> _guildMemberTimeoutAdded;
+
+		/// <summary>
+		/// Fired when a guild member timeout gets changed.
+		/// For this Event you need the <see cref="DiscordIntents.GuildMembers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+		/// </summary>
+		public event AsyncEventHandler<DiscordClient, GuildMemberTimeoutUpdateEventArgs> GuildMemberTimeoutChanged
+		{
+			add => this._guildMemberTimeoutChanged.Register(value);
+			remove => this._guildMemberTimeoutChanged.Unregister(value);
+		}
+		private AsyncEvent<DiscordClient, GuildMemberTimeoutUpdateEventArgs> _guildMemberTimeoutChanged;
+
+
+		/// <summary>
+		/// Fired when a guild member timeout gets removed.
+		/// For this Event you need the <see cref="DiscordIntents.GuildMembers"/> intent specified in <seealso cref="DiscordConfiguration.Intents"/>
+		/// </summary>
+		public event AsyncEventHandler<DiscordClient, GuildMemberTimeoutRemoveEventArgs> GuildMemberTimeoutRemoved
+		{
+			add => this._guildMemberTimeoutRemoved.Register(value);
+			remove => this._guildMemberTimeoutRemoved.Unregister(value);
+		}
+		private AsyncEvent<DiscordClient, GuildMemberTimeoutRemoveEventArgs> _guildMemberTimeoutRemoved;
+
+		#endregion
+
 		#region Guild Scheduled Event
 
 		/// <summary>
