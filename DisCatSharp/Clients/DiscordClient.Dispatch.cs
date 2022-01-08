@@ -1723,7 +1723,7 @@ namespace DisCatSharp
 				guild.MembersInternal.TryAdd(member.User.Id, mbr);
 
 			var timeoutUntil = member.CommunicationDisabledUntil;
-			this.Logger.LogDebug($"Timeout:\nBefore - {cduOld}\nAfter - {timeoutUntil}");
+			this.Logger.LogTrace($"Timeout:\nBefore - {cduOld}\nAfter - {timeoutUntil}");
 			if ((timeoutUntil.HasValue && cduOld.HasValue) || (timeoutUntil == null && cduOld.HasValue) || (timeoutUntil.HasValue && cduOld == null))
 			{
 				// We are going to add a scheduled timer to assure that we get a auditlog entry.
@@ -1748,12 +1748,12 @@ namespace DisCatSharp
 					)
 				);
 
-				this.Logger.LogDebug("Scheduling timeout event.");
+				this.Logger.LogTrace("Scheduling timeout event.");
 
 				return;
 			}
 
-			this.Logger.LogDebug("No timeout detected. Continuing on normal operation.");
+			this.Logger.LogTrace("No timeout detected. Continuing on normal operation.");
 
 			var eargs = new GuildMemberUpdateEventArgs(this.ServiceProvider)
 			{
@@ -1801,7 +1801,7 @@ namespace DisCatSharp
 
 			var actor = filtered?.UserResponsible as DiscordMember;
 
-			this.Logger.LogDebug("Trying to execute timeout event.");
+			this.Logger.LogTrace("Trying to execute timeout event.");
 
 			if (data._timeoutUntilOld.HasValue && data._timeoutUntilNew.HasValue)
 			{
@@ -1809,7 +1809,7 @@ namespace DisCatSharp
 
 				if (filtered != null && auditlog == null)
 				{
-					this.Logger.LogDebug("Re-scheduling timeout event.");
+					this.Logger.LogTrace("Re-scheduling timeout event.");
 					timer.Change(2000, Timeout.Infinite);
 					return;
 				}
@@ -1832,7 +1832,7 @@ namespace DisCatSharp
 
 				if (filtered != null && auditlog == null)
 				{
-					this.Logger.LogDebug("Re-scheduling timeout event.");
+					this.Logger.LogTrace("Re-scheduling timeout event.");
 					timer.Change(2000, Timeout.Infinite);
 					return;
 				}
@@ -1854,7 +1854,7 @@ namespace DisCatSharp
 
 				if (filtered != null && auditlog == null)
 				{
-					this.Logger.LogDebug("Re-scheduling timeout event.");
+					this.Logger.LogTrace("Re-scheduling timeout event.");
 					timer.Change(2000, Timeout.Infinite);
 					return;
 				}
@@ -1872,7 +1872,7 @@ namespace DisCatSharp
 			}
 
 			// Ending timer because it worked.
-			this.Logger.LogDebug("Removing timeout event.");
+			this.Logger.LogTrace("Removing timeout event.");
 			await timer.DisposeAsync();
 			this._tempTimers.Remove(tid);
 		}
