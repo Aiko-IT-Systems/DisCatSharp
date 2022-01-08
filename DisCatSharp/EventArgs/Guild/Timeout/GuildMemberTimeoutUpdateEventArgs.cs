@@ -47,9 +47,14 @@ namespace DisCatSharp.EventArgs
 		public DiscordGuild Guild { get; internal set; }
 
 		/// <summary>
-		/// Gets the audit log entry.
+		/// Gets the audit log id.
 		/// </summary>
-		public DiscordAuditLogMemberUpdateEntry AuditLogEntry { get; internal set; }
+		public ulong? AuditLogId { get; internal set; }
+
+		/// <summary>
+		/// Gets the audit log reason.
+		/// </summary>
+		public string AuditLogReason { get; internal set; }
 
 		/// <summary>
 		/// Gets the timeout time before the update.

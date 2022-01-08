@@ -109,6 +109,6 @@ namespace DisCatSharp.Net.Abstractions
 		/// Gets the timeout time.
 		/// </summary>
 		[JsonProperty("communication_disabled_until", NullValueHandling = NullValueHandling.Include)]
-		public DateTimeOffset? CommunicationDisabledUntil { get; internal set; }
+		public DateTime? CommunicationDisabledUntil { get; internal set; }
 	}
 }
