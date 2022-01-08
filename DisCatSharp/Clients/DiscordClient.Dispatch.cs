@@ -53,6 +53,49 @@ namespace DisCatSharp
 		private string _sessionId;
 		private bool _guildDownloadCompleted;
 
+		private readonly Dictionary<string, KeyValuePair<TimeoutHandler, Timer>> _tempTimers = new();
+
+		/// <summary>
+		/// Represents a timeout handler.
+		/// </summary>
+		internal class TimeoutHandler
+		{
+			/// <summary>
+			/// Gets the member.
+			/// </summary>
+			internal DiscordMember _member;
+
+			/// <summary>
+			/// Gets the guild.
+			/// </summary>
+			internal DiscordGuild _guild;
+
+			/// <summary>
+			/// Gets the old timeout value.
+			/// </summary>
+			internal DateTime? _timeoutUntilOld;
+
+			/// <summary>
+			/// Gets the new timeout value.
+			/// </summary>
+			internal DateTime? _timeoutUntilNew;
+
+			/// <summary>
+			/// Constructs a new <see cref="TimeoutHandler"/>.
+			/// </summary>
+			/// <param name="mbr">The affected member.</param>
+			/// <param name="guild">The affected guild.</param>
+			/// <param name="too">The old timeout value.</param>
+			/// <param name="ton">The new timeout value.</param>
+			internal TimeoutHandler(DiscordMember mbr, DiscordGuild guild, DateTime? too, DateTime? ton)
+			{
+				this._guild = guild;
+				this._member = mbr;
+				this._timeoutUntilOld = too;
+				this._timeoutUntilNew = ton;
+			}
+		}
+
 		#endregion
 
 		#region Dispatch Handler
@@ -1663,6 +1706,7 @@ namespace DisCatSharp
 
 			if (!guild.Members.TryGetValue(member.User.Id, out var mbr))
 				mbr = new DiscordMember(usr) { Discord = this, GuildId = guild.Id };
+			var old = mbr;
 
 			var nickOld = mbr.Nickname;
 			var pendingOld = mbr.IsPending;
@@ -1675,8 +1719,43 @@ namespace DisCatSharp
 			mbr.CommunicationDisabledUntil = member.CommunicationDisabledUntil;
 			mbr.RoleIdsInternal.Clear();
 			mbr.RoleIdsInternal.AddRange(roles);
+			if (!guild.MembersInternal.TryUpdate(member.User.Id, mbr, old))
+				guild.MembersInternal.TryAdd(member.User.Id, mbr);
 
-			var ea = new GuildMemberUpdateEventArgs(this.ServiceProvider)
+			var timeoutUntil = member.CommunicationDisabledUntil;
+			this.Logger.LogTrace($"Timeout:\nBefore - {cduOld}\nAfter - {timeoutUntil}");
+			if ((timeoutUntil.HasValue && cduOld.HasValue) || (timeoutUntil == null && cduOld.HasValue) || (timeoutUntil.HasValue && cduOld == null))
+			{
+				// We are going to add a scheduled timer to assure that we get a auditlog entry.
+
+				var id = $"tt-{mbr.Id}-{guild.Id}-{DateTime.Now.ToLongTimeString()}";
+
+				this._tempTimers.Add(
+					id,
+					new(
+						new TimeoutHandler(
+							mbr,
+							guild,
+							cduOld,
+							timeoutUntil
+						),
+						new Timer(
+							this.TimeoutTimer,
+							id,
+							2000,
+							Timeout.Infinite
+						)
+					)
+				);
+
+				this.Logger.LogTrace("Scheduling timeout event.");
+
+				return;
+			}
+
+			this.Logger.LogTrace("No timeout detected. Continuing on normal operation.");
+
+			var eargs = new GuildMemberUpdateEventArgs(this.ServiceProvider)
 			{
 				Guild = guild,
 				Member = mbr,
@@ -1691,7 +1770,111 @@ namespace DisCatSharp
 				PendingBefore = pendingOld,
 				TimeoutBefore = cduOld
 			};
-			await this._guildMemberUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+			await this._guildMemberUpdated.InvokeAsync(this, eargs).ConfigureAwait(false);
+		}
+
+		/// <summary>
+		/// Handles timeout events.
+		/// </summary>
+		/// <param name="state">Internally used as uid for the timer data.</param>
+		private async void TimeoutTimer(object state)
+		{
+			var tid = (string)state;
+			var data = this._tempTimers.First(x=> x.Key == tid).Value.Key;
+			var timer = this._tempTimers.First(x=> x.Key == tid).Value.Value;
+
+			IReadOnlyList<DiscordAuditLogEntry> auditlog = null;
+			DiscordAuditLogMemberUpdateEntry filtered = null;
+			try
+			{
+				auditlog = await data._guild.GetAuditLogsAsync(10, null, AuditLogActionType.MemberUpdate);
+				var pre_filtered = auditlog.Select(x => x as DiscordAuditLogMemberUpdateEntry).Where(x => x.Target.Id == data._member.Id);
+				filtered = pre_filtered.First();
+			}
+			catch (UnauthorizedException) { }
+			catch (Exception)
+			{
+				this.Logger.LogTrace("Re-scheduling timeout event.");
+				timer.Change(2000, Timeout.Infinite);
+				return;
+			}
+
+			var actor = filtered?.UserResponsible as DiscordMember;
+
+			this.Logger.LogTrace("Trying to execute timeout event.");
+
+			if (data._timeoutUntilOld.HasValue && data._timeoutUntilNew.HasValue)
+			{
+				// A timeout was updated.
+
+				if (filtered != null && auditlog == null)
+				{
+					this.Logger.LogTrace("Re-scheduling timeout event.");
+					timer.Change(2000, Timeout.Infinite);
+					return;
+				}
+
+				var ea = new GuildMemberTimeoutUpdateEventArgs(this.ServiceProvider)
+				{
+					Guild = data._guild,
+					Target = data._member,
+					TimeoutBefore = data._timeoutUntilOld.Value,
+					TimeoutAfter = data._timeoutUntilNew.Value,
+					Actor = actor,
+					AuditLogId = filtered?.Id,
+					AuditLogReason = filtered?.Reason
+				};
+				await this._guildMemberTimeoutChanged.InvokeAsync(this, ea).ConfigureAwait(false);
+			}
+			else if (!data._timeoutUntilOld.HasValue && data._timeoutUntilNew.HasValue)
+			{
+				// A timeout was added.
+
+				if (filtered != null && auditlog == null)
+				{
+					this.Logger.LogTrace("Re-scheduling timeout event.");
+					timer.Change(2000, Timeout.Infinite);
+					return;
+				}
+
+				var ea = new GuildMemberTimeoutAddEventArgs(this.ServiceProvider)
+				{
+					Guild = data._guild,
+					Target = data._member,
+					Timeout = data._timeoutUntilNew.Value,
+					Actor = actor,
+					AuditLogId = filtered?.Id,
+					AuditLogReason = filtered?.Reason
+				};
+				await this._guildMemberTimeoutAdded.InvokeAsync(this, ea).ConfigureAwait(false);
+			}
+			else if (data._timeoutUntilOld.HasValue && !data._timeoutUntilNew.HasValue)
+			{
+				// A timeout was removed.
+
+				if (filtered != null && auditlog == null)
+				{
+					this.Logger.LogTrace("Re-scheduling timeout event.");
+					timer.Change(2000, Timeout.Infinite);
+					return;
+				}
+
+				var ea = new GuildMemberTimeoutRemoveEventArgs(this.ServiceProvider)
+				{
+					Guild = data._guild,
+					Target = data._member,
+					TimeoutBefore = data._timeoutUntilOld.Value,
+					Actor = actor,
+					AuditLogId = filtered?.Id,
+					AuditLogReason = filtered?.Reason
+				};
+				await this._guildMemberTimeoutRemoved.InvokeAsync(this, ea).ConfigureAwait(false);
+			}
+
+			// Ending timer because it worked.
+			this.Logger.LogTrace("Removing timeout event.");
+			await timer.DisposeAsync();
+			this._tempTimers.Remove(tid);
 		}
 
 		/// <summary>

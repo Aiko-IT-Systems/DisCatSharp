@@ -188,7 +188,7 @@ namespace DisCatSharp.Entities
 		/// Date until the can communicate again.
 		/// </summary>
 		[JsonProperty("communication_disabled_until", NullValueHandling = NullValueHandling.Include)]
-		public DateTimeOffset? CommunicationDisabledUntil { get; internal set; }
+		public DateTime? CommunicationDisabledUntil { get; internal set; }
 
 		/// <summary>
 		/// If the user is deafened
