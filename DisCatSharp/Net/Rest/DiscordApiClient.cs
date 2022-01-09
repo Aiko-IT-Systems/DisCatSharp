@@ -5347,7 +5347,7 @@ namespace DisCatSharp.Net
 					LogoHash = guild.IconHash,
 					GuildId = guild.Id,
 					Guild = guild,
-					SupportInvite = await this.GetInviteAsync("discatsharp", true, true, null)
+					SupportInvite = await this.GetInviteAsync("U4BGHpKSF7", true, true, null)
 				};
 				List<DisCatSharpTeamMember> team = new();
 				DisCatSharpTeamMember owner = new();
