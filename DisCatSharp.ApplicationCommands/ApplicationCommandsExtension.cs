@@ -161,11 +161,11 @@ namespace DisCatSharp.ApplicationCommands
 		/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
 		/// </summary>
 		/// <param name="configuration">The configuration.</param>
-		internal ApplicationCommandsExtension(ApplicationCommandsConfiguration configuration)
+		internal ApplicationCommandsExtension(ApplicationCommandsConfiguration configuration = null)
 		{
 			Configuration = configuration;
-			DebugEnabled = configuration.DebugStartup;
-			CheckAllGuilds = configuration.CheckAllGuilds;
+			DebugEnabled = configuration?.DebugStartup ?? false;
+			CheckAllGuilds = configuration?.CheckAllGuilds ?? false;
 		}
 
 		/// <summary>
