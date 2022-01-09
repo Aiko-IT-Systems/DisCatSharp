@@ -1,4 +1,4 @@
-# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/discatsharp)
+# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/U4BGHpKSF7)
 
 ![dcs-christmas-banner](https://user-images.githubusercontent.com/14029133/144901681-3056a79a-16fd-43ab-956e-b4268c3427e1.jpeg)
 
@@ -28,7 +28,7 @@ We want the lib always up-to-date. The newest features are important for us.
 So the API version is always the newest, in the actual case `v9`.
 
 ## Where is the Changelog?
-On [our guild!](https://discord.gg/discatsharp) You find it in [this channel](https://discord.com/channels/858089281214087179/858099438580006913).
+On [our guild!](https://discord.gg/U4BGHpKSF7) You find it in [this channel](https://discord.com/channels/858089281214087179/858099438580006913).
 
 ## Installing
 You can install the library from following source:
@@ -41,7 +41,7 @@ The documentation for the latest stable version is available at [docs.dcs.aitsys
 The documentation of the latest nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
-Either join our [support guild](https://discord.gg/discatsharp) and open a support ticket.
+Either join our [support guild](https://discord.gg/U4BGHpKSF7) and open a support ticket.
 Or write a mail to dcs@aitsys.dev.
 
 All requests are tracked at [aitsys.dev](https://aitsys.dev).
