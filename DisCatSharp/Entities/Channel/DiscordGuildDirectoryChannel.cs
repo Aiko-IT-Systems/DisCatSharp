@@ -21,19 +21,27 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
 	/// <summary>
 	/// Represents a discord guild directory channel.
 	/// </summary>
-	public class DiscordGuildDirectoryChannel : SnowflakeObject, IEquatable<DiscordGuildDirectoryChannel>
+	public class DiscordGuildDirectoryChannel : DiscordChannel, IEquatable<DiscordGuildDirectoryChannel>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordGuildDirectoryChannel"/> class.
 		/// </summary>
 		internal DiscordGuildDirectoryChannel()
 		{ }
+
+		[JsonIgnore]
+		public IReadOnlyList<DiscordGuildDirectoryEntry> Entries =>
+			this.Guild.ChannelsInternal.Values.Where(e => e.ParentId == this.Id).Select(x => x as DiscordGuildDirectoryEntry).ToList();
 
 		#region Methods
 
