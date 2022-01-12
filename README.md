@@ -90,12 +90,13 @@ If you can't see it, take a look into the selfroles channel.
 
 
 ## Thanks
-Big thanks goes to the following people who helps us ♥️
+Big thanks goes to the following people who helped us ♥️
 - [Auros Nexus](https://github.com/Auros)
 - [Lunar Starstrum](https://github.com/OoLunar)
 - [Johannes](https://github.com/JMLutra)
 - [Geferon](https://github.com/geferon)
 - [Alice](https://github.com/QuantuChi)
+- [Will](https://github.com/villChurch)
 
 ## Special Thanks
 The special thanks goes to Nagisa. Make sure to check out her [instagram](https://www.instagram.com/nagisaarts_/) ♥️♥️

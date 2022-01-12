@@ -16,7 +16,7 @@ Translations are added the same way like permissions are added to Application Co
 ```cs
 const string TRANSLATION_PATH = "translations/";
 
-Client.GetShard(0).GetApplicationCommands().RegisterCommands<MyCommand>(1215484634894646844, perms => {
+Client.GetApplicationCommands().RegisterGuildCommands<MyCommand>(1215484634894646844, perms => {
     perms.AddRole(915747497668915230, true);
 }, translations =>
 {
@@ -25,7 +25,7 @@ Client.GetShard(0).GetApplicationCommands().RegisterCommands<MyCommand>(12154846
     translations.AddTranslation(json);
 });
 
-Client.GetShard(0).GetApplicationCommands().RegisterCommands<MySimpleCommands>(1215484634894646844, perms => {
+Client.GetApplicationCommands().RegisterGuildCommands<MySimpleCommands>(1215484634894646844, perms => {
     perms.AddRole(915747497668915230, true);
 }, translations =>
 {
