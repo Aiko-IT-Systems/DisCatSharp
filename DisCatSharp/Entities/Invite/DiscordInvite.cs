@@ -77,10 +77,9 @@ namespace DisCatSharp.Entities
 
 		/// <summary>
 		/// Gets the type of this invite.
-		/// 2 = user.
 		/// </summary>
 		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-		public int? Type { get; internal set; }
+		public InviteType Type { get; internal set; }
 
 		/// <summary>
 		/// Gets the user that is currently livestreaming.
