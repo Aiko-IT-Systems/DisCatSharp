@@ -698,7 +698,7 @@ namespace DisCatSharp.Entities
 	public sealed class DiscordAuditLogGuildScheduledEventEntry : DiscordAuditLogEntry
 	{
 		/// <summary>
-		/// Gets the affected thread
+		/// Gets the affected event
 		/// </summary>
 		public DiscordScheduledEvent Target { get; internal set; }
 
@@ -778,6 +778,11 @@ namespace DisCatSharp.Entities
 		/// Gets the locked state of the thread.
 		/// </summary>
 		public PropertyChange<bool?> LockedChange { get; internal set; }
+
+		/// <summary>
+		/// Gets the invitable state of the thread.
+		/// </summary>
+		public PropertyChange<bool?> InvitableChange { get; internal set; }
 
 		/// <summary>
 		/// Gets the new auto archive duration of the thread.
