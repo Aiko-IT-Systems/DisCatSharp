@@ -36,4 +36,4 @@ Once you're up and running, feel free to browse through the [API Documentation](
 You can get in contact with us on Discord through the following guild:
 
 **DisCatSharp Guild**:</br>
-[![DisCatSharp](https://discordapp.com/api/guilds/858089281214087179/embed.png?style=banner2)](https://discord.gg/discatsharp)
+[![DisCatSharp](https://discordapp.com/api/guilds/858089281214087179/embed.png?style=banner2)](https://discord.gg/U4BGHpKSF7)
