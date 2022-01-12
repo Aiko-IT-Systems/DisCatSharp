@@ -2585,6 +2585,14 @@ namespace DisCatSharp.Entities
 									};
 									break;
 
+								case "invitable":
+									entrythr.InvitableChange = new PropertyChange<bool?>
+									{
+										Before = xc.OldValue != null ? (bool?)xc.OldValue : null,
+										After = xc.NewValue != null ? (bool?)xc.NewValue : null
+									};
+									break;
+
 								case "auto_archive_duration":
 									p1 = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5);
 									p2 = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6);
