@@ -53,6 +53,12 @@ namespace DisCatSharp.ApplicationCommands
 		public bool DebugStartup { internal get; set; } = false;
 
 		/// <summary>
+		/// Manual override.
+		/// <note type="warning">DO NOT USE THIS!</note>
+		/// </summary>
+		public bool ManualOverride { internal get; set; } = false;
+
+		/// <summary>
 		/// Checks through all guilds.
 		/// <note type="warning">This will take quite a while, when the bot is on more than 1k guilds.</note>
 		/// </summary>
@@ -78,6 +84,7 @@ namespace DisCatSharp.ApplicationCommands
 			this.ServiceProvider = acc.ServiceProvider;
 			this.DebugStartup = acc.DebugStartup;
 			this.CheckAllGuilds = acc.CheckAllGuilds;
+			this.ManualOverride = acc.ManualOverride;
 		}
 	}
 }
