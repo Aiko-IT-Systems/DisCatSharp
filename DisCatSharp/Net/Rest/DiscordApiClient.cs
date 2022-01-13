@@ -5002,6 +5002,46 @@ namespace DisCatSharp.Net
 			return ret.ToList();
 		}
 
+		#region Permissions 2.1
+		/// <summary>
+		/// Overwrites the default guild application command permissions.
+		/// </summary>
+		/// <param name="applicationId">The target application id.</param>
+		/// <param name="guildId">The target guild id.</param>
+		/// <param name="everyonePermission">The permission for @everyone.</param>
+		/// <param name="allChannelsPermission">The permission for all channels.</param>
+		/// <param name="permissions">Array of additional permissions.</param>
+		internal async Task<DiscordGuildApplicationCommandPermission> OverwriteDefaultGuildApplicationCommandPermissionsAsync(ulong applicationId, ulong guildId, bool everyonePermission, bool allChannelsPermission, IEnumerable<DiscordApplicationCommandPermission> permissions)
+		{
+			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id{Endpoints.PERMISSIONS}";
+			var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {application_id = applicationId, guild_id = guildId, command_id = guildId }, out var path);
+
+			if (permissions.ToArray().Length > 8)
+				throw new NotSupportedException("You can add only up to 9 permission overwrites.");
+
+			var allChannelsId = guildId - 1;
+
+			var perms = permissions.ToList();
+			perms.Add(new DiscordApplicationCommandPermission(guildId, ApplicationCommandPermissionType.Role, everyonePermission));
+			perms.Add(new DiscordApplicationCommandPermission(allChannelsId, ApplicationCommandPermissionType.Channel, allChannelsPermission));
+
+			var pld = new RestApplicationCommandPermissionEditPayload
+			{
+				Permissions = perms
+			};
+
+			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+
+			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
+
+			var ret = JsonConvert.DeserializeObject<DiscordGuildApplicationCommandPermission>(res.Response);
+
+			ret.Discord = this.Discord;
+
+			return ret;
+		}
+		#endregion
+
 		/// <summary>
 		/// Creates the interaction response.
 		/// </summary>
