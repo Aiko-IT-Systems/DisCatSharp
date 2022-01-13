@@ -67,13 +67,15 @@ namespace DisCatSharp.ApplicationCommands
 			return type switch {
 				ApplicationCommandType.ChatInput => DeepEqual(source, target),
 				_ => (source.Name == target.Name) && (source.DefaultPermission == target.DefaultPermission)
+					&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions) && (source.DmPermission == target.DmPermission)
 			&& (source.Type == target.Type)
 			};
 		}
 
 		internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target)
 		{
-			var rootCheck = (source.Name == target.Name) && (source.Description == target.Description) && (source.DefaultPermission == target.DefaultPermission) && (source.Type == target.Type);
+			var rootCheck = (source.Name == target.Name) && (source.Description == target.Description) && (source.DefaultPermission == target.DefaultPermission) && (source.Type == target.Type)
+					&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions) && (source.DmPermission == target.DmPermission);
 
 			if (source.Options == null && target.Options == null)
 				return rootCheck;

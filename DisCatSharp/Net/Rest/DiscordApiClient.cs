@@ -4598,7 +4598,9 @@ namespace DisCatSharp.Net
 					Options = command.Options,
 					DefaultPermission = command.DefaultPermission,
 					NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
-					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs()
+					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
+					DefaultMemberPermission = command.DefaultMemberPermissions,
+					DmPermission = command.DmPermission
 				});
 			}
 
@@ -4631,7 +4633,9 @@ namespace DisCatSharp.Net
 				Options = command.Options,
 				DefaultPermission = command.DefaultPermission,
 				NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
-				DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs()
+				DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
+				DefaultMemberPermission = command.DefaultMemberPermissions,
+				DmPermission = command.DmPermission
 			};
 
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -4676,7 +4680,11 @@ namespace DisCatSharp.Net
 		/// <param name="defaultPermission">The default permission.</param>
 		/// <param name="nameLocalization">The localizations of the name.</param>
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
-		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> defaultPermission, Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization)
+		/// <param name="defaultMemberPermission">The default member permissions.</param>
+		/// <param name="dmPermission">The dm permission.</param>
+		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
+			Optional<bool> defaultPermission, Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
+			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
 		{
 			var pld = new RestApplicationCommandEditPayload
 			{
@@ -4685,7 +4693,9 @@ namespace DisCatSharp.Net
 				Options = options,
 				DefaultPermission = defaultPermission,
 				NameLocalizations = nameLocalization.HasValue ? nameLocalization.Value.GetKeyValuePairs() : null,
-				DescriptionLocalizations = descriptionLocalization.HasValue ? descriptionLocalization.Value.GetKeyValuePairs() : null
+				DescriptionLocalizations = descriptionLocalization.HasValue ? descriptionLocalization.Value.GetKeyValuePairs() : null,
+				DefaultMemberPermission = defaultMemberPermission,
+				DmPermission = dmPermission
 			};
 
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -4753,7 +4763,9 @@ namespace DisCatSharp.Net
 					Options = command.Options,
 					DefaultPermission = command.DefaultPermission,
 					NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
-					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs()
+					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
+					DefaultMemberPermission = command.DefaultMemberPermissions,
+					DmPermission = command.DmPermission
 				});
 			}
 			this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
@@ -4786,7 +4798,9 @@ namespace DisCatSharp.Net
 				Options = command.Options,
 				DefaultPermission = command.DefaultPermission,
 				NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
-				DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs()
+				DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
+				DefaultMemberPermission = command.DefaultMemberPermissions,
+				DmPermission = command.DmPermission
 
 			};
 
@@ -4834,7 +4848,11 @@ namespace DisCatSharp.Net
 		/// <param name="defaultPermission">The default permission.</param>
 		/// <param name="nameLocalization">The localizations of the name.</param>
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
-		internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> defaultPermission, Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization)
+		/// <param name="defaultMemberPermission">The default member permissions.</param>
+		/// <param name="dmPermission">The dm permission.</param>
+		internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
+			Optional<bool> defaultPermission, Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
+			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
 		{
 			var pld = new RestApplicationCommandEditPayload
 			{
@@ -4843,7 +4861,9 @@ namespace DisCatSharp.Net
 				Options = options,
 				DefaultPermission = defaultPermission,
 				NameLocalizations = nameLocalization.HasValue ? nameLocalization.Value.GetKeyValuePairs() : null,
-				DescriptionLocalizations = descriptionLocalization.HasValue ? descriptionLocalization.Value.GetKeyValuePairs() : null
+				DescriptionLocalizations = descriptionLocalization.HasValue ? descriptionLocalization.Value.GetKeyValuePairs() : null,
+				DefaultMemberPermission = defaultMemberPermission,
+				DmPermission = dmPermission
 			};
 
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";
