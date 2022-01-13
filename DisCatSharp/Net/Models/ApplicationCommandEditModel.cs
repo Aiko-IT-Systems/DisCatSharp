@@ -85,7 +85,7 @@ namespace DisCatSharp.Net.Models
 		/// <summary>
 		/// Sets the command's needed permissions.
 		/// </summary>
-		public Optional<Permissions> Permission { internal get; set; }
+		public Optional<Permissions> DefaultMemberPermissions { internal get; set; }
 
 		/// <summary>
 		/// Sets whether the command can be used in direct messages.

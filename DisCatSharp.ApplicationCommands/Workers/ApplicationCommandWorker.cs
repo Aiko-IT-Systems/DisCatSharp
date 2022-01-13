@@ -66,7 +66,7 @@ namespace DisCatSharp.ApplicationCommands
 				if (commandTranslation != null)
 					nameLocalizations = commandTranslation.NameTranslations;
 
-				var command = new DiscordApplicationCommand(contextAttribute.Name, null, null, contextAttribute.DefaultPermission, contextAttribute.Type, nameLocalizations);
+				var command = new DiscordApplicationCommand(contextAttribute.Name, null, null, contextAttribute.DefaultPermission, contextAttribute.Type, nameLocalizations, null, contextAttribute.DefaultMemberPermissions, contextAttribute.DmPermission);
 
 				var parameters = contextMethod.GetParameters();
 				if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(ContextMenuContext)))
@@ -145,7 +145,7 @@ namespace DisCatSharp.ApplicationCommands
 					descriptionLocalizations = commandTranslation.DescriptionTranslations;
 				}
 
-				var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, (localizisedOptions != null && localizisedOptions.Any() ? localizisedOptions : null) ?? (options != null && options.Any() ? options : null), commandattribute.DefaultPermission, ApplicationCommandType.ChatInput, nameLocalizations, descriptionLocalizations);
+				var payload = new DiscordApplicationCommand(commandattribute.Name, commandattribute.Description, (localizisedOptions != null && localizisedOptions.Any() ? localizisedOptions : null) ?? (options != null && options.Any() ? options : null), commandattribute.DefaultPermission, ApplicationCommandType.ChatInput, nameLocalizations, descriptionLocalizations, commandattribute.DefaultMemberPermissions, commandattribute.DmPermission);
 				commands.Add(payload);
 				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 			}
@@ -209,7 +209,7 @@ namespace DisCatSharp.ApplicationCommands
 				}
 
 				//Initializes the command
-				var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, defaultPermission: groupAttribute.DefaultPermission, nameLocalizations: nameLocalizations, descriptionLocalizations: descriptionLocalizations);
+				var payload = new DiscordApplicationCommand(groupAttribute.Name, groupAttribute.Description, defaultPermission: groupAttribute.DefaultPermission, nameLocalizations: nameLocalizations, descriptionLocalizations: descriptionLocalizations, defaultMemberPermissions: groupAttribute.DefaultMemberPermissions, dmPermission: groupAttribute.DmPermission);
 				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 
 				var commandmethods = new List<KeyValuePair<string, MethodInfo>>();
@@ -264,7 +264,7 @@ namespace DisCatSharp.ApplicationCommands
 
 					//Creates the subcommand and adds it to the main command
 					var subpayload = new DiscordApplicationCommandOption(commandAttribute.Name, commandAttribute.Description, ApplicationCommandOptionType.SubCommand, null, null, localizisedOptions ?? options, nameLocalizations: subNameLocalizations, descriptionLocalizations: subDescriptionLocalizations);
-					payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations);
+					payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, dmPermission: payload.DmPermission);
 					commandTypeSources.Add(new KeyValuePair<Type, Type>(subclassinfo, type));
 
 					//Adds it to the method lists
@@ -358,7 +358,7 @@ namespace DisCatSharp.ApplicationCommands
 					//Adds the group to the command and method lists
 					var subpayload = new DiscordApplicationCommandOption(subGroupAttribute.Name, subGroupAttribute.Description, ApplicationCommandOptionType.SubCommandGroup, null, null, options, nameLocalizations: subNameLocalizations, descriptionLocalizations: subDescriptionLocalizations);
 					command.SubCommands.Add(new GroupCommand { Name = subGroupAttribute.Name, Methods = currentMethods });
-					payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations);
+					payload = new DiscordApplicationCommand(payload.Name, payload.Description, payload.Options?.Append(subpayload) ?? new[] { subpayload }, payload.DefaultPermission, nameLocalizations: payload.NameLocalizations, descriptionLocalizations: payload.DescriptionLocalizations, defaultMemberPermissions: payload.DefaultMemberPermissions, dmPermission: payload.DmPermission);
 					commandTypeSources.Add(new KeyValuePair<Type, Type>(subclass, type));
 
 					//Accounts for lifespans for the sub group

@@ -24,6 +24,8 @@ using System;
 
 using DisCatSharp.Enums;
 
+using Newtonsoft.Json;
+
 namespace DisCatSharp.ApplicationCommands
 {
 
@@ -49,12 +51,26 @@ namespace DisCatSharp.ApplicationCommands
 		public bool DefaultPermission { get; internal set; }
 
 		/// <summary>
+		/// Gets the commands needed permissions.
+		/// </summary>
+		[JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Ignore)]
+		public Permissions DefaultMemberPermissions { get; internal set; }
+
+		/// <summary>
+		/// Gets whether the command can be used in direct messages.
+		/// </summary>
+		[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Ignore)]
+		public bool DmPermission { get; internal set; }
+
+		/// <summary>
 		/// Marks this method as a context menu.
 		/// </summary>
 		/// <param name="type">The type of the context menu.</param>
 		/// <param name="name">The name of the context menu.</param>
 		/// <param name="defaultPermission">The default permission of the context menu.</param>
-		public ContextMenuAttribute(ApplicationCommandType type, string name, bool defaultPermission = true)
+		/// <param name="defaultMemberPermissions">The default member permissions.</param>
+		/// <param name="dmPermission">The dm permission.</param>
+		public ContextMenuAttribute(ApplicationCommandType type, string name, bool defaultPermission = true, long defaultMemberPermissions = (long)0, bool dmPermission = true)
 		{
 			if (type == ApplicationCommandType.ChatInput)
 				throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
@@ -62,6 +78,8 @@ namespace DisCatSharp.ApplicationCommands
 			this.Type = type;
 			this.Name = name;
 			this.DefaultPermission = defaultPermission;
+			this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
+			this.DmPermission = dmPermission;
 		}
 	}
 }
