@@ -157,6 +157,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		internal static bool CheckAllGuilds { get; set; }
 
+		internal static bool ManOr { get; set; }
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
 		/// </summary>
@@ -166,6 +168,7 @@ namespace DisCatSharp.ApplicationCommands
 			Configuration = configuration;
 			DebugEnabled = configuration?.DebugStartup ?? false;
 			CheckAllGuilds = configuration?.CheckAllGuilds ?? false;
+			ManOr = configuration?.ManualOverride ?? false;
 		}
 
 		/// <summary>
@@ -773,8 +776,8 @@ namespace DisCatSharp.ApplicationCommands
 								}
 							}
 						}
-
-						if (guildid != null)
+						
+						if (guildid != null && overwrites != null && overwrites.Any())
 						{
 							if (overwrites.Any(x => x.Id == 0))
 							{
@@ -815,7 +818,7 @@ namespace DisCatSharp.ApplicationCommands
 								s_permError = true;
 								throw new ArgumentException("Overwrites has a value with command id 0. Seems like an error. Aborting.");
 							}
-
+							
 							try
 							{
 								var gOv = guildOverwrites.Select(x => x.Key).Distinct();
@@ -844,7 +847,7 @@ namespace DisCatSharp.ApplicationCommands
 									this.Client.Logger.LogError($"[AC Perms] General exception: {ex.Message}\n{ex.StackTrace}\nRestarting could help.");
 							}
 						}
-
+						
 						//Adds to the global lists finally
 						s_commandMethods.AddRange(commandMethods);
 						s_groupCommands.AddRange(groupCommands);
@@ -879,8 +882,7 @@ namespace DisCatSharp.ApplicationCommands
 						}
 
 						s_registrationCount++;
-
-						this.CheckRegistrationStartup();
+						this.CheckRegistrationStartup(ManOr);
 					}
 					catch (Exception ex)
 					{
@@ -894,11 +896,11 @@ namespace DisCatSharp.ApplicationCommands
 			});
 		}
 
-		private async void CheckRegistrationStartup()
+		private async void CheckRegistrationStartup(bool man = false)
 		{
 			this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Checking counts...\n\nExpected Count: {s_expectedCount}\nCurrent Count: {s_registrationCount}");
 
-			if (s_registrationCount == s_expectedCount && !s_permError)
+			if ((s_registrationCount == s_expectedCount && !s_permError) || man)
 			{
 				await this._applicationCommandsModuleStartupFinished.InvokeAsync(this, new ApplicationCommandsModuleStartupFinishedEventArgs(Configuration?.ServiceProvider)
 				{
