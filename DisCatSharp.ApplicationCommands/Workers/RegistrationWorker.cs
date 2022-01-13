@@ -168,7 +168,7 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (globalCommandsCreateList.EmptyOrNull() && changedCommands.EmptyOrNull() && unchangedCommands.NotEmptyAndNotNull())
 			{
-				ApplicationCommandsExtension.ClientInternal.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC GUILD] Re-using all application commands.");
+				ApplicationCommandsExtension.ClientInternal.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC GLOBAL] Re-using all application commands.");
 
 				commands.AddRange(unchangedCommands);
 			}
