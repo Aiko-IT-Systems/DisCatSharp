@@ -24,8 +24,6 @@ using System;
 
 using DisCatSharp.Enums;
 
-using Newtonsoft.Json;
-
 namespace DisCatSharp.ApplicationCommands
 {
 
@@ -53,13 +51,11 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Gets the commands needed permissions.
 		/// </summary>
-		[JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Ignore)]
 		public Permissions DefaultMemberPermissions { get; internal set; }
 
 		/// <summary>
 		/// Gets whether the command can be used in direct messages.
 		/// </summary>
-		[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Ignore)]
 		public bool DmPermission { get; internal set; }
 
 		/// <summary>
