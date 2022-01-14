@@ -63,7 +63,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <param name="defaultPermission">Whether everyone can execute this command.</param>
 		/// <param name="defaultMemberPermissions">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
-		public SlashCommandAttribute(string name, string description, bool defaultPermission = true, long defaultMemberPermissions = (long)0, bool dmPermission = true)
+		public SlashCommandAttribute(string name, string description, bool defaultPermission = true, long defaultMemberPermissions = 0, bool dmPermission = true)
 		{
 			this.Name = name.ToLower();
 			this.Description = description;

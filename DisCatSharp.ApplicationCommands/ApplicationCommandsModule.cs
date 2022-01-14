@@ -60,5 +60,14 @@ namespace DisCatSharp.ApplicationCommands
 		/// <returns></returns>
 		public virtual Task AfterContextMenuExecutionAsync(ContextMenuContext ctx)
 			=> Task.CompletedTask;
+
+		/// <summary>
+		/// Generate the default member permissions.
+		/// To use on <see cref="SlashCommandAttribute.DefaultMemberPermissions"></see>
+		/// </summary>
+		/// <param name="permissions">The default needed member permissions.</param>
+		/// <returns>Permission long.</returns>
+		public long GenerateDefaultMemberPermission(Permissions permissions)
+			=> (long)permissions;
 	}
 }

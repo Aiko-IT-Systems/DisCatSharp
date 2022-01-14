@@ -66,7 +66,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <param name="defaultPermission">The default permission of the context menu.</param>
 		/// <param name="defaultMemberPermissions">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
-		public ContextMenuAttribute(ApplicationCommandType type, string name, bool defaultPermission = true, long defaultMemberPermissions = (long)0, bool dmPermission = true)
+		public ContextMenuAttribute(ApplicationCommandType type, string name, bool defaultPermission = true, long defaultMemberPermissions = 0, bool dmPermission = true)
 		{
 			if (type == ApplicationCommandType.ChatInput)
 				throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
