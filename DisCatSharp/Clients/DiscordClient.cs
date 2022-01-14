@@ -903,6 +903,18 @@ namespace DisCatSharp
 		/// <param name="permissionsOverwrites">The list of permissions to overwrite with.</param>
 		public Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> BulkOverwriteGuildApplicationCommandsAsync(ulong guildId, IEnumerable<DiscordGuildApplicationCommandPermission> permissionsOverwrites) =>
 			this.ApiClient.BulkOverwriteGuildApplicationCommandPermissionsAsync(this.CurrentApplication.Id, guildId, permissionsOverwrites);
+
+		/// <summary>
+		/// Overwrites the default permissions for the application commands.
+		/// </summary>
+		/// <param name="guildId">The id of the guild.</param>
+		/// <param name="everyonePermission">Permission for @everyone.</param>
+		/// <param name="allChannelsPermission">Permission for all members in all channels.</param>
+		/// <param name="permissions">List of permissions.</param>
+		/// <returns></returns>
+		public Task<DiscordGuildApplicationCommandPermission> OverwriteDefaultGuildApplicationCommandPermissionsAsync(ulong guildId, bool everyonePermission, bool allChannelsPermission, IEnumerable<DiscordApplicationCommandPermission> permissions)
+			=> this.ApiClient.OverwriteDefaultGuildApplicationCommandPermissionsAsync(this.CurrentApplication.Id, guildId, everyonePermission, allChannelsPermission, permissions);
+
 		#endregion
 
 		#region Internal Caching Methods
