@@ -232,34 +232,4 @@ namespace DisCatSharp.Net.Abstractions
 		[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
 		public List<DiscordAttachment> Attachments { get; set; }
 	}
-
-	/// <summary>
-	/// Represents a application command permission edit payload.
-	/// </summary>
-	internal class RestApplicationCommandPermissionEditPayload
-	{
-		/// <summary>
-		/// Gets the permissions.
-		/// </summary>
-		[JsonProperty("permissions")]
-		public IEnumerable<DiscordApplicationCommandPermission> Permissions { get; set; }
-	}
-
-	/// <summary>
-	/// Represents a guild application command permission edit payload.
-	/// </summary>
-	internal class RestGuildApplicationCommandPermissionEditPayload
-	{
-		/// <summary>
-		/// Gets the command id.
-		/// </summary>
-		[JsonProperty("id")]
-		public ulong CommandId { get; set; }
-
-		/// <summary>
-		/// Gets the permissions.
-		/// </summary>
-		[JsonProperty("permissions")]
-		public IEnumerable<DiscordApplicationCommandPermission> Permissions { get; set; }
-	}
 }
