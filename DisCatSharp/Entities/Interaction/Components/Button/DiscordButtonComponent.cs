@@ -79,7 +79,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Constructs a new <see cref="DiscordButtonComponent"/>.
 		/// </summary>
-		internal DiscordButtonComponent()
+		public DiscordButtonComponent()
 		{
 			this.Type = ComponentType.Button;
 		}
