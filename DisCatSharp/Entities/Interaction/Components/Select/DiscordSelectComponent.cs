@@ -107,7 +107,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordSelectComponent"/> class.
 		/// </summary>
-		internal DiscordSelectComponent()
+		public DiscordSelectComponent()
 		{
 			this.Type = ComponentType.Select;
 		}
