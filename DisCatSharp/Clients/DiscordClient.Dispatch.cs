@@ -1720,8 +1720,7 @@ namespace DisCatSharp
 			mbr.CommunicationDisabledUntil = member.CommunicationDisabledUntil;
 			mbr.RoleIdsInternal.Clear();
 			mbr.RoleIdsInternal.AddRange(roles);
-			if (!guild.MembersInternal.TryUpdate(member.User.Id, mbr, old))
-				guild.MembersInternal.TryAdd(member.User.Id, mbr);
+			guild.MembersInternal.AddOrUpdate(member.User.Id, mbr, (id, oldMbr) => oldMbr);
 
 			var timeoutUntil = member.CommunicationDisabledUntil;
 			this.Logger.LogTrace($"Timeout:\nBefore - {cduOld}\nAfter - {timeoutUntil}");
