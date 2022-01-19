@@ -99,7 +99,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordLinkButtonComponent"/> class.
 		/// </summary>
-		internal DiscordLinkButtonComponent()
+		public DiscordLinkButtonComponent()
 		{
 			this.Type = ComponentType.Button;
 		}

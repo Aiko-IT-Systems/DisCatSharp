@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.IO;
 
 using DisCatSharp.Entities;
 
@@ -69,7 +70,7 @@ namespace DisCatSharp.Net.Models
 		/// <summary>
 		/// Gets or sets the cover image as base64.
 		/// </summary>
-		public Optional<string> ImageBase64 { get; set; }
+		public Optional<Stream> CoverImage { get; set; }
 
 		/// <summary>
 		/// Gets or sets the status of the scheduled event.

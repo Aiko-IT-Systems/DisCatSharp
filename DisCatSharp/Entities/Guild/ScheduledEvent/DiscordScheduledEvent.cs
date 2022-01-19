@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 
+using DisCatSharp.Enums;
+using DisCatSharp.Net;
 using DisCatSharp.Net.Models;
 
 using Newtonsoft.Json;
@@ -95,20 +97,20 @@ namespace DisCatSharp.Entities
 		[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
 		public string Description { get; internal set; }
 
-		/* TODO|INFO: Is not available yet to users / clients / bots.
         /// <summary>
         /// Gets this event's cover hash, when applicable.
         /// </summary>
         [JsonProperty("image", NullValueHandling = NullValueHandling.Ignore)]
-        public string ImageHash { get; internal set; }
+        public string CoverImageHash { get; internal set; }
 
         /// <summary>
         /// Gets this event's cover in url form.
         /// </summary>
         [JsonIgnore]
-        public string ImageUrl
-            => !string.IsNullOrWhiteSpace(this.ImageHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.EVENTS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}/images/{this.ImageHash}.{(this.ImageHash.StartsWith("a_") ? "gif" : "png")}" : null;
-        */
+        public string CoverImageUrl
+            => !string.IsNullOrWhiteSpace(this.CoverImageHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.GUILD_EVENTS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}" : null;
+		// Somehow they does not include a extension. .{(this.CoverImageHash.StartsWith("a_") ? "gif" : "png")}
+
 		/// <summary>
 		/// Gets the scheduled start time of the scheduled event.
 		/// </summary>
@@ -218,11 +220,20 @@ namespace DisCatSharp.Entities
 			else if (mdl.Description.HasValue)
 				description = null;
 
+			var coverb64 = Optional.FromNoValue<string>();
+
+			if (mdl.CoverImage.HasValue && mdl.CoverImage.Value != null)
+				using (var imgtool = new ImageTool(mdl.CoverImage.Value))
+					coverb64 = imgtool.GetBase64();
+			else if (mdl.CoverImage.HasValue)
+				coverb64 = null;
+
+
 			var scheduledEndTime = Optional.FromNoValue<DateTimeOffset>();
 			if (mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
 				scheduledEndTime = mdl.ScheduledEndTime.Value;
 
-			await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.Status, mdl.AuditLogReason);
+			await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.Status, coverb64, mdl.AuditLogReason);
 		}
 
 		/// <summary>

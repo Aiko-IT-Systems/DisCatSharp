@@ -969,19 +969,27 @@ namespace DisCatSharp.Entities
 		/// <param name="name">The name.</param>
 		/// <param name="scheduledStartTime">The scheduled start time.</param>
 		/// <param name="description">The description.</param>
+		/// <param name="coverImage">The cover image.</param>
 		/// <param name="reason">The reason.</param>
 		/// <returns>A scheduled event.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the ressource does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, string description = null, string reason = null)
+		public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, string description = null, Optional<Stream> coverImage = default, string reason = null)
 		{
 			if (!this.IsVoiceJoinable())
 				throw new NotSupportedException("Cannot create a scheduled event for this type of channel. Channel type must be either voice or stage.");
 
+			var coverb64 = Optional.FromNoValue<string>();
+			if (coverImage.HasValue && coverImage.Value != null)
+				using (var imgtool = new ImageTool(coverImage.Value))
+					coverb64 = imgtool.GetBase64();
+			else if (coverImage.HasValue)
+				coverb64 = null;
+
 			var type = this.Type == ChannelType.Voice ? ScheduledEventEntityType.Voice : ScheduledEventEntityType.StageInstance;
 
-			return await this.Guild.CreateScheduledEventAsync(name, scheduledStartTime, null, this, null, description, type, reason);
+			return await this.Guild.CreateScheduledEventAsync(name, scheduledStartTime, null, this, null, description, type, coverImage, reason);
 		}
 
 		#endregion

@@ -1374,7 +1374,7 @@ namespace DisCatSharp.ApplicationCommands
 			GuildDiscordCommands = null;
 			s_errored = false;
 
-			if (Configuration.EnableDefaultHelp)
+			if (Configuration != null && Configuration.EnableDefaultHelp)
 			{
 				this._updateList.RemoveAll(x => x.Value.Type == typeof(DefaultHelpModule));
 			}
