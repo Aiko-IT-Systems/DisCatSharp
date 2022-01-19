@@ -108,7 +108,7 @@ namespace DisCatSharp.Entities
         /// </summary>
         [JsonIgnore]
         public string CoverImageUrl
-            => !string.IsNullOrWhiteSpace(this.CoverImageHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.GUILD_EVENTS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}" : null;
+            => !string.IsNullOrWhiteSpace(this.CoverImageHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.GUILD_EVENTS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png" : null;
 		// Somehow they does not include a extension. .{(this.CoverImageHash.StartsWith("a_") ? "gif" : "png")}
 
 		/// <summary>
