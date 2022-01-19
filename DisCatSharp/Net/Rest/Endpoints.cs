@@ -369,9 +369,14 @@ namespace DisCatSharp.Net
 		public const string THREAD_MEMBERS = "/thread-members";
 
 		/// <summary>
-		/// The guild sheduled events endpoint.
+		/// The guild scheduled events endpoint.
 		/// </summary>
 		public const string SCHEDULED_EVENTS = "/scheduled-events";
+
+		/// <summary>
+		/// The guild scheduled events cover image endpoint.
+		/// </summary>
+		public const string GUILD_EVENTS = "guild-events";
 
 		/// <summary>
 		/// The stickers endpoint.

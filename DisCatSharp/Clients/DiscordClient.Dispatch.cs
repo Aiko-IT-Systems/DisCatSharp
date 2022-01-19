@@ -1454,7 +1454,8 @@ namespace DisCatSharp
 					GuildId = ev.GuildId,
 					Status = ev.Status,
 					Name = ev.Name,
-					UserCount = ev.UserCount
+					UserCount = ev.UserCount,
+					CoverImageHash = ev.CoverImageHash
 				};
 
 			}

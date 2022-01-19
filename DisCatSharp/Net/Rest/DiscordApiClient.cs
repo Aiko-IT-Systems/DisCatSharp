@@ -1199,7 +1199,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Creates a scheduled event.
 		/// </summary>
-		internal async Task<DiscordScheduledEvent> CreateGuildScheduledEventAsync(ulong guildId, ulong? channelId, DiscordScheduledEventEntityMetadata metadata, string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime, string description, ScheduledEventEntityType type, string reason = null)
+		internal async Task<DiscordScheduledEvent> CreateGuildScheduledEventAsync(ulong guildId, ulong? channelId, DiscordScheduledEventEntityMetadata metadata, string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime, string description, ScheduledEventEntityType type, Optional<string> coverb64, string reason = null)
 		{
 			var pld = new RestGuildScheduledEventCreatePayload
 			{
@@ -1209,7 +1209,8 @@ namespace DisCatSharp.Net
 				ScheduledStartTime = scheduledStartTime,
 				ScheduledEndTime = scheduledEndTime,
 				Description = description,
-				EntityType = type
+				EntityType = type,
+				CoverBase64 = coverb64
 			};
 
 			var headers = Utilities.GetBaseHeaders();
@@ -1239,7 +1240,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Modifies a scheduled event.
 		/// </summary>
-		internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventAsync(ulong guildId, ulong scheduledEventId, Optional<ulong?> channelId, Optional<DiscordScheduledEventEntityMetadata> metadata, Optional<string> name, Optional<DateTimeOffset> scheduledStartTime, Optional<DateTimeOffset> scheduledEndTime, Optional<string> description, Optional<ScheduledEventEntityType> type, Optional<ScheduledEventStatus> status, string reason = null)
+		internal async Task<DiscordScheduledEvent> ModifyGuildScheduledEventAsync(ulong guildId, ulong scheduledEventId, Optional<ulong?> channelId, Optional<DiscordScheduledEventEntityMetadata> metadata, Optional<string> name, Optional<DateTimeOffset> scheduledStartTime, Optional<DateTimeOffset> scheduledEndTime, Optional<string> description, Optional<ScheduledEventEntityType> type, Optional<ScheduledEventStatus> status, Optional<string> coverb64, string reason = null)
 		{
 			var pld = new RestGuildSheduledEventModifyPayload
 			{
@@ -1250,7 +1251,8 @@ namespace DisCatSharp.Net
 				ScheduledEndTime = scheduledEndTime,
 				Description = description,
 				EntityType = type,
-				Status = status
+				Status = status,
+				CoverBase64 = coverb64
 			};
 
 			var headers = Utilities.GetBaseHeaders();
