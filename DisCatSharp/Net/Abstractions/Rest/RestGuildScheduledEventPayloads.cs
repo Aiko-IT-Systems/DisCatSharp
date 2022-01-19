@@ -84,8 +84,8 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// Gets or sets the image as base64.
 		/// </summary>
-		[JsonProperty("image", NullValueHandling = NullValueHandling.Ignore)]
-		public string ImageBase64 { get; set; }
+		[JsonProperty("image", NullValueHandling = NullValueHandling.Include)]
+		public Optional<string> CoverBase64 { get; set; }
 	}
 
 	/// <summary>
@@ -139,7 +139,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// Gets or sets the cover image as base64.
 		/// </summary>
 		[JsonProperty("image")]
-		public Optional<string> ImageBase64 { get; set; }
+		public Optional<string> CoverBase64 { get; set; }
 
 		/// <summary>
 		/// Gets or sets the status of the scheduled event.
