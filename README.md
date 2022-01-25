@@ -88,6 +88,9 @@ Visit the channel [#github-feed](https://discord.com/channels/858089281214087179
 
 If you can't see it, take a look into the selfroles channel.
 
+## Sponsors
+- [Deividas Kazakevicius](https://github.com/DeividasKaza)
+- [Will](https://github.com/villChurch)
 
 ## Thanks
 Big thanks goes to the following people who helped us ♥️
