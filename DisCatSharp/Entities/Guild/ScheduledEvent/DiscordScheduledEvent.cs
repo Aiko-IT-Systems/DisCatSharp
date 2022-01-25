@@ -100,7 +100,7 @@ namespace DisCatSharp.Entities
         /// <summary>
         /// Gets this event's cover hash, when applicable.
         /// </summary>
-        [JsonProperty("image", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("image", NullValueHandling = NullValueHandling.Include)]
         public string CoverImageHash { get; internal set; }
 
         /// <summary>
