@@ -76,6 +76,21 @@ namespace DisCatSharp.Entities
 		public bool? Invitable { get; internal set; }
 
 		/// <summary>
+		/// Gets the timestamp when the thread was created.
+		/// Only populated for threads created after 2022-01-09.
+		/// </summary>
+		public DateTimeOffset? CreateTimestamp
+			=> !string.IsNullOrWhiteSpace(this.CreateTimestampRaw) && DateTimeOffset.TryParse(this.CreateTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
+				dto : null;
+
+		/// <summary>
+		/// Gets the timestamp when the thread was created as raw string.
+		/// Only populated for threads created after 2022-01-09.
+		/// </summary>
+		[JsonProperty("create_timestamp", NullValueHandling = NullValueHandling.Ignore)]
+		internal string CreateTimestampRaw { get; set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordThreadChannelMetadata"/> class.
 		/// </summary>
 		internal DiscordThreadChannelMetadata()

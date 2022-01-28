@@ -3954,7 +3954,7 @@ namespace DisCatSharp.Net
 		/// <param name="threadId">The thread id.</param>
 		internal async Task<DiscordThreadChannel> GetThreadAsync(ulong threadId)
 		{
-			var route = $"{Endpoints.CHANNELS}/:channel_id";
+			var route = $"{Endpoints.CHANNELS}/:thread_id";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {thread_id = threadId }, out var path);
 
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
