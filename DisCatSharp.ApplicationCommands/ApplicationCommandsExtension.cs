@@ -1325,19 +1325,12 @@ namespace DisCatSharp.ApplicationCommands
 						args.Add((int?)option.Value);
 					else if (parameter.ParameterType == typeof(DiscordAttachment))
 					{
-						this.Client.Logger.LogDebug($"Attachment triggered. {(string)option.Value}");
 						//Checks through resolved
 						if (e.Interaction.Data.Resolved.Attachments != null &&
 							e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
-						{
-							this.Client.Logger.LogDebug("Found attachment");
 							args.Add(attachment);
-						}
 						else
-						{
-							this.Client.Logger.LogDebug("Not found attachment");
-							args.Add(new DiscordAttachment() { Id = (ulong)option.Value});
-						}
+							args.Add(new DiscordAttachment() { Id = (ulong)option.Value, Discord = this.Client.ApiClient.Discord });
 					}
 					else if (parameter.ParameterType == typeof(DiscordUser))
 					{
