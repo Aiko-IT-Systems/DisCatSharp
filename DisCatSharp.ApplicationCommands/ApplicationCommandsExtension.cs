@@ -1325,7 +1325,7 @@ namespace DisCatSharp.ApplicationCommands
 						args.Add((int?)option.Value);
 					else if (parameter.ParameterType == typeof(DiscordAttachment))
 					{
-						this.Client.Logger.LogDebug($"Attachment triggered. {option.Value}");
+						this.Client.Logger.LogDebug($"Attachment triggered. {(string)option.Value}");
 						//Checks through resolved
 						if (e.Interaction.Data.Resolved.Attachments != null &&
 							e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
