@@ -48,7 +48,6 @@ jobs:
         author_name: DisCatSharp
         author_email: discatsharp@aitsys.dev
         message: 'Docs update for commit ${{ github.repository }} (${{ github.sha }})'
-        pull: 'NO-PULL'
         
     - name: Publish to Prod
       run: |
