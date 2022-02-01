@@ -168,7 +168,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Sets the interaction response to be ephemeral.
 		/// </summary>
-		/// <param name="ephemeral">Whether the response should be ephemeral. Defaults to true.param>
+		/// <param name="ephemeral">Whether the response should be ephemeral. Defaults to true.<param>
 		public DiscordInteractionResponseBuilder AsEphemeral(bool ephemeral = true)
 		{
 			this.IsEphemeral = ephemeral;
