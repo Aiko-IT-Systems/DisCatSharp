@@ -3289,6 +3289,11 @@ namespace DisCatSharp
 							m.Value.GuildId = guildId.Value;
 					}
 				}
+
+
+				if (resolved.Attachments != null)
+					foreach (var a in resolved.Attachments)
+						a.Value.Discord = this;
 			}
 
 			if (interaction.Type is InteractionType.Component || interaction.Type is InteractionType.ModalSubmit)

@@ -1371,8 +1371,6 @@ namespace DisCatSharp.ApplicationCommands
 							args.Add(member);
 						else if (e.Interaction.Data.Resolved.Users != null && e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
 							args.Add(user);
-						else if (e.Interaction.Data.Resolved.Attachments != null && e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
-							args.Add(attachment);
 						else
 							throw new ArgumentException("Error resolving mentionable option.");
 					}
@@ -1515,6 +1513,8 @@ namespace DisCatSharp.ApplicationCommands
 				? ApplicationCommandOptionType.Boolean
 				: type == typeof(double) || type == typeof(double?)
 				? ApplicationCommandOptionType.Number
+				: type == typeof(DiscordAttachment)
+				? ApplicationCommandOptionType.Attachment
 				: type == typeof(DiscordChannel)
 				? ApplicationCommandOptionType.Channel
 				: type == typeof(DiscordUser)
@@ -1523,8 +1523,6 @@ namespace DisCatSharp.ApplicationCommands
 				? ApplicationCommandOptionType.Role
 				: type == typeof(SnowflakeObject)
 				? ApplicationCommandOptionType.Mentionable
-				: type == typeof(DiscordAttachment)
-				? ApplicationCommandOptionType.Attachment
 				: type.IsEnum
 				? ApplicationCommandOptionType.String
 				: throw new ArgumentException("Cannot convert type! Argument types must be string, int, long, bool, double, DiscordChannel, DiscordUser, DiscordRole, SnowflakeObject, DiscordAttachment or an Enum.");
