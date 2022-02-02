@@ -59,6 +59,12 @@ namespace DisCatSharp.ApplicationCommands
 		public bool ManualOverride { internal get; set; } = false;
 
 		/// <summary>
+		/// Automatically defer all responses.
+		/// <note type="note">If you enable this, you can't use CreateResponse. Use EditResponse instad.</note>
+		/// </summary>
+		public bool AutoDefer { internal get; set; } = false;
+
+		/// <summary>
 		/// Checks through all guilds.
 		/// <note type="warning">This will take quite a while, when the bot is on more than 1k guilds.</note>
 		/// </summary>
@@ -85,6 +91,7 @@ namespace DisCatSharp.ApplicationCommands
 			this.DebugStartup = acc.DebugStartup;
 			this.CheckAllGuilds = acc.CheckAllGuilds;
 			this.ManualOverride = acc.ManualOverride;
+			this.AutoDefer = acc.AutoDefer;
 		}
 	}
 }
