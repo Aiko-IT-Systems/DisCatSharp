@@ -159,6 +159,8 @@ namespace DisCatSharp.ApplicationCommands
 
 		internal static bool ManOr { get; set; }
 
+		internal static bool AutoDeferEnabled { get; set; }
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
 		/// </summary>
@@ -169,6 +171,7 @@ namespace DisCatSharp.ApplicationCommands
 			DebugEnabled = configuration?.DebugStartup ?? false;
 			CheckAllGuilds = configuration?.CheckAllGuilds ?? false;
 			ManOr = configuration?.ManualOverride ?? false;
+			AutoDeferEnabled = configuration?.AutoDefer ?? false;
 		}
 
 		/// <summary>
@@ -1207,6 +1210,8 @@ namespace DisCatSharp.ApplicationCommands
 
 				if (shouldExecute)
 				{
+					if (AutoDeferEnabled)
+						await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
 					await (Task)method.Invoke(classInstance, args.ToArray());
 
 					await (module?.AfterSlashExecutionAsync(slashContext) ?? Task.CompletedTask);
@@ -1221,6 +1226,8 @@ namespace DisCatSharp.ApplicationCommands
 
 				if (shouldExecute)
 				{
+					if (AutoDeferEnabled)
+						await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
 					await (Task)method.Invoke(classInstance, args.ToArray());
 
 					await (module?.AfterContextMenuExecutionAsync(contextMenuContext) ?? Task.CompletedTask);
