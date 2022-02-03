@@ -138,6 +138,12 @@ namespace DisCatSharp
 		/// <summary>
 		/// The user is disabled for being a spammer.
 		/// </summary>
-		Spammer = 1 << 20
+		Spammer = 1 << 20,
+
+		/// <summary>
+		/// Nitro is disabled for user.
+		/// Used by discord staff instead of forcedNonPremium.
+		/// </summary>
+		DisablePremium = 1 << 21
 	}
 }
