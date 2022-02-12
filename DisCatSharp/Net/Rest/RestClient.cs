@@ -382,6 +382,14 @@ namespace DisCatSharp.Net
 							}
 							else
 							{
+								if (this._discord is DiscordClient)
+								{
+									await (this._discord as DiscordClient)._rateLimitHit.InvokeAsync(this._discord as DiscordClient, new EventArgs.RateLimitExceptionEventArgs(this._discord.ServiceProvider)
+									{
+										Exception = ex as RateLimitException,
+										ApiEndpoint = request.Url.AbsoluteUri
+									});
+								}
 								this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeueing request to {0}", request.Url);
 								await wait.ConfigureAwait(false);
 								this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
