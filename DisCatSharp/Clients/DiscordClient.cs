@@ -246,6 +246,7 @@ namespace DisCatSharp
 			this._guildMemberTimeoutAdded = new AsyncEvent<DiscordClient, GuildMemberTimeoutAddEventArgs>("GUILD_MEMBER_TIMEOUT_ADDED", EventExecutionLimit, this.EventErrorHandler);
 			this._guildMemberTimeoutChanged = new AsyncEvent<DiscordClient, GuildMemberTimeoutUpdateEventArgs>("GUILD_MEMBER_TIMEOUT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 			this._guildMemberTimeoutRemoved = new AsyncEvent<DiscordClient, GuildMemberTimeoutRemoveEventArgs>("GUILD_MEMBER_TIMEOUT_REMOVED", EventExecutionLimit, this.EventErrorHandler);
+			this._rateLimitHit = new AsyncEvent<DiscordClient, RateLimitExceptionEventArgs>("RATELIMIT_HIT", EventExecutionLimit, this.EventErrorHandler);
 
 			this.GuildsInternal.Clear();
 
