@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,28 +21,29 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.Net.Models
 {
-    /// <summary>
-    /// Represents a welcome screen edit model.
-    /// </summary>
-    public class WelcomeScreenEditModel
-    {
-        /// <summary>
-        /// Sets whether the welcome screen should be enabled.
-        /// </summary>
-        public Optional<bool> Enabled { internal get; set; }
+	/// <summary>
+	/// Represents a welcome screen edit model.
+	/// </summary>
+	public class WelcomeScreenEditModel
+	{
+		/// <summary>
+		/// Sets whether the welcome screen should be enabled.
+		/// </summary>
+		public Optional<bool> Enabled { internal get; set; }
 
-        /// <summary>
-        /// Sets the welcome channels.
-        /// </summary>
-        public Optional<IEnumerable<DiscordGuildWelcomeScreenChannel>> WelcomeChannels { internal get; set; }
+		/// <summary>
+		/// Sets the welcome channels.
+		/// </summary>
+		public Optional<IEnumerable<DiscordGuildWelcomeScreenChannel>> WelcomeChannels { internal get; set; }
 
-        /// <summary>
-        /// Sets the serer description shown.
-        /// </summary>
-        public Optional<string> Description { internal get; set; }
-    }
+		/// <summary>
+		/// Sets the serer description shown.
+		/// </summary>
+		public Optional<string> Description { internal get; set; }
+	}
 }

@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,32 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+
 using DisCatSharp.Entities;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Represents a context for an interaction.
-    /// </summary>
-    public sealed class InteractionContext : BaseContext
-    {
-        /// <summary>
-        /// Gets the users mentioned in the command parameters.
-        /// </summary>
-        public IReadOnlyList<DiscordUser> ResolvedUserMentions { get; internal set; }
+	/// <summary>
+	/// Represents a context for an interaction.
+	/// </summary>
+	public sealed class InteractionContext : BaseContext
+	{
+		/// <summary>
+		/// Gets the users mentioned in the command parameters.
+		/// </summary>
+		public IReadOnlyList<DiscordUser> ResolvedUserMentions { get; internal set; }
 
-        /// <summary>
-        /// Gets the roles mentioned in the command parameters.
-        /// </summary>
-        public IReadOnlyList<DiscordRole> ResolvedRoleMentions { get; internal set; }
+		/// <summary>
+		/// Gets the roles mentioned in the command parameters.
+		/// </summary>
+		public IReadOnlyList<DiscordRole> ResolvedRoleMentions { get; internal set; }
 
-        /// <summary>
-        /// Gets the channels mentioned in the command parameters.
-        /// </summary>
-        public IReadOnlyList<DiscordChannel> ResolvedChannelMentions { get; internal set; }
-    }
+		/// <summary>
+		/// Gets the channels mentioned in the command parameters.
+		/// </summary>
+		public IReadOnlyList<DiscordChannel> ResolvedChannelMentions { get; internal set; }
+
+		/// <summary>
+		/// Gets the attachments in the command parameters, if applicable.
+		/// </summary>
+		public IReadOnlyList<DiscordAttachment> ResolvedAttachments { get; internal set; }
+	}
 }

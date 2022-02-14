@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,28 +21,29 @@
 // SOFTWARE.
 
 using System;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments to <see cref="DiscordClient.WebhooksUpdated"/> event.
-    /// </summary>
-    public class WebhooksUpdateEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the guild that had its webhooks updated.
-        /// </summary>
-        public DiscordGuild Guild { get; internal set; }
+	/// <summary>
+	/// Represents arguments to <see cref="DiscordClient.WebhooksUpdated"/> event.
+	/// </summary>
+	public class WebhooksUpdateEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the guild that had its webhooks updated.
+		/// </summary>
+		public DiscordGuild Guild { get; internal set; }
 
-        /// <summary>
-        /// Gets the channel to which the webhook belongs to.
-        /// </summary>
-        public DiscordChannel Channel { get; internal set; }
+		/// <summary>
+		/// Gets the channel to which the webhook belongs to.
+		/// </summary>
+		public DiscordChannel Channel { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WebhooksUpdateEventArgs"/> class.
-        /// </summary>
-        internal WebhooksUpdateEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WebhooksUpdateEventArgs"/> class.
+		/// </summary>
+		internal WebhooksUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

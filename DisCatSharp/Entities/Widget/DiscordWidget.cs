@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,49 +21,50 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
-    /// <summary>
-    /// Represents a Discord guild's widget.
-    /// </summary>
-    public class DiscordWidget : SnowflakeObject
-    {
-        /// <summary>
-        /// Gets the guild.
-        /// </summary>
-        [JsonIgnore]
-        public DiscordGuild Guild { get; internal set; }
+	/// <summary>
+	/// Represents a Discord guild's widget.
+	/// </summary>
+	public class DiscordWidget : SnowflakeObject
+	{
+		/// <summary>
+		/// Gets the guild.
+		/// </summary>
+		[JsonIgnore]
+		public DiscordGuild Guild { get; internal set; }
 
-        /// <summary>
-        /// Gets the guild's name.
-        /// </summary>
-        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; internal set; }
+		/// <summary>
+		/// Gets the guild's name.
+		/// </summary>
+		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+		public string Name { get; internal set; }
 
-        /// <summary>
-        /// Gets the guild's invite URL.
-        /// </summary>
-        [JsonProperty("instant_invite", NullValueHandling = NullValueHandling.Ignore)]
-        public string InstantInviteUrl { get; internal set; }
+		/// <summary>
+		/// Gets the guild's invite URL.
+		/// </summary>
+		[JsonProperty("instant_invite", NullValueHandling = NullValueHandling.Ignore)]
+		public string InstantInviteUrl { get; internal set; }
 
-        /// <summary>
-        /// Gets the number of online members.
-        /// </summary>
-        [JsonProperty("presence_count", NullValueHandling = NullValueHandling.Ignore)]
-        public int PresenceCount { get; internal set; }
+		/// <summary>
+		/// Gets the number of online members.
+		/// </summary>
+		[JsonProperty("presence_count", NullValueHandling = NullValueHandling.Ignore)]
+		public int PresenceCount { get; internal set; }
 
-        /// <summary>
-        /// Gets a list of online members.
-        /// </summary>
-        [JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
-        public IReadOnlyList<DiscordWidgetMember> Members { get; internal set; }
+		/// <summary>
+		/// Gets a list of online members.
+		/// </summary>
+		[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
+		public IReadOnlyList<DiscordWidgetMember> Members { get; internal set; }
 
-        /// <summary>
-        /// Gets a list of widget channels.
-        /// </summary>
-        [JsonIgnore]
-        public IReadOnlyList<DiscordChannel> Channels { get; internal set; }
-    }
+		/// <summary>
+		/// Gets a list of widget channels.
+		/// </summary>
+		[JsonIgnore]
+		public IReadOnlyList<DiscordChannel> Channels { get; internal set; }
+	}
 }

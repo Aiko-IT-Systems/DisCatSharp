@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,38 +24,48 @@ using System;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Marks this method as a slash command
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class SlashCommandAttribute : Attribute
-    {
-        /// <summary>
-        /// Gets the name of this command
-        /// </summary>
-        public string Name { get; }
+	/// <summary>
+	/// Marks this method as a slash command
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method)]
+	public class SlashCommandAttribute : Attribute
+	{
+		/// <summary>
+		/// Gets the name of this command
+		/// </summary>
+		public string Name { get; set; }
 
-        /// <summary>
-        /// Gets the description of this command
-        /// </summary>
-        public string Description { get; }
+		/// <summary>
+		/// Gets the description of this command
+		/// </summary>
+		public string Description { get; set; }
 
-        /// <summary>
-        /// Gets the default permission of this command
-        /// </summary>
-        public bool DefaultPermission { get; set; }
+		/// <summary>
+		/// Gets the default permission of this command
+		/// </summary>
+		public bool DefaultPermission { get; }
 
-        /// <summary>
-        /// Marks this method as a slash command
-        /// </summary>
-        /// <param name="name">The name of this slash command</param>
-        /// <param name="description">The description of this slash command</param>
-        /// <param name="default_permission">Whether everyone can execute this command.</param>
-        public SlashCommandAttribute(string name, string description, bool default_permission = true)
-        {
-            this.Name = name.ToLower();
-            this.Description = description;
-            this.DefaultPermission = default_permission;
-        }
-    }
+		/// <summary>
+		/// Gets the needed permission of this command
+		/// </summary>
+		public Permissions? Permission { get; set; }
+
+		/// <summary>
+		/// Gets the dm permission of this command
+		/// </summary>
+		public bool? DmPermission { get; set; }
+
+		/// <summary>
+		/// Marks this method as a slash command
+		/// </summary>
+		/// <param name="name">The name of this slash command.</param>
+		/// <param name="description">The description of this slash command.</param>
+		/// <param name="defaultPermission">Whether everyone can execute this command.</param>
+		public SlashCommandAttribute(string name, string description, bool defaultPermission = true)
+		{
+			this.Name = name.ToLower();
+			this.Description = description;
+			this.DefaultPermission = defaultPermission;
+		}
+	}
 }

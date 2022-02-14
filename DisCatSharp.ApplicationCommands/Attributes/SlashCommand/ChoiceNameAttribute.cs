@@ -1,6 +1,6 @@
-﻿// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,24 +24,24 @@ using System;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Sets the name for this enum choice.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
-    public class ChoiceNameAttribute : Attribute
-    {
-        /// <summary>
-        /// The name.
-        /// </summary>
-        public string Name { get; set; }
+	/// <summary>
+	/// Sets the name for this enum choice.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.All)]
+	public class ChoiceNameAttribute : Attribute
+	{
+		/// <summary>
+		/// The name.
+		/// </summary>
+		public string Name { get; set; }
 
-        /// <summary>
-        /// Sets the name for this enum choice.
-        /// </summary>
-        /// <param name="name">The name for this enum choice.</param>
-        public ChoiceNameAttribute(string name)
-        {
-            this.Name = name;
-        }
-    }
+		/// <summary>
+		/// Sets the name for this enum choice.
+		/// </summary>
+		/// <param name="name">The name for this enum choice.</param>
+		public ChoiceNameAttribute(string name)
+		{
+			this.Name = name;
+		}
+	}
 }

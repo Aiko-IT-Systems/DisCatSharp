@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,51 +25,51 @@ using System.Collections.Generic;
 
 namespace DisCatSharp.CommandsNext.Converters
 {
-    /// <summary>
-    /// Represents a argument binding result.
-    /// </summary>
-    public struct ArgumentBindingResult
-    {
-        /// <summary>
-        /// Gets a value indicating whether the binding is successful.
-        /// </summary>
-        public bool IsSuccessful { get; }
-        /// <summary>
-        /// Gets the converted.
-        /// </summary>
-        public object[] Converted { get; }
-        /// <summary>
-        /// Gets the raw.
-        /// </summary>
-        public IReadOnlyList<string> Raw { get; }
-        /// <summary>
-        /// Gets the reason.
-        /// </summary>
-        public Exception Reason { get; }
+	/// <summary>
+	/// Represents a argument binding result.
+	/// </summary>
+	public struct ArgumentBindingResult
+	{
+		/// <summary>
+		/// Gets a value indicating whether the binding is successful.
+		/// </summary>
+		public bool IsSuccessful { get; }
+		/// <summary>
+		/// Gets the converted.
+		/// </summary>
+		public object[] Converted { get; }
+		/// <summary>
+		/// Gets the raw.
+		/// </summary>
+		public IReadOnlyList<string> Raw { get; }
+		/// <summary>
+		/// Gets the reason.
+		/// </summary>
+		public Exception Reason { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ArgumentBindingResult"/> class.
-        /// </summary>
-        /// <param name="converted">The converted.</param>
-        /// <param name="raw">The raw.</param>
-        public ArgumentBindingResult(object[] converted, IReadOnlyList<string> raw)
-        {
-            this.IsSuccessful = true;
-            this.Reason = null;
-            this.Converted = converted;
-            this.Raw = raw;
-        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ArgumentBindingResult"/> class.
+		/// </summary>
+		/// <param name="converted">The converted.</param>
+		/// <param name="raw">The raw.</param>
+		public ArgumentBindingResult(object[] converted, IReadOnlyList<string> raw)
+		{
+			this.IsSuccessful = true;
+			this.Reason = null;
+			this.Converted = converted;
+			this.Raw = raw;
+		}
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ArgumentBindingResult"/> class.
-        /// </summary>
-        /// <param name="ex">The ex.</param>
-        public ArgumentBindingResult(Exception ex)
-        {
-            this.IsSuccessful = false;
-            this.Reason = ex;
-            this.Converted = null;
-            this.Raw = null;
-        }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ArgumentBindingResult"/> class.
+		/// </summary>
+		/// <param name="ex">The ex.</param>
+		public ArgumentBindingResult(Exception ex)
+		{
+			this.IsSuccessful = false;
+			this.Reason = ex;
+			this.Converted = null;
+			this.Raw = null;
+		}
+	}
 }

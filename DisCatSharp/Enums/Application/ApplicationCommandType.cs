@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,36 +19,37 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+
 namespace DisCatSharp.Enums
 {
-    /// <summary>
-    /// Represents the type of an <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/>.
-    /// </summary>
-    public enum ApplicationCommandType
-    {
-        /// <summary>
-        /// This command is registered as a slash-command, aka "Chat Input".
-        /// </summary>
-        ChatInput = 1,
+	/// <summary>
+	/// Represents the type of an <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/>.
+	/// </summary>
+	public enum ApplicationCommandType
+	{
+		/// <summary>
+		/// This command is registered as a slash-command, aka "Chat Input".
+		/// </summary>
+		ChatInput = 1,
 
-        /// <summary>
-        /// This command is registered as a user context menu, and is applicable when interacting a user.
-        /// </summary>
-        User = 2,
+		/// <summary>
+		/// This command is registered as a user context menu, and is applicable when interacting a user.
+		/// </summary>
+		User = 2,
 
-        /// <summary>
-        /// This command is registered as a message context menu, and is applicable when interacting with a message.
-        /// </summary>
-        Message = 3,
+		/// <summary>
+		/// This command is registered as a message context menu, and is applicable when interacting with a message.
+		/// </summary>
+		Message = 3,
 
-        /// <summary>
-        /// Inbound only: An auto-complete option is being interacted with.
-        /// </summary>
-        AutoCompleteRequest = 4,
+		/// <summary>
+		/// Inbound only: An auto-complete option is being interacted with.
+		/// </summary>
+		AutoCompleteRequest = 4,
 
-        /// <summary>
-        /// Inbound only: A modal was submitted.
-        /// </summary>
-        ModalSubmit = 5
-    }
+		/// <summary>
+		/// Inbound only: A modal was submitted.
+		/// </summary>
+		ModalSubmit = 5
+	}
 }

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-  <Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../Version.targets" />
+  <Import Project="../Version.targets" />
   <Import Project="../DisCatSharp.targets" />
   <Import Project="../Package.targets" />
   <Import Project="../NuGet.targets" />
+  <Import Project="../Library.targets" />
 
   <PropertyGroup>
     <AssemblyName>DisCatSharp.ApplicationCommands</AssemblyName>
     <RootNamespace>DisCatSharp.ApplicationCommands</RootNamespace>
-    <OutputType>Library</OutputType>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -35,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+    <ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
   </ItemGroup>
 
 </Project>

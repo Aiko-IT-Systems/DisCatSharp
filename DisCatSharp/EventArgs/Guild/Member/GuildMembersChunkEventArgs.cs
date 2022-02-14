@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,53 +22,54 @@
 
 using System;
 using System.Collections.Generic;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.GuildMembersChunked"/> event.
-    /// </summary>
-    public class GuildMembersChunkEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the guild that requested this chunk.
-        /// </summary>
-        public DiscordGuild Guild { get; internal set; }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.GuildMembersChunked"/> event.
+	/// </summary>
+	public class GuildMembersChunkEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the guild that requested this chunk.
+		/// </summary>
+		public DiscordGuild Guild { get; internal set; }
 
-        /// <summary>
-        /// Gets the collection of members returned from this chunk.
-        /// </summary>
-        public IReadOnlyCollection<DiscordMember> Members { get; internal set; }
+		/// <summary>
+		/// Gets the collection of members returned from this chunk.
+		/// </summary>
+		public IReadOnlyCollection<DiscordMember> Members { get; internal set; }
 
-        /// <summary>
-        /// Gets the current chunk index from the response.
-        /// </summary>
-        public int ChunkIndex { get; internal set; }
+		/// <summary>
+		/// Gets the current chunk index from the response.
+		/// </summary>
+		public int ChunkIndex { get; internal set; }
 
-        /// <summary>
-        /// Gets the total amount of chunks for the request.
-        /// </summary>
-        public int ChunkCount { get; internal set; }
+		/// <summary>
+		/// Gets the total amount of chunks for the request.
+		/// </summary>
+		public int ChunkCount { get; internal set; }
 
-        /// <summary>
-        /// Gets the collection of presences returned from this chunk, if specified.
-        /// </summary>
-        public IReadOnlyCollection<DiscordPresence> Presences { get; internal set; }
+		/// <summary>
+		/// Gets the collection of presences returned from this chunk, if specified.
+		/// </summary>
+		public IReadOnlyCollection<DiscordPresence> Presences { get; internal set; }
 
-        /// <summary>
-        /// Gets the returned Ids that were not found in the chunk, if specified.
-        /// </summary>
-        public IReadOnlyCollection<ulong> NotFound { get; internal set; }
+		/// <summary>
+		/// Gets the returned Ids that were not found in the chunk, if specified.
+		/// </summary>
+		public IReadOnlyCollection<ulong> NotFound { get; internal set; }
 
-        /// <summary>
-        /// Gets the unique string used to identify the request, if specified.
-        /// </summary>
-        public string Nonce { get; set; }
+		/// <summary>
+		/// Gets the unique string used to identify the request, if specified.
+		/// </summary>
+		public string Nonce { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GuildMembersChunkEventArgs"/> class.
-        /// </summary>
-        internal GuildMembersChunkEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GuildMembersChunkEventArgs"/> class.
+		/// </summary>
+		internal GuildMembersChunkEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

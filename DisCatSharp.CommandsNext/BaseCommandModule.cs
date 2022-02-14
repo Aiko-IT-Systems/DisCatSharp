@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,25 +24,25 @@ using System.Threading.Tasks;
 
 namespace DisCatSharp.CommandsNext
 {
-    /// <summary>
-    /// Represents a base class for all command modules.
-    /// </summary>
-    public abstract class BaseCommandModule
-    {
-        /// <summary>
-        /// Called before a command in the implementing module is executed.
-        /// </summary>
-        /// <param name="ctx">Context in which the method is being executed.</param>
-        /// <returns></returns>
-        public virtual Task BeforeExecutionAsync(CommandContext ctx)
-            => Task.Delay(0);
+	/// <summary>
+	/// Represents a base class for all command modules.
+	/// </summary>
+	public abstract class BaseCommandModule
+	{
+		/// <summary>
+		/// Called before a command in the implementing module is executed.
+		/// </summary>
+		/// <param name="ctx">Context in which the method is being executed.</param>
+		/// <returns></returns>
+		public virtual Task BeforeExecutionAsync(CommandContext ctx)
+			=> Task.Delay(0);
 
-        /// <summary>
-        /// Called after a command in the implementing module is successfully executed.
-        /// </summary>
-        /// <param name="ctx">Context in which the method is being executed.</param>
-        /// <returns></returns>
-        public virtual Task AfterExecutionAsync(CommandContext ctx)
-            => Task.Delay(0);
-    }
+		/// <summary>
+		/// Called after a command in the implementing module is successfully executed.
+		/// </summary>
+		/// <param name="ctx">Context in which the method is being executed.</param>
+		/// <returns></returns>
+		public virtual Task AfterExecutionAsync(CommandContext ctx)
+			=> Task.Delay(0);
+	}
 }

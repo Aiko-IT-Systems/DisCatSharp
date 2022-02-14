@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,51 +21,52 @@
 // SOFTWARE.
 
 using System;
+
 using DisCatSharp.Entities;
 using DisCatSharp.VoiceNext.Codec;
 
 namespace DisCatSharp.VoiceNext.Entities
 {
-    /// <summary>
-    /// The audio sender.
-    /// </summary>
-    internal class AudioSender : IDisposable
-    {
-        /// <summary>
-        /// Gets the s s r c.
-        /// </summary>
-        public uint SSRC { get; }
-        /// <summary>
-        /// Gets the id.
-        /// </summary>
-        public ulong Id => this.User?.Id ?? 0;
-        /// <summary>
-        /// Gets the decoder.
-        /// </summary>
-        public OpusDecoder Decoder { get; }
-        /// <summary>
-        /// Gets or sets the user.
-        /// </summary>
-        public DiscordUser User { get; set; } = null;
-        /// <summary>
-        /// Gets or sets the last sequence.
-        /// </summary>
-        public ushort LastSequence { get; set; } = 0;
+	/// <summary>
+	/// The audio sender.
+	/// </summary>
+	internal class AudioSender : IDisposable
+	{
+		/// <summary>
+		/// Gets the s s r c.
+		/// </summary>
+		public uint Ssrc { get; }
+		/// <summary>
+		/// Gets the id.
+		/// </summary>
+		public ulong Id => this.User?.Id ?? 0;
+		/// <summary>
+		/// Gets the decoder.
+		/// </summary>
+		public OpusDecoder Decoder { get; }
+		/// <summary>
+		/// Gets or sets the user.
+		/// </summary>
+		public DiscordUser User { get; set; } = null;
+		/// <summary>
+		/// Gets or sets the last sequence.
+		/// </summary>
+		public ushort LastSequence { get; set; } = 0;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AudioSender"/> class.
-        /// </summary>
-        /// <param name="ssrc">The ssrc.</param>
-        /// <param name="decoder">The decoder.</param>
-        public AudioSender(uint ssrc, OpusDecoder decoder)
-        {
-            this.SSRC = ssrc;
-            this.Decoder = decoder;
-        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AudioSender"/> class.
+		/// </summary>
+		/// <param name="ssrc">The ssrc.</param>
+		/// <param name="decoder">The decoder.</param>
+		public AudioSender(uint ssrc, OpusDecoder decoder)
+		{
+			this.Ssrc = ssrc;
+			this.Decoder = decoder;
+		}
 
-        /// <summary>
-        /// Disposes .
-        /// </summary>
-        public void Dispose() => this.Decoder?.Dispose();
-    }
+		/// <summary>
+		/// Disposes .
+		/// </summary>
+		public void Dispose() => this.Decoder?.Dispose();
+	}
 }

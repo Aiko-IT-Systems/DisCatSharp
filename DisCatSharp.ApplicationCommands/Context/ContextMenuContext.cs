@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,25 +24,25 @@ using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Respresents a context for a context menu.
-    /// </summary>
-    public sealed class ContextMenuContext : BaseContext
-    {
-        /// <summary>
-        /// The user this command targets, if applicable.
-        /// </summary>
-        public DiscordUser TargetUser { get; internal set; }
+	/// <summary>
+	/// Respresents a context for a context menu.
+	/// </summary>
+	public sealed class ContextMenuContext : BaseContext
+	{
+		/// <summary>
+		/// The user this command targets, if applicable.
+		/// </summary>
+		public DiscordUser TargetUser { get; internal set; }
 
-        /// <summary>
-        /// The member this command targets, if applicable.
-        /// </summary>
-        public DiscordMember TargetMember
-            => this.TargetUser is DiscordMember member ? member : null;
+		/// <summary>
+		/// The member this command targets, if applicable.
+		/// </summary>
+		public DiscordMember TargetMember
+			=> this.TargetUser is DiscordMember member ? member : null;
 
-        /// <summary>
-        /// The message this command targets, if applicable.
-        /// </summary>
-        public DiscordMessage TargetMessage { get; internal set; }
-    }
+		/// <summary>
+		/// The message this command targets, if applicable.
+		/// </summary>
+		public DiscordMessage TargetMessage { get; internal set; }
+	}
 }

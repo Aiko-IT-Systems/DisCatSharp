@@ -5,12 +5,11 @@
   <Import Project="../DisCatSharp.targets" />
   <Import Project="../Package.targets" />
   <Import Project="../NuGet.targets" />
+  <Import Project="../Library.targets" />
 
   <PropertyGroup>
     <AssemblyName>DisCatSharp</AssemblyName>
     <RootNamespace>DisCatSharp</RootNamespace>
-    <OutputType>Library</OutputType>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -33,7 +32,7 @@
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
@@ -61,6 +60,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\Interaction\Components\Attachment\" />
+    <Folder Include="Entities\Interaction\Components\DateTime\" />
+    <Folder Include="Entities\Interaction\Components\Radio\" />
   </ItemGroup>
 
 </Project>

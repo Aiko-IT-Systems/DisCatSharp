@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,42 +26,42 @@ using System.Runtime.CompilerServices;
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Read-only view of a given <see cref="ISet{T}"/>.
-    /// </summary>
-    /// <typeparam name="T">Type of the items in the set.</typeparam>
-    internal readonly struct ReadOnlySet<T> : IReadOnlyCollection<T>
-    {
-        private readonly ISet<T> _underlyingSet;
+	/// <summary>
+	/// Read-only view of a given <see cref="ISet{T}"/>.
+	/// </summary>
+	/// <typeparam name="T">Type of the items in the set.</typeparam>
+	internal readonly struct ReadOnlySet<T> : IReadOnlyCollection<T>
+	{
+		private readonly ISet<T> _underlyingSet;
 
-        /// <summary>
-        /// Creates a new read-only view of the given set.
-        /// </summary>
-        /// <param name="sourceSet">Set to create a view over.</param>
-        public ReadOnlySet(ISet<T> sourceSet)
-        {
-            this._underlyingSet = sourceSet;
-        }
+		/// <summary>
+		/// Creates a new read-only view of the given set.
+		/// </summary>
+		/// <param name="sourceSet">Set to create a view over.</param>
+		public ReadOnlySet(ISet<T> sourceSet)
+		{
+			this._underlyingSet = sourceSet;
+		}
 
-        /// <summary>
-        /// Gets the number of items in the underlying set.
-        /// </summary>
-        public int Count => this._underlyingSet.Count;
+		/// <summary>
+		/// Gets the number of items in the underlying set.
+		/// </summary>
+		public int Count => this._underlyingSet.Count;
 
-        /// <summary>
-        /// Returns an enumerator that iterates through this set view.
-        /// </summary>
-        /// <returns>Enumerator for the underlying set.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public IEnumerator<T> GetEnumerator()
-            => this._underlyingSet.GetEnumerator();
+		/// <summary>
+		/// Returns an enumerator that iterates through this set view.
+		/// </summary>
+		/// <returns>Enumerator for the underlying set.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public IEnumerator<T> GetEnumerator()
+			=> this._underlyingSet.GetEnumerator();
 
-        /// <summary>
-        /// Returns an enumerator that iterates through this set view.
-        /// </summary>
-        /// <returns>Enumerator for the underlying set.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        IEnumerator IEnumerable.GetEnumerator()
-            => (this._underlyingSet as IEnumerable).GetEnumerator();
-    }
+		/// <summary>
+		/// Returns an enumerator that iterates through this set view.
+		/// </summary>
+		/// <returns>Enumerator for the underlying set.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		IEnumerator IEnumerable.GetEnumerator()
+			=> (this._underlyingSet as IEnumerable).GetEnumerator();
+	}
 }

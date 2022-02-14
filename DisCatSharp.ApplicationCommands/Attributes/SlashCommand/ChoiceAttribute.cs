@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,64 +24,64 @@ using System;
 
 namespace DisCatSharp.ApplicationCommands
 {
-    /// <summary>
-    /// Adds a choice for this slash command option
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true)]
-    public class ChoiceAttribute : Attribute
-    {
-        /// <summary>
-        /// Gets the name of the choice
-        /// </summary>
-        public string Name { get; }
+	/// <summary>
+	/// Adds a choice for this slash command option
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true)]
+	public class ChoiceAttribute : Attribute
+	{
+		/// <summary>
+		/// Gets the name of the choice
+		/// </summary>
+		public string Name { get; }
 
-        /// <summary>
-        /// Gets the value of the choice
-        /// </summary>
-        public object Value { get; }
+		/// <summary>
+		/// Gets the value of the choice
+		/// </summary>
+		public object Value { get; }
 
-        /// <summary>
-        /// Adds a choice to the slash command option
-        /// </summary>
-        /// <param name="name">The name of the choice</param>
-        /// <param name="value">The value of the choice</param>
-        public ChoiceAttribute(string name, string value)
-        {
-            this.Name = name;
-            this.Value = value;
-        }
+		/// <summary>
+		/// Adds a choice to the slash command option
+		/// </summary>
+		/// <param name="name">The name of the choice.</param>
+		/// <param name="value">The value of the choice.</param>
+		public ChoiceAttribute(string name, string value)
+		{
+			this.Name = name;
+			this.Value = value;
+		}
 
-        /// <summary>
-        /// Adds a choice to the slash command option
-        /// </summary>
-        /// <param name="name">The name of the choice</param>
-        /// <param name="value">The value of the choice</param>
-        public ChoiceAttribute(string name, long value)
-        {
-            this.Name = name;
-            this.Value = value;
-        }
+		/// <summary>
+		/// Adds a choice to the slash command option
+		/// </summary>
+		/// <param name="name">The name of the choice.</param>
+		/// <param name="value">The value of the choice.</param>
+		public ChoiceAttribute(string name, long value)
+		{
+			this.Name = name;
+			this.Value = value;
+		}
 
-        /// <summary>
-        /// Adds a choice to the slash command option
-        /// </summary>
-        /// <param name="name">The name of the choice</param>
-        /// <param name="value">The value of the choice</param>
-        public ChoiceAttribute(string name, int value)
-        {
-            this.Name = name;
-            this.Value = value;
-        }
+		/// <summary>
+		/// Adds a choice to the slash command option
+		/// </summary>
+		/// <param name="name">The name of the choice.</param>
+		/// <param name="value">The value of the choice.</param>
+		public ChoiceAttribute(string name, int value)
+		{
+			this.Name = name;
+			this.Value = value;
+		}
 
-        /// <summary>
-        /// Adds a choice to the slash command option
-        /// </summary>
-        /// <param name="name">The name of the choice</param>
-        /// <param name="value">The value of the choice</param>
-        public ChoiceAttribute(string name, double value)
-        {
-            this.Name = name;
-            this.Value = value;
-        }
-    }
+		/// <summary>
+		/// Adds a choice to the slash command option
+		/// </summary>
+		/// <param name="name">The name of the choice.</param>
+		/// <param name="value">The value of the choice.</param>
+		public ChoiceAttribute(string name, double value)
+		{
+			this.Name = name;
+			this.Value = value;
+		}
+	}
 }

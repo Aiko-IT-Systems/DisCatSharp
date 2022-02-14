@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._registeredCommands")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._commandMethods")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._contextMenuCommands")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._errored")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._groupCommands")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._singletonModules")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._subGroupCommands")]
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension._updateList")]
+[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.s_registeredCommands")]
+[assembly: SuppressMessage("Style", "IDE0018:Inline variable declaration", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.ApplicationCommands.RegistrationWorker.BuildGuildCreateList(System.UInt64,System.Collections.Generic.List{DisCatSharp.Entities.DiscordApplicationCommand})~System.Collections.Generic.List{DisCatSharp.Entities.DiscordApplicationCommand}")]
+[assembly: SuppressMessage("Style", "IDE0018:Inline variable declaration", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.ApplicationCommands.RegistrationWorker.BuildGuildDeleteList(System.UInt64,System.Collections.Generic.List{DisCatSharp.Entities.DiscordApplicationCommand})~System.Collections.Generic.List{System.UInt64}")]
+[assembly: SuppressMessage("Style", "IDE0018:Inline variable declaration", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.ApplicationCommands.RegistrationWorker.BuildGuildOverwriteList(System.UInt64,System.Collections.Generic.List{DisCatSharp.Entities.DiscordApplicationCommand})~System.ValueTuple{System.Collections.Generic.Dictionary{System.UInt64,DisCatSharp.Entities.DiscordApplicationCommand},System.Collections.Generic.List{DisCatSharp.Entities.DiscordApplicationCommand}}")]

@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,22 +21,21 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DisCatSharp.CommandsNext.Attributes
 {
-    /// <summary>
-    /// Defines that usage of this command is restricted to discord employees.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class RequireStaffAttribute : CheckBaseAttribute
-    {
-        /// <summary>
-        /// Executes the a check.
-        /// </summary>
-        /// <param name="ctx">The command context.</param>
-        /// <param name="help">If true, help - returns true.</param>
-        public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => ctx.User.Flags.HasValue ? Task.FromResult(ctx.User.Flags.Value.HasFlag(UserFlags.Staff)) : Task.FromResult(false);
-    }
+	/// <summary>
+	/// Defines that usage of this command is restricted to discord employees.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+	public sealed class RequireStaffAttribute : CheckBaseAttribute
+	{
+		/// <summary>
+		/// Executes the a check.
+		/// </summary>
+		/// <param name="ctx">The command context.</param>
+		/// <param name="help">If true, help - returns true.</param>
+		public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help) => ctx.User.Flags.HasValue ? Task.FromResult(ctx.User.Flags.Value.HasFlag(UserFlags.Staff)) : Task.FromResult(false);
+	}
 }

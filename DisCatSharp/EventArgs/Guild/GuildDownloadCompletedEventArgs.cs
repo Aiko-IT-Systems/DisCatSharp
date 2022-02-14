@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,30 @@
 
 using System;
 using System.Collections.Generic;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.GuildDownloadCompleted"/> event.
-    /// </summary>
-    public class GuildDownloadCompletedEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the dictionary of guilds that just finished downloading.
-        /// </summary>
-        public IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.GuildDownloadCompleted"/> event.
+	/// </summary>
+	public class GuildDownloadCompletedEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the dictionary of guilds that just finished downloading.
+		/// </summary>
+		public IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GuildDownloadCompletedEventArgs"/> class.
-        /// </summary>
-        /// <param name="guilds">The guilds.</param>
-        /// <param name="provider">Service provider.</param>
-        internal GuildDownloadCompletedEventArgs(IReadOnlyDictionary<ulong, DiscordGuild> guilds, IServiceProvider provider)
-            : base(provider)
-        {
-            this.Guilds = guilds;
-        }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GuildDownloadCompletedEventArgs"/> class.
+		/// </summary>
+		/// <param name="guilds">The guilds.</param>
+		/// <param name="provider">Service provider.</param>
+		internal GuildDownloadCompletedEventArgs(IReadOnlyDictionary<ulong, DiscordGuild> guilds, IServiceProvider provider)
+			: base(provider)
+		{
+			this.Guilds = guilds;
+		}
+	}
 }

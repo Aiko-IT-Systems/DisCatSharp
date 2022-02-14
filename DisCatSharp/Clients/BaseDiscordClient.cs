@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,279 +26,283 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+
 using DisCatSharp.Entities;
 using DisCatSharp.Net;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents a common base for various Discord client implementations.
-    /// </summary>
-    public abstract class BaseDiscordClient : IDisposable
-    {
-        /// <summary>
-        /// Gets the api client.
-        /// </summary>
-        internal protected DiscordApiClient ApiClient { get; }
-        /// <summary>
-        /// Gets the configuration.
-        /// </summary>
-        internal protected DiscordConfiguration Configuration { get; }
+	/// <summary>
+	/// Represents a common base for various Discord Client implementations.
+	/// </summary>
+	public abstract class BaseDiscordClient : IDisposable
+	{
+		/// <summary>
+		/// Gets the api client.
+		/// </summary>
+		internal protected DiscordApiClient ApiClient { get; }
 
-        /// <summary>
-        /// Gets the instance of the logger for this client.
-        /// </summary>
-        public ILogger<BaseDiscordClient> Logger { get; }
+		/// <summary>
+		/// Gets the configuration.
+		/// </summary>
+		internal protected DiscordConfiguration Configuration { get; }
 
-        /// <summary>
-        /// Gets the string representing the version of bot lib.
-        /// </summary>
-        public string VersionString { get; }
+		/// <summary>
+		/// Gets the instance of the logger for this client.
+		/// </summary>
+		public ILogger<BaseDiscordClient> Logger { get; }
 
-        /// <summary>
-        /// Gets the bot library name.
-        /// </summary>
-        public string BotLibrary { get; }
+		/// <summary>
+		/// Gets the string representing the version of bot lib.
+		/// </summary>
+		public string VersionString { get; }
 
-        /// <summary>
-        /// Gets the library team.
-        /// </summary>
-        public DisCatSharpTeam LibraryDeveloperTeam
-            => this.ApiClient.GetDisCatSharpTeamAsync().Result;
+		/// <summary>
+		/// Gets the bot library name.
+		/// </summary>
+		public string BotLibrary { get; }
 
-        /// <summary>
-        /// Gets the current user.
-        /// </summary>
-        public DiscordUser CurrentUser { get; internal set; }
+		/// <summary>
+		/// Gets the library team.
+		/// </summary>
+		public DisCatSharpTeam LibraryDeveloperTeam
+			=> this.ApiClient.GetDisCatSharpTeamAsync().Result;
 
-        /// <summary>
-        /// Gets the current application.
-        /// </summary>
-        public DiscordApplication CurrentApplication { get; internal set; }
+		/// <summary>
+		/// Gets the current user.
+		/// </summary>
+		public DiscordUser CurrentUser { get; internal set; }
 
-        /// <summary>
-        /// Gets the cached guilds for this client.
-        /// </summary>
-        public abstract IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
+		/// <summary>
+		/// Gets the current application.
+		/// </summary>
+		public DiscordApplication CurrentApplication { get; internal set; }
 
-        /// <summary>
-        /// Gets the cached users for this client.
-        /// </summary>
-        protected internal ConcurrentDictionary<ulong, DiscordUser> UserCache { get; }
+		/// <summary>
+		/// Exposes a <see cref="System.Net.Http.HttpClient">Http Client</see> for custom operations.
+		/// </summary>
+		public HttpClient RestClient { get; internal set; }
 
-        /// <summary>
-        /// <para>Gets the service provider.</para>
-        /// <para>This allows passing data around without resorting to static members.</para>
-        /// <para>Defaults to null.</para>
-        /// </summary>
-        internal IServiceProvider ServiceProvider { get; set; } = new ServiceCollection().BuildServiceProvider(true);
+		/// <summary>
+		/// Gets the cached guilds for this client.
+		/// </summary>
+		public abstract IReadOnlyDictionary<ulong, DiscordGuild> Guilds { get; }
 
-        /// <summary>
-        /// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
-        /// </summary>
-        public IReadOnlyDictionary<string, DiscordVoiceRegion> VoiceRegions
-            => this._voice_regions_lazy.Value;
+		/// <summary>
+		/// Gets the cached users for this client.
+		/// </summary>
+		public ConcurrentDictionary<ulong, DiscordUser> UserCache { get; internal set; }
 
-        /// <summary>
-        /// Gets the list of available voice regions. This property is meant as a way to modify <see cref="VoiceRegions"/>.
-        /// </summary>
-        protected internal ConcurrentDictionary<string, DiscordVoiceRegion> InternalVoiceRegions { get; set; }
-        internal Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>> _voice_regions_lazy;
+		/// <summary>
+		/// <para>Gets the service provider.</para>
+		/// <para>This allows passing data around without resorting to static members.</para>
+		/// <para>Defaults to null.</para>
+		/// </summary>
+		internal IServiceProvider ServiceProvider { get; set; } = new ServiceCollection().BuildServiceProvider(true);
 
-        /// <summary>
-        /// Initializes this Discord API client.
-        /// </summary>
-        /// <param name="config">Configuration for this client.</param>
-        protected BaseDiscordClient(DiscordConfiguration config)
-        {
-            this.Configuration = new DiscordConfiguration(config);
+		/// <summary>
+		/// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
+		/// </summary>
+		public IReadOnlyDictionary<string, DiscordVoiceRegion> VoiceRegions
+			=> this.VoiceRegionsLazy.Value;
 
-            if (this.Configuration.LoggerFactory == null)
-            {
-                this.Configuration.LoggerFactory = new DefaultLoggerFactory();
-                this.Configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
-            }
-            this.Logger = this.Configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
+		/// <summary>
+		/// Gets the list of available voice regions. This property is meant as a way to modify <see cref="VoiceRegions"/>.
+		/// </summary>
+		protected internal ConcurrentDictionary<string, DiscordVoiceRegion> InternalVoiceRegions { get; set; }
+		internal Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>> VoiceRegionsLazy;
 
-            this.ApiClient = new DiscordApiClient(this);
-            this.UserCache = new ConcurrentDictionary<ulong, DiscordUser>();
-            this.InternalVoiceRegions = new ConcurrentDictionary<string, DiscordVoiceRegion>();
-            this._voice_regions_lazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this.InternalVoiceRegions));
+		/// <summary>
+		/// Initializes this Discord API client.
+		/// </summary>
+		/// <param name="config">Configuration for this client.</param>
+		protected BaseDiscordClient(DiscordConfiguration config)
+		{
+			this.Configuration = new DiscordConfiguration(config);
 
-            var a = typeof(DiscordClient).GetTypeInfo().Assembly;
+			if (this.Configuration.LoggerFactory == null)
+			{
+				this.Configuration.LoggerFactory = new DefaultLoggerFactory();
+				this.Configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
+			}
+			this.Logger = this.Configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
 
-            var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-            if (iv != null)
-            {
-                this.VersionString = iv.InformationalVersion;
-            }
-            else
-            {
-                var v = a.GetName().Version;
-                var vs = v.ToString(3);
+			this.ApiClient = new DiscordApiClient(this);
+			this.UserCache = new ConcurrentDictionary<ulong, DiscordUser>();
+			this.InternalVoiceRegions = new ConcurrentDictionary<string, DiscordVoiceRegion>();
+			this.VoiceRegionsLazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this.InternalVoiceRegions));
 
-                if (v.Revision > 0)
-                    this.VersionString = $"{vs}, CI build {v.Revision}";
-            }
+			this.RestClient = this.ApiClient.Rest.HttpClient;
 
-            this.BotLibrary = "DisCatSharp";
+			var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 
-            this.ServiceProvider = config.ServiceProvider;
-        }
+			var iv = a.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+			if (iv != null)
+			{
+				this.VersionString = iv.InformationalVersion;
+			}
+			else
+			{
+				var v = a.GetName().Version;
+				var vs = v.ToString(3);
 
-        /// <summary>
-        /// Gets the current API application.
-        /// </summary>
-        /// <returns>Current API application.</returns>
-        public async Task<DiscordApplication> GetCurrentApplicationAsync()
-        {
-            var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync().ConfigureAwait(false);
-            var app = new DiscordApplication
-            {
-                Discord = this,
-                Id = tapp.Id,
-                Name = tapp.Name,
-                Description = tapp.Description,
-                Summary = tapp.Summary,
-                IconHash = tapp.IconHash,
-                RpcOrigins = tapp.RpcOrigins != null ? new ReadOnlyCollection<string>(tapp.RpcOrigins) : null,
-                Flags = tapp.Flags,
-                RequiresCodeGrant = tapp.BotRequiresCodeGrant,
-                IsPublic = tapp.IsPublicBot,
-                PrivacyPolicyUrl = tapp.PrivacyPolicyUrl,
-                TermsOfServiceUrl = tapp.TermsOfServiceUrl,
-                CustomInstallUrl = tapp.CustomInstallUrl,
-                InstallParams = tapp.InstallParams,
-                Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray()
-            };
+				if (v.Revision > 0)
+					this.VersionString = $"{vs}, CI build {v.Revision}";
+			}
 
-            // do team and owners
-            // tbh fuck doing this properly
-            if (tapp.Team == null)
-            {
-                // singular owner
+			this.BotLibrary = "DisCatSharp";
 
-                app.Owners = new ReadOnlyCollection<DiscordUser>(new[] { new DiscordUser(tapp.Owner) });
-                app.Team = null;
-                app.TeamName = null;
-            }
-            else
-            {
-                // team owner
+			this.ServiceProvider = config.ServiceProvider;
+		}
 
-                app.Team = new DiscordTeam(tapp.Team);
+		/// <summary>
+		/// Gets the current API application.
+		/// </summary>
+		public async Task<DiscordApplication> GetCurrentApplicationAsync()
+		{
+			var tapp = await this.ApiClient.GetCurrentApplicationInfoAsync().ConfigureAwait(false);
+			var app = new DiscordApplication
+			{
+				Discord = this,
+				Id = tapp.Id,
+				Name = tapp.Name,
+				Description = tapp.Description,
+				Summary = tapp.Summary,
+				IconHash = tapp.IconHash,
+				RpcOrigins = tapp.RpcOrigins != null ? new ReadOnlyCollection<string>(tapp.RpcOrigins) : null,
+				Flags = tapp.Flags,
+				RequiresCodeGrant = tapp.BotRequiresCodeGrant,
+				IsPublic = tapp.IsPublicBot,
+				IsHook = tapp.IsHook,
+				Type = tapp.Type,
+				PrivacyPolicyUrl = tapp.PrivacyPolicyUrl,
+				TermsOfServiceUrl = tapp.TermsOfServiceUrl,
+				CustomInstallUrl = tapp.CustomInstallUrl,
+				InstallParams = tapp.InstallParams,
+				Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray()
+			};
 
-                var members = tapp.Team.Members
-                    .Select(x => new DiscordTeamMember(x) { Team = app.Team, User = new DiscordUser(x.User) })
-                    .ToArray();
+			if (tapp.Team == null)
+			{
+				app.Owners = new ReadOnlyCollection<DiscordUser>(new[] { new DiscordUser(tapp.Owner) });
+				app.Team = null;
+				app.TeamName = null;
+			}
+			else
+			{
+				app.Team = new DiscordTeam(tapp.Team);
 
-                var owners = members
-                    .Where(x => x.MembershipStatus == DiscordTeamMembershipStatus.Accepted)
-                    .Select(x => x.User)
-                    .ToArray();
+				var members = tapp.Team.Members
+					.Select(x => new DiscordTeamMember(x) { Team = app.Team, User = new DiscordUser(x.User) })
+					.ToArray();
 
-                app.Owners = new ReadOnlyCollection<DiscordUser>(owners);
-                app.Team.Owner = owners.FirstOrDefault(x => x.Id == tapp.Team.OwnerId);
-                app.Team.Members = new ReadOnlyCollection<DiscordTeamMember>(members);
-                app.TeamName = app.Team.Name;
-            }
+				var owners = members
+					.Where(x => x.MembershipStatus == DiscordTeamMembershipStatus.Accepted)
+					.Select(x => x.User)
+					.ToArray();
 
-            app.GuildId = tapp.GuildId.HasValue ? tapp.GuildId.Value : null;
-            app.Slug = tapp.Slug.HasValue ? tapp.Slug.Value : null;
-            app.PrimarySkuId = tapp.PrimarySkuId.HasValue ? tapp.PrimarySkuId.Value : null;
-            app.VerifyKey = tapp.VerifyKey.HasValue ? tapp.VerifyKey.Value : null;
-            app.CoverImageHash = tapp.CoverImageHash.HasValue ? tapp.CoverImageHash.Value : null;
+				app.Owners = new ReadOnlyCollection<DiscordUser>(owners);
+				app.Team.Owner = owners.FirstOrDefault(x => x.Id == tapp.Team.OwnerId);
+				app.Team.Members = new ReadOnlyCollection<DiscordTeamMember>(members);
+				app.TeamName = app.Team.Name;
+			}
 
-            return app;
-        }
+			app.GuildId = tapp.GuildId.HasValue ? tapp.GuildId.Value : null;
+			app.Slug = tapp.Slug.HasValue ? tapp.Slug.Value : null;
+			app.PrimarySkuId = tapp.PrimarySkuId.HasValue ? tapp.PrimarySkuId.Value : null;
+			app.VerifyKey = tapp.VerifyKey.HasValue ? tapp.VerifyKey.Value : null;
+			app.CoverImageHash = tapp.CoverImageHash.HasValue ? tapp.CoverImageHash.Value : null;
 
-        /// <summary>
-        /// Gets a list of regions
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-        public Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync()
-            => this.ApiClient.ListVoiceRegionsAsync();
+			return app;
+		}
 
-        /// <summary>
-        /// Initializes this client. This method fetches information about current user, application, and voice regions.
-        /// </summary>
-        /// <returns></returns>
-        public virtual async Task InitializeAsync()
-        {
-            if (this.CurrentUser == null)
-            {
-                this.CurrentUser = await this.ApiClient.GetCurrentUserAsync().ConfigureAwait(false);
-                this.UserCache.AddOrUpdate(this.CurrentUser.Id, this.CurrentUser, (id, xu) => this.CurrentUser);
-            }
+		/// <summary>
+		/// Gets a list of voice regions.
+		/// </summary>
+		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+		public Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync()
+			=> this.ApiClient.ListVoiceRegionsAsync();
 
-            if (this.Configuration.TokenType == TokenType.Bot && this.CurrentApplication == null)
-                this.CurrentApplication = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
+		/// <summary>
+		/// Initializes this client. This method fetches information about current user, application, and voice regions.
+		/// </summary>
+		public virtual async Task InitializeAsync()
+		{
+			if (this.CurrentUser == null)
+			{
+				this.CurrentUser = await this.ApiClient.GetCurrentUserAsync().ConfigureAwait(false);
+				this.UserCache.AddOrUpdate(this.CurrentUser.Id, this.CurrentUser, (id, xu) => this.CurrentUser);
+			}
 
-            if (this.Configuration.TokenType != TokenType.Bearer && this.InternalVoiceRegions.Count == 0)
-            {
-                var vrs = await this.ListVoiceRegionsAsync().ConfigureAwait(false);
-                foreach (var xvr in vrs)
-                    this.InternalVoiceRegions.TryAdd(xvr.Id, xvr);
-            }
-        }
+			if (this.Configuration.TokenType == TokenType.Bot && this.CurrentApplication == null)
+				this.CurrentApplication = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
 
-        /// <summary>
-        /// Gets the current gateway info for the provided token.
-        /// <para>If no value is provided, the configuration value will be used instead.</para>
-        /// </summary>
-        /// <returns>A gateway info object.</returns>
-        public async Task<GatewayInfo> GetGatewayInfoAsync(string token = null)
-        {
-            if (this.Configuration.TokenType != TokenType.Bot)
-                throw new InvalidOperationException("Only bot tokens can access this info.");
+			if (this.Configuration.TokenType != TokenType.Bearer && this.InternalVoiceRegions.Count == 0)
+			{
+				var vrs = await this.ListVoiceRegionsAsync().ConfigureAwait(false);
+				foreach (var xvr in vrs)
+					this.InternalVoiceRegions.TryAdd(xvr.Id, xvr);
+			}
+		}
 
-            if (string.IsNullOrEmpty(this.Configuration.Token))
-            {
-                if (string.IsNullOrEmpty(token))
-                    throw new InvalidOperationException("Could not locate a valid token.");
+		/// <summary>
+		/// Gets the current gateway info for the provided token.
+		/// <para>If no value is provided, the configuration value will be used instead.</para>
+		/// </summary>
+		/// <returns>A gateway info object.</returns>
+		public async Task<GatewayInfo> GetGatewayInfoAsync(string token = null)
+		{
+			if (this.Configuration.TokenType != TokenType.Bot)
+				throw new InvalidOperationException("Only bot tokens can access this info.");
 
-                this.Configuration.Token = token;
+			if (string.IsNullOrEmpty(this.Configuration.Token))
+			{
+				if (string.IsNullOrEmpty(token))
+					throw new InvalidOperationException("Could not locate a valid token.");
 
-                var res = await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
-                this.Configuration.Token = null;
-                return res;
-            }
+				this.Configuration.Token = token;
 
-            return await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
-        }
+				var res = await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
+				this.Configuration.Token = null;
+				return res;
+			}
 
-        /// <summary>
-        /// Gets a cached user.
-        /// </summary>
-        /// <param name="user_id">The user_id.</param>
-        internal DiscordUser GetCachedOrEmptyUserInternal(ulong user_id)
-        {
-            this.TryGetCachedUserInternal(user_id, out var user);
-            return user;
-        }
+			return await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
+		}
 
-        /// <summary>
-        /// Tries the get a cached user.
-        /// </summary>
-        /// <param name="user_id">The user_id.</param>
-        /// <param name="user">The user.</param>
-        internal bool TryGetCachedUserInternal(ulong user_id, out DiscordUser user)
-        {
-            if (this.UserCache.TryGetValue(user_id, out user))
-                return true;
+		/// <summary>
+		/// Gets a cached user.
+		/// </summary>
+		/// <param name="userId">The user id.</param>
+		internal DiscordUser GetCachedOrEmptyUserInternal(ulong userId)
+		{
+			this.TryGetCachedUserInternal(userId, out var user);
+			return user;
+		}
 
-            user = new DiscordUser { Id = user_id, Discord = this };
-            return false;
-        }
+		/// <summary>
+		/// Tries the get a cached user.
+		/// </summary>
+		/// <param name="userId">The user id.</param>
+		/// <param name="user">The user.</param>
+		internal bool TryGetCachedUserInternal(ulong userId, out DiscordUser user)
+		{
+			if (this.UserCache.TryGetValue(userId, out user))
+				return true;
 
-        /// <summary>
-        /// Disposes this client.
-        /// </summary>
-        public abstract void Dispose();
-    }
+			user = new DiscordUser { Id = userId, Discord = this };
+			return false;
+		}
+
+		/// <summary>
+		/// Disposes this client.
+		/// </summary>
+		public abstract void Dispose();
+	}
 }

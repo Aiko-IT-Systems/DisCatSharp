@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,19 +24,19 @@ using System;
 
 namespace DisCatSharp.Common.Serialization
 {
-    /// <summary>
-    /// <para>Specifies that this <see cref="System.TimeSpan"/> will be serialized as a number of whole seconds.</para>
-    /// <para>This value will always be serialized as a number.</para>
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class TimeSpanSecondsAttribute : SerializationAttribute
-    { }
+	/// <summary>
+	/// <para>Specifies that this <see cref="System.TimeSpan"/> will be serialized as a number of whole seconds.</para>
+	/// <para>This value will always be serialized as a number.</para>
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	public sealed class TimeSpanSecondsAttribute : SerializationAttribute
+	{ }
 
-    /// <summary>
-    /// <para>Specifies that this <see cref="System.TimeSpan"/> will be serialized as a number of whole milliseconds.</para>
-    /// <para>This value will always be serialized as a number.</para>
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public sealed class TimeSpanMillisecondsAttribute : SerializationAttribute
-    { }
+	/// <summary>
+	/// <para>Specifies that this <see cref="System.TimeSpan"/> will be serialized as a number of whole milliseconds.</para>
+	/// <para>This value will always be serialized as a number.</para>
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	public sealed class TimeSpanMillisecondsAttribute : SerializationAttribute
+	{ }
 }

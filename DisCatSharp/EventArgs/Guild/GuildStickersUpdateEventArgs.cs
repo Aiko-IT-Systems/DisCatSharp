@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,34 +21,35 @@
 // SOFTWARE.
 
 using System;
-using DisCatSharp.Entities;
 using System.Collections.Generic;
+
+using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents event args for the <see cref="DiscordClient.GuildStickersUpdated"/> event.
-    /// </summary>
-    public class GuildStickersUpdateEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the list of stickers after the change.
-        /// </summary>
-        public IReadOnlyDictionary<ulong, DiscordSticker> StickersAfter { get; internal set; }
+	/// <summary>
+	/// Represents event args for the <see cref="DiscordClient.GuildStickersUpdated"/> event.
+	/// </summary>
+	public class GuildStickersUpdateEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the list of stickers after the change.
+		/// </summary>
+		public IReadOnlyDictionary<ulong, DiscordSticker> StickersAfter { get; internal set; }
 
-        /// <summary>
-        /// Gets the list of stickers before the change.
-        /// </summary>
-        public IReadOnlyDictionary<ulong, DiscordSticker> StickersBefore { get; internal set; }
+		/// <summary>
+		/// Gets the list of stickers before the change.
+		/// </summary>
+		public IReadOnlyDictionary<ulong, DiscordSticker> StickersBefore { get; internal set; }
 
-        /// <summary>
-        /// Gets the guild in which the update occurred.
-        /// </summary>
-        public DiscordGuild Guild { get; internal set; }
+		/// <summary>
+		/// Gets the guild in which the update occurred.
+		/// </summary>
+		public DiscordGuild Guild { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GuildStickersUpdateEventArgs"/> class.
-        /// </summary>
-        internal GuildStickersUpdateEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GuildStickersUpdateEventArgs"/> class.
+		/// </summary>
+		internal GuildStickersUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,23 +21,24 @@
 // SOFTWARE.
 
 using System;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.UserSettingsUpdated"/> event.
-    /// </summary>
-    public class UserSettingsUpdateEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the user whose settings were updated.
-        /// </summary>
-        public DiscordUser User { get; internal set; }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.UserSettingsUpdated"/> event.
+	/// </summary>
+	public class UserSettingsUpdateEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the user whose settings were updated.
+		/// </summary>
+		public DiscordUser User { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UserSettingsUpdateEventArgs"/> class.
-        /// </summary>
-        internal UserSettingsUpdateEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="UserSettingsUpdateEventArgs"/> class.
+		/// </summary>
+		internal UserSettingsUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

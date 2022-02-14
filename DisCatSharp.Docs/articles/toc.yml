@@ -2,8 +2,10 @@
   href: preamble.md
 - name: Important Changes
   items:
-  - name: Version 9.9.0
-    href: important_changes/9_9_0.md
+  - name: Version 10.0.0
+    href: important_changes/10_0_0.md
+  - name: Version 9.8.5
+    href: important_changes/9_8_5.md
   - name: Version 9.8.4
     href: important_changes/9_8_4.md
   - name: Version 9.8.3
@@ -53,6 +55,12 @@
     href: application_commands/options.md
   - name: Events
     href: application_commands/events.md
+  - name: Translations
+    items:
+      - name: Using Translations
+        href: application_commands/translations/using.md
+      - name: Translation Reference
+        href: application_commands/translations/reference.md
 - name: Commands
   items:
   - name: Introduction

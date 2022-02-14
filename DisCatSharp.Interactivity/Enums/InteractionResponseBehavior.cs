@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,22 +22,22 @@
 
 namespace DisCatSharp.Interactivity.Enums
 {
-    /// <summary>
-    /// The interaction response behavior.
-    /// </summary>
-    public enum InteractionResponseBehavior
-    {
-        /// <summary>
-        /// Indicates that invalid input should be ignored when waiting for interactions. This will cause the interaction to fail.
-        /// </summary>
-        Ignore,
-        /// <summary>
-        /// Indicates that invalid input should be ACK'd. The interaction will succeed, but nothing will happen.
-        /// </summary>
-        Ack,
-        /// <summary>
-        /// Indicates that invalid input should warrant an ephemeral error message.
-        /// </summary>
-        Respond
-    }
+	/// <summary>
+	/// The interaction response behavior.
+	/// </summary>
+	public enum InteractionResponseBehavior
+	{
+		/// <summary>
+		/// Indicates that invalid input should be ignored when waiting for interactions. This will cause the interaction to fail.
+		/// </summary>
+		Ignore,
+		/// <summary>
+		/// Indicates that invalid input should be ACK'd. The interaction will succeed, but nothing will happen.
+		/// </summary>
+		Ack,
+		/// <summary>
+		/// Indicates that invalid input should warrant an ephemeral error message.
+		/// </summary>
+		Respond
+	}
 }

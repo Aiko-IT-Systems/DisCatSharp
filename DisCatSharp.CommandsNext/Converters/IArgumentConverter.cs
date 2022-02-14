@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,28 +21,29 @@
 // SOFTWARE.
 
 using System.Threading.Tasks;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.CommandsNext.Converters
 {
-    /// <summary>
-    /// Argument converter abstract.
-    /// </summary>
-    public interface IArgumentConverter
-    { }
+	/// <summary>
+	/// Argument converter abstract.
+	/// </summary>
+	public interface IArgumentConverter
+	{ }
 
-    /// <summary>
-    /// Represents a converter for specific argument type.
-    /// </summary>
-    /// <typeparam name="T">Type for which the converter is to be registered.</typeparam>
-    public interface IArgumentConverter<T> : IArgumentConverter
-    {
-        /// <summary>
-        /// Converts the raw value into the specified type.
-        /// </summary>
-        /// <param name="value">Value to convert.</param>
-        /// <param name="ctx">Context in which the value will be converted.</param>
-        /// <returns>A structure containing information whether the value was converted, and, if so, the converted value.</returns>
-        Task<Optional<T>> ConvertAsync(string value, CommandContext ctx);
-    }
+	/// <summary>
+	/// Represents a converter for specific argument type.
+	/// </summary>
+	/// <typeparam name="T">Type for which the converter is to be registered.</typeparam>
+	public interface IArgumentConverter<T> : IArgumentConverter
+	{
+		/// <summary>
+		/// Converts the raw value into the specified type.
+		/// </summary>
+		/// <param name="value">Value to convert.</param>
+		/// <param name="ctx">Context in which the value will be converted.</param>
+		/// <returns>A structure containing information whether the value was converted, and, if so, the converted value.</returns>
+		Task<Optional<T>> ConvertAsync(string value, CommandContext ctx);
+	}
 }

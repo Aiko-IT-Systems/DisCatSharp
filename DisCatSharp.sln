@@ -38,6 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Items", "Build Items"
 		docs-oneclick-rebuild.ps1 = docs-oneclick-rebuild.ps1
 		.github\workflows\docs.yml = .github\workflows\docs.yml
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		Library.targets = Library.targets
 		NuGet.targets = NuGet.targets
 		oneclick-rebuild.ps1 = oneclick-rebuild.ps1
 		Package.targets = Package.targets

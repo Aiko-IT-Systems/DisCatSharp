@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,47 +22,48 @@
 
 using System;
 using System.Threading.Tasks;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.CommandsNext.Converters
 {
-    /// <summary>
-    /// Represents a string converter.
-    /// </summary>
-    public class StringConverter : IArgumentConverter<string>
-    {
-        /// <summary>
-        /// Converts a string.
-        /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        Task<Optional<string>> IArgumentConverter<string>.ConvertAsync(string value, CommandContext ctx)
-            => Task.FromResult(Optional.FromValue(value));
-    }
+	/// <summary>
+	/// Represents a string converter.
+	/// </summary>
+	public class StringConverter : IArgumentConverter<string>
+	{
+		/// <summary>
+		/// Converts a string.
+		/// </summary>
+		/// <param name="value">The string to convert.</param>
+		/// <param name="ctx">The command context.</param>
+		Task<Optional<string>> IArgumentConverter<string>.ConvertAsync(string value, CommandContext ctx)
+			=> Task.FromResult(Optional.FromValue(value));
+	}
 
-    /// <summary>
-    /// Represents a uri converter.
-    /// </summary>
-    public class UriConverter : IArgumentConverter<Uri>
-    {
-        /// <summary>
-        /// Converts a string.
-        /// </summary>
-        /// <param name="value">The string to convert.</param>
-        /// <param name="ctx">The command context.</param>
-        Task<Optional<Uri>> IArgumentConverter<Uri>.ConvertAsync(string value, CommandContext ctx)
-        {
-            try
-            {
-                if (value.StartsWith("<") && value.EndsWith(">"))
-                    value = value.Substring(1, value.Length - 2);
+	/// <summary>
+	/// Represents a uri converter.
+	/// </summary>
+	public class UriConverter : IArgumentConverter<Uri>
+	{
+		/// <summary>
+		/// Converts a string.
+		/// </summary>
+		/// <param name="value">The string to convert.</param>
+		/// <param name="ctx">The command context.</param>
+		Task<Optional<Uri>> IArgumentConverter<Uri>.ConvertAsync(string value, CommandContext ctx)
+		{
+			try
+			{
+				if (value.StartsWith("<") && value.EndsWith(">"))
+					value = value[1..^1];
 
-                return Task.FromResult(Optional.FromValue(new Uri(value)));
-            }
-            catch
-            {
-                return Task.FromResult(Optional.FromNoValue<Uri>());
-            }
-        }
-    }
+				return Task.FromResult(Optional.FromValue(new Uri(value)));
+			}
+			catch
+			{
+				return Task.FromResult(Optional.FromNoValue<Uri>());
+			}
+		}
+	}
 }

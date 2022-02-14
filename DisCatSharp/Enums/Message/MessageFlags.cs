@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,69 +24,69 @@ using System;
 
 namespace DisCatSharp
 {
-    /// <summary>
-    /// Represents a message flag extensions.
-    /// </summary>
-    public static class MessageFlagExtensions
-    {
-        /// <summary>
-        /// Calculates whether these message flags contain a specific flag.
-        /// </summary>
-        /// <param name="baseFlags">The existing flags.</param>
-        /// <param name="flag">The flags to search for.</param>
-        /// <returns></returns>
-        public static bool HasMessageFlag(this MessageFlags baseFlags, MessageFlags flag) => (baseFlags & flag) == flag;
-    }
+	/// <summary>
+	/// Represents a message flag extensions.
+	/// </summary>
+	public static class MessageFlagExtensions
+	{
+		/// <summary>
+		/// Calculates whether these message flags contain a specific flag.
+		/// </summary>
+		/// <param name="baseFlags">The existing flags.</param>
+		/// <param name="flag">The flags to search for.</param>
+		/// <returns></returns>
+		public static bool HasMessageFlag(this MessageFlags baseFlags, MessageFlags flag) => (baseFlags & flag) == flag;
+	}
 
-    /// <summary>
-    /// Represents additional features of a message.
-    /// </summary>
-    [Flags]
-    public enum MessageFlags
-    {
-        /// <summary>
-        /// Whether this message is the original message that was published from a news channel to subscriber channels.
-        /// </summary>
-        Crossposted = 1 << 0,
+	/// <summary>
+	/// Represents additional features of a message.
+	/// </summary>
+	[Flags]
+	public enum MessageFlags
+	{
+		/// <summary>
+		/// Whether this message is the original message that was published from a news channel to subscriber channels.
+		/// </summary>
+		Crossposted = 1 << 0,
 
-        /// <summary>
-        /// Whether this message is crossposted (automatically posted in a subscriber channel).
-        /// </summary>
-        IsCrosspost = 1 << 1,
+		/// <summary>
+		/// Whether this message is crossposted (automatically posted in a subscriber channel).
+		/// </summary>
+		IsCrosspost = 1 << 1,
 
-        /// <summary>
-        /// Whether any embeds in the message are hidden.
-        /// </summary>
-        SuppressedEmbeds = 1 << 2,
+		/// <summary>
+		/// Whether any embeds in the message are hidden.
+		/// </summary>
+		SuppressedEmbeds = 1 << 2,
 
-        /// <summary>
-        /// The source message for this crosspost has been deleted.
-        /// </summary>
-        SourceMessageDelete = 1 << 3,
+		/// <summary>
+		/// The source message for this crosspost has been deleted.
+		/// </summary>
+		SourceMessageDelete = 1 << 3,
 
-        /// <summary>
-        /// The message came from the urgent message system.
-        /// </summary>
-        Urgent = 1 << 4,
+		/// <summary>
+		/// The message came from the urgent message system.
+		/// </summary>
+		Urgent = 1 << 4,
 
-        /// <summary>
-        /// The message has an associated thread, with the same id as the message.
-        /// </summary>
-        HasThread = 1 << 5,
+		/// <summary>
+		/// The message has an associated thread, with the same id as the message.
+		/// </summary>
+		HasThread = 1 << 5,
 
-        /// <summary>
-        /// The message is only visible to the user who invoked the interaction.
-        /// </summary>
-        Ephemeral = 1 << 6,
+		/// <summary>
+		/// The message is only visible to the user who invoked the interaction.
+		/// </summary>
+		Ephemeral = 1 << 6,
 
-        /// <summary>
-        /// The message is an interaction response and the bot is "thinking".
-        /// </summary>
-        Loading = 1 << 7,
+		/// <summary>
+		/// The message is an interaction response and the bot is "thinking".
+		/// </summary>
+		Loading = 1 << 7,
 
-        /// <summary>
-        /// The message is warning that some roles failed to mention in thread.
-        /// </summary>
-        FailedToMentionSomeRolesInThread = 1 << 8
-    }
+		/// <summary>
+		/// The message is warning that some roles failed to mention in thread.
+		/// </summary>
+		FailedToMentionSomeRolesInThread = 1 << 8
+	}
 }

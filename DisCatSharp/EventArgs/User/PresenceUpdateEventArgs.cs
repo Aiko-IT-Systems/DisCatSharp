@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,53 +21,54 @@
 // SOFTWARE.
 
 using System;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.EventArgs
 {
-    /// <summary>
-    /// Represents arguments for <see cref="DiscordClient.PresenceUpdated"/> event.
-    /// </summary>
-    public class PresenceUpdateEventArgs : DiscordEventArgs
-    {
-        /// <summary>
-        /// Gets the user whose presence was updated.
-        /// </summary>
-        public DiscordUser User { get; internal set; }
+	/// <summary>
+	/// Represents arguments for <see cref="DiscordClient.PresenceUpdated"/> event.
+	/// </summary>
+	public class PresenceUpdateEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the user whose presence was updated.
+		/// </summary>
+		public DiscordUser User { get; internal set; }
 
-        /// <summary>
-        /// Gets the user's new game.
-        /// </summary>
-        public DiscordActivity Activity { get; internal set; }
+		/// <summary>
+		/// Gets the user's new game.
+		/// </summary>
+		public DiscordActivity Activity { get; internal set; }
 
-        /// <summary>
-        /// Gets the user's status.
-        /// </summary>
-        public UserStatus Status { get; internal set; }
+		/// <summary>
+		/// Gets the user's status.
+		/// </summary>
+		public UserStatus Status { get; internal set; }
 
-        /// <summary>
-        /// Gets the user's old presence.
-        /// </summary>
-        public DiscordPresence PresenceBefore { get; internal set; }
+		/// <summary>
+		/// Gets the user's old presence.
+		/// </summary>
+		public DiscordPresence PresenceBefore { get; internal set; }
 
-        /// <summary>
-        /// Gets the user's new presence.
-        /// </summary>
-        public DiscordPresence PresenceAfter { get; internal set; }
+		/// <summary>
+		/// Gets the user's new presence.
+		/// </summary>
+		public DiscordPresence PresenceAfter { get; internal set; }
 
-        /// <summary>
-        /// Gets the user prior to presence update.
-        /// </summary>
-        public DiscordUser UserBefore { get; internal set; }
+		/// <summary>
+		/// Gets the user prior to presence update.
+		/// </summary>
+		public DiscordUser UserBefore { get; internal set; }
 
-        /// <summary>
-        /// Gets the user after the presence update.
-        /// </summary>
-        public DiscordUser UserAfter { get; internal set; }
+		/// <summary>
+		/// Gets the user after the presence update.
+		/// </summary>
+		public DiscordUser UserAfter { get; internal set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PresenceUpdateEventArgs"/> class.
-        /// </summary>
-        internal PresenceUpdateEventArgs(IServiceProvider provider) : base(provider) { }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PresenceUpdateEventArgs"/> class.
+		/// </summary>
+		internal PresenceUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

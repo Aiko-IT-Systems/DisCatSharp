@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,46 +21,47 @@
 // SOFTWARE.
 
 using System;
+
 using DisCatSharp.Enums;
 
 namespace DisCatSharp.ApplicationCommands
 {
 
-    /// <summary>
-    /// Marks this method as a context menu.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class ContextMenuAttribute : Attribute
-    {
-        /// <summary>
-        /// Gets the name of this context menu.
-        /// </summary>
-        public string Name { get; internal set; }
+	/// <summary>
+	/// Marks this method as a context menu.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method)]
+	public sealed class ContextMenuAttribute : Attribute
+	{
+		/// <summary>
+		/// Gets the name of this context menu.
+		/// </summary>
+		public string Name { get; internal set; }
 
-        /// <summary>
-        /// Gets the type of this context menu.
-        /// </summary>
-        public ApplicationCommandType Type { get; internal set; }
+		/// <summary>
+		/// Gets the type of this context menu.
+		/// </summary>
+		public ApplicationCommandType Type { get; internal set; }
 
-        /// <summary>
-        /// Gets whether this command is enabled by default.
-        /// </summary>
-        public bool DefaultPermission { get; internal set;}
+		/// <summary>
+		/// Gets whether this command is enabled by default.
+		/// </summary>
+		public bool DefaultPermission { get; internal set; }
 
-        /// <summary>
-        /// Marks this method as a context menu.
-        /// </summary>
-        /// <param name="type">The type of the context menu.</param>
-        /// <param name="name">The name of the context menu.</param>
-        /// <param name="defaultPermission">The default permission of the context menu.</param>
-        public ContextMenuAttribute(ApplicationCommandType type, string name, bool defaultPermission = true)
-        {
-            if (type == ApplicationCommandType.ChatInput)
-                throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
+		/// <summary>
+		/// Marks this method as a context menu.
+		/// </summary>
+		/// <param name="type">The type of the context menu.</param>
+		/// <param name="name">The name of the context menu.</param>
+		/// <param name="defaultPermission">The default permission of the context menu.</param>
+		public ContextMenuAttribute(ApplicationCommandType type, string name, bool defaultPermission = true)
+		{
+			if (type == ApplicationCommandType.ChatInput)
+				throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
 
-            this.Type = type;
-            this.Name = name;
-            this.DefaultPermission = defaultPermission;
-        }
-    }
+			this.Type = type;
+			this.Name = name;
+			this.DefaultPermission = defaultPermission;
+		}
+	}
 }

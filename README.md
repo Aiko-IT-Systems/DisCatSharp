@@ -1,8 +1,8 @@
-# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/discatsharp)
+# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/U4BGHpKSF7)
 
-![Logo](DisCatSharp.Logos/logobig.png#64x64)
+![dcs](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Logos/android-chrome-192x192.png?raw=true)
 
-[Discord Bot Library](https://discord.gg/discatsharp) written in C# for .NET.
+Discord Bot Library written in C# for .NET.
 
 #### Status
 [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=NuGet%20Overall%20Version)](https://nuget.dcs.aitsys.dev)
@@ -25,10 +25,10 @@
 ## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
 
-So the API version is always the newest, in the actual case `v9`.
+So the API version is always the newest, in the actual case `v10`.
 
 ## Where is the Changelog?
-On our guild! You find it in [this channel](https://discord.com/channels/858089281214087179/858099438580006913).
+On [our guild!](https://discord.gg/U4BGHpKSF7) You find it in [this channel](https://discord.com/channels/858089281214087179/858099438580006913).
 
 ## Installing
 You can install the library from following source:
@@ -41,7 +41,7 @@ The documentation for the latest stable version is available at [docs.dcs.aitsys
 The documentation of the latest nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
-Either join our [support guild](https://discord.gg/discatsharp) and open a support ticket.
+Either join our [support guild](https://discord.gg/U4BGHpKSF7) and open a support ticket.
 Or write a mail to dcs@aitsys.dev.
 
 All requests are tracked at [aitsys.dev](https://aitsys.dev).
@@ -88,14 +88,18 @@ Visit the channel [#github-feed](https://discord.com/channels/858089281214087179
 
 If you can't see it, take a look into the selfroles channel.
 
+## Sponsors
+- [Deividas Kazakevicius](https://github.com/DeividasKaza)
+- [Will](https://github.com/villChurch)
 
 ## Thanks
-Big thanks goes to the following people who helps us ♥️
+Big thanks goes to the following people who helped us ♥️
 - [Auros Nexus](https://github.com/Auros)
 - [Lunar Starstrum](https://github.com/OoLunar)
 - [Johannes](https://github.com/JMLutra)
 - [Geferon](https://github.com/geferon)
 - [Alice](https://github.com/QuantuChi)
+- [Will](https://github.com/villChurch)
 
 ## Special Thanks
 The special thanks goes to Nagisa. Make sure to check out her [instagram](https://www.instagram.com/nagisaarts_/) ♥️♥️

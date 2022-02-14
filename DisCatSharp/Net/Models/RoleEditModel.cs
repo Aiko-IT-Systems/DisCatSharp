@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,62 +21,63 @@
 // SOFTWARE.
 
 using System.IO;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.Net.Models
 {
-    /// <summary>
-    /// Represents a role edit model.
-    /// </summary>
-    public class RoleEditModel : BaseEditModel
-    {
-        /// <summary>
-        /// New role name
-        /// </summary>
+	/// <summary>
+	/// Represents a role edit model.
+	/// </summary>
+	public class RoleEditModel : BaseEditModel
+	{
+		/// <summary>
+		/// New role name
+		/// </summary>
 		public string Name { internal get; set; }
 
-        /// <summary>
-        /// New role permissions
-        /// </summary>
+		/// <summary>
+		/// New role permissions
+		/// </summary>
 		public Permissions? Permissions { internal get; set; }
 
-        /// <summary>
-        /// New role color
-        /// </summary>
+		/// <summary>
+		/// New role color
+		/// </summary>
 		public DiscordColor? Color { internal get; set; }
 
-        /// <summary>
-        /// Whether new role should be hoisted (Shown in the sidebar)
-        /// </summary>
+		/// <summary>
+		/// Whether new role should be hoisted (Shown in the sidebar)
+		/// </summary>
 		public bool? Hoist { internal get; set; }
 
-        /// <summary>
-        /// Whether new role should be mentionable
-        /// </summary>
+		/// <summary>
+		/// Whether new role should be mentionable
+		/// </summary>
 		public bool? Mentionable { internal get; set; }
 
-        /// <summary>
-        /// The new role icon.
-        /// </summary>
-        public Optional<Stream> Icon { internal get; set; }
+		/// <summary>
+		/// The new role icon.
+		/// </summary>
+		public Optional<Stream> Icon { internal get; set; }
 
-        /// <summary>
-        /// The new role icon from unicode emoji.
-        /// </summary>
-        public Optional<DiscordEmoji> UnicodeEmoji { internal get; set; }
+		/// <summary>
+		/// The new role icon from unicode emoji.
+		/// </summary>
+		public Optional<DiscordEmoji> UnicodeEmoji { internal get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RoleEditModel"/> class.
-        /// </summary>
-        internal RoleEditModel()
-        {
-            this.Name = null;
-            this.Permissions = null;
-            this.Color = null;
-            this.Hoist = null;
-            this.Mentionable = null;
-            this.Icon = null;
-            this.UnicodeEmoji = null;
-        }
-    }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="RoleEditModel"/> class.
+		/// </summary>
+		internal RoleEditModel()
+		{
+			this.Name = null;
+			this.Permissions = null;
+			this.Color = null;
+			this.Hoist = null;
+			this.Mentionable = null;
+			this.Icon = null;
+			this.UnicodeEmoji = null;
+		}
+	}
 }

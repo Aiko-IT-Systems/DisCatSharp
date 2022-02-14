@@ -1,6 +1,6 @@
-// This file is part of the DisCatSharp project, a fork of DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
-// Copyright (c) 2021 AITSYS
+// Copyright (c) 2021-2022 AITSYS
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,66 +22,68 @@
 
 using System;
 using System.Threading.Tasks;
+
 using DisCatSharp.Configuration;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.Hosting
 {
-    /// <summary>
-    /// Simple Implementation for <see cref="DiscordShardedClient"/> to work as a <see cref="Microsoft.Extensions.Hosting.BackgroundService"/>
-    /// </summary>
-    public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordHostedShardService
-    {
-        public DiscordShardedClient ShardedClient { get; protected set; }
+	/// <summary>
+	/// Simple Implementation for <see cref="DiscordShardedClient"/> to work as a <see cref="Microsoft.Extensions.Hosting.BackgroundService"/>
+	/// </summary>
+	public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordHostedShardService
+	{
+		public DiscordShardedClient ShardedClient { get; protected set; }
 
-        #pragma warning disable 8618
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DiscordShardedHostedService"/> class.
-        /// </summary>
-        /// <param name="config">The config.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="applicationLifetime">The application lifetime.</param>
-        /// <param name="configBotSection">The config bot section.</param>
-        protected DiscordShardedHostedService(IConfiguration config,
-            ILogger<DiscordShardedHostedService> logger,
-            IServiceProvider serviceProvider,
-            IHostApplicationLifetime applicationLifetime,
-            string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DefaultRootLib)
-            : base(config, logger, serviceProvider, applicationLifetime, configBotSection)
-        {
+#pragma warning disable 8618
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordShardedHostedService"/> class.
+		/// </summary>
+		/// <param name="config">The config.</param>
+		/// <param name="logger">The logger.</param>
+		/// <param name="serviceProvider">The service provider.</param>
+		/// <param name="applicationLifetime">The application lifetime.</param>
+		/// <param name="configBotSection">The config bot section.</param>
+		protected DiscordShardedHostedService(IConfiguration config,
+			ILogger<DiscordShardedHostedService> logger,
+			IServiceProvider serviceProvider,
+			IHostApplicationLifetime applicationLifetime,
+			string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
+			: base(config, logger, serviceProvider, applicationLifetime, configBotSection)
+		{
 
-        }
-        #pragma warning restore 8618
+		}
+#pragma warning restore 8618
 
-        protected override Task ConfigureAsync()
-        {
-            try
-            {
-                var config = this.Configuration.ExtractConfig<DiscordConfiguration>(this.ServiceProvider, "Discord", this.BotSection);
-                this.ShardedClient = new DiscordShardedClient(config);
-            }
-            catch (Exception ex)
-            {
-                this.Logger.LogError($"Was unable to build {nameof(DiscordShardedClient)} for {this.GetType().Name}");
-                this.OnInitializationError(ex);
-            }
+		protected override Task ConfigureAsync()
+		{
+			try
+			{
+				var config = this.Configuration.ExtractConfig<DiscordConfiguration>(this.ServiceProvider, "Discord", this.BotSection);
+				this.ShardedClient = new DiscordShardedClient(config);
+			}
+			catch (Exception ex)
+			{
+				this.Logger.LogError($"Was unable to build {nameof(DiscordShardedClient)} for {this.GetType().Name}");
+				this.OnInitializationError(ex);
+			}
 
-            return Task.CompletedTask;
-        }
+			return Task.CompletedTask;
+		}
 
-        protected sealed override async Task ConnectAsync() => await this.ShardedClient.StartAsync();
+		protected sealed override async Task ConnectAsync() => await this.ShardedClient.StartAsync();
 
-        protected override Task ConfigureExtensionsAsync()
-        {
-            foreach (var client in this.ShardedClient.ShardClients.Values)
-            {
-                this.InitializeExtensions(client);
-            }
+		protected override Task ConfigureExtensionsAsync()
+		{
+			foreach (var client in this.ShardedClient.ShardClients.Values)
+			{
+				this.InitializeExtensions(client);
+			}
 
-            return Task.CompletedTask;
-        }
-    }
+			return Task.CompletedTask;
+		}
+	}
 }
