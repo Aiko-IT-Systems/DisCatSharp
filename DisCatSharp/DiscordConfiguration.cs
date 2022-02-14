@@ -66,7 +66,7 @@ namespace DisCatSharp
 
 		/// <summary>
 		/// Overwrites the api version.
-		/// Defaults to 9.
+		/// Defaults to 10.
 		/// </summary>
 		public string ApiVersion { internal get; set; } = "10";
 
