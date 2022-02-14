@@ -72,7 +72,7 @@ namespace DisCatSharp
 	public enum DiscordIntents
 	{
 		/// <summary>
-		/// Whether to include general guild events.
+		/// Whether to include general guild events. Note that you receive empty message contents if you don't have the guild message intent.
 		/// <para>These include <see cref="DiscordClient.GuildCreated"/>, <see cref="DiscordClient.GuildDeleted"/>, <see cref="DiscordClient.GuildAvailable"/>, <see cref="DiscordClient.GuildDownloadCompleted"/>,</para>
 		/// <para><see cref="DiscordClient.GuildRoleCreated"/>, <see cref="DiscordClient.GuildRoleUpdated"/>, <see cref="DiscordClient.GuildRoleDeleted"/>,</para>
 		/// <para><see cref="DiscordClient.ChannelCreated"/>, <see cref="DiscordClient.ChannelUpdated"/>, <see cref="DiscordClient.ChannelDeleted"/>, <see cref="DiscordClient.ChannelPinsUpdated"/>,</para>
@@ -133,7 +133,7 @@ namespace DisCatSharp
 		GuildPresences = 1 << 8,
 
 		/// <summary>
-		/// Whether to include guild message events.
+		/// Whether to include guild message events. Note that you receive empty contents if you don't have the guild message intent.
 		/// <para>These include <see cref="DiscordClient.MessageCreated"/>, <see cref="DiscordClient.MessageUpdated"/>, and <see cref="DiscordClient.MessageDeleted"/>.</para>
 		/// </summary>
 		GuildMessages = 1 << 9,
@@ -189,14 +189,11 @@ namespace DisCatSharp
 		/// </summary>
 		AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
 			GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents,
-		// AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates |
-		//      GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping,
-
 		/// <summary>
 		/// Includes all intents.
 		/// <para>The <see cref="GuildMembers"/> and <see cref="GuildPresences"/> intents are privileged, and must be enabled on the bot's developer page.</para>
 		/// <para>The <see cref="GuildMessages"/> will be privileged as of April 2022.</para>
 		/// </summary>
-		All = AllUnprivileged | GuildMembers | GuildPresences // | DiscordIntents.GuildMessages
+		All = AllUnprivileged | GuildMembers | GuildPresences
 	}
 }
