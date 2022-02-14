@@ -68,7 +68,7 @@ namespace DisCatSharp
 		/// Overwrites the api version.
 		/// Defaults to 9.
 		/// </summary>
-		public string ApiVersion { internal get; set; } = "9";
+		public string ApiVersion { internal get; set; } = "10";
 
 		/// <summary>
 		/// <para>Sets whether to rely on Discord for NTP (Network Time Protocol) synchronization with the "X-Ratelimit-Reset-After" header.</para>
