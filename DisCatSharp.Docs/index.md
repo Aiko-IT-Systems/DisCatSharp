@@ -1,11 +1,11 @@
 ---
 uid: index
-title: DisCatSharp 9.9.0 Documentation
+title: DisCatSharp 10.0.0 Documentation
 ---
 
-<h1 class="delet-this">DisCatSharp 9.9.0 Documentation</h1>
+<h1 class="delet-this">DisCatSharp 10.0.0 Documentation</h1>
 <h1 class="logo-center">![DisCatSharp Logo](/logobig.png "DisCatSharp Documentation")</h1>
-## DisCatSharp 9.9.0 Documentation
+## DisCatSharp 10.0.0 Documentation
 [DisCatSharp](https://github.com/Aiko-IT-Systems/DisCatSharp) (DCS) is an unofficial .NET wrapper for the [Discord API](https://discordapp.com/developers/docs/intro "Discord API") based off [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus).<br/>
 The library has been rewritten to fit quality and API standards as well as target wider range of .NET implementations. Furthermore this lib will includes many new features of Discord and is pretty fast with keeping up with Discords API.
 
