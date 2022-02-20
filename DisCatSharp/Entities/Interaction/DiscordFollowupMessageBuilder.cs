@@ -275,9 +275,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Sets the followup message to be ephemeral.
 		/// </summary>
-		/// <param name="ephemeral">Ephemeral.</param>
-		/// <returns>The builder to chain calls with.</returns>
-		public DiscordFollowupMessageBuilder AsEphemeral(bool ephemeral)
+		/// <param name="ephemeral">Whether the followup should be ephemeral. Defaults to true.</param>
+		public DiscordFollowupMessageBuilder AsEphemeral(bool ephemeral = true)
 		{
 			this.IsEphemeral = ephemeral;
 			return this;
