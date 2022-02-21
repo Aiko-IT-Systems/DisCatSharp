@@ -36,7 +36,7 @@ namespace DisCatSharp
 	/// </summary>
 	public sealed partial class DiscordClient
 	{
-		private readonly Dictionary<(object?, Type, bool), List<List<(EventInfo, Delegate)>>> _registrationToDelegate = new();
+		private readonly Dictionary<(object?, Type, bool), List<(EventInfo, Delegate)[]>> _registrationToDelegate = new();
 		private readonly Dictionary<Type, List<object>> _typeToAnonymousHandlers = new();
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace DisCatSharp
 			=> this.RegisterEventHandlerImpl(handler, handler.GetType(), registerStatic);
 
 		/// <summary>
-		/// Registers all static methods annoated with <see cref="Event"/> from the given type.
+		/// Registers all static methods annotated with <see cref="Event"/> from the given type.
 		/// </summary>
 		/// <param name="t">The static event handler type.</param>
 		public void RegisterStaticEventHandler(Type t)
@@ -66,9 +66,7 @@ namespace DisCatSharp
 		public void RegisterEventHandler(Type type)
 		{
 			if (type.IsAbstract)
-			{
 				this.RegisterStaticEventHandler(type);
-			}
 			else
 			{
 				object anon = ActivatorUtilities.CreateInstance(this.Configuration.ServiceProvider, type);
@@ -91,10 +89,8 @@ namespace DisCatSharp
 		/// <param name="assembly">The assembly from which to get the types.</param>
 		public void RegisterEventHandlers(Assembly assembly)
 		{
-			foreach (Type t in this.getEventHandlersFromAssembly(assembly))
-			{
+			foreach (Type t in GetEventHandlersFromAssembly(assembly))
 				this.RegisterEventHandler(t);
-			}
 		}
 
 		/// <summary>
@@ -124,24 +120,18 @@ namespace DisCatSharp
 		public void UnregisterEventHandler(Type t)
 		{
 			if (t.IsAbstract)
-			{
 				this.UnregisterStaticEventHandler(t);
-			}
 			else
 			{
 				if (!this._typeToAnonymousHandlers.TryGetValue(t, out var anonObjs)
 					|| anonObjs.Count == 0)
-				{
 					return; // Wasn't registered
-				}
 
 				object anon = anonObjs[0];
 				anonObjs.RemoveAt(0);
 
 				if (anonObjs.Count == 0)
-				{
 					this._typeToAnonymousHandlers.Remove(t);
-				}
 
 				this.UnregisterEventHandlerImpl(anon, t);
 			}
@@ -161,13 +151,11 @@ namespace DisCatSharp
 		/// <param name="assembly"></param>
 		public void UnregisterEventHandlers(Assembly assembly)
 		{
-			foreach (Type t in this.getEventHandlersFromAssembly(assembly))
-			{
+			foreach (Type t in GetEventHandlersFromAssembly(assembly))
 				this.UnregisterEventHandler(t);
-			}
 		}
 
-		private IEnumerable<Type> getEventHandlersFromAssembly(Assembly assembly)
+		private static IEnumerable<Type> GetEventHandlersFromAssembly(Assembly assembly)
 			=> assembly.GetTypes()
 				.Where(t => t.GetCustomAttribute<EventHandler>() is not null);
 
@@ -175,46 +163,40 @@ namespace DisCatSharp
 		{
 			if (!this._registrationToDelegate.TryGetValue((handler, type, registerStatic), out var delegateLists)
 				|| delegateLists.Count == 0)
-			{
 				return;
-			}
 
-			foreach (var (evtn, dlgt) in delegateLists[0])
-			{
-				evtn.RemoveEventHandler(this, dlgt);
-			}
+			foreach (var (evnt, dlgt) in delegateLists[0])
+				evnt.RemoveEventHandler(this, dlgt);
+
 			delegateLists.RemoveAt(0);
 			if (delegateLists.Count == 0)
-			{
 				this._registrationToDelegate.Remove((handler, type, registerStatic));
-			}
 		}
 
 		private void RegisterEventHandlerImpl(object? handler, Type type, bool registerStatic = true)
 		{
-			var delegates = type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-								.Select(method => (method, attribute: method.GetCustomAttribute<Event>()))
-								.Where(m => m.attribute is not null && ((registerStatic && m.method.IsStatic) || handler is not null))
-								.Select(m => {
-									   var eventName = m.attribute!.EventName ?? m.method.Name;
-									   return (m.method, evtn: this.GetType().GetEvent(eventName)
-											?? throw new ArgumentException($"Tried to register handler to non-existent event "
-																				 + $"\"{eventName}\"")); })
-								.Select(m => (m.evtn, dlgt: (m.method.IsStatic
-										? Delegate.CreateDelegate(m.evtn.EventHandlerType, m.method, false)
-										: Delegate.CreateDelegate(m.evtn.EventHandlerType, handler, m.method, false))
-											?? throw new ArgumentException($"Method \"{m.method}\" does not adhere to event specification"
-												+ $" \"{m.evtn.EventHandlerType}\""))).ToList();
+			var delegates = (
+				from method in type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+				let attribute = method.GetCustomAttribute<Event>()
+				where attribute is not null && ((registerStatic && method.IsStatic) || handler is not null)
+				let eventName = attribute.EventName ?? method.Name
+				let eventInfo = this.GetType().GetEvent(eventName)
+					?? throw new ArgumentException($"Tried to register handler to non-existent event \"{eventName}\"")
+				let eventHandlerType = eventInfo.EventHandlerType
+				let dlgt = (method.IsStatic
+					? Delegate.CreateDelegate(eventHandlerType, method, false)
+					: Delegate.CreateDelegate(eventHandlerType, handler, method, false))
+					?? throw new ArgumentException($"Method \"{method}\" does not adhere to event specification \"{eventHandlerType}\"")
+				select (eventInfo, dlgt)
+				).ToArray();
 
 			this._registrationToDelegate[(handler, type, registerStatic)]
 				= this._registrationToDelegate.TryGetValue((handler, type, registerStatic), out var delList) ? delList : (delList = new());
 
 			delList.Add(delegates);
 
-			foreach (var (evtn, dlgt) in delegates)
-			{
-				evtn.AddEventHandler(this, dlgt);
-			}
+			foreach (var (evnt, dlgt) in delegates)
+				evnt.AddEventHandler(this, dlgt);
 		}
 	}
 }
