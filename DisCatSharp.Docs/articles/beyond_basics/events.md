@@ -92,12 +92,12 @@ public class MyOtherEventHandler {
 }
 ```
 
-In the above example an instance of `SomeClass` will need to be provided to the `DiscordContext`s `IServiceProvider`, read the next chapter to see how to accomplish that!
+In the above example an instance of `SomeClass` will need to be provided to the `DiscordContext`'s `IServiceProvider`, read the next chapter to see how to accomplish that!
 
 You can also register individual types, and even individual objects as event handlers using the overloaded method `DiscordClient.RegisterEventHandler`. In both of those cases the attribute `EventHandler` is not required.
 
 When registering an object as a handler, by default the type's static methods will *not* be considered as event handling methods.
-This allows for registering multiple instances of the same type without getting a duplication of the registration of the static event handling methods.
+This allows for registering multiple instances of the same type without registering their static event handling methods multiple times.
 To register the static methods exclusively, use `DiscordClient.RegisterStaticEventHandler` with the type in question.
 
 # Dependency Injection
