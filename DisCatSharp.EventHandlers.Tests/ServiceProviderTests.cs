@@ -40,13 +40,10 @@ namespace DisCatSharp.EventHandlers.Tests
 		[Fact]
 		public void Test()
 		{
-			var poorClient = new DiscordClient(new DiscordConfiguration()
-			{
-				Token = "1",
-			});
+			var poorClient = new DiscordClient(new() { Token = "1" });
 			Assert.ThrowsAny<Exception>(() => poorClient.RegisterEventHandler<Handler>());
 
-			var richClient = new DiscordClient(new DiscordConfiguration()
+			var richClient = new DiscordClient(new()
 			{
 				Token = "2",
 				ServiceProvider = new ServiceCollection().AddSingleton<Resource>().BuildServiceProvider(),

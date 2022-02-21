@@ -53,10 +53,7 @@ namespace DisCatSharp.EventHandlers.Tests
 			private static Task ThisEventDoesNotExist() => Task.CompletedTask;
 		}
 
-		private readonly DiscordClient _client = new(new DiscordConfiguration()
-		{
-			Token = "1"
-		});
+		private readonly DiscordClient _client = new(new() { Token = "1" });
 
 		[Fact]
 		public void TestUtility()
