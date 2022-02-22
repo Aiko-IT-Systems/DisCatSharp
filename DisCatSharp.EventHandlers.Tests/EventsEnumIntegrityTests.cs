@@ -22,30 +22,31 @@
 
 #nullable enable
 
-using System;
+using System.Linq;
 
-namespace DisCatSharp
+using Xunit;
+
+namespace DisCatSharp.EventHandlers.Tests
 {
-	/// <summary>
-	/// Methods marked with this attribute will be registered as event handling methods
-	/// if the associated type / an associated instance is being registered.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Method)]
-	public class Event : Attribute
+	public class EventsEnumIntegrityTests
 	{
-		internal readonly string? EventName;
-
-		/// <param name="name"><para>The name of the event.</para>
-		/// <para>The attributed method's name will be used if null.</para></param>
-		public Event(string? name = null)
+		[Fact]
+		void TestEnumToEvent()
 		{
-			this.EventName = name;
+			foreach (var value in typeof(DiscordEvent).GetEnumValues())
+			{
+				Assert.NotNull(typeof(DiscordClient).GetEvent(value.ToString()!));
+			}
+		}
+
+		[Fact]
+		void TestEventToEnum()
+		{
+			var enumNames = typeof(DiscordEvent).GetEnumNames().ToHashSet();
+			foreach (var evtn in typeof(DiscordClient).GetEvents())
+			{
+				Assert.Contains(evtn.Name, enumNames);
+			}
 		}
 	}
-
-	/// <summary>
-	/// Classes marked with this attribute will be considered for event handler registration from an assembly.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, Inherited = false)]
-	public class EventHandler : Attribute { }
 }

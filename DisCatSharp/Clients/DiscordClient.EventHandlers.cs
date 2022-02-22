@@ -40,7 +40,7 @@ namespace DisCatSharp
 		private readonly Dictionary<Type, List<object>> _typeToAnonymousHandlers = new();
 
 		/// <summary>
-		/// Registers all methods annotated with <see cref="Event"/> from the given object.
+		/// Registers all methods annotated with <see cref="EventAttribute"/> from the given object.
 		/// </summary>
 		/// <param name="handler">The event handler object.</param>
 		/// <param name="registerStatic">Whether to consider static methods.</param>
@@ -48,7 +48,7 @@ namespace DisCatSharp
 			=> this.RegisterEventHandlerImpl(handler, handler.GetType(), registerStatic);
 
 		/// <summary>
-		/// Registers all static methods annotated with <see cref="Event"/> from the given type.
+		/// Registers all static methods annotated with <see cref="EventAttribute"/> from the given type.
 		/// </summary>
 		/// <param name="t">The static event handler type.</param>
 		public void RegisterStaticEventHandler(Type t)
@@ -157,7 +157,7 @@ namespace DisCatSharp
 
 		private static IEnumerable<Type> GetEventHandlersFromAssembly(Assembly assembly)
 			=> assembly.GetTypes()
-				.Where(t => t.GetCustomAttribute<EventHandler>() is not null);
+				.Where(t => t.GetCustomAttribute<EventHandlerAttribute>() is not null);
 
 		private void UnregisterEventHandlerImpl(object? handler, Type type, bool registerStatic = true)
 		{
@@ -177,7 +177,7 @@ namespace DisCatSharp
 		{
 			var delegates = (
 				from method in type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-				let attribute = method.GetCustomAttribute<Event>()
+				let attribute = method.GetCustomAttribute<EventAttribute>()
 				where attribute is not null && ((registerStatic && method.IsStatic) || handler is not null)
 				let eventName = attribute.EventName ?? method.Name
 				let eventInfo = this.GetType().GetEvent(eventName)

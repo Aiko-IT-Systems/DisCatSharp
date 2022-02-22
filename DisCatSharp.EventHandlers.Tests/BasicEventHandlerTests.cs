@@ -43,7 +43,7 @@ namespace DisCatSharp.EventHandlers.Tests
 			[Event]
 			public Task MessageCreated(DiscordClient sender, MessageCreateEventArgs args) => Task.CompletedTask;
 
-			[Event("MessageDeleted")]
+			[Event(DiscordEvent.MessageDeleted)]
 			private static Task SomeEvent(DiscordClient sender, MessageDeleteEventArgs args) => Task.CompletedTask;
 		}
 

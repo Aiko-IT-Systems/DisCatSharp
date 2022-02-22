@@ -64,7 +64,7 @@ public class MyEventHandler {
     [Event]
     private async Task MessageCreated(DiscordClient s, MessageCreateEventArgs e) { /* ... */ }
 
-    [Event("MessageCreated")] // You can specify the event name in the attribute, instead of via the method name!
+    [Event(DiscordEvent.MessageCreated)] // You can specify the event name in the attribute, instead of via the method name!
     public static async Task MySecondaryHandler(DiscordClient s, MessageCreateEventArgs e) { /* ... */ }
 }
 ```
