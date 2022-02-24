@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
@@ -29,17 +31,51 @@ namespace DisCatSharp.Entities
 	/// </summary>
 	public sealed class DiscordEmbedField
 	{
+		private string _name;
+
 		/// <summary>
 		/// Gets the name of the field.
 		/// </summary>
 		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-		public string Name { get; set; }
+		public string Name { get => this._name;
+			set
+			{
+				if (string.IsNullOrWhiteSpace(value))
+				{
+					if (value == null)
+						throw new ArgumentNullException(nameof(value));
+					throw new ArgumentException("Name cannot be empty or whitespace.", nameof(value));
+				}
+
+				if (value.Length > 256)
+					throw new ArgumentException("Embed field name length cannot exceed 256 characters.");
+
+				this._name = value;
+			}
+		}
+
+		private string _value;
 
 		/// <summary>
 		/// Gets the value of the field.
 		/// </summary>
 		[JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
-		public string Value { get; set; }
+		public string Value { get => this._value;
+			set
+			{
+				if (string.IsNullOrWhiteSpace(value))
+				{
+					if (value == null)
+						throw new ArgumentNullException(nameof(value));
+					throw new ArgumentException("Value cannot be empty or whitespace.", nameof(value));
+				}
+
+				if (value.Length > 1024)
+					throw new ArgumentException("Embed field value length cannot exceed 1024 characters.");
+
+				this._value = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets whether or not this field should display inline.
@@ -50,7 +86,11 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordEmbedField"/> class.
 		/// </summary>
-		internal DiscordEmbedField()
-		{ }
+		public DiscordEmbedField(string name, string value, bool inline)
+		{
+			this.Name = name;
+			this.Value = value;
+			this.Inline = inline;
+		}
 	}
 }

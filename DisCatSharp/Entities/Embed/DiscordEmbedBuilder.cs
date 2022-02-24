@@ -366,34 +366,40 @@ namespace DisCatSharp.Entities
 		/// <param name="inline">Whether the field is to be inline or not.</param>
 		/// <returns>This embed builder.</returns>
 		public DiscordEmbedBuilder AddField(string name, string value, bool inline = false)
+			=> this.AddField(new DiscordEmbedField(name, value, inline));
+
+		/// <summary>
+		/// Adds a field to this embed.
+		/// </summary>
+		/// <param name="field">The field to add.</param>
+		/// <returns>This embed builder.</returns>
+		public DiscordEmbedBuilder AddField(DiscordEmbedField field)
 		{
-			if (string.IsNullOrWhiteSpace(name))
-			{
-				if (name == null)
-					throw new ArgumentNullException(nameof(name));
-				throw new ArgumentException("Name cannot be empty or whitespace.", nameof(name));
-			}
-			if (string.IsNullOrWhiteSpace(value))
-			{
-				if (value == null)
-					throw new ArgumentNullException(nameof(value));
-				throw new ArgumentException("Value cannot be empty or whitespace.", nameof(value));
-			}
-
-			if (name.Length > 256)
-				throw new ArgumentException("Embed field name length cannot exceed 256 characters.");
-			if (value.Length > 1024)
-				throw new ArgumentException("Embed field value length cannot exceed 1024 characters.");
-
 			if (this._fields.Count >= 25)
 				throw new InvalidOperationException("Cannot add more than 25 fields.");
 
-			this._fields.Add(new DiscordEmbedField
-			{
-				Inline = inline,
-				Name = name,
-				Value = value
-			});
+			this._fields.Add(field);
+
+			return this;
+		}
+
+		/// <summary>
+		/// Adds multiple fields to this embed.
+		/// </summary>
+		/// <param name="fields">The fields to add.</param>
+		/// <returns>This embed builder.</returns>
+		public DiscordEmbedBuilder AddFields(params DiscordEmbedField[] fields)
+			=> this.AddFields((IEnumerable<DiscordEmbedField>)fields);
+
+		/// <summary>
+		/// Adds multiple fields to this embed.
+		/// </summary>
+		/// <param name="fields">The fields to add.</param>
+		/// <returns>This embed builder.</returns>
+		public DiscordEmbedBuilder AddFields(IEnumerable<DiscordEmbedField> fields)
+		{
+			fields.Select(f => this.AddField(f));
+
 			return this;
 		}
 
