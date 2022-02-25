@@ -91,7 +91,7 @@ namespace DisCatSharp.Entities
 		/// <param name="name"><see cref="Name"/></param>
 		/// <param name="value"><see cref="Value"/></param>
 		/// <param name="inline"><see cref="Inline"/></param>
-		public DiscordEmbedField(string name, string value, bool inline)
+		public DiscordEmbedField(string name, string value, bool inline = false)
 		{
 			this.Name = name;
 			this.Value = value;
