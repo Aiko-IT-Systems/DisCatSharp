@@ -397,9 +397,38 @@ namespace DisCatSharp.Entities
 		/// <param name="fields">The fields to add.</param>
 		/// <returns>This embed builder.</returns>
 		public DiscordEmbedBuilder AddFields(IEnumerable<DiscordEmbedField> fields)
-		{
-			fields.Select(f => this.AddField(f));
+			=> fields.Aggregate(this, (x, y) => x.AddField(y));
 
+		/// <summary>
+		/// Removes a field from this embed, if it is part of it.
+		/// </summary>
+		/// <param name="field">The field to remove.</param>
+		/// <returns>This embed builder.</returns>
+		public DiscordEmbedBuilder RemoveField(DiscordEmbedField field)
+		{
+			this._fields.Remove(field);
+			return this;
+		}
+
+		/// <summary>
+		/// Removes multiple fields from this embed, if they are part of it.
+		/// </summary>
+		/// <param name="fields">The fields to remove.</param>
+		/// <returns>This embed builder.</returns>
+		public DiscordEmbedBuilder RemoveFields(params DiscordEmbedField[] fields)
+		{
+			this.RemoveFields((IEnumerable<DiscordEmbedField>)fields);
+			return this;
+		}
+
+		/// <summary>
+		/// Removes multiple fields from this embed, if they are part of it.
+		/// </summary>
+		/// <param name="fields">The fields to remove.</param>
+		/// <returns>This embed builder.</returns>
+		public DiscordEmbed RemoveFields(IEnumerable<DiscordEmbedField> fields)
+		{
+			this._fields.RemoveAll(x => fields.Contains(x));
 			return this;
 		}
 
