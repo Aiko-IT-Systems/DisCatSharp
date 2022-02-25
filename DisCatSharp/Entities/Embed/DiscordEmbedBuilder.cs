@@ -365,35 +365,71 @@ namespace DisCatSharp.Entities
 		/// <param name="value">Value of the field to add.</param>
 		/// <param name="inline">Whether the field is to be inline or not.</param>
 		/// <returns>This embed builder.</returns>
+		[Obsolete("DiscordEmbedFields should be constructed manually")]
 		public DiscordEmbedBuilder AddField(string name, string value, bool inline = false)
+			=> this.AddField(new DiscordEmbedField(name, value, inline));
+
+		/// <summary>
+		/// Adds a field to this embed.
+		/// </summary>
+		/// <param name="field">The field to add.</param>
+		/// <returns>This embed builder.</returns>
+		public DiscordEmbedBuilder AddField(DiscordEmbedField field)
 		{
-			if (string.IsNullOrWhiteSpace(name))
-			{
-				if (name == null)
-					throw new ArgumentNullException(nameof(name));
-				throw new ArgumentException("Name cannot be empty or whitespace.", nameof(name));
-			}
-			if (string.IsNullOrWhiteSpace(value))
-			{
-				if (value == null)
-					throw new ArgumentNullException(nameof(value));
-				throw new ArgumentException("Value cannot be empty or whitespace.", nameof(value));
-			}
-
-			if (name.Length > 256)
-				throw new ArgumentException("Embed field name length cannot exceed 256 characters.");
-			if (value.Length > 1024)
-				throw new ArgumentException("Embed field value length cannot exceed 1024 characters.");
-
 			if (this._fields.Count >= 25)
 				throw new InvalidOperationException("Cannot add more than 25 fields.");
 
-			this._fields.Add(new DiscordEmbedField
-			{
-				Inline = inline,
-				Name = name,
-				Value = value
-			});
+			this._fields.Add(field);
+
+			return this;
+		}
+
+		/// <summary>
+		/// Adds multiple fields to this embed.
+		/// </summary>
+		/// <param name="fields">The fields to add.</param>
+		/// <returns>This embed builder.</returns>
+		public DiscordEmbedBuilder AddFields(params DiscordEmbedField[] fields)
+			=> this.AddFields((IEnumerable<DiscordEmbedField>)fields);
+
+		/// <summary>
+		/// Adds multiple fields to this embed.
+		/// </summary>
+		/// <param name="fields">The fields to add.</param>
+		/// <returns>This embed builder.</returns>
+		public DiscordEmbedBuilder AddFields(IEnumerable<DiscordEmbedField> fields)
+			=> fields.Aggregate(this, (x, y) => x.AddField(y));
+
+		/// <summary>
+		/// Removes a field from this embed, if it is part of it.
+		/// </summary>
+		/// <param name="field">The field to remove.</param>
+		/// <returns>This embed builder.</returns>
+		public DiscordEmbedBuilder RemoveField(DiscordEmbedField field)
+		{
+			this._fields.Remove(field);
+			return this;
+		}
+
+		/// <summary>
+		/// Removes multiple fields from this embed, if they are part of it.
+		/// </summary>
+		/// <param name="fields">The fields to remove.</param>
+		/// <returns>This embed builder.</returns>
+		public DiscordEmbedBuilder RemoveFields(params DiscordEmbedField[] fields)
+		{
+			this.RemoveFields((IEnumerable<DiscordEmbedField>)fields);
+			return this;
+		}
+
+		/// <summary>
+		/// Removes multiple fields from this embed, if they are part of it.
+		/// </summary>
+		/// <param name="fields">The fields to remove.</param>
+		/// <returns>This embed builder.</returns>
+		public DiscordEmbed RemoveFields(IEnumerable<DiscordEmbedField> fields)
+		{
+			this._fields.RemoveAll(x => fields.Contains(x));
 			return this;
 		}
 
