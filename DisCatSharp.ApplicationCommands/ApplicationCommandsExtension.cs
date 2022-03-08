@@ -215,6 +215,27 @@ namespace DisCatSharp.ApplicationCommands
 			this.Client.InteractionCreated += this.InteractionHandler;
 			this.Client.ContextMenuInteractionCreated += this.ContextMenuHandler;
 		}
+		/// <summary>
+		/// Cleans the module for a new start of the bot.
+		/// DO NOT USE IF YOU DON'T KNOW WHAT IT DOES.
+		/// </summary>
+		public void CleanModule()
+		{
+			this._updateList.Clear();
+			s_singletonModules.Clear();
+			s_errored = false;
+			s_permError = false;
+			s_expectedCount = 0;
+			s_registrationCount = 0;
+			s_commandMethods.Clear();
+			s_groupCommands.Clear();
+			s_contextMenuCommands.Clear();
+			s_subGroupCommands.Clear();
+			s_singletonModules.Clear();
+			s_registeredCommands.Clear();
+			GlobalCommandsInternal.Clear();
+			GuildCommandsInternal.Clear();
+		}
 
 		/// <summary>
 		/// Registers a command class.
