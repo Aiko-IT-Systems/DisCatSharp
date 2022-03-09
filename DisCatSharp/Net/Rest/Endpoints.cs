@@ -71,7 +71,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// The @original endpoint.
 		/// </summary>
-		public const string ORIGINAL = "/@original";
+		public const string ORIGINAL = "@original";
 
 		/// <summary>
 		/// The permissions endpoint.
