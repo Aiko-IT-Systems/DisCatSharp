@@ -125,9 +125,14 @@ namespace DisCatSharp.Entities
 		public IReadOnlyCollection<string> Permissions { get; internal set; }
 
 		/// <summary>
-		/// Gets the team this member belongs to.
+		/// Gets the id of the team this member belongs to.
 		/// </summary>
-		public DiscordTeam Team { get; internal set; }
+		public ulong? TeamId { get; internal set; }
+
+		/// <summary>
+		/// Gets the name of the team this member belongs to.
+		/// </summary>
+		public string TeamName { get; internal set; }
 
 		/// <summary>
 		/// Gets the user who is the team member.
@@ -164,20 +169,20 @@ namespace DisCatSharp.Entities
 		/// Gets a hash code of this team member.
 		/// </summary>
 		/// <returns>Hash code of this team member.</returns>
-		public override int GetHashCode() => HashCode.Combine(this.User, this.Team);
+		public override int GetHashCode() => HashCode.Combine(this.User, this.TeamId);
 
 		/// <summary>
 		/// Converts this team member to their string representation.
 		/// </summary>
 		/// <returns>String representation of this team member.</returns>
 		public override string ToString()
-			=> $"Team member: {this.User.Username}#{this.User.Discriminator} ({this.User.Id}), part of team {this.Team.Name} ({this.Team.Id})";
+			=> $"Team member: {this.User.Username}#{this.User.Discriminator} ({this.User.Id}), part of team {this.TeamName} ({this.TeamId})";
 
 		public static bool operator ==(DiscordTeamMember left, DiscordTeamMember right)
-			=> left?.Team?.Id == right?.Team?.Id && left?.User?.Id == right?.User?.Id;
+			=> left?.TeamId == right?.TeamId && left?.User?.Id == right?.User?.Id;
 
 		public static bool operator !=(DiscordTeamMember left, DiscordTeamMember right)
-			=> left?.Team?.Id != right?.Team?.Id || left?.User?.Id != right?.User?.Id;
+			=> left?.TeamId != right?.TeamId || left?.User?.Id != right?.User?.Id;
 	}
 
 	/// <summary>
