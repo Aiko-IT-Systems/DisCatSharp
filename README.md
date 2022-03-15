@@ -55,7 +55,7 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev).
 * [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
 * [Examples](https://examples.dcs.aitsys.dev)
 
-## Snippts
+## Snippets
 [Snippets for Visual Studio](https://github.com/Aiko-IT-Systems/DisCatSharp.Snippets)
 
 ## Latest NuGet Packages
