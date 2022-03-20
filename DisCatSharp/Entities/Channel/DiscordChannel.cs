@@ -1020,11 +1020,11 @@ namespace DisCatSharp.Entities
 					: type == ChannelType.PrivateThread
 						? Utilities.CheckThreadPrivateFeature(this.Guild)
 							? Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
-								? await this.Discord.ApiClient.CreateThreadWithoutMessageAsync(this.Id, name, autoArchiveDuration, type, rateLimitPerUser, reason)
+								? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, type, rateLimitPerUser, reason)
 								: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.")
 							: throw new NotSupportedException($"Cannot create a private thread. Guild needs to be boost tier two.")
 						: Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
-							? await this.Discord.ApiClient.CreateThreadWithoutMessageAsync(this.Id, name, autoArchiveDuration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, reason)
+							? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, reason)
 							: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 
 		/// <summary>
