@@ -3906,20 +3906,17 @@ namespace DisCatSharp.Net
 			if (!string.IsNullOrWhiteSpace(reason))
 				headers.Add(REASON_HEADER_NAME, reason);
 
-			string route;
-			RateLimitBucket bucket;
-			string path;
+			var route = $"{Endpoints.CHANNELS}/:channel_id";
 			if (messageId is not null)
-			{
-				route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.THREADS}";
-				bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {channel_id = channelId, message_id = messageId }, out path);
-			}
-			else
-			{
-				route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}";
-				bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {channel_id = channelId }, out path);
-			}
+				route += $"{Endpoints.MESSAGES}/:message_id";
+			route += Endpoints.THREADS;
 
+			object param = messageId is null
+				? new {channel_id = channelId}
+				: new {channel_id = channelId, message_id = messageId};
+
+			var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, param, out var path);
+			
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
 
