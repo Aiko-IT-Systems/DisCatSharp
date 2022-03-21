@@ -3882,48 +3882,17 @@ namespace DisCatSharp.Net
 		#region Threads
 
 		/// <summary>
-		/// Creates the thread with message.
+		/// Creates the thread.
 		/// </summary>
 		/// <param name="channelId">The channel id to create the thread in.</param>
-		/// <param name="messageId">The message id to create the thread from.</param>
-		/// <param name="name">The name of the thread.</param>
-		/// <param name="autoArchiveDuration">The auto_archive_duration for the thread.</param>
-		/// <param name="rateLimitPerUser">The rate limit per user.</param>
-		/// <param name="reason">The reason.</param>
-		internal async Task<DiscordThreadChannel> CreateThreadWithMessageAsync(ulong channelId, ulong messageId, string name, ThreadAutoArchiveDuration autoArchiveDuration, int? rateLimitPerUser, string reason = null)
-		{
-			var pld = new RestThreadChannelCreatePayload
-			{
-				Name = name,
-				AutoArchiveDuration = autoArchiveDuration,
-				PerUserRateLimit = rateLimitPerUser
-			};
-
-			var headers = Utilities.GetBaseHeaders();
-			if (!string.IsNullOrWhiteSpace(reason))
-				headers.Add(REASON_HEADER_NAME, reason);
-
-			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id{Endpoints.THREADS}";
-			var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {channel_id = channelId, message_id = messageId }, out var path);
-
-			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
-
-			var threadChannel = JsonConvert.DeserializeObject<DiscordThreadChannel>(res.Response);
-
-			return threadChannel;
-		}
-
-		/// <summary>
-		/// Creates the thread without a message.
-		/// </summary>
-		/// <param name="channelId">The channel id to create the thread in.</param>
+		/// <param name="messageId">The optional message id to create the thread from.</param>
 		/// <param name="name">The name of the thread.</param>
 		/// <param name="autoArchiveDuration">The auto_archive_duration for the thread.</param>
 		/// <param name="type">Can be either <see cref="ChannelType.PublicThread"/> or <see cref="ChannelType.PrivateThread"/>.</param>
 		/// <param name="rateLimitPerUser">The rate limit per user.</param>
 		/// <param name="reason">The reason.</param>
-		internal async Task<DiscordThreadChannel> CreateThreadWithoutMessageAsync(ulong channelId, string name, ThreadAutoArchiveDuration autoArchiveDuration, ChannelType type = ChannelType.PublicThread, int? rateLimitPerUser = null, string reason = null)
+		internal async Task<DiscordThreadChannel> CreateThreadAsync(ulong channelId, ulong? messageId, string name,
+			ThreadAutoArchiveDuration autoArchiveDuration, ChannelType type, int? rateLimitPerUser, string reason)
 		{
 			var pld = new RestThreadChannelCreatePayload
 			{
@@ -3937,13 +3906,23 @@ namespace DisCatSharp.Net
 			if (!string.IsNullOrWhiteSpace(reason))
 				headers.Add(REASON_HEADER_NAME, reason);
 
-			var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.THREADS}";
-			var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {channel_id = channelId }, out var path);
+			var route = $"{Endpoints.CHANNELS}/:channel_id";
+			if (messageId is not null)
+				route += $"{Endpoints.MESSAGES}/:message_id";
+			route += Endpoints.THREADS;
 
+			object param = messageId is null
+				? new {channel_id = channelId}
+				: new {channel_id = channelId, message_id = messageId};
+
+			var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, param, out var path);
+			
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
 
 			var threadChannel = JsonConvert.DeserializeObject<DiscordThreadChannel>(res.Response);
+
+			threadChannel.Discord = this.Discord;
 
 			return threadChannel;
 		}
