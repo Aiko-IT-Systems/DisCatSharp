@@ -294,7 +294,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordMessage> SendMessageAsync(string content) =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
@@ -308,7 +308,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed) =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, null, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
@@ -323,7 +323,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed) =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
@@ -354,7 +354,7 @@ namespace DisCatSharp.Entities
 			action(builder);
 
 
-			return !this.IsWriteable()
+			return !this.IsWritable()
 				? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
 		}
@@ -402,7 +402,7 @@ namespace DisCatSharp.Entities
 			{
 				userLimit = null;
 			}
-			if (!this.IsWriteable())
+			if (!this.IsWritable())
 			{
 				perUserRateLimit = Optional.FromNoValue<int?>();
 			}
@@ -459,7 +459,7 @@ namespace DisCatSharp.Entities
 				bannerb64 = null;
 
 			return this.Discord.ApiClient.ModifyChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Nsfw,
-				mdl.Parent.HasValue ? mdl.Parent.Value?.Id : default(Optional<ulong?>), mdl.Bitrate, mdl.Userlimit, mdl.PerUserRateLimit, mdl.RtcRegion.IfPresent(r => r?.Id),
+				mdl.Parent.HasValue ? mdl.Parent.Value?.Id : default(Optional<ulong?>), mdl.Bitrate, mdl.UserLimit, mdl.PerUserRateLimit, mdl.RtcRegion.IfPresent(r => r?.Id),
 				mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, bannerb64, mdl.AuditLogReason);
 		}
 
@@ -796,7 +796,7 @@ namespace DisCatSharp.Entities
 		/// <param name="around">Get messages around snowflake.</param>
 		private async Task<IReadOnlyList<DiscordMessage>> GetMessagesInternalAsync(int limit = 100, ulong? before = null, ulong? after = null, ulong? around = null)
 		{
-			if (!this.IsWriteable())
+			if (!this.IsWritable())
 				throw new ArgumentException("Cannot get the messages of a non-text channel.");
 
 			if (limit < 0)
@@ -1128,7 +1128,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task TriggerTypingAsync() =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("Cannot start typing in a non-text channel.")
 				: this.Discord.ApiClient.TriggerTypingAsync(this.Id);
 
@@ -1140,7 +1140,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync() =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("A non-text channel does not have pinned messages.")
 				: this.Discord.ApiClient.GetPinnedMessagesAsync(this.Id);
 

@@ -119,10 +119,10 @@ namespace DisCatSharp.Interactivity
 
 			var res = await this._poller.DoPollAsync(new PollRequest(m, timeout ?? this.Config.Timeout, emojis)).ConfigureAwait(false);
 
-			var pollbehaviour = behaviour ?? this.Config.PollBehaviour;
-			var thismember = await m.Channel.Guild.GetMemberAsync(this.Client.CurrentUser.Id).ConfigureAwait(false);
+			var pollBehaviour = behaviour ?? this.Config.PollBehaviour;
+			var thisMember = await m.Channel.Guild.GetMemberAsync(this.Client.CurrentUser.Id).ConfigureAwait(false);
 
-			if (pollbehaviour == PollBehaviour.DeleteEmojis && m.Channel.PermissionsFor(thismember).HasPermission(Permissions.ManageMessages))
+			if (pollBehaviour == PollBehaviour.DeleteEmojis && m.Channel.PermissionsFor(thisMember).HasPermission(Permissions.ManageMessages))
 				await m.DeleteAllReactionsAsync().ConfigureAwait(false);
 
 			return new ReadOnlyCollection<PollEmoji>(res.ToList());
