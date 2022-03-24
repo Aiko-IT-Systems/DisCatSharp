@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
 // Copyright (c) 2021-2022 AITSYS
 //
@@ -47,13 +47,13 @@ namespace DisCatSharp.Common.Utilities
 
 		/// <summary>
 		/// <para>Creates an empty, uninitialized instance of type <typeparamref name="T"/>.</para>
-		/// <para>This method will not call the constructor for type <typeparamref name="T"/>. As such, the object might not be proerly initialized.</para>
+		/// <para>This method will not call the constructor for type <typeparamref name="T"/>. As such, the object might not be properly initialized.</para>
 		/// </summary>
 		/// <remarks>
 		/// This method is intended for reflection use only.
 		/// </remarks>
 		/// <typeparam name="T">Type of the object to instantiate.</typeparam>
-		/// <returns>Empty, uninitalized object of specified type.</returns>
+		/// <returns>Empty, uninitialized object of specified type.</returns>
 		public static T CreateEmpty<T>()
 			=> (T)FormatterServices.GetUninitializedObject(typeof(T));
 

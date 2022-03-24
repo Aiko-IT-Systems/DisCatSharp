@@ -350,7 +350,7 @@ namespace DisCatSharp.Entities
 		public DiscordAsset LargeImage { get; internal set; }
 
 		/// <summary>
-		/// Gets the hovertext for large image.
+		/// Gets the hover text for large image.
 		/// </summary>
 		public string LargeImageText { get; internal set; }
 
@@ -360,7 +360,7 @@ namespace DisCatSharp.Entities
 		public DiscordAsset SmallImage { get; internal set; }
 
 		/// <summary>
-		/// Gets the hovertext for small image.
+		/// Gets the hover text for small image.
 		/// </summary>
 		public string SmallImageText { get; internal set; }
 

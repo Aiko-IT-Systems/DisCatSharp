@@ -497,7 +497,7 @@ namespace DisCatSharp.Net.Abstractions
 		public Optional<int?> PerUserRateLimit { get; set; }
 
 		/// <summary>
-		/// Gets or sets the threads's invitable state.
+		/// Gets or sets the thread's invitable state.
 		/// </summary>
 		[JsonProperty("invitable", NullValueHandling = NullValueHandling.Ignore)]
 		public Optional<bool?> Invitable { internal get; set; }

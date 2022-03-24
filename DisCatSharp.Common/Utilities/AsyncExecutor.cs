@@ -146,7 +146,7 @@ namespace DisCatSharp.Common.Utilities
 			public AutoResetEvent Lock { get; }
 
 			/// <summary>
-			/// Gets the exception that occured during task's execution, if any.
+			/// Gets the exception that occurred during task's execution, if any.
 			/// </summary>
 			public Exception Exception { get; set; }
 

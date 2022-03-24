@@ -33,7 +33,7 @@ namespace DisCatSharp.Enums
 		/// <summary>
 		/// dis.gd
 		/// </summary>
-		[DomainHelp("Marketing URL shortner", "dis.gd")]
+		[DomainHelp("Marketing URL shortener", "dis.gd")]
 		DiscordMarketing = 1,
 
 		/// <summary>

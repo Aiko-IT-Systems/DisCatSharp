@@ -102,258 +102,258 @@ namespace DisCatSharp.Net.Abstractions
 	}
 
 	/// <summary>
-	/// Represents a audit log thread metadata
+	/// Represents a audit log thread metadata.
 	/// </summary>
 	internal sealed class AuditLogThreadMetadata
 	{
 		/// <summary>
-		/// Gets whether the thread is archived
+		/// Gets whether the thread is archived.
 		/// </summary>
 		[JsonProperty("archived")]
 		public bool Archived { get; set; }
 
 		/// <summary>
-		/// Gets the threads archive timestamp
+		/// Gets the threads archive timestamp.
 		/// </summary>
 		[JsonProperty("archive_timestamp", NullValueHandling = NullValueHandling.Ignore)]
 		public string ArchiveTimestamp { get; set; }
 
 		/// <summary>
-		/// Gets the threads auto archive duration
+		/// Gets the threads auto archive duration.
 		/// </summary>
 		[JsonProperty("auto_archive_duration")]
 		public int AutoArchiveDuration { get; set; }
 
 		/// <summary>
-		/// Gets whether the thread is lockeed
+		/// Gets whether the thread is locked.
 		/// </summary>
 		[JsonProperty("locked")]
 		public bool Locked { get; set; }
 	}
 
 	/// <summary>
-	/// Represents a audit log thread
+	/// Represents a audit log thread.
 	/// </summary>
 	internal sealed class AuditLogThread
 	{
 		/// <summary>
-		/// Gets the thread id
+		/// Gets the thread id.
 		/// </summary>
 		[JsonProperty("id")]
 		public ulong Id { get; set; }
 
 		/// <summary>
-		/// Gets the thread guild id
+		/// Gets the thread guild id.
 		/// </summary>
 		[JsonProperty("guild_id")]
 		public ulong GuildId { get; set; }
 
 		/// <summary>
-		/// Gets the thread parent channel id
+		/// Gets the thread parent channel id.
 		/// </summary>
 		[JsonProperty("parent_id")]
 		public ulong ParentId { get; set; }
 
 		/// <summary>
-		/// Gets the thread owner id
+		/// Gets the thread owner id.
 		/// </summary>
 		[JsonProperty("owner_id", NullValueHandling = NullValueHandling.Ignore)]
 		public ulong? OwnerId { get; set; }
 
 		/// <summary>
-		/// Gets the thread type
+		/// Gets the thread type.
 		/// </summary>
 		[JsonProperty("type")]
 		public ChannelType Type { get; set; }
 
 		/// <summary>
-		/// Gets the thread name
+		/// Gets the thread name.
 		/// </summary>
 		[JsonProperty("name")]
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Gets the thread last message id
+		/// Gets the thread last message id.
 		/// </summary>
 		[JsonProperty("last_message_id", NullValueHandling = NullValueHandling.Ignore)]
 		public ulong? LastMessageId { get; set; }
 
 		/// <summary>
-		/// Gets the thread metadata
+		/// Gets the thread metadata.
 		/// </summary>
 		[JsonProperty("thread_metadata")]
 		public AuditLogThreadMetadata Metadata { get; set; }
 
 		/// <summary>
-		/// Gets the thread approximate message count
+		/// Gets the thread approximate message count.
 		/// </summary>
 		[JsonProperty("message_count", NullValueHandling = NullValueHandling.Ignore)]
 		public int? MessageCount { get; set; }
 
 		/// <summary>
-		/// Gets the thread member count
+		/// Gets the thread member count.
 		/// </summary>
 		[JsonProperty("member_count", NullValueHandling = NullValueHandling.Ignore)]
 		public int? MemberCount { get; set; }
 
 		/// <summary>
-		/// Gets the thread rate limit per user
+		/// Gets the thread rate limit per user.
 		/// </summary>
 		[JsonProperty("rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
 		public int? RateLimitPerUser { get; set; }
 	}
 
 	/// <summary>
-	/// Represents a audit log scheduled event
+	/// Represents a audit log scheduled event.
 	/// </summary>
 	internal sealed class AuditLogGuildScheduledEvent
 	{
 		/// <summary>
-		/// Gets the scheduled event id
+		/// Gets the scheduled event id.
 		/// </summary>
 		[JsonProperty("id")]
 		public ulong Id { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event guild id
+		/// Gets the scheduled event guild id.
 		/// </summary>
 		[JsonProperty("guild_id")]
 		public ulong GuildId { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event channel id
+		/// Gets the scheduled event channel id.
 		/// </summary>
 		[JsonProperty("channel_id")]
 		public ulong ChannelId { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event creator id
+		/// Gets the scheduled event creator id.
 		/// </summary>
 		[JsonProperty("creator_id")]
 		public ulong CreatorId { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event name
+		/// Gets the scheduled event name.
 		/// </summary>
 		[JsonProperty("name")]
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event description
+		/// Gets the scheduled event description.
 		/// </summary>
 		[JsonProperty("description")]
 		public string Description { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event image
+		/// Gets the scheduled event image.
 		/// </summary>
 		[JsonProperty("image", NullValueHandling = NullValueHandling.Ignore)]
 		public string Image { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event scheduled start time
+		/// Gets the scheduled event scheduled start time.
 		/// </summary>
 		[JsonProperty("scheduled_start_time")]
 		public string ScheduledStartTime;
 
 		/// <summary>
-		/// Gets the scheduled event scheduled end time
+		/// Gets the scheduled event scheduled end time.
 		/// </summary>
 		[JsonProperty("scheduled_end_time")]
 		public string ScheduledEndTime { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event privacy level
+		/// Gets the scheduled event privacy level.
 		/// </summary>
 		[JsonProperty("privacy_level")]
 		public ScheduledEventPrivacyLevel PrivacyLevel { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event status
+		/// Gets the scheduled event status.
 		/// </summary>
 		[JsonProperty("status")]
 		public ScheduledEventStatus Status { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event entity type
+		/// Gets the scheduled event entity type.
 		/// </summary>
 		[JsonProperty("entity_type")]
 		public ScheduledEventEntityType EntityType { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event entity id
+		/// Gets the scheduled event entity id.
 		/// </summary>
 		[JsonProperty("entity_id")]
 		public ulong EntityId { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event entity metadata
+		/// Gets the scheduled event entity metadata.
 		/// </summary>
 		[JsonProperty("entity_metadata")]
 		public AuditLogGuildScheduledEventEntityMetadata EntityMetadata { get; set; }
 
 		/// <summary>
-		/// Gets the scheduled event sku ids
+		/// Gets the scheduled event sku ids.
 		/// </summary>
 		[JsonProperty("sku_ids")]
 		public List<ulong> SkuIds { get; set; }
 	}
 
 	/// <summary>
-	/// Represents a audit log scheduled event entity metadata
+	/// Represents a audit log scheduled event entity metadata.
 	/// </summary>
 	internal sealed class AuditLogGuildScheduledEventEntityMetadata
 	{
 		/// <summary>
-		/// Gets the scheduled events external location
+		/// Gets the scheduled events external location.
 		/// </summary>
 		[JsonProperty("location")]
 		public string Location { get; set; }
 	}
 
 	/// <summary>
-	/// Represents a audit log integration account
+	/// Represents a audit log integration account.
 	/// </summary>
 	internal sealed class AuditLogIntegrationAccount
 	{
 		/// <summary>
-		/// Gets the account id
+		/// Gets the account id.
 		/// </summary>
 		[JsonProperty("id")]
 		public string Id { get; set; }
 
 		/// <summary>
-		/// Gets the account name
+		/// Gets the account name.
 		/// </summary>
 		[JsonProperty("name")]
 		public string Name { get; set; }
 	}
 
 	/// <summary>
-	/// Represents a audit log integration
+	/// Represents a audit log integration.
 	/// </summary>
 	internal sealed class AuditLogIntegration
 	{
 		/// <summary>
-		/// Gets the integration id
+		/// Gets the integration id.
 		/// </summary>
 		[JsonProperty("id")]
 		public ulong Id { get; set; }
 
 		/// <summary>
-		/// Gets the integration type
+		/// Gets the integration type.
 		/// </summary>
 		[JsonProperty("type")]
 		public string Type { get; set; }
 
 		/// <summary>
-		/// Gets the integration name
+		/// Gets the integration name.
 		/// </summary>
 		[JsonProperty("name")]
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Gets the integration account
+		/// Gets the integration account.
 		/// </summary>
 		[JsonProperty("account")]
 		public AuditLogIntegrationAccount Account { get; set; }
@@ -568,7 +568,7 @@ namespace DisCatSharp.Net.Abstractions
 		/*
         /// <summary>
         /// Gets or sets the application commands.
-        /// Releated to Permissions V2.
+        /// Related to Permissions V2.
         /// </summary>
         [JsonProperty("application_commands")]
         public IEnumerable<AuditLogApplicationCommand> ApplicationCommands { get; set; }

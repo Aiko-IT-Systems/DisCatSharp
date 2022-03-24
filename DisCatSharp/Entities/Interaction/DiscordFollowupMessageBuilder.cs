@@ -43,7 +43,7 @@ namespace DisCatSharp.Entities
 		public bool IsEphemeral { get; set; }
 
 		/// <summary>
-		/// Indicates this message is emphemeral.
+		/// Indicates this message is ephemeral.
 		/// </summary>
 		internal int? Flags
 			=> this.IsEphemeral ? 64 : null;

@@ -172,7 +172,7 @@ namespace DisCatSharp.Configuration.Tests
 		}
 
 		[Fact]
-		public void TestExtractDiscordConfig_Haphzard()
+		public void TestExtractDiscordConfig_Haphazard()
 		{
 			var source = this.DiscordHaphazardConfig();
 

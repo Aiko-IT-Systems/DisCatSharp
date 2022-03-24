@@ -60,7 +60,7 @@ namespace DisCatSharp.ApplicationCommands
 
 		/// <summary>
 		/// Automatically defer all responses.
-		/// <note type="note">If you enable this, you can't use CreateResponse. Use EditResponse instad.</note>
+		/// <note type="note">If you enable this, you can't use CreateResponse. Use EditResponse instead.</note>
 		/// </summary>
 		public bool AutoDefer { internal get; set; } = false;
 

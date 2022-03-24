@@ -117,7 +117,7 @@ namespace DisCatSharp.Net.Models
 		public Optional<Stream> Banner { get; set; }
 
 		/// <summary>
-		/// The new discorvery splash image of the guild
+		/// The new discovery splash image of the guild
 		/// </summary>
 		public Optional<Stream> DiscoverySplash { get; set; }
 

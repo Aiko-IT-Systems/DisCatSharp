@@ -70,7 +70,7 @@ namespace DisCatSharp.Common.Utilities
 
 		/// <summary>
 		/// Defines that all exceptions should be thrown and handled by the specified exception handler. This is 
-		/// equivalent to combinind <see cref="HandleAll"/> and <see cref="ThrowAll"/> flags.
+		/// equivalent to combining <see cref="HandleAll"/> and <see cref="ThrowAll"/> flags.
 		/// </summary>
 		ThrowAllHandleAll = ThrowAll | HandleAll,
 

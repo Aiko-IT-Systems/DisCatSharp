@@ -923,7 +923,7 @@ namespace DisCatSharp
 
 
 		/// <summary>
-		/// Gets the internal chached scheduled event.
+		/// Gets the internal cached scheduled event.
 		/// </summary>
 		/// <param name="scheduledEventId">The target scheduled event id.</param>
 		/// <returns>The requested scheduled event.</returns>
@@ -937,7 +937,7 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Gets the internal chached channel.
+		/// Gets the internal cached channel.
 		/// </summary>
 		/// <param name="channelId">The target channel id.</param>
 		/// <returns>The requested channel.</returns>

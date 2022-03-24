@@ -71,7 +71,7 @@ namespace DisCatSharp.Lavalink
 		/// Whether two band adjustments are equal.
 		/// </summary>
 		/// <param name="x">The first band adjustments.</param>
-		/// <param name="y">The seconed band adjustments.</param>
+		/// <param name="y">The second band adjustments.</param>
 		public bool Equals(LavalinkBandAdjustment x, LavalinkBandAdjustment y)
 			=> x.BandId == y.BandId;
 

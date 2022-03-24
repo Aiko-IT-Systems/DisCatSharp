@@ -39,7 +39,7 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Interactivity.EventHandling
 {
 	/// <summary>
-	/// Eventwaiter is a class that serves as a layer between the InteractivityExtension
+	/// EventWaiter is a class that serves as a layer between the InteractivityExtension
 	/// and the DiscordClient to listen to an event and check for matches to a predicate.
 	/// </summary>
 	internal class ReactionCollector : IDisposable
@@ -58,7 +58,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		ConcurrentHashSet<ReactionCollectRequest> _requests;
 
 		/// <summary>
-		/// Creates a new Eventwaiter object.
+		/// Creates a new EventWaiter object.
 		/// </summary>
 		/// <param name="client">Your DiscordClient</param>
 		public ReactionCollector(DiscordClient client)
@@ -119,28 +119,28 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// Handles the reaction add.
 		/// </summary>
 		/// <param name="client">The client.</param>
-		/// <param name="eventargs">The eventargs.</param>
+		/// <param name="eventArgs">The event's arguments.</param>
 		/// <returns>A Task.</returns>
-		private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventargs)
+		private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventArgs)
 		{
 			// foreach request add
 			foreach (var req in this._requests)
 			{
-				if (req.Message.Id == eventargs.Message.Id)
+				if (req.Message.Id == eventArgs.Message.Id)
 				{
-					if (req.Collected.Any(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id)))
+					if (req.Collected.Any(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id)))
 					{
-						var reaction = req.Collected.First(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id));
+						var reaction = req.Collected.First(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id));
 						req.Collected.TryRemove(reaction);
-						reaction.Users.Add(eventargs.User);
+						reaction.Users.Add(eventArgs.User);
 						req.Collected.Add(reaction);
 					}
 					else
 					{
 						req.Collected.Add(new Reaction()
 						{
-							Emoji = eventargs.Emoji,
-							Users = new ConcurrentHashSet<DiscordUser>() { eventargs.User }
+							Emoji = eventArgs.Emoji,
+							Users = new ConcurrentHashSet<DiscordUser>() { eventArgs.User }
 						});
 					}
 				}
@@ -152,20 +152,20 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// Handles the reaction remove.
 		/// </summary>
 		/// <param name="client">The client.</param>
-		/// <param name="eventargs">The eventargs.</param>
+		/// <param name="eventArgs">The event's arguments.</param>
 		/// <returns>A Task.</returns>
-		private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventargs)
+		private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
 		{
 			// foreach request remove
 			foreach (var req in this._requests)
 			{
-				if (req.Message.Id == eventargs.Message.Id)
+				if (req.Message.Id == eventArgs.Message.Id)
 				{
-					if (req.Collected.Any(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id)))
+					if (req.Collected.Any(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id)))
 					{
-						var reaction = req.Collected.First(x => x.Emoji == eventargs.Emoji && x.Users.Any(y => y.Id == eventargs.User.Id));
+						var reaction = req.Collected.First(x => x.Emoji == eventArgs.Emoji && x.Users.Any(y => y.Id == eventArgs.User.Id));
 						req.Collected.TryRemove(reaction);
-						reaction.Users.TryRemove(eventargs.User);
+						reaction.Users.TryRemove(eventArgs.User);
 						if (reaction.Users.Count > 0)
 							req.Collected.Add(reaction);
 					}
@@ -178,14 +178,14 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// Handles the reaction clear.
 		/// </summary>
 		/// <param name="client">The client.</param>
-		/// <param name="eventargs">The eventargs.</param>
+		/// <param name="eventArgs">The event's arguments.</param>
 		/// <returns>A Task.</returns>
-		private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventargs)
+		private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventArgs)
 		{
 			// foreach request add
 			foreach (var req in this._requests)
 			{
-				if (req.Message.Id == eventargs.Message.Id)
+				if (req.Message.Id == eventArgs.Message.Id)
 				{
 					req.Collected.Clear();
 				}

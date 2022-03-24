@@ -1283,7 +1283,7 @@ namespace DisCatSharp
 			=> this._guildMemberUpdated.InvokeAsync(client, e);
 
 		/// <summary>
-		/// Handles the guild role creat evente.
+		/// Handles the guild role create event.
 		/// </summary>
 		/// <param name="client">The client.</param>
 		/// <param name="e">The event args.</param>
@@ -1451,7 +1451,7 @@ namespace DisCatSharp
 			=> this._webhooksUpdated.InvokeAsync(client, e);
 
 		/// <summary>
-		/// Handles the heart beated event.
+		/// Handles the heartbeated event.
 		/// </summary>
 		/// <param name="client">The client.</param>
 		/// <param name="e">The event args.</param>
