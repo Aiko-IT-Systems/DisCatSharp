@@ -23,7 +23,7 @@
 namespace DisCatSharp
 {
 	/// <summary>
-	/// Represents a directory entrys primary category type.
+	/// Represents a directory entries primary category type.
 	/// </summary>
 	public enum DirectoryCategory : int
 	{

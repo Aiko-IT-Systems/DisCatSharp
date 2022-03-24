@@ -36,7 +36,7 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Interactivity.EventHandling
 {
 	/// <summary>
-	/// Eventwaiter is a class that serves as a layer between the InteractivityExtension
+	/// EventWaiter is a class that serves as a layer between the InteractivityExtension
 	/// and the DiscordClient to listen to an event and check for matches to a predicate.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
@@ -50,7 +50,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		bool _disposed;
 
 		/// <summary>
-		/// Creates a new Eventwaiter object.
+		/// Creates a new EventWaiter object.
 		/// </summary>
 		/// <param name="client">Your DiscordClient</param>
 		public EventWaiter(DiscordClient client)

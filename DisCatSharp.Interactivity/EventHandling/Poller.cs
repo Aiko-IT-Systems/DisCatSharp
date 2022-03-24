@@ -43,7 +43,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		ConcurrentHashSet<PollRequest> _requests;
 
 		/// <summary>
-		/// Creates a new Eventwaiter object.
+		/// Creates a new EventWaiter object.
 		/// </summary>
 		/// <param name="client">Your DiscordClient</param>
 		public Poller(DiscordClient client)

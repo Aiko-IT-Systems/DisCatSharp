@@ -48,7 +48,7 @@ namespace DisCatSharp.Lavalink
 
 		//Route Planner
 		/// <summary>
-		/// The reoute planner endpoint.
+		/// The route planner endpoint.
 		/// </summary>
 		internal const string ROUTE_PLANNER = "/routeplanner";
 		/// <summary>

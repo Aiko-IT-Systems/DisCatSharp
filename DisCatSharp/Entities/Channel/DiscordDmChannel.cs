@@ -68,7 +68,7 @@ namespace DisCatSharp.Entities
 			=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.CHANNEL_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png" : null;
 
 		/// <summary>
-		/// Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token
+		/// Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token.
 		/// </summary>
 		/// <param name="userId">The id of the user to add.</param>
 		/// <param name="accesstoken">The OAuth2 access token.</param>
@@ -80,7 +80,7 @@ namespace DisCatSharp.Entities
 			=> this.Discord.ApiClient.AddGroupDmRecipientAsync(this.Id, userId, accesstoken, nickname);
 
 		/// <summary>
-		/// Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token
+		/// Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token.
 		/// </summary>
 		/// <param name="userId">The id of the User to remove.</param>
 		/// <param name="accesstoken">The OAuth2 access token.</param>

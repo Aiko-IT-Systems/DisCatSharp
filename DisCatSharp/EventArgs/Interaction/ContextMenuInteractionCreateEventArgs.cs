@@ -38,7 +38,7 @@ namespace DisCatSharp.EventArgs
 		public ApplicationCommandType Type { get; internal set; }
 
 		/// <summary>
-		/// The user that invoked this interaction. Can be casted to a member if this was on a guild.
+		/// The user that invoked this interaction. Can be cast to a member if this was on a guild.
 		/// </summary>
 		public DiscordUser User => this.Interaction.User;
 

@@ -130,7 +130,7 @@ namespace DisCatSharp.Entities
 		/// <param name="required">Whether the parameter is required.</param>
 		/// <param name="choices">The optional choice selection for this parameter.</param>
 		/// <param name="options">The optional subcommands for this parameter.</param>
-		/// <param name="channeltypes">If the option is a channel type, the channels shown will be restricted to these types</param>
+		/// <param name="channelTypes">If the option is a channel type, the channels shown will be restricted to these types.</param>
 		/// <param name="autocomplete">Whether this option provides autocompletion.</param>
 		/// <param name="minimumValue">The minimum value for this parameter. Only valid for types <see cref="ApplicationCommandOptionType.Integer"/> or <see cref="ApplicationCommandOptionType.Number"/>.</param>
 		/// <param name="maximumValue">The maximum value for this parameter. Only valid for types <see cref="ApplicationCommandOptionType.Integer"/> or <see cref="ApplicationCommandOptionType.Number"/>.</param>

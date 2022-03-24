@@ -1436,16 +1436,16 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Gets the users who RSVP'd to a sheduled event.
+		/// Gets the users who RSVP'd to a scheduled event.
 		/// Optional with member objects.
 		/// This endpoint is paginated.
 		/// </summary>
 		/// <param name="guildId">The guild_id.</param>
-		/// <param name="scheduledEventId">The sheduled event id.</param>
+		/// <param name="scheduledEventId">The scheduled event id.</param>
 		/// <param name="limit">The limit how many users to receive from the event.</param>
 		/// <param name="before">Get results before the given id.</param>
 		/// <param name="after">Get results after the given id.</param>
-		/// <param name="withMember">Wether to include guild member data. attaches guild_member property to the user object.</param>
+		/// <param name="withMember">Whether to include guild member data. attaches guild_member property to the user object.</param>
 		internal async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetGuildScheduledEventRspvUsersAsync(ulong guildId, ulong scheduledEventId, int? limit, ulong? before, ulong? after, bool? withMember)
 		{
 			var urlparams = new Dictionary<string, string>();

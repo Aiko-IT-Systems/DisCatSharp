@@ -131,7 +131,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the original interaction response.
 		/// </summary>
-		/// <returns>The origingal message that was sent. This <b>does not work on ephemeral messages.</b></returns>
+		/// <returns>The original message that was sent. This <b>does not work on ephemeral messages.</b></returns>
 		public Task<DiscordMessage> GetOriginalResponseAsync()
 			=> this.Discord.ApiClient.GetOriginalInteractionResponseAsync(this.Discord.CurrentApplication.Id, this.Token);
 

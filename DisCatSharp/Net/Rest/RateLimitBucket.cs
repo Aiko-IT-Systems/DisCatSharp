@@ -131,7 +131,7 @@ namespace DisCatSharp.Net
 		internal volatile bool IsUnlimited;
 
 		/// <summary>
-		/// If the initial request for this bucket that is deterternining the rate limits is currently executing
+		/// If the initial request for this bucket that is determining the rate limits is currently executing
 		/// This is a int because booleans can't be accessed atomically
 		/// 0 => False, all other values => True
 		/// </summary>

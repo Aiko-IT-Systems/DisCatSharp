@@ -64,7 +64,7 @@ namespace DisCatSharp.Net.Abstractions
 		public string Summary { get; set; }
 
 		/// <summary>
-		/// Wwhether the bot is public.
+		/// Whether the bot is public.
 		/// </summary>
 		[JsonProperty("bot_public", NullValueHandling = NullValueHandling.Include)]
 		public bool IsPublicBot { get; set; }

@@ -273,7 +273,7 @@ namespace DisCatSharp.Entities
 		/// <param name="limit">The limit how many users to receive from the event. Defaults to 100. Max 100.</param>
 		/// <param name="before">Get results of <see cref="DiscordScheduledEventUser"/> before the given snowflake.</param>
 		/// <param name="after">Get results of <see cref="DiscordScheduledEventUser"/> after the given snowflake.</param>
-		/// <param name="withMember">Wether to include guild member data.</param>
+		/// <param name="withMember">Whether to include guild member data.</param>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -321,7 +321,7 @@ namespace DisCatSharp.Entities
 		/// Gets whether the two <see cref="DiscordScheduledEvent"/> objects are equal.
 		/// </summary>
 		/// <param name="e1">First event to compare.</param>
-		/// <param name="e2">Second ecent to compare.</param>
+		/// <param name="e2">Second event to compare.</param>
 		/// <returns>Whether the two events are equal.</returns>
 		public static bool operator ==(DiscordScheduledEvent e1, DiscordScheduledEvent e2)
 		{

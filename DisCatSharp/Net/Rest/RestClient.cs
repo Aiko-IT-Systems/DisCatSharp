@@ -162,7 +162,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="method">The method.</param>
 		/// <param name="route">The route.</param>
-		/// <param name="routeParams">The route paramaters.</param>
+		/// <param name="routeParams">The route parameters.</param>
 		/// <param name="url">The url.</param>
 		/// <returns>A ratelimit bucket.</returns>
 		public RateLimitBucket GetBucket(RestRequestMethod method, string route, object routeParams, out string url)
@@ -291,7 +291,7 @@ namespace DisCatSharp.Net
 						if (delay < TimeSpan.Zero)
 							delay = TimeSpan.FromMilliseconds(100);
 
-						this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Pre-emptive ratelimit triggered - waiting until {0:yyyy-MM-dd HH:mm:ss zzz} ({1:c}).", resetDate, delay);
+						this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {0:yyyy-MM-dd HH:mm:ss zzz} ({1:c}).", resetDate, delay);
 						Task.Delay(delay)
 							.ContinueWith(_ => this.ExecuteRequestAsync(request, null, null))
 							.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
@@ -390,7 +390,7 @@ namespace DisCatSharp.Net
 										ApiEndpoint = request.Url.AbsoluteUri
 									});
 								}
-								this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeueing request to {0}", request.Url);
+								this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeuing request to {0}", request.Url);
 								await wait.ConfigureAwait(false);
 								this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
 									.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while retrying request");
@@ -489,7 +489,7 @@ namespace DisCatSharp.Net
 				{
 					if (Interlocked.CompareExchange(ref bucket.LimitTesting, 1, 0) == 0)
 					{
-						// if we got here when the first request was just finishing, we must not create the waiter task as it would signel ExecureRequestAsync to bypass rate limiting
+						// if we got here when the first request was just finishing, we must not create the waiter task as it would signal ExecureRequestAsync to bypass rate limiting
 						if (bucket.LimitValid)
 							return null;
 

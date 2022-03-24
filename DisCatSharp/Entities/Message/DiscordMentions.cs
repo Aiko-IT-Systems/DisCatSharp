@@ -29,7 +29,7 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities
 {
 	/// <summary>
-	/// Handles mentionables
+	/// Handles mentionables.
 	/// </summary>
 	internal class DiscordMentions
 	{

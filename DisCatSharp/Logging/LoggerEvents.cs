@@ -110,7 +110,7 @@ namespace DisCatSharp
 		public static EventId RatelimitDiag { get; } = new(115, nameof(RatelimitDiag));
 
 		/// <summary>
-		/// Events emitted when a ratelimit is exhausted and a request is preemtively blocked.
+		/// Events emitted when a ratelimit is exhausted and a request is preemptively blocked.
 		/// </summary>
 		public static EventId RatelimitPreemptive { get; } = new(116, nameof(RatelimitPreemptive));
 

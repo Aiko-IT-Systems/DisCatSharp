@@ -42,7 +42,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		ConcurrentHashSet<IPaginationRequest> _requests;
 
 		/// <summary>
-		/// Creates a new Eventwaiter object.
+		/// Creates a new EventWaiter object.
 		/// </summary>
 		/// <param name="client">Discord client</param>
 		public Paginator(DiscordClient client)

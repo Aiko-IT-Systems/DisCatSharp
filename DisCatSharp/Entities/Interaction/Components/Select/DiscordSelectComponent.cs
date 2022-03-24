@@ -90,8 +90,8 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="customId">The Id to assign to the button. This is sent back when a user presses it.</param>
 		/// <param name="options">Array of options</param>
-		/// <param name="placeholder">Text to show if no option is slected.</param>
-		/// <param name="minOptions">Minmum count of selectable options.</param>
+		/// <param name="placeholder">Text to show if no option is selected.</param>
+		/// <param name="minOptions">Minimum count of selectable options.</param>
 		/// <param name="maxOptions">Maximum count of selectable options.</param>
 		/// <param name="disabled">Whether this button should be initialized as being disabled. User sees a greyed out button that cannot be interacted with.</param>
 		public DiscordSelectComponent(string customId, string placeholder, IEnumerable<DiscordSelectComponentOption> options, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()

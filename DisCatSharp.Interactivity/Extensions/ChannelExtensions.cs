@@ -81,7 +81,7 @@ namespace DisCatSharp.Interactivity.Extensions
 		/// Sends a new paginated message.
 		/// </summary>
 		/// <param name="channel">Target channel.</param>
-		/// <param name="user">The user that'll be able to control the pages.</param>
+		/// <param name="user">The user that will be able to control the pages.</param>
 		/// <param name="pages">A collection of <see cref="Page"/> to display.</param>
 		/// <param name="emojis">Pagination emojis.</param>
 		/// <param name="behaviour">Pagination behaviour (when hitting max and min indices).</param>
@@ -95,7 +95,7 @@ namespace DisCatSharp.Interactivity.Extensions
 		/// Sends a new paginated message with buttons.
 		/// </summary>
 		/// <param name="channel">Target channel.</param>
-		/// <param name="user">The user that'll be able to control the pages.</param>
+		/// <param name="user">The user that will be able to control the pages.</param>
 		/// <param name="pages">A collection of <see cref="Page"/> to display.</param>
 		/// <param name="buttons">Pagination buttons (leave null to default to ones on configuration).</param>
 		/// <param name="behaviour">Pagination behaviour.</param>
@@ -113,7 +113,7 @@ namespace DisCatSharp.Interactivity.Extensions
 		/// Sends a new paginated message with buttons.
 		/// </summary>
 		/// <param name="channel">Target channel.</param>
-		/// <param name="user">The user that'll be able to control the pages.</param>
+		/// <param name="user">The user that will be able to control the pages.</param>
 		/// <param name="pages">A collection of <see cref="Page"/> to display.</param>
 		/// <param name="buttons">Pagination buttons (leave null to default to ones on configuration).</param>
 		/// <param name="behaviour">Pagination behaviour.</param>

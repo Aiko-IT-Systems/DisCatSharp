@@ -102,7 +102,7 @@ namespace DisCatSharp.Entities
 		/// Gets whether the two <see cref="DiscordScheduledEventUser"/> objects are equal.
 		/// </summary>
 		/// <param name="e1">First event to compare.</param>
-		/// <param name="e2">Second ecent to compare.</param>
+		/// <param name="e2">Second event to compare.</param>
 		/// <returns>Whether the two events are equal.</returns>
 		public static bool operator ==(DiscordScheduledEventUser e1, DiscordScheduledEventUser e2)
 		{
