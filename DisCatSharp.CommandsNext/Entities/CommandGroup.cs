@@ -56,8 +56,8 @@ namespace DisCatSharp.CommandsNext
 		/// <returns>Command's execution results.</returns>
 		public override async Task<CommandResult> ExecuteAsync(CommandContext ctx)
 		{
-			var findpos = 0;
-			var cn = CommandsNextUtilities.ExtractNextArgument(ctx.RawArgumentString, ref findpos);
+			var findPos = 0;
+			var cn = CommandsNextUtilities.ExtractNextArgument(ctx.RawArgumentString, ref findPos);
 
 			if (cn != null)
 			{
@@ -73,7 +73,7 @@ namespace DisCatSharp.CommandsNext
 						Message = ctx.Message,
 						Command = cmd,
 						Config = ctx.Config,
-						RawArgumentString = ctx.RawArgumentString[findpos..],
+						RawArgumentString = ctx.RawArgumentString[findPos..],
 						Prefix = ctx.Prefix,
 						CommandsNext = ctx.CommandsNext,
 						Services = ctx.Services

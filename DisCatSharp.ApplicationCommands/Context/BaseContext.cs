@@ -31,7 +31,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DisCatSharp.ApplicationCommands
 {
 	/// <summary>
-	/// Respresents a base context for application command contexts.
+	/// Represents a base context for application command contexts.
 	/// </summary>
 	public class BaseContext
 	{

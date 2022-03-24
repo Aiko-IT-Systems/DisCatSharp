@@ -24,7 +24,7 @@
 namespace DisCatSharp
 {
 	/// <summary>
-	/// Represents a guild's conetent level.
+	/// Represents a guild's content level.
 	/// </summary>
 	public enum NsfwLevel
 	{

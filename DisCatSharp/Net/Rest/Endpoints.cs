@@ -94,7 +94,7 @@ namespace DisCatSharp.Net
 		public const string INTEGRATIONS = "/integrations";
 
 		/// <summary>
-		/// The sinc endpoint.
+		/// The sync endpoint.
 		/// </summary>
 		public const string SYNC = "/sync";
 

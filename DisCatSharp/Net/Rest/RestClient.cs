@@ -162,7 +162,7 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="method">The method.</param>
 		/// <param name="route">The route.</param>
-		/// <param name="routeParams">The route paramaters.</param>
+		/// <param name="routeParams">The route parameters.</param>
 		/// <param name="url">The url.</param>
 		/// <returns>A ratelimit bucket.</returns>
 		public RateLimitBucket GetBucket(RestRequestMethod method, string route, object routeParams, out string url)
@@ -291,7 +291,7 @@ namespace DisCatSharp.Net
 						if (delay < TimeSpan.Zero)
 							delay = TimeSpan.FromMilliseconds(100);
 
-						this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Pre-emptive ratelimit triggered - waiting until {0:yyyy-MM-dd HH:mm:ss zzz} ({1:c}).", resetDate, delay);
+						this._logger.LogWarning(LoggerEvents.RatelimitPreemptive, "Preemptive ratelimit triggered - waiting until {0:yyyy-MM-dd HH:mm:ss zzz} ({1:c}).", resetDate, delay);
 						Task.Delay(delay)
 							.ContinueWith(_ => this.ExecuteRequestAsync(request, null, null))
 							.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
@@ -390,7 +390,7 @@ namespace DisCatSharp.Net
 										ApiEndpoint = request.Url.AbsoluteUri
 									});
 								}
-								this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeueing request to {0}", request.Url);
+								this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeuing request to {0}", request.Url);
 								await wait.ConfigureAwait(false);
 								this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
 									.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while retrying request");
@@ -489,7 +489,7 @@ namespace DisCatSharp.Net
 				{
 					if (Interlocked.CompareExchange(ref bucket.LimitTesting, 1, 0) == 0)
 					{
-						// if we got here when the first request was just finishing, we must not create the waiter task as it would signel ExecureRequestAsync to bypass rate limiting
+						// if we got here when the first request was just finishing, we must not create the waiter task as it would signal ExecureRequestAsync to bypass rate limiting
 						if (bucket.LimitValid)
 							return null;
 
@@ -615,7 +615,7 @@ namespace DisCatSharp.Net
 			}
 
 			// check if global b1nzy
-			if (hs.TryGetValue("X-RateLimit-Global", out var isglobal) && isglobal.ToLowerInvariant() == "true")
+			if (hs.TryGetValue("X-RateLimit-Global", out var isGlobal) && isGlobal.ToLowerInvariant() == "true")
 			{
 				// global
 				global = true;
@@ -647,7 +647,7 @@ namespace DisCatSharp.Net
 			}
 
 
-			if (hs.TryGetValue("X-RateLimit-Global", out var isglobal) && isglobal.ToLowerInvariant() == "true")
+			if (hs.TryGetValue("X-RateLimit-Global", out var isGlobal) && isGlobal.ToLowerInvariant() == "true")
 			{
 				if (response.ResponseCode != 429)
 				{
@@ -658,8 +658,8 @@ namespace DisCatSharp.Net
 				return;
 			}
 
-			var r1 = hs.TryGetValue("X-RateLimit-Limit", out var usesmax);
-			var r2 = hs.TryGetValue("X-RateLimit-Remaining", out var usesleft);
+			var r1 = hs.TryGetValue("X-RateLimit-Limit", out var usesMax);
+			var r2 = hs.TryGetValue("X-RateLimit-Remaining", out var usesLeft);
 			var r3 = hs.TryGetValue("X-RateLimit-Reset", out var reset);
 			var r4 = hs.TryGetValue("X-Ratelimit-Reset-After", out var resetAfter);
 			var r5 = hs.TryGetValue("X-Ratelimit-Bucket", out var hash);
@@ -673,36 +673,36 @@ namespace DisCatSharp.Net
 				return;
 			}
 
-			var clienttime = DateTimeOffset.UtcNow;
-			var resettime = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).AddSeconds(double.Parse(reset, CultureInfo.InvariantCulture));
-			var servertime = clienttime;
+			var clientTime = DateTimeOffset.UtcNow;
+			var resetTime = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).AddSeconds(double.Parse(reset, CultureInfo.InvariantCulture));
+			var serverTime = clientTime;
 			if (hs.TryGetValue("Date", out var rawDate))
-				servertime = DateTimeOffset.Parse(rawDate, CultureInfo.InvariantCulture).ToUniversalTime();
+				serverTime = DateTimeOffset.Parse(rawDate, CultureInfo.InvariantCulture).ToUniversalTime();
 
-			var resetdelta = resettime - servertime;
-			//var difference = clienttime - servertime;
+			var resetDelta = resetTime - serverTime;
+			//var difference = clientTime - serverTime;
 			//if (Math.Abs(difference.TotalSeconds) >= 1)
 			////    this.Logger.LogMessage(LogLevel.DebugBaseDiscordClient.RestEventId,  $"Difference between machine and server time: {difference.TotalMilliseconds.ToString("#,##0.00", CultureInfo.InvariantCulture)}ms", DateTime.Now);
 			//else
 			//    difference = TimeSpan.Zero;
 
 			if (request.RateLimitWaitOverride.HasValue)
-				resetdelta = TimeSpan.FromSeconds(request.RateLimitWaitOverride.Value);
-			var newReset = clienttime + resetdelta;
+				resetDelta = TimeSpan.FromSeconds(request.RateLimitWaitOverride.Value);
+			var newReset = clientTime + resetDelta;
 
 			if (this._useResetAfter)
 			{
 				bucket.ResetAfter = TimeSpan.FromSeconds(double.Parse(resetAfter, CultureInfo.InvariantCulture));
-				newReset = clienttime + bucket.ResetAfter.Value + (request.RateLimitWaitOverride.HasValue
-					? resetdelta
+				newReset = clientTime + bucket.ResetAfter.Value + (request.RateLimitWaitOverride.HasValue
+					? resetDelta
 					: TimeSpan.Zero);
 				bucket.ResetAfterOffset = newReset;
 			}
 			else
 				bucket.Reset = newReset;
 
-			var maximum = int.Parse(usesmax, CultureInfo.InvariantCulture);
-			var remaining = int.Parse(usesleft, CultureInfo.InvariantCulture);
+			var maximum = int.Parse(usesMax, CultureInfo.InvariantCulture);
+			var remaining = int.Parse(usesLeft, CultureInfo.InvariantCulture);
 
 			if (ratelimitTcs != null)
 			{

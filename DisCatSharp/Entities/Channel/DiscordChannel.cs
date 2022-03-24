@@ -74,13 +74,13 @@ namespace DisCatSharp.Entities
 		public ChannelType Type { get; internal set; }
 
 		/// <summary>
-		/// Gets this channels's banner hash, when applicable.
+		/// Gets this channel's banner hash, when applicable.
 		/// </summary>
 		[JsonProperty("banner")]
 		public string BannerHash { get; internal set; }
 
 		/// <summary>
-		/// Gets this channels's banner in url form.
+		/// Gets this channel's banner in url form.
 		/// </summary>
 		[JsonIgnore]
 		public string BannerUrl
@@ -94,7 +94,7 @@ namespace DisCatSharp.Entities
 
 		/// <summary>
 		/// Gets the maximum available position to move the channel to.
-		/// This can contain outdated informations.
+		/// This can contain outdated information.
 		/// </summary>
 		public int GetMaxPosition()
 		{
@@ -294,7 +294,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordMessage> SendMessageAsync(string content) =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
@@ -308,7 +308,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed) =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, null, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
@@ -323,7 +323,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed) =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, embed != null ? new[] { embed } : null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
@@ -354,7 +354,7 @@ namespace DisCatSharp.Entities
 			action(builder);
 
 
-			return !this.IsWriteable()
+			return !this.IsWritable()
 				? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
 		}
@@ -402,7 +402,7 @@ namespace DisCatSharp.Entities
 			{
 				userLimit = null;
 			}
-			if (!this.IsWriteable())
+			if (!this.IsWritable())
 			{
 				perUserRateLimit = Optional.FromNoValue<int?>();
 			}
@@ -459,7 +459,7 @@ namespace DisCatSharp.Entities
 				bannerb64 = null;
 
 			return this.Discord.ApiClient.ModifyChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Nsfw,
-				mdl.Parent.HasValue ? mdl.Parent.Value?.Id : default(Optional<ulong?>), mdl.Bitrate, mdl.Userlimit, mdl.PerUserRateLimit, mdl.RtcRegion.IfPresent(r => r?.Id),
+				mdl.Parent.HasValue ? mdl.Parent.Value?.Id : default(Optional<ulong?>), mdl.Bitrate, mdl.UserLimit, mdl.PerUserRateLimit, mdl.RtcRegion.IfPresent(r => r?.Id),
 				mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, bannerb64, mdl.AuditLogReason);
 		}
 
@@ -586,7 +586,7 @@ namespace DisCatSharp.Entities
 		}
 
 		/// <summary>
-		/// Internaly refreshes the channel list.
+		/// Internally refreshes the channel list.
 		/// </summary>
 		private async Task<IReadOnlyList<DiscordChannel>> InternalRefreshChannelsAsync()
 		{
@@ -796,7 +796,7 @@ namespace DisCatSharp.Entities
 		/// <param name="around">Get messages around snowflake.</param>
 		private async Task<IReadOnlyList<DiscordMessage>> GetMessagesInternalAsync(int limit = 100, ulong? before = null, ulong? after = null, ulong? around = null)
 		{
-			if (!this.IsWriteable())
+			if (!this.IsWritable())
 				throw new ArgumentException("Cannot get the messages of a non-text channel.");
 
 			if (limit < 0)
@@ -972,7 +972,7 @@ namespace DisCatSharp.Entities
 		/// <param name="coverImage">The cover image.</param>
 		/// <param name="reason">The reason.</param>
 		/// <returns>A scheduled event.</returns>
-		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the ressource does not exist.</exception>
+		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the resource does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, string description = null, Optional<Stream> coverImage = default, string reason = null)
@@ -1122,30 +1122,30 @@ namespace DisCatSharp.Entities
 			=> this.Discord.ApiClient.DeleteChannelPermissionAsync(this.Id, role.Id, reason);
 
 		/// <summary>
-		/// Post a typing indicator
+		/// Post a typing indicator.
 		/// </summary>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task TriggerTypingAsync() =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("Cannot start typing in a non-text channel.")
 				: this.Discord.ApiClient.TriggerTypingAsync(this.Id);
 
 		/// <summary>
-		/// Returns all pinned messages
+		/// Returns all pinned messages.
 		/// </summary>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync() =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("A non-text channel does not have pinned messages.")
 				: this.Discord.ApiClient.GetPinnedMessagesAsync(this.Id);
 
 		/// <summary>
-		/// Create a new webhook
+		/// Create a new webhook.
 		/// </summary>
 		/// <param name="name">The name of the webhook.</param>
 		/// <param name="avatar">The image for the default webhook avatar.</param>
@@ -1167,7 +1167,7 @@ namespace DisCatSharp.Entities
 		}
 
 		/// <summary>
-		/// Returns a list of webhooks
+		/// Returns a list of webhooks.
 		/// </summary>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageWebhooks"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
@@ -1176,7 +1176,7 @@ namespace DisCatSharp.Entities
 			=> this.Discord.ApiClient.GetChannelWebhooksAsync(this.Id);
 
 		/// <summary>
-		/// Moves a member to this voice channel
+		/// Moves a member to this voice channel.
 		/// </summary>
 		/// <param name="member">The member to be moved.</param>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MoveMembers"/> permission.</exception>
@@ -1193,21 +1193,21 @@ namespace DisCatSharp.Entities
 		}
 
 		/// <summary>
-		/// Follows a news channel
+		/// Follows a news channel.
 		/// </summary>
-		/// <param name="targetChannel">Channel to crosspost messages to</param>
-		/// <exception cref="System.ArgumentException">Thrown when trying to follow a non-news channel</exception>
-		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the current user doesn't have <see cref="Permissions.ManageWebhooks"/> on the target channel</exception>
+		/// <param name="targetChannel">Channel to crosspost messages to.</param>
+		/// <exception cref="System.ArgumentException">Thrown when trying to follow a non-news channel.</exception>
+		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the current user doesn't have <see cref="Permissions.ManageWebhooks"/> on the target channel.</exception>
 		public Task<DiscordFollowedChannel> FollowAsync(DiscordChannel targetChannel) =>
 			this.Type != ChannelType.News
 				? throw new ArgumentException("Cannot follow a non-news channel.")
 				: this.Discord.ApiClient.FollowChannelAsync(this.Id, targetChannel.Id);
 
 		/// <summary>
-		/// Publishes a message in a news channel to following channels
+		/// Publishes a message in a news channel to following channels.
 		/// </summary>
-		/// <param name="message">Message to publish</param>
-		/// <exception cref="System.ArgumentException">Thrown when the message has already been crossposted</exception>
+		/// <param name="message">Message to publish.</param>
+		/// <exception cref="System.ArgumentException">Thrown when the message has already been crossposted.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">
 		///     Thrown when the current user doesn't have <see cref="Permissions.ManageWebhooks"/> and/or <see cref="Permissions.SendMessages"/>
 		/// </exception>
@@ -1260,7 +1260,7 @@ namespace DisCatSharp.Entities
 			// assign permissions from member's roles (in order)
 			perms |= mbRoles.Aggregate(Permissions.None, (c, role) => c | role.Permissions);
 
-			// Adminstrator grants all permissions and cannot be overridden
+			// Administrator grants all permissions and cannot be overridden
 			if ((perms & Permissions.Administrator) == Permissions.Administrator)
 				return PermissionMethods.FullPerms;
 

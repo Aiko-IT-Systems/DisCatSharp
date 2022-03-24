@@ -40,11 +40,11 @@ namespace DisCatSharp.Interactivity
 		/// <summary>
 		/// Initializes a new instance of the <see cref="InteractivityResult{T}"/> class.
 		/// </summary>
-		/// <param name="timedout">If true, timedout.</param>
+		/// <param name="timedOut">If true, timed out.</param>
 		/// <param name="result">The result.</param>
-		internal InteractivityResult(bool timedout, T result)
+		internal InteractivityResult(bool timedOut, T result)
 		{
-			this.TimedOut = timedout;
+			this.TimedOut = timedOut;
 			this.Result = result;
 		}
 	}

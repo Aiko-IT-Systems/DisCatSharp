@@ -38,7 +38,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// Whether two application commands are equal.
 		/// </summary>
 		/// <param name="ac1">Source command.</param>
-		/// <param name="targetApplicationCommand">Command to check agains.</param>
+		/// <param name="targetApplicationCommand">Command to check against.</param>
 		internal static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand)
 		{
 			if (targetApplicationCommand is null || ac1 is null)

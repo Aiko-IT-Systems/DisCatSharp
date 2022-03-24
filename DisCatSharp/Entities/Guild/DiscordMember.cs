@@ -702,7 +702,7 @@ namespace DisCatSharp.Entities
 			// assign permissions from member's roles (in order)
 			perms |= this.Roles.Aggregate(Permissions.None, (c, role) => c | role.Permissions);
 
-			// Adminstrator grants all permissions and cannot be overridden
+			// Administrator grants all permissions and cannot be overridden
 			return (perms & Permissions.Administrator) == Permissions.Administrator ? PermissionMethods.FullPerms : perms;
 		}
 

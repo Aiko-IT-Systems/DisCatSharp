@@ -69,7 +69,7 @@ namespace DisCatSharp.Common
 		/// <summary>
 		/// Fills a supplied memory region with random bytes.
 		/// </summary>
-		/// <param name="buffer">Memmory region to fill with random bytes.</param>
+		/// <param name="buffer">Memory region to fill with random bytes.</param>
 		public void GetBytes(Span<byte> buffer)
 		{
 			var buff = ArrayPool<byte>.Shared.Rent(buffer.Length);
@@ -88,7 +88,7 @@ namespace DisCatSharp.Common
 		/// <summary>
 		/// Fills a supplied memory region with random nonzero bytes.
 		/// </summary>
-		/// <param name="buffer">Memmory region to fill with random nonzero bytes.</param>
+		/// <param name="buffer">Memory region to fill with random nonzero bytes.</param>
 		public void GetNonZeroBytes(Span<byte> buffer)
 		{
 			var buff = ArrayPool<byte>.Shared.Rent(buffer.Length);

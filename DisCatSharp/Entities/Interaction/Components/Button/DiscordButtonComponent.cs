@@ -85,7 +85,7 @@ namespace DisCatSharp.Entities
 		}
 
 		/// <summary>
-		/// Constucts a new button based on another button.
+		/// Constructs a new button based on another button.
 		/// </summary>
 		/// <param name="other">The button to copy.</param>
 		public DiscordButtonComponent(DiscordButtonComponent other) : this()

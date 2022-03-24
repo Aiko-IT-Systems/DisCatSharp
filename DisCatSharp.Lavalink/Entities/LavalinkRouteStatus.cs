@@ -142,7 +142,7 @@ namespace DisCatSharp.Lavalink.Entities
 		public string Address { get; internal set; }
 
 		/// <summary>
-		/// Gets the failing timestamp in miliseconds.
+		/// Gets the failing timestamp in milliseconds.
 		/// </summary>
 		[JsonProperty("failingTimestamp", NullValueHandling = NullValueHandling.Ignore)]
 		public ulong FailingTimestamp { get; internal set; }
