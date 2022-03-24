@@ -478,14 +478,14 @@ namespace DisCatSharp.Interactivity
 		/// Waits for a specific message.
 		/// </summary>
 		/// <param name="predicate">Predicate to match.</param>
-		/// <param name="timeoutoverride">override timeout period.</param>
+		/// <param name="timeoutOverride">Override timeout period.</param>
 		public async Task<InteractivityResult<DiscordMessage>> WaitForMessageAsync(Func<DiscordMessage, bool> predicate,
-			TimeSpan? timeoutoverride = null)
+			TimeSpan? timeoutOverride = null)
 		{
 			if (!Utilities.HasMessageIntents(this.Client.Configuration.Intents))
 				throw new InvalidOperationException("No message intents are enabled.");
 
-			var timeout = timeoutoverride ?? this.Config.Timeout;
+			var timeout = timeoutOverride ?? this.Config.Timeout;
 			var returns = await this._messageCreatedWaiter.WaitForMatchAsync(new MatchRequest<MessageCreateEventArgs>(x => predicate(x.Message), timeout)).ConfigureAwait(false);
 
 			return new InteractivityResult<DiscordMessage>(returns == null, returns?.Message);
@@ -495,14 +495,14 @@ namespace DisCatSharp.Interactivity
 		/// Wait for a specific reaction.
 		/// </summary>
 		/// <param name="predicate">Predicate to match.</param>
-		/// <param name="timeoutoverride">override timeout period.</param>
+		/// <param name="timeoutOverride">Override timeout period.</param>
 		public async Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(Func<MessageReactionAddEventArgs, bool> predicate,
-			TimeSpan? timeoutoverride = null)
+			TimeSpan? timeoutOverride = null)
 		{
 			if (!Utilities.HasReactionIntents(this.Client.Configuration.Intents))
 				throw new InvalidOperationException("No reaction intents are enabled.");
 
-			var timeout = timeoutoverride ?? this.Config.Timeout;
+			var timeout = timeoutOverride ?? this.Config.Timeout;
 			var returns = await this._messageReactionAddWaiter.WaitForMatchAsync(new MatchRequest<MessageReactionAddEventArgs>(predicate, timeout)).ConfigureAwait(false);
 
 			return new InteractivityResult<MessageReactionAddEventArgs>(returns == null, returns);
@@ -514,10 +514,10 @@ namespace DisCatSharp.Interactivity
 		/// </summary>
 		/// <param name="message">Message reaction was added to.</param>
 		/// <param name="user">User that made the reaction.</param>
-		/// <param name="timeoutoverride">override timeout period.</param>
+		/// <param name="timeoutOverride">Override timeout period.</param>
 		public async Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(DiscordMessage message, DiscordUser user,
-			TimeSpan? timeoutoverride = null)
-			=> await this.WaitForReactionAsync(x => x.User.Id == user.Id && x.Message.Id == message.Id, timeoutoverride).ConfigureAwait(false);
+			TimeSpan? timeoutOverride = null)
+			=> await this.WaitForReactionAsync(x => x.User.Id == user.Id && x.Message.Id == message.Id, timeoutOverride).ConfigureAwait(false);
 
 		/// <summary>
 		/// Waits for a specific reaction.
@@ -526,10 +526,10 @@ namespace DisCatSharp.Interactivity
 		/// <param name="predicate">Predicate to match.</param>
 		/// <param name="message">Message reaction was added to.</param>
 		/// <param name="user">User that made the reaction.</param>
-		/// <param name="timeoutoverride">override timeout period.</param>
+		/// <param name="timeoutOverride">Override timeout period.</param>
 		public async Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(Func<MessageReactionAddEventArgs, bool> predicate,
-			DiscordMessage message, DiscordUser user, TimeSpan? timeoutoverride = null)
-			=> await this.WaitForReactionAsync(x => predicate(x) && x.User.Id == user.Id && x.Message.Id == message.Id, timeoutoverride).ConfigureAwait(false);
+			DiscordMessage message, DiscordUser user, TimeSpan? timeoutOverride = null)
+			=> await this.WaitForReactionAsync(x => predicate(x) && x.User.Id == user.Id && x.Message.Id == message.Id, timeoutOverride).ConfigureAwait(false);
 
 		/// <summary>
 		/// Waits for a specific reaction.
@@ -537,24 +537,24 @@ namespace DisCatSharp.Interactivity
 		/// </summary>
 		/// <param name="predicate">predicate to match.</param>
 		/// <param name="user">User that made the reaction.</param>
-		/// <param name="timeoutoverride">Override timeout period.</param>
+		/// <param name="timeoutOverride">Override timeout period.</param>
 		public async Task<InteractivityResult<MessageReactionAddEventArgs>> WaitForReactionAsync(Func<MessageReactionAddEventArgs, bool> predicate,
-			DiscordUser user, TimeSpan? timeoutoverride = null)
-			=> await this.WaitForReactionAsync(x => predicate(x) && x.User.Id == user.Id, timeoutoverride).ConfigureAwait(false);
+			DiscordUser user, TimeSpan? timeoutOverride = null)
+			=> await this.WaitForReactionAsync(x => predicate(x) && x.User.Id == user.Id, timeoutOverride).ConfigureAwait(false);
 
 		/// <summary>
 		/// Waits for a user to start typing.
 		/// </summary>
 		/// <param name="user">User that starts typing.</param>
 		/// <param name="channel">Channel the user is typing in.</param>
-		/// <param name="timeoutoverride">Override timeout period.</param>
+		/// <param name="timeoutOverride">Override timeout period.</param>
 		public async Task<InteractivityResult<TypingStartEventArgs>> WaitForUserTypingAsync(DiscordUser user,
-			DiscordChannel channel, TimeSpan? timeoutoverride = null)
+			DiscordChannel channel, TimeSpan? timeoutOverride = null)
 		{
 			if (!Utilities.HasTypingIntents(this.Client.Configuration.Intents))
 				throw new InvalidOperationException("No typing intents are enabled.");
 
-			var timeout = timeoutoverride ?? this.Config.Timeout;
+			var timeout = timeoutOverride ?? this.Config.Timeout;
 			var returns = await this._typingStartWaiter.WaitForMatchAsync(
 				new MatchRequest<TypingStartEventArgs>(x => x.User.Id == user.Id && x.Channel.Id == channel.Id, timeout))
 				.ConfigureAwait(false);
@@ -566,13 +566,13 @@ namespace DisCatSharp.Interactivity
 		/// Waits for a user to start typing.
 		/// </summary>
 		/// <param name="user">User that starts typing.</param>
-		/// <param name="timeoutoverride">Override timeout period.</param>
-		public async Task<InteractivityResult<TypingStartEventArgs>> WaitForUserTypingAsync(DiscordUser user, TimeSpan? timeoutoverride = null)
+		/// <param name="timeoutOverride">Override timeout period.</param>
+		public async Task<InteractivityResult<TypingStartEventArgs>> WaitForUserTypingAsync(DiscordUser user, TimeSpan? timeoutOverride = null)
 		{
 			if (!Utilities.HasTypingIntents(this.Client.Configuration.Intents))
 				throw new InvalidOperationException("No typing intents are enabled.");
 
-			var timeout = timeoutoverride ?? this.Config.Timeout;
+			var timeout = timeoutOverride ?? this.Config.Timeout;
 			var returns = await this._typingStartWaiter.WaitForMatchAsync(
 				new MatchRequest<TypingStartEventArgs>(x => x.User.Id == user.Id, timeout))
 				.ConfigureAwait(false);
@@ -584,13 +584,13 @@ namespace DisCatSharp.Interactivity
 		/// Waits for any user to start typing.
 		/// </summary>
 		/// <param name="channel">Channel to type in.</param>
-		/// <param name="timeoutoverride">Override timeout period.</param>
-		public async Task<InteractivityResult<TypingStartEventArgs>> WaitForTypingAsync(DiscordChannel channel, TimeSpan? timeoutoverride = null)
+		/// <param name="timeoutOverride">Override timeout period.</param>
+		public async Task<InteractivityResult<TypingStartEventArgs>> WaitForTypingAsync(DiscordChannel channel, TimeSpan? timeoutOverride = null)
 		{
 			if (!Utilities.HasTypingIntents(this.Client.Configuration.Intents))
 				throw new InvalidOperationException("No typing intents are enabled.");
 
-			var timeout = timeoutoverride ?? this.Config.Timeout;
+			var timeout = timeoutOverride ?? this.Config.Timeout;
 			var returns = await this._typingStartWaiter.WaitForMatchAsync(
 				new MatchRequest<TypingStartEventArgs>(x => x.Channel.Id == channel.Id, timeout))
 				.ConfigureAwait(false);
@@ -602,13 +602,13 @@ namespace DisCatSharp.Interactivity
 		/// Collects reactions on a specific message.
 		/// </summary>
 		/// <param name="m">Message to collect reactions on.</param>
-		/// <param name="timeoutoverride">Override timeout period.</param>
-		public async Task<ReadOnlyCollection<Reaction>> CollectReactionsAsync(DiscordMessage m, TimeSpan? timeoutoverride = null)
+		/// <param name="timeoutOverride">Override timeout period.</param>
+		public async Task<ReadOnlyCollection<Reaction>> CollectReactionsAsync(DiscordMessage m, TimeSpan? timeoutOverride = null)
 		{
 			if (!Utilities.HasReactionIntents(this.Client.Configuration.Intents))
 				throw new InvalidOperationException("No reaction intents are enabled.");
 
-			var timeout = timeoutoverride ?? this.Config.Timeout;
+			var timeout = timeoutOverride ?? this.Config.Timeout;
 			var collection = await this._reactionCollector.CollectAsync(new ReactionCollectRequest(m, timeout)).ConfigureAwait(false);
 
 			return collection;
@@ -619,10 +619,10 @@ namespace DisCatSharp.Interactivity
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="predicate">The predicate.</param>
-		/// <param name="timeoutoverride">Override timeout period.</param>
-		public async Task<InteractivityResult<T>> WaitForEventArgsAsync<T>(Func<T, bool> predicate, TimeSpan? timeoutoverride = null) where T : AsyncEventArgs
+		/// <param name="timeoutOverride">Override timeout period.</param>
+		public async Task<InteractivityResult<T>> WaitForEventArgsAsync<T>(Func<T, bool> predicate, TimeSpan? timeoutOverride = null) where T : AsyncEventArgs
 		{
-			var timeout = timeoutoverride ?? this.Config.Timeout;
+			var timeout = timeoutOverride ?? this.Config.Timeout;
 
 			using var waiter = new EventWaiter<T>(this.Client);
 			var res = await waiter.WaitForMatchAsync(new MatchRequest<T>(predicate, timeout)).ConfigureAwait(false);
@@ -633,10 +633,10 @@ namespace DisCatSharp.Interactivity
 		/// Collects the event arguments.
 		/// </summary>
 		/// <param name="predicate">The predicate.</param>
-		/// <param name="timeoutoverride">Override timeout period.</param>
-		public async Task<ReadOnlyCollection<T>> CollectEventArgsAsync<T>(Func<T, bool> predicate, TimeSpan? timeoutoverride = null) where T : AsyncEventArgs
+		/// <param name="timeoutOverride">Override timeout period.</param>
+		public async Task<ReadOnlyCollection<T>> CollectEventArgsAsync<T>(Func<T, bool> predicate, TimeSpan? timeoutOverride = null) where T : AsyncEventArgs
 		{
-			var timeout = timeoutoverride ?? this.Config.Timeout;
+			var timeout = timeoutOverride ?? this.Config.Timeout;
 
 			using var waiter = new EventWaiter<T>(this.Client);
 			var res = await waiter.CollectMatchesAsync(new CollectRequest<T>(predicate, timeout)).ConfigureAwait(false);
@@ -688,12 +688,12 @@ namespace DisCatSharp.Interactivity
 		/// <param name="pages">The pages.</param>
 		/// <param name="buttons">Pagination buttons (pass null to use buttons defined in <see cref="InteractivityConfiguration"/>).</param>
 		/// <param name="behaviour">Pagination behaviour.</param>
-		/// <param name="timeoutoverride">Override timeout period.</param>
 		/// <param name="deletion">Deletion behaviour.</param>
+		/// <param name="timeoutOverride">Override timeout period.</param>
 		public Task SendPaginatedMessageAsync(
-			DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons, TimeSpan? timeoutoverride,
+			DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons, TimeSpan? timeoutOverride,
 			PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default)
-			=> this.SendPaginatedMessageAsync(channel, user, pages, buttons, behaviour, deletion, this.GetCancellationToken(timeoutoverride));
+			=> this.SendPaginatedMessageAsync(channel, user, pages, buttons, behaviour, deletion, this.GetCancellationToken(timeoutOverride));
 
 		/// <summary>
 		/// Sends the paginated message.
@@ -714,12 +714,12 @@ namespace DisCatSharp.Interactivity
 		/// <param name="channel">The channel.</param>
 		/// <param name="user">The user.</param>
 		/// <param name="pages">The pages.</param>
-		/// <param name="timeoutoverride">The timeoutoverride.</param>
+		/// <param name="timeoutOverride">Override timeout period.</param>
 		/// <param name="behaviour">The behaviour.</param>
 		/// <param name="deletion">The deletion.</param>
 		/// <returns>A Task.</returns>
-		public Task SendPaginatedMessageAsync(DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, TimeSpan? timeoutoverride, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default)
-			=> this.SendPaginatedMessageAsync(channel, user, pages, timeoutoverride, behaviour, deletion);
+		public Task SendPaginatedMessageAsync(DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, TimeSpan? timeoutOverride, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default)
+			=> this.SendPaginatedMessageAsync(channel, user, pages, timeoutOverride, behaviour, deletion);
 
 		/// <summary>
 		/// Sends a paginated message.
@@ -731,24 +731,24 @@ namespace DisCatSharp.Interactivity
 		/// <param name="emojis">Pagination emojis.</param>
 		/// <param name="behaviour">Pagination behaviour (when hitting max and min indices).</param>
 		/// <param name="deletion">Deletion behaviour.</param>
-		/// <param name="timeoutoverride">Override timeout period.</param>
+		/// <param name="timeoutOverride">Override timeout period.</param>
 		public async Task SendPaginatedMessageAsync(DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationEmojis emojis,
-			PaginationBehaviour? behaviour = default, PaginationDeletion? deletion = default, TimeSpan? timeoutoverride = null)
+			PaginationBehaviour? behaviour = default, PaginationDeletion? deletion = default, TimeSpan? timeoutOverride = null)
 		{
 			var builder = new DiscordMessageBuilder()
 				.WithContent(pages.First().Content)
 				.WithEmbed(pages.First().Embed);
 			var m = await builder.SendAsync(channel).ConfigureAwait(false);
 
-			var timeout = timeoutoverride ?? this.Config.Timeout;
+			var timeout = timeoutOverride ?? this.Config.Timeout;
 
 			var bhv = behaviour ?? this.Config.PaginationBehaviour;
 			var del = deletion ?? this.Config.PaginationDeletion;
 			var ems = emojis ?? this.Config.PaginationEmojis;
 
-			var prequest = new PaginationRequest(m, user, bhv, del, ems, timeout, pages.ToArray());
+			var pRequest = new PaginationRequest(m, user, bhv, del, ems, timeout, pages.ToArray());
 
-			await this._paginator.DoPaginationAsync(prequest).ConfigureAwait(false);
+			await this._paginator.DoPaginationAsync(pRequest).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -813,9 +813,9 @@ namespace DisCatSharp.Interactivity
 		/// Generates pages from a string, and puts them in message content.
 		/// </summary>
 		/// <param name="input">Input string.</param>
-		/// <param name="splittype">How to split input string.</param>
+		/// <param name="splitType">How to split input string.</param>
 		/// <returns></returns>
-		public IEnumerable<Page> GeneratePagesInContent(string input, SplitType splittype = SplitType.Character)
+		public IEnumerable<Page> GeneratePagesInContent(string input, SplitType splitType = SplitType.Character)
 		{
 			if (string.IsNullOrEmpty(input))
 				throw new ArgumentException("You must provide a string that is not null or empty!");
@@ -823,7 +823,7 @@ namespace DisCatSharp.Interactivity
 			var result = new List<Page>();
 			List<string> split;
 
-			switch (splittype)
+			switch (splitType)
 			{
 				default:
 				case SplitType.Character:
@@ -863,20 +863,20 @@ namespace DisCatSharp.Interactivity
 		/// Generates pages from a string, and puts them in message embeds.
 		/// </summary>
 		/// <param name="input">Input string.</param>
-		/// <param name="splittype">How to split input string.</param>
-		/// <param name="embedbase">Base embed for output embeds.</param>
+		/// <param name="splitType">How to split input string.</param>
+		/// <param name="embedBase">Base embed for output embeds.</param>
 		/// <returns></returns>
-		public IEnumerable<Page> GeneratePagesInEmbed(string input, SplitType splittype = SplitType.Character, DiscordEmbedBuilder embedbase = null)
+		public IEnumerable<Page> GeneratePagesInEmbed(string input, SplitType splitType = SplitType.Character, DiscordEmbedBuilder embedBase = null)
 		{
 			if (string.IsNullOrEmpty(input))
 				throw new ArgumentException("You must provide a string that is not null or empty!");
 
-			var embed = embedbase ?? new DiscordEmbedBuilder();
+			var embed = embedBase ?? new DiscordEmbedBuilder();
 
 			var result = new List<Page>();
 			List<string> split;
 
-			switch (splittype)
+			switch (splitType)
 			{
 				default:
 				case SplitType.Character:
