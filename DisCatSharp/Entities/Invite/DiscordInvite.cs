@@ -35,7 +35,7 @@ namespace DisCatSharp.Entities
 	public class DiscordInvite
 	{
 		/// <summary>
-		/// Gets the base cloent.
+		/// Gets the base client.
 		/// </summary>
 		internal BaseDiscordClient Discord { get; set; }
 

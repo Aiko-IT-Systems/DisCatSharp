@@ -39,7 +39,7 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Interactivity.EventHandling
 {
 	/// <summary>
-	/// Eventwaiter is a class that serves as a layer between the InteractivityExtension
+	/// EventWaiter is a class that serves as a layer between the InteractivityExtension
 	/// and the DiscordClient to listen to an event and check for matches to a predicate.
 	/// </summary>
 	internal class ReactionCollector : IDisposable
@@ -58,7 +58,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		ConcurrentHashSet<ReactionCollectRequest> _requests;
 
 		/// <summary>
-		/// Creates a new Eventwaiter object.
+		/// Creates a new EventWaiter object.
 		/// </summary>
 		/// <param name="client">Your DiscordClient</param>
 		public ReactionCollector(DiscordClient client)

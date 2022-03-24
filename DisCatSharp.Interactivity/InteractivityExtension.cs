@@ -104,7 +104,7 @@ namespace DisCatSharp.Interactivity
 		/// <param name="m">Message to create poll on.</param>
 		/// <param name="emojis">Emojis to use for this poll.</param>
 		/// <param name="behaviour">What to do when the poll ends.</param>
-		/// <param name="timeout">override timeout period.</param>
+		/// <param name="timeout">Override timeout period.</param>
 		/// <returns></returns>
 		public async Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(DiscordMessage m, IEnumerable<DiscordEmoji> emojis, PollBehaviour? behaviour = default, TimeSpan? timeout = null)
 		{
@@ -651,7 +651,7 @@ namespace DisCatSharp.Interactivity
 		/// <param name="pages">The pages.</param>
 		/// <param name="buttons">Pagination buttons (pass null to use buttons defined in <see cref="InteractivityConfiguration"/>).</param>
 		/// <param name="behaviour">Pagination behaviour.</param>
-		/// <param name="deletion">Deletion behaviour</param>
+		/// <param name="deletion">Deletion behaviour.</param>
 		/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 		public async Task SendPaginatedMessageAsync(
 			DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons,
@@ -688,8 +688,8 @@ namespace DisCatSharp.Interactivity
 		/// <param name="pages">The pages.</param>
 		/// <param name="buttons">Pagination buttons (pass null to use buttons defined in <see cref="InteractivityConfiguration"/>).</param>
 		/// <param name="behaviour">Pagination behaviour.</param>
-		/// <param name="deletion">Deletion behaviour</param>
 		/// <param name="timeoutoverride">Override timeout period.</param>
+		/// <param name="deletion">Deletion behaviour.</param>
 		public Task SendPaginatedMessageAsync(
 			DiscordChannel channel, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons, TimeSpan? timeoutoverride,
 			PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default)
@@ -761,9 +761,9 @@ namespace DisCatSharp.Interactivity
 		/// <param name="ephemeral">Whether the response should be ephemeral.</param>
 		/// <param name="user">The user to listen for button presses from.</param>
 		/// <param name="pages">The pages to paginate.</param>
-		/// <param name="buttons">Optional: custom buttons</param>
+		/// <param name="buttons">Optional: custom buttons.</param>
 		/// <param name="behaviour">Pagination behaviour.</param>
-		/// <param name="deletion">Deletion behaviour</param>
+		/// <param name="deletion">Deletion behaviour.</param>
 		/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 		public async Task SendPaginatedResponseAsync(DiscordInteraction interaction, bool ephemeral, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons = null, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
 		{

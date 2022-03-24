@@ -33,7 +33,7 @@ namespace DisCatSharp
 		Public = 1,
 
 		/// <summary>
-		/// Indicates that the the guild scheduled event is only accessable to guild members.
+		/// Indicates that the the guild scheduled event is only accessible to guild members.
 		/// </summary>
 		GuildOnly = 2
 	}

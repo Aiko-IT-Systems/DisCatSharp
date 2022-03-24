@@ -27,12 +27,12 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Entities
 {
 	/// <summary>
-	/// Represants a interactions application command callback data.
+	/// Represents a interactions application command callback data.
 	/// </summary>
 	internal class DiscordInteractionApplicationCommandCallbackData
 	{
 		/// <summary>
-		/// Wheter this message is tts
+		/// Whether this message is text to speech.
 		/// </summary>
 		[JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
 		public bool? IsTts { get; internal set; }
@@ -81,7 +81,7 @@ namespace DisCatSharp.Entities
 	}
 
 	/// <summary>
-	/// Represants a interactions application command callback data.
+	/// Represents a interactions application command callback data.
 	/// </summary>
 	internal class DiscordInteractionApplicationCommandModalCallbackData
 	{

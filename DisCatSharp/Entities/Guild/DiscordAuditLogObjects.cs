@@ -821,7 +821,7 @@ namespace DisCatSharp.Entities
 		Delete,
 
 		/// <summary>
-		/// Indicates that this action resulted in something else than creation, addition, update, deleteion, or removal of an object.
+		/// Indicates that this action resulted in something else than creation, addition, update, deletion, or removal of an object.
 		/// </summary>
 		Other
 	}

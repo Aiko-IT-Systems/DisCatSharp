@@ -1411,7 +1411,7 @@ namespace DisCatSharp.ApplicationCommands
 		}
 
 		/// <summary>
-		/// Runs the preexecution checks.
+		/// Runs the pre-execution checks.
 		/// </summary>
 		/// <param name="method">The method info.</param>
 		/// <param name="context">The base context.</param>

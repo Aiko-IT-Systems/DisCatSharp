@@ -30,32 +30,32 @@ namespace DisCatSharp.Net.Models
 	public class ThreadEditModel : BaseEditModel
 	{
 		/// <summary>
-		/// Sets the threads's new name.
+		/// Sets the thread's new name.
 		/// </summary>
 		public string Name { internal get; set; }
 
 		/// <summary>
-		/// Sets the threads's locked state.
+		/// Sets the thread's locked state.
 		/// </summary>
 		public Optional<bool?> Locked { internal get; set; }
 
 		/// <summary>
-		/// Sets the threads's archived state.
+		/// Sets the thread's archived state.
 		/// </summary>
 		public Optional<bool?> Archived { internal get; set; }
 
 		/// <summary>
-		/// Sets the threads's auto archive duration.
+		/// Sets the thread's auto archive duration.
 		/// </summary>
 		public Optional<ThreadAutoArchiveDuration?> AutoArchiveDuration { internal get; set; }
 
 		/// <summary>
-		/// Sets the threads's new user rate limit.
+		/// Sets the thread's new user rate limit.
 		/// </summary>
 		public Optional<int?> PerUserRateLimit { internal get; set; }
 
 		/// <summary>
-		/// Sets the threads's invitable state.
+		/// Sets the thread's invitable state.
 		/// </summary>
 		public Optional<bool?> Invitable { internal get; set; }
 

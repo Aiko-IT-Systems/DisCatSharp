@@ -28,7 +28,7 @@ namespace DisCatSharp
 	public enum PriceTierType : int
 	{
 		/// <summary>
-		/// Indicates that this is a role subscriotion.
+		/// Indicates that this is a role subscription.
 		/// </summary>
 		GuildRoleSubscriptions = 1
 	}

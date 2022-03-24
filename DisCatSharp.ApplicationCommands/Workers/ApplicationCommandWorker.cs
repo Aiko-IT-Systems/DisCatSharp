@@ -218,7 +218,7 @@ namespace DisCatSharp.ApplicationCommands
 				{
 					var commandAttribute = submethod.GetCustomAttribute<SlashCommandAttribute>();
 
-					//Gets the paramaters and accounts for InteractionContext
+					//Gets the parameters and accounts for InteractionContext
 					var parameters = submethod.GetParameters();
 					if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
 						throw new ArgumentException($"The first argument must be an InteractionContext!");

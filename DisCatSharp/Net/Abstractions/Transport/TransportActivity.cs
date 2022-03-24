@@ -55,7 +55,7 @@ namespace DisCatSharp.Net.Abstractions
 		public string StreamUrl { get; internal set; }
 
 		/// <summary>
-		/// Gets or sets the livesteam type.
+		/// Gets or sets the livestream type.
 		/// </summary>
 		[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 		public ActivityType ActivityType { get; internal set; }
@@ -157,7 +157,7 @@ namespace DisCatSharp.Net.Abstractions
 		public string SessionId { get; internal set; }
 
 		/// <summary>
-		/// Gets or sets infromation about current game's timestamps.
+		/// Gets or sets information about current game's timestamps.
 		///
 		/// This is a component of the rich presence, and, as such, can only be used by regular users.
 		/// </summary>

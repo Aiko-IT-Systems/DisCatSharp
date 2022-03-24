@@ -897,7 +897,7 @@ namespace DisCatSharp.VoiceNext
 		}
 
 		/// <summary>
-		/// Asynchronously waits for playback to be finished. Playback is finished when speaking = false is signalled.
+		/// Asynchronously waits for playback to be finished. Playback is finished when speaking = false is signaled.
 		/// </summary>
 		/// <returns>A task representing the waiting operation.</returns>
 		public async Task WaitForPlaybackFinishAsync()
@@ -1059,7 +1059,7 @@ namespace DisCatSharp.VoiceNext
 				Address = ip,
 				Port = port
 			};
-			this._discord.Logger.LogTrace(VoiceNextEvents.VoiceHandshake, "Endpoint dicovery finished - discovered endpoint is {0}:{1}", ip, port);
+			this._discord.Logger.LogTrace(VoiceNextEvents.VoiceHandshake, "Endpoint discovery finished - discovered endpoint is {0}:{1}", ip, port);
 
 			void PreparePacket(byte[] packet)
 			{
@@ -1343,7 +1343,7 @@ namespace DisCatSharp.VoiceNext
 		/// <summary>
 		/// Gets the unix timestamp.
 		/// </summary>
-		/// <param name="dt">The datetine.</param>
+		/// <param name="dt">The datetime.</param>
 		private static uint UnixTimestamp(DateTime dt)
 		{
 			var ts = dt - s_unixEpoch;

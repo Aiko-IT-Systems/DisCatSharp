@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
 // Copyright (c) 2021-2022 AITSYS
 //
@@ -110,7 +110,7 @@ namespace DisCatSharp.Common
 		}
 
 		/// <summary>
-		/// Checks whether this proerty's value is equal to another value.
+		/// Checks whether this property's value is equal to another value.
 		/// </summary>
 		/// <param name="other">Value to compare this property's value against.</param>
 		/// <returns>Whether the supplied value is equal to the value of this property.</returns>

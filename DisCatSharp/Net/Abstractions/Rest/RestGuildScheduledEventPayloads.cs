@@ -29,7 +29,7 @@ using Newtonsoft.Json;
 namespace DisCatSharp.Net.Abstractions
 {
 	/// <summary>
-	/// The rest guild sheduled event create payload.
+	/// The rest guild scheduled event create payload.
 	/// </summary>
 	internal class RestGuildScheduledEventCreatePayload
 	{
@@ -89,7 +89,7 @@ namespace DisCatSharp.Net.Abstractions
 	}
 
 	/// <summary>
-	/// The rest guild sheduled event modify payload.
+	/// The rest guild scheduled event modify payload.
 	/// </summary>
 	internal class RestGuildSheduledEventModifyPayload
 	{

@@ -25,7 +25,7 @@ using DisCatSharp.Entities;
 namespace DisCatSharp.ApplicationCommands
 {
 	/// <summary>
-	/// Respresents a context for a context menu.
+	/// Represents a context for a context menu.
 	/// </summary>
 	public sealed class ContextMenuContext : BaseContext
 	{
