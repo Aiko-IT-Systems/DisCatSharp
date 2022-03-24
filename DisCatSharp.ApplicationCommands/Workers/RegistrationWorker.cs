@@ -187,7 +187,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <param name="guildId">The target guild id.</param>
 		/// <param name="commands">The command list.</param>
 		/// <returns>A list of registered commands.</returns>
-		internal static async Task<List<DiscordApplicationCommand>> RegisterGuilldCommandsAsync(ulong guildId, List<DiscordApplicationCommand> commands)
+		internal static async Task<List<DiscordApplicationCommand>> RegisterGuildCommandsAsync(ulong guildId, List<DiscordApplicationCommand> commands)
 		{
 			var (changedCommands, unchangedCommands) = BuildGuildOverwriteList(guildId, commands);
 			var guildCommandsCreateList = BuildGuildCreateList(guildId, commands);

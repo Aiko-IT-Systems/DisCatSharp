@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -69,11 +70,14 @@ namespace DisCatSharp.Net.Models
 		/// </summary>
 		public int? Bitrate { internal get; set; }
 
+		[Obsolete("Use properly capitalized UserLimit property")]
+		public int? Userlimit { set => this.UserLimit = value; }
+
 		/// <summary>
 		/// <para>Sets the voice channel's new user limit.</para>
 		/// <para>Setting this to 0 will disable the user limit.</para>
 		/// </summary>
-		public int? Userlimit { internal get; set; }
+		public int? UserLimit { internal get; set; }
 
 		/// <summary>
 		/// <para>Sets the channel's new slow mode timeout.</para>

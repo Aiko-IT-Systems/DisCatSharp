@@ -91,7 +91,7 @@ namespace DisCatSharp.Net.Abstractions
 	/// <summary>
 	/// The rest guild scheduled event modify payload.
 	/// </summary>
-	internal class RestGuildSheduledEventModifyPayload
+	internal class RestGuildScheduledEventModifyPayload
 	{
 		/// <summary>
 		/// Gets or sets the channel id.

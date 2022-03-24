@@ -40,14 +40,14 @@ namespace DisCatSharp.ApplicationCommands
 		/// Updates the application command permissions.
 		/// </summary>
 		/// <param name="types">The types.</param>
-		/// <param name="guildid">The optional guild id.</param>
+		/// <param name="guildId">The optional guild id.</param>
 		/// <param name="commandId">The command id.</param>
 		/// <param name="commandName">The command name.</param>
 		/// <param name="commandDeclaringType">The declaring command type.</param>
 		/// <param name="commandRootType">The root command type.</param>
-		internal static async Task UpdateCommandPermissionAsync(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildid, ulong commandId, string commandName, Type commandDeclaringType, Type commandRootType)
+		internal static async Task UpdateCommandPermissionAsync(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildId, ulong commandId, string commandName, Type commandDeclaringType, Type commandRootType)
 		{
-			if (!guildid.HasValue)
+			if (!guildId.HasValue)
 			{
 				ApplicationCommandsExtension.ClientInternal.Logger.LogTrace("You can't set global permissions till yet. See https://discord.com/developers/docs/interactions/application-commands#permissions");
 				return;
@@ -60,9 +60,9 @@ namespace DisCatSharp.ApplicationCommands
 			if (ctx.Permissions.Count == 0)
 				return;
 
-			ApplicationCommandsExtension.ClientInternal.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC Perms] Command {commandName} permission update on {guildid.Value}");
+			ApplicationCommandsExtension.ClientInternal.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC Perms] Command {commandName} permission update on {guildId.Value}");
 
-			await ApplicationCommandsExtension.ClientInternal.OverwriteGuildApplicationCommandPermissionsAsync(guildid.Value, commandId, ctx.Permissions);
+			await ApplicationCommandsExtension.ClientInternal.OverwriteGuildApplicationCommandPermissionsAsync(guildId.Value, commandId, ctx.Permissions);
 		}
 
 		/// <summary>
