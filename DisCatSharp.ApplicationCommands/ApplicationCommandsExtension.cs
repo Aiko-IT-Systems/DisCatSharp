@@ -2030,7 +2030,7 @@ namespace DisCatSharp.ApplicationCommands
 						sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
 					sb.Append('\n');
-					discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
+					discordEmbed.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
 				}
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
 					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
@@ -2054,7 +2054,7 @@ namespace DisCatSharp.ApplicationCommands
 						sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
 					sb.Append('\n');
-					discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
+					discordEmbed.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
 				}
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
 					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
@@ -2082,7 +2082,7 @@ namespace DisCatSharp.ApplicationCommands
 						sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
 					sb.Append('\n');
-					discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
+					discordEmbed.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
 				}
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
 					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
