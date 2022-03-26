@@ -28,8 +28,6 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
 
-using Newtonsoft.Json;
-
 namespace DisCatSharp.EventArgs
 {
 	/// <summary>

@@ -88,10 +88,10 @@ namespace DisCatSharp.Common.Serialization
 			// ie<double>
 			if (s_doubleEnumerable.IsAssignableFrom(tobj) && obj is IEnumerable<double> ied)
 			{
-				if (ied.Count() < 2)
+				if (!ied.TryFirstTwo(out var values))
 					return false;
 
-				var (real, imag) = ied.FirstTwoOrDefault();
+				var (real, imag) = values;
 				recomposed = new Complex(real, imag);
 				return true;
 			}
@@ -99,10 +99,10 @@ namespace DisCatSharp.Common.Serialization
 			// ie<obj>
 			if (s_objectEnumerable.IsAssignableFrom(tobj) && obj is IEnumerable<object> ieo)
 			{
-				if (ieo.Count() < 2)
+				if (!ieo.TryFirstTwo(out var values))
 					return false;
 
-				var (real, imag) = ieo.FirstTwoOrDefault();
+				var (real, imag) = values;
 				if (real is not double dreal || imag is not double dimag)
 					return false;
 

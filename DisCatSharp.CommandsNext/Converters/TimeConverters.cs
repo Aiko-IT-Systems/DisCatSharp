@@ -43,7 +43,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		Task<Optional<DateTime>> IArgumentConverter<DateTime>.ConvertAsync(string value, CommandContext ctx) =>
 			DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
 				? Task.FromResult(new Optional<DateTime>(result))
-				: Task.FromResult(Optional.FromNoValue<DateTime>());
+				: Task.FromResult(new Optional<DateTime>());
 	}
 
 	/// <summary>
@@ -59,7 +59,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		Task<Optional<DateTimeOffset>> IArgumentConverter<DateTimeOffset>.ConvertAsync(string value, CommandContext ctx) =>
 			DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
 				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<DateTimeOffset>());
+				: Task.FromResult(new Optional<DateTimeOffset>());
 	}
 
 	/// <summary>
@@ -91,7 +91,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				return Task.FromResult(Optional.FromValue(TimeSpan.Zero));
 
 			if (int.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out _))
-				return Task.FromResult(Optional.FromNoValue<TimeSpan>());
+				return Task.FromResult(new Optional<TimeSpan>());
 
 			if (!ctx.Config.CaseSensitive)
 				value = value.ToLowerInvariant();
@@ -102,7 +102,7 @@ namespace DisCatSharp.CommandsNext.Converters
 			var gps = new string[] { "days", "hours", "minutes", "seconds" };
 			var mtc = s_timeSpanRegex.Match(value);
 			if (!mtc.Success)
-				return Task.FromResult(Optional.FromNoValue<TimeSpan>());
+				return Task.FromResult(new Optional<TimeSpan>());
 
 			var d = 0;
 			var h = 0;

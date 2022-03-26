@@ -180,8 +180,8 @@ namespace DisCatSharp.Entities
 			var mdl = new RoleEditModel();
 			action(mdl);
 
-			var iconb64 = Optional.FromNoValue<string>();
-			var emoji = Optional.FromNoValue<string>();
+			var iconb64 = new Optional<string>();
+			var emoji = new Optional<string>();
 			var canContinue = true;
 			if (mdl.Icon.HasValue || mdl.UnicodeEmoji.HasValue)
 				canContinue = this.Discord.Guilds[this.GuildId].Features.CanSetRoleIcons;

@@ -504,7 +504,7 @@ namespace DisCatSharp.Net
 				RulesChannelId = rulesChannelId,
 				PublicUpdatesChannelId = publicUpdatesChannelId,
 				PreferredLocale = preferredLocale,
-				Description = description ?? Optional.FromNoValue<string>(),
+				Description = Optional.FromNullable(description),
 				Features = features
 			};
 

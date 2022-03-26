@@ -534,7 +534,7 @@ namespace DisCatSharp
 		public Task<DiscordGuild> CreateGuildAsync(string name, string region = null, Optional<Stream> icon = default, VerificationLevel? verificationLevel = null,
 			DefaultMessageNotifications? defaultMessageNotifications = null, SystemChannelFlags? systemChannelFlags = null)
 		{
-			var iconb64 = Optional.FromNoValue<string>();
+			var iconb64 = new Optional<string>();
 			if (icon.HasValue && icon.Value != null)
 				using (var imgtool = new ImageTool(icon.Value))
 					iconb64 = imgtool.GetBase64();
@@ -555,7 +555,7 @@ namespace DisCatSharp
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordGuild> CreateGuildFromTemplateAsync(string code, string name, Optional<Stream> icon = default)
 		{
-			var iconb64 = Optional.FromNoValue<string>();
+			var iconb64 = new Optional<string>();
 			if (icon.HasValue && icon.Value != null)
 				using (var imgtool = new ImageTool(icon.Value))
 					iconb64 = imgtool.GetBase64();
@@ -736,7 +736,7 @@ namespace DisCatSharp
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordUser> UpdateCurrentUserAsync(string username = null, Optional<Stream> avatar = default)
 		{
-			var av64 = Optional.FromNoValue<string>();
+			var av64 = new Optional<string>();
 			if (avatar.HasValue && avatar.Value != null)
 				using (var imgtool = new ImageTool(avatar.Value))
 					av64 = imgtool.GetBase64();

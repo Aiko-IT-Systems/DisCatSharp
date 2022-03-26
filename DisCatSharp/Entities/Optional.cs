@@ -42,26 +42,48 @@ namespace DisCatSharp.Entities
 	public static class Optional
 	{
 		/// <summary>
+		/// Provided for easy creation of empty <see cref="Optional{T}"/>s.
+		/// </summary>
+		public static readonly None None = new();
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		public static Optional<T> FromNullable<T>(T value)
+			=> value is null
+				? None
+				: value;
+
+		/// <summary>
 		/// Creates a new <see cref="Optional{T}"/> with specified value and valid state.
 		/// </summary>
 		/// <param name="value">Value to populate the optional with.</param>
 		/// <typeparam name="T">Type of the value.</typeparam>
 		/// <returns>Created optional.</returns>
 		public static Optional<T> FromValue<T>(T value)
-			=> new(value);
+			=> value;
 
 		/// <summary>
 		/// Creates a new empty <see cref="Optional{T}"/> with no value and invalid state.
 		/// </summary>
 		/// <typeparam name="T">The type that the created instance is wrapping around.</typeparam>
 		/// <returns>Created optional.</returns>
+		[Obsolete("Use the None unit type and the default constructor.")]
 		public static Optional<T> FromNoValue<T>()
 			=> default;
 	}
 
-	// used internally to make serialization more convenient, do NOT change this, do NOT implement this yourself
 	/// <summary>
-	/// Represents a IOptional interface.
+	/// Unit type for creating an empty <see cref="Optional{T}"/>s.
+	/// </summary>
+	public struct None
+	{ }
+
+	/// <summary>
+	/// Used internally to make serialization more convenient, do NOT change this, do NOT implement this yourself.
 	/// </summary>
 	internal interface IOptional
 	{
@@ -112,6 +134,35 @@ namespace DisCatSharp.Entities
 		}
 
 		/// <summary>
+		/// Gets the <see cref="Optional"/>'s value, or throws the provided exception if it's empty.
+		/// </summary>
+		/// <param name="err">The exception to throw if the optional is empty.</param>
+		/// <returns></returns>
+		public T Expect(Exception err)
+		{
+			if (!this.HasValue)
+				throw err;
+
+			return this._val;
+		}
+
+		/// <summary>
+		/// Gets the <see cref="Optional"/>'s value, or throws a standard exception with the provided string if it's
+		/// empty.
+		/// </summary>
+		/// <param name="str">The string provided to the exception.</param>
+		/// <returns>The value.</returns>
+		public T Expect(string str) => this.Expect(new InvalidOperationException(str));
+
+		/// <summary>
+		/// Checks if this has a value and tests the predicate if it does.
+		/// </summary>
+		/// <param name="predicate">The predicate to test if this has a value.</param>
+		/// <returns>True if this has a value and the predicate is fulfilled, false otherwise.</returns>
+		public bool HasValueAnd(Predicate<T> predicate)
+			=> this.HasValue && predicate(this._val);
+
+		/// <summary>
 		/// Returns a string representation of this optional value.
 		/// </summary>
 		/// <returns>String representation of this optional value.</returns>
@@ -157,6 +208,11 @@ namespace DisCatSharp.Entities
 
 		public static explicit operator T(Optional<T> opt)
 			=> opt.Value;
+
+		/// <summary>
+		/// Creates an empty optional.
+		/// </summary>
+		public static implicit operator Optional<T>(None _) => default;
 
 		public static bool operator ==(Optional<T> opt1, Optional<T> opt2)
 			=> opt1.Equals(opt2);

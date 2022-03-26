@@ -204,7 +204,7 @@ namespace DisCatSharp.Entities
 			var mdl = new ScheduledEventEditModel();
 			action(mdl);
 
-			var channelId = Optional.FromNoValue<ulong?>();
+			var channelId = new Optional<ulong?>();
 			if (mdl.Channel.HasValue && (mdl.Channel.Value.Type != ChannelType.Voice || mdl.Channel.Value.Type != ChannelType.Stage) && mdl.Channel.Value != null)
 				throw new ArgumentException("Channel needs to be a voice or stage channel.");
 			else if (mdl.Channel.HasValue && mdl.Channel.Value != null)
@@ -213,13 +213,13 @@ namespace DisCatSharp.Entities
 			if (this.EntityType != ScheduledEventEntityType.External && mdl.EntityType == ScheduledEventEntityType.External)
 				channelId = null;
 
-			var description = Optional.FromNoValue<string>();
+			var description = new Optional<string>();
 			if (mdl.Description.HasValue && mdl.Description.Value != null)
 				description = mdl.Description;
 			else if (mdl.Description.HasValue)
 				description = null;
 
-			var coverb64 = Optional.FromNoValue<string>();
+			var coverb64 = new Optional<string>();
 
 			if (mdl.CoverImage.HasValue && mdl.CoverImage.Value != null)
 				using (var imgtool = new ImageTool(mdl.CoverImage.Value))
@@ -228,8 +228,8 @@ namespace DisCatSharp.Entities
 				coverb64 = null;
 
 
-			var scheduledEndTime = Optional.FromNoValue<DateTimeOffset>();
-			if (mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
+			var scheduledEndTime = new Optional<DateTimeOffset>();
+			if (mdl.ScheduledEndTime.HasValue && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
 				scheduledEndTime = mdl.ScheduledEndTime.Value;
 
 			await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.Status, coverb64, mdl.AuditLogReason);

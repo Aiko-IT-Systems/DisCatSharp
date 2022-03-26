@@ -404,7 +404,7 @@ namespace DisCatSharp.Entities
 			}
 			if (!this.IsWritable())
 			{
-				perUserRateLimit = Optional.FromNoValue<int?>();
+				perUserRateLimit = Optional.None;
 			}
 
 			return await this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNsfw, perUserRateLimit, this.QualityMode, reason).ConfigureAwait(false);
@@ -451,7 +451,7 @@ namespace DisCatSharp.Entities
 					throw new NotSupportedException($"Cannot modify Banner. Guild needs boost tier three.");
 			}
 
-			var bannerb64 = Optional.FromNoValue<string>();
+			var bannerb64 = new Optional<string>();
 			if (mdl.Banner.HasValue && mdl.Banner.Value != null)
 				using (var imgtool = new ImageTool(mdl.Banner.Value))
 					bannerb64 = imgtool.GetBase64();
@@ -980,7 +980,7 @@ namespace DisCatSharp.Entities
 			if (!this.IsVoiceJoinable())
 				throw new NotSupportedException("Cannot create a scheduled event for this type of channel. Channel type must be either voice or stage.");
 
-			var coverb64 = Optional.FromNoValue<string>();
+			var coverb64 = new Optional<string>();
 			if (coverImage.HasValue && coverImage.Value != null)
 				using (var imgtool = new ImageTool(coverImage.Value))
 					coverb64 = imgtool.GetBase64();
@@ -1156,7 +1156,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordWebhook> CreateWebhookAsync(string name, Optional<Stream> avatar = default, string reason = null)
 		{
-			var av64 = Optional.FromNoValue<string>();
+			var av64 = new Optional<string>();
 			if (avatar.HasValue && avatar.Value != null)
 				using (var imgtool = new ImageTool(avatar.Value))
 					av64 = imgtool.GetBase64();

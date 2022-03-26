@@ -713,7 +713,7 @@ namespace DisCatSharp.Entities
 			var mdl = new GuildEditModel();
 			action(mdl);
 
-			var afkChannelId = Optional.FromNoValue<ulong?>();
+			var afkChannelId = new Optional<ulong?>();
 			if (mdl.AfkChannel.HasValue && mdl.AfkChannel.Value.Type != ChannelType.Voice && mdl.AfkChannel.Value != null)
 				throw new ArgumentException("AFK channel needs to be a voice channel.");
 			else if (mdl.AfkChannel.HasValue && mdl.AfkChannel.Value != null)
@@ -721,7 +721,7 @@ namespace DisCatSharp.Entities
 			else if (mdl.AfkChannel.HasValue)
 				afkChannelId = null;
 
-			var rulesChannelId = Optional.FromNoValue<ulong?>();
+			var rulesChannelId = new Optional<ulong?>();
 			if (mdl.RulesChannel.HasValue && mdl.RulesChannel.Value != null && mdl.RulesChannel.Value.Type != ChannelType.Text && mdl.RulesChannel.Value.Type != ChannelType.News)
 				throw new ArgumentException("Rules channel needs to be a text channel.");
 			else if (mdl.RulesChannel.HasValue && mdl.RulesChannel.Value != null)
@@ -729,7 +729,7 @@ namespace DisCatSharp.Entities
 			else if (mdl.RulesChannel.HasValue)
 				rulesChannelId = null;
 
-			var publicUpdatesChannelId = Optional.FromNoValue<ulong?>();
+			var publicUpdatesChannelId = new Optional<ulong?>();
 			if (mdl.PublicUpdatesChannel.HasValue && mdl.PublicUpdatesChannel.Value != null && mdl.PublicUpdatesChannel.Value.Type != ChannelType.Text && mdl.PublicUpdatesChannel.Value.Type != ChannelType.News)
 				throw new ArgumentException("Public updates channel needs to be a text channel.");
 			else if (mdl.PublicUpdatesChannel.HasValue && mdl.PublicUpdatesChannel.Value != null)
@@ -737,7 +737,7 @@ namespace DisCatSharp.Entities
 			else if (mdl.PublicUpdatesChannel.HasValue)
 				publicUpdatesChannelId = null;
 
-			var systemChannelId = Optional.FromNoValue<ulong?>();
+			var systemChannelId = new Optional<ulong?>();
 			if (mdl.SystemChannel.HasValue && mdl.SystemChannel.Value != null && mdl.SystemChannel.Value.Type != ChannelType.Text && mdl.SystemChannel.Value.Type != ChannelType.News)
 				throw new ArgumentException("Public updates channel needs to be a text channel.");
 			else if (mdl.SystemChannel.HasValue && mdl.SystemChannel.Value != null)
@@ -745,35 +745,35 @@ namespace DisCatSharp.Entities
 			else if (mdl.SystemChannel.HasValue)
 				systemChannelId = null;
 
-			var iconb64 = Optional.FromNoValue<string>();
+			var iconb64 = new Optional<string>();
 			if (mdl.Icon.HasValue && mdl.Icon.Value != null)
 				using (var imgtool = new ImageTool(mdl.Icon.Value))
 					iconb64 = imgtool.GetBase64();
 			else if (mdl.Icon.HasValue)
 				iconb64 = null;
 
-			var splashb64 = Optional.FromNoValue<string>();
+			var splashb64 = new Optional<string>();
 			if (mdl.Splash.HasValue && mdl.Splash.Value != null)
 				using (var imgtool = new ImageTool(mdl.Splash.Value))
 					splashb64 = imgtool.GetBase64();
 			else if (mdl.Splash.HasValue)
 				splashb64 = null;
 
-			var bannerb64 = Optional.FromNoValue<string>();
+			var bannerb64 = new Optional<string>();
 			if (mdl.Banner.HasValue && mdl.Banner.Value != null)
 				using (var imgtool = new ImageTool(mdl.Banner.Value))
 					bannerb64 = imgtool.GetBase64();
 			else if (mdl.Banner.HasValue)
 				bannerb64 = null;
 
-			var discoverySplash64 = Optional.FromNoValue<string>();
+			var discoverySplash64 = new Optional<string>();
 			if (mdl.DiscoverySplash.HasValue && mdl.DiscoverySplash.Value != null)
 				using (var imgtool = new ImageTool(mdl.DiscoverySplash.Value))
 					discoverySplash64 = imgtool.GetBase64();
 			else if (mdl.DiscoverySplash.HasValue)
 				discoverySplash64 = null;
 
-			var description = Optional.FromNoValue<string>();
+			var description = new Optional<string>();
 			if (mdl.Description.HasValue && mdl.Description.Value != null)
 				description = mdl.Description;
 			else if (mdl.Description.HasValue)
@@ -811,7 +811,7 @@ namespace DisCatSharp.Entities
 
 			var explicitContentFilter = ExplicitContentFilter.AllMembers;
 
-			var rulesChannelId = Optional.FromNoValue<ulong?>();
+			var rulesChannelId = new Optional<ulong?>();
 			if (rulesChannel != null && rulesChannel.Type != ChannelType.Text && rulesChannel.Type != ChannelType.News)
 				throw new ArgumentException("Rules channel needs to be a text channel.");
 			else if (rulesChannel != null)
@@ -819,7 +819,7 @@ namespace DisCatSharp.Entities
 			else if (rulesChannel == null)
 				rulesChannelId = null;
 
-			var publicUpdatesChannelId = Optional.FromNoValue<ulong?>();
+			var publicUpdatesChannelId = new Optional<ulong?>();
 			if (publicUpdatesChannel != null && publicUpdatesChannel.Type != ChannelType.Text && publicUpdatesChannel.Type != ChannelType.News)
 				throw new ArgumentException("Public updates channel needs to be a text channel.");
 			else if (publicUpdatesChannel != null)
@@ -1008,7 +1008,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime = null, DiscordChannel channel = null, DiscordScheduledEventEntityMetadata metadata = null, string description = null, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, Optional<Stream> coverImage = default, string reason = null)
 		{
-			var coverb64 = Optional.FromNoValue<string>();
+			var coverb64 = new Optional<string>();
 			if (coverImage.HasValue && coverImage.Value != null)
 				using (var imgtool = new ImageTool(coverImage.Value))
 					coverb64 = imgtool.GetBase64();
@@ -1034,7 +1034,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset scheduledEndTime, string location, string description = null, Optional<Stream> coverImage = default, string reason = null)
 		{
-			var coverb64 = Optional.FromNoValue<string>();
+			var coverb64 = new Optional<string>();
 			if (coverImage.HasValue && coverImage.Value != null)
 				using (var imgtool = new ImageTool(coverImage.Value))
 					coverb64 = imgtool.GetBase64();
@@ -1111,7 +1111,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordChannel> CreateChannelCategoryAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-			=> this.CreateChannelAsync(name, ChannelType.Category, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason);
+			=> this.CreateChannelAsync(name, ChannelType.Category, null, Optional.None, null, null, overwrites, null, Optional.None, null, reason);
 
 		/// <summary>
 		/// Creates a new stage channel in this guild.
@@ -1126,7 +1126,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <exception cref="System.NotSupportedException">Thrown when the guilds has not enabled community.</exception>
 		public Task<DiscordChannel> CreateStageChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-			=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
+			=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.None, null, null, overwrites, null, new Optional<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
 
 		/// <summary>
 		/// Creates a new news channel in this guild.
@@ -1141,7 +1141,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <exception cref="System.NotSupportedException">Thrown when the guilds has not enabled community.</exception>
 		public Task<DiscordChannel> CreateNewsChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-			=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
+			=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.None, null, null, overwrites, null, new Optional<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
 
 		/// <summary>
 		/// Creates a new voice channel in this guild.
@@ -1159,7 +1159,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordChannel> CreateVoiceChannelAsync(string name, DiscordChannel parent = null, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, VideoQualityMode? qualityMode = null, string reason = null)
-			=> this.CreateChannelAsync(name, ChannelType.Voice, parent, Optional.FromNoValue<string>(), bitrate, userLimit, overwrites, null, Optional.FromNoValue<int?>(), qualityMode, reason);
+			=> this.CreateChannelAsync(name, ChannelType.Voice, parent, Optional.None, bitrate, userLimit, overwrites, null, new Optional<int?>(), qualityMode, reason);
 
 		/// <summary>
 		/// Creates a new channel in this guild.
