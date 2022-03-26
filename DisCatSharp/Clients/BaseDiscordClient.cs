@@ -213,11 +213,11 @@ namespace DisCatSharp
 				app.TeamName = app.Team.Name;
 			}
 
-			app.GuildId = tapp.GuildId.HasValue ? tapp.GuildId.Value : null;
-			app.Slug = tapp.Slug.HasValue ? tapp.Slug.Value : null;
-			app.PrimarySkuId = tapp.PrimarySkuId.HasValue ? tapp.PrimarySkuId.Value : null;
-			app.VerifyKey = tapp.VerifyKey.HasValue ? tapp.VerifyKey.Value : null;
-			app.CoverImageHash = tapp.CoverImageHash.HasValue ? tapp.CoverImageHash.Value : null;
+			app.GuildId = tapp.GuildId.ValueOrDefault();
+			app.Slug = tapp.Slug.ValueOrDefault();
+			app.PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault();
+			app.VerifyKey = tapp.VerifyKey.ValueOrDefault();
+			app.CoverImageHash = tapp.CoverImageHash.ValueOrDefault();
 
 			return app;
 		}

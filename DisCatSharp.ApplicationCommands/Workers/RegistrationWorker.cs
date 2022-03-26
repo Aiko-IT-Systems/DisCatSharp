@@ -68,7 +68,7 @@ namespace DisCatSharp.ApplicationCommands
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
-							action.Options = Entities.Optional.FromValue(command.Options);
+							action.Options = Entities.Optional.Some(command.Options);
 						action.DefaultPermission = command.DefaultPermission;
 					});
 
@@ -99,7 +99,7 @@ namespace DisCatSharp.ApplicationCommands
 							action.Description = command.Description;
 							action.DescriptionLocalizations = command.DescriptionLocalizations;
 							if(command.Options != null && command.Options.Any())
-								action.Options = Entities.Optional.FromValue(command.Options);
+								action.Options = Entities.Optional.Some(command.Options);
 							action.DefaultPermission = command.DefaultPermission;
 						});
 
@@ -124,7 +124,7 @@ namespace DisCatSharp.ApplicationCommands
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
-							action.Options = Entities.Optional.FromValue(command.Options);
+							action.Options = Entities.Optional.Some(command.Options);
 						action.DefaultPermission = command.DefaultPermission;
 					});
 
@@ -213,7 +213,7 @@ namespace DisCatSharp.ApplicationCommands
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
-							action.Options = Entities.Optional.FromValue(command.Options);
+							action.Options = Entities.Optional.Some(command.Options);
 						action.DefaultPermission = command.DefaultPermission;
 					});
 
@@ -244,7 +244,7 @@ namespace DisCatSharp.ApplicationCommands
 							action.Description = command.Description;
 							action.DescriptionLocalizations = command.DescriptionLocalizations;
 							if(command.Options != null && command.Options.Any())
-								action.Options = Entities.Optional.FromValue(command.Options);
+								action.Options = Entities.Optional.Some(command.Options);
 							action.DefaultPermission = command.DefaultPermission;
 						});
 
@@ -269,7 +269,7 @@ namespace DisCatSharp.ApplicationCommands
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
-							action.Options = Entities.Optional.FromValue(command.Options);
+							action.Options = Entities.Optional.Some(command.Options);
 						action.DefaultPermission = command.DefaultPermission;
 					});
 

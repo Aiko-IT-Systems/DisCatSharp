@@ -488,15 +488,15 @@ namespace DisCatSharp.Entities
 				await this.Discord.ApiClient.ModifyCurrentMemberNicknameAsync(this.Guild.Id, mdl.Nickname.Value,
 					mdl.AuditLogReason).ConfigureAwait(false);
 
-				await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, Optional.FromNoValue<string>(),
-					mdl.Roles.IfPresent(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
-					mdl.VoiceChannel.IfPresent(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
+				await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, Optional.None,
+					mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
+					mdl.VoiceChannel.Map(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
 			}
 			else
 			{
 				await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, mdl.Nickname,
-					mdl.Roles.IfPresent(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
-					mdl.VoiceChannel.IfPresent(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
+					mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
+					mdl.VoiceChannel.Map(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
 			}
 		}
 
@@ -581,7 +581,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task ReplaceRolesAsync(IEnumerable<DiscordRole> roles, string reason = null)
 			=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, default,
-				new Optional<IEnumerable<ulong>>(roles.Select(xr => xr.Id)), default, default, default, reason);
+				Optional.Some(roles.Select(xr => xr.Id)), default, default, default, reason);
 
 		/// <summary>
 		/// Bans this member from their guild.

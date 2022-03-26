@@ -55,7 +55,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonIgnore]
 		public DiscordScheduledEvent ScheduledEvent
-			=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild.ScheduledEvents.TryGetValue(this.EventId, out var scheduledEvent) ? scheduledEvent : null : null;
+			=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) && guild.ScheduledEvents.TryGetValue(this.EventId, out var scheduledEvent) ? scheduledEvent : null;
 
 		/// <summary>
 		/// Gets or sets the event id.

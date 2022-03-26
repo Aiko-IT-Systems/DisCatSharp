@@ -184,14 +184,14 @@ namespace DisCatSharp.Enums
 		/// <summary>
 		/// discordapp.io
 		/// </summary>
-		[Obsolete("Not in use", false)]
+		[Obsolete("Not in use.", false)]
 		[DomainHelp("IO domain for discord", "discordapp.io")]
 		DiscordAppIo = 1,
 
 		/// <summary>
 		/// discordcdn.com
 		/// </summary>
-		[Obsolete("Not in use", false)]
+		[Obsolete("Not in use.", false)]
 		[DomainHelp("Alternative CDN domain", "discordcdn.com")]
 		DiscordCdnCom = 2
 	}
