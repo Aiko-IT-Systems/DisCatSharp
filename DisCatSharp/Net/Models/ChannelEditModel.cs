@@ -70,7 +70,7 @@ namespace DisCatSharp.Net.Models
 		/// </summary>
 		public int? Bitrate { internal get; set; }
 
-		[Obsolete("Use properly capitalized UserLimit property")]
+		[Obsolete("Use properly capitalized UserLimit property.")]
 		public int? Userlimit { set => this.UserLimit = value; }
 
 		/// <summary>

@@ -455,23 +455,28 @@ namespace DisCatSharp.Common
 			=> Knuth(chars.AsSpan(start, count));
 
 		/// <summary>
-		/// Firsts the two or default.
+		/// Gets the two first elements of the <see cref="IEnumerable{T}"/>, if they exist.
 		/// </summary>
 		/// <param name="enumerable">The enumerable.</param>
-		/// <returns>A (T first, T second) .</returns>
-		internal static (T first, T second) FirstTwoOrDefault<T>(this IEnumerable<T> enumerable)
+		/// <param name="values">The output values. Undefined if <code>false</code> is returned.</param>
+		/// <returns>Whether the <see cref="IEnumerable{T}"/> contained enough elements.</returns>
+		internal static bool TryFirstTwo<T>(this IEnumerable<T> enumerable, out (T first, T second) values)
 		{
+			values = default;
+
 			using var enumerator = enumerable.GetEnumerator();
 
 			if (!enumerator.MoveNext())
-				return (default, default);
+				return false;
 
 			var first = enumerator.Current;
 
 			if (!enumerator.MoveNext())
-				return (first, default);
+				return false;
 
-			return (first, enumerator.Current);
+
+			values = (first, enumerator.Current);
+			return true;
 		}
 
 		/// <summary>

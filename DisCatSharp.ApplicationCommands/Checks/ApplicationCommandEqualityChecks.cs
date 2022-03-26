@@ -20,12 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
-using DisCatSharp.Common;
+
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;

@@ -39,8 +39,8 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<bool>> IArgumentConverter<bool>.ConvertAsync(string value, CommandContext ctx) =>
 			bool.TryParse(value, out var result)
-				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<bool>());
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<bool>.None);
 	}
 
 	/// <summary>
@@ -55,8 +55,8 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<sbyte>> IArgumentConverter<sbyte>.ConvertAsync(string value, CommandContext ctx) =>
 			sbyte.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
-				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<sbyte>());
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<sbyte>.None);
 	}
 
 	/// <summary>
@@ -71,8 +71,8 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<byte>> IArgumentConverter<byte>.ConvertAsync(string value, CommandContext ctx) =>
 			byte.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
-				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<byte>());
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<byte>.None);
 	}
 
 	/// <summary>
@@ -87,8 +87,8 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<short>> IArgumentConverter<short>.ConvertAsync(string value, CommandContext ctx) =>
 			short.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
-				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<short>());
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<short>.None);
 	}
 
 	/// <summary>
@@ -103,8 +103,8 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<ushort>> IArgumentConverter<ushort>.ConvertAsync(string value, CommandContext ctx) =>
 			ushort.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
-				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<ushort>());
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<ushort>.None);
 	}
 
 	/// <summary>
@@ -119,8 +119,8 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<int>> IArgumentConverter<int>.ConvertAsync(string value, CommandContext ctx) =>
 			int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
-				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<int>());
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<int>.None);
 	}
 
 	/// <summary>
@@ -135,8 +135,8 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<uint>> IArgumentConverter<uint>.ConvertAsync(string value, CommandContext ctx) =>
 			uint.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
-				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<uint>());
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<uint>.None);
 	}
 
 	/// <summary>
@@ -151,8 +151,8 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<long>> IArgumentConverter<long>.ConvertAsync(string value, CommandContext ctx) =>
 			long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
-				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<long>());
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<long>.None);
 	}
 
 	/// <summary>
@@ -167,8 +167,8 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<ulong>> IArgumentConverter<ulong>.ConvertAsync(string value, CommandContext ctx) =>
 			ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
-				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<ulong>());
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<ulong>.None);
 	}
 
 	/// <summary>
@@ -183,8 +183,8 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<float>> IArgumentConverter<float>.ConvertAsync(string value, CommandContext ctx) =>
 			float.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var result)
-				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<float>());
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<float>.None);
 	}
 
 	/// <summary>
@@ -199,8 +199,8 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<double>> IArgumentConverter<double>.ConvertAsync(string value, CommandContext ctx) =>
 			double.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var result)
-				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<double>());
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<double>.None);
 	}
 
 	/// <summary>
@@ -215,7 +215,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<decimal>> IArgumentConverter<decimal>.ConvertAsync(string value, CommandContext ctx) =>
 			decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var result)
-				? Task.FromResult(Optional.FromValue(result))
-				: Task.FromResult(Optional.FromNoValue<decimal>());
+				? Task.FromResult(Optional.Some(result))
+				: Task.FromResult(Optional<decimal>.None);
 	}
 }

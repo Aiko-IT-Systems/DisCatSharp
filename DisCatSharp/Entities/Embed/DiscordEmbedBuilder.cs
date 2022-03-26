@@ -365,7 +365,7 @@ namespace DisCatSharp.Entities
 		/// <param name="value">Value of the field to add.</param>
 		/// <param name="inline">Whether the field is to be inline or not.</param>
 		/// <returns>This embed builder.</returns>
-		[Obsolete("DiscordEmbedFields should be constructed manually")]
+		[Obsolete("DiscordEmbedFields should be constructed manually.")]
 		public DiscordEmbedBuilder AddField(string name, string value, bool inline = false)
 			=> this.AddField(new DiscordEmbedField(name, value, inline));
 
@@ -477,7 +477,7 @@ namespace DisCatSharp.Entities
 				Title = this._title,
 				Description = this._description,
 				Url = this._url,
-				ColorInternal = this.Color.IfPresent(e => e.Value),
+				ColorInternal = this.Color.Map(e => e.Value),
 				Timestamp = this.Timestamp
 			};
 

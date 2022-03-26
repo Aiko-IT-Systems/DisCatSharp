@@ -534,13 +534,7 @@ namespace DisCatSharp
 		public Task<DiscordGuild> CreateGuildAsync(string name, string region = null, Optional<Stream> icon = default, VerificationLevel? verificationLevel = null,
 			DefaultMessageNotifications? defaultMessageNotifications = null, SystemChannelFlags? systemChannelFlags = null)
 		{
-			var iconb64 = Optional.FromNoValue<string>();
-			if (icon.HasValue && icon.Value != null)
-				using (var imgtool = new ImageTool(icon.Value))
-					iconb64 = imgtool.GetBase64();
-			else if (icon.HasValue)
-				iconb64 = null;
-
+			var iconb64 = ImageTool.Base64FromStream(icon);
 			return this.ApiClient.CreateGuildAsync(name, region, iconb64, verificationLevel, defaultMessageNotifications, systemChannelFlags);
 		}
 
@@ -555,13 +549,7 @@ namespace DisCatSharp
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordGuild> CreateGuildFromTemplateAsync(string code, string name, Optional<Stream> icon = default)
 		{
-			var iconb64 = Optional.FromNoValue<string>();
-			if (icon.HasValue && icon.Value != null)
-				using (var imgtool = new ImageTool(icon.Value))
-					iconb64 = imgtool.GetBase64();
-			else if (icon.HasValue)
-				iconb64 = null;
-
+			var iconb64 = ImageTool.Base64FromStream(icon);
 			return this.ApiClient.CreateGuildFromTemplateAsync(code, name, iconb64);
 		}
 
@@ -736,12 +724,7 @@ namespace DisCatSharp
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordUser> UpdateCurrentUserAsync(string username = null, Optional<Stream> avatar = default)
 		{
-			var av64 = Optional.FromNoValue<string>();
-			if (avatar.HasValue && avatar.Value != null)
-				using (var imgtool = new ImageTool(avatar.Value))
-					av64 = imgtool.GetBase64();
-			else if (avatar.HasValue)
-				av64 = null;
+			var av64 = ImageTool.Base64FromStream(avatar);
 
 			var usr = await this.ApiClient.ModifyCurrentUserAsync(username, av64).ConfigureAwait(false);
 

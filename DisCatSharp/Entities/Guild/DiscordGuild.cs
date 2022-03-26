@@ -713,77 +713,30 @@ namespace DisCatSharp.Entities
 			var mdl = new GuildEditModel();
 			action(mdl);
 
-			var afkChannelId = Optional.FromNoValue<ulong?>();
-			if (mdl.AfkChannel.HasValue && mdl.AfkChannel.Value.Type != ChannelType.Voice && mdl.AfkChannel.Value != null)
-				throw new ArgumentException("AFK channel needs to be a voice channel.");
-			else if (mdl.AfkChannel.HasValue && mdl.AfkChannel.Value != null)
-				afkChannelId = mdl.AfkChannel.Value.Id;
-			else if (mdl.AfkChannel.HasValue)
-				afkChannelId = null;
+			var afkChannelId = mdl.PublicUpdatesChannel
+				.MapOrNull<ulong?>(c => c.Type != ChannelType.Voice
+					? throw new ArgumentException("AFK channel needs to be a text channel.")
+					: c.Id);
 
-			var rulesChannelId = Optional.FromNoValue<ulong?>();
-			if (mdl.RulesChannel.HasValue && mdl.RulesChannel.Value != null && mdl.RulesChannel.Value.Type != ChannelType.Text && mdl.RulesChannel.Value.Type != ChannelType.News)
-				throw new ArgumentException("Rules channel needs to be a text channel.");
-			else if (mdl.RulesChannel.HasValue && mdl.RulesChannel.Value != null)
-				rulesChannelId = mdl.RulesChannel.Value.Id;
-			else if (mdl.RulesChannel.HasValue)
-				rulesChannelId = null;
+			static Optional<ulong?> ChannelToId(Optional<DiscordChannel> ch, string name)
+				=> ch.MapOrNull<ulong?>(c => c.Type != ChannelType.Text && c.Type != ChannelType.News
+					? throw new ArgumentException($"{name} channel needs to be a text channel.")
+					: c.Id);
 
-			var publicUpdatesChannelId = Optional.FromNoValue<ulong?>();
-			if (mdl.PublicUpdatesChannel.HasValue && mdl.PublicUpdatesChannel.Value != null && mdl.PublicUpdatesChannel.Value.Type != ChannelType.Text && mdl.PublicUpdatesChannel.Value.Type != ChannelType.News)
-				throw new ArgumentException("Public updates channel needs to be a text channel.");
-			else if (mdl.PublicUpdatesChannel.HasValue && mdl.PublicUpdatesChannel.Value != null)
-				publicUpdatesChannelId = mdl.PublicUpdatesChannel.Value.Id;
-			else if (mdl.PublicUpdatesChannel.HasValue)
-				publicUpdatesChannelId = null;
+			var rulesChannelId = ChannelToId(mdl.RulesChannel, "Rules");
+			var publicUpdatesChannelId = ChannelToId(mdl.PublicUpdatesChannel, "Public updates");
+			var systemChannelId = ChannelToId(mdl.SystemChannel, "System");
 
-			var systemChannelId = Optional.FromNoValue<ulong?>();
-			if (mdl.SystemChannel.HasValue && mdl.SystemChannel.Value != null && mdl.SystemChannel.Value.Type != ChannelType.Text && mdl.SystemChannel.Value.Type != ChannelType.News)
-				throw new ArgumentException("Public updates channel needs to be a text channel.");
-			else if (mdl.SystemChannel.HasValue && mdl.SystemChannel.Value != null)
-				systemChannelId = mdl.SystemChannel.Value.Id;
-			else if (mdl.SystemChannel.HasValue)
-				systemChannelId = null;
-
-			var iconb64 = Optional.FromNoValue<string>();
-			if (mdl.Icon.HasValue && mdl.Icon.Value != null)
-				using (var imgtool = new ImageTool(mdl.Icon.Value))
-					iconb64 = imgtool.GetBase64();
-			else if (mdl.Icon.HasValue)
-				iconb64 = null;
-
-			var splashb64 = Optional.FromNoValue<string>();
-			if (mdl.Splash.HasValue && mdl.Splash.Value != null)
-				using (var imgtool = new ImageTool(mdl.Splash.Value))
-					splashb64 = imgtool.GetBase64();
-			else if (mdl.Splash.HasValue)
-				splashb64 = null;
-
-			var bannerb64 = Optional.FromNoValue<string>();
-			if (mdl.Banner.HasValue && mdl.Banner.Value != null)
-				using (var imgtool = new ImageTool(mdl.Banner.Value))
-					bannerb64 = imgtool.GetBase64();
-			else if (mdl.Banner.HasValue)
-				bannerb64 = null;
-
-			var discoverySplash64 = Optional.FromNoValue<string>();
-			if (mdl.DiscoverySplash.HasValue && mdl.DiscoverySplash.Value != null)
-				using (var imgtool = new ImageTool(mdl.DiscoverySplash.Value))
-					discoverySplash64 = imgtool.GetBase64();
-			else if (mdl.DiscoverySplash.HasValue)
-				discoverySplash64 = null;
-
-			var description = Optional.FromNoValue<string>();
-			if (mdl.Description.HasValue && mdl.Description.Value != null)
-				description = mdl.Description;
-			else if (mdl.Description.HasValue)
-				description = null;
+			var iconb64 = ImageTool.Base64FromStream(mdl.Icon);
+			var splashb64 = ImageTool.Base64FromStream(mdl.Splash);
+			var bannerb64 = ImageTool.Base64FromStream(mdl.Banner);
+			var discoverySplash64 = ImageTool.Base64FromStream(mdl.DiscoverySplash);
 
 			return await this.Discord.ApiClient.ModifyGuildAsync(this.Id, mdl.Name,
 				mdl.VerificationLevel, mdl.DefaultMessageNotifications, mdl.MfaLevel, mdl.ExplicitContentFilter,
-				afkChannelId, mdl.AfkTimeout, iconb64, mdl.Owner.IfPresent(e => e.Id), splashb64,
+				afkChannelId, mdl.AfkTimeout, iconb64, mdl.Owner.Map(e => e.Id), splashb64,
 				systemChannelId, mdl.SystemChannelFlags, publicUpdatesChannelId, rulesChannelId,
-				description, bannerb64, discoverySplash64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason).ConfigureAwait(false);
+				mdl.Description, bannerb64, discoverySplash64, mdl.PreferredLocale, mdl.PremiumProgressBarEnabled, mdl.AuditLogReason).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -811,21 +764,14 @@ namespace DisCatSharp.Entities
 
 			var explicitContentFilter = ExplicitContentFilter.AllMembers;
 
-			var rulesChannelId = Optional.FromNoValue<ulong?>();
-			if (rulesChannel != null && rulesChannel.Type != ChannelType.Text && rulesChannel.Type != ChannelType.News)
-				throw new ArgumentException("Rules channel needs to be a text channel.");
-			else if (rulesChannel != null)
-				rulesChannelId = rulesChannel.Id;
-			else if (rulesChannel == null)
-				rulesChannelId = null;
+			static Optional<ulong?> ChannelToId(DiscordChannel ch, string name)
+				=> ch == null ? null :
+					ch.Type != ChannelType.Text && ch.Type != ChannelType.News
+						? throw new ArgumentException($"{name} channel needs to be a text channel.")
+						: ch.Id;
 
-			var publicUpdatesChannelId = Optional.FromNoValue<ulong?>();
-			if (publicUpdatesChannel != null && publicUpdatesChannel.Type != ChannelType.Text && publicUpdatesChannel.Type != ChannelType.News)
-				throw new ArgumentException("Public updates channel needs to be a text channel.");
-			else if (publicUpdatesChannel != null)
-				publicUpdatesChannelId = publicUpdatesChannel.Id;
-			else if (publicUpdatesChannel == null)
-				publicUpdatesChannelId = null;
+			var rulesChannelId = ChannelToId(rulesChannel, "Rules");
+			var publicUpdatesChannelId = ChannelToId(publicUpdatesChannel, "Public updates");
 
 			List<string> features = new();
 			var rfeatures = this.RawFeatures.ToList();
@@ -1008,13 +954,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset? scheduledEndTime = null, DiscordChannel channel = null, DiscordScheduledEventEntityMetadata metadata = null, string description = null, ScheduledEventEntityType type = ScheduledEventEntityType.StageInstance, Optional<Stream> coverImage = default, string reason = null)
 		{
-			var coverb64 = Optional.FromNoValue<string>();
-			if (coverImage.HasValue && coverImage.Value != null)
-				using (var imgtool = new ImageTool(coverImage.Value))
-					coverb64 = imgtool.GetBase64();
-			else if (coverImage.HasValue)
-				coverb64 = null;
-
+			var coverb64 = ImageTool.Base64FromStream(coverImage);
 			return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, type == ScheduledEventEntityType.External ? null : channel?.Id, type == ScheduledEventEntityType.External ? metadata : null, name, scheduledStartTime, scheduledEndTime.HasValue && type == ScheduledEventEntityType.External ? scheduledEndTime.Value : null, description, type, coverb64, reason);
 		}
 
@@ -1034,13 +974,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordScheduledEvent> CreateExternalScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, DateTimeOffset scheduledEndTime, string location, string description = null, Optional<Stream> coverImage = default, string reason = null)
 		{
-			var coverb64 = Optional.FromNoValue<string>();
-			if (coverImage.HasValue && coverImage.Value != null)
-				using (var imgtool = new ImageTool(coverImage.Value))
-					coverb64 = imgtool.GetBase64();
-			else if (coverImage.HasValue)
-				coverb64 = null;
-
+			var coverb64 = ImageTool.Base64FromStream(coverImage);
 			return await this.Discord.ApiClient.CreateGuildScheduledEventAsync(this.Id, null, new DiscordScheduledEventEntityMetadata(location), name, scheduledStartTime, scheduledEndTime, description, ScheduledEventEntityType.External, coverb64, reason);
 		}
 
@@ -1111,7 +1045,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordChannel> CreateChannelCategoryAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-			=> this.CreateChannelAsync(name, ChannelType.Category, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason);
+			=> this.CreateChannelAsync(name, ChannelType.Category, null, Optional.None, null, null, overwrites, null, Optional.None, null, reason);
 
 		/// <summary>
 		/// Creates a new stage channel in this guild.
@@ -1126,7 +1060,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <exception cref="System.NotSupportedException">Thrown when the guilds has not enabled community.</exception>
 		public Task<DiscordChannel> CreateStageChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-			=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
+			=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.None, null, null, overwrites, null, Optional.None, null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
 
 		/// <summary>
 		/// Creates a new news channel in this guild.
@@ -1141,7 +1075,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <exception cref="System.NotSupportedException">Thrown when the guilds has not enabled community.</exception>
 		public Task<DiscordChannel> CreateNewsChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-			=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.FromNoValue<string>(), null, null, overwrites, null, Optional.FromNoValue<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
+			=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.None, null, null, overwrites, null, Optional.None, null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
 
 		/// <summary>
 		/// Creates a new voice channel in this guild.
@@ -1159,7 +1093,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordChannel> CreateVoiceChannelAsync(string name, DiscordChannel parent = null, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, VideoQualityMode? qualityMode = null, string reason = null)
-			=> this.CreateChannelAsync(name, ChannelType.Voice, parent, Optional.FromNoValue<string>(), bitrate, userLimit, overwrites, null, Optional.FromNoValue<int?>(), qualityMode, reason);
+			=> this.CreateChannelAsync(name, ChannelType.Voice, parent, Optional.None, bitrate, userLimit, overwrites, null, Optional.None, qualityMode, reason);
 
 		/// <summary>
 		/// Creates a new channel in this guild.
@@ -2782,9 +2716,7 @@ namespace DisCatSharp.Entities
 			if (image == null)
 				throw new ArgumentNullException(nameof(image));
 
-			string image64 = null;
-			using (var imgtool = new ImageTool(image))
-				image64 = imgtool.GetBase64();
+			var image64 = ImageTool.Base64FromStream(image);
 
 			return this.Discord.ApiClient.CreateGuildEmojiAsync(this.Id, name, image64, roles?.Select(xr => xr.Id), reason);
 		}
@@ -2916,9 +2848,6 @@ namespace DisCatSharp.Entities
 		/// <exception cref="System.ArgumentException">Sticker does not belong to a guild.</exception>
 		public async Task<DiscordSticker> ModifyStickerAsync(ulong sticker, Optional<string> name, Optional<string> description, Optional<DiscordEmoji> emoji, string reason = null)
 		{
-
-			string uemoji = null;
-
 			if (!this.StickersInternal.TryGetValue(sticker, out var stickerobj) || stickerobj.Guild.Id != this.Id)
 				throw new ArgumentException("This sticker does not belong to this guild.");
 			if (name.HasValue && (name.Value.Length < 2 || name.Value.Length > 30))
@@ -2927,7 +2856,9 @@ namespace DisCatSharp.Entities
 				throw new ArgumentException("Sticker description needs to be between 1 and 100 characters long.");
 			if (emoji.HasValue && emoji.Value.Id > 0)
 				throw new ArgumentException("Only unicode emojis can be used with stickers.");
-			else if (emoji.HasValue)
+
+			string uemoji = null;
+			if (emoji.HasValue)
 				uemoji = emoji.Value.GetDiscordName().Replace(":", "");
 
 			var usticker = await this.Discord.ApiClient.ModifyGuildStickerAsync(this.Id, sticker, name, description, uemoji, reason).ConfigureAwait(false);

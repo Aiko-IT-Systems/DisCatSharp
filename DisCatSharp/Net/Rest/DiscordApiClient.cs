@@ -504,7 +504,7 @@ namespace DisCatSharp.Net
 				RulesChannelId = rulesChannelId,
 				PublicUpdatesChannelId = publicUpdatesChannelId,
 				PreferredLocale = preferredLocale,
-				Description = description ?? Optional.FromNoValue<string>(),
+				Description = Optional.FromNullable(description),
 				Features = features
 			};
 
@@ -2007,11 +2007,11 @@ namespace DisCatSharp.Net
 			var pld = new RestChannelMessageEditPayload
 			{
 				HasContent = content.HasValue,
-				Content = content.HasValue ? (string)content : null,
+				Content = content.ValueOrDefault(),
 				HasEmbed = embeds.HasValue && (embeds.Value?.Any() ?? false),
 				Embeds = embeds.HasValue && (embeds.Value?.Any() ?? false) ? embeds.Value : null,
-				Components = components ?? null,
-				Flags = suppressEmbed.HasValue ? (bool)suppressEmbed ? MessageFlags.SuppressedEmbeds : null : null
+				Components = components,
+				Flags = suppressEmbed.HasValue && (bool)suppressEmbed ? MessageFlags.SuppressedEmbeds : null
 			};
 
 			pld.Mentions = new DiscordMentions(mentions ?? Mentions.None, false, mentions?.OfType<RepliedUserMention>().Any() ?? false);
@@ -2059,7 +2059,7 @@ namespace DisCatSharp.Net
 			}
 			else
 			{
-				pld.Attachments = attachments.HasValue ? attachments.Value : null;
+				pld.Attachments = attachments.ValueOrDefault();
 
 				var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.MESSAGES}/:message_id";
 				var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new {channel_id = channelId, message_id = messageId }, out var path);
@@ -2519,7 +2519,7 @@ namespace DisCatSharp.Net
 			var pld = new RestUserUpdateCurrentPayload
 			{
 				Username = username,
-				AvatarBase64 = base64Avatar.HasValue ? base64Avatar.Value : null,
+				AvatarBase64 = base64Avatar.ValueOrDefault(),
 				AvatarSet = base64Avatar.HasValue
 			};
 
@@ -3217,7 +3217,7 @@ namespace DisCatSharp.Net
 			var pld = new RestWebhookPayload
 			{
 				Name = name,
-				AvatarBase64 = base64Avatar.HasValue ? base64Avatar.Value : null,
+				AvatarBase64 = base64Avatar.ValueOrDefault(),
 				AvatarSet = base64Avatar.HasValue
 			};
 
@@ -3331,7 +3331,7 @@ namespace DisCatSharp.Net
 			var pld = new RestWebhookPayload
 			{
 				Name = name,
-				AvatarBase64 = base64Avatar.HasValue ? base64Avatar.Value : null,
+				AvatarBase64 = base64Avatar.ValueOrDefault(),
 				AvatarSet = base64Avatar.HasValue,
 				ChannelId = channelId
 			};
@@ -3447,8 +3447,8 @@ namespace DisCatSharp.Net
 			var pld = new RestWebhookExecutePayload
 			{
 				Content = builder.Content,
-				Username = builder.Username.HasValue ? builder.Username.Value : null,
-				AvatarUrl = builder.AvatarUrl.HasValue ? builder.AvatarUrl.Value : null,
+				Username = builder.Username.ValueOrDefault(),
+				AvatarUrl = builder.AvatarUrl.ValueOrDefault(),
 				IsTts = builder.IsTts,
 				Embeds = builder.Embeds,
 				Components = builder.Components
@@ -4665,8 +4665,8 @@ namespace DisCatSharp.Net
 				Description = description,
 				Options = options,
 				DefaultPermission = defaultPermission,
-				NameLocalizations = nameLocalization.HasValue ? nameLocalization.Value.GetKeyValuePairs() : null,
-				DescriptionLocalizations = descriptionLocalization.HasValue ? descriptionLocalization.Value.GetKeyValuePairs() : null
+				NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+				DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			};
 
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -4823,8 +4823,8 @@ namespace DisCatSharp.Net
 				Description = description,
 				Options = options,
 				DefaultPermission = defaultPermission,
-				NameLocalizations = nameLocalization.HasValue ? nameLocalization.Value.GetKeyValuePairs() : null,
-				DescriptionLocalizations = descriptionLocalization.HasValue ? descriptionLocalization.Value.GetKeyValuePairs() : null
+				NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+				DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			};
 
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";

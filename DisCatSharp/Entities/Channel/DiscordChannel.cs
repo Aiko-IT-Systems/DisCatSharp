@@ -404,7 +404,7 @@ namespace DisCatSharp.Entities
 			}
 			if (!this.IsWritable())
 			{
-				perUserRateLimit = Optional.FromNoValue<int?>();
+				perUserRateLimit = Optional.None;
 			}
 
 			return await this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNsfw, perUserRateLimit, this.QualityMode, reason).ConfigureAwait(false);
@@ -451,15 +451,10 @@ namespace DisCatSharp.Entities
 					throw new NotSupportedException($"Cannot modify Banner. Guild needs boost tier three.");
 			}
 
-			var bannerb64 = Optional.FromNoValue<string>();
-			if (mdl.Banner.HasValue && mdl.Banner.Value != null)
-				using (var imgtool = new ImageTool(mdl.Banner.Value))
-					bannerb64 = imgtool.GetBase64();
-			else if (mdl.Banner.HasValue)
-				bannerb64 = null;
+			var bannerb64 = ImageTool.Base64FromStream(mdl.Banner);
 
 			return this.Discord.ApiClient.ModifyChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Nsfw,
-				mdl.Parent.HasValue ? mdl.Parent.Value?.Id : default(Optional<ulong?>), mdl.Bitrate, mdl.UserLimit, mdl.PerUserRateLimit, mdl.RtcRegion.IfPresent(r => r?.Id),
+				mdl.Parent.Map(p => p?.Id), mdl.Bitrate, mdl.UserLimit, mdl.PerUserRateLimit, mdl.RtcRegion.Map(r => r?.Id),
 				mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, bannerb64, mdl.AuditLogReason);
 		}
 
@@ -980,13 +975,6 @@ namespace DisCatSharp.Entities
 			if (!this.IsVoiceJoinable())
 				throw new NotSupportedException("Cannot create a scheduled event for this type of channel. Channel type must be either voice or stage.");
 
-			var coverb64 = Optional.FromNoValue<string>();
-			if (coverImage.HasValue && coverImage.Value != null)
-				using (var imgtool = new ImageTool(coverImage.Value))
-					coverb64 = imgtool.GetBase64();
-			else if (coverImage.HasValue)
-				coverb64 = null;
-
 			var type = this.Type == ChannelType.Voice ? ScheduledEventEntityType.Voice : ScheduledEventEntityType.StageInstance;
 
 			return await this.Guild.CreateScheduledEventAsync(name, scheduledStartTime, null, this, null, description, type, coverImage, reason);
@@ -1156,13 +1144,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordWebhook> CreateWebhookAsync(string name, Optional<Stream> avatar = default, string reason = null)
 		{
-			var av64 = Optional.FromNoValue<string>();
-			if (avatar.HasValue && avatar.Value != null)
-				using (var imgtool = new ImageTool(avatar.Value))
-					av64 = imgtool.GetBase64();
-			else if (avatar.HasValue)
-				av64 = null;
-
+			var av64 = ImageTool.Base64FromStream(avatar);
 			return await this.Discord.ApiClient.CreateWebhookAsync(this.Id, name, av64, reason).ConfigureAwait(false);
 		}
 
