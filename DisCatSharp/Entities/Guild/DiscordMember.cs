@@ -581,7 +581,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task ReplaceRolesAsync(IEnumerable<DiscordRole> roles, string reason = null)
 			=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, default,
-				new Optional<IEnumerable<ulong>>(roles.Select(xr => xr.Id)), default, default, default, reason);
+				Optional.Some(roles.Select(xr => xr.Id)), default, default, default, reason);
 
 		/// <summary>
 		/// Bans this member from their guild.

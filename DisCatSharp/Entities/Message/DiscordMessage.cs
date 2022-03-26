@@ -560,7 +560,7 @@ namespace DisCatSharp.Entities
 		public async Task<DiscordMessage> ModifyAsync(DiscordMessageBuilder builder)
 		{
 			builder.Validate(true);
-			return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? new Optional<IEnumerable<DiscordAttachment>>(builder.Attachments) : builder.KeepAttachmentsInternal.HasValue ? builder.KeepAttachmentsInternal.Value ? new Optional<IEnumerable<DiscordAttachment>>(this.Attachments) : Array.Empty<DiscordAttachment>() : null);
+			return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? Optional.Some(builder.Attachments.AsEnumerable()) : builder.KeepAttachmentsInternal.HasValue ? builder.KeepAttachmentsInternal.Value ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>() : null);
 		}
 
 		/// <summary>
@@ -594,7 +594,7 @@ namespace DisCatSharp.Entities
 			var builder = new DiscordMessageBuilder();
 			action(builder);
 			builder.Validate(true);
-			return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, new Optional<IEnumerable<DiscordEmbed>>(builder.Embeds), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? new Optional<IEnumerable<DiscordAttachment>>(builder.Attachments) : builder.KeepAttachmentsInternal.HasValue ? builder.KeepAttachmentsInternal.Value ? new Optional<IEnumerable<DiscordAttachment>>(this.Attachments) : Array.Empty<DiscordAttachment>() : null);
+			return await this.Discord.ApiClient.EditMessageAsync(this.ChannelId, this.Id, builder.Content, Optional.Some(builder.Embeds.AsEnumerable()), builder.Mentions, builder.Components, builder.Suppressed, builder.Files, builder.Attachments.Count > 0 ? Optional.Some(builder.Attachments.AsEnumerable()) : builder.KeepAttachmentsInternal.HasValue ? builder.KeepAttachmentsInternal.Value ? Optional.Some(this.Attachments.AsEnumerable()) : Array.Empty<DiscordAttachment>() : null);
 		}
 
 		/// <summary>

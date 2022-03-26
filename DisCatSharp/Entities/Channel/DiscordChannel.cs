@@ -454,7 +454,7 @@ namespace DisCatSharp.Entities
 			var bannerb64 = ImageTool.Base64FromStream(mdl.Banner);
 
 			return this.Discord.ApiClient.ModifyChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Nsfw,
-				mdl.Parent.HasValue ? mdl.Parent.Value?.Id : Optional.None, mdl.Bitrate, mdl.UserLimit, mdl.PerUserRateLimit, mdl.RtcRegion.Map(r => r?.Id),
+				mdl.Parent.Map(p => p?.Id), mdl.Bitrate, mdl.UserLimit, mdl.PerUserRateLimit, mdl.RtcRegion.Map(r => r?.Id),
 				mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, bannerb64, mdl.AuditLogReason);
 		}
 

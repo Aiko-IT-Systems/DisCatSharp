@@ -48,7 +48,7 @@ namespace DisCatSharp.CommandsNext.Converters
 			{
 				var cvx = cv as IArgumentConverter<T>;
 				var val = await cvx.ConvertAsync(value, ctx).ConfigureAwait(false);
-				return val.HasValue ? Optional.FromValue<T?>(val.Value) : new Optional<T?>();
+				return val.Map<T?>(x => x);
 			}
 
 			return Optional.None;

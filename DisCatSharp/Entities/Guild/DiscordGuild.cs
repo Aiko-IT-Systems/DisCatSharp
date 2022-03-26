@@ -1060,7 +1060,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <exception cref="System.NotSupportedException">Thrown when the guilds has not enabled community.</exception>
 		public Task<DiscordChannel> CreateStageChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-			=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.None, null, null, overwrites, null, new Optional<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
+			=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.None, null, null, overwrites, null, Optional.None, null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
 
 		/// <summary>
 		/// Creates a new news channel in this guild.
@@ -1075,7 +1075,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <exception cref="System.NotSupportedException">Thrown when the guilds has not enabled community.</exception>
 		public Task<DiscordChannel> CreateNewsChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-			=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.None, null, null, overwrites, null, new Optional<int?>(), null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
+			=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.None, null, null, overwrites, null, Optional.None, null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
 
 		/// <summary>
 		/// Creates a new voice channel in this guild.
@@ -1093,7 +1093,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordChannel> CreateVoiceChannelAsync(string name, DiscordChannel parent = null, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, VideoQualityMode? qualityMode = null, string reason = null)
-			=> this.CreateChannelAsync(name, ChannelType.Voice, parent, Optional.None, bitrate, userLimit, overwrites, null, new Optional<int?>(), qualityMode, reason);
+			=> this.CreateChannelAsync(name, ChannelType.Voice, parent, Optional.None, bitrate, userLimit, overwrites, null, Optional.None, qualityMode, reason);
 
 		/// <summary>
 		/// Creates a new channel in this guild.

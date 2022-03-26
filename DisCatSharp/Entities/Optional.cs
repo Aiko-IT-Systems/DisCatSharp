@@ -81,7 +81,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <typeparam name="T">The type that the created instance is wrapping around.</typeparam>
 		/// <returns>Created optional.</returns>
-		[Obsolete("Use the None unit type and the default constructor.")]
+		[Obsolete("Use None.")]
 		public static Optional<T> FromNoValue<T>()
 			=> default;
 	}
@@ -105,7 +105,10 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the raw value.
 		/// </summary>
-		object RawValue { get; } // must NOT throw InvalidOperationException
+		/// <remarks>
+		/// Must NOT throw InvalidOperationException.
+		/// </remarks>
+		object RawValue { get; }
 	}
 
 	/// <summary>
@@ -115,6 +118,11 @@ namespace DisCatSharp.Entities
 	[JsonConverter(typeof(OptionalJsonConverter))]
 	public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOptional
 	{
+		/// <summary>
+		/// Static empty <see cref="Optional"/>.
+		/// </summary>
+		public static readonly Optional<T> None = default;
+
 		/// <summary>
 		/// Gets whether this <see cref="Optional{T}"/> has a value.
 		/// </summary>
@@ -137,6 +145,7 @@ namespace DisCatSharp.Entities
 		/// Creates a new <see cref="Optional{T}"/> with specified value.
 		/// </summary>
 		/// <param name="value">Value of this option.</param>
+		[Obsolete("Use Optional.Some")]
 		public Optional(T value)
 		{
 			this._val = value;
@@ -228,7 +237,7 @@ namespace DisCatSharp.Entities
 		/// Returns a string representation of this optional value.
 		/// </summary>
 		/// <returns>String representation of this optional value.</returns>
-		public override string ToString() => $"Optional<{typeof(T)}> ({(this.HasValue ? this.Value.ToString() : "<no value>")})";
+		public override string ToString() => $"Optional<{typeof(T)}> ({this.Map(x => x.ToString()).ValueOr("<no value>")})";
 
 		/// <summary>
 		/// Checks whether this <see cref="Optional{T}"/> (or its value) are equal to another object.
@@ -263,10 +272,12 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <returns>The hash code for this <see cref="Optional{T}"/>.</returns>
 		public override int GetHashCode()
-			=> this.HasValue ? this.Value.GetHashCode() : 0;
+			=> this.Map(x => x.GetHashCode()).ValueOrDefault();
 
 		public static implicit operator Optional<T>(T val)
+#pragma warning disable 0618
 			=> new(val);
+#pragma warning restore 0618
 
 		public static explicit operator T(Optional<T> opt)
 			=> opt.Value;

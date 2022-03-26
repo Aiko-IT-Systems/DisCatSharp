@@ -267,7 +267,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		Task<Optional<DiscordRole>> IArgumentConverter<DiscordRole>.ConvertAsync(string value, CommandContext ctx)
 		{
 			if (ctx.Guild == null)
-				return Task.FromResult(new Optional<DiscordRole>());
+				return Task.FromResult(Optional<DiscordRole>.None);
 
 			if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var rid))
 			{
@@ -307,7 +307,7 @@ namespace DisCatSharp.CommandsNext.Converters
 			{
 				return ctx.Client.Guilds.TryGetValue(gid, out var result)
 					? Task.FromResult(Optional.Some(result))
-					: Task.FromResult(new Optional<DiscordGuild>());
+					: Task.FromResult(Optional<DiscordGuild>.None);
 			}
 
 			var cs = ctx.Config.CaseSensitive;
@@ -518,7 +518,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				var anim = m.Groups["animated"].Success;
 
 				return !ulong.TryParse(sid, NumberStyles.Integer, CultureInfo.InvariantCulture, out var id)
-					? Task.FromResult(new Optional<DiscordEmoji>())
+					? Task.FromResult(Optional<DiscordEmoji>.None)
 					: DiscordEmoji.TryFromGuildEmote(ctx.Client, id, out emoji)
 					? Task.FromResult(Optional.Some(emoji))
 					: Task.FromResult(Optional.Some(new DiscordEmoji
@@ -532,7 +532,7 @@ namespace DisCatSharp.CommandsNext.Converters
 					}));
 			}
 
-			return Task.FromResult(new Optional<DiscordEmoji>());
+			return Task.FromResult(Optional<DiscordEmoji>.None);
 		}
 	}
 
@@ -578,11 +578,11 @@ namespace DisCatSharp.CommandsNext.Converters
 				var p3 = byte.TryParse(m.Groups[3].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var b);
 
 				return !(p1 && p2 && p3)
-					? Task.FromResult(new Optional<DiscordColor>())
+					? Task.FromResult(Optional<DiscordColor>.None)
 					: Task.FromResult(Optional.Some(new DiscordColor(r, g, b)));
 			}
 
-			return Task.FromResult(new Optional<DiscordColor>());
+			return Task.FromResult(Optional<DiscordColor>.None);
 		}
 	}
 }

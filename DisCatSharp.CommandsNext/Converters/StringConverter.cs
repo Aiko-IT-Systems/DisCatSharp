@@ -62,7 +62,7 @@ namespace DisCatSharp.CommandsNext.Converters
 			}
 			catch
 			{
-				return Task.FromResult(new Optional<Uri>());
+				return Task.FromResult(Optional<Uri>.None);
 			}
 		}
 	}

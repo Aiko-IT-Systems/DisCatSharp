@@ -213,7 +213,7 @@ namespace DisCatSharp.Entities
 
 			var coverb64 = ImageTool.Base64FromStream(mdl.CoverImage);
 
-			var scheduledEndTime = new Optional<DateTimeOffset>();
+			var scheduledEndTime = Optional<DateTimeOffset>.None;
 			if (mdl.ScheduledEndTime.HasValue && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
 				scheduledEndTime = mdl.ScheduledEndTime.Value;
 
