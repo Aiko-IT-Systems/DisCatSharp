@@ -718,7 +718,7 @@ namespace DisCatSharp.Entities
 					? throw new ArgumentException("AFK channel needs to be a text channel.")
 					: c.Id);
 
-			Optional<ulong?> ChannelToId(Optional<DiscordChannel> ch, string name)
+			static Optional<ulong?> ChannelToId(Optional<DiscordChannel> ch, string name)
 				=> ch.MapOrNull<ulong?>(c => c.Type != ChannelType.Text && c.Type != ChannelType.News
 					? throw new ArgumentException($"{name} channel needs to be a text channel.")
 					: c.Id);
