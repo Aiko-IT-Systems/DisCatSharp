@@ -204,35 +204,20 @@ namespace DisCatSharp.Entities
 			var mdl = new ScheduledEventEditModel();
 			action(mdl);
 
-			var channelId = new Optional<ulong?>();
-			if (mdl.Channel.HasValue && (mdl.Channel.Value.Type != ChannelType.Voice || mdl.Channel.Value.Type != ChannelType.Stage) && mdl.Channel.Value != null)
-				throw new ArgumentException("Channel needs to be a voice or stage channel.");
-			else if (mdl.Channel.HasValue && mdl.Channel.Value != null)
-				channelId = mdl.Channel.Value.Id;
+			Optional<ulong?> channelId = null;
+			if (this.EntityType == ScheduledEventEntityType.External || mdl.EntityType != ScheduledEventEntityType.External)
+				channelId = mdl.Channel
+					.MapOrNull<ulong?>(c => c.Type != ChannelType.Voice && c.Type != ChannelType.Stage
+						? throw new ArgumentException("Channel needs to be a voice or stage channel.")
+						: c.Id);
 
-			if (this.EntityType != ScheduledEventEntityType.External && mdl.EntityType == ScheduledEventEntityType.External)
-				channelId = null;
-
-			var description = new Optional<string>();
-			if (mdl.Description.HasValue && mdl.Description.Value != null)
-				description = mdl.Description;
-			else if (mdl.Description.HasValue)
-				description = null;
-
-			var coverb64 = new Optional<string>();
-
-			if (mdl.CoverImage.HasValue && mdl.CoverImage.Value != null)
-				using (var imgtool = new ImageTool(mdl.CoverImage.Value))
-					coverb64 = imgtool.GetBase64();
-			else if (mdl.CoverImage.HasValue)
-				coverb64 = null;
-
+			var coverb64 = ImageTool.Base64FromStream(mdl.CoverImage);
 
 			var scheduledEndTime = new Optional<DateTimeOffset>();
 			if (mdl.ScheduledEndTime.HasValue && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
 				scheduledEndTime = mdl.ScheduledEndTime.Value;
 
-			await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.Status, coverb64, mdl.AuditLogReason);
+			await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, mdl.Description, mdl.EntityType, mdl.Status, coverb64, mdl.AuditLogReason);
 		}
 
 		/// <summary>

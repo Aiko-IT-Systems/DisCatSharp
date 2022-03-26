@@ -36,8 +36,8 @@ namespace DisCatSharp.Entities
 	/// Helper methods for instantiating an <see cref="Optional{T}"/>.
 	/// </summary>
 	/// <remarks>
-	/// This class only serves to allow type parameter inference on calls to <see cref="FromValue{T}"/> or
-	/// <see cref="FromNoValue{T}"/>.
+	/// This class only serves to provide <see cref="Some{T}"/> and <see cref="None"/>
+	/// as utility that supports type inference.
 	/// </remarks>
 	public static class Optional
 	{
@@ -47,13 +47,22 @@ namespace DisCatSharp.Entities
 		public static readonly None None = new();
 
 		/// <summary>
+		/// Creates a new <see cref="Optional{T}"/> with specified value and valid state.
+		/// </summary>
+		/// <param name="value">Value to populate the optional with.</param>
+		/// <typeparam name="T">Type of the value.</typeparam>
+		/// <returns>Created optional.</returns>
+		public static Optional<T> Some<T>(T value)
+			=> value;
+
+		/// <summary>
 		/// 
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="value"></param>
 		/// <returns></returns>
 		public static Optional<T> FromNullable<T>(T value)
-			=> value is null
+			=> value == null
 				? None
 				: value;
 
@@ -63,6 +72,7 @@ namespace DisCatSharp.Entities
 		/// <param name="value">Value to populate the optional with.</param>
 		/// <typeparam name="T">Type of the value.</typeparam>
 		/// <returns>Created optional.</returns>
+		[Obsolete("Renamed to Some.")]
 		public static Optional<T> FromValue<T>(T value)
 			=> value;
 
@@ -133,11 +143,63 @@ namespace DisCatSharp.Entities
 			this.HasValue = true;
 		}
 
+		[Obsolete("Renamed to Map")]
+		public Optional<TOut> IfPresent<TOut>(Func<T, TOut> mapper)
+			=> this.Map(mapper);
+
+		/// <summary>
+		/// Performs a mapping operation on the current <see cref="Optional{T}"/>, turning it into an Optional holding a
+		/// <typeparamref name="TOut"/> instance if the source optional contains a value; otherwise, returns an
+		/// <see cref="Optional{T}"/> of that same type with no value.
+		/// </summary>
+		/// <param name="mapper">The mapping function to apply on the current value if it exists</param>
+		/// <typeparam name="TOut">The type of the target value returned by <paramref name="mapper"/></typeparam>
+		/// <returns>
+		/// An <see cref="Optional{T}"/> containing a value denoted by calling <paramref name="mapper"/> if the current
+		/// <see cref="Optional{T}"/> contains a value; otherwise, an empty <see cref="Optional{T}"/> of the target
+		/// type.
+		/// </returns>
+		public Optional<TOut> Map<TOut>(Func<T, TOut> mapper)
+			=> this.HasValue
+				? mapper(this._val)
+				: Optional.None;
+
+		/// <summary>
+		/// Maps to <see cref="None"/> for <see cref="None"/>, to <code>default</code> for <code>null</code> and to the mapped value otherwise./>
+		/// </summary>
+		/// <typeparam name="TOut">The type to map to.</typeparam>
+		/// <param name="mapper">The function that does the mapping of the non-null <typeparamref name="T"/>.</param>
+		/// <returns>The mapped value.</returns>
+		public Optional<TOut> MapOrNull<TOut>(Func<T, TOut> mapper)
+			=> this.HasValue
+				? this._val == null
+					? default
+					: mapper(this._val)
+				: Optional.None;
+
+		/// <summary>
+		/// Gets the value of the <see cref="Optional{T}"/> or a specified value, if the <see cref="Optional{T}"/> has no value.
+		/// </summary>
+		/// <param name="other">The value to return if this has no value.</param>
+		/// <returns>Either the value of the <see cref="Optional{T}"/> if present or the provided value.</returns>
+		public T ValueOr(T other)
+			=> this.HasValue
+				? this._val
+				: other;
+
+		/// <summary>
+		/// Gets the value of the <see cref="Optional{T}"/> or the default value for <typeparamref name="T"/>, if the
+		/// <see cref="Optional{T}"/> has no value.
+		/// </summary>
+		/// <returns>Either the value of the <see cref="Optional{T}"/> if present or the type's default value.</returns>
+		public T ValueOrDefault()
+			=> this.ValueOr(default);
+
 		/// <summary>
 		/// Gets the <see cref="Optional"/>'s value, or throws the provided exception if it's empty.
 		/// </summary>
 		/// <param name="err">The exception to throw if the optional is empty.</param>
-		/// <returns></returns>
+		/// <returns>The value of the <see cref="Optional"/>, if present.</returns>
 		public T Expect(Exception err)
 		{
 			if (!this.HasValue)
@@ -151,7 +213,7 @@ namespace DisCatSharp.Entities
 		/// empty.
 		/// </summary>
 		/// <param name="str">The string provided to the exception.</param>
-		/// <returns>The value.</returns>
+		/// <returns>The value of the <see cref="Optional"/>, if present.</returns>
 		public T Expect(string str) => this.Expect(new InvalidOperationException(str));
 
 		/// <summary>
@@ -225,20 +287,6 @@ namespace DisCatSharp.Entities
 
 		public static bool operator !=(Optional<T> opt, T t)
 			=> !opt.Equals(t);
-
-		/// <summary>
-		/// Performs a mapping operation on the current <see cref="Optional{T}"/>, turning it into an Optional holding a
-		/// <typeparamref name="TTarget"/> instance if the source optional contains a value; otherwise, returns an
-		/// <see cref="Optional{T}"/> of that same type with no value.
-		/// </summary>
-		/// <param name="mapper">The mapping function to apply on the current value if it exists</param>
-		/// <typeparam name="TTarget">The type of the target value returned by <paramref name="mapper"/></typeparam>
-		/// <returns>
-		/// An <see cref="Optional{T}"/> containing a value denoted by calling <paramref name="mapper"/> if the current
-		/// <see cref="Optional{T}"/> contains a value; otherwise, an empty <see cref="Optional{T}"/> of the target
-		/// type.
-		/// </returns>
-		public Optional<TTarget> IfPresent<TTarget>(Func<T, TTarget> mapper) => this.HasValue ? new Optional<TTarget>(mapper(this.Value)) : default;
 	}
 
 	/// <summary>

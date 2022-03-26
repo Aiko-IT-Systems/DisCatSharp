@@ -129,7 +129,7 @@ namespace DisCatSharp.CommandsNext.Converters
 
 			var searchResult = await ctx.Guild.SearchMembersAsync(value).ConfigureAwait(false);
 			if (searchResult.Any())
-				return Optional.FromValue(searchResult.First());
+				return Optional.Some(searchResult.First());
 
 			var cs = ctx.Config.CaseSensitive;
 			if (!cs)
@@ -306,7 +306,7 @@ namespace DisCatSharp.CommandsNext.Converters
 			if (ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var gid))
 			{
 				return ctx.Client.Guilds.TryGetValue(gid, out var result)
-					? Task.FromResult(Optional.FromValue(result))
+					? Task.FromResult(Optional.Some(result))
 					: Task.FromResult(new Optional<DiscordGuild>());
 			}
 
@@ -507,7 +507,7 @@ namespace DisCatSharp.CommandsNext.Converters
 			if (DiscordEmoji.TryFromUnicode(ctx.Client, value, out var emoji))
 			{
 				var result = emoji;
-				return Task.FromResult(Optional.FromValue(result));
+				return Task.FromResult(Optional.Some(result));
 			}
 
 			var m = s_emoteRegex.Match(value);
@@ -520,8 +520,8 @@ namespace DisCatSharp.CommandsNext.Converters
 				return !ulong.TryParse(sid, NumberStyles.Integer, CultureInfo.InvariantCulture, out var id)
 					? Task.FromResult(new Optional<DiscordEmoji>())
 					: DiscordEmoji.TryFromGuildEmote(ctx.Client, id, out emoji)
-					? Task.FromResult(Optional.FromValue(emoji))
-					: Task.FromResult(Optional.FromValue(new DiscordEmoji
+					? Task.FromResult(Optional.Some(emoji))
+					: Task.FromResult(Optional.Some(new DiscordEmoji
 					{
 						Discord = ctx.Client,
 						Id = id,
@@ -568,7 +568,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		{
 			var m = s_colorRegexHex.Match(value);
 			if (m.Success && int.TryParse(m.Groups[1].Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var clr))
-				return Task.FromResult(Optional.FromValue<DiscordColor>(clr));
+				return Task.FromResult(Optional.Some<DiscordColor>(clr));
 
 			m = s_colorRegexRgb.Match(value);
 			if (m.Success)
@@ -579,7 +579,7 @@ namespace DisCatSharp.CommandsNext.Converters
 
 				return !(p1 && p2 && p3)
 					? Task.FromResult(new Optional<DiscordColor>())
-					: Task.FromResult(Optional.FromValue(new DiscordColor(r, g, b)));
+					: Task.FromResult(Optional.Some(new DiscordColor(r, g, b)));
 			}
 
 			return Task.FromResult(new Optional<DiscordColor>());

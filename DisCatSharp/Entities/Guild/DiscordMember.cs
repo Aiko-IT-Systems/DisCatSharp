@@ -489,14 +489,14 @@ namespace DisCatSharp.Entities
 					mdl.AuditLogReason).ConfigureAwait(false);
 
 				await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, Optional.None,
-					mdl.Roles.IfPresent(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
-					mdl.VoiceChannel.IfPresent(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
+					mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
+					mdl.VoiceChannel.Map(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
 			}
 			else
 			{
 				await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, mdl.Nickname,
-					mdl.Roles.IfPresent(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
-					mdl.VoiceChannel.IfPresent(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
+					mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
+					mdl.VoiceChannel.Map(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
 			}
 		}
 

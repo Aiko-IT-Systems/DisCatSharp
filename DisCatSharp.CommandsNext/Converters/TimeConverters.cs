@@ -58,7 +58,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<DateTimeOffset>> IArgumentConverter<DateTimeOffset>.ConvertAsync(string value, CommandContext ctx) =>
 			DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result)
-				? Task.FromResult(Optional.FromValue(result))
+				? Task.FromResult(Optional.Some(result))
 				: Task.FromResult(new Optional<DateTimeOffset>());
 	}
 
@@ -88,7 +88,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		Task<Optional<TimeSpan>> IArgumentConverter<TimeSpan>.ConvertAsync(string value, CommandContext ctx)
 		{
 			if (value == "0")
-				return Task.FromResult(Optional.FromValue(TimeSpan.Zero));
+				return Task.FromResult(Optional.Some(TimeSpan.Zero));
 
 			if (int.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out _))
 				return Task.FromResult(new Optional<TimeSpan>());
@@ -97,7 +97,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				value = value.ToLowerInvariant();
 
 			if (TimeSpan.TryParse(value, CultureInfo.InvariantCulture, out var result))
-				return Task.FromResult(Optional.FromValue(result));
+				return Task.FromResult(Optional.Some(result));
 
 			var gps = new string[] { "days", "hours", "minutes", "seconds" };
 			var mtc = s_timeSpanRegex.Match(value);
@@ -136,7 +136,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				}
 			}
 			result = new TimeSpan(d, h, m, s);
-			return Task.FromResult(Optional.FromValue(result));
+			return Task.FromResult(Optional.Some(result));
 		}
 	}
 }

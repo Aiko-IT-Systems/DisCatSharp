@@ -477,7 +477,7 @@ namespace DisCatSharp.Entities
 				Title = this._title,
 				Description = this._description,
 				Url = this._url,
-				ColorInternal = this.Color.IfPresent(e => e.Value),
+				ColorInternal = this.Color.Map(e => e.Value),
 				Timestamp = this.Timestamp
 			};
 
