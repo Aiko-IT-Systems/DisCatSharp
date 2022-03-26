@@ -80,7 +80,7 @@ namespace DisCatSharp.Common.Tests
 			c1 = new TestClass();
 			c2 = c1.MapOrNull(Map);
 			Assert.True(mapped);
-			Assert.False(c2.HasValue);
+			Assert.True(c2.HasValue);
 			Assert.Equal(c1, c2);
 			Assert.Equal(c1.Value, c2.Value);
 		}
