@@ -908,20 +908,23 @@ namespace DisCatSharp.Entities
 			=> this.Discord.ApiClient.LeaveGuildAsync(this.Id);
 
 		/// <summary>
-		/// Gets the bans for this guild.
+		/// Gets the bans for this guild, allowing for pagination.
 		/// </summary>
-		/// <returns>Collection of bans in this guild.</returns>
+		/// <param name="limit">Maximum number of bans to fetch. Max 1000. Defaults to 1000.</param>
+		/// <param name="before">The Id of the user before which to fetch the bans. Overrides <paramref name="after"/> if both are present.</param>
+		/// <param name="after">The Id of the user after which to fetch the bans.</param>
+		/// <returns>Collection of bans in this guild in ascending order by user id.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task<IReadOnlyList<DiscordBan>> GetBansAsync()
-			=> this.Discord.ApiClient.GetGuildBansAsync(this.Id);
+		public Task<IReadOnlyList<DiscordBan>> GetBansAsync(int? limit = null, ulong? before = null, ulong? after = null)
+			=> this.Discord.ApiClient.GetGuildBansAsync(this.Id, limit, before, after);
 
 		/// <summary>
 		/// Gets a ban for a specific user.
 		/// </summary>
 		/// <param name="userId">The Id of the user to get the ban for.</param>
-		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the specified user is not banned.</exception>
 		/// <returns>The requested ban object.</returns>
+		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the specified user is not banned.</exception>
 		public Task<DiscordBan> GetBanAsync(ulong userId)
 			=> this.Discord.ApiClient.GetGuildBanAsync(this.Id, userId);
 
@@ -929,8 +932,8 @@ namespace DisCatSharp.Entities
 		/// Gets a ban for a specific user.
 		/// </summary>
 		/// <param name="user">The user to get the ban for.</param>
-		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the specified user is not banned.</exception>
 		/// <returns>The requested ban object.</returns>
+		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the specified user is not banned.</exception>
 		public Task<DiscordBan> GetBanAsync(DiscordUser user)
 			=> this.GetBanAsync(user.Id);
 
