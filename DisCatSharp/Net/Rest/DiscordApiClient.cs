@@ -530,16 +530,22 @@ namespace DisCatSharp.Net
 		}
 
 		/// <summary>
-		/// Gets the guild bans async.
+		/// Implements https://discord.com/developers/docs/resources/guild#get-guild-bans.
 		/// </summary>
-		/// <param name="guildId">The guild_id.</param>
-
-		internal async Task<IReadOnlyList<DiscordBan>> GetGuildBansAsync(ulong guildId)
+		internal async Task<IReadOnlyList<DiscordBan>> GetGuildBansAsync(ulong guildId, int? limit, ulong? before, ulong? after)
 		{
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.BANS}";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
 
-			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+			var urlParams = new Dictionary<string, string>();
+			if (limit != null)
+				urlParams["limit"] = limit.Value.ToString(CultureInfo.InvariantCulture);
+			if (before != null)
+				urlParams["before"] = before.Value.ToString(CultureInfo.InvariantCulture);
+			if (after != null)
+				urlParams["after"] = after.Value.ToString(CultureInfo.InvariantCulture);
+
+			var url = Utilities.GetApiUriFor(path, BuildQueryString(urlParams), this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 			var bansRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordBan>>(res.Response).Select(xb =>
@@ -2014,7 +2020,9 @@ namespace DisCatSharp.Net
 				Flags = suppressEmbed.HasValue && (bool)suppressEmbed ? MessageFlags.SuppressedEmbeds : null
 			};
 
-			pld.Mentions = mentions.HasValue ? new DiscordMentions(mentions.Value ?? Mentions.None, false, mentions.Value?.OfType<RepliedUserMention>().Any() ?? false) : null;
+			pld.Mentions = mentions
+				.Map(m => new DiscordMentions(m ?? Mentions.None, false, mentions.Value?.OfType<RepliedUserMention>().Any() ?? false))
+				.ValueOrDefault();
 
 			if (files?.Count > 0)
 			{
