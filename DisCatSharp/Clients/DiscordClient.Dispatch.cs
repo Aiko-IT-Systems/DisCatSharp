@@ -1714,6 +1714,7 @@ namespace DisCatSharp
 			var pendingOld = mbr.IsPending;
 			var rolesOld = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles));
 			var cduOld = mbr.CommunicationDisabledUntil;
+			mbr.MemberFlags = member.MemberFlags;
 			mbr.AvatarHashInternal = member.AvatarHash;
 			mbr.GuildAvatarHash = member.GuildAvatarHash;
 			mbr.Nickname = nick;
