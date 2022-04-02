@@ -257,6 +257,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets this member's username.
 		/// </summary>
+		[JsonIgnore]
 		public override string Username
 		{
 			get => this.User.Username;
@@ -266,6 +267,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the member's 4-digit discriminator.
 		/// </summary>
+		[JsonIgnore]
 		public override string Discriminator
 		{
 			get => this.User.Discriminator;
@@ -295,6 +297,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets whether the member is a bot.
 		/// </summary>
+		[JsonIgnore]
 		public override bool IsBot
 		{
 			get => this.User.IsBot;
@@ -305,6 +308,7 @@ namespace DisCatSharp.Entities
 		/// Gets the member's email address.
 		/// <para>This is only present in OAuth.</para>
 		/// </summary>
+		[JsonIgnore]
 		public override string Email
 		{
 			get => this.User.Email;
@@ -314,6 +318,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets whether the member has multi-factor authentication enabled.
 		/// </summary>
+		[JsonIgnore]
 		public override bool? MfaEnabled
 		{
 			get => this.User.MfaEnabled;
@@ -324,6 +329,7 @@ namespace DisCatSharp.Entities
 		/// Gets whether the member is verified.
 		/// <para>This is only present in OAuth.</para>
 		/// </summary>
+		[JsonIgnore]
 		public override bool? Verified
 		{
 			get => this.User.Verified;
@@ -333,6 +339,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the member's chosen language
 		/// </summary>
+		[JsonIgnore]
 		public override string Locale
 		{
 			get => this.User.Locale;
@@ -342,6 +349,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the user's flags.
 		/// </summary>
+		[JsonIgnore]
 		public override UserFlags? OAuthFlags
 		{
 			get => this.User.OAuthFlags;
@@ -351,6 +359,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the member's flags for OAuth.
 		/// </summary>
+		[JsonIgnore]
 		public override UserFlags? Flags
 		{
 			get => this.User.Flags;
