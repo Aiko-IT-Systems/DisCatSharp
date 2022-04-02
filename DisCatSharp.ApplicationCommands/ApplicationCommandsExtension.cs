@@ -606,7 +606,7 @@ namespace DisCatSharp.ApplicationCommands
 							{
 								if (updateList != null && updateList.Any())
 								{
-									var regCommands = RegistrationWorker.RegisterGuilldCommandsAsync(guildid.Value, updateList, withLocales).Result;
+									var regCommands = RegistrationWorker.RegisterGuilldCommandsAsync(guildId.Value, updateList, withLocales).Result;
 									var actualCommands = regCommands.Distinct().ToList();
 									commands.AddRange(actualCommands);
 									GuildCommandsInternal.Add(guildId.Value, actualCommands);
