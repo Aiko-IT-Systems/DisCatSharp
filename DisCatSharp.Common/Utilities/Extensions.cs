@@ -59,7 +59,7 @@ namespace DisCatSharp.Common
 		/// Calculates the length of string representation of given number in base 10 (including sign, if present).
 		/// </summary>
 		/// <param name="num">Number to calculate the length of.</param>
-		/// <returns>Calculated nuembr length.</returns>
+		/// <returns>Calculated number length.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int CalculateLength(this byte num)
 			=> num == 0 ? 1 : (int)Math.Floor(Math.Log10(num)) + 1;
@@ -77,7 +77,7 @@ namespace DisCatSharp.Common
 		/// Calculates the length of string representation of given number in base 10 (including sign, if present).
 		/// </summary>
 		/// <param name="num">Number to calculate the length of.</param>
-		/// <returns>Calculated nuembr length.</returns>
+		/// <returns>Calculated number length.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int CalculateLength(this ushort num)
 			=> num == 0 ? 1 : (int)Math.Floor(Math.Log10(num)) + 1;
@@ -95,7 +95,7 @@ namespace DisCatSharp.Common
 		/// Calculates the length of string representation of given number in base 10 (including sign, if present).
 		/// </summary>
 		/// <param name="num">Number to calculate the length of.</param>
-		/// <returns>Calculated nuembr length.</returns>
+		/// <returns>Calculated number length.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int CalculateLength(this uint num)
 			=> num == 0 ? 1 : (int)Math.Floor(Math.Log10(num)) + 1;
@@ -113,13 +113,13 @@ namespace DisCatSharp.Common
 		/// Calculates the length of string representation of given number in base 10 (including sign, if present).
 		/// </summary>
 		/// <param name="num">Number to calculate the length of.</param>
-		/// <returns>Calculated nuembr length.</returns>
+		/// <returns>Calculated number length.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int CalculateLength(this ulong num)
 			=> num == 0 ? 1 : (int)Math.Floor(Math.Log10(num)) + 1;
 
 		/// <summary>
-		/// Tests wheter given value is in supplied range, optionally allowing it to be an exclusive check.
+		/// Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.
 		/// </summary>
 		/// <param name="num">Number to test.</param>
 		/// <param name="min">Lower bound of the range.</param>
@@ -140,7 +140,7 @@ namespace DisCatSharp.Common
 		}
 
 		/// <summary>
-		/// Tests wheter given value is in supplied range, optionally allowing it to be an exclusive check.
+		/// Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.
 		/// </summary>
 		/// <param name="num">Number to test.</param>
 		/// <param name="min">Lower bound of the range.</param>
@@ -161,7 +161,7 @@ namespace DisCatSharp.Common
 		}
 
 		/// <summary>
-		/// Tests wheter given value is in supplied range, optionally allowing it to be an exclusive check.
+		/// Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.
 		/// </summary>
 		/// <param name="num">Number to test.</param>
 		/// <param name="min">Lower bound of the range.</param>
@@ -182,7 +182,7 @@ namespace DisCatSharp.Common
 		}
 
 		/// <summary>
-		/// Tests wheter given value is in supplied range, optionally allowing it to be an exclusive check.
+		/// Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.
 		/// </summary>
 		/// <param name="num">Number to test.</param>
 		/// <param name="min">Lower bound of the range.</param>
@@ -203,7 +203,7 @@ namespace DisCatSharp.Common
 		}
 
 		/// <summary>
-		/// Tests wheter given value is in supplied range, optionally allowing it to be an exclusive check.
+		/// Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.
 		/// </summary>
 		/// <param name="num">Number to test.</param>
 		/// <param name="min">Lower bound of the range.</param>
@@ -224,7 +224,7 @@ namespace DisCatSharp.Common
 		}
 
 		/// <summary>
-		/// Tests wheter given value is in supplied range, optionally allowing it to be an exclusive check.
+		/// Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.
 		/// </summary>
 		/// <param name="num">Number to test.</param>
 		/// <param name="min">Lower bound of the range.</param>
@@ -245,7 +245,7 @@ namespace DisCatSharp.Common
 		}
 
 		/// <summary>
-		/// Tests wheter given value is in supplied range, optionally allowing it to be an exclusive check.
+		/// Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.
 		/// </summary>
 		/// <param name="num">Number to test.</param>
 		/// <param name="min">Lower bound of the range.</param>
@@ -266,7 +266,7 @@ namespace DisCatSharp.Common
 		}
 
 		/// <summary>
-		/// Tests wheter given value is in supplied range, optionally allowing it to be an exclusive check.
+		/// Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.
 		/// </summary>
 		/// <param name="num">Number to test.</param>
 		/// <param name="min">Lower bound of the range.</param>
@@ -287,7 +287,7 @@ namespace DisCatSharp.Common
 		}
 
 		/// <summary>
-		/// Tests wheter given value is in supplied range, optionally allowing it to be an exclusive check.
+		/// Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.
 		/// </summary>
 		/// <param name="num">Number to test.</param>
 		/// <param name="min">Lower bound of the range.</param>
@@ -304,7 +304,7 @@ namespace DisCatSharp.Common
 		}
 
 		/// <summary>
-		/// Tests wheter given value is in supplied range, optionally allowing it to be an exclusive check.
+		/// Tests whether given value is in supplied range, optionally allowing it to be an exclusive check.
 		/// </summary>
 		/// <param name="num">Number to test.</param>
 		/// <param name="min">Lower bound of the range.</param>
@@ -455,23 +455,28 @@ namespace DisCatSharp.Common
 			=> Knuth(chars.AsSpan(start, count));
 
 		/// <summary>
-		/// Firsts the two or default.
+		/// Gets the two first elements of the <see cref="IEnumerable{T}"/>, if they exist.
 		/// </summary>
 		/// <param name="enumerable">The enumerable.</param>
-		/// <returns>A (T first, T second) .</returns>
-		internal static (T first, T second) FirstTwoOrDefault<T>(this IEnumerable<T> enumerable)
+		/// <param name="values">The output values. Undefined if <code>false</code> is returned.</param>
+		/// <returns>Whether the <see cref="IEnumerable{T}"/> contained enough elements.</returns>
+		internal static bool TryFirstTwo<T>(this IEnumerable<T> enumerable, out (T first, T second) values)
 		{
+			values = default;
+
 			using var enumerator = enumerable.GetEnumerator();
 
 			if (!enumerator.MoveNext())
-				return (default, default);
+				return false;
 
 			var first = enumerator.Current;
 
 			if (!enumerator.MoveNext())
-				return (first, default);
+				return false;
 
-			return (first, enumerator.Current);
+
+			values = (first, enumerator.Current);
+			return true;
 		}
 
 		/// <summary>

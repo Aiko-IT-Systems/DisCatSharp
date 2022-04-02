@@ -89,7 +89,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Creates bold text.
 		/// </summary>
-		/// <param name="content">Text to bolden.</param>
+		/// <param name="content">Text to embolden.</param>
 		/// <returns>Formatted text.</returns>
 		public static string Bold(string content)
 			=> $"**{content}**";
@@ -105,7 +105,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Creates spoiler from text.
 		/// </summary>
-		/// <param name="content">Text to spoilerize.</param>
+		/// <param name="content">Text to spoiler.</param>
 		/// <returns>Formatted text.</returns>
 		public static string Spoiler(string content)
 			=> $"||{content}||";

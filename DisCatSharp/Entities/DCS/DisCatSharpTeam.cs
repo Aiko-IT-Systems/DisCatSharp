@@ -34,40 +34,40 @@ namespace DisCatSharp.Entities
 	public sealed class DisCatSharpTeam : SnowflakeObject
 	{
 		/// <summary>
-		/// Gets the team name.
+		/// Gets the team's name.
 		/// </summary>
 		public string TeamName { get; internal set; }
 
 		/// <summary>
-		/// Gets the teams's icon.
+		/// Gets the team's icon.
 		/// </summary>
 		public string Icon
 			=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.TEAM_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png?size=1024" : null;
 
 		/// <summary>
-		/// Gets the team's icon hash.
+		/// Gets the team's icon's hash.
 		/// </summary>
 		public string IconHash { get; internal set; }
 
 		/// <summary>
-		/// Gets the teams's logo.
+		/// Gets the team's logo.
 		/// </summary>
 		public string Logo
 			=> !string.IsNullOrWhiteSpace(this.LogoHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.ICONS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}/{this.LogoHash}.png?size=1024" : null;
 
 		/// <summary>
-		/// Gets the team's logo hash.
+		/// Gets the team's logo's hash.
 		/// </summary>
 		public string LogoHash { get; internal set; }
 
 		/// <summary>
-		/// Gets the teams's banner.
+		/// Gets the team's banner.
 		/// </summary>
 		public string Banner
 			=> !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.BANNERS}/{this.GuildId.ToString(CultureInfo.InvariantCulture)}/{this.BannerHash}.png?size=1024" : null;
 
 		/// <summary>
-		/// Gets the team's banner hash.
+		/// Gets the team's banner's hash.
 		/// </summary>
 		public string BannerHash { get; internal set; }
 

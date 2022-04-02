@@ -130,34 +130,30 @@ namespace DisCatSharp.Entities
 		/// <param name="required">Whether the parameter is required.</param>
 		/// <param name="choices">The optional choice selection for this parameter.</param>
 		/// <param name="options">The optional subcommands for this parameter.</param>
-		/// <param name="channeltypes">If the option is a channel type, the channels shown will be restricted to these types</param>
+		/// <param name="channelTypes">If the option is a channel type, the channels shown will be restricted to these types.</param>
 		/// <param name="autocomplete">Whether this option provides autocompletion.</param>
 		/// <param name="minimumValue">The minimum value for this parameter. Only valid for types <see cref="ApplicationCommandOptionType.Integer"/> or <see cref="ApplicationCommandOptionType.Number"/>.</param>
 		/// <param name="maximumValue">The maximum value for this parameter. Only valid for types <see cref="ApplicationCommandOptionType.Integer"/> or <see cref="ApplicationCommandOptionType.Number"/>.</param>
 		/// <param name="nameLocalizations">The localizations of the parameter name.</param>
 		/// <param name="descriptionLocalizations">The localizations of the parameter description.</param>
-		public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool? required = null, IEnumerable<DiscordApplicationCommandOptionChoice> choices = null, IEnumerable<DiscordApplicationCommandOption> options = null, IEnumerable<ChannelType> channeltypes = null, bool? autocomplete = null, object minimumValue = null, object maximumValue = null, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null)
+		public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool? required = null, IEnumerable<DiscordApplicationCommandOptionChoice> choices = null, IEnumerable<DiscordApplicationCommandOption> options = null, IEnumerable<ChannelType> channelTypes = null, bool? autocomplete = null, object minimumValue = null, object maximumValue = null, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null)
 		{
 			if (!Utilities.IsValidSlashCommandName(name))
 				throw new ArgumentException("Invalid application command option name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
-			if (name.Any(ch => char.IsUpper(ch)))
+			if (name.Any(char.IsUpper))
 				throw new ArgumentException("Application command option name cannot have any upper case characters.", nameof(name));
 			if (description.Length > 100)
 				throw new ArgumentException("Application command option description cannot exceed 100 characters.", nameof(description));
 			if ((autocomplete ?? false) && (choices?.Any() ?? false))
 				throw new InvalidOperationException("Auto-complete slash command options cannot provide choices.");
 
-			var choiceList = choices != null ? new ReadOnlyCollection<DiscordApplicationCommandOptionChoice>(choices.ToList()) : null;
-			var optionList = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;
-			var channelTypes = channeltypes!= null ? new ReadOnlyCollection<ChannelType>(channeltypes.ToList()) : null;
-
 			this.Name = name;
 			this.Description = description;
 			this.Type = type;
 			this.Required = required;
-			this.Choices = choiceList;
-			this.Options = optionList;
-			this.ChannelTypes = channelTypes;
+			this.Choices = choices != null ? new ReadOnlyCollection<DiscordApplicationCommandOptionChoice>(choices.ToList()) : null;
+			this.Options = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;
+			this.ChannelTypes = channelTypes != null ? new ReadOnlyCollection<ChannelType>(channelTypes.ToList()) : null;
 			this.AutoComplete = autocomplete;
 			this.MinimumValue = minimumValue;
 			this.MaximumValue = maximumValue;

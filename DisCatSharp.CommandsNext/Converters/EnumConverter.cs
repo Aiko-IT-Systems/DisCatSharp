@@ -45,8 +45,8 @@ namespace DisCatSharp.CommandsNext.Converters
 			return !ti.IsEnum
 				? throw new InvalidOperationException("Cannot convert non-enum value to an enum.")
 				: Enum.TryParse(value, !ctx.Config.CaseSensitive, out T ev)
-				? Task.FromResult(Optional.FromValue(ev))
-				: Task.FromResult(Optional.FromNoValue<T>());
+				? Task.FromResult(Optional.Some(ev))
+				: Task.FromResult(Optional<T>.None);
 		}
 	}
 }

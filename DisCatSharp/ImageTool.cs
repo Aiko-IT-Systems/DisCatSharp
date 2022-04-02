@@ -24,6 +24,8 @@ using System;
 using System.IO;
 using System.Text;
 
+using DisCatSharp.Entities;
+
 namespace DisCatSharp
 {
 	/// <summary>
@@ -169,6 +171,38 @@ namespace DisCatSharp
 		{
 			if (this.SourceStream != null)
 				this.SourceStream.Dispose();
+		}
+
+		/// <summary>
+		/// Utility function to convert an image stream into a base 64 string.
+		/// </summary>
+		/// <param name="stream">The stream.</param>
+		/// <returns>The base 64 string.</returns>
+		public static string Base64FromStream(Stream stream)
+		{
+			using var imgtool = new ImageTool(stream);
+			return imgtool.GetBase64();
+		}
+
+		/// <summary>
+		/// Utility function to convert an optional image stream into an optional base 64 string.
+		/// </summary>
+		/// <param name="stream">The optional stream.</param>
+		/// <returns>The optional base 64 string.</returns>
+		public static Optional<string> Base64FromStream(Optional<Stream> stream)
+		{
+			if (stream.HasValue)
+			{
+				var val = stream.Value;
+				if (val != null)
+				{
+					return Base64FromStream(val);
+				}
+
+				return null;
+			}
+
+			return Optional.None;
 		}
 	}
 

@@ -20,12 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
-using DisCatSharp.Common;
+
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -38,7 +37,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// Whether two application commands are equal.
 		/// </summary>
 		/// <param name="ac1">Source command.</param>
-		/// <param name="targetApplicationCommand">Command to check agains.</param>
+		/// <param name="targetApplicationCommand">Command to check against.</param>
 		internal static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand)
 		{
 			if (targetApplicationCommand is null || ac1 is null)

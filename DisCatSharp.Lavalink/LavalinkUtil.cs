@@ -34,7 +34,7 @@ namespace DisCatSharp.Lavalink
 	public static class LavalinkUtilities
 	{
 		/// <summary>
-		/// Indicates whether a new track should be started after reciving this TrackEndReason. If this is false, either this event is
+		/// Indicates whether a new track should be started after receiving this TrackEndReason. If this is false, either this event is
 		/// already triggered because another track started (REPLACED) or because the player is stopped (STOPPED, CLEANUP).
 		/// </summary>
 		public static bool MayStartNext(this TrackEndReason reason)

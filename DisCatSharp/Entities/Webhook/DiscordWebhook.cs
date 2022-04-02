@@ -121,12 +121,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordWebhook> ModifyAsync(string name = null, Optional<Stream> avatar = default, ulong? channelId = null, string reason = null)
 		{
-			var avatarb64 = Optional.FromNoValue<string>();
-			if (avatar.HasValue && avatar.Value != null)
-				using (var imgtool = new ImageTool(avatar.Value))
-					avatarb64 = imgtool.GetBase64();
-			else if (avatar.HasValue)
-				avatarb64 = null;
+			var avatarb64 = ImageTool.Base64FromStream(avatar);
 
 			var newChannelId = channelId ?? this.ChannelId;
 
