@@ -83,6 +83,7 @@ namespace DisCatSharp.Entities
 			this.AvatarHashInternal = mbr.AvatarHash;
 			this.RoleIdsInternal = mbr.Roles ?? new List<ulong>();
 			this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
+			this.MemberFlags = mbr.MemberFlags;
 		}
 
 		/// <summary>
@@ -129,6 +130,12 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonProperty("bio", NullValueHandling = NullValueHandling.Ignore)]
 		public string GuildBio { get; internal set; }
+
+		/// <summary>
+		/// Gets the members flags.
+		/// </summary>
+		[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+		public MemberFlags MemberFlags { get; internal set; }
 
 		[JsonIgnore]
 		internal string AvatarHashInternal;
