@@ -119,23 +119,26 @@ namespace DisCatSharp.ApplicationCommands
 									subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required ?? false,
 									subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
 									subSubOption.MinimumValue, subSubOption.MaximumValue,
-									localizationEnabled ? subSubOption.NameLocalizations : null, localizationEnabled ? subSubOption.DescriptionLocalizations : null
+									localizationEnabled ? subSubOption.NameLocalizations : null,
+									localizationEnabled ? subSubOption.DescriptionLocalizations : null
 								));
 							}
 
 							minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
-								subOption.Name, subOption.Description, subOption.Type, null, null,
-								minimalSubSubSourceOptions, null, null, null, null,
-								localizationEnabled ? subOption.NameLocalizations : null, localizationEnabled ? subOption.DescriptionLocalizations : null
+								subOption.Name, subOption.Description, subOption.Type,
+								options: minimalSubSubSourceOptions,
+								nameLocalizations: localizationEnabled ? subOption.NameLocalizations : null,
+								descriptionLocalizations: localizationEnabled ? subOption.DescriptionLocalizations : null
 							));
 						}
 
 					}
 
 					minimalSourceOptions.Add(new DiscordApplicationCommandOption(
-						option.Name, option.Description, option.Type, null, null,
-						minimalSubSourceOptions, null, null, null, null,
-						localizationEnabled ? option.NameLocalizations : null, localizationEnabled ? option.DescriptionLocalizations : null
+						option.Name, option.Description, option.Type,
+						options: minimalSubSourceOptions,
+						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
+						descriptionLocalizations: localizationEnabled ? option.DescriptionLocalizations : null
 					));
 				}
 
@@ -157,22 +160,25 @@ namespace DisCatSharp.ApplicationCommands
 									subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required ?? false,
 									subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
 									subSubOption.MinimumValue, subSubOption.MaximumValue,
-									localizationEnabled ? subSubOption.NameLocalizations : null, localizationEnabled ? subSubOption.DescriptionLocalizations : null
+									localizationEnabled ? subSubOption.NameLocalizations : null,
+									localizationEnabled ? subSubOption.DescriptionLocalizations : null
 								));
 							}
 
 							minimalSubTargetOptions.Add(new DiscordApplicationCommandOption(
-								subOption.Name, subOption.Description, subOption.Type, null, null,
-								minimalSubSubTargetOptions, null, null, null, null,
-								localizationEnabled ? subOption.NameLocalizations : null, localizationEnabled ? subOption.DescriptionLocalizations : null
+								subOption.Name, subOption.Description, subOption.Type,
+								options: minimalSubSubTargetOptions,
+								nameLocalizations: localizationEnabled ? subOption.NameLocalizations : null,
+								descriptionLocalizations: localizationEnabled ? subOption.DescriptionLocalizations : null
 							));
 						}
 					}
 
 					minimalTargetOptions.Add(new DiscordApplicationCommandOption(
-						option.Name, option.Description, option.Type, null, null,
-						minimalSubTargetOptions, null, null, null, null,
-						localizationEnabled ? option.NameLocalizations : null, localizationEnabled ? option.DescriptionLocalizations : null
+						option.Name, option.Description, option.Type,
+						options: minimalSubTargetOptions,
+						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
+						descriptionLocalizations: localizationEnabled ? option.DescriptionLocalizations : null
 					));
 				}
 
@@ -196,14 +202,18 @@ namespace DisCatSharp.ApplicationCommands
 							minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
 								subOption.Name, subOption.Description, subOption.Type, subOption.Required ?? false,
 								subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
-								subOption.MinimumValue, subOption.MaximumValue, localizationEnabled ? subOption.NameLocalizations : null, localizationEnabled ? subOption.DescriptionLocalizations : null
+								subOption.MinimumValue, subOption.MaximumValue,
+								localizationEnabled ? subOption.NameLocalizations : null,
+								localizationEnabled ? subOption.DescriptionLocalizations : null
 							));
 						}
 					}
 
 					minimalSourceOptions.Add(new DiscordApplicationCommandOption(
-						option.Name, option.Description, option.Type, null, null,
-						minimalSubSourceOptions, null, null, null, null, localizationEnabled ? option.NameLocalizations : null, localizationEnabled ? option.DescriptionLocalizations : null
+						option.Name, option.Description, option.Type,
+						options: minimalSubSourceOptions,
+						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
+						descriptionLocalizations: localizationEnabled ? option.DescriptionLocalizations : null
 					));
 				}
 
@@ -220,14 +230,18 @@ namespace DisCatSharp.ApplicationCommands
 							minimalSubTargetOptions.Add(new DiscordApplicationCommandOption(
 								subOption.Name, subOption.Description, subOption.Type, subOption.Required ?? false,
 								subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
-								subOption.MinimumValue, subOption.MaximumValue, localizationEnabled ? subOption.NameLocalizations : null, localizationEnabled ? subOption.DescriptionLocalizations : null
+								subOption.MinimumValue, subOption.MaximumValue,
+								localizationEnabled ? subOption.NameLocalizations : null,
+								localizationEnabled ? subOption.DescriptionLocalizations : null
 							));
 						}
 					}
 
 					minimalTargetOptions.Add(new DiscordApplicationCommandOption(
-						option.Name, option.Description, option.Type, null, null,
-						minimalSubTargetOptions, null, null, null, null, localizationEnabled ? option.NameLocalizations : null, localizationEnabled ? option.DescriptionLocalizations : null
+						option.Name, option.Description, option.Type,
+						options: minimalSubTargetOptions,
+						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
+						descriptionLocalizations: localizationEnabled ? option.DescriptionLocalizations : null
 					));
 				}
 
@@ -242,14 +256,16 @@ namespace DisCatSharp.ApplicationCommands
 					minimalSourceOptions.Add(new DiscordApplicationCommandOption(
 						option.Name, option.Description, option.Type, option.Required ?? false,
 						option.Choices, null, option.ChannelTypes, option.AutoComplete ?? false, option.MinimumValue, option.MaximumValue,
-						localizationEnabled ? option.NameLocalizations : null, localizationEnabled ? option.DescriptionLocalizations : null
+						localizationEnabled ? option.NameLocalizations : null,
+						localizationEnabled ? option.DescriptionLocalizations : null
 					));
 
 				foreach (var option in target.Options)
 					minimalTargetOptions.Add(new DiscordApplicationCommandOption(
 						option.Name, option.Description, option.Type, option.Required ?? false,
 						option.Choices, null, option.ChannelTypes, option.AutoComplete ?? false, option.MinimumValue, option.MaximumValue,
-						localizationEnabled ? option.NameLocalizations : null, localizationEnabled ? option.DescriptionLocalizations : null
+						localizationEnabled ? option.NameLocalizations : null,
+						localizationEnabled ? option.DescriptionLocalizations : null
 					));
 
 				return rootCheck && JsonConvert.SerializeObject(minimalSourceOptions) == JsonConvert.SerializeObject(minimalTargetOptions);
