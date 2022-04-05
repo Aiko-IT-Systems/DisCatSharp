@@ -74,10 +74,10 @@ namespace DisCatSharp.CommandsNext
 				return -1;
 
 			var cni = content.IndexOf('>');
-			if (cni == -1 || content.Length <= cni + 2)
+			if (cni == -1 || content.Length <= cni + 1)
 				return -1;
 
-			var cnp = content[..(cni + 2)];
+			var cnp = content[..(cni + 1)];
 			var m = s_userRegex.Match(cnp);
 			if (!m.Success)
 				return -1;
