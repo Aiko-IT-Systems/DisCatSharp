@@ -47,7 +47,8 @@ namespace DisCatSharp.ApplicationCommands
 			(
 				List<DiscordApplicationCommand> applicationCommands,
 				List<KeyValuePair<Type, Type>> commandTypeSources,
-				List<ContextMenuCommand> contextMenuCommands
+				List<ContextMenuCommand> contextMenuCommands,
+				bool withLocalization
 			)
 			> ParseContextMenuCommands(Type type, IEnumerable<MethodInfo> methods, List<CommandTranslator> translator = null)
 		{
@@ -80,7 +81,7 @@ namespace DisCatSharp.ApplicationCommands
 				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 			}
 
-			return Task.FromResult((commands, commandTypeSources, contextMenuCommands));
+			return Task.FromResult((commands, commandTypeSources, contextMenuCommands, translator != null));
 		}
 
 		/// <summary>
@@ -95,7 +96,8 @@ namespace DisCatSharp.ApplicationCommands
 			(
 				List<DiscordApplicationCommand> applicationCommands,
 				List<KeyValuePair<Type, Type>> commandTypeSources,
-				List<CommandMethod> commandMethods
+				List<CommandMethod> commandMethods,
+				bool withLocalization
 			)
 			> ParseBasicSlashCommandsAsync(Type type, IEnumerable<MethodInfo> methods, ulong? guildId = null, List<CommandTranslator> translator = null)
 		{
@@ -150,7 +152,7 @@ namespace DisCatSharp.ApplicationCommands
 				commandTypeSources.Add(new KeyValuePair<Type, Type>(type, type));
 			}
 
-			return (commands, commandTypeSources, commandMethods);
+			return (commands, commandTypeSources, commandMethods, translator != null);
 		}
 	}
 
@@ -173,7 +175,8 @@ namespace DisCatSharp.ApplicationCommands
 				List<KeyValuePair<Type, Type>> commandTypeSources,
 				List<object> singletonModules,
 				List<GroupCommand> groupCommands,
-				List<SubGroupCommand> subGroupCommands
+				List<SubGroupCommand> subGroupCommands,
+				bool withLocalization
 			)
 			> ParseSlashGroupsAsync(Type type, List<TypeInfo> types, ulong? guildId = null, List<GroupTranslator> translator = null)
 		{
@@ -377,7 +380,7 @@ namespace DisCatSharp.ApplicationCommands
 				}
 			}
 
-			return (commands, commandTypeSources, singletonModules, groupCommands, subGroupCommands);
+			return (commands, commandTypeSources, singletonModules, groupCommands, subGroupCommands, translator != null);
 		}
 	}
 }

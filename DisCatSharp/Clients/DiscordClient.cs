@@ -747,9 +747,10 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets all the global application commands for this application.
 		/// </summary>
+		/// <param name="withLocalizations">Whether to get the full localization dict.</param>
 		/// <returns>A list of global application commands.</returns>
-		public Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync() =>
-			this.ApiClient.GetGlobalApplicationCommandsAsync(this.CurrentApplication.Id);
+		public Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync(bool withLocalizations = false) =>
+			this.ApiClient.GetGlobalApplicationCommandsAsync(this.CurrentApplication.Id, withLocalizations);
 
 		/// <summary>
 		/// Overwrites the existing global application commands. New commands are automatically created and missing commands are automatically deleted.
@@ -800,9 +801,10 @@ namespace DisCatSharp
 		/// Gets all the application commands for a guild.
 		/// </summary>
 		/// <param name="guildId">The id of the guild to get application commands for.</param>
+		/// <param name="withLocalizations">Whether to get the full localization dict.</param>
 		/// <returns>A list of application commands in the guild.</returns>
-		public Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong guildId) =>
-			this.ApiClient.GetGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId);
+		public Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong guildId, bool withLocalizations = false) =>
+			this.ApiClient.GetGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, withLocalizations);
 
 		/// <summary>
 		/// Overwrites the existing application commands in a guild. New commands are automatically created and missing commands are automatically deleted.
