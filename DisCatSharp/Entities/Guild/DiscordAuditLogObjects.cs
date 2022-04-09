@@ -79,67 +79,90 @@ namespace DisCatSharp.Entities
 		public DiscordGuild Target { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of guild name's change.
+		/// <see cref="DiscordGuild.Name"/>
 		/// </summary>
 		public PropertyChange<string> NameChange { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of owner's change.
+		/// <see cref="DiscordGuild.Owner"/>
 		/// </summary>
 		public PropertyChange<DiscordMember> OwnerChange { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of icon's change.
+		/// <see cref="DiscordGuild.IconUrl"/>
 		/// </summary>
 		public PropertyChange<string> IconChange { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of verification level's change.
+		/// <see cref="DiscordGuild.VerificationLevel"/>
 		/// </summary>
 		public PropertyChange<VerificationLevel> VerificationLevelChange { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of afk channel's change.
+		/// <see cref="DiscordGuild.AfkChannel"/>
 		/// </summary>
 		public PropertyChange<DiscordChannel> AfkChannelChange { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of widget channel's change.
+		/// <see cref="DiscordGuild.SystemChannelFlags"/>
 		/// </summary>
-		public PropertyChange<DiscordChannel> EmbedChannelChange { get; internal set; }
+		public PropertyChange<SystemChannelFlags> SystemChannelFlagsChange { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of notification settings' change.
+		/// <see cref="DiscordGuild.WidgetChannel"/>
+		/// </summary>
+		public PropertyChange<DiscordChannel> WidgetChannelChange { get; internal set; }
+
+		[Obsolete("Use properly named WidgetChannelChange")]
+		public PropertyChange<DiscordChannel> EmbedChannelChange => this.WidgetChannelChange;
+
+		/// <summary>
+		/// <see cref="DiscordGuild.RulesChannel"/>
+		/// </summary>
+		public PropertyChange<DiscordChannel> RulesChannelChange { get; internal set; }
+
+		/// <summary>
+		/// <see cref="DiscordGuild.PublicUpdatesChannel"/>
+		/// </summary>
+		public PropertyChange<DiscordChannel> PublicUpdatesChannelChange { get; internal set; }
+
+		/// <summary>
+		/// <see cref="DiscordGuild.DefaultMessageNotifications"/>
 		/// </summary>
 		public PropertyChange<DefaultMessageNotifications> NotificationSettingsChange { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of system message channel's change.
+		/// <see cref="DiscordGuild.SystemChannel"/>
 		/// </summary>
 		public PropertyChange<DiscordChannel> SystemChannelChange { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of explicit content filter settings' change.
+		/// <see cref="DiscordGuild.ExplicitContentFilter"/>
 		/// </summary>
 		public PropertyChange<ExplicitContentFilter> ExplicitContentFilterChange { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of guild's mfa level change.
+		/// <see cref="DiscordGuild.MfaLevel"/>
 		/// </summary>
 		public PropertyChange<MfaLevel> MfaLevelChange { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of invite splash's change.
+		/// <see cref="DiscordGuild.SplashUrl"/>
 		/// </summary>
 		public PropertyChange<string> SplashChange { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of the guild's region change.
+		/// <see cref="DiscordGuild.VoiceRegion"/>
 		/// </summary>
 		public PropertyChange<string> RegionChange { get; internal set; }
 
 		/// <summary>
-		/// Gets the description of the guild's premium progress bar enabled state.
+		/// <see cref="DiscordGuild.VanityUrlCode"/>
+		/// </summary>
+		public PropertyChange<string> VanityUrlCodeChange { get; internal set; }
+
+		/// <summary>
+		/// <see cref="DiscordGuild.PremiumProgressBarEnabled"/>
 		/// </summary>
 		public PropertyChange<bool> PremiumProgressBarChange { get; internal set; }
 
@@ -175,6 +198,11 @@ namespace DisCatSharp.Entities
 		public PropertyChange<bool?> NsfwChange { get; internal set; }
 
 		/// <summary>
+		/// <see cref="DiscordChannel.RtcRegionId"/>
+		/// </summary>
+		public PropertyChange<string> RtcRegionIdChange { get; internal set; }
+
+		/// <summary>
 		/// Gets the description of channel's bitrate change.
 		/// </summary>
 		public PropertyChange<int?> BitrateChange { get; internal set; }
@@ -190,9 +218,19 @@ namespace DisCatSharp.Entities
 		public PropertyChange<string> TopicChange { get; internal set; }
 
 		/// <summary>
+		/// <see cref="DiscordChannel.UserLimit"/>
+		/// </summary>
+		public PropertyChange<int?> UserLimitChange { get; internal set; }
+
+		/// <summary>
 		/// Gets the description of channel's slow mode timeout change.
 		/// </summary>
 		public PropertyChange<int?> PerUserRateLimitChange { get; internal set; }
+
+		/// <summary>
+		/// <see cref="DiscordChannel.DefaultAutoArchiveDuration"/>
+		/// </summary>
+		public PropertyChange<ThreadAutoArchiveDuration?> DefaultAutoArchiveDurationChange { get; internal set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordAuditLogChannelEntry"/> class.
@@ -228,7 +266,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the description of overwrite's type change.
 		/// </summary>
-		public PropertyChange<string> TypeChange { get; internal set; }
+		public PropertyChange<OverwriteType?> TypeChange { get; internal set; }
 
 		/// <summary>
 		/// Gets the description of overwrite's target id change.
@@ -381,6 +419,11 @@ namespace DisCatSharp.Entities
 		public PropertyChange<bool?> HoistChange { get; internal set; }
 
 		/// <summary>
+		/// <see cref="DiscordRole.IconHash"/>
+		/// </summary>
+		public PropertyChange<string> IconHashChange { get; internal set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="DiscordAuditLogRoleUpdateEntry"/> class.
 		/// </summary>
 		internal DiscordAuditLogRoleUpdateEntry() { }
@@ -446,6 +489,11 @@ namespace DisCatSharp.Entities
 		/// Gets the affected webhook.
 		/// </summary>
 		public DiscordWebhook Target { get; internal set; }
+
+		/// <summary>
+		/// Undocumented.
+		/// </summary>
+		public PropertyChange<ulong?> IdChange { get; internal set; }
 
 		/// <summary>
 		/// Gets the description of webhook's name change.
@@ -651,6 +699,11 @@ namespace DisCatSharp.Entities
 	public sealed class DiscordAuditLogIntegrationEntry : DiscordAuditLogEntry
 	{
 		/// <summary>
+		/// The type of integration.
+		/// </summary>
+		public PropertyChange<string> Type { get; internal set; }
+
+		/// <summary>
 		/// Gets the description of emoticons' change.
 		/// </summary>
 		public PropertyChange<bool?> EnableEmoticons { get; internal set; }
@@ -706,6 +759,11 @@ namespace DisCatSharp.Entities
 		/// Gets the channel change.
 		/// </summary>
 		public PropertyChange<ulong?> ChannelIdChange { get; internal set; }
+
+		/// <summary>
+		/// <see cref="DiscordScheduledEvent.Name"/>
+		/// </summary>
+		public PropertyChange<string> NameChange { get; internal set; }
 
 		/// <summary>
 		/// Gets the description change.
@@ -832,8 +890,13 @@ namespace DisCatSharp.Entities
 	/// <summary>
 	/// Represents type of the action that was taken in given audit log event.
 	/// </summary>
-	public enum AuditLogActionType : int
+	public enum AuditLogActionType
 	{
+		/// <summary>
+		/// Indicates an invalid action type.
+		/// </summary>
+		Invalid = 0,
+
 		/// <summary>
 		/// Indicates that the guild was updated.
 		/// </summary>

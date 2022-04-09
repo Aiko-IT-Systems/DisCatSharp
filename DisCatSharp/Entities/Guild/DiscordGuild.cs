@@ -1606,6 +1606,9 @@ namespace DisCatSharp.Entities
 				bool p1, p2;
 				switch (xac.ActionType)
 				{
+					case AuditLogActionType.Invalid:
+						break;
+
 					case AuditLogActionType.GuildUpdate:
 						entry = new DiscordAuditLogGuildEntry
 						{
@@ -1615,6 +1618,18 @@ namespace DisCatSharp.Entities
 						var entrygld = entry as DiscordAuditLogGuildEntry;
 						foreach (var xc in xac.Changes)
 						{
+							PropertyChange<DiscordChannel> GetChannelChange()
+							{
+								ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
+								ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+
+								return new PropertyChange<DiscordChannel>
+								{
+									Before = this.GetChannel(t1) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id },
+									After = this.GetChannel(t2) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id }
+								};
+							}
+
 							switch (xc.Key.ToLowerInvariant())
 							{
 								case "name":
@@ -1650,25 +1665,27 @@ namespace DisCatSharp.Entities
 									break;
 
 								case "afk_channel_id":
-									ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-									ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+									entrygld.AfkChannelChange = GetChannelChange();
+									break;
 
-									entrygld.AfkChannelChange = new PropertyChange<DiscordChannel>
+								case "system_channel_flags":
+									entrygld.SystemChannelFlagsChange = new PropertyChange<SystemChannelFlags>()
 									{
-										Before = this.GetChannel(t1) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id },
-										After = this.GetChannel(t2) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id }
+										Before = (SystemChannelFlags)(long)xc.OldValue,
+										After = (SystemChannelFlags)(long)xc.NewValue
 									};
 									break;
 
 								case "widget_channel_id":
-									ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-									ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+									entrygld.WidgetChannelChange = GetChannelChange();
+									break;
 
-									entrygld.EmbedChannelChange = new PropertyChange<DiscordChannel>
-									{
-										Before = this.GetChannel(t1) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id },
-										After = this.GetChannel(t2) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id }
-									};
+								case "rules_channel_id":
+									entrygld.RulesChannelChange = GetChannelChange();
+									break;
+
+								case "public_updates_channel_id":
+									entrygld.PublicUpdatesChannelChange = GetChannelChange();
 									break;
 
 								case "splash_hash":
@@ -1688,14 +1705,7 @@ namespace DisCatSharp.Entities
 									break;
 
 								case "system_channel_id":
-									ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
-									ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
-
-									entrygld.SystemChannelChange = new PropertyChange<DiscordChannel>
-									{
-										Before = this.GetChannel(t1) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id },
-										After = this.GetChannel(t2) ?? new DiscordChannel { Id = t1, Discord = this.Discord, GuildId = this.Id }
-									};
+									entrygld.SystemChannelChange = GetChannelChange();
 									break;
 
 								case "explicit_content_filter":
@@ -1716,6 +1726,14 @@ namespace DisCatSharp.Entities
 
 								case "region":
 									entrygld.RegionChange = new PropertyChange<string>
+									{
+										Before = xc.OldValueString,
+										After = xc.NewValueString
+									};
+									break;
+
+								case "vanity_url_code":
+									entrygld.VanityUrlCodeChange = new PropertyChange<string>
 									{
 										Before = xc.OldValueString,
 										After = xc.NewValueString
@@ -1753,8 +1771,8 @@ namespace DisCatSharp.Entities
 								case "name":
 									entrychn.NameChange = new PropertyChange<string>
 									{
-										Before = xc.OldValue != null ? xc.OldValueString : null,
-										After = xc.NewValue != null ? xc.NewValueString : null
+										Before = xc.OldValueString,
+										After = xc.NewValueString
 									};
 									break;
 
@@ -1801,8 +1819,24 @@ namespace DisCatSharp.Entities
 									};
 									break;
 
+								case "rtc_region":
+									entrychn.RtcRegionIdChange = new PropertyChange<string>
+									{
+										Before = xc.OldValueString,
+										After = xc.NewValueString
+									};
+									break;
+
 								case "bitrate":
 									entrychn.BitrateChange = new PropertyChange<int?>
+									{
+										Before = (int?)(long?)xc.OldValue,
+										After = (int?)(long?)xc.NewValue
+									};
+									break;
+
+								case "user_limit":
+									entrychn.UserLimitChange = new PropertyChange<int?>
 									{
 										Before = (int?)(long?)xc.OldValue,
 										After = (int?)(long?)xc.NewValue
@@ -1814,6 +1848,14 @@ namespace DisCatSharp.Entities
 									{
 										Before = (int?)(long?)xc.OldValue,
 										After = (int?)(long?)xc.NewValue
+									};
+									break;
+
+								case "default_auto_archive_duration":
+									entrychn.DefaultAutoArchiveDurationChange = new PropertyChange<ThreadAutoArchiveDuration?>
+									{
+										Before = (ThreadAutoArchiveDuration?)(long?)xc.OldValue,
+										After = (ThreadAutoArchiveDuration?)(long?)xc.NewValue
 									};
 									break;
 
@@ -1861,10 +1903,10 @@ namespace DisCatSharp.Entities
 									break;
 
 								case "type":
-									entryovr.TypeChange = new PropertyChange<string>
+									entryovr.TypeChange = new PropertyChange<OverwriteType?>
 									{
-										Before = xc.OldValueString,
-										After = xc.NewValueString
+										Before = xc.OldValue != null ? (OverwriteType)(long)xc.OldValue : null,
+										After = xc.NewValue != null ? (OverwriteType)(long)xc.NewValue : null
 									};
 									break;
 
@@ -2031,6 +2073,14 @@ namespace DisCatSharp.Entities
 									};
 									break;
 
+								case "icon_hash":
+									entryrol.IconHashChange = new PropertyChange<string>
+									{
+										Before = xc.OldValueString,
+										After = xc.NewValueString
+									};
+									break;
+
 								default:
 									this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in role update: {0} - this should be reported to library developers", xc.Key);
 									break;
@@ -2167,6 +2217,17 @@ namespace DisCatSharp.Entities
 						{
 							switch (xc.Key.ToLowerInvariant())
 							{
+								case "application_id": // ???
+									p1 = ulong.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t1);
+									p2 = ulong.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t2);
+
+									entrywhk.IdChange = new PropertyChange<ulong?>
+									{
+										Before = p1 ? t1 : null,
+										After = p2 ? t2 : null
+									};
+									break;
+
 								case "name":
 									entrywhk.NameChange = new PropertyChange<string>
 									{
@@ -2465,6 +2526,13 @@ namespace DisCatSharp.Entities
 						{
 							switch (xc.Key.ToLowerInvariant())
 							{
+								case "type":
+									integentry.Type = new PropertyChange<string>()
+									{
+										Before = xc.OldValueString,
+										After = xc.NewValueString
+									};
+									break;
 								case "enable_emoticons":
 									integentry.EnableEmoticons = new PropertyChange<bool?>
 									{
@@ -2510,8 +2578,8 @@ namespace DisCatSharp.Entities
 								case "name":
 									entrythr.NameChange = new PropertyChange<string>
 									{
-										Before = xc.OldValue != null ? xc.OldValueString : null,
-										After = xc.NewValue != null ? xc.NewValueString : null
+										Before = xc.OldValueString,
+										After = xc.NewValueString
 									};
 									break;
 
@@ -2598,19 +2666,27 @@ namespace DisCatSharp.Entities
 									};
 									break;
 
+								case "name":
+									entryse.NameChange = new PropertyChange<string>
+									{
+										Before = xc.OldValueString,
+										After = xc.NewValueString
+									};
+									break;
+
 								case "description":
 									entryse.DescriptionChange = new PropertyChange<string>
 									{
-										Before = xc.OldValue != null ? xc.OldValueString : null,
-										After = xc.NewValue != null ? xc.NewValueString : null
+										Before = xc.OldValueString,
+										After = xc.NewValueString
 									};
 									break;
 
 								case "location":
 									entryse.LocationChange = new PropertyChange<string>
 									{
-										Before = xc.OldValue != null ? xc.OldValueString : null,
-										After = xc.NewValue != null ? xc.NewValueString : null
+										Before = xc.OldValueString,
+										After = xc.NewValueString
 									};
 									break;
 

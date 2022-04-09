@@ -223,7 +223,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// Gets the scheduled event channel id.
 		/// </summary>
-		[JsonProperty("channel_id")]
+		[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
 		public ulong ChannelId { get; set; }
 
 		/// <summary>
@@ -283,7 +283,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// Gets the scheduled event entity id.
 		/// </summary>
-		[JsonProperty("entity_id")]
+		[JsonProperty("entity_id", NullValueHandling = NullValueHandling.Ignore)]
 		public ulong EntityId { get; set; }
 
 		/// <summary>
@@ -489,7 +489,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// Gets or sets the user id.
 		/// </summary>
-		[JsonProperty("user_id")]
+		[JsonProperty("user_id", NullValueHandling = NullValueHandling.Ignore)]
 		public ulong UserId { get; set; }
 
 		/// <summary>
@@ -501,7 +501,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// Gets or sets the action type.
 		/// </summary>
-		[JsonProperty("action_type")]
+		[JsonProperty("action_type", NullValueHandling = NullValueHandling.Ignore)]
 		public AuditLogActionType ActionType { get; set; }
 
 		/// <summary>
