@@ -25,7 +25,7 @@ Discord Bot Library written in C# for .NET.
 ## Important Info
 
 Development is a bit slow right now, because I (Lala) have a surgery soon and a rehab.
-Please continue reporting bugs to us via discord. The other staffs will help!
+Please continue reporting bugs to us via [discord](https://discord.gg/U4BGHpKSF7). The other staffs will help!
 
 ## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
@@ -44,6 +44,8 @@ The latest release is always available on [NuGet](https://nuget.dcs.aitsys.dev).
 The documentation for the latest stable version is available at [docs.dcs.aitsys.dev/lts](https://docs.dcs.aitsys.dev/lts).
 
 The documentation of the latest nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
+
+Fallback docs are available at [docs-alt.dcs.aitsys.dev](https://docs-alt.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
 Either join our [support guild](https://discord.gg/U4BGHpKSF7) and open a support ticket.
