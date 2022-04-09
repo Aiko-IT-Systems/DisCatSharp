@@ -85,7 +85,7 @@ To release a new version do the following steps:
 - Wait for the CI/CD to complete.
 - Merge the branch into main and delete it afterwards
 
-## Testing Docs
+## Testing Docs (Not in use)
 Just visit [this](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/docs-preview.yml) Workflow.
 
 The workflow generates a docs artifact and deploys on Cloudflare Pages.
