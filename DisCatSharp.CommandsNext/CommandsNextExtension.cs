@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using DisCatSharp.CommandsNext.Attributes;
@@ -171,9 +172,9 @@ namespace DisCatSharp.CommandsNext
 				this._userFriendlyTypeNames[xnt] = this._userFriendlyTypeNames[xt];
 			}
 
-			var t = typeof(CommandsNextExtension);
+			var t = this.GetType();
 			var ms = t.GetTypeInfo().DeclaredMethods;
-			var m = ms.FirstOrDefault(xm => xm.Name == "ConvertArgument" && xm.ContainsGenericParameters && !xm.IsStatic && xm.IsPublic);
+			var m = ms.FirstOrDefault(xm => xm.Name == "ConvertArgumentToObj" && xm.ContainsGenericParameters && !xm.IsStatic && xm.IsPrivate);
 			this._convertGeneric = m;
 		}
 
@@ -1033,6 +1034,13 @@ namespace DisCatSharp.CommandsNext
 		#endregion
 
 		#region Helpers
+		/// <summary>
+		/// Allows easier interoperability with reflection by turning the <see cref="Task{T}"/> returned by <see cref="ConvertArgument"/>
+		/// into a task containing <see cref="object"/>, using the provided generic type information.
+		/// </summary>
+		private async Task<object> ConvertArgumentToObj<T>(string value, CommandContext ctx)
+			=> await this.ConvertArgument<T>(value, ctx).ConfigureAwait(false);
+
 		/// <summary>
 		/// Gets the configuration-specific string comparer. This returns <see cref="StringComparer.Ordinal"/> or <see cref="StringComparer.OrdinalIgnoreCase"/>,
 		/// depending on whether <see cref="CommandsNextConfiguration.CaseSensitive"/> is set to <see langword="true"/> or <see langword="false"/>.
