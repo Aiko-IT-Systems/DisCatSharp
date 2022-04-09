@@ -47,12 +47,14 @@ namespace DisCatSharp.Hosting
 		/// <param name="serviceProvider">The service provider.</param>
 		/// <param name="applicationLifetime">The application lifetime.</param>
 		/// <param name="configBotSection">The config bot section.</param>
+		/// <param name="loggerFactory"></param>
 		protected DiscordShardedHostedService(IConfiguration config,
 			ILogger<DiscordShardedHostedService> logger,
 			IServiceProvider serviceProvider,
 			IHostApplicationLifetime applicationLifetime,
-			string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
-			: base(config, logger, serviceProvider, applicationLifetime, configBotSection)
+			string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB,
+			ILoggerFactory? loggerFactory = null)
+			: base(config, logger, serviceProvider, applicationLifetime, configBotSection, loggerFactory)
 		{
 
 		}
@@ -63,6 +65,7 @@ namespace DisCatSharp.Hosting
 			try
 			{
 				var config = this.Configuration.ExtractConfig<DiscordConfiguration>(this.ServiceProvider, "Discord", this.BotSection);
+				config.LoggerFactory = this.LoggerFactory;
 				this.ShardedClient = new DiscordShardedClient(config);
 			}
 			catch (Exception ex)

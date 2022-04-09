@@ -28,6 +28,7 @@ using DisCatSharp.Configuration.Models;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.Configuration
 {
@@ -295,9 +296,10 @@ namespace DisCatSharp.Configuration
 		/// <param name="config"></param>
 		/// <param name="serviceProvider"></param>
 		/// <param name="botSectionName"></param>
+		/// <param name="logger"></param>
 		/// <returns>Instance of <see cref="DiscordClient"/></returns>
 		public static DiscordClient BuildClient(this IConfiguration config, IServiceProvider serviceProvider,
-			string botSectionName = DEFAULT_ROOT_LIB)
+			string botSectionName = DEFAULT_ROOT_LIB, ILoggerFactory? logger = null)
 		{
 			var section = config.HasSection(botSectionName, "Discord")
 				? "Discord"
@@ -305,9 +307,9 @@ namespace DisCatSharp.Configuration
 					? $"Discord:{CONFIG_SUFFIX}"
 					: null;
 
-			return string.IsNullOrEmpty(section)
-				? new DiscordClient(new DiscordConfiguration(serviceProvider))
-				: new DiscordClient(config.ExtractConfig<DiscordConfiguration>(serviceProvider, section, botSectionName));
+			var cfg = string.IsNullOrEmpty(section) ? new DiscordConfiguration(serviceProvider) : config.ExtractConfig<DiscordConfiguration>(serviceProvider, section, botSectionName);
+			cfg.LoggerFactory = logger; 
+			return new DiscordClient(cfg);
 		}
 	}
 }

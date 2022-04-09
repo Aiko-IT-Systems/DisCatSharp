@@ -46,6 +46,7 @@ namespace DisCatSharp.Hosting
 		protected readonly IConfiguration Configuration;
 		protected readonly IServiceProvider ServiceProvider;
 		protected readonly string BotSection;
+		protected readonly ILoggerFactory? LoggerFactory;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BaseHostedService"/> class.
@@ -55,17 +56,20 @@ namespace DisCatSharp.Hosting
 		/// <param name="serviceProvider">The service provider.</param>
 		/// <param name="applicationLifetime">The application lifetime.</param>
 		/// <param name="configBotSection">The config bot section.</param>
+		/// <param name="loggerFactory">The logger factory.</param>
 		internal BaseHostedService(IConfiguration config,
 			ILogger<BaseHostedService> logger,
 			IServiceProvider serviceProvider,
 			IHostApplicationLifetime applicationLifetime,
-			string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
+			string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB,
+			ILoggerFactory? loggerFactory = null)
 		{
 			this.Configuration = config;
 			this.Logger = logger;
 			this.ApplicationLifetime = applicationLifetime;
 			this.ServiceProvider = serviceProvider;
 			this.BotSection = configBotSection;
+			this.LoggerFactory = loggerFactory;
 		}
 
 		/// <summary>
