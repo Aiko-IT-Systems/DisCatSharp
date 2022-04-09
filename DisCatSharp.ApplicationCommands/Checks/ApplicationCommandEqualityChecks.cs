@@ -51,28 +51,45 @@ namespace DisCatSharp.ApplicationCommands
 
 			ApplicationCommandsExtension.ClientInternal.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC Change Check] Command {ac1.Name}\n\n[{JsonConvert.SerializeObject(sourceApplicationCommand)},{JsonConvert.SerializeObject(targetApplicationCommand)}]\n\n");
 
-			return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand, ac1.Type);
+			return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand, ac1.Type, ApplicationCommandsExtension.Configuration?.EnableLocalization ?? false);
 		}
 
 		/// <summary>
-		/// Checks if two <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/>s are the same.
+		/// Checks softly whether two <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/>s are the same.
 		/// Excluding id, application id and version here.
 		/// </summary>
 		/// <param name="source">Source application command.</param>
 		/// <param name="target">Application command to check against.</param>
 		/// <param name="type">The application command type.</param>
-		internal static bool SoftEqual(this DiscordApplicationCommand source, DiscordApplicationCommand target, ApplicationCommandType type)
+		/// <param name="localizationEnabled">Whether localization is enabled.</param>
+		internal static bool SoftEqual(this DiscordApplicationCommand source, DiscordApplicationCommand target, ApplicationCommandType type, bool localizationEnabled = false)
 		{
-			return type switch {
-				ApplicationCommandType.ChatInput => DeepEqual(source, target),
-				_ => (source.Name == target.Name) && (source.DefaultPermission == target.DefaultPermission)
-			&& (source.Type == target.Type)
-			};
+			return localizationEnabled
+				? type switch
+				{
+					ApplicationCommandType.ChatInput => DeepEqual(source, target, localizationEnabled),
+					_ => (source.Name == target.Name) && (source.DefaultPermission == target.DefaultPermission)
+				&& (source.Type == target.Type) && (source.NameLocalizations == target.NameLocalizations)
+				}
+				: type switch {
+					ApplicationCommandType.ChatInput => DeepEqual(source, target),
+					_ => (source.Name == target.Name) && (source.DefaultPermission == target.DefaultPermission)
+				&& (source.Type == target.Type)
+				};
 		}
 
-		internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target)
+		/// <summary>
+		/// Checks deeply whether two <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/>s are the same.
+		/// Excluding id, application id and version here.
+		/// </summary>
+		/// <param name="source">Source application command.</param>
+		/// <param name="target">Application command to check against.</param>
+		/// <param name="localizationEnabled">Whether localization is enabled.</param>
+		internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target, bool localizationEnabled = false)
 		{
 			var rootCheck = (source.Name == target.Name) && (source.Description == target.Description) && (source.DefaultPermission == target.DefaultPermission) && (source.Type == target.Type);
+			if (localizationEnabled)
+				rootCheck = rootCheck && (source.NameLocalizations == target.NameLocalizations) && (source.DescriptionLocalizations == target.DescriptionLocalizations);
 
 			if (source.Options == null && target.Options == null)
 				return rootCheck;
@@ -100,21 +117,27 @@ namespace DisCatSharp.ApplicationCommands
 								minimalSubSubSourceOptions.Add(new DiscordApplicationCommandOption(
 									subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required ?? false,
 									subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
-									subSubOption.MinimumValue, subSubOption.MaximumValue, null, null
+									subSubOption.MinimumValue, subSubOption.MaximumValue,
+									localizationEnabled ? subSubOption.NameLocalizations : null,
+									localizationEnabled ? subSubOption.DescriptionLocalizations : null
 								));
 							}
 
 							minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
-								subOption.Name, subOption.Description, subOption.Type, null, null,
-								minimalSubSubSourceOptions, null, null, null, null, null, null
+								subOption.Name, subOption.Description, subOption.Type,
+								options: minimalSubSubSourceOptions,
+								nameLocalizations: localizationEnabled ? subOption.NameLocalizations : null,
+								descriptionLocalizations: localizationEnabled ? subOption.DescriptionLocalizations : null
 							));
 						}
 
 					}
 
 					minimalSourceOptions.Add(new DiscordApplicationCommandOption(
-						option.Name, option.Description, option.Type, null, null,
-						minimalSubSourceOptions, null, null, null, null, null, null
+						option.Name, option.Description, option.Type,
+						options: minimalSubSourceOptions,
+						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
+						descriptionLocalizations: localizationEnabled ? option.DescriptionLocalizations : null
 					));
 				}
 
@@ -135,20 +158,26 @@ namespace DisCatSharp.ApplicationCommands
 								minimalSubSubTargetOptions.Add(new DiscordApplicationCommandOption(
 									subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required ?? false,
 									subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
-									subSubOption.MinimumValue, subSubOption.MaximumValue, null, null
+									subSubOption.MinimumValue, subSubOption.MaximumValue,
+									localizationEnabled ? subSubOption.NameLocalizations : null,
+									localizationEnabled ? subSubOption.DescriptionLocalizations : null
 								));
 							}
 
 							minimalSubTargetOptions.Add(new DiscordApplicationCommandOption(
-								subOption.Name, subOption.Description, subOption.Type, null, null,
-								minimalSubSubTargetOptions, null, null, null, null, null, null
+								subOption.Name, subOption.Description, subOption.Type,
+								options: minimalSubSubTargetOptions,
+								nameLocalizations: localizationEnabled ? subOption.NameLocalizations : null,
+								descriptionLocalizations: localizationEnabled ? subOption.DescriptionLocalizations : null
 							));
 						}
 					}
 
 					minimalTargetOptions.Add(new DiscordApplicationCommandOption(
-						option.Name, option.Description, option.Type, null, null,
-						minimalSubTargetOptions, null, null, null, null, null, null
+						option.Name, option.Description, option.Type,
+						options: minimalSubTargetOptions,
+						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
+						descriptionLocalizations: localizationEnabled ? option.DescriptionLocalizations : null
 					));
 				}
 
@@ -172,14 +201,18 @@ namespace DisCatSharp.ApplicationCommands
 							minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
 								subOption.Name, subOption.Description, subOption.Type, subOption.Required ?? false,
 								subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
-								subOption.MinimumValue, subOption.MaximumValue, null, null
+								subOption.MinimumValue, subOption.MaximumValue,
+								localizationEnabled ? subOption.NameLocalizations : null,
+								localizationEnabled ? subOption.DescriptionLocalizations : null
 							));
 						}
 					}
 
 					minimalSourceOptions.Add(new DiscordApplicationCommandOption(
-						option.Name, option.Description, option.Type, null, null,
-						minimalSubSourceOptions, null, null, null, null, null, null
+						option.Name, option.Description, option.Type,
+						options: minimalSubSourceOptions,
+						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
+						descriptionLocalizations: localizationEnabled ? option.DescriptionLocalizations : null
 					));
 				}
 
@@ -196,14 +229,18 @@ namespace DisCatSharp.ApplicationCommands
 							minimalSubTargetOptions.Add(new DiscordApplicationCommandOption(
 								subOption.Name, subOption.Description, subOption.Type, subOption.Required ?? false,
 								subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
-								subOption.MinimumValue, subOption.MaximumValue, null, null
+								subOption.MinimumValue, subOption.MaximumValue,
+								localizationEnabled ? subOption.NameLocalizations : null,
+								localizationEnabled ? subOption.DescriptionLocalizations : null
 							));
 						}
 					}
 
 					minimalTargetOptions.Add(new DiscordApplicationCommandOption(
-						option.Name, option.Description, option.Type, null, null,
-						minimalSubTargetOptions, null, null, null, null, null, null
+						option.Name, option.Description, option.Type,
+						options: minimalSubTargetOptions,
+						nameLocalizations: localizationEnabled ? option.NameLocalizations : null,
+						descriptionLocalizations: localizationEnabled ? option.DescriptionLocalizations : null
 					));
 				}
 
@@ -218,14 +255,16 @@ namespace DisCatSharp.ApplicationCommands
 					minimalSourceOptions.Add(new DiscordApplicationCommandOption(
 						option.Name, option.Description, option.Type, option.Required ?? false,
 						option.Choices, null, option.ChannelTypes, option.AutoComplete ?? false, option.MinimumValue, option.MaximumValue,
-						null, null
+						localizationEnabled ? option.NameLocalizations : null,
+						localizationEnabled ? option.DescriptionLocalizations : null
 					));
 
 				foreach (var option in target.Options)
 					minimalTargetOptions.Add(new DiscordApplicationCommandOption(
 						option.Name, option.Description, option.Type, option.Required ?? false,
 						option.Choices, null, option.ChannelTypes, option.AutoComplete ?? false, option.MinimumValue, option.MaximumValue,
-						null, null
+						localizationEnabled ? option.NameLocalizations : null,
+						localizationEnabled ? option.DescriptionLocalizations : null
 					));
 
 				return rootCheck && JsonConvert.SerializeObject(minimalSourceOptions) == JsonConvert.SerializeObject(minimalTargetOptions);

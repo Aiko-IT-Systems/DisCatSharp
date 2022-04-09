@@ -41,8 +41,9 @@ namespace DisCatSharp.ApplicationCommands
 		/// Registers the global commands.
 		/// </summary>
 		/// <param name="commands">The command list.</param>
+		/// <param name="withLocales">Whether this commands has localization.</param>
 		/// <returns>A list of registered commands.</returns>
-		internal static async Task<List<DiscordApplicationCommand>> RegisterGlobalCommandsAsync(List<DiscordApplicationCommand> commands)
+		internal static async Task<List<DiscordApplicationCommand>> RegisterGlobalCommandsAsync(List<DiscordApplicationCommand> commands, bool withLocales)
 		{
 			var (changedCommands, unchangedCommands) = BuildGlobalOverwriteList(commands);
 			var globalCommandsCreateList = BuildGlobalCreateList(commands);
@@ -186,8 +187,9 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="guildId">The target guild id.</param>
 		/// <param name="commands">The command list.</param>
+		/// <param name="withLocales">Whether this commands has localization.</param>
 		/// <returns>A list of registered commands.</returns>
-		internal static async Task<List<DiscordApplicationCommand>> RegisterGuildCommandsAsync(ulong guildId, List<DiscordApplicationCommand> commands)
+		internal static async Task<List<DiscordApplicationCommand>> RegisterGuilldCommandsAsync(ulong guildId, List<DiscordApplicationCommand> commands, bool withLocales)
 		{
 			var (changedCommands, unchangedCommands) = BuildGuildOverwriteList(guildId, commands);
 			var guildCommandsCreateList = BuildGuildCreateList(guildId, commands);
