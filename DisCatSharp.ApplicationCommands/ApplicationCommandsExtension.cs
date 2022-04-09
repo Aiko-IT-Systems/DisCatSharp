@@ -394,7 +394,7 @@ namespace DisCatSharp.ApplicationCommands
 
 				List<ulong> failedGuilds = new();
 				IEnumerable<DiscordApplicationCommand> globalCommands = null;
-				globalCommands = await this.Client.GetGlobalApplicationCommandsAsync() ?? null;
+				globalCommands = await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false) ?? null;
 				var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys : this._updateList.Select(x => x.Key)?.Distinct().Where(x => x != null)?.Select(x => x.Value);
 
 				foreach (var guild in guilds)
@@ -403,7 +403,7 @@ namespace DisCatSharp.ApplicationCommands
 					var unauthorized = false;
 					try
 					{
-						commands = await this.Client.GetGuildApplicationCommandsAsync(guild) ?? null;
+						commands = await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false) ?? null;
 					}
 					catch (UnauthorizedException)
 					{
@@ -461,6 +461,7 @@ namespace DisCatSharp.ApplicationCommands
 			var subGroupCommands = new List<SubGroupCommand>();
 			var contextMenuCommands = new List<ContextMenuCommand>();
 			var updateList = new List<DiscordApplicationCommand>();
+			var withLocales = false;
 
 			var commandTypeSources = new List<KeyValuePair<Type, Type>>();
 
@@ -494,6 +495,7 @@ namespace DisCatSharp.ApplicationCommands
 						if (!string.IsNullOrEmpty(ctx.Translations))
 						{
 							groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
+							withLocales = true;
 						}
 
 						var slashGroupsTuple = NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations).Result;
@@ -521,6 +523,7 @@ namespace DisCatSharp.ApplicationCommands
 							if (!string.IsNullOrEmpty(ctx.Translations))
 							{
 								commandTranslations = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
+								withLocales = true;
 							}
 
 							//Slash commands
@@ -579,7 +582,7 @@ namespace DisCatSharp.ApplicationCommands
 							{
 								if (updateList != null && updateList.Any())
 								{
-									var regCommands = RegistrationWorker.RegisterGlobalCommandsAsync(updateList).Result;
+									var regCommands = RegistrationWorker.RegisterGlobalCommandsAsync(updateList, withLocales).Result;
 									var actualCommands = regCommands.Distinct().ToList();
 									commands.AddRange(actualCommands);
 									GlobalCommandsInternal.AddRange(actualCommands);
@@ -603,7 +606,7 @@ namespace DisCatSharp.ApplicationCommands
 							{
 								if (updateList != null && updateList.Any())
 								{
-									var regCommands = RegistrationWorker.RegisterGuildCommandsAsync(guildId.Value, updateList).Result;
+									var regCommands = RegistrationWorker.RegisterGuilldCommandsAsync(guildId.Value, updateList, withLocales).Result;
 									var actualCommands = regCommands.Distinct().ToList();
 									commands.AddRange(actualCommands);
 									GuildCommandsInternal.Add(guildId.Value, actualCommands);

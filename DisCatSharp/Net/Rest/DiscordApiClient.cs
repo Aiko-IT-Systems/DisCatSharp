@@ -28,6 +28,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Net.Abstractions;
@@ -4555,12 +4556,17 @@ namespace DisCatSharp.Net
 		/// Gets the global application commands.
 		/// </summary>
 		/// <param name="applicationId">The application id.</param>
-		internal async Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync(ulong applicationId)
+		/// <param name="withLocalizations">Whether to get the full localization dict.</param>
+		internal async Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync(ulong applicationId, bool withLocalizations = false)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {application_id = applicationId }, out var path);
 
-			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+			var querydict = new Dictionary<string, string>
+			{
+				["with_localizations"] = withLocalizations.ToString().ToLower()
+			};
+			var url = Utilities.GetApiUriFor(path, BuildQueryString(querydict), this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
 			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response);
@@ -4709,12 +4715,17 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="applicationId">The application id.</param>
 		/// <param name="guildId">The guild id.</param>
-		internal async Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong applicationId, ulong guildId)
+		/// <param name="withLocalizations">Whether to get the full localization dict.</param>
+		internal async Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong applicationId, ulong guildId, bool withLocalizations = false)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {application_id = applicationId, guild_id = guildId }, out var path);
 
-			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+			var querydict = new Dictionary<string, string>
+			{
+				["with_localizations"] = withLocalizations.ToString().ToLower()
+			};
+			var url = Utilities.GetApiUriFor(path, BuildQueryString(querydict), this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
 			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response);
