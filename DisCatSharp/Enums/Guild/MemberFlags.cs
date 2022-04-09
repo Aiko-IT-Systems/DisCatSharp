@@ -20,26 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+using System;
+
+namespace DisCatSharp.Enums
 {
 	/// <summary>
-	/// Represents the invite type .
+	/// Represents additional details of a member account.
 	/// </summary>
-	public enum InviteType
+	[Flags]
+	public enum MemberFlags
 	{
 		/// <summary>
-		/// Represents a guild invite.
+		/// This member has no flags.
 		/// </summary>
-		Guild = 0,
+		None = 0,
 
 		/// <summary>
-		/// Represents a group dm invite.
+		/// This member has joined and left the guild before.
 		/// </summary>
-		GroupDm = 1,
-
-		/// <summary>
-		/// Represents a friend invite.
-		/// </summary>
-		User = 2
+		DidRejoin = 1 << 0,
 	}
 }
+
