@@ -197,9 +197,16 @@ namespace DisCatSharp
 
 		/// <summary>
 		/// Includes all intents.
-		/// <para>The <see cref="GuildMembers"/> and <see cref="GuildPresences"/> intents are privileged, and must be enabled on the bot's developer page.</para>
-		/// <para>The <see cref="GuildMessages"/> will be privileged as of April 2022.</para>
+		/// <para>The <see cref="GuildMembers"/>, <see cref="GuildPresences"/> and <see cref="MessageContent"/> intents are privileged, and must be enabled on the bot's developer page.</para>
+		/// <para>The <see cref="MessageContent"/> exist only in v10.</para>
 		/// </summary>
-		All = AllUnprivileged | GuildMembers | GuildPresences
+		All = AllUnprivileged | GuildMembers | GuildPresences | MessageContent,
+
+		/// <summary>
+		/// Includes all intents.
+		/// <para>The <see cref="GuildMembers"/> and <see cref="GuildPresences"/> intents are privileged, and must be enabled on the bot's developer page.</para>
+		/// <para>The <see cref="MessageContent"/> exist only in v10 and is removed here.</para>
+		/// </summary>
+		AllV9Less = AllUnprivileged | GuildMembers | GuildPresences
 	}
 }
