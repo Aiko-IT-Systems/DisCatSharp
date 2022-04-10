@@ -53,6 +53,11 @@ namespace DisCatSharp.ApplicationCommands
 		public bool DebugStartup { internal get; set; } = false;
 
 		/// <summary>
+		/// Enable localization features.
+		/// </summary>
+		public bool EnableLocalization { internal get; set; } = false;
+
+		/// <summary>
 		/// Manual override.
 		/// <note type="warning">DO NOT USE THIS!</note>
 		/// </summary>
@@ -92,6 +97,7 @@ namespace DisCatSharp.ApplicationCommands
 			this.CheckAllGuilds = acc.CheckAllGuilds;
 			this.ManualOverride = acc.ManualOverride;
 			this.AutoDefer = acc.AutoDefer;
+			this.EnableLocalization = acc.EnableLocalization;
 		}
 	}
 }

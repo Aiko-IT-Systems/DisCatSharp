@@ -407,7 +407,7 @@ namespace DisCatSharp.Entities
 				perUserRateLimit = Optional.None;
 			}
 
-			return await this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNsfw, perUserRateLimit, this.QualityMode, reason).ConfigureAwait(false);
+			return await this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNsfw, perUserRateLimit, this.QualityMode, this.DefaultAutoArchiveDuration, reason).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -850,13 +850,13 @@ namespace DisCatSharp.Entities
 			if (messages == null || !msgs.Any())
 				throw new ArgumentException("You need to specify at least one message to delete.");
 
-			if (msgs.Count() < 2)
+			if (msgs.Length < 2)
 			{
 				await this.Discord.ApiClient.DeleteMessageAsync(this.Id, msgs.Single(), reason).ConfigureAwait(false);
 				return;
 			}
 
-			for (var i = 0; i < msgs.Count(); i += 100)
+			for (var i = 0; i < msgs.Length; i += 100)
 				await this.Discord.ApiClient.DeleteMessagesAsync(this.Id, msgs.Skip(i).Take(100), reason).ConfigureAwait(false);
 		}
 
