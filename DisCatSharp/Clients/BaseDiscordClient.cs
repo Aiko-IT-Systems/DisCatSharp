@@ -131,12 +131,13 @@ namespace DisCatSharp
 				this.Configuration.LoggerFactory = config.ServiceProvider.GetService<ILoggerFactory>();
 				this.Logger = config.ServiceProvider.GetService<ILogger<BaseDiscordClient>>();
 			}
-			else if (this.Configuration.LoggerFactory == null)
+
+			if (this.Configuration.LoggerFactory == null)
 			{
 				this.Configuration.LoggerFactory = new DefaultLoggerFactory();
 				this.Configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
-				this.Logger = this.Configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
 			}
+			this.Logger ??= this.Configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
 
 			this.ApiClient = new DiscordApiClient(this);
 			this.UserCache = new ConcurrentDictionary<ulong, DiscordUser>();
