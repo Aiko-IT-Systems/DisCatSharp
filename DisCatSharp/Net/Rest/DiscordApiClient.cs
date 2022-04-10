@@ -28,6 +28,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Net.Abstractions;
@@ -1517,9 +1518,9 @@ namespace DisCatSharp.Net
 		/// <param name="nsfw">If true, nsfw.</param>
 		/// <param name="perUserRateLimit">The per user rate limit.</param>
 		/// <param name="qualityMode">The quality mode.</param>
+		/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
 		/// <param name="reason">The reason.</param>
-
-		internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, string reason)
+		internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, string reason)
 		{
 			var restOverwrites = new List<DiscordRestOverwrite>();
 			if (overwrites != null)
@@ -1537,7 +1538,8 @@ namespace DisCatSharp.Net
 				PermissionOverwrites = restOverwrites,
 				Nsfw = nsfw,
 				PerUserRateLimit = perUserRateLimit,
-				QualityMode = qualityMode
+				QualityMode = qualityMode,
+				DefaultAutoArchiveDuration = defaultAutoArchiveDuration
 			};
 
 			var headers = Utilities.GetBaseHeaders();
@@ -2856,7 +2858,7 @@ namespace DisCatSharp.Net
 			if (includeRoles != null)
 			{
 				var roleArray = includeRoles.ToArray();
-				var roleArrayCount = roleArray.Count();
+				var roleArrayCount = roleArray.Length;
 
 				for (var i = 0; i < roleArrayCount; i++)
 					sb.Append($"&include_roles={roleArray[i]}");
@@ -2897,7 +2899,7 @@ namespace DisCatSharp.Net
 			if (includeRoles != null)
 			{
 				var roleArray = includeRoles.ToArray();
-				var roleArrayCount = roleArray.Count();
+				var roleArrayCount = roleArray.Length;
 
 				for (var i = 0; i < roleArrayCount; i++)
 					sb.Append($"&include_roles={roleArray[i]}");
@@ -3485,7 +3487,7 @@ namespace DisCatSharp.Net
 				pld.Attachments = attachments;
 			}
 
-			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.Files?.Count > 0 || builder.IsTts == true || builder.Mentions != null)
+			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.Files?.Count > 0 || builder.IsTts == true || builder.Mentions != null)
 				values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 			var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
@@ -4555,12 +4557,17 @@ namespace DisCatSharp.Net
 		/// Gets the global application commands.
 		/// </summary>
 		/// <param name="applicationId">The application id.</param>
-		internal async Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync(ulong applicationId)
+		/// <param name="withLocalizations">Whether to get the full localization dict.</param>
+		internal async Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync(ulong applicationId, bool withLocalizations = false)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {application_id = applicationId }, out var path);
 
-			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+			var querydict = new Dictionary<string, string>
+			{
+				["with_localizations"] = withLocalizations.ToString().ToLower()
+			};
+			var url = Utilities.GetApiUriFor(path, BuildQueryString(querydict), this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
 			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response);
@@ -4709,12 +4716,17 @@ namespace DisCatSharp.Net
 		/// </summary>
 		/// <param name="applicationId">The application id.</param>
 		/// <param name="guildId">The guild id.</param>
-		internal async Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong applicationId, ulong guildId)
+		/// <param name="withLocalizations">Whether to get the full localization dict.</param>
+		internal async Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong applicationId, ulong guildId, bool withLocalizations = false)
 		{
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {application_id = applicationId, guild_id = guildId }, out var path);
 
-			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+			var querydict = new Dictionary<string, string>
+			{
+				["with_localizations"] = withLocalizations.ToString().ToLower()
+			};
+			var url = Utilities.GetApiUriFor(path, BuildQueryString(querydict), this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
 			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response);
@@ -5052,7 +5064,7 @@ namespace DisCatSharp.Net
 			var values = new Dictionary<string, string>();
 
 			if (builder != null)
-				if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTts == true || builder.Mentions != null || builder.Files?.Count > 0)
+				if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts == true || builder.Mentions != null || builder.Files?.Count > 0)
 					values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 			var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
@@ -5180,7 +5192,7 @@ namespace DisCatSharp.Net
 			if (builder.Mentions != null)
 				pld.Mentions = new DiscordMentions(builder.Mentions, builder.Mentions.Any());
 
-			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTts == true || builder.Mentions != null || builder.Files?.Count > 0)
+			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts == true || builder.Mentions != null || builder.Files?.Count > 0)
 				values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 			var route = $"{Endpoints.WEBHOOKS}/:application_id/:interaction_token";

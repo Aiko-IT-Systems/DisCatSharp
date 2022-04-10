@@ -1900,7 +1900,7 @@ namespace DisCatSharp
 
 			var members = dat["members"].ToObject<TransportMember[]>();
 
-			var memCount = members.Count();
+			var memCount = members.Length;
 			for (var i = 0; i < memCount; i++)
 			{
 				var mbr = new DiscordMember(members[i]) { Discord = this, GuildId = guild.Id };
@@ -1928,7 +1928,7 @@ namespace DisCatSharp
 			{
 				var presences = dat["presences"].ToObject<DiscordPresence[]>();
 
-				var presCount = presences.Count();
+				var presCount = presences.Length;
 				for (var i = 0; i < presCount; i++)
 				{
 					var xp = presences[i];
