@@ -56,7 +56,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the instance of the logger for this client.
 		/// </summary>
-		public ILogger<BaseDiscordClient> Logger { get; }
+		public ILogger<BaseDiscordClient> Logger { get; internal set; }
 
 		/// <summary>
 		/// Gets the string representing the version of bot lib.
@@ -126,12 +126,17 @@ namespace DisCatSharp
 		{
 			this.Configuration = new DiscordConfiguration(config);
 
-			if (this.Configuration.LoggerFactory == null)
+			if (this.Configuration.ServiceProvider != null)
+			{
+				this.Configuration.LoggerFactory = config.ServiceProvider.GetService<ILoggerFactory>();
+				this.Logger = config.ServiceProvider.GetService<ILogger<BaseDiscordClient>>();
+			}
+			else if (this.Configuration.LoggerFactory == null)
 			{
 				this.Configuration.LoggerFactory = new DefaultLoggerFactory();
 				this.Configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
+				this.Logger = this.Configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
 			}
-			this.Logger = this.Configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
 
 			this.ApiClient = new DiscordApiClient(this);
 			this.UserCache = new ConcurrentDictionary<ulong, DiscordUser>();

@@ -1023,15 +1023,15 @@ namespace DisCatSharp.Entities
 		/// <param name="topic">Topic of the channel.</param>
 		/// <param name="overwrites">Permission overwrites for this channel.</param>
 		/// <param name="nsfw">Whether the channel is to be flagged as not safe for work.</param>
-		/// <param name="reason">Reason for audit logs.</param>
-		/// <param name="defaultAutoArchiveDuration">The default auto archive duration for new threads.</param>
 		/// <param name="perUserRateLimit">Slow mode timeout for users.</param>
+		/// <param name="defaultAutoArchiveDuration">The default auto archive duration for new threads.</param>
+		/// <param name="reason">Reason for audit logs.</param>
 		/// <returns>The newly-created channel.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task<DiscordChannel> CreateTextChannelAsync(string name, DiscordChannel parent = null, Optional<string> topic = default, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, string reason = null, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay)
+		public Task<DiscordChannel> CreateTextChannelAsync(string name, DiscordChannel parent = null, Optional<string> topic = default, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, string reason = null)
 			=> this.CreateChannelAsync(name, ChannelType.Text, parent, topic, null, null, overwrites, nsfw, perUserRateLimit, null, defaultAutoArchiveDuration, reason);
 
 		/// <summary>
