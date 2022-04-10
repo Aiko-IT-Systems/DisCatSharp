@@ -2858,7 +2858,7 @@ namespace DisCatSharp.Net
 			if (includeRoles != null)
 			{
 				var roleArray = includeRoles.ToArray();
-				var roleArrayCount = roleArray.Count();
+				var roleArrayCount = roleArray.Length;
 
 				for (var i = 0; i < roleArrayCount; i++)
 					sb.Append($"&include_roles={roleArray[i]}");
@@ -2899,7 +2899,7 @@ namespace DisCatSharp.Net
 			if (includeRoles != null)
 			{
 				var roleArray = includeRoles.ToArray();
-				var roleArrayCount = roleArray.Count();
+				var roleArrayCount = roleArray.Length;
 
 				for (var i = 0; i < roleArrayCount; i++)
 					sb.Append($"&include_roles={roleArray[i]}");
@@ -3487,7 +3487,7 @@ namespace DisCatSharp.Net
 				pld.Attachments = attachments;
 			}
 
-			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.Files?.Count > 0 || builder.IsTts == true || builder.Mentions != null)
+			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.Files?.Count > 0 || builder.IsTts == true || builder.Mentions != null)
 				values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 			var route = $"{Endpoints.WEBHOOKS}/:webhook_id/:webhook_token";
@@ -5064,7 +5064,7 @@ namespace DisCatSharp.Net
 			var values = new Dictionary<string, string>();
 
 			if (builder != null)
-				if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTts == true || builder.Mentions != null || builder.Files?.Count > 0)
+				if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts == true || builder.Mentions != null || builder.Files?.Count > 0)
 					values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 			var route = $"{Endpoints.INTERACTIONS}/:interaction_id/:interaction_token{Endpoints.CALLBACK}";
@@ -5192,7 +5192,7 @@ namespace DisCatSharp.Net
 			if (builder.Mentions != null)
 				pld.Mentions = new DiscordMentions(builder.Mentions, builder.Mentions.Any());
 
-			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count() > 0 || builder.IsTts == true || builder.Mentions != null || builder.Files?.Count > 0)
+			if (!string.IsNullOrEmpty(builder.Content) || builder.Embeds?.Count > 0 || builder.IsTts == true || builder.Mentions != null || builder.Files?.Count > 0)
 				values["payload_json"] = DiscordJson.SerializeObject(pld);
 
 			var route = $"{Endpoints.WEBHOOKS}/:application_id/:interaction_token";
