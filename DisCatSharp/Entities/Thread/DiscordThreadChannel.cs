@@ -165,7 +165,7 @@ namespace DisCatSharp.Entities
 			{
 				canContinue = this.Guild.Features.CanCreatePrivateThreads;
 			}
-			return canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, mdl.Name, mdl.Locked, mdl.Archived, mdl.AutoArchiveDuration, mdl.PerUserRateLimit, mdl.Invitable, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+			return canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, mdl.Name, mdl.Locked, mdl.Archived, mdl.PerUserRateLimit, mdl.AutoArchiveDuration, mdl.Invitable, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 		}
 
 		/// <summary>
