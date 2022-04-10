@@ -36,7 +36,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <para>Objects in this provider are used when instantiating application command modules. This allows passing data around without resorting to static members.</para>
 		/// <para>Defaults to null.</para>
 		/// </summary>
-		public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
+		public IServiceProvider ServiceProvider { internal get; set; }
 
 		/// <summary>
 		/// <para>Sets whether to enable default help command.</para>
