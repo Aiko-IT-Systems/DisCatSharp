@@ -71,7 +71,7 @@ namespace DisCatSharp
 	public enum DiscordIntents
 	{
 		/// <summary>
-		/// Whether to include general guild events. Note that you receive empty message contents if you don't have the guild message intent.
+		/// Whether to include general guild events. Note that you may receive empty message contents if you don't have the message content intent.
 		/// <para>These include <see cref="DiscordClient.GuildCreated"/>, <see cref="DiscordClient.GuildDeleted"/>, <see cref="DiscordClient.GuildAvailable"/>, <see cref="DiscordClient.GuildDownloadCompleted"/>,</para>
 		/// <para><see cref="DiscordClient.GuildRoleCreated"/>, <see cref="DiscordClient.GuildRoleUpdated"/>, <see cref="DiscordClient.GuildRoleDeleted"/>,</para>
 		/// <para><see cref="DiscordClient.ChannelCreated"/>, <see cref="DiscordClient.ChannelUpdated"/>, <see cref="DiscordClient.ChannelDeleted"/>, <see cref="DiscordClient.ChannelPinsUpdated"/>,</para>
@@ -132,7 +132,7 @@ namespace DisCatSharp
 		GuildPresences = 1 << 8,
 
 		/// <summary>
-		/// Whether to include guild message events. Note that you receive empty contents if you don't have the guild message intent.
+		/// Whether to include guild message events. Note that you may receive empty contents if you don't have the message content intent.
 		/// <para>These include <see cref="DiscordClient.MessageCreated"/>, <see cref="DiscordClient.MessageUpdated"/>, and <see cref="DiscordClient.MessageDeleted"/>.</para>
 		/// </summary>
 		GuildMessages = 1 << 9,
