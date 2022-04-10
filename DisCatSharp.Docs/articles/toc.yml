@@ -33,6 +33,8 @@
       href: beyond_basics/logging/default.md
     - name: Third Party Loggers
       href: beyond_basics/logging/third_party.md
+    - name: Dependency Injection Loggers
+      href: beyond_basics/logging/di.md
   - name: Intents
     href: beyond_basics/intents.md
   - name: Sharding
