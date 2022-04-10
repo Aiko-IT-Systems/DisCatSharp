@@ -61,8 +61,7 @@ namespace DisCatSharp
 		/// </summary>
 		/// <param name="intents">The intents.</param>
 		internal static bool HasAllPrivilegedIntents(this DiscordIntents intents)
-			=> intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences);
-		//    => intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences | DiscordIntents.GuildMessages);
+			=> intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences | DiscordIntents.MessageContent);
 	}
 
 	/// <summary>
@@ -175,6 +174,12 @@ namespace DisCatSharp
 		DirectMessageTyping = 1 << 14,
 
 		/// <summary>
+		/// Whether to include the content of guild messages.
+		/// Furthermore known as Message Content Intent.
+		/// </summary>
+		MessageContent = 1 << 15,
+
+		/// <summary>
 		/// Whether to include guild scheduled event events.
 		/// <para>These include <see cref="DiscordClient.GuildScheduledEventCreated"/>, <see cref="DiscordClient.GuildScheduledEventUpdated"/>, <see cref="DiscordClient.GuildScheduledEventDeleted"/>,</para>
 		/// <para><see cref="DiscordClient.GuildScheduledEventUserAdded"/> and <see cref="DiscordClient.GuildScheduledEventUserRemoved"/>.</para>
@@ -189,6 +194,7 @@ namespace DisCatSharp
 		/// </summary>
 		AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
 			GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents,
+
 		/// <summary>
 		/// Includes all intents.
 		/// <para>The <see cref="GuildMembers"/> and <see cref="GuildPresences"/> intents are privileged, and must be enabled on the bot's developer page.</para>
