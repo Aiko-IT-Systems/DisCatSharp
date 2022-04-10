@@ -194,7 +194,7 @@ namespace DisCatSharp
 			if (stream.HasValue)
 			{
 				var val = stream.Value;
-				return val != null ? (Optional<string>)Base64FromStream(val) : (Optional<string>)null;
+				return val != null ? Base64FromStream(val) : null;
 			}
 
 			return Optional.None;
