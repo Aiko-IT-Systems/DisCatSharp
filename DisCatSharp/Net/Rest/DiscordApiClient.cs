@@ -1518,9 +1518,9 @@ namespace DisCatSharp.Net
 		/// <param name="nsfw">If true, nsfw.</param>
 		/// <param name="perUserRateLimit">The per user rate limit.</param>
 		/// <param name="qualityMode">The quality mode.</param>
+		/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
 		/// <param name="reason">The reason.</param>
-
-		internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, string reason)
+		internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, string reason)
 		{
 			var restOverwrites = new List<DiscordRestOverwrite>();
 			if (overwrites != null)
@@ -1538,7 +1538,8 @@ namespace DisCatSharp.Net
 				PermissionOverwrites = restOverwrites,
 				Nsfw = nsfw,
 				PerUserRateLimit = perUserRateLimit,
-				QualityMode = qualityMode
+				QualityMode = qualityMode,
+				DefaultAutoArchiveDuration = defaultAutoArchiveDuration
 			};
 
 			var headers = Utilities.GetBaseHeaders();
