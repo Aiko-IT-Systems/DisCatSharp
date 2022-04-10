@@ -30,12 +30,12 @@ namespace DisCatSharp.EventArgs
 	public class ZombiedEventArgs : DiscordEventArgs
 	{
 		/// <summary>
-		/// Gets how many heartbeat failures have occured.
+		/// Gets how many heartbeat failures have occurred.
 		/// </summary>
 		public int Failures { get; internal set; }
 
 		/// <summary>
-		/// Gets whether the zombie event occured whilst guilds are downloading.
+		/// Gets whether the zombie event occurred whilst guilds are downloading.
 		/// </summary>
 		public bool GuildDownloadCompleted { get; internal set; }
 

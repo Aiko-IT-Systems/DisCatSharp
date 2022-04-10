@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
 // Copyright (c) 2021-2022 AITSYS
 //
@@ -37,7 +37,7 @@ namespace DisCatSharp.Common.Types
 		ulong Capacity { get; }
 
 		/// <summary>
-		/// Gets the amount of bytes currently written to the buffer. This number is never greather than <see cref="Capacity"/>.
+		/// Gets the amount of bytes currently written to the buffer. This number is never greater than <see cref="Capacity"/>.
 		/// </summary>
 		ulong Length { get; }
 

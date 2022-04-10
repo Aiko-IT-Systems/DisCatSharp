@@ -180,22 +180,16 @@ namespace DisCatSharp.Entities
 			var mdl = new RoleEditModel();
 			action(mdl);
 
-			var iconb64 = Optional.FromNoValue<string>();
-			var emoji = Optional.FromNoValue<string>();
 			var canContinue = true;
 			if (mdl.Icon.HasValue || mdl.UnicodeEmoji.HasValue)
 				canContinue = this.Discord.Guilds[this.GuildId].Features.CanSetRoleIcons;
 
-			if (mdl.Icon.HasValue && mdl.Icon.Value != null)
-				using (var imgtool = new ImageTool(mdl.Icon.Value))
-					iconb64 = imgtool.GetBase64();
-			else if (mdl.Icon.HasValue)
-				iconb64 = null;
+			var iconb64 = ImageTool.Base64FromStream(mdl.Icon);
 
-			if (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null)
-				emoji = mdl.UnicodeEmoji.Value.Id == 0 ? mdl.UnicodeEmoji.Value.Name : throw new ArgumentException("Emoji must be unicode");
-			else if (mdl.UnicodeEmoji.HasValue)
-				emoji = null;
+			var emoji = mdl.UnicodeEmoji
+				.MapOrNull(e => e.Id == 0
+					? e.Name
+					: throw new ArgumentException("Emoji must be unicode"));
 
 			return canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
 		}

@@ -204,35 +204,20 @@ namespace DisCatSharp.Entities
 			var mdl = new ScheduledEventEditModel();
 			action(mdl);
 
-			var channelId = Optional.FromNoValue<ulong?>();
-			if (mdl.Channel.HasValue && (mdl.Channel.Value.Type != ChannelType.Voice || mdl.Channel.Value.Type != ChannelType.Stage) && mdl.Channel.Value != null)
-				throw new ArgumentException("Channel needs to be a voice or stage channel.");
-			else if (mdl.Channel.HasValue && mdl.Channel.Value != null)
-				channelId = mdl.Channel.Value.Id;
+			Optional<ulong?> channelId = null;
+			if (this.EntityType == ScheduledEventEntityType.External || mdl.EntityType != ScheduledEventEntityType.External)
+				channelId = mdl.Channel
+					.MapOrNull<ulong?>(c => c.Type != ChannelType.Voice && c.Type != ChannelType.Stage
+						? throw new ArgumentException("Channel needs to be a voice or stage channel.")
+						: c.Id);
 
-			if (this.EntityType != ScheduledEventEntityType.External && mdl.EntityType == ScheduledEventEntityType.External)
-				channelId = null;
+			var coverb64 = ImageTool.Base64FromStream(mdl.CoverImage);
 
-			var description = Optional.FromNoValue<string>();
-			if (mdl.Description.HasValue && mdl.Description.Value != null)
-				description = mdl.Description;
-			else if (mdl.Description.HasValue)
-				description = null;
-
-			var coverb64 = Optional.FromNoValue<string>();
-
-			if (mdl.CoverImage.HasValue && mdl.CoverImage.Value != null)
-				using (var imgtool = new ImageTool(mdl.CoverImage.Value))
-					coverb64 = imgtool.GetBase64();
-			else if (mdl.CoverImage.HasValue)
-				coverb64 = null;
-
-
-			var scheduledEndTime = Optional.FromNoValue<DateTimeOffset>();
-			if (mdl.ScheduledEndTime.HasValue && mdl.ScheduledEndTime.Value != null && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
+			var scheduledEndTime = Optional<DateTimeOffset>.None;
+			if (mdl.ScheduledEndTime.HasValue && mdl.EntityType.HasValue ? mdl.EntityType == ScheduledEventEntityType.External : this.EntityType == ScheduledEventEntityType.External)
 				scheduledEndTime = mdl.ScheduledEndTime.Value;
 
-			await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, description, mdl.EntityType, mdl.Status, coverb64, mdl.AuditLogReason);
+			await this.Discord.ApiClient.ModifyGuildScheduledEventAsync(this.GuildId, this.Id, channelId, this.EntityType == ScheduledEventEntityType.External ? new DiscordScheduledEventEntityMetadata(mdl.Location.Value) : null, mdl.Name, mdl.ScheduledStartTime, scheduledEndTime, mdl.Description, mdl.EntityType, mdl.Status, coverb64, mdl.AuditLogReason);
 		}
 
 		/// <summary>
@@ -273,7 +258,7 @@ namespace DisCatSharp.Entities
 		/// <param name="limit">The limit how many users to receive from the event. Defaults to 100. Max 100.</param>
 		/// <param name="before">Get results of <see cref="DiscordScheduledEventUser"/> before the given snowflake.</param>
 		/// <param name="after">Get results of <see cref="DiscordScheduledEventUser"/> after the given snowflake.</param>
-		/// <param name="withMember">Wether to include guild member data.</param>
+		/// <param name="withMember">Whether to include guild member data.</param>
 		/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -321,7 +306,7 @@ namespace DisCatSharp.Entities
 		/// Gets whether the two <see cref="DiscordScheduledEvent"/> objects are equal.
 		/// </summary>
 		/// <param name="e1">First event to compare.</param>
-		/// <param name="e2">Second ecent to compare.</param>
+		/// <param name="e2">Second event to compare.</param>
 		/// <returns>Whether the two events are equal.</returns>
 		public static bool operator ==(DiscordScheduledEvent e1, DiscordScheduledEvent e2)
 		{

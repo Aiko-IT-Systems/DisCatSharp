@@ -43,7 +43,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		ConcurrentHashSet<PollRequest> _requests;
 
 		/// <summary>
-		/// Creates a new Eventwaiter object.
+		/// Creates a new EventWaiter object.
 		/// </summary>
 		/// <param name="client">Your DiscordClient</param>
 		public Poller(DiscordClient client)
@@ -86,9 +86,9 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// Handles the reaction add.
 		/// </summary>
 		/// <param name="client">The client.</param>
-		/// <param name="eventargs">The eventargs.</param>
+		/// <param name="eventArgs">The event's arguments.</param>
 		/// <returns>A Task.</returns>
-		private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventargs)
+		private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventArgs)
 		{
 			if (this._requests.Count == 0)
 				return Task.CompletedTask;
@@ -98,18 +98,18 @@ namespace DisCatSharp.Interactivity.EventHandling
 				foreach (var req in this._requests)
 				{
 					// match message
-					if (req.Message.Id == eventargs.Message.Id && req.Message.ChannelId == eventargs.Channel.Id)
+					if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
 					{
-						if (req.Emojis.Contains(eventargs.Emoji) && !req.Collected.Any(x => x.Voted.Contains(eventargs.User)))
+						if (req.Emojis.Contains(eventArgs.Emoji) && !req.Collected.Any(x => x.Voted.Contains(eventArgs.User)))
 						{
-							if (eventargs.User.Id != this._client.CurrentUser.Id)
-								req.AddReaction(eventargs.Emoji, eventargs.User);
+							if (eventArgs.User.Id != this._client.CurrentUser.Id)
+								req.AddReaction(eventArgs.Emoji, eventArgs.User);
 						}
 						else
 						{
-							var member = await eventargs.Channel.Guild.GetMemberAsync(client.CurrentUser.Id).ConfigureAwait(false);
-							if (eventargs.Channel.PermissionsFor(member).HasPermission(Permissions.ManageMessages))
-								await eventargs.Message.DeleteReactionAsync(eventargs.Emoji, eventargs.User).ConfigureAwait(false);
+							var member = await eventArgs.Channel.Guild.GetMemberAsync(client.CurrentUser.Id).ConfigureAwait(false);
+							if (eventArgs.Channel.PermissionsFor(member).HasPermission(Permissions.ManageMessages))
+								await eventArgs.Message.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
 						}
 					}
 				}
@@ -121,17 +121,17 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// Handles the reaction remove.
 		/// </summary>
 		/// <param name="client">The client.</param>
-		/// <param name="eventargs">The eventargs.</param>
+		/// <param name="eventArgs">The event's arguments.</param>
 		/// <returns>A Task.</returns>
-		private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventargs)
+		private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
 		{
 			foreach (var req in this._requests)
 			{
 				// match message
-				if (req.Message.Id == eventargs.Message.Id && req.Message.ChannelId == eventargs.Channel.Id)
+				if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
 				{
-					if (eventargs.User.Id != this._client.CurrentUser.Id)
-						req.RemoveReaction(eventargs.Emoji, eventargs.User);
+					if (eventArgs.User.Id != this._client.CurrentUser.Id)
+						req.RemoveReaction(eventArgs.Emoji, eventArgs.User);
 				}
 			}
 			return Task.CompletedTask;
@@ -141,14 +141,14 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// Handles the reaction clear.
 		/// </summary>
 		/// <param name="client">The client.</param>
-		/// <param name="eventargs">The eventargs.</param>
+		/// <param name="eventArgs">The event's arguments.</param>
 		/// <returns>A Task.</returns>
-		private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventargs)
+		private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventArgs)
 		{
 			foreach (var req in this._requests)
 			{
 				// match message
-				if (req.Message.Id == eventargs.Message.Id && req.Message.ChannelId == eventargs.Channel.Id)
+				if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
 				{
 					req.ClearCollected();
 				}

@@ -71,7 +71,7 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// The @original endpoint.
 		/// </summary>
-		public const string ORIGINAL = "/@original";
+		public const string ORIGINAL = "@original";
 
 		/// <summary>
 		/// The permissions endpoint.
@@ -94,7 +94,7 @@ namespace DisCatSharp.Net
 		public const string INTEGRATIONS = "/integrations";
 
 		/// <summary>
-		/// The sinc endpoint.
+		/// The sync endpoint.
 		/// </summary>
 		public const string SYNC = "/sync";
 

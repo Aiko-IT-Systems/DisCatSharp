@@ -56,7 +56,7 @@ namespace DisCatSharp.Common.Utilities
 		where TArgs : AsyncEventArgs
 	{
 		/// <summary>
-		/// Gets the maximum alloted execution time for all handlers. Any event which causes the handler to time out 
+		/// Gets the maximum allotted execution time for all handlers. Any event which causes the handler to time out 
 		/// will raise a non-fatal <see cref="AsyncEventTimeoutException{TSender, TArgs}"/>.
 		/// </summary>
 		public TimeSpan MaximumExecutionTime { get; }

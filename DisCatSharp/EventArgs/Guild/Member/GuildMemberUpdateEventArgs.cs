@@ -28,8 +28,6 @@ using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
 
-using Newtonsoft.Json;
-
 namespace DisCatSharp.EventArgs
 {
 	/// <summary>
@@ -63,22 +61,22 @@ namespace DisCatSharp.EventArgs
 		public string NicknameBefore { get; internal set; }
 
 		/// <summary>
-		/// Gets whether the member had passed membership screening before the update
+		/// Gets whether the member had passed membership screening before the update.
 		/// </summary>
 		public bool? PendingBefore { get; internal set; }
 
 		/// <summary>
-		/// Gets whether the member had passed membership screening after the update
+		/// Gets whether the member had passed membership screening after the update.
 		/// </summary>
 		public bool? PendingAfter { get; internal set; }
 
 		/// <summary>
-		/// Gets whether the member is timeouted before the update
+		/// Gets whether the member is timed out before the update.
 		/// </summary>
 		public DateTimeOffset? TimeoutBefore { get; internal set; }
 
 		/// <summary>
-		/// Gets whether the member is timeouted after the update
+		/// Gets whether the member is timed out after the update.
 		/// </summary>
 		public DateTimeOffset? TimeoutAfter { get; internal set; }
 

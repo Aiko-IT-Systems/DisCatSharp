@@ -404,7 +404,7 @@ namespace DisCatSharp.Net.WebSocket
 		/// Events the error handler.
 		/// </summary>
 		/// <param name="asyncEvent">The event.</param>
-		/// <param name="ex">The exeption.</param>
+		/// <param name="ex">The exception.</param>
 		/// <param name="handler">The handler.</param>
 		/// <param name="sender">The sender.</param>
 		/// <param name="eventArgs">The event args.</param>

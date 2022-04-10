@@ -49,7 +49,7 @@ namespace DisCatSharp.VoiceNext
 		public static IReadOnlyCollection<int> AllowedSampleDurations { get; } = new ReadOnlyCollection<int>(new[] { 5, 10, 20, 40, 60 });
 
 		/// <summary>
-		/// Gets the default audio format. This is a formt configured for 48kHz sampling rate, 2 channels, with music quality preset.
+		/// Gets the default audio format. This is a format configured for 48kHz sampling rate, 2 channels, with music quality preset.
 		/// </summary>
 		public static AudioFormat Default { get; } = new(48000, 2, VoiceApplication.Music);
 
@@ -93,7 +93,7 @@ namespace DisCatSharp.VoiceNext
 		/// <summary>
 		/// Calculates a sample size in bytes.
 		/// </summary>
-		/// <param name="sampleDuration">Millsecond duration of a sample.</param>
+		/// <param name="sampleDuration">Millisecond duration of a sample.</param>
 		/// <returns>Calculated sample size in bytes.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public int CalculateSampleSize(int sampleDuration)

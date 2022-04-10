@@ -28,12 +28,12 @@ namespace DisCatSharp
 	public enum InviteType
 	{
 		/// <summary>
-		/// Represents a streaming invite.
+		/// Represents a guild invite.
 		/// </summary>
 		Guild = 0,
 
 		/// <summary>
-		/// Represents a activity invite.
+		/// Represents a group dm invite.
 		/// </summary>
 		GroupDm = 1,
 

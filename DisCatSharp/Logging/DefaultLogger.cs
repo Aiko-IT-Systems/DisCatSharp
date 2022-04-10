@@ -115,7 +115,7 @@ namespace DisCatSharp
 					LogLevel.Information => "[Info ] ",
 					LogLevel.Warning => "[Warn ] ",
 					LogLevel.Error => "[Error] ",
-					LogLevel.Critical => "[Crit ]",
+					LogLevel.Critical => "[Critical ]",
 					LogLevel.None => "[None ] ",
 					_ => "[?????] "
 				});

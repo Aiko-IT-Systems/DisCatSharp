@@ -199,7 +199,7 @@ namespace DisCatSharp
 				app.Team = new DiscordTeam(tapp.Team);
 
 				var members = tapp.Team.Members
-					.Select(x => new DiscordTeamMember(x) { Team = app.Team, User = new DiscordUser(x.User) })
+					.Select(x => new DiscordTeamMember(x) { TeamId = app.Team.Id, TeamName = app.Team.Name, User = new DiscordUser(x.User) })
 					.ToArray();
 
 				var owners = members
@@ -213,11 +213,11 @@ namespace DisCatSharp
 				app.TeamName = app.Team.Name;
 			}
 
-			app.GuildId = tapp.GuildId.HasValue ? tapp.GuildId.Value : null;
-			app.Slug = tapp.Slug.HasValue ? tapp.Slug.Value : null;
-			app.PrimarySkuId = tapp.PrimarySkuId.HasValue ? tapp.PrimarySkuId.Value : null;
-			app.VerifyKey = tapp.VerifyKey.HasValue ? tapp.VerifyKey.Value : null;
-			app.CoverImageHash = tapp.CoverImageHash.HasValue ? tapp.CoverImageHash.Value : null;
+			app.GuildId = tapp.GuildId.ValueOrDefault();
+			app.Slug = tapp.Slug.ValueOrDefault();
+			app.PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault();
+			app.VerifyKey = tapp.VerifyKey.ValueOrDefault();
+			app.CoverImageHash = tapp.CoverImageHash.ValueOrDefault();
 
 			return app;
 		}

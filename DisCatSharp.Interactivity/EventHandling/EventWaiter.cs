@@ -36,7 +36,7 @@ using Microsoft.Extensions.Logging;
 namespace DisCatSharp.Interactivity.EventHandling
 {
 	/// <summary>
-	/// Eventwaiter is a class that serves as a layer between the InteractivityExtension
+	/// EventWaiter is a class that serves as a layer between the InteractivityExtension
 	/// and the DiscordClient to listen to an event and check for matches to a predicate.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
@@ -45,12 +45,12 @@ namespace DisCatSharp.Interactivity.EventHandling
 		DiscordClient _client;
 		AsyncEvent<DiscordClient, T> _event;
 		AsyncEventHandler<DiscordClient, T> _handler;
-		ConcurrentHashSet<MatchRequest<T>> _matchrequests;
-		ConcurrentHashSet<CollectRequest<T>> _collectrequests;
+		ConcurrentHashSet<MatchRequest<T>> _matchRequests;
+		ConcurrentHashSet<CollectRequest<T>> _collectRequests;
 		bool _disposed;
 
 		/// <summary>
-		/// Creates a new Eventwaiter object.
+		/// Creates a new EventWaiter object.
 		/// </summary>
 		/// <param name="client">Your DiscordClient</param>
 		public EventWaiter(DiscordClient client)
@@ -58,8 +58,8 @@ namespace DisCatSharp.Interactivity.EventHandling
 			this._client = client;
 			var tinfo = this._client.GetType().GetTypeInfo();
 			var handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, T>));
-			this._matchrequests = new ConcurrentHashSet<MatchRequest<T>>();
-			this._collectrequests = new ConcurrentHashSet<CollectRequest<T>>();
+			this._matchRequests = new ConcurrentHashSet<MatchRequest<T>>();
+			this._collectRequests = new ConcurrentHashSet<CollectRequest<T>>();
 			this._event = (AsyncEvent<DiscordClient, T>)handler.GetValue(this._client);
 			this._handler = new AsyncEventHandler<DiscordClient, T>(this.HandleEvent);
 			this._event.Register(this._handler);
@@ -73,7 +73,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		public async Task<T> WaitForMatchAsync(MatchRequest<T> request)
 		{
 			T result = null;
-			this._matchrequests.Add(request);
+			this._matchRequests.Add(request);
 			try
 			{
 				result = await request.Tcs.Task.ConfigureAwait(false);
@@ -85,7 +85,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			finally
 			{
 				request.Dispose();
-				this._matchrequests.TryRemove(request);
+				this._matchRequests.TryRemove(request);
 			}
 			return result;
 		}
@@ -97,7 +97,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		public async Task<ReadOnlyCollection<T>> CollectMatchesAsync(CollectRequest<T> request)
 		{
 			ReadOnlyCollection<T> result = null;
-			this._collectrequests.Add(request);
+			this._collectRequests.Add(request);
 			try
 			{
 				await request.Tcs.Task.ConfigureAwait(false);
@@ -110,7 +110,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			{
 				result = new ReadOnlyCollection<T>(new HashSet<T>(request.Collected).ToList());
 				request.Dispose();
-				this._collectrequests.TryRemove(request);
+				this._collectRequests.TryRemove(request);
 			}
 			return result;
 		}
@@ -119,24 +119,24 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// Handles the event.
 		/// </summary>
 		/// <param name="client">The client.</param>
-		/// <param name="eventargs">The event args.</param>
-		private Task HandleEvent(DiscordClient client, T eventargs)
+		/// <param name="eventArgs">The event's arguments.</param>
+		private Task HandleEvent(DiscordClient client, T eventArgs)
 		{
 			if (!this._disposed)
 			{
-				foreach (var req in this._matchrequests)
+				foreach (var req in this._matchRequests)
 				{
-					if (req.Predicate(eventargs))
+					if (req.Predicate(eventArgs))
 					{
-						req.Tcs.TrySetResult(eventargs);
+						req.Tcs.TrySetResult(eventArgs);
 					}
 				}
 
-				foreach (var req in this._collectrequests)
+				foreach (var req in this._collectRequests)
 				{
-					if (req.Predicate(eventargs))
+					if (req.Predicate(eventArgs))
 					{
-						req.Collected.Add(eventargs);
+						req.Collected.Add(eventArgs);
 					}
 				}
 			}
@@ -162,13 +162,13 @@ namespace DisCatSharp.Interactivity.EventHandling
 			this._handler = null;
 			this._client = null;
 
-			if (this._matchrequests != null)
-				this._matchrequests.Clear();
-			if (this._collectrequests != null)
-				this._collectrequests.Clear();
+			if (this._matchRequests != null)
+				this._matchRequests.Clear();
+			if (this._collectRequests != null)
+				this._collectRequests.Clear();
 
-			this._matchrequests = null;
-			this._collectrequests = null;
+			this._matchRequests = null;
+			this._collectRequests = null;
 		}
 	}
 }

@@ -166,7 +166,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// Gets or sets the discovery splash base64.
 		/// </summary>
-		[JsonProperty("discorvery_splash")]
+		[JsonProperty("discovery_splash")]
 		public Optional<string> DiscoverySplashBase64 { get; set; }
 
 		/// <summary>

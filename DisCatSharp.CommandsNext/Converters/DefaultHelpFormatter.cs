@@ -71,7 +71,7 @@ namespace DisCatSharp.CommandsNext.Converters
 				this.EmbedBuilder.WithDescription($"{this.EmbedBuilder.Description}\n\nThis group can be executed as a standalone command.");
 
 			if (command.Aliases?.Any() == true)
-				this.EmbedBuilder.AddField("Aliases", string.Join(", ", command.Aliases.Select(Formatter.InlineCode)), false);
+				this.EmbedBuilder.AddField(new DiscordEmbedField("Aliases", string.Join(", ", command.Aliases.Select(Formatter.InlineCode))));
 
 			if (command.Overloads?.Any() == true)
 			{
@@ -92,7 +92,7 @@ namespace DisCatSharp.CommandsNext.Converters
 					sb.Append('\n');
 				}
 
-				this.EmbedBuilder.AddField("Arguments", sb.ToString().Trim(), false);
+				this.EmbedBuilder.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
 			}
 
 			return this;
@@ -105,7 +105,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <returns>This help formatter.</returns>
 		public override BaseHelpFormatter WithSubcommands(IEnumerable<Command> subcommands)
 		{
-			this.EmbedBuilder.AddField(this._command != null ? "Subcommands" : "Commands", string.Join(", ", subcommands.Select(x => Formatter.InlineCode(x.Name))), false);
+			this.EmbedBuilder.AddField(new DiscordEmbedField(this._command != null ? "Subcommands" : "Commands", string.Join(", ", subcommands.Select(x => Formatter.InlineCode(x.Name)))));
 
 			return this;
 		}

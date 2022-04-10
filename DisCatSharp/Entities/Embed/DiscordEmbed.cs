@@ -121,7 +121,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordEmbed()
 		{
-			this._colorLazy = new Lazy<Optional<DiscordColor>>(() => this.ColorInternal.HasValue ? Optional.FromValue<DiscordColor>(this.ColorInternal.Value) : Optional.FromNoValue<DiscordColor>());
+			this._colorLazy = new Lazy<Optional<DiscordColor>>(() => this.ColorInternal.Map<DiscordColor>(c => c));
 		}
 	}
 }

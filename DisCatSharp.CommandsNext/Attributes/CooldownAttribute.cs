@@ -243,7 +243,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 		/// <summary>
 		/// Decrements the remaining use counter.
 		/// </summary>
-		/// <returns>Whether decrement succeded or not.</returns>
+		/// <returns>Whether decrement succeeded or not.</returns>
 		internal async Task<bool> DecrementUseAsync()
 		{
 			await this._usageSemaphore.WaitAsync().ConfigureAwait(false);

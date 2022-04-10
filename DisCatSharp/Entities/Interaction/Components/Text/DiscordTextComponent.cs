@@ -69,7 +69,7 @@ namespace DisCatSharp.Entities
 		[JsonProperty("max_length", NullValueHandling = NullValueHandling.Ignore)]
 		public int? MaxLength { get; internal set; }
 
-		// NOTE: Probably will be introdruced in future
+		// NOTE: Probably will be introduced in future
 		/*/// <summary>
         /// Whether this text component can be used.
         /// </summary>
