@@ -104,7 +104,7 @@ namespace DisCatSharp
 		/// <para>This allows passing data around without resorting to static members.</para>
 		/// <para>Defaults to null.</para>
 		/// </summary>
-		internal IServiceProvider ServiceProvider { get; set; } = new ServiceCollection().BuildServiceProvider(true);
+		internal IServiceProvider ServiceProvider { get; set; }
 
 		/// <summary>
 		/// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
@@ -125,8 +125,9 @@ namespace DisCatSharp
 		protected BaseDiscordClient(DiscordConfiguration config)
 		{
 			this.Configuration = new DiscordConfiguration(config);
+			this.ServiceProvider = config.ServiceProvider;
 
-			if (this.Configuration.ServiceProvider != null)
+			if (this.ServiceProvider != null)
 			{
 				this.Configuration.LoggerFactory ??= config.ServiceProvider.GetService<ILoggerFactory>();
 				this.Logger = config.ServiceProvider.GetService<ILogger<BaseDiscordClient>>();
@@ -163,8 +164,6 @@ namespace DisCatSharp
 			}
 
 			this.BotLibrary = "DisCatSharp";
-
-			this.ServiceProvider = config.ServiceProvider;
 		}
 
 		/// <summary>
