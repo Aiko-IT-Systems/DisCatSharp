@@ -128,7 +128,7 @@ namespace DisCatSharp
 
 			if (this.Configuration.ServiceProvider != null)
 			{
-				this.Configuration.LoggerFactory = config.ServiceProvider.GetService<ILoggerFactory>();
+				this.Configuration.LoggerFactory ??= config.ServiceProvider.GetService<ILoggerFactory>();
 				this.Logger = config.ServiceProvider.GetService<ILogger<BaseDiscordClient>>();
 			}
 
