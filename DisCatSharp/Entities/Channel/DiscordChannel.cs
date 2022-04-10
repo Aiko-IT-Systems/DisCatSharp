@@ -407,7 +407,7 @@ namespace DisCatSharp.Entities
 				perUserRateLimit = Optional.None;
 			}
 
-			return await this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNsfw, perUserRateLimit, this.QualityMode, reason).ConfigureAwait(false);
+			return await this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNsfw, perUserRateLimit, this.QualityMode, this.DefaultAutoArchiveDuration, reason).ConfigureAwait(false);
 		}
 
 		/// <summary>
