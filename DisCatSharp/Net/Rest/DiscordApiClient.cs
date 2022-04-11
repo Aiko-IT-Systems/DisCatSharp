@@ -55,6 +55,7 @@ namespace DisCatSharp.Net
 		/// Gets the discord client.
 		/// </summary>
 		internal BaseDiscordClient Discord { get; }
+		
 		/// <summary>
 		/// Gets the rest client.
 		/// </summary>
