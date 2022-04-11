@@ -29,13 +29,14 @@ namespace DisCatSharp.Common.RegularExpressions
 	/// </summary>
 	public static class DiscordRegEx
 	{
-		private const string WEBSITE = @"(https?:\/\/)?(www\.|canary\.|ptb\.)?(discord)\.(com|net)\/";
+		// language=regex
+		private const string WEBSITE = @"(https?:\/\/)?(www\.|canary\.|ptb\.)?(discord|discordapp)\.com\/";
 
 		/// <summary>
 		/// Represents a invite.
 		/// </summary>
 		public static readonly Regex Invite
-			= new(@"^(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.(com|net)\/invite)\/(.*\/)*(?<code>[a-zA-Z0-9]*)(\?event=(?<eventId>\d+))?$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+			= new($@"^((https?:\/\/)?(www\.)?discord\.gg(\/.*)*|{WEBSITE}invite)\/(?<code>[a-zA-Z0-9]*)(\?event=(?<event>\d+))?$", RegexOptions.ECMAScript | RegexOptions.Compiled);
 
 		/// <summary>
 		/// Represents a message link.
