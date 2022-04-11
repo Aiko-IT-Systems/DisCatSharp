@@ -62,6 +62,14 @@ namespace DisCatSharp
 		/// <param name="intents">The intents.</param>
 		internal static bool HasAllPrivilegedIntents(this DiscordIntents intents)
 			=> intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences | DiscordIntents.MessageContent);
+
+
+		/// <summary>
+		/// Whether it has all v9 privileged intents.
+		/// </summary>
+		/// <param name="intents">The intents.</param>
+		internal static bool HasAllV9PrivilegedIntents(this DiscordIntents intents)
+			=> intents.HasIntent(DiscordIntents.GuildMembers | DiscordIntents.GuildPresences);
 	}
 
 	/// <summary>
