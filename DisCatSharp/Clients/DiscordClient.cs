@@ -1124,7 +1124,7 @@ namespace DisCatSharp
 
 			var guild = this.GuildsInternal[newGuild.Id];
 
-			if (newGuild.ChannelsInternal != null && newGuild.ChannelsInternal.Count > 0)
+			if (newGuild.ChannelsInternal != null && !newGuild.ChannelsInternal.IsEmpty)
 			{
 				foreach (var channel in newGuild.ChannelsInternal.Values)
 				{
@@ -1140,7 +1140,7 @@ namespace DisCatSharp
 				}
 			}
 
-			if (newGuild.ThreadsInternal != null && newGuild.ThreadsInternal.Count > 0)
+			if (newGuild.ThreadsInternal != null && !newGuild.ThreadsInternal.IsEmpty)
 			{
 				foreach (var thread in newGuild.ThreadsInternal.Values)
 				{
@@ -1150,7 +1150,7 @@ namespace DisCatSharp
 				}
 			}
 
-			if (newGuild.ScheduledEventsInternal != null && newGuild.ScheduledEventsInternal.Count > 0)
+			if (newGuild.ScheduledEventsInternal != null && !newGuild.ScheduledEventsInternal.IsEmpty)
 			{
 				foreach (var @event in newGuild.ScheduledEventsInternal.Values)
 				{
