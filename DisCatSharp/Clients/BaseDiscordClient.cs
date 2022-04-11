@@ -145,7 +145,8 @@ namespace DisCatSharp
 			this.InternalVoiceRegions = new ConcurrentDictionary<string, DiscordVoiceRegion>();
 			this.VoiceRegionsLazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this.InternalVoiceRegions));
 
-			this.RestClient = this.ApiClient.Rest.HttpClient;
+			this.RestClient = new();
+			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
 
 			var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 
