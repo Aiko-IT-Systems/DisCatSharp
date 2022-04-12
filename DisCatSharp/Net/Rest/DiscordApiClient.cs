@@ -5330,8 +5330,14 @@ namespace DisCatSharp.Net
 		{
 			try
 			{
-				var dcs = await this.Discord.RestClient.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/devs/"));
-				var dcsGuild = await this.Discord.RestClient.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/guild/"));
+				string dcs;
+				string dcsGuild;
+
+				using(var httpClient = new System.Net.Http.HttpClient())
+				{
+					dcs = await httpClient.GetStringAsync("https://dcs.aitsys.dev/api/devs/"); 
+					dcsGuild = await httpClient.GetStringAsync("https://dcs.aitsys.dev/api/guild/"); 
+				}
 
 				var app = JsonConvert.DeserializeObject<TransportApplication>(dcs);
 				var guild = JsonConvert.DeserializeObject<DiscordGuild>(dcsGuild);
