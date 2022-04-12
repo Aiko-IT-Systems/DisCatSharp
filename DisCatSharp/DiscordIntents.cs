@@ -141,6 +141,7 @@ namespace DisCatSharp
 
 		/// <summary>
 		/// Whether to include guild message events. Note that you may receive empty contents if you don't have the message content intent.
+		/// You can enable it in the developer portal. If you have a verified bot, you might need to apply for the intent.
 		/// <para>These include <see cref="DiscordClient.MessageCreated"/>, <see cref="DiscordClient.MessageUpdated"/>, and <see cref="DiscordClient.MessageDeleted"/>.</para>
 		/// </summary>
 		GuildMessages = 1 << 9,
@@ -183,7 +184,7 @@ namespace DisCatSharp
 
 		/// <summary>
 		/// Whether to include the content of guild messages.
-		/// Furthermore known as Message Content Intent.
+		/// See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-for-Verified-Bots for more informations.
 		/// </summary>
 		MessageContent = 1 << 15,
 
