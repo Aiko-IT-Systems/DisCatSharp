@@ -270,7 +270,7 @@ namespace DisCatSharp.CommandsNext.Converters
 			var m = DiscordRegEx.Invite.Match(value);
 			if (m.Success)
 			{
-				ulong? eventId = ulong.TryParse(m.Groups["eventId"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
+				ulong? eventId = ulong.TryParse(m.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
 					out var eid) ? eid : null;
 				var result = await ctx.Client.GetInviteByCodeAsync(m.Groups["code"].Value, scheduledEventId: eventId).ConfigureAwait(false);
 				return Optional.FromNullable(result);
