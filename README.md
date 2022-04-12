@@ -25,7 +25,7 @@ Discord Bot Library written in C# for .NET.
 ## Important Info
 
 Development is a bit slow right now, because I (Lala) have a surgery soon and a rehab.
-Please continue reporting bugs to us via [discord](https://discord.gg/U4BGHpKSF7). The other staffs will help!
+<!-- Please continue reporting bugs to us via [discord](https://discord.gg/U4BGHpKSF7). --> Write a mail to ottero@aitsys.dev. The other staffs will help!
 
 ## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
