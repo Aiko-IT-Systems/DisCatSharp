@@ -20,11 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
 using DisCatSharp.Net;
+using DisCatSharp.Net.Abstractions;
+
+using Microsoft.Extensions.Logging;
+
+using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities
 {
@@ -119,7 +128,74 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DisCatSharpTeam"/> class.
 		/// </summary>
-		internal DisCatSharpTeam()
-		{ }
+		internal static async Task<DisCatSharpTeam> Get(HttpClient http, ILogger logger, DiscordApiClient apiClient)
+		{
+			try
+			{
+				var dcs = await http.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/devs/"));
+				var dcsGuild = await http.GetStringAsync(new Uri("https://dcs.aitsys.dev/api/guild/"));
+
+				var app = JsonConvert.DeserializeObject<TransportApplication>(dcs);
+				var guild = JsonConvert.DeserializeObject<DiscordGuild>(dcsGuild);
+
+				var dcst = new DisCatSharpTeam
+				{
+					IconHash = app.Team.IconHash,
+					TeamName = app.Team.Name,
+					PrivacyPolicyUrl = app.PrivacyPolicyUrl,
+					TermsOfServiceUrl = app.TermsOfServiceUrl,
+					RepoUrl = "https://github.com/Aiko-IT-Systems/DisCatSharp",
+					DocsUrl = "https://docs.dcs.aitsys.dev",
+					Id = app.Team.Id,
+					BannerHash = guild.BannerHash,
+					LogoHash = guild.IconHash,
+					GuildId = guild.Id,
+					Guild = guild,
+					SupportInvite = await apiClient.GetInviteAsync("GGYSywkxwN", true, true, null)
+				};
+				List<DisCatSharpTeamMember> team = new();
+				DisCatSharpTeamMember owner = new();
+				foreach (var mb in app.Team.Members.OrderBy(m => m.User.Username))
+				{
+					var tuser = await apiClient.GetUserAsync(mb.User.Id);
+					var user = mb.User;
+					if (mb.User.Id == 856780995629154305)
+					{
+						owner.Id = user.Id;
+						owner.Username = user.Username;
+						owner.Discriminator = user.Discriminator;
+						owner.AvatarHash = user.AvatarHash;
+						owner.BannerHash = tuser.BannerHash;
+						owner.BannerColorInternal = tuser.BannerColorInternal;
+						team.Add(owner);
+					}
+					else
+					{
+						team.Add(new DisCatSharpTeamMember
+						{
+							Id = user.Id,
+							Username = user.Username,
+							Discriminator = user.Discriminator,
+							AvatarHash = user.AvatarHash,
+							BannerHash = tuser.BannerHash,
+							BannerColorInternal = tuser.BannerColorInternal
+						});
+					}
+				}
+
+				dcst.Owner = owner;
+				dcst.Developers = team;
+
+				return dcst;
+			}
+			catch (Exception ex)
+			{
+				logger.LogDebug(ex.Message);
+				logger.LogDebug(ex.StackTrace);
+				return null;
+			}
+		}
+
+		private DisCatSharpTeam() { }
 	}
 }

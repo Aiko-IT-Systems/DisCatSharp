@@ -39,8 +39,8 @@ namespace DisCatSharp.CommandsNext.Attributes
 		/// <param name="help">If true, help - returns true.</param>
 		public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
 		{
-			var team = ctx.Client.LibraryDeveloperTeam.Developers;
-			return team != null ? await Task.FromResult(team.Where(x => x.Id == ctx.User.Id).Any()) : await Task.FromResult(false);
+			var team = (await ctx.Client.GetLibraryDevelopmentTeamAsync()).Developers;
+			return team?.Any(x => x.Id == ctx.User.Id) ?? false;
 		}
 	}
 }
