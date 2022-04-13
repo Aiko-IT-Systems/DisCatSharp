@@ -75,11 +75,9 @@ namespace DisCatSharp
 		/// </summary>
 		public DiscordApplication CurrentApplication { get; private set; }
 
-		/// <summary>
-		/// Gets the library team.
-		/// </summary>
+		[Obsolete("Use GetLibraryDevelopmentTeamAsync")]
 		public DisCatSharpTeam LibraryDeveloperTeam
-			=> this.GetShard(0).LibraryDeveloperTeam;
+			=> this.GetLibraryDevelopmentTeamAsync().Result;
 
 		/// <summary>
 		/// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
@@ -255,6 +253,12 @@ namespace DisCatSharp
 
 			await Task.WhenAll(tasks).ConfigureAwait(false);
 		}
+
+		/// <summary>
+		/// <see cref="BaseDiscordClient.GetLibraryDevelopmentTeamAsync"/>
+		/// </summary>
+		public async Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
+			=> await this.GetShard(0).GetLibraryDevelopmentTeamAsync().ConfigureAwait(false);
 
 		#endregion
 
