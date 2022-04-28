@@ -210,12 +210,7 @@ namespace DisCatSharp.Entities
 		/// <param name="err">The exception to throw if the optional is empty.</param>
 		/// <returns>The value of the <see cref="Optional"/>, if present.</returns>
 		public T Expect(Exception err)
-		{
-			if (!this.HasValue)
-				throw err;
-
-			return this._val;
-		}
+			=> !this.HasValue ? throw err : this._val;
 
 		/// <summary>
 		/// Gets the <see cref="Optional"/>'s value, or throws a standard exception with the provided string if it's

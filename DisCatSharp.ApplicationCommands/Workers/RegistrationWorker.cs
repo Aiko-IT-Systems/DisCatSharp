@@ -70,7 +70,10 @@ namespace DisCatSharp.ApplicationCommands
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Entities.Optional.Some(command.Options);
-						action.DefaultPermission = command.DefaultPermission;
+						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
+							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
+						if (command.DmPermission.HasValue && command.DmPermission != null)
+							action.DmPermission = command.DmPermission.Value;
 					});
 
 					commands.Add(discordBackendCommand);
@@ -101,7 +104,10 @@ namespace DisCatSharp.ApplicationCommands
 							action.DescriptionLocalizations = command.DescriptionLocalizations;
 							if(command.Options != null && command.Options.Any())
 								action.Options = Entities.Optional.Some(command.Options);
-							action.DefaultPermission = command.DefaultPermission;
+							if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
+								action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
+							if (command.DmPermission.HasValue && command.DmPermission != null)
+								action.DmPermission = command.DmPermission.Value;
 						});
 
 						commands.Add(discordBackendCommand);
@@ -126,7 +132,10 @@ namespace DisCatSharp.ApplicationCommands
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Entities.Optional.Some(command.Options);
-						action.DefaultPermission = command.DefaultPermission;
+						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
+							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
+						if (command.DmPermission.HasValue && command.DmPermission != null)
+							action.DmPermission = command.DmPermission.Value;
 					});
 
 					commands.Add(discordBackendCommand);
@@ -157,7 +166,7 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (globalCommandsCreateList.EmptyOrNull() && changedCommands.EmptyOrNull() && unchangedCommands.NotEmptyAndNotNull())
 			{
-				ApplicationCommandsExtension.ClientInternal.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC GUILD] Re-using all application commands.");
+				ApplicationCommandsExtension.ClientInternal.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC GLOBAL] Re-using all application commands.");
 
 				commands.AddRange(unchangedCommands);
 			}
@@ -216,7 +225,10 @@ namespace DisCatSharp.ApplicationCommands
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Entities.Optional.Some(command.Options);
-						action.DefaultPermission = command.DefaultPermission;
+						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
+							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
+						if (command.DmPermission.HasValue && command.DmPermission != null)
+							action.DmPermission = command.DmPermission.Value;
 					});
 
 					commands.Add(discordBackendCommand);
@@ -247,7 +259,10 @@ namespace DisCatSharp.ApplicationCommands
 							action.DescriptionLocalizations = command.DescriptionLocalizations;
 							if(command.Options != null && command.Options.Any())
 								action.Options = Entities.Optional.Some(command.Options);
-							action.DefaultPermission = command.DefaultPermission;
+							if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
+								action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
+							if (command.DmPermission.HasValue && command.DmPermission != null)
+								action.DmPermission = command.DmPermission.Value;
 						});
 
 						commands.Add(discordBackendCommand);
@@ -272,7 +287,10 @@ namespace DisCatSharp.ApplicationCommands
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Entities.Optional.Some(command.Options);
-						action.DefaultPermission = command.DefaultPermission;
+						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
+							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
+						if (command.DmPermission.HasValue && command.DmPermission != null)
+							action.DmPermission = command.DmPermission.Value;
 					});
 
 					commands.Add(discordBackendCommand);

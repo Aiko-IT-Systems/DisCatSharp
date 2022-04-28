@@ -79,13 +79,13 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// The command needed permissions.
 		/// </summary>
-		[JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Include)]
 		public Permissions? DefaultMemberPermission { get; set; }
 
 		/// <summary>
 		/// Whether the command is allowed for dms.
 		/// </summary>
-		[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Include)]
 		public bool? DmPermission { get; set; }
 	}
 
@@ -133,13 +133,13 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// The command needed permissions.
 		/// </summary>
-		[JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Include)]
 		public Optional<Permissions> DefaultMemberPermission { get; set; }
 
 		/// <summary>
 		/// Whether the command is allowed for dms.
 		/// </summary>
-		[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Include)]
 		public Optional<bool> DmPermission { get; set; }
 	}
 
@@ -231,35 +231,5 @@ namespace DisCatSharp.Net.Abstractions
 		/// </summary>
 		[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
 		public List<DiscordAttachment> Attachments { get; set; }
-	}
-
-	/// <summary>
-	/// Represents a application command permission edit payload.
-	/// </summary>
-	internal class RestApplicationCommandPermissionEditPayload
-	{
-		/// <summary>
-		/// Gets the permissions.
-		/// </summary>
-		[JsonProperty("permissions")]
-		public IEnumerable<DiscordApplicationCommandPermission> Permissions { get; set; }
-	}
-
-	/// <summary>
-	/// Represents a guild application command permission edit payload.
-	/// </summary>
-	internal class RestGuildApplicationCommandPermissionEditPayload
-	{
-		/// <summary>
-		/// Gets the command id.
-		/// </summary>
-		[JsonProperty("id")]
-		public ulong CommandId { get; set; }
-
-		/// <summary>
-		/// Gets the permissions.
-		/// </summary>
-		[JsonProperty("permissions")]
-		public IEnumerable<DiscordApplicationCommandPermission> Permissions { get; set; }
 	}
 }

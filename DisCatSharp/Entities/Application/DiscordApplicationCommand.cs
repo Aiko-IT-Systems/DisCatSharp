@@ -93,16 +93,10 @@ namespace DisCatSharp.Entities
 		public IReadOnlyCollection<DiscordApplicationCommandOption> Options { get; internal set; }
 
 		/// <summary>
-		/// Gets whether the command is enabled by default when the app is added to a guild.
-		/// </summary>
-		[JsonProperty("default_permission", NullValueHandling = NullValueHandling.Ignore)]
-		public bool DefaultPermission { get; internal set; }
-
-		/// <summary>
 		/// Gets the commands needed permissions.
 		/// </summary>
 		[JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Ignore)]
-		public Permissions? Permission { get; internal set; }
+		public Permissions? DefaultMemberPermissions { get; internal set; }
 
 		/// <summary>
 		/// Gets whether the command can be used in direct messages.
@@ -122,11 +116,12 @@ namespace DisCatSharp.Entities
 		/// <param name="name">The name of the command.</param>
 		/// <param name="description">The description of the command.</param>
 		/// <param name="options">Optional parameters for this command.</param>
-		/// <param name="defaultPermission">Optional default permission for this command.</param>
 		/// <param name="type">The type of the command. Defaults to ChatInput.</param>
 		/// <param name="nameLocalizations">The localizations of the command name.</param>
 		/// <param name="descriptionLocalizations">The localizations of the command description.</param>
-		public DiscordApplicationCommand(string name, string description, IEnumerable<DiscordApplicationCommandOption> options = null, bool defaultPermission = true, ApplicationCommandType type = ApplicationCommandType.ChatInput, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null)
+		/// <param name="defaultMemberPermissions">The default member permissions.</param>
+		/// <param name="dmPermission">The dm permission.</param>
+		public DiscordApplicationCommand(string name, string description, IEnumerable<DiscordApplicationCommandOption> options = null, ApplicationCommandType type = ApplicationCommandType.ChatInput, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null, Permissions? defaultMemberPermissions = null, bool? dmPermission = null)
 		{
 			if (type is ApplicationCommandType.ChatInput)
 			{
@@ -157,7 +152,8 @@ namespace DisCatSharp.Entities
 			this.Name = name;
 			this.Description = description;
 			this.Options = optionsList;
-			this.DefaultPermission = defaultPermission;
+			this.DefaultMemberPermissions = defaultMemberPermissions;
+			this.DmPermission = dmPermission;
 		}
 
 		/// <summary>

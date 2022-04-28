@@ -41,31 +41,28 @@ namespace DisCatSharp.ApplicationCommands
 		public string Description { get; set; }
 
 		/// <summary>
-		/// Gets the default permission of this command
-		/// </summary>
-		public bool DefaultPermission { get; }
-
-		/// <summary>
 		/// Gets the needed permission of this command
 		/// </summary>
-		public Permissions? Permission { get; set; }
+		public Permissions DefaultMemberPermissions { get; set; }
 
 		/// <summary>
 		/// Gets the dm permission of this command
 		/// </summary>
-		public bool? DmPermission { get; set; }
+		public bool DmPermission { get; set; }
 
 		/// <summary>
 		/// Marks this method as a slash command
 		/// </summary>
 		/// <param name="name">The name of this slash command.</param>
 		/// <param name="description">The description of this slash command.</param>
-		/// <param name="defaultPermission">Whether everyone can execute this command.</param>
-		public SlashCommandAttribute(string name, string description, bool defaultPermission = true)
+		/// <param name="defaultMemberPermissions">The default member permissions.</param>
+		/// <param name="dmPermission">The dm permission.</param>
+		public SlashCommandAttribute(string name, string description, long defaultMemberPermissions = 0, bool dmPermission = true)
 		{
 			this.Name = name.ToLower();
 			this.Description = description;
-			this.DefaultPermission = defaultPermission;
+			this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
+			this.DmPermission = dmPermission;
 		}
 	}
 }
