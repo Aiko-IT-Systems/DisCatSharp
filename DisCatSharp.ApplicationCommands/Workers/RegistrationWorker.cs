@@ -41,8 +41,9 @@ namespace DisCatSharp.ApplicationCommands
 		/// Registers the global commands.
 		/// </summary>
 		/// <param name="commands">The command list.</param>
+		/// <param name="withLocales">Whether this commands has localization.</param>
 		/// <returns>A list of registered commands.</returns>
-		internal static async Task<List<DiscordApplicationCommand>> RegisterGlobalCommandsAsync(List<DiscordApplicationCommand> commands)
+		internal static async Task<List<DiscordApplicationCommand>> RegisterGlobalCommandsAsync(List<DiscordApplicationCommand> commands, bool withLocales)
 		{
 			var (changedCommands, unchangedCommands) = BuildGlobalOverwriteList(commands);
 			var globalCommandsCreateList = BuildGlobalCreateList(commands);
@@ -68,7 +69,7 @@ namespace DisCatSharp.ApplicationCommands
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
-							action.Options = Entities.Optional.FromValue(command.Options);
+							action.Options = Entities.Optional.Some(command.Options);
 						action.DefaultPermission = command.DefaultPermission;
 						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
@@ -103,7 +104,7 @@ namespace DisCatSharp.ApplicationCommands
 							action.Description = command.Description;
 							action.DescriptionLocalizations = command.DescriptionLocalizations;
 							if(command.Options != null && command.Options.Any())
-								action.Options = Entities.Optional.FromValue(command.Options);
+								action.Options = Entities.Optional.Some(command.Options);
 							action.DefaultPermission = command.DefaultPermission;
 							if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
 								action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
@@ -132,7 +133,7 @@ namespace DisCatSharp.ApplicationCommands
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
-							action.Options = Entities.Optional.FromValue(command.Options);
+							action.Options = Entities.Optional.Some(command.Options);
 						action.DefaultPermission = command.DefaultPermission;
 						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
@@ -198,8 +199,9 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="guildId">The target guild id.</param>
 		/// <param name="commands">The command list.</param>
+		/// <param name="withLocales">Whether this commands has localization.</param>
 		/// <returns>A list of registered commands.</returns>
-		internal static async Task<List<DiscordApplicationCommand>> RegisterGuilldCommandsAsync(ulong guildId, List<DiscordApplicationCommand> commands)
+		internal static async Task<List<DiscordApplicationCommand>> RegisterGuilldCommandsAsync(ulong guildId, List<DiscordApplicationCommand> commands, bool withLocales)
 		{
 			var (changedCommands, unchangedCommands) = BuildGuildOverwriteList(guildId, commands);
 			var guildCommandsCreateList = BuildGuildCreateList(guildId, commands);
@@ -225,7 +227,7 @@ namespace DisCatSharp.ApplicationCommands
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
-							action.Options = Entities.Optional.FromValue(command.Options);
+							action.Options = Entities.Optional.Some(command.Options);
 						action.DefaultPermission = command.DefaultPermission;
 						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
@@ -260,7 +262,7 @@ namespace DisCatSharp.ApplicationCommands
 							action.Description = command.Description;
 							action.DescriptionLocalizations = command.DescriptionLocalizations;
 							if(command.Options != null && command.Options.Any())
-								action.Options = Entities.Optional.FromValue(command.Options);
+								action.Options = Entities.Optional.Some(command.Options);
 							action.DefaultPermission = command.DefaultPermission;
 							if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
 								action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
@@ -289,7 +291,7 @@ namespace DisCatSharp.ApplicationCommands
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
-							action.Options = Entities.Optional.FromValue(command.Options);
+							action.Options = Entities.Optional.Some(command.Options);
 						action.DefaultPermission = command.DefaultPermission;
 						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;

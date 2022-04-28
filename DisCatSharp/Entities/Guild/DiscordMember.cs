@@ -83,6 +83,7 @@ namespace DisCatSharp.Entities
 			this.AvatarHashInternal = mbr.AvatarHash;
 			this.RoleIdsInternal = mbr.Roles ?? new List<ulong>();
 			this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
+			this.MemberFlags = mbr.MemberFlags;
 		}
 
 		/// <summary>
@@ -129,6 +130,12 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonProperty("bio", NullValueHandling = NullValueHandling.Ignore)]
 		public string GuildBio { get; internal set; }
+
+		/// <summary>
+		/// Gets the members flags.
+		/// </summary>
+		[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+		public MemberFlags MemberFlags { get; internal set; }
 
 		[JsonIgnore]
 		internal string AvatarHashInternal;
@@ -257,6 +264,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets this member's username.
 		/// </summary>
+		[JsonIgnore]
 		public override string Username
 		{
 			get => this.User.Username;
@@ -266,6 +274,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the member's 4-digit discriminator.
 		/// </summary>
+		[JsonIgnore]
 		public override string Discriminator
 		{
 			get => this.User.Discriminator;
@@ -295,6 +304,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets whether the member is a bot.
 		/// </summary>
+		[JsonIgnore]
 		public override bool IsBot
 		{
 			get => this.User.IsBot;
@@ -305,6 +315,7 @@ namespace DisCatSharp.Entities
 		/// Gets the member's email address.
 		/// <para>This is only present in OAuth.</para>
 		/// </summary>
+		[JsonIgnore]
 		public override string Email
 		{
 			get => this.User.Email;
@@ -314,6 +325,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets whether the member has multi-factor authentication enabled.
 		/// </summary>
+		[JsonIgnore]
 		public override bool? MfaEnabled
 		{
 			get => this.User.MfaEnabled;
@@ -324,6 +336,7 @@ namespace DisCatSharp.Entities
 		/// Gets whether the member is verified.
 		/// <para>This is only present in OAuth.</para>
 		/// </summary>
+		[JsonIgnore]
 		public override bool? Verified
 		{
 			get => this.User.Verified;
@@ -333,6 +346,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the member's chosen language
 		/// </summary>
+		[JsonIgnore]
 		public override string Locale
 		{
 			get => this.User.Locale;
@@ -342,6 +356,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the user's flags.
 		/// </summary>
+		[JsonIgnore]
 		public override UserFlags? OAuthFlags
 		{
 			get => this.User.OAuthFlags;
@@ -351,6 +366,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the member's flags for OAuth.
 		/// </summary>
+		[JsonIgnore]
 		public override UserFlags? Flags
 		{
 			get => this.User.Flags;
@@ -488,15 +504,15 @@ namespace DisCatSharp.Entities
 				await this.Discord.ApiClient.ModifyCurrentMemberNicknameAsync(this.Guild.Id, mdl.Nickname.Value,
 					mdl.AuditLogReason).ConfigureAwait(false);
 
-				await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, Optional.FromNoValue<string>(),
-					mdl.Roles.IfPresent(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
-					mdl.VoiceChannel.IfPresent(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
+				await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, Optional.None,
+					mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
+					mdl.VoiceChannel.Map(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
 			}
 			else
 			{
 				await this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, mdl.Nickname,
-					mdl.Roles.IfPresent(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
-					mdl.VoiceChannel.IfPresent(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
+					mdl.Roles.Map(e => e.Select(xr => xr.Id)), mdl.Muted, mdl.Deafened,
+					mdl.VoiceChannel.Map(e => e?.Id), mdl.AuditLogReason).ConfigureAwait(false);
 			}
 		}
 
@@ -581,7 +597,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task ReplaceRolesAsync(IEnumerable<DiscordRole> roles, string reason = null)
 			=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, default,
-				new Optional<IEnumerable<ulong>>(roles.Select(xr => xr.Id)), default, default, default, reason);
+				Optional.Some(roles.Select(xr => xr.Id)), default, default, default, reason);
 
 		/// <summary>
 		/// Bans this member from their guild.
@@ -702,7 +718,7 @@ namespace DisCatSharp.Entities
 			// assign permissions from member's roles (in order)
 			perms |= this.Roles.Aggregate(Permissions.None, (c, role) => c | role.Permissions);
 
-			// Adminstrator grants all permissions and cannot be overridden
+			// Administrator grants all permissions and cannot be overridden
 			return (perms & Permissions.Administrator) == Permissions.Administrator ? PermissionMethods.FullPerms : perms;
 		}
 

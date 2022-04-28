@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
 // Copyright (c) 2021-2022 AITSYS
 //
@@ -59,7 +59,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("DocumentationHeader", "MethodDocumentationHeader:The method must have a documentation header.", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Configuration.Tests.ConfigurationExtensionTests.TestExtractConfig_V3_Change")]
 [assembly: SuppressMessage("DocumentationHeader", "MethodDocumentationHeader:The method must have a documentation header.", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Configuration.Tests.ConfigurationExtensionTests.TestExtractConfig_V3_Default")]
 [assembly: SuppressMessage("DocumentationHeader", "MethodDocumentationHeader:The method must have a documentation header.", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Configuration.Tests.ConfigurationExtensionTests.TestExtractDiscordConfig_Default")]
-[assembly: SuppressMessage("DocumentationHeader", "MethodDocumentationHeader:The method must have a documentation header.", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Configuration.Tests.ConfigurationExtensionTests.TestExtractDiscordConfig_Haphzard")]
+[assembly: SuppressMessage("DocumentationHeader", "MethodDocumentationHeader:The method must have a documentation header.", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Configuration.Tests.ConfigurationExtensionTests.TestExtractDiscordConfig_Haphazard")]
 [assembly: SuppressMessage("DocumentationHeader", "MethodDocumentationHeader:The method must have a documentation header.", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Configuration.Tests.ConfigurationExtensionTests.TestExtractDiscordConfig_Intents")]
 [assembly: SuppressMessage("DocumentationHeader", "MethodDocumentationHeader:The method must have a documentation header.", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Configuration.Tests.ConfigurationExtensionTests.TestHasSectionNoSuffix")]
 [assembly: SuppressMessage("DocumentationHeader", "MethodDocumentationHeader:The method must have a documentation header.", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Configuration.Tests.ConfigurationExtensionTests.TestHasSectionWithSuffix")]

@@ -68,26 +68,26 @@ namespace DisCatSharp.Entities
 			=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.CHANNEL_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png" : null;
 
 		/// <summary>
-		/// Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token
+		/// Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token.
 		/// </summary>
 		/// <param name="userId">The id of the user to add.</param>
-		/// <param name="accesstoken">The OAuth2 access token.</param>
+		/// <param name="accessToken">The OAuth2 access token.</param>
 		/// <param name="nickname">The nickname to give to the user.</param>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task AddDmRecipientAsync(ulong userId, string accesstoken, string nickname)
-			=> this.Discord.ApiClient.AddGroupDmRecipientAsync(this.Id, userId, accesstoken, nickname);
+		public Task AddDmRecipientAsync(ulong userId, string accessToken, string nickname)
+			=> this.Discord.ApiClient.AddGroupDmRecipientAsync(this.Id, userId, accessToken, nickname);
 
 		/// <summary>
-		/// Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token
+		/// Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token.
 		/// </summary>
 		/// <param name="userId">The id of the User to remove.</param>
-		/// <param name="accesstoken">The OAuth2 access token.</param>
+		/// <param name="accessToken">The OAuth2 access token.</param>
 		/// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-		public Task RemoveDmRecipientAsync(ulong userId, string accesstoken)
+		public Task RemoveDmRecipientAsync(ulong userId, string accessToken)
 			=> this.Discord.ApiClient.RemoveGroupDmRecipientAsync(this.Id, userId);
 	}
 }

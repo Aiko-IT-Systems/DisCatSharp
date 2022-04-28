@@ -23,7 +23,7 @@
 namespace DisCatSharp
 {
 	/// <summary>
-	/// Represents a channelpermissions overwrite's type.
+	/// Represents a channel permission overwrite's type.
 	/// </summary>
 	public enum OverwriteType : int
 	{

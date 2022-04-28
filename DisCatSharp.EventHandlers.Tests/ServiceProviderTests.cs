@@ -20,27 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Newtonsoft.Json;
+#nullable enable
 
-// TODO: What the fuck is this?
+using System;
 
-namespace DisCatSharp.Entities
+using Microsoft.Extensions.DependencyInjection;
+
+using Xunit;
+
+namespace DisCatSharp.EventHandlers.Tests
 {
-	/// <summary>
-	/// Represents a Discord guild widget.
-	/// </summary>
-	public class DiscordGuildEmbed
+	public class ServiceProviderTests
 	{
-		/// <summary>
-		/// Gets whether the widget is enabled.
-		/// </summary>
-		[JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
-		public bool IsEnabled { get; set; }
+		private class Resource { }
 
-		/// <summary>
-		/// Gets the ID of the widget channel.
-		/// </summary>
-		[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
-		public ulong ChannelId { get; set; }
+		private class Handler
+		{
+			public Handler(Resource res) { }
+		}
+
+		[Fact]
+		public void Test()
+		{
+			var poorClient = new DiscordClient(new() { Token = "1" });
+			Assert.ThrowsAny<Exception>(() => poorClient.RegisterEventHandler<Handler>());
+
+			var richClient = new DiscordClient(new()
+			{
+				Token = "2",
+				ServiceProvider = new ServiceCollection().AddSingleton<Resource>().BuildServiceProvider(),
+			});
+			richClient.RegisterEventHandler<Handler>(); // May not throw.
+		}
 	}
 }

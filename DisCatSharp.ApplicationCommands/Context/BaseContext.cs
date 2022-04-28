@@ -31,7 +31,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DisCatSharp.ApplicationCommands
 {
 	/// <summary>
-	/// Respresents a base context for application command contexts.
+	/// Represents a base context for application command contexts.
 	/// </summary>
 	public class BaseContext
 	{
@@ -104,7 +104,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// <para>Gets the service provider.</para>
 		/// <para>This allows passing data around without resorting to static members.</para>
-		/// <para>Defaults to null.</para>
+		/// <para>Defaults to an empty service provider.</para>
 		/// </summary>
 		public IServiceProvider Services { get; internal set; } = new ServiceCollection().BuildServiceProvider(true);
 

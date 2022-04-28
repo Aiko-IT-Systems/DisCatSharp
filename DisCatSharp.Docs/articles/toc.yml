@@ -2,6 +2,8 @@
   href: preamble.md
 - name: Important Changes
   items:
+  - name: Version 9.9.0
+    href: important_changes/9_9_0.md
   - name: Version 9.8.5
     href: important_changes/9_8_5.md
   - name: Version 9.8.4
@@ -31,6 +33,8 @@
       href: beyond_basics/logging/default.md
     - name: Third Party Loggers
       href: beyond_basics/logging/third_party.md
+    - name: Dependency Injection Loggers
+      href: beyond_basics/logging/di.md
   - name: Intents
     href: beyond_basics/intents.md
   - name: Sharding

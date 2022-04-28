@@ -981,6 +981,16 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
+		/// Fired when a ratelimit was hit.
+		/// </summary>
+		public event AsyncEventHandler<DiscordClient, RateLimitExceptionEventArgs> RateLimitHit
+		{
+			add => this._rateLimitHit.Register(value);
+			remove => this._rateLimitHit.Unregister(value);
+		}
+		internal AsyncEvent<DiscordClient, RateLimitExceptionEventArgs> _rateLimitHit;
+
+		/// <summary>
 		/// Fired on heartbeat attempt cancellation due to too many failed heartbeats.
 		/// </summary>
 		public event AsyncEventHandler<DiscordClient, ZombiedEventArgs> Zombied

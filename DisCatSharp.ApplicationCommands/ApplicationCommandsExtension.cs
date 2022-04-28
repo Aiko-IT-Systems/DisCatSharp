@@ -154,6 +154,8 @@ namespace DisCatSharp.ApplicationCommands
 
 		internal static bool ManOr { get; set; }
 
+		internal static bool AutoDeferEnabled { get; set; }
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
 		/// </summary>
@@ -164,6 +166,7 @@ namespace DisCatSharp.ApplicationCommands
 			DebugEnabled = configuration?.DebugStartup ?? false;
 			CheckAllGuilds = configuration?.CheckAllGuilds ?? false;
 			ManOr = configuration?.ManualOverride ?? false;
+			AutoDeferEnabled = configuration?.AutoDefer ?? false;
 		}
 
 		/// <summary>
@@ -206,6 +209,27 @@ namespace DisCatSharp.ApplicationCommands
 
 			this.Client.InteractionCreated += this.InteractionHandler;
 			this.Client.ContextMenuInteractionCreated += this.ContextMenuHandler;
+		}
+		/// <summary>
+		/// Cleans the module for a new start of the bot.
+		/// DO NOT USE IF YOU DON'T KNOW WHAT IT DOES.
+		/// </summary>
+		public void CleanModule()
+		{
+			this._updateList.Clear();
+			s_singletonModules.Clear();
+			s_errored = false;
+			s_permError = false;
+			s_expectedCount = 0;
+			s_registrationCount = 0;
+			s_commandMethods.Clear();
+			s_groupCommands.Clear();
+			s_contextMenuCommands.Clear();
+			s_subGroupCommands.Clear();
+			s_singletonModules.Clear();
+			s_registeredCommands.Clear();
+			GlobalCommandsInternal.Clear();
+			GuildCommandsInternal.Clear();
 		}
 
 		/// <summary>
@@ -360,7 +384,7 @@ namespace DisCatSharp.ApplicationCommands
 
 				List<ulong> failedGuilds = new();
 				IEnumerable<DiscordApplicationCommand> globalCommands = null;
-				globalCommands = await this.Client.GetGlobalApplicationCommandsAsync() ?? null;
+				globalCommands = await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false) ?? null;
 				var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys : this._updateList.Select(x => x.Key)?.Distinct().Where(x => x != null)?.Select(x => x.Value);
 
 				foreach (var guild in guilds)
@@ -369,7 +393,7 @@ namespace DisCatSharp.ApplicationCommands
 					var unauthorized = false;
 					try
 					{
-						commands = await this.Client.GetGuildApplicationCommandsAsync(guild) ?? null;
+						commands = await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false) ?? null;
 					}
 					catch (UnauthorizedException)
 					{
@@ -427,6 +451,7 @@ namespace DisCatSharp.ApplicationCommands
 			var subGroupCommands = new List<SubGroupCommand>();
 			var contextMenuCommands = new List<ContextMenuCommand>();
 			var updateList = new List<DiscordApplicationCommand>();
+			var withLocales = false;
 
 			var commandTypeSources = new List<KeyValuePair<Type, Type>>();
 
@@ -460,24 +485,25 @@ namespace DisCatSharp.ApplicationCommands
 						if (!string.IsNullOrEmpty(ctx.Translations))
 						{
 							groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
+							withLocales = true;
 						}
 
-						var slashGroupsTulpe = NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations).Result;
+						var slashGroupsTuple = NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations).Result;
 
-						if (slashGroupsTulpe.applicationCommands != null && slashGroupsTulpe.applicationCommands.Any())
-							updateList.AddRange(slashGroupsTulpe.applicationCommands);
+						if (slashGroupsTuple.applicationCommands != null && slashGroupsTuple.applicationCommands.Any())
+							updateList.AddRange(slashGroupsTuple.applicationCommands);
 
-						if (slashGroupsTulpe.commandTypeSources != null && slashGroupsTulpe.commandTypeSources.Any())
-							commandTypeSources.AddRange(slashGroupsTulpe.commandTypeSources);
+						if (slashGroupsTuple.commandTypeSources != null && slashGroupsTuple.commandTypeSources.Any())
+							commandTypeSources.AddRange(slashGroupsTuple.commandTypeSources);
 
-						if (slashGroupsTulpe.singletonModules != null && slashGroupsTulpe.singletonModules.Any())
-							s_singletonModules.AddRange(slashGroupsTulpe.singletonModules);
+						if (slashGroupsTuple.singletonModules != null && slashGroupsTuple.singletonModules.Any())
+							s_singletonModules.AddRange(slashGroupsTuple.singletonModules);
 
-						if (slashGroupsTulpe.groupCommands != null && slashGroupsTulpe.groupCommands.Any())
-							groupCommands.AddRange(slashGroupsTulpe.groupCommands);
+						if (slashGroupsTuple.groupCommands != null && slashGroupsTuple.groupCommands.Any())
+							groupCommands.AddRange(slashGroupsTuple.groupCommands);
 
-						if (slashGroupsTulpe.subGroupCommands != null && slashGroupsTulpe.subGroupCommands.Any())
-							subGroupCommands.AddRange(slashGroupsTulpe.subGroupCommands);
+						if (slashGroupsTuple.subGroupCommands != null && slashGroupsTuple.subGroupCommands.Any())
+							subGroupCommands.AddRange(slashGroupsTuple.subGroupCommands);
 
 						//Handles methods and context menus, only if the module isn't a group itself
 						if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
@@ -487,6 +513,7 @@ namespace DisCatSharp.ApplicationCommands
 							if (!string.IsNullOrEmpty(ctx.Translations))
 							{
 								commandTranslations = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
+								withLocales = true;
 							}
 
 							//Slash commands
@@ -545,7 +572,7 @@ namespace DisCatSharp.ApplicationCommands
 							{
 								if (updateList != null && updateList.Any())
 								{
-									var regCommands = RegistrationWorker.RegisterGlobalCommandsAsync(updateList).Result;
+									var regCommands = RegistrationWorker.RegisterGlobalCommandsAsync(updateList, withLocales).Result;
 									var actualCommands = regCommands.Distinct().ToList();
 									commands.AddRange(actualCommands);
 									GlobalCommandsInternal.AddRange(actualCommands);
@@ -569,7 +596,7 @@ namespace DisCatSharp.ApplicationCommands
 							{
 								if (updateList != null && updateList.Any())
 								{
-									var regCommands = RegistrationWorker.RegisterGuilldCommandsAsync(guildId.Value, updateList).Result;
+									var regCommands = RegistrationWorker.RegisterGuilldCommandsAsync(guildId.Value, updateList, withLocales).Result;
 									var actualCommands = regCommands.Distinct().ToList();
 									commands.AddRange(actualCommands);
 									GuildCommandsInternal.Add(guildId.Value, actualCommands);
@@ -614,7 +641,7 @@ namespace DisCatSharp.ApplicationCommands
 							else if (contextMenuCommands.GetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
 								cmCom.CommandId = command.Id;
 						}
-						
+
 						//Adds to the global lists finally
 						s_commandMethods.AddRange(commandMethods);
 						s_groupCommands.AddRange(groupCommands);
@@ -969,6 +996,8 @@ namespace DisCatSharp.ApplicationCommands
 
 				if (shouldExecute)
 				{
+					if (AutoDeferEnabled)
+						await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
 					await (Task)method.Invoke(classInstance, args.ToArray());
 
 					await (module?.AfterSlashExecutionAsync(slashContext) ?? Task.CompletedTask);
@@ -983,6 +1012,8 @@ namespace DisCatSharp.ApplicationCommands
 
 				if (shouldExecute)
 				{
+					if (AutoDeferEnabled)
+						await context.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
 					await (Task)method.Invoke(classInstance, args.ToArray());
 
 					await (module?.AfterContextMenuExecutionAsync(contextMenuContext) ?? Task.CompletedTask);
@@ -1133,8 +1164,6 @@ namespace DisCatSharp.ApplicationCommands
 							args.Add(member);
 						else if (e.Interaction.Data.Resolved.Users != null && e.Interaction.Data.Resolved.Users.TryGetValue((ulong)option.Value, out var user))
 							args.Add(user);
-						else if (e.Interaction.Data.Resolved.Attachments != null && e.Interaction.Data.Resolved.Attachments.TryGetValue((ulong)option.Value, out var attachment))
-							args.Add(attachment);
 						else
 							throw new ArgumentException("Error resolving mentionable option.");
 					}
@@ -1147,7 +1176,7 @@ namespace DisCatSharp.ApplicationCommands
 		}
 
 		/// <summary>
-		/// Runs the preexecution checks.
+		/// Runs the pre-execution checks.
 		/// </summary>
 		/// <param name="method">The method info.</param>
 		/// <param name="context">The base context.</param>
@@ -1269,7 +1298,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <param name="type">The type.</param>
 		private static ApplicationCommandOptionType GetParameterType(Type type)
 		{
-			var parametertype = type == typeof(string)
+			var parameterType = type == typeof(string)
 				? ApplicationCommandOptionType.String
 				: type == typeof(long) || type == typeof(long?) || type == typeof(int) || type == typeof(int?)
 				? ApplicationCommandOptionType.Integer
@@ -1277,6 +1306,8 @@ namespace DisCatSharp.ApplicationCommands
 				? ApplicationCommandOptionType.Boolean
 				: type == typeof(double) || type == typeof(double?)
 				? ApplicationCommandOptionType.Number
+				: type == typeof(DiscordAttachment)
+				? ApplicationCommandOptionType.Attachment
 				: type == typeof(DiscordChannel)
 				? ApplicationCommandOptionType.Channel
 				: type == typeof(DiscordUser)
@@ -1285,22 +1316,20 @@ namespace DisCatSharp.ApplicationCommands
 				? ApplicationCommandOptionType.Role
 				: type == typeof(SnowflakeObject)
 				? ApplicationCommandOptionType.Mentionable
-				: type == typeof(DiscordAttachment)
-				? ApplicationCommandOptionType.Attachment
 				: type.IsEnum
 				? ApplicationCommandOptionType.String
 				: throw new ArgumentException("Cannot convert type! Argument types must be string, int, long, bool, double, DiscordChannel, DiscordUser, DiscordRole, SnowflakeObject, DiscordAttachment or an Enum.");
-			return parametertype;
+			return parameterType;
 		}
 
 		/// <summary>
 		/// Gets the choice attributes from parameter.
 		/// </summary>
-		/// <param name="choiceattributes">The choice attributes.</param>
-		private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(IEnumerable<ChoiceAttribute> choiceattributes) =>
-			!choiceattributes.Any()
+		/// <param name="choiceAttributes">The choice attributes.</param>
+		private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(IEnumerable<ChoiceAttribute> choiceAttributes) =>
+			!choiceAttributes.Any()
 				? null
-				: choiceattributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, att.Value)).ToList();
+				: choiceAttributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, att.Value)).ToList();
 
 		/// <summary>
 		/// Parses the parameters.
@@ -1313,8 +1342,8 @@ namespace DisCatSharp.ApplicationCommands
 			foreach (var parameter in parameters)
 			{
 				//Gets the attribute
-				var optionattribute = parameter.GetCustomAttribute<OptionAttribute>();
-				if (optionattribute == null)
+				var optionAttribute = parameter.GetCustomAttribute<OptionAttribute>();
+				if (optionAttribute == null)
 					throw new ArgumentException("Arguments must have the Option attribute!");
 
 				var minimumValue = parameter.GetCustomAttribute<MinimumAttribute>()?.Value ?? null;
@@ -1322,14 +1351,14 @@ namespace DisCatSharp.ApplicationCommands
 
 
 				var autocompleteAttribute = parameter.GetCustomAttribute<AutocompleteAttribute>();
-				if (optionattribute.Autocomplete && autocompleteAttribute == null)
+				if (optionAttribute.Autocomplete && autocompleteAttribute == null)
 					throw new ArgumentException("Autocomplete options must have the Autocomplete attribute!");
-				if (!optionattribute.Autocomplete && autocompleteAttribute != null)
+				if (!optionAttribute.Autocomplete && autocompleteAttribute != null)
 					throw new ArgumentException("Setting an autocomplete provider requires the option to have autocomplete set to true!");
 
 				//Sets the type
 				var type = parameter.ParameterType;
-				var parametertype = GetParameterType(type);
+				var parameterType = GetParameterType(type);
 
 				//Handles choices
 				//From attributes
@@ -1348,7 +1377,7 @@ namespace DisCatSharp.ApplicationCommands
 
 				var channelTypes = parameter.GetCustomAttribute<ChannelTypesAttribute>()?.ChannelTypes ?? null;
 
-				options.Add(new DiscordApplicationCommandOption(optionattribute.Name, optionattribute.Description, parametertype, !parameter.IsOptional, choices, null, channelTypes, optionattribute.Autocomplete, minimumValue, maximumValue));
+				options.Add(new DiscordApplicationCommandOption(optionAttribute.Name, optionAttribute.Description, parameterType, !parameter.IsOptional, choices, null, channelTypes, optionAttribute.Autocomplete, minimumValue, maximumValue));
 			}
 
 			return options;
@@ -1731,7 +1760,7 @@ namespace DisCatSharp.ApplicationCommands
 						sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
 					sb.Append('\n');
-					discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
+					discordEmbed.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
 				}
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
 					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
@@ -1755,7 +1784,7 @@ namespace DisCatSharp.ApplicationCommands
 						sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
 					sb.Append('\n');
-					discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
+					discordEmbed.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
 				}
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
 					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
@@ -1783,7 +1812,7 @@ namespace DisCatSharp.ApplicationCommands
 						sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
 					sb.Append('\n');
-					discordEmbed.AddField("Arguments", sb.ToString().Trim(), false);
+					discordEmbed.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
 				}
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
 					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));

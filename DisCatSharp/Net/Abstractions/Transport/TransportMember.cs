@@ -23,6 +23,8 @@
 using System;
 using System.Collections.Generic;
 
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions
@@ -110,5 +112,11 @@ namespace DisCatSharp.Net.Abstractions
 		/// </summary>
 		[JsonProperty("communication_disabled_until", NullValueHandling = NullValueHandling.Include)]
 		public DateTime? CommunicationDisabledUntil { get; internal set; }
+
+		/// <summary>
+		/// Gets the members flags.
+		/// </summary>
+		[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+		public MemberFlags MemberFlags { get; internal set; }
 	}
 }

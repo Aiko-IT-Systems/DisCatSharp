@@ -165,7 +165,7 @@ namespace DisCatSharp.Entities
 			{
 				canContinue = this.Guild.Features.CanCreatePrivateThreads;
 			}
-			return canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, mdl.Name, mdl.Locked, mdl.Archived, mdl.AutoArchiveDuration, mdl.PerUserRateLimit, mdl.Invitable, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+			return canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, mdl.Name, mdl.Locked, mdl.Archived, mdl.PerUserRateLimit, mdl.AutoArchiveDuration, mdl.Invitable, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 		}
 
 		/// <summary>
@@ -345,7 +345,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public new Task<DiscordMessage> SendMessageAsync(string content) =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, null, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
@@ -359,7 +359,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public new Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed) =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, null, new[] { embed }, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
@@ -374,7 +374,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public new Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed) =>
-			!this.IsWriteable()
+			!this.IsWritable()
 				? throw new ArgumentException("Cannot send a text message to a non-thread channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, content, new[] { embed }, sticker: null, replyMessageId: null, mentionReply: false, failOnInvalidReply: false);
 
@@ -404,7 +404,7 @@ namespace DisCatSharp.Entities
 			var builder = new DiscordMessageBuilder();
 			action(builder);
 
-			return !this.IsWriteable()
+			return !this.IsWritable()
 				? throw new ArgumentException("Cannot send a text message to a non-text channel.")
 				: this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
 		}
@@ -540,13 +540,13 @@ namespace DisCatSharp.Entities
 			if (messages == null || !msgs.Any())
 				throw new ArgumentException("You need to specify at least one message to delete.");
 
-			if (msgs.Count() < 2)
+			if (msgs.Length < 2)
 			{
 				await this.Discord.ApiClient.DeleteMessageAsync(this.Id, msgs.Single(), reason).ConfigureAwait(false);
 				return;
 			}
 
-			for (var i = 0; i < msgs.Count(); i += 100)
+			for (var i = 0; i < msgs.Length; i += 100)
 				await this.Discord.ApiClient.DeleteMessagesAsync(this.Id, msgs.Skip(i).Take(100), reason).ConfigureAwait(false);
 		}
 
@@ -590,16 +590,13 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <returns>String representation of this thread.</returns>
 		public override string ToString()
-		{
-			var threadchannel = (object)this.Type switch
-			{
-				ChannelType.NewsThread => $"News thread {this.Name} ({this.Id})",
-				ChannelType.PublicThread => $"Thread {this.Name} ({this.Id})",
-				ChannelType.PrivateThread => $"Private thread {this.Name} ({this.Id})",
-				_ => $"Thread {this.Name} ({this.Id})",
-			};
-			return threadchannel;
-		}
+			=> this.Type switch
+				{
+					ChannelType.NewsThread => $"News thread {this.Name} ({this.Id})",
+					ChannelType.PublicThread => $"Thread {this.Name} ({this.Id})",
+					ChannelType.PrivateThread => $"Private thread {this.Name} ({this.Id})",
+					_ => $"Thread {this.Name} ({this.Id})",
+				};
 		#endregion
 
 		/// <summary>

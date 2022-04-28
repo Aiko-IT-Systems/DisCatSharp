@@ -39,7 +39,7 @@ namespace DisCatSharp.EventArgs
 		/// <summary>
 		/// <para>Gets the service provider.</para>
 		/// <para>This allows passing data around without resorting to static members.</para>
-		/// <para>Defaults to null.</para>
+		/// <para>Defaults to an empty service provider.</para>
 		/// </summary>
 		public IServiceProvider ServiceProvider { get; internal set; } = new ServiceCollection().BuildServiceProvider(true);
 

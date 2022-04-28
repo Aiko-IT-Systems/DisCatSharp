@@ -58,7 +58,7 @@ namespace DisCatSharp
 		ChannelIconChange = 5,
 
 		/// <summary>
-		/// Message indiciating a user pinned a message to a channel.
+		/// Message indicating a user pinned a message to a channel.
 		/// </summary>
 		ChannelPinnedMessage = 6,
 
@@ -103,7 +103,7 @@ namespace DisCatSharp
 		GuildDiscoveryDisqualified = 14,
 
 		/// <summary>
-		/// Message indicating a guild was readded to guild discovery.
+		/// Message indicating a guild was re-added to guild discovery.
 		/// </summary>
 		GuildDiscoveryRequalified = 15,
 

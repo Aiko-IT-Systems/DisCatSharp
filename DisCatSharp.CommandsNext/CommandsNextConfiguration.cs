@@ -107,7 +107,7 @@ namespace DisCatSharp.CommandsNext
 		/// <summary>
 		/// <para>Sets the service provider for this CommandsNext instance.</para>
 		/// <para>Objects in this provider are used when instantiating command modules. This allows passing data around without resorting to static members.</para>
-		/// <para>Defaults to null.</para>
+		/// <para>Defaults to an empty service provider.</para>
 		/// </summary>
 		public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
 

@@ -1,4 +1,4 @@
-# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) [![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/U4BGHpKSF7)
+# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) <!--[![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/U4BGHpKSF7)-->
 
 ![dcs](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Logos/android-chrome-192x192.png?raw=true)
 
@@ -22,13 +22,18 @@ Discord Bot Library written in C# for .NET.
 [![StackShare](http://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/aiko-it-systems/discatsharp)
 <!-- [![Known Vulnerabilities](https://snyk.io/test/github/Aiko-IT-Systems/DisCatSharp/badge.svg)](https://snyk.io/test/github/Aiko-IT-Systems/DisCatSharp)-->
 
+## Important Info
+
+Development is a bit slow right now, because I (Lala) have a surgery soon and a rehab.
+<!-- Please continue reporting bugs to us via [discord](https://discord.gg/U4BGHpKSF7). --> Write a mail to ottero@aitsys.dev. The other staffs will help!
+
 ## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
 
 So the API version is always the newest, in the actual case `v9`.
 
-## Where is the Changelog?
-On [our guild!](https://discord.gg/U4BGHpKSF7) You find it in [this channel](https://discord.com/channels/858089281214087179/858099438580006913).
+<!--## Where is the Changelog?
+On [our guild!](https://discord.gg/U4BGHpKSF7) You find it in [this channel](https://discord.com/channels/858089281214087179/858099438580006913). -->
 
 ## Installing
 You can install the library from following source:
@@ -40,9 +45,12 @@ The documentation for the latest stable version is available at [docs.dcs.aitsys
 
 The documentation of the latest nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
+Fallback docs are available at [docs-alt.dcs.aitsys.dev](https://docs-alt.dcs.aitsys.dev).
+
 ## Bugs or Feature requests?
-Either join our [support guild](https://discord.gg/U4BGHpKSF7) and open a support ticket.
-Or write a mail to dcs@aitsys.dev.
+<!-- Either join our [support guild](https://discord.gg/U4BGHpKSF7) and open a support ticket. 
+Or write a mail to dcs@aitsys.dev. -->
+Write a mail to ottero@aitsys.dev.
 
 All requests are tracked at [aitsys.dev](https://aitsys.dev).
 
@@ -50,7 +58,7 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev).
 * [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
 * [Examples](https://examples.dcs.aitsys.dev)
 
-## Snippts
+## Snippets
 [Snippets for Visual Studio](https://github.com/Aiko-IT-Systems/DisCatSharp.Snippets)
 
 ## Latest NuGet Packages
@@ -78,7 +86,7 @@ To release a new version do the following steps:
 - Wait for the CI/CD to complete.
 - Merge the branch into main and delete it afterwards
 
-## Testing Docs
+## Testing Docs (Not in use)
 Just visit [this](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/docs-preview.yml) Workflow.
 
 The workflow generates a docs artifact and deploys on Cloudflare Pages.

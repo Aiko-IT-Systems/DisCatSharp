@@ -246,6 +246,7 @@ namespace DisCatSharp
 			this._guildMemberTimeoutAdded = new AsyncEvent<DiscordClient, GuildMemberTimeoutAddEventArgs>("GUILD_MEMBER_TIMEOUT_ADDED", EventExecutionLimit, this.EventErrorHandler);
 			this._guildMemberTimeoutChanged = new AsyncEvent<DiscordClient, GuildMemberTimeoutUpdateEventArgs>("GUILD_MEMBER_TIMEOUT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 			this._guildMemberTimeoutRemoved = new AsyncEvent<DiscordClient, GuildMemberTimeoutRemoveEventArgs>("GUILD_MEMBER_TIMEOUT_REMOVED", EventExecutionLimit, this.EventErrorHandler);
+			this._rateLimitHit = new AsyncEvent<DiscordClient, RateLimitExceptionEventArgs>("RATELIMIT_HIT", EventExecutionLimit, this.EventErrorHandler);
 
 			this.GuildsInternal.Clear();
 
@@ -533,13 +534,7 @@ namespace DisCatSharp
 		public Task<DiscordGuild> CreateGuildAsync(string name, string region = null, Optional<Stream> icon = default, VerificationLevel? verificationLevel = null,
 			DefaultMessageNotifications? defaultMessageNotifications = null, SystemChannelFlags? systemChannelFlags = null)
 		{
-			var iconb64 = Optional.FromNoValue<string>();
-			if (icon.HasValue && icon.Value != null)
-				using (var imgtool = new ImageTool(icon.Value))
-					iconb64 = imgtool.GetBase64();
-			else if (icon.HasValue)
-				iconb64 = null;
-
+			var iconb64 = ImageTool.Base64FromStream(icon);
 			return this.ApiClient.CreateGuildAsync(name, region, iconb64, verificationLevel, defaultMessageNotifications, systemChannelFlags);
 		}
 
@@ -554,13 +549,7 @@ namespace DisCatSharp
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task<DiscordGuild> CreateGuildFromTemplateAsync(string code, string name, Optional<Stream> icon = default)
 		{
-			var iconb64 = Optional.FromNoValue<string>();
-			if (icon.HasValue && icon.Value != null)
-				using (var imgtool = new ImageTool(icon.Value))
-					iconb64 = imgtool.GetBase64();
-			else if (icon.HasValue)
-				iconb64 = null;
-
+			var iconb64 = ImageTool.Base64FromStream(icon);
 			return this.ApiClient.CreateGuildFromTemplateAsync(code, name, iconb64);
 		}
 
@@ -735,12 +724,7 @@ namespace DisCatSharp
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordUser> UpdateCurrentUserAsync(string username = null, Optional<Stream> avatar = default)
 		{
-			var av64 = Optional.FromNoValue<string>();
-			if (avatar.HasValue && avatar.Value != null)
-				using (var imgtool = new ImageTool(avatar.Value))
-					av64 = imgtool.GetBase64();
-			else if (avatar.HasValue)
-				av64 = null;
+			var av64 = ImageTool.Base64FromStream(avatar);
 
 			var usr = await this.ApiClient.ModifyCurrentUserAsync(username, av64).ConfigureAwait(false);
 
@@ -763,9 +747,10 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets all the global application commands for this application.
 		/// </summary>
+		/// <param name="withLocalizations">Whether to get the full localization dict.</param>
 		/// <returns>A list of global application commands.</returns>
-		public Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync() =>
-			this.ApiClient.GetGlobalApplicationCommandsAsync(this.CurrentApplication.Id);
+		public Task<IReadOnlyList<DiscordApplicationCommand>> GetGlobalApplicationCommandsAsync(bool withLocalizations = false) =>
+			this.ApiClient.GetGlobalApplicationCommandsAsync(this.CurrentApplication.Id, withLocalizations);
 
 		/// <summary>
 		/// Overwrites the existing global application commands. New commands are automatically created and missing commands are automatically deleted.
@@ -816,9 +801,10 @@ namespace DisCatSharp
 		/// Gets all the application commands for a guild.
 		/// </summary>
 		/// <param name="guildId">The id of the guild to get application commands for.</param>
+		/// <param name="withLocalizations">Whether to get the full localization dict.</param>
 		/// <returns>A list of application commands in the guild.</returns>
-		public Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong guildId) =>
-			this.ApiClient.GetGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId);
+		public Task<IReadOnlyList<DiscordApplicationCommand>> GetGuildApplicationCommandsAsync(ulong guildId, bool withLocalizations = false) =>
+			this.ApiClient.GetGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, withLocalizations);
 
 		/// <summary>
 		/// Overwrites the existing application commands in a guild. New commands are automatically created and missing commands are automatically deleted.
@@ -904,7 +890,7 @@ namespace DisCatSharp
 
 
 		/// <summary>
-		/// Gets the internal chached scheduled event.
+		/// Gets the internal cached scheduled event.
 		/// </summary>
 		/// <param name="scheduledEventId">The target scheduled event id.</param>
 		/// <returns>The requested scheduled event.</returns>
@@ -918,7 +904,7 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Gets the internal chached channel.
+		/// Gets the internal cached channel.
 		/// </summary>
 		/// <param name="channelId">The target channel id.</param>
 		/// <returns>The requested channel.</returns>
@@ -1120,7 +1106,7 @@ namespace DisCatSharp
 
 			var guild = this.GuildsInternal[newGuild.Id];
 
-			if (newGuild.ChannelsInternal != null && newGuild.ChannelsInternal.Count > 0)
+			if (newGuild.ChannelsInternal != null && !newGuild.ChannelsInternal.IsEmpty)
 			{
 				foreach (var channel in newGuild.ChannelsInternal.Values)
 				{
@@ -1136,7 +1122,7 @@ namespace DisCatSharp
 				}
 			}
 
-			if (newGuild.ThreadsInternal != null && newGuild.ThreadsInternal.Count > 0)
+			if (newGuild.ThreadsInternal != null && !newGuild.ThreadsInternal.IsEmpty)
 			{
 				foreach (var thread in newGuild.ThreadsInternal.Values)
 				{
@@ -1146,7 +1132,7 @@ namespace DisCatSharp
 				}
 			}
 
-			if (newGuild.ScheduledEventsInternal != null && newGuild.ScheduledEventsInternal.Count > 0)
+			if (newGuild.ScheduledEventsInternal != null && !newGuild.ScheduledEventsInternal.IsEmpty)
 			{
 				foreach (var @event in newGuild.ScheduledEventsInternal.Values)
 				{

@@ -43,7 +43,7 @@ namespace DisCatSharp.Entities
 		public bool IsEphemeral { get; set; }
 
 		/// <summary>
-		/// Indicates this message is emphemeral.
+		/// Indicates this message is ephemeral.
 		/// </summary>
 		internal int? Flags
 			=> this.IsEphemeral ? 64 : null;
@@ -275,9 +275,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Sets the followup message to be ephemeral.
 		/// </summary>
-		/// <param name="ephemeral">Ephemeral.</param>
-		/// <returns>The builder to chain calls with.</returns>
-		public DiscordFollowupMessageBuilder AsEphemeral(bool ephemeral)
+		/// <param name="ephemeral">Whether the followup should be ephemeral. Defaults to true.</param>
+		public DiscordFollowupMessageBuilder AsEphemeral(bool ephemeral = true)
 		{
 			this.IsEphemeral = ephemeral;
 			return this;

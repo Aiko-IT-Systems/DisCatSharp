@@ -36,7 +36,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <para>Objects in this provider are used when instantiating application command modules. This allows passing data around without resorting to static members.</para>
 		/// <para>Defaults to null.</para>
 		/// </summary>
-		public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
+		public IServiceProvider ServiceProvider { internal get; set; }
 
 		/// <summary>
 		/// <para>Sets whether to enable default help command.</para>
@@ -53,10 +53,21 @@ namespace DisCatSharp.ApplicationCommands
 		public bool DebugStartup { internal get; set; } = false;
 
 		/// <summary>
+		/// Enable localization features.
+		/// </summary>
+		public bool EnableLocalization { internal get; set; } = false;
+
+		/// <summary>
 		/// Manual override.
 		/// <note type="warning">DO NOT USE THIS!</note>
 		/// </summary>
 		public bool ManualOverride { internal get; set; } = false;
+
+		/// <summary>
+		/// Automatically defer all responses.
+		/// <note type="note">If you enable this, you can't use CreateResponse. Use EditResponse instead.</note>
+		/// </summary>
+		public bool AutoDefer { internal get; set; } = false;
 
 		/// <summary>
 		/// Checks through all guilds.
@@ -85,6 +96,8 @@ namespace DisCatSharp.ApplicationCommands
 			this.DebugStartup = acc.DebugStartup;
 			this.CheckAllGuilds = acc.CheckAllGuilds;
 			this.ManualOverride = acc.ManualOverride;
+			this.AutoDefer = acc.AutoDefer;
+			this.EnableLocalization = acc.EnableLocalization;
 		}
 	}
 }

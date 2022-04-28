@@ -38,7 +38,7 @@ namespace DisCatSharp.CommandsNext.Converters
 		/// <param name="value">The string to convert.</param>
 		/// <param name="ctx">The command context.</param>
 		Task<Optional<string>> IArgumentConverter<string>.ConvertAsync(string value, CommandContext ctx)
-			=> Task.FromResult(Optional.FromValue(value));
+			=> Task.FromResult(Optional.Some(value));
 	}
 
 	/// <summary>
@@ -58,11 +58,11 @@ namespace DisCatSharp.CommandsNext.Converters
 				if (value.StartsWith("<") && value.EndsWith(">"))
 					value = value[1..^1];
 
-				return Task.FromResult(Optional.FromValue(new Uri(value)));
+				return Task.FromResult(Optional.Some(new Uri(value)));
 			}
 			catch
 			{
-				return Task.FromResult(Optional.FromNoValue<Uri>());
+				return Task.FromResult(Optional<Uri>.None);
 			}
 		}
 	}

@@ -34,7 +34,7 @@ namespace DisCatSharp.Net.Abstractions
 	internal class ReadyPayload
 	{
 		/// <summary>
-		/// Gets the gateway version the client is connectected to.
+		/// Gets the gateway version the client is connected to.
 		/// </summary>
 		[JsonProperty("v")]
 		public int GatewayVersion { get; private set; }

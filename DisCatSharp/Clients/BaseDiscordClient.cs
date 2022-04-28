@@ -56,7 +56,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the instance of the logger for this client.
 		/// </summary>
-		public ILogger<BaseDiscordClient> Logger { get; }
+		public ILogger<BaseDiscordClient> Logger { get; internal set; }
 
 		/// <summary>
 		/// Gets the string representing the version of bot lib.
@@ -68,11 +68,9 @@ namespace DisCatSharp
 		/// </summary>
 		public string BotLibrary { get; }
 
-		/// <summary>
-		/// Gets the library team.
-		/// </summary>
-		public DisCatSharpTeam LibraryDeveloperTeam
-			=> this.ApiClient.GetDisCatSharpTeamAsync().Result;
+		[Obsolete("Use GetLibraryDeveloperTeamAsync")]
+		public DisCatSharpTeam LibraryDeveloperTeamAsync
+			=> this.GetLibraryDevelopmentTeamAsync().Result;
 
 		/// <summary>
 		/// Gets the current user.
@@ -104,7 +102,7 @@ namespace DisCatSharp
 		/// <para>This allows passing data around without resorting to static members.</para>
 		/// <para>Defaults to null.</para>
 		/// </summary>
-		internal IServiceProvider ServiceProvider { get; set; } = new ServiceCollection().BuildServiceProvider(true);
+		internal IServiceProvider ServiceProvider { get; set; }
 
 		/// <summary>
 		/// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
@@ -125,20 +123,28 @@ namespace DisCatSharp
 		protected BaseDiscordClient(DiscordConfiguration config)
 		{
 			this.Configuration = new DiscordConfiguration(config);
+			this.ServiceProvider = config.ServiceProvider;
+
+			if (this.ServiceProvider != null)
+			{
+				this.Configuration.LoggerFactory ??= config.ServiceProvider.GetService<ILoggerFactory>();
+				this.Logger = config.ServiceProvider.GetService<ILogger<BaseDiscordClient>>();
+			}
 
 			if (this.Configuration.LoggerFactory == null)
 			{
 				this.Configuration.LoggerFactory = new DefaultLoggerFactory();
 				this.Configuration.LoggerFactory.AddProvider(new DefaultLoggerProvider(this));
 			}
-			this.Logger = this.Configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
+			this.Logger ??= this.Configuration.LoggerFactory.CreateLogger<BaseDiscordClient>();
 
 			this.ApiClient = new DiscordApiClient(this);
 			this.UserCache = new ConcurrentDictionary<ulong, DiscordUser>();
 			this.InternalVoiceRegions = new ConcurrentDictionary<string, DiscordVoiceRegion>();
 			this.VoiceRegionsLazy = new Lazy<IReadOnlyDictionary<string, DiscordVoiceRegion>>(() => new ReadOnlyDictionary<string, DiscordVoiceRegion>(this.InternalVoiceRegions));
 
-			this.RestClient = this.ApiClient.Rest.HttpClient;
+			this.RestClient = new();
+			this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
 
 			var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 
@@ -157,8 +163,6 @@ namespace DisCatSharp
 			}
 
 			this.BotLibrary = "DisCatSharp";
-
-			this.ServiceProvider = config.ServiceProvider;
 		}
 
 		/// <summary>
@@ -199,7 +203,7 @@ namespace DisCatSharp
 				app.Team = new DiscordTeam(tapp.Team);
 
 				var members = tapp.Team.Members
-					.Select(x => new DiscordTeamMember(x) { Team = app.Team, User = new DiscordUser(x.User) })
+					.Select(x => new DiscordTeamMember(x) { TeamId = app.Team.Id, TeamName = app.Team.Name, User = new DiscordUser(x.User) })
 					.ToArray();
 
 				var owners = members
@@ -213,11 +217,11 @@ namespace DisCatSharp
 				app.TeamName = app.Team.Name;
 			}
 
-			app.GuildId = tapp.GuildId.HasValue ? tapp.GuildId.Value : null;
-			app.Slug = tapp.Slug.HasValue ? tapp.Slug.Value : null;
-			app.PrimarySkuId = tapp.PrimarySkuId.HasValue ? tapp.PrimarySkuId.Value : null;
-			app.VerifyKey = tapp.VerifyKey.HasValue ? tapp.VerifyKey.Value : null;
-			app.CoverImageHash = tapp.CoverImageHash.HasValue ? tapp.CoverImageHash.Value : null;
+			app.GuildId = tapp.GuildId.ValueOrDefault();
+			app.Slug = tapp.Slug.ValueOrDefault();
+			app.PrimarySkuId = tapp.PrimarySkuId.ValueOrDefault();
+			app.VerifyKey = tapp.VerifyKey.ValueOrDefault();
+			app.CoverImageHash = tapp.CoverImageHash.ValueOrDefault();
 
 			return app;
 		}
@@ -275,6 +279,15 @@ namespace DisCatSharp
 
 			return await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
 		}
+
+		/// <summary>
+		/// Gets some information about the development team behind DisCatSharp.
+		/// Can be used for crediting etc.
+		/// <para>Note: This call contacts servers managed by the DCS team, no information is collected.</para>
+		/// <returns>The team, or null with errors being logged on failure.</returns>
+		/// </summary>
+		public async Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
+			=> await DisCatSharpTeam.Get(this.RestClient, this.Logger, this.ApiClient).ConfigureAwait(false);
 
 		/// <summary>
 		/// Gets a cached user.
