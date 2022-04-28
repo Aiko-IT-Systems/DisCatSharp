@@ -68,11 +68,9 @@ namespace DisCatSharp
 		/// </summary>
 		public string BotLibrary { get; }
 
-		/// <summary>
-		/// Gets the library team.
-		/// </summary>
-		public DisCatSharpTeam LibraryDeveloperTeam
-			=> this.ApiClient.GetDisCatSharpTeamAsync().Result;
+		[Obsolete("Use GetLibraryDeveloperTeamAsync")]
+		public DisCatSharpTeam LibraryDeveloperTeamAsync
+			=> this.GetLibraryDevelopmentTeamAsync().Result;
 
 		/// <summary>
 		/// Gets the current user.
@@ -249,7 +247,7 @@ namespace DisCatSharp
 			if (this.Configuration.TokenType == TokenType.Bot && this.CurrentApplication == null)
 				this.CurrentApplication = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
 
-			if (this.Configuration.TokenType != TokenType.Bearer && this.InternalVoiceRegions.Count == 0)
+			if (this.Configuration.TokenType != TokenType.Bearer && this.InternalVoiceRegions.IsEmpty)
 			{
 				var vrs = await this.ListVoiceRegionsAsync().ConfigureAwait(false);
 				foreach (var xvr in vrs)
@@ -281,6 +279,15 @@ namespace DisCatSharp
 
 			return await this.ApiClient.GetGatewayInfoAsync().ConfigureAwait(false);
 		}
+
+		/// <summary>
+		/// Gets some information about the development team behind DisCatSharp.
+		/// Can be used for crediting etc.
+		/// <para>Note: This call contacts servers managed by the DCS team, no information is collected.</para>
+		/// <returns>The team, or null with errors being logged on failure.</returns>
+		/// </summary>
+		public async Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
+			=> await DisCatSharpTeam.Get(this.RestClient, this.Logger, this.ApiClient).ConfigureAwait(false);
 
 		/// <summary>
 		/// Gets a cached user.

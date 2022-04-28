@@ -41,10 +41,10 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 		/// <summary>
 		/// Runs checks.
 		/// </summary>
-		public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+		public override async Task<bool> ExecuteChecksAsync(InteractionContext ctx)
 		{
-			var team = ctx.Client.LibraryDeveloperTeam.Developers;
-			return team != null ? Task.FromResult(team.Where(x => x.Id == ctx.User.Id).Any()) : Task.FromResult(false);
+			var team = (await ctx.Client.GetLibraryDevelopmentTeamAsync()).Developers;
+			return team?.Any(x => x.Id == ctx.User.Id) ?? false;
 		}
 	}
 }
