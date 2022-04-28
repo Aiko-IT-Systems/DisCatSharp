@@ -58,7 +58,6 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="type">The type of the context menu.</param>
 		/// <param name="name">The name of the context menu.</param>
-		/// <param name="defaultPermission">The default permission of the context menu.</param>
 		/// <param name="defaultMemberPermissions">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
 		public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions = 0, bool dmPermission = true)
