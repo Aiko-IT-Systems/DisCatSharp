@@ -70,7 +70,6 @@ namespace DisCatSharp.ApplicationCommands
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Entities.Optional.Some(command.Options);
-						action.DefaultPermission = command.DefaultPermission;
 						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 						if (command.DmPermission.HasValue && command.DmPermission != null)
@@ -105,7 +104,6 @@ namespace DisCatSharp.ApplicationCommands
 							action.DescriptionLocalizations = command.DescriptionLocalizations;
 							if(command.Options != null && command.Options.Any())
 								action.Options = Entities.Optional.Some(command.Options);
-							action.DefaultPermission = command.DefaultPermission;
 							if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
 								action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 							if (command.DmPermission.HasValue && command.DmPermission != null)
@@ -134,7 +132,6 @@ namespace DisCatSharp.ApplicationCommands
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Entities.Optional.Some(command.Options);
-						action.DefaultPermission = command.DefaultPermission;
 						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 						if (command.DmPermission.HasValue && command.DmPermission != null)
@@ -228,7 +225,6 @@ namespace DisCatSharp.ApplicationCommands
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Entities.Optional.Some(command.Options);
-						action.DefaultPermission = command.DefaultPermission;
 						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 						if (command.DmPermission.HasValue && command.DmPermission != null)
@@ -263,7 +259,6 @@ namespace DisCatSharp.ApplicationCommands
 							action.DescriptionLocalizations = command.DescriptionLocalizations;
 							if(command.Options != null && command.Options.Any())
 								action.Options = Entities.Optional.Some(command.Options);
-							action.DefaultPermission = command.DefaultPermission;
 							if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
 								action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 							if (command.DmPermission.HasValue && command.DmPermission != null)
@@ -292,7 +287,6 @@ namespace DisCatSharp.ApplicationCommands
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Entities.Optional.Some(command.Options);
-						action.DefaultPermission = command.DefaultPermission;
 						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 						if (command.DmPermission.HasValue && command.DmPermission != null)

@@ -561,9 +561,10 @@ namespace DisCatSharp.Entities
 		{
 			IReadOnlyList<DiscordChannel> rawChannels = this.ChannelsInternal.Values.ToList();
 
-			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new();
-
-			orderedChannels.Add(0, new List<DiscordChannel>());
+			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
+			{
+				{ 0, new List<DiscordChannel>() }
+			};
 
 			foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
 			{
@@ -602,9 +603,10 @@ namespace DisCatSharp.Entities
 		{
 			var rawChannels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Id);
 
-			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new();
-
-			orderedChannels.Add(0, new List<DiscordChannel>());
+			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
+			{
+				{ 0, new List<DiscordChannel>() }
+			};
 
 			foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
 			{
@@ -1876,7 +1878,7 @@ namespace DisCatSharp.Entities
 		{
 			var mdl = new ApplicationCommandEditModel();
 			action(mdl);
-			return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.DefaultPermission, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission).ConfigureAwait(false);
+			return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission).ConfigureAwait(false);
 		}
 
 		/// <summary>

@@ -2020,12 +2020,11 @@ namespace DisCatSharp.Net
 				HasEmbed = embeds.HasValue && (embeds.Value?.Any() ?? false),
 				Embeds = embeds.HasValue && (embeds.Value?.Any() ?? false) ? embeds.Value : null,
 				Components = components,
-				Flags = suppressEmbed.HasValue && (bool)suppressEmbed ? MessageFlags.SuppressedEmbeds : null
-			};
-
-			pld.Mentions = mentions
+				Flags = suppressEmbed.HasValue && (bool)suppressEmbed ? MessageFlags.SuppressedEmbeds : null,
+				Mentions = mentions
 				.Map(m => new DiscordMentions(m ?? Mentions.None, false, mentions.Value?.OfType<RepliedUserMention>().Any() ?? false))
-				.ValueOrDefault();
+				.ValueOrDefault()
+			};
 
 			if (files?.Count > 0)
 			{
@@ -4593,7 +4592,6 @@ namespace DisCatSharp.Net
 					Name = command.Name,
 					Description = command.Description,
 					Options = command.Options,
-					DefaultPermission = command.DefaultPermission,
 					NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 					DefaultMemberPermission = command.DefaultMemberPermissions,
@@ -4628,7 +4626,6 @@ namespace DisCatSharp.Net
 				Name = command.Name,
 				Description = command.Description,
 				Options = command.Options,
-				DefaultPermission = command.DefaultPermission,
 				NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
@@ -4674,13 +4671,12 @@ namespace DisCatSharp.Net
 		/// <param name="name">The name.</param>
 		/// <param name="description">The description.</param>
 		/// <param name="options">The options.</param>
-		/// <param name="defaultPermission">The default permission.</param>
 		/// <param name="nameLocalization">The localizations of the name.</param>
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
 		/// <param name="defaultMemberPermission">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
 		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
-			Optional<bool> defaultPermission, Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
+			Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
 			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
 		{
 			var pld = new RestApplicationCommandEditPayload
@@ -4688,9 +4684,8 @@ namespace DisCatSharp.Net
 				Name = name,
 				Description = description,
 				Options = options,
-				DefaultPermission = defaultPermission,
 				DefaultMemberPermission = defaultMemberPermission,
-				DmPermission = dmPermission
+				DmPermission = dmPermission,
 				NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 				DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			};
@@ -4763,7 +4758,6 @@ namespace DisCatSharp.Net
 					Name = command.Name,
 					Description = command.Description,
 					Options = command.Options,
-					DefaultPermission = command.DefaultPermission,
 					NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 					DefaultMemberPermission = command.DefaultMemberPermissions,
@@ -4798,7 +4792,6 @@ namespace DisCatSharp.Net
 				Name = command.Name,
 				Description = command.Description,
 				Options = command.Options,
-				DefaultPermission = command.DefaultPermission,
 				NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
@@ -4847,13 +4840,12 @@ namespace DisCatSharp.Net
 		/// <param name="name">The name.</param>
 		/// <param name="description">The description.</param>
 		/// <param name="options">The options.</param>
-		/// <param name="defaultPermission">The default permission.</param>
 		/// <param name="nameLocalization">The localizations of the name.</param>
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
 		/// <param name="defaultMemberPermission">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
 		internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
-			Optional<bool> defaultPermission, Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
+			Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
 			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
 		{
 			var pld = new RestApplicationCommandEditPayload
@@ -4861,9 +4853,8 @@ namespace DisCatSharp.Net
 				Name = name,
 				Description = description,
 				Options = options,
-				DefaultPermission = defaultPermission,
 				DefaultMemberPermission = defaultMemberPermission,
-				DmPermission = dmPermission
+				DmPermission = dmPermission,
 				NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 				DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			};

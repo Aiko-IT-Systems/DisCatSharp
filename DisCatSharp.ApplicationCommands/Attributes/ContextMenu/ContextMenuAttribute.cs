@@ -44,11 +44,6 @@ namespace DisCatSharp.ApplicationCommands
 		public ApplicationCommandType Type { get; internal set; }
 
 		/// <summary>
-		/// Gets whether this command is enabled by default.
-		/// </summary>
-		public bool DefaultPermission { get; internal set; }
-
-		/// <summary>
 		/// Gets the commands needed permissions.
 		/// </summary>
 		public Permissions DefaultMemberPermissions { get; internal set; }
@@ -66,14 +61,13 @@ namespace DisCatSharp.ApplicationCommands
 		/// <param name="defaultPermission">The default permission of the context menu.</param>
 		/// <param name="defaultMemberPermissions">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
-		public ContextMenuAttribute(ApplicationCommandType type, string name, bool defaultPermission = true, long defaultMemberPermissions = 0, bool dmPermission = true)
+		public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions = 0, bool dmPermission = true)
 		{
 			if (type == ApplicationCommandType.ChatInput)
 				throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
 
 			this.Type = type;
 			this.Name = name;
-			this.DefaultPermission = defaultPermission;
 			this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 			this.DmPermission = dmPermission;
 		}

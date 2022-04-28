@@ -219,7 +219,6 @@ namespace DisCatSharp.ApplicationCommands
 			this._updateList.Clear();
 			s_singletonModules.Clear();
 			s_errored = false;
-			s_permError = false;
 			s_expectedCount = 0;
 			s_registrationCount = 0;
 			s_commandMethods.Clear();
