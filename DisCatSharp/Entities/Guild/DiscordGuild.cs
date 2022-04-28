@@ -154,16 +154,6 @@ namespace DisCatSharp.Entities
 		internal List<DiscordApplicationCommand> InternalRegisteredApplicationCommands { get; set; } = null;
 
 		/// <summary>
-		/// List of <see cref="DisCatSharp.Entities.DiscordGuildApplicationCommandPermission"/>.
-		/// Null if DisCatSharp.ApplicationCommands is not used or no guild commands or permissions are registered.
-		/// </summary>
-		[JsonIgnore]
-		public ReadOnlyCollection<DiscordGuildApplicationCommandPermission> GuildApplicationCommandPermissions
-			=> new(this.InternalGuildApplicationCommandPermissions);
-		[JsonIgnore]
-		internal List<DiscordGuildApplicationCommandPermission> InternalGuildApplicationCommandPermissions { get; set; } = null;
-
-		/// <summary>
 		/// Gets the guild's AFK timeout.
 		/// </summary>
 		[JsonProperty("afk_timeout", NullValueHandling = NullValueHandling.Ignore)]
@@ -571,9 +561,10 @@ namespace DisCatSharp.Entities
 		{
 			IReadOnlyList<DiscordChannel> rawChannels = this.ChannelsInternal.Values.ToList();
 
-			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new();
-
-			orderedChannels.Add(0, new List<DiscordChannel>());
+			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
+			{
+				{ 0, new List<DiscordChannel>() }
+			};
 
 			foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
 			{
@@ -612,9 +603,10 @@ namespace DisCatSharp.Entities
 		{
 			var rawChannels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Id);
 
-			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new();
-
-			orderedChannels.Add(0, new List<DiscordChannel>());
+			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
+			{
+				{ 0, new List<DiscordChannel>() }
+			};
 
 			foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
 			{
@@ -1886,7 +1878,7 @@ namespace DisCatSharp.Entities
 		{
 			var mdl = new ApplicationCommandEditModel();
 			action(mdl);
-			return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.DefaultPermission, mdl.NameLocalizations, mdl.DescriptionLocalizations).ConfigureAwait(false);
+			return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission).ConfigureAwait(false);
 		}
 
 		/// <summary>

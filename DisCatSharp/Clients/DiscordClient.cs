@@ -787,7 +787,7 @@ namespace DisCatSharp
 			var mdl = new ApplicationCommandEditModel();
 			action(mdl);
 			var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-			return await this.ApiClient.EditGlobalApplicationCommandAsync(applicationId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.DefaultPermission, mdl.NameLocalizations, mdl.DescriptionLocalizations).ConfigureAwait(false);
+			return await this.ApiClient.EditGlobalApplicationCommandAsync(applicationId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -845,7 +845,7 @@ namespace DisCatSharp
 			var mdl = new ApplicationCommandEditModel();
 			action(mdl);
 			var applicationId = this.CurrentApplication?.Id ?? (await this.GetCurrentApplicationAsync().ConfigureAwait(false)).Id;
-			return await this.ApiClient.EditGuildApplicationCommandAsync(applicationId, guildId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.DefaultPermission, mdl.NameLocalizations, mdl.DescriptionLocalizations).ConfigureAwait(false);
+			return await this.ApiClient.EditGuildApplicationCommandAsync(applicationId, guildId, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -871,24 +871,6 @@ namespace DisCatSharp
 		public Task<DiscordGuildApplicationCommandPermission> GetApplicationCommandPermissionAsync(ulong guildId, ulong commandId) =>
 			this.ApiClient.GetGuildApplicationCommandPermissionAsync(this.CurrentApplication.Id, guildId, commandId);
 
-		/// <summary>
-		/// Overwrites the existing permissions for a application command in a guild. New permissions are automatically created and missing permissions are deleted.
-		/// A command takes up to 10 permission overwrites.
-		/// </summary>
-		/// <param name="guildId">The id of the guild.</param>
-		/// <param name="commandId">The id of the command.</param>
-		/// <param name="permissions">List of permissions.</param>
-		public Task<DiscordGuildApplicationCommandPermission> OverwriteGuildApplicationCommandPermissionsAsync(ulong guildId, ulong commandId, IEnumerable<DiscordApplicationCommandPermission> permissions) =>
-			this.ApiClient.OverwriteGuildApplicationCommandPermissionsAsync(this.CurrentApplication.Id, guildId, commandId, permissions);
-
-		/// <summary>
-		/// Overwrites the existing application command permissions in a guild. New permissions are automatically created and missing permissions are deleted.
-		/// Each command takes up to 10 permission overwrites.
-		/// </summary>
-		/// <param name="guildId">The id of the guild.</param>
-		/// <param name="permissionsOverwrites">The list of permissions to overwrite with.</param>
-		public Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> BulkOverwriteGuildApplicationCommandsAsync(ulong guildId, IEnumerable<DiscordGuildApplicationCommandPermission> permissionsOverwrites) =>
-			this.ApiClient.BulkOverwriteGuildApplicationCommandPermissionsAsync(this.CurrentApplication.Id, guildId, permissionsOverwrites);
 		#endregion
 
 		#region Internal Caching Methods

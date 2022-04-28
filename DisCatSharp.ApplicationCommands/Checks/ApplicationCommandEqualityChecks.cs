@@ -45,7 +45,7 @@ namespace DisCatSharp.ApplicationCommands
 
 			DiscordApplicationCommand sourceApplicationCommand = new(
 				ac1.Name, ac1.Description, ac1.Options,
-				ac1.DefaultPermission, ac1.Type,
+				ac1.Type,
 				ac1.NameLocalizations, ac1.DescriptionLocalizations
 			);
 
@@ -68,13 +68,15 @@ namespace DisCatSharp.ApplicationCommands
 				? type switch
 				{
 					ApplicationCommandType.ChatInput => DeepEqual(source, target, localizationEnabled),
-					_ => (source.Name == target.Name) && (source.DefaultPermission == target.DefaultPermission)
-				&& (source.Type == target.Type) && (source.NameLocalizations == target.NameLocalizations)
+					_ => (source.Name == target.Name)
+						&& (source.Type == target.Type) && (source.NameLocalizations == target.NameLocalizations)
+						&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions) && (source.DmPermission == target.DmPermission)
 				}
 				: type switch {
 					ApplicationCommandType.ChatInput => DeepEqual(source, target),
-					_ => (source.Name == target.Name) && (source.DefaultPermission == target.DefaultPermission)
-				&& (source.Type == target.Type)
+					_ => (source.Name == target.Name)
+						&& (source.Type == target.Type)
+						&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions) && (source.DmPermission == target.DmPermission)
 				};
 		}
 
@@ -87,7 +89,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// <param name="localizationEnabled">Whether localization is enabled.</param>
 		internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target, bool localizationEnabled = false)
 		{
-			var rootCheck = (source.Name == target.Name) && (source.Description == target.Description) && (source.DefaultPermission == target.DefaultPermission) && (source.Type == target.Type);
+			var rootCheck = (source.Name == target.Name) && (source.Description == target.Description) && (source.Type == target.Type)
+				&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions) && (source.DmPermission == target.DmPermission);
 			if (localizationEnabled)
 				rootCheck = rootCheck && (source.NameLocalizations == target.NameLocalizations) && (source.DescriptionLocalizations == target.DescriptionLocalizations);
 
@@ -270,9 +273,5 @@ namespace DisCatSharp.ApplicationCommands
 				return rootCheck && JsonConvert.SerializeObject(minimalSourceOptions) == JsonConvert.SerializeObject(minimalTargetOptions);
 			}
 		}
-
-		// TODO: Later
-		//&& (source.NameLocalizations == target.NameLocalizations) && (source.DescriptionLocalizations == target.DescriptionLocalizations)
-		// && (source.Permission == other.Permission) && (source.DmPermission == other.DmPermission)
 	}
 }

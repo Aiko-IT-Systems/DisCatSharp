@@ -55,7 +55,7 @@ namespace DisCatSharp.Net
 		/// Gets the discord client.
 		/// </summary>
 		internal BaseDiscordClient Discord { get; }
-		
+
 		/// <summary>
 		/// Gets the rest client.
 		/// </summary>
@@ -2020,12 +2020,11 @@ namespace DisCatSharp.Net
 				HasEmbed = embeds.HasValue && (embeds.Value?.Any() ?? false),
 				Embeds = embeds.HasValue && (embeds.Value?.Any() ?? false) ? embeds.Value : null,
 				Components = components,
-				Flags = suppressEmbed.HasValue && (bool)suppressEmbed ? MessageFlags.SuppressedEmbeds : null
-			};
-
-			pld.Mentions = mentions
+				Flags = suppressEmbed.HasValue && (bool)suppressEmbed ? MessageFlags.SuppressedEmbeds : null,
+				Mentions = mentions
 				.Map(m => new DiscordMentions(m ?? Mentions.None, false, mentions.Value?.OfType<RepliedUserMention>().Any() ?? false))
-				.ValueOrDefault();
+				.ValueOrDefault()
+			};
 
 			if (files?.Count > 0)
 			{
@@ -3927,7 +3926,7 @@ namespace DisCatSharp.Net
 				: new {channel_id = channelId, message_id = messageId};
 
 			var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, param, out var path);
-			
+
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
 
@@ -4593,9 +4592,10 @@ namespace DisCatSharp.Net
 					Name = command.Name,
 					Description = command.Description,
 					Options = command.Options,
-					DefaultPermission = command.DefaultPermission,
 					NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
-					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs()
+					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
+					DefaultMemberPermission = command.DefaultMemberPermissions,
+					DmPermission = command.DmPermission
 				});
 			}
 
@@ -4626,9 +4626,10 @@ namespace DisCatSharp.Net
 				Name = command.Name,
 				Description = command.Description,
 				Options = command.Options,
-				DefaultPermission = command.DefaultPermission,
 				NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
-				DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs()
+				DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
+				DefaultMemberPermission = command.DefaultMemberPermissions,
+				DmPermission = command.DmPermission
 			};
 
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -4670,17 +4671,21 @@ namespace DisCatSharp.Net
 		/// <param name="name">The name.</param>
 		/// <param name="description">The description.</param>
 		/// <param name="options">The options.</param>
-		/// <param name="defaultPermission">The default permission.</param>
 		/// <param name="nameLocalization">The localizations of the name.</param>
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
-		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> defaultPermission, Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization)
+		/// <param name="defaultMemberPermission">The default member permissions.</param>
+		/// <param name="dmPermission">The dm permission.</param>
+		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
+			Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
+			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
 		{
 			var pld = new RestApplicationCommandEditPayload
 			{
 				Name = name,
 				Description = description,
 				Options = options,
-				DefaultPermission = defaultPermission,
+				DefaultMemberPermission = defaultMemberPermission,
+				DmPermission = dmPermission,
 				NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 				DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			};
@@ -4753,9 +4758,10 @@ namespace DisCatSharp.Net
 					Name = command.Name,
 					Description = command.Description,
 					Options = command.Options,
-					DefaultPermission = command.DefaultPermission,
 					NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
-					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs()
+					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
+					DefaultMemberPermission = command.DefaultMemberPermissions,
+					DmPermission = command.DmPermission
 				});
 			}
 			this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
@@ -4786,9 +4792,10 @@ namespace DisCatSharp.Net
 				Name = command.Name,
 				Description = command.Description,
 				Options = command.Options,
-				DefaultPermission = command.DefaultPermission,
 				NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
-				DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs()
+				DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
+				DefaultMemberPermission = command.DefaultMemberPermissions,
+				DmPermission = command.DmPermission
 
 			};
 
@@ -4833,17 +4840,21 @@ namespace DisCatSharp.Net
 		/// <param name="name">The name.</param>
 		/// <param name="description">The description.</param>
 		/// <param name="options">The options.</param>
-		/// <param name="defaultPermission">The default permission.</param>
 		/// <param name="nameLocalization">The localizations of the name.</param>
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
-		internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options, Optional<bool> defaultPermission, Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization)
+		/// <param name="defaultMemberPermission">The default member permissions.</param>
+		/// <param name="dmPermission">The dm permission.</param>
+		internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
+			Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
+			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
 		{
 			var pld = new RestApplicationCommandEditPayload
 			{
 				Name = name,
 				Description = description,
 				Options = options,
-				DefaultPermission = defaultPermission,
+				DefaultMemberPermission = defaultMemberPermission,
+				DmPermission = dmPermission,
 				NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 				DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			};
@@ -4874,6 +4885,8 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route);
 		}
+
+		#region Permissions 2.1
 
 		/// <summary>
 		/// Gets the guild application command permissions.
@@ -4917,72 +4930,7 @@ namespace DisCatSharp.Net
 			return ret;
 		}
 
-		/// <summary>
-		/// Overwrites the guild application command permissions.
-		/// </summary>
-		/// <param name="applicationId">The target application id.</param>
-		/// <param name="guildId">The target guild id.</param>
-		/// <param name="commandId">The target command id.</param>
-		/// <param name="permissions">Array of permissions.</param>
-		internal async Task<DiscordGuildApplicationCommandPermission> OverwriteGuildApplicationCommandPermissionsAsync(ulong applicationId, ulong guildId, ulong commandId, IEnumerable<DiscordApplicationCommandPermission> permissions)
-		{
-			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id{Endpoints.PERMISSIONS}";
-			var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {application_id = applicationId, guild_id = guildId, command_id = commandId }, out var path);
-
-			if (permissions.ToArray().Length > 10)
-				throw new NotSupportedException("You can add only up to 10 permission overwrites per command.");
-
-			var pld = new RestApplicationCommandPermissionEditPayload
-			{
-				Permissions = permissions
-			};
-
-			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-
-			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
-
-			var ret = JsonConvert.DeserializeObject<DiscordGuildApplicationCommandPermission>(res.Response);
-
-			ret.Discord = this.Discord;
-
-			return ret;
-		}
-
-		/// <summary>
-		/// Bulks overwrite the application command permissions.
-		/// </summary>
-		/// <param name="applicationId">The target application id.</param>
-		/// <param name="guildId">The target guild id.</param>
-		/// <param name="permissionOverwrites">List of overwrites.</param>
-		internal async Task<IReadOnlyList<DiscordGuildApplicationCommandPermission>> BulkOverwriteGuildApplicationCommandPermissionsAsync(ulong applicationId, ulong guildId, IEnumerable<DiscordGuildApplicationCommandPermission> permissionOverwrites)
-		{
-			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}{Endpoints.PERMISSIONS}";
-			var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {application_id = applicationId, guild_id = guildId }, out var path);
-
-			var pld = new List<RestGuildApplicationCommandPermissionEditPayload>();
-			foreach (var overwrite in permissionOverwrites)
-			{
-				if (overwrite.Permissions.Count > 10)
-					throw new NotSupportedException("You can add only up to 10 permission overwrites per command.");
-
-				pld.Add(new RestGuildApplicationCommandPermissionEditPayload
-				{
-					CommandId = overwrite.Id,
-					Permissions = overwrite.Permissions
-				});
-			}
-
-			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-
-			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld.ToArray()));
-
-			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordGuildApplicationCommandPermission>>(res.Response);
-
-			foreach (var app in ret)
-				app.Discord = this.Discord;
-
-			return ret.ToList();
-		}
+		#endregion
 
 		/// <summary>
 		/// Creates the interaction response.

@@ -247,7 +247,7 @@ namespace DisCatSharp
 			if (this.Configuration.TokenType == TokenType.Bot && this.CurrentApplication == null)
 				this.CurrentApplication = await this.GetCurrentApplicationAsync().ConfigureAwait(false);
 
-			if (this.Configuration.TokenType != TokenType.Bearer && this.InternalVoiceRegions.Count == 0)
+			if (this.Configuration.TokenType != TokenType.Bearer && this.InternalVoiceRegions.IsEmpty)
 			{
 				var vrs = await this.ListVoiceRegionsAsync().ConfigureAwait(false);
 				foreach (var xvr in vrs)
