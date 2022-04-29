@@ -135,8 +135,6 @@ namespace DisCatSharp
 		/// </summary>
 		[PermissionString("Stage Channel Permissions")]
 		StageChannelPermissions = RequestToSpeak,
-
-
 		/// <summary>
 		/// Includes all event permissions.
 		/// </summary>
