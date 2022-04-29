@@ -92,7 +92,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Indicates that this is a guild forum channel (Threads only channel).
 		/// </summary>
-		GuildForum = 15,
+		Forum = 15,
 
 		/// <summary>
 		/// Indicates unknown channel type.
