@@ -30,7 +30,7 @@ Development is a bit slow right now, because I (Lala) have a surgery soon and a 
 ## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
 
-So the API version is always the newest, in the actual case `v9`.
+So the API version is always the newest, in the current case `v10`.
 
 <!--## Where is the Changelog?
 On [our guild!](https://discord.gg/U4BGHpKSF7) You find it in [this channel](https://discord.com/channels/858089281214087179/858099438580006913). -->

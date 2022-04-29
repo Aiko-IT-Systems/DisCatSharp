@@ -2,6 +2,8 @@
   href: preamble.md
 - name: Important Changes
   items:
+  - name: Version 10.0.0
+    href: important_changes/10_0_0.md
   - name: Version 9.9.0
     href: important_changes/9_9_0.md
   - name: Version 9.8.5
