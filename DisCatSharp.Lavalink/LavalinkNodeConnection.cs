@@ -285,7 +285,7 @@ namespace DisCatSharp.Lavalink
 					if (!this.Configuration.SocketAutoReconnect || this._backoff == MAXIMUM_BACKOFF)
 					{
 						this.Discord.Logger.LogCritical(LavalinkEvents.LavalinkConnectionError, ex, "Failed to connect to Lavalink.");
-						throw ex;
+						throw;
 					}
 					else
 					{
