@@ -812,7 +812,7 @@ namespace DisCatSharp.Net
 					var resetOffset = this._useResetAfter ? value.ResetAfterOffset : value.Reset;
 
 					// Don't remove the bucket if it's reset date is less than now + the additional wait time, unless it's an unlimited bucket.
-					if (resetOffset != null && !value.IsUnlimited && (resetOffset > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - resetOffset < this._bucketCleanupDelay))
+					if (!value.IsUnlimited && (resetOffset > DateTimeOffset.UtcNow || DateTimeOffset.UtcNow - resetOffset < this._bucketCleanupDelay))
 						continue;
 
 					_ = this._hashesToBuckets.TryRemove(key, out _);
