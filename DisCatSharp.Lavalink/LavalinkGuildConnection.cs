@@ -351,7 +351,7 @@ namespace DisCatSharp.Lavalink
 			if (bands?.Any() != true)
 				return;
 
-			if (bands.Distinct(new LavalinkBandAdjustmentComparer()).Count() != bands.Count())
+			if (bands.Distinct(new LavalinkBandAdjustmentComparer()).Count() != bands.Length)
 				throw new InvalidOperationException("You cannot specify multiple modifiers for the same band.");
 
 			await this.Node.SendPayloadAsync(new LavalinkEqualizer(this, bands)).ConfigureAwait(false);
