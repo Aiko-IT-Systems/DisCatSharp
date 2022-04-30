@@ -80,8 +80,8 @@ After writing the commands, we must register them. For this we need a [DiscordCl
 ```cs
 var appCommands = client.UseApplicationCommands();
 
-appCommands.RegisterCommands<MyCommand>();
-appCommands.RegisterCommands<MySecondCommand>();
+appCommands.RegisterGlobalCommands<MyCommand>();
+appCommands.RegisterGlobalCommands<MySecondCommand>();
 ```
 Simple, isn't it? You can register global and guild commands.
 Global commands will be available on all guilds of which the bot is a member. Guild commands will only appear in a specific guild.
@@ -94,8 +94,8 @@ To register guild commands, it is enough to specify the Id of the guild as the f
 ```cs
 var appCommands = client.UseApplicationCommands();
 
-appCommands.RegisterCommands<MyCommand>(<guildId>);
-appCommands.RegisterCommands<MySecondCommand>(<guildId>);
+appCommands.RegisterGuildCommands<MyCommand>(<guildId>);
+appCommands.RegisterGuildCommands<MySecondCommand>(<guildId>);
 ```
 
 ## Command Groups
