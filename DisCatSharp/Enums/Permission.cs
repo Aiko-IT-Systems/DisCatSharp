@@ -91,253 +91,256 @@ namespace DisCatSharp
 		/// Indicates no permissions given.
 		/// </summary>
 		[PermissionString("No permissions")]
-		None = 0x0000000000000000,
+		None = 0,
 
 		/// <summary>
 		/// Indicates all permissions are granted
 		/// </summary>
 		[PermissionString("All permissions")]
-		All = 2199023255551,
+		All = 0b0001_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111,
 
 		/// <summary>
 		/// Allows creation of instant channel invites.
 		/// </summary>
 		[PermissionString("Create instant invites")]
-		CreateInstantInvite = 0x0000000000000001,
+		CreateInstantInvite = 1L << 0,
 
 		/// <summary>
 		/// Allows kicking members.
 		/// </summary>
 		[PermissionString("Kick members")]
-		KickMembers = 0x0000000000000002,
+		KickMembers = 1L << 1,
 
 		/// <summary>
 		/// Allows banning and unbanning members.
 		/// </summary>
 		[PermissionString("Ban members")]
-		BanMembers = 0x0000000000000004,
+		BanMembers = 1L << 2,
 
 		/// <summary>
 		/// Enables full access on a given guild. This also overrides other permissions.
 		/// </summary>
 		[PermissionString("Administrator")]
-		Administrator = 0x0000000000000008,
+		Administrator = 1L << 3,
 
 		/// <summary>
 		/// Allows managing channels.
 		/// </summary>
 		[PermissionString("Manage channels")]
-		ManageChannels = 0x0000000000000010,
+		ManageChannels = 1L << 4,
 
 		/// <summary>
 		/// Allows managing the guild.
 		/// </summary>
 		[PermissionString("Manage guild")]
-		ManageGuild = 0x0000000000000020,
+		ManageGuild = 1L << 5,
 
 		/// <summary>
 		/// Allows adding reactions to messages.
 		/// </summary>
 		[PermissionString("Add reactions")]
-		AddReactions = 0x0000000000000040,
+		AddReactions = 1L << 6,
 
 		/// <summary>
 		/// Allows viewing audit log entries.
 		/// </summary>
 		[PermissionString("View audit log")]
-		ViewAuditLog = 0x0000000000000080,
+		ViewAuditLog = 1L << 7,
 
 		/// <summary>
 		/// Allows the use of priority speaker.
 		/// </summary>
 		[PermissionString("Use priority speaker")]
-		PrioritySpeaker = 0x0000000000000100,
-
-		/// <summary>
-		/// Allows accessing text and voice channels. Disabling this permission hides channels.
-		/// </summary>
-		[PermissionString("Read messages")]
-		AccessChannels = 0x0000000000000400,
-
-		/// <summary>
-		/// Allows sending messages (does not allow sending messages in threads).
-		/// </summary>
-		[PermissionString("Send messages")]
-		SendMessages = 0x0000000000000800,
-
-		/// <summary>
-		/// Allows sending text-to-speech messages.
-		/// </summary>
-		[PermissionString("Send TTS messages")]
-		SendTtsMessages = 0x0000000000001000,
-
-		/// <summary>
-		/// Allows managing messages of other users.
-		/// </summary>
-		[PermissionString("Manage messages")]
-		ManageMessages = 0x0000000000002000,
-
-		/// <summary>
-		/// Allows embedding content in messages.
-		/// </summary>
-		[PermissionString("Use embeds")]
-		EmbedLinks = 0x0000000000004000,
-
-		/// <summary>
-		/// Allows uploading files.
-		/// </summary>
-		[PermissionString("Attach files")]
-		AttachFiles = 0x0000000000008000,
-
-		/// <summary>
-		/// Allows reading message history.
-		/// </summary>
-		[PermissionString("Read message history")]
-		ReadMessageHistory = 0x0000000000010000,
-
-		/// <summary>
-		/// Allows using @everyone and @here mentions.
-		/// </summary>
-		[PermissionString("Mention everyone")]
-		MentionEveryone = 0x0000000000020000,
-
-		/// <summary>
-		/// Allows using emojis from external servers, such as twitch or nitro emojis.
-		/// </summary>
-		[PermissionString("Use external emojis")]
-		UseExternalEmojis = 0x0000000000040000,
-
-		/// <summary>
-		/// Allows connecting to voice chat.
-		/// </summary>
-		[PermissionString("Use voice chat")]
-		UseVoice = 0x0000000000100000,
-
-		/// <summary>
-		/// Allows speaking in voice chat.
-		/// </summary>
-		[PermissionString("Speak")]
-		Speak = 0x0000000000200000,
-
-		/// <summary>
-		/// Allows muting other members in voice chat.
-		/// </summary>
-		[PermissionString("Mute voice chat members")]
-		MuteMembers = 0x0000000000400000,
-
-		/// <summary>
-		/// Allows deafening other members in voice chat.
-		/// </summary>
-		[PermissionString("Deafen voice chat members")]
-		DeafenMembers = 0x0000000000800000,
-
-		/// <summary>
-		/// Allows moving voice chat members.
-		/// </summary>
-		[PermissionString("Move voice chat members")]
-		MoveMembers = 0x0000000001000000,
-
-		/// <summary>
-		/// Allows using voice activation in voice chat. Revoking this will usage of push-to-talk.
-		/// </summary>
-		[PermissionString("Use voice activity detection")]
-		UseVoiceDetection = 0x0000000002000000,
-
-		/// <summary>
-		/// Allows changing of own nickname.
-		/// </summary>
-		[PermissionString("Change own nickname")]
-		ChangeNickname = 0x0000000004000000,
-
-		/// <summary>
-		/// Allows managing nicknames of other members.
-		/// </summary>
-		[PermissionString("Manage nicknames")]
-		ManageNicknames = 0x0000000008000000,
-
-		/// <summary>
-		/// Allows managing roles in a guild.
-		/// </summary>
-		[PermissionString("Manage roles")]
-		ManageRoles = 0x0000000010000000,
-
-		/// <summary>
-		/// Allows managing webhooks in a guild.
-		/// </summary>
-		[PermissionString("Manage webhooks")]
-		ManageWebhooks = 0x0000000020000000,
-
-		/// <summary>
-		/// Allows managing guild emojis and stickers.
-		/// </summary>
-		[PermissionString("Manage emojis & stickers")]
-		ManageEmojisAndStickers = 0x0000000040000000,
+		PrioritySpeaker = 1L << 8,
 
 		/// <summary>
 		/// Allows the user to go live.
 		/// </summary>
 		[PermissionString("Allow stream")]
-		Stream  = 0x0000000000000200,
+		Stream  = 1L << 9,
+
+		/// <summary>
+		/// Allows accessing text and voice channels. Disabling this permission hides channels.
+		/// </summary>
+		[PermissionString("Read messages")]
+		AccessChannels = 1L << 10,
+
+		/// <summary>
+		/// Allows sending messages (does not allow sending messages in threads).
+		/// </summary>
+		[PermissionString("Send messages")]
+		SendMessages = 1L << 11,
+
+		/// <summary>
+		/// Allows sending text-to-speech messages.
+		/// </summary>
+		[PermissionString("Send TTS messages")]
+		SendTtsMessages = 1L << 12,
+
+		/// <summary>
+		/// Allows managing messages of other users.
+		/// </summary>
+		[PermissionString("Manage messages")]
+		ManageMessages = 1L << 13,
+
+		/// <summary>
+		/// Allows embedding content in messages.
+		/// </summary>
+		[PermissionString("Use embeds")]
+		EmbedLinks = 1L << 14,
+
+		/// <summary>
+		/// Allows uploading files.
+		/// </summary>
+		[PermissionString("Attach files")]
+		AttachFiles = 1L << 15,
+
+		/// <summary>
+		/// Allows reading message history.
+		/// </summary>
+		[PermissionString("Read message history")]
+		ReadMessageHistory = 1L << 16,
+
+		/// <summary>
+		/// Allows using @everyone and @here mentions.
+		/// </summary>
+		[PermissionString("Mention everyone")]
+		MentionEveryone = 1L << 17,
+
+		/// <summary>
+		/// Allows using emojis from external servers, such as twitch or nitro emojis.
+		/// </summary>
+		[PermissionString("Use external emojis")]
+		UseExternalEmojis = 1L << 18,
+
+		[PermissionString("View guild insights")]
+		ViewGuildInsights = 1L << 19,
+
+		/// <summary>
+		/// Allows connecting to voice chat.
+		/// </summary>
+		[PermissionString("Use voice chat")]
+		UseVoice = 1L << 20,
+
+		/// <summary>
+		/// Allows speaking in voice chat.
+		/// </summary>
+		[PermissionString("Speak")]
+		Speak = 1L << 21,
+
+		/// <summary>
+		/// Allows muting other members in voice chat.
+		/// </summary>
+		[PermissionString("Mute voice chat members")]
+		MuteMembers = 1L << 22,
+
+		/// <summary>
+		/// Allows deafening other members in voice chat.
+		/// </summary>
+		[PermissionString("Deafen voice chat members")]
+		DeafenMembers = 1L << 23,
+
+		/// <summary>
+		/// Allows moving voice chat members.
+		/// </summary>
+		[PermissionString("Move voice chat members")]
+		MoveMembers = 1L << 24,
+
+		/// <summary>
+		/// Allows using voice activation in voice chat. Revoking this will usage of push-to-talk.
+		/// </summary>
+		[PermissionString("Use voice activity detection")]
+		UseVoiceDetection = 1L << 25,
+
+		/// <summary>
+		/// Allows changing of own nickname.
+		/// </summary>
+		[PermissionString("Change own nickname")]
+		ChangeNickname = 1L << 26,
+
+		/// <summary>
+		/// Allows managing nicknames of other members.
+		/// </summary>
+		[PermissionString("Manage nicknames")]
+		ManageNicknames = 1L << 27,
+
+		/// <summary>
+		/// Allows managing roles in a guild.
+		/// </summary>
+		[PermissionString("Manage roles")]
+		ManageRoles = 1L << 28,
+
+		/// <summary>
+		/// Allows managing webhooks in a guild.
+		/// </summary>
+		[PermissionString("Manage webhooks")]
+		ManageWebhooks = 1L << 29,
+
+		/// <summary>
+		/// Allows managing guild emojis and stickers.
+		/// </summary>
+		[PermissionString("Manage emojis & stickers")]
+		ManageEmojisAndStickers = 1L << 30,
 
 		/// <summary>
 		/// Allows the user to use slash commands.
 		/// </summary>
 		[PermissionString("Use application commands")]
-		UseApplicationCommands = 0x0000000080000000,
+		UseApplicationCommands = 1L << 31,
 
 		/// <summary>
 		/// Allows for requesting to speak in stage channels.
 		/// </summary>
 		[PermissionString("Request to speak")]
-		RequestToSpeak = 0x0000000100000000,
+		RequestToSpeak = 1L << 32,
 
 		/// <summary>
 		/// Allows managing guild events.
 		/// </summary>
 		[PermissionString("Manage Events")]
-		ManageEvents = 0x0000000200000000,
+		ManageEvents = 1L << 33,
 
 		/// <summary>
 		/// Allows for deleting and archiving threads, and viewing all private threads.
 		/// </summary>
 		[PermissionString("Manage Threads")]
-		ManageThreads = 0x0000000400000000,
+		ManageThreads = 1L << 34,
 
 		/// <summary>
 		/// Allows for creating threads.
 		/// </summary>
 		[PermissionString("Create Public Threads")]
-		CreatePublicThreads = 0x0000000800000000,
+		CreatePublicThreads = 1L << 35,
 
 		/// <summary>
 		/// Allows for creating private threads.
 		/// </summary>
 		[PermissionString("Create Private Threads")]
-		CreatePrivateThreads = 0x0000001000000000,
+		CreatePrivateThreads = 1L << 36,
 
 		/// <summary>
 		/// Allows the usage of custom stickers from other servers.
 		/// </summary>
 		[PermissionString("Use external Stickers")]
-		UseExternalStickers = 0x0000002000000000,
+		UseExternalStickers = 1L << 37,
 
 		/// <summary>
 		/// Allows for sending messages in threads.
 		/// </summary>
 		[PermissionString("Send messages in Threads")]
-		SendMessagesInThreads = 0x0000004000000000,
+		SendMessagesInThreads = 1L << 38,
 
 		/// <summary>
 		/// Allows for launching activities (applications with the `EMBEDDED` flag) in a voice channel.
 		/// </summary>
 		[PermissionString("Start Embedded Activities")]
-		StartEmbeddedActivities = 0x0000008000000000,
+		StartEmbeddedActivities = 1L << 39,
 
 		/// <summary>
 		/// Allows to perform limited moderation actions (timeout).
 		/// </summary>
 		[PermissionString("Moderate Members")]
-		ModerateMembers = 0x0000010000000000
+		ModerateMembers = 1L << 40
 	}
 
 	/// <summary>
