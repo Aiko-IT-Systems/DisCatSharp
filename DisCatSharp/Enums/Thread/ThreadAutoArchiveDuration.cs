@@ -38,12 +38,12 @@ namespace DisCatSharp
 		OneDay = 1440,
 
 		/// <summary>
-		/// Indicates that the thread will be auto archived after three days. Needs boost level 1 for guild.
+		/// Indicates that the thread will be auto archived after three days.
 		/// </summary>
 		ThreeDays = 4320,
 
 		/// <summary>
-		/// Indicates that the thread will be auto archived after a week. Needs boost level 2 for guild.
+		/// Indicates that the thread will be auto archived after a week.
 		/// </summary>
 		OneWeek = 10080
 	}

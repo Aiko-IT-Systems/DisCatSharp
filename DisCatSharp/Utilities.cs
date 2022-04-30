@@ -291,10 +291,8 @@ namespace DisCatSharp
 		/// <param name="guild">The guild.</param>
 		/// <param name="taad">The taad.</param>
 		/// <returns>A bool.</returns>
-		internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad) =>
-			taad == ThreadAutoArchiveDuration.ThreeDays
-				? guild.PremiumTier.HasFlag(PremiumTier.TierOne) || guild.Features.CanSetThreadArchiveDurationThreeDays
-				: taad != ThreadAutoArchiveDuration.OneWeek || guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || guild.Features.CanSetThreadArchiveDurationSevenDays;
+		internal static bool CheckThreadAutoArchiveDurationFeature(DiscordGuild guild, ThreadAutoArchiveDuration taad)
+			=> true;
 
 		/// <summary>
 		/// Checks the thread private feature.
