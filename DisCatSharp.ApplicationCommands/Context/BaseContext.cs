@@ -149,13 +149,30 @@ namespace DisCatSharp.ApplicationCommands
 			=> this.Interaction.CreateFollowupMessageAsync(builder);
 
 		/// <summary>
+		/// Creates a follow up message to the interaction.
+		/// </summary>
+		/// <param name="content">The content of the message to be sent.</param>
+		/// <returns>The created message.</returns>
+		public Task<DiscordMessage> FollowUpAsync(string content)
+			=> this.FollowUpAsync(new DiscordFollowupMessageBuilder().WithContent(content));
+
+		/// <summary>
 		/// Edits a followup message.
 		/// </summary>
 		/// <param name="followupMessageId">The id of the followup message to edit.</param>
 		/// <param name="builder">The webhook builder.</param>
-		/// <returns></returns>
+		/// <returns>The created message.</returns>
 		public Task<DiscordMessage> EditFollowupAsync(ulong followupMessageId, DiscordWebhookBuilder builder)
 			=> this.Interaction.EditFollowupMessageAsync(followupMessageId, builder);
+
+		/// <summary>
+		/// Edits a followup message.
+		/// </summary>
+		/// <param name="followupMessageId">The id of the followup message to edit.</param>
+		/// <param name="content">The content of the webhook.</param>
+		/// <returns>The created message.</returns>
+		public Task<DiscordMessage> EditFollowupAsync(ulong followupMessageId, string content)
+			=> this.EditFollowupAsync(followupMessageId, new DiscordWebhookBuilder().WithContent(content));
 
 		/// <summary>
 		/// Deletes a followup message.
