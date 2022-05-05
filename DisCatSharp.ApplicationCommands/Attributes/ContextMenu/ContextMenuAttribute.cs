@@ -46,12 +46,29 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Gets the commands needed permissions.
 		/// </summary>
-		public Permissions DefaultMemberPermissions { get; internal set; }
+		public Permissions? DefaultMemberPermissions { get; internal set; }
 
 		/// <summary>
 		/// Gets whether the command can be used in direct messages.
 		/// </summary>
-		public bool DmPermission { get; internal set; }
+		internal bool? DmPermission { get; set; }
+
+		/// <summary>
+		/// Marks this method as a context menu.
+		/// </summary>
+		/// <param name="type">The type of the context menu.</param>
+		/// <param name="name">The name of the context menu.</param>
+		public ContextMenuAttribute(ApplicationCommandType type, string name)
+		{
+			if (type == ApplicationCommandType.ChatInput)
+				throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
+			
+			this.Type = type;
+			this.Name = name;
+			this.DefaultMemberPermissions = null;
+			this.DmPermission = null;
+		}
+
 
 		/// <summary>
 		/// Marks this method as a context menu.
@@ -59,8 +76,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// <param name="type">The type of the context menu.</param>
 		/// <param name="name">The name of the context menu.</param>
 		/// <param name="defaultMemberPermissions">The default member permissions.</param>
-		/// <param name="dmPermission">The dm permission.</param>
-		public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions = 0, bool dmPermission = true)
+		public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions)
 		{
 			if (type == ApplicationCommandType.ChatInput)
 				throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
@@ -68,7 +84,7 @@ namespace DisCatSharp.ApplicationCommands
 			this.Type = type;
 			this.Name = name;
 			this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
-			this.DmPermission = dmPermission;
-		}
+			this.DmPermission = null;
+		}		
 	}
 }
