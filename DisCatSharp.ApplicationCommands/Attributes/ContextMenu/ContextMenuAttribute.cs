@@ -85,6 +85,6 @@ namespace DisCatSharp.ApplicationCommands
 			this.Name = name;
 			this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 			this.DmPermission = null;
-		}		
+		}
 	}
 }
