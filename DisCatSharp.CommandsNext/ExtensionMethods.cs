@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using DisCatSharp.CommandsNext.Builders;
 using DisCatSharp.CommandsNext.Converters;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace DisCatSharp.CommandsNext
@@ -56,7 +57,7 @@ namespace DisCatSharp.CommandsNext
 			if (!client.Configuration.Intents.HasIntent(DiscordIntents.Guilds))
 				client.Logger.LogCritical(CommandsNextEvents.Intents, "The CommandsNext extension is registered but the guilds intent is not enabled. It is highly recommended to enable it.");
 
-			cfg.ServiceProvider ??= client.ServiceProvider;
+			cfg.ServiceProvider ??= client.ServiceProvider ?? new ServiceCollection().BuildServiceProvider(true);
 
 			var cnext = new CommandsNextExtension(cfg);
 			client.AddExtension(cnext);

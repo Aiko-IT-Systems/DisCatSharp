@@ -109,7 +109,7 @@ namespace DisCatSharp.CommandsNext
 		/// <para>Objects in this provider are used when instantiating command modules. This allows passing data around without resorting to static members.</para>
 		/// <para>Defaults to an empty service provider.</para>
 		/// </summary>
-		public IServiceProvider ServiceProvider { internal get; set; } = new ServiceCollection().BuildServiceProvider(true);
+		public IServiceProvider ServiceProvider { internal get; set; }
 
 		/// <summary>
 		/// <para>Gets whether any extra arguments passed to commands should be ignored or not. If this is set to false, extra arguments will throw, otherwise they will be ignored.</para>
