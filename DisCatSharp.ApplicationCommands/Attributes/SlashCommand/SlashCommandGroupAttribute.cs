@@ -73,7 +73,7 @@ namespace DisCatSharp.ApplicationCommands
 		{
 			this.Name = name.ToLower();
 			this.Description = description;
-			this.DefaultMemberPermissions = (Permissions?)defaultMemberPermissions;
+			this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 			this.DmPermission = null;
 		}
 
@@ -102,7 +102,7 @@ namespace DisCatSharp.ApplicationCommands
 		{
 			this.Name = name.ToLower();
 			this.Description = description;
-			this.DefaultMemberPermissions = (Permissions?)defaultMemberPermissions;
+			this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 			this.DmPermission = dmPermission;
 		}
 	}
