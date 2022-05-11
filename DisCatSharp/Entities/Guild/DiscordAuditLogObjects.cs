@@ -1132,5 +1132,14 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		ThreadDelete = 112,
 
+		ApplicationCommandPermissionUpdate = 121,
+
+		AutoModerationRuleCreate = 140,
+
+		AutoModerationRuleUpdate = 141,
+
+		AutoModerationRuleDelete = 142,
+
+		AutoModerationBlockMessage = 143
 	}
 }

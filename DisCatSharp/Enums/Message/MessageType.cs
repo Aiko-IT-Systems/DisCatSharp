@@ -145,6 +145,11 @@ namespace DisCatSharp
 		/// <summary>
 		/// Message indicating an context menu command was invoked.
 		/// </summary>
-		ContextMenuCommand = 23
+		ContextMenuCommand = 23,
+
+		/// <summary>
+		/// Message indicating the guilds automod acted.
+		/// </summary>
+		AutoModerationAction = 24,
 	}
 }

@@ -235,6 +235,11 @@ namespace DisCatSharp.Entities
 		public bool IsStaffOnly { get; }
 
 		/// <summary>
+		/// Guild can use and setup the experimental auto moderation feature.
+		/// </summary>
+		public bool CanSetupAutoModeration { get; }
+
+		/// <summary>
 		/// String of guild features.
 		/// </summary>
 		public string FeatureString { get; }
@@ -283,6 +288,7 @@ namespace DisCatSharp.Entities
 			this.HasMemberProfiles = guild.RawFeatures.Contains("MEMBER_PROFILES");
 			this.IsStaffOnly = guild.RawFeatures.Contains("INTERNAL_EMPLOYEE_ONLY");
 			this.RoleSubscriptionsIsAvaiableForPurchase = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE");
+			this.CanSetupAutoModeration = guild.RawFeatures.Contains("AUTO_MODERATION");
 
 			var features = guild.RawFeatures.Any() ? "" : "None";
 			foreach (var feature in guild.RawFeatures)
