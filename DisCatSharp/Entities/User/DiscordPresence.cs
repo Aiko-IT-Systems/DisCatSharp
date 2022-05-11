@@ -133,19 +133,19 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the user's status set for an active desktop (Windows, Linux, Mac) application session.
 		/// </summary>
-		[JsonProperty("desktop", NullValueHandling = NullValueHandling.Ignore)]
-		public Optional<UserStatus> Desktop { get; internal set; }
+		[JsonProperty("desktop", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
+		public Optional<UserStatus> Desktop { get; internal set; } = UserStatus.Offline;
 
 		/// <summary>
 		/// Gets the user's status set for an active mobile (iOS, Android) application session.
 		/// </summary>
-		[JsonProperty("mobile", NullValueHandling = NullValueHandling.Ignore)]
-		public Optional<UserStatus> Mobile { get; internal set; }
+		[JsonProperty("mobile", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
+		public Optional<UserStatus> Mobile { get; internal set; } = UserStatus.Offline;
 
 		/// <summary>
 		/// Gets the user's status set for an active web (browser, bot account) application session.
 		/// </summary>
-		[JsonProperty("web", NullValueHandling = NullValueHandling.Ignore)]
-		public Optional<UserStatus> Web { get; internal set; }
+		[JsonProperty("web", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
+		public Optional<UserStatus> Web { get; internal set; } = UserStatus.Offline;
 	}
 }
