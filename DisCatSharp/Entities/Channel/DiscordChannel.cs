@@ -93,6 +93,12 @@ namespace DisCatSharp.Entities
 		public int Position { get; internal set; }
 
 		/// <summary>
+		/// Gets the flags of this channel.
+		/// </summary>
+		[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+		public ChannelFlags Flags { get; internal set; }
+
+		/// <summary>
 		/// Gets the maximum available position to move the channel to.
 		/// This can contain outdated information.
 		/// </summary>
