@@ -120,6 +120,12 @@ namespace DisCatSharp.Entities
 		internal ulong GuildId = 0;
 
 		/// <summary>
+		/// Gets the role flags.
+		/// </summary>
+		[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+		public RoleFlags RoleFlags { get; internal set; }
+
+		/// <summary>
 		/// Gets a mention string for this role. If the role is mentionable, this string will mention all the users that belong to this role.
 		/// </summary>
 		public string Mention
