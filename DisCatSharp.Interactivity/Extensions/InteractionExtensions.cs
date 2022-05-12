@@ -58,14 +58,14 @@ namespace DisCatSharp.Interactivity.Extensions
 		/// Sends multiple modals to the user with a prompt to open the next one.
 		/// </summary>
 		/// <param name="interaction">The interaction to create a response to.</param>
-		/// <param name="builder">The paginated modal builder.</param>
+		/// <param name="modals">The modal pages.</param>
 		/// <param name="timeOutOverride">A custom timeout. (Default: 15 minutes)</param>
 		/// <returns>A read-only dictionary with the customid of the components as the key.</returns>
 		/// <exception cref="ArgumentException">Is thrown when no modals are defined.</exception>
 		/// <exception cref="InvalidOperationException">Is thrown when interactivity is not enabled for the client/shard.</exception>
-		public static async Task<PaginatedModalResponse> CreatePaginatedModalResponseAsync(this DiscordInteraction interaction, DiscordInteractionPaginatedModal builder, TimeSpan? timeOutOverride = null)
+		public static async Task<PaginatedModalResponse> CreatePaginatedModalResponseAsync(this DiscordInteraction interaction, IReadOnlyList<ModalPage> modals, TimeSpan? timeOutOverride = null)
 		{
-			if (builder.Modals is null || builder.Modals.Count is 0)
+			if (modals is null || modals.Count is 0)
 				throw new ArgumentException("You have to set at least one page");
 
 			var client = (DiscordClient)interaction.Discord;
@@ -77,7 +77,7 @@ namespace DisCatSharp.Interactivity.Extensions
 
 			var previousInteraction = interaction;
 
-			foreach (var b in builder.Modals)
+			foreach (var b in modals)
 			{
 				var modal = b.Modal.WithCustomId(Guid.NewGuid().ToString());
 
@@ -116,7 +116,7 @@ namespace DisCatSharp.Interactivity.Extensions
 
 			await previousInteraction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral());
 
-			return new PaginatedModalResponse { TimedOut = false, Responses = caughtResponses, interaction = previousInteraction };
+			return new PaginatedModalResponse { TimedOut = false, Responses = caughtResponses, Interaction = previousInteraction };
 		}
 	}
 }
