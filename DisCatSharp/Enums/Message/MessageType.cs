@@ -151,5 +151,10 @@ namespace DisCatSharp
 		/// Message indicating the guilds automod acted.
 		/// </summary>
 		AutoModerationAction = 24,
+
+		/// <summary>
+		/// Message indicating that a member purchased a role subscription.
+		/// </summary>
+		RoleSubscriptionPurchase = 25
 	}
 }

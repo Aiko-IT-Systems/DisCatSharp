@@ -62,6 +62,16 @@ namespace DisCatSharp
 		/// <summary>
 		/// Suppress member join sticker replies.
 		/// </summary>
-		SuppressJoinNotificationReplies = 1 << 3
+		SuppressJoinNotificationReplies = 1 << 3,
+
+		/// <summary>
+		/// Role subscription purchase messages are disabled.
+		/// </summary>
+		SuppressRoleSubbscriptionPurchaseNotification = 1<<4,
+
+		/// <summary>
+		/// Suppress role subscription purchase sticker replies.
+		/// </summary>
+		SuppressRoleSubbscriptionPurchaseNotificationReplies = 1<<5,
 	}
 }
