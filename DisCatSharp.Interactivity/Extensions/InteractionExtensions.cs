@@ -90,7 +90,10 @@ namespace DisCatSharp.Interactivity.Extensions
 					var modalOpen = await interactivity.WaitForButtonAsync(originalResponse, new List<DiscordButtonComponent> { b.OpenButton }, timeOutOverride);
 
 					if (modalOpen.TimedOut)
+					{
+						_ = previousInteraction.EditOriginalResponseAsync(new DiscordWebhookBuilder().WithContent(b.OpenMessage.Content).AddComponents(b.OpenButton.Disable()));
 						return new PaginatedModalResponse { TimedOut = true };
+					}
 
 					await modalOpen.Result.Interaction.CreateInteractionModalResponseAsync(modal);
 				}
