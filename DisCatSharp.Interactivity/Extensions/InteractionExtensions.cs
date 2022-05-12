@@ -26,7 +26,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
-using DisCatSharp.EventArgs;
 using DisCatSharp.Interactivity.Enums;
 using DisCatSharp.Interactivity.EventHandling;
 
