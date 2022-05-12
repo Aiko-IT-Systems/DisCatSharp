@@ -65,7 +65,7 @@ namespace DisCatSharp.Interactivity.Extensions
 		/// <exception cref="InvalidOperationException">Is thrown when interactivity is not enabled for the client/shard.</exception>
 		public static async Task<PaginatedModalResponse> CreatePaginatedModalResponseAsync(this DiscordInteraction interaction, IReadOnlyList<ModalPage> modals, TimeSpan? timeOutOverride = null)
 		{
-			if (modals is null || modals.Count is 0)
+			if (modals is null || modals.Count == 0)
 				throw new ArgumentException("You have to set at least one page");
 
 			var client = (DiscordClient)interaction.Discord;
