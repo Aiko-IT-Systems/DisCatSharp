@@ -63,7 +63,7 @@ namespace DisCatSharp.Interactivity.Extensions
 		/// <returns>A read-only dictionary with the customid of the components as the key.</returns>
 		/// <exception cref="ArgumentException">Is thrown when no modals are defined.</exception>
 		/// <exception cref="InvalidOperationException">Is thrown when interactivity is not enabled for the client/shard.</exception>
-		public static async Task<PaginatedModalResponse> CreatePaginatedModalResponseAsync(this DiscordInteraction interaction, DiscordInteractionPaginatedModalBuilder builder, TimeSpan? timeOutOverride = null)
+		public static async Task<PaginatedModalResponse> CreatePaginatedModalResponseAsync(this DiscordInteraction interaction, DiscordInteractionPaginatedModal builder, TimeSpan? timeOutOverride = null)
 		{
 			if (builder.Modals is null || builder.Modals.Count is 0)
 				throw new ArgumentException("You have to set at least one page");
@@ -75,18 +75,16 @@ namespace DisCatSharp.Interactivity.Extensions
 
 			Dictionary<string, string> caughtResponses = new();
 
-			DiscordInteraction previousInteraction = interaction;
+			var previousInteraction = interaction;
 
 			foreach (var b in builder.Modals)
 			{
 				var modal = b.Modal.WithCustomId(Guid.NewGuid().ToString());
 
-				DiscordMessage originalResponse = null;
-
 				if (previousInteraction.Type is InteractionType.Ping or InteractionType.ModalSubmit)
 				{
 					await previousInteraction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, b.OpenMessage.AddComponents(b.OpenButton));
-					originalResponse = await previousInteraction.GetOriginalResponseAsync();
+					var originalResponse = await previousInteraction.GetOriginalResponseAsync();
 					var modalOpen = await interactivity.WaitForButtonAsync(originalResponse, new List<DiscordButtonComponent> { b.OpenButton }, timeOutOverride);
 
 					if (modalOpen.TimedOut)

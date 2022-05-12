@@ -52,16 +52,16 @@ namespace DisCatSharp.Interactivity.Enums
 		/// <summary>
 		/// The modal that will be displayed.
 		/// </summary>
-		public DiscordInteractionModalBuilder Modal { get; internal set; }
+		public DiscordInteractionModalBuilder Modal { get; set; }
 
 		/// <summary>
 		/// The button that will be displayed on the ephemeral message.
 		/// </summary>
-		public DiscordButtonComponent OpenButton { get; internal set; }
+		public DiscordButtonComponent OpenButton { get; set; }
 
 		/// <summary>
 		/// The ephemeral message to display for this page.
 		/// </summary>
-		public DiscordInteractionResponseBuilder OpenMessage { get; internal set; }
+		public DiscordInteractionResponseBuilder OpenMessage { get; set; }
 	}
 }

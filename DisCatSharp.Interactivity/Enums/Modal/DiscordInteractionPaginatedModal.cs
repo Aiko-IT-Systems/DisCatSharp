@@ -31,7 +31,7 @@ namespace DisCatSharp.Interactivity.Enums
 	/// <summary>
 	/// A paginated modal builder.
 	/// </summary>
-	public class DiscordInteractionPaginatedModalBuilder
+	public class DiscordInteractionPaginatedModal
 	{
 		/// <summary>
 		/// The modal pages.
@@ -42,7 +42,7 @@ namespace DisCatSharp.Interactivity.Enums
 		/// Creates a new instance of the paginated modal builder.
 		/// </summary>
 		/// <param name="modals">The modal pages to display.</param>
-		public DiscordInteractionPaginatedModalBuilder(IReadOnlyList<ModalPage> modals)
+		public DiscordInteractionPaginatedModal(IReadOnlyList<ModalPage> modals)
 		{
 			this.Modals = modals;
 		}

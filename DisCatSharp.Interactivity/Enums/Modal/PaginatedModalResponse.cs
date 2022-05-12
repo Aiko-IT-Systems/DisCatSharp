@@ -43,10 +43,10 @@ namespace DisCatSharp.Interactivity.Enums
 		/// <summary>
 		/// The last interaction. This is automatically replied to with a ephemeral "thinking" state. Use EditOriginalResponseAsync to modify this.
 		/// </summary>
-		public DiscordInteraction interaction { get; internal set; }
+		public DiscordInteraction Interaction { get; internal set; }
 
 		/// <summary>
-		/// Wether the interaction timed out.
+		/// Whether the interaction timed out.
 		/// </summary>
 		public bool TimedOut { get; internal set; }
 	}
