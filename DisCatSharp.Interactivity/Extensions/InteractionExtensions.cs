@@ -71,7 +71,7 @@ namespace DisCatSharp.Interactivity.Extensions
 			var client = (DiscordClient)interaction.Discord;
 			var interactivity = client.GetInteractivity() ?? throw new InvalidOperationException($"Interactivity is not enabled for this {(client.IsShard ? "shard" : "client")}.");
 
-			timeOutOverride = timeOutOverride is null ? TimeSpan.FromMinutes(15) : timeOutOverride;
+			timeOutOverride ??= TimeSpan.FromMinutes(15);
 
 			Dictionary<string, string> caughtResponses = new();
 
