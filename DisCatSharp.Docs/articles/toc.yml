@@ -65,6 +65,8 @@
         href: application_commands/translations/using.md
       - name: Translation Reference
         href: application_commands/translations/reference.md
+  - name: Paginated Modals
+    href: application_commands/paginated_modals.md
 - name: Commands
   items:
   - name: Introduction
