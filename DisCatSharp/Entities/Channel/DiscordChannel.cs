@@ -284,7 +284,6 @@ namespace DisCatSharp.Entities
 		public DiscordVoiceRegion RtcRegion
 			=> this.RtcRegionId != null ? this.Discord.VoiceRegions[this.RtcRegionId] : null;
 
-
 		/// <summary>
 		/// Only sent on the resolved channels of interaction responses for application commands.
 		/// Gets the permissions of the user in this channel who invoked the command.
@@ -1070,6 +1069,21 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public async Task<DiscordThreadResult> GetPrivateArchivedThreadsAsync(ulong? before, int? limit)
 			=> await this.Discord.ApiClient.GetPrivateArchivedThreadsAsync(this.Id, before, limit);
+
+		/// <summary>
+		/// Gets a forum channel tag.
+		/// </summary>
+		/// <param name="id">The id of the tag to get.</param>
+		/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
+		public async Task<ForumPostTag> GetForumPostTagAsync(ulong id)
+			=> throw new NotImplementedException();
+
+		/// <summary>
+		/// Gets a list of forum channel tags.
+		/// </summary>
+		/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
+		public async Task<List<ForumPostTag>> GetForumPostTagsAsync()
+			=> throw new NotImplementedException();
 
 		#endregion
 
