@@ -106,21 +106,21 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Gets a list of registered commands. The key is the guild id (null if global).
 		/// </summary>
-		public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> RegisteredCommands
+		public static IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> RegisteredCommands
 			=> s_registeredCommands;
 		private static readonly List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
 
 		/// <summary>
 		/// Gets a list of registered global commands.
 		/// </summary>
-		public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
+		public static IReadOnlyList<DiscordApplicationCommand> GlobalCommands
 			=> GlobalCommandsInternal;
 		internal static readonly List<DiscordApplicationCommand> GlobalCommandsInternal = new();
 
 		/// <summary>
 		/// Gets a list of registered guild commands mapped by guild id.
 		/// </summary>
-		public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
+		public static IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
 		=> GuildCommandsInternal;
 		internal static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommandsInternal = new();
 
@@ -152,8 +152,14 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		internal static bool CheckAllGuilds { get; set; }
 
+		/// <summary>
+		/// Gets whether the registration check should be manually overriden.
+		/// </summary>
 		internal static bool ManOr { get; set; }
 
+		/// <summary>
+		/// Gets whether interactions should be automatically deffered.
+		/// </summary>
 		internal static bool AutoDeferEnabled { get; set; }
 
 		/// <summary>
@@ -424,7 +430,7 @@ namespace DisCatSharp.ApplicationCommands
 				foreach (var key in commandsPending.ToList())
 				{
 					this.Client.Logger.LogInformation(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
-					this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
+					await this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
 				}
 
 				this._missingScopeGuildIds = failedGuilds;
@@ -442,7 +448,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="types">The types.</param>
 		/// <param name="guildId">The optional guild id.</param>
-		private void RegisterCommands(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildId)
+		private async Task RegisterCommands(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildId)
 		{
 			//Initialize empty lists to be added to the global ones at the end
 			var commandMethods = new List<CommandMethod>();
@@ -453,237 +459,234 @@ namespace DisCatSharp.ApplicationCommands
 
 			var commandTypeSources = new List<KeyValuePair<Type, Type>>();
 
-			_ = Task.Run(async () =>
+			//Iterates over all the modules
+			foreach (var config in types)
 			{
-				//Iterates over all the modules
-				foreach (var config in types)
+				var type = config.Type;
+				try
 				{
-					var type = config.Type;
-					try
+					var module = type.GetTypeInfo();
+					var classes = new List<TypeInfo>();
+
+					var ctx = new ApplicationCommandsTranslationContext(type, module.FullName);
+					config.Translations?.Invoke(ctx);
+
+					//Add module to classes list if it's a group
+					if (module.GetCustomAttribute<SlashCommandGroupAttribute>() != null)
 					{
-						var module = type.GetTypeInfo();
-						var classes = new List<TypeInfo>();
+						classes.Add(module);
+					}
+					else
+					{
+						//Otherwise add the nested groups
+						classes = module.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
+					}
 
-						var ctx = new ApplicationCommandsTranslationContext(type, module.FullName);
-						config.Translations?.Invoke(ctx);
+					List<GroupTranslator> groupTranslations = null;
 
-						//Add module to classes list if it's a group
-						if (module.GetCustomAttribute<SlashCommandGroupAttribute>() != null)
-						{
-							classes.Add(module);
-						}
-						else
-						{
-							//Otherwise add the nested groups
-							classes = module.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
-						}
+					if (!string.IsNullOrEmpty(ctx.Translations))
+					{
+						groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
+					}
 
-						List<GroupTranslator> groupTranslations = null;
+					var slashGroupsTuple = NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations).Result;
+
+					if (slashGroupsTuple.applicationCommands != null && slashGroupsTuple.applicationCommands.Any())
+						updateList.AddRange(slashGroupsTuple.applicationCommands);
+
+					if (slashGroupsTuple.commandTypeSources != null && slashGroupsTuple.commandTypeSources.Any())
+						commandTypeSources.AddRange(slashGroupsTuple.commandTypeSources);
+
+					if (slashGroupsTuple.singletonModules != null && slashGroupsTuple.singletonModules.Any())
+						s_singletonModules.AddRange(slashGroupsTuple.singletonModules);
+
+					if (slashGroupsTuple.groupCommands != null && slashGroupsTuple.groupCommands.Any())
+						groupCommands.AddRange(slashGroupsTuple.groupCommands);
+
+					if (slashGroupsTuple.subGroupCommands != null && slashGroupsTuple.subGroupCommands.Any())
+						subGroupCommands.AddRange(slashGroupsTuple.subGroupCommands);
+
+					//Handles methods and context menus, only if the module isn't a group itself
+					if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
+					{
+						List<CommandTranslator> commandTranslations = null;
 
 						if (!string.IsNullOrEmpty(ctx.Translations))
 						{
-							groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
+							commandTranslations = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
 						}
 
-						var slashGroupsTuple = NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations).Result;
+						//Slash commands
+						var methods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
 
-						if (slashGroupsTuple.applicationCommands != null && slashGroupsTuple.applicationCommands.Any())
-							updateList.AddRange(slashGroupsTuple.applicationCommands);
+						var slashCommands = CommandWorker.ParseBasicSlashCommandsAsync(type, methods, guildId, commandTranslations).Result;
 
-						if (slashGroupsTuple.commandTypeSources != null && slashGroupsTuple.commandTypeSources.Any())
-							commandTypeSources.AddRange(slashGroupsTuple.commandTypeSources);
+						if (slashCommands.applicationCommands != null && slashCommands.applicationCommands.Any())
+							updateList.AddRange(slashCommands.applicationCommands);
 
-						if (slashGroupsTuple.singletonModules != null && slashGroupsTuple.singletonModules.Any())
-							s_singletonModules.AddRange(slashGroupsTuple.singletonModules);
+						if (slashCommands.commandTypeSources != null && slashCommands.commandTypeSources.Any())
+							commandTypeSources.AddRange(slashCommands.commandTypeSources);
 
-						if (slashGroupsTuple.groupCommands != null && slashGroupsTuple.groupCommands.Any())
-							groupCommands.AddRange(slashGroupsTuple.groupCommands);
+						if (slashCommands.commandMethods != null && slashCommands.commandMethods.Any())
+							commandMethods.AddRange(slashCommands.commandMethods);
 
-						if (slashGroupsTuple.subGroupCommands != null && slashGroupsTuple.subGroupCommands.Any())
-							subGroupCommands.AddRange(slashGroupsTuple.subGroupCommands);
+						//Context Menus
+						var contextMethods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<ContextMenuAttribute>() != null);
 
-						//Handles methods and context menus, only if the module isn't a group itself
-						if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
+						var contextCommands = CommandWorker.ParseContextMenuCommands(type, contextMethods, commandTranslations).Result;
+
+						if (contextCommands.applicationCommands != null && contextCommands.applicationCommands.Any())
+							updateList.AddRange(contextCommands.applicationCommands);
+
+						if (contextCommands.commandTypeSources != null && contextCommands.commandTypeSources.Any())
+							commandTypeSources.AddRange(contextCommands.commandTypeSources);
+
+						if (contextCommands.contextMenuCommands != null && contextCommands.contextMenuCommands.Any())
+							contextMenuCommands.AddRange(contextCommands.contextMenuCommands);
+
+						//Accounts for lifespans
+						if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
 						{
-							List<CommandTranslator> commandTranslations = null;
-
-							if (!string.IsNullOrEmpty(ctx.Translations))
-							{
-								commandTranslations = JsonConvert.DeserializeObject<List<CommandTranslator>>(ctx.Translations);
-							}
-
-							//Slash commands
-							var methods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
-
-							var slashCommands = CommandWorker.ParseBasicSlashCommandsAsync(type, methods, guildId, commandTranslations).Result;
-
-							if (slashCommands.applicationCommands != null && slashCommands.applicationCommands.Any())
-								updateList.AddRange(slashCommands.applicationCommands);
-
-							if (slashCommands.commandTypeSources != null && slashCommands.commandTypeSources.Any())
-								commandTypeSources.AddRange(slashCommands.commandTypeSources);
-
-							if (slashCommands.commandMethods != null && slashCommands.commandMethods.Any())
-								commandMethods.AddRange(slashCommands.commandMethods);
-
-							//Context Menus
-							var contextMethods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<ContextMenuAttribute>() != null);
-
-							var contextCommands = CommandWorker.ParseContextMenuCommands(type, contextMethods, commandTranslations).Result;
-
-							if (contextCommands.applicationCommands != null && contextCommands.applicationCommands.Any())
-								updateList.AddRange(contextCommands.applicationCommands);
-
-							if (contextCommands.commandTypeSources != null && contextCommands.commandTypeSources.Any())
-								commandTypeSources.AddRange(contextCommands.commandTypeSources);
-
-							if (contextCommands.contextMenuCommands != null && contextCommands.contextMenuCommands.Any())
-								contextMenuCommands.AddRange(contextCommands.contextMenuCommands);
-
-							//Accounts for lifespans
-							if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
-							{
-								s_singletonModules.Add(CreateInstance(module, Configuration?.ServiceProvider));
-							}
+							s_singletonModules.Add(CreateInstance(module, Configuration?.ServiceProvider));
 						}
-					}
-					catch (Exception ex)
-					{
-						if (ex is BadRequestException brex)
-							this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.JsonMessage}");
-						else
-							this.Client.Logger.LogCritical(ex, $"There was an error parsing the application commands");
-						s_errored = true;
 					}
 				}
-				if (!s_errored)
+				catch (Exception ex)
 				{
+					if (ex is BadRequestException brex)
+						this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.JsonMessage}");
+					else
+						this.Client.Logger.LogCritical(ex, $"There was an error parsing the application commands");
+					s_errored = true;
+				}
+			}
+			if (!s_errored)
+			{
+				try
+				{
+					List<DiscordApplicationCommand> commands = new();
+
 					try
 					{
-						List<DiscordApplicationCommand> commands = new();
-
-						try
+						if (guildId == null)
 						{
-							if (guildId == null)
+							if (updateList != null && updateList.Any())
 							{
-								if (updateList != null && updateList.Any())
-								{
-									var regCommands = RegistrationWorker.RegisterGlobalCommandsAsync(updateList).Result;
-									var actualCommands = regCommands.Distinct().ToList();
-									commands.AddRange(actualCommands);
-									GlobalCommandsInternal.AddRange(actualCommands);
-								}
-								else
-								{
-									foreach (var cmd in GlobalDiscordCommands)
-									{
-										try
-										{
-											await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id);
-										}
-										catch (NotFoundException)
-										{
-											this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Could not delete global command {cmd.Id}. Please clean up manually");
-										}
-									}
-								}
+								var regCommands = RegistrationWorker.RegisterGlobalCommandsAsync(updateList).Result;
+								var actualCommands = regCommands.Distinct().ToList();
+								commands.AddRange(actualCommands);
+								GlobalCommandsInternal.AddRange(actualCommands);
 							}
 							else
 							{
-								if (updateList != null && updateList.Any())
+								foreach (var cmd in GlobalDiscordCommands)
 								{
-									var regCommands = RegistrationWorker.RegisterGuilldCommandsAsync(guildId.Value, updateList).Result;
-									var actualCommands = regCommands.Distinct().ToList();
-									commands.AddRange(actualCommands);
-									GuildCommandsInternal.Add(guildId.Value, actualCommands);
-									if (this.Client.Guilds.TryGetValue(guildId.Value, out var guild))
+									try
 									{
-										guild.InternalRegisteredApplicationCommands = new();
-										guild.InternalRegisteredApplicationCommands.AddRange(actualCommands);
+										await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id);
 									}
-
-								}
-								else
-								{
-									foreach (var cmd in GuildDiscordCommands[guildId.Value])
+									catch (NotFoundException)
 									{
-										try
-										{
-											await this.Client.DeleteGuildApplicationCommandAsync(guildId.Value, cmd.Id);
-										}
-										catch (NotFoundException)
-										{
-											this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Could not delete guild command {cmd.Id} in guild {guildId.Value}. Please clean up manually");
-										}
+										this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Could not delete global command {cmd.Id}. Please clean up manually");
 									}
 								}
 							}
 						}
-						catch (UnauthorizedException ex)
-						{
-							this.Client.Logger.LogError($"Could not register application commands for guild {guildId}.\nError: {ex.JsonMessage}");
-							return;
-						}
-						//Creates a guild command if a guild id is specified, otherwise global
-						//Checks against the ids and adds them to the command method lists
-						foreach (var command in commands)
-						{
-							if (commandMethods.GetFirstValueWhere(x => x.Name == command.Name, out var com))
-								com.CommandId = command.Id;
-							else if (groupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
-								groupCom.CommandId = command.Id;
-							else if (subGroupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var subCom))
-								subCom.CommandId = command.Id;
-							else if (contextMenuCommands.GetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
-								cmCom.CommandId = command.Id;
-						}
-
-						//Adds to the global lists finally
-						s_commandMethods.AddRange(commandMethods);
-						s_groupCommands.AddRange(groupCommands);
-						s_subGroupCommands.AddRange(subGroupCommands);
-						s_contextMenuCommands.AddRange(contextMenuCommands);
-
-						s_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildId, commands.ToList()));
-
-						foreach (var command in commandMethods)
-						{
-							var app = types.First(t => t.Type == command.Method.DeclaringType);
-						}
-
-						this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Expected Count: {s_expectedCount}\nCurrent Count: {s_registrationCount}");
-
-						if (guildId.HasValue)
-						{
-							await this._guildApplicationCommandsRegistered.InvokeAsync(this, new GuildApplicationCommandsRegisteredEventArgs(Configuration?.ServiceProvider)
-							{
-								Handled = true,
-								GuildId = guildId.Value,
-								RegisteredCommands = GuildCommandsInternal.Any(c => c.Key == guildId.Value) ? GuildCommandsInternal.FirstOrDefault(c => c.Key == guildId.Value).Value : null
-							});
-						}
 						else
 						{
-							await this._globalApplicationCommandsRegistered.InvokeAsync(this, new GlobalApplicationCommandsRegisteredEventArgs(Configuration?.ServiceProvider)
+							if (updateList != null && updateList.Any())
 							{
-								Handled = true,
-								RegisteredCommands = GlobalCommandsInternal
-							});
-						}
+								var regCommands = RegistrationWorker.RegisterGuilldCommandsAsync(guildId.Value, updateList).Result;
+								var actualCommands = regCommands.Distinct().ToList();
+								commands.AddRange(actualCommands);
+								GuildCommandsInternal.Add(guildId.Value, actualCommands);
+								if (this.Client.Guilds.TryGetValue(guildId.Value, out var guild))
+								{
+									guild.InternalRegisteredApplicationCommands = new();
+									guild.InternalRegisteredApplicationCommands.AddRange(actualCommands);
+								}
 
-						s_registrationCount++;
-						this.CheckRegistrationStartup(ManOr);
+							}
+							else
+							{
+								foreach (var cmd in GuildDiscordCommands[guildId.Value])
+								{
+									try
+									{
+										await this.Client.DeleteGuildApplicationCommandAsync(guildId.Value, cmd.Id);
+									}
+									catch (NotFoundException)
+									{
+										this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Could not delete guild command {cmd.Id} in guild {guildId.Value}. Please clean up manually");
+									}
+								}
+							}
+						}
 					}
-					catch (Exception ex)
+					catch (UnauthorizedException ex)
 					{
-						if (ex is BadRequestException brex)
-							this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.JsonMessage}");
-						else
-							this.Client.Logger.LogCritical(ex, $"There was an general error registering application commands");
-						s_errored = true;
+						this.Client.Logger.LogError($"Could not register application commands for guild {guildId}.\nError: {ex.JsonMessage}");
+						return;
 					}
+					//Creates a guild command if a guild id is specified, otherwise global
+					//Checks against the ids and adds them to the command method lists
+					foreach (var command in commands)
+					{
+						if (commandMethods.GetFirstValueWhere(x => x.Name == command.Name, out var com))
+							com.CommandId = command.Id;
+						else if (groupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
+							groupCom.CommandId = command.Id;
+						else if (subGroupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var subCom))
+							subCom.CommandId = command.Id;
+						else if (contextMenuCommands.GetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
+							cmCom.CommandId = command.Id;
+					}
+
+					//Adds to the global lists finally
+					s_commandMethods.AddRange(commandMethods);
+					s_groupCommands.AddRange(groupCommands);
+					s_subGroupCommands.AddRange(subGroupCommands);
+					s_contextMenuCommands.AddRange(contextMenuCommands);
+
+					s_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildId, commands.ToList()));
+
+					foreach (var command in commandMethods)
+					{
+						var app = types.First(t => t.Type == command.Method.DeclaringType);
+					}
+
+					this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Expected Count: {s_expectedCount}\nCurrent Count: {s_registrationCount}");
+
+					if (guildId.HasValue)
+					{
+						await this._guildApplicationCommandsRegistered.InvokeAsync(this, new GuildApplicationCommandsRegisteredEventArgs(Configuration?.ServiceProvider)
+						{
+							Handled = true,
+							GuildId = guildId.Value,
+							RegisteredCommands = GuildCommandsInternal.Any(c => c.Key == guildId.Value) ? GuildCommandsInternal.FirstOrDefault(c => c.Key == guildId.Value).Value : null
+						});
+					}
+					else
+					{
+						await this._globalApplicationCommandsRegistered.InvokeAsync(this, new GlobalApplicationCommandsRegisteredEventArgs(Configuration?.ServiceProvider)
+						{
+							Handled = true,
+							RegisteredCommands = GlobalCommandsInternal
+						});
+					}
+
+					s_registrationCount++;
+					this.CheckRegistrationStartup(ManOr);
 				}
-			});
+				catch (Exception ex)
+				{
+					if (ex is BadRequestException brex)
+						this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.JsonMessage}");
+					else
+						this.Client.Logger.LogCritical(ex, $"There was an general error registering application commands");
+					s_errored = true;
+				}
+			}
 		}
 
 		private async void CheckRegistrationStartup(bool man = false)
@@ -986,7 +989,7 @@ namespace DisCatSharp.ApplicationCommands
 			// Slash commands
 			if (context is InteractionContext slashContext)
 			{
-				await this.RunPreexecutionChecksAsync(method, slashContext);
+				await RunPreexecutionChecksAsync(method, slashContext);
 
 				var shouldExecute = await (module?.BeforeSlashExecutionAsync(slashContext) ?? Task.FromResult(true));
 
@@ -1002,7 +1005,7 @@ namespace DisCatSharp.ApplicationCommands
 			// Context menus
 			if (context is ContextMenuContext contextMenuContext)
 			{
-				await this.RunPreexecutionChecksAsync(method, contextMenuContext);
+				await RunPreexecutionChecksAsync(method, contextMenuContext);
 
 				var shouldExecute = await (module?.BeforeContextMenuExecutionAsync(contextMenuContext) ?? Task.FromResult(true));
 
@@ -1176,7 +1179,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="method">The method info.</param>
 		/// <param name="context">The base context.</param>
-		private async Task RunPreexecutionChecksAsync(MethodInfo method, BaseContext context)
+		private static async Task RunPreexecutionChecksAsync(MethodInfo method, BaseContext context)
 		{
 			if (context is InteractionContext ctx)
 			{
@@ -1713,7 +1716,7 @@ namespace DisCatSharp.ApplicationCommands
 		}
 
 		[SlashCommand("help", "Displays command help")]
-		internal async Task DefaultHelpAsync(InteractionContext ctx,
+		internal static async Task DefaultHelpAsync(InteractionContext ctx,
 			[Autocomplete(typeof(DefaultHelpAutoCompleteProvider))]
 			[Option("option_one", "top level command to provide help for", true)] string commandName,
 			[Autocomplete(typeof(DefaultHelpAutoCompleteLevelOneProvider))]
