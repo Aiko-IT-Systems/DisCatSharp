@@ -144,6 +144,36 @@ namespace DisCatSharp
 		/// Nitro is disabled for user.
 		/// Used by discord staff instead of forcedNonPremium.
 		/// </summary>
-		DisablePremium = 1 << 21
+		DisablePremium = 1 << 21,
+
+		/// <summary>
+		/// The user has a premium discriminator.
+		/// </summary>
+		PremiumDiscriminator = 1 << 37,
+
+		/// <summary>
+		/// The user has used the desktop client
+		/// </summary>
+		UsedDesktopClient = 1 << 38,
+
+		/// <summary>
+		/// The user has used the web client
+		/// </summary>
+		UsedWebClient = 1 << 39,
+
+		/// <summary>
+		/// The user has used the mobile client
+		/// </summary>
+		UsedMobileClient = 1 << 40,
+
+		/// <summary>
+		/// The user is currently temporarily or permanently disabled.
+		/// </summary>
+		Disabled = 1 << 42,
+
+		/// <summary>
+		/// The user has a verified email.
+		/// </summary>
+		VerifiedEmail = 1 << 43
 	}
 }
