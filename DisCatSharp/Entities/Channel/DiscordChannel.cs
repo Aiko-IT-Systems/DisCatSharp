@@ -213,10 +213,10 @@ namespace DisCatSharp.Entities
 		public List<ForumPostTag> AvailableTags { get; internal set; }
 
 		/// <summary>
-		/// Currently unknown, seems to be for forum channel.
+		/// Starter template for forum posts.
 		/// </summary>
 		[JsonProperty("template", NullValueHandling = NullValueHandling.Ignore)]
-		internal string Template { get; set; }
+		public string Template { get; internal set; }
 
 		/// <summary>
 		/// Gets when the last pinned message was pinned.
