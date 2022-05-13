@@ -211,9 +211,12 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
 		public List<ForumPostTag> AvailableTags { get; internal set; }
-		
+
+		/// <summary>
+		/// Currently unknown, seems to be for forum channel.
+		/// </summary>
 		[JsonProperty("template", NullValueHandling = NullValueHandling.Ignore)]
-		public string Template { get; internal set; }
+		internal string Template { get; set; }
 
 		/// <summary>
 		/// Gets when the last pinned message was pinned.
