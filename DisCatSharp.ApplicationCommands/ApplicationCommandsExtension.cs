@@ -989,7 +989,7 @@ namespace DisCatSharp.ApplicationCommands
 			// Slash commands
 			if (context is InteractionContext slashContext)
 			{
-				await RunPreexecutionChecksAsync(method, slashContext);
+				await this.RunPreexecutionChecksAsync(method, slashContext);
 
 				var shouldExecute = await (module?.BeforeSlashExecutionAsync(slashContext) ?? Task.FromResult(true));
 
@@ -1005,7 +1005,7 @@ namespace DisCatSharp.ApplicationCommands
 			// Context menus
 			if (context is ContextMenuContext contextMenuContext)
 			{
-				await RunPreexecutionChecksAsync(method, contextMenuContext);
+				await this.RunPreexecutionChecksAsync(method, contextMenuContext);
 
 				var shouldExecute = await (module?.BeforeContextMenuExecutionAsync(contextMenuContext) ?? Task.FromResult(true));
 
@@ -1179,7 +1179,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="method">The method info.</param>
 		/// <param name="context">The base context.</param>
-		private static async Task RunPreexecutionChecksAsync(MethodInfo method, BaseContext context)
+		private async Task RunPreexecutionChecksAsync(MethodInfo method, BaseContext context)
 		{
 			if (context is InteractionContext ctx)
 			{
@@ -1716,7 +1716,7 @@ namespace DisCatSharp.ApplicationCommands
 		}
 
 		[SlashCommand("help", "Displays command help")]
-		internal static async Task DefaultHelpAsync(InteractionContext ctx,
+		internal async Task DefaultHelpAsync(InteractionContext ctx,
 			[Autocomplete(typeof(DefaultHelpAutoCompleteProvider))]
 			[Option("option_one", "top level command to provide help for", true)] string commandName,
 			[Autocomplete(typeof(DefaultHelpAutoCompleteLevelOneProvider))]
