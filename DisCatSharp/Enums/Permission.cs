@@ -89,6 +89,7 @@ namespace DisCatSharp
 	{
 		/// <summary>
 		/// Indicates no permissions given.
+		/// This disallows users to run application command per default.
 		/// </summary>
 		[PermissionString("No permissions")]
 		None = 0,
