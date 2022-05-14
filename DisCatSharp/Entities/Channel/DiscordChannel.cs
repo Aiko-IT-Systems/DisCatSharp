@@ -207,6 +207,18 @@ namespace DisCatSharp.Entities
 		public VideoQualityMode? QualityMode { get; internal set; }
 
 		/// <summary>
+		/// List of available tags for forum posts.
+		/// </summary>
+		[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
+		public List<ForumPostTag> AvailableTags { get; internal set; }
+
+		/// <summary>
+		/// Starter template for forum posts.
+		/// </summary>
+		[JsonProperty("template", NullValueHandling = NullValueHandling.Ignore)]
+		public string Template { get; internal set; }
+
+		/// <summary>
 		/// Gets when the last pinned message was pinned.
 		/// </summary>
 		[JsonIgnore]
@@ -493,9 +505,8 @@ namespace DisCatSharp.Entities
 				pmds[i] = new RestGuildChannelReorderPayload
 				{
 					ChannelId = chns[i].Id,
+					Position = chns[i].Id == this.Id ? position : chns[i].Position >= position ? chns[i].Position + 1 : chns[i].Position
 				};
-
-				pmds[i].Position = chns[i].Id == this.Id ? position : chns[i].Position >= position ? chns[i].Position + 1 : chns[i].Position;
 			}
 
 			return this.Discord.ApiClient.ModifyGuildChannelPositionAsync(this.Guild.Id, pmds, reason);
