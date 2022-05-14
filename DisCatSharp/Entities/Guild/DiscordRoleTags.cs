@@ -50,6 +50,5 @@ namespace DisCatSharp.Entities
 
 		[JsonProperty("premium_subscriber", NullValueHandling = NullValueHandling.Include)]
 		internal Optional<bool?> PremiumSubscriber = false;
-
 	}
 }
