@@ -1725,7 +1725,7 @@ namespace DisCatSharp
 			guild.MembersInternal.AddOrUpdate(member.User.Id, mbr, (id, oldMbr) => oldMbr);
 
 			var timeoutUntil = member.CommunicationDisabledUntil;
-			this.Logger.LogTrace($"Timeout:\nBefore - {cduOld}\nAfter - {timeoutUntil}");
+			/*this.Logger.LogTrace($"Timeout:\nBefore - {cduOld}\nAfter - {timeoutUntil}");
 			if ((timeoutUntil.HasValue && cduOld.HasValue) || (timeoutUntil == null && cduOld.HasValue) || (timeoutUntil.HasValue && cduOld == null))
 			{
 				// We are going to add a scheduled timer to assure that we get a auditlog entry.
@@ -1753,9 +1753,9 @@ namespace DisCatSharp
 				this.Logger.LogTrace("Scheduling timeout event.");
 
 				return;
-			}
+			}*/
 
-			this.Logger.LogTrace("No timeout detected. Continuing on normal operation.");
+			//this.Logger.LogTrace("No timeout detected. Continuing on normal operation.");
 
 			var eargs = new GuildMemberUpdateEventArgs(this.ServiceProvider)
 			{
