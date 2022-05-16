@@ -22,48 +22,46 @@
 
 using System;
 
-namespace DisCatSharp.ApplicationCommands
+namespace DisCatSharp.ApplicationCommands;
+
+/// <summary>
+/// Defines this application command module's lifespan. Module lifespans are transient by default.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class)]
+public class ApplicationCommandModuleLifespanAttribute : Attribute
 {
+	/// <summary>
+	/// Gets the lifespan.
+	/// </summary>
+	public ApplicationCommandModuleLifespan Lifespan { get; }
 
 	/// <summary>
-	/// Defines this application command module's lifespan. Module lifespans are transient by default.
+	/// Defines this application command module's lifespan.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class)]
-	public class ApplicationCommandModuleLifespanAttribute : Attribute
+	/// <param name="lifespan">The lifespan of the module. Module lifespans are transient by default.</param>
+	public ApplicationCommandModuleLifespanAttribute(ApplicationCommandModuleLifespan lifespan)
 	{
-		/// <summary>
-		/// Gets the lifespan.
-		/// </summary>
-		public ApplicationCommandModuleLifespan Lifespan { get; }
-
-		/// <summary>
-		/// Defines this application command module's lifespan.
-		/// </summary>
-		/// <param name="lifespan">The lifespan of the module. Module lifespans are transient by default.</param>
-		public ApplicationCommandModuleLifespanAttribute(ApplicationCommandModuleLifespan lifespan)
-		{
-			this.Lifespan = lifespan;
-		}
+		this.Lifespan = lifespan;
 	}
+}
+
+/// <summary>
+/// Represents a application command module lifespan.
+/// </summary>
+public enum ApplicationCommandModuleLifespan
+{
+	/// <summary>
+	/// Whether this module should be initiated every time a command is run, with dependencies injected from a scope.
+	/// </summary>
+	Scoped,
 
 	/// <summary>
-	/// Represents a application command module lifespan.
+	/// Whether this module should be initiated every time a command is run.
 	/// </summary>
-	public enum ApplicationCommandModuleLifespan
-	{
-		/// <summary>
-		/// Whether this module should be initiated every time a command is run, with dependencies injected from a scope.
-		/// </summary>
-		Scoped,
+	Transient,
 
-		/// <summary>
-		/// Whether this module should be initiated every time a command is run.
-		/// </summary>
-		Transient,
-
-		/// <summary>
-		/// Whether this module should be initiated at startup.
-		/// </summary>
-		Singleton
-	}
+	/// <summary>
+	/// Whether this module should be initiated at startup.
+	/// </summary>
+	Singleton
 }

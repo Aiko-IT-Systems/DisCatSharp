@@ -24,21 +24,20 @@ using System;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.EventArgs
+namespace DisCatSharp.EventArgs;
+
+/// <summary>
+/// Represents arguments for <see cref="DiscordClient.DmChannelDeleted"/> event.
+/// </summary>
+public class DmChannelDeleteEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Represents arguments for <see cref="DiscordClient.DmChannelDeleted"/> event.
+	/// Gets the direct message channel that was deleted.
 	/// </summary>
-	public class DmChannelDeleteEventArgs : DiscordEventArgs
-	{
-		/// <summary>
-		/// Gets the direct message channel that was deleted.
-		/// </summary>
-		public DiscordDmChannel Channel { get; internal set; }
+	public DiscordDmChannel Channel { get; internal set; }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DmChannelDeleteEventArgs"/> class.
-		/// </summary>
-		internal DmChannelDeleteEventArgs(IServiceProvider provider) : base(provider) { }
-	}
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DmChannelDeleteEventArgs"/> class.
+	/// </summary>
+	internal DmChannelDeleteEventArgs(IServiceProvider provider) : base(provider) { }
 }

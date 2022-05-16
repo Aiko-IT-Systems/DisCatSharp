@@ -23,24 +23,23 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DisCatSharp.ApplicationCommands.Attributes
+namespace DisCatSharp.ApplicationCommands.Attributes;
+
+/// <summary>
+/// Defines that this application command is only usable within a guild.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+public sealed class ApplicationCommandRequireNsfwAttribute : SlashCheckBaseAttribute
 {
 	/// <summary>
-	/// Defines that this application command is only usable within a guild.
+	/// Defines that this command is only usable within a guild.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-	public sealed class ApplicationCommandRequireNsfwAttribute : SlashCheckBaseAttribute
-	{
-		/// <summary>
-		/// Defines that this command is only usable within a guild.
-		/// </summary>
-		public ApplicationCommandRequireNsfwAttribute()
-		{ }
+	public ApplicationCommandRequireNsfwAttribute()
+	{ }
 
-		/// <summary>
-		/// Runs checks.
-		/// </summary>
-		public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-			=> Task.FromResult(ctx.Channel.Guild == null || ctx.Channel.IsNsfw);
-	}
+	/// <summary>
+	/// Runs checks.
+	/// </summary>
+	public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+		=> Task.FromResult(ctx.Channel.Guild == null || ctx.Channel.IsNsfw);
 }

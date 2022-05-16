@@ -20,16 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Net.Abstractions
+namespace DisCatSharp.Net.Abstractions;
+
+/// <summary>
+/// Represents a OAuth2 payload.
+/// </summary>
+internal interface IOAuth2Payload
 {
 	/// <summary>
-	/// Represents a OAuth2 payload.
+	/// Gets or sets the access token.
 	/// </summary>
-	internal interface IOAuth2Payload
-	{
-		/// <summary>
-		/// Gets or sets the access token.
-		/// </summary>
-		string AccessToken { get; set; }
-	}
+	string AccessToken { get; set; }
 }

@@ -32,81 +32,80 @@ using DisCatSharp.Interactivity.Enums;
 
 using Microsoft.Extensions.Logging;
 
-namespace DisCatSharp.Interactivity.EventHandling
+namespace DisCatSharp.Interactivity.EventHandling;
+
+/// <summary>
+/// A modal-based version of <see cref="EventWaiter{T}"/>
+/// </summary>
+internal class ModalEventWaiter : IDisposable
 {
+	private readonly DiscordClient _client;
+	private readonly ConcurrentHashSet<ModalMatchRequest> _modalMatchRequests = new();
+
+	private readonly DiscordFollowupMessageBuilder _message;
+	private readonly InteractivityConfiguration _config;
+
 	/// <summary>
-	/// A modal-based version of <see cref="EventWaiter{T}"/>
+	/// Initializes a new instance of the <see cref="ComponentEventWaiter"/> class.
 	/// </summary>
-	internal class ModalEventWaiter : IDisposable
+	/// <param name="client">The client.</param>
+	/// <param name="config">The config.</param>
+	public ModalEventWaiter(DiscordClient client, InteractivityConfiguration config)
 	{
-		private readonly DiscordClient _client;
-		private readonly ConcurrentHashSet<ModalMatchRequest> _modalMatchRequests = new();
+		this._client = client;
+		this._client.ComponentInteractionCreated += this.Handle;
+		this._config = config;
 
-		private readonly DiscordFollowupMessageBuilder _message;
-		private readonly InteractivityConfiguration _config;
+		this._message = new DiscordFollowupMessageBuilder { Content = config.ResponseMessage ?? "This modal was not meant for you.", IsEphemeral = true };
+	}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ComponentEventWaiter"/> class.
-		/// </summary>
-		/// <param name="client">The client.</param>
-		/// <param name="config">The config.</param>
-		public ModalEventWaiter(DiscordClient client, InteractivityConfiguration config)
+	/// <summary>
+	/// Waits for a specified <see cref="ModalMatchRequest"/>'s predicate to be fulfilled.
+	/// </summary>
+	/// <param name="request">The request to wait for.</param>
+	/// <returns>The returned args, or null if it timed out.</returns>
+	public async Task<ComponentInteractionCreateEventArgs> WaitForModalMatchAsync(ModalMatchRequest request)
+	{
+		this._modalMatchRequests.Add(request);
+
+		try
 		{
-			this._client = client;
-			this._client.ComponentInteractionCreated += this.Handle;
-			this._config = config;
-
-			this._message = new DiscordFollowupMessageBuilder { Content = config.ResponseMessage ?? "This modal was not meant for you.", IsEphemeral = true };
+			return await request.Tcs.Task.ConfigureAwait(false);
 		}
-
-		/// <summary>
-		/// Waits for a specified <see cref="ModalMatchRequest"/>'s predicate to be fulfilled.
-		/// </summary>
-		/// <param name="request">The request to wait for.</param>
-		/// <returns>The returned args, or null if it timed out.</returns>
-		public async Task<ComponentInteractionCreateEventArgs> WaitForModalMatchAsync(ModalMatchRequest request)
+		catch (Exception e)
 		{
-			this._modalMatchRequests.Add(request);
-
-			try
-			{
-				return await request.Tcs.Task.ConfigureAwait(false);
-			}
-			catch (Exception e)
-			{
-				this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, e, "An exception was thrown while waiting for modals.");
-				return null;
-			}
-			finally
-			{
-				this._modalMatchRequests.TryRemove(request);
-			}
+			this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, e, "An exception was thrown while waiting for modals.");
+			return null;
 		}
-
-		/// <summary>
-		/// Handles the waiter.
-		/// </summary>
-		/// <param name="_">The client.</param>
-		/// <param name="args">The args.</param>
-		private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs args)
+		finally
 		{
-			foreach (var mreq in this._modalMatchRequests.ToArray())
-			{
-				if (mreq.CustomId == args.Interaction.Data.CustomId && mreq.IsMatch(args))
-					mreq.Tcs.TrySetResult(args);
-
-				else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
-					await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
-			}
+			this._modalMatchRequests.TryRemove(request);
 		}
+	}
 
-		/// <summary>
-		/// Disposes the waiter.
-		/// </summary>
-		public void Dispose()
+	/// <summary>
+	/// Handles the waiter.
+	/// </summary>
+	/// <param name="_">The client.</param>
+	/// <param name="args">The args.</param>
+	private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs args)
+	{
+		foreach (var mreq in this._modalMatchRequests.ToArray())
 		{
-			this._modalMatchRequests.Clear();
-			this._client.ComponentInteractionCreated -= this.Handle;
+			if (mreq.CustomId == args.Interaction.Data.CustomId && mreq.IsMatch(args))
+				mreq.Tcs.TrySetResult(args);
+
+			else if (this._config.ResponseBehavior is InteractionResponseBehavior.Respond)
+				await args.Interaction.CreateFollowupMessageAsync(this._message).ConfigureAwait(false);
 		}
+	}
+
+	/// <summary>
+	/// Disposes the waiter.
+	/// </summary>
+	public void Dispose()
+	{
+		this._modalMatchRequests.Clear();
+		this._client.ComponentInteractionCreated -= this.Handle;
 	}
 }

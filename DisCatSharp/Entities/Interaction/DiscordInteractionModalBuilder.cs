@@ -24,133 +24,132 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DisCatSharp.Entities
+namespace DisCatSharp.Entities;
+
+/// <summary>
+/// Constructs an interaction modal response.
+/// </summary>
+public sealed class DiscordInteractionModalBuilder
 {
 	/// <summary>
-	/// Constructs an interaction modal response.
+	/// Title of modal.
 	/// </summary>
-	public sealed class DiscordInteractionModalBuilder
+	public string Title
 	{
-		/// <summary>
-		/// Title of modal.
-		/// </summary>
-		public string Title
+		get => this._title;
+		set
 		{
-			get => this._title;
-			set
-			{
-				if (value != null && value.Length > 128)
-					throw new ArgumentException("Title length cannot exceed 128 characters.", nameof(value));
-				this._title = value;
-			}
+			if (value != null && value.Length > 128)
+				throw new ArgumentException("Title length cannot exceed 128 characters.", nameof(value));
+			this._title = value;
 		}
-		private string _title;
+	}
+	private string _title;
 
-		/// <summary>
-		/// Custom id of modal.
-		/// </summary>
-		public string CustomId { get; set; }
+	/// <summary>
+	/// Custom id of modal.
+	/// </summary>
+	public string CustomId { get; set; }
 
-		/// <summary>
-		/// Components to send on this interaction response.
-		/// </summary>
-		public IReadOnlyList<DiscordActionRowComponent> ModalComponents => this._components;
-		private readonly List<DiscordActionRowComponent> _components = new();
+	/// <summary>
+	/// Components to send on this interaction response.
+	/// </summary>
+	public IReadOnlyList<DiscordActionRowComponent> ModalComponents => this._components;
+	private readonly List<DiscordActionRowComponent> _components = new();
 
-		/// <summary>
-		/// Constructs a new empty interaction modal builder.
-		/// </summary>
-		public DiscordInteractionModalBuilder() { }
+	/// <summary>
+	/// Constructs a new empty interaction modal builder.
+	/// </summary>
+	public DiscordInteractionModalBuilder() { }
 
-		public DiscordInteractionModalBuilder WithTitle(string title)
-		{
-			this.Title = title;
-			return this;
-		}
+	public DiscordInteractionModalBuilder WithTitle(string title)
+	{
+		this.Title = title;
+		return this;
+	}
 
-		public DiscordInteractionModalBuilder WithCustomId(string customId)
-		{
-			this.CustomId = customId;
-			return this;
-		}
+	public DiscordInteractionModalBuilder WithCustomId(string customId)
+	{
+		this.CustomId = customId;
+		return this;
+	}
 
-		/// <summary>
-		/// Appends a collection of components to the builder. Each call will append to a new row.
-		/// </summary>
-		/// <param name="components">The components to append. Up to five.</param>
-		/// <returns>The current builder to chain calls with.</returns>
-		/// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
-		public DiscordInteractionModalBuilder AddModalComponents(params DiscordTextComponent[] components)
-			=> this.AddModalComponents((IEnumerable<DiscordTextComponent>)components);
+	/// <summary>
+	/// Appends a collection of components to the builder. Each call will append to a new row.
+	/// </summary>
+	/// <param name="components">The components to append. Up to five.</param>
+	/// <returns>The current builder to chain calls with.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
+	public DiscordInteractionModalBuilder AddModalComponents(params DiscordTextComponent[] components)
+		=> this.AddModalComponents((IEnumerable<DiscordTextComponent>)components);
 
-		/// <summary>
-		/// Appends a text component to the builder.
-		/// </summary>
-		/// <param name="component">The component to append.</param>
-		/// <returns>The current builder to chain calls with.</returns>
-		public DiscordInteractionModalBuilder AddTextComponent(DiscordTextComponent component)
-		{
-			List<DiscordTextComponent> comp = new(1);
-			comp.Add(component);
+	/// <summary>
+	/// Appends a text component to the builder.
+	/// </summary>
+	/// <param name="component">The component to append.</param>
+	/// <returns>The current builder to chain calls with.</returns>
+	public DiscordInteractionModalBuilder AddTextComponent(DiscordTextComponent component)
+	{
+		List<DiscordTextComponent> comp = new(1);
+		comp.Add(component);
 
-			return this.AddModalComponents(comp);
-		}
+		return this.AddModalComponents(comp);
+	}
 
-		/// <summary>
-		/// Appends several rows of components to the message
-		/// </summary>
-		/// <param name="components">The rows of components to add, holding up to five each.</param>
-		/// <returns></returns>
-		public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordActionRowComponent> components)
-		{
-			var ara = components.ToArray();
+	/// <summary>
+	/// Appends several rows of components to the message
+	/// </summary>
+	/// <param name="components">The rows of components to add, holding up to five each.</param>
+	/// <returns></returns>
+	public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordActionRowComponent> components)
+	{
+		var ara = components.ToArray();
 
-			if (ara.Length + this._components.Count > 5)
-				throw new ArgumentException("ActionRow count exceeds maximum of five.");
+		if (ara.Length + this._components.Count > 5)
+			throw new ArgumentException("ActionRow count exceeds maximum of five.");
 
-			foreach (var ar in ara)
-				this._components.Add(ar);
+		foreach (var ar in ara)
+			this._components.Add(ar);
 
-			return this;
-		}
+		return this;
+	}
 
-		/// <summary>
-		/// Appends a collection of components to the builder. Each call will append to a new row.
-		/// If you add a <see cref="DiscordTextComponent"></see> you can only add one.
-		/// </summary>
-		/// <param name="components">The components to append. Up to five.</param>
-		/// <returns>The current builder to chain calls with.</returns>
-		/// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
-		public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordTextComponent> components)
-		{
-			var compArr = components.ToArray();
-			var count = compArr.Length;
+	/// <summary>
+	/// Appends a collection of components to the builder. Each call will append to a new row.
+	/// If you add a <see cref="DiscordTextComponent"></see> you can only add one.
+	/// </summary>
+	/// <param name="components">The components to append. Up to five.</param>
+	/// <returns>The current builder to chain calls with.</returns>
+	/// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
+	public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordTextComponent> components)
+	{
+		var compArr = components.ToArray();
+		var count = compArr.Length;
 
-			if (count > 5)
-				throw new ArgumentException("Cannot add more than 5 components per action row!");
+		if (count > 5)
+			throw new ArgumentException("Cannot add more than 5 components per action row!");
 
-			if (components.Where(c => c.Type == Enums.ComponentType.InputText).Any() && count < 1)
-				throw new ArgumentException("Cannot add more than 1 text components per action row!");
+		if (components.Where(c => c.Type == Enums.ComponentType.InputText).Any() && count < 1)
+			throw new ArgumentException("Cannot add more than 1 text components per action row!");
 
-			var arc = new DiscordActionRowComponent(compArr);
-			this._components.Add(arc);
-			return this;
-		}
+		var arc = new DiscordActionRowComponent(compArr);
+		this._components.Add(arc);
+		return this;
+	}
 
-		/// <summary>
-		/// Clears all message components on this builder.
-		/// </summary>
-		public void ClearComponents()
-			=> this._components.Clear();
+	/// <summary>
+	/// Clears all message components on this builder.
+	/// </summary>
+	public void ClearComponents()
+		=> this._components.Clear();
 
-		/// <summary>
-		/// Allows for clearing the Interaction Response Builder so that it can be used again to send a new response.
-		/// </summary>
-		public void Clear()
-		{
-			this._components.Clear();
-			this.Title = null;
-			this.CustomId = null;
-		}
+	/// <summary>
+	/// Allows for clearing the Interaction Response Builder so that it can be used again to send a new response.
+	/// </summary>
+	public void Clear()
+	{
+		this._components.Clear();
+		this.Title = null;
+		this.CustomId = null;
 	}
 }

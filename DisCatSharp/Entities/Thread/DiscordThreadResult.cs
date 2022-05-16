@@ -22,33 +22,32 @@
 
 using System.Collections.Generic;
 
-namespace DisCatSharp.Entities
+namespace DisCatSharp.Entities;
+
+/// <summary>
+/// Represents a discord thread result.
+/// </summary>
+public class DiscordThreadResult
 {
 	/// <summary>
-	/// Represents a discord thread result.
+	/// Gets the returned threads.
 	/// </summary>
-	public class DiscordThreadResult
-	{
-		/// <summary>
-		/// Gets the returned threads.
-		/// </summary>
-		public Dictionary<ulong, DiscordThreadChannel> ReturnedThreads { get; internal set; }
+	public Dictionary<ulong, DiscordThreadChannel> ReturnedThreads { get; internal set; }
 
-		/// <summary>
-		/// Gets the active members.
-		/// </summary>
-		public List<DiscordThreadChannelMember> ActiveMembers { get; internal set; }
+	/// <summary>
+	/// Gets the active members.
+	/// </summary>
+	public List<DiscordThreadChannelMember> ActiveMembers { get; internal set; }
 
-		/// <summary>
-		/// Whether there are more results.
-		/// </summary>
-		public bool HasMore { get; internal set; }
+	/// <summary>
+	/// Whether there are more results.
+	/// </summary>
+	public bool HasMore { get; internal set; }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DiscordThreadResult"/> class.
-		/// </summary>
-		internal DiscordThreadResult()
-			: base()
-		{ }
-	}
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DiscordThreadResult"/> class.
+	/// </summary>
+	internal DiscordThreadResult()
+		: base()
+	{ }
 }
