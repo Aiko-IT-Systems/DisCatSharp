@@ -22,78 +22,77 @@
 
 using System;
 
-namespace DisCatSharp
+namespace DisCatSharp;
+
+/// <summary>
+/// Represents additional details of an application.
+/// </summary>
+[Flags]
+public enum ApplicationFlags
 {
 	/// <summary>
-	/// Represents additional details of an application.
+	/// The application is embedded and can be used by users.
+	/// This was introdruced to avoid users using in-dev apps.
 	/// </summary>
-	[Flags]
-	public enum ApplicationFlags
-	{
-		/// <summary>
-		/// The application is embedded and can be used by users.
-		/// This was introdruced to avoid users using in-dev apps.
-		/// </summary>
-		EmbeddedReleased = 1 << 1,
+	EmbeddedReleased = 1 << 1,
 
-		/// <summary>
-		/// The application is a managed emoji.
-		/// </summary>
-		ManagedEmoji = 1 << 2,
+	/// <summary>
+	/// The application is a managed emoji.
+	/// </summary>
+	ManagedEmoji = 1 << 2,
 
-		/// <summary>
-		/// The application can create group dms.
-		/// </summary>
-		GroupDmCreate = 1 << 5,
+	/// <summary>
+	/// The application can create group dms.
+	/// </summary>
+	GroupDmCreate = 1 << 5,
 
-		/// <summary>
-		/// The application has connected to RPC.
-		/// </summary>
-		RpcHasConnected = 1 << 11,
+	/// <summary>
+	/// The application has connected to RPC.
+	/// </summary>
+	RpcHasConnected = 1 << 11,
 
-		/// <summary>
-		/// The application can track presence data.
-		/// </summary>
-		GatewayPresence = 1 << 12,
+	/// <summary>
+	/// The application can track presence data.
+	/// </summary>
+	GatewayPresence = 1 << 12,
 
-		/// <summary>
-		/// The application can track presence data (limited).
-		/// </summary>
-		GatewayPresenceLimited = 1 << 13,
+	/// <summary>
+	/// The application can track presence data (limited).
+	/// </summary>
+	GatewayPresenceLimited = 1 << 13,
 
-		/// <summary>
-		/// The application can track guild members.
-		/// </summary>
-		GatewayGuildMembers = 1 << 14,
+	/// <summary>
+	/// The application can track guild members.
+	/// </summary>
+	GatewayGuildMembers = 1 << 14,
 
-		/// <summary>
-		/// The application can track guild members (limited).
-		/// </summary>
-		GatewayGuildMembersLimited = 1 << 15,
+	/// <summary>
+	/// The application can track guild members (limited).
+	/// </summary>
+	GatewayGuildMembersLimited = 1 << 15,
 
-		/// <summary>
-		/// The application can track pending guild member verifications (limited).
-		/// </summary>
-		VerificationPendingGuildLimit = 1 << 16,
+	/// <summary>
+	/// The application can track pending guild member verifications (limited).
+	/// </summary>
+	VerificationPendingGuildLimit = 1 << 16,
 
-		/// <summary>
-		/// The application is embedded.
-		/// </summary>
-		Embedded = 1 << 17,
+	/// <summary>
+	/// The application is embedded.
+	/// </summary>
+	Embedded = 1 << 17,
 
-		/// <summary>
-		/// The application can track message content.
-		/// </summary>
-		GatewayMessageContent = 1 << 18,
+	/// <summary>
+	/// The application can track message content.
+	/// </summary>
+	GatewayMessageContent = 1 << 18,
 
-		/// <summary>
-		/// The application can track message content (limited).
-		/// </summary>
-		GatewayMessageContentLimited = 1 << 19,
+	/// <summary>
+	/// The application can track message content (limited).
+	/// </summary>
+	GatewayMessageContentLimited = 1 << 19,
 
-		/// <summary>
-		/// Related to embedded applications.
-		/// </summary>
-		EmbeddedFirstParty = 1 << 20
-	}
+	/// <summary>
+	/// Related to embedded applications.
+	/// </summary>
+	EmbeddedFirstParty = 1 << 20
 }

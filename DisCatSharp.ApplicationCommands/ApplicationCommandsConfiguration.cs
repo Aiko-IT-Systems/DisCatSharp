@@ -24,80 +24,79 @@ using System;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DisCatSharp.ApplicationCommands
+namespace DisCatSharp.ApplicationCommands;
+
+/// <summary>
+/// A configuration for a <see cref="ApplicationCommandsExtension"/>
+/// </summary>
+public class ApplicationCommandsConfiguration
 {
 	/// <summary>
-	/// A configuration for a <see cref="ApplicationCommandsExtension"/>
+	/// <para>Sets the service provider.</para>
+	/// <para>Objects in this provider are used when instantiating application command modules. This allows passing data around without resorting to static members.</para>
+	/// <para>Defaults to null.</para>
 	/// </summary>
-	public class ApplicationCommandsConfiguration
+	public IServiceProvider ServiceProvider { internal get; set; }
+
+	/// <summary>
+	/// <para>Sets whether to enable default help command.</para>
+	/// <para>Disabling this will allow you to make your own help command.</para>
+	/// <para>
+	/// </para>
+	/// <para>Defaults to true.</para>
+	/// </summary>
+	public bool EnableDefaultHelp { internal get; set; } = true;
+
+	/// <summary>
+	/// Debugs the startup.
+	/// </summary>
+	public bool DebugStartup { internal get; set; } = false;
+
+	/// <summary>
+	/// Enable localization features.
+	/// </summary>
+	public bool EnableLocalization { internal get; set; } = false;
+
+	/// <summary>
+	/// Manual override.
+	/// <note type="warning">DO NOT USE THIS!</note>
+	/// </summary>
+	public bool ManualOverride { internal get; set; } = false;
+
+	/// <summary>
+	/// Automatically defer all responses.
+	/// <note type="note">If you enable this, you can't use CreateResponse. Use EditResponse instead.</note>
+	/// </summary>
+	public bool AutoDefer { internal get; set; } = false;
+
+	/// <summary>
+	/// Checks through all guilds.
+	/// <note type="warning">This will take quite a while, when the bot is on more than 1k guilds.</note>
+	/// </summary>
+	public bool CheckAllGuilds { internal get; set; } = false;
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
+	/// </summary>
+	/// <param name="provider">The service provider.</param>
+	[ActivatorUtilitiesConstructor]
+	public ApplicationCommandsConfiguration(IServiceProvider provider = null)
 	{
-		/// <summary>
-		/// <para>Sets the service provider.</para>
-		/// <para>Objects in this provider are used when instantiating application command modules. This allows passing data around without resorting to static members.</para>
-		/// <para>Defaults to null.</para>
-		/// </summary>
-		public IServiceProvider ServiceProvider { internal get; set; }
+		this.ServiceProvider = provider;
+	}
 
-		/// <summary>
-		/// <para>Sets whether to enable default help command.</para>
-		/// <para>Disabling this will allow you to make your own help command.</para>
-		/// <para>
-		/// </para>
-		/// <para>Defaults to true.</para>
-		/// </summary>
-		public bool EnableDefaultHelp { internal get; set; } = true;
-
-		/// <summary>
-		/// Debugs the startup.
-		/// </summary>
-		public bool DebugStartup { internal get; set; } = false;
-
-		/// <summary>
-		/// Enable localization features.
-		/// </summary>
-		public bool EnableLocalization { internal get; set; } = false;
-
-		/// <summary>
-		/// Manual override.
-		/// <note type="warning">DO NOT USE THIS!</note>
-		/// </summary>
-		public bool ManualOverride { internal get; set; } = false;
-
-		/// <summary>
-		/// Automatically defer all responses.
-		/// <note type="note">If you enable this, you can't use CreateResponse. Use EditResponse instead.</note>
-		/// </summary>
-		public bool AutoDefer { internal get; set; } = false;
-
-		/// <summary>
-		/// Checks through all guilds.
-		/// <note type="warning">This will take quite a while, when the bot is on more than 1k guilds.</note>
-		/// </summary>
-		public bool CheckAllGuilds { internal get; set; } = false;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
-		/// </summary>
-		/// <param name="provider">The service provider.</param>
-		[ActivatorUtilitiesConstructor]
-		public ApplicationCommandsConfiguration(IServiceProvider provider = null)
-		{
-			this.ServiceProvider = provider;
-		}
-
-		/// <summary>
-		/// Creates a new instance of <see cref="ApplicationCommandsConfiguration"/>, copying the properties of another configuration.
-		/// </summary>
-		/// <param name="acc">Configuration the properties of which are to be copied.</param>
-		public ApplicationCommandsConfiguration(ApplicationCommandsConfiguration acc)
-		{
-			this.EnableDefaultHelp = acc.EnableDefaultHelp;
-			this.ServiceProvider = acc.ServiceProvider;
-			this.DebugStartup = acc.DebugStartup;
-			this.CheckAllGuilds = acc.CheckAllGuilds;
-			this.ManualOverride = acc.ManualOverride;
-			this.AutoDefer = acc.AutoDefer;
-			this.EnableLocalization = acc.EnableLocalization;
-		}
+	/// <summary>
+	/// Creates a new instance of <see cref="ApplicationCommandsConfiguration"/>, copying the properties of another configuration.
+	/// </summary>
+	/// <param name="acc">Configuration the properties of which are to be copied.</param>
+	public ApplicationCommandsConfiguration(ApplicationCommandsConfiguration acc)
+	{
+		this.EnableDefaultHelp = acc.EnableDefaultHelp;
+		this.ServiceProvider = acc.ServiceProvider;
+		this.DebugStartup = acc.DebugStartup;
+		this.CheckAllGuilds = acc.CheckAllGuilds;
+		this.ManualOverride = acc.ManualOverride;
+		this.AutoDefer = acc.AutoDefer;
+		this.EnableLocalization = acc.EnableLocalization;
 	}
 }

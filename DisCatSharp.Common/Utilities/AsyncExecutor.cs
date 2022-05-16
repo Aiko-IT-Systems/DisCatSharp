@@ -24,150 +24,149 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DisCatSharp.Common.Utilities
+namespace DisCatSharp.Common.Utilities;
+
+/// <summary>
+/// Provides a simplified way of executing asynchronous code synchronously.
+/// </summary>
+public class AsyncExecutor
 {
 	/// <summary>
-	/// Provides a simplified way of executing asynchronous code synchronously.
+	/// Creates a new instance of asynchronous executor.
 	/// </summary>
-	public class AsyncExecutor
+	public AsyncExecutor()
+	{ }
+
+	/// <summary>
+	/// Executes a specified task in an asynchronous manner, waiting for its completion.
+	/// </summary>
+	/// <param name="task">Task to execute.</param>
+	public void Execute(Task task)
+	{
+		// create state object
+		var taskState = new StateRef<object>(new AutoResetEvent(false));
+
+		// queue a task and wait for it to finish executing
+		task.ContinueWith(TaskCompletionHandler, taskState);
+		taskState.Lock.WaitOne();
+
+		// check for and rethrow any exceptions
+		if (taskState.Exception != null)
+			throw taskState.Exception;
+
+		// completion method
+		void TaskCompletionHandler(Task t, object state)
+		{
+			// retrieve state data
+			var stateRef = state as StateRef<object>;
+
+			// retrieve any exceptions or cancellation status
+			if (t.IsFaulted)
+			{
+				if (t.Exception.InnerExceptions.Count == 1) // unwrap if 1
+					stateRef.Exception = t.Exception.InnerException;
+				else
+					stateRef.Exception = t.Exception;
+			}
+			else if (t.IsCanceled)
+			{
+				stateRef.Exception = new TaskCanceledException(t);
+			}
+
+			// signal that the execution is done
+			stateRef.Lock.Set();
+		}
+	}
+
+	/// <summary>
+	/// Executes a specified task in an asynchronous manner, waiting for its completion, and returning the result.
+	/// </summary>
+	/// <typeparam name="T">Type of the Task's return value.</typeparam>
+	/// <param name="task">Task to execute.</param>
+	/// <returns>Task's result.</returns>
+	public T Execute<T>(Task<T> task)
+	{
+		// create state object
+		var taskState = new StateRef<T>(new AutoResetEvent(false));
+
+		// queue a task and wait for it to finish executing
+		task.ContinueWith(TaskCompletionHandler, taskState);
+		taskState.Lock.WaitOne();
+
+		// check for and rethrow any exceptions
+		if (taskState.Exception != null)
+			throw taskState.Exception;
+
+		// return the result, if any
+		if (taskState.HasResult)
+			return taskState.Result;
+
+		// throw exception if no result
+		throw new Exception("Task returned no result.");
+
+		// completion method
+		void TaskCompletionHandler(Task<T> t, object state)
+		{
+			// retrieve state data
+			var stateRef = state as StateRef<T>;
+
+			// retrieve any exceptions or cancellation status
+			if (t.IsFaulted)
+			{
+				if (t.Exception.InnerExceptions.Count == 1) // unwrap if 1
+					stateRef.Exception = t.Exception.InnerException;
+				else
+					stateRef.Exception = t.Exception;
+			}
+			else if (t.IsCanceled)
+			{
+				stateRef.Exception = new TaskCanceledException(t);
+			}
+
+			// return the result from the task, if any
+			if (t.IsCompleted && !t.IsFaulted)
+			{
+				stateRef.HasResult = true;
+				stateRef.Result = t.Result;
+			}
+
+			// signal that the execution is done
+			stateRef.Lock.Set();
+		}
+	}
+
+	/// <summary>
+	/// The state ref.
+	/// </summary>
+	private sealed class StateRef<T>
 	{
 		/// <summary>
-		/// Creates a new instance of asynchronous executor.
+		/// Gets the lock used to wait for task's completion.
 		/// </summary>
-		public AsyncExecutor()
-		{ }
+		public AutoResetEvent Lock { get; }
 
 		/// <summary>
-		/// Executes a specified task in an asynchronous manner, waiting for its completion.
+		/// Gets the exception that occurred during task's execution, if any.
 		/// </summary>
-		/// <param name="task">Task to execute.</param>
-		public void Execute(Task task)
-		{
-			// create state object
-			var taskState = new StateRef<object>(new AutoResetEvent(false));
-
-			// queue a task and wait for it to finish executing
-			task.ContinueWith(TaskCompletionHandler, taskState);
-			taskState.Lock.WaitOne();
-
-			// check for and rethrow any exceptions
-			if (taskState.Exception != null)
-				throw taskState.Exception;
-
-			// completion method
-			void TaskCompletionHandler(Task t, object state)
-			{
-				// retrieve state data
-				var stateRef = state as StateRef<object>;
-
-				// retrieve any exceptions or cancellation status
-				if (t.IsFaulted)
-				{
-					if (t.Exception.InnerExceptions.Count == 1) // unwrap if 1
-						stateRef.Exception = t.Exception.InnerException;
-					else
-						stateRef.Exception = t.Exception;
-				}
-				else if (t.IsCanceled)
-				{
-					stateRef.Exception = new TaskCanceledException(t);
-				}
-
-				// signal that the execution is done
-				stateRef.Lock.Set();
-			}
-		}
+		public Exception Exception { get; set; }
 
 		/// <summary>
-		/// Executes a specified task in an asynchronous manner, waiting for its completion, and returning the result.
+		/// Gets the result returned by the task.
 		/// </summary>
-		/// <typeparam name="T">Type of the Task's return value.</typeparam>
-		/// <param name="task">Task to execute.</param>
-		/// <returns>Task's result.</returns>
-		public T Execute<T>(Task<T> task)
-		{
-			// create state object
-			var taskState = new StateRef<T>(new AutoResetEvent(false));
-
-			// queue a task and wait for it to finish executing
-			task.ContinueWith(TaskCompletionHandler, taskState);
-			taskState.Lock.WaitOne();
-
-			// check for and rethrow any exceptions
-			if (taskState.Exception != null)
-				throw taskState.Exception;
-
-			// return the result, if any
-			if (taskState.HasResult)
-				return taskState.Result;
-
-			// throw exception if no result
-			throw new Exception("Task returned no result.");
-
-			// completion method
-			void TaskCompletionHandler(Task<T> t, object state)
-			{
-				// retrieve state data
-				var stateRef = state as StateRef<T>;
-
-				// retrieve any exceptions or cancellation status
-				if (t.IsFaulted)
-				{
-					if (t.Exception.InnerExceptions.Count == 1) // unwrap if 1
-						stateRef.Exception = t.Exception.InnerException;
-					else
-						stateRef.Exception = t.Exception;
-				}
-				else if (t.IsCanceled)
-				{
-					stateRef.Exception = new TaskCanceledException(t);
-				}
-
-				// return the result from the task, if any
-				if (t.IsCompleted && !t.IsFaulted)
-				{
-					stateRef.HasResult = true;
-					stateRef.Result = t.Result;
-				}
-
-				// signal that the execution is done
-				stateRef.Lock.Set();
-			}
-		}
+		public T Result { get; set; }
 
 		/// <summary>
-		/// The state ref.
+		/// Gets whether the task returned a result.
 		/// </summary>
-		private sealed class StateRef<T>
+		public bool HasResult { get; set; }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StateRef{T}"/> class.
+		/// </summary>
+		/// <param name="lock">The lock.</param>
+		public StateRef(AutoResetEvent @lock)
 		{
-			/// <summary>
-			/// Gets the lock used to wait for task's completion.
-			/// </summary>
-			public AutoResetEvent Lock { get; }
-
-			/// <summary>
-			/// Gets the exception that occurred during task's execution, if any.
-			/// </summary>
-			public Exception Exception { get; set; }
-
-			/// <summary>
-			/// Gets the result returned by the task.
-			/// </summary>
-			public T Result { get; set; }
-
-			/// <summary>
-			/// Gets whether the task returned a result.
-			/// </summary>
-			public bool HasResult { get; set; }
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="StateRef{T}"/> class.
-			/// </summary>
-			/// <param name="lock">The lock.</param>
-			public StateRef(AutoResetEvent @lock)
-			{
-				this.Lock = @lock;
-			}
+			this.Lock = @lock;
 		}
 	}
 }
