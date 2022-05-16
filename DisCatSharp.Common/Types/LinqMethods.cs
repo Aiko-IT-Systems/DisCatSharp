@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DisCatSharp.Common;
+namespace DisCatSharp.Common.Types;
 
 /// <summary>
 /// Various Methods for Linq

@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
+using DisCatSharp.Common.Utilities;
+
 namespace DisCatSharp.Common.Serialization;
 
 /// <summary>

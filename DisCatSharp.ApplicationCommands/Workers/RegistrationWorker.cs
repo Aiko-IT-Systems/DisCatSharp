@@ -25,6 +25,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Common;
+using DisCatSharp.Common.Types;
+using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.Exceptions;
 

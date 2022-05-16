@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace DisCatSharp.Common;
+namespace DisCatSharp.Common.Utilities;
 
 /// <summary>
 /// Assortment of various extension and utility methods, designed to make working with various types a little easier.

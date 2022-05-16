@@ -26,7 +26,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-namespace DisCatSharp.Common;
+namespace DisCatSharp.Common.Types;
 
 /// <summary>
 /// Provides a cryptographically-secure pseudorandom number generator (CSPRNG) implementation compatible with <see cref="System.Random"/>.

@@ -26,7 +26,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 
-namespace DisCatSharp.Common;
+using DisCatSharp.Common.Utilities;
+
+namespace DisCatSharp.Common.Types;
 
 /// <summary>
 /// Represents collection of string keys and <typeparamref name="TValue"/> values, allowing the use of <see cref="System.ReadOnlySpan{T}"/> for dictionary operations.
