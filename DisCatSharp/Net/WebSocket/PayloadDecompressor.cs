@@ -25,6 +25,8 @@ using System.Buffers.Binary;
 using System.IO;
 using System.IO.Compression;
 
+using DisCatSharp.Enums;
+
 namespace DisCatSharp.Net.WebSocket;
 
 /// <summary>

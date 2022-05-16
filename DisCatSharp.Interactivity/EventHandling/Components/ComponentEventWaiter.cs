@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using ConcurrentCollections;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Interactivity.Enums;
 

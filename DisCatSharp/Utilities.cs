@@ -31,6 +31,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.Net;
 
 using Microsoft.Extensions.Logging;

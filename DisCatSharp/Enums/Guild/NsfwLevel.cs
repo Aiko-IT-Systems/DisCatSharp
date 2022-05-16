@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 // ReSharper disable InconsistentNaming
-namespace DisCatSharp;
+namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents a guild's content level.

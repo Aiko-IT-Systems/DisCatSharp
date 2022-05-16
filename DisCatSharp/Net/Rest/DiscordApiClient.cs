@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Serialization;
 

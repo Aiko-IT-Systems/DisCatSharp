@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Interactivity.Enums;
 

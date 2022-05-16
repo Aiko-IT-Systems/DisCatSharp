@@ -25,6 +25,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 namespace DisCatSharp;
 

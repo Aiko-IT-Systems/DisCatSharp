@@ -27,6 +27,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.WebSocket;

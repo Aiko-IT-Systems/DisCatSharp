@@ -1741,7 +1741,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public DiscordChannel GetDefaultChannel() =>
 		this.ChannelsInternal?.Values.Where(xc => xc.Type == ChannelType.Text)
 			.OrderBy(xc => xc.Position)
-			.FirstOrDefault(xc => (xc.PermissionsFor(this.CurrentMember) & DisCatSharp.Permissions.AccessChannels) == DisCatSharp.Permissions.AccessChannels);
+			.FirstOrDefault(xc => (xc.PermissionsFor(this.CurrentMember) & DisCatSharp.Enums.Permissions.AccessChannels) == DisCatSharp.Enums.Permissions.AccessChannels);
 
 	/// <summary>
 	/// Gets the guild's widget

@@ -27,6 +27,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
