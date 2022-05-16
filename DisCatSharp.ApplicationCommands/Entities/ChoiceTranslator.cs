@@ -26,26 +26,25 @@ using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.ApplicationCommands
+namespace DisCatSharp.ApplicationCommands;
+
+/// <summary>
+/// Represents a choice translator.
+/// </summary>
+internal class ChoiceTranslator
 {
 	/// <summary>
-	/// Represents a choice translator.
+	/// Gets the choice name.
 	/// </summary>
-	internal class ChoiceTranslator
-	{
-		/// <summary>
-		/// Gets the choice name.
-		/// </summary>
-		[JsonProperty("name")]
-		public string Name { get; set; }
+	[JsonProperty("name")]
+	public string Name { get; set; }
 
-		/// <summary>
-		/// Gets the choice name translations.
-		/// </summary>
-		[JsonProperty("name_translations")]
-		internal Dictionary<string, string> NameTranslationsDictionary { get; set; }
-		[JsonIgnore]
-		public DiscordApplicationCommandLocalization NameTranslations
-			=> new(this.NameTranslationsDictionary);
-	}
+	/// <summary>
+	/// Gets the choice name translations.
+	/// </summary>
+	[JsonProperty("name_translations")]
+	internal Dictionary<string, string> NameTranslationsDictionary { get; set; }
+	[JsonIgnore]
+	public DiscordApplicationCommandLocalization NameTranslations
+		=> new(this.NameTranslationsDictionary);
 }

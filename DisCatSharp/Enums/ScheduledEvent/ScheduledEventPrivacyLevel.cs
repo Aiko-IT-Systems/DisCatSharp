@@ -20,21 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+namespace DisCatSharp;
+
+/// <summary>
+/// Represents the privacy level for a guild scheduled event.
+/// </summary>
+public enum ScheduledEventPrivacyLevel : int
 {
 	/// <summary>
-	/// Represents the privacy level for a guild scheduled event.
+	/// Indicates that the guild scheduled event is public.
 	/// </summary>
-	public enum ScheduledEventPrivacyLevel : int
-	{
-		/// <summary>
-		/// Indicates that the guild scheduled event is public.
-		/// </summary>
-		Public = 1,
+	Public = 1,
 
-		/// <summary>
-		/// Indicates that the the guild scheduled event is only accessible to guild members.
-		/// </summary>
-		GuildOnly = 2
-	}
+	/// <summary>
+	/// Indicates that the the guild scheduled event is only accessible to guild members.
+	/// </summary>
+	GuildOnly = 2
 }

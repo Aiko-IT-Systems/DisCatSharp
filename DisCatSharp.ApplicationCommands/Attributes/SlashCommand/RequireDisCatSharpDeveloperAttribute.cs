@@ -24,27 +24,26 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DisCatSharp.ApplicationCommands.Attributes
+namespace DisCatSharp.ApplicationCommands.Attributes;
+
+/// <summary>
+/// Defines that this application command is restricted to the owner of the bot.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+public sealed class ApplicationCommandRequireDisCatSharpDeveloperAttribute : SlashCheckBaseAttribute
 {
 	/// <summary>
 	/// Defines that this application command is restricted to the owner of the bot.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-	public sealed class ApplicationCommandRequireDisCatSharpDeveloperAttribute : SlashCheckBaseAttribute
-	{
-		/// <summary>
-		/// Defines that this application command is restricted to the owner of the bot.
-		/// </summary>
-		public ApplicationCommandRequireDisCatSharpDeveloperAttribute()
-		{ }
+	public ApplicationCommandRequireDisCatSharpDeveloperAttribute()
+	{ }
 
-		/// <summary>
-		/// Runs checks.
-		/// </summary>
-		public override async Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-		{
-			var team = (await ctx.Client.GetLibraryDevelopmentTeamAsync()).Developers;
-			return team?.Any(x => x.Id == ctx.User.Id) ?? false;
-		}
+	/// <summary>
+	/// Runs checks.
+	/// </summary>
+	public override async Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+	{
+		var team = (await ctx.Client.GetLibraryDevelopmentTeamAsync()).Developers;
+		return team?.Any(x => x.Id == ctx.User.Id) ?? false;
 	}
 }

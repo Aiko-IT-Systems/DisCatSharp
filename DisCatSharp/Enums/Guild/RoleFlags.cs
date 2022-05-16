@@ -22,23 +22,22 @@
 
 using System;
 
-namespace DisCatSharp.Enums
+namespace DisCatSharp.Enums;
+
+/// <summary>
+/// Represents additional details of a role.
+/// </summary>
+[Flags]
+public enum RoleFlags
 {
 	/// <summary>
-	/// Represents additional details of a role.
+	/// This role has no flags.
 	/// </summary>
-	[Flags]
-	public enum RoleFlags
-	{
-		/// <summary>
-		/// This role has no flags.
-		/// </summary>
-		None = 0,
+	None = 0,
 
-		/// <summary>
-		/// This role is in a prompt.
-		/// </summary>
-		InPrompt = 1 << 0,
-	}
+	/// <summary>
+	/// This role is in a prompt.
+	/// </summary>
+	InPrompt = 1 << 0,
 }
 

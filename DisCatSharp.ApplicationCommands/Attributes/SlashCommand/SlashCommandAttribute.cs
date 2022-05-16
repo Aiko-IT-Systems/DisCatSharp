@@ -22,88 +22,87 @@
 
 using System;
 
-namespace DisCatSharp.ApplicationCommands
+namespace DisCatSharp.ApplicationCommands;
+
+/// <summary>
+/// Marks this method as a slash command
+/// </summary>
+[AttributeUsage(AttributeTargets.Method)]
+public class SlashCommandAttribute : Attribute
 {
+	/// <summary>
+	/// Gets the name of this command
+	/// </summary>
+	public string Name { get; set; }
+
+	/// <summary>
+	/// Gets the description of this command
+	/// </summary>
+	public string Description { get; set; }
+
+	/// <summary>
+	/// Gets the needed permission of this command
+	/// </summary>
+	public Permissions? DefaultMemberPermissions { get; set; }
+
+	/// <summary>
+	/// Gets the dm permission of this command
+	/// </summary>
+	public bool? DmPermission { get; set; }
+
 	/// <summary>
 	/// Marks this method as a slash command
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method)]
-	public class SlashCommandAttribute : Attribute
+	/// <param name="name">The name of this slash command.</param>
+	/// <param name="description">The description of this slash command.</param>
+	public SlashCommandAttribute(string name, string description)
 	{
-		/// <summary>
-		/// Gets the name of this command
-		/// </summary>
-		public string Name { get; set; }
+		this.Name = name.ToLower();
+		this.Description = description;
+		this.DefaultMemberPermissions = null;
+		this.DmPermission = null;
+	}
 
-		/// <summary>
-		/// Gets the description of this command
-		/// </summary>
-		public string Description { get; set; }
+	/// <summary>
+	/// Marks this method as a slash command
+	/// </summary>
+	/// <param name="name">The name of this slash command.</param>
+	/// <param name="description">The description of this slash command.</param>
+	/// <param name="defaultMemberPermissions">The default member permissions.</param>
+	public SlashCommandAttribute(string name, string description, long defaultMemberPermissions)
+	{
+		this.Name = name.ToLower();
+		this.Description = description;
+		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
+		this.DmPermission = null;
+	}
 
-		/// <summary>
-		/// Gets the needed permission of this command
-		/// </summary>
-		public Permissions? DefaultMemberPermissions { get; set; }
+	/// <summary>
+	/// Marks this method as a slash command
+	/// </summary>
+	/// <param name="name">The name of this slash command.</param>
+	/// <param name="description">The description of this slash command.</param>
+	/// <param name="dmPermission">The dm permission.</param>
+	public SlashCommandAttribute(string name, string description, bool dmPermission)
+	{
+		this.Name = name.ToLower();
+		this.Description = description;
+		this.DefaultMemberPermissions = null;
+		this.DmPermission = dmPermission;
+	}
 
-		/// <summary>
-		/// Gets the dm permission of this command
-		/// </summary>
-		public bool? DmPermission { get; set; }
-
-		/// <summary>
-		/// Marks this method as a slash command
-		/// </summary>
-		/// <param name="name">The name of this slash command.</param>
-		/// <param name="description">The description of this slash command.</param>
-		public SlashCommandAttribute(string name, string description)
-		{
-			this.Name = name.ToLower();
-			this.Description = description;
-			this.DefaultMemberPermissions = null;
-			this.DmPermission = null;
-		}
-
-		/// <summary>
-		/// Marks this method as a slash command
-		/// </summary>
-		/// <param name="name">The name of this slash command.</param>
-		/// <param name="description">The description of this slash command.</param>
-		/// <param name="defaultMemberPermissions">The default member permissions.</param>
-		public SlashCommandAttribute(string name, string description, long defaultMemberPermissions)
-		{
-			this.Name = name.ToLower();
-			this.Description = description;
-			this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
-			this.DmPermission = null;
-		}
-
-		/// <summary>
-		/// Marks this method as a slash command
-		/// </summary>
-		/// <param name="name">The name of this slash command.</param>
-		/// <param name="description">The description of this slash command.</param>
-		/// <param name="dmPermission">The dm permission.</param>
-		public SlashCommandAttribute(string name, string description, bool dmPermission)
-		{
-			this.Name = name.ToLower();
-			this.Description = description;
-			this.DefaultMemberPermissions = null;
-			this.DmPermission = dmPermission;
-		}
-
-		/// <summary>
-		/// Marks this method as a slash command
-		/// </summary>
-		/// <param name="name">The name of this slash command.</param>
-		/// <param name="description">The description of this slash command.</param>
-		/// <param name="defaultMemberPermissions">The default member permissions.</param>
-		/// <param name="dmPermission">The dm permission.</param>
-		public SlashCommandAttribute(string name, string description, long defaultMemberPermissions, bool dmPermission)
-		{
-			this.Name = name.ToLower();
-			this.Description = description;
-			this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
-			this.DmPermission = dmPermission;
-		}
+	/// <summary>
+	/// Marks this method as a slash command
+	/// </summary>
+	/// <param name="name">The name of this slash command.</param>
+	/// <param name="description">The description of this slash command.</param>
+	/// <param name="defaultMemberPermissions">The default member permissions.</param>
+	/// <param name="dmPermission">The dm permission.</param>
+	public SlashCommandAttribute(string name, string description, long defaultMemberPermissions, bool dmPermission)
+	{
+		this.Name = name.ToLower();
+		this.Description = description;
+		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
+		this.DmPermission = dmPermission;
 	}
 }
