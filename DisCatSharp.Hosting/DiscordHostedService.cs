@@ -29,56 +29,55 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace DisCatSharp.Hosting
+namespace DisCatSharp.Hosting;
+
+/// <summary>
+/// Simple implementation for <see cref="DiscordClient"/> to work as a <see cref="Microsoft.Extensions.Hosting.BackgroundService"/>
+/// </summary>
+public abstract class DiscordHostedService : BaseHostedService, IDiscordHostedService
 {
-	/// <summary>
-	/// Simple implementation for <see cref="DiscordClient"/> to work as a <see cref="Microsoft.Extensions.Hosting.BackgroundService"/>
-	/// </summary>
-	public abstract class DiscordHostedService : BaseHostedService, IDiscordHostedService
-	{
-		/// <inheritdoc/>
-		public DiscordClient Client { get; protected set; }
+	/// <inheritdoc/>
+	public DiscordClient Client { get; protected set; }
 
 #pragma warning disable 8618
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DiscordHostedService"/> class.
-		/// </summary>
-		/// <param name="config">IConfiguration provided via Dependency Injection. Aggregate method to access configuration files </param>
-		/// <param name="logger">An ILogger to work with, provided via Dependency Injection</param>
-		/// <param name="serviceProvider">ServiceProvider reference which contains all items currently registered for Dependency Injection</param>
-		/// <param name="applicationLifetime">Contains the appropriate methods for disposing / stopping BackgroundServices during runtime</param>
-		/// <param name="configBotSection">The name of the JSON/Config Key which contains the configuration for this Discord Service</param>
-		protected DiscordHostedService(IConfiguration config,
-			ILogger<DiscordHostedService> logger,
-			IServiceProvider serviceProvider,
-			IHostApplicationLifetime applicationLifetime,
-			string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
-			: base(config, logger, serviceProvider, applicationLifetime, configBotSection)
-		{
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DiscordHostedService"/> class.
+	/// </summary>
+	/// <param name="config">IConfiguration provided via Dependency Injection. Aggregate method to access configuration files </param>
+	/// <param name="logger">An ILogger to work with, provided via Dependency Injection</param>
+	/// <param name="serviceProvider">ServiceProvider reference which contains all items currently registered for Dependency Injection</param>
+	/// <param name="applicationLifetime">Contains the appropriate methods for disposing / stopping BackgroundServices during runtime</param>
+	/// <param name="configBotSection">The name of the JSON/Config Key which contains the configuration for this Discord Service</param>
+	protected DiscordHostedService(IConfiguration config,
+		ILogger<DiscordHostedService> logger,
+		IServiceProvider serviceProvider,
+		IHostApplicationLifetime applicationLifetime,
+		string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
+		: base(config, logger, serviceProvider, applicationLifetime, configBotSection)
+	{
 
-		}
+	}
 #pragma warning restore 8618
 
-		protected override Task ConfigureAsync()
+	protected override Task ConfigureAsync()
+	{
+		try
 		{
-			try
-			{
-				this.Client = this.Configuration.BuildClient(this.ServiceProvider, this.BotSection);
-			}
-			catch (Exception ex)
-			{
-				this.Logger.LogError($"Was unable to build {nameof(DiscordClient)} for {this.GetType().Name}");
-				this.OnInitializationError(ex);
-			}
-
-			return Task.CompletedTask;
+			this.Client = this.Configuration.BuildClient(this.ServiceProvider, this.BotSection);
 		}
-		protected sealed override async Task ConnectAsync() => await this.Client.ConnectAsync();
-
-		protected override Task ConfigureExtensionsAsync()
+		catch (Exception ex)
 		{
-			this.InitializeExtensions(this.Client);
-			return Task.CompletedTask;
+			this.Logger.LogError($"Was unable to build {nameof(DiscordClient)} for {this.GetType().Name}");
+			this.OnInitializationError(ex);
 		}
+
+		return Task.CompletedTask;
+	}
+	protected sealed override async Task ConnectAsync() => await this.Client.ConnectAsync();
+
+	protected override Task ConfigureExtensionsAsync()
+	{
+		this.InitializeExtensions(this.Client);
+		return Task.CompletedTask;
 	}
 }

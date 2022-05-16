@@ -22,23 +22,22 @@
 
 using System;
 
-namespace DisCatSharp.CommandsNext
+namespace DisCatSharp.CommandsNext;
+
+/// <summary>
+/// Represents arguments for <see cref="CommandsNextExtension.CommandErrored"/> event.
+/// </summary>
+public class CommandErrorEventArgs : CommandEventArgs
 {
 	/// <summary>
-	/// Represents arguments for <see cref="CommandsNextExtension.CommandErrored"/> event.
+	/// Gets the exception.
 	/// </summary>
-	public class CommandErrorEventArgs : CommandEventArgs
-	{
-		/// <summary>
-		/// Gets the exception.
-		/// </summary>
-		public Exception Exception { get; internal set; }
+	public Exception Exception { get; internal set; }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CommandErrorEventArgs"/> class.
-		/// </summary>
-		/// <param name="provider">The provider.</param>
-		public CommandErrorEventArgs(IServiceProvider provider) : base(provider)
-		{ }
-	}
+	/// <summary>
+	/// Initializes a new instance of the <see cref="CommandErrorEventArgs"/> class.
+	/// </summary>
+	/// <param name="provider">The provider.</param>
+	public CommandErrorEventArgs(IServiceProvider provider) : base(provider)
+	{ }
 }

@@ -23,62 +23,61 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DisCatSharp
+namespace DisCatSharp;
+
+// source: https://blogs.msdn.microsoft.com/pfxteam/2012/02/11/building-async-coordination-primitives-part-1-asyncmanualresetevent/
+/// <summary>
+/// Implements an async version of a <see cref="ManualResetEvent"/>
+/// This class does currently not support Timeouts or the use of CancellationTokens
+/// </summary>
+internal class AsyncManualResetEvent
 {
-	// source: https://blogs.msdn.microsoft.com/pfxteam/2012/02/11/building-async-coordination-primitives-part-1-asyncmanualresetevent/
 	/// <summary>
-	/// Implements an async version of a <see cref="ManualResetEvent"/>
-	/// This class does currently not support Timeouts or the use of CancellationTokens
+	/// Gets a value indicating whether this is set.
 	/// </summary>
-	internal class AsyncManualResetEvent
+	public bool IsSet => this._tsc != null && this._tsc.Task.IsCompleted;
+
+	private TaskCompletionSource<bool> _tsc;
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="AsyncManualResetEvent"/> class.
+	/// </summary>
+	public AsyncManualResetEvent()
+		: this(false)
+	{ }
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="AsyncManualResetEvent"/> class.
+	/// </summary>
+	/// <param name="initialState">If true, initial state.</param>
+	public AsyncManualResetEvent(bool initialState)
 	{
-		/// <summary>
-		/// Gets a value indicating whether this is set.
-		/// </summary>
-		public bool IsSet => this._tsc != null && this._tsc.Task.IsCompleted;
+		this._tsc = new TaskCompletionSource<bool>();
 
-		private TaskCompletionSource<bool> _tsc;
+		if (initialState) this._tsc.TrySetResult(true);
+	}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncManualResetEvent"/> class.
-		/// </summary>
-		public AsyncManualResetEvent()
-			: this(false)
-		{ }
+	/// <summary>
+	/// Waits the async waiter.
+	/// </summary>
+	public Task WaitAsync() => this._tsc.Task;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AsyncManualResetEvent"/> class.
-		/// </summary>
-		/// <param name="initialState">If true, initial state.</param>
-		public AsyncManualResetEvent(bool initialState)
+	/// <summary>
+	/// Sets the async task.
+	/// </summary>
+	public Task SetAsync() => Task.Run(() => this._tsc.TrySetResult(true));
+
+	/// <summary>
+	/// Resets the async waiter.
+	/// </summary>
+	public void Reset()
+	{
+		while (true)
 		{
-			this._tsc = new TaskCompletionSource<bool>();
+			var tsc = this._tsc;
 
-			if (initialState) this._tsc.TrySetResult(true);
-		}
-
-		/// <summary>
-		/// Waits the async waiter.
-		/// </summary>
-		public Task WaitAsync() => this._tsc.Task;
-
-		/// <summary>
-		/// Sets the async task.
-		/// </summary>
-		public Task SetAsync() => Task.Run(() => this._tsc.TrySetResult(true));
-
-		/// <summary>
-		/// Resets the async waiter.
-		/// </summary>
-		public void Reset()
-		{
-			while (true)
-			{
-				var tsc = this._tsc;
-
-				if (!tsc.Task.IsCompleted || Interlocked.CompareExchange(ref this._tsc, new TaskCompletionSource<bool>(), tsc) == tsc)
-					return;
-			}
+			if (!tsc.Task.IsCompleted || Interlocked.CompareExchange(ref this._tsc, new TaskCompletionSource<bool>(), tsc) == tsc)
+				return;
 		}
 	}
 }

@@ -26,47 +26,46 @@ using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.ApplicationCommands
+namespace DisCatSharp.ApplicationCommands;
+
+/// <summary>
+/// Represents a group translator.
+/// </summary>
+internal class GroupTranslator
 {
 	/// <summary>
-	/// Represents a group translator.
+	/// Gets the group name.
 	/// </summary>
-	internal class GroupTranslator
-	{
-		/// <summary>
-		/// Gets the group name.
-		/// </summary>
-		[JsonProperty("name")]
-		public string Name { get; set; }
+	[JsonProperty("name")]
+	public string Name { get; set; }
 
-		/// <summary>
-		/// Gets the group name translations.
-		/// </summary>
-		[JsonProperty("name_translations")]
-		internal Dictionary<string, string> NameTranslationsDictionary { get; set; }
-		[JsonIgnore]
-		public DiscordApplicationCommandLocalization NameTranslations
-			=> new(this.NameTranslationsDictionary);
+	/// <summary>
+	/// Gets the group name translations.
+	/// </summary>
+	[JsonProperty("name_translations")]
+	internal Dictionary<string, string> NameTranslationsDictionary { get; set; }
+	[JsonIgnore]
+	public DiscordApplicationCommandLocalization NameTranslations
+		=> new(this.NameTranslationsDictionary);
 
-		/// <summary>
-		/// Gets the group description translations.
-		/// </summary>
-		[JsonProperty("description_translations")]
-		internal Dictionary<string, string> DescriptionTranslationsDictionary { get; set; }
-		[JsonIgnore]
-		public DiscordApplicationCommandLocalization DescriptionTranslations
-			=> new(this.DescriptionTranslationsDictionary);
+	/// <summary>
+	/// Gets the group description translations.
+	/// </summary>
+	[JsonProperty("description_translations")]
+	internal Dictionary<string, string> DescriptionTranslationsDictionary { get; set; }
+	[JsonIgnore]
+	public DiscordApplicationCommandLocalization DescriptionTranslations
+		=> new(this.DescriptionTranslationsDictionary);
 
-		/// <summary>
-		/// Gets the sub group translators, if applicable.
-		/// </summary>
-		[JsonProperty("groups")]
-		public List<SubGroupTranslator> SubGroups { get; set; }
+	/// <summary>
+	/// Gets the sub group translators, if applicable.
+	/// </summary>
+	[JsonProperty("groups")]
+	public List<SubGroupTranslator> SubGroups { get; set; }
 
-		/// <summary>
-		/// Gets the command translators, if applicable.
-		/// </summary>
-		[JsonProperty("commands")]
-		public List<CommandTranslator> Commands { get; set; }
-	}
+	/// <summary>
+	/// Gets the command translators, if applicable.
+	/// </summary>
+	[JsonProperty("commands")]
+	public List<CommandTranslator> Commands { get; set; }
 }

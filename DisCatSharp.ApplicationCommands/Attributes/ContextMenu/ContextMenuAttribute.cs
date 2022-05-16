@@ -24,67 +24,65 @@ using System;
 
 using DisCatSharp.Enums;
 
-namespace DisCatSharp.ApplicationCommands
+namespace DisCatSharp.ApplicationCommands;
+
+/// <summary>
+/// Marks this method as a context menu.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method)]
+public sealed class ContextMenuAttribute : Attribute
 {
+	/// <summary>
+	/// Gets the name of this context menu.
+	/// </summary>
+	public string Name { get; internal set; }
+
+	/// <summary>
+	/// Gets the type of this context menu.
+	/// </summary>
+	public ApplicationCommandType Type { get; internal set; }
+
+	/// <summary>
+	/// Gets the commands needed permissions.
+	/// </summary>
+	public Permissions? DefaultMemberPermissions { get; internal set; }
+
+	/// <summary>
+	/// Gets whether the command can be used in direct messages.
+	/// </summary>
+	internal bool? DmPermission { get; set; }
 
 	/// <summary>
 	/// Marks this method as a context menu.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method)]
-	public sealed class ContextMenuAttribute : Attribute
+	/// <param name="type">The type of the context menu.</param>
+	/// <param name="name">The name of the context menu.</param>
+	public ContextMenuAttribute(ApplicationCommandType type, string name)
 	{
-		/// <summary>
-		/// Gets the name of this context menu.
-		/// </summary>
-		public string Name { get; internal set; }
-
-		/// <summary>
-		/// Gets the type of this context menu.
-		/// </summary>
-		public ApplicationCommandType Type { get; internal set; }
-
-		/// <summary>
-		/// Gets the commands needed permissions.
-		/// </summary>
-		public Permissions? DefaultMemberPermissions { get; internal set; }
-
-		/// <summary>
-		/// Gets whether the command can be used in direct messages.
-		/// </summary>
-		internal bool? DmPermission { get; set; }
-
-		/// <summary>
-		/// Marks this method as a context menu.
-		/// </summary>
-		/// <param name="type">The type of the context menu.</param>
-		/// <param name="name">The name of the context menu.</param>
-		public ContextMenuAttribute(ApplicationCommandType type, string name)
-		{
-			if (type == ApplicationCommandType.ChatInput)
-				throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
-			
-			this.Type = type;
-			this.Name = name;
-			this.DefaultMemberPermissions = null;
-			this.DmPermission = null;
-		}
+		if (type == ApplicationCommandType.ChatInput)
+			throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
+		
+		this.Type = type;
+		this.Name = name;
+		this.DefaultMemberPermissions = null;
+		this.DmPermission = null;
+	}
 
 
-		/// <summary>
-		/// Marks this method as a context menu.
-		/// </summary>
-		/// <param name="type">The type of the context menu.</param>
-		/// <param name="name">The name of the context menu.</param>
-		/// <param name="defaultMemberPermissions">The default member permissions.</param>
-		public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions)
-		{
-			if (type == ApplicationCommandType.ChatInput)
-				throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
+	/// <summary>
+	/// Marks this method as a context menu.
+	/// </summary>
+	/// <param name="type">The type of the context menu.</param>
+	/// <param name="name">The name of the context menu.</param>
+	/// <param name="defaultMemberPermissions">The default member permissions.</param>
+	public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions)
+	{
+		if (type == ApplicationCommandType.ChatInput)
+			throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
 
-			this.Type = type;
-			this.Name = name;
-			this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
-			this.DmPermission = null;
-		}
+		this.Type = type;
+		this.Name = name;
+		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
+		this.DmPermission = null;
 	}
 }

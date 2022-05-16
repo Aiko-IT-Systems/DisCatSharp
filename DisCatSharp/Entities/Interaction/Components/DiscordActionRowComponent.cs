@@ -27,42 +27,41 @@ using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities
+namespace DisCatSharp.Entities;
+
+/// <summary>
+/// Represents a row of components. Action rows can have up to five components.
+/// </summary>
+public sealed class DiscordActionRowComponent : DiscordComponent
 {
 	/// <summary>
-	/// Represents a row of components. Action rows can have up to five components.
+	/// The components contained within the action row.
 	/// </summary>
-	public sealed class DiscordActionRowComponent : DiscordComponent
+	[JsonIgnore]
+	public IReadOnlyCollection<DiscordComponent> Components
 	{
-		/// <summary>
-		/// The components contained within the action row.
-		/// </summary>
-		[JsonIgnore]
-		public IReadOnlyCollection<DiscordComponent> Components
-		{
-			get => this._components ?? new List<DiscordComponent>();
-			set => this._components = new List<DiscordComponent>(value);
-		}
+		get => this._components ?? new List<DiscordComponent>();
+		set => this._components = new List<DiscordComponent>(value);
+	}
 
-		[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-		private List<DiscordComponent> _components;
+	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+	private List<DiscordComponent> _components;
 
-		/// <summary>
-		/// Constructs a new <see cref="DiscordActionRowComponent"/>.
-		/// </summary>
-		/// <param name="components">List of components</param>
-		public DiscordActionRowComponent(IEnumerable<DiscordComponent> components)
-			: this()
-		{
-			this.Components = components.ToList().AsReadOnly();
-		}
+	/// <summary>
+	/// Constructs a new <see cref="DiscordActionRowComponent"/>.
+	/// </summary>
+	/// <param name="components">List of components</param>
+	public DiscordActionRowComponent(IEnumerable<DiscordComponent> components)
+		: this()
+	{
+		this.Components = components.ToList().AsReadOnly();
+	}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DiscordActionRowComponent"/> class.
-		/// </summary>
-		internal DiscordActionRowComponent()
-		{
-			this.Type = ComponentType.ActionRow;
-		}
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DiscordActionRowComponent"/> class.
+	/// </summary>
+	internal DiscordActionRowComponent()
+	{
+		this.Type = ComponentType.ActionRow;
 	}
 }

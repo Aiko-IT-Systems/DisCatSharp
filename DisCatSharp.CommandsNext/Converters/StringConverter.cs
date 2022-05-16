@@ -25,45 +25,44 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.CommandsNext.Converters
+namespace DisCatSharp.CommandsNext.Converters;
+
+/// <summary>
+/// Represents a string converter.
+/// </summary>
+public class StringConverter : IArgumentConverter<string>
 {
 	/// <summary>
-	/// Represents a string converter.
+	/// Converts a string.
 	/// </summary>
-	public class StringConverter : IArgumentConverter<string>
-	{
-		/// <summary>
-		/// Converts a string.
-		/// </summary>
-		/// <param name="value">The string to convert.</param>
-		/// <param name="ctx">The command context.</param>
-		Task<Optional<string>> IArgumentConverter<string>.ConvertAsync(string value, CommandContext ctx)
-			=> Task.FromResult(Optional.Some(value));
-	}
+	/// <param name="value">The string to convert.</param>
+	/// <param name="ctx">The command context.</param>
+	Task<Optional<string>> IArgumentConverter<string>.ConvertAsync(string value, CommandContext ctx)
+		=> Task.FromResult(Optional.Some(value));
+}
 
+/// <summary>
+/// Represents a uri converter.
+/// </summary>
+public class UriConverter : IArgumentConverter<Uri>
+{
 	/// <summary>
-	/// Represents a uri converter.
+	/// Converts a string.
 	/// </summary>
-	public class UriConverter : IArgumentConverter<Uri>
+	/// <param name="value">The string to convert.</param>
+	/// <param name="ctx">The command context.</param>
+	Task<Optional<Uri>> IArgumentConverter<Uri>.ConvertAsync(string value, CommandContext ctx)
 	{
-		/// <summary>
-		/// Converts a string.
-		/// </summary>
-		/// <param name="value">The string to convert.</param>
-		/// <param name="ctx">The command context.</param>
-		Task<Optional<Uri>> IArgumentConverter<Uri>.ConvertAsync(string value, CommandContext ctx)
+		try
 		{
-			try
-			{
-				if (value.StartsWith("<") && value.EndsWith(">"))
-					value = value[1..^1];
+			if (value.StartsWith("<") && value.EndsWith(">"))
+				value = value[1..^1];
 
-				return Task.FromResult(Optional.Some(new Uri(value)));
-			}
-			catch
-			{
-				return Task.FromResult(Optional<Uri>.None);
-			}
+			return Task.FromResult(Optional.Some(new Uri(value)));
+		}
+		catch
+		{
+			return Task.FromResult(Optional<Uri>.None);
 		}
 	}
 }
