@@ -572,7 +572,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <returns>A awaitable RestResponse</returns>
-	[Obsolete("This is no longer needed. Use DiscordClient.RestClient instead.", false)]
+	[Obsolete("This is no longer needed. Use DiscordClient.RestClient instead.", false)] 
 	public async Task<RestResponse> ExecuteRawRequestAsync(RestRequestMethod method, string route, object routeParams, string jsonBody = null, Dictionary<string, string> additionalHeaders = null, double? ratelimitWaitOverride = null)
 	{
 		var bucket = this.ApiClient.Rest.GetBucket(method, route, routeParams, out var path);
