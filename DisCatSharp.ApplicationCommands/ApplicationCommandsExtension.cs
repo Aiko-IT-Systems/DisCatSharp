@@ -106,21 +106,21 @@ namespace DisCatSharp.ApplicationCommands
 		/// <summary>
 		/// Gets a list of registered commands. The key is the guild id (null if global).
 		/// </summary>
-		public static IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> RegisteredCommands
+		public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> RegisteredCommands
 			=> s_registeredCommands;
 		private static readonly List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
 
 		/// <summary>
 		/// Gets a list of registered global commands.
 		/// </summary>
-		public static IReadOnlyList<DiscordApplicationCommand> GlobalCommands
+		public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
 			=> GlobalCommandsInternal;
 		internal static readonly List<DiscordApplicationCommand> GlobalCommandsInternal = new();
 
 		/// <summary>
 		/// Gets a list of registered guild commands mapped by guild id.
 		/// </summary>
-		public static IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
+		public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
 		=> GuildCommandsInternal;
 		internal static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommandsInternal = new();
 
