@@ -79,3 +79,14 @@ internal class CollectRequest<T> : IDisposable where T : AsyncEventArgs
 		}
 	}
 }
+
+
+/*
+              ^  ^
+( Quack! )> (ﾐචᆽචﾐ)
+
+
+(somewhere on twitter I read amazon had a duck
+that said meow so I had to add a cat that says quack)
+
+*/
