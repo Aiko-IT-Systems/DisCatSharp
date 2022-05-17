@@ -20,25 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Interactivity.Enums;
-
-/// <summary>
-/// Specifies what should be done once pagination times out.
-/// </summary>
-public enum PaginationDeletion
+namespace DisCatSharp.Interactivity.Enums
 {
 	/// <summary>
-	/// Reaction emojis will be deleted on timeout.
+	/// Specifies what should be done once pagination times out.
 	/// </summary>
-	DeleteEmojis = 0,
+	public enum PaginationDeletion
+	{
+		/// <summary>
+		/// Reaction emojis will be deleted on timeout.
+		/// </summary>
+		DeleteEmojis = 0,
 
-	/// <summary>
-	/// Reaction emojis will not be deleted on timeout.
-	/// </summary>
-	KeepEmojis = 1,
+		/// <summary>
+		/// Reaction emojis will not be deleted on timeout.
+		/// </summary>
+		KeepEmojis = 1,
 
-	/// <summary>
-	/// The message will be completely deleted on timeout.
-	/// </summary>
-	DeleteMessage = 2
+		/// <summary>
+		/// The message will be completely deleted on timeout.
+		/// </summary>
+		DeleteMessage = 2
+	}
 }

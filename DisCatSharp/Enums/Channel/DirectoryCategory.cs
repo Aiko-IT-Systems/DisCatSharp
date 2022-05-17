@@ -20,40 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
-
-/// <summary>
-/// Represents a directory entries primary category type.
-/// </summary>
-public enum DirectoryCategory : int
+namespace DisCatSharp
 {
 	/// <summary>
-	/// Indicates that this entry falls under the category Clubs.
+	/// Represents a directory entries primary category type.
 	/// </summary>
-	Clubs = 1,
+	public enum DirectoryCategory : int
+	{
+		/// <summary>
+		/// Indicates that this entry falls under the category Clubs.
+		/// </summary>
+		Clubs = 1,
 
-	/// <summary>
-	/// Indicates that this entry falls under the category Classes.
-	/// </summary>
-	Classes = 2,
+		/// <summary>
+		/// Indicates that this entry falls under the category Classes.
+		/// </summary>
+		Classes = 2,
 
-	/// <summary>
-	/// Indicates that this entry falls under the category Social and Study.
-	/// </summary>
-	SocialAndStudy = 3,
+		/// <summary>
+		/// Indicates that this entry falls under the category Social and Study.
+		/// </summary>
+		SocialAndStudy = 3,
 
-	/// <summary>
-	/// Indicates that this entry falls under the category Majors and Subjects.
-	/// </summary>
-	MajorsAndSubjects = 4,
+		/// <summary>
+		/// Indicates that this entry falls under the category Majors and Subjects.
+		/// </summary>
+		MajorsAndSubjects = 4,
 
-	/// <summary>
-	/// Indicates that this entry falls under the category Miscellaneous.
-	/// </summary>
-	Miscellaneous = 5,
+		/// <summary>
+		/// Indicates that this entry falls under the category Miscellaneous.
+		/// </summary>
+		Miscellaneous = 5,
 
-	/// <summary>
-	/// Indicates unknown category type.
-	/// </summary>
-	Unknown = int.MaxValue
+		/// <summary>
+		/// Indicates unknown category type.
+		/// </summary>
+		Unknown = int.MaxValue
+	}
 }

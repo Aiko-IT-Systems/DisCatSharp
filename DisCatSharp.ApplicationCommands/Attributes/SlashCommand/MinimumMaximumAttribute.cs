@@ -22,76 +22,77 @@
 
 using System;
 
-namespace DisCatSharp.ApplicationCommands.Attributes;
-
-/// <summary>
-/// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
-/// </summary>
-[AttributeUsage(AttributeTargets.Parameter)]
-public class MinimumAttribute : Attribute
+namespace DisCatSharp.ApplicationCommands.Attributes
 {
 	/// <summary>
-	/// The value.
-	/// </summary>
-	public object Value { get; internal set; }
-
-	/// <summary>
 	/// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
 	/// </summary>
-	public MinimumAttribute(int value)
+	[AttributeUsage(AttributeTargets.Parameter)]
+	public class MinimumAttribute : Attribute
 	{
-		this.Value = value;
-	}
+		/// <summary>
+		/// The value.
+		/// </summary>
+		public object Value { get; internal set; }
 
-	/// <summary>
-	/// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
-	/// </summary>
-	public MinimumAttribute(long value)
-	{
-		this.Value = value;
-	}
+		/// <summary>
+		/// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
+		/// </summary>
+		public MinimumAttribute(int value)
+		{
+			this.Value = value;
+		}
 
-	/// <summary>
-	/// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
-	/// </summary>
-	public MinimumAttribute(double value)
-	{
-		this.Value = value;
-	}
-}
+		/// <summary>
+		/// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
+		/// </summary>
+		public MinimumAttribute(long value)
+		{
+			this.Value = value;
+		}
 
-/// <summary>
-/// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
-/// </summary>
-[AttributeUsage(AttributeTargets.Parameter)]
-public class MaximumAttribute : Attribute
-{
-	/// <summary>
-	/// The value.
-	/// </summary>
-	public object Value { get; internal set; }
-
-	/// <summary>
-	/// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
-	/// </summary>
-	public MaximumAttribute(int value)
-	{
-		this.Value = value;
+		/// <summary>
+		/// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
+		/// </summary>
+		public MinimumAttribute(double value)
+		{
+			this.Value = value;
+		}
 	}
 
 	/// <summary>
 	/// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
 	/// </summary>
-	public MaximumAttribute(long value)
+	[AttributeUsage(AttributeTargets.Parameter)]
+	public class MaximumAttribute : Attribute
 	{
-		this.Value = value;
-	}
+		/// <summary>
+		/// The value.
+		/// </summary>
+		public object Value { get; internal set; }
 
-	/// <summary>
-	/// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
-	/// </summary>
-	public MaximumAttribute(double value)
-	{
-		this.Value = value;
+		/// <summary>
+		/// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
+		/// </summary>
+		public MaximumAttribute(int value)
+		{
+			this.Value = value;
+		}
+
+		/// <summary>
+		/// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
+		/// </summary>
+		public MaximumAttribute(long value)
+		{
+			this.Value = value;
+		}
+
+		/// <summary>
+		/// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
+		/// </summary>
+		public MaximumAttribute(double value)
+		{
+			this.Value = value;
+		}
 	}
 }

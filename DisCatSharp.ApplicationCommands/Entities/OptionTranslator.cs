@@ -26,40 +26,41 @@ using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.ApplicationCommands;
-
-/// <summary>
-/// Represents a option translator.
-/// </summary>
-internal class OptionTranslator
+namespace DisCatSharp.ApplicationCommands
 {
 	/// <summary>
-	/// Gets the option name.
+	/// Represents a option translator.
 	/// </summary>
-	[JsonProperty("name")]
-	public string Name { get; set; }
+	internal class OptionTranslator
+	{
+		/// <summary>
+		/// Gets the option name.
+		/// </summary>
+		[JsonProperty("name")]
+		public string Name { get; set; }
 
-	/// <summary>
-	/// Gets the option name translations.
-	/// </summary>
-	[JsonProperty("name_translations")]
-	internal Dictionary<string, string> NameTranslationsDictionary { get; set; }
-	[JsonIgnore]
-	public DiscordApplicationCommandLocalization NameTranslations
-		=> new(this.NameTranslationsDictionary);
+		/// <summary>
+		/// Gets the option name translations.
+		/// </summary>
+		[JsonProperty("name_translations")]
+		internal Dictionary<string, string> NameTranslationsDictionary { get; set; }
+		[JsonIgnore]
+		public DiscordApplicationCommandLocalization NameTranslations
+			=> new(this.NameTranslationsDictionary);
 
-	/// <summary>
-	/// Gets the option description translations.
-	/// </summary>
-	[JsonProperty("description_translations")]
-	internal Dictionary<string, string> DescriptionTranslationsDictionary { get; set; }
-	[JsonIgnore]
-	public DiscordApplicationCommandLocalization DescriptionTranslations
-		=> new(this.DescriptionTranslationsDictionary);
+		/// <summary>
+		/// Gets the option description translations.
+		/// </summary>
+		[JsonProperty("description_translations")]
+		internal Dictionary<string, string> DescriptionTranslationsDictionary { get; set; }
+		[JsonIgnore]
+		public DiscordApplicationCommandLocalization DescriptionTranslations
+			=> new(this.DescriptionTranslationsDictionary);
 
-	/// <summary>
-	/// Gets the choice translators, if applicable.
-	/// </summary>
-	[JsonProperty("choices")]
-	public List<ChoiceTranslator> Choices { get; set; }
+		/// <summary>
+		/// Gets the choice translators, if applicable.
+		/// </summary>
+		[JsonProperty("choices")]
+		public List<ChoiceTranslator> Choices { get; set; }
+	}
 }

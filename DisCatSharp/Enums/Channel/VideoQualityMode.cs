@@ -20,20 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
-
-/// <summary>
-/// Represents the video quality mode of a voice channel. This is applicable to voice channels only.
-/// </summary>
-public enum VideoQualityMode : int
+namespace DisCatSharp
 {
 	/// <summary>
-	/// Indicates that the video quality is automatically chosen, or there is no value set.
+	/// Represents the video quality mode of a voice channel. This is applicable to voice channels only.
 	/// </summary>
-	Auto = 1,
+	public enum VideoQualityMode : int
+	{
+		/// <summary>
+		/// Indicates that the video quality is automatically chosen, or there is no value set.
+		/// </summary>
+		Auto = 1,
 
-	/// <summary>
-	/// Indicates that the video quality is 720p.
-	/// </summary>
-	Full = 2,
+		/// <summary>
+		/// Indicates that the video quality is 720p.
+		/// </summary>
+		Full = 2,
+	}
 }

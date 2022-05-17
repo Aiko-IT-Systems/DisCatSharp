@@ -20,15 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Net.Models;
-
-/// <summary>
-/// Represents the base edit model.
-/// </summary>
-public class BaseEditModel
+namespace DisCatSharp.Net.Models
 {
 	/// <summary>
-	/// Reason given in audit logs
+	/// Represents the base edit model.
 	/// </summary>
-	public string AuditLogReason { internal get; set; }
+	public class BaseEditModel
+	{
+		/// <summary>
+		/// Reason given in audit logs
+		/// </summary>
+		public string AuditLogReason { internal get; set; }
+	}
 }

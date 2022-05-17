@@ -28,54 +28,55 @@ using ConcurrentCollections;
 
 using DisCatSharp.Common.Utilities;
 
-namespace DisCatSharp.Interactivity.EventHandling;
-
-/// <summary>
-/// CollectRequest is a class that serves as a representation of
-/// EventArgs that are being collected within a specific time frame.
-/// </summary>
-/// <typeparam name="T"></typeparam>
-internal class CollectRequest<T> : IDisposable where T : AsyncEventArgs
+namespace DisCatSharp.Interactivity.EventHandling
 {
-	internal TaskCompletionSource<bool> Tcs;
-	internal CancellationTokenSource Ct;
-	internal Func<T, bool> Predicate;
-	internal TimeSpan Timeout;
-	internal ConcurrentHashSet<T> Collected;
-
 	/// <summary>
-	/// Creates a new CollectRequest object.
+	/// CollectRequest is a class that serves as a representation of
+	/// EventArgs that are being collected within a specific time frame.
 	/// </summary>
-	/// <param name="predicate">Predicate to match</param>
-	/// <param name="timeout">Timeout time</param>
-	public CollectRequest(Func<T, bool> predicate, TimeSpan timeout)
+	/// <typeparam name="T"></typeparam>
+	internal class CollectRequest<T> : IDisposable where T : AsyncEventArgs
 	{
-		this.Tcs = new TaskCompletionSource<bool>();
-		this.Ct = new CancellationTokenSource(timeout);
-		this.Predicate = predicate;
-		this.Ct.Token.Register(() => this.Tcs.TrySetResult(true));
-		this.Timeout = timeout;
-		this.Collected = new ConcurrentHashSet<T>();
-	}
+		internal TaskCompletionSource<bool> Tcs;
+		internal CancellationTokenSource Ct;
+		internal Func<T, bool> Predicate;
+		internal TimeSpan Timeout;
+		internal ConcurrentHashSet<T> Collected;
 
-	~CollectRequest()
-	{
-		this.Dispose();
-	}
-
-	/// <summary>
-	/// Disposes this CollectRequest.
-	/// </summary>
-	public void Dispose()
-	{
-		this.Ct.Dispose();
-		this.Tcs = null;
-		this.Predicate = null;
-
-		if (this.Collected != null)
+		/// <summary>
+		/// Creates a new CollectRequest object.
+		/// </summary>
+		/// <param name="predicate">Predicate to match</param>
+		/// <param name="timeout">Timeout time</param>
+		public CollectRequest(Func<T, bool> predicate, TimeSpan timeout)
 		{
-			this.Collected.Clear();
-			this.Collected = null;
+			this.Tcs = new TaskCompletionSource<bool>();
+			this.Ct = new CancellationTokenSource(timeout);
+			this.Predicate = predicate;
+			this.Ct.Token.Register(() => this.Tcs.TrySetResult(true));
+			this.Timeout = timeout;
+			this.Collected = new ConcurrentHashSet<T>();
+		}
+
+		~CollectRequest()
+		{
+			this.Dispose();
+		}
+
+		/// <summary>
+		/// Disposes this CollectRequest.
+		/// </summary>
+		public void Dispose()
+		{
+			this.Ct.Dispose();
+			this.Tcs = null;
+			this.Predicate = null;
+
+			if (this.Collected != null)
+			{
+				this.Collected.Clear();
+				this.Collected = null;
+			}
 		}
 	}
 }

@@ -24,52 +24,53 @@ using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Net.Abstractions;
-
-/// <summary>
-/// Represents a stage instance create payload.
-/// </summary>
-internal sealed class RestStageInstanceCreatePayload
+namespace DisCatSharp.Net.Abstractions
 {
 	/// <summary>
-	/// Gets or sets the channel id.
+	/// Represents a stage instance create payload.
 	/// </summary>
-	[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
-	public ulong ChannelId { get; set; }
+	internal sealed class RestStageInstanceCreatePayload
+	{
+		/// <summary>
+		/// Gets or sets the channel id.
+		/// </summary>
+		[JsonProperty("channel_id", NullValueHandling = NullValueHandling.Ignore)]
+		public ulong ChannelId { get; set; }
+
+		/// <summary>
+		/// Gets or sets the topic.
+		/// </summary>
+		[JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
+		public string Topic { get; set; }
+
+		/// <summary>
+		/// Gets or sets the privacy level.
+		/// </summary>
+		[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
+		public StagePrivacyLevel PrivacyLevel { get; set; }
+
+		/// <summary>
+		/// Whether everyone should be notified about the start.
+		/// </summary>
+		[JsonProperty("send_start_notification", NullValueHandling = NullValueHandling.Ignore)]
+		public bool SendStartNotification { get; set; }
+	}
 
 	/// <summary>
-	/// Gets or sets the topic.
+	/// Represents a stage instance modify payload.
 	/// </summary>
-	[JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
-	public string Topic { get; set; }
+	internal sealed class RestStageInstanceModifyPayload
+	{
+		/// <summary>
+		/// Gets or sets the topic.
+		/// </summary>
+		[JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
+		public Optional<string> Topic { get; set; }
 
-	/// <summary>
-	/// Gets or sets the privacy level.
-	/// </summary>
-	[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
-	public StagePrivacyLevel PrivacyLevel { get; set; }
-
-	/// <summary>
-	/// Whether everyone should be notified about the start.
-	/// </summary>
-	[JsonProperty("send_start_notification", NullValueHandling = NullValueHandling.Ignore)]
-	public bool SendStartNotification { get; set; }
-}
-
-/// <summary>
-/// Represents a stage instance modify payload.
-/// </summary>
-internal sealed class RestStageInstanceModifyPayload
-{
-	/// <summary>
-	/// Gets or sets the topic.
-	/// </summary>
-	[JsonProperty("topic", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<string> Topic { get; set; }
-
-	/// <summary>
-	/// Gets or sets the privacy level.
-	/// </summary>
-	[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<StagePrivacyLevel> PrivacyLevel { get; set; }
+		/// <summary>
+		/// Gets or sets the privacy level.
+		/// </summary>
+		[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
+		public Optional<StagePrivacyLevel> PrivacyLevel { get; set; }
+	}
 }

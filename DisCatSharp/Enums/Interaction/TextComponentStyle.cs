@@ -20,20 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Enums;
-
-/// <summary>
-/// Represents a button's style/color.
-/// </summary>
-public enum TextComponentStyle : int
+namespace DisCatSharp.Enums
 {
 	/// <summary>
-	/// A small text input.
+	/// Represents a button's style/color.
 	/// </summary>
-	Small = 1,
+	public enum TextComponentStyle : int
+	{
+		/// <summary>
+		/// A small text input.
+		/// </summary>
+		Small = 1,
 
-	/// <summary>
-	/// A paragraph text input.
-	/// </summary>
-	Paragraph = 2
+		/// <summary>
+		/// A paragraph text input.
+		/// </summary>
+		Paragraph = 2
+	}
 }

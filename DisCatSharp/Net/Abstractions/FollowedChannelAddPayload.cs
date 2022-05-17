@@ -22,16 +22,17 @@
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Net.Abstractions;
-
-/// <summary>
-/// Represents a followed channel add payload.
-/// </summary>
-internal sealed class FollowedChannelAddPayload
+namespace DisCatSharp.Net.Abstractions
 {
 	/// <summary>
-	/// Gets or sets the webhook channel id.
+	/// Represents a followed channel add payload.
 	/// </summary>
-	[JsonProperty("webhook_channel_id")]
-	public ulong WebhookChannelId { get; set; }
+	internal sealed class FollowedChannelAddPayload
+	{
+		/// <summary>
+		/// Gets or sets the webhook channel id.
+		/// </summary>
+		[JsonProperty("webhook_channel_id")]
+		public ulong WebhookChannelId { get; set; }
+	}
 }

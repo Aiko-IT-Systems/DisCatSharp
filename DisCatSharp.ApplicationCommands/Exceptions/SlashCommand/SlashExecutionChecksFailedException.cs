@@ -23,15 +23,16 @@
 using System;
 using System.Collections.Generic;
 
-namespace DisCatSharp.ApplicationCommands;
-
-/// <summary>
-/// Thrown when a pre-execution check for a slash command fails.
-/// </summary>
-public class SlashExecutionChecksFailedException : Exception
+namespace DisCatSharp.ApplicationCommands
 {
 	/// <summary>
-	/// The list of failed checks.
+	/// Thrown when a pre-execution check for a slash command fails.
 	/// </summary>
-	public IReadOnlyList<SlashCheckBaseAttribute> FailedChecks;
+	public class SlashExecutionChecksFailedException : Exception
+	{
+		/// <summary>
+		/// The list of failed checks.
+		/// </summary>
+		public IReadOnlyList<SlashCheckBaseAttribute> FailedChecks;
+	}
 }

@@ -22,41 +22,42 @@
 
 using System.Threading.Tasks;
 
-namespace DisCatSharp.Net.Udp;
-
-/// <summary>
-/// Creates an instance of a UDP client implementation.
-/// </summary>
-/// <returns>Constructed UDP client implementation.</returns>
-public delegate BaseUdpClient UdpClientFactoryDelegate();
-
-/// <summary>
-/// Represents a base abstraction for all UDP client implementations.
-/// </summary>
-public abstract class BaseUdpClient
+namespace DisCatSharp.Net.Udp
 {
 	/// <summary>
-	/// Configures the UDP client.
+	/// Creates an instance of a UDP client implementation.
 	/// </summary>
-	/// <param name="endpoint">Endpoint that the client will be communicating with.</param>
-	public abstract void Setup(ConnectionEndpoint endpoint);
+	/// <returns>Constructed UDP client implementation.</returns>
+	public delegate BaseUdpClient UdpClientFactoryDelegate();
 
 	/// <summary>
-	/// Sends a datagram.
+	/// Represents a base abstraction for all UDP client implementations.
 	/// </summary>
-	/// <param name="data">Datagram.</param>
-	/// <param name="dataLength">Length of the datagram.</param>
-	/// <returns></returns>
-	public abstract Task SendAsync(byte[] data, int dataLength);
+	public abstract class BaseUdpClient
+	{
+		/// <summary>
+		/// Configures the UDP client.
+		/// </summary>
+		/// <param name="endpoint">Endpoint that the client will be communicating with.</param>
+		public abstract void Setup(ConnectionEndpoint endpoint);
 
-	/// <summary>
-	/// Receives a datagram.
-	/// </summary>
-	/// <returns>The received bytes.</returns>
-	public abstract Task<byte[]> ReceiveAsync();
+		/// <summary>
+		/// Sends a datagram.
+		/// </summary>
+		/// <param name="data">Datagram.</param>
+		/// <param name="dataLength">Length of the datagram.</param>
+		/// <returns></returns>
+		public abstract Task SendAsync(byte[] data, int dataLength);
 
-	/// <summary>
-	/// Closes and disposes the client.
-	/// </summary>
-	public abstract void Close();
+		/// <summary>
+		/// Receives a datagram.
+		/// </summary>
+		/// <returns>The received bytes.</returns>
+		public abstract Task<byte[]> ReceiveAsync();
+
+		/// <summary>
+		/// Closes and disposes the client.
+		/// </summary>
+		public abstract void Close();
+	}
 }

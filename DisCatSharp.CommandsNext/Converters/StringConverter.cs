@@ -25,44 +25,45 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.CommandsNext.Converters;
-
-/// <summary>
-/// Represents a string converter.
-/// </summary>
-public class StringConverter : IArgumentConverter<string>
+namespace DisCatSharp.CommandsNext.Converters
 {
 	/// <summary>
-	/// Converts a string.
+	/// Represents a string converter.
 	/// </summary>
-	/// <param name="value">The string to convert.</param>
-	/// <param name="ctx">The command context.</param>
-	Task<Optional<string>> IArgumentConverter<string>.ConvertAsync(string value, CommandContext ctx)
-		=> Task.FromResult(Optional.Some(value));
-}
-
-/// <summary>
-/// Represents a uri converter.
-/// </summary>
-public class UriConverter : IArgumentConverter<Uri>
-{
-	/// <summary>
-	/// Converts a string.
-	/// </summary>
-	/// <param name="value">The string to convert.</param>
-	/// <param name="ctx">The command context.</param>
-	Task<Optional<Uri>> IArgumentConverter<Uri>.ConvertAsync(string value, CommandContext ctx)
+	public class StringConverter : IArgumentConverter<string>
 	{
-		try
-		{
-			if (value.StartsWith("<") && value.EndsWith(">"))
-				value = value[1..^1];
+		/// <summary>
+		/// Converts a string.
+		/// </summary>
+		/// <param name="value">The string to convert.</param>
+		/// <param name="ctx">The command context.</param>
+		Task<Optional<string>> IArgumentConverter<string>.ConvertAsync(string value, CommandContext ctx)
+			=> Task.FromResult(Optional.Some(value));
+	}
 
-			return Task.FromResult(Optional.Some(new Uri(value)));
-		}
-		catch
+	/// <summary>
+	/// Represents a uri converter.
+	/// </summary>
+	public class UriConverter : IArgumentConverter<Uri>
+	{
+		/// <summary>
+		/// Converts a string.
+		/// </summary>
+		/// <param name="value">The string to convert.</param>
+		/// <param name="ctx">The command context.</param>
+		Task<Optional<Uri>> IArgumentConverter<Uri>.ConvertAsync(string value, CommandContext ctx)
 		{
-			return Task.FromResult(Optional<Uri>.None);
+			try
+			{
+				if (value.StartsWith("<") && value.EndsWith(">"))
+					value = value[1..^1];
+
+				return Task.FromResult(Optional.Some(new Uri(value)));
+			}
+			catch
+			{
+				return Task.FromResult(Optional<Uri>.None);
+			}
 		}
 	}
 }

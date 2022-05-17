@@ -20,35 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
-
-/// <summary>
-/// Type of mention being made
-/// </summary>
-public enum MentionType
+namespace DisCatSharp
 {
 	/// <summary>
-	/// No mention (wtf?)
+	/// Type of mention being made
 	/// </summary>
-	None = 0,
+	public enum MentionType
+	{
+		/// <summary>
+		/// No mention (wtf?)
+		/// </summary>
+		None = 0,
 
-	/// <summary>
-	/// Mentioned Username
-	/// </summary>
-	Username = 1,
+		/// <summary>
+		/// Mentioned Username
+		/// </summary>
+		Username = 1,
 
-	/// <summary>
-	/// Mentioned Nickname
-	/// </summary>
-	Nickname = 2,
+		/// <summary>
+		/// Mentioned Nickname
+		/// </summary>
+		Nickname = 2,
 
-	/// <summary>
-	/// Mentioned Channel
-	/// </summary>
-	Channel = 4,
+		/// <summary>
+		/// Mentioned Channel
+		/// </summary>
+		Channel = 4,
 
-	/// <summary>
-	/// Mentioned Role
-	/// </summary>
-	Role = 8
+		/// <summary>
+		/// Mentioned Role
+		/// </summary>
+		Role = 8
+	}
 }
