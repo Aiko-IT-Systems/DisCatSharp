@@ -125,7 +125,7 @@ internal sealed class RestClient : IDisposable
 	/// <param name="useRelativeRatelimit">Whether to use relative ratelimit.</param>
 	/// <param name="logger">The logger.</param>
 	internal RestClient(IWebProxy proxy, TimeSpan timeout, bool useRelativeRatelimit,
-		ILogger logger) 
+		ILogger logger)
 	{
 		this._logger = logger;
 
