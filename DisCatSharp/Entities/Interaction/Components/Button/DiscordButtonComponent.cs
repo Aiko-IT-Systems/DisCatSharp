@@ -113,12 +113,12 @@ public sealed class DiscordButtonComponent : DiscordComponent
 		this.CustomId = customId ?? Guid.NewGuid().ToString();
 		this.Disabled = disabled;
 		if (emoji != null)
-		{
+            {
 			this.Label = label;
 			this.Emoji = emoji;
 		}
 		else
-		{
+            {
 			this.Label = label ?? throw new ArgumentException("Label can only be null if emoji is set.");
 			this.Emoji = null;
 		}

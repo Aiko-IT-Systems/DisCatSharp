@@ -42,13 +42,13 @@ public enum ButtonStyle : int
 	/// </summary>
 	Success  = 3,
 
-	/// <summary>
-	/// Red button.
-	/// </summary>
-	Danger = 4,
+        /// <summary>
+        /// Red button.
+        /// </summary>
+        Danger = 4,
 
-	/// <summary>
-	/// Link Button.
-	/// </summary>
-	Link = 5
-}
+        /// <summary>
+        /// Link Button.
+        /// </summary>
+        Link = 5
+    }

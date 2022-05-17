@@ -20,14 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
 using System.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-
 using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands;
@@ -73,8 +72,7 @@ internal static class ApplicationCommandEqualityChecks
 					&& (source.Type == target.Type) && (source.NameLocalizations == target.NameLocalizations)
 					&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions) && (source.DmPermission == target.DmPermission)
 			}
-			: type switch
-			{
+			: type switch {
 				ApplicationCommandType.ChatInput => DeepEqual(source, target),
 				_ => (source.Name == target.Name)
 					&& (source.Type == target.Type)

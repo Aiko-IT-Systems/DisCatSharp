@@ -73,7 +73,7 @@ public class DiscordScheduledEventUser : IEquatable<DiscordScheduledEventUser>
 	/// Initializes a new instance of the <see cref="DiscordScheduledEventUser"/> class.
 	/// </summary>
 	internal DiscordScheduledEventUser()
-	{ }
+{ }
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordScheduledEventUser"/> is equal to another object.
