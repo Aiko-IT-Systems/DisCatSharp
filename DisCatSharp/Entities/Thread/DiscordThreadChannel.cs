@@ -591,12 +591,12 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	/// <returns>String representation of this thread.</returns>
 	public override string ToString()
 		=> this.Type switch
-			{
-				ChannelType.NewsThread => $"News thread {this.Name} ({this.Id})",
-				ChannelType.PublicThread => $"Thread {this.Name} ({this.Id})",
-				ChannelType.PrivateThread => $"Private thread {this.Name} ({this.Id})",
-				_ => $"Thread {this.Name} ({this.Id})",
-			};
+		{
+			ChannelType.NewsThread => $"News thread {this.Name} ({this.Id})",
+			ChannelType.PublicThread => $"Thread {this.Name} ({this.Id})",
+			ChannelType.PrivateThread => $"Private thread {this.Name} ({this.Id})",
+			_ => $"Thread {this.Name} ({this.Id})",
+		};
 	#endregion
 
 	/// <summary>

@@ -25,8 +25,8 @@ using System;
 namespace DisCatSharp;
 
 /// <summary>
- /// Represents the type of the application command permission.
- /// </summary>
+/// Represents the type of the application command permission.
+/// </summary>
 [Flags]
 public enum ApplicationCommandPermissionType
 {
