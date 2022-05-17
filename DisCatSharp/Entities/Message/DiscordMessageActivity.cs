@@ -22,28 +22,29 @@
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities;
-
-/// <summary>
-/// Represents a Rich Presence activity.
-/// </summary>
-public class DiscordMessageActivity
+namespace DisCatSharp.Entities
 {
 	/// <summary>
-	/// Gets the activity type.
+	/// Represents a Rich Presence activity.
 	/// </summary>
-	[JsonProperty("type")]
-	public MessageActivityType Type { get; internal set; }
+	public class DiscordMessageActivity
+	{
+		/// <summary>
+		/// Gets the activity type.
+		/// </summary>
+		[JsonProperty("type")]
+		public MessageActivityType Type { get; internal set; }
 
-	/// <summary>
-	/// Gets the party id of the activity.
-	/// </summary>
-	[JsonProperty("party_id")]
-	public string PartyId { get; internal set; }
+		/// <summary>
+		/// Gets the party id of the activity.
+		/// </summary>
+		[JsonProperty("party_id")]
+		public string PartyId { get; internal set; }
 
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordMessageActivity"/> class.
-	/// </summary>
-	internal DiscordMessageActivity()
-	{ }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordMessageActivity"/> class.
+		/// </summary>
+		internal DiscordMessageActivity()
+		{ }
+	}
 }

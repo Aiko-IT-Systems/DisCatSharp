@@ -20,30 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
-
-/// <summary>
-/// Represents the auto-archive duration for a thread.
-/// </summary>
-public enum ThreadAutoArchiveDuration : int
+namespace DisCatSharp
 {
 	/// <summary>
-	/// Indicates that the thread will be auto archived after one hour.
+	/// Represents the auto-archive duration for a thread.
 	/// </summary>
-	OneHour = 60,
+	public enum ThreadAutoArchiveDuration : int
+	{
+		/// <summary>
+		/// Indicates that the thread will be auto archived after one hour.
+		/// </summary>
+		OneHour = 60,
 
-	/// <summary>
-	/// Indicates that the thread will be auto archived after one day / 24 hours.
-	/// </summary>
-	OneDay = 1440,
+		/// <summary>
+		/// Indicates that the thread will be auto archived after one day / 24 hours.
+		/// </summary>
+		OneDay = 1440,
 
-	/// <summary>
-	/// Indicates that the thread will be auto archived after three days.
-	/// </summary>
-	ThreeDays = 4320,
+		/// <summary>
+		/// Indicates that the thread will be auto archived after three days.
+		/// </summary>
+		ThreeDays = 4320,
 
-	/// <summary>
-	/// Indicates that the thread will be auto archived after a week.
-	/// </summary>
-	OneWeek = 10080
+		/// <summary>
+		/// Indicates that the thread will be auto archived after a week.
+		/// </summary>
+		OneWeek = 10080
+	}
 }

@@ -26,41 +26,42 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DisCatSharp.ApplicationCommands.Attributes;
-
-/// <summary>
-/// Requires ownership of the bot or a whitelisted id to execute this command.
-/// </summary>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireOwnerOrIdAttribute : SlashCheckBaseAttribute
+namespace DisCatSharp.ApplicationCommands.Attributes
 {
 	/// <summary>
-	/// Allowed user ids
+	/// Requires ownership of the bot or a whitelisted id to execute this command.
 	/// </summary>
-	public IReadOnlyList<ulong> UserIds { get; }
-
-	/// <summary>
-	/// Defines that usage of this command is restricted to the owner or whitelisted ids of the bot.
-	/// </summary>
-	/// <param name="userIds">List of allowed user ids</param>
-	public ApplicationCommandRequireOwnerOrIdAttribute(params ulong[] userIds)
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+	public sealed class ApplicationCommandRequireOwnerOrIdAttribute : SlashCheckBaseAttribute
 	{
-		this.UserIds = new ReadOnlyCollection<ulong>(userIds);
-	}
+		/// <summary>
+		/// Allowed user ids
+		/// </summary>
+		public IReadOnlyList<ulong> UserIds { get; }
 
-	/// <summary>
-	/// Executes the a check.
-	/// </summary>
-	/// <param name="ctx">The command context.</param>s
-	public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-	{
-		var app = ctx.Client.CurrentApplication;
-		var me = ctx.Client.CurrentUser;
+		/// <summary>
+		/// Defines that usage of this command is restricted to the owner or whitelisted ids of the bot.
+		/// </summary>
+		/// <param name="userIds">List of allowed user ids</param>
+		public ApplicationCommandRequireOwnerOrIdAttribute(params ulong[] userIds)
+		{
+			this.UserIds = new ReadOnlyCollection<ulong>(userIds);
+		}
 
-		var owner = app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
+		/// <summary>
+		/// Executes the a check.
+		/// </summary>
+		/// <param name="ctx">The command context.</param>s
+		public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+		{
+			var app = ctx.Client.CurrentApplication;
+			var me = ctx.Client.CurrentUser;
 
-		var allowed = this.UserIds.Contains(ctx.User.Id);
+			var owner = app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
 
-		return allowed ? Task.FromResult(true) : owner;
+			var allowed = this.UserIds.Contains(ctx.User.Id);
+
+			return allowed ? Task.FromResult(true) : owner;
+		}
 	}
 }

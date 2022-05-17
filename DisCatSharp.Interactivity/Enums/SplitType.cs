@@ -20,20 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Interactivity.Enums;
-
-/// <summary>
-/// Specifies how to split a string.
-/// </summary>
-public enum SplitType
+namespace DisCatSharp.Interactivity.Enums
 {
 	/// <summary>
-	/// Splits string per 500 characters.
+	/// Specifies how to split a string.
 	/// </summary>
-	Character,
+	public enum SplitType
+	{
+		/// <summary>
+		/// Splits string per 500 characters.
+		/// </summary>
+		Character,
 
-	/// <summary>
-	/// Splits string per 15 lines.
-	/// </summary>
-	Line
+		/// <summary>
+		/// Splits string per 15 lines.
+		/// </summary>
+		Line
+	}
 }

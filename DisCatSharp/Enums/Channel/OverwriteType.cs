@@ -20,20 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
-
-/// <summary>
-/// Represents a channel permission overwrite's type.
-/// </summary>
-public enum OverwriteType : int
+namespace DisCatSharp
 {
 	/// <summary>
-	/// Specifies that this overwrite applies to a role.
+	/// Represents a channel permission overwrite's type.
 	/// </summary>
-	Role = 0,
+	public enum OverwriteType : int
+	{
+		/// <summary>
+		/// Specifies that this overwrite applies to a role.
+		/// </summary>
+		Role = 0,
 
-	/// <summary>
-	/// Specifies that this overwrite applies to a member.
-	/// </summary>
-	Member = 1,
+		/// <summary>
+		/// Specifies that this overwrite applies to a member.
+		/// </summary>
+		Member = 1,
+	}
 }

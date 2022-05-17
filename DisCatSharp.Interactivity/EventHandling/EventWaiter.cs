@@ -33,141 +33,142 @@ using DisCatSharp.Common.Utilities;
 
 using Microsoft.Extensions.Logging;
 
-namespace DisCatSharp.Interactivity.EventHandling;
-
-/// <summary>
-/// EventWaiter is a class that serves as a layer between the InteractivityExtension
-/// and the DiscordClient to listen to an event and check for matches to a predicate.
-/// </summary>
-/// <typeparam name="T"></typeparam>
-internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
+namespace DisCatSharp.Interactivity.EventHandling
 {
-	DiscordClient _client;
-	AsyncEvent<DiscordClient, T> _event;
-	AsyncEventHandler<DiscordClient, T> _handler;
-	ConcurrentHashSet<MatchRequest<T>> _matchRequests;
-	ConcurrentHashSet<CollectRequest<T>> _collectRequests;
-	bool _disposed;
-
 	/// <summary>
-	/// Creates a new EventWaiter object.
+	/// EventWaiter is a class that serves as a layer between the InteractivityExtension
+	/// and the DiscordClient to listen to an event and check for matches to a predicate.
 	/// </summary>
-	/// <param name="client">Your DiscordClient</param>
-	public EventWaiter(DiscordClient client)
+	/// <typeparam name="T"></typeparam>
+	internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 	{
-		this._client = client;
-		var tinfo = this._client.GetType().GetTypeInfo();
-		var handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, T>));
-		this._matchRequests = new ConcurrentHashSet<MatchRequest<T>>();
-		this._collectRequests = new ConcurrentHashSet<CollectRequest<T>>();
-		this._event = (AsyncEvent<DiscordClient, T>)handler.GetValue(this._client);
-		this._handler = new AsyncEventHandler<DiscordClient, T>(this.HandleEvent);
-		this._event.Register(this._handler);
-	}
+		DiscordClient _client;
+		AsyncEvent<DiscordClient, T> _event;
+		AsyncEventHandler<DiscordClient, T> _handler;
+		ConcurrentHashSet<MatchRequest<T>> _matchRequests;
+		ConcurrentHashSet<CollectRequest<T>> _collectRequests;
+		bool _disposed;
 
-	/// <summary>
-	/// Waits for a match to a specific request, else returns null.
-	/// </summary>
-	/// <param name="request">Request to match</param>
-	/// <returns></returns>
-	public async Task<T> WaitForMatchAsync(MatchRequest<T> request)
-	{
-		T result = null;
-		this._matchRequests.Add(request);
-		try
+		/// <summary>
+		/// Creates a new EventWaiter object.
+		/// </summary>
+		/// <param name="client">Your DiscordClient</param>
+		public EventWaiter(DiscordClient client)
 		{
-			result = await request.Tcs.Task.ConfigureAwait(false);
+			this._client = client;
+			var tinfo = this._client.GetType().GetTypeInfo();
+			var handler = tinfo.DeclaredFields.First(x => x.FieldType == typeof(AsyncEvent<DiscordClient, T>));
+			this._matchRequests = new ConcurrentHashSet<MatchRequest<T>>();
+			this._collectRequests = new ConcurrentHashSet<CollectRequest<T>>();
+			this._event = (AsyncEvent<DiscordClient, T>)handler.GetValue(this._client);
+			this._handler = new AsyncEventHandler<DiscordClient, T>(this.HandleEvent);
+			this._event.Register(this._handler);
 		}
-		catch (Exception ex)
-		{
-			this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, ex, "An exception occurred while waiting for {0}", typeof(T).Name);
-		}
-		finally
-		{
-			request.Dispose();
-			this._matchRequests.TryRemove(request);
-		}
-		return result;
-	}
 
-	/// <summary>
-	/// Collects the matches async.
-	/// </summary>
-	/// <param name="request">The request.</param>
-	public async Task<ReadOnlyCollection<T>> CollectMatchesAsync(CollectRequest<T> request)
-	{
-		ReadOnlyCollection<T> result = null;
-		this._collectRequests.Add(request);
-		try
+		/// <summary>
+		/// Waits for a match to a specific request, else returns null.
+		/// </summary>
+		/// <param name="request">Request to match</param>
+		/// <returns></returns>
+		public async Task<T> WaitForMatchAsync(MatchRequest<T> request)
 		{
-			await request.Tcs.Task.ConfigureAwait(false);
-		}
-		catch (Exception ex)
-		{
-			this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, ex, "An exception occurred while collecting from {0}", typeof(T).Name);
-		}
-		finally
-		{
-			result = new ReadOnlyCollection<T>(new HashSet<T>(request.Collected).ToList());
-			request.Dispose();
-			this._collectRequests.TryRemove(request);
-		}
-		return result;
-	}
-
-	/// <summary>
-	/// Handles the event.
-	/// </summary>
-	/// <param name="client">The client.</param>
-	/// <param name="eventArgs">The event's arguments.</param>
-	private Task HandleEvent(DiscordClient client, T eventArgs)
-	{
-		if (!this._disposed)
-		{
-			foreach (var req in this._matchRequests)
+			T result = null;
+			this._matchRequests.Add(request);
+			try
 			{
-				if (req.Predicate(eventArgs))
+				result = await request.Tcs.Task.ConfigureAwait(false);
+			}
+			catch (Exception ex)
+			{
+				this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, ex, "An exception occurred while waiting for {0}", typeof(T).Name);
+			}
+			finally
+			{
+				request.Dispose();
+				this._matchRequests.TryRemove(request);
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// Collects the matches async.
+		/// </summary>
+		/// <param name="request">The request.</param>
+		public async Task<ReadOnlyCollection<T>> CollectMatchesAsync(CollectRequest<T> request)
+		{
+			ReadOnlyCollection<T> result = null;
+			this._collectRequests.Add(request);
+			try
+			{
+				await request.Tcs.Task.ConfigureAwait(false);
+			}
+			catch (Exception ex)
+			{
+				this._client.Logger.LogError(InteractivityEvents.InteractivityWaitError, ex, "An exception occurred while collecting from {0}", typeof(T).Name);
+			}
+			finally
+			{
+				result = new ReadOnlyCollection<T>(new HashSet<T>(request.Collected).ToList());
+				request.Dispose();
+				this._collectRequests.TryRemove(request);
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// Handles the event.
+		/// </summary>
+		/// <param name="client">The client.</param>
+		/// <param name="eventArgs">The event's arguments.</param>
+		private Task HandleEvent(DiscordClient client, T eventArgs)
+		{
+			if (!this._disposed)
+			{
+				foreach (var req in this._matchRequests)
 				{
-					req.Tcs.TrySetResult(eventArgs);
+					if (req.Predicate(eventArgs))
+					{
+						req.Tcs.TrySetResult(eventArgs);
+					}
+				}
+
+				foreach (var req in this._collectRequests)
+				{
+					if (req.Predicate(eventArgs))
+					{
+						req.Collected.Add(eventArgs);
+					}
 				}
 			}
 
-			foreach (var req in this._collectRequests)
-			{
-				if (req.Predicate(eventArgs))
-				{
-					req.Collected.Add(eventArgs);
-				}
-			}
+			return Task.CompletedTask;
 		}
 
-		return Task.CompletedTask;
-	}
+		~EventWaiter()
+		{
+			this.Dispose();
+		}
 
-	~EventWaiter()
-	{
-		this.Dispose();
-	}
+		/// <summary>
+		/// Disposes this EventWaiter
+		/// </summary>
+		public void Dispose()
+		{
+			this._disposed = true;
+			if (this._event != null)
+				this._event.Unregister(this._handler);
 
-	/// <summary>
-	/// Disposes this EventWaiter
-	/// </summary>
-	public void Dispose()
-	{
-		this._disposed = true;
-		if (this._event != null)
-			this._event.Unregister(this._handler);
+			this._event = null;
+			this._handler = null;
+			this._client = null;
 
-		this._event = null;
-		this._handler = null;
-		this._client = null;
+			if (this._matchRequests != null)
+				this._matchRequests.Clear();
+			if (this._collectRequests != null)
+				this._collectRequests.Clear();
 
-		if (this._matchRequests != null)
-			this._matchRequests.Clear();
-		if (this._collectRequests != null)
-			this._collectRequests.Clear();
-
-		this._matchRequests = null;
-		this._collectRequests = null;
+			this._matchRequests = null;
+			this._collectRequests = null;
+		}
 	}
 }

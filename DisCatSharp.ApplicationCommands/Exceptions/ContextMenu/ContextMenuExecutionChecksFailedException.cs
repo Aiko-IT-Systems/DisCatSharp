@@ -23,15 +23,16 @@
 using System;
 using System.Collections.Generic;
 
-namespace DisCatSharp.ApplicationCommands;
-
-/// <summary>
-/// Thrown when a pre-execution check for a context menu command fails.
-/// </summary>
-public sealed class ContextMenuExecutionChecksFailedException : Exception
+namespace DisCatSharp.ApplicationCommands
 {
 	/// <summary>
-	/// The list of failed checks.
+	/// Thrown when a pre-execution check for a context menu command fails.
 	/// </summary>
-	public IReadOnlyList<ContextMenuCheckBaseAttribute> FailedChecks;
+	public sealed class ContextMenuExecutionChecksFailedException : Exception
+	{
+		/// <summary>
+		/// The list of failed checks.
+		/// </summary>
+		public IReadOnlyList<ContextMenuCheckBaseAttribute> FailedChecks;
+	}
 }

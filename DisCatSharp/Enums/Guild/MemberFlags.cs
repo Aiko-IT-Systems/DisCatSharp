@@ -22,22 +22,23 @@
 
 using System;
 
-namespace DisCatSharp.Enums;
-
-/// <summary>
-/// Represents additional details of a member account.
-/// </summary>
-[Flags]
-public enum MemberFlags
+namespace DisCatSharp.Enums
 {
 	/// <summary>
-	/// This member has no flags.
+	/// Represents additional details of a member account.
 	/// </summary>
-	None = 0,
+	[Flags]
+	public enum MemberFlags
+	{
+		/// <summary>
+		/// This member has no flags.
+		/// </summary>
+		None = 0,
 
-	/// <summary>
-	/// This member has joined and left the guild before.
-	/// </summary>
-	DidRejoin = 1 << 0,
+		/// <summary>
+		/// This member has joined and left the guild before.
+		/// </summary>
+		DidRejoin = 1 << 0,
+	}
 }
 

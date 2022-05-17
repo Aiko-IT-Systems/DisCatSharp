@@ -20,25 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
-
-/// <summary>
-/// The type of Nitro subscription on a user's account.
-/// </summary>
-public enum PremiumType
+namespace DisCatSharp
 {
 	/// <summary>
-	/// User does not have any perks.
+	/// The type of Nitro subscription on a user's account.
 	/// </summary>
-	None = 0,
+	public enum PremiumType
+	{
+		/// <summary>
+		/// User does not have any perks.
+		/// </summary>
+		None = 0,
 
-	/// <summary>
-	/// Includes basic app perks like animated emojis and avatars.
-	/// </summary>
-	NitroClassic = 1,
+		/// <summary>
+		/// Includes basic app perks like animated emojis and avatars.
+		/// </summary>
+		NitroClassic = 1,
 
-	/// <summary>
-	/// Includes all app perks.
-	/// </summary>
-	Nitro = 2
+		/// <summary>
+		/// Includes all app perks.
+		/// </summary>
+		Nitro = 2
+	}
 }

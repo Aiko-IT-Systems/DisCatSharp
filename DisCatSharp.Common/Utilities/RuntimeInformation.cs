@@ -26,52 +26,53 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace DisCatSharp.Common.Utilities;
-
-/// <summary>
-/// Gets information about current runtime.
-/// </summary>
-public static class RuntimeInformation
+namespace DisCatSharp.Common.Utilities
 {
 	/// <summary>
-	/// Gets the current runtime's version.
+	/// Gets information about current runtime.
 	/// </summary>
-	public static string Version { get; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="RuntimeInformation"/> class.
-	/// </summary>
-	static RuntimeInformation()
+	public static class RuntimeInformation
 	{
-		var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-		var mscorlib = loadedAssemblies.Select(x => new { Assembly = x, AssemblyName = x.GetName() })
-			.FirstOrDefault(x => x.AssemblyName.Name == "mscorlib" || x.AssemblyName.Name == "System.Private.CoreLib");
+		/// <summary>
+		/// Gets the current runtime's version.
+		/// </summary>
+		public static string Version { get; }
 
-		var location = mscorlib.Assembly.Location;
-		var assemblyFile = new FileInfo(location);
-		var versionFile = new FileInfo(Path.Combine(assemblyFile.Directory.FullName, ".version"));
-		if (versionFile.Exists)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="RuntimeInformation"/> class.
+		/// </summary>
+		static RuntimeInformation()
 		{
-			var lines = File.ReadAllLines(versionFile.FullName, new UTF8Encoding(false));
+			var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+			var mscorlib = loadedAssemblies.Select(x => new { Assembly = x, AssemblyName = x.GetName() })
+				.FirstOrDefault(x => x.AssemblyName.Name == "mscorlib" || x.AssemblyName.Name == "System.Private.CoreLib");
 
-			if (lines.Length >= 2)
+			var location = mscorlib.Assembly.Location;
+			var assemblyFile = new FileInfo(location);
+			var versionFile = new FileInfo(Path.Combine(assemblyFile.Directory.FullName, ".version"));
+			if (versionFile.Exists)
 			{
-				Version = lines[1];
-				return;
-			}
-		}
+				var lines = File.ReadAllLines(versionFile.FullName, new UTF8Encoding(false));
 
-		var infVersion = mscorlib.Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-		if (infVersion != null)
-		{
-			var infVersionString = infVersion.InformationalVersion;
-			if (!string.IsNullOrWhiteSpace(infVersionString))
+				if (lines.Length >= 2)
+				{
+					Version = lines[1];
+					return;
+				}
+			}
+
+			var infVersion = mscorlib.Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+			if (infVersion != null)
 			{
-				Version = infVersionString.Split(' ').First();
-				return;
+				var infVersionString = infVersion.InformationalVersion;
+				if (!string.IsNullOrWhiteSpace(infVersionString))
+				{
+					Version = infVersionString.Split(' ').First();
+					return;
+				}
 			}
-		}
 
-		Version = mscorlib.AssemblyName.Version.ToString();
+			Version = mscorlib.AssemblyName.Version.ToString();
+		}
 	}
 }

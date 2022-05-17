@@ -25,23 +25,24 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.ApplicationCommands.Attributes;
-
-/// <summary>
-/// Defines that this application command is only usable within a direct message channel.
-/// </summary>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireDirectMessageAttribute : SlashCheckBaseAttribute
+namespace DisCatSharp.ApplicationCommands.Attributes
 {
 	/// <summary>
-	/// Defines that this command is only usable within a direct message channel.
+	/// Defines that this application command is only usable within a direct message channel.
 	/// </summary>
-	public ApplicationCommandRequireDirectMessageAttribute()
-	{ }
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+	public sealed class ApplicationCommandRequireDirectMessageAttribute : SlashCheckBaseAttribute
+	{
+		/// <summary>
+		/// Defines that this command is only usable within a direct message channel.
+		/// </summary>
+		public ApplicationCommandRequireDirectMessageAttribute()
+		{ }
 
-	/// <summary>
-	/// Runs checks.
-	/// </summary>
-	public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-		=> Task.FromResult(ctx.Channel is DiscordDmChannel);
+		/// <summary>
+		/// Runs checks.
+		/// </summary>
+		public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+			=> Task.FromResult(ctx.Channel is DiscordDmChannel);
+	}
 }

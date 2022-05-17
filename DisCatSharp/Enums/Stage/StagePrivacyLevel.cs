@@ -20,20 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
-
-/// <summary>
-/// Represents the privacy level for a stage.
-/// </summary>
-public enum StagePrivacyLevel : int
+namespace DisCatSharp
 {
 	/// <summary>
-	/// Indicates that the stage is public visible.
+	/// Represents the privacy level for a stage.
 	/// </summary>
-	Public = 1,
+	public enum StagePrivacyLevel : int
+	{
+		/// <summary>
+		/// Indicates that the stage is public visible.
+		/// </summary>
+		Public = 1,
 
-	/// <summary>
-	/// Indicates that the stage is only visible to guild members.
-	/// </summary>
-	GuildOnly = 2
+		/// <summary>
+		/// Indicates that the stage is only visible to guild members.
+		/// </summary>
+		GuildOnly = 2
+	}
 }

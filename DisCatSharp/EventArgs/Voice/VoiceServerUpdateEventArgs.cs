@@ -24,30 +24,31 @@ using System;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.EventArgs;
-
-/// <summary>
-/// Represents arguments for <see cref="DiscordClient.VoiceServerUpdated"/> event.
-/// </summary>
-public class VoiceServerUpdateEventArgs : DiscordEventArgs
+namespace DisCatSharp.EventArgs
 {
 	/// <summary>
-	/// Gets the guild for which the update occurred.
+	/// Represents arguments for <see cref="DiscordClient.VoiceServerUpdated"/> event.
 	/// </summary>
-	public DiscordGuild Guild { get; internal set; }
+	public class VoiceServerUpdateEventArgs : DiscordEventArgs
+	{
+		/// <summary>
+		/// Gets the guild for which the update occurred.
+		/// </summary>
+		public DiscordGuild Guild { get; internal set; }
 
-	/// <summary>
-	/// Gets the new voice endpoint.
-	/// </summary>
-	public string Endpoint { get; internal set; }
+		/// <summary>
+		/// Gets the new voice endpoint.
+		/// </summary>
+		public string Endpoint { get; internal set; }
 
-	/// <summary>
-	/// Gets the voice connection token.
-	/// </summary>
-	internal string VoiceToken { get; set; }
+		/// <summary>
+		/// Gets the voice connection token.
+		/// </summary>
+		internal string VoiceToken { get; set; }
 
-	/// <summary>
-	/// Initializes a new instance of the <see cref="VoiceServerUpdateEventArgs"/> class.
-	/// </summary>
-	internal VoiceServerUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="VoiceServerUpdateEventArgs"/> class.
+		/// </summary>
+		internal VoiceServerUpdateEventArgs(IServiceProvider provider) : base(provider) { }
+	}
 }

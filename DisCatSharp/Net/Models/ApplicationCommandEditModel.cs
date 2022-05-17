@@ -25,65 +25,66 @@ using System.Collections.Generic;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.Net.Models;
-
-/// <summary>
-/// Represents a application command edit model.
-/// </summary>
-public class ApplicationCommandEditModel
+namespace DisCatSharp.Net.Models
 {
 	/// <summary>
-	/// Sets the command's new name.
+	/// Represents a application command edit model.
 	/// </summary>
-	public Optional<string> Name
+	public class ApplicationCommandEditModel
 	{
-		internal get => this._name;
-		set
+		/// <summary>
+		/// Sets the command's new name.
+		/// </summary>
+		public Optional<string> Name
 		{
-			if (value.Value.Length > 32)
-				throw new ArgumentException("Application command name cannot exceed 32 characters.", nameof(value));
-			this._name = value;
+			internal get => this._name;
+			set
+			{
+				if (value.Value.Length > 32)
+					throw new ArgumentException("Application command name cannot exceed 32 characters.", nameof(value));
+				this._name = value;
+			}
 		}
-	}
-	private Optional<string> _name;
+		private Optional<string> _name;
 
-	/// <summary>
-	/// Sets the command's new description
-	/// </summary>
-	public Optional<string> Description
-	{
-		internal get => this._description;
-		set
+		/// <summary>
+		/// Sets the command's new description
+		/// </summary>
+		public Optional<string> Description
 		{
-			if (value.Value.Length > 100)
-				throw new ArgumentException("Application command description cannot exceed 100 characters.", nameof(value));
-			this._description = value;
+			internal get => this._description;
+			set
+			{
+				if (value.Value.Length > 100)
+					throw new ArgumentException("Application command description cannot exceed 100 characters.", nameof(value));
+				this._description = value;
+			}
 		}
+		private Optional<string> _description;
+
+		/// <summary>
+		/// Sets the command's name localizations.
+		/// </summary>
+		public Optional<DiscordApplicationCommandLocalization> NameLocalizations { internal get; set; }
+
+		/// <summary>
+		/// Sets the command's description localizations.
+		/// </summary>
+		public Optional<DiscordApplicationCommandLocalization> DescriptionLocalizations { internal get; set; }
+
+		/// <summary>
+		/// Sets the command's new options.
+		/// </summary>
+		public Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> Options { internal get; set; }
+
+		/// <summary>
+		/// Sets the command's needed permissions.
+		/// </summary>
+		public Optional<Permissions> DefaultMemberPermissions { internal get; set; }
+
+		/// <summary>
+		/// Sets whether the command can be used in direct messages.
+		/// </summary>
+		public Optional<bool> DmPermission { internal get; set; }
 	}
-	private Optional<string> _description;
-
-	/// <summary>
-	/// Sets the command's name localizations.
-	/// </summary>
-	public Optional<DiscordApplicationCommandLocalization> NameLocalizations { internal get; set; }
-
-	/// <summary>
-	/// Sets the command's description localizations.
-	/// </summary>
-	public Optional<DiscordApplicationCommandLocalization> DescriptionLocalizations { internal get; set; }
-
-	/// <summary>
-	/// Sets the command's new options.
-	/// </summary>
-	public Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> Options { internal get; set; }
-
-	/// <summary>
-	/// Sets the command's needed permissions.
-	/// </summary>
-	public Optional<Permissions> DefaultMemberPermissions { internal get; set; }
-
-	/// <summary>
-	/// Sets whether the command can be used in direct messages.
-	/// </summary>
-	public Optional<bool> DmPermission { internal get; set; }
 }

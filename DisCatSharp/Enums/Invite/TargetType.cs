@@ -20,20 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
-
-/// <summary>
-/// Represents the invite type .
-/// </summary>
-public enum TargetType
+namespace DisCatSharp
 {
 	/// <summary>
-	/// Represents a streaming invite.
+	/// Represents the invite type .
 	/// </summary>
-	Streaming = 1,
+	public enum TargetType
+	{
+		/// <summary>
+		/// Represents a streaming invite.
+		/// </summary>
+		Streaming = 1,
 
-	/// <summary>
-	/// Represents a activity invite.
-	/// </summary>
-	EmbeddedApplication = 2
+		/// <summary>
+		/// Represents a activity invite.
+		/// </summary>
+		EmbeddedApplication = 2
+	}
 }

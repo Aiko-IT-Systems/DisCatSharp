@@ -20,30 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
-
-/// <summary>
-/// Represents notification settings for a thread.
-/// </summary>
-public enum ThreadMemberFlags : int
+namespace DisCatSharp
 {
 	/// <summary>
-	/// Indicates that the notification setting is set to has interacted.
+	/// Represents notification settings for a thread.
 	/// </summary>
-	HasInteracted = 1,
+	public enum ThreadMemberFlags : int
+	{
+		/// <summary>
+		/// Indicates that the notification setting is set to has interacted.
+		/// </summary>
+		HasInteracted = 1,
 
-	/// <summary>
-	/// Indicates that the notification setting is set to all messages.
-	/// </summary>
-	AllMessages = 2,
+		/// <summary>
+		/// Indicates that the notification setting is set to all messages.
+		/// </summary>
+		AllMessages = 2,
 
-	/// <summary>
-	/// Indicates that the notification setting is set to only mentions.
-	/// </summary>
-	OnlyMentions = 4,
+		/// <summary>
+		/// Indicates that the notification setting is set to only mentions.
+		/// </summary>
+		OnlyMentions = 4,
 
-	/// <summary>
-	/// Indicates that the notification setting is set to none.
-	/// </summary>
-	None = 8
+		/// <summary>
+		/// Indicates that the notification setting is set to none.
+		/// </summary>
+		None = 8
+	}
 }

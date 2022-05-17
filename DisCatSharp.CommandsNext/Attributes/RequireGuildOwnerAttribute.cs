@@ -23,31 +23,32 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DisCatSharp.CommandsNext.Attributes;
-
-/// <summary>
-/// Defines that usage of this command is restricted to the guild owner.
-/// </summary>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class RequireGuildOwnerAttribute : CheckBaseAttribute
+namespace DisCatSharp.CommandsNext.Attributes
 {
 	/// <summary>
-	/// Executes the a check.
+	/// Defines that usage of this command is restricted to the guild owner.
 	/// </summary>
-	/// <param name="ctx">The command context.</param>
-	/// <param name="help">If true, help - returns true.</param>
-	public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+	public sealed class RequireGuildOwnerAttribute : CheckBaseAttribute
 	{
-		var guild = await Task.FromResult(ctx.Guild != null);
-		if (guild)
+		/// <summary>
+		/// Executes the a check.
+		/// </summary>
+		/// <param name="ctx">The command context.</param>
+		/// <param name="help">If true, help - returns true.</param>
+		public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
 		{
-			var owner = await Task.FromResult(ctx.Member == ctx.Guild.Owner);
+			var guild = await Task.FromResult(ctx.Guild != null);
+			if (guild)
+			{
+				var owner = await Task.FromResult(ctx.Member == ctx.Guild.Owner);
 
-			return owner;
-		}
-		else
-		{
-			return false;
+				return owner;
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 }

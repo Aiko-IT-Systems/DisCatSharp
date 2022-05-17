@@ -24,27 +24,28 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities;
-
-/// <summary>
-/// The application install params.
-/// </summary>
-public sealed class DiscordApplicationInstallParams
+namespace DisCatSharp.Entities
 {
 	/// <summary>
-	/// Gets the scopes.
+	/// The application install params.
 	/// </summary>
-	[JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<string> Scopes { get; internal set; }
+	public sealed class DiscordApplicationInstallParams
+	{
+		/// <summary>
+		/// Gets the scopes.
+		/// </summary>
+		[JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
+		public IReadOnlyList<string> Scopes { get; internal set; }
 
-	/// <summary>
-	/// Gets or sets the permissions.
-	/// </summary>
-	[JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
-	public Permissions? Permissions { get; internal set; }
+		/// <summary>
+		/// Gets or sets the permissions.
+		/// </summary>
+		[JsonProperty("permissions", NullValueHandling = NullValueHandling.Ignore)]
+		public Permissions? Permissions { get; internal set; }
 
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordApplicationInstallParams"/> class.
-	/// </summary>
-	internal DiscordApplicationInstallParams() { }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DiscordApplicationInstallParams"/> class.
+		/// </summary>
+		internal DiscordApplicationInstallParams() { }
+	}
 }
