@@ -22,7 +22,7 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("DisCatSharp")]
+[assembly: InternalsVisibleTo("DisCatSharp.ApplicationCommands")]
 [assembly: InternalsVisibleTo("DisCatSharp.CommandsNext")]
 [assembly: InternalsVisibleTo("DisCatSharp.Common")]
 [assembly: InternalsVisibleTo("DisCatSharp.Configuration")]
@@ -31,7 +31,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("DisCatSharp.Hosting.DependencyInjection")]
 [assembly: InternalsVisibleTo("DisCatSharp.Hosting.Tests")]
 [assembly: InternalsVisibleTo("DisCatSharp.Interactivity")]
-[assembly: InternalsVisibleTo("DisCatSharp.Lavalink")]
+[assembly: InternalsVisibleTo("DisCatSharp")]
 [assembly: InternalsVisibleTo("DisCatSharp.Phabricator")]
 [assembly: InternalsVisibleTo("DisCatSharp.Support")]
 [assembly: InternalsVisibleTo("DisCatSharp.Test")]
