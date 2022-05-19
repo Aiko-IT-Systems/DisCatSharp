@@ -25,6 +25,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+using DisCatSharp.Common;
+
 namespace DisCatSharp
 {
 	/// <summary>
@@ -155,9 +157,7 @@ namespace DisCatSharp
 		/// </summary>
 		public void Clear()
 		{
-			for (var i = 0; i < this.InternalBuffer.Length; i++)
-				this.InternalBuffer[i] = default;
-
+			this.InternalBuffer.Populate(default);
 			this.CurrentIndex = 0;
 		}
 

@@ -1092,10 +1092,8 @@ namespace DisCatSharp.ApplicationCommands
 			var args = new List<object> { context };
 			var parameters = method.GetParameters().Skip(1);
 
-			for (var i = 0; i < parameters.Count(); i++)
+			foreach (var parameter in parameters)
 			{
-				var parameter = parameters.ElementAt(i);
-
 				//Accounts for optional arguments without values given
 				if (parameter.IsOptional && (options == null || (!options?.Any(x => x.Name == parameter.GetCustomAttribute<OptionAttribute>().Name.ToLower()) ?? true)))
 					args.Add(parameter.DefaultValue);
@@ -1335,7 +1333,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// </summary>
 		/// <param name="parameters">The parameters.</param>
 		/// <param name="guildId">The optional guild id.</param>
-		internal static async Task<List<DiscordApplicationCommandOption>> ParseParametersAsync(ParameterInfo[] parameters, ulong? guildId)
+		internal static async Task<List<DiscordApplicationCommandOption>> ParseParametersAsync(IEnumerable<ParameterInfo> parameters, ulong? guildId)
 		{
 			var options = new List<DiscordApplicationCommandOption>();
 			foreach (var parameter in parameters)

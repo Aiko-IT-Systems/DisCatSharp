@@ -154,7 +154,7 @@ namespace DisCatSharp.CommandsNext
 
 			var ncvt = typeof(NullableConverter<>);
 			var nt = typeof(Nullable<>);
-			var cvts = this.ArgumentConverters.Keys.ToArray();
+			var cvts = this.ArgumentConverters.Keys;
 			foreach (var xt in cvts)
 			{
 				var xti = xt.GetTypeInfo();
@@ -212,8 +212,8 @@ namespace DisCatSharp.CommandsNext
 				{
 					var checks = this._config.DefaultHelpChecks.ToArray();
 
-					for (var i = 0; i < tcmds.Count; i++)
-						tcmds[i].WithExecutionChecks(checks);
+					foreach (var cb in tcmds)
+						cb.WithExecutionChecks(checks);
 				}
 
 				if (tcmds != null)

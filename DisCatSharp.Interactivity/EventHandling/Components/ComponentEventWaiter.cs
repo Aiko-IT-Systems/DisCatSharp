@@ -90,7 +90,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// </summary>
 		/// <param name="request">The request to wait on.</param>
 		/// <returns>The result from request's predicate over the period of time leading up to the token's cancellation.</returns>
-		public async Task<IReadOnlyList<ComponentInteractionCreateEventArgs>> CollectMatchesAsync(ComponentCollectRequest request)
+		public async Task<IEnumerable<ComponentInteractionCreateEventArgs>> CollectMatchesAsync(ComponentCollectRequest request)
 		{
 			this._collectRequests.Add(request);
 			try
@@ -106,7 +106,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 				this._collectRequests.TryRemove(request);
 			}
 
-			return request.Collected.ToArray();
+			return request.Collected;
 		}
 
 		/// <summary>
@@ -116,7 +116,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <param name="args">The args.</param>
 		private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs args)
 		{
-			foreach (var mreq in this._matchRequests.ToArray())
+			foreach (var mreq in this._matchRequests)
 			{
 				if (mreq.Message == args.Message && mreq.IsMatch(args))
 					mreq.Tcs.TrySetResult(args);
@@ -126,7 +126,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			}
 
 
-			foreach (var creq in this._collectRequests.ToArray())
+			foreach (var creq in this._collectRequests)
 			{
 				if (creq.Message == args.Message && creq.IsMatch(args))
 				{
