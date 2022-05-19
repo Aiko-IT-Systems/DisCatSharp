@@ -79,6 +79,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting.DependencyInjection", "DisCatSharp.Hosting.DependencyInjection\DisCatSharp.Hosting.DependencyInjection.csproj", "{2D67D1DD-E5B2-40C7-80E2-54D63730E7F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.SourceGenerator.Sample", "DisCatSharp.SourceGenerator.Sample\DisCatSharp.SourceGenerator.Sample.csproj", "{CCCEF42C-5B11-4886-B1B6-0EBCDB60B46D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisCatSharp.SourceGenerator", "DisCatSharp.SourceGenerator\DisCatSharp.SourceGenerator.csproj", "{2366C3FC-F714-49C8-87BF-F24518A42454}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SourceGeneration", "SourceGeneration", "{103E363E-2765-46F1-9378-F8168400E512}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SCSamples", "SCSamples", "{04F29FF2-8263-46B0-BE11-E84C7F50FAFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,11 +149,24 @@ Global
 		{1407FAE8-DAC1-4E89-AA15-4E4592CCC8A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1407FAE8-DAC1-4E89-AA15-4E4592CCC8A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1407FAE8-DAC1-4E89-AA15-4E4592CCC8A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCCEF42C-5B11-4886-B1B6-0EBCDB60B46D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCCEF42C-5B11-4886-B1B6-0EBCDB60B46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCCEF42C-5B11-4886-B1B6-0EBCDB60B46D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCCEF42C-5B11-4886-B1B6-0EBCDB60B46D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2366C3FC-F714-49C8-87BF-F24518A42454}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2366C3FC-F714-49C8-87BF-F24518A42454}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2366C3FC-F714-49C8-87BF-F24518A42454}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2366C3FC-F714-49C8-87BF-F24518A42454}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23F3A981-51B8-4285-A38C-3267F1D25FE7}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2366C3FC-F714-49C8-87BF-F24518A42454} = {103E363E-2765-46F1-9378-F8168400E512}
+		{04F29FF2-8263-46B0-BE11-E84C7F50FAFC} = {103E363E-2765-46F1-9378-F8168400E512}
+		{CCCEF42C-5B11-4886-B1B6-0EBCDB60B46D} = {04F29FF2-8263-46B0-BE11-E84C7F50FAFC}
 	EndGlobalSection
 EndGlobal
