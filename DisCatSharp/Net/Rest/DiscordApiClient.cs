@@ -2853,16 +2853,9 @@ namespace DisCatSharp.Net
 				["days"] = days.ToString(CultureInfo.InvariantCulture)
 			};
 
-			var sb = new StringBuilder();
-
-			if (includeRoles != null)
-			{
-				var roleArray = includeRoles.ToArray();
-				var roleArrayCount = roleArray.Length;
-
-				for (var i = 0; i < roleArrayCount; i++)
-					sb.Append($"&include_roles={roleArray[i]}");
-			}
+			var sb = includeRoles?.Aggregate(new StringBuilder(),
+				         (sb, id) => sb.Append($"&include_roles={id}"))
+			         ?? new StringBuilder();
 
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PRUNE}";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
@@ -2894,16 +2887,9 @@ namespace DisCatSharp.Net
 				["compute_prune_count"] = computePruneCount.ToString()
 			};
 
-			var sb = new StringBuilder();
-
-			if (includeRoles != null)
-			{
-				var roleArray = includeRoles.ToArray();
-				var roleArrayCount = roleArray.Length;
-
-				for (var i = 0; i < roleArrayCount; i++)
-					sb.Append($"&include_roles={roleArray[i]}");
-			}
+			var sb = includeRoles?.Aggregate(new StringBuilder(),
+				         (sb, id) => sb.Append($"&include_roles={id}"))
+			         ?? new StringBuilder();
 
 			var headers = Utilities.GetBaseHeaders();
 			if (!string.IsNullOrWhiteSpace(reason))

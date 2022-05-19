@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace DisCatSharp.Common
@@ -487,9 +488,45 @@ namespace DisCatSharp.Common
 		private static ulong Knuth(ReadOnlySpan<char> chars)
 		{
 			var hash = 3074457345618258791ul;
-			for (var i = 0; i < chars.Length; i++)
-				hash = (hash + chars[i]) * 3074457345618258799ul;
+			foreach (var ch in chars)
+				hash = (hash + ch) * 3074457345618258799ul;
+
 			return hash;
+		}
+
+		/// <summary>
+		/// Removes the first item matching the predicate from the list.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="list"></param>
+		/// <param name="predicate"></param>
+		/// <returns>Whether an item was removed.</returns>
+		internal static bool RemoveFirst<T>(this IList<T> list, Predicate<T> predicate)
+		{
+			for (var i = 0; i < list.Count; i++)
+			{
+				if (predicate(list[i]))
+				{
+					list.RemoveAt(i);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Populates an array with the given value.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="arr"></param>
+		/// <param name="value"></param>
+		internal static void Populate<T>(this T[] arr, T value)
+		{
+			for (var i = 0; i < arr.Length; i++)
+			{
+				arr[i] = value;
+			}
 		}
 	}
 }

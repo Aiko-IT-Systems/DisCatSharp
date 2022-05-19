@@ -145,16 +145,16 @@ namespace DisCatSharp.Entities
 		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public Task ModifyPositionAsync(int position, string reason = null)
 		{
-			var roles = this.Discord.Guilds[this.GuildId].Roles.Values.OrderByDescending(xr => xr.Position).ToArray();
-			var pmds = new RestGuildRoleReorderPayload[roles.Length];
-			for (var i = 0; i < roles.Length; i++)
-			{
-				pmds[i] = new RestGuildRoleReorderPayload { RoleId = roles[i].Id };
+			var roles = this.Discord.Guilds[this.GuildId].Roles.Values.OrderByDescending(xr => xr.Position)
+				.Select(x => new RestGuildRoleReorderPayload
+				{
+					RoleId = x.Id,
+					Position = x.Id == this.Id
+						? position
+						: x.Position <= position ? x.Position - 1 : x.Position
+				});
 
-				pmds[i].Position = roles[i].Id == this.Id ? position : roles[i].Position <= position ? roles[i].Position - 1 : roles[i].Position;
-			}
-
-			return this.Discord.ApiClient.ModifyGuildRolePositionAsync(this.GuildId, pmds, reason);
+			return this.Discord.ApiClient.ModifyGuildRolePositionAsync(this.GuildId, roles, reason);
 		}
 
 		/// <summary>

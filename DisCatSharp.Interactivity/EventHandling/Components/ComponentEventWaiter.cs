@@ -116,7 +116,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <param name="args">The args.</param>
 		private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs args)
 		{
-			foreach (var mreq in this._matchRequests.ToArray())
+			foreach (var mreq in this._matchRequests)
 			{
 				if (mreq.Message == args.Message && mreq.IsMatch(args))
 					mreq.Tcs.TrySetResult(args);
@@ -126,7 +126,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			}
 
 
-			foreach (var creq in this._collectRequests.ToArray())
+			foreach (var creq in this._collectRequests)
 			{
 				if (creq.Message == args.Message && creq.IsMatch(args))
 				{

@@ -112,8 +112,7 @@ namespace DisCatSharp.ApplicationCommands
 				var parameters = method.GetParameters();
 				if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
 					throw new ArgumentException($"The first argument must be an InteractionContext!");
-				parameters = parameters.Skip(1).ToArray();
-				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters, guildId);
+				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), guildId);
 
 				commandMethods.Add(new CommandMethod { Method = method, Name = commandAttribute.Name });
 
@@ -225,9 +224,8 @@ namespace DisCatSharp.ApplicationCommands
 					var parameters = submethod.GetParameters();
 					if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
 						throw new ArgumentException($"The first argument must be an InteractionContext!");
-					parameters = parameters.Skip(1).ToArray();
 
-					var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters, guildId);
+					var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), guildId);
 
 					DiscordApplicationCommandLocalization subNameLocalizations = null;
 					DiscordApplicationCommandLocalization subDescriptionLocalizations = null;
@@ -315,8 +313,7 @@ namespace DisCatSharp.ApplicationCommands
 						if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
 							throw new ArgumentException($"The first argument must be an InteractionContext!");
 
-						parameters = parameters.Skip(1).ToArray();
-						suboptions = suboptions.Concat(await ApplicationCommandsExtension.ParseParametersAsync(parameters, guildId)).ToList();
+						suboptions = suboptions.Concat(await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), guildId)).ToList();
 
 						DiscordApplicationCommandLocalization subSubNameLocalizations = null;
 						DiscordApplicationCommandLocalization subSubDescriptionLocalizations = null;
