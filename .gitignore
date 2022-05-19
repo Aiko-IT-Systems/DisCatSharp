@@ -29,6 +29,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 
+**/Generated/*
+
 # NuGET
 [Nn]uget/
 
