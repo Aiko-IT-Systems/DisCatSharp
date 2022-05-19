@@ -596,6 +596,10 @@ namespace DisCatSharp
 					await this.OnGuildApplicationCommandCountsUpdateAsync((int)counts["1"], (int)counts["2"], (int)counts["3"], (ulong)dat["guild_id"]).ConfigureAwait(false);
 					break;
 
+				case "guild_application_command_index_update":
+					// TODO: Implement.
+					break;
+
 				case "application_command_permissions_update":
 					var aid = (ulong)dat["application_id"];
 					if (aid != this.CurrentApplication.Id)
