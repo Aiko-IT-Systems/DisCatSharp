@@ -675,7 +675,7 @@ namespace DisCatSharp.Interactivity
 
 			var message = await builder.SendAsync(channel).ConfigureAwait(false);
 
-			var req = new ButtonPaginationRequest(message, user, bhv, del, bts, pages.ToArray(), token == default ? this.GetCancellationToken() : token);
+			var req = new ButtonPaginationRequest(message, user, bhv, del, bts, pages, token == default ? this.GetCancellationToken() : token);
 
 			await this._compPaginator.DoPaginationAsync(req).ConfigureAwait(false);
 		}
@@ -746,7 +746,7 @@ namespace DisCatSharp.Interactivity
 			var del = deletion ?? this.Config.PaginationDeletion;
 			var ems = emojis ?? this.Config.PaginationEmojis;
 
-			var pRequest = new PaginationRequest(m, user, bhv, del, ems, timeout, pages.ToArray());
+			var pRequest = new PaginationRequest(m, user, bhv, del, ems, timeout, pages);
 
 			await this._paginator.DoPaginationAsync(pRequest).ConfigureAwait(false);
 		}

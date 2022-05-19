@@ -218,10 +218,9 @@ namespace DisCatSharp.CommandsNext
 
 			var argString = ctx.RawArgumentString;
 			var foundAt = 0;
-			var argValue = "";
-			for (var i = 0; i < overload.Arguments.Count; i++)
+			foreach (var arg in overload.Arguments)
 			{
-				var arg = overload.Arguments[i];
+				string argValue;
 				if (arg.IsCatchAll)
 				{
 					if (arg.IsArray)
