@@ -458,7 +458,7 @@ namespace DisCatSharp.Common
 		/// <summary>
 		/// Gets the two first elements of the <see cref="IEnumerable{T}"/>, if they exist.
 		/// </summary>
-		/// <param name="enumerable">The list.</param>
+		/// <param name="enumerable">The enumerable.</param>
 		/// <param name="values">The output values. Undefined if <code>false</code> is returned.</param>
 		/// <returns>Whether the <see cref="IEnumerable{T}"/> contained enough elements.</returns>
 		internal static bool TryFirstTwo<T>(this IEnumerable<T> enumerable, out (T first, T second) values)
@@ -515,6 +515,12 @@ namespace DisCatSharp.Common
 			return false;
 		}
 
+		/// <summary>
+		/// Populates an array with the given value.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="arr"></param>
+		/// <param name="value"></param>
 		internal static void Populate<T>(this T[] arr, T value)
 		{
 			for (var i = 0; i < arr.Length; i++)
