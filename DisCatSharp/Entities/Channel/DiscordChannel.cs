@@ -656,23 +656,23 @@ namespace DisCatSharp.Entities
                             .Select(xc => xc.Position).DefaultIfEmpty(-1).Max() + 1; // returns highest position of list +1, default val: 0
 
 			var pmds = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type)
-							.OrderBy(xc => xc.Position)
-							.Select(x =>
-							{
-								var pmd = new RestGuildChannelNewParentPayload
-								{
-									ChannelId = x.Id,
-									Position = x.Position >= position ? x.Position + 1 : x.Position,
-								};
-								if (x.Id == this.Id)
-								{
-									pmd.Position = position;
-									pmd.ParentId = newParent is not null ? newParent.Id : null;
-									pmd.LockPermissions = lockPermissions;
-								}
+				.OrderBy(xc => xc.Position)
+				.Select(x =>
+				{
+					var pmd = new RestGuildChannelNewParentPayload
+					{
+						ChannelId = x.Id,
+						Position = x.Position >= position ? x.Position + 1 : x.Position,
+					};
+					if (x.Id == this.Id)
+					{
+						pmd.Position = position;
+						pmd.ParentId = newParent is not null ? newParent.Id : null;
+						pmd.LockPermissions = lockPermissions;
+					}
 
-								return pmd;
-							});
+					return pmd;
+				});
 
 			return this.Discord.ApiClient.ModifyGuildChannelParentAsync(this.Guild.Id, pmds, reason);
 		}

@@ -90,7 +90,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// </summary>
 		/// <param name="request">The request to wait on.</param>
 		/// <returns>The result from request's predicate over the period of time leading up to the token's cancellation.</returns>
-		public async Task<IEnumerable<ComponentInteractionCreateEventArgs>> CollectMatchesAsync(ComponentCollectRequest request)
+		public async Task<IReadOnlyList<ComponentInteractionCreateEventArgs>> CollectMatchesAsync(ComponentCollectRequest request)
 		{
 			this._collectRequests.Add(request);
 			try
@@ -106,7 +106,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 				this._collectRequests.TryRemove(request);
 			}
 
-			return request.Collected;
+			return request.Collected.ToArray();
 		}
 
 		/// <summary>
