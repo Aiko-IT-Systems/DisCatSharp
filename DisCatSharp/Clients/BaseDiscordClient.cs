@@ -180,7 +180,7 @@ namespace DisCatSharp
 				Description = tapp.Description,
 				Summary = tapp.Summary,
 				IconHash = tapp.IconHash,
-				RpcOrigins = tapp.RpcOrigins.AsReadOnly(),
+				RpcOrigins = tapp.RpcOrigins?.AsReadOnly(),
 				Flags = tapp.Flags,
 				RequiresCodeGrant = tapp.BotRequiresCodeGrant,
 				IsPublic = tapp.IsPublicBot,

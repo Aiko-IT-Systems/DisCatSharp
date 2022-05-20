@@ -548,6 +548,12 @@ namespace DisCatSharp.Common
 			return list;
 		}
 
+		/// <summary>
+		/// <see cref="List{T}.AsReadOnly"/> for <see cref="IList{T}"/>.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="list"></param>
+		/// <returns></returns>
 		internal static ReadOnlyCollection<T> AsReadOnly<T>(this IList<T> list) => new(list);
 	}
 }

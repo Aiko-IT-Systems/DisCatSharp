@@ -4633,7 +4633,7 @@ namespace DisCatSharp.Net
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
 		/// <param name="defaultMemberPermission">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
-		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyList<DiscordApplicationCommandOption>> options,
+		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
 			Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
 			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
 		{
@@ -4705,7 +4705,7 @@ namespace DisCatSharp.Net
 		/// <param name="applicationId">The application id.</param>
 		/// <param name="guildId">The guild id.</param>
 		/// <param name="commands">The commands.</param>
-		internal async Task<IEnumerable<DiscordApplicationCommand>> BulkOverwriteGuildApplicationCommandsAsync(ulong applicationId, ulong guildId, IEnumerable<DiscordApplicationCommand> commands)
+		internal async Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGuildApplicationCommandsAsync(ulong applicationId, ulong guildId, IEnumerable<DiscordApplicationCommand> commands)
 		{
 			var pld = new List<RestApplicationCommandCreatePayload>();
 			foreach (var command in commands)
@@ -4802,7 +4802,7 @@ namespace DisCatSharp.Net
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
 		/// <param name="defaultMemberPermission">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
-		internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyList<DiscordApplicationCommandOption>> options,
+		internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
 			Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
 			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
 		{

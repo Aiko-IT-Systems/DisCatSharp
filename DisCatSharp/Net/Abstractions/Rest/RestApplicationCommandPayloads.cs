@@ -122,7 +122,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// Gets the options.
 		/// </summary>
 		[JsonProperty("options")]
-		public Optional<IReadOnlyList<DiscordApplicationCommandOption>> Options { get; set; }
+		public Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> Options { get; set; }
 
 		/// <summary>
 		/// Gets the default permission.
