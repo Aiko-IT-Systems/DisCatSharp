@@ -87,11 +87,11 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		public List<IMention> Mentions { get; private set; }
 
+		internal readonly List<DiscordMessageFile> FilesInternal = new();
 		/// <summary>
 		/// Gets the Files to be sent in the Message.
 		/// </summary>
-		public IReadOnlyCollection<DiscordMessageFile> Files => this.FilesInternal;
-		internal readonly List<DiscordMessageFile> FilesInternal = new();
+		public IReadOnlyList<DiscordMessageFile> Files => this.FilesInternal.AsReadOnly();
 
 		/// <summary>
 		/// Gets the components that will be attached to the message.

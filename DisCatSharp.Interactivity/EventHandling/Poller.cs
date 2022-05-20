@@ -61,9 +61,9 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// </summary>
 		/// <param name="request">The request.</param>
 		/// <returns>A Task.</returns>
-		public async Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(PollRequest request)
+		public async Task<List<PollEmoji>> DoPollAsync(PollRequest request)
 		{
-			ReadOnlyCollection<PollEmoji> result = null;
+			List<PollEmoji> result;
 			this._requests.Add(request);
 			try
 			{
@@ -75,7 +75,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			}
 			finally
 			{
-				result = new ReadOnlyCollection<PollEmoji>(new HashSet<PollEmoji>(request.Collected).ToList());
+				result = request.Collected.ToList();
 				request.Dispose();
 				this._requests.TryRemove(request);
 			}

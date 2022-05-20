@@ -30,6 +30,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using DisCatSharp.Common;
 using DisCatSharp.Entities;
 using DisCatSharp.Net;
 
@@ -179,7 +180,7 @@ namespace DisCatSharp
 				Description = tapp.Description,
 				Summary = tapp.Summary,
 				IconHash = tapp.IconHash,
-				RpcOrigins = tapp.RpcOrigins != null ? new ReadOnlyCollection<string>(tapp.RpcOrigins) : null,
+				RpcOrigins = tapp.RpcOrigins.AsReadOnly(),
 				Flags = tapp.Flags,
 				RequiresCodeGrant = tapp.BotRequiresCodeGrant,
 				IsPublic = tapp.IsPublicBot,
@@ -194,7 +195,7 @@ namespace DisCatSharp
 
 			if (tapp.Team == null)
 			{
-				app.Owners = new ReadOnlyCollection<DiscordUser>(new[] { new DiscordUser(tapp.Owner) });
+				app.Owners = new[] { new DiscordUser(tapp.Owner) };
 				app.Team = null;
 				app.TeamName = null;
 			}
@@ -211,9 +212,9 @@ namespace DisCatSharp
 					.Select(x => x.User)
 					.ToArray();
 
-				app.Owners = new ReadOnlyCollection<DiscordUser>(owners);
+				app.Owners = owners;
 				app.Team.Owner = owners.FirstOrDefault(x => x.Id == tapp.Team.OwnerId);
-				app.Team.Members = new ReadOnlyCollection<DiscordTeamMember>(members);
+				app.Team.Members = members;
 				app.TeamName = app.Team.Name;
 			}
 

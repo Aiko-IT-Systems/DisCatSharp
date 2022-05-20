@@ -39,7 +39,7 @@ namespace DisCatSharp.CommandsNext.Exceptions
 		/// <summary>
 		/// Gets the ordered collection of argument types for the specified overload.
 		/// </summary>
-		public IReadOnlyList<Type> ArgumentTypes { get; }
+		public IEnumerable<Type> ArgumentTypes { get; }
 
 		/// <summary>
 		/// Gets the argument set key.
@@ -52,11 +52,11 @@ namespace DisCatSharp.CommandsNext.Exceptions
 		/// <param name="name">Name of the command with duplicated argument sets.</param>
 		/// <param name="argumentTypes">Collection of ordered argument types for the command.</param>
 		/// <param name="argumentSetKey">Overload identifier.</param>
-		internal DuplicateOverloadException(string name, IList<Type> argumentTypes, string argumentSetKey)
+		internal DuplicateOverloadException(string name, IEnumerable<Type> argumentTypes, string argumentSetKey)
 			: base("An overload with specified argument types exists.")
 		{
 			this.CommandName = name;
-			this.ArgumentTypes = new ReadOnlyCollection<Type>(argumentTypes);
+			this.ArgumentTypes = argumentTypes;
 			this._argumentSetKey = argumentSetKey;
 		}
 

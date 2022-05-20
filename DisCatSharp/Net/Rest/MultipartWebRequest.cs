@@ -63,7 +63,7 @@ namespace DisCatSharp.Net
 		/// <param name="ratelimitWaitOverride">The ratelimit_wait_override.</param>
 		/// <param name="overwriteFileIdStart">The file id start.</param>
 		internal MultipartWebRequest(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, IReadOnlyDictionary<string, string> values = null,
-			IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimitWaitOverride = null, int? overwriteFileIdStart = null)
+			IEnumerable<DiscordMessageFile> files = null, double? ratelimitWaitOverride = null, int? overwriteFileIdStart = null)
 			: base(client, bucket, url, method, route, headers, ratelimitWaitOverride)
 		{
 			this.Values = values;

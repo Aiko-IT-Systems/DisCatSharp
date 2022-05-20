@@ -112,16 +112,14 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the embed's fields.
 		/// </summary>
-		public IReadOnlyList<DiscordEmbedField> Fields { get; }
+		public IReadOnlyList<DiscordEmbedField> Fields => this._fields;
 		private readonly List<DiscordEmbedField> _fields = new();
 
 		/// <summary>
 		/// Constructs a new empty embed builder.
 		/// </summary>
 		public DiscordEmbedBuilder()
-		{
-			this.Fields = new ReadOnlyCollection<DiscordEmbedField>(this._fields);
-		}
+		{ }
 
 		/// <summary>
 		/// Constructs a new embed builder using another embed as prototype.
@@ -506,7 +504,7 @@ namespace DisCatSharp.Entities
 					Width = this.Thumbnail.Width
 				};
 
-			embed.Fields = new ReadOnlyCollection<DiscordEmbedField>(new List<DiscordEmbedField>(this._fields)); // copy the list, don't wrap it, prevents mutation
+			embed.Fields = new List<DiscordEmbedField>(this._fields); // copy the list, don't wrap it, prevents mutation
 
 			var charCount = 0;
 			if (embed.Fields.Any())

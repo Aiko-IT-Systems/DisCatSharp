@@ -108,7 +108,7 @@ namespace DisCatSharp
 
 			this.Apiclient = new DiscordApiClient(proxy, parsedTimeout, useRelativeRateLimit, this.Logger);
 			this.Hooks = new List<DiscordWebhook>();
-			this.Webhooks = new ReadOnlyCollection<DiscordWebhook>(this.Hooks);
+			this.Webhooks = this.Hooks;
 		}
 
 		/// <summary>

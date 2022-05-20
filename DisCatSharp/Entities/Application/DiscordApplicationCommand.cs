@@ -146,7 +146,7 @@ namespace DisCatSharp.Entities
 				this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
 			}
 
-			var optionsList = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;
+			var optionsList = options?.ToArray();
 
 			this.Type = type;
 			this.Name = name;

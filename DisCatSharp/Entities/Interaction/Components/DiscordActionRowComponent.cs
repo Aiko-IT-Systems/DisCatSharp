@@ -38,7 +38,7 @@ namespace DisCatSharp.Entities
 		/// The components contained within the action row.
 		/// </summary>
 		[JsonIgnore]
-		public IReadOnlyCollection<DiscordComponent> Components
+		public IReadOnlyList<DiscordComponent> Components
 		{
 			get => this._components ?? new List<DiscordComponent>();
 			set => this._components = new List<DiscordComponent>(value);
@@ -54,7 +54,7 @@ namespace DisCatSharp.Entities
 		public DiscordActionRowComponent(IEnumerable<DiscordComponent> components)
 			: this()
 		{
-			this.Components = components.ToList().AsReadOnly();
+			this.Components = components.ToArray();
 		}
 
 		/// <summary>

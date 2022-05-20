@@ -94,9 +94,9 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// Collects the matches async.
 		/// </summary>
 		/// <param name="request">The request.</param>
-		public async Task<ReadOnlyCollection<T>> CollectMatchesAsync(CollectRequest<T> request)
+		public async Task<List<T>> CollectMatchesAsync(CollectRequest<T> request)
 		{
-			ReadOnlyCollection<T> result = null;
+			List<T> result;
 			this._collectRequests.Add(request);
 			try
 			{
@@ -108,7 +108,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			}
 			finally
 			{
-				result = new ReadOnlyCollection<T>(new HashSet<T>(request.Collected).ToList());
+				result = request.Collected.ToList();
 				request.Dispose();
 				this._collectRequests.TryRemove(request);
 			}

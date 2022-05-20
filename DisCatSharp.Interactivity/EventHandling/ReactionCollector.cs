@@ -93,10 +93,10 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// </summary>
 		/// <param name="request">The request.</param>
 		/// <returns>A Task.</returns>
-		public async Task<ReadOnlyCollection<Reaction>> CollectAsync(ReactionCollectRequest request)
+		public async Task<List<Reaction>> CollectAsync(ReactionCollectRequest request)
 		{
 			this._requests.Add(request);
-			var result = (ReadOnlyCollection<Reaction>)null;
+			List<Reaction> result;
 
 			try
 			{
@@ -108,7 +108,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			}
 			finally
 			{
-				result = new ReadOnlyCollection<Reaction>(new HashSet<Reaction>(request.Collected).ToList());
+				result = request.Collected.ToList();
 				request.Dispose();
 				this._requests.TryRemove(request);
 			}

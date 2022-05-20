@@ -106,7 +106,7 @@ namespace DisCatSharp.Interactivity
 		/// <param name="behaviour">What to do when the poll ends.</param>
 		/// <param name="timeout">Override timeout period.</param>
 		/// <returns></returns>
-		public async Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(DiscordMessage m, IEnumerable<DiscordEmoji> emojis, PollBehaviour? behaviour = default, TimeSpan? timeout = null)
+		public async Task<IReadOnlyList<PollEmoji>> DoPollAsync(DiscordMessage m, IEnumerable<DiscordEmoji> emojis, PollBehaviour? behaviour = default, TimeSpan? timeout = null)
 		{
 			if (!Utilities.HasReactionIntents(this.Client.Configuration.Intents))
 				throw new InvalidOperationException("No reaction intents are enabled.");
@@ -125,7 +125,7 @@ namespace DisCatSharp.Interactivity
 			if (pollBehaviour == PollBehaviour.DeleteEmojis && m.Channel.PermissionsFor(thisMember).HasPermission(Permissions.ManageMessages))
 				await m.DeleteAllReactionsAsync().ConfigureAwait(false);
 
-			return new ReadOnlyCollection<PollEmoji>(res.ToList());
+			return res;
 		}
 
 		/// <summary>
@@ -603,7 +603,7 @@ namespace DisCatSharp.Interactivity
 		/// </summary>
 		/// <param name="m">Message to collect reactions on.</param>
 		/// <param name="timeoutOverride">Override timeout period.</param>
-		public async Task<ReadOnlyCollection<Reaction>> CollectReactionsAsync(DiscordMessage m, TimeSpan? timeoutOverride = null)
+		public async Task<IReadOnlyList<Reaction>> CollectReactionsAsync(DiscordMessage m, TimeSpan? timeoutOverride = null)
 		{
 			if (!Utilities.HasReactionIntents(this.Client.Configuration.Intents))
 				throw new InvalidOperationException("No reaction intents are enabled.");
@@ -634,7 +634,7 @@ namespace DisCatSharp.Interactivity
 		/// </summary>
 		/// <param name="predicate">The predicate.</param>
 		/// <param name="timeoutOverride">Override timeout period.</param>
-		public async Task<ReadOnlyCollection<T>> CollectEventArgsAsync<T>(Func<T, bool> predicate, TimeSpan? timeoutOverride = null) where T : AsyncEventArgs
+		public async Task<IReadOnlyList<T>> CollectEventArgsAsync<T>(Func<T, bool> predicate, TimeSpan? timeoutOverride = null) where T : AsyncEventArgs
 		{
 			var timeout = timeoutOverride ?? this.Config.Timeout;
 
@@ -827,7 +827,7 @@ namespace DisCatSharp.Interactivity
 			{
 				default:
 				case SplitType.Character:
-					split = this.SplitString(input, 500).ToList();
+					split = this.SplitString(input, 500);
 					break;
 				case SplitType.Line:
 					var subsplit = input.Split('\n');
@@ -880,7 +880,7 @@ namespace DisCatSharp.Interactivity
 			{
 				default:
 				case SplitType.Character:
-					split = this.SplitString(input, 500).ToList();
+					split = this.SplitString(input, 500);
 					break;
 				case SplitType.Line:
 					var subsplit = input.Split('\n');

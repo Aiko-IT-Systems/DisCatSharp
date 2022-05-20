@@ -382,8 +382,8 @@ namespace DisCatSharp.ApplicationCommands
 				GlobalDiscordCommands = new();
 				GuildDiscordCommands = new();
 
-				var commandsPending = this._updateList.Select(x => x.Key).Distinct();
-				s_expectedCount = commandsPending.Count();
+				var commandsPending = this._updateList.Select(x => x.Key).Distinct().ToArray();
+				s_expectedCount = commandsPending.Length;
 
 				this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Expected Count: {s_expectedCount}");
 
@@ -394,11 +394,11 @@ namespace DisCatSharp.ApplicationCommands
 
 				foreach (var guild in guilds)
 				{
-					IEnumerable<DiscordApplicationCommand> commands = null;
+					List<DiscordApplicationCommand> commands = null;
 					var unauthorized = false;
 					try
 					{
-						commands = await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false) ?? null;
+						commands = (await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false)).ToList();
 					}
 					catch (UnauthorizedException)
 					{
@@ -407,7 +407,7 @@ namespace DisCatSharp.ApplicationCommands
 					finally
 					{
 						if (!unauthorized && commands != null && commands.Any())
-							GuildDiscordCommands.Add(guild, commands.ToList());
+							GuildDiscordCommands.Add(guild, commands);
 						else if (!unauthorized)
 							GuildDiscordCommands.Add(guild, null);
 						else
@@ -421,13 +421,13 @@ namespace DisCatSharp.ApplicationCommands
 				{
 					this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
 						(null, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
-					commandsPending = this._updateList.Select(x => x.Key).Distinct();
+					commandsPending = this._updateList.Select(x => x.Key).Distinct().ToArray();
 				}
 
 				if (globalCommands != null && globalCommands.Any())
 					GlobalDiscordCommands.AddRange(globalCommands);
 
-				foreach (var key in commandsPending.ToList())
+				foreach (var key in commandsPending)
 				{
 					this.Client.Logger.LogInformation(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
 					await this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
@@ -466,21 +466,14 @@ namespace DisCatSharp.ApplicationCommands
 				try
 				{
 					var module = type.GetTypeInfo();
-					var classes = new List<TypeInfo>();
 
 					var ctx = new ApplicationCommandsTranslationContext(type, module.FullName);
 					config.Translations?.Invoke(ctx);
 
-					//Add module to classes list if it's a group
-					if (module.GetCustomAttribute<SlashCommandGroupAttribute>() != null)
-					{
-						classes.Add(module);
-					}
-					else
-					{
-						//Otherwise add the nested groups
-						classes = module.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
-					}
+					var classes = module.GetCustomAttribute<SlashCommandGroupAttribute>() != null
+						? new[] {module} // Add module to classes list if it's a group
+						: module.DeclaredNestedTypes.Where(x => //Otherwise add the nested groups
+							x.GetCustomAttribute<SlashCommandGroupAttribute>() != null);
 
 					List<GroupTranslator> groupTranslations = null;
 
@@ -573,7 +566,7 @@ namespace DisCatSharp.ApplicationCommands
 							if (updateList != null && updateList.Any())
 							{
 								var regCommands = RegistrationWorker.RegisterGlobalCommandsAsync(updateList).Result;
-								var actualCommands = regCommands.Distinct().ToList();
+								var actualCommands = regCommands.Distinct().ToArray();
 								commands.AddRange(actualCommands);
 								GlobalCommandsInternal.AddRange(actualCommands);
 							}
@@ -597,7 +590,7 @@ namespace DisCatSharp.ApplicationCommands
 							if (updateList != null && updateList.Any())
 							{
 								var regCommands = RegistrationWorker.RegisterGuilldCommandsAsync(guildId.Value, updateList).Result;
-								var actualCommands = regCommands.Distinct().ToList();
+								var actualCommands = regCommands.Distinct().ToArray();
 								commands.AddRange(actualCommands);
 								GuildCommandsInternal.Add(guildId.Value, actualCommands);
 								if (this.Client.Guilds.TryGetValue(guildId.Value, out var guild))
@@ -648,7 +641,7 @@ namespace DisCatSharp.ApplicationCommands
 					s_subGroupCommands.AddRange(subGroupCommands);
 					s_contextMenuCommands.AddRange(contextMenuCommands);
 
-					s_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildId, commands.ToList()));
+					s_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildId, commands.ToArray()));
 
 					foreach (var command in commandMethods)
 					{
@@ -731,10 +724,10 @@ namespace DisCatSharp.ApplicationCommands
 						InteractionId = e.Interaction.Id,
 						Token = e.Interaction.Token,
 						Services = Configuration?.ServiceProvider,
-						ResolvedUserMentions = e.Interaction.Data.Resolved?.Users?.Values.ToList(),
-						ResolvedRoleMentions = e.Interaction.Data.Resolved?.Roles?.Values.ToList(),
-						ResolvedChannelMentions = e.Interaction.Data.Resolved?.Channels?.Values.ToList(),
-						ResolvedAttachments = e.Interaction.Data.Resolved?.Attachments?.Values.ToList(),
+						ResolvedUserMentions = e.Interaction.Data.Resolved?.Users?.Values.ToArray(),
+						ResolvedRoleMentions = e.Interaction.Data.Resolved?.Roles?.Values.ToArray(),
+						ResolvedChannelMentions = e.Interaction.Data.Resolved?.Channels?.Values.ToArray(),
+						ResolvedAttachments = e.Interaction.Data.Resolved?.Attachments?.Values.ToArray(),
 						Type = ApplicationCommandType.ChatInput,
 						Locale = e.Interaction.Locale,
 						GuildLocale = e.Interaction.GuildLocale
@@ -819,7 +812,7 @@ namespace DisCatSharp.ApplicationCommands
 								Guild = e.Interaction.Guild,
 								Channel = e.Interaction.Channel,
 								User = e.Interaction.User,
-								Options = e.Interaction.Data.Options.ToList(),
+								Options = e.Interaction.Data.Options.ToArray(),
 								FocusedOption = focusedOption,
 								Locale = e.Interaction.Locale,
 								GuildLocale = e.Interaction.GuildLocale
@@ -847,7 +840,7 @@ namespace DisCatSharp.ApplicationCommands
 								Guild = e.Interaction.Guild,
 								Channel = e.Interaction.Channel,
 								User = e.Interaction.User,
-								Options = command.Options.ToList(),
+								Options = command.Options.ToArray(),
 								FocusedOption = focusedOption,
 								Locale = e.Interaction.Locale,
 								GuildLocale = e.Interaction.GuildLocale
@@ -876,7 +869,7 @@ namespace DisCatSharp.ApplicationCommands
                                 Guild = e.Interaction.Guild,
                                 Channel = e.Interaction.Channel,
                                 User = e.Interaction.User,
-                                Options = command.Options.First().Options.ToList(),
+                                Options = command.Options.First().Options.ToArray(),
                                 FocusedOption = focusedOption,
 								Locale = e.Interaction.Locale,
 								GuildLocale = e.Interaction.GuildLocale
@@ -1204,7 +1197,7 @@ namespace DisCatSharp.ApplicationCommands
 
 				//Checks if any failed, and throws an exception
 				if (dict.Any(x => x.Value == false))
-					throw new SlashExecutionChecksFailedException { FailedChecks = dict.Where(x => x.Value == false).Select(x => x.Key).ToList() };
+					throw new SlashExecutionChecksFailedException { FailedChecks = dict.Where(x => x.Value == false).Select(x => x.Key).ToArray() };
 			}
 			if (context is ContextMenuContext cMctx)
 			{
@@ -1230,63 +1223,8 @@ namespace DisCatSharp.ApplicationCommands
 
 				//Checks if any failed, and throws an exception
 				if (dict.Any(x => x.Value == false))
-					throw new ContextMenuExecutionChecksFailedException { FailedChecks = dict.Where(x => x.Value == false).Select(x => x.Key).ToList() };
+					throw new ContextMenuExecutionChecksFailedException { FailedChecks = dict.Where(x => x.Value == false).Select(x => x.Key).ToArray() };
 			}
-		}
-
-		/// <summary>
-		/// Gets the choice attributes from choice provider.
-		/// </summary>
-		/// <param name="customAttributes">The custom attributes.</param>
-		/// <param name="guildId">The optional guild id</param>
-		private static async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(IEnumerable<ChoiceProviderAttribute> customAttributes, ulong? guildId = null)
-		{
-			var choices = new List<DiscordApplicationCommandOptionChoice>();
-			foreach (var choiceProviderAttribute in customAttributes)
-			{
-				var method = choiceProviderAttribute.ProviderType.GetMethod(nameof(IChoiceProvider.Provider));
-
-				if (method == null)
-					throw new ArgumentException("ChoiceProviders must inherit from IChoiceProvider.");
-				else
-				{
-					var instance = Activator.CreateInstance(choiceProviderAttribute.ProviderType);
-
-					// Abstract class offers more properties that can be set
-					if (choiceProviderAttribute.ProviderType.IsSubclassOf(typeof(ChoiceProvider)))
-					{
-						choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.GuildId))
-							?.SetValue(instance, guildId);
-
-						choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.Services))
-							?.SetValue(instance, Configuration.ServiceProvider);
-					}
-
-					//Gets the choices from the method
-					var result = await (Task<IEnumerable<DiscordApplicationCommandOptionChoice>>)method.Invoke(instance, null);
-
-					if (result.Any())
-					{
-						choices.AddRange(result);
-					}
-				}
-			}
-
-			return choices;
-		}
-
-		/// <summary>
-		/// Gets the choice attributes from enum parameter.
-		/// </summary>
-		/// <param name="enumParam">The enum parameter.</param>
-		private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromEnumParameter(Type enumParam)
-		{
-			var choices = new List<DiscordApplicationCommandOptionChoice>();
-			foreach (Enum enumValue in Enum.GetValues(enumParam))
-			{
-				choices.Add(new DiscordApplicationCommandOptionChoice(enumValue.GetName(), enumValue.ToString()));
-			}
-			return choices;
 		}
 
 		/// <summary>
@@ -1320,15 +1258,6 @@ namespace DisCatSharp.ApplicationCommands
 		}
 
 		/// <summary>
-		/// Gets the choice attributes from parameter.
-		/// </summary>
-		/// <param name="choiceAttributes">The choice attributes.</param>
-		private static List<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(IEnumerable<ChoiceAttribute> choiceAttributes) =>
-			!choiceAttributes.Any()
-				? null
-				: choiceAttributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, att.Value)).ToList();
-
-		/// <summary>
 		/// Parses the parameters.
 		/// </summary>
 		/// <param name="parameters">The parameters.</param>
@@ -1359,18 +1288,47 @@ namespace DisCatSharp.ApplicationCommands
 
 				//Handles choices
 				//From attributes
-				var choices = GetChoiceAttributesFromParameter(parameter.GetCustomAttributes<ChoiceAttribute>());
+				IEnumerable<DiscordApplicationCommandOptionChoice> choices = null;
 				//From enums
 				if (parameter.ParameterType.IsEnum)
 				{
-					choices = GetChoiceAttributesFromEnumParameter(parameter.ParameterType);
+					choices = Enum.GetValues(parameter.ParameterType).OfType<int>().Select(enumValue =>
+						new DiscordApplicationCommandOptionChoice(enumValue.GetName(), enumValue.ToString()));
 				}
 				//From choice provider
 				var choiceProviders = parameter.GetCustomAttributes<ChoiceProviderAttribute>();
 				if (choiceProviders.Any())
 				{
-					choices = await GetChoiceAttributesFromProvider(choiceProviders, guildId);
+					choices = (await Task.WhenAll(choiceProviders.Select(async choiceProviderAttribute =>
+					{
+						var method = choiceProviderAttribute.ProviderType.GetMethod(nameof(IChoiceProvider.Provider));
+
+						if (method == null)
+							throw new ArgumentException("ChoiceProviders must inherit from IChoiceProvider.");
+
+						var instance = Activator.CreateInstance(choiceProviderAttribute.ProviderType);
+
+						// Abstract class offers more properties that can be set
+						if (choiceProviderAttribute.ProviderType.IsSubclassOf(typeof(ChoiceProvider)))
+						{
+							choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.GuildId))
+								?.SetValue(instance, guildId);
+
+							choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.Services))
+								?.SetValue(instance, Configuration.ServiceProvider);
+						}
+
+						//Gets the choices from the method
+						return await (Task<IEnumerable<DiscordApplicationCommandOptionChoice>>)method.Invoke(instance, null);
+					}))).SelectMany(x => x);
 				}
+
+				choices ??= GetChoiceAttributesFromParameter(parameter.GetCustomAttributes<ChoiceAttribute>());
+
+				IEnumerable<DiscordApplicationCommandOptionChoice> GetChoiceAttributesFromParameter(IEnumerable<ChoiceAttribute> choiceAttributes) =>
+					!choiceAttributes.Any()
+						? null
+						: choiceAttributes.Select(att => new DiscordApplicationCommandOptionChoice(att.Name, att.Value));
 
 				var channelTypes = parameter.GetCustomAttribute<ChannelTypesAttribute>()?.ChannelTypes ?? null;
 
@@ -1593,7 +1551,7 @@ namespace DisCatSharp.ApplicationCommands
 			{
 				var options = new List<DiscordApplicationCommandAutocompleteChoice>();
 
-				IEnumerable<DiscordApplicationCommand> slashCommands = null;
+				IEnumerable<DiscordApplicationCommand> slashCommands;
 				var globalCommandsTask = context.Client.GetGlobalApplicationCommandsAsync();
 				if (context.Guild != null)
 				{
@@ -1602,8 +1560,7 @@ namespace DisCatSharp.ApplicationCommands
 					slashCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
 						.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 						.GroupBy(ac => ac.Name).Select(x => x.First())
-						.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase))
-						.ToList();
+						.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase));
 				}
 				else
 				{
@@ -1611,8 +1568,7 @@ namespace DisCatSharp.ApplicationCommands
 					slashCommands = globalCommandsTask.Result
 						.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
 						.GroupBy(ac => ac.Name).Select(x => x.First())
-						.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase))
-						.ToList();
+						.Where(ac => ac.Name.StartsWith(context.Options[0].Value.ToString(), StringComparison.OrdinalIgnoreCase));
 				}
 
 				foreach (var sc in slashCommands.Take(25))
@@ -1627,8 +1583,7 @@ namespace DisCatSharp.ApplicationCommands
 		{
 			public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
 			{
-				var options = new List<DiscordApplicationCommandAutocompleteChoice>();
-				IEnumerable<DiscordApplicationCommand> slashCommands = null;
+				IEnumerable<DiscordApplicationCommand> slashCommands;
 				var globalCommandsTask = context.Client.GetGlobalApplicationCommandsAsync();
 				if (context.Guild != null)
 				{
@@ -1649,19 +1604,12 @@ namespace DisCatSharp.ApplicationCommands
 				var command = slashCommands.FirstOrDefault(ac =>
 					ac.Name.Equals(context.Options[0].Value.ToString().Trim(),StringComparison.OrdinalIgnoreCase));
 				if (command is null || command.Options is null)
-				{
-					options.Add(new DiscordApplicationCommandAutocompleteChoice("no_options_for_this_command", "no_options_for_this_command"));
-				}
-				else
-				{
-					var opt = command.Options.Where(c => c.Type is ApplicationCommandOptionType.SubCommandGroup or ApplicationCommandOptionType.SubCommand
-														 && c.Name.StartsWith(context.Options[1].Value.ToString(), StringComparison.InvariantCultureIgnoreCase)).ToList();
-					foreach (var option in opt.Take(25))
-					{
-						options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
-					}
-				}
-				return options.AsEnumerable();
+					return new [] { new DiscordApplicationCommandAutocompleteChoice("no_options_for_this_command", "no_options_for_this_command") };
+
+				return command.Options.Where(c => c.Type is ApplicationCommandOptionType.SubCommandGroup or ApplicationCommandOptionType.SubCommand
+				                                  && c.Name.StartsWith(context.Options[1].Value.ToString(), StringComparison.InvariantCultureIgnoreCase))
+					.Take(25)
+					.Select(option => new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
 			}
 		}
 
@@ -1669,8 +1617,7 @@ namespace DisCatSharp.ApplicationCommands
 		{
 			public async Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context)
 			{
-				var options = new List<DiscordApplicationCommandAutocompleteChoice>();
-				IEnumerable<DiscordApplicationCommand> slashCommands = null;
+				IEnumerable<DiscordApplicationCommand> slashCommands;
 				var globalCommandsTask = context.Client.GetGlobalApplicationCommandsAsync();
 				if (context.Guild != null)
 				{
@@ -1691,25 +1638,16 @@ namespace DisCatSharp.ApplicationCommands
 				var command = slashCommands.FirstOrDefault(ac =>
 					ac.Name.Equals(context.Options[0].Value.ToString().Trim(), StringComparison.OrdinalIgnoreCase));
 				if (command.Options is null)
-				{
-					options.Add(new DiscordApplicationCommandAutocompleteChoice("no_options_for_this_command", "no_options_for_this_command"));
-					return options.AsEnumerable();
-				}
+					return new [] { new DiscordApplicationCommandAutocompleteChoice("no_options_for_this_command", "no_options_for_this_command") };
+
 				var foundCommand = command.Options.FirstOrDefault(op => op.Name.Equals(context.Options[1].Value.ToString().Trim(), StringComparison.OrdinalIgnoreCase));
 				if (foundCommand is null || foundCommand.Options is null)
-				{
-					options.Add(new DiscordApplicationCommandAutocompleteChoice("no_options_for_this_command", "no_options_for_this_command"));
-				}
-				else
-				{
-					var opt = foundCommand.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand &&
-															  x.Name.StartsWith(context.Options[2].Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
-					foreach (var option in opt.Take(25))
-					{
-						options.Add(new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
-					}
-				}
-				return options.AsEnumerable();
+					return new [] { new DiscordApplicationCommandAutocompleteChoice("no_options_for_this_command", "no_options_for_this_command") };
+
+				return foundCommand.Options.Where(x => x.Type == ApplicationCommandOptionType.SubCommand
+				                                       && x.Name.StartsWith(context.Options[2].Value.ToString(), StringComparison.OrdinalIgnoreCase))
+					.Take(25)
+					.Select(option => new DiscordApplicationCommandAutocompleteChoice(option.Name, option.Name.Trim()));
 			}
 		}
 
@@ -1729,9 +1667,8 @@ namespace DisCatSharp.ApplicationCommands
 
 			var applicationCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
 				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-				.GroupBy(ac => ac.Name).Select(x => x.First())
-				.ToList();
-			if (applicationCommands.Count < 1)
+				.GroupBy(ac => ac.Name).Select(x => x.First());
+			if (!applicationCommands.Any())
 			{
 				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
 					.WithContent($"There are no slash commands for guild {ctx.Guild.Name}").AsEphemeral(true));
@@ -1739,7 +1676,7 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			if (commandTwoName is not null && !commandTwoName.Equals("no_options_for_this_command"))
 			{
-				var commandsWithSubCommands = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.Any(op => op.Type == ApplicationCommandOptionType.SubCommandGroup));
+				var commandsWithSubCommands = applicationCommands.Where(ac => ac.Options is not null && ac.Options.Any(op => op.Type == ApplicationCommandOptionType.SubCommandGroup));
 				var cmdParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Options.Any(op => op.Name.Equals(commandOneName))).Options
 						.FirstOrDefault(opt => opt.Name.Equals(commandOneName,StringComparison.OrdinalIgnoreCase));
 				var cmd = cmdParent.Options.FirstOrDefault(op => op.Name.Equals(commandTwoName,StringComparison.OrdinalIgnoreCase));
@@ -1750,10 +1687,9 @@ namespace DisCatSharp.ApplicationCommands
 				};
 				if (cmd.Options is not null)
 				{
-					var commandOptions = cmd.Options.ToList();
 					var sb = new StringBuilder();
 
-					foreach (var option in commandOptions)
+					foreach (var option in cmd.Options)
 						sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
 					sb.Append('\n');
@@ -1764,7 +1700,7 @@ namespace DisCatSharp.ApplicationCommands
 			}
 			else if (commandOneName is not null && commandTwoName is null && !commandOneName.Equals("no_options_for_this_command"))
 			{
-				var commandsWithOptions = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.All(op => op.Type == ApplicationCommandOptionType.SubCommand));
+				var commandsWithOptions = applicationCommands.Where(ac => ac.Options is not null && ac.Options.All(op => op.Type == ApplicationCommandOptionType.SubCommand));
 				var subCommandParent = commandsWithOptions.FirstOrDefault(cm => cm.Name.Equals(commandName,StringComparison.OrdinalIgnoreCase));
 				var subCommand = subCommandParent.Options.FirstOrDefault(op => op.Name.Equals(commandOneName,StringComparison.OrdinalIgnoreCase));
 				var discordEmbed = new DiscordEmbedBuilder
@@ -1774,10 +1710,9 @@ namespace DisCatSharp.ApplicationCommands
 				};
 				if (subCommand.Options is not null)
 				{
-					var commandOptions = subCommand.Options.ToList();
 					var sb = new StringBuilder();
 
-					foreach (var option in commandOptions)
+					foreach (var option in subCommand.Options)
 						sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
 					sb.Append('\n');
@@ -1802,10 +1737,9 @@ namespace DisCatSharp.ApplicationCommands
 				};
 				if (command.Options is not null)
 				{
-					var commandOptions = command.Options.ToList();
 					var sb = new StringBuilder();
 
-					foreach (var option in commandOptions)
+					foreach (var option in command.Options)
 						sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
 					sb.Append('\n');

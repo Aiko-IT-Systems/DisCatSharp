@@ -68,6 +68,6 @@ namespace DisCatSharp.CommandsNext
 		/// <summary>
 		/// Gets the custom attributes attached to this argument.
 		/// </summary>
-		public IReadOnlyCollection<Attribute> CustomAttributes { get; internal set; }
+		public IReadOnlyList<Attribute> CustomAttributes { get; internal set; }
 	}
 }

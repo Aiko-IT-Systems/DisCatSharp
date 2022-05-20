@@ -36,7 +36,7 @@ namespace DisCatSharp
 		/// <summary>
 		/// Gets the loggers.
 		/// </summary>
-		private readonly IEnumerable<ILogger<BaseDiscordClient>> _loggers;
+		private readonly ILogger<BaseDiscordClient>[] _loggers;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CompositeDefaultLogger"/> class.
@@ -46,7 +46,7 @@ namespace DisCatSharp
 		{
 			this._loggers = providers.Select(x => x.CreateLogger(typeof(BaseDiscordClient).FullName))
 				.OfType<ILogger<BaseDiscordClient>>()
-				.ToList();
+				.ToArray();
 		}
 
 		/// <summary>

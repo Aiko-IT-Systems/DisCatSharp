@@ -65,13 +65,13 @@ namespace DisCatSharp.Entities
 		/// Gets the components.
 		/// </summary>
 		[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-		public IReadOnlyCollection<DiscordActionRowComponent> Components { get; internal set; }
+		public IReadOnlyList<DiscordActionRowComponent> Components { get; internal set; }
 
 		/// <summary>
 		/// Gets the autocomplete choices.
 		/// </summary>
 		[JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
-		public IReadOnlyCollection<DiscordApplicationCommandAutocompleteChoice> Choices { get; internal set; }
+		public IReadOnlyList<DiscordApplicationCommandAutocompleteChoice> Choices { get; internal set; }
 
 		/// <summary>
 		/// Gets the attachments.
@@ -101,6 +101,6 @@ namespace DisCatSharp.Entities
 		/// Gets the components.
 		/// </summary>
 		[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-		public IReadOnlyCollection<DiscordComponent> ModalComponents { get; internal set; }
+		public IReadOnlyList<DiscordComponent> ModalComponents { get; internal set; }
 	}
 }

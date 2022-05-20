@@ -115,19 +115,19 @@ namespace DisCatSharp.CommandsNext.Builders
 		public CommandBuilder(ICommandModule module)
 		{
 			this._aliasList = new List<string>();
-			this.Aliases = new ReadOnlyCollection<string>(this._aliasList);
+			this.Aliases = this._aliasList.AsReadOnly();
 
 			this._executionCheckList = new List<CheckBaseAttribute>();
-			this.ExecutionChecks = new ReadOnlyCollection<CheckBaseAttribute>(this._executionCheckList);
+			this.ExecutionChecks = this._executionCheckList.AsReadOnly();
 
 			this._overloadArgumentSets = new HashSet<string>();
 			this._overloadList = new List<CommandOverloadBuilder>();
-			this.Overloads = new ReadOnlyCollection<CommandOverloadBuilder>(this._overloadList);
+			this.Overloads = this._overloadList.AsReadOnly();
 
 			this.Module = module;
 
 			this._customAttributeList = new List<Attribute>();
-			this.CustomAttributes = new ReadOnlyCollection<Attribute>(this._customAttributeList);
+			this.CustomAttributes = this._customAttributeList.AsReadOnly();
 		}
 
 		/// <summary>
@@ -249,7 +249,7 @@ namespace DisCatSharp.CommandsNext.Builders
 		public CommandBuilder WithOverload(CommandOverloadBuilder overload)
 		{
 			if (this._overloadArgumentSets.Contains(overload.ArgumentSet))
-				throw new DuplicateOverloadException(this.Name, overload.Arguments.Select(x => x.Type).ToList(), overload.ArgumentSet);
+				throw new DuplicateOverloadException(this.Name, overload.Arguments.Select(x => x.Type), overload.ArgumentSet);
 
 			this._overloadArgumentSets.Add(overload.ArgumentSet);
 			this._overloadList.Add(overload);
@@ -295,7 +295,7 @@ namespace DisCatSharp.CommandsNext.Builders
 				ExecutionChecks = this.ExecutionChecks,
 				IsHidden = this.IsHidden,
 				Parent = parent,
-				Overloads = new ReadOnlyCollection<CommandOverload>(this.Overloads.Select(xo => xo.Build()).ToList()),
+				Overloads = this.Overloads.Select(xo => xo.Build()).ToArray(),
 				Module = this.Module,
 				CustomAttributes = this.CustomAttributes
 			};

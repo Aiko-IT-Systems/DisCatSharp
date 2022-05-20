@@ -30,6 +30,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
+using DisCatSharp.Common;
 using DisCatSharp.Entities;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Serialization;
@@ -247,7 +248,7 @@ namespace DisCatSharp.Net
 		/// <param name="files">The files.</param>
 		/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
 		private Task<RestResponse> DoMultipartAsync(BaseDiscordClient client, RateLimitBucket bucket, Uri url, RestRequestMethod method, string route, IReadOnlyDictionary<string, string> headers = null, IReadOnlyDictionary<string, string> values = null,
-			IReadOnlyCollection<DiscordMessageFile> files = null, double? ratelimitWaitOverride = null)
+			IReadOnlyList<DiscordMessageFile> files = null, double? ratelimitWaitOverride = null)
 		{
 			var req = new MultipartWebRequest(client, bucket, url, method, route, headers, values, files, ratelimitWaitOverride);
 
@@ -550,7 +551,7 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, BuildQueryString(urlParams), this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var bansRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordBan>>(res.Response).Select(xb =>
+			return JsonConvert.DeserializeObject<List<DiscordBan>>(res.Response).Mutate(xb =>
 			{
 				if (!this.Discord.TryGetCachedUserInternal(xb.RawUser.Id, out var usr))
 				{
@@ -565,11 +566,7 @@ namespace DisCatSharp.Net
 				}
 
 				xb.User = usr;
-				return xb;
 			});
-			var bans = new ReadOnlyCollection<DiscordBan>(new List<DiscordBan>(bansRaw));
-
-			return bans;
 		}
 
 		/// <summary>
@@ -687,8 +684,7 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var membersRaw = JsonConvert.DeserializeObject<List<TransportMember>>(res.Response);
-			return new ReadOnlyCollection<TransportMember>(membersRaw);
+			return JsonConvert.DeserializeObject<List<TransportMember>>(res.Response);
 		}
 
 		/// <summary>
@@ -893,13 +889,13 @@ namespace DisCatSharp.Net
 					Id = (ulong)r["id"],
 					Name = r["name"].ToString(),
 					Position = (int)r["position"]
-				}).ToList()
+				}).ToArray()
 				: rawChannels.Select(r =>
 				{
 					var c = ret.Guild.GetChannel((ulong)r["id"]);
 					c.Position = (int)r["position"];
 					return c;
-				}).ToList();
+				}).ToArray();
 
 			return ret;
 		}
@@ -968,9 +964,7 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var templatesRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordGuildTemplate>>(res.Response);
-
-			return new ReadOnlyCollection<DiscordGuildTemplate>(new List<DiscordGuildTemplate>(templatesRaw));
+			return JsonConvert.DeserializeObject<List<DiscordGuildTemplate>>(res.Response);
 		}
 
 		/// <summary>
@@ -1836,16 +1830,16 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var channelsRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordChannel>>(res.Response).Select(xc => { xc.Discord = this.Discord; return xc; });
-
-			foreach (var ret in channelsRaw)
-				foreach (var xo in ret.PermissionOverwritesInternal)
+			return JsonConvert.DeserializeObject<List<DiscordChannel>>(res.Response)
+				.Mutate(xc =>
 				{
-					xo.Discord = this.Discord;
-					xo.ChannelId = ret.Id;
-				}
-
-			return new ReadOnlyCollection<DiscordChannel>(new List<DiscordChannel>(channelsRaw));
+					xc.Discord = this.Discord;
+					xc.PermissionOverwritesInternal.Mutate(xo =>
+					{
+						xo.Discord = this.Discord;
+						xo.ChannelId = xc.Id;
+					});
+				});
 		}
 
 		/// <summary>
@@ -1966,12 +1960,9 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var msgsRaw = JArray.Parse(res.Response);
-			var msgs = new List<DiscordMessage>();
-			foreach (var xj in msgsRaw)
-				msgs.Add(this.PrepareMessage(xj));
-
-			return new ReadOnlyCollection<DiscordMessage>(new List<DiscordMessage>(msgs));
+			return JArray.Parse(res.Response)
+				.Select(this.PrepareMessage)
+				.ToArray();
 		}
 
 		/// <summary>
@@ -2006,7 +1997,7 @@ namespace DisCatSharp.Net
 		/// <param name="files">The files.</param>
 		/// <param name="attachments">The attachments to keep.</param>
 
-		internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppressEmbed, IReadOnlyCollection<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
+		internal async Task<DiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, Optional<string> content, Optional<IEnumerable<DiscordEmbed>> embeds, Optional<IEnumerable<IMention>> mentions, IReadOnlyList<DiscordActionRowComponent> components, Optional<bool> suppressEmbed, IReadOnlyList<DiscordMessageFile> files, Optional<IEnumerable<DiscordAttachment>> attachments)
 		{
 			if (embeds.HasValue && embeds.Value != null)
 				foreach (var embed in embeds.Value)
@@ -2143,7 +2134,8 @@ namespace DisCatSharp.Net
 
 			var invitesRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordInvite>>(res.Response).Select(xi => { xi.Discord = this.Discord; return xi; });
 
-			return new ReadOnlyCollection<DiscordInvite>(new List<DiscordInvite>(invitesRaw));
+			return JsonConvert.DeserializeObject<List<DiscordInvite>>(res.Response)
+				.Mutate(xi => xi.Discord = this.Discord);
 		}
 
 		/// <summary>
@@ -2265,12 +2257,9 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var msgsRaw = JArray.Parse(res.Response);
-			var msgs = new List<DiscordMessage>();
-			foreach (var xj in msgsRaw)
-				msgs.Add(this.PrepareMessage(xj));
-
-			return new ReadOnlyCollection<DiscordMessage>(new List<DiscordMessage>(msgs));
+			return JArray.Parse(res.Response)
+				.Select(this.PrepareMessage)
+				.ToArray();
 		}
 
 		/// <summary>
@@ -2570,12 +2559,12 @@ namespace DisCatSharp.Net
 			if (this.Discord is DiscordClient)
 			{
 				var guildsRaw = JsonConvert.DeserializeObject<IEnumerable<RestUserGuild>>(res.Response);
-				var glds = guildsRaw.Select(xug => (this.Discord as DiscordClient)?.GuildsInternal[xug.Id]);
-				return new ReadOnlyCollection<DiscordGuild>(new List<DiscordGuild>(glds));
+				return guildsRaw.Select(xug => (this.Discord as DiscordClient)?.GuildsInternal[xug.Id])
+					.ToArray();
 			}
 			else
 			{
-				return new ReadOnlyCollection<DiscordGuild>(JsonConvert.DeserializeObject<List<DiscordGuild>>(res.Response));
+				return JsonConvert.DeserializeObject<List<DiscordGuild>>(res.Response);
 			}
 		}
 
@@ -2681,9 +2670,8 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var rolesRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordRole>>(res.Response).Select(xr => { xr.Discord = this.Discord; xr.GuildId = guildId; return xr; });
-
-			return new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(rolesRaw));
+			return JsonConvert.DeserializeObject<List<DiscordRole>>(res.Response)
+				.Mutate(xr => { xr.Discord = this.Discord; xr.GuildId = guildId; });
 		}
 
 		/// <summary>
@@ -2939,9 +2927,8 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var integrationsRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordIntegration>>(res.Response).Select(xi => { xi.Discord = this.Discord; return xi; });
-
-			return new ReadOnlyCollection<DiscordIntegration>(new List<DiscordIntegration>(integrationsRaw));
+			return JsonConvert.DeserializeObject<List<DiscordIntegration>>(res.Response)
+				.Mutate(xi => xi.Discord = this.Discord);
 		}
 
 		/// <summary>
@@ -3063,9 +3050,7 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var regionsRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordVoiceRegion>>(res.Response);
-
-			return new ReadOnlyCollection<DiscordVoiceRegion>(new List<DiscordVoiceRegion>(regionsRaw));
+			return JsonConvert.DeserializeObject<List<DiscordVoiceRegion>>(res.Response);
 		}
 
 		/// <summary>
@@ -3081,9 +3066,8 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var invitesRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordInvite>>(res.Response).Select(xi => { xi.Discord = this.Discord; return xi; });
-
-			return new ReadOnlyCollection<DiscordInvite>(new List<DiscordInvite>(invitesRaw));
+			return JsonConvert.DeserializeObject<List<DiscordInvite>>(res.Response)
+				.Mutate(xi => xi.Discord = this.Discord );
 		}
 		#endregion
 
@@ -3174,9 +3158,8 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var connectionsRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordConnection>>(res.Response).Select(xc => { xc.Discord = this.Discord; return xc; });
-
-			return new ReadOnlyCollection<DiscordConnection>(new List<DiscordConnection>(connectionsRaw));
+			return JsonConvert.DeserializeObject<List<DiscordConnection>>(res.Response)
+				.Mutate(xc => xc.Discord = this.Discord);
 		}
 		#endregion
 
@@ -3193,9 +3176,7 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var regions = JsonConvert.DeserializeObject<IEnumerable<DiscordVoiceRegion>>(res.Response);
-
-			return new ReadOnlyCollection<DiscordVoiceRegion>(new List<DiscordVoiceRegion>(regions));
+			return JsonConvert.DeserializeObject<List<DiscordVoiceRegion>>(res.Response);
 		}
 		#endregion
 
@@ -3247,9 +3228,8 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var webhooksRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordWebhook>>(res.Response).Select(xw => { xw.Discord = this.Discord; xw.ApiClient = this; return xw; });
-
-			return new ReadOnlyCollection<DiscordWebhook>(new List<DiscordWebhook>(webhooksRaw));
+			return JsonConvert.DeserializeObject<List<DiscordWebhook>>(res.Response)
+				.Mutate(xw => { xw.Discord = this.Discord; xw.ApiClient = this; });
 		}
 
 		/// <summary>
@@ -3265,9 +3245,8 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var webhooksRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordWebhook>>(res.Response).Select(xw => { xw.Discord = this.Discord; xw.ApiClient = this; return xw; });
-
-			return new ReadOnlyCollection<DiscordWebhook>(new List<DiscordWebhook>(webhooksRaw));
+			return JsonConvert.DeserializeObject<List<DiscordWebhook>>(res.Response)
+				.Mutate(xw => { xw.Discord = this.Discord; xw.ApiClient = this; });
 		}
 
 		/// <summary>
@@ -3819,23 +3798,20 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, BuildQueryString(urlParams), this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var reactersRaw = JsonConvert.DeserializeObject<IEnumerable<TransportUser>>(res.Response);
-			var reacters = new List<DiscordUser>();
-			foreach (var xr in reactersRaw)
-			{
-				var usr = new DiscordUser(xr) { Discord = this.Discord };
-				usr = this.Discord.UserCache.AddOrUpdate(xr.Id, usr, (id, old) =>
+			return JsonConvert.DeserializeObject<IEnumerable<TransportUser>>(res.Response)
+				.Select(xr =>
 				{
-					old.Username = usr.Username;
-					old.Discriminator = usr.Discriminator;
-					old.AvatarHash = usr.AvatarHash;
-					return old;
-				});
+					var usr = new DiscordUser(xr) { Discord = this.Discord };
+					usr = this.Discord.UserCache.AddOrUpdate(xr.Id, usr, (id, old) =>
+					{
+						old.Username = usr.Username;
+						old.Discriminator = usr.Discriminator;
+						old.AvatarHash = usr.AvatarHash;
+						return old;
+					});
 
-				reacters.Add(usr);
-			}
-
-			return new ReadOnlyCollection<DiscordUser>(new List<DiscordUser>(reacters));
+					return usr;
+				}).ToArray();
 		}
 
 		/// <summary>
@@ -4025,9 +4001,7 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-			var threadMembersRaw = JsonConvert.DeserializeObject<List<DiscordThreadChannelMember>>(res.Response);
-
-			return new ReadOnlyCollection<DiscordThreadChannelMember>(threadMembersRaw);
+			return JsonConvert.DeserializeObject<List<DiscordThreadChannelMember>>(res.Response);
 		}
 
 		/// <summary>
@@ -4190,12 +4164,10 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var emojisRaw = JsonConvert.DeserializeObject<IEnumerable<JObject>>(res.Response);
-
 			this.Discord.Guilds.TryGetValue(guildId, out var gld);
 			var users = new Dictionary<ulong, DiscordUser>();
-			var emojis = new List<DiscordGuildEmoji>();
-			foreach (var rawEmoji in emojisRaw)
+
+			return JsonConvert.DeserializeObject<IEnumerable<JObject>>(res.Response).Select(rawEmoji =>
 			{
 				var xge = rawEmoji.ToObject<DiscordGuildEmoji>();
 				xge.Guild = gld;
@@ -4205,17 +4177,17 @@ namespace DisCatSharp.Net
 				{
 					if (!users.ContainsKey(xtu.Id))
 					{
-						var user = gld != null && gld.Members.TryGetValue(xtu.Id, out var member) ? member : new DiscordUser(xtu);
+						var user = gld != null && gld.Members.TryGetValue(xtu.Id, out var member)
+							? member
+							: new DiscordUser(xtu);
 						users[user.Id] = user;
 					}
 
 					xge.User = users[xtu.Id];
 				}
 
-				emojis.Add(xge);
-			}
-
-			return new ReadOnlyCollection<DiscordGuildEmoji>(emojis);
+				return xge;
+			}).ToArray();
 		}
 
 		/// <summary>
@@ -4381,7 +4353,7 @@ namespace DisCatSharp.Net
 			var json = JObject.Parse(res.Response)["sticker_packs"] as JArray;
 			var ret = json.ToDiscordObject<DiscordStickerPack[]>();
 
-			return ret.ToList();
+			return ret;
 		}
 
 		/// <summary>
@@ -4418,7 +4390,7 @@ namespace DisCatSharp.Net
 				}
 			}
 
-			return ret.ToList();
+			return ret;
 		}
 
 		/// <summary>
@@ -4556,10 +4528,10 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, BuildQueryString(querydict), this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response);
+			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response).ToArray();
 			foreach (var app in ret)
 				app.Discord = this.Discord;
-			return ret.ToList();
+			return ret;
 		}
 
 		/// <summary>
@@ -4593,10 +4565,10 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
 
-			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response);
+			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response).ToArray();
 			foreach (var app in ret)
 				app.Discord = this.Discord;
-			return ret.ToList();
+			return ret;
 		}
 
 		/// <summary>
@@ -4661,7 +4633,7 @@ namespace DisCatSharp.Net
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
 		/// <param name="defaultMemberPermission">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
-		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
+		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyList<DiscordApplicationCommandOption>> options,
 			Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
 			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
 		{
@@ -4721,10 +4693,10 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, BuildQueryString(querydict), this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response);
+			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response).ToArray();
 			foreach (var app in ret)
 				app.Discord = this.Discord;
-			return ret.ToList();
+			return ret;
 		}
 
 		/// <summary>
@@ -4733,7 +4705,7 @@ namespace DisCatSharp.Net
 		/// <param name="applicationId">The application id.</param>
 		/// <param name="guildId">The guild id.</param>
 		/// <param name="commands">The commands.</param>
-		internal async Task<IReadOnlyList<DiscordApplicationCommand>> BulkOverwriteGuildApplicationCommandsAsync(ulong applicationId, ulong guildId, IEnumerable<DiscordApplicationCommand> commands)
+		internal async Task<IEnumerable<DiscordApplicationCommand>> BulkOverwriteGuildApplicationCommandsAsync(ulong applicationId, ulong guildId, IEnumerable<DiscordApplicationCommand> commands)
 		{
 			var pld = new List<RestApplicationCommandCreatePayload>();
 			foreach (var command in commands)
@@ -4758,10 +4730,10 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
 
-			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response);
+			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationCommand>>(res.Response).ToArray();
 			foreach (var app in ret)
 				app.Discord = this.Discord;
-			return ret.ToList();
+			return ret;
 		}
 
 		/// <summary>
@@ -4830,7 +4802,7 @@ namespace DisCatSharp.Net
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
 		/// <param name="defaultMemberPermission">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
-		internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
+		internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyList<DiscordApplicationCommandOption>> options,
 			Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
 			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
 		{
@@ -4887,12 +4859,11 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
-			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordGuildApplicationCommandPermission>>(res.Response);
-
+			var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordGuildApplicationCommandPermission>>(res.Response).ToArray();
 			foreach (var app in ret)
 				app.Discord = this.Discord;
 
-			return ret.ToList();
+			return ret;
 		}
 
 		/// <summary>
@@ -5184,7 +5155,6 @@ namespace DisCatSharp.Net
 		/// <summary>
 		/// Gets the current application info async.
 		/// </summary>
-
 		internal Task<TransportApplication> GetCurrentApplicationInfoAsync()
 			=> this.GetApplicationInfoAsync("@me");
 
@@ -5192,7 +5162,6 @@ namespace DisCatSharp.Net
 		/// Gets the application info async.
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
-
 		internal Task<TransportApplication> GetApplicationInfoAsync(ulong applicationId)
 			=> this.GetApplicationInfoAsync(applicationId.ToString(CultureInfo.InvariantCulture));
 
@@ -5200,7 +5169,6 @@ namespace DisCatSharp.Net
 		/// Gets the application info async.
 		/// </summary>
 		/// <param name="applicationId">The application_id.</param>
-
 		private async Task<TransportApplication> GetApplicationInfoAsync(string applicationId)
 		{
 			var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id";
@@ -5216,7 +5184,6 @@ namespace DisCatSharp.Net
 		/// Gets the application assets async.
 		/// </summary>
 		/// <param name="application">The application.</param>
-
 		internal async Task<IReadOnlyList<DiscordApplicationAsset>> GetApplicationAssetsAsync(DiscordApplication application)
 		{
 			var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id{Endpoints.ASSETS}";
@@ -5225,20 +5192,13 @@ namespace DisCatSharp.Net
 			var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 			var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-			var assets = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationAsset>>(res.Response);
-			foreach (var asset in assets)
-			{
-				asset.Discord = application.Discord;
-				asset.Application = application;
-			}
-
-			return new ReadOnlyCollection<DiscordApplicationAsset>(new List<DiscordApplicationAsset>(assets));
+			return JsonConvert.DeserializeObject<List<DiscordApplicationAsset>>(res.Response)
+				.Mutate(asset => { asset.Discord = application.Discord; asset.Application = application; });
 		}
 
 		/// <summary>
 		/// Gets the gateway info async.
 		/// </summary>
-
 		internal async Task<GatewayInfo> GetGatewayInfoAsync()
 		{
 			var headers = Utilities.GetBaseHeaders();

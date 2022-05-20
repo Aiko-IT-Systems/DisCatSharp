@@ -149,7 +149,7 @@ namespace DisCatSharp.CommandsNext.Builders
 				if (arg.ParameterType.IsArray && !isParams)
 					throw new InvalidOverloadException("Cannot use array arguments without params modifier.", method, arg);
 
-				ca.CustomAttributes = new ReadOnlyCollection<Attribute>(attrsCustom);
+				ca.CustomAttributes = attrsCustom;
 				args.Add(ca);
 				ea[i++] = Expression.Parameter(arg.ParameterType, arg.Name);
 			}
@@ -159,7 +159,7 @@ namespace DisCatSharp.CommandsNext.Builders
 			var el = Expression.Lambda(ec, ea);
 
 			this.ArgumentSet = setb.ToString();
-			this.Arguments = new ReadOnlyCollection<CommandArgument>(args);
+			this.Arguments = args;
 			this.Callable = el.Compile();
 		}
 

@@ -550,6 +550,41 @@ namespace DisCatSharp.Entities
 			return keyValuePairs;
 		}
 
+		private Dictionary<ulong, List<DiscordChannel>> GetOrderedChannelsInternal(IEnumerable<DiscordChannel> channels)
+		{
+			var ordered = channels.OrderBy(c => c.Position).ToArray();
+
+			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
+			{
+				{ 0, new List<DiscordChannel>() }
+			};
+
+			foreach (var channel in ordered.Where(c => c.Type == ChannelType.Category))
+			{
+				orderedChannels.Add(channel.Id, new List<DiscordChannel>());
+			}
+
+			foreach (var channel in ordered.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News)))
+			{
+				orderedChannels[channel.ParentId.Value].Add(channel);
+			}
+			foreach (var channel in ordered.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)))
+			{
+				orderedChannels[channel.ParentId.Value].Add(channel);
+			}
+
+			foreach (var channel in ordered.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News)))
+			{
+				orderedChannels[0].Add(channel);
+			}
+			foreach (var channel in ordered.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)))
+			{
+				orderedChannels[0].Add(channel);
+			}
+
+			return orderedChannels;
+		}
+
 		/// <summary>
 		/// Gets an ordered <see cref="DiscordChannel"/> list out of the channel cache.
 		/// Returns a Dictionary where the key is an ulong and can be mapped to <see cref="ChannelType.Category"/> <see cref="DiscordChannel"/>s.
@@ -558,39 +593,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <returns>A ordered list of categories with its channels</returns>
 		public Dictionary<ulong, List<DiscordChannel>> GetOrderedChannels()
-		{
-			IReadOnlyList<DiscordChannel> rawChannels = this.ChannelsInternal.Values.ToList();
-
-			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
-			{
-				{ 0, new List<DiscordChannel>() }
-			};
-
-			foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
-			{
-				orderedChannels.Add(channel.Id, new List<DiscordChannel>());
-			}
-
-			foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
-			{
-				orderedChannels[channel.ParentId.Value].Add(channel);
-			}
-			foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
-			{
-				orderedChannels[channel.ParentId.Value].Add(channel);
-			}
-
-			foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
-			{
-				orderedChannels[0].Add(channel);
-			}
-			foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
-			{
-				orderedChannels[0].Add(channel);
-			}
-
-			return orderedChannels;
-		}
+			=> this.GetOrderedChannelsInternal(this.ChannelsInternal.Values);
 
 		/// <summary>
 		/// Gets an ordered <see cref="DiscordChannel"/> list.
@@ -600,39 +603,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <returns>A ordered list of categories with its channels</returns>
 		public async Task<Dictionary<ulong, List<DiscordChannel>>> GetOrderedChannelsAsync()
-		{
-			var rawChannels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Id);
-
-			Dictionary<ulong, List<DiscordChannel>> orderedChannels = new()
-			{
-				{ 0, new List<DiscordChannel>() }
-			};
-
-			foreach (var channel in rawChannels.Where(c => c.Type == ChannelType.Category).OrderBy(c => c.Position))
-			{
-				orderedChannels.Add(channel.Id, new List<DiscordChannel>());
-			}
-
-			foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
-			{
-				orderedChannels[channel.ParentId.Value].Add(channel);
-			}
-			foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
-			{
-				orderedChannels[channel.ParentId.Value].Add(channel);
-			}
-
-			foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
-			{
-				orderedChannels[0].Add(channel);
-			}
-			foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Voice || c.Type == ChannelType.Stage)).OrderBy(c => c.Position))
-			{
-				orderedChannels[0].Add(channel);
-			}
-
-			return orderedChannels;
-		}
+			=> this.GetOrderedChannelsInternal(await this.GetChannelsAsync());
 
 		/// <summary>
 		/// Whether it is synced.
@@ -762,25 +733,17 @@ namespace DisCatSharp.Entities
 			var rulesChannelId = ChannelToId(rulesChannel, "Rules");
 			var publicUpdatesChannelId = ChannelToId(publicUpdatesChannel, "Public updates");
 
-			List<string> features = new();
-			var rfeatures = this.RawFeatures.ToList();
-			if (this.RawFeatures.Contains("COMMUNITY") && enabled)
+			var features = this.RawFeatures.ToList();
+			if (enabled)
 			{
-				features = rfeatures;
+				if (!features.Contains("COMMUNITY"))
+				{
+					features.Add("COMMUNITY");
+				}
 			}
-			else if (!this.RawFeatures.Contains("COMMUNITY") && enabled)
+			else
 			{
-				rfeatures.Add("COMMUNITY");
-				features = rfeatures;
-			}
-			else if (this.RawFeatures.Contains("COMMUNITY") && !enabled)
-			{
-				rfeatures.Remove("COMMUNITY");
-				features = rfeatures;
-			}
-			else if (!this.RawFeatures.Contains("COMMUNITY") && !enabled)
-			{
-				features = rfeatures;
+				features.Remove("COMMUNITY");
 			}
 
 			return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, features, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
@@ -1728,8 +1691,10 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		public DiscordChannel GetDefaultChannel() =>
 			this.ChannelsInternal?.Values.Where(xc => xc.Type == ChannelType.Text)
-				.OrderBy(xc => xc.Position)
-				.FirstOrDefault(xc => (xc.PermissionsFor(this.CurrentMember) & DisCatSharp.Permissions.AccessChannels) == DisCatSharp.Permissions.AccessChannels);
+				.Where(xc =>
+					(xc.PermissionsFor(this.CurrentMember) & DisCatSharp.Permissions.AccessChannels) ==
+					DisCatSharp.Permissions.AccessChannels)
+				.MinBy(xc => xc.Position);
 
 		/// <summary>
 		/// Gets the guild's widget

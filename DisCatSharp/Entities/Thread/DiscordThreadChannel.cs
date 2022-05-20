@@ -521,7 +521,7 @@ namespace DisCatSharp.Entities
 			}
 			while (remaining > 0 && lastCount > 0);
 
-			return new ReadOnlyCollection<DiscordMessage>(msgs);
+			return msgs;
 		}
 
 		/// <summary>

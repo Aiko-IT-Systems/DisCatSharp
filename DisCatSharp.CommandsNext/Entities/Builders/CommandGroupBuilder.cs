@@ -58,7 +58,7 @@ namespace DisCatSharp.CommandsNext.Builders
 			: base(module)
 		{
 			this._childrenList = new List<CommandBuilder>();
-			this.Children = new ReadOnlyCollection<CommandBuilder>(this._childrenList);
+			this.Children = this._childrenList.AsReadOnly();
 		}
 
 		/// <summary>
@@ -86,16 +86,12 @@ namespace DisCatSharp.CommandsNext.Builders
 				ExecutionChecks = this.ExecutionChecks,
 				IsHidden = this.IsHidden,
 				Parent = parent,
-				Overloads = new ReadOnlyCollection<CommandOverload>(this.Overloads.Select(xo => xo.Build()).ToList()),
+				Overloads = this.Overloads.Select(xo => xo.Build()).ToArray(),
 				Module = this.Module,
 				CustomAttributes = this.CustomAttributes
 			};
 
-			var cs = new List<Command>();
-			foreach (var xc in this.Children)
-				cs.Add(xc.Build(cmd));
-
-			cmd.Children = new ReadOnlyCollection<Command>(cs);
+			cmd.Children = this.Children.Select(xc => xc.Build(cmd)).ToArray();
 			return cmd;
 		}
 	}

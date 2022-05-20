@@ -45,7 +45,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes
 		/// <param name="userIds">List of allowed user ids</param>
 		public ApplicationCommandRequireOwnerOrIdAttribute(params ulong[] userIds)
 		{
-			this.UserIds = new ReadOnlyCollection<ulong>(userIds);
+			this.UserIds = userIds;
 		}
 
 		/// <summary>

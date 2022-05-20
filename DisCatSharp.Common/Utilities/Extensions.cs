@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -528,5 +529,25 @@ namespace DisCatSharp.Common
 				arr[i] = value;
 			}
 		}
+
+		/// <summary>
+		/// Applies a function to all elements of a list.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="list"></param>
+		/// <param name="mutator"></param>
+		/// <returns>The list for convenience.</returns>
+		internal static List<T> Mutate<T>(this List<T> list, Action<T> mutator)
+			where T : class
+		{
+			foreach (var elem in list)
+			{
+				mutator(elem);
+			}
+
+			return list;
+		}
+
+		internal static ReadOnlyCollection<T> AsReadOnly<T>(this IList<T> list) => new(list);
 	}
 }

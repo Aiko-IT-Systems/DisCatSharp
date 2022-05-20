@@ -107,11 +107,17 @@ namespace DisCatSharp.Entities
 			var channels = this.Guild.Channels.Values;
 			return this.ParentId != null
 				? this.Type == ChannelType.Text || this.Type == ChannelType.News
-					? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News)).OrderBy(xc => xc.Position).Last().Position
+					? channels.Where(xc =>
+							xc.ParentId == this.ParentId &&
+							(xc.Type == ChannelType.Text || xc.Type == ChannelType.News))
+						.Max(xc => xc.Position)
 					: this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
-						? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).OrderBy(xc => xc.Position).Last().Position
-						: channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).Last().Position
-				: channels.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).Last().Position;
+						? channels.Where(xc =>
+							xc.ParentId == this.ParentId &&
+							(xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).Max(xc => xc.Position)
+						: channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type)
+							.Max(xc => xc.Position)
+				: channels.Where(xc => xc.ParentId == null && xc.Type == this.Type).Max(xc => xc.Position);
 		}
 
 		/// <summary>
@@ -122,11 +128,17 @@ namespace DisCatSharp.Entities
 			var channels = this.Guild.Channels.Values;
 			return this.ParentId != null
 				? this.Type == ChannelType.Text || this.Type == ChannelType.News
-					? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News)).OrderBy(xc => xc.Position).First().Position
+					? channels.Where(xc =>
+							xc.ParentId == this.ParentId &&
+							(xc.Type == ChannelType.Text || xc.Type == ChannelType.News))
+						.Min(xc => xc.Position)
 					: this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
-						? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).OrderBy(xc => xc.Position).First().Position
-						: channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).First().Position
-				: channels.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).First().Position;
+						? channels.Where(xc =>
+							xc.ParentId == this.ParentId &&
+							(xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).Min(xc => xc.Position)
+						: channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type)
+							.Min(xc => xc.Position)
+				: channels.Where(xc => xc.ParentId == null && xc.Type == this.Type).Min(xc => xc.Position);
 		}
 
 		/// <summary>
@@ -249,21 +261,21 @@ namespace DisCatSharp.Entities
 		/// Gets this channel's children. This applies only to channel categories.
 		/// </summary>
 		[JsonIgnore]
-		public IReadOnlyList<DiscordChannel> Children =>
+		public IEnumerable<DiscordChannel> Children =>
 			!this.IsCategory
 				? throw new ArgumentException("Only channel categories contain children.")
-				: this.Guild.ChannelsInternal.Values.Where(e => e.ParentId == this.Id).ToList();
+				: this.Guild.ChannelsInternal.Values.Where(e => e.ParentId == this.Id);
 
 		/// <summary>
 		/// Gets the list of members currently in the channel (if voice channel), or members who can see the channel (otherwise).
 		/// </summary>
 		[JsonIgnore]
-		public virtual IReadOnlyList<DiscordMember> Users =>
+		public virtual IEnumerable<DiscordMember> Users =>
 			this.Guild == null
 				? throw new InvalidOperationException("Cannot query users outside of guild channels.")
 				: this.IsVoiceJoinable()
-					? this.Guild.Members.Values.Where(x => x.VoiceState?.ChannelId == this.Id).ToList()
-					: this.Guild.Members.Values.Where(x => (this.PermissionsFor(x) & Permissions.AccessChannels) == Permissions.AccessChannels).ToList();
+					? this.Guild.Members.Values.Where(x => x.VoiceState?.ChannelId == this.Id)
+					: this.Guild.Members.Values.Where(x => (this.PermissionsFor(x) & Permissions.AccessChannels) == Permissions.AccessChannels);
 
 		/// <summary>
 		/// Gets whether this channel is an NSFW channel.
@@ -297,7 +309,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordChannel()
 		{
-			this._permissionOverwritesLazy = new Lazy<IReadOnlyList<DiscordOverwrite>>(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
+			this._permissionOverwritesLazy = new Lazy<IReadOnlyList<DiscordOverwrite>>(() => this.PermissionOverwritesInternal);
 		}
 
 		#region Methods
@@ -572,7 +584,7 @@ namespace DisCatSharp.Entities
 		private async Task<IReadOnlyList<DiscordChannel>> InternalRefreshChannelsAsync()
 		{
 			await this.RefreshPositionsAsync();
-			return this.Guild.Channels.Values.ToList().AsReadOnly();
+			return this.Guild.Channels.Values.ToArray();
 		}
 
 		/// <summary>
@@ -582,7 +594,7 @@ namespace DisCatSharp.Entities
 		{
 			var channels = await this.Discord.ApiClient.GetGuildChannelsAsync(this.Guild.Id);
 			this.Guild.ChannelsInternal.Clear();
-			foreach (var channel in channels.ToList())
+			foreach (var channel in channels)
 			{
 				channel.Discord = this.Discord;
 				foreach (var xo in channel.PermissionOverwritesInternal)
@@ -809,7 +821,7 @@ namespace DisCatSharp.Entities
 			}
 			while (remaining > 0 && lastCount > 0);
 
-			return new ReadOnlyCollection<DiscordMessage>(msgs);
+			return msgs;
 		}
 
 		/// <summary>
@@ -1228,7 +1240,7 @@ namespace DisCatSharp.Entities
 			var mbRoleOverrides = mbRoles
 				.Select(xr => this.PermissionOverwritesInternal.FirstOrDefault(xo => xo.Id == xr.Id))
 				.Where(xo => xo != null)
-				.ToList();
+				.ToArray();
 
 			// assign channel permission overwrites for @everyone pseudo-role
 			var everyoneOverwrites = this.PermissionOverwritesInternal.FirstOrDefault(xo => xo.Id == everyoneRole.Id);

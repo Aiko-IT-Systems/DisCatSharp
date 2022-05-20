@@ -130,9 +130,8 @@ namespace DisCatSharp.Entities
 				ahd = amh.ToDictionary(xh => xh.Id, xh => xh);
 			}
 
-			var acs = alrs.SelectMany(xa => xa.Entries).OrderByDescending(xa => xa.Id);
 			var entries = new List<DiscordAuditLogEntry>();
-			foreach (var xac in acs)
+			foreach (var xac in alrs.SelectMany(xa => xa.Entries).OrderByDescending(xa => xa.Id))
 			{
 				DiscordAuditLogEntry entry = null;
 				ulong t1, t2;
@@ -333,8 +332,8 @@ namespace DisCatSharp.Entities
 
 									entrychn.OverwriteChange = new PropertyChange<IReadOnlyList<DiscordOverwrite>>
 									{
-										Before = olds != null ? new ReadOnlyCollection<DiscordOverwrite>(new List<DiscordOverwrite>(olds)) : null,
-										After = news != null ? new ReadOnlyCollection<DiscordOverwrite>(new List<DiscordOverwrite>(news)) : null
+										Before = olds?.ToArray(),
+										After = news?.ToArray()
 									};
 									break;
 
@@ -530,11 +529,11 @@ namespace DisCatSharp.Entities
 									break;
 
 								case "$add":
-									entrymbu.AddedRoles = new ReadOnlyCollection<DiscordRole>(xc.NewValues.Select(xo => (ulong)xo["id"]).Select(this.GetRole).ToList());
+									entrymbu.AddedRoles = xc.NewValues.Select(xo => (ulong)xo["id"]).Select(this.GetRole).ToArray();
 									break;
 
 								case "$remove":
-									entrymbu.RemovedRoles = new ReadOnlyCollection<DiscordRole>(xc.NewValues.Select(xo => (ulong)xo["id"]).Select(this.GetRole).ToList());
+									entrymbu.RemovedRoles = xc.NewValues.Select(xo => (ulong)xo["id"]).Select(this.GetRole).ToArray();
 									break;
 
 								default:
@@ -1288,7 +1287,7 @@ namespace DisCatSharp.Entities
 				entries.Add(entry);
 			}
 
-			return new ReadOnlyCollection<DiscordAuditLogEntry>(entries);
+			return entries;
 		}
 	}
 }

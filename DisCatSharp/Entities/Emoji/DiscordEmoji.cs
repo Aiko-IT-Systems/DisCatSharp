@@ -95,7 +95,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordEmoji()
 		{
-			this._rolesLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RolesInternal));
+			this._rolesLazy = new Lazy<IReadOnlyList<ulong>>(() => this.RolesInternal);
 		}
 
 		/// <summary>

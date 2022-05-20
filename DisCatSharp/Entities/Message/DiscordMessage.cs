@@ -41,15 +41,15 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordMessage()
 		{
-			this._attachmentsLazy = new Lazy<IReadOnlyList<DiscordAttachment>>(() => new ReadOnlyCollection<DiscordAttachment>(this.AttachmentsInternal));
-			this._embedsLazy = new Lazy<IReadOnlyList<DiscordEmbed>>(() => new ReadOnlyCollection<DiscordEmbed>(this.EmbedsInternal));
-			this._mentionedChannelsLazy = new Lazy<IReadOnlyList<DiscordChannel>>(() => this.MentionedChannelsInternal != null
-					? new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal)
-					: Array.Empty<DiscordChannel>());
-			this._mentionedRolesLazy = new Lazy<IReadOnlyList<DiscordRole>>(() => this.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal) : Array.Empty<DiscordRole>());
-			this.MentionedUsersLazy = new Lazy<IReadOnlyList<DiscordUser>>(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
-			this._reactionsLazy = new Lazy<IReadOnlyList<DiscordReaction>>(() => new ReadOnlyCollection<DiscordReaction>(this.ReactionsInternal));
-			this._stickersLazy = new Lazy<IReadOnlyList<DiscordSticker>>(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
+			this._attachmentsLazy = new Lazy<IReadOnlyList<DiscordAttachment>>(() => this.AttachmentsInternal);
+			this._embedsLazy = new Lazy<IReadOnlyList<DiscordEmbed>>(() => this.EmbedsInternal);
+			this._mentionedChannelsLazy = new Lazy<IReadOnlyList<DiscordChannel>>(() =>
+					(IReadOnlyList<DiscordChannel>)this.MentionedChannelsInternal
+					?? Array.Empty<DiscordChannel>());
+			this._mentionedRolesLazy = new Lazy<IReadOnlyList<DiscordRole>>(() => (IReadOnlyList<DiscordRole>)this.MentionedRolesInternal ?? Array.Empty<DiscordRole>());
+			this.MentionedUsersLazy = new Lazy<IReadOnlyList<DiscordUser>>(() => this.MentionedUsersInternal);
+			this._reactionsLazy = new Lazy<IReadOnlyList<DiscordReaction>>(() => this.ReactionsInternal);
+			this._stickersLazy = new Lazy<IReadOnlyList<DiscordSticker>>(() => this.StickersInternal);
 			this._jumpLink = new Lazy<Uri>(() =>
 			{
 				string gid = null;
@@ -135,7 +135,7 @@ namespace DisCatSharp.Entities
 		/// Gets the components this message was sent with.
 		/// </summary>
 		[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-		public IReadOnlyCollection<DiscordActionRowComponent> Components { get; internal set; }
+		public IReadOnlyList<DiscordActionRowComponent> Components { get; internal set; }
 
 		/// <summary>
 		/// Gets the user or member that sent the message.
@@ -809,7 +809,7 @@ namespace DisCatSharp.Entities
 				last = fetch.LastOrDefault()?.Id;
 			} while (remaining > 0 && lastCount > 0);
 
-			return new ReadOnlyCollection<DiscordUser>(users);
+			return users;
 		}
 
 		/// <summary>

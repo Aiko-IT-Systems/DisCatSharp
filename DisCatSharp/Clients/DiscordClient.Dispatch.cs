@@ -925,7 +925,7 @@ namespace DisCatSharp
 			var guild = this.InternalGetCachedGuild(guildId);
 			var channels = await this.ApiClient.GetGuildChannelsAsync(guildId);
 			guild.ChannelsInternal.Clear();
-			foreach (var channel in channels.ToList())
+			foreach (var channel in channels)
 			{
 				channel.Discord = this;
 				foreach (var xo in channel.PermissionOverwritesInternal)
@@ -1716,7 +1716,7 @@ namespace DisCatSharp
 			var avOld = old.AvatarHash;
 			var nickOld = mbr.Nickname;
 			var pendingOld = mbr.IsPending;
-			var rolesOld = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles));
+			var rolesOld = mbr.Roles.ToArray();
 			var cduOld = mbr.CommunicationDisabledUntil;
 			mbr.MemberFlags = member.MemberFlags;
 			mbr.AvatarHashInternal = member.AvatarHash;
@@ -1767,7 +1767,7 @@ namespace DisCatSharp
 				Member = mbr,
 
 				NicknameAfter = mbr.Nickname,
-				RolesAfter = new ReadOnlyCollection<DiscordRole>(new List<DiscordRole>(mbr.Roles)),
+				RolesAfter = mbr.Roles.ToArray(),
 				PendingAfter = mbr.IsPending,
 				TimeoutAfter = mbr.CommunicationDisabledUntil,
 				AvatarHashAfter = mbr.AvatarHash,
@@ -2163,9 +2163,9 @@ namespace DisCatSharp
 			{
 				Message = message,
 
-				MentionedUsers = new ReadOnlyCollection<DiscordUser>(message.MentionedUsersInternal),
-				MentionedRoles = message.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(message.MentionedRolesInternal) : null,
-				MentionedChannels = message.MentionedChannelsInternal != null ? new ReadOnlyCollection<DiscordChannel>(message.MentionedChannelsInternal) : null
+				MentionedUsers = message.MentionedUsersInternal.AsReadOnly(),
+				MentionedRoles = message.MentionedRolesInternal?.AsReadOnly(),
+				MentionedChannels = message.MentionedChannelsInternal?.AsReadOnly()
 			};
 			await this._messageCreated.InvokeAsync(this, ea).ConfigureAwait(false);
 		}
@@ -2221,9 +2221,9 @@ namespace DisCatSharp
 			{
 				Message = message,
 				MessageBefore = oldmsg,
-				MentionedUsers = new ReadOnlyCollection<DiscordUser>(message.MentionedUsersInternal),
-				MentionedRoles = message.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(message.MentionedRolesInternal) : null,
-				MentionedChannels = message.MentionedChannelsInternal != null ? new ReadOnlyCollection<DiscordChannel>(message.MentionedChannelsInternal) : null
+				MentionedUsers = message.MentionedUsersInternal.AsReadOnly(),
+				MentionedRoles = message.MentionedRolesInternal?.AsReadOnly(),
+				MentionedChannels = message.MentionedChannelsInternal
 			};
 			await this._messageUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 		}
@@ -2300,7 +2300,7 @@ namespace DisCatSharp
 			var ea = new MessageBulkDeleteEventArgs(this.ServiceProvider)
 			{
 				Channel = channel,
-				Messages = new ReadOnlyCollection<DiscordMessage>(msgs),
+				Messages = msgs,
 				Guild = guild
 			};
 			await this._messagesBulkDeleted.InvokeAsync(this, ea).ConfigureAwait(false);
@@ -2670,7 +2670,7 @@ namespace DisCatSharp
 			}
 			threads.Select(x => x.Discord = this);
 
-			await this._threadListSynced.InvokeAsync(this, new ThreadListSyncEventArgs(this.ServiceProvider) { Guild = guild, Channels = channels.ToList().AsReadOnly(), Threads = threads, Members = members.ToList().AsReadOnly() }).ConfigureAwait(false);
+			await this._threadListSynced.InvokeAsync(this, new ThreadListSyncEventArgs(this.ServiceProvider) { Guild = guild, Channels = channels.ToArray(), Threads = threads, Members = members.ToArray() }).ConfigureAwait(false);
 		}
 
 		/// <summary>

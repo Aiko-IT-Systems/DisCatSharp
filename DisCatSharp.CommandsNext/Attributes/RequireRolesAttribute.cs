@@ -52,7 +52,7 @@ namespace DisCatSharp.CommandsNext.Attributes
 		public RequireRolesAttribute(RoleCheckMode checkMode, params string[] roleNames)
 		{
 			this.CheckMode = checkMode;
-			this.RoleNames = new ReadOnlyCollection<string>(roleNames);
+			this.RoleNames = roleNames;
 		}
 
 		/// <summary>

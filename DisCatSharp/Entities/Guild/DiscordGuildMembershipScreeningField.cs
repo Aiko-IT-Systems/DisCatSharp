@@ -67,7 +67,7 @@ namespace DisCatSharp.Entities
 		{
 			this.Type = type;
 			this.Label = label;
-			this.Values = values.ToList();
+			this.Values = values.ToArray();
 			this.IsRequired = required;
 		}
 

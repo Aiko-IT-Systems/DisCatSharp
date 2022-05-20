@@ -151,9 +151,9 @@ namespace DisCatSharp.Entities
 			this.Description = description;
 			this.Type = type;
 			this.Required = required;
-			this.Choices = choices != null ? new ReadOnlyCollection<DiscordApplicationCommandOptionChoice>(choices.ToList()) : null;
-			this.Options = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;
-			this.ChannelTypes = channelTypes != null ? new ReadOnlyCollection<ChannelType>(channelTypes.ToList()) : null;
+			this.Choices = choices?.ToArray();
+			this.Options = options?.ToArray();
+			this.ChannelTypes = channelTypes?.ToArray();
 			this.AutoComplete = autocomplete;
 			this.MinimumValue = minimumValue;
 			this.MaximumValue = maximumValue;

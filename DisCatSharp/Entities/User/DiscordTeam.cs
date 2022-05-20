@@ -122,7 +122,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the member's permissions within the team.
 		/// </summary>
-		public IReadOnlyCollection<string> Permissions { get; internal set; }
+		public IReadOnlyList<string> Permissions { get; internal set; }
 
 		/// <summary>
 		/// Gets the id of the team this member belongs to.

@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
@@ -278,16 +279,12 @@ namespace DisCatSharp.Lavalink
 
 				jarr = jo["tracks"] as JArray;
 				var loadInfo = jo.ToObject<LavalinkLoadResult>();
-				var tracks = new List<LavalinkTrack>(jarr.Count);
-				foreach (var jt in jarr)
+				loadInfo.Tracks = jarr.Select(jt =>
 				{
 					var track = jt["info"].ToObject<LavalinkTrack>();
 					track.TrackString = jt["track"].ToString();
-
-					tracks.Add(track);
-				}
-
-				loadInfo.Tracks = new ReadOnlyCollection<LavalinkTrack>(tracks);
+					return track;
+				}).ToArray();
 
 				return loadInfo;
 			}
@@ -347,9 +344,7 @@ namespace DisCatSharp.Lavalink
 				decodedTracks[i].TrackString = jarr[i]["track"].ToString();
 			}
 
-			var decodedTrackList = new ReadOnlyCollection<LavalinkTrack>(decodedTracks);
-
-			return decodedTrackList;
+			return decodedTracks;
 		}
 
 		#endregion

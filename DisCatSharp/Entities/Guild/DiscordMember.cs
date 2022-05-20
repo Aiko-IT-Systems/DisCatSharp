@@ -46,7 +46,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		internal DiscordMember()
 		{
-			this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
+			this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => this.RoleIdsInternal);
 		}
 
 		/// <summary>
@@ -60,7 +60,7 @@ namespace DisCatSharp.Entities
 			this.Id = user.Id;
 
 			this.RoleIdsInternal = new List<ulong>();
-			this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
+			this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => this.RoleIdsInternal);
 		}
 
 		/// <summary>
@@ -82,7 +82,7 @@ namespace DisCatSharp.Entities
 			this.CommunicationDisabledUntil = mbr.CommunicationDisabledUntil;
 			this.AvatarHashInternal = mbr.AvatarHash;
 			this.RoleIdsInternal = mbr.Roles ?? new List<ulong>();
-			this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.RoleIdsInternal));
+			this._roleIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => this.RoleIdsInternal);
 			this.MemberFlags = mbr.MemberFlags;
 		}
 
@@ -174,7 +174,7 @@ namespace DisCatSharp.Entities
 		{
 			get
 			{
-				var role = this.Roles.OrderByDescending(xr => xr.Position).FirstOrDefault(xr => xr.Color.Value != 0);
+				var role = this.Roles.Where(xr => xr.Color.Value != 0).MaxBy(xr => xr.Position);
 				return role != null ? role.Color : new DiscordColor();
 			}
 		}

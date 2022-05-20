@@ -41,7 +41,7 @@ namespace DisCatSharp.Entities
 
 		[JsonIgnore]
 		public IReadOnlyList<DiscordGuildDirectoryEntry> Entries =>
-			this.Guild.ChannelsInternal.Values.Where(e => e.ParentId == this.Id).Select(x => x as DiscordGuildDirectoryEntry).ToList();
+			this.Guild.ChannelsInternal.Values.Where(e => e.ParentId == this.Id).Select(x => x as DiscordGuildDirectoryEntry).ToArray();
 
 		#region Methods
 

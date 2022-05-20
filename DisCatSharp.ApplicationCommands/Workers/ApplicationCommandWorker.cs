@@ -177,7 +177,7 @@ namespace DisCatSharp.ApplicationCommands
 				List<SubGroupCommand> subGroupCommands,
 				bool withLocalization
 			)
-			> ParseSlashGroupsAsync(Type type, List<TypeInfo> types, ulong? guildId = null, List<GroupTranslator> translator = null)
+			> ParseSlashGroupsAsync(Type type, IEnumerable<TypeInfo> types, ulong? guildId = null, List<GroupTranslator> translator = null)
 		{
 			List<DiscordApplicationCommand> commands = new();
 			List<KeyValuePair<Type, Type>> commandTypeSources = new();
@@ -190,8 +190,8 @@ namespace DisCatSharp.ApplicationCommands
 			{
 				//Gets the attribute and methods in the group
 				var groupAttribute = subclassInfo.GetCustomAttribute<SlashCommandGroupAttribute>();
-				var submethods = subclassInfo.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null).ToList();
-				var subclasses = subclassInfo.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
+				var submethods = subclassInfo.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
+				var subclasses = subclassInfo.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null);
 				if (subclasses.Any() && submethods.Any())
 				{
 					throw new ArgumentException("Slash command groups cannot have both subcommands and subgroups!");
@@ -307,17 +307,16 @@ namespace DisCatSharp.ApplicationCommands
 					//Similar to the one for regular groups
 					foreach (var subsubmethod in subsubmethods)
 					{
-						var suboptions = new List<DiscordApplicationCommandOption>();
 						var commatt = subsubmethod.GetCustomAttribute<SlashCommandAttribute>();
 						var parameters = subsubmethod.GetParameters();
 						if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
 							throw new ArgumentException($"The first argument must be an InteractionContext!");
 
-						suboptions = suboptions.Concat(await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), guildId)).ToList();
+						var suboptions = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), guildId);
 
 						DiscordApplicationCommandLocalization subSubNameLocalizations = null;
 						DiscordApplicationCommandLocalization subSubDescriptionLocalizations = null;
-						List<DiscordApplicationCommandOption> localizedOptions = null;
+						IEnumerable<DiscordApplicationCommandOption> localizedOptions = null;
 
 						var commandTranslation = translator?.Single(c => c.Name == payload.Name);
 
@@ -327,8 +326,7 @@ namespace DisCatSharp.ApplicationCommands
 
 						if (subSubCommandTranslation != null && subSubCommandTranslation.Options != null)
 						{
-							localizedOptions = new List<DiscordApplicationCommandOption>(suboptions.Count);
-							foreach (var option in suboptions)
+							localizedOptions = suboptions.Select(option =>
 							{
 								var choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
 								if (option.Choices != null)
@@ -339,11 +337,11 @@ namespace DisCatSharp.ApplicationCommands
 									}
 								}
 
-								localizedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
+								return new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
 									choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
 									subSubCommandTranslation.Options.Single(o => o.Name == option.Name).NameTranslations, subSubCommandTranslation.Options.Single(o => o.Name == option.Name).DescriptionTranslations
-								));
-							}
+								);
+							});
 
 							subSubNameLocalizations = subSubCommandTranslation.NameTranslations;
 							subSubDescriptionLocalizations = subSubCommandTranslation.DescriptionTranslations;

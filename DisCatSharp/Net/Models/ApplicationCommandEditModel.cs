@@ -75,7 +75,7 @@ namespace DisCatSharp.Net.Models
 		/// <summary>
 		/// Sets the command's new options.
 		/// </summary>
-		public Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> Options { internal get; set; }
+		public Optional<IReadOnlyList<DiscordApplicationCommandOption>> Options { internal get; set; }
 
 		/// <summary>
 		/// Sets the command's needed permissions.

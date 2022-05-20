@@ -684,8 +684,10 @@ namespace DisCatSharp.CommandsNext
 			if (cmds.Any(x => x.Parent != null))
 				throw new InvalidOperationException("Cannot unregister nested commands.");
 
-			var keys = this.RegisteredCommands.Where(x => cmds.Contains(x.Value)).Select(x => x.Key).ToList();
-			foreach (var key in keys)
+			foreach (var key in this.RegisteredCommands
+				         .Where(x => cmds.Contains(x.Value))
+				         .Select(x => x.Key)
+				         .ToList()) // This is necessary.
 				this._topLevelCommands.Remove(key);
 		}
 
@@ -847,7 +849,7 @@ namespace DisCatSharp.CommandsNext
 				ReactionsInternal = new List<DiscordReaction>()
 			};
 
-			var mentionedUsers = new List<DiscordUser>();
+			List<DiscordUser> mentionedUsers = null;
 			var mentionedRoles = msg.Channel.Guild != null ? new List<DiscordRole>() : null;
 			var mentionedChannels = msg.Channel.Guild != null ? new List<DiscordChannel>() : null;
 
@@ -865,7 +867,7 @@ namespace DisCatSharp.CommandsNext
 				}
 			}
 
-			msg.MentionedUsersInternal = mentionedUsers;
+			msg.MentionedUsersInternal = mentionedUsers ?? new();
 			msg.MentionedRolesInternal = mentionedRoles;
 			msg.MentionedChannelsInternal = mentionedChannels;
 
