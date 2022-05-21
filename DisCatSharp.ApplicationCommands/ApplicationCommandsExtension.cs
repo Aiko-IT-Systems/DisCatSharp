@@ -1746,7 +1746,7 @@ namespace DisCatSharp.ApplicationCommands
 				var discordEmbed = new DiscordEmbedBuilder
 				{
 					Title = "Help",
-					Description = $"{Formatter.InlineCode(cmd.Name)}: {cmd.Description ?? "No description provided."}"
+					Description = $"{Formatter.InlineCode(cmd.Name)}: {cmd.Description ?? "No description provided."}",
 				};
 				if (cmd.Options is not null)
 				{
@@ -1799,7 +1799,7 @@ namespace DisCatSharp.ApplicationCommands
 				{
 					Title = "Help",
 					Description = $"{Formatter.InlineCode(command.Name)}: {command.Description ?? "No description provided."}"
-				};
+				}.AddField(new DiscordEmbedField("Command is NSFW", command.IsNsfw.ToString()));
 				if (command.Options is not null)
 				{
 					var commandOptions = command.Options.ToList();
