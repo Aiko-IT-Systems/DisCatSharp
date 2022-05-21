@@ -73,6 +73,7 @@ namespace DisCatSharp.ApplicationCommands
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 						if (command.DmPermission.HasValue)
 							action.DmPermission = command.DmPermission.Value;
+						action.IsNsfw = command.IsNsfw;
 					});
 
 					commands.Add(discordBackendCommand);
@@ -107,6 +108,7 @@ namespace DisCatSharp.ApplicationCommands
 								action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 							if (command.DmPermission.HasValue)
 								action.DmPermission = command.DmPermission.Value;
+							action.IsNsfw = command.IsNsfw;
 						});
 
 						commands.Add(discordBackendCommand);
@@ -135,6 +137,7 @@ namespace DisCatSharp.ApplicationCommands
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 						if (command.DmPermission.HasValue)
 							action.DmPermission = command.DmPermission.Value;
+						action.IsNsfw = command.IsNsfw;
 					});
 
 					commands.Add(discordBackendCommand);
@@ -227,6 +230,7 @@ namespace DisCatSharp.ApplicationCommands
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 						if (command.DmPermission.HasValue)
 							action.DmPermission = command.DmPermission.Value;
+						action.IsNsfw = command.IsNsfw;
 					});
 
 					commands.Add(discordBackendCommand);
@@ -261,6 +265,7 @@ namespace DisCatSharp.ApplicationCommands
 								action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 							if (command.DmPermission.HasValue)
 								action.DmPermission = command.DmPermission.Value;
+							action.IsNsfw = command.IsNsfw;
 						});
 
 						commands.Add(discordBackendCommand);
@@ -289,6 +294,7 @@ namespace DisCatSharp.ApplicationCommands
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 						if (command.DmPermission.HasValue)
 							action.DmPermission = command.DmPermission.Value;
+						action.IsNsfw = command.IsNsfw;
 					});
 
 					commands.Add(discordBackendCommand);
