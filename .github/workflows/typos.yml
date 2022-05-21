@@ -1,2 +1,14 @@
-- name: typos-action
-  uses: crate-ci/typos@v1.0.4
+name: Check Typos
+uses: crate-ci/typos@v1.0.4
+  with:
+    # Files or patterns to check
+    files: # optional
+    # Comma separated list of extend identifiers, like someone's name
+    extend_identifiers: # optional
+    # Comma separated list of extend words.
+    extend_words: # optional
+    # Ignore implicit configuration files
+    isolated: # optional
+    # Use a custom config file.
+    config: # optional
+
