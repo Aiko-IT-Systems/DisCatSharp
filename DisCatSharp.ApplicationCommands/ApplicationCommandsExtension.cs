@@ -1746,7 +1746,7 @@ namespace DisCatSharp.ApplicationCommands
 				var discordEmbed = new DiscordEmbedBuilder
 				{
 					Title = "Help",
-					Description = $"{Formatter.InlineCode(cmd.Name)}: {cmd.Description ?? "No description provided."}",
+					Description = $"{Formatter.InlineCode(cmd.Name)}: {cmd.Description ?? "No description provided."}"
 				};
 				if (cmd.Options is not null)
 				{
