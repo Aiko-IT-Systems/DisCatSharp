@@ -1734,7 +1734,7 @@ namespace DisCatSharp.ApplicationCommands
 				{
 					Title = "Help",
 					Description = $"{Formatter.InlineCode(command.Name)}: {command.Description ?? "No description provided."}"
-				};
+				}.AddField(new DiscordEmbedField("Command is NSFW", command.IsNsfw.ToString()));
 				if (command.Options is not null)
 				{
 					var sb = new StringBuilder();

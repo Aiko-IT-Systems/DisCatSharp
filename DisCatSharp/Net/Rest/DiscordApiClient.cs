@@ -4553,7 +4553,8 @@ namespace DisCatSharp.Net
 					NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 					DefaultMemberPermission = command.DefaultMemberPermissions,
-					DmPermission = command.DmPermission
+					DmPermission = command.DmPermission,
+					Nsfw = command.IsNsfw
 				});
 			}
 
@@ -4587,7 +4588,8 @@ namespace DisCatSharp.Net
 				NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission
+				DmPermission = command.DmPermission,
+				Nsfw = command.IsNsfw
 			};
 
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -4633,9 +4635,11 @@ namespace DisCatSharp.Net
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
 		/// <param name="defaultMemberPermission">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
-		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
+		/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+		internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId,
+			Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
 			Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
-			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
+			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
 		{
 			var pld = new RestApplicationCommandEditPayload
 			{
@@ -4646,6 +4650,7 @@ namespace DisCatSharp.Net
 				DmPermission = dmPermission,
 				NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 				DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+				Nsfw = isNsfw
 			};
 
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -4719,7 +4724,8 @@ namespace DisCatSharp.Net
 					NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 					DefaultMemberPermission = command.DefaultMemberPermissions,
-					DmPermission = command.DmPermission
+					DmPermission = command.DmPermission,
+					Nsfw = command.IsNsfw
 				});
 			}
 			this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
@@ -4753,8 +4759,8 @@ namespace DisCatSharp.Net
 				NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission
-
+				DmPermission = command.DmPermission,
+				Nsfw = command.IsNsfw
 			};
 
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
@@ -4802,9 +4808,11 @@ namespace DisCatSharp.Net
 		/// <param name="descriptionLocalization">The localizations of the description.</param>
 		/// <param name="defaultMemberPermission">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
-		internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
+		/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+		internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId,
+			Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
 			Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
-			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
+			Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
 		{
 			var pld = new RestApplicationCommandEditPayload
 			{
@@ -4815,6 +4823,7 @@ namespace DisCatSharp.Net
 				DmPermission = dmPermission,
 				NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 				DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+				Nsfw = isNsfw
 			};
 
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";

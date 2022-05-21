@@ -105,6 +105,12 @@ namespace DisCatSharp.Entities
 		public bool? DmPermission { get; internal set; }
 
 		/// <summary>
+		/// Gets whether the command is marked as NSFW.
+		/// </summary>
+		[JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
+		public bool IsNsfw { get; internal set; } = false;
+
+		/// <summary>
 		/// Gets the version number for this command.
 		/// </summary>
 		[JsonProperty("version")]
@@ -121,7 +127,13 @@ namespace DisCatSharp.Entities
 		/// <param name="descriptionLocalizations">The localizations of the command description.</param>
 		/// <param name="defaultMemberPermissions">The default member permissions.</param>
 		/// <param name="dmPermission">The dm permission.</param>
-		public DiscordApplicationCommand(string name, string description, IEnumerable<DiscordApplicationCommandOption> options = null, ApplicationCommandType type = ApplicationCommandType.ChatInput, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null, Permissions? defaultMemberPermissions = null, bool? dmPermission = null)
+		/// <param name="isNsfw">Whether this command is NSFW.</param>
+		public DiscordApplicationCommand(
+			string name, string description,
+			IEnumerable<DiscordApplicationCommandOption> options = null,
+			ApplicationCommandType type = ApplicationCommandType.ChatInput,
+			DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null,
+			Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false)
 		{
 			if (type is ApplicationCommandType.ChatInput)
 			{
@@ -154,6 +166,7 @@ namespace DisCatSharp.Entities
 			this.Options = optionsList;
 			this.DefaultMemberPermissions = defaultMemberPermissions;
 			this.DmPermission = dmPermission;
+			this.IsNsfw = isNsfw;
 		}
 
 		/// <summary>
