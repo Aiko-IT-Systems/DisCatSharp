@@ -74,7 +74,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// Whether the command is allowed for everyone.
 		/// </summary>
 		[JsonProperty("default_permission")]
-		public bool DefaultPermission { get; set; }
+		public bool DefaultPermission { get; set; } = true;
 
 		/// <summary>
 		/// The command needed permissions.
@@ -87,6 +87,12 @@ namespace DisCatSharp.Net.Abstractions
 		/// </summary>
 		[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Include)]
 		public bool? DmPermission { get; set; }
+
+		/// <summary>
+		/// Whether the command is marked as NSFW.
+		/// </summary>
+		[JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
+		public bool Nsfw { get; set; }
 	}
 
 	/// <summary>
@@ -128,7 +134,7 @@ namespace DisCatSharp.Net.Abstractions
 		/// Gets the default permission.
 		/// </summary>
 		[JsonProperty("default_permission")]
-		public Optional<bool> DefaultPermission { get; set; }
+		public Optional<bool> DefaultPermission { get; set; } = true;
 
 		/// <summary>
 		/// The command needed permissions.
@@ -141,6 +147,12 @@ namespace DisCatSharp.Net.Abstractions
 		/// </summary>
 		[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Include)]
 		public Optional<bool> DmPermission { get; set; }
+
+		/// <summary>
+		/// Whether the command is marked as NSFW.
+		/// </summary>
+		[JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
+		public Optional<bool> Nsfw { get; set; }
 	}
 
 	/// <summary>

@@ -446,7 +446,7 @@ namespace DisCatSharp.Entities
 		/// Gets the mentions.
 		/// </summary>
 		/// <returns>An array of IMentions.</returns>
-		private IMention[] GetMentions()
+		private List<IMention> GetMentions()
 		{
 			var mentions = new List<IMention>();
 
@@ -459,7 +459,7 @@ namespace DisCatSharp.Entities
 			if (this.MentionedRoleIds.Any())
 				mentions.AddRange(this.MentionedRoleIds.Select(r => (IMention)new RoleMention(r)));
 
-			return mentions.ToArray();
+			return mentions;
 		}
 
 		/// <summary>

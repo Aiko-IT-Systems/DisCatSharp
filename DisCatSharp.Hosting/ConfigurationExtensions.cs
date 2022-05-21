@@ -64,7 +64,7 @@ namespace DisCatSharp.Hosting
 		/// </remarks>
 		/// <param name="names">Names of assemblies to look for</param>
 		/// <returns>Assemblies which meet the given names. No duplicates</returns>
-		public static Assembly[] FindAssemblies(string[]? names)
+		public static List<Assembly> FindAssemblies(IEnumerable<string>? names)
 		{
 
 			/*
@@ -74,9 +74,9 @@ namespace DisCatSharp.Hosting
 			List<Assembly> results = new();
 
 			if (names is null)
-				return results.ToArray();
+				return results;
 
-			List<string> queue = new(names);
+			var queue = names.ToList();
 			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
 			{
 				if (!queue.Any())
@@ -89,12 +89,9 @@ namespace DisCatSharp.Hosting
 					continue;
 
 				// Is this something we're looking for?
-				if (queue.Contains(loadedAssemblyName))
+				if (queue.Remove(loadedAssemblyName))
 				{
 					results.Add(assembly);
-
-					// Shrink queue so we don't accidentally add the same assembly > 1 times
-					queue.Remove(loadedAssemblyName);
 				}
 
 				// Time to check if one of the referenced assemblies is something we're looking for
@@ -115,7 +112,7 @@ namespace DisCatSharp.Hosting
 					}
 			}
 
-			return results.ToArray();
+			return results;
 		}
 
 		/// <summary>
@@ -151,7 +148,7 @@ namespace DisCatSharp.Hosting
 						configuration[configuration.ConfigPath(rootName, "Using")]);
 
 #pragma warning disable 8604
-			foreach (var assembly in FindAssemblies(assemblyNames.Select(x => x.StartsWith(Constants.LibName) ? x : $"{Constants.LibName}.{x}").ToArray()))
+			foreach (var assembly in FindAssemblies(assemblyNames.Select(x => x.StartsWith(Constants.LibName) ? x : $"{Constants.LibName}.{x}")))
 			{
 				ExtensionConfigResult result = new();
 

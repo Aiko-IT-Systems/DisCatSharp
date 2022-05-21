@@ -74,9 +74,9 @@ namespace DisCatSharp.Common.Types
 			this._lastSegmentLength = 0;
 			this._clear = clearOnDispose;
 
-			this._segments = new List<IMemoryOwner<byte>>(initialSegmentCount + 1);
-			for (var i = 0; i < initialSegmentCount; i++)
-				this._segments.Add(this._pool.Rent(this._segmentSize));
+			this._segments = Enumerable.Range(0, initialSegmentCount)
+				.Select(x => this._pool.Rent(this._segmentSize))
+				.ToList();
 
 			this.Length = 0;
 

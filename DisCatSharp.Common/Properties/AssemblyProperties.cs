@@ -22,9 +22,9 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("DisCatSharp")]
+[assembly: InternalsVisibleTo("DisCatSharp.ApplicationCommands")]
 [assembly: InternalsVisibleTo("DisCatSharp.CommandsNext")]
-[assembly: InternalsVisibleTo("DisCatSharp.Common")]
+[assembly: InternalsVisibleTo("DisCatSharp")]
 [assembly: InternalsVisibleTo("DisCatSharp.Configuration")]
 [assembly: InternalsVisibleTo("DisCatSharp.Configuration.Tests")]
 [assembly: InternalsVisibleTo("DisCatSharp.Hosting")]

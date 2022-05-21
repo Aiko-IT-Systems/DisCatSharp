@@ -152,17 +152,14 @@ namespace DisCatSharp.CommandsNext
 				[typeof(DiscordScheduledEvent)] = "event"
 			};
 
-			var ncvt = typeof(NullableConverter<>);
-			var nt = typeof(Nullable<>);
-			var cvts = this.ArgumentConverters.Keys.ToArray();
-			foreach (var xt in cvts)
+			foreach (var xt in this.ArgumentConverters.Keys.ToArray())
 			{
 				var xti = xt.GetTypeInfo();
 				if (!xti.IsValueType)
 					continue;
 
-				var xcvt = ncvt.MakeGenericType(xt);
-				var xnt = nt.MakeGenericType(xt);
+				var xcvt = typeof(NullableConverter<>).MakeGenericType(xt);
+				var xnt = typeof(Nullable<>).MakeGenericType(xt);
 				if (this.ArgumentConverters.ContainsKey(xcvt))
 					continue;
 
@@ -212,8 +209,8 @@ namespace DisCatSharp.CommandsNext
 				{
 					var checks = this._config.DefaultHelpChecks.ToArray();
 
-					for (var i = 0; i < tcmds.Count; i++)
-						tcmds[i].WithExecutionChecks(checks);
+					foreach (var cb in tcmds)
+						cb.WithExecutionChecks(checks);
 				}
 
 				if (tcmds != null)
