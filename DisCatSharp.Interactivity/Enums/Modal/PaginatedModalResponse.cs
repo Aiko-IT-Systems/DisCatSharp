@@ -20,24 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
-[assembly: InternalsVisibleTo("DisCatSharp")]
-[assembly: InternalsVisibleTo("DisCatSharp.CommandsNext")]
-[assembly: InternalsVisibleTo("DisCatSharp.Common")]
-[assembly: InternalsVisibleTo("DisCatSharp.Configuration")]
-[assembly: InternalsVisibleTo("DisCatSharp.Configuration.Tests")]
-[assembly: InternalsVisibleTo("DisCatSharp.Hosting")]
-[assembly: InternalsVisibleTo("DisCatSharp.Hosting.DependencyInjection")]
-[assembly: InternalsVisibleTo("DisCatSharp.Hosting.Tests")]
-[assembly: InternalsVisibleTo("DisCatSharp.Interactivity")]
-[assembly: InternalsVisibleTo("DisCatSharp.Lavalink")]
-[assembly: InternalsVisibleTo("DisCatSharp.Phabricator")]
-[assembly: InternalsVisibleTo("DisCatSharp.Support")]
-[assembly: InternalsVisibleTo("DisCatSharp.Test")]
-[assembly: InternalsVisibleTo("DisCatSharp.VoiceNext")]
-[assembly: InternalsVisibleTo("DisCatSharp.VoiceNext.Natives")]
-[assembly: InternalsVisibleTo("Nyaw")]
-[assembly: InternalsVisibleTo("DisCatSharp.DevTools")]
-[assembly: InternalsVisibleTo("DisCatSharp.DocsGenerator")]
-[assembly: InternalsVisibleTo("DisCatSharp.StaffApps")]
+using DisCatSharp.Entities;
+
+namespace DisCatSharp.Interactivity.Enums
+{
+	/// <summary>
+	/// A response from the paginated modal response
+	/// </summary>
+	public class PaginatedModalResponse
+	{
+		/// <summary>
+		/// The responses. The key is the customid of each component.
+		/// </summary>
+		public IReadOnlyDictionary<string, string> Responses { get; internal set; }
+
+		/// <summary>
+		/// The last interaction. This is automatically replied to with a ephemeral "thinking" state. Use EditOriginalResponseAsync to modify this.
+		/// </summary>
+		public DiscordInteraction Interaction { get; internal set; }
+
+		/// <summary>
+		/// Whether the interaction timed out.
+		/// </summary>
+		public bool TimedOut { get; internal set; }
+	}
+}

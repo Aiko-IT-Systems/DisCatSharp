@@ -54,7 +54,7 @@ namespace DisCatSharp.Entities
 			else
 			{
 				throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
-					$"Valid locales: {string.Join(", ", this.ValidLocales.ToArray())}");
+					$"Valid locales: {string.Join(", ", this.ValidLocales)}");
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace DisCatSharp.Entities
 				{
 					if (!this.Validate(locale))
 						throw new NotSupportedException($"The provided locale \"{locale}\" is not valid for Discord.\n" +
-							$"Valid locales: {string.Join(", ", this.ValidLocales.ToArray())}");
+							$"Valid locales: {string.Join(", ", this.ValidLocales)}");
 				}
 			}
 

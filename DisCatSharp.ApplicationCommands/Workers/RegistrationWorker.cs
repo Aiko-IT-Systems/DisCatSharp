@@ -69,10 +69,11 @@ namespace DisCatSharp.ApplicationCommands
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Entities.Optional.Some(command.Options);
-						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
+						if (command.DefaultMemberPermissions.HasValue)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
-						if (command.DmPermission.HasValue && command.DmPermission != null)
+						if (command.DmPermission.HasValue)
 							action.DmPermission = command.DmPermission.Value;
+						action.IsNsfw = command.IsNsfw;
 					});
 
 					commands.Add(discordBackendCommand);
@@ -103,10 +104,11 @@ namespace DisCatSharp.ApplicationCommands
 							action.DescriptionLocalizations = command.DescriptionLocalizations;
 							if(command.Options != null && command.Options.Any())
 								action.Options = Entities.Optional.Some(command.Options);
-							if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
+							if (command.DefaultMemberPermissions.HasValue)
 								action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
-							if (command.DmPermission.HasValue && command.DmPermission != null)
+							if (command.DmPermission.HasValue)
 								action.DmPermission = command.DmPermission.Value;
+							action.IsNsfw = command.IsNsfw;
 						});
 
 						commands.Add(discordBackendCommand);
@@ -131,10 +133,11 @@ namespace DisCatSharp.ApplicationCommands
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Entities.Optional.Some(command.Options);
-						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
+						if (command.DefaultMemberPermissions.HasValue)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
-						if (command.DmPermission.HasValue && command.DmPermission != null)
+						if (command.DmPermission.HasValue)
 							action.DmPermission = command.DmPermission.Value;
+						action.IsNsfw = command.IsNsfw;
 					});
 
 					commands.Add(discordBackendCommand);
@@ -223,10 +226,11 @@ namespace DisCatSharp.ApplicationCommands
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Entities.Optional.Some(command.Options);
-						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
+						if (command.DefaultMemberPermissions.HasValue)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
-						if (command.DmPermission.HasValue && command.DmPermission != null)
+						if (command.DmPermission.HasValue)
 							action.DmPermission = command.DmPermission.Value;
+						action.IsNsfw = command.IsNsfw;
 					});
 
 					commands.Add(discordBackendCommand);
@@ -257,10 +261,11 @@ namespace DisCatSharp.ApplicationCommands
 							action.DescriptionLocalizations = command.DescriptionLocalizations;
 							if(command.Options != null && command.Options.Any())
 								action.Options = Entities.Optional.Some(command.Options);
-							if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
+							if (command.DefaultMemberPermissions.HasValue)
 								action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
-							if (command.DmPermission.HasValue && command.DmPermission != null)
+							if (command.DmPermission.HasValue)
 								action.DmPermission = command.DmPermission.Value;
+							action.IsNsfw = command.IsNsfw;
 						});
 
 						commands.Add(discordBackendCommand);
@@ -285,10 +290,11 @@ namespace DisCatSharp.ApplicationCommands
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Entities.Optional.Some(command.Options);
-						if (command.DefaultMemberPermissions.HasValue && command.DefaultMemberPermissions != null)
+						if (command.DefaultMemberPermissions.HasValue)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
-						if (command.DmPermission.HasValue && command.DmPermission != null)
+						if (command.DmPermission.HasValue)
 							action.DmPermission = command.DmPermission.Value;
+						action.IsNsfw = command.IsNsfw;
 					});
 
 					commands.Add(discordBackendCommand);

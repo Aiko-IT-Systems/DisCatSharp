@@ -20,35 +20,58 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Newtonsoft.Json;
+using System;
 
-namespace DisCatSharp.Entities
+namespace DisCatSharp
 {
 	/// <summary>
-	/// Represents a discord role tags.
+	/// Represents a system channel flags extension.
 	/// </summary>
-	public class DiscordRoleTags
+	public static class SystemChannelFlagsExtension
 	{
 		/// <summary>
-		/// Gets the id of the bot this role belongs to.
+		/// Calculates whether these system channel flags contain a specific flag.
 		/// </summary>
-		[JsonProperty("bot_id", NullValueHandling = NullValueHandling.Ignore)]
-		public ulong? BotId { get; internal set; }
+		/// <param name="baseFlags">The existing flags.</param>
+		/// <param name="flag">The flag to search for.</param>
+		/// <returns></returns>
+		public static bool HasSystemChannelFlag(this SystemChannelFlags baseFlags, SystemChannelFlags flag) => (baseFlags & flag) == flag;
+	}
+
+	/// <summary>
+	/// Represents settings for a guild's system channel.
+	/// </summary>
+	[Flags]
+	public enum SystemChannelFlags
+	{
+		/// <summary>
+		/// Member join messages are disabled.
+		/// </summary>
+		SuppressJoinNotifications = 1 << 0,
 
 		/// <summary>
-		/// Gets the id of the integration this role belongs to.
+		/// Server boost messages are disabled.
 		/// </summary>
-		[JsonProperty("integration_id", NullValueHandling = NullValueHandling.Ignore)]
-		public ulong? IntegrationId { get; internal set; }
+		SuppressPremiumSubscriptions = 1 << 1,
 
 		/// <summary>
-		/// Gets whether this is the guild's premium subscriber role.
+		/// Server setup tips are disabled.
 		/// </summary>
-		[JsonIgnore]
-		public bool IsPremiumSubscriber
-			=> this.PremiumSubscriber.HasValue && this.PremiumSubscriber.Value is null;
+		SuppressGuildReminderNotifications = 1 << 2,
 
-		[JsonProperty("premium_subscriber", NullValueHandling = NullValueHandling.Include)]
-		internal Optional<bool?> PremiumSubscriber = false;
+		/// <summary>
+		/// Suppress member join sticker replies.
+		/// </summary>
+		SuppressJoinNotificationReplies = 1 << 3,
+
+		/// <summary>
+		/// Role subscription purchase messages are disabled.
+		/// </summary>
+		SuppressRoleSubbscriptionPurchaseNotification = 1<<4,
+
+		/// <summary>
+		/// Suppress role subscription purchase sticker replies.
+		/// </summary>
+		SuppressRoleSubbscriptionPurchaseNotificationReplies = 1<<5,
 	}
 }

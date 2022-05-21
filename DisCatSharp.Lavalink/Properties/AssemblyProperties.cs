@@ -20,48 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using System.Runtime.CompilerServices;
 
-namespace DisCatSharp
-{
-	/// <summary>
-	/// Represents a system channel flags extension.
-	/// </summary>
-	public static class SystemChannelFlagsExtension
-	{
-		/// <summary>
-		/// Calculates whether these system channel flags contain a specific flag.
-		/// </summary>
-		/// <param name="baseFlags">The existing flags.</param>
-		/// <param name="flag">The flag to search for.</param>
-		/// <returns></returns>
-		public static bool HasSystemChannelFlag(this SystemChannelFlags baseFlags, SystemChannelFlags flag) => (baseFlags & flag) == flag;
-	}
-
-	/// <summary>
-	/// Represents settings for a guild's system channel.
-	/// </summary>
-	[Flags]
-	public enum SystemChannelFlags
-	{
-		/// <summary>
-		/// Member join messages are disabled.
-		/// </summary>
-		SuppressJoinNotifications = 1 << 0,
-
-		/// <summary>
-		/// Server boost messages are disabled.
-		/// </summary>
-		SuppressPremiumSubscriptions = 1 << 1,
-
-		/// <summary>
-		/// Server setup tips are disabled.
-		/// </summary>
-		SuppressGuildReminderNotifications = 1 << 2,
-
-		/// <summary>
-		/// Suppress member join sticker replies.
-		/// </summary>
-		SuppressJoinNotificationReplies = 1 << 3
-	}
-}
+[assembly: InternalsVisibleTo("DisCatSharp.ApplicationCommands")]
+[assembly: InternalsVisibleTo("DisCatSharp.CommandsNext")]
+[assembly: InternalsVisibleTo("DisCatSharp.Common")]
+[assembly: InternalsVisibleTo("DisCatSharp.Configuration")]
+[assembly: InternalsVisibleTo("DisCatSharp.Configuration.Tests")]
+[assembly: InternalsVisibleTo("DisCatSharp.Hosting")]
+[assembly: InternalsVisibleTo("DisCatSharp.Hosting.DependencyInjection")]
+[assembly: InternalsVisibleTo("DisCatSharp.Hosting.Tests")]
+[assembly: InternalsVisibleTo("DisCatSharp.Interactivity")]
+[assembly: InternalsVisibleTo("DisCatSharp")]
+[assembly: InternalsVisibleTo("DisCatSharp.Phabricator")]
+[assembly: InternalsVisibleTo("DisCatSharp.Support")]
+[assembly: InternalsVisibleTo("DisCatSharp.Test")]
+[assembly: InternalsVisibleTo("DisCatSharp.VoiceNext")]
+[assembly: InternalsVisibleTo("DisCatSharp.VoiceNext.Natives")]
+[assembly: InternalsVisibleTo("Nyaw")]
+[assembly: InternalsVisibleTo("DisCatSharp.DevTools")]
+[assembly: InternalsVisibleTo("DisCatSharp.DocsGenerator")]
+[assembly: InternalsVisibleTo("DisCatSharp.StaffApps")]

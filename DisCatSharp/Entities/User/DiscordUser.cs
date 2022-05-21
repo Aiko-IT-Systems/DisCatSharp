@@ -275,6 +275,13 @@ namespace DisCatSharp.Entities
 		#endregion
 
 		/// <summary>
+		/// Fetches the user from the API.
+		/// </summary>
+		/// <returns>The user with fresh data from the API.</returns>
+		public async Task<DiscordUser> GetFromApiAsync()
+			=> await this.Discord.ApiClient.GetUserAsync(this.Id);
+		
+		/// <summary>
 		/// Whether this user is in a <see cref="DiscordGuild"/>
 		/// </summary>
 		/// <example>
@@ -309,6 +316,17 @@ namespace DisCatSharp.Entities
 		/// <returns><see cref="bool"/></returns>
 		public async Task<bool> IsNotInGuild(DiscordGuild guild)
 			=> !await this.IsInGuild(guild);
+
+		/// <summary>
+		/// Returns the DiscordMember in the specified <see cref="DiscordGuild"/>
+		/// </summary>
+		/// <param name="guild">The <see cref="DiscordGuild"/> to get this user on.</param>
+		/// <returns>The <see cref="DiscordMember"/>.</returns>
+		/// <exception cref="Exceptions.NotFoundException">Thrown when the user is not part of the guild.</exception>
+		/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+		/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+		public async Task<DiscordMember> ConvertToMember(DiscordGuild guild)
+			=> await guild.GetMemberAsync(this.Id);
 
 		/// <summary>
 		/// Unbans this user from a guild.

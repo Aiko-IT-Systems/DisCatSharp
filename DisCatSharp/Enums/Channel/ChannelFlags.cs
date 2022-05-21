@@ -28,7 +28,13 @@ namespace DisCatSharp
 	public enum ChannelFlags : int
 	{
 		/// <summary>
+		/// Indicates that this channel is removed from the guilds home feed.
+		/// </summary>
+		RemovedFromHome = 1 << 0,
+
+		/// <summary>
 		/// Indicates that this thread is pinned to the top of its parent forum channel.
+		/// Forum channel thread only.
 		/// </summary>
 		Pinned = 1 << 1
 	}

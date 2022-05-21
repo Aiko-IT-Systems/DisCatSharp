@@ -1153,15 +1153,9 @@ namespace DisCatSharp.Entities
 			if (includedRoles != null)
 			{
 				includedRoles = includedRoles.Where(r => r != null);
-				var roleCount = includedRoles.Count();
-				var roleArr = includedRoles.ToArray();
-				var rawRoleIds = new List<ulong>();
-
-				for (var i = 0; i < roleCount; i++)
-				{
-					if (this.RolesInternal.ContainsKey(roleArr[i].Id))
-						rawRoleIds.Add(roleArr[i].Id);
-				}
+				var rawRoleIds = includedRoles
+					.Where(x => this.RolesInternal.ContainsKey(x.Id))
+					.Select(x => x.Id);
 
 				return this.Discord.ApiClient.GetGuildPruneCountAsync(this.Id, days, rawRoleIds);
 			}
@@ -1186,15 +1180,9 @@ namespace DisCatSharp.Entities
 			if (includedRoles != null)
 			{
 				includedRoles = includedRoles.Where(r => r != null);
-				var roleCount = includedRoles.Count();
-				var roleArr = includedRoles.ToArray();
-				var rawRoleIds = new List<ulong>();
-
-				for (var i = 0; i < roleCount; i++)
-				{
-					if (this.RolesInternal.ContainsKey(roleArr[i].Id))
-						rawRoleIds.Add(roleArr[i].Id);
-				}
+				var rawRoleIds = includedRoles
+					.Where(x => this.RolesInternal.ContainsKey(x.Id))
+					.Select(x => x.Id);
 
 				return this.Discord.ApiClient.BeginGuildPruneAsync(this.Id, days, computePruneCount, rawRoleIds, reason);
 			}
@@ -1297,8 +1285,8 @@ namespace DisCatSharp.Entities
 
 			if (!intents.HasIntent(DiscordIntents.GuildInvites))
 			{
-				for (var i = 0; i < res.Count; i++)
-					this.Invites[res[i].Code] = res[i];
+				foreach (var r in res)
+					this.Invites[r.Code] = r;
 			}
 
 			return res;
@@ -1878,7 +1866,7 @@ namespace DisCatSharp.Entities
 		{
 			var mdl = new ApplicationCommandEditModel();
 			action(mdl);
-			return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission).ConfigureAwait(false);
+			return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw).ConfigureAwait(false);
 		}
 
 		/// <summary>
