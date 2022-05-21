@@ -4678,7 +4678,7 @@ namespace DisCatSharp.Net
 				DmPermission = dmPermission,
 				NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 				DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-				IsNsfw = isNsfw
+				Nsfw = isNsfw
 			};
 
 			var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -4753,7 +4753,7 @@ namespace DisCatSharp.Net
 					DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 					DefaultMemberPermission = command.DefaultMemberPermissions,
 					DmPermission = command.DmPermission,
-					Nsfw = command.Nsfw
+					Nsfw = command.IsNsfw
 				});
 			}
 			this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
