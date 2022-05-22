@@ -29,7 +29,7 @@ Simple slash command:
 ```cs
 public class MyCommand : ApplicationCommandsModule
 {
-    [SlashCommand("my_command", "This is decription of the command.")]
+    [SlashCommand("my_command", "This is description of the command.")]
     public async Task MySlashCommand(InteractionContext context)
     {
 
@@ -106,10 +106,10 @@ In this case, we need to wrap our class with commands in another class and add t
 ```cs
 public class MyCommand : ApplicationCommandsModule
 {
-    [SlashCommandGroup("my_command", "This is decription of the command group.")]
+    [SlashCommandGroup("my_command", "This is description of the command group.")]
     public class MyCommandGroup : ApplicationCommandsModule
     {
-        [SlashCommand("first", "This is decription of the command.")]
+        [SlashCommand("first", "This is description of the command.")]
         public async Task MySlashCommand(InteractionContext context)
         {
             await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
@@ -117,7 +117,7 @@ public class MyCommand : ApplicationCommandsModule
                 Content = "This is first subcommand."
             });
         }
-        [SlashCommand("second", "This is decription of the command.")]
+        [SlashCommand("second", "This is description of the command.")]
         public async Task MySecondCommand(InteractionContext context)
         {
             await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()

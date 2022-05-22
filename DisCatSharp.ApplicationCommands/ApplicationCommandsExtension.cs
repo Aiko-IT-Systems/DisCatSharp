@@ -153,7 +153,7 @@ namespace DisCatSharp.ApplicationCommands
 		internal static bool CheckAllGuilds { get; set; }
 
 		/// <summary>
-		/// Gets whether the registration check should be manually overriden.
+		/// Gets whether the registration check should be manually overridden.
 		/// </summary>
 		internal static bool ManOr { get; set; }
 

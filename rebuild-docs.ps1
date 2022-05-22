@@ -76,7 +76,7 @@ function Install-DocFX([string] $target_dir_path)
     {
         Write-Host "Getting latest DocFX release"
         $release_json = Invoke-WebRequest -uri "https://chocolatey.org/api/v2/package-versions/docfx" | ConvertFrom-JSON
-        $release_json = $release_json | % { [System.Version]::Parse($_) } | Sort-Object -Descending
+        $release_json = $release_json | ForEach-Object { [System.Version]::Parse($_) } | Sort-Object -Descending
     }
     catch
     {
@@ -118,7 +118,7 @@ function Install-DocFX([string] $target_dir_path)
         }
     }
 
-    # Check if we succedded in downloading
+    # Check if we succeeded in downloading
     if ($fail)
     {
         Return 1
@@ -144,7 +144,7 @@ function Install-DocFX([string] $target_dir_path)
 
     # Add DocFX to PATH
     Write-Host "Adding DocFX to PATH"
-    if ($Env:OS -eq $null)
+    if ($null -eq $Env:OS)
     {
         $Env:DOCFX_PATH = "$target_dir"
     }
@@ -260,7 +260,7 @@ function Install-7zip([string] $target_dir_path)
 }
 
 # Builds the documentation using available DocFX
-function Build-Docs([string] $target_dir_path)
+function BuildDocs([string] $target_dir_path)
 {
     # Check if documentation source path exists
     if (-not (Test-Path "$target_dir_path"))
@@ -335,7 +335,7 @@ function Build-Docs([string] $target_dir_path)
 
     # Check OS
     # Null means non-Windows
-    if ($Env:OS -eq $null)
+    if ($null -eq $Env:OS)
     {
         # Generate new API documentation
         & mono "$Env:DOCFX_PATH/docfx.exe" docfx.json | Out-Host
@@ -375,7 +375,7 @@ function Build-Docs([string] $target_dir_path)
 }
 
 # Packages the build site to a .tar.xz archive
-function Package-Docs([string] $target_dir_path, [string] $output_dir_path, [string] $pack_name)
+function PackDocs([string] $target_dir_path, [string] $output_dir_path, [string] $pack_name)
 {
     # Form target path
     $target_path = Get-Item "$target_dir_path"
@@ -448,7 +448,7 @@ if ($result -ne 0)
 }
 
 # Install 7-zip, if Windows
-if ($Env:OS -ne $null)
+if ($null -ne $Env:OS)
 {
     $result = Install-7zip "$sevenzip_path"
     if ($result -ne 0)
@@ -462,10 +462,10 @@ if ($Env:OS -ne $null)
 
 # Build and package docs
 # At this point nothing should fail as everything is already set up
-$result = Build-Docs "$DocsPath"
+$result = BuildDocs "$DocsPath"
 if ($result -eq 0)
 {
-    $result = Package-Docs "$DocsPath" "$OutputPath" "$PackageName"
+    $result = PackDocs "$DocsPath" "$OutputPath" "$PackageName"
     if ($result -ne 0)
     {
         Write-Host "Packaging API documentation failed"
