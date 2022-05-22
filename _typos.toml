@@ -13,6 +13,8 @@ ret = "ret"
 axe = "axe"
 Behaviour = "Behaviour"
 prev = "prev"
+desktopbsd = "desktopbsd"
+deffered = "deffered"
 
 [files]
 ignore-vcs = true
