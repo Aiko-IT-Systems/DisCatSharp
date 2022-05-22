@@ -8,6 +8,8 @@ flag_fo = "flag_fo"
 CLAUS = "CLAUS"
 claus = "claus"
 WOMENS = "WOMENS"
+goes = "goes"
+ret = "ret"
 
 [files]
 ignore-vcs = true
