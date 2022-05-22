@@ -10,6 +10,8 @@ claus = "claus"
 WOMENS = "WOMENS"
 goes = "goes"
 ret = "ret"
+axe = "axe"
+Behaviour = "Behaviour"
 
 [files]
 ignore-vcs = true
