@@ -17,7 +17,7 @@ jobs:
       with:
         repository: Aiko-IT-Systems/DisCatSharp.Docs
         path: DisCatSharp.Docs
-        token: ${{ secrets.DOCS_TOKEN }}
+        token: ${{ secrets.NYUW_TOKEN_GH }}
         
     - name: Get SSH
       uses: webfactory/ssh-agent@v0.5.3
@@ -46,7 +46,7 @@ jobs:
         cwd: ./DisCatSharp.Docs
         default_author: github_actions
         author_name: DisCatSharp
-        author_email: discatsharp@aitsys.dev
+        author_email: nyuw@aitsys.dev
         message: 'Docs update for commit ${{ github.repository }} (${{ github.sha }})'
         
     - name: Publish to Prod
