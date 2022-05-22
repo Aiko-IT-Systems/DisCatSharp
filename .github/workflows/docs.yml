@@ -44,9 +44,12 @@ jobs:
       uses: EndBug/add-and-commit@main
       with:
         cwd: ./DisCatSharp.Docs
-        default_author: github_actions
+        default_author: user_info
         author_name: DisCatSharp
-        author_email: nyuw@aitsys.dev
+        author_email: team@aitsys.dev
+        committer_name: NyuwBot
+        committer_email: nyuw@aitsys.dev
+        commit: --signoff
         message: 'Docs update for commit ${{ github.repository }} (${{ github.sha }})'
         
     - name: Publish to Prod
