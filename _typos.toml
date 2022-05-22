@@ -15,6 +15,7 @@ Behaviour = "Behaviour"
 prev = "prev"
 desktopbsd = "desktopbsd"
 deffered = "deffered"
+Rythm = "Rythm"
 
 [files]
 ignore-vcs = true
