@@ -61,13 +61,13 @@ In addition to these, we also have several preferences:
   ```cs
   var a = new Class
   {
-      StringNumber = "fourty-two",
+      StringNumber = "forty-two",
       Number = 42
   };
 
   var b = new Dictionary<string, int>()
   {
-      ["fourty-two"] = 42,
+      ["forty-two"] = 42,
       ["sixty-nine"] = 69
   };
 
@@ -90,9 +90,9 @@ In addition to these, we also have several preferences:
    * Static constructor.
    * Public constructors.
    * Non-public constructors.
-   * Public methods (with the exception of methods overriden from `System.Object`).
+   * Public methods (with the exception of methods overridden from `System.Object`).
    * Non-public methods.
-   * Methods overriden from `System.Object`.
+   * Methods overridden from `System.Object`.
    * Public static methods.
    * Non-public static methods.
    * Operator overloads.
@@ -115,7 +115,7 @@ the commit with `[ci skip]`.
 In the event you change something outside of code (i.e. a meta-change or documentation), you must tag your commit with
 `[ci skip]`.
 
-# Developer Certificate of Origin (DCO) 
+# Developer Certificate of Origin (DCO)
 ```
 Version 1.1
 

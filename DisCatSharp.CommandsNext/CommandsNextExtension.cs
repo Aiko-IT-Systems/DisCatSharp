@@ -676,7 +676,7 @@ namespace DisCatSharp.CommandsNext
 		}
 
 		/// <summary>
-		/// Unregisters specified commands from CommandsNext.
+		/// Unregister specified commands from CommandsNext.
 		/// </summary>
 		/// <param name="cmds">Commands to unregister.</param>
 		public void UnregisterCommands(params Command[] cmds)
@@ -960,7 +960,7 @@ namespace DisCatSharp.CommandsNext
 		}
 
 		/// <summary>
-		/// Unregisters an argument converter for specified type.
+		/// Unregister an argument converter for specified type.
 		/// </summary>
 		/// <typeparam name="T">Type for which to unregister the converter.</typeparam>
 		public void UnregisterConverter<T>()
@@ -1070,18 +1070,16 @@ namespace DisCatSharp.CommandsNext
 		private AsyncEvent<CommandsNextExtension, CommandErrorEventArgs> _error;
 
 		/// <summary>
-		/// Ons the command executed.
+		/// Fires when a command gets executed.
 		/// </summary>
-		/// <param name="e">The e.</param>
-		/// <returns>A Task.</returns>
+		/// <param name="e">The command execution event arguments.</param>
 		private Task OnCommandExecuted(CommandExecutionEventArgs e)
 			=> this._executed.InvokeAsync(this, e);
 
 		/// <summary>
-		/// Ons the command errored.
+		/// Fires when a command fails.
 		/// </summary>
-		/// <param name="e">The e.</param>
-		/// <returns>A Task.</returns>
+		/// <param name="e">The command error event arguments.</param>
 		private Task OnCommandErrored(CommandErrorEventArgs e)
 			=> this._error.InvokeAsync(this, e);
 		#endregion

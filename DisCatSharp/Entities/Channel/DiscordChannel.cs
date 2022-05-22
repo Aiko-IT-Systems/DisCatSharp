@@ -478,7 +478,7 @@ namespace DisCatSharp.Entities
 
 		/// <summary>
 		/// Updates the channel position when it doesn't have a category.
-		/// 
+		///
 		/// Use <see cref="ModifyParentAsync"/> for moving to other categories.
 		/// Use <see cref="RemoveParentAsync"/> to move out of a category.
 		/// Use <see cref="ModifyPositionInCategoryAsync"/> for moving within a category.
@@ -510,7 +510,7 @@ namespace DisCatSharp.Entities
 
 		/// <summary>
 		/// Updates the channel position within it's own category.
-		/// 
+		///
 		/// Use <see cref="ModifyParentAsync"/> for moving to other categories.
 		/// Use <see cref="RemoveParentAsync"/> to move out of a category.
 		/// Use <see cref="ModifyPositionAsync"/> to move channels outside a category.
@@ -610,7 +610,7 @@ namespace DisCatSharp.Entities
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <exception cref="System.IndexOutOfRangeException">Thrown when <paramref name="position"/> is out of range.</exception>
-		/// <exception cref="System.ArgumentException">Thrown when function is called on a channel without a parent channel, a wrong mode is givven or given position is zero.</exception>
+		/// <exception cref="System.ArgumentException">Thrown when function is called on a channel without a parent channel, a wrong mode is given or given position is zero.</exception>
 		public Task ModifyPositionInCategorySmartAsync(string mode, int position, string reason = null)
 		{
 			if (!this.IsMovableInParent())

@@ -114,7 +114,7 @@ namespace DisCatSharp.Entities
 		}
 
 		/// <summary>
-		/// Constucts a new text component based on another text component.
+		/// Constructs a new text component based on another text component.
 		/// </summary>
 		/// <param name="other">The button to copy.</param>
 		public DiscordTextComponent(DiscordTextComponent other) : this()

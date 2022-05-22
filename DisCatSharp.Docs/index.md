@@ -3,7 +3,7 @@ uid: index
 title: DisCatSharp 10.0.0 Documentation
 ---
 
-<h1 class="delet-this">DisCatSharp 10.0.0 Documentation</h1>
+<h1 class="delete-this">DisCatSharp 10.0.0 Documentation</h1>
 <h1 class="logo-center">![DisCatSharp Logo](/logobig.png "DisCatSharp Documentation")</h1>
 ## DisCatSharp 10.0.0 Documentation
 [DisCatSharp](https://github.com/Aiko-IT-Systems/DisCatSharp) (DCS) is an unofficial .NET wrapper for the [Discord API](https://discordapp.com/developers/docs/intro "Discord API") based off [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus).<br/>

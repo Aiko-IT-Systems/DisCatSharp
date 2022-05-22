@@ -526,7 +526,7 @@ namespace DisCatSharp
 		/// <param name="icon">Stream containing the icon for the guild.</param>
 		/// <param name="verificationLevel">Verification level for the guild.</param>
 		/// <param name="defaultMessageNotifications">Default message notification settings for the guild.</param>
-		/// <param name="systemChannelFlags">System channel flags fopr the guild.</param>
+		/// <param name="systemChannelFlags">System channel flags for the guild.</param>
 		/// <returns>The created guild.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -566,13 +566,13 @@ namespace DisCatSharp
 		/// <param name="route">The route.</param>
 		/// <param name="routeParams">The route parameters.</param>
 		/// <param name="jsonBody">The json body.</param>
-		/// <param name="additionalHeaders">The addditional headers.</param>
+		/// <param name="additionalHeaders">The additional headers.</param>
 		/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the ressource does not exist.</exception>
+		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the resource does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 		/// <returns>A awaitable RestResponse</returns>
-		[Obsolete("This is no longer needed. Use DiscordClient.RestClient instead.", false)] 
+		[Obsolete("This is no longer needed. Use DiscordClient.RestClient instead.", false)]
 		public async Task<RestResponse> ExecuteRawRequestAsync(RestRequestMethod method, string route, object routeParams, string jsonBody = null, Dictionary<string, string> additionalHeaders = null, double? ratelimitWaitOverride = null)
 		{
 			var bucket = this.ApiClient.Rest.GetBucket(method, route, routeParams, out var path);
@@ -875,7 +875,7 @@ namespace DisCatSharp
 
 		#region Internal Caching Methods
 		/// <summary>
-		/// Gets the internal chached threads.
+		/// Gets the internal cached threads.
 		/// </summary>
 		/// <param name="threadId">The target thread id.</param>
 		/// <returns>The requested thread.</returns>
@@ -918,7 +918,7 @@ namespace DisCatSharp
 		}
 
 		/// <summary>
-		/// Gets the internal chached guild.
+		/// Gets the internal cached guild.
 		/// </summary>
 		/// <param name="guildId">The target guild id.</param>
 		/// <returns>The requested guild.</returns>
