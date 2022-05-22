@@ -13,7 +13,7 @@ WOMENS = "WOMENS"
 ignore-vcs = true
 ignore-files = true
 ignore-dot = true
-extend-exclude = ["./DisCatSharp.docs/dcs/*.*", "./DisCatSharp.Docs/dcs/styles/*.*"]
+extend-exclude = ["DisCatSharp.Docs/dcs/styles/*.js"]
 
 [default]
 locale = "en-us"
