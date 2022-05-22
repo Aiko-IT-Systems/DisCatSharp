@@ -184,7 +184,7 @@ namespace DisCatSharp
 
 		/// <summary>
 		/// Whether to include the content of guild messages.
-		/// See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-for-Verified-Bots for more informations.
+		/// See https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-for-Verified-Bots for more information.
 		/// </summary>
 		MessageContent = 1 << 15,
 
