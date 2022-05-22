@@ -8,3 +8,12 @@ flag_fo = "flag_fo"
 CLAUS = "CLAUS"
 claus = "claus"
 WOMENS = "WOMENS"
+
+[files]
+ignore-vcs = true
+ignore-files = true
+ignore-dot = true
+extend-exclude = ["DisCatSharp.docs/dcs/*"]
+
+[default]
+locale = "en-us"
