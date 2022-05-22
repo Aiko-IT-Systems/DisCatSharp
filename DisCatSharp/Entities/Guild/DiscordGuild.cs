@@ -738,7 +738,7 @@ namespace DisCatSharp.Entities
 		/// <param name="preferredLocale">The preferred locale. Defaults to en-US.</param>
 		/// <param name="description">The description.</param>
 		/// <param name="defaultMessageNotifications">The default message notifications. Defaults to <see cref="DefaultMessageNotifications.MentionsOnly"/></param>
-		/// <param name="reason">The auditlog reason.</param>
+		/// <param name="reason">The audit log reason.</param>
 		/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -926,7 +926,7 @@ namespace DisCatSharp.Entities
 		public Task<DiscordBan> GetBanAsync(DiscordUser user)
 			=> this.GetBanAsync(user.Id);
 
-		#region Sheduled Events
+		#region Scheduled Events
 
 		/// <summary>
 		/// Creates a scheduled event.
@@ -988,7 +988,7 @@ namespace DisCatSharp.Entities
 		/// </summary>
 		/// <param name="scheduledEvent">The event to get.</param>
 		/// <param name="withUserCount">Whether to include user count.</param>
-		/// <returns>A sheduled event.</returns>
+		/// <returns>A scheduled event.</returns>
 		/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 		/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
