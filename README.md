@@ -1,4 +1,4 @@
-# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby) <!--[![Discord Server](https://img.shields.io/discord/858089281214087179.svg?label=Discord)](https://discord.gg/U4BGHpKSF7)-->
+# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby)
 
 ![dcs](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Logos/android-chrome-192x192.png?raw=true)
 
@@ -20,15 +20,11 @@ Discord Bot Library written in C# for .NET.
 [![GitHub Repo stars](https://img.shields.io/github/stars/Aiko-IT-Systems/DisCatSharp?label=Stars)](https://github.com/Aiko-IT-Systems/DisCatSharp/stargazers)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5282/badge)](https://bestpractices.coreinfrastructure.org/projects/5282)
 [![StackShare](http://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/aiko-it-systems/discatsharp)
-<!-- [![Known Vulnerabilities](https://snyk.io/test/github/Aiko-IT-Systems/DisCatSharp/badge.svg)](https://snyk.io/test/github/Aiko-IT-Systems/DisCatSharp)-->
 
 ## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
 
 So the API version is always the newest, in the current case `v10`.
-
-<!--## Where is the Changelog?
-On [our guild!](https://discord.gg/U4BGHpKSF7) You find it in [this channel](https://discord.com/channels/858089281214087179/858099438580006913). -->
 
 ## Installing
 You can install the library from following source:
@@ -43,8 +39,6 @@ The documentation of the latest nightly versions is available at [docs.dcs.aitsy
 Fallback docs are available at [docs-alt.dcs.aitsys.dev](https://docs-alt.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
-<!-- Either join our [support guild](https://discord.gg/U4BGHpKSF7) and open a support ticket. 
-Or write a mail to dcs@aitsys.dev. -->
 Write a mail to ottero@aitsys.dev.
 
 All requests are tracked at [aitsys.dev](https://aitsys.dev).
