@@ -268,6 +268,7 @@ namespace DisCatSharp.Net.WebSocket
 
 			this._receiverTokenSource?.Dispose();
 			this._socketTokenSource?.Dispose();
+			GC.SuppressFinalize(this);
 		}
 
 		/// <summary>

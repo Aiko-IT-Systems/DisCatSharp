@@ -90,8 +90,10 @@ namespace DisCatSharp.Entities
 		/// <returns>The current builder to chain calls with.</returns>
 		public DiscordInteractionModalBuilder AddTextComponent(DiscordTextComponent component)
 		{
-			List<DiscordTextComponent> comp = new(1);
-			comp.Add(component);
+			List<DiscordTextComponent> comp = new(1)
+			{
+				component
+			};
 
 			return this.AddModalComponents(comp);
 		}

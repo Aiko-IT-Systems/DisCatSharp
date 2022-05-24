@@ -307,6 +307,7 @@ namespace DisCatSharp.Common
 
 			this._isDisposed = true;
 			this._rng.Dispose();
+			GC.SuppressFinalize(this);
 		}
 
 		/// <summary>

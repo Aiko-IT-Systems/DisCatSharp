@@ -77,6 +77,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 				this.Collected.Clear();
 				this.Collected = null;
 			}
+			GC.SuppressFinalize(this);
 		}
 	}
 }

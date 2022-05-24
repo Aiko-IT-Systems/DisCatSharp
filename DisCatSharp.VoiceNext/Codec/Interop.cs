@@ -386,7 +386,8 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// </summary>
 		/// <param name="decoder">The decoder.</param>
 		/// <param name="sampleCount">The sample count.</param>
-		public static void OpusGetLastPacketDuration(IntPtr decoder, out int sampleCount) => _OpusDecoderControl(decoder, OpusControl.GetLastPacketDuration, out sampleCount);
+		public static void OpusGetLastPacketDuration(IntPtr decoder, out int sampleCount)
+			=> _OpusDecoderControl(decoder, OpusControl.GetLastPacketDuration, out sampleCount);
 		#endregion
 	}
 }
