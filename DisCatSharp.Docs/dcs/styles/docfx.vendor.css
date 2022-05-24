@@ -356,7 +356,7 @@ address,blockquote .small,blockquote footer,blockquote small,dd,dt,pre{line-heig
 @media (min-width:768px){.lead{font-size:21px}
 }
 .small,small{font-size:85%}
-.mark,mark{padding:.2em;background-color:#fcf8e3}
+.mark,mark{padding:.2em;background-color:#4cb08b;color:#2eff00}
 .list-inline,.list-unstyled{padding-left:0;list-style:none}
 .text-left{text-align:left}
 .text-right{text-align:right}
