@@ -29,7 +29,7 @@ discord.UseInteractivity(new InteractivityConfiguration()
 
 There are two ways available to use interactivity:
 
-* Extension methods available for `DiscordChannel` and `DiscordMessage`.
+* Extension methods available for `DiscordChannel`, `DiscordMessage`, `DiscordClient` and `DiscordInteraction`.
 * [Instance methods](xref:DisCatSharp.Interactivity.InteractivityExtension#methods) available from `InteractivityExtension`.
 
 We'll have a quick look at a few common interactivity methods along with an example of use for each.

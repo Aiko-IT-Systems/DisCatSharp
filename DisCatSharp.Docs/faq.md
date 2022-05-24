@@ -69,16 +69,16 @@ However, if you meant an activity like this:
 
 You can use either of the following
 
-* The overload for @DisCatSharp.DiscordClient.ConnectAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) which accepts a @DisCatSharp.Entities.DiscordActivity.
-* @DisCatSharp.DiscordClient.UpdateStatusAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) OR @DisCatSharp.DiscordShardedClient.UpdateStatusAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) (for the sharded client) at any point after `Ready` has been fired.
+* The overload for [ConnectAsync](xref:DisCatSharp.DiscordClient#ConnectAsync)([DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity), System.Nullable{UserStatus}, System.Nullable{DateTimeOffset}) which accepts a [DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity).
+* [UpdateStatusAsync](xref:DisCatSharp.DiscordClient#UpdateStatusAsync)([DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity), System.Nullable{UserStatus}, System.Nullable{DateTimeOffset}) OR [UpdateStatusAsync](xref:DisCatSharp.DiscordShardedClient#UpdateStatusAsync)(DiscordActivity, System.Nullable{[UserStatus](xref:DisCatSharp.Entities.UserStatus)}, System.Nullable{DateTimeOffset}) (for the sharded client) at any point after `Ready` has been fired.
 
 ### Am I able to retrieve a @DisCatSharp.Entities.DiscordRole by name?
-Yes. Use LINQ on the `Roles` property of your instance of @DisCatSharp.Entities.DiscordGuild and compare against the `Name` of  each @DisCatSharp.Entities.DiscordRole.
+Yes. Use LINQ on the `Roles` property of your instance of [DiscordGuild](DisCatSharp.Entities.DiscordGuild) and compare against the `Name` of  each [DiscordRole](xref:DisCatSharp.Entities.DiscordRole).
 
 ### Why are you using Newtonsoft.Json when System.Text.Json is available
 Yes `System.Text.Json` is available to use but it still doesn't stand up to what we currently need which is why we still use Newtonsoft.Json.
 Maybe in time we can switch to your favorite Json Deserializer but for right now we will be using Newtonsoft.Json for the foreseeable future.
 
 ### Why the hell are my events not firing?
-This is because in the Discord V8 API, they require @DisCatSharp.DiscordIntents to be enabled on @DisCatSharp.DiscordConfiguration and the
+This is because in the Discord V8+ API, they require @DisCatSharp.DiscordIntents to be enabled on [DiscordConfiguration](DisCatSharp.DiscordConfiguration) and the
 Discord Application Portal. We have an [article](xref:beyond_basics_intents) that covers all that has to be done to set this up.
