@@ -22,7 +22,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Lavalink.LavalinkGuildConnection.#ctor(DisCatSharp.Lavalink.LavalinkNodeConnection,DisCatSharp.Entities.DiscordChannel,DisCatSharp.EventArgs.VoiceStateUpdateEventArgs)")]
-[assembly: SuppressMessage("Usage", "CA2254:Template should be a static expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Lavalink.LavalinkNodeConnection.StartAsync~System.Threading.Tasks.Task")]
-[assembly: SuppressMessage("Usage", "CA2254:Template should be a static expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Lavalink.LavalinkNodeConnection.WebSocket_OnMessage(DisCatSharp.Net.WebSocket.IWebSocketClient,DisCatSharp.EventArgs.SocketMessageEventArgs)~System.Threading.Tasks.Task")]
-[assembly: SuppressMessage("Usage", "CA2254:Template should be a static expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Lavalink.LavalinkNodeConnection.WsSendAsync(System.String)~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("Usage", "CA2254:Template should be a static expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.VoiceNext.VoiceNextConnection.Dispose")]
+[assembly: SuppressMessage("Usage", "CA2254:Template should be a static expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.VoiceNext.VoiceNextConnection.VoiceWS_SocketMessage(DisCatSharp.Net.WebSocket.IWebSocketClient,DisCatSharp.EventArgs.SocketMessageEventArgs)~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("Usage", "CA2254:Template should be a static expression", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.VoiceNext.VoiceNextConnection.WsSendAsync(System.String)~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("Performance", "CA1806:Do not ignore method results", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.VoiceNext.Codec.Interop.OpusGetLastPacketDuration(System.IntPtr,System.Int32@)")]

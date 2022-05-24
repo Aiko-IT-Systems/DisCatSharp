@@ -243,6 +243,7 @@ namespace DisCatSharp.VoiceNext.Codec
 			this._isDisposed = true;
 			if (this.Decoder != IntPtr.Zero)
 				Interop.OpusDestroyDecoder(this.Decoder);
+			GC.SuppressFinalize(this);
 		}
 	}
 

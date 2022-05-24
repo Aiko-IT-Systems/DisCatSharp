@@ -35,7 +35,7 @@ namespace DisCatSharp.VoiceNext.Entities
 		// starting the counter a full wrap ahead handles an edge case where the VERY first packets
 		// we see are right around the wraparound line.
 		private ulong _sequenceBase = 1 << 16;
-		
+
 		private SequenceWrapState _currentSequenceWrapState = SequenceWrapState.AssumeNextHighSequenceIsOutOfOrder;
 
 		private enum SequenceWrapState
@@ -49,27 +49,27 @@ namespace DisCatSharp.VoiceNext.Entities
 		/// Gets the s s r c.
 		/// </summary>
 		public uint Ssrc { get; }
-		
+
 		/// <summary>
 		/// Gets the id.
 		/// </summary>
 		public ulong Id => this.User?.Id ?? 0;
-		
+
 		/// <summary>
 		/// Gets the decoder.
 		/// </summary>
 		public OpusDecoder Decoder { get; }
-		
+
 		/// <summary>
 		/// Gets or sets the user.
 		/// </summary>
 		public DiscordUser User { get; set; } = null;
-		
+
 		/// <summary>
 		/// Gets or sets the last sequence.
 		/// </summary>
 		public ulong? LastTrueSequence { get; set; } = null;
-		
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AudioSender"/> class.
 		/// </summary>

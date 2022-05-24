@@ -66,7 +66,7 @@ namespace DisCatSharp.Net.Serialization
 			if (type == null)
 				throw new ArgumentException($"Value {reader} does not have a component type specifier");
 
-            DiscordComponent cmp;
+			DiscordComponent cmp;
 			cmp = type switch
 			{
 				ComponentType.ActionRow => new DiscordActionRowComponent(),
@@ -79,7 +79,7 @@ namespace DisCatSharp.Net.Serialization
 
 			// Populate the existing component with the values in the JObject. This avoids a recursive JsonConverter loop
 			using var jreader = job.CreateReader();
-            serializer.Populate(jreader, cmp);
+			serializer.Populate(jreader, cmp);
 
 			return cmp;
 		}

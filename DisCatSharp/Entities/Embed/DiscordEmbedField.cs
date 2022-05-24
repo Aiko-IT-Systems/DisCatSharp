@@ -38,7 +38,9 @@ namespace DisCatSharp.Entities
 		/// Must be non-null, non-empty and &lt;= 256 characters.
 		/// </summary>
 		[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-		public string Name { get => this._name;
+		public string Name
+		{
+			get => this._name;
 			set
 			{
 				if (string.IsNullOrWhiteSpace(value))
@@ -62,7 +64,9 @@ namespace DisCatSharp.Entities
 		/// Must be non-null, non-empty and &lt;= 1024 characters.
 		/// </summary>
 		[JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
-		public string Value { get => this._value;
+		public string Value
+		{
+			get => this._value;
 			set
 			{
 				if (string.IsNullOrWhiteSpace(value))
