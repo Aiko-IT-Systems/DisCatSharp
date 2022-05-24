@@ -28,12 +28,6 @@
       },
       {
         "files": [
-            /*"articles/**.md",
-            "articles//toc.yml",
-            "natives/**.md",
-            "faq/**.md",
-            "toc.yml",
-            "*.md"*/
 			"**.md",
 			"toc.yml",
 			"faq/**.yml",
@@ -81,19 +75,19 @@
 		"_enableSearch": true,
 		"_enableNewTab": true,
 		"_appTitle": "DisCatSharp Docs",
-		//"_gitUrlPattern": "git",
-		/*"_gitContribute": {
+		"_gitUrlPattern": "git",
+		"_gitContribute": {
 			"repo": "https://github.com/Aiko-IT-Systems/DisCatSharp",
 			"branch": "main"
-		},*/
+		},
 		//"_disableNavbar": false,
 		//"_disableBreadcrumb": false,
 		//"_disableAffix": true,
 		//"_disableToc": false,
 		//"_disableContribution": true
     },
-	"disableGitFeatures": true,
-	//"exportRawModel": true,
+	"disableGitFeatures": false,
+	"exportRawModel": true,
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
