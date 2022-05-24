@@ -72,8 +72,8 @@ namespace DisCatSharp.ApplicationCommands
 		/// <note type="warning">
 		/// <para>It can lead to unexpected behavior of the application commands module.</para>
 		/// <para>Enable this option only if DisCatSharp support advises you to do so.</para>
-		/// <para>Defaults to <see langword="false"/>.</para>
 		/// </note>
+		/// <para>Defaults to <see langword="false"/>.</para>
 		/// </summary>
 		public bool ManualOverride { internal get; set; } = false;
 
