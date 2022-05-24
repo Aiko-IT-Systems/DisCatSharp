@@ -429,7 +429,7 @@ article section {
 }
 
 .pagination>.active>a {
-  background-color: #429ff2;
+  background-color: #133d62 !important;
   /*border-color: #47A7A0;*/
 }
 
