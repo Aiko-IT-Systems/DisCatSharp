@@ -19,7 +19,7 @@
     }
   ],
   "build": {
-    "content": [
+	"content": [
       {
         "files": [
           "api/**.yml",
@@ -96,4 +96,5 @@
 		"changefreq": "hourly",
 		"priority": 1.0
 	}
+  }
 }
