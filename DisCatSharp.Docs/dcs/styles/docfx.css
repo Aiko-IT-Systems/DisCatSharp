@@ -449,7 +449,7 @@ article section {
 }
 
 .sidenav, .fixed_header, .toc  {
-  background-color: #f1f1f1;
+  background-color: #222;
 }
 
 .sidetoc {
@@ -459,7 +459,7 @@ article section {
   bottom: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: #f1f1f1;
+  background-color: #222;
   border-left: 1px solid #e7e7e7;
   border-right: 1px solid #e7e7e7;
   z-index: 1;
@@ -470,7 +470,7 @@ article section {
 }
 
 body .toc{
-  background-color: #f1f1f1;
+  background-color: transparent;
   overflow-x: hidden;
 }
 
@@ -506,23 +506,23 @@ body .toc{
   left: 0;
 }
 .toc .nav > li > a {
-  color: #666666;
+  color: #ccc;
   margin-left: 5px;
   display: block;
   padding: 0;
 }
 .toc .nav > li > a:hover,
 .toc .nav > li > a:focus {
-  color: #000000;
+  color: #eee;
   background: none;
   text-decoration: inherit;
 }
 .toc .nav > li.active > a {
-  color: #337ab7;
+  color: #7289da;
 }
 .toc .nav > li.active > a:hover,
 .toc .nav > li.active > a:focus {
-  color: #23527c;
+  color: #85a0ff;
 }
 
 .toc .nav > li> .expand-stub {
@@ -574,7 +574,7 @@ body .toc{
   position: fixed;
   top: 90px;
   width: 260px;
-  background-color: #f1f1f1;
+  background-color: #222;
   padding: 15px;
   border-left: 1px solid #e7e7e7;
   border-right: 1px solid #e7e7e7;
@@ -582,15 +582,15 @@ body .toc{
 }
 .toc-filter {
   border-radius: 5px;
-  background: #fff;
-  color: #666666;
+  background: #444;
+  color: #ddd;
   padding: 5px;
   position: relative;
   margin: 0 5px 0 5px;
 }
 .toc-filter > input {
   border: 0;
-  color: #666666;
+  color: #ddd;
   padding-left: 20px;
   padding-right: 20px;
   width: 100%;
@@ -653,7 +653,7 @@ body .toc{
   font-size: 14px;
 }
 .sideaffix > div.contribution > ul > li > a.contribution-link:hover {
-  background-color: #ffffff;
+  background-color: #222;
 }
 .sideaffix ul.nav > li > a:focus {
   background: none;
@@ -675,15 +675,15 @@ body .toc{
 }
 .affix ul > li > a:hover {
   background: none;
-  color: #666666;
+  color: #eee;
 }
 .affix ul > li.active > a,
 .affix ul > li.active > a:before {
-  color: #337ab7;
+  color: #7289da;
 }
 .affix ul > li > a {
   padding: 5px 12px;
-  color: #666666;
+  color: #ccc;
 }
 .affix > ul > li.active:last-child {
   margin-bottom: 50px;
@@ -761,8 +761,7 @@ footer {
   z-index: 1000;
 }
 .footer {
-  border-top: 1px solid #e7e7e7;
-  background-color: #f8f8f8;
+  background-color: #222;
   padding: 15px 0;
 }
 @media (min-width: 768px) {
@@ -822,7 +821,7 @@ footer {
   .toc .level1 > li {
     display: block;
   }
-  
+
   .toc .level1 > li:after {
     display: none;
   }
@@ -871,33 +870,6 @@ footer {
   .toc .level2 > li:after {
     display: none;
   }
-}
-
-/* Code snippet */
-code {
-  color: #717374;
-  background-color: #f1f2f3;
-}
-
-a code {
-  color: #337ab7;
-  background-color: #f1f2f3;
-}
-
-a code:hover {
-  text-decoration: underline;
-}
-
-.hljs-keyword {
-  color: rgb(86,156,214);
-}
-
-.hljs-string {
-  color: rgb(214, 157, 133);
-}
-
-pre {
-  border: 0;
 }
 
 /* For code snippet line highlight */
