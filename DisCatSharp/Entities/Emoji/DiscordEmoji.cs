@@ -105,7 +105,7 @@ namespace DisCatSharp.Entities
 		{
 			s_discordNameLookup.TryGetValue(this.Name, out var name);
 
-			return name ?? $":{ this.Name }:";
+			return name ?? $":{this.Name}:";
 		}
 
 		/// <summary>

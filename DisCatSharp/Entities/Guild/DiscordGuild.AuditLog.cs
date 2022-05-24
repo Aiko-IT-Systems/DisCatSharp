@@ -37,7 +37,8 @@ using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.Entities
 {
-	public partial class DiscordGuild {
+	public partial class DiscordGuild
+	{
 		// TODO: Rework audit logs!
 		/// <summary>
 		/// Gets audit log entries for this guild.

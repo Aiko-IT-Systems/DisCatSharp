@@ -67,6 +67,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 			this.Ct.Dispose();
 			this.Tcs = null;
 			this.Predicate = null;
+			GC.SuppressFinalize(this);
 		}
 	}
 }

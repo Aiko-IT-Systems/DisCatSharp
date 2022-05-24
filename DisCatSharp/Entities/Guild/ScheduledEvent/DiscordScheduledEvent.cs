@@ -97,18 +97,18 @@ namespace DisCatSharp.Entities
 		[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
 		public string Description { get; internal set; }
 
-        /// <summary>
-        /// Gets this event's cover hash, when applicable.
-        /// </summary>
-        [JsonProperty("image", NullValueHandling = NullValueHandling.Include)]
-        public string CoverImageHash { get; internal set; }
+		/// <summary>
+		/// Gets this event's cover hash, when applicable.
+		/// </summary>
+		[JsonProperty("image", NullValueHandling = NullValueHandling.Include)]
+		public string CoverImageHash { get; internal set; }
 
-        /// <summary>
-        /// Gets this event's cover in url form.
-        /// </summary>
-        [JsonIgnore]
-        public string CoverImageUrl
-            => !string.IsNullOrWhiteSpace(this.CoverImageHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.GUILD_EVENTS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png" : null;
+		/// <summary>
+		/// Gets this event's cover in url form.
+		/// </summary>
+		[JsonIgnore]
+		public string CoverImageUrl
+			=> !string.IsNullOrWhiteSpace(this.CoverImageHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.GUILD_EVENTS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.CoverImageHash}.png" : null;
 
 		/// <summary>
 		/// Gets the scheduled start time of the scheduled event.

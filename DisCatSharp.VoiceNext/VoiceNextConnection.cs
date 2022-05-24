@@ -794,7 +794,7 @@ namespace DisCatSharp.VoiceNext
 						Ssrc = vtx.Ssrc,
 						User = vtx.User,
 						PcmData = pcmFiller,
-						OpusData = new byte[0].AsMemory(),
+						OpusData = Array.Empty<byte>().AsMemory(),
 						AudioFormat = audioFormat,
 						AudioDuration = audioFormat.CalculateSampleDuration(pcmFiller.Length)
 					}).ConfigureAwait(false);
@@ -978,6 +978,7 @@ namespace DisCatSharp.VoiceNext
 			}
 
 			this.VoiceDisconnected?.Invoke(this._guild);
+			GC.SuppressFinalize(this);
 		}
 
 		/// <summary>

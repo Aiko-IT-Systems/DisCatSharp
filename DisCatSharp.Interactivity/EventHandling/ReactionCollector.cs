@@ -218,6 +218,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 
 			this._requests.Clear();
 			this._requests = null;
+			GC.SuppressFinalize(this);
 		}
 	}
 

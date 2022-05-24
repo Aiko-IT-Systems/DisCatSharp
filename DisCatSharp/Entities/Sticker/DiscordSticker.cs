@@ -133,11 +133,21 @@ namespace DisCatSharp.Entities
 		internal DiscordSticker()
 		{ }
 
+
+		/// <summary>
+		/// Checks whether this <see cref="DiscordSticker"/> is equal to another object.
+		/// </summary>
+		/// <param name="obj">Object to compare to.</param>
+		/// <returns>Whether the object is equal to this <see cref="DiscordSticker"/>.</returns>
+		public override bool Equals(object obj)
+			=> this.Equals(obj as ForumPostTag);
+
 		/// <summary>
 		/// Whether to stickers are equal.
 		/// </summary>
 		/// <param name="other">DiscordSticker</param>
-		public bool Equals(DiscordSticker other) => this.Id == other.Id;
+		public bool Equals(DiscordSticker other)
+			=> this.Id == other.Id;
 
 		/// <summary>
 		/// Gets the sticker in readable format.

@@ -28,7 +28,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Net.Abstractions;
@@ -2854,8 +2853,8 @@ namespace DisCatSharp.Net
 			};
 
 			var sb = includeRoles?.Aggregate(new StringBuilder(),
-				         (sb, id) => sb.Append($"&include_roles={id}"))
-			         ?? new StringBuilder();
+						 (sb, id) => sb.Append($"&include_roles={id}"))
+					 ?? new StringBuilder();
 
 			var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PRUNE}";
 			var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
@@ -2888,8 +2887,8 @@ namespace DisCatSharp.Net
 			};
 
 			var sb = includeRoles?.Aggregate(new StringBuilder(),
-				         (sb, id) => sb.Append($"&include_roles={id}"))
-			         ?? new StringBuilder();
+						 (sb, id) => sb.Append($"&include_roles={id}"))
+					 ?? new StringBuilder();
 
 			var headers = Utilities.GetBaseHeaders();
 			if (!string.IsNullOrWhiteSpace(reason))

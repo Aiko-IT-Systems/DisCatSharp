@@ -823,7 +823,7 @@ namespace DisCatSharp.Net
 				if (removedBuckets > 0)
 					this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed {0} unused bucket{1}: [{2}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder.ToString().TrimEnd(',', ' '));
 
-				if (this._hashesToBuckets.Count == 0)
+				if (this._hashesToBuckets.IsEmpty)
 					break;
 			}
 
@@ -868,6 +868,7 @@ namespace DisCatSharp.Net
 			this._routesToHashes.Clear();
 			this._hashesToBuckets.Clear();
 			this._requestQueue.Clear();
+			GC.SuppressFinalize(this);
 		}
 	}
 }
