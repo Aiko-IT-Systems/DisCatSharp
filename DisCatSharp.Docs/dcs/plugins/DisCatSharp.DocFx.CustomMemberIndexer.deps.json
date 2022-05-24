@@ -1,19 +1,18 @@
 {
   "runtimeTarget": {
-    "name": ".NETStandard,Version=v2.0/",
+    "name": ".NETStandard,Version=v2.1/",
     "signature": ""
   },
   "compilationOptions": {},
   "targets": {
-    ".NETStandard,Version=v2.0": {},
-    ".NETStandard,Version=v2.0/": {
+    ".NETStandard,Version=v2.1": {},
+    ".NETStandard,Version=v2.1/": {
       "DisCatSharp.DocFx.CustomMemberIndexer/1.0.0": {
         "dependencies": {
           "CsQuery": "1.3.5-beta5",
           "Microsoft.Composition": "1.0.31",
-          "Microsoft.DocAsCode.Common": "2.58.9",
-          "Microsoft.DocAsCode.Plugins": "2.58.9",
-          "NETStandard.Library": "2.0.3"
+          "Microsoft.DocAsCode.Common": "2.59.2",
+          "Microsoft.DocAsCode.Plugins": "2.59.2"
         },
         "runtime": {
           "DisCatSharp.DocFx.CustomMemberIndexer.dll": {}
@@ -58,49 +57,44 @@
           }
         }
       },
-      "Microsoft.DocAsCode.Common/2.58.9": {
+      "Microsoft.DocAsCode.Common/2.59.2": {
         "dependencies": {
-          "Microsoft.DocAsCode.Plugins": "2.58.9",
-          "Microsoft.DocAsCode.YamlSerialization": "2.58.9"
+          "Microsoft.DocAsCode.Plugins": "2.59.2",
+          "Microsoft.DocAsCode.YamlSerialization": "2.59.2"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.DocAsCode.Common.dll": {
-            "assemblyVersion": "2.58.9.0",
-            "fileVersion": "2.58.9.12548"
+            "assemblyVersion": "2.59.2.0",
+            "fileVersion": "2.59.2.13435"
           }
         }
       },
-      "Microsoft.DocAsCode.Plugins/2.58.9": {
+      "Microsoft.DocAsCode.Plugins/2.59.2": {
         "dependencies": {
           "Newtonsoft.Json": "9.0.1",
           "System.Collections.Immutable": "5.0.0"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.DocAsCode.Plugins.dll": {
-            "assemblyVersion": "2.58.9.0",
-            "fileVersion": "2.58.9.12548"
+            "assemblyVersion": "2.59.2.0",
+            "fileVersion": "2.59.2.13435"
           }
         }
       },
-      "Microsoft.DocAsCode.YamlSerialization/2.58.9": {
+      "Microsoft.DocAsCode.YamlSerialization/2.59.2": {
         "dependencies": {
           "System.Reflection.Emit.Lightweight": "4.3.0",
           "YamlDotNet.Signed": "5.1.0"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.DocAsCode.YamlSerialization.dll": {
-            "assemblyVersion": "2.58.9.0",
-            "fileVersion": "2.58.9.12548"
+            "assemblyVersion": "2.59.2.0",
+            "fileVersion": "2.59.2.13435"
           }
         }
       },
       "Microsoft.NETCore.Platforms/1.1.0": {},
       "Microsoft.NETCore.Targets/1.1.0": {},
-      "NETStandard.Library/2.0.3": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "1.1.0"
-        }
-      },
       "Newtonsoft.Json/9.0.1": {
         "dependencies": {
           "Microsoft.CSharp": "4.0.1",
@@ -707,26 +701,26 @@
       "path": "microsoft.csharp/4.0.1",
       "hashPath": "microsoft.csharp.4.0.1.nupkg.sha512"
     },
-    "Microsoft.DocAsCode.Common/2.58.9": {
+    "Microsoft.DocAsCode.Common/2.59.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-1C/+wx0cQtsmi7d5QHIT77HV5MTKAHKUo3ywSbIWz0L3LkDktuEAScmZ0xrxwUFPcThKdsRw702Bai6QriAPUg==",
-      "path": "microsoft.docascode.common/2.58.9",
-      "hashPath": "microsoft.docascode.common.2.58.9.nupkg.sha512"
+      "sha512": "sha512-ezlS+U8v152D+Bn8iDMW0PWmaYEYw6PQhRSeCUDMlLYlA0KfbI6HBPMkwAdLRxWIh7nUREIzC6EoFfjuwqv22w==",
+      "path": "microsoft.docascode.common/2.59.2",
+      "hashPath": "microsoft.docascode.common.2.59.2.nupkg.sha512"
     },
-    "Microsoft.DocAsCode.Plugins/2.58.9": {
+    "Microsoft.DocAsCode.Plugins/2.59.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-y+7Gj2sPURzM+tv7kB/nnnwWYnPiapVnK44Jmg8e6xVVEjTWstEwoc/iY1BBJZsOKNJGamR+9x5kpr6zApV48g==",
-      "path": "microsoft.docascode.plugins/2.58.9",
-      "hashPath": "microsoft.docascode.plugins.2.58.9.nupkg.sha512"
+      "sha512": "sha512-u+2kcqCPZEkaMt0vnNiAJx70FeU3I9HIe0r0fLbbqqKS/mmDz7ir3Km0HJqbSnqsf1dykpNi1l/+AFvSoWbWEw==",
+      "path": "microsoft.docascode.plugins/2.59.2",
+      "hashPath": "microsoft.docascode.plugins.2.59.2.nupkg.sha512"
     },
-    "Microsoft.DocAsCode.YamlSerialization/2.58.9": {
+    "Microsoft.DocAsCode.YamlSerialization/2.59.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-dQqzGf6S5xjDACZ5TFcBcrK1+pe2aaYvaGTgqpfNhhCtcNQX+LwByX8lZfICkqMiHv+cDXGg6+PYuxLv7d4UpA==",
-      "path": "microsoft.docascode.yamlserialization/2.58.9",
-      "hashPath": "microsoft.docascode.yamlserialization.2.58.9.nupkg.sha512"
+      "sha512": "sha512-dCLxa63Ey+duzopUDlPCwOYQTuhMwP3uyd/40ZZqp9x/CShV9romA5+WZqY2SxVhw1iG9s70kc0DnBk6XBii4g==",
+      "path": "microsoft.docascode.yamlserialization/2.59.2",
+      "hashPath": "microsoft.docascode.yamlserialization.2.59.2.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",
@@ -741,13 +735,6 @@
       "sha512": "sha512-aOZA3BWfz9RXjpzt0sRJJMjAscAUm3Hoa4UWAfceV9UTYxgwZ1lZt5nO2myFf+/jetYQo4uTP7zS8sJY67BBxg==",
       "path": "microsoft.netcore.targets/1.1.0",
       "hashPath": "microsoft.netcore.targets.1.1.0.nupkg.sha512"
-    },
-    "NETStandard.Library/2.0.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
-      "path": "netstandard.library/2.0.3",
-      "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
     },
     "Newtonsoft.Json/9.0.1": {
       "type": "package",
