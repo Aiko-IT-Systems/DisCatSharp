@@ -109,11 +109,11 @@ PRs that do not build will not be accepted.
 Furthermore we require that methods you implement on Discord entities have a reflection in the Discord API.
 
 In the event your code change is a style change, XML doc change, or otherwise does not change how the code works, tag
-the commit with `[ci skip]`.
+the commit with `[skip appveyor]`.
 
 # Non-code changes
 In the event you change something outside of code (i.e. a meta-change or documentation), you must tag your commit with
-`[ci skip]`.
+`[skip appveyor]`.
 
 # Developer Certificate of Origin (DCO)
 ```

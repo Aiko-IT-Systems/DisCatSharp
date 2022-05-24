@@ -59,8 +59,7 @@
     ],
     "overwrite": [
       {
-        "files": [
-        ],
+        "files": [],
         "exclude": [
           "**/bin/**",
           "**/obj/**",
@@ -70,21 +69,31 @@
       }
     ],
     "dest": "_site",
-    "globalMetadata": {
-      "_appFooter": "© 2021-2022 Aiko IT Systems",
-      "_enableSearch": true,
-      "_enableNewTab": true,
-      "_appTitle": "DisCatSharp Docs"
+	"globalMetadata": {
+		"_appFooter": "© 2021-2022 Aiko IT Systems",
+		"_enableSearch": true,
+		"_enableNewTab": true,
+		"_appTitle": "DisCatSharp Docs",
+		"_gitUrlPattern": "git",
+		"_gitContribute": {
+			"repo": "https://github.com/Aiko-IT-Systems/DisCatSharp",
+			"branch": "main"
+		},
+		"_disableContribution": false
     },
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
-      "dcs"
+		"dcs"
     ],
     "postProcessors": ["ExtractSearchIndex", "CustomMemberIndexer"],
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
-    "disableGitFeatures": false
-  }
+    "disableGitFeatures": false,
+	"sitemap": {
+		"baseUrl": "https://docs.dcs.aitsys.dev/",
+		"changefreq": "hourly",
+		"priority": 1.0
+	}
 }

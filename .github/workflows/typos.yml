@@ -1,4 +1,4 @@
-name: Check typos
+name: DisCatSharp Check typos
 on:
   push:
   pull_request:
