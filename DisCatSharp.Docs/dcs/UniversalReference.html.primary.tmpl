@@ -2,12 +2,11 @@
 {{!master(layout/_master.tmpl)}}
 
 {{#isNamespace}}
-  {{>partials/namespace}}
+  {{>partials/uref/namespace}}
 {{/isNamespace}}
 {{#isClass}}
-  {{>partials/class}}
+  {{>partials/uref/class}}
 {{/isClass}}
 {{#isEnum}}
   {{>partials/enum}}
 {{/isEnum}}
-{{>partials/customMREFContent}}
