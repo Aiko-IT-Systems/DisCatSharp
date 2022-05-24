@@ -78,27 +78,25 @@
 		"_gitContribute": {
 			"repo": "https://github.com/Aiko-IT-Systems/DisCatSharp",
 			"branch": "main"
-		},
-		"_disableContribution": false,
+		},,
 		"_disableNavbar": false,
 		"_disableBreadcrumb": false,
 		"_disableAffix": false,
 		"_disableToc": false,
-		"_disableContribution": false
+		"_disableContribution": true
     },
 	"disableGitFeatures": false,
 	"exportRawModel": true,
-	"exportViewModel": true,
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
 		"dcs"
     ],
     "postProcessors": ["ExtractSearchIndex", "CustomMemberIndexer"],
-    "noLangKeyword": false,
+    "noLangKeyword": true,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
-    "disableGitFeatures": false,
+    "disableGitFeatures": true,
 	"sitemap": {
 		"baseUrl": "https://docs.dcs.aitsys.dev/",
 		"changefreq": "hourly",

@@ -636,17 +636,18 @@ body .toc{
   margin-top: 50px;
   font-size: 12px;
   max-height: 100%;
-  overflow: hidden;
   top: 100px;
   bottom: 10px;
   position: fixed;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .sideaffix.shiftup {
   bottom: 70px;
 }
 .affix {
   position: relative;
-  height: 100%;
+  height: auto;
 }
 .sideaffix > div.contribution {
   margin-bottom: 20px;
@@ -669,7 +670,7 @@ body .toc{
   font-size: 12px;
 }
 .affix > ul.level1 {
-  overflow: hidden;
+  overflow: inherit;
   padding-bottom: 10px;
   height: calc(100% - 100px);
 }
@@ -719,8 +720,8 @@ body .toc{
 .affix ul > li.active > ul,
 .affix ul > li.active > a:before,
 .affix ul > li > a:hover:before {
-  display: block;
-  white-space: nowrap;
+	display: block;
+	white-space: inherit;
 }
 .codewrapper {
   position: relative;
