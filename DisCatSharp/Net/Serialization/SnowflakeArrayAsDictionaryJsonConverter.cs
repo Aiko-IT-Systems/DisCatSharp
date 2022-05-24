@@ -74,7 +74,7 @@ namespace DisCatSharp.Net.Serialization
 			var constructor = objectType.GetTypeInfo().DeclaredConstructors
 				.FirstOrDefault(e => !e.IsStatic && e.GetParameters().Length == 0);
 
-			var dict = constructor.Invoke(new object[] {});
+			var dict = constructor.Invoke(Array.Empty<object>());
 
 			// the default name of an indexer is "Item"
 			var properties = objectType.GetTypeInfo().GetDeclaredProperty("Item");

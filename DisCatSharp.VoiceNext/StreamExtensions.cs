@@ -58,7 +58,7 @@ namespace DisCatSharp.VoiceNext
 			try
 			{
 				int bytesRead;
-				while ((bytesRead = await source.ReadAsync(buffer, 0, bufferLength, cancellationToken).ConfigureAwait(false)) != 0)
+				while ((bytesRead = await source.ReadAsync(buffer.AsMemory(0, bufferLength), cancellationToken).ConfigureAwait(false)) != 0)
 				{
 					await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead), cancellationToken).ConfigureAwait(false);
 				}

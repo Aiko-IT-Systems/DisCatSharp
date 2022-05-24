@@ -169,6 +169,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 
 			this._matchRequests = null;
 			this._collectRequests = null;
+			GC.SuppressFinalize(this);
 		}
 	}
 }
