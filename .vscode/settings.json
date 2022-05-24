@@ -1,0 +1,17 @@
+{
+    "cSpell.language": "en,en-US,de,de-DE",
+    "cSpell.enableFiletypes": [
+        "csv",
+        "csv (caret)",
+        "csv (dot)",
+        "csv (double quote)",
+        "csv (hyphen)",
+        "csv (pipe)",
+        "csv (semicolon)",
+        "csv (tilde)",
+        "csv (whitespace)",
+        "hlsl",
+        "powershell",
+        "xml"
+    ]
+}
