@@ -68,7 +68,7 @@ jobs:
     
     steps:
      - name: Get SSH Agent
-       uses: webfactory/ssh-agent@v0.5.3
+       uses: webfactory/ssh-agent@v0.5.4
        with:
           ssh-private-key: ${{ secrets.AITSYS_SSH }}
 
