@@ -8,11 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           path: DisCatSharp
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: Aiko-IT-Systems/DisCatSharp.Docs.Preview
           path: DisCatSharp.Docs.Preview
@@ -28,7 +28,7 @@ jobs:
           ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output ".." -PackageName "dcs-docs-preview"
 
       - name: Archive Docs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: preview-docs
           path: dcs-docs-preview.tar.xz

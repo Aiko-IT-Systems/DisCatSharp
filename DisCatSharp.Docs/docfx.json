@@ -3,9 +3,9 @@
     {
       "src": [
         {
-          "src": "..",
+          "src": "../",
           "files": [
-            "**.cs"
+            "**.csproj"
           ],
           "exclude": [
             "**/obj/**",
@@ -23,23 +23,25 @@
       {
         "files": [
           "api/**.yml",
-          "api/index.md"
+          "api/**.md"
         ]
       },
       {
         "files": [
-            "articles/**.md",
-            "articles/**/toc.yml",
-            "natives/**.md",
-            "faq/**.md",
-            "toc.yml",
-            "*.md"
+			"**.md",
+			"toc.yml",
+			"faq/**.yml",
+			"faq/**.md",
+			"articles/**.yml",
+			"articles/**.md",
+			"natives/**.yml",
+			"natives/**.md"
         ],
         "exclude": [
             "**/bin/**",
             "**/obj/**",
             "_site/**",
-            "_site_pdf/**"
+			"dcs/**"
         ]
       }
     ],
@@ -53,7 +55,7 @@
             "**/bin/**",
             "**/obj/**",
             "_site/**",
-            "_site_pdf/**"
+			"images/_**"
         ]
       }
     ],
@@ -63,8 +65,7 @@
         "exclude": [
           "**/bin/**",
           "**/obj/**",
-          "_site/**",
-          "_site_pdf/**"
+          "_site/**"
         ]
       }
     ],
@@ -79,11 +80,11 @@
 			"repo": "https://github.com/Aiko-IT-Systems/DisCatSharp",
 			"branch": "main"
 		},
-		"_disableNavbar": false,
-		"_disableBreadcrumb": false,
-		"_disableAffix": false,
-		"_disableToc": false,
-		"_disableContribution": true
+		//"_disableNavbar": false,
+		//"_disableBreadcrumb": false,
+		//"_disableAffix": true,
+		//"_disableToc": false,
+		//"_disableContribution": true
     },
 	"disableGitFeatures": false,
 	"exportRawModel": true,
@@ -93,10 +94,9 @@
 		"dcs"
     ],
     "postProcessors": ["ExtractSearchIndex", "CustomMemberIndexer"],
-    "noLangKeyword": true,
+    "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
-    "disableGitFeatures": true,
 	"sitemap": {
 		"baseUrl": "https://docs.dcs.aitsys.dev/",
 		"changefreq": "hourly",
