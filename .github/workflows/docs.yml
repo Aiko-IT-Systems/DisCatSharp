@@ -23,11 +23,11 @@ jobs:
       uses: webfactory/ssh-agent@v0.5.3
       with:
           ssh-private-key: ${{ secrets.AITSYS_SSH }}
-          
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 6.0.300
+        dotnet-version: 6.0.202
 
     - name: Restore dependencies
       working-directory: ./DisCatSharp
@@ -49,12 +49,10 @@ jobs:
       run: |
         Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
 
-    - name: Install 7Zip
+    - name: Extract new docs
       shell: pwsh
       run: |
-        ./DisCatSharp/Add7ZipCmd.ps1
-        Expand-Tar dcs-docs.tar.xz .
-        Expand-Tar dcs-docs.tar DisCatSharp.Docs/
+        Expand-Archive -Path dcs-docs.zip DisCatSharp.Docs/
 
     - name: Commit and push changes
       uses: EndBug/add-and-commit@main
