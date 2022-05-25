@@ -9,3 +9,22 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+  assignees:
+    - "NyuwBot
+  reviewers:
+    - "Aiko-IT-Systems/discatsharp"
+    - "Lulalaby"
+  labels:
+    - "dependencies"
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+      interval: "daily"
+  assignees:
+    - "NyuwBot
+  reviewers:
+    - "Aiko-IT-Systems/discatsharp"
+    - "Lulalaby"
+  labels:
+    - "ci/cd"
+    - "dependencies"
