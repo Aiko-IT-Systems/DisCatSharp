@@ -6,7 +6,7 @@ apiRules:
 - exclude:
     uidRegex: ^System\.Runtime\.CompilerServices$
 - exclude:
-    uidRegex: ^System\..*$
+    uidRegex: ^System
 - exclude:
     uidRegex: ^DisCatSharp\.Hosting\.Tests$
 - exclude:
