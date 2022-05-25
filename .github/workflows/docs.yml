@@ -67,5 +67,6 @@ jobs:
         message: 'Docs update for commit ${{ github.repository }} (${{ github.sha }})'
 
     - name: Publish to Prod
+      shell: pwsh
       run: |
         ssh -o StrictHostKeyChecking=no -T root@80.153.182.68 -f 'cd /var/www/dcs/docs && git pull -f'
