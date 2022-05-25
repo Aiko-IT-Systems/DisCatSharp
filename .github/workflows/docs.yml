@@ -29,6 +29,12 @@ jobs:
       with:
         dotnet-version: 6.0.300
 
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build Projects
+      run: dotnet build --no-restore
+
     - name: Build Docs
       working-directory: ./DisCatSharp
       shell: pwsh
