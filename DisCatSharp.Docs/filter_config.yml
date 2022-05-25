@@ -14,7 +14,7 @@ apiRules:
 - exclude:
     uidRegex: ^DisCatSharp\.Configuration\.Tests$
 - include:
-	uidRegex: ^DisCatSharp
+    uidRegex: ^DisCatSharp
 attributeRules:
 - exclude:
     uidRegex: ^System\.Collections\.Immutable$
