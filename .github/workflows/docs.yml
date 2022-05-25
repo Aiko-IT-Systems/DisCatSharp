@@ -2,7 +2,7 @@ name: "DisCatSharp Docs"
 
 on:
   push:
-    branches: [ main ]  
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -10,45 +10,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: DisCatSharp
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         repository: Aiko-IT-Systems/DisCatSharp.Docs
         path: DisCatSharp.Docs
-        token: ${{ secrets.DOCS_TOKEN }}
-        
+        token: ${{ secrets.NYUW_TOKEN_GH }}
+
     - name: Get SSH
       uses: webfactory/ssh-agent@v0.5.3
       with:
           ssh-private-key: ${{ secrets.AITSYS_SSH }}
-        
+
     - name: Build Docs
       working-directory: ./DisCatSharp
       shell: pwsh
       run: |
         ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output ".." -PackageName "dcs-docs"
-        
+
     - name: Purge old docs
       working-directory: ./DisCatSharp.Docs
       run: |
         shopt -s extglob
         rm -rf !(.git|.gitignore)
-        
+
     - name: Extract new docs
       run: |
         tar -xf dcs-docs.tar.xz -C ./DisCatSharp.Docs
-        
+
     - name: Commit and push changes
       uses: EndBug/add-and-commit@main
       with:
         cwd: ./DisCatSharp.Docs
-        default_author: github_actions
+        default_author: user_info
         author_name: DisCatSharp
-        author_email: discatsharp@aitsys.dev
+        author_email: team@aitsys.dev
+        committer_name: NyuwBot
+        committer_email: nyuw@aitsys.dev
+        commit: --signoff
         message: 'Docs update for commit ${{ github.repository }} (${{ github.sha }})'
-        
+
     - name: Publish to Prod
       run: |
         ssh -o StrictHostKeyChecking=no -T root@80.153.182.68 -f 'cd /var/www/dcs/docs && git pull -f'

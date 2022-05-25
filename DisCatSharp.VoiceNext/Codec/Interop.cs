@@ -217,12 +217,12 @@ namespace DisCatSharp.VoiceNext.Codec
 		private static unsafe extern int _OpusDecode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize, int decodeFec);
 
 		/// <summary>
-		/// _S the opus get packet chanel count.
+		/// _S the opus get packet channel count.
 		/// </summary>
 		/// <param name="opusData">The opus data.</param>
 		/// <returns>An int.</returns>
 		[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_nb_channels")]
-		private static unsafe extern int _OpusGetPacketChanelCount(byte* opusData);
+		private static unsafe extern int _OpusGetPacketChannelCount(byte* opusData);
 
 		/// <summary>
 		/// _S the opus get packet frame count.
@@ -375,7 +375,7 @@ namespace DisCatSharp.VoiceNext.Codec
 			{
 				frames = _OpusGetPacketFrameCount(opusPtr, opus.Length);
 				samplesPerFrame = _OpusGetPacketSamplePerFrameCount(opusPtr, samplingRate);
-				channels = _OpusGetPacketChanelCount(opusPtr);
+				channels = _OpusGetPacketChannelCount(opusPtr);
 			}
 
 			frameSize = frames * samplesPerFrame;
@@ -386,7 +386,8 @@ namespace DisCatSharp.VoiceNext.Codec
 		/// </summary>
 		/// <param name="decoder">The decoder.</param>
 		/// <param name="sampleCount">The sample count.</param>
-		public static void OpusGetLastPacketDuration(IntPtr decoder, out int sampleCount) => _OpusDecoderControl(decoder, OpusControl.GetLastPacketDuration, out sampleCount);
+		public static void OpusGetLastPacketDuration(IntPtr decoder, out int sampleCount)
+			=> _OpusDecoderControl(decoder, OpusControl.GetLastPacketDuration, out sampleCount);
 		#endregion
 	}
 }

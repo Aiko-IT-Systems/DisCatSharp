@@ -280,7 +280,7 @@ namespace DisCatSharp.Entities
 		/// <returns>The user with fresh data from the API.</returns>
 		public async Task<DiscordUser> GetFromApiAsync()
 			=> await this.Discord.ApiClient.GetUserAsync(this.Id);
-		
+
 		/// <summary>
 		/// Whether this user is in a <see cref="DiscordGuild"/>
 		/// </summary>

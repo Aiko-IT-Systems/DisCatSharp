@@ -3,9 +3,9 @@
     {
       "src": [
         {
-          "src": "..",
+          "src": "../",
           "files": [
-            "**.cs"
+            "**.csproj"
           ],
           "exclude": [
             "**/obj/**",
@@ -19,27 +19,29 @@
     }
   ],
   "build": {
-    "content": [
+	"content": [
       {
         "files": [
           "api/**.yml",
-          "api/index.md"
+          "api/**.md"
         ]
       },
       {
         "files": [
-            "articles/**.md",
-            "articles/**/toc.yml",
-            "natives/**.md",
-            "faq/**.md",
-            "toc.yml",
-            "*.md"
+			"**.md",
+			"toc.yml",
+			"faq/**.yml",
+			"faq/**.md",
+			"articles/**.yml",
+			"articles/**.md",
+			"natives/**.yml",
+			"natives/**.md"
         ],
         "exclude": [
             "**/bin/**",
             "**/obj/**",
             "_site/**",
-            "_site_pdf/**"
+			"dcs/**"
         ]
       }
     ],
@@ -53,38 +55,52 @@
             "**/bin/**",
             "**/obj/**",
             "_site/**",
-            "_site_pdf/**"
+			"images/_**"
         ]
       }
     ],
     "overwrite": [
       {
-        "files": [
-        ],
+        "files": [],
         "exclude": [
           "**/bin/**",
           "**/obj/**",
-          "_site/**",
-          "_site_pdf/**"
+          "_site/**"
         ]
       }
     ],
     "dest": "_site",
-    "globalMetadata": {
-      "_appFooter": "© 2021-2022 Aiko IT Systems",
-      "_enableSearch": true,
-      "_enableNewTab": true,
-      "_appTitle": "DisCatSharp Docs"
+	"globalMetadata": {
+		"_appFooter": "© 2021-2022 Aiko IT Systems",
+		"_enableSearch": true,
+		"_enableNewTab": true,
+		"_appTitle": "DisCatSharp Docs",
+		"_gitUrlPattern": "git",
+		"_gitContribute": {
+			"repo": "https://github.com/Aiko-IT-Systems/DisCatSharp",
+			"branch": "main"
+		},
+		//"_disableNavbar": false,
+		//"_disableBreadcrumb": false,
+		//"_disableAffix": true,
+		//"_disableToc": false,
+		//"_disableContribution": true
     },
+	"disableGitFeatures": false,
+	"exportRawModel": true,
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
-      "dcs"
+		"dcs"
     ],
     "postProcessors": ["ExtractSearchIndex", "CustomMemberIndexer"],
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
-    "disableGitFeatures": false
+	"sitemap": {
+		"baseUrl": "https://docs.dcs.aitsys.dev/",
+		"changefreq": "hourly",
+		"priority": 1.0
+	}
   }
 }

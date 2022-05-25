@@ -23,7 +23,6 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using DisCatSharp.Common.RegularExpressions;
@@ -345,10 +344,10 @@ namespace DisCatSharp.CommandsNext.Converters
 			{
 				var uripath = DiscordRegEx.Event.Match(uri.AbsoluteUri);
 				if (uripath.Success
-				    && ulong.TryParse(uripath.Groups["guild"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
-					    out var gid)
-				    && ulong.TryParse(uripath.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
-					    out seid))
+					&& ulong.TryParse(uripath.Groups["guild"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
+						out var gid)
+					&& ulong.TryParse(uripath.Groups["event"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture,
+						out seid))
 				{
 					var guild = await ctx.Client.GetGuildAsync(gid).ConfigureAwait(false);
 					if (guild == null)

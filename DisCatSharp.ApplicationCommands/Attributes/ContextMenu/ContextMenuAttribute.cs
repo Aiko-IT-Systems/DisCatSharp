@@ -68,7 +68,7 @@ namespace DisCatSharp.ApplicationCommands
 		{
 			if (type == ApplicationCommandType.ChatInput)
 				throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
-			
+
 			this.Type = type;
 			this.Name = name;
 			this.DefaultMemberPermissions = null;

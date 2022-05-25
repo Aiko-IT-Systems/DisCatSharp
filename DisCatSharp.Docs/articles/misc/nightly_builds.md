@@ -13,7 +13,7 @@ Then just select **Latest prerelease** version of DisCatSharp packages, and inst
 
 You might need to restart Visual Studio for changes to take effect.
 
-If you find any problems in the SlimGet versions of the packages, please follow the instructions in [Reporting issues](xref:misc_reporting_issues)
+If you find any problems in the nightly versions of the packages, please follow the instructions in [Reporting issues](xref:misc_reporting_issues)
 article.
 
 ## But I'm running GNU/Linux, Mac OS X, or BSD!

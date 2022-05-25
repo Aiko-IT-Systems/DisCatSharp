@@ -7,8 +7,8 @@ title: Paginated Modals
 
 **The package `DisCatSharp.Interactivity` is required for this to work.**
 
-You may need multi-step modals to collect a variety of information from a user. We implemented an easy way of doing this with paginated modals. 
-You simply construct all your modals, call `DiscordInteraction.CreatePaginatedModalResponseAsync` and you're good to go. After the user submitted all modals, you'll get back a `PaginatedModalResponse` which has a `TimedOut` bool, the `DiscordInteraction` that was used to submit the last modal and a `IReadOnlyDictionary<string, string>` with the compononent custom ids as key.
+You may need multi-step modals to collect a variety of information from a user. We implemented an easy way of doing this with paginated modals.
+You simply construct all your modals, call `DiscordInteraction.CreatePaginatedModalResponseAsync` and you're good to go. After the user submitted all modals, you'll get back a `PaginatedModalResponse` which has a `TimedOut` bool, the `DiscordInteraction` that was used to submit the last modal and a `IReadOnlyDictionary<string, string>` with the component custom ids as key.
 
 The code below shows an example application command on how this could look.
 
@@ -41,7 +41,7 @@ public async Task PaginatedModals(InteractionContext ctx)
         if (responses.TimedOut)
             return;
 
-        // We simply throw all respones into the Console, you can do whatever with this.
+        // We simply throw all response into the Console, you can do whatever with this.
         foreach (var b in responses.Responses)
             Console.WriteLine(b.ToString());
 
