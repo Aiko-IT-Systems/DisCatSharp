@@ -45,9 +45,9 @@ jobs:
 
     - name: Purge old docs
       working-directory: ./DisCatSharp.Docs
+      shell: pwsh
       run: |
-        shopt -s extglob
-        rm -rf !(.git|.gitignore)
+        Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
 
     - name: Extract new docs
       run: |
