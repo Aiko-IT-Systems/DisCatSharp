@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 
 using DisCatSharp.Entities;
@@ -73,8 +74,8 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// Whether the command is allowed for everyone.
 		/// </summary>
-		[JsonProperty("default_permission")]
-		public bool DefaultPermission { get; set; } = true;
+		[JsonProperty("default_permission", NullValueHandling = NullValueHandling.Ignore)]
+		public bool? DefaultPermission { get; set; } = null;
 
 		/// <summary>
 		/// The command needed permissions.
@@ -133,8 +134,8 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// Gets the default permission.
 		/// </summary>
-		[JsonProperty("default_permission")]
-		public Optional<bool> DefaultPermission { get; set; } = true;
+		[JsonProperty("default_permission", NullValueHandling = NullValueHandling.Ignore)]
+		public bool? DefaultPermission { get; set; } = null;
 
 		/// <summary>
 		/// The command needed permissions.
