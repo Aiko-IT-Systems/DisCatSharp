@@ -30,9 +30,11 @@ jobs:
         dotnet-version: 6.0.300
 
     - name: Restore dependencies
+      working-directory: ./DisCatSharp
       run: dotnet restore
 
     - name: Build Projects
+      working-directory: ./DisCatSharp
       run: dotnet build --no-restore
 
     - name: Build Docs
