@@ -30,7 +30,6 @@ $current_location = Get-Location
 
 # Tool paths
 $docfx_path = Join-Path "$current_location" "docfx"
-$sevenzip_path = Join-Path "$current_location" "7zip"
 
 # Restores the environment
 function Restore-Environment()
@@ -42,11 +41,6 @@ function Restore-Environment()
     if (Test-Path "$docfx_path")
     {
         Remove-Item -recurse -force "$docfx_path"
-    }
-
-    if (Test-Path "$sevenzip_path")
-    {
-        Remove-Item -recurse -force "$sevenzip_path"
     }
 }
 
@@ -152,108 +146,6 @@ function Install-DocFX([string] $target_dir_path)
     {
         $Env:PATH = "$target_dir;$current_path"
     }
-    Set-Location -path "$current_location"
-
-    Return 0
-}
-
-# Downloads and installs latest version of 7-zip CLI
-function Install-7zip([string] $target_dir_path)
-{
-    # First, download 7-zip 9.20 CLI to extract latest CLI
-    # http://www.7-zip.org/a/7za920.zip
-
-    Write-Host "Installing 7-zip"
-
-    # Check if the target directory exists
-    # If it does, remove it
-    if (Test-Path "$target_dir_path")
-    {
-        Write-Host "Target directory exists, deleting"
-        Remove-Item -recurse -force "$target_dir_path"
-    }
-
-    # Create target directory
-    $target_dir = New-Item -type directory "$target_dir_path"
-    $target_fn = "7za920.zip"
-
-    # Form target path
-    $target_dir = $target_dir.FullName
-    $target_path = Join-Path "$target_dir" "v920"
-    $target_dir_920 = New-Item -type directory "$target_path"
-
-    $target_dir_920 = $target_dir_920.FullName
-    $target_path = Join-Path "$target_dir_920" "$target_fn"
-
-    # Download the 9.20 CLI
-    try
-    {
-        Write-Host "Downloading 7-zip 9.20 CLI to $target_path"
-        Invoke-WebRequest -uri "http://www.7-zip.org/a/7za920.zip" -outfile "$target_path"
-        Set-Location -Path "$target_dir_920"
-    }
-    catch
-    {
-        Return 1
-    }
-
-    # Extract the 9.20 CLI
-    try
-    {
-        Write-Host "Extracting 7-zip latest CLI"
-        Expand-Archive -path "$target_path" -destinationpath "$target_dir_920"
-    }
-    catch
-    {
-        Return 1
-    }
-
-    # Temporarily add the 9.20 CLI to PATH
-    Write-Host "Adding 7-zip 9.20 CLI to PATH"
-    $old_path = $Env:PATH
-    $Env:PATH = "$target_dir_920;$old_path"
-
-    # Next, download latest CLI
-    # http://www.7-zip.org/a/7z1604-extra.7z
-
-    # Form target path
-    $target_version = "19.00"
-    $target_fn = "7z1900-extra.7z"
-    $target_path = Join-Path "$target_dir" "$target_fn"
-
-    # Download the latest CLI
-    try
-    {
-        Write-Host "Downloading 7-zip $target_version CLI to $target_path"
-        Invoke-WebRequest -uri "http://www.7-zip.org/a/$target_fn" -outfile "$target_path"
-        Set-Location -Path "$target_dir"
-    }
-    catch
-    {
-        Return 1
-    }
-
-    # Extract the latest CLI
-    Write-Host "Extracting 7-zip $target_version CLI"
-    & 7za x "$target_path" | Out-Host
-    if ($LastExitCode -ne 0)
-    {
-        Return $LastExitCode
-    }
-
-    # Remove the 9.20 CLI from PATH
-    Write-Host "Removing 7-zip 9.20 CLI from PATH"
-    $Env:PATH = "$old_path"
-
-    # Remove temporary files and 9.20 CLI
-    Write-Host "Removing temporary files"
-    Remove-Item -recurse -force "$target_dir_920"
-    Remove-Item -recurse -force "$target_path"
-
-    # Add the latest CLI to PATH
-    Write-Host "Adding 7-zip $target_version CLI to PATH"
-    $target_dir = Join-Path "$target_dir" "x64"
-    $Env:PATH = "$target_dir;$old_path"
     Set-Location -path "$current_location"
 
     Return 0
@@ -374,7 +266,7 @@ function BuildDocs([string] $target_dir_path)
     }
 }
 
-# Packages the build site to a .tar.xz archive
+# Packages the build site to a .zip archive
 function PackDocs([string] $target_dir_path, [string] $output_dir_path, [string] $pack_name)
 {
     # Form target path
@@ -390,38 +282,17 @@ function PackDocs([string] $target_dir_path, [string] $output_dir_path, [string]
     # Enter target path
     Set-Location -path "$target_path"
 
-    # Check if target .tar exists
+    # Check if target .zip exists
     # If it does, remove it
-    if (Test-Path "$output_path.tar")
+    if (Test-Path "$output_path.zip")
     {
-        Write-Host "$output_path.tar exists, deleting"
-        Remove-Item "$output_path.tar"
+        Write-Host "$output_path.zip exists, deleting"
+        Remove-Item "$output_path.zip"
     }
 
-    # Package .tar archive
-    Write-Host "Packaging docs to $output_path.tar"
-    & 7za -r a "$output_path.tar" * | Out-Host
-
-    # Check if prepackaging was a success
-    if ($LastExitCode -ne 0)
-    {
-        Return $LastExitCode
-    }
-
-    # Go to package's location
-    Set-Location -path "$output_path_dir"
-
-    # Check if target .tar.xz exists
-    # If it does, remove it
-    if (Test-Path "$output_path.tar.xz")
-    {
-        Write-Host "$output_path.tar.xz exists, deleting"
-        Remove-Item "$output_path.tar.xz"
-    }
-
-    # Package .tar.xz
-    Write-Host "Packaging docs to $output_path.tar.xz"
-    & 7za -sdel -mx9 a "$pack_name.tar.xz" "$pack_name.tar" | Out-Host
+	# Package .zip archive
+	Write-Host "Packing $output_path.zip"
+	Compress-Archive -Path "$target_path/*" -DestinationPath "$output_path.zip" -Force -CompressionLevel Fastest
 
     # Exit back
     Set-Location -path "$current_location"
@@ -445,19 +316,6 @@ if ($result -ne 0)
     Restore-Environment
     $host.SetShouldExit(1)
     Exit 1
-}
-
-# Install 7-zip, if Windows
-if ($null -ne $Env:OS)
-{
-    $result = Install-7zip "$sevenzip_path"
-    if ($result -ne 0)
-    {
-        Write-Host "Installing 7-zip failed"
-        Restore-Environment
-        $host.SetShouldExit(1)
-        Exit 1
-    }
 }
 
 # Build and package docs
