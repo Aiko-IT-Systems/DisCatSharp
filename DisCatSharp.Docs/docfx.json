@@ -15,7 +15,8 @@
         }
       ],
       "dest": "api",
-      "filter": "filter_config.yml"
+      "filter": "filter_config.yml",
+	  "properties": { "TargetFramework": "net6.0" }
     }
   ],
   "build": {
