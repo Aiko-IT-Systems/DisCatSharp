@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: "daily"
     assignees:
-      - "NyuwBot
+      - "NyuwBot"
     reviewers:
       - "Aiko-IT-Systems/discatsharp"
       - "Lulalaby"
@@ -19,7 +19,7 @@ updates:
     schedule:
       interval: "daily"
     assignees:
-      - "NyuwBot
+      - "NyuwBot"
     reviewers:
       - "Aiko-IT-Systems/discatsharp"
       - "Lulalaby"
