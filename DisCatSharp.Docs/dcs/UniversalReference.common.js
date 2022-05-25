@@ -81,7 +81,7 @@ function handleItem(vm, gitContribute, gitUrlPattern) {
   if (vm.inheritance) {
     normalizeLanguageValuePairs(vm.inheritance).forEach(handleInheritance);
   }
-
+  
   common.processSeeAlso(vm);
 
   // id is used as default template's bookmark

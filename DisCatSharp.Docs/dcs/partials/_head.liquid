@@ -21,11 +21,15 @@
   {%- else -%}
   <link rel="shortcut icon" href="{{_rel}}favicon.ico">
   {%- endif -%}
-  <link rel="stylesheet" href="{{_rel}}styles/docfx.vendor.css">
-  <link rel="stylesheet" href="{{_rel}}styles/docfx.css">
-  <link rel="stylesheet" href="{{_rel}}styles/main.css">
-  <link rel="stylesheet" href="{{_rel}}styles/discord.css">
-  <link rel="stylesheet" href="{{_rel}}styles/colors.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/docfx.vendor.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/docfx.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/main.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/discord.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/colors.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/highlight/github-dark.min.css">
+  {%- if _noindex -%}
+  <meta name="searchOption" content="noindex">
+  {%- endif -%}
   <meta property="docfx:navrel" content="{{_navRel}}">
   <meta property="docfx:tocrel" content="{{_tocRel}}">
   {%- if _enableSearch -%}
