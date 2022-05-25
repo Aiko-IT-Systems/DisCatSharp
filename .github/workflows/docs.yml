@@ -49,9 +49,12 @@ jobs:
       run: |
         Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
 
-    - name: Extract new docs
+    - name: Install 7Zip
+      shell: pwsh
       run: |
-        tar -xf dcs-docs.tar.xz -C ./DisCatSharp.Docs
+        ./DisCatSharp/Add7ZipCmd.ps1
+        Expand-Tar dcs-docs.tar.xz .
+        Expand-Tar dcs-docs.tar DisCatSharp.Docs/
 
     - name: Commit and push changes
       uses: EndBug/add-and-commit@main
