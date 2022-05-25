@@ -9,13 +9,15 @@
   <meta name="generator" content="docfx {{_docfxVersion}}">
   {{#_description}}<meta name="description" content="{{_description}}">{{/_description}}
   <link rel="shortcut icon" href="{{_rel}}{{{_appFaviconPath}}}{{^_appFaviconPath}}favicon.ico{{/_appFaviconPath}}">
-  <link rel="stylesheet" href="{{_rel}}styles/docfx.vendor.css">
-  <link rel="stylesheet" href="{{_rel}}styles/docfx.css">
-  <link rel="stylesheet" href="{{_rel}}styles/main.css">
-  <link rel="stylesheet" href="{{_rel}}styles/discord.css">
-  <link rel="stylesheet" href="{{_rel}}styles/colors.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/docfx.vendor.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/docfx.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/main.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/discord.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/colors.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/highlight/github-dark.min.css">
   <meta property="docfx:navrel" content="{{_navRel}}">
   <meta property="docfx:tocrel" content="{{_tocRel}}">
+  {{#_noindex}}<meta name="searchOption" content="noindex">{{/_noindex}}
   {{#_enableSearch}}<meta property="docfx:rel" content="{{_rel}}">{{/_enableSearch}}
   {{#_enableNewTab}}<meta property="docfx:newtab" content="true">{{/_enableNewTab}}
 </head>

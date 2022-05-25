@@ -1,4 +1,4 @@
-name: Check typos
+name: DisCatSharp Check typos
 on:
   push:
   pull_request:
@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Actions Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Check spelling of repo
         uses: crate-ci/typos@master

@@ -49,7 +49,7 @@ namespace DisCatSharp.ApplicationCommands
 		/// Gets the dm permission of this slash command group
 		/// </summary>
 		public bool? DmPermission { get; set; }
-		
+
 		/// <summary>
 		/// Gets whether this command is marked as NSFW
 		/// </summary>

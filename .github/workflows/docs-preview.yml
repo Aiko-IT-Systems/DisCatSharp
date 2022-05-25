@@ -1,4 +1,4 @@
-name: Docs Preview
+name: DisCatSharp Docs Preview
 
 on:
   workflow_dispatch:
@@ -8,19 +8,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           path: DisCatSharp
-          
-      - uses: actions/checkout@v2
+
+      - uses: actions/checkout@v3
         with:
           repository: Aiko-IT-Systems/DisCatSharp.Docs.Preview
           path: DisCatSharp.Docs.Preview
           token: ${{ secrets.DOCS_TOKEN }}
-          
+
       - name: Show Dir
         run: dir
-        
+
       - name: Build Docs
         working-directory: ./DisCatSharp
         shell: pwsh
@@ -28,17 +28,17 @@ jobs:
           ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output ".." -PackageName "dcs-docs-preview"
 
       - name: Archive Docs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: preview-docs
           path: dcs-docs-preview.tar.xz
-          
+
       - name: Purge old docs
         working-directory: ./DisCatSharp.Docs.Preview
         run: |
           shopt -s extglob
           rm -rf !(.git|.gitignore)
-          
+
       - name: Extract new docs
         run: |
           tar -xf dcs-docs-preview.tar.xz -C ./DisCatSharp.Docs.Preview

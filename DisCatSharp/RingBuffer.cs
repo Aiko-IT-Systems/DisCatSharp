@@ -98,7 +98,7 @@ namespace DisCatSharp
 		public RingBuffer(IEnumerable<T> elements, int index)
 		{
 			if (elements == null || !elements.Any())
-				throw new ArgumentException(nameof(elements), "The collection cannot be null or empty.");
+				throw new ArgumentException("The collection cannot be null or empty.", nameof(elements));
 
 			this.CurrentIndex = index;
 			this.InternalBuffer = elements.ToArray();

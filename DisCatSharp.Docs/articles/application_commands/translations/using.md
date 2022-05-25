@@ -51,10 +51,10 @@ Imagine, your class look like the following example:
 ```cs
 public class MyCommand : ApplicationCommandsModule
 {
-    [SlashCommandGroup("my_command", "This is decription of the command group.")]
+    [SlashCommandGroup("my_command", "This is description of the command group.")]
     public class MyCommandGroup : ApplicationCommandsModule
     {
-        [SlashCommand("first", "This is decription of the command.")]
+        [SlashCommand("first", "This is description of the command.")]
         public async Task MySlashCommand(InteractionContext context)
         {
             await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
@@ -62,7 +62,7 @@ public class MyCommand : ApplicationCommandsModule
                 Content = "This is first subcommand."
             });
         }
-        [SlashCommand("second", "This is decription of the command.")]
+        [SlashCommand("second", "This is description of the command.")]
         public async Task MySecondCommand(InteractionContext context, [Option("value", "Some string value.")] string value)
         {
             await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
@@ -85,8 +85,8 @@ A correct translation json for english and german would look like that:
             "de": "mein_befehl"
         },
         "description_translations": {
-            "en-US": "This is decription of the command group.",
-            "de": "Das ist die Beschreibung der Befehl Gruppe."
+            "en-US": "This is description of the command group.",
+            "de": "Das ist die description der Befehl Gruppe."
         },
         "commands": [
             {
@@ -97,7 +97,7 @@ A correct translation json for english and german would look like that:
                     "de": "erste"
                 },
                 "description_translations": {
-                    "en-US": "This is decription of the command.",
+                    "en-US": "This is description of the command.",
                     "de": "Das ist die Beschreibung des Befehls."
                 }
             },
@@ -109,7 +109,7 @@ A correct translation json for english and german would look like that:
                     "de": "zweite"
                 },
                 "description_translations": {
-                    "en-US": "This is decription of the command.",
+                    "en-US": "This is description of the command.",
                     "de": "Das ist die Beschreibung des Befehls."
                 },
                 "options": [
@@ -137,7 +137,7 @@ Now imagine, that your class look like this example:
 ```cs
 public class MySimpleCommands : ApplicationCommandsModule
 {
-    [SlashCommand("my_command", "This is decription of the command.")]
+    [SlashCommand("my_command", "This is description of the command.")]
     public async Task MySlashCommand(InteractionContext context)
     {
 
@@ -168,7 +168,7 @@ A correct json for this example would look like that:
          "de":"mein_befehl"
       },
       "description_translations":{
-         "en-US":"This is decription of the command.",
+         "en-US":"This is description of the command.",
          "de":"Das ist die Beschreibung des Befehls."
       }
    },

@@ -6,11 +6,15 @@ apiRules:
 - exclude:
     uidRegex: ^System\.Runtime\.CompilerServices$
 - exclude:
-    uidRegex: ^System\..*$
+    uidRegex: ^System
 - exclude:
     uidRegex: ^DisCatSharp\.Hosting\.Tests$
 - exclude:
+    uidRegex: ^DisCatSharp\.Tests
+- exclude:
     uidRegex: ^DisCatSharp\.Configuration\.Tests$
+- include:
+    uidRegex: ^DisCatSharp
 attributeRules:
 - exclude:
     uidRegex: ^System\.Collections\.Immutable$
@@ -68,6 +72,9 @@ attributeRules:
     type: Namespace
 - exclude:
     uidRegex: ^System\.Numerics\.Complex$
+    type: Namespace
+- exclude:
+    uidRegex: '^System\.[^.]+$'
     type: Namespace
 - exclude:
     uidRegex: ^System\.Diagnostics\.CodeAnalysis$

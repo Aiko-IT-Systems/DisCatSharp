@@ -286,7 +286,6 @@ build/
 
 ### Built docs
 DisCatSharp.Docs/_site/
-DisCatSharp.Docs/_site_pdf/
 
 # Docs build artifacts
 docfx/
@@ -303,6 +302,7 @@ appveyor-test.ps1
 *.diff
 CodeMap1.dgml
 .vscode/launch.json
-*.diff
 *.patch
 dcs-docs-preview.tar.xz
+dcs-docs.tar.xz
+_site/

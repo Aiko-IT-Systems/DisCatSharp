@@ -125,7 +125,7 @@ namespace DisCatSharp.Net
 		/// <param name="useRelativeRatelimit">Whether to use relative ratelimit.</param>
 		/// <param name="logger">The logger.</param>
 		internal RestClient(IWebProxy proxy, TimeSpan timeout, bool useRelativeRatelimit,
-			ILogger logger) 
+			ILogger logger)
 		{
 			this._logger = logger;
 
@@ -263,7 +263,7 @@ namespace DisCatSharp.Net
 				if (ratelimitTcs == null)
 					ratelimitTcs = await this.WaitForInitialRateLimit(bucket).ConfigureAwait(false);
 
-				if (ratelimitTcs == null) // ckeck rate limit only if we are not the probe request
+				if (ratelimitTcs == null) // check rate limit only if we are not the probe request
 				{
 					var now = DateTimeOffset.UtcNow;
 
@@ -489,7 +489,7 @@ namespace DisCatSharp.Net
 				{
 					if (Interlocked.CompareExchange(ref bucket.LimitTesting, 1, 0) == 0)
 					{
-						// if we got here when the first request was just finishing, we must not create the waiter task as it would signal ExecureRequestAsync to bypass rate limiting
+						// if we got here when the first request was just finishing, we must not create the waiter task as it would signal ExecuteRequestAsync to bypass rate limiting
 						if (bucket.LimitValid)
 							return null;
 
@@ -823,7 +823,7 @@ namespace DisCatSharp.Net
 				if (removedBuckets > 0)
 					this._logger.LogDebug(LoggerEvents.RestCleaner, "Removed {0} unused bucket{1}: [{2}]", removedBuckets, removedBuckets > 1 ? "s" : string.Empty, bucketIdStrBuilder.ToString().TrimEnd(',', ' '));
 
-				if (this._hashesToBuckets.Count == 0)
+				if (this._hashesToBuckets.IsEmpty)
 					break;
 			}
 
@@ -868,6 +868,7 @@ namespace DisCatSharp.Net
 			this._routesToHashes.Clear();
 			this._hashesToBuckets.Clear();
 			this._requestQueue.Clear();
+			GC.SuppressFinalize(this);
 		}
 	}
 }

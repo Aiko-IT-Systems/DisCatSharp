@@ -64,7 +64,7 @@ Package|Description
 
 <br/>
 We'll only need the `DisCatSharp` package for the basic bot we'll be writing in this article.<br/>
-Select it from the list then click the `Install` button to the right (after verifing that you will be installing the **latest 4.0 version**).
+Select it from the list then click the `Install` button to the right (after verifying that you will be installing the **latest 4.0 version**).
 
 ![Install DisCatSharp](/images/basics_first_bot_08.png)
 

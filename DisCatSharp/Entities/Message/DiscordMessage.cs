@@ -274,11 +274,11 @@ namespace DisCatSharp.Entities
 		[JsonIgnore]
 		private readonly Lazy<IReadOnlyList<DiscordReaction>> _reactionsLazy;
 
-        /// <summary>
-        /// Gets the nonce sent with the message, if the message was sent by the client.
-        /// </summary>
-        [JsonProperty("nonce", NullValueHandling = NullValueHandling.Ignore)]
-        public string Nonce { get; internal set; }
+		/// <summary>
+		/// Gets the nonce sent with the message, if the message was sent by the client.
+		/// </summary>
+		[JsonProperty("nonce", NullValueHandling = NullValueHandling.Ignore)]
+		public string Nonce { get; internal set; }
 
 
 		/// <summary>
