@@ -305,4 +305,6 @@ CodeMap1.dgml
 *.patch
 dcs-docs-preview.tar.xz
 dcs-docs.tar.xz
+dcs-docs.zip
+dcs-docs-preview.zip
 _site/

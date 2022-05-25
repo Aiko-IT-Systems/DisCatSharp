@@ -9,7 +9,7 @@
   lunr.tokenizer.separator = /[\s\-\.\(\)]+/;
 
   var stopWordsRequest = new XMLHttpRequest();
-  stopWordsRequest.open('GET', '../search-stopwords.json');
+  stopWordsRequest.open('GET', '/search-stopwords.json');
   stopWordsRequest.onload = function () {
     if (this.status != 200) {
       return;
@@ -21,7 +21,7 @@
 
   var searchDataRequest = new XMLHttpRequest();
 
-  searchDataRequest.open('GET', '../index.json');
+  searchDataRequest.open('GET', '/index.json');
   searchDataRequest.onload = function () {
     if (this.status != 200) {
       return;
