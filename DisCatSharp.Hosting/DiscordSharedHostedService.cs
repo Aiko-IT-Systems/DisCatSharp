@@ -29,61 +29,60 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace DisCatSharp.Hosting
+namespace DisCatSharp.Hosting;
+
+/// <summary>
+/// Simple Implementation for <see cref="DiscordShardedClient"/> to work as a <see cref="Microsoft.Extensions.Hosting.BackgroundService"/>
+/// </summary>
+public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordHostedShardService
 {
-	/// <summary>
-	/// Simple Implementation for <see cref="DiscordShardedClient"/> to work as a <see cref="Microsoft.Extensions.Hosting.BackgroundService"/>
-	/// </summary>
-	public abstract class DiscordShardedHostedService : BaseHostedService, IDiscordHostedShardService
-	{
-		public DiscordShardedClient ShardedClient { get; protected set; }
+	public DiscordShardedClient ShardedClient { get; protected set; }
 
 #pragma warning disable 8618
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DiscordShardedHostedService"/> class.
-		/// </summary>
-		/// <param name="config">The config.</param>
-		/// <param name="logger">The logger.</param>
-		/// <param name="serviceProvider">The service provider.</param>
-		/// <param name="applicationLifetime">The application lifetime.</param>
-		/// <param name="configBotSection">The config bot section.</param>
-		protected DiscordShardedHostedService(IConfiguration config,
-			ILogger<DiscordShardedHostedService> logger,
-			IServiceProvider serviceProvider,
-			IHostApplicationLifetime applicationLifetime,
-			string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
-			: base(config, logger, serviceProvider, applicationLifetime, configBotSection)
-		{
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DiscordShardedHostedService"/> class.
+	/// </summary>
+	/// <param name="config">The config.</param>
+	/// <param name="logger">The logger.</param>
+	/// <param name="serviceProvider">The service provider.</param>
+	/// <param name="applicationLifetime">The application lifetime.</param>
+	/// <param name="configBotSection">The config bot section.</param>
+	protected DiscordShardedHostedService(IConfiguration config,
+		ILogger<DiscordShardedHostedService> logger,
+		IServiceProvider serviceProvider,
+		IHostApplicationLifetime applicationLifetime,
+		string configBotSection = DisCatSharp.Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB)
+		: base(config, logger, serviceProvider, applicationLifetime, configBotSection)
+	{
 
-		}
+	}
 #pragma warning restore 8618
 
-		protected override Task ConfigureAsync()
+	protected override Task ConfigureAsync()
+	{
+		try
 		{
-			try
-			{
-				var config = this.Configuration.ExtractConfig<DiscordConfiguration>(this.ServiceProvider, "Discord", this.BotSection);
-				this.ShardedClient = new DiscordShardedClient(config);
-			}
-			catch (Exception ex)
-			{
-				this.Logger.LogError($"Was unable to build {nameof(DiscordShardedClient)} for {this.GetType().Name}");
-				this.OnInitializationError(ex);
-			}
-
-			return Task.CompletedTask;
+			var config = this.Configuration.ExtractConfig<DiscordConfiguration>(this.ServiceProvider, "Discord", this.BotSection);
+			this.ShardedClient = new DiscordShardedClient(config);
+		}
+		catch (Exception ex)
+		{
+			this.Logger.LogError($"Was unable to build {nameof(DiscordShardedClient)} for {this.GetType().Name}");
+			this.OnInitializationError(ex);
 		}
 
-		protected sealed override async Task ConnectAsync() => await this.ShardedClient.StartAsync();
+		return Task.CompletedTask;
+	}
 
-		protected override Task ConfigureExtensionsAsync()
+	protected sealed override async Task ConnectAsync() => await this.ShardedClient.StartAsync();
+
+	protected override Task ConfigureExtensionsAsync()
+	{
+		foreach (var client in this.ShardedClient.ShardClients.Values)
 		{
-			foreach (var client in this.ShardedClient.ShardClients.Values)
-			{
-				this.InitializeExtensions(client);
-			}
-
-			return Task.CompletedTask;
+			this.InitializeExtensions(client);
 		}
+
+		return Task.CompletedTask;
 	}
 }

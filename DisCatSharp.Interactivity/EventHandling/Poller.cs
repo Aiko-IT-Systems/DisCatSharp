@@ -32,146 +32,145 @@ using DisCatSharp.EventArgs;
 
 using Microsoft.Extensions.Logging;
 
-namespace DisCatSharp.Interactivity.EventHandling
+namespace DisCatSharp.Interactivity.EventHandling;
+
+/// <summary>
+/// The poller.
+/// </summary>
+internal class Poller
 {
+	DiscordClient _client;
+	ConcurrentHashSet<PollRequest> _requests;
+
 	/// <summary>
-	/// The poller.
+	/// Creates a new EventWaiter object.
 	/// </summary>
-	internal class Poller
+	/// <param name="client">Your DiscordClient</param>
+	public Poller(DiscordClient client)
 	{
-		DiscordClient _client;
-		ConcurrentHashSet<PollRequest> _requests;
+		this._client = client;
+		this._requests = new ConcurrentHashSet<PollRequest>();
 
-		/// <summary>
-		/// Creates a new EventWaiter object.
-		/// </summary>
-		/// <param name="client">Your DiscordClient</param>
-		public Poller(DiscordClient client)
+		this._client.MessageReactionAdded += this.HandleReactionAdd;
+		this._client.MessageReactionRemoved += this.HandleReactionRemove;
+		this._client.MessageReactionsCleared += this.HandleReactionClear;
+	}
+
+	/// <summary>
+	/// Dos the poll async.
+	/// </summary>
+	/// <param name="request">The request.</param>
+	/// <returns>A Task.</returns>
+	public async Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(PollRequest request)
+	{
+		ReadOnlyCollection<PollEmoji> result = null;
+		this._requests.Add(request);
+		try
 		{
-			this._client = client;
-			this._requests = new ConcurrentHashSet<PollRequest>();
-
-			this._client.MessageReactionAdded += this.HandleReactionAdd;
-			this._client.MessageReactionRemoved += this.HandleReactionRemove;
-			this._client.MessageReactionsCleared += this.HandleReactionClear;
+			await request.Tcs.Task.ConfigureAwait(false);
 		}
-
-		/// <summary>
-		/// Dos the poll async.
-		/// </summary>
-		/// <param name="request">The request.</param>
-		/// <returns>A Task.</returns>
-		public async Task<ReadOnlyCollection<PollEmoji>> DoPollAsync(PollRequest request)
+		catch (Exception ex)
 		{
-			ReadOnlyCollection<PollEmoji> result = null;
-			this._requests.Add(request);
-			try
-			{
-				await request.Tcs.Task.ConfigureAwait(false);
-			}
-			catch (Exception ex)
-			{
-				this._client.Logger.LogError(InteractivityEvents.InteractivityPollError, ex, "Exception occurred while polling");
-			}
-			finally
-			{
-				result = new ReadOnlyCollection<PollEmoji>(new HashSet<PollEmoji>(request.Collected).ToList());
-				request.Dispose();
-				this._requests.TryRemove(request);
-			}
-			return result;
+			this._client.Logger.LogError(InteractivityEvents.InteractivityPollError, ex, "Exception occurred while polling");
 		}
-
-		/// <summary>
-		/// Handles the reaction add.
-		/// </summary>
-		/// <param name="client">The client.</param>
-		/// <param name="eventArgs">The event's arguments.</param>
-		/// <returns>A Task.</returns>
-		private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventArgs)
+		finally
 		{
-			if (this._requests.Count == 0)
-				return Task.CompletedTask;
+			result = new ReadOnlyCollection<PollEmoji>(new HashSet<PollEmoji>(request.Collected).ToList());
+			request.Dispose();
+			this._requests.TryRemove(request);
+		}
+		return result;
+	}
 
-			_ = Task.Run(async () =>
+	/// <summary>
+	/// Handles the reaction add.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="eventArgs">The event's arguments.</param>
+	/// <returns>A Task.</returns>
+	private Task HandleReactionAdd(DiscordClient client, MessageReactionAddEventArgs eventArgs)
+	{
+		if (this._requests.Count == 0)
+			return Task.CompletedTask;
+
+		_ = Task.Run(async () =>
+		{
+			foreach (var req in this._requests)
 			{
-				foreach (var req in this._requests)
+				// match message
+				if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
 				{
-					// match message
-					if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
+					if (req.Emojis.Contains(eventArgs.Emoji) && !req.Collected.Any(x => x.Voted.Contains(eventArgs.User)))
 					{
-						if (req.Emojis.Contains(eventArgs.Emoji) && !req.Collected.Any(x => x.Voted.Contains(eventArgs.User)))
-						{
-							if (eventArgs.User.Id != this._client.CurrentUser.Id)
-								req.AddReaction(eventArgs.Emoji, eventArgs.User);
-						}
-						else
-						{
-							var member = await eventArgs.Channel.Guild.GetMemberAsync(client.CurrentUser.Id).ConfigureAwait(false);
-							if (eventArgs.Channel.PermissionsFor(member).HasPermission(Permissions.ManageMessages))
-								await eventArgs.Message.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
-						}
+						if (eventArgs.User.Id != this._client.CurrentUser.Id)
+							req.AddReaction(eventArgs.Emoji, eventArgs.User);
+					}
+					else
+					{
+						var member = await eventArgs.Channel.Guild.GetMemberAsync(client.CurrentUser.Id).ConfigureAwait(false);
+						if (eventArgs.Channel.PermissionsFor(member).HasPermission(Permissions.ManageMessages))
+							await eventArgs.Message.DeleteReactionAsync(eventArgs.Emoji, eventArgs.User).ConfigureAwait(false);
 					}
 				}
-			});
-			return Task.CompletedTask;
-		}
-
-		/// <summary>
-		/// Handles the reaction remove.
-		/// </summary>
-		/// <param name="client">The client.</param>
-		/// <param name="eventArgs">The event's arguments.</param>
-		/// <returns>A Task.</returns>
-		private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
-		{
-			foreach (var req in this._requests)
-			{
-				// match message
-				if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
-				{
-					if (eventArgs.User.Id != this._client.CurrentUser.Id)
-						req.RemoveReaction(eventArgs.Emoji, eventArgs.User);
-				}
 			}
-			return Task.CompletedTask;
-		}
+		});
+		return Task.CompletedTask;
+	}
 
-		/// <summary>
-		/// Handles the reaction clear.
-		/// </summary>
-		/// <param name="client">The client.</param>
-		/// <param name="eventArgs">The event's arguments.</param>
-		/// <returns>A Task.</returns>
-		private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventArgs)
+	/// <summary>
+	/// Handles the reaction remove.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="eventArgs">The event's arguments.</param>
+	/// <returns>A Task.</returns>
+	private Task HandleReactionRemove(DiscordClient client, MessageReactionRemoveEventArgs eventArgs)
+	{
+		foreach (var req in this._requests)
 		{
-			foreach (var req in this._requests)
+			// match message
+			if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
 			{
-				// match message
-				if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
-				{
-					req.ClearCollected();
-				}
+				if (eventArgs.User.Id != this._client.CurrentUser.Id)
+					req.RemoveReaction(eventArgs.Emoji, eventArgs.User);
 			}
-			return Task.CompletedTask;
 		}
+		return Task.CompletedTask;
+	}
 
-		~Poller()
+	/// <summary>
+	/// Handles the reaction clear.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="eventArgs">The event's arguments.</param>
+	/// <returns>A Task.</returns>
+	private Task HandleReactionClear(DiscordClient client, MessageReactionsClearEventArgs eventArgs)
+	{
+		foreach (var req in this._requests)
 		{
-			this.Dispose();
+			// match message
+			if (req.Message.Id == eventArgs.Message.Id && req.Message.ChannelId == eventArgs.Channel.Id)
+			{
+				req.ClearCollected();
+			}
 		}
+		return Task.CompletedTask;
+	}
 
-		/// <summary>
-		/// Disposes this EventWaiter
-		/// </summary>
-		public void Dispose()
-		{
-			this._client.MessageReactionAdded -= this.HandleReactionAdd;
-			this._client.MessageReactionRemoved -= this.HandleReactionRemove;
-			this._client.MessageReactionsCleared -= this.HandleReactionClear;
-			this._client = null;
-			this._requests.Clear();
-			this._requests = null;
-		}
+	~Poller()
+	{
+		this.Dispose();
+	}
+
+	/// <summary>
+	/// Disposes this EventWaiter
+	/// </summary>
+	public void Dispose()
+	{
+		this._client.MessageReactionAdded -= this.HandleReactionAdd;
+		this._client.MessageReactionRemoved -= this.HandleReactionRemove;
+		this._client.MessageReactionsCleared -= this.HandleReactionClear;
+		this._client = null;
+		this._requests.Clear();
+		this._requests = null;
 	}
 }
