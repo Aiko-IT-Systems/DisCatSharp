@@ -676,7 +676,7 @@ namespace DisCatSharp.VoiceNext
 			}
 
 			voiceSender = vtx;
-			ulong sequence = vtx.GetTrueSequenceAfterWrapping(shortSequence);
+			var sequence = vtx.GetTrueSequenceAfterWrapping(shortSequence);
 			ushort gap = 0;
 			if (vtx.LastTrueSequence is ulong lastTrueSequence)
 			{

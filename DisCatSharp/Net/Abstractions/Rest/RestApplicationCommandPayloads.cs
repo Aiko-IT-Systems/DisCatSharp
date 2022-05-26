@@ -73,8 +73,8 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// Whether the command is allowed for everyone.
 		/// </summary>
-		[JsonProperty("default_permission")]
-		public bool DefaultPermission { get; set; } = true;
+		[JsonProperty("default_permission", NullValueHandling = NullValueHandling.Include)]
+		public bool? DefaultPermission { get; set; } = null;
 
 		/// <summary>
 		/// The command needed permissions.
@@ -133,8 +133,8 @@ namespace DisCatSharp.Net.Abstractions
 		/// <summary>
 		/// Gets the default permission.
 		/// </summary>
-		[JsonProperty("default_permission")]
-		public Optional<bool> DefaultPermission { get; set; } = true;
+		[JsonProperty("default_permission", NullValueHandling = NullValueHandling.Include)]
+		public bool? DefaultPermission { get; set; } = null;
 
 		/// <summary>
 		/// The command needed permissions.

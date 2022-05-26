@@ -497,7 +497,7 @@ namespace DisCatSharp.Entities
 			action(mdl);
 
 			if (mdl.VoiceChannel.HasValue && mdl.VoiceChannel.Value != null && mdl.VoiceChannel.Value.Type != ChannelType.Voice && mdl.VoiceChannel.Value.Type != ChannelType.Stage)
-				throw new ArgumentException("Given channel is not a voice or stage channel.", nameof(mdl.VoiceChannel));
+				throw new ArgumentException("Given channel is not a voice or stage channel.", nameof(action));
 
 			if (mdl.Nickname.HasValue && this.Discord.CurrentUser.Id == this.Id)
 			{
