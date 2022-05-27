@@ -22,46 +22,45 @@
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.Net.Models
+namespace DisCatSharp.Net.Models;
+
+/// <summary>
+/// Represents a thread edit model.
+/// </summary>
+public class ThreadEditModel : BaseEditModel
 {
 	/// <summary>
-	/// Represents a thread edit model.
+	/// Sets the thread's new name.
 	/// </summary>
-	public class ThreadEditModel : BaseEditModel
-	{
-		/// <summary>
-		/// Sets the thread's new name.
-		/// </summary>
-		public string Name { internal get; set; }
+	public string Name { internal get; set; }
 
-		/// <summary>
-		/// Sets the thread's locked state.
-		/// </summary>
-		public Optional<bool?> Locked { internal get; set; }
+	/// <summary>
+	/// Sets the thread's locked state.
+	/// </summary>
+	public Optional<bool?> Locked { internal get; set; }
 
-		/// <summary>
-		/// Sets the thread's archived state.
-		/// </summary>
-		public Optional<bool?> Archived { internal get; set; }
+	/// <summary>
+	/// Sets the thread's archived state.
+	/// </summary>
+	public Optional<bool?> Archived { internal get; set; }
 
-		/// <summary>
-		/// Sets the thread's auto archive duration.
-		/// </summary>
-		public Optional<ThreadAutoArchiveDuration?> AutoArchiveDuration { internal get; set; }
+	/// <summary>
+	/// Sets the thread's auto archive duration.
+	/// </summary>
+	public Optional<ThreadAutoArchiveDuration?> AutoArchiveDuration { internal get; set; }
 
-		/// <summary>
-		/// Sets the thread's new user rate limit.
-		/// </summary>
-		public Optional<int?> PerUserRateLimit { internal get; set; }
+	/// <summary>
+	/// Sets the thread's new user rate limit.
+	/// </summary>
+	public Optional<int?> PerUserRateLimit { internal get; set; }
 
-		/// <summary>
-		/// Sets the thread's invitable state.
-		/// </summary>
-		public Optional<bool?> Invitable { internal get; set; }
+	/// <summary>
+	/// Sets the thread's invitable state.
+	/// </summary>
+	public Optional<bool?> Invitable { internal get; set; }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ThreadEditModel"/> class.
-		/// </summary>
-		internal ThreadEditModel() { }
-	}
+	/// <summary>
+	/// Initializes a new instance of the <see cref="ThreadEditModel"/> class.
+	/// </summary>
+	internal ThreadEditModel() { }
 }

@@ -35,249 +35,248 @@ using DisCatSharp.Net;
 
 using Microsoft.Extensions.Logging;
 
-namespace DisCatSharp
+namespace DisCatSharp;
+
+/// <summary>
+/// Represents a webhook-only client. This client can be used to execute Discord Webhooks.
+/// </summary>
+public class DiscordWebhookClient
 {
 	/// <summary>
-	/// Represents a webhook-only client. This client can be used to execute Discord Webhooks.
+	/// Gets the logger for this client.
 	/// </summary>
-	public class DiscordWebhookClient
+	public ILogger<DiscordWebhookClient> Logger { get; }
+
+	/// <summary>
+	/// Gets the webhook regex.
+	/// This regex has 2 named capture groups: "id" and "token".
+	/// </summary>
+	private static Regex s_webhookRegex { get; } = new(@"(?:https?:\/\/)?discord(?:app)?.com\/api\/(?:v\d\/)?webhooks\/(?<id>\d+)\/(?<token>[A-Za-z0-9_\-]+)", RegexOptions.ECMAScript);
+
+	/// <summary>
+	/// Gets the collection of registered webhooks.
+	/// </summary>
+	public IReadOnlyList<DiscordWebhook> Webhooks { get; }
+
+	/// <summary>
+	/// Gets or sets the username for registered webhooks. Note that this only takes effect when broadcasting.
+	/// </summary>
+	public string Username { get; set; }
+
+	/// <summary>
+	/// Gets or set the avatar for registered webhooks. Note that this only takes effect when broadcasting.
+	/// </summary>
+	public string AvatarUrl { get; set; }
+
+	internal List<DiscordWebhook> Hooks;
+	internal DiscordApiClient Apiclient;
+
+	internal LogLevel MinimumLogLevel;
+	internal string LogTimestampFormat;
+
+	/// <summary>
+	/// Creates a new webhook client.
+	/// </summary>
+	public DiscordWebhookClient()
+		: this(null, null)
+	{ }
+
+	/// <summary>
+	/// Creates a new webhook client, with specified HTTP proxy, timeout, and logging settings.
+	/// </summary>
+	/// <param name="proxy">The proxy to use for HTTP connections. Defaults to null.</param>
+	/// <param name="timeout">The optional timeout to use for HTTP requests. Set to <see cref="System.Threading.Timeout.InfiniteTimeSpan"/> to disable timeouts. Defaults to null.</param>
+	/// <param name="useRelativeRateLimit">Whether to use the system clock for computing rate limit resets. See <see cref="DiscordConfiguration.UseRelativeRatelimit"/> for more details. Defaults to true.</param>
+	/// <param name="loggerFactory">The optional logging factory to use for this client. Defaults to null.</param>
+	/// <param name="minimumLogLevel">The minimum logging level for messages. Defaults to information.</param>
+	/// <param name="logTimestampFormat">The timestamp format to use for the logger.</param>
+	public DiscordWebhookClient(IWebProxy proxy = null, TimeSpan? timeout = null, bool useRelativeRateLimit = true,
+		ILoggerFactory loggerFactory = null, LogLevel minimumLogLevel = LogLevel.Information, string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz")
 	{
-		/// <summary>
-		/// Gets the logger for this client.
-		/// </summary>
-		public ILogger<DiscordWebhookClient> Logger { get; }
+		this.MinimumLogLevel = minimumLogLevel;
+		this.LogTimestampFormat = logTimestampFormat;
 
-		/// <summary>
-		/// Gets the webhook regex.
-		/// This regex has 2 named capture groups: "id" and "token".
-		/// </summary>
-		private static Regex s_webhookRegex { get; } = new(@"(?:https?:\/\/)?discord(?:app)?.com\/api\/(?:v\d\/)?webhooks\/(?<id>\d+)\/(?<token>[A-Za-z0-9_\-]+)", RegexOptions.ECMAScript);
-
-		/// <summary>
-		/// Gets the collection of registered webhooks.
-		/// </summary>
-		public IReadOnlyList<DiscordWebhook> Webhooks { get; }
-
-		/// <summary>
-		/// Gets or sets the username for registered webhooks. Note that this only takes effect when broadcasting.
-		/// </summary>
-		public string Username { get; set; }
-
-		/// <summary>
-		/// Gets or set the avatar for registered webhooks. Note that this only takes effect when broadcasting.
-		/// </summary>
-		public string AvatarUrl { get; set; }
-
-		internal List<DiscordWebhook> Hooks;
-		internal DiscordApiClient Apiclient;
-
-		internal LogLevel MinimumLogLevel;
-		internal string LogTimestampFormat;
-
-		/// <summary>
-		/// Creates a new webhook client.
-		/// </summary>
-		public DiscordWebhookClient()
-			: this(null, null)
-		{ }
-
-		/// <summary>
-		/// Creates a new webhook client, with specified HTTP proxy, timeout, and logging settings.
-		/// </summary>
-		/// <param name="proxy">The proxy to use for HTTP connections. Defaults to null.</param>
-		/// <param name="timeout">The optional timeout to use for HTTP requests. Set to <see cref="System.Threading.Timeout.InfiniteTimeSpan"/> to disable timeouts. Defaults to null.</param>
-		/// <param name="useRelativeRateLimit">Whether to use the system clock for computing rate limit resets. See <see cref="DiscordConfiguration.UseRelativeRatelimit"/> for more details. Defaults to true.</param>
-		/// <param name="loggerFactory">The optional logging factory to use for this client. Defaults to null.</param>
-		/// <param name="minimumLogLevel">The minimum logging level for messages. Defaults to information.</param>
-		/// <param name="logTimestampFormat">The timestamp format to use for the logger.</param>
-		public DiscordWebhookClient(IWebProxy proxy = null, TimeSpan? timeout = null, bool useRelativeRateLimit = true,
-			ILoggerFactory loggerFactory = null, LogLevel minimumLogLevel = LogLevel.Information, string logTimestampFormat = "yyyy-MM-dd HH:mm:ss zzz")
+		if (loggerFactory == null)
 		{
-			this.MinimumLogLevel = minimumLogLevel;
-			this.LogTimestampFormat = logTimestampFormat;
+			loggerFactory = new DefaultLoggerFactory();
+			loggerFactory.AddProvider(new DefaultLoggerProvider(this));
+		}
 
-			if (loggerFactory == null)
+		this.Logger = loggerFactory.CreateLogger<DiscordWebhookClient>();
+
+		var parsedTimeout = timeout ?? TimeSpan.FromSeconds(10);
+
+		this.Apiclient = new DiscordApiClient(proxy, parsedTimeout, useRelativeRateLimit, this.Logger);
+		this.Hooks = new List<DiscordWebhook>();
+		this.Webhooks = new ReadOnlyCollection<DiscordWebhook>(this.Hooks);
+	}
+
+	/// <summary>
+	/// Registers a webhook with this client. This retrieves a webhook based on the ID and token supplied.
+	/// </summary>
+	/// <param name="id">The ID of the webhook to add.</param>
+	/// <param name="token">The token of the webhook to add.</param>
+	/// <returns>The registered webhook.</returns>
+	public async Task<DiscordWebhook> AddWebhookAsync(ulong id, string token)
+	{
+		if (string.IsNullOrWhiteSpace(token))
+			throw new ArgumentNullException(nameof(token));
+		token = token.Trim();
+
+		if (this.Hooks.Any(x => x.Id == id))
+			throw new InvalidOperationException("This webhook is registered with this client.");
+
+		var wh = await this.Apiclient.GetWebhookWithTokenAsync(id, token).ConfigureAwait(false);
+		this.Hooks.Add(wh);
+
+		return wh;
+	}
+
+	/// <summary>
+	/// Registers a webhook with this client. This retrieves a webhook from webhook URL.
+	/// </summary>
+	/// <param name="url">URL of the webhook to retrieve. This URL must contain both ID and token.</param>
+	/// <returns>The registered webhook.</returns>
+	public Task<DiscordWebhook> AddWebhookAsync(Uri url)
+	{
+		if (url == null)
+			throw new ArgumentNullException(nameof(url));
+
+		var m = s_webhookRegex.Match(url.ToString());
+		if (!m.Success)
+			throw new ArgumentException("Invalid webhook URL supplied.", nameof(url));
+
+		var idraw = m.Groups["id"];
+		var tokenraw = m.Groups["token"];
+		if (!ulong.TryParse(idraw.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var id))
+			throw new ArgumentException("Invalid webhook URL supplied.", nameof(url));
+
+		var token = tokenraw.Value;
+		return this.AddWebhookAsync(id, token);
+	}
+
+	/// <summary>
+	/// Registers a webhook with this client. This retrieves a webhook using the supplied full discord client.
+	/// </summary>
+	/// <param name="id">ID of the webhook to register.</param>
+	/// <param name="client">Discord client to which the webhook will belong.</param>
+	/// <returns>The registered webhook.</returns>
+	public async Task<DiscordWebhook> AddWebhookAsync(ulong id, BaseDiscordClient client)
+	{
+		if (client == null)
+			throw new ArgumentNullException(nameof(client));
+
+		if (this.Hooks.Any(x => x.Id == id))
+			throw new ArgumentException("This webhook is already registered with this client.");
+
+		var wh = await client.ApiClient.GetWebhookAsync(id).ConfigureAwait(false);
+
+		// personally I don't think we need to override anything.
+		// it would even make sense to keep the hook as-is, in case
+		// it's returned without a token for some bizarre reason
+		// remember -- discord is not really consistent
+		//var nwh = new DiscordWebhook()
+		//{
+		//    ApiClient = _apiclient,
+		//    AvatarHash = wh.AvatarHash,
+		//    ChannelId = wh.ChannelId,
+		//    GuildId = wh.GuildId,
+		//    Id = wh.Id,
+		//    Name = wh.Name,
+		//    Token = wh.Token,
+		//    User = wh.User,
+		//    Discord = null
+		//};
+		this.Hooks.Add(wh);
+
+		return wh;
+	}
+
+	/// <summary>
+	/// Registers a webhook with this client. This reuses the supplied webhook object.
+	/// </summary>
+	/// <param name="webhook">Webhook to register.</param>
+	/// <returns>The registered webhook.</returns>
+	public DiscordWebhook AddWebhook(DiscordWebhook webhook)
+	{
+		if (webhook == null)
+			throw new ArgumentNullException(nameof(webhook));
+
+		if (this.Hooks.Any(x => x.Id == webhook.Id))
+			throw new ArgumentException("This webhook is already registered with this client.");
+
+		//var nwh = new DiscordWebhook()
+		//{
+		//    ApiClient = _apiclient,
+		//    AvatarHash = webhook.AvatarHash,
+		//    ChannelId = webhook.ChannelId,
+		//    GuildId = webhook.GuildId,
+		//    Id = webhook.Id,
+		//    Name = webhook.Name,
+		//    Token = webhook.Token,
+		//    User = webhook.User,
+		//    Discord = null
+		//};
+		this.Hooks.Add(webhook);
+
+		return webhook;
+	}
+
+	/// <summary>
+	/// Unregisters a webhook with this client.
+	/// </summary>
+	/// <param name="id">ID of the webhook to unregister.</param>
+	/// <returns>The unregistered webhook.</returns>
+	public DiscordWebhook RemoveWebhook(ulong id)
+	{
+		if (!this.Hooks.Any(x => x.Id == id))
+			throw new ArgumentException("This webhook is not registered with this client.");
+
+		var wh = this.GetRegisteredWebhook(id);
+		this.Hooks.Remove(wh);
+		return wh;
+	}
+
+	/// <summary>
+	/// Gets a registered webhook with specified ID.
+	/// </summary>
+	/// <param name="id">ID of the registered webhook to retrieve.</param>
+	/// <returns>The requested webhook.</returns>
+	public DiscordWebhook GetRegisteredWebhook(ulong id)
+		=> this.Hooks.FirstOrDefault(xw => xw.Id == id);
+
+	/// <summary>
+	/// Broadcasts a message to all registered webhooks.
+	/// </summary>
+	/// <param name="builder">Webhook builder filled with data to send.</param>
+	/// <returns>A dictionary of <see cref="DisCatSharp.Entities.DiscordWebhook"/>s and <see cref="DisCatSharp.Entities.DiscordMessage"/>s.</returns>
+	public async Task<Dictionary<DiscordWebhook, DiscordMessage>> BroadcastMessageAsync(DiscordWebhookBuilder builder)
+	{
+		var deadhooks = new List<DiscordWebhook>();
+		var messages = new Dictionary<DiscordWebhook, DiscordMessage>();
+
+		foreach (var hook in this.Hooks)
+		{
+			try
 			{
-				loggerFactory = new DefaultLoggerFactory();
-				loggerFactory.AddProvider(new DefaultLoggerProvider(this));
+				messages.Add(hook, await hook.ExecuteAsync(builder).ConfigureAwait(false));
 			}
-
-			this.Logger = loggerFactory.CreateLogger<DiscordWebhookClient>();
-
-			var parsedTimeout = timeout ?? TimeSpan.FromSeconds(10);
-
-			this.Apiclient = new DiscordApiClient(proxy, parsedTimeout, useRelativeRateLimit, this.Logger);
-			this.Hooks = new List<DiscordWebhook>();
-			this.Webhooks = new ReadOnlyCollection<DiscordWebhook>(this.Hooks);
-		}
-
-		/// <summary>
-		/// Registers a webhook with this client. This retrieves a webhook based on the ID and token supplied.
-		/// </summary>
-		/// <param name="id">The ID of the webhook to add.</param>
-		/// <param name="token">The token of the webhook to add.</param>
-		/// <returns>The registered webhook.</returns>
-		public async Task<DiscordWebhook> AddWebhookAsync(ulong id, string token)
-		{
-			if (string.IsNullOrWhiteSpace(token))
-				throw new ArgumentNullException(nameof(token));
-			token = token.Trim();
-
-			if (this.Hooks.Any(x => x.Id == id))
-				throw new InvalidOperationException("This webhook is registered with this client.");
-
-			var wh = await this.Apiclient.GetWebhookWithTokenAsync(id, token).ConfigureAwait(false);
-			this.Hooks.Add(wh);
-
-			return wh;
-		}
-
-		/// <summary>
-		/// Registers a webhook with this client. This retrieves a webhook from webhook URL.
-		/// </summary>
-		/// <param name="url">URL of the webhook to retrieve. This URL must contain both ID and token.</param>
-		/// <returns>The registered webhook.</returns>
-		public Task<DiscordWebhook> AddWebhookAsync(Uri url)
-		{
-			if (url == null)
-				throw new ArgumentNullException(nameof(url));
-
-			var m = s_webhookRegex.Match(url.ToString());
-			if (!m.Success)
-				throw new ArgumentException("Invalid webhook URL supplied.", nameof(url));
-
-			var idraw = m.Groups["id"];
-			var tokenraw = m.Groups["token"];
-			if (!ulong.TryParse(idraw.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var id))
-				throw new ArgumentException("Invalid webhook URL supplied.", nameof(url));
-
-			var token = tokenraw.Value;
-			return this.AddWebhookAsync(id, token);
-		}
-
-		/// <summary>
-		/// Registers a webhook with this client. This retrieves a webhook using the supplied full discord client.
-		/// </summary>
-		/// <param name="id">ID of the webhook to register.</param>
-		/// <param name="client">Discord client to which the webhook will belong.</param>
-		/// <returns>The registered webhook.</returns>
-		public async Task<DiscordWebhook> AddWebhookAsync(ulong id, BaseDiscordClient client)
-		{
-			if (client == null)
-				throw new ArgumentNullException(nameof(client));
-
-			if (this.Hooks.Any(x => x.Id == id))
-				throw new ArgumentException("This webhook is already registered with this client.");
-
-			var wh = await client.ApiClient.GetWebhookAsync(id).ConfigureAwait(false);
-
-			// personally I don't think we need to override anything.
-			// it would even make sense to keep the hook as-is, in case
-			// it's returned without a token for some bizarre reason
-			// remember -- discord is not really consistent
-			//var nwh = new DiscordWebhook()
-			//{
-			//    ApiClient = _apiclient,
-			//    AvatarHash = wh.AvatarHash,
-			//    ChannelId = wh.ChannelId,
-			//    GuildId = wh.GuildId,
-			//    Id = wh.Id,
-			//    Name = wh.Name,
-			//    Token = wh.Token,
-			//    User = wh.User,
-			//    Discord = null
-			//};
-			this.Hooks.Add(wh);
-
-			return wh;
-		}
-
-		/// <summary>
-		/// Registers a webhook with this client. This reuses the supplied webhook object.
-		/// </summary>
-		/// <param name="webhook">Webhook to register.</param>
-		/// <returns>The registered webhook.</returns>
-		public DiscordWebhook AddWebhook(DiscordWebhook webhook)
-		{
-			if (webhook == null)
-				throw new ArgumentNullException(nameof(webhook));
-
-			if (this.Hooks.Any(x => x.Id == webhook.Id))
-				throw new ArgumentException("This webhook is already registered with this client.");
-
-			//var nwh = new DiscordWebhook()
-			//{
-			//    ApiClient = _apiclient,
-			//    AvatarHash = webhook.AvatarHash,
-			//    ChannelId = webhook.ChannelId,
-			//    GuildId = webhook.GuildId,
-			//    Id = webhook.Id,
-			//    Name = webhook.Name,
-			//    Token = webhook.Token,
-			//    User = webhook.User,
-			//    Discord = null
-			//};
-			this.Hooks.Add(webhook);
-
-			return webhook;
-		}
-
-		/// <summary>
-		/// Unregisters a webhook with this client.
-		/// </summary>
-		/// <param name="id">ID of the webhook to unregister.</param>
-		/// <returns>The unregistered webhook.</returns>
-		public DiscordWebhook RemoveWebhook(ulong id)
-		{
-			if (!this.Hooks.Any(x => x.Id == id))
-				throw new ArgumentException("This webhook is not registered with this client.");
-
-			var wh = this.GetRegisteredWebhook(id);
-			this.Hooks.Remove(wh);
-			return wh;
-		}
-
-		/// <summary>
-		/// Gets a registered webhook with specified ID.
-		/// </summary>
-		/// <param name="id">ID of the registered webhook to retrieve.</param>
-		/// <returns>The requested webhook.</returns>
-		public DiscordWebhook GetRegisteredWebhook(ulong id)
-			=> this.Hooks.FirstOrDefault(xw => xw.Id == id);
-
-		/// <summary>
-		/// Broadcasts a message to all registered webhooks.
-		/// </summary>
-		/// <param name="builder">Webhook builder filled with data to send.</param>
-		/// <returns>A dictionary of <see cref="DisCatSharp.Entities.DiscordWebhook"/>s and <see cref="DisCatSharp.Entities.DiscordMessage"/>s.</returns>
-		public async Task<Dictionary<DiscordWebhook, DiscordMessage>> BroadcastMessageAsync(DiscordWebhookBuilder builder)
-		{
-			var deadhooks = new List<DiscordWebhook>();
-			var messages = new Dictionary<DiscordWebhook, DiscordMessage>();
-
-			foreach (var hook in this.Hooks)
+			catch (NotFoundException)
 			{
-				try
-				{
-					messages.Add(hook, await hook.ExecuteAsync(builder).ConfigureAwait(false));
-				}
-				catch (NotFoundException)
-				{
-					deadhooks.Add(hook);
-				}
+				deadhooks.Add(hook);
 			}
-
-			// Removing dead webhooks from collection
-			foreach (var xwh in deadhooks) this.Hooks.Remove(xwh);
-
-			return messages;
 		}
 
-		~DiscordWebhookClient()
-		{
-			this.Hooks.Clear();
-			this.Hooks = null;
-			this.Apiclient.Rest.Dispose();
-		}
+		// Removing dead webhooks from collection
+		foreach (var xwh in deadhooks) this.Hooks.Remove(xwh);
+
+		return messages;
+	}
+
+	~DiscordWebhookClient()
+	{
+		this.Hooks.Clear();
+		this.Hooks = null;
+		this.Apiclient.Rest.Dispose();
 	}
 }

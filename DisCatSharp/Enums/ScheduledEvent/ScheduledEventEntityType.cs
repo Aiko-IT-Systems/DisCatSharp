@@ -20,26 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+namespace DisCatSharp;
+
+/// <summary>
+/// Represents the entity type for a scheduled event.
+/// </summary>
+public enum ScheduledEventEntityType : int
 {
 	/// <summary>
-	/// Represents the entity type for a scheduled event.
+	/// Indicates that the events is hold in a stage instance.
 	/// </summary>
-	public enum ScheduledEventEntityType : int
-	{
-		/// <summary>
-		/// Indicates that the events is hold in a stage instance.
-		/// </summary>
-		StageInstance = 1,
+	StageInstance = 1,
 
-		/// <summary>
-		/// Indicates that the events is hold in a voice channel.
-		/// </summary>
-		Voice = 2,
+	/// <summary>
+	/// Indicates that the events is hold in a voice channel.
+	/// </summary>
+	Voice = 2,
 
-		/// <summary>
-		/// Indicates that the events is hold external.
-		/// </summary>
-		External = 3
-	}
+	/// <summary>
+	/// Indicates that the events is hold external.
+	/// </summary>
+	External = 3
 }

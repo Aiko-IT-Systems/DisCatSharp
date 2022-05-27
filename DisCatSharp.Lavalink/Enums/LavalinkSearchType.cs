@@ -20,27 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Lavalink
+namespace DisCatSharp.Lavalink;
+
+/// <summary>
+/// The lavalink search type.
+/// </summary>
+public enum LavalinkSearchType
 {
+	/// <summary>
+	/// Search on SoundCloud
+	/// </summary>
+	SoundCloud,
 
 	/// <summary>
-	/// The lavalink search type.
+	/// Search on Youtube.
 	/// </summary>
-	public enum LavalinkSearchType
-	{
-		/// <summary>
-		/// Search on SoundCloud
-		/// </summary>
-		SoundCloud,
+	Youtube,
 
-		/// <summary>
-		/// Search on Youtube.
-		/// </summary>
-		Youtube,
-
-		/// <summary>
-		/// Provide Lavalink with a plain URL.
-		/// </summary>
-		Plain
-	}
+	/// <summary>
+	/// Provide Lavalink with a plain URL.
+	/// </summary>
+	Plain
 }

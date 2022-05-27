@@ -20,31 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Lavalink
+namespace DisCatSharp.Lavalink;
+
+/// <summary>
+/// The lavalink route planner type.
+/// </summary>
+public enum LavalinkRoutePlannerType
 {
 	/// <summary>
-	/// The lavalink route planner type.
+	/// Route planner that switches the IP on ban.
 	/// </summary>
-	public enum LavalinkRoutePlannerType
-	{
-		/// <summary>
-		/// Route planner that switches the IP on ban.
-		/// </summary>
-		RotatingIpRoutePlanner = 1,
+	RotatingIpRoutePlanner = 1,
 
-		/// <summary>
-		/// Route planner that selects random IP addresses from the given block.
-		/// </summary>
-		BalancingIpRoutePlanner = 2,
+	/// <summary>
+	/// Route planner that selects random IP addresses from the given block.
+	/// </summary>
+	BalancingIpRoutePlanner = 2,
 
-		/// <summary>
-		/// Route planner that switches the IP on every clock update.
-		/// </summary>
-		NanoIpRoutePlanner = 3,
+	/// <summary>
+	/// Route planner that switches the IP on every clock update.
+	/// </summary>
+	NanoIpRoutePlanner = 3,
 
-		/// <summary>
-		/// Route planner that switches the IP on every clock update and rotates to next IP block on a ban as a fallback.
-		/// </summary>
-		RotatingNanoIpRoutePlanner = 4
-	}
+	/// <summary>
+	/// Route planner that switches the IP on every clock update and rotates to next IP block on a ban as a fallback.
+	/// </summary>
+	RotatingNanoIpRoutePlanner = 4
 }
