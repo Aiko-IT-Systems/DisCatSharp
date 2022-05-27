@@ -19,7 +19,6 @@
     <PackageId>DisCatSharp.Common</PackageId>
     <Description>Assortment of various common types and utilities for DisCatSharp's projects.</Description>
     <PackageTags>common utilities dotnet dotnet-core dotnetfx netfx netcore csharp</PackageTags>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -34,13 +33,6 @@
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\LICENSE.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>
