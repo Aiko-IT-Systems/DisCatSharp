@@ -225,21 +225,12 @@ namespace DisCatSharp.Interactivity.EventHandling
 			var msg = await p.GetMessageAsync().ConfigureAwait(false);
 			var emojis = await p.GetEmojisAsync().ConfigureAwait(false);
 
-			// Test permissions to avoid a 403:
-			// https://totally-not.a-sketchy.site/3pXpRLK.png
-			// Yes, this is an issue
-			// No, we should not require people to guarantee MANAGE_MESSAGES
-			// Need to check following:
-			// - In guild?
-			//  - If yes, check if have permission
-			// - If all above fail (DM || guild && no permission), skip this
 			var chn = msg.Channel;
 			var gld = chn?.Guild;
 			var mbr = gld?.CurrentMember;
 
-			if (mbr != null /* == is guild and cache is valid */ && (chn.PermissionsFor(mbr) & Permissions.ManageChannels) != 0) /* == has permissions */
+			if (mbr != null && (chn.PermissionsFor(mbr) & Permissions.ManageMessages) != 0)
 				await msg.DeleteAllReactionsAsync("Pagination").ConfigureAwait(false);
-			// ENDOF: 403 fix
 
 			if (p.PageCount > 1)
 			{

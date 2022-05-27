@@ -79,15 +79,11 @@
 		"_gitContribute": {
 			"repo": "https://github.com/Aiko-IT-Systems/DisCatSharp",
 			"branch": "main"
-		},
-		//"_disableNavbar": false,
-		//"_disableBreadcrumb": false,
-		//"_disableAffix": true,
-		//"_disableToc": false,
-		//"_disableContribution": true
+		}
     },
 	"disableGitFeatures": false,
 	"exportRawModel": true,
+	"rawModelOutputFolder": "_site/.bot-query/raw/",
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [

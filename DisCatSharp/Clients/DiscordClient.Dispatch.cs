@@ -2668,7 +2668,7 @@ namespace DisCatSharp
 			{
 				chan.Discord = this;
 			}
-			threads.Select(x => x.Discord = this);
+			_ = threads.Select(x => x.Discord = this);
 
 			await this._threadListSynced.InvokeAsync(this, new ThreadListSyncEventArgs(this.ServiceProvider) { Guild = guild, Channels = channels.ToList().AsReadOnly(), Threads = threads, Members = members.ToList().AsReadOnly() }).ConfigureAwait(false);
 		}
