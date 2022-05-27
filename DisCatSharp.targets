@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-        <Authors>Lala Sabathil, Lunar, Auros, Geferon, J_M_Lutra, Alice, AITSYS contributors</Authors>
+        <Authors>AITSYS, Lala Sabathil (aiko@aitsys.dev), Johannes (ottero@aitsys.dev), Mira (mira@aitsys.dev), AITSYS Contributors (contributors@aitsys.dev)</Authors>
         <Company>Aiko IT Systems</Company>
         <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
         <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
-        <PackageIconUrl>https://raw.githubusercontent.com/Aiko-IT-Systems/DisCatSharp/main/DisCatSharp.Logos/logobig.png</PackageIconUrl>
+		<PackageIcon>logobig.png</PackageIcon>
+	    <PackageLicenseExpression />
+	    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\DisCatSharp.Logos\logobig.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 </Project>
