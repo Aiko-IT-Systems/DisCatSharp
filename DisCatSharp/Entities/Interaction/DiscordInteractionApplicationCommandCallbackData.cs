@@ -24,83 +24,82 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Entities
+namespace DisCatSharp.Entities;
+
+/// <summary>
+/// Represents a interactions application command callback data.
+/// </summary>
+internal class DiscordInteractionApplicationCommandCallbackData
 {
 	/// <summary>
-	/// Represents a interactions application command callback data.
+	/// Whether this message is text to speech.
 	/// </summary>
-	internal class DiscordInteractionApplicationCommandCallbackData
-	{
-		/// <summary>
-		/// Whether this message is text to speech.
-		/// </summary>
-		[JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
-		public bool? IsTts { get; internal set; }
-
-		/// <summary>
-		/// Gets the content.
-		/// </summary>
-		[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-		public string Content { get; internal set; }
-
-		/// <summary>
-		/// Gets the embeds.
-		/// </summary>
-		[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-		public IEnumerable<DiscordEmbed> Embeds { get; internal set; }
-
-		/// <summary>
-		/// Gets the mentions.
-		/// </summary>
-		[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-		public IEnumerable<IMention> Mentions { get; internal set; }
-
-		/// <summary>
-		/// Gets the flags.
-		/// </summary>
-		[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
-		public MessageFlags? Flags { get; internal set; }
-
-		/// <summary>
-		/// Gets the components.
-		/// </summary>
-		[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-		public IReadOnlyCollection<DiscordActionRowComponent> Components { get; internal set; }
-
-		/// <summary>
-		/// Gets the autocomplete choices.
-		/// </summary>
-		[JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
-		public IReadOnlyCollection<DiscordApplicationCommandAutocompleteChoice> Choices { get; internal set; }
-
-		/// <summary>
-		/// Gets the attachments.
-		/// </summary>
-		[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
-		public List<DiscordAttachment> Attachments { get; set; }
-	}
+	[JsonProperty("tts", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? IsTts { get; internal set; }
 
 	/// <summary>
-	/// Represents a interactions application command callback data.
+	/// Gets the content.
 	/// </summary>
-	internal class DiscordInteractionApplicationCommandModalCallbackData
-	{
-		/// <summary>
-		/// Gets the custom id.
-		/// </summary>
-		[JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
-		public string CustomId { get; internal set; }
+	[JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
+	public string Content { get; internal set; }
 
-		/// <summary>
-		/// Gets the content.
-		/// </summary>
-		[JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
-		public string Title { get; internal set; }
+	/// <summary>
+	/// Gets the embeds.
+	/// </summary>
+	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
+	public IEnumerable<DiscordEmbed> Embeds { get; internal set; }
 
-		/// <summary>
-		/// Gets the components.
-		/// </summary>
-		[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-		public IReadOnlyCollection<DiscordComponent> ModalComponents { get; internal set; }
-	}
+	/// <summary>
+	/// Gets the mentions.
+	/// </summary>
+	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
+	public IEnumerable<IMention> Mentions { get; internal set; }
+
+	/// <summary>
+	/// Gets the flags.
+	/// </summary>
+	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+	public MessageFlags? Flags { get; internal set; }
+
+	/// <summary>
+	/// Gets the components.
+	/// </summary>
+	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyCollection<DiscordActionRowComponent> Components { get; internal set; }
+
+	/// <summary>
+	/// Gets the autocomplete choices.
+	/// </summary>
+	[JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyCollection<DiscordApplicationCommandAutocompleteChoice> Choices { get; internal set; }
+
+	/// <summary>
+	/// Gets the attachments.
+	/// </summary>
+	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
+	public List<DiscordAttachment> Attachments { get; set; }
+}
+
+/// <summary>
+/// Represents a interactions application command callback data.
+/// </summary>
+internal class DiscordInteractionApplicationCommandModalCallbackData
+{
+	/// <summary>
+	/// Gets the custom id.
+	/// </summary>
+	[JsonProperty("custom_id", NullValueHandling = NullValueHandling.Ignore)]
+	public string CustomId { get; internal set; }
+
+	/// <summary>
+	/// Gets the content.
+	/// </summary>
+	[JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+	public string Title { get; internal set; }
+
+	/// <summary>
+	/// Gets the components.
+	/// </summary>
+	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyCollection<DiscordComponent> ModalComponents { get; internal set; }
 }

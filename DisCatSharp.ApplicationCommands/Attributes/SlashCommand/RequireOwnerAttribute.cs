@@ -24,29 +24,28 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DisCatSharp.ApplicationCommands.Attributes
+namespace DisCatSharp.ApplicationCommands.Attributes;
+
+/// <summary>
+/// Defines that this application command is restricted to the owner of the bot.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+public sealed class ApplicationCommandRequireOwnerAttribute : SlashCheckBaseAttribute
 {
 	/// <summary>
 	/// Defines that this application command is restricted to the owner of the bot.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-	public sealed class ApplicationCommandRequireOwnerAttribute : SlashCheckBaseAttribute
+	public ApplicationCommandRequireOwnerAttribute()
+	{ }
+
+	/// <summary>
+	/// Runs checks.
+	/// </summary>
+	public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
 	{
-		/// <summary>
-		/// Defines that this application command is restricted to the owner of the bot.
-		/// </summary>
-		public ApplicationCommandRequireOwnerAttribute()
-		{ }
+		var app = ctx.Client.CurrentApplication;
+		var me = ctx.Client.CurrentUser;
 
-		/// <summary>
-		/// Runs checks.
-		/// </summary>
-		public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-		{
-			var app = ctx.Client.CurrentApplication;
-			var me = ctx.Client.CurrentUser;
-
-			return app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
-		}
+		return app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
 	}
 }

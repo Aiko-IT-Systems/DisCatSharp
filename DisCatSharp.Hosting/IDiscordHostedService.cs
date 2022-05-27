@@ -20,25 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Hosting
+namespace DisCatSharp.Hosting;
+
+/// <summary>
+/// Contract required for <see cref="DiscordClient"/> to work in a web hosting environment
+/// </summary>
+public interface IDiscordHostedService : Microsoft.Extensions.Hosting.IHostedService
 {
-
 	/// <summary>
-	/// Contract required for <see cref="DiscordClient"/> to work in a web hosting environment
+	/// Reference to connected client
 	/// </summary>
-	public interface IDiscordHostedService : Microsoft.Extensions.Hosting.IHostedService
-	{
-		/// <summary>
-		/// Reference to connected client
-		/// </summary>
-		DiscordClient Client { get; }
-	}
+	DiscordClient Client { get; }
+}
 
-	/// <summary>
-	/// Contract required for <see cref="DiscordShardedClient"/> to work in a web hosting environment
-	/// </summary>
-	public interface IDiscordHostedShardService : Microsoft.Extensions.Hosting.IHostedService
-	{
-		DiscordShardedClient ShardedClient { get; }
-	}
+/// <summary>
+/// Contract required for <see cref="DiscordShardedClient"/> to work in a web hosting environment
+/// </summary>
+public interface IDiscordHostedShardService : Microsoft.Extensions.Hosting.IHostedService
+{
+	DiscordShardedClient ShardedClient { get; }
 }

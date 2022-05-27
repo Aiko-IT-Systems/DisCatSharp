@@ -20,22 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+namespace DisCatSharp;
+
+/// <summary>
+/// Represents a channel's flags.
+/// </summary>
+public enum ChannelFlags : int
 {
 	/// <summary>
-	/// Represents a channel's flags.
+	/// Indicates that this channel is removed from the guilds home feed.
 	/// </summary>
-	public enum ChannelFlags : int
-	{
-		/// <summary>
-		/// Indicates that this channel is removed from the guilds home feed.
-		/// </summary>
-		RemovedFromHome = 1 << 0,
+	RemovedFromHome = 1 << 0,
 
-		/// <summary>
-		/// Indicates that this thread is pinned to the top of its parent forum channel.
-		/// Forum channel thread only.
-		/// </summary>
-		Pinned = 1 << 1
-	}
+	/// <summary>
+	/// Indicates that this thread is pinned to the top of its parent forum channel.
+	/// Forum channel thread only.
+	/// </summary>
+	Pinned = 1 << 1
 }
