@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-        <Authors>AITSYS, Lala Sabathil (aiko@aitsys.dev), Johannes (ottero@aitsys.dev), Mira (mira@aitsys.dev), AITSYS Contributors (contributors@aitsys.dev)</Authors>
+        <Authors>Aiko-IT-Systems, aiko, J_M_Lutra , Xorog, Badger2-3, AITSYS Contributors</Authors>
         <Company>Aiko IT Systems</Company>
         <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
         <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
@@ -12,7 +12,7 @@
 	    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     </PropertyGroup>
-  
+
   <ItemGroup>
     <None Include="..\LICENSE.md">
       <Pack>True</Pack>
