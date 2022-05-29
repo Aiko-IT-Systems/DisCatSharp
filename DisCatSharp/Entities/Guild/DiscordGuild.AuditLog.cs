@@ -323,6 +323,14 @@ public partial class DiscordGuild
 								};
 								break;
 
+							case "flags":
+								entrychn.ChannelFlagsChange = new PropertyChange<ChannelFlags>()
+								{
+									Before = (ChannelFlags)(int)xc.OldValue,
+									After = (ChannelFlags)(int)xc.NewValue
+								};
+								break;
+
 							case "permission_overwrites":
 								var olds = xc.OldValues?.OfType<JObject>()
 									?.Select(xjo => xjo.ToObject<DiscordOverwrite>())

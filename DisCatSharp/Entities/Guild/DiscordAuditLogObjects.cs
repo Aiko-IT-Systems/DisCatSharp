@@ -228,6 +228,11 @@ public sealed class DiscordAuditLogChannelEntry : DiscordAuditLogEntry
 	public PropertyChange<int?> PerUserRateLimitChange { get; internal set; }
 
 	/// <summary>
+	/// Gets the channel flags change.
+	/// </summary>
+	public PropertyChange<ChannelFlags> ChannelFlagsChange { get; internal set; }
+
+	/// <summary>
 	/// <see cref="DiscordChannel.DefaultAutoArchiveDuration"/>
 	/// </summary>
 	public PropertyChange<ThreadAutoArchiveDuration?> DefaultAutoArchiveDurationChange { get; internal set; }
