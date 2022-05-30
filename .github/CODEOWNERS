@@ -17,4 +17,5 @@ README.md @Aiko-IT-Systems/aitsys-leader
 /DisCatSharp.Configuration.Tests/ @JBraunsmaJr
 /DisCatSharp.Hosting/ @JBraunsmaJr
 /DisCatSharp.Hosting.DependencyInjection/ @JBraunsmaJr
+/DisCatSharp.SourceGenerator/ @JBraunsmaJr
 /DisCatSharp.Tests/ @JBraunsmaJr
