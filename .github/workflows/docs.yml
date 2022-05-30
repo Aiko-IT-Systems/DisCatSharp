@@ -4,14 +4,25 @@ on:
     branches: [ main ]
   workflow_dispatch:
 jobs:
-  build-library:
+  checkout-repos:
     runs-on: windows-latest
-    name: Build library
+    name: Checkout repositories
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
         path: DisCatSharp
+    - name: Checkout docs repository
+      uses: actions/checkout@v3
+      with:
+        repository: Aiko-IT-Systems/DisCatSharp.Docs
+        path: DisCatSharp.Docs
+        token: ${{ secrets.NYUW_TOKEN_GH }}
+  build-library:
+    runs-on: windows-latest
+    name: Build library
+    needs: checkout-repos
+    steps:
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
@@ -29,12 +40,6 @@ jobs:
     name: Build documentation
     needs: build-library
     steps:
-    - name: Checkout docs repository
-      uses: actions/checkout@v3
-      with:
-        repository: Aiko-IT-Systems/DisCatSharp.Docs
-        path: DisCatSharp.Docs
-        token: ${{ secrets.NYUW_TOKEN_GH }}
     - name: Build Docs
       working-directory: ./DisCatSharp
       shell: pwsh
@@ -48,6 +53,7 @@ jobs:
   purge-docs:
     runs-on: windows-latest
     name: Purge old documentation
+    needs: checkout-repos
     steps:
     - name: Purge old docs
       working-directory: ./DisCatSharp.Docs
