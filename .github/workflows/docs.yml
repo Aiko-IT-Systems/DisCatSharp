@@ -30,7 +30,7 @@ jobs:
       working-directory: DisCatSharp
       shell: pwsh
       run: ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output ".." -PackageName "dcs-docs"
-    - name: Upload Artifact
+    - name: Upload packed docs
       uses: actions/upload-artifact@v3
       with:
         name: dcs-docs.zip
@@ -47,7 +47,7 @@ jobs:
         repository: Aiko-IT-Systems/DisCatSharp.Docs
         path: DisCatSharp.Docs
         token: ${{ secrets.NYUW_TOKEN_GH }}
-    - name: Download a single artifact
+    - name: Download packed docs
       uses: actions/download-artifact@v3
       with:
         name: dcs-docs.zip
