@@ -22,40 +22,39 @@
 
 using System;
 
-namespace DisCatSharp.ApplicationCommands
+namespace DisCatSharp.ApplicationCommands;
+
+/// <summary>
+/// The application commands translation context.
+/// </summary>
+public class ApplicationCommandsTranslationContext
 {
 	/// <summary>
-	/// The application commands translation context.
+	/// Gets the type.
 	/// </summary>
-	public class ApplicationCommandsTranslationContext
+	public Type Type { get; }
+
+	/// <summary>
+	/// Gets the name.
+	/// </summary>
+	public string Name { get; }
+
+	/// <summary>
+	/// Gets the translation json.
+	/// </summary>
+	internal string Translations { get; set; }
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="ApplicationCommandsTranslationContext"/> class.
+	/// </summary>
+	/// <param name="type">The type.</param>
+	/// <param name="name">The name.</param>
+	internal ApplicationCommandsTranslationContext(Type type, string name)
 	{
-		/// <summary>
-		/// Gets the type.
-		/// </summary>
-		public Type Type { get; }
-
-		/// <summary>
-		/// Gets the name.
-		/// </summary>
-		public string Name { get; }
-
-		/// <summary>
-		/// Gets the translation json.
-		/// </summary>
-		internal string Translations { get; set; }
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ApplicationCommandsTranslationContext"/> class.
-		/// </summary>
-		/// <param name="type">The type.</param>
-		/// <param name="name">The name.</param>
-		internal ApplicationCommandsTranslationContext(Type type, string name)
-		{
-			this.Type = type;
-			this.Name = name;
-		}
-
-		public void AddTranslation(string translationJson)
-			=> this.Translations = translationJson;
+		this.Type = type;
+		this.Name = name;
 	}
+
+	public void AddTranslation(string translationJson)
+		=> this.Translations = translationJson;
 }

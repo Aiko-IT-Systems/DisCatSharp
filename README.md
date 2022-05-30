@@ -1,45 +1,45 @@
-# DisCatSharp [![GitHub](https://img.shields.io/github/license/Aiko-IT-Systems/DisCatSharp?label=License)](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=Sponsors)](https://github.com/sponsors/Lulalaby)
+# DisCatSharp ![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=%23ebb34b&label=Stable&style=flat-square&logo=nuget) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=%23ff1493&label=Nightly&style=flat-square&logo=nuget)
+
+A Discord Bot Library written in C# for .NET.
 
 ![DisCatSharp Logo](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Logos/android-chrome-192x192.png?raw=true)
 
-Discord Bot Library written in C# for .NET.
+----
+[![Build](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/dotnet.yml)
+[![Documentation](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/docs.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/docs.yml)
+[![Typos](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/typos.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/typos.yml)
+[![CodeQL](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/codeql.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/codeql.yml)
+![Wakatime](https://wakatime.com/badge/github/Aiko-IT-Systems/DisCatSharp.svg)
 
-#### Status
-[![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=NuGet%20Overall%20Version)](https://nuget.dcs.aitsys.dev)
-[![Build status](https://ci.appveyor.com/api/projects/status/fy4xn9s3cq7j30j7/branch/main?svg=true)](https://ci.appveyor.com/project/AITSYS/discatsharp/branch/main)
+[![AppVeyor](https://img.shields.io/appveyor/build/AITSYS/DisCatSharp?label=Appveyor&logo=appveyor&style=flat-square)](https://ci.appveyor.com/project/AITSYS/discatsharp)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit&style=flat-square&logo=github)](https://aitsys.dev/source/DisCatSharp/history/)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DisCatSharp?label=Commit%20Activity&style=flat-square&logo=github)](https://github.com/Aiko-IT-Systems/DisCatSharp/commits/main)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DisCatSharp?label=PRs&style=flat-square&logo=github&logo=gitub)](https://github.com/Aiko-IT-Systems/DisCatSharp/pulls)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DisCatSharp?label=Size&style=flat-square&logo=github)
 
-#### Commit Activities
-[![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit)](https://aitsys.dev/source/DisCatSharp/history/)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Aiko-IT-Systems/DisCatSharp?label=Commit%20Activity)](https://github.com/Aiko-IT-Systems/DisCatSharp/commits/main)
-[![wakatime](https://wakatime.com/badge/github/Aiko-IT-Systems/DisCatSharp.svg)](https://wakatime.com/badge/github/Aiko-IT-Systems/DisCatSharp)
-
-#### Stats
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/Aiko-IT-Systems/DisCatSharp?label=PRs)](https://github.com/Aiko-IT-Systems/DisCatSharp/pulls)
-[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DisCatSharp?label=Size)](#)
-[![GitHub contributors](https://img.shields.io/github/contributors/Aiko-IT-Systems/DisCatSharp)](https://github.com/Aiko-IT-Systems/DisCatSharp/graphs/contributors)
-[![GitHub Repo stars](https://img.shields.io/github/stars/Aiko-IT-Systems/DisCatSharp?label=Stars)](https://github.com/Aiko-IT-Systems/DisCatSharp/stargazers)
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5282/badge)](https://bestpractices.coreinfrastructure.org/projects/5282)
-[![StackShare](http://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/aiko-it-systems/discatsharp)
+----
 
 ## Why DisCatSharp?
 We want the lib always up-to-date. The newest features are important for us.
 
-So the API version is always the newest, in the current case `v10`.
+Furthermore we want to make sure that the lib is easy to use.
+
+Our other goal is to create a non-toxic environment for you.
+
+Drama is not a goal and will be blocked.
 
 ## Installing
-You can install the library from following source:
-
-The latest release is always available on [NuGet](https://nuget.dcs.aitsys.dev).
+You can install the library from following source: [NuGet](https://nuget.dcs.aitsys.dev).
 
 ## Documentation
-The documentation for the latest stable version is available at [docs.dcs.aitsys.dev/lts](https://docs.dcs.aitsys.dev/lts).
+The documentation for the stable version is available at [docs.dcs.aitsys.dev/lts](https://docs.dcs.aitsys.dev/lts).
 
-The documentation of the latest nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
+The documentation of the nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
 
 Fallback docs are available at [docs-alt.dcs.aitsys.dev](https://docs-alt.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
-Write a mail to ottero@aitsys.dev.
+Write a mail to [dcs@aitsys.dev](mailto:dcs@aitsys.dev).
 
 All requests are tracked at [aitsys.dev](https://aitsys.dev).
 
@@ -50,32 +50,45 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev).
 ## Snippets
 [Snippets for Visual Studio](https://github.com/Aiko-IT-Systems/DisCatSharp.Snippets)
 
-## Latest NuGet Packages
-| Package                                 | NuGet                                                                                                                                                               |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| DisCatSharp                             | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp)                                                         |
-| DisCatSharp.ApplicationCommands         | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ApplicationCommands.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.ApplicationCommands)                 |
-| DisCatSharp.CommandsNext                | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.CommandsNext.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.CommandsNext)                               |
-| DisCatSharp.Common                      | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Common)                                           |
-| DisCatSharp.Configuration               | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Configuration.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Configuration)                             |
-| DisCatSharp.Hosting                     | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Hosting)                                         |
-| DisCatSharp.Hosting.DependencyInjection | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.DependencyInjection.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Hosting.DependencyInjection) |
-| DisCatSharp.Interactivity               | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Interactivity.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Interactivity)                             |
-| DisCatSharp.Lavalink                    | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Lavalink.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.Lavalink)                                       |
-| DisCatSharp.VoiceNext                   | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.VoiceNext)                                     |
-| DisCatSharp.VoiceNext.Natives           | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.Natives.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.VoiceNext.Natives)                     |
-| DisCatSharp.ProjectTemplates           | [![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ProjectTemplates.svg?label=)](https://nuget.dcs.aitsys.dev/DisCatSharp.ProjectTemplates)                     |
+----
 
-## Releasing
-To release a new version do the following steps:
-- Create locally a repo named `release/VERSION` (Don't forget to replace VERSION with the target version number)
-- Replace version number with the correct version in [appveyor.yml#L78](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/appveyor.yml#L78) with the new release number and [appveyor.yml#L5](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/appveyor.yml#L5) with the next-ahead release number.
-- Replace nuget version number in [Version.targets#L4](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/Version.targets#L4)
-- Publish branch to GitHub
-- Wait for the CI/CD to complete.
-- Merge the branch into main and delete it afterwards
+## NuGet Packages
+### Main
+| Package                         | Stable                                                                                                           | Nightly                                                                                                                             |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| DisCatSharp                     | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=&logo=nuget&style=flat-square)                     | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)                     |
+| DisCatSharp.ApplicationCommands | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ApplicationCommands.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.ApplicationCommands.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+| DisCatSharp.CommandsNext        | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.CommandsNext.svg?label=&logo=nuget&style=flat-square)        | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.CommandsNext.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)        |
+| DisCatSharp.Interactivity       | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Interactivity.svg?label=&logo=nuget&style=flat-square)       | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Interactivity.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)       |
 
-## Sponsors
+### Voice
+| Package                       | Stable                                                                                                         | Nightly                                                                                                                           |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| DisCatSharp.Lavalink          | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square)          | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)          |
+| DisCatSharp.VoiceNext         | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.svg?label=&logo=nuget&style=flat-square)         | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.VoiceNext.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)         |
+| DisCatSharp.VoiceNext.Natives | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.Natives.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.VoiceNext.Natives.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+
+### Hosting
+| Package                                 | Stable                                                                                                                   | Nightly                                                                                                                                     |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| DisCatSharp.Configuration               | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Configuration.svg?label=&logo=nuget&style=flat-square)               | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Configuration.svg?label=&logo=nuget&color=%23ff1493&style=flat-square)               |
+| DisCatSharp.Hosting                     | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.svg?label=&logo=nuget&style=flat-square)                     | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Hosting.svg?label=&logo=nuget&color=%23ff1493&style=flat-square)                     |
+| DisCatSharp.Hosting.DependencyInjection | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.DependencyInjection.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Hosting.DependencyInjection.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
+
+### Templates
+| Package                      | Stable                                                                                                        | Nightly                                                                                                                          |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| DisCatSharp.ProjectTemplates | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
+
+### Development / Commons
+| Package            | Stable                                                                                              | Nightly                                                                                                                |
+| ------------------ | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| DisCatSharp.Common | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
+
+
+----
+
+## Sponsors [![Sponsors](https://img.shields.io/github/sponsors/Aiko-IT-Systems?label=&style=flat-square&logo=github)](https://github.com/sponsors/Aiko-IT-Systems)
 - [Deividas Kazakevicius](https://github.com/DeividasKaza)
 - [Will](https://github.com/villChurch)
 

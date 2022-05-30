@@ -20,26 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+namespace DisCatSharp;
+
+/// <summary>
+/// Represents a guilds hub type.
+/// </summary>
+public enum HubType : int
 {
 	/// <summary>
-	/// Represents a guilds hub type.
+	/// Indicates that the hub is a default one.
 	/// </summary>
-	public enum HubType : int
-	{
-		/// <summary>
-		/// Indicates that the hub is a default one.
-		/// </summary>
-		Default = 0,
+	Default = 0,
 
-		/// <summary>
-		/// Indicates that the hub is a high school.
-		/// </summary>
-		HighSchool = 1,
+	/// <summary>
+	/// Indicates that the hub is a high school.
+	/// </summary>
+	HighSchool = 1,
 
-		/// <summary>
-		/// Indicates that the hub is a college.
-		/// </summary>
-		College = 2
-	}
+	/// <summary>
+	/// Indicates that the hub is a college.
+	/// </summary>
+	College = 2
 }

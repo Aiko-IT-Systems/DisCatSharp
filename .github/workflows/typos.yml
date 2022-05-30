@@ -1,9 +1,8 @@
-name: DisCatSharp Check typos
+name: Typo check
 on:
   push:
   pull_request:
   workflow_dispatch:
-
 jobs:
   run:
     name: Spell Check with Typos
