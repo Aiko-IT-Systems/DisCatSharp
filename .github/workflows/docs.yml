@@ -69,9 +69,9 @@ jobs:
         committer_email: nyuw@aitsys.dev
         commit: --signoff
         message: 'Docs update for commit ${{ github.repository }} (${{ github.sha }})'
-  publish:
+  publish-main:
     runs-on: ubuntu-latest
-    name: Publish documentation
+    name: Publish documentation on main server
     needs: documentation
     steps:
     - name: Get SSH Agent
@@ -81,3 +81,15 @@ jobs:
     - name: Publish on server
       continue-on-error: true
       run: ssh -o StrictHostKeyChecking=no -T root@80.153.182.68 -f 'cd /var/www/dcs/docs && git pull -f'
+  publish-backup:
+    runs-on: ubuntu-latest
+    name: Publish documentation on backup server
+    needs: documentation
+    steps:
+    - name: Get SSH Agent
+      uses: webfactory/ssh-agent@v0.5.4
+      with:
+        ssh-private-key: ${{ secrets.AITSYS_SSH }}
+    - name: Publish on server
+      continue-on-error: true
+      run: ssh -o StrictHostKeyChecking=no -T root@207.180.240.241 -f 'cd /var/www/dcsdocs && git pull -f'
