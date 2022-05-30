@@ -39,7 +39,7 @@ jobs:
   documentation:
     runs-on: windows-latest
     name: Upload documentation
-    needs: build-docs
+    needs: build
     steps:
     - name: Checkout docs repository
       uses: actions/checkout@v3
@@ -72,7 +72,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     name: Publish documentation
-    needs: commit-docs
+    needs: documentation
     steps:
     - name: Get SSH Agent
       uses: webfactory/ssh-agent@v0.5.4
