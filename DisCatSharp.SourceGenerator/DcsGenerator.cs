@@ -97,7 +97,7 @@ public class DcsGenerator : ISourceGenerator
 	A T T E N T I O N
 
 	Do not modify this file.
-	It is auto-generated and will be overriden during build.
+	It is auto-generated and will be overridden during build.
 
 	A T T E N T I O N
 */
