@@ -28,11 +28,13 @@ jobs:
       with:
         dotnet-version: 6.0.202
     - name: Restore packages
-      working-directory: ./DisCatSharp
+      working-directory: DisCatSharp
       run: dotnet restore
     - name: Build library
+      working-directory: DisCatSharp
       run: dotnet build -c Release
     - name: Test library
+      working-directory: DisCatSharp
       run: dotnet test -c Release
       continue-on-error: true
   build-docs:
@@ -41,7 +43,7 @@ jobs:
     needs: build-library
     steps:
     - name: Build Docs
-      working-directory: ./DisCatSharp
+      working-directory: DisCatSharp
       shell: pwsh
       run: ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output ".." -PackageName "dcs-docs"
     - name: Upload Artifact
@@ -56,7 +58,7 @@ jobs:
     needs: checkout-repos
     steps:
     - name: Purge old docs
-      working-directory: ./DisCatSharp.Docs
+      working-directory: DisCatSharp.Docs
       shell: pwsh
       run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
   extract-docs:
@@ -75,7 +77,7 @@ jobs:
     - name: Commit and push changes
       uses: EndBug/add-and-commit@main
       with:
-        cwd: ./DisCatSharp.Docs
+        cwd: DisCatSharp.Docs
         default_author: user_info
         author_name: DisCatSharp
         author_email: team@aitsys.dev
