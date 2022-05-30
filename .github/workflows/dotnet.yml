@@ -20,23 +20,7 @@ jobs:
         dotnet-version: ${{ matrix.dotnet }}
     - name: Restore dependencies
       run: dotnet restore
-  build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    name: Build library
-    needs: [setup]
-    steps:
     - name: Build library
-      run: dotnet build --no-restore
-  test:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    name: Test library
-    needs: [setup, build]
-    steps:
+      run: dotnet build -c Release
     - name: Test library
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --verbosity normal -c Release
