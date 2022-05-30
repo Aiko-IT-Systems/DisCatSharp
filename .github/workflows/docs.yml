@@ -4,25 +4,14 @@ on:
     branches: [ main ]
   workflow_dispatch:
 jobs:
-  checkout-repos:
+  build:
     runs-on: windows-latest
-    name: Checkout repositories
+    name: Build library
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
         path: DisCatSharp
-    - name: Checkout docs repository
-      uses: actions/checkout@v3
-      with:
-        repository: Aiko-IT-Systems/DisCatSharp.Docs
-        path: DisCatSharp.Docs
-        token: ${{ secrets.NYUW_TOKEN_GH }}
-  build-library:
-    runs-on: windows-latest
-    name: Build library
-    needs: checkout-repos
-    steps:
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
@@ -37,11 +26,6 @@ jobs:
       working-directory: DisCatSharp
       run: dotnet test -c Release
       continue-on-error: true
-  build-docs:
-    runs-on: windows-latest
-    name: Build documentation
-    needs: build-library
-    steps:
     - name: Build Docs
       working-directory: DisCatSharp
       shell: pwsh
@@ -49,31 +33,31 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: docs.zip
+        name: dcs-docs.zip
         path: dcs-docs.zip
         retention-days: 30
-  purge-docs:
+  documentation:
     runs-on: windows-latest
-    name: Purge old documentation
-    needs: checkout-repos
+    name: Upload documentation
+    needs: build-docs
     steps:
+    - name: Checkout docs repository
+      uses: actions/checkout@v3
+      with:
+        repository: Aiko-IT-Systems/DisCatSharp.Docs
+        path: DisCatSharp.Docs
+        token: ${{ secrets.NYUW_TOKEN_GH }}
+    - name: Download a single artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: dcs-docs.zip
     - name: Purge old docs
       working-directory: DisCatSharp.Docs
       shell: pwsh
       run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
-  extract-docs:
-    runs-on: windows-latest
-    name: Extract documentation
-    needs: [purge-docs, build-docs]
-    steps:
     - name: Extract new docs
       shell: pwsh
       run: Expand-Archive -Path dcs-docs.zip DisCatSharp.Docs/
-  commit-docs:
-    runs-on: windows-latest
-    name: Commit documentation
-    needs: extract-docs
-    steps:
     - name: Commit and push changes
       uses: EndBug/add-and-commit@main
       with:
@@ -85,7 +69,7 @@ jobs:
         committer_email: nyuw@aitsys.dev
         commit: --signoff
         message: 'Docs update for commit ${{ github.repository }} (${{ github.sha }})'
-  publish-docs:
+  publish:
     runs-on: ubuntu-latest
     name: Publish documentation
     needs: commit-docs
