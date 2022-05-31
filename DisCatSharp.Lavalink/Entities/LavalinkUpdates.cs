@@ -48,6 +48,9 @@ internal sealed class LavalinkState
 	public TimeSpan Position => TimeSpan.FromMilliseconds(this._position);
 	[JsonProperty("position")]
 	private readonly long _position;
+
+	[JsonProperty("connected")]
+	public bool IsConnected;
 }
 
 /// <summary>
@@ -69,6 +72,11 @@ public sealed class LavalinkPlayerState
 	/// Gets the currently-played track.
 	/// </summary>
 	public LavalinkTrack CurrentTrack { get; internal set; }
+
+	/// <summary>
+	/// Gets whether the player is currently connected to the voice gateway.
+	/// </summary>
+	public bool IsConnected { get; internal set; }
 }
 
 /// <summary>

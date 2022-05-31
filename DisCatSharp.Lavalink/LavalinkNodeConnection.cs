@@ -256,6 +256,7 @@ public sealed class LavalinkNodeConnection
 		this._webSocket.AddDefaultHeader("Authorization", this.Configuration.Password);
 		this._webSocket.AddDefaultHeader("Num-Shards", this.Discord.ShardCount.ToString(CultureInfo.InvariantCulture));
 		this._webSocket.AddDefaultHeader("User-Id", this.Discord.CurrentUser.Id.ToString(CultureInfo.InvariantCulture));
+		this._webSocket.AddDefaultHeader("Client-Name", $"DisCatSharp.Lavalink version {this.Discord.VersionString}");		
 		if (this.Configuration.ResumeKey != null)
 			this._webSocket.AddDefaultHeader("Resume-Key", this.Configuration.ResumeKey);
 
@@ -449,8 +450,24 @@ public sealed class LavalinkNodeConnection
 						break;
 
 					case EventType.TrackExceptionEvent:
+						var severity = LoadFailedSeverity.Common;
+
+						switch (jsonData["severity"].ToString())
+						{
+							case "COMMON":
+								severity = LoadFailedSeverity.Common;
+								break;
+
+							case "SUSPICIOUS":
+								severity = LoadFailedSeverity.Suspicious;
+								break;
+
+							case "FAULT":
+								severity = LoadFailedSeverity.Fault;
+								break;
+						}
 						if (this.ConnectedGuildsInternal.TryGetValue(guildId, out var lvlEvte))
-							await lvlEvte.InternalTrackExceptionAsync(new TrackExceptionData { Track = jsonData["track"].ToString(), Error = jsonData["error"].ToString() }).ConfigureAwait(false);
+							await lvlEvte.InternalTrackExceptionAsync(new LavalinkLoadFailedInfo { Message = jsonData["message"].ToString(), Severity = severity }, jsonData["track"].ToString()).ConfigureAwait(false);
 						break;
 
 					case EventType.WebSocketClosedEvent:

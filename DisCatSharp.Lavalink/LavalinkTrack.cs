@@ -93,6 +93,12 @@ public class LavalinkTrack
 	/// </summary>
 	[JsonProperty("uri")]
 	public Uri Uri { get; internal set; }
+	
+	/// <summary>
+	/// Gets the source name that this track was retrieved from.
+	/// </summary>
+	[JsonProperty("sourceName")]
+	public string SourceName { get; internal set; }
 }
 
 /// <summary>
