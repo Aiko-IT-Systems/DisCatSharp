@@ -20,13 +20,11 @@ A Discord Bot Library written in C# for .NET.
 ----
 
 ## Why DisCatSharp?
-We want the lib always up-to-date. The newest features are important for us.
+- You want a library where you get kind and efficient help?
+- You would like to have the most recent features of Discord API?
+- You are ready to build great things?
 
-Furthermore we want to make sure that the lib is easy to use.
-
-Our other goal is to create a non-toxic environment for you.
-
-Drama is not a goal and will be blocked.
+Then this is the right place for you!
 
 ## Installing
 You can install the library from following source: [NuGet](https://nuget.dcs.aitsys.dev).
