@@ -46,6 +46,7 @@ public static class CommonRegEx
 	/// </summary>
 	public static Regex TimeSpan
 		=> new(@"^(?<days>\d+d\s*)?(?<hours>\d{1,2}h\s*)?(?<minutes>\d{1,2}m\s*)?(?<seconds>\d{1,2}s\s*)?$", RegexOptions.ECMAScript | RegexOptions.Compiled);
+
 	/// <summary>
 	/// Represents a advanced youtube regex.
 	/// Named groups: 
