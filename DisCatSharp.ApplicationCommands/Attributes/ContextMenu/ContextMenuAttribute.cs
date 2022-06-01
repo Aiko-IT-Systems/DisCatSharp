@@ -53,19 +53,26 @@ public sealed class ContextMenuAttribute : Attribute
 	internal bool? DmPermission { get; set; }
 
 	/// <summary>
+	/// Gets whether this command is marked as NSFW
+	/// </summary>
+	public bool IsNsfw { get; set; }
+
+	/// <summary>
 	/// Marks this method as a context menu.
 	/// </summary>
 	/// <param name="type">The type of the context menu.</param>
 	/// <param name="name">The name of the context menu.</param>
-	public ContextMenuAttribute(ApplicationCommandType type, string name)
+	/// <param name="isNsfw">Whether this context menu command is marked as NSFW.</param>
+	public ContextMenuAttribute(ApplicationCommandType type, string name, bool isNsfw = false)
 	{
 		if (type == ApplicationCommandType.ChatInput)
 			throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
-		
+
 		this.Type = type;
 		this.Name = name;
 		this.DefaultMemberPermissions = null;
 		this.DmPermission = null;
+		this.IsNsfw = isNsfw;
 	}
 
 
@@ -75,7 +82,8 @@ public sealed class ContextMenuAttribute : Attribute
 	/// <param name="type">The type of the context menu.</param>
 	/// <param name="name">The name of the context menu.</param>
 	/// <param name="defaultMemberPermissions">The default member permissions.</param>
-	public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions)
+	/// <param name="isNsfw">Whether this context menu command is marked as NSFW.</param>
+	public ContextMenuAttribute(ApplicationCommandType type, string name, long defaultMemberPermissions, bool isNsfw = false)
 	{
 		if (type == ApplicationCommandType.ChatInput)
 			throw new ArgumentException("Context menus cannot be of type ChatInput (Slash).");
@@ -84,5 +92,6 @@ public sealed class ContextMenuAttribute : Attribute
 		this.Name = name;
 		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 		this.DmPermission = null;
+		this.IsNsfw = isNsfw;
 	}
 }

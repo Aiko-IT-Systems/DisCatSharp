@@ -87,4 +87,9 @@ public class ApplicationCommandEditModel
 	/// Sets whether the command can be used in direct messages.
 	/// </summary>
 	public Optional<bool> DmPermission { internal get; set; }
+
+	/// <summary>
+	/// Sets whether the command is marked as NSFW.
+	/// </summary>
+	public Optional<bool> IsNsfw { internal get; set; }
 }

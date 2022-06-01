@@ -15,16 +15,16 @@ However, if you are using DisCatSharp from source or without a NuGet package man
 
 ### MacOS
 Native libraries for Apple's macOS can be installed using the [Homebrew](https://brew.sh) package manager:
-```console 
+```console
 $ brew install opus libsodium
 ```
 
 ### Linux
 
 
-#### Debian and Derivatives 
+#### Debian and Derivatives
 Opus package naming is consistent across Debian, Ubuntu, and Linux Mint.
-```bash 
+```bash
 sudo apt-get install libopus0 libopus-dev
 ```
 
@@ -32,6 +32,6 @@ Package naming for *libsodium* will vary depending on your distro and version:
 
 Distributions|Terminal Command
 :---:|:---:
-Ubuntu 20.04, Ubuntu 18.04, Debian 10|`sudo apt-get install libsodium23 libsodium-dev`
+Ubuntu 18.04+, Debian 10+|`sudo apt-get install libsodium23 libsodium-dev`
 Linux Mint, Ubuntu 16.04, Debian 9 |`sudo apt-get install libsodium18 libsodium-dev`
 Debian 8|`sudo apt-get install libsodium13 libsodium-dev`

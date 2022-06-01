@@ -191,14 +191,14 @@ public class GuildFeatures
 	public bool CanSetThreadDefaultAutoArchiveDuration { get; }
 
 	/// <summary>
-	/// Guild has enabled role subsriptions.
+	/// Guild has enabled role subscriptions.
 	/// </summary>
 	public bool HasRoleSubscriptionsEnabled { get; }
 
 	/// <summary>
-	/// Guild role subsriptions as purchaseable.
+	/// Guild role subscriptions as purchaseable.
 	/// </summary>
-	public bool RoleSubscriptionsIsAvaiableForPurchase { get; }
+	public bool RoleSubscriptionsIsAvailableForPurchase { get; }
 
 	/// <summary>
 	/// Guild has premium tier 3 override.
@@ -256,7 +256,7 @@ public class GuildFeatures
 		this.CanCreateStoreChannels = guild.RawFeatures.Contains("COMMERCE");
 		this.HasCommunityEnabled = guild.RawFeatures.Contains("COMMUNITY");
 		this.IsDiscoverable = !guild.RawFeatures.Contains("DISCOVERABLE_DISABLED") && guild.RawFeatures.Contains("DISCOVERABLE");
-		this.IsFeatureable = guild.RawFeatures.Contains("FEATURABLE");
+		this.IsFeatureable = guild.RawFeatures.Contains("FEATUREABLE");
 		this.CanSetInviteSplash = guild.RawFeatures.Contains("INVITE_SPLASH");
 		this.HasMembershipScreeningEnabled = guild.RawFeatures.Contains("MEMBER_VERIFICATION_GATE_ENABLED");
 		this.CanCreateNewsChannels = guild.RawFeatures.Contains("NEWS");
@@ -286,7 +286,7 @@ public class GuildFeatures
 		this.IsLinkedToHub = guild.RawFeatures.Contains("LINKED_TO_HUB");
 		this.HasMemberProfiles = guild.RawFeatures.Contains("MEMBER_PROFILES");
 		this.IsStaffOnly = guild.RawFeatures.Contains("INTERNAL_EMPLOYEE_ONLY");
-		this.RoleSubscriptionsIsAvaiableForPurchase = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE");
+		this.RoleSubscriptionsIsAvailableForPurchase = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE");
 		this.CanSetupAutoModeration = guild.RawFeatures.Contains("AUTO_MODERATION");
 
 		var features = guild.RawFeatures.Any() ? "" : "None";

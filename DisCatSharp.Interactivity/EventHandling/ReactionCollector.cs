@@ -218,6 +218,7 @@ internal class ReactionCollector : IDisposable
 
 		this._requests.Clear();
 		this._requests = null;
+		GC.SuppressFinalize(this);
 	}
 }
 

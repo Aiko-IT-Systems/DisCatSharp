@@ -169,5 +169,6 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 
 		this._matchRequests = null;
 		this._collectRequests = null;
+		GC.SuppressFinalize(this);
 	}
 }

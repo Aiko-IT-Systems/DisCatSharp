@@ -20,13 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
 using System.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
-using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands;
@@ -70,13 +71,16 @@ internal static class ApplicationCommandEqualityChecks
 				ApplicationCommandType.ChatInput => DeepEqual(source, target, localizationEnabled),
 				_ => (source.Name == target.Name)
 					&& (source.Type == target.Type) && (source.NameLocalizations == target.NameLocalizations)
-					&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions) && (source.DmPermission == target.DmPermission)
+					&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions)
+					&& (source.IsNsfw == target.IsNsfw)
 			}
-			: type switch {
+			: type switch
+			{
 				ApplicationCommandType.ChatInput => DeepEqual(source, target),
 				_ => (source.Name == target.Name)
 					&& (source.Type == target.Type)
-					&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions) && (source.DmPermission == target.DmPermission)
+					&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions)
+					&& (source.IsNsfw == target.IsNsfw)
 			};
 	}
 
@@ -90,7 +94,7 @@ internal static class ApplicationCommandEqualityChecks
 	internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target, bool localizationEnabled = false)
 	{
 		var rootCheck = (source.Name == target.Name) && (source.Description == target.Description) && (source.Type == target.Type)
-			&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions) && (source.DmPermission == target.DmPermission);
+			&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions) && (source.DmPermission == target.DmPermission) && (source.IsNsfw == target.IsNsfw);
 		if (localizationEnabled)
 			rootCheck = rootCheck && (source.NameLocalizations == target.NameLocalizations) && (source.DescriptionLocalizations == target.DescriptionLocalizations);
 

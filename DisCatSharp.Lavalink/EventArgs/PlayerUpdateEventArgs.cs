@@ -47,16 +47,22 @@ public sealed class PlayerUpdateEventArgs : DiscordEventArgs
 	public LavalinkGuildConnection Player { get; }
 
 	/// <summary>
+	/// Gets whether the player is connected to the voice gateway.
+	/// </summary>
+	public bool IsConnected { get; }
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="PlayerUpdateEventArgs"/> class.
 	/// </summary>
 	/// <param name="lvl">The lvl.</param>
 	/// <param name="timestamp">The timestamp.</param>
 	/// <param name="position">The position.</param>
-	internal PlayerUpdateEventArgs(LavalinkGuildConnection lvl, DateTimeOffset timestamp,
-		TimeSpan position) : base(lvl.Node.Discord.ServiceProvider)
+	internal PlayerUpdateEventArgs(LavalinkGuildConnection lvl, DateTimeOffset timestamp, TimeSpan position, bool connected)
+		: base(lvl.Node.Discord.ServiceProvider)
 	{
 		this.Player = lvl;
 		this.Timestamp = timestamp;
 		this.Position = position;
+		this.IsConnected = connected;
 	}
 }

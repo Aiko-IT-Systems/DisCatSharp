@@ -132,9 +132,8 @@ public sealed class AsyncEvent<TSender, TArgs> : AsyncEvent
 
 		// If we have a timeout configured, start the timeout task
 		var timeout = this.MaximumExecutionTime > TimeSpan.Zero ? Task.Delay(this.MaximumExecutionTime) : null;
-		for (var i = 0; i < handlers.Length; i++)
+		foreach (var handler in handlers)
 		{
-			var handler = handlers[i];
 			try
 			{
 				// Start the handler execution

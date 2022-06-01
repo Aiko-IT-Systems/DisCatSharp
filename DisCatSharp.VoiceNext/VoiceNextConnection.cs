@@ -676,7 +676,7 @@ public sealed class VoiceNextConnection : IDisposable
 		}
 
 		voiceSender = vtx;
-		ulong sequence = vtx.GetTrueSequenceAfterWrapping(shortSequence);
+		var sequence = vtx.GetTrueSequenceAfterWrapping(shortSequence);
 		ushort gap = 0;
 		if (vtx.LastTrueSequence is ulong lastTrueSequence)
 		{
@@ -794,7 +794,7 @@ public sealed class VoiceNextConnection : IDisposable
 					Ssrc = vtx.Ssrc,
 					User = vtx.User,
 					PcmData = pcmFiller,
-					OpusData = new byte[0].AsMemory(),
+					OpusData = Array.Empty<byte>().AsMemory(),
 					AudioFormat = audioFormat,
 					AudioDuration = audioFormat.CalculateSampleDuration(pcmFiller.Length)
 				}).ConfigureAwait(false);
@@ -978,6 +978,7 @@ public sealed class VoiceNextConnection : IDisposable
 		}
 
 		this.VoiceDisconnected?.Invoke(this._guild);
+		GC.SuppressFinalize(this);
 	}
 
 	/// <summary>

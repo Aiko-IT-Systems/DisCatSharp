@@ -146,7 +146,7 @@ public static class Utilities
 		{
 			TokenType.Bearer => $"Bearer {config.Token}",
 			TokenType.Bot => $"Bot {config.Token}",
-			_ => throw new ArgumentException("Invalid token type specified.", nameof(config.Token)),
+			_ => throw new ArgumentException("Invalid token type specified.", nameof(config)),
 		};
 
 	/// <summary>
@@ -232,8 +232,8 @@ public static class Utilities
 	{
 		var regex = new Regex(@"<@!?(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
-		foreach (Match match in matches)
-			yield return ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+		return from Match match in matches
+			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -245,8 +245,8 @@ public static class Utilities
 	{
 		var regex = new Regex(@"<@&(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
-		foreach (Match match in matches)
-			yield return ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+		return from Match match in matches
+			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -258,8 +258,8 @@ public static class Utilities
 	{
 		var regex = new Regex(@"<#(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
-		foreach (Match match in matches)
-			yield return ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+		return from Match match in matches
+			   select ulong.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -271,8 +271,8 @@ public static class Utilities
 	{
 		var regex = new Regex(@"<a?:([a-zA-Z0-9_]+):(\d+)>", RegexOptions.ECMAScript);
 		var matches = regex.Matches(message.Content);
-		foreach (Match match in matches)
-			yield return ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+		return from Match match in matches
+			   select ulong.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
 	}
 
 	/// <summary>
@@ -309,6 +309,14 @@ public static class Utilities
 	/// <returns>A bool.</returns>
 	internal static bool HasMessageIntents(DiscordIntents intents)
 		=> intents.HasIntent(DiscordIntents.GuildMessages) || intents.HasIntent(DiscordIntents.DirectMessages);
+	
+	/// <summary>
+	/// Have the message intents.
+	/// </summary>
+	/// <param name="intents">The intents.</param>
+	/// <returns>A bool.</returns>
+	internal static bool HasMessageContentIntents(DiscordIntents intents)
+		=> intents.HasIntent(DiscordIntents.MessageContent);
 
 	/// <summary>
 	/// Have the reaction intents.

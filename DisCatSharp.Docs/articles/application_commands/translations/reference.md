@@ -84,7 +84,7 @@ A translation object is a key-value-pair of `"locale": "value"`.
 | en-US  | English, US           |
 | es-ES  | Spanish               |
 | fr     | French                |
-| hr     | Croatioan             |
+| hr     | Croatian              |
 | it     | Italian               |
 | lt     | Lithuanian            |
 | hu     | Hungarian             |

@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.CommandsNext.Attributes;
@@ -154,7 +153,7 @@ public sealed class CommandsNextConfiguration
 		this.IgnoreExtraArguments = other.IgnoreExtraArguments;
 		this.UseDefaultCommandHandler = other.UseDefaultCommandHandler;
 		this.ServiceProvider = other.ServiceProvider;
-		this.StringPrefixes = other.StringPrefixes?.ToArray();
+		this.StringPrefixes = other.StringPrefixes;
 		this.DmHelp = other.DmHelp;
 	}
 }

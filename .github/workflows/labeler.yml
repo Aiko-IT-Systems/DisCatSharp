@@ -1,0 +1,13 @@
+name: Label PRs
+on:
+  pull_request_target:
+    types:
+      - opened
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    name: Label PRs
+    steps:
+    - uses: srvaroa/labeler@v0.9
+      env:
+        GITHUB_TOKEN: "${{ secrets.NYUW_TOKEN_GH }}"

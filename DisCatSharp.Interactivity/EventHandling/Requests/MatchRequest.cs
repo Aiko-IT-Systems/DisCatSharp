@@ -67,5 +67,6 @@ internal class MatchRequest<T> : IDisposable where T : AsyncEventArgs
 		this.Ct.Dispose();
 		this.Tcs = null;
 		this.Predicate = null;
+		GC.SuppressFinalize(this);
 	}
 }

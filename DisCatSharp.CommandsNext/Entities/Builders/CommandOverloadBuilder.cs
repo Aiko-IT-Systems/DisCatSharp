@@ -106,7 +106,7 @@ public sealed class CommandOverloadBuilder
 		var setb = new StringBuilder();
 		foreach (var arg in prms.Skip(1))
 		{
-			setb.Append(arg.ParameterType).Append(";");
+			setb.Append(arg.ParameterType).Append(';');
 			var ca = new CommandArgument
 			{
 				Name = arg.Name,

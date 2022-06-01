@@ -37,7 +37,8 @@ using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.Entities;
 
-public partial class DiscordGuild {
+public partial class DiscordGuild
+{
 	// TODO: Rework audit logs!
 	/// <summary>
 	/// Gets audit log entries for this guild.
@@ -319,6 +320,14 @@ public partial class DiscordGuild {
 								{
 									Before = p1 ? (ChannelType?)t1 : null,
 									After = p2 ? (ChannelType?)t2 : null
+								};
+								break;
+
+							case "flags":
+								entrychn.ChannelFlagsChange = new PropertyChange<ChannelFlags>()
+								{
+									Before = (ChannelFlags)(int)xc.OldValue,
+									After = (ChannelFlags)(int)xc.NewValue
 								};
 								break;
 

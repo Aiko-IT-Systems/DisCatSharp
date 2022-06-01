@@ -738,7 +738,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="preferredLocale">The preferred locale. Defaults to en-US.</param>
 	/// <param name="description">The description.</param>
 	/// <param name="defaultMessageNotifications">The default message notifications. Defaults to <see cref="DefaultMessageNotifications.MentionsOnly"/></param>
-	/// <param name="reason">The auditlog reason.</param>
+	/// <param name="reason">The audit log reason.</param>
 	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
@@ -926,7 +926,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public Task<DiscordBan> GetBanAsync(DiscordUser user)
 		=> this.GetBanAsync(user.Id);
 
-	#region Sheduled Events
+	#region Scheduled Events
 
 	/// <summary>
 	/// Creates a scheduled event.
@@ -988,7 +988,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <param name="scheduledEvent">The event to get.</param>
 	/// <param name="withUserCount">Whether to include user count.</param>
-	/// <returns>A sheduled event.</returns>
+	/// <returns>A scheduled event.</returns>
 	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -1153,15 +1153,9 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		if (includedRoles != null)
 		{
 			includedRoles = includedRoles.Where(r => r != null);
-			var roleCount = includedRoles.Count();
-			var roleArr = includedRoles.ToArray();
-			var rawRoleIds = new List<ulong>();
-
-			for (var i = 0; i < roleCount; i++)
-			{
-				if (this.RolesInternal.ContainsKey(roleArr[i].Id))
-					rawRoleIds.Add(roleArr[i].Id);
-			}
+			var rawRoleIds = includedRoles
+				.Where(x => this.RolesInternal.ContainsKey(x.Id))
+				.Select(x => x.Id);
 
 			return this.Discord.ApiClient.GetGuildPruneCountAsync(this.Id, days, rawRoleIds);
 		}
@@ -1186,15 +1180,9 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		if (includedRoles != null)
 		{
 			includedRoles = includedRoles.Where(r => r != null);
-			var roleCount = includedRoles.Count();
-			var roleArr = includedRoles.ToArray();
-			var rawRoleIds = new List<ulong>();
-
-			for (var i = 0; i < roleCount; i++)
-			{
-				if (this.RolesInternal.ContainsKey(roleArr[i].Id))
-					rawRoleIds.Add(roleArr[i].Id);
-			}
+			var rawRoleIds = includedRoles
+				.Where(x => this.RolesInternal.ContainsKey(x.Id))
+				.Select(x => x.Id);
 
 			return this.Discord.ApiClient.BeginGuildPruneAsync(this.Id, days, computePruneCount, rawRoleIds, reason);
 		}
@@ -1297,8 +1285,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		if (!intents.HasIntent(DiscordIntents.GuildInvites))
 		{
-			for (var i = 0; i < res.Count; i++)
-				this.Invites[res[i].Code] = res[i];
+			foreach (var r in res)
+				this.Invites[r.Code] = r;
 		}
 
 		return res;
@@ -1878,7 +1866,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		var mdl = new ApplicationCommandEditModel();
 		action(mdl);
-		return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission).ConfigureAwait(false);
+		return await this.Discord.ApiClient.EditGuildApplicationCommandAsync(this.Discord.CurrentApplication.Id, this.Id, commandId, mdl.Name, mdl.Description, mdl.Options, mdl.NameLocalizations, mdl.DescriptionLocalizations, mdl.DefaultMemberPermissions, mdl.DmPermission, mdl.IsNsfw).ConfigureAwait(false);
 	}
 
 	/// <summary>
