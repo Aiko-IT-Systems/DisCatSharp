@@ -25,17 +25,16 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.ApplicationCommands.Attributes
+namespace DisCatSharp.ApplicationCommands.Attributes;
+
+/// <summary>
+/// The autocomplete provider.
+/// </summary>
+public interface IAutocompleteProvider
 {
 	/// <summary>
-	/// The autocomplete provider.
+	/// Provider the autocompletion.
 	/// </summary>
-	public interface IAutocompleteProvider
-	{
-		/// <summary>
-		/// Provider the autocompletion.
-		/// </summary>
-		/// <param name="context">The context.</param>
-		Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context);
-	}
+	/// <param name="context">The context.</param>
+	Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>> Provider(AutocompleteContext context);
 }

@@ -20,16 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp
+namespace DisCatSharp;
+
+/// <summary>
+/// Represents a price tier type.
+/// </summary>
+public enum PriceTierType : int
 {
 	/// <summary>
-	/// Represents a price tier type.
+	/// Indicates that this is a role subscription.
 	/// </summary>
-	public enum PriceTierType : int
-	{
-		/// <summary>
-		/// Indicates that this is a role subscription.
-		/// </summary>
-		GuildRoleSubscriptions = 1
-	}
+	GuildRoleSubscriptions = 1
 }

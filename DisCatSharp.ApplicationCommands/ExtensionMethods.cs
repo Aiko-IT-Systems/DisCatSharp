@@ -27,84 +27,83 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace DisCatSharp.ApplicationCommands
+namespace DisCatSharp.ApplicationCommands;
+
+/// <summary>
+/// Defines various extension methods for application commands.
+/// </summary>
+public static class ExtensionMethods
 {
 	/// <summary>
-	/// Defines various extension methods for application commands.
+	/// Enables application commands on this <see cref="DiscordClient"/>.
 	/// </summary>
-	public static class ExtensionMethods
+	/// <param name="client">Client to enable application commands for.</param>
+	/// <param name="config">Configuration to use.</param>
+	/// <returns>Created <see cref="ApplicationCommandsExtension"/>.</returns>
+	public static ApplicationCommandsExtension UseApplicationCommands(this DiscordClient client,
+		ApplicationCommandsConfiguration config = null)
 	{
-		/// <summary>
-		/// Enables application commands on this <see cref="DiscordClient"/>.
-		/// </summary>
-		/// <param name="client">Client to enable application commands for.</param>
-		/// <param name="config">Configuration to use.</param>
-		/// <returns>Created <see cref="ApplicationCommandsExtension"/>.</returns>
-		public static ApplicationCommandsExtension UseApplicationCommands(this DiscordClient client,
-			ApplicationCommandsConfiguration config = null)
-		{
-			if (client.GetExtension<ApplicationCommandsExtension>() != null)
-				throw new InvalidOperationException("Application commands are already enabled for that client.");
+		if (client.GetExtension<ApplicationCommandsExtension>() != null)
+			throw new InvalidOperationException("Application commands are already enabled for that client.");
 
-			var scomm = new ApplicationCommandsExtension(config);
-			client.AddExtension(scomm);
-			return scomm;
+		var scomm = new ApplicationCommandsExtension(config);
+		client.AddExtension(scomm);
+		return scomm;
+	}
+
+	/// <summary>
+	/// Gets the application commands module for this client.
+	/// </summary>
+	/// <param name="client">Client to get application commands for.</param>
+	/// <returns>The module, or null if not activated.</returns>
+	public static ApplicationCommandsExtension GetApplicationCommands(this DiscordClient client)
+		=> client.GetExtension<ApplicationCommandsExtension>();
+
+	/// <summary>
+	/// Enables application commands on this <see cref="DiscordShardedClient"/>.
+	/// </summary>
+	/// <param name="client">Client to enable application commands on.</param>
+	/// <param name="config">Configuration to use.</param>
+	/// <returns>A dictionary of created <see cref="ApplicationCommandsExtension"/> with the key being the shard id.</returns>
+	public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> UseApplicationCommandsAsync(this DiscordShardedClient client, ApplicationCommandsConfiguration config = null)
+	{
+		var modules = new Dictionary<int, ApplicationCommandsExtension>();
+		await (Task)client.GetType().GetMethod("InitializeShardsAsync", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(client, null);
+		foreach (var shard in client.ShardClients.Values)
+		{
+			var scomm = shard.GetApplicationCommands();
+			if (scomm == null)
+				scomm = shard.UseApplicationCommands(config);
+
+			modules[shard.ShardId] = scomm;
 		}
 
-		/// <summary>
-		/// Gets the application commands module for this client.
-		/// </summary>
-		/// <param name="client">Client to get application commands for.</param>
-		/// <returns>The module, or null if not activated.</returns>
-		public static ApplicationCommandsExtension GetApplicationCommands(this DiscordClient client)
-			=> client.GetExtension<ApplicationCommandsExtension>();
+		return modules;
+	}
 
-		/// <summary>
-		/// Enables application commands on this <see cref="DiscordShardedClient"/>.
-		/// </summary>
-		/// <param name="client">Client to enable application commands on.</param>
-		/// <param name="config">Configuration to use.</param>
-		/// <returns>A dictionary of created <see cref="ApplicationCommandsExtension"/> with the key being the shard id.</returns>
-		public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> UseApplicationCommandsAsync(this DiscordShardedClient client, ApplicationCommandsConfiguration config = null)
+	/// <summary>
+	/// Gets the name from the <see cref="ChoiceNameAttribute"/> for this enum value.
+	/// </summary>
+	/// <returns>The name.</returns>
+	public static string GetName<T>(this T e) where T : IConvertible
+	{
+		if (e is Enum)
 		{
-			var modules = new Dictionary<int, ApplicationCommandsExtension>();
-			await (Task)client.GetType().GetMethod("InitializeShardsAsync", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(client, null);
-			foreach (var shard in client.ShardClients.Values)
+			var type = e.GetType();
+			var values = Enum.GetValues(type);
+
+			foreach (int val in values)
 			{
-				var scomm = shard.GetApplicationCommands();
-				if (scomm == null)
-					scomm = shard.UseApplicationCommands(config);
-
-				modules[shard.ShardId] = scomm;
-			}
-
-			return modules;
-		}
-
-		/// <summary>
-		/// Gets the name from the <see cref="ChoiceNameAttribute"/> for this enum value.
-		/// </summary>
-		/// <returns>The name.</returns>
-		public static string GetName<T>(this T e) where T : IConvertible
-		{
-			if (e is Enum)
-			{
-				var type = e.GetType();
-				var values = Enum.GetValues(type);
-
-				foreach (int val in values)
+				if (val == e.ToInt32(CultureInfo.InvariantCulture))
 				{
-					if (val == e.ToInt32(CultureInfo.InvariantCulture))
-					{
-						var memInfo = type.GetMember(type.GetEnumName(val));
+					var memInfo = type.GetMember(type.GetEnumName(val));
 
-						return memInfo[0]
-							.GetCustomAttributes(typeof(ChoiceNameAttribute), false)
-							.FirstOrDefault() is ChoiceNameAttribute nameAttribute ? nameAttribute.Name : type.GetEnumName(val);
-					}
+					return memInfo[0]
+						.GetCustomAttributes(typeof(ChoiceNameAttribute), false)
+						.FirstOrDefault() is ChoiceNameAttribute nameAttribute ? nameAttribute.Name : type.GetEnumName(val);
 				}
 			}
-			return null;
 		}
+		return null;
 	}
 }

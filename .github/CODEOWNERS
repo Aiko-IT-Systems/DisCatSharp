@@ -1,1 +1,20 @@
 * @Aiko-IT-Systems/discatsharp
+
+/DisCatSharp.Common/ @Lulalaby
+/DisCatSharp.Docs/dcs/ @Lulalaby
+/DisCatSharp.Docs/docfx.json @Lulalaby
+
+*.yml @Lulalaby
+*.ps1 @Lulalaby
+
+*.targets @Aiko-IT-Systems/aitsys-leader
+LICENSE.md @Aiko-IT-Systems/aitsys-leader
+README.md @Aiko-IT-Systems/aitsys-leader
+
+/.github/ @Lulalaby @NyuwBot @Aiko-IT-Systems/aitsys-leader
+
+/DisCatSharp.Configuration/ @JBraunsmaJr
+/DisCatSharp.Configuration.Tests/ @JBraunsmaJr
+/DisCatSharp.Hosting/ @JBraunsmaJr
+/DisCatSharp.Hosting.DependencyInjection/ @JBraunsmaJr
+/DisCatSharp.Tests/ @JBraunsmaJr
