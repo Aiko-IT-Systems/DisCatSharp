@@ -243,6 +243,7 @@ public class OpusDecoder : IDisposable
 		this._isDisposed = true;
 		if (this.Decoder != IntPtr.Zero)
 			Interop.OpusDestroyDecoder(this.Decoder);
+		GC.SuppressFinalize(this);
 	}
 }
 

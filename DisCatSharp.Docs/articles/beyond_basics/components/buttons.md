@@ -102,11 +102,11 @@ builder.AddComponents(new DiscordComponent[]
     new DiscordLinkButtonComponent("https://some-super-cool.site", "Link!", true)
 });
 ```
-Practically identical, but now with `true` as an extra paremeter. This is the `Disabled` property.
+Practically identical, but now with `true` as an extra parameter. This is the `Disabled` property.
 
 Produces a message like such: ![Buttons](/images/advanced_topics_buttons_01.png)
 
-Well, that's all neat, but lets say you want to add an emoji. Being able to use any emoji is pretty neat, afterall. That's also very simple!
+Well, that's all neat, but lets say you want to add an emoji. Being able to use any emoji is pretty neat, after all. That's also very simple!
 
 ```cs
 var myButton = new DiscordButtonComponent
@@ -158,7 +158,7 @@ Along with the typical `WaitForMessageAsync` and `WaitForReactionAsync` methods 
 More information about how interactivity works can be found in [the interactivity article](xref:interactivity)
 
 Since buttons create interactions, there are also two additional properties in the configuration:
-- RepsonseBehavior
+- ResponseBehavior
 - ResponseMessage
 
 ResponseBehavior is what interactivity will do when handling something that isn't a valid valid button, in the context of waiting for a specific button. It defaults to `Ignore`, which will cause the interaction fail.

@@ -152,17 +152,14 @@ public class CommandsNextExtension : BaseExtension
 			[typeof(DiscordScheduledEvent)] = "event"
 		};
 
-		var ncvt = typeof(NullableConverter<>);
-		var nt = typeof(Nullable<>);
-		var cvts = this.ArgumentConverters.Keys.ToArray();
-		foreach (var xt in cvts)
+		foreach (var xt in this.ArgumentConverters.Keys.ToArray())
 		{
 			var xti = xt.GetTypeInfo();
 			if (!xti.IsValueType)
 				continue;
 
-			var xcvt = ncvt.MakeGenericType(xt);
-			var xnt = nt.MakeGenericType(xt);
+			var xcvt = typeof(NullableConverter<>).MakeGenericType(xt);
+			var xnt = typeof(Nullable<>).MakeGenericType(xt);
 			if (this.ArgumentConverters.ContainsKey(xcvt))
 				continue;
 
@@ -212,8 +209,8 @@ public class CommandsNextExtension : BaseExtension
 			{
 				var checks = this._config.DefaultHelpChecks.ToArray();
 
-				for (var i = 0; i < tcmds.Count; i++)
-					tcmds[i].WithExecutionChecks(checks);
+				foreach (var cb in tcmds)
+					cb.WithExecutionChecks(checks);
 			}
 
 			if (tcmds != null)
@@ -679,7 +676,7 @@ public class CommandsNextExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Unregisters specified commands from CommandsNext.
+	/// Unregister specified commands from CommandsNext.
 	/// </summary>
 	/// <param name="cmds">Commands to unregister.</param>
 	public void UnregisterCommands(params Command[] cmds)
@@ -963,7 +960,7 @@ public class CommandsNextExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Unregisters an argument converter for specified type.
+	/// Unregister an argument converter for specified type.
 	/// </summary>
 	/// <typeparam name="T">Type for which to unregister the converter.</typeparam>
 	public void UnregisterConverter<T>()
@@ -1073,18 +1070,16 @@ public class CommandsNextExtension : BaseExtension
 	private AsyncEvent<CommandsNextExtension, CommandErrorEventArgs> _error;
 
 	/// <summary>
-	/// Ons the command executed.
+	/// Fires when a command gets executed.
 	/// </summary>
-	/// <param name="e">The e.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="e">The command execution event arguments.</param>
 	private Task OnCommandExecuted(CommandExecutionEventArgs e)
 		=> this._executed.InvokeAsync(this, e);
 
 	/// <summary>
-	/// Ons the command errored.
+	/// Fires when a command fails.
 	/// </summary>
-	/// <param name="e">The e.</param>
-	/// <returns>A Task.</returns>
+	/// <param name="e">The command error event arguments.</param>
 	private Task OnCommandErrored(CommandErrorEventArgs e)
 		=> this._error.InvokeAsync(this, e);
 	#endregion

@@ -29,6 +29,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using DisCatSharp.Common;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
@@ -595,6 +596,10 @@ public sealed partial class DiscordClient
 				await this.OnGuildApplicationCommandCountsUpdateAsync((int)counts["1"], (int)counts["2"], (int)counts["3"], (ulong)dat["guild_id"]).ConfigureAwait(false);
 				break;
 
+			case "guild_application_command_index_update":
+				// TODO: Implement.
+				break;
+
 			case "application_command_permissions_update":
 				var aid = (ulong)dat["application_id"];
 				if (aid != this.CurrentApplication.Id)
@@ -973,9 +978,8 @@ public sealed partial class DiscordClient
 				xp.Activity = new DiscordActivity(xp.RawActivity);
 				if (xp.RawActivities != null)
 				{
-					xp.InternalActivities = new DiscordActivity[xp.RawActivities.Length];
-					for (var i = 0; i < xp.RawActivities.Length; i++)
-						xp.InternalActivities[i] = new DiscordActivity(xp.RawActivities[i]);
+					xp.InternalActivities = xp.RawActivities
+						.Select(x => new DiscordActivity(x)).ToArray();
 				}
 				this.PresencesInternal[xp.InternalUser.Id] = xp;
 			}
@@ -1900,13 +1904,12 @@ public sealed partial class DiscordClient
 
 		var members = dat["members"].ToObject<TransportMember[]>();
 
-		var memCount = members.Length;
-		for (var i = 0; i < memCount; i++)
+		foreach (var member in members)
 		{
-			var mbr = new DiscordMember(members[i]) { Discord = this, GuildId = guild.Id };
+			var mbr = new DiscordMember(member) { Discord = this, GuildId = guild.Id };
 
 			if (!this.UserCache.ContainsKey(mbr.Id))
-				this.UserCache[mbr.Id] = new DiscordUser(members[i].User) { Discord = this };
+				this.UserCache[mbr.Id] = new DiscordUser(member.User) { Discord = this };
 
 			guild.MembersInternal[mbr.Id] = mbr;
 
@@ -1929,20 +1932,18 @@ public sealed partial class DiscordClient
 			var presences = dat["presences"].ToObject<DiscordPresence[]>();
 
 			var presCount = presences.Length;
-			for (var i = 0; i < presCount; i++)
+			foreach (var presence in presences)
 			{
-				var xp = presences[i];
-				xp.Discord = this;
-				xp.Activity = new DiscordActivity(xp.RawActivity);
+				presence.Discord = this;
+				presence.Activity = new DiscordActivity(presence.RawActivity);
 
-				if (xp.RawActivities != null)
+				if (presence.RawActivities != null)
 				{
-					xp.InternalActivities = new DiscordActivity[xp.RawActivities.Length];
-					for (var j = 0; j < xp.RawActivities.Length; j++)
-						xp.InternalActivities[j] = new DiscordActivity(xp.RawActivities[j]);
+					presence.InternalActivities = presence.RawActivities
+						.Select(x => new DiscordActivity(x)).ToArray();
 				}
 
-				pres.Add(xp);
+				pres.Add(presence);
 			}
 
 			ea.Presences = new ReadOnlySet<DiscordPresence>(pres);
@@ -2408,12 +2409,7 @@ public sealed partial class DiscordClient
 			react.IsMe &= this.CurrentUser.Id != userId;
 
 			if (msg.ReactionsInternal != null && react.Count <= 0) // shit happens
-				for (var i = 0; i < msg.ReactionsInternal.Count; i++)
-					if (msg.ReactionsInternal[i].Emoji == emoji)
-					{
-						msg.ReactionsInternal.RemoveAt(i);
-						break;
-					}
+				msg.ReactionsInternal.RemoveFirst(x => x.Emoji == emoji);
 		}
 
 		var guild = this.InternalGetCachedGuild(guildId);
@@ -2672,7 +2668,7 @@ public sealed partial class DiscordClient
 		{
 			chan.Discord = this;
 		}
-		threads.Select(x => x.Discord = this);
+		_ = threads.Select(x => x.Discord = this);
 
 		await this._threadListSynced.InvokeAsync(this, new ThreadListSyncEventArgs(this.ServiceProvider) { Guild = guild, Channels = channels.ToList().AsReadOnly(), Threads = threads, Members = members.ToList().AsReadOnly() }).ConfigureAwait(false);
 	}

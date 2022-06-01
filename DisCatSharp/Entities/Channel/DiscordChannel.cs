@@ -107,11 +107,11 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var channels = this.Guild.Channels.Values;
 		return this.ParentId != null
 			? this.Type == ChannelType.Text || this.Type == ChannelType.News
-				? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News)).OrderBy(xc => xc.Position).ToArray().Last().Position
+				? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News)).OrderBy(xc => xc.Position).Last().Position
 				: this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
-					? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).OrderBy(xc => xc.Position).ToArray().Last().Position
-					: channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().Last().Position
-			: channels.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().Last().Position;
+					? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).OrderBy(xc => xc.Position).Last().Position
+					: channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).Last().Position
+			: channels.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).Last().Position;
 	}
 
 	/// <summary>
@@ -122,11 +122,11 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var channels = this.Guild.Channels.Values;
 		return this.ParentId != null
 			? this.Type == ChannelType.Text || this.Type == ChannelType.News
-				? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News)).OrderBy(xc => xc.Position).ToArray().First().Position
+				? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Text || xc.Type == ChannelType.News)).OrderBy(xc => xc.Position).First().Position
 				: this.Type == ChannelType.Voice || this.Type == ChannelType.Stage
-					? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).OrderBy(xc => xc.Position).ToArray().First().Position
-					: channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().First().Position
-			: channels.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray().First().Position;
+					? channels.Where(xc => xc.ParentId == this.ParentId && (xc.Type == ChannelType.Voice || xc.Type == ChannelType.Stage)).OrderBy(xc => xc.Position).First().Position
+					: channels.Where(xc => xc.ParentId == this.ParentId && xc.Type == this.Type).OrderBy(xc => xc.Position).First().Position
+			: channels.Where(xc => xc.ParentId == null && xc.Type == this.Type).OrderBy(xc => xc.Position).First().Position;
 	}
 
 	/// <summary>
@@ -478,7 +478,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 	/// <summary>
 	/// Updates the channel position when it doesn't have a category.
-	/// 
+	///
 	/// Use <see cref="ModifyParentAsync"/> for moving to other categories.
 	/// Use <see cref="RemoveParentAsync"/> to move out of a category.
 	/// Use <see cref="ModifyPositionInCategoryAsync"/> for moving within a category.
@@ -498,23 +498,19 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		if (this.ParentId != null)
 			throw new ArgumentException("Cannot modify order of channels within a category. Use ModifyPositionInCategoryAsync instead.");
 
-		var chns = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type).OrderBy(xc => xc.Position).ToArray();
-		var pmds = new RestGuildChannelReorderPayload[chns.Length];
-		for (var i = 0; i < chns.Length; i++)
-		{
-			pmds[i] = new RestGuildChannelReorderPayload
+		var pmds = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type).OrderBy(xc => xc.Position)
+			.Select(x => new RestGuildChannelReorderPayload
 			{
-				ChannelId = chns[i].Id,
-				Position = chns[i].Id == this.Id ? position : chns[i].Position >= position ? chns[i].Position + 1 : chns[i].Position
-			};
-		}
+				ChannelId = x.Id,
+				Position = x.Id == this.Id ? position : x.Position >= position ? x.Position + 1 : x.Position
+			});
 
 		return this.Discord.ApiClient.ModifyGuildChannelPositionAsync(this.Guild.Id, pmds, reason);
 	}
 
 	/// <summary>
 	/// Updates the channel position within it's own category.
-	/// 
+	///
 	/// Use <see cref="ModifyParentAsync"/> for moving to other categories.
 	/// Use <see cref="RemoveParentAsync"/> to move out of a category.
 	/// Use <see cref="ModifyPositionAsync"/> to move channels outside a category.
@@ -555,44 +551,17 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		if (position > max || position < min)
 			throw new IndexOutOfRangeException($"Position is not in range. {position} is {(position > max ? "greater then the maximal" : "lower then the minimal")} position.");
 
-		var pmds = new RestGuildChannelReorderPayload[ochns.Length];
-		for (var i = 0; i < ochns.Length; i++)
-		{
-			pmds[i] = new RestGuildChannelReorderPayload
+		var pmds = ochns.Select(x =>
+			new RestGuildChannelReorderPayload
 			{
-				ChannelId = ochns[i].Id,
-			};
-
-			if (ochns[i].Id == this.Id)
-			{
-				pmds[i].Position = position;
+				ChannelId = x.Id,
+				Position = x.Id == this.Id
+					? position
+					: isUp
+						? x.Position <= position && x.Position > this.Position ? x.Position - 1 : x.Position
+						: x.Position >= position && x.Position < this.Position ? x.Position + 1 : x.Position
 			}
-			else
-			{
-				if (isUp)
-				{
-					if (ochns[i].Position <= position && ochns[i].Position > this.Position)
-					{
-						pmds[i].Position = ochns[i].Position - 1;
-					}
-					else if (ochns[i].Position < this.Position || ochns[i].Position > position)
-					{
-						pmds[i].Position = ochns[i].Position;
-					}
-				}
-				else
-				{
-					if (ochns[i].Position >= position && ochns[i].Position < this.Position)
-					{
-						pmds[i].Position = ochns[i].Position + 1;
-					}
-					else if (ochns[i].Position > this.Position || ochns[i].Position < position)
-					{
-						pmds[i].Position = ochns[i].Position;
-					}
-				}
-			}
-		}
+		);
 
 		await this.Discord.ApiClient.ModifyGuildChannelPositionAsync(this.Guild.Id, pmds, reason).ConfigureAwait(false);
 	}
@@ -641,7 +610,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="System.IndexOutOfRangeException">Thrown when <paramref name="position"/> is out of range.</exception>
-	/// <exception cref="System.ArgumentException">Thrown when function is called on a channel without a parent channel, a wrong mode is givven or given position is zero.</exception>
+	/// <exception cref="System.ArgumentException">Thrown when function is called on a channel without a parent channel, a wrong mode is given or given position is zero.</exception>
 	public Task ModifyPositionInCategorySmartAsync(string mode, int position, string reason = null)
 	{
 		if (!this.IsMovableInParent())
@@ -686,25 +655,24 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var position = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type && xc.ParentId == newParent.Id) // gets list same type channels in parent
                             .Select(xc => xc.Position).DefaultIfEmpty(-1).Max() + 1; // returns highest position of list +1, default val: 0
 
-		var chns = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type)
-						.OrderBy(xc => xc.Position).ToArray();
-
-		var pmds = new RestGuildChannelNewParentPayload[chns.Length];
-
-		for (var i = 0; i < chns.Length; i++)
-		{
-			pmds[i] = new RestGuildChannelNewParentPayload
+		var pmds = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type)
+			.OrderBy(xc => xc.Position)
+			.Select(x =>
 			{
-				ChannelId = chns[i].Id,
-				Position = chns[i].Position >= position ? chns[i].Position + 1 : chns[i].Position,
-			};
-			if (chns[i].Id == this.Id)
-			{
-				pmds[i].Position = position;
-				pmds[i].ParentId = newParent is not null ? newParent.Id : null;
-				pmds[i].LockPermissions = lockPermissions;
-			}
-		}
+				var pmd = new RestGuildChannelNewParentPayload
+				{
+					ChannelId = x.Id,
+					Position = x.Position >= position ? x.Position + 1 : x.Position,
+				};
+				if (x.Id == this.Id)
+				{
+					pmd.Position = position;
+					pmd.ParentId = newParent is not null ? newParent.Id : null;
+					pmd.LockPermissions = lockPermissions;
+				}
+
+				return pmd;
+			});
 
 		return this.Discord.ApiClient.ModifyGuildChannelParentAsync(this.Guild.Id, pmds, reason);
 	}
@@ -724,30 +692,23 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		if (!this.IsMovableInParent())
 			throw new NotSupportedException("You can't move this type of channel in categories.");
 
-		var position = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type && xc.Parent is null) //gets list of same type channels with no parent
-                            .Select(xc => xc.Position).DefaultIfEmpty(-1).Max() + 1; // returns highest position of list +1, default val: 0
-
-		var chns = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type)
-			.OrderBy(xc => xc.Position).ToArray();
-
-		var pmds = new RestGuildChannelNoParentPayload[chns.Length];
-
-		for (var i = 0; i < chns.Length; i++)
-		{
-			pmds[i] = new RestGuildChannelNoParentPayload
+		var pmds = this.Guild.ChannelsInternal.Values.Where(xc => xc.Type == this.Type)
+			.OrderBy(xc => xc.Position)
+			.Select(x =>
 			{
-				ChannelId = chns[i].Id,
-			};
-			if (chns[i].Id == this.Id)
-			{
-				pmds[i].Position = 1;
-				pmds[i].ParentId = null;
-			}
-			else
-			{
-				pmds[i].Position = chns[i].Position < this.Position ? chns[i].Position + 1 : chns[i].Position;
-			}
-		}
+				var pmd = new RestGuildChannelNoParentPayload { ChannelId = x.Id };
+				if (x.Id == this.Id)
+				{
+					pmd.Position = 1;
+					pmd.ParentId = null;
+				}
+				else
+				{
+					pmd.Position = x.Position < this.Position ? x.Position + 1 : x.Position;
+				}
+
+				return pmd;
+			});
 
 		return this.Discord.ApiClient.DetachGuildChannelParentAsync(this.Guild.Id, pmds, reason);
 	}
@@ -1254,7 +1215,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		perms = everyoneRole.Permissions;
 
 		// roles that member is in
-		var mbRoles = mbr.Roles.Where(xr => xr.Id != everyoneRole.Id).ToArray();
+		var mbRoles = mbr.Roles.Where(xr => xr.Id != everyoneRole.Id);
 
 		// assign permissions from member's roles (in order)
 		perms |= mbRoles.Aggregate(Permissions.None, (c, role) => c | role.Permissions);

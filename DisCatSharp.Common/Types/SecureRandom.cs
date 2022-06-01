@@ -307,6 +307,7 @@ public sealed class SecureRandom : Random, IDisposable
 
 		this._isDisposed = true;
 		this._rng.Dispose();
+		GC.SuppressFinalize(this);
 	}
 
 	/// <summary>

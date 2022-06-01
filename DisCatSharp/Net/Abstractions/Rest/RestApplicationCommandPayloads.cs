@@ -73,8 +73,8 @@ internal class RestApplicationCommandCreatePayload
 	/// <summary>
 	/// Whether the command is allowed for everyone.
 	/// </summary>
-	[JsonProperty("default_permission")]
-	public bool DefaultPermission { get; set; } = true;
+	[JsonProperty("default_permission", NullValueHandling = NullValueHandling.Include)]
+	public bool? DefaultPermission { get; set; } = null;
 
 	/// <summary>
 	/// The command needed permissions.
@@ -87,6 +87,12 @@ internal class RestApplicationCommandCreatePayload
 	/// </summary>
 	[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Include)]
 	public bool? DmPermission { get; set; }
+
+	/// <summary>
+	/// Whether the command is marked as NSFW.
+	/// </summary>
+	[JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
+	public bool Nsfw { get; set; }
 }
 
 /// <summary>
@@ -127,8 +133,8 @@ internal class RestApplicationCommandEditPayload
 	/// <summary>
 	/// Gets the default permission.
 	/// </summary>
-	[JsonProperty("default_permission")]
-	public Optional<bool> DefaultPermission { get; set; } = true;
+	[JsonProperty("default_permission", NullValueHandling = NullValueHandling.Include)]
+	public bool? DefaultPermission { get; set; } = null;
 
 	/// <summary>
 	/// The command needed permissions.
@@ -141,6 +147,12 @@ internal class RestApplicationCommandEditPayload
 	/// </summary>
 	[JsonProperty("dm_permission", NullValueHandling = NullValueHandling.Include)]
 	public Optional<bool> DmPermission { get; set; }
+
+	/// <summary>
+	/// Whether the command is marked as NSFW.
+	/// </summary>
+	[JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<bool> Nsfw { get; set; }
 }
 
 /// <summary>

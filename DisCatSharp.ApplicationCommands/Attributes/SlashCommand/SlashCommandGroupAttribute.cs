@@ -53,16 +53,23 @@ public class SlashCommandGroupAttribute : Attribute
 	public bool? DmPermission { get; set; }
 
 	/// <summary>
+	/// Gets whether this command is marked as NSFW
+	/// </summary>
+	public bool IsNsfw { get; set; }
+
+	/// <summary>
 	/// Marks this class as a slash command group
 	/// </summary>
 	/// <param name="name">The name of this slash command group.</param>
 	/// <param name="description">The description of this slash command group.</param>
-	public SlashCommandGroupAttribute(string name, string description)
+	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+	public SlashCommandGroupAttribute(string name, string description, bool isNsfw = false)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
 		this.DefaultMemberPermissions = null;
 		this.DmPermission = null;
+		this.IsNsfw = isNsfw;
 	}
 
 	/// <summary>
@@ -71,12 +78,14 @@ public class SlashCommandGroupAttribute : Attribute
 	/// <param name="name">The name of this slash command.</param>
 	/// <param name="description">The description of this slash command.</param>
 	/// <param name="defaultMemberPermissions">The default member permissions.</param>
-	public SlashCommandGroupAttribute(string name, string description, long defaultMemberPermissions)
+	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+	public SlashCommandGroupAttribute(string name, string description, long defaultMemberPermissions, bool isNsfw = false)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
 		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 		this.DmPermission = null;
+		this.IsNsfw = isNsfw;
 	}
 
 	/// <summary>
@@ -85,12 +94,14 @@ public class SlashCommandGroupAttribute : Attribute
 	/// <param name="name">The name of this slash command.</param>
 	/// <param name="description">The description of this slash command.</param>
 	/// <param name="dmPermission">The dm permission.</param>
-	public SlashCommandGroupAttribute(string name, string description, bool dmPermission)
+	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+	public SlashCommandGroupAttribute(string name, string description, bool dmPermission, bool isNsfw = false)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
 		this.DefaultMemberPermissions = null;
 		this.DmPermission = dmPermission;
+		this.IsNsfw = isNsfw;
 	}
 
 	/// <summary>
@@ -100,11 +111,13 @@ public class SlashCommandGroupAttribute : Attribute
 	/// <param name="description">The description of this slash command.</param>
 	/// <param name="defaultMemberPermissions">The default member permissions.</param>
 	/// <param name="dmPermission">The dm permission.</param>
-	public SlashCommandGroupAttribute(string name, string description, long defaultMemberPermissions, bool dmPermission)
+	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+	public SlashCommandGroupAttribute(string name, string description, long defaultMemberPermissions, bool dmPermission, bool isNsfw = false)
 	{
 		this.Name = name.ToLower();
 		this.Description = description;
 		this.DefaultMemberPermissions = (Permissions)defaultMemberPermissions;
 		this.DmPermission = dmPermission;
+		this.IsNsfw = isNsfw;
 	}
 }

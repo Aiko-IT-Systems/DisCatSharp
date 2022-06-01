@@ -77,5 +77,17 @@ internal class CollectRequest<T> : IDisposable where T : AsyncEventArgs
 			this.Collected.Clear();
 			this.Collected = null;
 		}
+		GC.SuppressFinalize(this);
 	}
 }
+
+
+/*
+              ^  ^
+( Quack! )> (ﾐචᆽචﾐ)
+
+
+(somewhere on twitter I read amazon had a duck
+that said meow so I had to add a cat that says quack)
+
+*/

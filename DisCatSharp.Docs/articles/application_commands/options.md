@@ -30,8 +30,8 @@ They should be after [InteractionContext](xref:DisCatSharp.ApplicationCommands.I
 ```cs
 public class MyCommand : ApplicationCommandsModule
 {
-    [SlashCommand("my_command", "This is decription of the command.")]
-    public static async Task MySlashCommand(InteractionContext context, [Option("argument", "This is decription of the option.")] string firstParam)
+    [SlashCommand("my_command", "This is description of the command.")]
+    public static async Task MySlashCommand(InteractionContext context, [Option("argument", "This is description of the option.")] string firstParam)
     {
         await context.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
         {
@@ -57,7 +57,7 @@ This is the easiest option. We just need to specify the required Enum as a comma
 ```cs
 public class MyCommand : ApplicationCommandsModule
 {
-    [SlashCommand("my_command", "This is decription of the command.")]
+    [SlashCommand("my_command", "This is description of the command.")]
     public static async Task MySlashCommand(InteractionContext context, [Option("enum_param", "Description")] MyEnum enumParameter)
     {
 
@@ -88,7 +88,7 @@ public enum MyEnum
 With this way, you can get rid of unnecessary conversions within the command.
 To do this, you need to add one or more [Choice Attributes](xref:DisCatSharp.ApplicationCommands.ChoiceAttribute) before the [Option](xref:DisCatSharp.ApplicationCommands.OptionAttribute) attribute
 ```cs
-[SlashCommand("my_command", "This is decription of the command.")]
+[SlashCommand("my_command", "This is description of the command.")]
 public static async Task MySlashCommand(InteractionContext context, [Choice("First option", 1)] [Choice("Second option", 2)] [Option("option", "Description")] long firstParam)
 {
 
@@ -133,7 +133,7 @@ Now let's add our new provider to the command.
 
 
 ```cs
-[SlashCommand("my_command", "This is decription of the command.")]
+[SlashCommand("my_command", "This is description of the command.")]
 public static async Task MySlashCommand(InteractionContext context, [ChoiceProvider(typeof(MyChoiceProvider))] [Option("option", "Description")] long option)
 {
 
@@ -144,7 +144,7 @@ All the code that we got:
 ```cs
 public class MyCommand : ApplicationCommandsModule
 {
-    [SlashCommand("my_command", "This is decription of the command.")]
+    [SlashCommand("my_command", "This is description of the command.")]
     public static async Task MySlashCommand(InteractionContext context, [ChoiceProvider(typeof(MyChoiceProvider))] [Option("option", "Description")] long option)
     {
 
@@ -195,7 +195,7 @@ The changes are that instead of [IChoiceProvider](xref:DisCatSharp.ApplicationCo
 
 Now we add it to the command:
 ```cs
-[SlashCommand("my_command", "This is decription of the command.")]
+[SlashCommand("my_command", "This is description of the command.")]
 public static async Task MySlashCommand(InteractionContext context, [Autocomplete(typeof(MyAutocompleteProvider))] [Option("option", "Description", true)] long option)
 {
 
@@ -211,7 +211,7 @@ Sometimes we may need to give users the ability to select only a certain type of
 This can be done by adding the [ChannelTypes](xref:DisCatSharp.ApplicationCommands.Attributes.ChannelTypesAttribute) attribute to the option with the [DiscordChannel](xref:DisCatSharp.Entities.DiscordChannel) type.
 
 ```cs
-[SlashCommand("my_command", "This is decription of the command.")]
+[SlashCommand("my_command", "This is description of the command.")]
 public static async Task MySlashCommand(InteractionContext context, [Option("channel", "You can select only text channels."), ChannelTypes(ChannelType.Text)] DiscordChannel channel)
 {
 
@@ -228,7 +228,7 @@ This can be done by adding the [Minimum](xref:DisCatSharp.ApplicationCommands.At
 It can be used only for the types `double`, `int` and `long` tho.
 
 ```cs
-[SlashCommand("my_command", "This is decription of the command.")]
+[SlashCommand("my_command", "This is description of the command.")]
 public static async Task MySlashCommand(InteractionContext context, [Option("number", "You can select only a certain range."), Minimum(50), Maximum(100)] int numbers)
 {
 

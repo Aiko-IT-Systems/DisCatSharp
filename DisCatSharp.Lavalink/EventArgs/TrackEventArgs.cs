@@ -232,9 +232,9 @@ internal struct TrackExceptionData
 public sealed class TrackExceptionEventArgs : DiscordEventArgs
 {
 	/// <summary>
-	/// Gets the error that occurred during playback.
+	/// Gets the exception that occurred during playback.
 	/// </summary>
-	public string Error { get; }
+	public LavalinkLoadFailedInfo Exception { get; }
 
 	/// <summary>
 	/// Gets the track that got stuck.
@@ -250,11 +250,11 @@ public sealed class TrackExceptionEventArgs : DiscordEventArgs
 	/// Initializes a new instance of the <see cref="TrackExceptionEventArgs"/> class.
 	/// </summary>
 	/// <param name="lvl">The lvl.</param>
-	/// <param name="error">The error.</param>
+	/// <param name="exception">The exception.</param>
 	/// <param name="track">The track.</param>
-	internal TrackExceptionEventArgs(LavalinkGuildConnection lvl, string error, LavalinkTrack track) : base(lvl.Node.Discord.ServiceProvider)
+	internal TrackExceptionEventArgs(LavalinkGuildConnection lvl, LavalinkLoadFailedInfo exception, LavalinkTrack track) : base(lvl.Node.Discord.ServiceProvider)
 	{
-		this.Error = error;
+		this.Exception = exception;
 		this.Track = track;
 		this.Player = lvl;
 	}

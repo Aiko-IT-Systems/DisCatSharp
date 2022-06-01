@@ -28,7 +28,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
@@ -2854,16 +2853,9 @@ public sealed class DiscordApiClient
 			["days"] = days.ToString(CultureInfo.InvariantCulture)
 		};
 
-		var sb = new StringBuilder();
-
-		if (includeRoles != null)
-		{
-			var roleArray = includeRoles.ToArray();
-			var roleArrayCount = roleArray.Length;
-
-			for (var i = 0; i < roleArrayCount; i++)
-				sb.Append($"&include_roles={roleArray[i]}");
-		}
+		var sb = includeRoles?.Aggregate(new StringBuilder(),
+					 (sb, id) => sb.Append($"&include_roles={id}"))
+				 ?? new StringBuilder();
 
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PRUNE}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
@@ -2895,16 +2887,9 @@ public sealed class DiscordApiClient
 			["compute_prune_count"] = computePruneCount.ToString()
 		};
 
-		var sb = new StringBuilder();
-
-		if (includeRoles != null)
-		{
-			var roleArray = includeRoles.ToArray();
-			var roleArrayCount = roleArray.Length;
-
-			for (var i = 0; i < roleArrayCount; i++)
-				sb.Append($"&include_roles={roleArray[i]}");
-		}
+		var sb = includeRoles?.Aggregate(new StringBuilder(),
+					 (sb, id) => sb.Append($"&include_roles={id}"))
+				 ?? new StringBuilder();
 
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -4596,7 +4581,8 @@ public sealed class DiscordApiClient
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission
+				DmPermission = command.DmPermission,
+				Nsfw = command.IsNsfw
 			});
 		}
 
@@ -4630,7 +4616,8 @@ public sealed class DiscordApiClient
 			NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
-			DmPermission = command.DmPermission
+			DmPermission = command.DmPermission,
+			Nsfw = command.IsNsfw
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -4676,9 +4663,11 @@ public sealed class DiscordApiClient
 	/// <param name="descriptionLocalization">The localizations of the description.</param>
 	/// <param name="defaultMemberPermission">The default member permissions.</param>
 	/// <param name="dmPermission">The dm permission.</param>
-	internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
+	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+	internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId,
+		Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
 		Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
-		Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
+		Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
 	{
 		var pld = new RestApplicationCommandEditPayload
 		{
@@ -4689,6 +4678,7 @@ public sealed class DiscordApiClient
 			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+			Nsfw = isNsfw
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -4762,7 +4752,8 @@ public sealed class DiscordApiClient
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission
+				DmPermission = command.DmPermission,
+				Nsfw = command.IsNsfw
 			});
 		}
 		this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
@@ -4796,8 +4787,8 @@ public sealed class DiscordApiClient
 			NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
-			DmPermission = command.DmPermission
-
+			DmPermission = command.DmPermission,
+			Nsfw = command.IsNsfw
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
@@ -4845,9 +4836,11 @@ public sealed class DiscordApiClient
 	/// <param name="descriptionLocalization">The localizations of the description.</param>
 	/// <param name="defaultMemberPermission">The default member permissions.</param>
 	/// <param name="dmPermission">The dm permission.</param>
-	internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId, Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
+	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
+	internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId,
+		Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
 		Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
-		Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission)
+		Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
 	{
 		var pld = new RestApplicationCommandEditPayload
 		{
@@ -4858,6 +4851,7 @@ public sealed class DiscordApiClient
 			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
 			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+			Nsfw = isNsfw
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";

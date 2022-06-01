@@ -1,6 +1,9 @@
 {{!Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See LICENSE file in the project root for full license information.}}
-{{!include(/^styles/.*/)}}
-{{!include(/^fonts/.*/)}}
+{{!include(/^src/styles/.*/)}}
+{{!include(/^src/scripts/.*/)}}
+{{!include(/^src/scripts/highlight/.*/)}}
+{{!include(/^src/scripts/highlight/languages/.*/)}}
+{{!include(/^src/fonts/.*/)}}
 {{!include(favicon.ico)}}
 {{!include(logo.png)}}
 {{!include(logobig.png)}}
@@ -9,7 +12,7 @@
 <!--[if IE]><![endif]-->
 <html>
   {{>partials/head}}
-  <body data-spy="scroll" data-target="#affix">
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
         {{^_disableNavbar}}

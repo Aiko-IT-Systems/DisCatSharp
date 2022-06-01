@@ -271,7 +271,7 @@ public sealed partial class DiscordShardedClient
 	/// <returns>The count of initialized shards.</returns>
 	internal async Task<int> InitializeShardsAsync()
 	{
-		if (this._shards.Count != 0)
+		if (!this._shards.IsEmpty)
 			return this._shards.Count;
 
 		this.GatewayInfo = await this.GetGatewayInfoAsync().ConfigureAwait(false);

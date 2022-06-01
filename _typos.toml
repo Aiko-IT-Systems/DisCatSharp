@@ -1,0 +1,28 @@
+[default.extend-identifiers]
+FLAG_BA = "FLAG_BA"
+flag_ba = "flag_ba"
+FLAG_FO = "FLAG_FO"
+flag_fo = "flag_fo"
+
+[default.extend-words]
+CLAUS = "CLAUS"
+claus = "claus"
+WOMENS = "WOMENS"
+goes = "goes"
+ret = "ret"
+axe = "axe"
+Behaviour = "Behaviour"
+prev = "prev"
+desktopbsd = "desktopbsd"
+deffered = "deffered"
+Rythm = "Rythm"
+ist = "ist"
+
+[files]
+ignore-vcs = true
+ignore-files = true
+ignore-dot = true
+extend-exclude = ["DisCatSharp.Docs/dcs/src/*"]
+
+[default]
+locale = "en-us"

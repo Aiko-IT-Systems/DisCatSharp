@@ -276,11 +276,11 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordReaction>> _reactionsLazy;
 
-        /// <summary>
-        /// Gets the nonce sent with the message, if the message was sent by the client.
-        /// </summary>
-        [JsonProperty("nonce", NullValueHandling = NullValueHandling.Ignore)]
-        public string Nonce { get; internal set; }
+	/// <summary>
+	/// Gets the nonce sent with the message, if the message was sent by the client.
+	/// </summary>
+	[JsonProperty("nonce", NullValueHandling = NullValueHandling.Ignore)]
+	public string Nonce { get; internal set; }
 
 
 	/// <summary>
@@ -448,7 +448,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// Gets the mentions.
 	/// </summary>
 	/// <returns>An array of IMentions.</returns>
-	private IMention[] GetMentions()
+	private List<IMention> GetMentions()
 	{
 		var mentions = new List<IMention>();
 
@@ -461,7 +461,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		if (this.MentionedRoleIds.Any())
 			mentions.AddRange(this.MentionedRoleIds.Select(r => (IMention)new RoleMention(r)));
 
-		return mentions.ToArray();
+		return mentions;
 	}
 
 	/// <summary>

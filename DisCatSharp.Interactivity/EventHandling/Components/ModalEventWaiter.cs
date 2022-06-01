@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 using ConcurrentCollections;
@@ -90,7 +89,7 @@ internal class ModalEventWaiter : IDisposable
 	/// <param name="args">The args.</param>
 	private async Task Handle(DiscordClient _, ComponentInteractionCreateEventArgs args)
 	{
-		foreach (var mreq in this._modalMatchRequests.ToArray())
+		foreach (var mreq in this._modalMatchRequests)
 		{
 			if (mreq.CustomId == args.Interaction.Data.CustomId && mreq.IsMatch(args))
 				mreq.Tcs.TrySetResult(args);

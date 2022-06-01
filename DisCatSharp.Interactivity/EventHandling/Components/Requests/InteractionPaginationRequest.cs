@@ -106,7 +106,7 @@ internal class InteractionPaginationRequest : IPaginationRequest
 
 		if (this.PageCount is 1)
 		{
-			this._buttons.ButtonArray.Select(b => b.Disable());
+			_ = this._buttons.ButtonArray.Select(b => b.Disable());
 			this._buttons.Stop.Enable();
 			return page;
 		}

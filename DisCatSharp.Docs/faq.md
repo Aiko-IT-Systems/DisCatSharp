@@ -31,7 +31,7 @@ To troubleshoot, please ensure that:
 There are two possible reasons:
 #### Connection issue between your bot application and Discord.
 Check your internet connection and ensure that the machine your bot is hosted on has a stable internet connection.<br/>
-If your local network has no issues, the problem could be with either Discord or Cloudfare. In which case, it's out of your control.
+If your local network has no issues, the problem could be with either Discord or Cloudflare. In which case, it's out of your control.
 
 #### Complex, long-running code in an event handler.
 Any event handlers that have the potential to run for more than a few seconds could cause a deadlock, and cause several heartbeats to be skipped.
@@ -69,16 +69,16 @@ However, if you meant an activity like this:
 
 You can use either of the following
 
-* The overload for @DisCatSharp.DiscordClient.ConnectAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) which accepts a @DisCatSharp.Entities.DiscordActivity.
-* @DisCatSharp.DiscordClient.UpdateStatusAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) OR @DisCatSharp.DiscordShardedClient.UpdateStatusAsync(DiscordActivity,System.Nullable{UserStatus},System.Nullable{DateTimeOffset}) (for the sharded client) at any point after `Ready` has been fired.
+* The overload for [ConnectAsync](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_ConnectAsync_DiscordActivity_System_Nullable_UserStatus__System_Nullable_DateTimeOffset__)([DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity), System.Nullable{UserStatus}, System.Nullable{DateTimeOffset}) which accepts a [DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity).
+* [UpdateStatusAsync](xref:DisCatSharp.DiscordClient#DisCatSharp_DiscordClient_UpdateStatusAsync_DiscordActivity_System_Nullable_UserStatus__System_Nullable_DateTimeOffset__)([DiscordActivity](xref:DisCatSharp.Entities.DiscordActivity), System.Nullable{UserStatus}, System.Nullable{DateTimeOffset}) OR [UpdateStatusAsync](xref:DisCatSharp.DiscordShardedClient#DisCatSharp_DiscordShardedClient_UpdateStatusAsync_DiscordActivity_System_Nullable_UserStatus__System_Nullable_DateTimeOffset__)(DiscordActivity, System.Nullable{[UserStatus](xref:DisCatSharp.Entities.UserStatus)}, System.Nullable{DateTimeOffset}) (for the sharded client) at any point after `Ready` has been fired.
 
 ### Am I able to retrieve a @DisCatSharp.Entities.DiscordRole by name?
-Yes. Use LINQ on the `Roles` property of your instance of @DisCatSharp.Entities.DiscordGuild and compare against the `Name` of  each @DisCatSharp.Entities.DiscordRole.
+Yes. Use LINQ on the `Roles` property of your instance of [DiscordGuild](xref:DisCatSharp.Entities.DiscordGuild) and compare against the `Name` of  each [DiscordRole](xref:DisCatSharp.Entities.DiscordRole).
 
 ### Why are you using Newtonsoft.Json when System.Text.Json is available
-Yes `System.Text.Json` is available to use but it still doesnt stand up to what we currently need which is why we still use Newtonsoft.Json.
-Maybe in time we can switch to your favorite Json Deserializer but for right now we will be using Newtonsoft.Json for the forseeable future.
+Yes `System.Text.Json` is available to use but it still doesn't stand up to what we currently need which is why we still use Newtonsoft.Json.
+Maybe in time we can switch to your favorite Json Deserializer but for right now we will be using Newtonsoft.Json for the foreseeable future.
 
 ### Why the hell are my events not firing?
-This is because in the Discord V8 API, they require @DisCatSharp.DiscordIntents to be enabled on @DisCatSharp.DiscordConfiguration and the
+This is because in the Discord V8+ API, they require @DisCatSharp.DiscordIntents to be enabled on [DiscordConfiguration](xref:DisCatSharp.DiscordConfiguration) and the
 Discord Application Portal. We have an [article](xref:beyond_basics_intents) that covers all that has to be done to set this up.
