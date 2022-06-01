@@ -20,31 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Enums
+namespace DisCatSharp.Enums;
+
+/// <summary>
+/// Represents a type of component.
+/// </summary>
+public enum ComponentType
 {
 	/// <summary>
-	/// Represents a type of component.
+	/// A row of components.
 	/// </summary>
-	public enum ComponentType
-	{
-		/// <summary>
-		/// A row of components.
-		/// </summary>
-		ActionRow = 1,
+	ActionRow = 1,
 
-		/// <summary>
-		/// A button.
-		/// </summary>
-		Button = 2,
+	/// <summary>
+	/// A button.
+	/// </summary>
+	Button = 2,
 
-		/// <summary>
-		/// A select menu.
-		/// </summary>
-		Select = 3,
+	/// <summary>
+	/// A select menu.
+	/// </summary>
+	Select = 3,
 
-		/// <summary>
-		/// A input text.
-		/// </summary>
-		InputText = 4
-	}
+	/// <summary>
+	/// A input text.
+	/// </summary>
+	InputText = 4
 }

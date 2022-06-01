@@ -306,7 +306,7 @@ public Task FooCommand(CommandContext ctx, string bar, int baz) { }
 [Command("foo")]
 public Task FooCommand(CommandContext ctx, DiscordUser bar) { }
 ```
-Executing `!foo green 5` will run the first method, and `!foo @Emzi0767` will run the second method.
+Executing `!foo green 5` will run the first method, and `!foo @SecondUser` will run the second method.
 
 <br/>
 Additionally, all check attributes are shared between overloads.<br/>

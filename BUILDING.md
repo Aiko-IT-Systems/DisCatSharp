@@ -11,7 +11,7 @@ On Windows, we only officially support Visual Studio 2019 16.10 or newer. Visual
 
 * **Windows 10** - while we support running the library on Windows 7 and above, we only support building on Windows 10 and better.
 * [**Git for Windows**](https://git-scm.com/download/win) - required to clone the repository.
-* [**Visual Studio 2019**](https://www.visualstudio.com/downloads/) - community edition or better. We do not support Visual Studio 2017 and older. Note that to build the library, you need Visual Studio 2019 version 16.10 or newer.
+* [**Visual Studio 2021**](https://www.visualstudio.com/downloads/) - community edition or better. We do not support Visual Studio 2017 and older. Note that to build the library, you need Visual Studio 2019 version 16.10 or newer.
    * **Workloads**:
       * **.NET Framework Desktop** - required to build .NETFX (4.5, 4.6, and 4.7 targets)
       * **.NET Core Cross-Platform Development** - required to build .NET Standard targets (1.1, 1.3, and 2.0) and the project overall.
@@ -33,7 +33,7 @@ When installing the below, make sure you install all the dependencies properly. 
 * **Git** - to clone the repository.
 * [**Visual Studio Code**](https://code.visualstudio.com/Download) - a recent version is required.
    * **C# for Visual Studio Code (powered by OmniSharp)** - required for syntax highlighting and basic Intellisense
-* [**.NET Core SDK 3.1**](https://www.microsoft.com/net/download) - required to build the project.
+* [**.NET SDK 6.0**](https://www.microsoft.com/net/download) - required to build the project.
 * [**Mono 5.x**](http://www.mono-project.com/download/#download-lin) - required to build the .NETFX 4.5, 4.6, and 4.7 targets, as well as to build the docs.
 * [**PowerShell Core**](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7.1) - required to execute the build scripts.
 * **p7zip-full** - required to package docs.
@@ -66,7 +66,7 @@ When all necessary prerequisites are installed, you can proceed to building. The
 1. Open Visual Studio Code and open the folder to which you cloned DisCatSharp as your workspace.
 2. Select Build > Run Task...
 3. Select `buildRelease` task and wait for it to finish.
-4. The artifacts will be placed in *dcs-artifacts* directory, next to whoch the repository is cloned.
+4. The artifacts will be placed in *dcs-artifacts* directory, next to where the repository is cloned.
 
 #### Through PowerShell
 1. Open PowerShell (`pwsh`) and navigate to the directory which you cloned DisCatSharp to.

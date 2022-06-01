@@ -25,16 +25,15 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.ApplicationCommands
+namespace DisCatSharp.ApplicationCommands;
+
+/// <summary>
+/// All choice providers must inherit from this interface
+/// </summary>
+public interface IChoiceProvider
 {
 	/// <summary>
-	/// All choice providers must inherit from this interface
+	/// Sets the choices for the slash command
 	/// </summary>
-	public interface IChoiceProvider
-	{
-		/// <summary>
-		/// Sets the choices for the slash command
-		/// </summary>
-		Task<IEnumerable<DiscordApplicationCommandOptionChoice>> Provider();
-	}
+	Task<IEnumerable<DiscordApplicationCommandOptionChoice>> Provider();
 }

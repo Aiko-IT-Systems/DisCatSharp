@@ -61,7 +61,7 @@ where Docker and other cloud native hosting comes into play.  There are many dif
 to chose which one will suit you best.  Here are a few services that offer Docker or other cloud native solutions that are cheaper than running
 a whole VM.
 
-* [**Azure App Service**](https://azure.microsoft.com/en-us/services/app-service/ "Azure App Service"):  Allows for Hosting Website, Continous Jobs,
+* [**Azure App Service**](https://azure.microsoft.com/en-us/services/app-service/ "Azure App Service"):  Allows for Hosting Website, Continuous Jobs,
   and Docker images on a Windows base or Linux base machine.
 * [**AWS Fargate**](https://aws.amazon.com/fargate/ "AWS Fargate"):  Allows for hosting Docker images within Amazon Web Services
 * [**Jelastic**](https://jelastic.com/docker/ "Jelastic"):  Allows for hosting Docker images.
@@ -72,7 +72,7 @@ source control solutions out there are free and also offer some type of CI/CD in
 solutions that we recommend:
 
 * [**Azure Devops**](https://azure.microsoft.com/en-us/services/devops/?nav=min "Azure Devops"):  Allows for GIT source control hosting along with integrated CI/CD
-  pipelines to auto compile and publish your applications.  You can also use their CI/CD service if your code is hosted in a different source control enviorment like Github.
+  pipelines to auto compile and publish your applications.  You can also use their CI/CD service if your code is hosted in a different source control environment like Github.
 * [**Github**](https://github.com/ "GitHub") Allows for GIT source control hosting.  From here you can leverage many different CI/CD options to compile and publish your
   applications.
 * [**Bitbucket**](https://bitbucket.org/ "Bitbucket"):  Allows for GIT source control hosting along with integrated CI/CD pipelines to auto compile and publish your applications.

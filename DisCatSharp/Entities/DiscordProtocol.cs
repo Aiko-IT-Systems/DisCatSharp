@@ -20,25 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Entities
+namespace DisCatSharp.Entities;
+
+/// <summary>
+/// Represents the discord protocol.
+/// </summary>
+public class DiscordProtocol
 {
+	#region Properties
+
+	#endregion
+
 	/// <summary>
-	/// Represents the discord protocol.
+	/// Initializes a new instance of the <see cref="DiscordProtocol"/> class.
 	/// </summary>
-	public class DiscordProtocol
-	{
-		#region Properties
+	public DiscordProtocol()
+	{ }
 
-		#endregion
+	#region Methods
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DiscordProtocol"/> class.
-		/// </summary>
-		public DiscordProtocol()
-		{ }
-
-		#region Methods
-
-		#endregion
-	}
+	#endregion
 }

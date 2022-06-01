@@ -56,7 +56,7 @@ namespace DisCatSharp.Interactivity.EventHandling
 		/// <param name="timeout">Timeout time</param>
 		/// <param name="pages">Pagination pages</param>
 		internal PaginationRequest(DiscordMessage message, DiscordUser user, PaginationBehaviour behaviour, PaginationDeletion deletion,
-			PaginationEmojis emojis, TimeSpan timeout, params Page[] pages)
+			PaginationEmojis emojis, TimeSpan timeout, IEnumerable<Page> pages)
 		{
 			this._tcs = new TaskCompletionSource<bool>();
 			this._ct = new CancellationTokenSource(timeout);

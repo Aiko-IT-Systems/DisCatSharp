@@ -20,24 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Hosting
+namespace DisCatSharp.Hosting;
+
+/// <summary>
+/// The constants.
+/// </summary>
+internal static class Constants
 {
 	/// <summary>
-	/// The constants.
+	/// Gets the lib name.
 	/// </summary>
-	internal static class Constants
-	{
-		/// <summary>
-		/// Gets the lib name.
-		/// </summary>
-		public static string LibName => Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB;
-		/// <summary>
-		/// Gets the config suffix.
-		/// </summary>
-		public static string ConfigSuffix => "Configuration";
-		/// <summary>
-		/// Gets the extension suffix.
-		/// </summary>
-		public static string ExtensionSuffix => "Extension";
-	}
+	public static string LibName => Configuration.ConfigurationExtensions.DEFAULT_ROOT_LIB;
+	/// <summary>
+	/// Gets the config suffix.
+	/// </summary>
+	public static string ConfigSuffix => "Configuration";
+	/// <summary>
+	/// Gets the extension suffix.
+	/// </summary>
+	public static string ExtensionSuffix => "Extension";
 }

@@ -23,10 +23,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DisCatSharp.Common
+namespace DisCatSharp.Common;
+
+/// <summary>
+/// Ensures that certain objects have the target state.
+/// </summary>
+public static class EnsureObjectStates
 {
 	/// <summary>
-	/// Ensures that certain objects have the target state.
+	/// Checks whether the dictionary is null or empty.
 	/// </summary>
 	public static class EnsureObjectStates
 	{

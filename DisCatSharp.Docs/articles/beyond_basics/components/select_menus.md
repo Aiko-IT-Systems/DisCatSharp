@@ -63,7 +63,7 @@ The emoji of a option is a [partial emoji object](https://discord.dev/interactio
 
 # Adding Select Menu
 
-Adding a selec menu is no different than adding a button.
+Adding a select menu is no different than adding a button.
 We have already created the select menu above, now we will just create a new message builder add the select menu to it.
 
 ```cs
@@ -127,7 +127,7 @@ Along with the typical `WaitForMessageAsync` and `WaitForReactionAsync` methods 
 More information about how interactivity works can be found in [the interactivity article](xref:interactivity)
 
 Since select menus create interactions, there are also two additional properties in the configuration:
-- RepsonseBehavior
+- ResponseBehavior
 - ResponseMessage
 
 ResponseBehavior is what interactivity will do when handling something that isn't a valid select menu, in the context of waiting for a specific select menu. It defaults to `Ignore`, which will cause the interaction fail.
