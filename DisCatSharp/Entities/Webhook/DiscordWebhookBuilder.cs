@@ -64,6 +64,12 @@ namespace DisCatSharp.Entities
 		private string _content;
 
 		/// <summary>
+		/// Name of the new thread.
+		/// Only works if the webhook is send in a <see cref="ChannelType.Forum"/>.
+		/// </summary>
+		public string ThreadName { get; set; }
+
+		/// <summary>
 		/// Whether to keep previous attachments.
 		/// </summary>
 		internal bool? KeepAttachmentsInternal;
@@ -193,6 +199,17 @@ namespace DisCatSharp.Entities
 		public DiscordWebhookBuilder WithContent(string content)
 		{
 			this.Content = content;
+			return this;
+		}
+
+		/// <summary>
+		/// Sets the thread name to create at the execution of the webhook.
+		/// Only works for <see cref="ChannelType.Forum"/>.
+		/// </summary>
+		/// <param name="name">The thread name.</param>
+		public DiscordWebhookBuilder WithThreadName(string name)
+		{
+			this.ThreadName = name;
 			return this;
 		}
 
@@ -398,6 +415,7 @@ namespace DisCatSharp.Entities
 			this.AttachmentsInternal.Clear();
 			this._components.Clear();
 			this.KeepAttachmentsInternal = false;
+			this.ThreadName = null;
 		}
 
 		/// <summary>

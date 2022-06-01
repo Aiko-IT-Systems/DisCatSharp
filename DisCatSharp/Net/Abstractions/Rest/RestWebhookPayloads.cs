@@ -116,6 +116,12 @@ namespace DisCatSharp.Net.Abstractions
 		/// </summary>
 		[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
 		public List<DiscordAttachment> Attachments { get; set; }
+
+		///<summary>
+		/// Gets or sets the thread name.
+		/// </summary>
+		[JsonProperty("thread_name", NullValueHandling = NullValueHandling.Ignore)]
+		public string ThreadName { get; set; }
 	}
 
 	/// <summary>
