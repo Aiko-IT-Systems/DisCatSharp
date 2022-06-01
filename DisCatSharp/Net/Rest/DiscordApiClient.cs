@@ -3447,7 +3447,7 @@ public sealed class DiscordApiClient
 			IsTts = builder.IsTts,
 			Embeds = builder.Embeds,
 			Components = builder.Components,
-      ThreadName = builder.ThreadName
+			ThreadName = builder.ThreadName
 		};
 
 		if (builder.Mentions != null)
