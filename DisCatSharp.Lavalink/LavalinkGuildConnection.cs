@@ -377,8 +377,9 @@ public sealed class LavalinkGuildConnection
 	{
 		this.CurrentState.LastUpdate = newState.Time;
 		this.CurrentState.PlaybackPosition = newState.Position;
+		this.CurrentState.IsConnected = newState.IsConnected;
 
-		return this._playerUpdated.InvokeAsync(this, new PlayerUpdateEventArgs(this, newState.Time, newState.Position));
+		return this._playerUpdated.InvokeAsync(this, new PlayerUpdateEventArgs(this, newState.Time, newState.Position, newState.IsConnected));
 	}
 
 	/// <summary>
@@ -421,10 +422,11 @@ public sealed class LavalinkGuildConnection
 	/// Internals the track exception async.
 	/// </summary>
 	/// <param name="e">The e.</param>
+	/// <param name="track">The failed track.</param>
 
-	internal Task InternalTrackExceptionAsync(TrackExceptionData e)
+	internal Task InternalTrackExceptionAsync(LavalinkLoadFailedInfo e, string track)
 	{
-		var ea = new TrackExceptionEventArgs(this, e.Error, LavalinkUtilities.DecodeTrack(e.Track));
+		var ea = new TrackExceptionEventArgs(this, e, LavalinkUtilities.DecodeTrack(track));
 		return this._trackException.InvokeAsync(this, ea);
 	}
 
