@@ -39,10 +39,9 @@ public static class LinqMethods
 	/// <param name="predicate">The predicate.</param>
 	/// <param name="value">The value to get if succeeded</param>
 	/// <returns>Whether a value was found.</returns>
-#nullable enable
 	public static bool GetFirstValueWhere<TSource>(this List<TSource?>? list, Func<TSource?, bool> predicate, out TSource? value)
 	{
-		if (list == null || !list.Any())
+		if (list.EmptyOrNull())
 		{
 			value = default;
 			return false;
@@ -52,7 +51,6 @@ public static class LinqMethods
 
 		return value is not null;
 	}
-#nullable disable
 
 	/// <summary>
 	/// Safely tries to extract the value of the first match where target key is found, otherwise null.
@@ -63,8 +61,8 @@ public static class LinqMethods
 	/// <param name="key">The key to search for.</param>
 	/// <param name="value">The value to get if succeeded.</param>
 	/// <returns>Whether a value was found through the key.</returns>
-#nullable enable
-	public static bool GetFirstValueByKey<TKey, TValue>(this Dictionary<TKey?, TValue?>? dict, TKey? key, out TValue? value)
+	public static bool GetFirstValueByKey<TKey, TValue>(this Dictionary<TKey, TValue?>? dict, TKey? key, out TValue? value)
+		where TKey : notnull
 	{
 		if (dict == null)
 		{
@@ -74,5 +72,4 @@ public static class LinqMethods
 
 		return dict.TryGetValue(key, out value);
 	}
-#nullable disable
 }
