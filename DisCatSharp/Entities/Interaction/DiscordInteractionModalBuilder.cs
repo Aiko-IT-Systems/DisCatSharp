@@ -60,7 +60,11 @@ public sealed class DiscordInteractionModalBuilder
 	/// <summary>
 	/// Constructs a new empty interaction modal builder.
 	/// </summary>
-	public DiscordInteractionModalBuilder() { }
+	public DiscordInteractionModalBuilder(string title = null, string customId = null)
+	{
+		this.Title = title ?? "Title";
+		this.CustomId = customId ?? Guid.NewGuid().ToString();
+	}
 
 	public DiscordInteractionModalBuilder WithTitle(string title)
 	{
