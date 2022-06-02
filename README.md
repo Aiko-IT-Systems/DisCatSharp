@@ -37,7 +37,7 @@ The documentation of the nightly versions is available at [docs.dcs.aitsys.dev](
 Fallback docs are available at [docs-alt.dcs.aitsys.dev](https://docs-alt.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
-Write a mail to [dcs@aitsys.dev](mailto:dcs@aitsys.dev).
+Write a mail to [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
 All requests are tracked at [aitsys.dev](https://aitsys.dev).
 
