@@ -87,5 +87,10 @@ public enum MessageFlags
 	/// <summary>
 	/// The message is warning that some roles failed to mention in thread.
 	/// </summary>
-	FailedToMentionSomeRolesInThread = 1 << 8
+	FailedToMentionSomeRolesInThread = 1 << 8,
+
+	/// <summary>
+	/// The message contains a link marked as potential dangerous or absusive.
+	/// </summary>
+	ShouldShowLinkNotDiscordWarning = 1 << 10
 }
