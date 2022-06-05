@@ -14,5 +14,5 @@ New users probably want to take a look into the [articles](xref:preamble) for qu
 Once you've gotten through the articles, head over to the [API Documentation](/api/index.html) for all classes and methods provided by this library.
 
 ## Source and Contributors
-DisCatSharp is licensed under MIT License, as detailed in the [license](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/master/LICENSE.md) found in the repository.<br/>
+DisCatSharp is licensed under MIT License, as detailed in the [license](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) found in the repository.<br/>
 The repository containing the source code for this library can be found [here](https://github.com/Aiko-IT-Systems/DisCatSharp). Contributions are welcomed.<br/>
