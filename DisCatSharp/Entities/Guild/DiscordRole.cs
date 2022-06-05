@@ -204,7 +204,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 					? e.Name
 					: throw new ArgumentException("Emoji must be unicode"));
 		else if (mdl.UnicodeEmoji.HasValue)
-			iconb64 = Optional.Some<string>(null);
+			emoji = Optional.Some<string>(null);
 
 		return canContinue ? this.Discord.ApiClient.ModifyGuildRoleAsync(this.GuildId, this.Id, mdl.Name, mdl.Permissions, mdl.Color?.Value, mdl.Hoist, mdl.Mentionable, iconb64, emoji, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify role icon. Guild needs boost tier two.");
 	}
