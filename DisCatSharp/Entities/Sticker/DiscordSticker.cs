@@ -133,6 +133,12 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	internal DiscordSticker()
 	{ }
 
+	/// <summary>
+	/// Gets the hash code of the current sticker.
+	/// </summary>
+	/// <returns>The hash code.</returns>
+	public override int GetHashCode()
+		=> this.PackId != null ? HashCode.Combine(this.Id.GetHashCode(), this.PackId.GetHashCode()) : HashCode.Combine(this.Id.GetHashCode(), this.GuildId.GetHashCode());
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordSticker"/> is equal to another object.

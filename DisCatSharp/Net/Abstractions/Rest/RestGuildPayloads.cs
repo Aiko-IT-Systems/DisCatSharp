@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 
@@ -234,6 +235,18 @@ internal sealed class RestGuildModifyPayload
 	/// </summary>
 	[JsonProperty("premium_progress_bar_enabled", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<bool> PremiumProgressBarEnabled { get; set; }
+}
+
+/// <summary>
+/// Represents a guild mfa level modify payload.
+/// </summary>
+internal sealed class RestGuildMfaLevelModifyPayload
+{
+	/// <summary>
+	/// Gets or sets the mfa level.
+	/// </summary>
+	[JsonProperty("level")]
+	public MfaLevel Level { get; set; }
 }
 
 /// <summary>

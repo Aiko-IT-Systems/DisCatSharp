@@ -28,6 +28,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Enums;
 using DisCatSharp.Net.Models;
 using DisCatSharp.Net.Serialization;
 

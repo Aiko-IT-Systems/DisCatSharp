@@ -20,22 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.Serialization;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents a membership screening field type
+/// Indicates audit log action category.
 /// </summary>
-[JsonConverter(typeof(StringEnumConverter))]
-public enum MembershipScreeningFieldType
+public enum AuditLogActionCategory
 {
 	/// <summary>
-	/// Specifies the server rules
+	/// Indicates that this action resulted in creation or addition of an object.
 	/// </summary>
-	[EnumMember(Value = "TERMS")]
-	Terms
+	Create,
+
+	/// <summary>
+	/// Indicates that this action resulted in update of an object.
+	/// </summary>
+	Update,
+
+	/// <summary>
+	/// Indicates that this action resulted in deletion or removal of an object.
+	/// </summary>
+	Delete,
+
+	/// <summary>
+	/// Indicates that this action resulted in something else than creation, addition, update, deletion, or removal of an object.
+	/// </summary>
+	Other
 }

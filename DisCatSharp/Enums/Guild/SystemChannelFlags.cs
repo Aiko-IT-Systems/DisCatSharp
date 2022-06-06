@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DisCatSharp;
+namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents a system channel flags extension.

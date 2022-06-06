@@ -30,6 +30,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Serialization;
 
@@ -530,6 +531,52 @@ public sealed class DiscordApiClient
 		return guild;
 	}
 
+	/// <summary>
+	/// Enables the guilds mfa requirement.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="reason">The reason.</param>
+	internal async Task EnableGuildMfaAsync(ulong guildId, string reason)
+	{
+		var pld = new RestGuildMfaLevelModifyPayload
+		{
+			Level = MfaLevel.Enabled
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MFA}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Disables the guilds mfa requirement.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="reason">The reason.</param>
+	internal async Task DisableGuildMfaAsync(ulong guildId, string reason)
+	{
+		var pld = new RestGuildMfaLevelModifyPayload
+		{
+			Level = MfaLevel.Disabled
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+		
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MFA}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+	}
+	
 	/// <summary>
 	/// Implements https://discord.com/developers/docs/resources/guild#get-guild-bans.
 	/// </summary>

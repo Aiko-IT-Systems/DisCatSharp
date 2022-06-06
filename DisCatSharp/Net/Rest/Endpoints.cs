@@ -222,6 +222,11 @@ public static class Endpoints
 	public const string GITHUB = "/github";
 
 	/// <summary>
+	/// The guilds mfa endpoint.
+	/// </summary>
+	public const string MFA = "/mfa";
+
+	/// <summary>
 	/// The bot endpoint.
 	/// </summary>
 	public const string BOT = "/bot";
