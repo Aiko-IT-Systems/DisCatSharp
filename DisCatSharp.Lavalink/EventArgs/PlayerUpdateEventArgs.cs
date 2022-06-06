@@ -57,6 +57,7 @@ public sealed class PlayerUpdateEventArgs : DiscordEventArgs
 	/// <param name="lvl">The lvl.</param>
 	/// <param name="timestamp">The timestamp.</param>
 	/// <param name="position">The position.</param>
+	/// <param name="connected">Whether the player is connected.</param>
 	internal PlayerUpdateEventArgs(LavalinkGuildConnection lvl, DateTimeOffset timestamp, TimeSpan position, bool connected)
 		: base(lvl.Node.Discord.ServiceProvider)
 	{

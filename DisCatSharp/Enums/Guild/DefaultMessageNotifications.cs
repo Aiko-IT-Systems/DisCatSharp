@@ -20,22 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.Serialization;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents a membership screening field type
+/// Represents default notification level for a guild.
 /// </summary>
-[JsonConverter(typeof(StringEnumConverter))]
-public enum MembershipScreeningFieldType
+public enum DefaultMessageNotifications : int
 {
 	/// <summary>
-	/// Specifies the server rules
+	/// All messages will trigger push notifications.
 	/// </summary>
-	[EnumMember(Value = "TERMS")]
-	Terms
+	AllMessages = 0,
+
+	/// <summary>
+	/// Only messages that mention the user (or a role he's in) will trigger push notifications.
+	/// </summary>
+	MentionsOnly = 1
 }
