@@ -596,7 +596,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						if (updateList != null && updateList.Any())
 						{
-							var regCommands = RegistrationWorker.RegisterGuilldCommandsAsync(guildId.Value, updateList).Result;
+							var regCommands = RegistrationWorker.RegisterGuildCommandsAsync(guildId.Value, updateList).Result;
 							var actualCommands = regCommands.Distinct().ToList();
 							commands.AddRange(actualCommands);
 							GuildCommandsInternal.Add(guildId.Value, actualCommands);
