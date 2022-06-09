@@ -559,7 +559,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 				else
 				{
-					if (ex.InnerException is BadRequestException brex1)
+					if (ex.InnerException is not null && ex.InnerException is BadRequestException brex1)
 						this.Client.Logger.LogCritical(brex1, $"There was an error registering application commands: {brex1.WebResponse.Response}");
 					else
 						this.Client.Logger.LogCritical(ex, $"There was an error parsing the application commands");
@@ -693,7 +693,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 				else
 				{
-					if (ex.InnerException is BadRequestException brex1)
+					if (ex.InnerException is not null && ex.InnerException is BadRequestException brex1)
 						this.Client.Logger.LogCritical(brex1, $"There was an error registering application commands: {brex1.WebResponse.Response}");
 					else
 						this.Client.Logger.LogCritical(ex, $"There was an general error registering application commands");
