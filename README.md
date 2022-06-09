@@ -27,12 +27,12 @@ A Discord Bot Library written in C# for .NET.
 Then this is the right place for you!
 
 ## Installing
-You can install the library from following source: [NuGet](https://nuget.dcs.aitsys.dev).
+You can install the library from following source: [NuGet](https://www.nuget.org/profiles/DisCatSharp).
 
 ## Documentation
-The documentation for the stable version is available at [docs.dcs.aitsys.dev/lts](https://docs.dcs.aitsys.dev/lts).
+<!--The documentation for the stable version is available at [docs.dcs.aitsys.dev/lts](https://docs.discatsharp.tech/lts).-->
 
-The documentation of the nightly versions is available at [docs.dcs.aitsys.dev](https://docs.dcs.aitsys.dev).
+The documentation of the nightly versions is available at [docs.dcs.aitsys.dev](https://docs.discatsharp.tech).
 
 Fallback docs are available at [docs-alt.dcs.aitsys.dev](https://docs-alt.dcs.aitsys.dev).
 
@@ -42,7 +42,7 @@ Write a mail to [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 All requests are tracked at [aitsys.dev](https://aitsys.dev).
 
 ## Tutorials
-* [Howto](https://docs.dcs.aitsys.dev/articles/basics/bot_account.html)
+* [Howto](https://docs.discatsharp.tech/articles/basics/bot_account.html)
 * [Examples](https://examples.dcs.aitsys.dev)
 
 ## Snippets
