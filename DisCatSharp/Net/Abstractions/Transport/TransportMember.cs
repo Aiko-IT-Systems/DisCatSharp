@@ -60,6 +60,12 @@ internal class TransportMember
 	public string GuildBio { get; internal set; }
 
 	/// <summary>
+	/// Gets the members's pronouns.
+	/// </summary>
+	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]
+	public string GuildPronouns { get; internal set; }
+
+	/// <summary>
 	/// Gets the user.
 	/// </summary>
 	[JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]

@@ -1722,6 +1722,7 @@ public sealed partial class DiscordClient
 		mbr.AvatarHashInternal = member.AvatarHash;
 		mbr.GuildAvatarHash = member.GuildAvatarHash;
 		mbr.Nickname = nick;
+		mbr.GuildPronouns = member.GuildPronouns;
 		mbr.IsPending = pending;
 		mbr.CommunicationDisabledUntil = member.CommunicationDisabledUntil;
 		mbr.RoleIdsInternal.Clear();
