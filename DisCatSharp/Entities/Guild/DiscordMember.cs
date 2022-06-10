@@ -79,6 +79,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		this.GuildAvatarHash = mbr.GuildAvatarHash;
 		this.GuildBannerHash = mbr.GuildBannerHash;
 		this.GuildBio = mbr.GuildBio;
+		this.GuildPronouns = mbr.GuildPronouns;
 		this.CommunicationDisabledUntil = mbr.CommunicationDisabledUntil;
 		this.AvatarHashInternal = mbr.AvatarHash;
 		this.RoleIdsInternal = mbr.Roles ?? new List<ulong>();
@@ -130,6 +131,12 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	[JsonProperty("bio", NullValueHandling = NullValueHandling.Ignore)]
 	public string GuildBio { get; internal set; }
+
+	/// <summary>
+	/// Gets the members's pronouns.
+	/// </summary>
+	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]
+	public string GuildPronouns { get; internal set; }
 
 	/// <summary>
 	/// Gets the members flags.
