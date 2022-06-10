@@ -418,6 +418,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.AvatarHash = usr.AvatarHash;
 				old.BannerHash = usr.BannerHash;
 				old.BannerColorInternal = usr.BannerColorInternal;
+				old.Pronouns = usr.Pronouns;
 				return old;
 			});
 
@@ -1024,6 +1025,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 					old.Username = usr.Username;
 					old.Discriminator = usr.Discriminator;
 					old.AvatarHash = usr.AvatarHash;
+					old.BannerHash = usr.BannerHash;
+					old.BannerColorInternal = usr.BannerColorInternal;
+					old.Pronouns = usr.Pronouns;
 					return old;
 				});
 
@@ -1059,6 +1063,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 				old.Username = usr.Username;
 				old.Discriminator = usr.Discriminator;
 				old.AvatarHash = usr.AvatarHash;
+				old.BannerHash = usr.BannerHash;
+				old.BannerColorInternal = usr.BannerColorInternal;
+				old.Pronouns = usr.Pronouns;
 				return old;
 			});
 		}

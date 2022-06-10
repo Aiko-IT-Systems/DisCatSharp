@@ -40,5 +40,11 @@ public enum PremiumType
 	/// <summary>
 	/// Includes all app perks.
 	/// </summary>
-	Nitro = 2
+	Nitro = 2,
+
+	/// <summary>
+	/// Includes lite app perks.
+	/// Unknown if it will be 3.
+	/// </summary>
+	NitroLite = 3
 }
