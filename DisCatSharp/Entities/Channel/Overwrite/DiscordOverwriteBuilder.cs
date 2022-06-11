@@ -22,6 +22,8 @@
 
 using System.Threading.Tasks;
 
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;

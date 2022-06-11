@@ -49,6 +49,13 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Ignore)]
 	internal string UnicodeEmojiString;
 
+
+	/// <summary>
+	/// Gets whether the tag can only be used by moderators.
+	/// </summary>
+	[JsonProperty("moderated", NullValueHandling = NullValueHandling.Ignore)]
+	public bool Moderated { get; internal set; }
+
 	/// <summary>
 	/// Gets the unicode emoji.
 	/// </summary>

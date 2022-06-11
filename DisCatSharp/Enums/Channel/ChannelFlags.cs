@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
+using DisCatSharp.Entities;
+
+namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents a channel's flags.
@@ -28,13 +30,27 @@ namespace DisCatSharp;
 public enum ChannelFlags : int
 {
 	/// <summary>
-	/// Indicates that this channel is removed from the guilds home feed.
+	/// Indicates that this channel is removed from the guilds home feed / from highlights.
+	/// Applicable for <see cref="ChannelType"/> Text, Forum and News.
 	/// </summary>
 	RemovedFromHome = 1 << 0,
+	RemovedFromHighlights = RemovedFromHome,
 
 	/// <summary>
 	/// Indicates that this thread is pinned to the top of its parent forum channel.
 	/// Forum channel thread only.
 	/// </summary>
-	Pinned = 1 << 1
+	Pinned = 1 << 1,
+
+	/// <summary>
+	/// Indicates that this channel is removed from the active now within the guilds home feed.
+	/// Applicable for <see cref="ChannelType"/> Text, News, Thread, Forum, Stage and Voice.
+	/// </summary>
+	RemovedFromActiveNow = 1 << 2,
+
+	/// <summary>
+	/// Indicates that the channel requires users to select at least one <see cref="ForumPostTag"/>.
+	/// Only applicable for <see cref="ChannelType.Forum"/>.
+	/// </summary>
+	RequireTags = 1<<4
 }
