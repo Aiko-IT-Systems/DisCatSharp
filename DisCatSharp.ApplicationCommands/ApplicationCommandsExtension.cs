@@ -554,9 +554,16 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			catch (Exception ex)
 			{
 				if (ex is BadRequestException brex)
-					this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.JsonMessage}");
+				{
+					this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.WebResponse.Response}");
+				}
 				else
-					this.Client.Logger.LogCritical(ex, $"There was an error parsing the application commands");
+				{
+					if (ex.InnerException is not null && ex.InnerException is BadRequestException brex1)
+						this.Client.Logger.LogCritical(brex1, $"There was an error registering application commands: {brex1.WebResponse.Response}");
+					else
+						this.Client.Logger.LogCritical(ex, $"There was an error parsing the application commands");
+				}
 				s_errored = true;
 			}
 		}
@@ -596,7 +603,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						if (updateList != null && updateList.Any())
 						{
-							var regCommands = RegistrationWorker.RegisterGuilldCommandsAsync(guildId.Value, updateList).Result;
+							var regCommands = RegistrationWorker.RegisterGuildCommandsAsync(guildId.Value, updateList).Result;
 							var actualCommands = regCommands.Distinct().ToList();
 							commands.AddRange(actualCommands);
 							GuildCommandsInternal.Add(guildId.Value, actualCommands);
@@ -681,9 +688,16 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			catch (Exception ex)
 			{
 				if (ex is BadRequestException brex)
-					this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.JsonMessage}");
+				{
+					this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.WebResponse.Response}");
+				}
 				else
-					this.Client.Logger.LogCritical(ex, $"There was an general error registering application commands");
+				{
+					if (ex.InnerException is not null && ex.InnerException is BadRequestException brex1)
+						this.Client.Logger.LogCritical(brex1, $"There was an error registering application commands: {brex1.WebResponse.Response}");
+					else
+						this.Client.Logger.LogCritical(ex, $"There was an general error registering application commands");
+				}
 				s_errored = true;
 			}
 		}

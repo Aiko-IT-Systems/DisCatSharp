@@ -127,6 +127,12 @@ internal class TransportUser
 	public string Bio { get; internal set; }
 
 	/// <summary>
+	/// Gets the users pronouns.
+	/// </summary>
+	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]
+	public string Pronouns { get; internal set; }
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportUser"/> class.
 	/// </summary>
 	internal TransportUser() { }
@@ -152,5 +158,6 @@ internal class TransportUser
 		this.Flags = other.Flags;
 		this.OAuthFlags = other.OAuthFlags;
 		this.Bio = other.Bio;
+		this.Pronouns = other.Pronouns;
 	}
 }

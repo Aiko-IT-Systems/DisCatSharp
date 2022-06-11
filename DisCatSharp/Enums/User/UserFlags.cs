@@ -174,5 +174,12 @@ public enum UserFlags : long
 	/// <summary>
 	/// The user has a verified email.
 	/// </summary>
-	VerifiedEmail = 1L << 43
+	VerifiedEmail = 1L << 43,
+
+	/// <summary>
+	/// The user is currently quarantined.
+	/// The user can't start new dms and join servers.
+	/// The user has to appeal via https://dis.gd/appeal.
+	/// </summary>
+	Quarantined = 1L << 44
 }

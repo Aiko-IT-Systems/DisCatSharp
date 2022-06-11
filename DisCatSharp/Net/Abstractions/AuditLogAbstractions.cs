@@ -22,7 +22,7 @@
 
 using System.Collections.Generic;
 
-using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

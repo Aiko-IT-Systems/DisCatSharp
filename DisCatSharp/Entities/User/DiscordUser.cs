@@ -66,6 +66,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.Flags = transport.Flags;
 		this.OAuthFlags = transport.OAuthFlags;
 		this.Bio = transport.Bio;
+		this.Pronouns = transport.Pronouns;
 	}
 
 	/// <summary>
@@ -215,6 +216,12 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonProperty("public_flags", NullValueHandling = NullValueHandling.Ignore)]
 	public virtual UserFlags? Flags { get; internal set; }
+
+	/// <summary>
+	/// Gets the user's pronouns.
+	/// </summary>
+	[JsonProperty("pronouns", NullValueHandling = NullValueHandling.Ignore)]
+	public virtual string Pronouns { get; internal set; }
 
 	/// <summary>
 	/// Gets the user's mention string.

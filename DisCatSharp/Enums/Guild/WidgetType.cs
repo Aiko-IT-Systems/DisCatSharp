@@ -20,22 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.Serialization;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents a membership screening field type
+/// Represents the formats for a guild widget.
 /// </summary>
-[JsonConverter(typeof(StringEnumConverter))]
-public enum MembershipScreeningFieldType
+public enum WidgetType : int
 {
 	/// <summary>
-	/// Specifies the server rules
+	/// The widget is represented in shield format.
+	/// <para>This is the default widget type.</para>
 	/// </summary>
-	[EnumMember(Value = "TERMS")]
-	Terms
+	Shield = 0,
+
+	/// <summary>
+	/// The widget is represented as the first banner type.
+	/// </summary>
+	Banner1 = 1,
+
+	/// <summary>
+	/// The widget is represented as the second banner type.
+	/// </summary>
+	Banner2 = 2,
+
+	/// <summary>
+	/// The widget is represented as the third banner type.
+	/// </summary>
+	Banner3 = 3,
+
+	/// <summary>
+	/// The widget is represented in the fourth banner type.
+	/// </summary>
+	Banner4 = 4
 }

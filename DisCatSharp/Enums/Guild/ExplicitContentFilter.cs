@@ -20,22 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.Serialization;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents a membership screening field type
+/// Represents the value of explicit content filter in a guild.
 /// </summary>
-[JsonConverter(typeof(StringEnumConverter))]
-public enum MembershipScreeningFieldType
+public enum ExplicitContentFilter : int
 {
 	/// <summary>
-	/// Specifies the server rules
+	/// Explicit content filter is disabled.
 	/// </summary>
-	[EnumMember(Value = "TERMS")]
-	Terms
+	Disabled = 0,
+
+	/// <summary>
+	/// Only messages from members without any roles are scanned.
+	/// </summary>
+	MembersWithoutRoles = 1,
+
+	/// <summary>
+	/// Messages from all members are scanned.
+	/// </summary>
+	AllMembers = 2
 }

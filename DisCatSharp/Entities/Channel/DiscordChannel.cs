@@ -74,6 +74,13 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public ChannelType Type { get; internal set; }
 
 	/// <summary>
+	/// Gets the template for new posts in this channel.
+	/// Applicable if forum channel.
+	/// </summary>
+	[JsonProperty("template", NullValueHandling = NullValueHandling.Ignore)]
+	public string Template { get; internal set; }
+
+	/// <summary>
 	/// Gets this channel's banner hash, when applicable.
 	/// </summary>
 	[JsonProperty("banner")]
@@ -211,12 +218,6 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
 	public List<ForumPostTag> AvailableTags { get; internal set; }
-
-	/// <summary>
-	/// Starter template for forum posts.
-	/// </summary>
-	[JsonProperty("template", NullValueHandling = NullValueHandling.Ignore)]
-	public string Template { get; internal set; }
 
 	/// <summary>
 	/// Gets when the last pinned message was pinned.

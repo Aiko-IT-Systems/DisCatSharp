@@ -30,6 +30,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Serialization;
 
@@ -528,6 +529,52 @@ public sealed class DiscordApiClient
 		if (this.Discord is DiscordClient dc)
 			await dc.OnGuildUpdateEventAsync(guild, rawMembers).ConfigureAwait(false);
 		return guild;
+	}
+
+	/// <summary>
+	/// Enables the guilds mfa requirement.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="reason">The reason.</param>
+	internal async Task EnableGuildMfaAsync(ulong guildId, string reason)
+	{
+		var pld = new RestGuildMfaLevelModifyPayload
+		{
+			Level = MfaLevel.Enabled
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MFA}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Disables the guilds mfa requirement.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="reason">The reason.</param>
+	internal async Task DisableGuildMfaAsync(ulong guildId, string reason)
+	{
+		var pld = new RestGuildMfaLevelModifyPayload
+		{
+			Level = MfaLevel.Disabled
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MFA}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -4581,8 +4628,8 @@ public sealed class DiscordApiClient
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission,
-				Nsfw = command.IsNsfw
+				DmPermission = command.DmPermission/*,
+				Nsfw = command.IsNsfw*/
 			});
 		}
 
@@ -4616,8 +4663,8 @@ public sealed class DiscordApiClient
 			NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
-			DmPermission = command.DmPermission,
-			Nsfw = command.IsNsfw
+			DmPermission = command.DmPermission/*,
+			Nsfw = command.IsNsfw*/
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -4677,8 +4724,8 @@ public sealed class DiscordApiClient
 			DefaultMemberPermission = defaultMemberPermission,
 			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			Nsfw = isNsfw
+			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault()/*,
+			Nsfw = isNsfw*/
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -4752,8 +4799,8 @@ public sealed class DiscordApiClient
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission,
-				Nsfw = command.IsNsfw
+				DmPermission = command.DmPermission/*,
+				Nsfw = command.IsNsfw*/
 			});
 		}
 		this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
@@ -4787,8 +4834,8 @@ public sealed class DiscordApiClient
 			NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
-			DmPermission = command.DmPermission,
-			Nsfw = command.IsNsfw
+			DmPermission = command.DmPermission/*,
+			Nsfw = command.IsNsfw*/
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
@@ -4850,8 +4897,8 @@ public sealed class DiscordApiClient
 			DefaultMemberPermission = defaultMemberPermission,
 			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			Nsfw = isNsfw
+			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault()/*,
+			Nsfw = isNsfw*/
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";

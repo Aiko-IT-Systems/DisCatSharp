@@ -689,9 +689,30 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> this.Discord.ApiClient.DeleteGuildAsync(this.Id);
 
 	/// <summary>
+	/// Enables the mfa requirement for this guild.
+	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the current user is not the guilds owner.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task EnableMfaAsync(string reason = null)
+		=> this.IsOwner ? this.Discord.ApiClient.EnableGuildMfaAsync(this.Id, reason) : throw new Exception("The current user does not own the guild.");
+
+	/// <summary>
+	/// Disables the mfa requirement for this guild.
+	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the current user is not the guilds owner.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+
+	public Task DisableMfaAsync(string reason = null)
+		=> this.IsOwner ? this.Discord.ApiClient.DisableGuildMfaAsync(this.Id, reason) : throw new Exception("The current user does not own the guild.");
+
+	/// <summary>
 	/// Modifies this guild.
 	/// </summary>
-	/// <param name="action">Action to perform on this guild..</param>
+	/// <param name="action">Action to perform on this guild.</param>
 	/// <returns>The modified guild object.</returns>
 	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
@@ -1945,120 +1966,4 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public static bool operator !=(DiscordGuild e1, DiscordGuild e2)
 		=> !(e1 == e2);
 
-}
-
-/// <summary>
-/// Represents guild verification level.
-/// </summary>
-public enum VerificationLevel : int
-{
-	/// <summary>
-	/// No verification. Anyone can join and chat right away.
-	/// </summary>
-	None = 0,
-
-	/// <summary>
-	/// Low verification level. Users are required to have a verified email attached to their account in order to be able to chat.
-	/// </summary>
-	Low = 1,
-
-	/// <summary>
-	/// Medium verification level. Users are required to have a verified email attached to their account, and account age need to be at least 5 minutes in order to be able to chat.
-	/// </summary>
-	Medium = 2,
-
-	/// <summary>
-	/// High verification level. Users are required to have a verified email attached to their account, account age need to be at least 5 minutes, and they need to be in the server for at least 10 minutes in order to be able to chat.
-	/// </summary>
-	High = 3,
-
-	/// <summary>
-	/// Highest verification level. Users are required to have a verified phone number attached to their account.
-	/// </summary>
-	Highest = 4
-}
-
-/// <summary>
-/// Represents default notification level for a guild.
-/// </summary>
-public enum DefaultMessageNotifications : int
-{
-	/// <summary>
-	/// All messages will trigger push notifications.
-	/// </summary>
-	AllMessages = 0,
-
-	/// <summary>
-	/// Only messages that mention the user (or a role he's in) will trigger push notifications.
-	/// </summary>
-	MentionsOnly = 1
-}
-
-/// <summary>
-/// Represents multi-factor authentication level required by a guild to use administrator functionality.
-/// </summary>
-public enum MfaLevel : int
-{
-	/// <summary>
-	/// Multi-factor authentication is not required to use administrator functionality.
-	/// </summary>
-	Disabled = 0,
-
-	/// <summary>
-	/// Multi-factor authentication is required to use administrator functionality.
-	/// </summary>
-	Enabled = 1
-}
-
-/// <summary>
-/// Represents the value of explicit content filter in a guild.
-/// </summary>
-public enum ExplicitContentFilter : int
-{
-	/// <summary>
-	/// Explicit content filter is disabled.
-	/// </summary>
-	Disabled = 0,
-
-	/// <summary>
-	/// Only messages from members without any roles are scanned.
-	/// </summary>
-	MembersWithoutRoles = 1,
-
-	/// <summary>
-	/// Messages from all members are scanned.
-	/// </summary>
-	AllMembers = 2
-}
-
-/// <summary>
-/// Represents the formats for a guild widget.
-/// </summary>
-public enum WidgetType : int
-{
-	/// <summary>
-	/// The widget is represented in shield format.
-	/// <para>This is the default widget type.</para>
-	/// </summary>
-	Shield = 0,
-
-	/// <summary>
-	/// The widget is represented as the first banner type.
-	/// </summary>
-	Banner1 = 1,
-
-	/// <summary>
-	/// The widget is represented as the second banner type.
-	/// </summary>
-	Banner2 = 2,
-
-	/// <summary>
-	/// The widget is represented as the third banner type.
-	/// </summary>
-	Banner3 = 3,
-
-	/// <summary>
-	/// The widget is represented in the fourth banner type.
-	/// </summary>
-	Banner4 = 4
 }

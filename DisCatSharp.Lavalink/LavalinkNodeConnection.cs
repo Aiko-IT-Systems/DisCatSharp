@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
 using DisCatSharp.Lavalink.Entities;
 using DisCatSharp.Lavalink.EventArgs;
@@ -256,7 +257,7 @@ public sealed class LavalinkNodeConnection
 		this._webSocket.AddDefaultHeader("Authorization", this.Configuration.Password);
 		this._webSocket.AddDefaultHeader("Num-Shards", this.Discord.ShardCount.ToString(CultureInfo.InvariantCulture));
 		this._webSocket.AddDefaultHeader("User-Id", this.Discord.CurrentUser.Id.ToString(CultureInfo.InvariantCulture));
-		this._webSocket.AddDefaultHeader("Client-Name", $"DisCatSharp.Lavalink version {this.Discord.VersionString}");		
+		this._webSocket.AddDefaultHeader("Client-Name", $"DisCatSharp.Lavalink version {this.Discord.VersionString}");
 		if (this.Configuration.ResumeKey != null)
 			this._webSocket.AddDefaultHeader("Resume-Key", this.Configuration.ResumeKey);
 

@@ -73,7 +73,7 @@ internal class RegistrationWorker
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 					if (command.DmPermission.HasValue)
 						action.DmPermission = command.DmPermission.Value;
-					action.IsNsfw = command.IsNsfw;
+					//action.IsNsfw = command.IsNsfw;
 				});
 
 				commands.Add(discordBackendCommand);
@@ -108,7 +108,7 @@ internal class RegistrationWorker
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 						if (command.DmPermission.HasValue)
 							action.DmPermission = command.DmPermission.Value;
-						action.IsNsfw = command.IsNsfw;
+						//action.IsNsfw = command.IsNsfw;
 					});
 
 					commands.Add(discordBackendCommand);
@@ -137,7 +137,7 @@ internal class RegistrationWorker
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 					if (command.DmPermission.HasValue)
 						action.DmPermission = command.DmPermission.Value;
-					action.IsNsfw = command.IsNsfw;
+					//action.IsNsfw = command.IsNsfw;
 				});
 
 				commands.Add(discordBackendCommand);
@@ -199,7 +199,7 @@ internal class RegistrationWorker
 	/// <param name="guildId">The target guild id.</param>
 	/// <param name="commands">The command list.</param>
 	/// <returns>A list of registered commands.</returns>
-	internal static async Task<List<DiscordApplicationCommand>> RegisterGuilldCommandsAsync(ulong guildId, List<DiscordApplicationCommand> commands)
+	internal static async Task<List<DiscordApplicationCommand>> RegisterGuildCommandsAsync(ulong guildId, List<DiscordApplicationCommand> commands)
 	{
 		var (changedCommands, unchangedCommands) = BuildGuildOverwriteList(guildId, commands);
 		var guildCommandsCreateList = BuildGuildCreateList(guildId, commands);
@@ -230,7 +230,7 @@ internal class RegistrationWorker
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 					if (command.DmPermission.HasValue)
 						action.DmPermission = command.DmPermission.Value;
-					action.IsNsfw = command.IsNsfw;
+					//action.IsNsfw = command.IsNsfw;
 				});
 
 				commands.Add(discordBackendCommand);
@@ -265,7 +265,7 @@ internal class RegistrationWorker
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 						if (command.DmPermission.HasValue)
 							action.DmPermission = command.DmPermission.Value;
-						action.IsNsfw = command.IsNsfw;
+						//action.IsNsfw = command.IsNsfw;
 					});
 
 					commands.Add(discordBackendCommand);
@@ -294,7 +294,7 @@ internal class RegistrationWorker
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 					if (command.DmPermission.HasValue)
 						action.DmPermission = command.DmPermission.Value;
-					action.IsNsfw = command.IsNsfw;
+					//action.IsNsfw = command.IsNsfw;
 				});
 
 				commands.Add(discordBackendCommand);

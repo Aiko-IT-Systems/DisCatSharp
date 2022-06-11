@@ -92,20 +92,23 @@ public class DiscordThreadChannelMember : SnowflakeObject, IEquatable<DiscordThr
 	/// </summary>
 	/// <param name="obj">Object to compare to.</param>
 	/// <returns>Whether the object is equal to this <see cref="DiscordThreadChannelMember"/>.</returns>
-	public override bool Equals(object obj) => this.Equals(obj as DiscordThreadChannelMember);
+	public override bool Equals(object obj)
+		=> this.Equals(obj as DiscordThreadChannelMember);
 
 	/// <summary>
 	/// Checks whether this <see cref="DiscordThreadChannel"/> is equal to another <see cref="DiscordThreadChannelMember"/>.
 	/// </summary>
 	/// <param name="e"><see cref="DiscordThreadChannel"/> to compare to.</param>
 	/// <returns>Whether the <see cref="DiscordThreadChannel"/> is equal to this <see cref="DiscordThreadChannelMember"/>.</returns>
-	public bool Equals(DiscordThreadChannelMember e) => e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.UserId == e.UserId));
+	public bool Equals(DiscordThreadChannelMember e)
+		=> e is not null && (ReferenceEquals(this, e) || (this.Id == e.Id && this.UserId == e.UserId));
 
 	/// <summary>
 	/// Gets the hash code for this <see cref="DiscordThreadChannelMember"/>.
 	/// </summary>
 	/// <returns>The hash code for this <see cref="DiscordThreadChannelMember"/>.</returns>
-	public override int GetHashCode() => HashCode.Combine(this.Id.GetHashCode(), this.UserId.GetHashCode());
+	public override int GetHashCode()
+		=> HashCode.Combine(this.Id.GetHashCode(), this.UserId.GetHashCode());
 
 	/// <summary>
 	/// Gets whether the two <see cref="DiscordThreadChannel"/> objects are equal.

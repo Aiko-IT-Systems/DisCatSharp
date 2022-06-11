@@ -20,22 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Runtime.Serialization;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents a membership screening field type
+/// Represents multi-factor authentication level required by a guild to use administrator functionality.
 /// </summary>
-[JsonConverter(typeof(StringEnumConverter))]
-public enum MembershipScreeningFieldType
+public enum MfaLevel : int
 {
 	/// <summary>
-	/// Specifies the server rules
+	/// Multi-factor authentication is not required to use administrator functionality.
 	/// </summary>
-	[EnumMember(Value = "TERMS")]
-	Terms
+	Disabled = 0,
+
+	/// <summary>
+	/// Multi-factor authentication is required to use administrator functionality.
+	/// </summary>
+	Enabled = 1
 }

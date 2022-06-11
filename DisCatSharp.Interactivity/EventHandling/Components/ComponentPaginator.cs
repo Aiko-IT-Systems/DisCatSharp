@@ -140,7 +140,7 @@ internal class ComponentPaginator : IPaginator
 #pragma warning disable CS8846 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
 		var paginationTask = id switch
 #pragma warning restore CS8846 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
-            {
+		{
 			_ when id == buttons.SkipLeft.CustomId => request.SkipLeftAsync(),
 			_ when id == buttons.SkipRight.CustomId => request.SkipRightAsync(),
 			_ when id == buttons.Stop.CustomId => Task.FromResult(tcs.TrySetResult(true)),

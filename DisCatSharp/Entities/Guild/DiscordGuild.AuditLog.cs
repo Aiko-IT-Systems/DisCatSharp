@@ -326,8 +326,8 @@ public partial class DiscordGuild
 							case "flags":
 								entrychn.ChannelFlagsChange = new PropertyChange<ChannelFlags>()
 								{
-									Before = (ChannelFlags)(int)xc.OldValue,
-									After = (ChannelFlags)(int)xc.NewValue
+									Before = (ChannelFlags)(long)(xc.OldValue ?? 0L),
+									After = (ChannelFlags)(long)(xc.NewValue ?? 0L)
 								};
 								break;
 
@@ -1272,6 +1272,10 @@ public partial class DiscordGuild
 								break;
 						}
 					}
+					break;
+
+				// TODO: Handle ApplicationCommandPermissionUpdate
+				case AuditLogActionType.ApplicationCommandPermissionUpdate:
 					break;
 
 				default:

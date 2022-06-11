@@ -49,7 +49,7 @@
   - provider: NuGet
     server:
     api_key:
-      secure: eml4lPttwjBZg7WdwX3tbx34ZDNssgb2zwthatNbolRY0PnaCIswbuPClf9IWrw7
+      secure: RjohrwOJE0RgzgIfe71AH42hRr7aZnEz5So/EKRI1FM7LQ/SLrEwSTDsNEQWMQik
     skip_symbols: false
   - provider: GitHub
     auth_token:
@@ -119,7 +119,7 @@
   - provider: NuGet
     server:
     api_key:
-      secure: eml4lPttwjBZg7WdwX3tbx34ZDNssgb2zwthatNbolRY0PnaCIswbuPClf9IWrw7
+      secure: hFr7dmC41bUWKRLZTu5SpkkN8Xv0b69VdkDL/wcsMkI4RmkVW6GKWi1iUMrtz0IT
     skip_symbols: false
   - provider: GitHub
     auth_token:
