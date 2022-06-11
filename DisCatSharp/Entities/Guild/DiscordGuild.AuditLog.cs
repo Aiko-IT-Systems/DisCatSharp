@@ -326,8 +326,8 @@ public partial class DiscordGuild
 							case "flags":
 								entrychn.ChannelFlagsChange = new PropertyChange<ChannelFlags>()
 								{
-									Before = (ChannelFlags)(long)xc.OldValue,
-									After = (ChannelFlags)(long)xc.NewValue
+									Before = (ChannelFlags)(long)(xc.OldValue ?? 0L),
+									After = (ChannelFlags)(long)(xc.NewValue ?? 0L)
 								};
 								break;
 
