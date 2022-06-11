@@ -267,13 +267,28 @@ public enum AuditLogActionType
 	/// </summary>
 	ThreadDelete = 112,
 
+	/// <summary>
+	/// Indicates that the permissions for an application command was updated.
+	/// </summary>
 	ApplicationCommandPermissionUpdate = 121,
 
+	/// <summary>
+	/// Indicates that a new automod rule has been added.
+	/// </summary>
 	AutoModerationRuleCreate = 140,
 
+	/// <summary>
+	/// Indicates that a automod rule has been updated.
+	/// </summary>
 	AutoModerationRuleUpdate = 141,
 
+	/// <summary>
+	/// Indicates that a automod rule has been deleted.
+	/// </summary>
 	AutoModerationRuleDelete = 142,
 
+	/// <summary>
+	/// Indicates that automod blocked a message.
+	/// </summary>
 	AutoModerationBlockMessage = 143
 }
