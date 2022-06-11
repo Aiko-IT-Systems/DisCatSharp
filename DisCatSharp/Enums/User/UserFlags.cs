@@ -175,7 +175,7 @@ public enum UserFlags : long
 	/// The user has a verified email.
 	/// </summary>
 	VerifiedEmail = 1L << 43,
-	
+
 	/// <summary>
 	/// The user is currently quarantined.
 	/// The user can't start new dms and join servers.

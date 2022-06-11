@@ -569,14 +569,14 @@ public sealed class DiscordApiClient
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
 			headers.Add(REASON_HEADER_NAME, reason);
-		
+
 		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.MFA}";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 	}
-	
+
 	/// <summary>
 	/// Implements https://discord.com/developers/docs/resources/guild#get-guild-bans.
 	/// </summary>
