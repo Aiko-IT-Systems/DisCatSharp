@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 namespace DisCatSharp;
 
