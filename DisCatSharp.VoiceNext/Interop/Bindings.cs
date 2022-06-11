@@ -23,8 +23,6 @@
 using System;
 using System.Runtime.InteropServices;
 
-using DisCatSharp.VoiceNext.Codec;
-
 namespace DisCatSharp.VoiceNext.Interop
 {
 	internal static unsafe class Bindings

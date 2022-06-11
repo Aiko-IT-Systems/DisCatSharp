@@ -309,7 +309,7 @@ public static class Utilities
 	/// <returns>A bool.</returns>
 	internal static bool HasMessageIntents(DiscordIntents intents)
 		=> intents.HasIntent(DiscordIntents.GuildMessages) || intents.HasIntent(DiscordIntents.DirectMessages);
-	
+
 	/// <summary>
 	/// Have the message intents.
 	/// </summary>
