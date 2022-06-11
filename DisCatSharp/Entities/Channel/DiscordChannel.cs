@@ -220,12 +220,6 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public List<ForumPostTag> AvailableTags { get; internal set; }
 
 	/// <summary>
-	/// Starter template for forum posts.
-	/// </summary>
-	[JsonProperty("template", NullValueHandling = NullValueHandling.Ignore)]
-	public string Template { get; internal set; }
-
-	/// <summary>
 	/// Gets when the last pinned message was pinned.
 	/// </summary>
 	[JsonIgnore]
