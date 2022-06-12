@@ -576,6 +576,7 @@ public sealed partial class DiscordClient
 				}
 
 				cid = (ulong)dat["channel_id"];
+				// Console.WriteLine(dat.ToString()); // Get raw interaction payload.
 				await this.OnInteractionCreateAsync((ulong?)dat["guild_id"], cid, usr, mbr, dat.ToDiscordObject<DiscordInteraction>()).ConfigureAwait(false);
 				break;
 

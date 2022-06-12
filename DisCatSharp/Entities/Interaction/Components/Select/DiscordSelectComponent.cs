@@ -85,6 +85,8 @@ public sealed class DiscordSelectComponent : DiscordComponent
 		return this;
 	}
 
+	// TODO: Can we set required
+
 	/// <summary>
 	/// Constructs a new <see cref="DiscordSelectComponent"/>.
 	/// </summary>
@@ -94,9 +96,9 @@ public sealed class DiscordSelectComponent : DiscordComponent
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this button should be initialized as being disabled. User sees a greyed out button that cannot be interacted with.</param>
-	public DiscordSelectComponent(string customId, string placeholder, IEnumerable<DiscordSelectComponentOption> options, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
+	public DiscordSelectComponent(string placeholder, IEnumerable<DiscordSelectComponentOption> options, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
 	{
-		this.CustomId = customId;
+		this.CustomId = customId ?? Guid.NewGuid().ToString(); ;
 		this.Disabled = disabled;
 		this.Options = options.ToArray();
 		this.Placeholder = placeholder;
