@@ -147,7 +147,7 @@ public sealed class DiscordTextComponent : DiscordComponent
 		this.Label = label ?? throw new ArgumentException("A label is required.");
 		this.CustomId = customId ?? Guid.NewGuid().ToString();
 		this.MinLength = minLength;
-		this.MaxLength = maxLength;
+		this.MaxLength = style == TextComponentStyle.Small ? 256 : maxLength;
 		this.Placeholder = placeholder;
 		//this.Disabled = disabled;
 		this.Required = required;

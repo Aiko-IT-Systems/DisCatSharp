@@ -5085,9 +5085,9 @@ public sealed class DiscordApiClient
 	/// <param name="builder">The builder.</param>
 	internal async Task CreateInteractionModalResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionModalBuilder builder)
 	{
-		if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type != Enums.ComponentType.InputText)))
-			throw new NotSupportedException("Can't send any other type then Input Text as Modal Component.");
-
+		if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type != ComponentType.InputText && c.Type != ComponentType.Select)))
+			throw new NotSupportedException("Can't send any other type then Input Text or Select as Modal Component.");
+		
 		var pld = new RestInteractionModalResponsePayload
 		{
 			Type = type,
