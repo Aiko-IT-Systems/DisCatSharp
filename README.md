@@ -1,6 +1,6 @@
 # DisCatSharp ![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=%23ebb34b&label=Stable&style=flat-square&logo=nuget) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=%23ff1493&label=Nightly&style=flat-square&logo=nuget)
 
-A Discord Bot Library written in C# for .NET.
+## A Discord Bot Library written in C# for .NET
 
 ![DisCatSharp Logo](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.Logos/android-chrome-192x192.png?raw=true)
 
