@@ -46,7 +46,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var invitesRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordInvite>>(res.Response).Select(xi => { xi.Discord = this.Discord; return xi; });
 
@@ -75,7 +75,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {invite_code = inviteCode }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, urlParams.Any() ? BuildQueryString(urlParams) : "", this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
 		ret.Discord = this.Discord;
@@ -99,7 +99,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {invite_code = inviteCode }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
 		ret.Discord = this.Discord;
@@ -117,7 +117,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {channel_id = channelId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var invitesRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordInvite>>(res.Response).Select(xi => { xi.Discord = this.Discord; return xi; });
 
@@ -158,7 +158,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {channel_id = channelId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
 		ret.Discord = this.Discord;
@@ -175,7 +175,7 @@ public sealed partial class DiscordApiClient
          *
          *     var url = new Uri($"{Utils.GetApiBaseUri(this.Configuration), Endpoints.INVITES}/{invite_code));
          *     var bucket = this.Rest.GetBucket(0, MajorParameterType.Unbucketed, url, HttpRequestMethod.POST);
-         *     var res = await this.DoRequestAsync(this.Discord, bucket, url, HttpRequestMethod.POST).ConfigureAwait(false);
+         *     var res = await this.ExecuteRestRequest(this.Discord, bucket, url, HttpRequestMethod.POST).ConfigureAwait(false);
          *
          *     var ret = JsonConvert.DeserializeObject<DiscordInvite>(res.Response);
          *     ret.Discord = this.Discord;

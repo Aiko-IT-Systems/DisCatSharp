@@ -46,7 +46,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var rolesRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordRole>>(res.Response).Select(xr => { xr.Discord = this.Discord; xr.GuildId = guildId; return xr; });
 
@@ -70,7 +70,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new {guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+		return this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
 	/// <summary>
@@ -117,7 +117,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new {guild_id = guildId, role_id = roleId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<DiscordRole>(res.Response);
 		ret.Discord = this.Discord;
@@ -143,7 +143,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {guild_id = guildId, role_id = roleId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
+		return this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
 	}
 
 	/// <summary>
@@ -176,7 +176,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<DiscordRole>(res.Response);
 		ret.Discord = this.Discord;

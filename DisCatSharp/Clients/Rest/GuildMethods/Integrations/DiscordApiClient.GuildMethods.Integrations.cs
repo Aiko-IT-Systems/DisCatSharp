@@ -52,7 +52,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var integrationsRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordIntegration>>(res.Response).Select(xi => { xi.Discord = this.Discord; return xi; });
 
@@ -79,7 +79,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {guild_id = guildId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<DiscordIntegration>(res.Response);
 		ret.Discord = this.Discord;
@@ -109,7 +109,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new {guild_id = guildId, integration_id = integrationId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<DiscordIntegration>(res.Response);
 		ret.Discord = this.Discord;
@@ -129,7 +129,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {guild_id = guildId, integration_id = integration.Id }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, payload: DiscordJson.SerializeObject(integration));
+		return this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.DELETE, route, payload: DiscordJson.SerializeObject(integration));
 	}
 
 	/// <summary>
@@ -144,6 +144,6 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {guild_id = guildId, integration_id = integrationId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route);
+		return this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.POST, route);
 	}
 }

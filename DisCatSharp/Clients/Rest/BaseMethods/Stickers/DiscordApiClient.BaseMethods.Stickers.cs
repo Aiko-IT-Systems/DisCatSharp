@@ -41,22 +41,36 @@ namespace DisCatSharp.Net;
 public sealed partial class DiscordApiClient
 {
 	/// <summary>
-	/// Gets the guild preview async.
+	/// Gets a sticker.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-
-	internal async Task<DiscordGuildPreview> GetGuildPreviewAsync(ulong guildId)
+	/// <param name="stickerId">The sticker id.</param>
+	internal async Task<DiscordSticker> GetStickerAsync(ulong stickerId)
 	{
-		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PREVIEW}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
+		var route = $"{Endpoints.STICKERS}/:sticker_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {sticker_id = stickerId}, out var path);
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var ret = JObject.Parse(res.Response).ToDiscordObject<DiscordSticker>();
+
+		ret.Discord = this.Discord;
+		return ret;
+	}
+
+	/// <summary>
+	/// Gets the sticker packs.
+	/// </summary>
+	internal async Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
+	{
+		var route = $"{Endpoints.STICKERPACKS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordGuildPreview>(res.Response);
-		ret.Discord = this.Discord;
+		var json = JObject.Parse(res.Response)["sticker_packs"] as JArray;
+		var ret = json.ToDiscordObject<DiscordStickerPack[]>();
 
-		return ret;
+		return ret.ToList();
 	}
-
 }

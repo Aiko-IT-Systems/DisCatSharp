@@ -62,7 +62,7 @@ public sealed partial class DiscordApiClient
 			headers.Add(REASON_HEADER_NAME, reason);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var stageInstance = JsonConvert.DeserializeObject<DiscordStageInstance>(res.Response);
 
@@ -79,7 +79,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {channel_id = channelId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var stageInstance = JsonConvert.DeserializeObject<DiscordStageInstance>(res.Response);
 
@@ -108,7 +108,7 @@ public sealed partial class DiscordApiClient
 			headers.Add(REASON_HEADER_NAME, reason);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+		return this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
 	/// <summary>
@@ -125,6 +125,6 @@ public sealed partial class DiscordApiClient
 			headers.Add(REASON_HEADER_NAME, reason);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
+		return this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
 	}
 }

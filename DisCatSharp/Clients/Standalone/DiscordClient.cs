@@ -579,7 +579,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		var bucket = this.ApiClient.Rest.GetBucket(method, route, routeParams, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Configuration);
-		var res = await this.ApiClient.DoRequestAsync(this, bucket, url, method, route, additionalHeaders, DiscordJson.SerializeObject(jsonBody), ratelimitWaitOverride);
+		var res = await this.ApiClient.ExecuteRestRequest(this, bucket, url, method, route, additionalHeaders, DiscordJson.SerializeObject(jsonBody), ratelimitWaitOverride);
 
 		return res;
 	}

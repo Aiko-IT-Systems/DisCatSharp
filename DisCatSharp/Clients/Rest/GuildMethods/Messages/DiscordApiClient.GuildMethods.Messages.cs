@@ -52,7 +52,7 @@ public sealed partial class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {channel_id = channelId, message_id = messageId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var response = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route).ConfigureAwait(false);
+		var response = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.POST, route).ConfigureAwait(false);
 		return JsonConvert.DeserializeObject<DiscordMessage>(response.Response);
 	}
 }

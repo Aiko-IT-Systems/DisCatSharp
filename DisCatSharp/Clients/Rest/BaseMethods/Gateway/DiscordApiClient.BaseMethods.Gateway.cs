@@ -41,22 +41,21 @@ namespace DisCatSharp.Net;
 public sealed partial class DiscordApiClient
 {
 	/// <summary>
-	/// Gets the guild preview async.
+	/// Gets the gateway info async.
 	/// </summary>
-	/// <param name="guildId">The guild_id.</param>
-
-	internal async Task<DiscordGuildPreview> GetGuildPreviewAsync(ulong guildId)
+	internal async Task<GatewayInfo> GetGatewayInfoAsync()
 	{
-		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.PREVIEW}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {guild_id = guildId }, out var path);
+		var headers = Utilities.GetBaseHeaders();
+		var route = Endpoints.GATEWAY;
+		if (this.Discord.Configuration.TokenType == TokenType.Bot)
+			route += Endpoints.BOT;
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+		var res = await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.GET, route, headers).ConfigureAwait(false);
 
-		var ret = JsonConvert.DeserializeObject<DiscordGuildPreview>(res.Response);
-		ret.Discord = this.Discord;
-
-		return ret;
+		var info = JObject.Parse(res.Response).ToObject<GatewayInfo>();
+		info.SessionBucket.ResetAfter = DateTimeOffset.UtcNow + TimeSpan.FromMilliseconds(info.SessionBucket.ResetAfterInternal);
+		return info;
 	}
-
 }
