@@ -26,6 +26,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -276,7 +277,7 @@ public sealed partial class DiscordApiClient
 		return new ReadOnlyCollection<DiscordConnection>(new List<DiscordConnection>(connectionsRaw));
 	}
 	#endregion
-
+    
 	#region Webhooks
 	/// <summary>
 	/// Creates the webhook async.
@@ -952,7 +953,6 @@ public sealed partial class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : (double?)0.26);
 	}
 	#endregion
-
 
 	#region Emoji
 	/// <summary>
