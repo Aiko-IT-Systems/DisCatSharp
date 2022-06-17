@@ -29,7 +29,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
-using DisCatSharp.Enums;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Serialization;
 

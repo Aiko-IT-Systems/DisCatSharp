@@ -20,20 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
-using DisCatSharp.Enums;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Serialization;
 
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp.Net;

@@ -146,7 +146,7 @@ public sealed partial class DiscordApiClient
 
 		return new ReadOnlyCollection<DiscordConnection>(new List<DiscordConnection>(connectionsRaw));
 	}
-	
+
 	/// <summary>
 	/// Gets the users connections async.
 	/// </summary>
