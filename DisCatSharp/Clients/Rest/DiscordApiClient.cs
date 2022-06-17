@@ -259,25 +259,6 @@ public sealed partial class DiscordApiClient
 		return req.WaitForCompletionAsync();
 	}
 
-	#region Connections
-	/// <summary>
-	/// Gets the users connections async.
-	/// </summary>
-
-	internal async Task<IReadOnlyList<DiscordConnection>> GetUserConnectionsAsync()
-	{
-		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CONNECTIONS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { }, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
-
-		var connectionsRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordConnection>>(res.Response).Select(xc => { xc.Discord = this.Discord; return xc; });
-
-		return new ReadOnlyCollection<DiscordConnection>(new List<DiscordConnection>(connectionsRaw));
-	}
-	#endregion
-    
 	#region Webhooks
 	/// <summary>
 	/// Creates the webhook async.

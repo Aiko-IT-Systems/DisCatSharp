@@ -637,7 +637,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordConnection>> GetConnectionsAsync()
-		=> this.ApiClient.GetUserConnectionsAsync();
+		=> this.ApiClient.GetCurrentUserConnectionsAsync();
 
 	/// <summary>
 	/// Gets a sticker.
