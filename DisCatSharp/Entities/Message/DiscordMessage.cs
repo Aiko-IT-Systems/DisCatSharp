@@ -209,7 +209,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this.MentionedUsersLazy.Value;
 
 	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordUser> MentionedUsersInternal;
+	internal List<DiscordUser> MentionedUsersInternal = new();
 	[JsonIgnore]
 	internal readonly Lazy<IReadOnlyList<DiscordUser>> MentionedUsersLazy;
 
@@ -223,10 +223,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this._mentionedRolesLazy.Value;
 
 	[JsonIgnore]
-	internal List<DiscordRole> MentionedRolesInternal;
+	internal List<DiscordRole> MentionedRolesInternal = new();
 
 	[JsonProperty("mention_roles")]
-	internal List<ulong> MentionedRoleIds;
+	internal List<ulong> MentionedRoleIds = new();
 
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
@@ -239,7 +239,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 		=> this._mentionedChannelsLazy.Value;
 
 	[JsonIgnore]
-	internal List<DiscordChannel> MentionedChannelsInternal;
+	internal List<DiscordChannel> MentionedChannelsInternal = new();
 	[JsonIgnore]
 	private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
 
