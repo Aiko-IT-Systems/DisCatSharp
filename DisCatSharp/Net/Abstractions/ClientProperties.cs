@@ -96,7 +96,7 @@ internal sealed class ClientProperties
 	[JsonProperty("device")]
 	public string Device
 		=> this.Browser;
-
+	/*
 	/// <summary>
 	/// Gets the client's referrer.
 	/// </summary>
@@ -110,4 +110,5 @@ internal sealed class ClientProperties
 	[JsonProperty("$referring_domain")]
 	public string ReferringDomain
 		=> "";
+	*/
 }
