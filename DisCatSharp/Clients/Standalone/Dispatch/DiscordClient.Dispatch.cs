@@ -2298,15 +2298,6 @@ public sealed partial class DiscordClient
 			message.ReferencedMessage.PopulateMentions();
 		}
 
-		// Handling of user mentions
-		if (message.MentionedUsersInternal.Any())
-			foreach (var user in message.MentionedUsers)
-			{
-				user.Discord = this;
-				if (user.Id != message.Author.Id)
-					this.UserCache.AddOrUpdate(user.Id, user, (id, oldUsr) => oldUsr);
-			}
-
 		// This is fucking hacky
 		if (!message.MentionedChannelsInternal.Any() && message.Content != null && Utilities.ContainsChannelMentions(message.Content))
 		{
