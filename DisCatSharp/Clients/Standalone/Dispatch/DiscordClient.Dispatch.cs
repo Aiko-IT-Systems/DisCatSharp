@@ -2211,11 +2211,20 @@ public sealed partial class DiscordClient
 			message.EditedTimestampRaw = eventMessage.EditedTimestampRaw;
 			if (eventMessage.Content != null)
 				message.Content = eventMessage.Content;
-			message.EmbedsInternal.Clear();
-			message.EmbedsInternal.AddRange(eventMessage.EmbedsInternal);
 			message.Pinned = eventMessage.Pinned;
 			message.IsTts = eventMessage.IsTts;
 		}
+		message.EmbedsInternal.Clear();
+		message.EmbedsInternal.AddRange(eventMessage.EmbedsInternal);
+		message.ComponentsInternal.Clear();
+		message.ComponentsInternal.AddRange(eventMessage.ComponentsInternal);
+		message.MentionedUsersInternal.Clear();
+		message.MentionedUsersInternal.AddRange(eventMessage.MentionedUsersInternal ?? new());
+		message.MentionedRolesInternal.Clear();
+		message.MentionedRolesInternal.AddRange(eventMessage.MentionedRolesInternal ?? new());
+		message.MentionedChannelsInternal.Clear();
+		message.MentionedChannelsInternal.AddRange(eventMessage.MentionedChannelsInternal ?? new());
+		message.MentionEveryone = eventMessage.MentionEveryone;
 
 		message.PopulateMentions();
 

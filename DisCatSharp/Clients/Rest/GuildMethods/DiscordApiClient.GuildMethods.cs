@@ -122,12 +122,6 @@ public sealed partial class DiscordApiClient
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		await this.ExecuteRestRequest(this.Discord, bucket, url, RestRequestMethod.DELETE, route).ConfigureAwait(false);
-
-		if (this.Discord is DiscordClient dc)
-		{
-			var gld = dc.GuildsInternal[guildId];
-			await dc.OnGuildDeleteEventAsync(gld).ConfigureAwait(false);
-		}
 	}
 
 	/// <summary>

@@ -137,7 +137,10 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// Gets the components this message was sent with.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordActionRowComponent> Components { get; internal set; }
+	internal List<DiscordActionRowComponent> ComponentsInternal;
+	[JsonIgnore]
+	public IReadOnlyList<DiscordActionRowComponent> Components
+		=> new List<DiscordActionRowComponent>(this.ComponentsInternal);
 
 	/// <summary>
 	/// Gets the user or member that sent the message.
