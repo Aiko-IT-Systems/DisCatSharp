@@ -2222,11 +2222,78 @@ public sealed partial class DiscordClient
 			guild.MembersInternal.AddOrUpdate(message.AuthorInternal.Id, message.Member, (id, oldMbr) => oldMbr);
 		}
 
-		this.PopulateMessageReactionsAndCache(message, message.AuthorInternal, message.MemberInternal);
-
 		if (message.ReferencedMessage != null)
 		{
 			message.ReferencedMessage.Discord = this;
+
+			if (!message.ReferencedMessage.MentionedChannelsInternal.Any() && message.ReferencedMessage.Content != null && Utilities.ContainsChannelMentions(message.ReferencedMessage.Content))
+			{
+				List<ChannelMention> mentions = new();
+				var channelMentions = Utilities.GetChannelMentions(message);
+				foreach (var mention in channelMentions)
+				{
+					try
+					{
+						var channel = this.InternalGetCachedChannel(mention) ?? this.InternalGetCachedThread(mention) ?? await this.ApiClient.GetChannelAsync(mention);
+						if (channel.Name == null)
+						{
+							mentions.Add(new ChannelMention()
+							{
+								Id = mention,
+								GuildId = null,
+								Name = null,
+								Discord = this,
+								Type = null
+							});
+							continue;
+						}
+						if (channel != null && channel.GuildId.HasValue)
+							mentions.Add(new ChannelMention()
+							{
+								Id = channel.Id,
+								GuildId = channel.GuildId,
+								Name = channel.Name,
+								Discord = this,
+								Type = channel.Type
+							});
+						else
+							mentions.Add(new ChannelMention()
+							{
+								Id = mention,
+								GuildId = null,
+								Name = null,
+								Discord = this,
+								Type = null
+							});
+						continue;
+					}
+					catch (UnauthorizedException)
+					{
+						mentions.Add(new ChannelMention()
+						{
+							Id = mention,
+							GuildId = null,
+							Name = null,
+							Discord = this,
+							Type = null
+						});
+						continue;
+					}
+					catch (NotFoundException)
+					{
+						mentions.Add(new ChannelMention()
+						{
+							Id = mention,
+							GuildId = null,
+							Name = null,
+							Discord = this,
+							Type = null
+						});
+						continue;
+					}
+				}
+				message.ReferencedMessage.MentionedChannelsInternal.AddRange(mentions);
+			}
 			this.PopulateMessageReactionsAndCache(message.ReferencedMessage, referenceAuthor, referenceMember);
 			message.ReferencedMessage.PopulateMentions();
 		}
@@ -2309,7 +2376,8 @@ public sealed partial class DiscordClient
 			}
 			message.MentionedChannelsInternal.AddRange(mentions);
 		}
-		
+
+		this.PopulateMessageReactionsAndCache(message, message.AuthorInternal, message.MemberInternal);
 		message.PopulateMentions();
 
 		// embed cache is broken, component cache is broken
