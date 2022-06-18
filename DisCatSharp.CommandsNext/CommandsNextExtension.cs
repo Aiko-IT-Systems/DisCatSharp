@@ -35,6 +35,7 @@ using DisCatSharp.CommandsNext.Exceptions;
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
 using DisCatSharp.EventArgs;
+using DisCatSharp.Net.Abstractions;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -848,16 +849,24 @@ public class CommandsNextExtension : BaseExtension
 		};
 
 		var mentionedUsers = new List<DiscordUser>();
-		var mentionedRoles = msg.Channel.Guild != null ? new List<DiscordRole>() : null;
-		var mentionedChannels = msg.Channel.Guild != null ? new List<DiscordChannel>() : null;
+		var mentionedRoles = msg.Channel.Guild != null ? new List<ulong>() : null;
+		var mentionedChannels = msg.Channel.Guild != null ? new List<ChannelMention>() : null;
 
 		if (!string.IsNullOrWhiteSpace(msg.Content))
 		{
 			if (msg.Channel.Guild != null)
 			{
 				mentionedUsers = Utilities.GetUserMentions(msg).Select(xid => msg.Channel.Guild.MembersInternal.TryGetValue(xid, out var member) ? member : null).Cast<DiscordUser>().ToList();
-				mentionedRoles = Utilities.GetRoleMentions(msg).Select(xid => msg.Channel.Guild.GetRole(xid)).ToList();
-				mentionedChannels = Utilities.GetChannelMentions(msg).Select(xid => msg.Channel.Guild.GetChannel(xid)).ToList();
+				mentionedRoles = Utilities.GetRoleMentions(msg).ToList();
+				mentionedChannels = Utilities.GetChannelMentions(msg).Select(xid => 
+				new ChannelMention()
+				{
+					Discord = msg.Discord,
+					Name = msg.Channel.Guild.GetChannel(xid).Name,
+					GuildId = msg.Channel.GuildId,
+					Id = xid,
+					Type = msg.Channel.Guild.GetChannel(xid).Type
+				}).ToList();
 			}
 			else
 			{
@@ -866,7 +875,7 @@ public class CommandsNextExtension : BaseExtension
 		}
 
 		msg.MentionedUsersInternal = mentionedUsers;
-		msg.MentionedRolesInternal = mentionedRoles;
+		msg.MentionedRoleIdsInternal = mentionedRoles;
 		msg.MentionedChannelsInternal = mentionedChannels;
 
 		var ctx = new CommandContext

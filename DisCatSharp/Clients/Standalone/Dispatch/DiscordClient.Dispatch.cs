@@ -2247,8 +2247,42 @@ public sealed partial class DiscordClient
 			var channelMentions = Utilities.GetChannelMentions(message);
 			foreach(var mention in channelMentions)
 			{
-				var channel = this.InternalGetCachedChannel(mention) ?? this.InternalGetCachedThread(mention) ?? await this.ApiClient.GetChannelAsync(mention);
-				if (channel.Name == null)
+				try
+				{
+					var channel = this.InternalGetCachedChannel(mention) ?? this.InternalGetCachedThread(mention) ?? await this.ApiClient.GetChannelAsync(mention);
+					if (channel.Name == null)
+					{
+						mentions.Add(new ChannelMention()
+						{
+							Id = mention,
+							GuildId = null,
+							Name = null,
+							Discord = this,
+							Type = null
+						});
+						continue;
+					}
+					if (channel != null && channel.GuildId.HasValue)
+						mentions.Add(new ChannelMention()
+						{
+							Id = channel.Id,
+							GuildId = channel.GuildId,
+							Name = channel.Name,
+							Discord = this,
+							Type = channel.Type
+						});
+					else
+						mentions.Add(new ChannelMention()
+						{
+							Id = mention,
+							GuildId = null,
+							Name = null,
+							Discord = this,
+							Type = null
+						});
+					continue;
+				}
+				catch (UnauthorizedException)
 				{
 					mentions.Add(new ChannelMention()
 					{
@@ -2260,16 +2294,8 @@ public sealed partial class DiscordClient
 					});
 					continue;
 				}
-				if (channel != null && channel.GuildId.HasValue)
-					mentions.Add(new ChannelMention()
-					{
-						Id = channel.Id,
-						GuildId = channel.GuildId,
-						Name = channel.Name,
-						Discord = this,
-						Type = channel.Type
-					});
-				else
+				catch (NotFoundException)
+				{
 					mentions.Add(new ChannelMention()
 					{
 						Id = mention,
@@ -2278,6 +2304,8 @@ public sealed partial class DiscordClient
 						Discord = this,
 						Type = null
 					});
+					continue;
+				}
 			}
 			message.MentionedChannelsInternal.AddRange(mentions);
 		}

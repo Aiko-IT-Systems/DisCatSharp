@@ -206,9 +206,9 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyCollection<DiscordUser> MentionedUsers
-		=> this.MentionedUsersInternal.Any() ? this.MentionedUsersInternal.Select(x => new DiscordUser(x)).ToArray(): Array.Empty<DiscordUser>();
+		=> this.MentionedUsersInternal.Any() ? this.MentionedUsersInternal.ToArray(): Array.Empty<DiscordUser>();
 	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<TransportUser> MentionedUsersInternal = new();
+	internal List<DiscordUser> MentionedUsersInternal = new();
 
 	/// <summary>
 	/// Gets roles mentioned by this message.
