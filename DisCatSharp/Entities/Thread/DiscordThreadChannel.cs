@@ -131,7 +131,13 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
 	/// </summary>
-	internal DiscordThreadChannel()
+	internal DiscordThreadChannel() : base()
+	{ }
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
+	/// </summary>
+	internal DiscordThreadChannel(string name, ulong id, ulong? guildId, ChannelType? type) : base(name, id, guildId, type)
 	{ }
 
 	#region Methods
@@ -422,7 +428,7 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 		this.Discord.Configuration.MessageCacheSize > 0
 		&& this.Discord is DiscordClient dc
 		&& dc.MessageCache != null
-		&& dc.MessageCache.TryGet(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)
+		&& dc.MessageCache.TryGetLastOrDefault(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)
 			? msg
 			: await this.Discord.ApiClient.GetMessageAsync(this.Id, id).ConfigureAwait(false);
 

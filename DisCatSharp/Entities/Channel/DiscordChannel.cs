@@ -301,6 +301,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		this._permissionOverwritesLazy = new Lazy<IReadOnlyList<DiscordOverwrite>>(() => new ReadOnlyCollection<DiscordOverwrite>(this.PermissionOverwritesInternal));
 	}
 
+	internal DiscordChannel(string name, ulong id, ulong? guildId, ChannelType? type) : this()
+	{
+		this.Name = name;
+		this.Id = id;
+		this.GuildId = guildId;
+		if (type != null)
+			this.Type = type.Value;
+	}
+
 	#region Methods
 
 	/// <summary>
@@ -441,7 +450,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		this.Discord.Configuration.MessageCacheSize > 0
 		&& this.Discord is DiscordClient dc
 		&& dc.MessageCache != null
-		&& dc.MessageCache.TryGet(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)
+		&& dc.MessageCache.TryGetLastOrDefault(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)
 			? msg
 			: await this.Discord.ApiClient.GetMessageAsync(this.Id, id).ConfigureAwait(false);
 

@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Net.Abstractions;
 
 using Newtonsoft.Json;
 
@@ -43,13 +44,6 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	internal DiscordMessage()
 	{
-		this._attachmentsLazy = new Lazy<IReadOnlyList<DiscordAttachment>>(() => new ReadOnlyCollection<DiscordAttachment>(this.AttachmentsInternal));
-		this._embedsLazy = new Lazy<IReadOnlyList<DiscordEmbed>>(() => new ReadOnlyCollection<DiscordEmbed>(this.EmbedsInternal));
-		this._mentionedChannelsLazy = new Lazy<IReadOnlyList<DiscordChannel>>(() => this.MentionedChannelsInternal != null
-				? new ReadOnlyCollection<DiscordChannel>(this.MentionedChannelsInternal)
-				: Array.Empty<DiscordChannel>());
-		this._mentionedRolesLazy = new Lazy<IReadOnlyList<DiscordRole>>(() => this.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(this.MentionedRolesInternal) : Array.Empty<DiscordRole>());
-		this.MentionedUsersLazy = new Lazy<IReadOnlyList<DiscordUser>>(() => new ReadOnlyCollection<DiscordUser>(this.MentionedUsersInternal));
 		this._reactionsLazy = new Lazy<IReadOnlyList<DiscordReaction>>(() => new ReadOnlyCollection<DiscordReaction>(this.ReactionsInternal));
 		this._stickersLazy = new Lazy<IReadOnlyList<DiscordSticker>>(() => new ReadOnlyCollection<DiscordSticker>(this.StickersInternal));
 		this._jumpLink = new Lazy<Uri>(() =>
@@ -59,7 +53,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 				gid = this.Channel is DiscordDmChannel
 					? "@me"
 					: this.Channel is DiscordThreadChannel
-					? this.INTERNAL_THREAD.GuildId.Value.ToString(CultureInfo.InvariantCulture)
+					? this.InternalThread.GuildId.Value.ToString(CultureInfo.InvariantCulture)
 					: this.Channel.GuildId.Value.ToString(CultureInfo.InvariantCulture);
 
 			var cid = this.ChannelId.ToString(CultureInfo.InvariantCulture);
@@ -78,18 +72,17 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	{
 		this.Discord = other.Discord;
 
-		this.AttachmentsInternal = other.AttachmentsInternal; // the attachments cannot change, thus no need to copy and reallocate.
-		this.EmbedsInternal = new List<DiscordEmbed>(other.EmbedsInternal);
+		this.AttachmentsInternal = new(other.AttachmentsInternal);
+		this.EmbedsInternal = new(other.EmbedsInternal);
+		this.ComponentsInternal = new(other.ComponentsInternal);
 
 		if (other.MentionedChannelsInternal != null)
-			this.MentionedChannelsInternal = new List<DiscordChannel>(other.MentionedChannelsInternal);
-		if (other.MentionedRolesInternal != null)
-			this.MentionedRolesInternal = new List<DiscordRole>(other.MentionedRolesInternal);
-		if (other.MentionedRoleIds != null)
-			this.MentionedRoleIds = new List<ulong>(other.MentionedRoleIds);
-		this.MentionedUsersInternal = new List<DiscordUser>(other.MentionedUsersInternal);
-		this.ReactionsInternal = new List<DiscordReaction>(other.ReactionsInternal);
-		this.StickersInternal = new List<DiscordSticker>(other.StickersInternal);
+			this.MentionedChannelsInternal = new(other.MentionedChannelsInternal);
+		if (other.MentionedRoleIdsInternal != null)
+			this.MentionedRoleIdsInternal = new(other.MentionedRoleIdsInternal);
+		this.MentionedUsersInternal = new(other.MentionedUsersInternal);
+		this.ReactionsInternal = new(other.ReactionsInternal);
+		this.StickersInternal = new(other.StickersInternal);
 
 		this.Author = other.Author;
 		this.ChannelId = other.ChannelId;
@@ -119,7 +112,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// Gets the thread in which the message was sent.
 	/// </summary>
 	[JsonIgnore]
-	private DiscordThreadChannel INTERNAL_THREAD
+	internal DiscordThreadChannel InternalThread
 	{
 		get => (this.Discord as DiscordClient)?.InternalGetCachedThread(this.ChannelId) ?? this._thread;
 		set => this._thread = value;
@@ -146,7 +139,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// Gets the user or member that sent the message.
 	/// </summary>
 	[JsonProperty("author", NullValueHandling = NullValueHandling.Ignore)]
+	internal TransportUser AuthorInternal;
+	[JsonIgnore]
 	public DiscordUser Author { get; internal set; }
+
+	[JsonProperty("member", NullValueHandling = NullValueHandling.Ignore)]
+	internal TransportMember MemberInternal;
+	[JsonIgnore]
+	public DiscordMember Member { get; internal set; }
 
 	/// <summary>
 	/// Gets the message's content.
@@ -205,67 +205,59 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// Gets users or members mentioned by this message.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordUser> MentionedUsers
-		=> this.MentionedUsersLazy.Value;
-
+	public IReadOnlyCollection<DiscordUser> MentionedUsers
+		=> this.MentionedUsersInternal.Any() ? this.MentionedUsersInternal.Select(x => new DiscordUser(x)).ToArray(): Array.Empty<DiscordUser>();
 	[JsonProperty("mentions", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<DiscordUser> MentionedUsersInternal = new();
-	[JsonIgnore]
-	internal readonly Lazy<IReadOnlyList<DiscordUser>> MentionedUsersLazy;
+	internal List<TransportUser> MentionedUsersInternal = new();
 
-	// TODO: this will probably throw an exception in DMs since it tries to wrap around a null List...
-	// this is probably low priority but need to find out a clean way to solve it...
 	/// <summary>
 	/// Gets roles mentioned by this message.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordRole> MentionedRoles
-		=> this._mentionedRolesLazy.Value;
-
+	public IReadOnlyCollection<DiscordRole> MentionedRoles
+		=> this.MentionedRoleIdsInternal.Any() ? this.MentionedRolesInternal : Array.Empty<DiscordRole>();
 	[JsonIgnore]
-	internal List<DiscordRole> MentionedRolesInternal = new();
-
+	internal List<DiscordRole> MentionedRolesInternal
+		=> this.GuildId != null && this.Guild != null && this.MentionedRoleIdsInternal.Any() ? this.MentionedRoleIdsInternal.Select(x => this.Guild.GetRole(x)).ToList() : new();
 	[JsonProperty("mention_roles")]
-	internal List<ulong> MentionedRoleIds = new();
-
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordRole>> _mentionedRolesLazy;
+	internal List<ulong> MentionedRoleIdsInternal = new();
 
 	/// <summary>
 	/// Gets channels mentioned by this message.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordChannel> MentionedChannels
-		=> this._mentionedChannelsLazy.Value;
+	public IReadOnlyCollection<DiscordChannel> MentionedChannels
+		=> this.MentionedChannelsInternal.Any()
+		? this.MentionedChannelsInternal.Select(
+			 x =>
+			 x.Type == ChannelType.NewsThread || x.Type == ChannelType.PublicThread || x.Type == ChannelType.PrivateThread
+			 ? x.GuildId.HasValue && this.Discord.Guilds.TryGetValue(x.GuildId.Value, out var guild) ? guild.GetThread(x.Id) : new DiscordThreadChannel(x.Name, x.Id, x.GuildId, x.Type ?? ChannelType.Unknown) { Discord = this.Discord }
+			 : x.GuildId.HasValue && this.Discord.Guilds.TryGetValue(x.GuildId.Value, out var guild2) ? guild2.GetChannel(x.Id) : new DiscordChannel(x.Name, x.Id, x.GuildId, x.Type ?? ChannelType.Unknown) { Discord = this.Discord }
+		).ToArray()
+		: Array.Empty<DiscordChannel>();
 
-	[JsonIgnore]
-	internal List<DiscordChannel> MentionedChannelsInternal = new();
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordChannel>> _mentionedChannelsLazy;
+	[JsonProperty("mention_channels", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<ChannelMention> MentionedChannelsInternal = new();
 
 	/// <summary>
 	/// Gets files attached to this message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordAttachment> Attachments
-		=> this._attachmentsLazy.Value;
+		=> this.AttachmentsInternal;
 
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordAttachment> AttachmentsInternal = new();
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordAttachment>> _attachmentsLazy;
 
 	/// <summary>
 	/// Gets embeds attached to this message.
 	/// </summary>
 	[JsonIgnore]
 	public IReadOnlyList<DiscordEmbed> Embeds
-		=> this._embedsLazy.Value;
+		=> this.EmbedsInternal;
 
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<DiscordEmbed> EmbedsInternal = new();
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<DiscordEmbed>> _embedsLazy;
 
 	/// <summary>
 	/// Gets reactions used on this message.
@@ -372,6 +364,11 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// </summary>
 	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
 	internal ulong? GuildId { get; set; }
+	/// <summary>
+	/// Gets the guild.
+	/// </summary>
+	[JsonIgnore]
+	internal DiscordGuild Guild { get; set; }
 
 	/// <summary>
 	/// Gets the message object for the referenced message
@@ -428,7 +425,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 
 		else reference.Channel = channel;
 
-		if (client.MessageCache != null && client.MessageCache.TryGet(m => m.Id == messageId.Value && m.ChannelId == channelId, out var msg))
+		if (client.MessageCache != null && client.MessageCache.TryGetLastOrDefault(m => m.Id == messageId.Value && m.ChannelId == channelId, out var msg))
 			reference.Message = msg;
 
 		else
@@ -455,14 +452,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	{
 		var mentions = new List<IMention>();
 
-		if (this.ReferencedMessage != null && this.MentionedUsersInternal.Contains(this.ReferencedMessage.Author))
+		if (this.ReferencedMessage != null && this.MentionedUsers.Contains(this.ReferencedMessage.Author))
 			mentions.Add(new RepliedUserMention());
 
 		if (this.MentionedUsersInternal.Any())
-			mentions.AddRange(this.MentionedUsersInternal.Select(m => (IMention)new UserMention(m)));
+			mentions.AddRange(this.MentionedUsers.Select(m => (IMention)new UserMention(m)));
 
-		if (this.MentionedRoleIds.Any())
-			mentions.AddRange(this.MentionedRoleIds.Select(r => (IMention)new RoleMention(r)));
+		if (this.MentionedRoleIdsInternal.Any())
+			mentions.AddRange(this.MentionedRoleIdsInternal.Select(r => (IMention)new RoleMention(r)));
 
 		return mentions;
 	}
@@ -473,14 +470,14 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	internal void PopulateMentions()
 	{
 		var guild = this.Channel?.Guild;
-		this.MentionedUsersInternal ??= new List<DiscordUser>();
-		this.MentionedRolesInternal ??= new List<DiscordRole>();
-		this.MentionedChannelsInternal ??= new List<DiscordChannel>();
+		this.MentionedUsersInternal ??= new();
+		this.MentionedRoleIdsInternal ??= new();
+		this.MentionedChannelsInternal ??= new();
 
 		var mentionedUsers = new HashSet<DiscordUser>(new DiscordUserComparer());
 		if (guild != null)
 		{
-			foreach (var usr in this.MentionedUsersInternal)
+			foreach (var usr in this.MentionedUsers)
 			{
 				usr.Discord = this.Discord;
 				this.Discord.UserCache.AddOrUpdate(usr.Id, usr, (id, old) =>
@@ -490,22 +487,8 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 					old.AvatarHash = usr.AvatarHash;
 					return old;
 				});
-
-				mentionedUsers.Add(guild.MembersInternal.TryGetValue(usr.Id, out var member) ? member : usr);
 			}
 		}
-		if (!string.IsNullOrWhiteSpace(this.Content))
-		{
-			//mentionedUsers.UnionWith(Utilities.GetUserMentions(this).Select(this.Discord.GetCachedOrEmptyUserInternal));
-			if (guild != null)
-			{
-				//this._mentionedRoles = this._mentionedRoles.Union(Utilities.GetRoleMentions(this).Select(xid => guild.GetRole(xid))).ToList();
-				this.MentionedRolesInternal = this.MentionedRolesInternal.Union(this.MentionedRoleIds.Select(xid => guild.GetRole(xid))).ToList();
-				this.MentionedChannelsInternal = this.MentionedChannelsInternal.Union(Utilities.GetChannelMentions(this).Select(xid => guild.GetChannel(xid))).ToList();
-			}
-		}
-
-		this.MentionedUsersInternal = mentionedUsers.ToList();
 	}
 
 	/// <summary>

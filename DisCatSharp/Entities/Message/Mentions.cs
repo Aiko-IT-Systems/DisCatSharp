@@ -23,6 +23,10 @@
 using System;
 using System.Collections.Generic;
 
+using DisCatSharp.Enums;
+
+using Newtonsoft.Json;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>
@@ -129,4 +133,25 @@ public static class Mentions
 	/// No mentions allowed.
 	/// </summary>
 	public static IEnumerable<IMention> None { get; } = Array.Empty<IMention>();
+}
+
+public class ChannelMention : SnowflakeObject
+{
+	/// <summary>
+	/// Gets the guild id.
+	/// </summary>
+	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? GuildId { get; internal set; }
+
+	/// <summary>
+	/// Gets the channel type.
+	/// </summary>
+	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+	public ChannelType? Type { get; internal set; }
+
+	/// <summary>
+	/// Gets the channel name.
+	/// </summary>
+	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
+	public string Name { get; internal set; }
 }

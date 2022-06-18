@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -53,6 +54,10 @@ public sealed partial class DiscordApiClient
 			xo.Discord = this.Discord;
 			xo.ChannelId = ret.Id;
 		}
+
+		if (ret.GuildId != null)
+			if (this.Discord.Guilds.Any(x => x.Key == ret.GuildId.Value))
+				this.Discord.Guilds.First(x => x.Key == ret.GuildId.Value).Value.ChannelsInternal.AddOrUpdate(ret.Id, ret, (oldChannel, newChannel) => newChannel);
 
 		return ret;
 	}

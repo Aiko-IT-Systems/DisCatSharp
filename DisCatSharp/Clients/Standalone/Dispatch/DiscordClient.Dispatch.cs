@@ -24,6 +24,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -412,25 +413,7 @@ public sealed partial class DiscordClient
 				break;
 
 			case "message_update":
-				rawMbr = dat["member"];
-
-				if (rawMbr != null)
-					mbr = rawMbr.ToObject<TransportMember>();
-
-				if (rawRefMsg != null && rawRefMsg.HasValues)
-				{
-					if (rawRefMsg.SelectToken("author") != null)
-					{
-						refUsr = rawRefMsg.SelectToken("author").ToObject<TransportUser>();
-					}
-
-					if (rawRefMsg.SelectToken("member") != null)
-					{
-						refMbr = rawRefMsg.SelectToken("member").ToObject<TransportMember>();
-					}
-				}
-
-				await this.OnMessageUpdateEventAsync(dat.ToDiscordObject<DiscordMessage>(), dat["author"]?.ToObject<TransportUser>(), mbr, refUsr, refMbr).ConfigureAwait(false);
+				await this.OnMessageUpdateRaw(dat).ConfigureAwait(false);
 				break;
 
 			// delete event does *not* include message object
@@ -2121,7 +2104,7 @@ public sealed partial class DiscordClient
 	/// <param name="messageId">The message id.</param>
 	internal async Task OnMessageAckEventAsync(DiscordChannel chn, ulong messageId)
 	{
-		if (this.MessageCache == null || !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == chn.Id, out var msg))
+		if (this.MessageCache == null || !this.MessageCache.TryGetLastOrDefault(xm => xm.Id == messageId && xm.ChannelId == chn.Id, out var msg))
 		{
 			msg = new DiscordMessage
 			{
@@ -2164,14 +2147,156 @@ public sealed partial class DiscordClient
 		var ea = new MessageCreateEventArgs(this.ServiceProvider)
 		{
 			Message = message,
-
-			MentionedUsers = new ReadOnlyCollection<DiscordUser>(message.MentionedUsersInternal),
-			MentionedRoles = message.MentionedRolesInternal != null ? new ReadOnlyCollection<DiscordRole>(message.MentionedRolesInternal) : null,
-			MentionedChannels = message.MentionedChannelsInternal != null ? new ReadOnlyCollection<DiscordChannel>(message.MentionedChannelsInternal) : null
+			MentionedUsers = message.MentionedUsers.ToList(),
+			MentionedRoles = message.MentionedRoles.ToList(),
+			MentionedChannels = message.MentionedChannels.ToList()
 		};
 		await this._messageCreated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
+	internal async Task OnMessageUpdateRaw(JObject data)
+	{
+		var guild = data["guild_id"];
+		if (guild.ToString() == "858089274087309313")
+			this.Logger.LogDebug(data.ToString());
+
+		// Valid
+
+
+		// To check
+		var rawRefMsg = data["referenced_message"];
+		TransportUser refUsr = null;
+		TransportMember refMbr = null;
+		
+
+		if (rawRefMsg != null && rawRefMsg.HasValues)
+		{
+			if (rawRefMsg.SelectToken("author") != null)
+			{
+				refUsr = rawRefMsg.SelectToken("author").ToObject<TransportUser>();
+			}
+
+			if (rawRefMsg.SelectToken("member") != null)
+			{
+				refMbr = rawRefMsg.SelectToken("member").ToObject<TransportMember>();
+			}
+		}
+
+		await this.OnMessageUpdateEventAsyncV2(data.ToDiscordObject<DiscordMessage>(), refUsr, refMbr).ConfigureAwait(false);
+	}
+
+	internal async Task OnMessageUpdateEventAsyncV2(DiscordMessage message, TransportUser referenceAuthor, TransportMember referenceMember)
+	{
+		DiscordMessage oldMessage = null;
+
+		message.Discord = this;
+
+		// If we have a guild id, we try to get the guild out of the cache, if not cached, we fetch from the api, otherwise null.
+		var guild = message.GuildId != null && message.GuildId.HasValue ?
+			this.InternalGetCachedGuild(message.GuildId) ?? await this.GetGuildAsync(message.GuildId.Value, false)
+			: null;
+
+		message.Guild = guild;
+
+		// We try to get the channel from the guild if guild id is given. This depends on the cache. If not cached, we fetch it from the api.
+		message.Channel = guild != null ?
+			this.InternalGetCachedChannel(message.ChannelId, guild.Id) ?? await this.ApiClient.GetChannelAsync(message.ChannelId)
+			: await this.ApiClient.GetChannelAsync(message.ChannelId);
+		
+		// When the message cache is not disabled and we get an old message
+		if (this.Configuration.MessageCacheSize != 0 && this.MessageCache != null && this.MessageCache.TryGetLastOrDefault(xm => xm.Id == message.Id && xm.ChannelId == message.ChannelId, out oldMessage))
+		{
+			oldMessage.Discord = this;
+			oldMessage.Guild = message.Guild;
+			oldMessage.Channel = message.Channel;
+		}
+
+		// If we have a transport member, we convert it to a discord member and update the members cache.
+		if (message.MemberInternal != null)
+		{
+			message.MemberInternal.User = message.AuthorInternal;
+			message.Member = new(message.MemberInternal)
+			{
+				Discord = this
+			};
+			guild.MembersInternal.AddOrUpdate(message.AuthorInternal.Id, message.Member, (id, oldMbr) => oldMbr);
+		}
+
+		this.PopulateMessageReactionsAndCache(message, message.AuthorInternal, message.MemberInternal);
+
+		if (message.ReferencedMessage != null)
+		{
+			message.ReferencedMessage.Discord = this;
+			this.PopulateMessageReactionsAndCache(message.ReferencedMessage, referenceAuthor, referenceMember);
+			message.ReferencedMessage.PopulateMentions();
+		}
+
+		// Handling of user mentions
+		if (message.MentionedUsersInternal.Any())
+			foreach (var user in message.MentionedUsers)
+			{
+				user.Discord = this;
+				if (user.Id != message.Author.Id)
+					this.UserCache.AddOrUpdate(user.Id, user, (id, oldUsr) => oldUsr);
+			}
+
+		// This is fucking hacky
+		if (!message.MentionedChannelsInternal.Any() && message.Content != null && Utilities.ContainsChannelMentions(message.Content))
+		{
+			List<ChannelMention> mentions = new();
+			var channelMentions = Utilities.GetChannelMentions(message);
+			foreach(var mention in channelMentions)
+			{
+				var channel = this.InternalGetCachedChannel(mention) ?? this.InternalGetCachedThread(mention) ?? await this.ApiClient.GetChannelAsync(mention);
+				if (channel.Name == null)
+				{
+					mentions.Add(new ChannelMention()
+					{
+						Id = mention,
+						GuildId = null,
+						Name = null,
+						Discord = this,
+						Type = null
+					});
+					continue;
+				}
+				if (channel != null && channel.GuildId.HasValue)
+					mentions.Add(new ChannelMention()
+					{
+						Id = channel.Id,
+						GuildId = channel.GuildId,
+						Name = channel.Name,
+						Discord = this,
+						Type = channel.Type
+					});
+				else
+					mentions.Add(new ChannelMention()
+					{
+						Id = mention,
+						GuildId = null,
+						Name = null,
+						Discord = this,
+						Type = null
+					});
+			}
+			message.MentionedChannelsInternal.AddRange(mentions);
+		}
+		
+		message.PopulateMentions();
+
+		// embed cache is broken, component cache is broken
+
+		var ea = new MessageUpdateEventArgs(this.ServiceProvider)
+		{
+			Message = message,
+			MessageBefore = oldMessage,
+			MentionedUsers = message.MentionedUsers.ToList(),
+			MentionedRoles = message.MentionedRoles.ToList(),
+			MentionedChannels = message.MentionedChannels.ToList()
+		};
+		await this._messageUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+	/*
 	/// <summary>
 	/// Handles the message update event.
 	/// </summary>
@@ -2190,7 +2315,7 @@ public sealed partial class DiscordClient
 		DiscordMessage oldmsg = null;
 		if (this.Configuration.MessageCacheSize == 0
 			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == eventMessage.Id && xm.ChannelId == eventMessage.ChannelId, out message))
+			|| !this.MessageCache.TryGetFirstOrDefault(xm => xm.Id == eventMessage.Id && xm.ChannelId == eventMessage.ChannelId, out message))
 		{
 			message = eventMessage;
 			this.PopulateMessageReactionsAndCache(message, author, member);
@@ -2214,16 +2339,47 @@ public sealed partial class DiscordClient
 			message.Pinned = eventMessage.Pinned;
 			message.IsTts = eventMessage.IsTts;
 		}
-		message.EmbedsInternal.Clear();
-		message.EmbedsInternal.AddRange(eventMessage.EmbedsInternal);
-		message.ComponentsInternal.Clear();
-		message.ComponentsInternal.AddRange(eventMessage.ComponentsInternal);
-		message.MentionedUsersInternal.Clear();
-		message.MentionedUsersInternal.AddRange(eventMessage.MentionedUsersInternal ?? new());
-		message.MentionedRolesInternal.Clear();
-		message.MentionedRolesInternal.AddRange(eventMessage.MentionedRolesInternal ?? new());
-		message.MentionedChannelsInternal.Clear();
-		message.MentionedChannelsInternal.AddRange(eventMessage.MentionedChannelsInternal ?? new());
+
+		if (message.EmbedsInternal != null)
+		{
+			message.EmbedsInternal.Clear();
+			message.EmbedsInternal.AddRange(eventMessage.EmbedsInternal ?? new());
+		}
+		else
+			message.EmbedsInternal = new(eventMessage.EmbedsInternal ?? new());
+
+		if (message.ComponentsInternal != null)
+		{
+			message.ComponentsInternal.Clear();
+			message.ComponentsInternal.AddRange(eventMessage.ComponentsInternal ?? new());
+		}
+		else
+			message.ComponentsInternal = new(eventMessage.ComponentsInternal ?? new());
+
+		if (message.MentionedUsersInternal != null)
+		{
+			message.MentionedUsersInternal.Clear();
+			message.MentionedUsersInternal.AddRange(eventMessage.MentionedUsersInternal ?? new());
+		}
+		else
+			message.MentionedUsersInternal = new(eventMessage.MentionedUsersInternal ?? new());
+
+		if (message.MentionedRolesInternal != null)
+		{
+			message.MentionedRolesInternal.Clear();
+			message.MentionedRolesInternal.AddRange(eventMessage.MentionedRolesInternal ?? new());
+		}
+		else
+			message.MentionedRolesInternal = new(eventMessage.MentionedRolesInternal ?? new());
+
+		if (message.MentionedChannelsInternal != null)
+		{
+			message.MentionedChannelsInternal.Clear();
+			message.MentionedChannelsInternal.AddRange(eventMessage.MentionedChannelsInternal ?? new());
+		}
+		else
+			message.MentionedChannelsInternal = new(eventMessage.MentionedChannelsInternal ?? new());
+
 		message.MentionEveryone = eventMessage.MentionEveryone;
 
 		message.PopulateMentions();
@@ -2238,7 +2394,7 @@ public sealed partial class DiscordClient
 		};
 		await this._messageUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
-
+	*/
 	/// <summary>
 	/// Handles the message delete event.
 	/// </summary>
@@ -2253,7 +2409,7 @@ public sealed partial class DiscordClient
 		if (channel == null
 			|| this.Configuration.MessageCacheSize == 0
 			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			|| !this.MessageCache.TryGetLastOrDefault(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 		{
 			msg = new DiscordMessage
 			{
@@ -2292,7 +2448,7 @@ public sealed partial class DiscordClient
 			if (channel == null
 				|| this.Configuration.MessageCacheSize == 0
 				|| this.MessageCache == null
-				|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+				|| !this.MessageCache.TryGetLastOrDefault(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 			{
 				msg = new DiscordMessage
 				{
@@ -2341,7 +2497,7 @@ public sealed partial class DiscordClient
 		if (channel == null
 			|| this.Configuration.MessageCacheSize == 0
 			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			|| !this.MessageCache.TryGetLastOrDefault(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 		{
 			msg = new DiscordMessage
 			{
@@ -2403,7 +2559,7 @@ public sealed partial class DiscordClient
 		if (channel == null
 			|| this.Configuration.MessageCacheSize == 0
 			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			|| !this.MessageCache.TryGetLastOrDefault(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 		{
 			msg = new DiscordMessage
 			{
@@ -2449,7 +2605,7 @@ public sealed partial class DiscordClient
 		if (channel == null
 			|| this.Configuration.MessageCacheSize == 0
 			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			|| !this.MessageCache.TryGetLastOrDefault(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 		{
 			msg = new DiscordMessage
 			{
@@ -2487,7 +2643,7 @@ public sealed partial class DiscordClient
 		if (channel == null
 			|| this.Configuration.MessageCacheSize == 0
 			|| this.MessageCache == null
-			|| !this.MessageCache.TryGet(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
+			|| !this.MessageCache.TryGetLastOrDefault(xm => xm.Id == messageId && xm.ChannelId == channelId, out var msg))
 		{
 			msg = new DiscordMessage
 			{

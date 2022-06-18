@@ -124,12 +124,12 @@ public class RingBuffer<T> : ICollection<T>
 	}
 
 	/// <summary>
-	/// Gets first item from the buffer that matches the predicate.
+	/// Gets the first item from the buffer that matches the predicate.
 	/// </summary>
 	/// <param name="predicate">Predicate used to find the item.</param>
 	/// <param name="item">Item that matches the predicate, or default value for the type of the items in this ring buffer, if one is not found.</param>
 	/// <returns>Whether an item that matches the predicate was found or not.</returns>
-	public bool TryGet(Func<T, bool> predicate, out T item)
+	public bool TryGetFirstOrDefault(Func<T, bool> predicate, out T item)
 	{
 		for (var i = this.CurrentIndex; i < this.InternalBuffer.Length; i++)
 		{
@@ -140,6 +140,27 @@ public class RingBuffer<T> : ICollection<T>
 			}
 		}
 		for (var i = 0; i < this.CurrentIndex; i++)
+		{
+			if (this.InternalBuffer[i] != null && predicate(this.InternalBuffer[i]))
+			{
+				item = this.InternalBuffer[i];
+				return true;
+			}
+		}
+
+		item = default;
+		return false;
+	}
+
+	/// <summary>
+	/// Gets the last item from the buffer that matches the predicate.
+	/// </summary>
+	/// <param name="predicate">Predicate used to find the item.</param>
+	/// <param name="item">Item that matches the predicate, or default value for the type of the items in this ring buffer, if one is not found.</param>
+	/// <returns>Whether an item that matches the predicate was found or not.</returns>
+	public bool TryGetLastOrDefault(Func<T, bool> predicate, out T item)
+	{
+		for (var i = this.CurrentIndex; i > 0; i--)
 		{
 			if (this.InternalBuffer[i] != null && predicate(this.InternalBuffer[i]))
 			{
