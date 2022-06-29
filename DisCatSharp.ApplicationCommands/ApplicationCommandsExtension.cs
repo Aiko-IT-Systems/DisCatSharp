@@ -751,7 +751,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					ResolvedAttachments = e.Interaction.Data.Resolved?.Attachments?.Values.ToList(),
 					Type = ApplicationCommandType.ChatInput,
 					Locale = e.Interaction.Locale,
-					GuildLocale = e.Interaction.GuildLocale
+					GuildLocale = e.Interaction.GuildLocale,
+					AppPermissions = e.Interaction.AppPermissions
 				};
 
 				try
@@ -836,7 +837,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							Options = e.Interaction.Data.Options.ToList(),
 							FocusedOption = focusedOption,
 							Locale = e.Interaction.Locale,
-							GuildLocale = e.Interaction.GuildLocale
+							GuildLocale = e.Interaction.GuildLocale,
+							AppPermissions = e.Interaction.AppPermissions
 						};
 
 						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
@@ -864,7 +866,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							Options = command.Options.ToList(),
 							FocusedOption = focusedOption,
 							Locale = e.Interaction.Locale,
-							GuildLocale = e.Interaction.GuildLocale
+							GuildLocale = e.Interaction.GuildLocale,
+							AppPermissions = e.Interaction.AppPermissions
 						};
 
 						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
@@ -893,7 +896,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							Options = command.Options.First().Options.ToList(),
 							FocusedOption = focusedOption,
 							Locale = e.Interaction.Locale,
-							GuildLocale = e.Interaction.GuildLocale
+							GuildLocale = e.Interaction.GuildLocale,
+							AppPermissions = e.Interaction.AppPermissions
 						};
 
 						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
@@ -935,7 +939,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				TargetMessage = e.TargetMessage,
 				Type = e.Type,
 				Locale = e.Interaction.Locale,
-				GuildLocale = e.Interaction.GuildLocale
+				GuildLocale = e.Interaction.GuildLocale,
+				AppPermissions = e.Interaction.AppPermissions
 			};
 
 			try
