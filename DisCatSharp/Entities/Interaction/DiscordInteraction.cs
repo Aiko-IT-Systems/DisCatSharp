@@ -116,6 +116,12 @@ public sealed class DiscordInteraction : SnowflakeObject
 	public string GuildLocale { get; internal set; }
 
 	/// <summary>
+	/// Gets the applications permissions.
+	/// </summary>
+	[JsonProperty("app_permissions", NullValueHandling = NullValueHandling.Ignore)]
+	public Permissions AppPermissions { get; internal set; }
+
+	/// <summary>
 	/// Creates a response to this interaction.
 	/// </summary>
 	/// <param name="type">The type of the response.</param>
