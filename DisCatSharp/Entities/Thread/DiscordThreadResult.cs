@@ -21,6 +21,9 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
+using System.Linq;
+
+using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
 
@@ -32,11 +35,16 @@ public class DiscordThreadResult
 	/// <summary>
 	/// Gets the returned threads.
 	/// </summary>
-	public Dictionary<ulong, DiscordThreadChannel> ReturnedThreads { get; internal set; }
+	[JsonIgnore]
+	public Dictionary<ulong, DiscordThreadChannel> ReturnedThreads
+		=> this.Threads == null || !this.Threads.Any() ? new Dictionary<ulong, DiscordThreadChannel>() : this.Threads.Select(t => new { t.Id, t }).ToDictionary(t => t.Id, t => t.t);
+	[JsonProperty("threads", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordThreadChannel> Threads { get; set; }
 
 	/// <summary>
 	/// Gets the active members.
 	/// </summary>
+	[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
 	public List<DiscordThreadChannelMember> ActiveMembers { get; internal set; }
 
 	/// <summary>
