@@ -1362,9 +1362,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			if (optionAttribute == null)
 				throw new ArgumentException("Arguments must have the Option attribute!");
 
-			var minimumValue = parameter.GetCustomAttribute<MinimumAttribute>()?.Value ?? null;
-			var maximumValue = parameter.GetCustomAttribute<MaximumAttribute>()?.Value ?? null;
-
+			var minimumValue = parameter.GetCustomAttribute<MinimumValueAttribute>()?.Value ?? null;
+			var maximumValue = parameter.GetCustomAttribute<MaximumValueAttribute>()?.Value ?? null;
+			var minimumLength = parameter.GetCustomAttribute<MinimumLengthAttribute>()?.Value ?? null;
+			var maximumLength = parameter.GetCustomAttribute<MaximumLengthAttribute>()?.Value ?? null;
+			var channelTypes = parameter.GetCustomAttribute<ChannelTypesAttribute>()?.ChannelTypes ?? null;
 
 			var autocompleteAttribute = parameter.GetCustomAttribute<AutocompleteAttribute>();
 			if (optionAttribute.Autocomplete && autocompleteAttribute == null)
@@ -1375,6 +1377,20 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			//Sets the type
 			var type = parameter.ParameterType;
 			var parameterType = GetParameterType(type);
+
+			if (parameterType == ApplicationCommandOptionType.String)
+			{
+				minimumValue = null;
+				maximumValue = null;
+			}
+			else if (parameterType == ApplicationCommandOptionType.Integer || parameterType == ApplicationCommandOptionType.Number)
+			{
+				minimumLength = null;
+				maximumLength = null;
+			}
+
+			if (parameterType != ApplicationCommandOptionType.Channel)
+				channelTypes = null;
 
 			//Handles choices
 			//From attributes
@@ -1391,9 +1407,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				choices = await GetChoiceAttributesFromProvider(choiceProviders, guildId);
 			}
 
-			var channelTypes = parameter.GetCustomAttribute<ChannelTypesAttribute>()?.ChannelTypes ?? null;
-
-			options.Add(new DiscordApplicationCommandOption(optionAttribute.Name, optionAttribute.Description, parameterType, !parameter.IsOptional, choices, null, channelTypes, optionAttribute.Autocomplete, minimumValue, maximumValue));
+			options.Add(new DiscordApplicationCommandOption(optionAttribute.Name, optionAttribute.Description, parameterType, !parameter.IsOptional, choices, null, channelTypes, optionAttribute.Autocomplete, minimumValue, maximumValue, minimumLength: minimumLength, maximumLength: maximumLength));
 		}
 
 		return options;
