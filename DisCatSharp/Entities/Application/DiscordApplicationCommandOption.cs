@@ -124,13 +124,13 @@ public sealed class DiscordApplicationCommandOption
 	public object MaximumValue { get; internal set; }
 
 	/// <summary>
-	/// Gets the maximum value for this slash command parameter.
+	/// Gets the maximum length for this slash command parameter.
 	/// </summary>
 	[JsonProperty("min_length", NullValueHandling = NullValueHandling.Ignore)]
 	public int? MinimumLength { get; internal set; }
 
 	/// <summary>
-	/// Gets the minimum value for this slash command parameter.
+	/// Gets the minimum length for this slash command parameter.
 	/// </summary>
 	[JsonProperty("max_length", NullValueHandling = NullValueHandling.Ignore)]
 	public int? MaximumLength { get; internal set; }
