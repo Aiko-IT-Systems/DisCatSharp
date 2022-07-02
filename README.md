@@ -20,16 +20,20 @@
 ----
 
 ## Why DisCatSharp?
-- You want a library where you get kind and efficient help?
-- You would like to have and use the most recent features of the Discord API?
-- You are ready to build great things?
+
+If you:
+- want a library where you get kind and efficient help
+- would like to have and use the most recent features of the Discord API
+- are ready to build great things
 
 Then this is the right place for you!
 
 ## Installing
+
 You can install the library from following source: [NuGet](https://www.nuget.org/profiles/DisCatSharp).
 
 ## Documentation
+
 <!--The documentation for the stable version is available at [docs.dcs.aitsys.dev/lts](https://docs.discatsharp.tech/lts).-->
 
 The documentation of the nightly versions is available at [docs.dcs.aitsys.dev](https://docs.discatsharp.tech).
@@ -37,11 +41,13 @@ The documentation of the nightly versions is available at [docs.dcs.aitsys.dev](
 Fallback docs are available at [docs-alt.dcs.aitsys.dev](https://docs-alt.dcs.aitsys.dev).
 
 ## Bugs or Feature requests?
+
 Write a mail to [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
 All requests are tracked at [aitsys.dev](https://aitsys.dev).
 
 ## Tutorials
+
 * [Howto](https://docs.discatsharp.tech/articles/basics/bot_account.html)
 * [Examples](https://examples.dcs.aitsys.dev)
 
@@ -51,7 +57,9 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev).
 ----
 
 ## NuGet Packages
+
 ### Main
+
 | Package                         | Stable                                                                                                           | Nightly                                                                                                                             |
 | ------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | DisCatSharp                     | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.svg?label=&logo=nuget&style=flat-square)                     | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)                     |
@@ -60,6 +68,7 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev).
 | DisCatSharp.Interactivity       | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Interactivity.svg?label=&logo=nuget&style=flat-square)       | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Interactivity.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)       |
 
 ### Voice
+
 | Package                       | Stable                                                                                                         | Nightly                                                                                                                           |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | DisCatSharp.Lavalink          | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square)          | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Lavalink.svg?label=&logo=nuget&style=flat-square&color=%23ff1493)          |
@@ -67,6 +76,7 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev).
 | DisCatSharp.VoiceNext.Natives | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.VoiceNext.Natives.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.VoiceNext.Natives.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
 
 ### Hosting
+
 | Package                                 | Stable                                                                                                                   | Nightly                                                                                                                                     |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | DisCatSharp.Configuration               | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Configuration.svg?label=&logo=nuget&style=flat-square)               | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Configuration.svg?label=&logo=nuget&color=%23ff1493&style=flat-square)               |
@@ -74,11 +84,13 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev).
 | DisCatSharp.Hosting.DependencyInjection | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Hosting.DependencyInjection.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Hosting.DependencyInjection.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
 
 ### Templates
+
 | Package                      | Stable                                                                                                        | Nightly                                                                                                                          |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | DisCatSharp.ProjectTemplates | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.ProjectTemplates.svg?label=&logo=nuget&color=%23ff1493&style=flat-square) |
 
 ### Development / Commons
+
 | Package            | Stable                                                                                              | Nightly                                                                                                                |
 | ------------------ | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | DisCatSharp.Common | ![NuGet](https://img.shields.io/nuget/v/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square) | ![NuGet](https://img.shields.io/nuget/vpre/DisCatSharp.Common.svg?label=&logo=nuget&style=flat-square&color=%23ff1493) |
@@ -87,10 +99,12 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev).
 ----
 
 ## Sponsors [![Sponsors](https://img.shields.io/github/sponsors/Aiko-IT-Systems?label=&style=flat-square&logo=github)](https://github.com/sponsors/Aiko-IT-Systems)
+
 - [Deividas Kazakevicius](https://github.com/DeividasKaza)
 - [Will](https://github.com/villChurch)
 
 ## Thanks
+
 Big thanks goes to the following people who helped us ♥️
 - [Auros Nexus](https://github.com/Auros)
 - [Lunar Starstrum](https://github.com/OoLunar)
@@ -100,4 +114,5 @@ Big thanks goes to the following people who helped us ♥️
 - [Will](https://github.com/villChurch)
 
 ## Special Thanks
+
 The special thanks goes to Nagisa. Make sure to check out her [instagram](https://www.instagram.com/nagisaarts_/) ♥️♥️

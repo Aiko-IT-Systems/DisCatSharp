@@ -126,7 +126,8 @@ internal static class ApplicationCommandEqualityChecks
 								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
 								subSubOption.MinimumValue, subSubOption.MaximumValue,
 								localizationEnabled ? subSubOption.NameLocalizations : null,
-								localizationEnabled ? subSubOption.DescriptionLocalizations : null
+								localizationEnabled ? subSubOption.DescriptionLocalizations : null,
+								subSubOption.MinimumLength, subSubOption.MaximumLength
 							));
 						}
 
@@ -167,7 +168,8 @@ internal static class ApplicationCommandEqualityChecks
 								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
 								subSubOption.MinimumValue, subSubOption.MaximumValue,
 								localizationEnabled ? subSubOption.NameLocalizations : null,
-								localizationEnabled ? subSubOption.DescriptionLocalizations : null
+								localizationEnabled ? subSubOption.DescriptionLocalizations : null,
+								subSubOption.MinimumLength, subSubOption.MaximumLength
 							));
 						}
 
@@ -210,7 +212,8 @@ internal static class ApplicationCommandEqualityChecks
 							subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
 							subOption.MinimumValue, subOption.MaximumValue,
 							localizationEnabled ? subOption.NameLocalizations : null,
-							localizationEnabled ? subOption.DescriptionLocalizations : null
+							localizationEnabled ? subOption.DescriptionLocalizations : null,
+							subOption.MinimumLength, subOption.MaximumLength
 						));
 					}
 				}
@@ -238,7 +241,8 @@ internal static class ApplicationCommandEqualityChecks
 							subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
 							subOption.MinimumValue, subOption.MaximumValue,
 							localizationEnabled ? subOption.NameLocalizations : null,
-							localizationEnabled ? subOption.DescriptionLocalizations : null
+							localizationEnabled ? subOption.DescriptionLocalizations : null,
+							subOption.MinimumLength, subOption.MaximumLength
 						));
 					}
 				}
@@ -263,7 +267,8 @@ internal static class ApplicationCommandEqualityChecks
 					option.Name, option.Description, option.Type, option.Required ?? false,
 					option.Choices, null, option.ChannelTypes, option.AutoComplete ?? false, option.MinimumValue, option.MaximumValue,
 					localizationEnabled ? option.NameLocalizations : null,
-					localizationEnabled ? option.DescriptionLocalizations : null
+					localizationEnabled ? option.DescriptionLocalizations : null,
+					option.MinimumLength, option.MaximumLength
 				));
 
 			foreach (var option in target.Options)
@@ -271,7 +276,8 @@ internal static class ApplicationCommandEqualityChecks
 					option.Name, option.Description, option.Type, option.Required ?? false,
 					option.Choices, null, option.ChannelTypes, option.AutoComplete ?? false, option.MinimumValue, option.MaximumValue,
 					localizationEnabled ? option.NameLocalizations : null,
-					localizationEnabled ? option.DescriptionLocalizations : null
+					localizationEnabled ? option.DescriptionLocalizations : null,
+					option.MinimumLength, option.MaximumLength
 				));
 
 			return rootCheck && JsonConvert.SerializeObject(minimalSourceOptions) == JsonConvert.SerializeObject(minimalTargetOptions);
