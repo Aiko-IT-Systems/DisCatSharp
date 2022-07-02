@@ -220,16 +220,16 @@ public static async Task MySlashCommand(InteractionContext context, [Option("cha
 
 This will make it possible to select only text channels.
 
-## Minimum / Maximum Attribute
+## MinimumValue / MaximumValue Attribute
 
 Sometimes we may need to give users the ability to select only a certain range of values.
 
-This can be done by adding the [Minimum](xref:DisCatSharp.ApplicationCommands.Attributes.MaximumAttribute) and [Maximum](xref:DisCatSharp.ApplicationCommands.Attributes.MaximumAttribute) attribute to the option.
+This can be done by adding the [MinimumValue](xref:DisCatSharp.ApplicationCommands.Attributes.MinimumValueAttribute) and [MaximumValue](xref:DisCatSharp.ApplicationCommands.Attributes.MaximumValueAttribute) attribute to the option.
 It can be used only for the types `double`, `int` and `long` tho.
 
 ```cs
 [SlashCommand("my_command", "This is description of the command.")]
-public static async Task MySlashCommand(InteractionContext context, [Option("number", "You can select only a certain range."), Minimum(50), Maximum(100)] int numbers)
+public static async Task MySlashCommand(InteractionContext context, [Option("number", "You can select only a certain range."), MinimumValue(50), MaximumValue(100)] int numbers)
 {
 
 }
