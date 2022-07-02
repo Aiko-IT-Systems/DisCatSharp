@@ -234,3 +234,18 @@ public static async Task MySlashCommand(InteractionContext context, [Option("num
 
 }
 ```
+
+## MinimumLength / MaximumLength Attribute
+
+Sometimes we may need to limit the user to a certain string length.
+
+This can be done by adding the [MinimumLength](xref:DisCatSharp.ApplicationCommands.Attributes.MinimumLengthAttribute) and [MaximumLength](xref:DisCatSharp.ApplicationCommands.Attributes.MaximumLengthAttribute) attribute to the option.
+It can be used only for the type `string`.
+
+```cs
+[SlashCommand("my_command", "This is description of the command.")]
+public static async Task MySlashCommand(InteractionContext context, [Option("text", "You can only send text with a length between 10 and 50 characters."), MinimumLength(10), MaximumLength(50)] string text)
+{
+
+}
+```
