@@ -28,7 +28,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public class MinimumAttribute : Attribute
+public class MinimumValueAttribute : Attribute
 {
 	/// <summary>
 	/// The value.
@@ -38,7 +38,7 @@ public class MinimumAttribute : Attribute
 	/// <summary>
 	/// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
 	/// </summary>
-	public MinimumAttribute(int value)
+	public MinimumValueAttribute(int value)
 	{
 		this.Value = value;
 	}
@@ -46,7 +46,7 @@ public class MinimumAttribute : Attribute
 	/// <summary>
 	/// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
 	/// </summary>
-	public MinimumAttribute(long value)
+	public MinimumValueAttribute(long value)
 	{
 		this.Value = value;
 	}
@@ -54,7 +54,7 @@ public class MinimumAttribute : Attribute
 	/// <summary>
 	/// Sets a minimum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
 	/// </summary>
-	public MinimumAttribute(double value)
+	public MinimumValueAttribute(double value)
 	{
 		this.Value = value;
 	}
@@ -64,7 +64,7 @@ public class MinimumAttribute : Attribute
 /// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public class MaximumAttribute : Attribute
+public class MaximumValueAttribute : Attribute
 {
 	/// <summary>
 	/// The value.
@@ -74,7 +74,7 @@ public class MaximumAttribute : Attribute
 	/// <summary>
 	/// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
 	/// </summary>
-	public MaximumAttribute(int value)
+	public MaximumValueAttribute(int value)
 	{
 		this.Value = value;
 	}
@@ -82,7 +82,7 @@ public class MaximumAttribute : Attribute
 	/// <summary>
 	/// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
 	/// </summary>
-	public MaximumAttribute(long value)
+	public MaximumValueAttribute(long value)
 	{
 		this.Value = value;
 	}
@@ -90,8 +90,51 @@ public class MaximumAttribute : Attribute
 	/// <summary>
 	/// Sets a maximum value for this slash command option. Only valid for <see cref="int"/>, <see cref="long"/> or <see cref="double"/> parameters.
 	/// </summary>
-	public MaximumAttribute(double value)
+	public MaximumValueAttribute(double value)
 	{
+		this.Value = value;
+	}
+}
+
+
+/// <summary>
+/// Sets a minimum value for this slash command option. Only valid for <see cref="string"/> parameters.
+/// </summary>
+[AttributeUsage(AttributeTargets.Parameter)]
+public class MinimumLengthAttribute : Attribute
+{
+	/// <summary>
+	/// The value.
+	/// </summary>
+	public int? Value { get; internal set; }
+
+	/// <summary>
+	/// Sets a minimum value for this slash command option. Only valid for <see cref="string"/> parameters.
+	/// </summary>
+	public MinimumLengthAttribute(int value)
+	{
+		this.Value = value;
+	}
+}
+
+/// <summary>
+/// Sets a maximum value for this slash command option.  Only valid for <see cref="string"/> parameters.
+/// </summary>
+[AttributeUsage(AttributeTargets.Parameter)]
+public class MaximumLengthAttribute : Attribute
+{
+	/// <summary>
+	/// The value.
+	/// </summary>
+	public int? Value { get; internal set; }
+
+	/// <summary>
+	/// Sets a maximum value for this slash command option. Only valid for <see cref="string"/> parameters.
+	/// </summary>
+	public MaximumLengthAttribute(int value)
+	{
+		if (value == 0)
+			throw new ArgumentException("Maximum length cannot be 0.");
 		this.Value = value;
 	}
 }
