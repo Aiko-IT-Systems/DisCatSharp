@@ -120,20 +120,20 @@ public sealed class DiscordApplicationCommandOption
 	/// <summary>
 	/// Gets the maximum value for this slash command parameter.
 	/// </summary>
+	[JsonProperty("max_value", NullValueHandling = NullValueHandling.Ignore)]
+	public object MaximumValue { get; internal set; }
+
+	/// <summary>
+	/// Gets the maximum value for this slash command parameter.
+	/// </summary>
 	[JsonProperty("min_length", NullValueHandling = NullValueHandling.Ignore)]
-	public int? MaximumLength { get; internal set; }
+	public int? MinimumLength { get; internal set; }
 
 	/// <summary>
 	/// Gets the minimum value for this slash command parameter.
 	/// </summary>
 	[JsonProperty("max_length", NullValueHandling = NullValueHandling.Ignore)]
-	public int? MinimumLength { get; internal set; }
-
-	/// <summary>
-	/// Gets the maximum value for this slash command parameter.
-	/// </summary>
-	[JsonProperty("max_value", NullValueHandling = NullValueHandling.Ignore)]
-	public object MaximumValue { get; internal set; }
+	public int? MaximumLength { get; internal set; }
 
 	/// <summary>
 	/// Creates a new instance of a <see cref="DiscordApplicationCommandOption"/>.
