@@ -116,6 +116,13 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	[JsonProperty("version")]
 	public ulong Version { get; internal set; }
 
+
+	/// <summary>
+	/// Gets the name localizations.
+	/// </summary>
+	[JsonIgnore]
+	public string Mention => this.Type == ApplicationCommandType.ChatInput ? $"</{this.Name}:{this.Id}>" : null;
+
 	/// <summary>
 	/// Creates a new instance of a <see cref="DiscordApplicationCommand"/>.
 	/// </summary>
