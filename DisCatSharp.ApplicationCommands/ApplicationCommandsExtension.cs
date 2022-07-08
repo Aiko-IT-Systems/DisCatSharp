@@ -1773,13 +1773,14 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 		if (commandTwoName is not null && !commandTwoName.Equals("no_options_for_this_command"))
 		{
 			var commandsWithSubCommands = applicationCommands.FindAll(ac => ac.Options is not null && ac.Options.Any(op => op.Type == ApplicationCommandOptionType.SubCommandGroup));
+			var subCommandParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Name.Equals(commandName,StringComparison.OrdinalIgnoreCase));
 			var cmdParent = commandsWithSubCommands.FirstOrDefault(cm => cm.Options.Any(op => op.Name.Equals(commandOneName))).Options
 					.FirstOrDefault(opt => opt.Name.Equals(commandOneName,StringComparison.OrdinalIgnoreCase));
 			var cmd = cmdParent.Options.FirstOrDefault(op => op.Name.Equals(commandTwoName,StringComparison.OrdinalIgnoreCase));
 			var discordEmbed = new DiscordEmbedBuilder
 			{
 				Title = "Help",
-				Description = $"{Formatter.InlineCode(cmd.Name)}: {cmd.Description ?? "No description provided."}"
+				Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {cmdParent.Name} {cmd.Name}")}: {cmd.Description ?? "No description provided."}"
 			};
 			if (cmd.Options is not null)
 			{
@@ -1803,7 +1804,7 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 			var discordEmbed = new DiscordEmbedBuilder
 			{
 				Title = "Help",
-				Description = $"{Formatter.InlineCode(subCommand.Name)}: {subCommand.Description ?? "No description provided."}"
+				Description = $"{subCommandParent.Mention.Replace(subCommandParent.Name, $"{subCommandParent.Name} {subCommand.Name}")}: {subCommand.Description ?? "No description provided."}"
 			};
 			if (subCommand.Options is not null)
 			{

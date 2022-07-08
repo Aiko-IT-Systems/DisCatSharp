@@ -121,7 +121,7 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	/// Gets the name localizations.
 	/// </summary>
 	[JsonIgnore]
-	public string Mention => this.Type == ApplicationCommandType.ChatInput ? $"</{this.Name}:{this.Id}>" : null;
+	public string Mention => this.Type == ApplicationCommandType.ChatInput ? $"</{this.Name}:{this.Id}>" : this.Name;
 
 	/// <summary>
 	/// Creates a new instance of a <see cref="DiscordApplicationCommand"/>.
