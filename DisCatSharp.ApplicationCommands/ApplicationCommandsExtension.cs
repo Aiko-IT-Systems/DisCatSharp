@@ -1831,7 +1831,7 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 			var discordEmbed = new DiscordEmbedBuilder
 			{
 				Title = "Help",
-				Description = $"{Formatter.InlineCode(command.Name)}: {command.Description ?? "No description provided."}"
+				Description = $"{command.Mention}: {command.Description ?? "No description provided."}"
 			}.AddField(new DiscordEmbedField("Command is NSFW", command.IsNsfw.ToString()));
 			if (command.Options is not null)
 			{
