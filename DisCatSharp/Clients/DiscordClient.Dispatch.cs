@@ -2613,6 +2613,7 @@ public sealed partial class DiscordClient
 			threadNew.MessageCount = thread.MessageCount;
 			threadNew.MemberCount = thread.MemberCount;
 			threadNew.GuildId = thread.GuildId;
+			threadNew.Discord = this;
 
 			updateEvent = new ThreadUpdateEventArgs(this.ServiceProvider)
 			{
