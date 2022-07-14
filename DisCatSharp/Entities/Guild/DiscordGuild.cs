@@ -785,24 +785,15 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 
 		List<string> features = new();
 		var rfeatures = this.RawFeatures.ToList();
-		if (this.RawFeatures.Contains("COMMUNITY") && enabled)
-		{
-			features = rfeatures;
-		}
-		else if (!this.RawFeatures.Contains("COMMUNITY") && enabled)
+		if (!this.RawFeatures.Contains("COMMUNITY") && enabled)
 		{
 			rfeatures.Add("COMMUNITY");
-			features = rfeatures;
 		}
 		else if (this.RawFeatures.Contains("COMMUNITY") && !enabled)
 		{
 			rfeatures.Remove("COMMUNITY");
-			features = rfeatures;
 		}
-		else if (!this.RawFeatures.Contains("COMMUNITY") && !enabled)
-		{
-			features = rfeatures;
-		}
+		features = rfeatures;
 
 		return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, features, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
 	}
