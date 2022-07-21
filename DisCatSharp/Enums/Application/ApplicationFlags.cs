@@ -94,5 +94,10 @@ public enum ApplicationFlags
 	/// <summary>
 	/// Related to embedded applications.
 	/// </summary>
-	EmbeddedFirstParty = 1 << 20
+	EmbeddedFirstParty = 1 << 20,
+	
+	/// <summary>
+	/// The application has registered global application commands.
+	/// </summary>
+	ApplicationCommandBadge = 1 << 23
 }
