@@ -1,0 +1,30 @@
+[
+	{
+		"name": "ban-user",
+		"description": "Bans a designated user from server",
+		"parameters": [
+			{
+				"name": "User",
+				"description": "user to ban",
+				"type": "DiscordUser"
+			},
+			{
+				"name": "Reason",
+				"description": "Reasoning for ban",
+				"type": "string"
+			}
+		]
+	},
+	{
+		"name": "ac-test",
+		"description": "Testing autocomplete provider",
+		"parameters": [
+			{
+				"name": "ac-param",
+				"description": "values are given by ac provider",
+				"type": "string",
+				"ac-provider": "MyAcProvider"
+			}
+		]
+	}
+]
