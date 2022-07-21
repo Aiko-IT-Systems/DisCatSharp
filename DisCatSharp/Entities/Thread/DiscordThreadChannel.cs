@@ -128,11 +128,36 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
 	internal ConcurrentDictionary<ulong, DiscordThreadChannelMember> ThreadMembersInternal;
 
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
-	/// </summary>
-	internal DiscordThreadChannel()
-	{ }
+  /// <summary>
+  /// List of applied tag ids.
+  /// </summary>
+  [JsonIgnore]
+  internal IReadOnlyList<ulong> AppliedTagIds
+    => this._appliedTagsIdsLazy.Value;
+
+  /// <summary>
+  /// List of applied tag ids.
+  /// </summary>
+  [JsonProperty("applied_tags", NullValueHandling = NullValueHandling.Ignore)]
+  internal List<ulong> AppliedTagIdsInternal;
+  [JsonIgnore]
+  private readonly Lazy<IReadOnlyList<ulong>> _appliedTagsIdsLazy;
+
+  /// <summary>
+  /// Gets the list of applied tags.
+  /// Only applicable for forum channel posts.
+  /// </summary>
+  [JsonIgnore]
+  public IEnumerable<ForumPostTag> AppliedTags
+    => this.AppliedTagIds.Select(id => this.Parent.GetForumPostTagAsync(id).Result).Where(x => x != null);
+
+  /// <summary>
+  /// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
+  /// </summary>
+  internal DiscordThreadChannel()
+  {
+    this._appliedTagsIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.AppliedTagIdsInternal));
+  }
 
 	#region Methods
 
