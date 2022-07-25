@@ -197,7 +197,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this._globalApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs>("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 		this._guildApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs>("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 
-		this.Client.GuildDownloadCompleted += async (c, e) => await this.UpdateAsync();
+		//this.Client.GuildDownloadCompleted += async (c, e) => await this.UpdateGuildCommandsAsync();
+		this.Client.Ready += async (c, e) => await this.UpdateAsync();
 		this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
 		this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
 	}
@@ -238,37 +239,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Registers a command class.
-	/// </summary>
-	/// <typeparam name="T">The command class to register.</typeparam>
-	public void RegisterGlobalCommands<T>() where T : ApplicationCommandsModule
-	{
-		if (this.Client.ShardId == 0)
-			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(typeof(T))));
-	}
-	/// <summary>
-	/// Registers a command class.
-	/// </summary>
-	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
-	public void RegisterGlobalCommands(Type type)
-	{
-		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
-			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
-		//If sharding, only register for shard 0
-		if (this.Client.ShardId == 0)
-			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(type)));
-	}
-
-	/// <summary>
 	/// Cleans all guild application commands.
 	/// <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
 	public async Task CleanGuildCommandsAsync()
 	{
 		foreach (var guild in this.Client.Guilds.Values)
-		{
 			await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, Array.Empty<DiscordApplicationCommand>());
-		}
 	}
 
 	/// <summary>
@@ -279,19 +256,16 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(Array.Empty<DiscordApplicationCommand>());
 
 	/// <summary>
-	/// Registers a command class with permission and translation setup.
+	/// Registers a command class with optional translation setup for a guild.
 	/// </summary>
 	/// <typeparam name="T">The command class to register.</typeparam>
 	/// <param name="guildId">The guild id to register it on.</param>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
 	public void RegisterGuildCommands<T>(ulong guildId, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
-	{
-		if (this.Client.ShardId == 0)
-			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T), translationSetup)));
-	}
+		=> this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T), translationSetup)));
 
 	/// <summary>
-	/// Registers a command class with permission and translation setup.
+	/// Registers a command class with optional translation setup for a guild.
 	/// </summary>
 	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
 	/// <param name="guildId">The guild id to register it on.</param>
@@ -300,24 +274,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
-		//If sharding, only register for shard 0
-		if (this.Client.ShardId == 0)
-			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type, translationSetup)));
+		this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type, translationSetup)));
 	}
 
 	/// <summary>
-	/// Registers a command class with permission setup but without a guild id.
+	/// Registers a command class with optional translation setup globally.
 	/// </summary>
 	/// <typeparam name="T">The command class to register.</typeparam>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
 	public void RegisterGlobalCommands<T>(Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
-	{
-		if (this.Client.ShardId == 0)
-			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(typeof(T), translationSetup)));
-	}
+		=> this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(typeof(T), translationSetup)));
 
 	/// <summary>
-	/// Registers a command class with permission setup but without a guild id.
+	/// Registers a command class with optional translation setup globally.
 	/// </summary>
 	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
@@ -325,9 +294,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
-		//If sharding, only register for shard 0
-		if (this.Client.ShardId == 0)
-			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(type, translationSetup)));
+		this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(type, translationSetup)));
 	}
 
 	/// <summary>
@@ -372,75 +339,71 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs> _globalApplicationCommandsRegistered;
 
 	/// <summary>
-	/// Used for RegisterCommands and the <see cref="DisCatSharp.DiscordClient.GuildDownloadCompleted"/> event.
+	/// Used for RegisterCommands and the <see cref="DisCatSharp.DiscordClient.Ready"/> event.
 	/// </summary>
 	internal async Task UpdateAsync()
 	{
-		//Only update for shard 0
-		if (this.Client.ShardId == 0)
+		GlobalDiscordCommands = new();
+		GuildDiscordCommands = new();
+
+		var commandsPending = this._updateList.Select(x => x.Key).Distinct();
+		s_expectedCount = commandsPending.Count();
+
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Expected Count: {s_expectedCount}");
+
+		List<ulong> failedGuilds = new();
+		IEnumerable<DiscordApplicationCommand> globalCommands = null;
+		globalCommands = await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false) ?? null;
+		var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys : this._updateList.Select(x => x.Key)?.Distinct().Where(x => x != null)?.Select(x => x.Value);
+
+		foreach (var guild in guilds)
 		{
-			GlobalDiscordCommands = new();
-			GuildDiscordCommands = new();
-
-			var commandsPending = this._updateList.Select(x => x.Key).Distinct();
-			s_expectedCount = commandsPending.Count();
-
-			this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Expected Count: {s_expectedCount}");
-
-			List<ulong> failedGuilds = new();
-			IEnumerable<DiscordApplicationCommand> globalCommands = null;
-			globalCommands = await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false) ?? null;
-			var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys : this._updateList.Select(x => x.Key)?.Distinct().Where(x => x != null)?.Select(x => x.Value);
-
-			foreach (var guild in guilds)
+			IEnumerable<DiscordApplicationCommand> commands = null;
+			var unauthorized = false;
+			try
 			{
-				IEnumerable<DiscordApplicationCommand> commands = null;
-				var unauthorized = false;
-				try
-				{
-					commands = await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false) ?? null;
-				}
-				catch (UnauthorizedException)
-				{
-					unauthorized = true;
-				}
-				finally
-				{
-					if (!unauthorized && commands != null && commands.Any())
-						GuildDiscordCommands.Add(guild, commands.ToList());
-					else if (!unauthorized)
-						GuildDiscordCommands.Add(guild, null);
-					else
-						failedGuilds.Add(guild);
-				}
+				commands = await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false) ?? null;
 			}
-
-			//Default should be to add the help and slash commands can be added without setting any configuration
-			//so this should still add the default help
-			if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
+			catch (UnauthorizedException)
 			{
-				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
-					(null, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
-				commandsPending = this._updateList.Select(x => x.Key).Distinct();
+				unauthorized = true;
 			}
-
-			if (globalCommands != null && globalCommands.Any())
-				GlobalDiscordCommands.AddRange(globalCommands);
-
-			foreach (var key in commandsPending.ToList())
+			finally
 			{
-				this.Client.Logger.LogInformation(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
-				await this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
+				if (!unauthorized && commands != null && commands.Any())
+					GuildDiscordCommands.Add(guild, commands.ToList());
+				else if (!unauthorized)
+					GuildDiscordCommands.Add(guild, null);
+				else
+					failedGuilds.Add(guild);
 			}
-
-			this._missingScopeGuildIds = failedGuilds;
-
-			await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(Configuration?.ServiceProvider)
-			{
-				Handled = true,
-				GuildsWithoutScope = failedGuilds
-			});
 		}
+
+		//Default should be to add the help and slash commands can be added without setting any configuration
+		//so this should still add the default help
+		if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
+		{
+			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
+				(null, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
+			commandsPending = this._updateList.Select(x => x.Key).Distinct();
+		}
+
+		if (globalCommands != null && globalCommands.Any())
+			GlobalDiscordCommands.AddRange(globalCommands);
+
+		foreach (var key in commandsPending.ToList())
+		{
+			this.Client.Logger.LogInformation(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
+			await this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
+		}
+
+		this._missingScopeGuildIds = failedGuilds;
+
+		await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(Configuration?.ServiceProvider)
+		{
+			Handled = true,
+			GuildsWithoutScope = failedGuilds
+		});
 	}
 
 	/// <summary>
@@ -1433,10 +1396,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		GuildDiscordCommands = null;
 		s_errored = false;
 
-		if (Configuration != null && Configuration.EnableDefaultHelp)
+		/*if (Configuration != null && Configuration.EnableDefaultHelp)
 		{
 			this._updateList.RemoveAll(x => x.Value.Type == typeof(DefaultHelpModule));
-		}
+		}*/
 
 		await this.UpdateAsync();
 	}
