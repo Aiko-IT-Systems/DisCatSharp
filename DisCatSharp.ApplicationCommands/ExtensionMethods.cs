@@ -64,11 +64,12 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="client">Client to get application commands from.</param>
 	/// <returns>A dictionary of current <see cref="ApplicationCommandsExtension"/> with the key being the shard id.</returns>
-	public static IReadOnlyDictionary<int, ApplicationCommandsExtension?> GetApplicationCommands(this DiscordShardedClient client)
+	public static async Task <IReadOnlyDictionary<int, ApplicationCommandsExtension>> GetApplicationCommandsAsync(this DiscordShardedClient client)
 	{
+		await client.InitializeShardsAsync().ConfigureAwait(false);
 		var modules = new Dictionary<int, ApplicationCommandsExtension>();
 		foreach (var shard in client.ShardClients.Values)
-			modules[shard.ShardId] = shard.GetExtension<ApplicationCommandsExtension>();
+			modules.Add(shard.ShardId, shard.GetExtension<ApplicationCommandsExtension>());
 		return modules;
 	}
 
@@ -150,7 +151,7 @@ public static class ExtensionMethods
 		await client.InitializeShardsAsync().ConfigureAwait(false);
 		foreach (var shard in client.ShardClients.Values)
 		{
-			var scomm = shard.GetApplicationCommands();
+			var scomm = shard.GetExtension<ApplicationCommandsExtension>();
 			if (scomm == null)
 				scomm = shard.UseApplicationCommands(config);
 
