@@ -347,8 +347,18 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		List<ulong> failedGuilds = new();
 		IEnumerable<DiscordApplicationCommand> globalCommands = null;
 		globalCommands = await client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false) ?? null;
-		var guilds = CheckAllGuilds ? client.Guilds?.Keys : this._updateList.Select(x => x.Key)?.Distinct().Where(x => x != null)?.Select(x => x.Value);
-
+		var guilds = CheckAllGuilds ? client.Guilds?.Keys.ToList() : this._updateList.Select(x => x.Key)?.Distinct().Where(x => x != null)?.Select(x => x.Value).ToList();
+		var wrongShards = guilds.Where(x => !client.Guilds.ContainsKey(x));
+		if (wrongShards.Any())
+		{
+			client.Logger.LogDebug("Some guilds are not on the same shard as the client. Removing them from the update list.");
+			foreach (var guild in wrongShards)
+			{
+				this._updateList.RemoveAll(x => x.Key == guild);
+				guilds.Remove(guild);
+			}
+		}
+		
 		foreach (var guild in guilds)
 		{
 			IEnumerable<DiscordApplicationCommand> commands = null;
@@ -385,11 +395,16 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		foreach (var key in commandsPending.ToList())
 		{
 			client.Logger.LogInformation(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
+			if (key.HasValue)
+			{
+				client.Logger.LogDebug("Found guild {guild} in shard {shard}!", key.Value, client.ShardId);
+				client.Logger.LogDebug("Registering");
+			}
 			await this.RegisterCommands(client, this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
 		}
 
 		this._missingScopeGuildIds = failedGuilds;
-
+		
 		await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(Configuration?.ServiceProvider)
 		{
 			GuildsWithoutScope = failedGuilds

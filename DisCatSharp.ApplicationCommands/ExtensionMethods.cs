@@ -113,21 +113,7 @@ public static class ExtensionMethods
 		foreach (var extension in extensions.Values)
 		{
 			extension.Client.Logger.LogInformation("Request to register guild commands on shard {shard} for guild {guild}!", extension.Client.ShardId, guildId);
-			if (extension.Client.Guilds.ContainsKey(guildId))
-			{
-				try
-				{
-					extension.Client.Logger.LogInformation("Found guild {guild} in shard {shard}!", guildId, extension.Client.ShardId);
-					extension.RegisterGuildCommands<T>(guildId, translationSetup);
-					extension.Client.Logger.LogInformation("Registered");
-				}
-				catch (Exception ex)
-				{
-					extension.Client.Logger.LogError(ex.Message);
-					extension.Client.Logger.LogError(ex.StackTrace);
-				}
-				return;
-			}
+			extension.RegisterGuildCommands<T>(guildId, translationSetup);
 		}
 	}
 
@@ -145,22 +131,7 @@ public static class ExtensionMethods
 		foreach (var extension in extensions.Values)
 		{
 			extension.Client.Logger.LogInformation("Request to register guild commands on shard {shard} for guild {guild}!", extension.Client.ShardId, guildId);
-
-			if (extension.Client.Guilds.ContainsKey(guildId))
-			{
-				try
-				{
-					extension.Client.Logger.LogInformation("Found guild {guild} in shard {shard}!", guildId, extension.Client.ShardId);
-					extension.RegisterGuildCommands(type, guildId, translationSetup);
-					extension.Client.Logger.LogInformation("Registered");
-				}
-				catch (Exception ex)
-				{
-					extension.Client.Logger.LogError(ex.Message);
-					extension.Client.Logger.LogError(ex.StackTrace);
-				}
-				return;
-			}
+			extension.RegisterGuildCommands(type, guildId, translationSetup);
 		}
 	}
 
