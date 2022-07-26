@@ -87,4 +87,7 @@ public sealed class DiscordInteractionData : SnowflakeObject
 	/// </summary>
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 	public ApplicationCommandType Type { get; internal set; }
+
+	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
+	public ulong? GuildId { get; internal set; }
 }

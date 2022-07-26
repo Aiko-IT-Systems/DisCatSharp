@@ -19,6 +19,10 @@
 
 ----
 
+## **NEW!**
+
+- Support for application commands (guild and global) in shards
+
 ## Why DisCatSharp?
 
 If you:
