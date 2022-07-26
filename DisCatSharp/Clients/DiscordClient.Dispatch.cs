@@ -3326,14 +3326,14 @@ public sealed partial class DiscordClient
 				interaction.Data.Resolved.Members?.TryGetValue(targetId, out targetMember);
 				interaction.Data.Resolved.Users?.TryGetValue(targetId, out targetUser);
 
-				var ctea = new ContextMenuInteractionCreateEventArgs(this.ServiceProvider)
+				var ea = new ContextMenuInteractionCreateEventArgs(this.ServiceProvider)
 				{
 					Interaction = interaction,
 					TargetUser = targetMember ?? targetUser,
 					TargetMessage = targetMessage,
 					Type = interaction.Data.Type
 				};
-				await this._contextMenuInteractionCreated.InvokeAsync(this, ctea).ConfigureAwait(false);
+				await this._contextMenuInteractionCreated.InvokeAsync(this, ea);
 			}
 			else
 			{
@@ -3342,7 +3342,7 @@ public sealed partial class DiscordClient
 					Interaction = interaction
 				};
 
-				await this._interactionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+				await this._interactionCreated.InvokeAsync(this, ea);
 			}
 		}
 	}
