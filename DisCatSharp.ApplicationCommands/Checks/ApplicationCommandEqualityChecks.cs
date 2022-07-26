@@ -39,7 +39,8 @@ internal static class ApplicationCommandEqualityChecks
 	/// </summary>
 	/// <param name="ac1">Source command.</param>
 	/// <param name="targetApplicationCommand">Command to check against.</param>
-	internal static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand)
+	/// <param name="client">The discord client.</param>
+	internal static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand, DiscordClient client)
 	{
 		if (targetApplicationCommand is null || ac1 is null)
 			return false;
@@ -50,7 +51,7 @@ internal static class ApplicationCommandEqualityChecks
 			ac1.NameLocalizations, ac1.DescriptionLocalizations
 		);
 
-		ApplicationCommandsExtension.ClientInternal.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC Change Check] Command {ac1.Name}\n\n[{JsonConvert.SerializeObject(sourceApplicationCommand)},{JsonConvert.SerializeObject(targetApplicationCommand)}]\n\n");
+		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC Change Check] Command {ac1.Name}\n\n[{JsonConvert.SerializeObject(sourceApplicationCommand)},{JsonConvert.SerializeObject(targetApplicationCommand)}]\n\n");
 
 		return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand, ac1.Type, ApplicationCommandsExtension.Configuration?.EnableLocalization ?? false);
 	}

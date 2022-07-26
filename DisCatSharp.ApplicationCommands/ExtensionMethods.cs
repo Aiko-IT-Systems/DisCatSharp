@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace DisCatSharp.ApplicationCommands;
@@ -60,6 +59,75 @@ public static class ExtensionMethods
 		=> client.GetExtension<ApplicationCommandsExtension>();
 
 	/// <summary>
+	/// Gets the application commands from this <see cref="DiscordShardedClient"/>.
+	/// </summary>
+	/// <param name="client">Client to get application commands from.</param>
+	/// <returns>A dictionary of current <see cref="ApplicationCommandsExtension"/> with the key being the shard id.</returns>
+	public static async Task <IReadOnlyDictionary<int, ApplicationCommandsExtension>> GetApplicationCommandsAsync(this DiscordShardedClient client)
+	{
+		await client.InitializeShardsAsync().ConfigureAwait(false);
+		var modules = new Dictionary<int, ApplicationCommandsExtension>();
+		foreach (var shard in client.ShardClients.Values)
+			modules.Add(shard.ShardId, shard.GetExtension<ApplicationCommandsExtension>());
+		return modules;
+	}
+
+	/// <summary>
+	/// Registers a command class with optional translation setup globally.
+	/// </summary>
+	/// <param name="extensions">Sharding extensions.</param>
+	/// <typeparam name="T">The command class to register.</typeparam>
+	/// <param name="translationSetup">A callback to setup translations with.</param>
+	public static void RegisterGlobalCommands<T>(this IReadOnlyDictionary<int, ApplicationCommandsExtension> extensions, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
+	{
+		foreach (var extension in extensions.Values)
+			extension.RegisterGlobalCommands<T>(translationSetup);
+	}
+
+	/// <summary>
+	/// Registers a command class with optional translation setup globally.
+	/// </summary>
+	/// <param name="extensions">Sharding extensions.</param>
+	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
+	/// <param name="translationSetup">A callback to setup translations with.</param>
+	public static void RegisterGlobalCommands(this IReadOnlyDictionary<int, ApplicationCommandsExtension> extensions, Type type, Action<ApplicationCommandsTranslationContext> translationSetup = null)
+	{
+		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
+			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
+		foreach (var extension in extensions.Values)
+			extension.RegisterGlobalCommands(type, translationSetup);
+	}
+
+	/// <summary>
+	/// Registers a command class with optional translation setup for a guild.
+	/// </summary>
+	/// <typeparam name="T">The command class to register.</typeparam>
+	/// <param name="extensions">Sharding extensions.</param>
+	/// <param name="guildId">The guild id to register it on.</param>
+	/// <param name="translationSetup">A callback to setup translations with.</param>
+	public static void RegisterGuildCommands<T>(this IReadOnlyDictionary<int, ApplicationCommandsExtension> extensions, ulong guildId, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
+	{
+		foreach (var extension in extensions.Values)
+			extension.RegisterGuildCommands<T>(guildId, translationSetup);
+
+	}
+
+	/// <summary>
+	/// Registers a command class with optional translation setup for a guild.
+	/// </summary>
+	/// <param name="extensions">Sharding extensions.</param>
+	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
+	/// <param name="guildId">The guild id to register it on.</param>
+	/// <param name="translationSetup">A callback to setup translations with.</param>
+	public static void RegisterGuildCommands(this IReadOnlyDictionary<int, ApplicationCommandsExtension> extensions, Type type, ulong guildId, Action<ApplicationCommandsTranslationContext> translationSetup = null)
+	{
+		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
+			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
+		foreach (var extension in extensions.Values)
+			extension.RegisterGuildCommands(type, guildId, translationSetup);
+	}
+
+	/// <summary>
 	/// Enables application commands on this <see cref="DiscordShardedClient"/>.
 	/// </summary>
 	/// <param name="client">Client to enable application commands on.</param>
@@ -68,10 +136,10 @@ public static class ExtensionMethods
 	public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> UseApplicationCommandsAsync(this DiscordShardedClient client, ApplicationCommandsConfiguration config = null)
 	{
 		var modules = new Dictionary<int, ApplicationCommandsExtension>();
-		await (Task)client.GetType().GetMethod("InitializeShardsAsync", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(client, null);
+		await client.InitializeShardsAsync().ConfigureAwait(false);
 		foreach (var shard in client.ShardClients.Values)
 		{
-			var scomm = shard.GetApplicationCommands();
+			var scomm = shard.GetExtension<ApplicationCommandsExtension>();
 			if (scomm == null)
 				scomm = shard.UseApplicationCommands(config);
 

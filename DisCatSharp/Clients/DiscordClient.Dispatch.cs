@@ -577,7 +577,7 @@ public sealed partial class DiscordClient
 
 				cid = (ulong)dat["channel_id"];
 				// Console.WriteLine(dat.ToString()); // Get raw interaction payload.
-				await this.OnInteractionCreateAsync((ulong?)dat["guild_id"], cid, usr, mbr, dat.ToDiscordObject<DiscordInteraction>()).ConfigureAwait(false);
+				await this.OnInteractionCreateAsync((ulong?)dat["guild_id"], cid, usr, mbr, dat.ToDiscordObject<DiscordInteraction>(), dat.ToString()).ConfigureAwait(false);
 				break;
 
 			case "application_command_create":
@@ -3211,8 +3211,10 @@ public sealed partial class DiscordClient
 	/// <param name="user">The transport user.</param>
 	/// <param name="member">The transport member.</param>
 	/// <param name="interaction">The interaction.</param>
-	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction)
+	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, string rawInteraction)
 	{
+		this.Logger.LogTrace("Interaction from {guild} on shard {shard}", guildId.HasValue ? guildId.Value : "dm", this.ShardId);
+		this.Logger.LogTrace("Interaction: {interaction}", rawInteraction);
 		var usr = new DiscordUser(user) { Discord = this };
 
 		interaction.ChannelId = channelId;
@@ -3324,14 +3326,14 @@ public sealed partial class DiscordClient
 				interaction.Data.Resolved.Members?.TryGetValue(targetId, out targetMember);
 				interaction.Data.Resolved.Users?.TryGetValue(targetId, out targetUser);
 
-				var ctea = new ContextMenuInteractionCreateEventArgs(this.ServiceProvider)
+				var ea = new ContextMenuInteractionCreateEventArgs(this.ServiceProvider)
 				{
 					Interaction = interaction,
 					TargetUser = targetMember ?? targetUser,
 					TargetMessage = targetMessage,
-					Type = interaction.Data.Type,
+					Type = interaction.Data.Type
 				};
-				await this._contextMenuInteractionCreated.InvokeAsync(this, ctea).ConfigureAwait(false);
+				await this._contextMenuInteractionCreated.InvokeAsync(this, ea);
 			}
 			else
 			{
@@ -3340,7 +3342,7 @@ public sealed partial class DiscordClient
 					Interaction = interaction
 				};
 
-				await this._interactionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+				await this._interactionCreated.InvokeAsync(this, ea);
 			}
 		}
 	}

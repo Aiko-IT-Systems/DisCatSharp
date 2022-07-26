@@ -94,11 +94,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal static ApplicationCommandsConfiguration Configuration;
 
 	/// <summary>
-	/// Discord client.
-	/// </summary>
-	internal static DiscordClient ClientInternal;
-
-	/// <summary>
 	/// Set to true if anything fails when registering.
 	/// </summary>
 	private static bool s_errored { get; set; }
@@ -121,7 +116,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// Gets a list of registered guild commands mapped by guild id.
 	/// </summary>
 	public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
-	=> GuildCommandsInternal;
+		=> GuildCommandsInternal;
 	internal static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommandsInternal = new();
 
 	/// <summary>
@@ -186,7 +181,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			throw new InvalidOperationException("What did I tell you?");
 
 		this.Client = client;
-		ClientInternal = client;
 
 		this._slashError = new AsyncEvent<ApplicationCommandsExtension, SlashCommandErrorEventArgs>("SLASHCOMMAND_ERRORED", TimeSpan.Zero, null);
 		this._slashExecuted = new AsyncEvent<ApplicationCommandsExtension, SlashCommandExecutedEventArgs>("SLASHCOMMAND_EXECUTED", TimeSpan.Zero, null);
@@ -238,37 +232,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	}
 
 	/// <summary>
-	/// Registers a command class.
-	/// </summary>
-	/// <typeparam name="T">The command class to register.</typeparam>
-	public void RegisterGlobalCommands<T>() where T : ApplicationCommandsModule
-	{
-		if (this.Client.ShardId == 0)
-			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(typeof(T))));
-	}
-	/// <summary>
-	/// Registers a command class.
-	/// </summary>
-	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
-	public void RegisterGlobalCommands(Type type)
-	{
-		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
-			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
-		//If sharding, only register for shard 0
-		if (this.Client.ShardId == 0)
-			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(type)));
-	}
-
-	/// <summary>
 	/// Cleans all guild application commands.
 	/// <note type="caution">You normally don't need to execute it.</note>
 	/// </summary>
 	public async Task CleanGuildCommandsAsync()
 	{
 		foreach (var guild in this.Client.Guilds.Values)
-		{
 			await this.Client.BulkOverwriteGuildApplicationCommandsAsync(guild.Id, Array.Empty<DiscordApplicationCommand>());
-		}
 	}
 
 	/// <summary>
@@ -279,19 +249,16 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		=> await this.Client.BulkOverwriteGlobalApplicationCommandsAsync(Array.Empty<DiscordApplicationCommand>());
 
 	/// <summary>
-	/// Registers a command class with permission and translation setup.
+	/// Registers a command class with optional translation setup for a guild.
 	/// </summary>
 	/// <typeparam name="T">The command class to register.</typeparam>
 	/// <param name="guildId">The guild id to register it on.</param>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
 	public void RegisterGuildCommands<T>(ulong guildId, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
-	{
-		if (this.Client.ShardId == 0)
-			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T), translationSetup)));
-	}
+		=> this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T), translationSetup)));
 
 	/// <summary>
-	/// Registers a command class with permission and translation setup.
+	/// Registers a command class with optional translation setup for a guild.
 	/// </summary>
 	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
 	/// <param name="guildId">The guild id to register it on.</param>
@@ -300,24 +267,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
-		//If sharding, only register for shard 0
-		if (this.Client.ShardId == 0)
-			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type, translationSetup)));
+		this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(type, translationSetup)));
 	}
 
 	/// <summary>
-	/// Registers a command class with permission setup but without a guild id.
+	/// Registers a command class with optional translation setup globally.
 	/// </summary>
 	/// <typeparam name="T">The command class to register.</typeparam>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
 	public void RegisterGlobalCommands<T>(Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
-	{
-		if (this.Client.ShardId == 0)
-			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(typeof(T), translationSetup)));
-	}
+		=> this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(typeof(T), translationSetup)));
 
 	/// <summary>
-	/// Registers a command class with permission setup but without a guild id.
+	/// Registers a command class with optional translation setup globally.
 	/// </summary>
 	/// <param name="type">The <see cref="System.Type"/> of the command class to register.</param>
 	/// <param name="translationSetup">A callback to setup translations with.</param>
@@ -325,9 +287,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
-		//If sharding, only register for shard 0
-		if (this.Client.ShardId == 0)
-			this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(type, translationSetup)));
+		this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(null, new ApplicationCommandsModuleConfiguration(type, translationSetup)));
 	}
 
 	/// <summary>
@@ -372,75 +332,86 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	private AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs> _globalApplicationCommandsRegistered;
 
 	/// <summary>
-	/// Used for RegisterCommands and the <see cref="DisCatSharp.DiscordClient.GuildDownloadCompleted"/> event.
+	/// Used for RegisterCommands and the <see cref="DisCatSharp.DiscordClient.Ready"/> event.
 	/// </summary>
 	internal async Task UpdateAsync()
 	{
-		//Only update for shard 0
-		if (this.Client.ShardId == 0)
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Request to register commands on shard {shard}", this.Client.ShardId);
+		GlobalDiscordCommands = new();
+		GuildDiscordCommands = new();
+
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Expected Count: {count}", s_expectedCount);
+
+		List<ulong> failedGuilds = new();
+		List<DiscordApplicationCommand> globalCommands = null;
+		globalCommands = (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false)).ToList() ?? null;
+		var updateList = this._updateList.DistinctBy(x => x.Key).ToList();
+		var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).ToList();
+		var wrongShards = guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList();
+		if (wrongShards.Any())
 		{
-			GlobalDiscordCommands = new();
-			GuildDiscordCommands = new();
-
-			var commandsPending = this._updateList.Select(x => x.Key).Distinct();
-			s_expectedCount = commandsPending.Count();
-
-			this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Expected Count: {s_expectedCount}");
-
-			List<ulong> failedGuilds = new();
-			IEnumerable<DiscordApplicationCommand> globalCommands = null;
-			globalCommands = await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false) ?? null;
-			var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys : this._updateList.Select(x => x.Key)?.Distinct().Where(x => x != null)?.Select(x => x.Value);
-
-			foreach (var guild in guilds)
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list.");
+			foreach (var guild in wrongShards)
 			{
-				IEnumerable<DiscordApplicationCommand> commands = null;
-				var unauthorized = false;
-				try
-				{
-					commands = await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false) ?? null;
-				}
-				catch (UnauthorizedException)
-				{
-					unauthorized = true;
-				}
-				finally
-				{
-					if (!unauthorized && commands != null && commands.Any())
-						GuildDiscordCommands.Add(guild, commands.ToList());
-					else if (!unauthorized)
-						GuildDiscordCommands.Add(guild, null);
-					else
-						failedGuilds.Add(guild);
-				}
+				updateList.RemoveAll(x => x.Key == guild);
+				guilds.Remove(guild);
 			}
-
-			//Default should be to add the help and slash commands can be added without setting any configuration
-			//so this should still add the default help
-			if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
-			{
-				this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
-					(null, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
-				commandsPending = this._updateList.Select(x => x.Key).Distinct();
-			}
-
-			if (globalCommands != null && globalCommands.Any())
-				GlobalDiscordCommands.AddRange(globalCommands);
-
-			foreach (var key in commandsPending.ToList())
-			{
-				this.Client.Logger.LogInformation(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
-				await this.RegisterCommands(this._updateList.Where(x => x.Key == key).Select(x => x.Value), key);
-			}
-
-			this._missingScopeGuildIds = failedGuilds;
-
-			await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(Configuration?.ServiceProvider)
-			{
-				Handled = true,
-				GuildsWithoutScope = failedGuilds
-			});
 		}
+
+		var commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
+		s_expectedCount = commandsPending.Count();
+
+		foreach (var guild in guilds)
+		{
+			List<DiscordApplicationCommand> commands = null;
+			var unauthorized = false;
+			try
+			{
+				commands = (await this.Client.GetGuildApplicationCommandsAsync(guild, Configuration?.EnableLocalization ?? false)).ToList() ?? null;
+			}
+			catch (UnauthorizedException)
+			{
+				unauthorized = true;
+			}
+			finally
+			{
+				if (!unauthorized && commands != null && commands.Any())
+					GuildDiscordCommands.Add(guild, commands.ToList());
+				else if (unauthorized)
+					failedGuilds.Add(guild);
+			}
+		}
+
+		//Default should be to add the help and slash commands can be added without setting any configuration
+		//so this should still add the default help
+		if (Configuration is null || (Configuration is not null && Configuration.EnableDefaultHelp))
+		{
+			updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>
+				(null, new ApplicationCommandsModuleConfiguration(typeof(DefaultHelpModule))));
+			commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
+		}
+
+		if (globalCommands != null && globalCommands.Any())
+			GlobalDiscordCommands.AddRange(globalCommands);
+
+		foreach (var key in commandsPending)
+		{
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
+			if (key.HasValue)
+			{
+				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Found guild {guild} in shard {shard}!", key.Value, this.Client.ShardId);
+				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering");
+			}
+			await this.RegisterCommands(updateList.Where(x => x.Key == key).Select(x => x.Value).ToList(), key);
+		}
+
+		this._missingScopeGuildIds = failedGuilds;
+		
+		await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(Configuration?.ServiceProvider)
+		{
+			GuildsWithoutScope = failedGuilds
+		});
+		this.Client.GuildDownloadCompleted -= async (c, e) => await this.UpdateAsync();
 	}
 
 	/// <summary>
@@ -448,8 +419,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="types">The types.</param>
 	/// <param name="guildId">The optional guild id.</param>
-	private async Task RegisterCommands(IEnumerable<ApplicationCommandsModuleConfiguration> types, ulong? guildId)
+	private async Task RegisterCommands(List<ApplicationCommandsModuleConfiguration> types, ulong? guildId)
 	{
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering commands on shard {shard}", this.Client.ShardId);
 		//Initialize empty lists to be added to the global ones at the end
 		var commandMethods = new List<CommandMethod>();
 		var groupCommands = new List<GroupCommand>();
@@ -489,7 +461,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
 				}
 
-				var slashGroupsTuple = NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations).Result;
+				var slashGroupsTuple = await NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations);
 
 				if (slashGroupsTuple.applicationCommands != null && slashGroupsTuple.applicationCommands.Any())
 					updateList.AddRange(slashGroupsTuple.applicationCommands);
@@ -519,7 +491,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					//Slash commands
 					var methods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null);
 
-					var slashCommands = CommandWorker.ParseBasicSlashCommandsAsync(type, methods, guildId, commandTranslations).Result;
+					var slashCommands = await CommandWorker.ParseBasicSlashCommandsAsync(type, methods, guildId, commandTranslations);
 
 					if (slashCommands.applicationCommands != null && slashCommands.applicationCommands.Any())
 						updateList.AddRange(slashCommands.applicationCommands);
@@ -533,7 +505,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					//Context Menus
 					var contextMethods = module.DeclaredMethods.Where(x => x.GetCustomAttribute<ContextMenuAttribute>() != null);
 
-					var contextCommands = CommandWorker.ParseContextMenuCommands(type, contextMethods, commandTranslations).Result;
+					var contextCommands = await CommandWorker.ParseContextMenuCommands(type, contextMethods, commandTranslations);
 
 					if (contextCommands.applicationCommands != null && contextCommands.applicationCommands.Any())
 						updateList.AddRange(contextCommands.applicationCommands);
@@ -546,9 +518,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					//Accounts for lifespans
 					if (module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && module.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
-					{
 						s_singletonModules.Add(CreateInstance(module, Configuration?.ServiceProvider));
-					}
 				}
 			}
 			catch (Exception ex)
@@ -579,7 +549,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						if (updateList != null && updateList.Any())
 						{
-							var regCommands = RegistrationWorker.RegisterGlobalCommandsAsync(updateList).Result;
+							var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(this.Client, updateList);
 							var actualCommands = regCommands.Distinct().ToList();
 							commands.AddRange(actualCommands);
 							GlobalCommandsInternal.AddRange(actualCommands);
@@ -603,20 +573,21 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						if (updateList != null && updateList.Any())
 						{
-							var regCommands = RegistrationWorker.RegisterGuildCommandsAsync(guildId.Value, updateList).Result;
+							var regCommands = await  RegistrationWorker.RegisterGuildCommandsAsync(this.Client, guildId.Value, updateList);
 							var actualCommands = regCommands.Distinct().ToList();
 							commands.AddRange(actualCommands);
 							GuildCommandsInternal.Add(guildId.Value, actualCommands);
-							if (this.Client.Guilds.TryGetValue(guildId.Value, out var guild))
+							/*
+							if (client.Guilds.TryGetValue(guildId.Value, out var guild))
 							{
 								guild.InternalRegisteredApplicationCommands = new();
 								guild.InternalRegisteredApplicationCommands.AddRange(actualCommands);
 							}
-
+							*/
 						}
 						else
 						{
-							foreach (var cmd in GuildDiscordCommands[guildId.Value])
+							foreach (var cmd in GuildDiscordCommands.First(x => x.Key == guildId.Value).Value)
 							{
 								try
 								{
@@ -705,7 +676,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 	private async void CheckRegistrationStartup(bool man = false)
 	{
-		this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Checking counts...\n\nExpected Count: {s_expectedCount}\nCurrent Count: {s_registrationCount}");
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Checking counts...\n\n" +
+			$"Expected Count: {s_expectedCount}\n" +
+			$"Current Count: {s_registrationCount}");
 
 		if ((s_registrationCount == s_expectedCount) || man)
 		{
@@ -728,6 +701,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="e">The event args.</param>
 	private Task InteractionHandler(DiscordClient client, InteractionCreateEventArgs e)
 	{
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Got interaction on shard {shard}", this.Client.ShardId);
 		_ = Task.Run(async () =>
 		{
 			if (e.Interaction.Type == InteractionType.ApplicationCommand)
@@ -769,7 +743,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					if (methods.Any())
 					{
 						var method = methods.First().Method;
-
+						this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options);
 
 						await this.RunCommandAsync(context, method, args);
@@ -779,6 +753,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						var command = e.Interaction.Data.Options.First();
 						var method = groups.First().Methods.First(x => x.Key == command.Name).Value;
 
+						this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options.First().Options);
 
 						await this.RunCommandAsync(context, method, args);
@@ -790,6 +765,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 						var method = group.Methods.First(x => x.Key == command.Options.First().Name).Value;
 
+						this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options.First().Options.First().Options);
 
 						await this.RunCommandAsync(context, method, args);
@@ -799,6 +775,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 				catch (Exception ex)
 				{
+					this.Client.Logger.LogError(ex.Message);
+					this.Client.Logger.LogError(ex.StackTrace);
+
 					await this._slashError.InvokeAsync(this, new SlashCommandErrorEventArgs(this.Client.ServiceProvider) { Context = context, Exception = ex });
 				}
 			}
@@ -828,7 +807,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						var context = new AutocompleteContext
 						{
 							Interaction = e.Interaction,
-							Client = this.Client,
+							Client = client,
 							Services = Configuration?.ServiceProvider,
 							ApplicationCommandsExtension = this,
 							Guild = e.Interaction.Guild,
@@ -857,6 +836,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 						var context = new AutocompleteContext
 						{
+							Client = client,
 							Interaction = e.Interaction,
 							Services = Configuration?.ServiceProvider,
 							ApplicationCommandsExtension = this,
@@ -887,6 +867,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 						var context = new AutocompleteContext
 						{
+							Client = client,
 							Interaction = e.Interaction,
 							Services = Configuration?.ServiceProvider,
 							ApplicationCommandsExtension = this,
@@ -978,6 +959,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		object classInstance;
 
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Executing {cmd}", method.Name);
 		//Accounts for lifespans
 		var moduleLifespan = (method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null ? method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>()?.Lifespan : ApplicationCommandModuleLifespan.Transient) ?? ApplicationCommandModuleLifespan.Transient;
 		switch (moduleLifespan)
@@ -1433,10 +1415,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		GuildDiscordCommands = null;
 		s_errored = false;
 
-		if (Configuration != null && Configuration.EnableDefaultHelp)
+		/*if (Configuration != null && Configuration.EnableDefaultHelp)
 		{
 			this._updateList.RemoveAll(x => x.Value.Type == typeof(DefaultHelpModule));
-		}
+		}*/
 
 		await this.UpdateAsync();
 	}
