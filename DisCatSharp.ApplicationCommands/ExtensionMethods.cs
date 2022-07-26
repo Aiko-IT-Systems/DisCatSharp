@@ -111,10 +111,8 @@ public static class ExtensionMethods
 	public static void RegisterGuildCommands<T>(this IReadOnlyDictionary<int, ApplicationCommandsExtension> extensions, ulong guildId, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
 	{
 		foreach (var extension in extensions.Values)
-		{
-			extension.Client.Logger.LogInformation("Request to register guild commands on shard {shard} for guild {guild}!", extension.Client.ShardId, guildId);
 			extension.RegisterGuildCommands<T>(guildId, translationSetup);
-		}
+
 	}
 
 	/// <summary>
@@ -129,10 +127,7 @@ public static class ExtensionMethods
 		if (!typeof(ApplicationCommandsModule).IsAssignableFrom(type))
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
 		foreach (var extension in extensions.Values)
-		{
-			extension.Client.Logger.LogInformation("Request to register guild commands on shard {shard} for guild {guild}!", extension.Client.ShardId, guildId);
 			extension.RegisterGuildCommands(type, guildId, translationSetup);
-		}
 	}
 
 	/// <summary>

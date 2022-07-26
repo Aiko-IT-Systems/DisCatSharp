@@ -336,11 +336,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	internal async Task UpdateAsync()
 	{
-		this.Client.Logger.LogInformation("Request to register commands on shard {shard}", this.Client.ShardId);
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Request to register commands on shard {shard}", this.Client.ShardId);
 		GlobalDiscordCommands = new();
 		GuildDiscordCommands = new();
 
-		this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Expected Count: {s_expectedCount}");
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Expected Count: {count}", s_expectedCount);
 
 		List<ulong> failedGuilds = new();
 		List<DiscordApplicationCommand> globalCommands = null;
@@ -350,7 +350,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		var wrongShards = guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList();
 		if (wrongShards.Any())
 		{
-			this.Client.Logger.LogDebug("Some guilds are not on the same shard as the client. Removing them from the update list.");
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Some guilds are not on the same shard as the client. Removing them from the update list.");
 			foreach (var guild in wrongShards)
 			{
 				updateList.RemoveAll(x => x.Key == guild);
@@ -393,14 +393,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 		if (globalCommands != null && globalCommands.Any())
 			GlobalDiscordCommands.AddRange(globalCommands);
-		this.Client.Logger.LogInformation("Test");
+
 		foreach (var key in commandsPending)
 		{
-			this.Client.Logger.LogInformation(key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, key.HasValue ? $"Registering commands in guild {key.Value}" : "Registering global commands.");
 			if (key.HasValue)
 			{
-				this.Client.Logger.LogDebug("Found guild {guild} in shard {shard}!", key.Value, this.Client.ShardId);
-				this.Client.Logger.LogDebug("Registering");
+				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Found guild {guild} in shard {shard}!", key.Value, this.Client.ShardId);
+				this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering");
 			}
 			await this.RegisterCommands(updateList.Where(x => x.Key == key).Select(x => x.Value).ToList(), key);
 		}
@@ -421,7 +421,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="guildId">The optional guild id.</param>
 	private async Task RegisterCommands(List<ApplicationCommandsModuleConfiguration> types, ulong? guildId)
 	{
-		this.Client.Logger.LogInformation("Registering commands on shard {shard}", this.Client.ShardId);
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Registering commands on shard {shard}", this.Client.ShardId);
 		//Initialize empty lists to be added to the global ones at the end
 		var commandMethods = new List<CommandMethod>();
 		var groupCommands = new List<GroupCommand>();
@@ -701,7 +701,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="e">The event args.</param>
 	private Task InteractionHandler(DiscordClient client, InteractionCreateEventArgs e)
 	{
-		this.Client.Logger.LogInformation("Got interaction on shard {shard}", this.Client.ShardId);
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Got interaction on shard {shard}", this.Client.ShardId);
 		_ = Task.Run(async () =>
 		{
 			if (e.Interaction.Type == InteractionType.ApplicationCommand)
@@ -959,7 +959,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		object classInstance;
 
-		this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Executing {cmd}", method.Name);
 		//Accounts for lifespans
 		var moduleLifespan = (method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null ? method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>()?.Lifespan : ApplicationCommandModuleLifespan.Transient) ?? ApplicationCommandModuleLifespan.Transient;
 		switch (moduleLifespan)
