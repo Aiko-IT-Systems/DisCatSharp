@@ -94,11 +94,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal static ApplicationCommandsConfiguration Configuration;
 
 	/// <summary>
-	/// Discord client.
-	/// </summary>
-	internal static DiscordClient ClientInternal;
-
-	/// <summary>
 	/// Set to true if anything fails when registering.
 	/// </summary>
 	private static bool s_errored { get; set; }
@@ -186,7 +181,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			throw new InvalidOperationException("What did I tell you?");
 
 		this.Client = client;
-		ClientInternal = client;
 
 		this._slashError = new AsyncEvent<ApplicationCommandsExtension, SlashCommandErrorEventArgs>("SLASHCOMMAND_ERRORED", TimeSpan.Zero, null);
 		this._slashExecuted = new AsyncEvent<ApplicationCommandsExtension, SlashCommandExecutedEventArgs>("SLASHCOMMAND_EXECUTED", TimeSpan.Zero, null);
@@ -542,7 +536,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						if (updateList != null && updateList.Any())
 						{
-							var regCommands = RegistrationWorker.RegisterGlobalCommandsAsync(updateList).Result;
+							var regCommands = RegistrationWorker.RegisterGlobalCommandsAsync(this.Client, updateList).Result;
 							var actualCommands = regCommands.Distinct().ToList();
 							commands.AddRange(actualCommands);
 							GlobalCommandsInternal.AddRange(actualCommands);
@@ -566,7 +560,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						if (updateList != null && updateList.Any())
 						{
-							var regCommands = RegistrationWorker.RegisterGuildCommandsAsync(guildId.Value, updateList).Result;
+							var regCommands = RegistrationWorker.RegisterGuildCommandsAsync(this.Client, guildId.Value, updateList).Result;
 							var actualCommands = regCommands.Distinct().ToList();
 							commands.AddRange(actualCommands);
 							GuildCommandsInternal.Add(guildId.Value, actualCommands);
@@ -691,6 +685,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="e">The event args.</param>
 	private Task InteractionHandler(DiscordClient client, InteractionCreateEventArgs e)
 	{
+		client.Logger.LogInformation("Got interaction on shard {shard}", client.ShardId);
 		_ = Task.Run(async () =>
 		{
 			if (e.Interaction.Type == InteractionType.ApplicationCommand)
@@ -732,7 +727,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					if (methods.Any())
 					{
 						var method = methods.First().Method;
-
+						client.Logger.LogDebug("Executing {cmd}", method.Name);
 						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options);
 
 						await this.RunCommandAsync(context, method, args);
@@ -742,6 +737,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						var command = e.Interaction.Data.Options.First();
 						var method = groups.First().Methods.First(x => x.Key == command.Name).Value;
 
+						client.Logger.LogDebug("Executing {cmd}", method.Name);
 						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options.First().Options);
 
 						await this.RunCommandAsync(context, method, args);
@@ -753,6 +749,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 						var method = group.Methods.First(x => x.Key == command.Options.First().Name).Value;
 
+						client.Logger.LogDebug("Executing {cmd}", method.Name);
 						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options.First().Options.First().Options);
 
 						await this.RunCommandAsync(context, method, args);
@@ -791,7 +788,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						var context = new AutocompleteContext
 						{
 							Interaction = e.Interaction,
-							Client = this.Client,
+							Client = client,
 							Services = Configuration?.ServiceProvider,
 							ApplicationCommandsExtension = this,
 							Guild = e.Interaction.Guild,
@@ -820,6 +817,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 						var context = new AutocompleteContext
 						{
+							Client = client,
 							Interaction = e.Interaction,
 							Services = Configuration?.ServiceProvider,
 							ApplicationCommandsExtension = this,
@@ -850,6 +848,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 						var context = new AutocompleteContext
 						{
+							Client = client,
 							Interaction = e.Interaction,
 							Services = Configuration?.ServiceProvider,
 							ApplicationCommandsExtension = this,
@@ -941,6 +940,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	{
 		object classInstance;
 
+		this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
 		//Accounts for lifespans
 		var moduleLifespan = (method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null ? method.DeclaringType.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>()?.Lifespan : ApplicationCommandModuleLifespan.Transient) ?? ApplicationCommandModuleLifespan.Transient;
 		switch (moduleLifespan)
