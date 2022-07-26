@@ -27,6 +27,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
+
 namespace DisCatSharp.ApplicationCommands;
 
 /// <summary>
@@ -110,10 +112,21 @@ public static class ExtensionMethods
 	{
 		foreach (var extension in extensions.Values)
 		{
+			extension.Client.Logger.LogInformation("Request to register guild commands on shard {shard} for guild {guild}!", extension.Client.ShardId, guildId);
 			if (extension.Client.Guilds.ContainsKey(guildId))
 			{
-				extension.RegisterGuildCommands<T>(guildId, translationSetup);
-				break;
+				try
+				{
+					extension.Client.Logger.LogInformation("Found guild {guild} in shard {shard}!", guildId, extension.Client.ShardId);
+					extension.RegisterGuildCommands<T>(guildId, translationSetup);
+					extension.Client.Logger.LogInformation("Registered");
+				}
+				catch (Exception ex)
+				{
+					extension.Client.Logger.LogError(ex.Message);
+					extension.Client.Logger.LogError(ex.StackTrace);
+				}
+				return;
 			}
 		}
 	}
@@ -131,10 +144,22 @@ public static class ExtensionMethods
 			throw new ArgumentException("Command classes have to inherit from ApplicationCommandsModule", nameof(type));
 		foreach (var extension in extensions.Values)
 		{
+			extension.Client.Logger.LogInformation("Request to register guild commands on shard {shard} for guild {guild}!", extension.Client.ShardId, guildId);
+
 			if (extension.Client.Guilds.ContainsKey(guildId))
 			{
-				extension.RegisterGuildCommands(type, guildId, translationSetup);
-				break;
+				try
+				{
+					extension.Client.Logger.LogInformation("Found guild {guild} in shard {shard}!", guildId, extension.Client.ShardId);
+					extension.RegisterGuildCommands(type, guildId, translationSetup);
+					extension.Client.Logger.LogInformation("Registered");
+				}
+				catch (Exception ex)
+				{
+					extension.Client.Logger.LogError(ex.Message);
+					extension.Client.Logger.LogError(ex.StackTrace);
+				}
+				return;
 			}
 		}
 	}
