@@ -191,8 +191,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this._globalApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs>("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 		this._guildApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs>("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 
-		//this.Client.GuildDownloadCompleted += async (c, e) => await this.UpdateGuildCommandsAsync();
-		client.Ready += async (c, e) => await this.UpdateAsync(c);
+		client.GuildDownloadCompleted += this.UpdateAsync;
 		client.InteractionCreated += this.CatchInteractionsOnStartup;
 		client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
 	}
@@ -335,7 +334,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Used for RegisterCommands and the <see cref="DisCatSharp.DiscordClient.Ready"/> event.
 	/// </summary>
-	internal async Task UpdateAsync(DiscordClient client)
+	internal async Task UpdateAsync(DiscordClient client, GuildDownloadCompletedEventArgs args = null)
 	{
 		GlobalDiscordCommands = new();
 		GuildDiscordCommands = new();
@@ -395,6 +394,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			GuildsWithoutScope = failedGuilds
 		});
+		client.GuildDownloadCompleted -= this.UpdateAsync;
 	}
 
 	/// <summary>
