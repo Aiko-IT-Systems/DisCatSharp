@@ -257,6 +257,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	public void RegisterGuildCommands<T>(ulong guildId, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
 		=> this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T), translationSetup)));
 
+
 	/// <summary>
 	/// Registers a command class with optional translation setup for a guild.
 	/// </summary>
@@ -341,12 +342,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		GuildDiscordCommands = new();
 
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Expected Count: {count}", s_expectedCount);
-
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} has {guilds} guilds.", this.Client.ShardId, this.Client.Guilds?.Count);
 		List<ulong> failedGuilds = new();
 		List<DiscordApplicationCommand> globalCommands = null;
 		globalCommands = (await this.Client.GetGlobalApplicationCommandsAsync(Configuration?.EnableLocalization ?? false)).ToList() ?? null;
-		var updateList = this._updateList.DistinctBy(x => x.Key).ToList();
-		var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).ToList();
+		var updateList = this._updateList;
+		var guilds = CheckAllGuilds ? this.Client.Guilds?.Keys.ToList() : updateList.Where(x => x.Key != null)?.Select(x => x.Key.Value).Distinct().ToList();
 		var wrongShards = guilds.Where(x => !this.Client.Guilds.ContainsKey(x)).ToList();
 		if (wrongShards.Any())
 		{
