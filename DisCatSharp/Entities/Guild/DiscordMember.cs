@@ -632,7 +632,6 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <returns></returns>
-	/// <remarks>[alias="KickAsync"]</remarks>
 	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
 	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
