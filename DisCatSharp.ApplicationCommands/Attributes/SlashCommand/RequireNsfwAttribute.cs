@@ -41,5 +41,5 @@ public sealed class ApplicationCommandRequireNsfwAttribute : SlashCheckBaseAttri
 	/// Runs checks.
 	/// </summary>
 	public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-		=> Task.FromResult(ctx.Channel.Guild == null || ctx.Channel.IsNsfw);
+		=> Task.FromResult(ctx.Guild == null || ctx.Channel.IsNsfw);
 }
