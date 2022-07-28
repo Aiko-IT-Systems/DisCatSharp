@@ -1242,8 +1242,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 
 		this.UpdateMessage(message, author, guild, member);
 
-		if (message.ReactionsInternal == null)
-			message.ReactionsInternal = new List<DiscordReaction>();
+		message.ReactionsInternal ??= new List<DiscordReaction>();
 		foreach (var xr in message.ReactionsInternal)
 			xr.Emoji.Discord = this;
 

@@ -676,8 +676,7 @@ public sealed partial class DiscordClient
 		{
 			guild.Discord = this;
 
-			if (guild.ChannelsInternal == null)
-				guild.ChannelsInternal = new ConcurrentDictionary<ulong, DiscordChannel>();
+			guild.ChannelsInternal ??= new ConcurrentDictionary<ulong, DiscordChannel>();
 
 			foreach (var xc in guild.Channels.Values)
 			{
@@ -690,8 +689,7 @@ public sealed partial class DiscordClient
 				}
 			}
 
-			if (guild.RolesInternal == null)
-				guild.RolesInternal = new ConcurrentDictionary<ulong, DiscordRole>();
+			guild.RolesInternal ??= new ConcurrentDictionary<ulong, DiscordRole>();
 
 			foreach (var xr in guild.Roles.Values)
 			{
@@ -726,38 +724,32 @@ public sealed partial class DiscordClient
 				}
 			}
 
-			if (guild.EmojisInternal == null)
-				guild.EmojisInternal = new ConcurrentDictionary<ulong, DiscordEmoji>();
+			guild.EmojisInternal ??= new ConcurrentDictionary<ulong, DiscordEmoji>();
 
 			foreach (var xe in guild.Emojis.Values)
 				xe.Discord = this;
 
-			if (guild.StickersInternal == null)
-				guild.StickersInternal = new ConcurrentDictionary<ulong, DiscordSticker>();
+			guild.StickersInternal ??= new ConcurrentDictionary<ulong, DiscordSticker>();
 
 			foreach (var xs in guild.Stickers.Values)
 				xs.Discord = this;
 
-			if (guild.VoiceStatesInternal == null)
-				guild.VoiceStatesInternal = new ConcurrentDictionary<ulong, DiscordVoiceState>();
+			guild.VoiceStatesInternal ??= new ConcurrentDictionary<ulong, DiscordVoiceState>();
 
 			foreach (var xvs in guild.VoiceStates.Values)
 				xvs.Discord = this;
 
-			if (guild.ThreadsInternal == null)
-				guild.ThreadsInternal = new ConcurrentDictionary<ulong, DiscordThreadChannel>();
+			guild.ThreadsInternal ??= new ConcurrentDictionary<ulong, DiscordThreadChannel>();
 
 			foreach (var xt in guild.ThreadsInternal.Values)
 				xt.Discord = this;
 
-			if (guild.StageInstancesInternal == null)
-				guild.StageInstancesInternal = new ConcurrentDictionary<ulong, DiscordStageInstance>();
+			guild.StageInstancesInternal ??= new ConcurrentDictionary<ulong, DiscordStageInstance>();
 
 			foreach (var xsi in guild.StageInstancesInternal.Values)
 				xsi.Discord = this;
 
-			if (guild.ScheduledEventsInternal == null)
-				guild.ScheduledEventsInternal = new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
+			guild.ScheduledEventsInternal ??= new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
 
 			foreach (var xse in guild.ScheduledEventsInternal.Values)
 				xse.Discord = this;
@@ -994,24 +986,15 @@ public sealed partial class DiscordClient
 		if (exists)
 			guild = foundGuild;
 
-		if (guild.ChannelsInternal == null)
-			guild.ChannelsInternal = new ConcurrentDictionary<ulong, DiscordChannel>();
-		if (guild.ThreadsInternal == null)
-			guild.ThreadsInternal = new ConcurrentDictionary<ulong, DiscordThreadChannel>();
-		if (guild.RolesInternal == null)
-			guild.RolesInternal = new ConcurrentDictionary<ulong, DiscordRole>();
-		if (guild.ThreadsInternal == null)
-			guild.ThreadsInternal = new ConcurrentDictionary<ulong, DiscordThreadChannel>();
-		if (guild.StickersInternal == null)
-			guild.StickersInternal = new ConcurrentDictionary<ulong, DiscordSticker>();
-		if (guild.EmojisInternal == null)
-			guild.EmojisInternal = new ConcurrentDictionary<ulong, DiscordEmoji>();
-		if (guild.VoiceStatesInternal == null)
-			guild.VoiceStatesInternal = new ConcurrentDictionary<ulong, DiscordVoiceState>();
-		if (guild.MembersInternal == null)
-			guild.MembersInternal = new ConcurrentDictionary<ulong, DiscordMember>();
-		if (guild.ScheduledEventsInternal == null)
-			guild.ScheduledEventsInternal = new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
+		guild.ChannelsInternal ??= new ConcurrentDictionary<ulong, DiscordChannel>();
+		guild.ThreadsInternal ??= new ConcurrentDictionary<ulong, DiscordThreadChannel>();
+		guild.RolesInternal ??= new ConcurrentDictionary<ulong, DiscordRole>();
+		guild.ThreadsInternal ??= new ConcurrentDictionary<ulong, DiscordThreadChannel>();
+		guild.StickersInternal ??= new ConcurrentDictionary<ulong, DiscordSticker>();
+		guild.EmojisInternal ??= new ConcurrentDictionary<ulong, DiscordEmoji>();
+		guild.VoiceStatesInternal ??= new ConcurrentDictionary<ulong, DiscordVoiceState>();
+		guild.MembersInternal ??= new ConcurrentDictionary<ulong, DiscordMember>();
+		guild.ScheduledEventsInternal ??= new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
 
 		this.UpdateCachedGuild(eventGuild, rawMembers);
 
@@ -1172,24 +1155,15 @@ public sealed partial class DiscordClient
 		var eventGuild = guild;
 		guild = this.GuildsInternal[eventGuild.Id];
 
-		if (guild.ChannelsInternal == null)
-			guild.ChannelsInternal = new ConcurrentDictionary<ulong, DiscordChannel>();
-		if (guild.ThreadsInternal == null)
-			guild.ThreadsInternal = new ConcurrentDictionary<ulong, DiscordThreadChannel>();
-		if (guild.RolesInternal == null)
-			guild.RolesInternal = new ConcurrentDictionary<ulong, DiscordRole>();
-		if (guild.EmojisInternal == null)
-			guild.EmojisInternal = new ConcurrentDictionary<ulong, DiscordEmoji>();
-		if (guild.StickersInternal == null)
-			guild.StickersInternal = new ConcurrentDictionary<ulong, DiscordSticker>();
-		if (guild.VoiceStatesInternal == null)
-			guild.VoiceStatesInternal = new ConcurrentDictionary<ulong, DiscordVoiceState>();
-		if (guild.StageInstancesInternal == null)
-			guild.StageInstancesInternal = new ConcurrentDictionary<ulong, DiscordStageInstance>();
-		if (guild.MembersInternal == null)
-			guild.MembersInternal = new ConcurrentDictionary<ulong, DiscordMember>();
-		if (guild.ScheduledEventsInternal == null)
-			guild.ScheduledEventsInternal = new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
+		guild.ChannelsInternal ??= new ConcurrentDictionary<ulong, DiscordChannel>();
+		guild.ThreadsInternal ??= new ConcurrentDictionary<ulong, DiscordThreadChannel>();
+		guild.RolesInternal ??= new ConcurrentDictionary<ulong, DiscordRole>();
+		guild.EmojisInternal ??= new ConcurrentDictionary<ulong, DiscordEmoji>();
+		guild.StickersInternal ??= new ConcurrentDictionary<ulong, DiscordSticker>();
+		guild.VoiceStatesInternal ??= new ConcurrentDictionary<ulong, DiscordVoiceState>();
+		guild.StageInstancesInternal ??= new ConcurrentDictionary<ulong, DiscordStageInstance>();
+		guild.MembersInternal ??= new ConcurrentDictionary<ulong, DiscordMember>();
+		guild.ScheduledEventsInternal ??= new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
 
 		this.UpdateCachedGuild(eventGuild, rawMembers);
 
