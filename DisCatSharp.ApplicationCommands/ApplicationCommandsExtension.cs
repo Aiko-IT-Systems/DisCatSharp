@@ -407,7 +407,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 
 		this._missingScopeGuildIds = failedGuilds;
-		
+
 		await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(Configuration?.ServiceProvider)
 		{
 			GuildsWithoutScope = failedGuilds

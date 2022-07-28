@@ -95,7 +95,7 @@ public enum ApplicationFlags
 	/// Related to embedded applications.
 	/// </summary>
 	EmbeddedFirstParty = 1 << 20,
-	
+
 	/// <summary>
 	/// The application has registered global application commands.
 	/// </summary>

@@ -86,7 +86,7 @@ public sealed class DiscordInteractionModalBuilder
 	/// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionModalBuilder AddTextComponents(params DiscordTextComponent[] components)
 		=> this.AddModalComponents(components);
-	
+
 	/// <summary>
 	/// Appends a collection of select components to the builder. Each call will append to a new row.
 	/// </summary>
@@ -124,7 +124,7 @@ public sealed class DiscordInteractionModalBuilder
 		if (ara.Length > 5)
 
 			throw new ArgumentException("You can only add 5 components to modals.");
-		
+
 		if (this._components.Count + ara.Length > 5)
 			throw new ArgumentException($"You try to add too many components. We already have {this._components.Count}.");
 
@@ -161,7 +161,7 @@ public sealed class DiscordInteractionModalBuilder
 	internal DiscordInteractionModalBuilder AddModalComponents(DiscordComponent component)
 	{
 		this._components.Add(new DiscordActionRowComponent(new List<DiscordComponent>() { component }));
-		
+
 		return this;
 	}
 
