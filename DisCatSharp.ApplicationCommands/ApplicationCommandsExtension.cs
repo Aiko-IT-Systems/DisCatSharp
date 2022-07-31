@@ -158,6 +158,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal static bool AutoDeferEnabled { get; set; }
 
 	/// <summary>
+	/// Whether this module finished the startup.
+	/// </summary>
+	internal bool StartupFinished { get; set; }
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
 	/// </summary>
 	/// <param name="configuration">The configuration.</param>
@@ -191,21 +196,34 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this._globalApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs>("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 		this._guildApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs>("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 
+		this.StartupFinished = false;
 		this.Client.GuildDownloadCompleted += async (c, e) => await this.UpdateAsync();
 		this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
 		this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
 	}
 
 	private async Task CatchInteractionsOnStartup(DiscordClient sender, InteractionCreateEventArgs e)
-		=> await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral(true).WithContent("Attention: This application is still starting up. Application commands are unavailable for now."));
+	{
+		if (!this.StartupFinished)
+			await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral(true).WithContent("Attention: This application is still starting up. Application commands are unavailable for now."));
+		else
+			await Task.Delay(1);
+	}
 
 	private async Task CatchContextMenuInteractionsOnStartup(DiscordClient sender, ContextMenuInteractionCreateEventArgs e)
-		=> await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral(true).WithContent("Attention: This application is still starting up. Context menu commands are unavailable for now."));
+	{
+		if (!this.StartupFinished)
+			await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().AsEphemeral(true).WithContent("Attention: This application is still starting up. Context menu commands are unavailable for now."));
+		else
+			await Task.Delay(1);
+	}
 
 	private void FinishedRegistration()
 	{
 		this.Client.InteractionCreated -= this.CatchInteractionsOnStartup;
 		this.Client.ContextMenuInteractionCreated -= this.CatchContextMenuInteractionsOnStartup;
+
+		this.StartupFinished = true;
 
 		this.Client.InteractionCreated += this.InteractionHandler;
 		this.Client.ContextMenuInteractionCreated += this.ContextMenuHandler;
@@ -1395,10 +1413,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 		return options;
 	}
-
+	/*
 	/// <summary>
-	/// <para>Refreshes your commands, used for refreshing choice providers or applying commands registered after the ready event on the discord client.
-	/// Should only be run on the slash command extension linked to shard 0 if sharding.</para>
+	/// <para>Refreshes your commands, used for refreshing choice providers or applying commands registered after the ready event on the discord client.</para>
 	/// <para>Not recommended and should be avoided since it can make slash commands be unresponsive for a while.</para>
 	/// </summary>
 	public async Task RefreshCommandsAsync()
@@ -1420,9 +1437,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		{
 			this._updateList.RemoveAll(x => x.Value.Type == typeof(DefaultHelpModule));
 		}*/
-
+	/*
 		await this.UpdateAsync();
-	}
+	}*/
 
 	/// <summary>
 	/// Fires when the execution of a slash command fails.
@@ -1463,6 +1480,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		remove => this._contextMenuExecuted.Unregister(value);
 	}
 	private AsyncEvent<ApplicationCommandsExtension, ContextMenuExecutedEventArgs> _contextMenuExecuted;
+
+	public override void Dispose()
+	{
+		this.Client.InteractionCreated -= this.InteractionHandler;
+		this.Client.ContextMenuInteractionCreated -= this.ContextMenuHandler;
+		GC.SuppressFinalize(this);
+	}
 }
 
 /// <summary>

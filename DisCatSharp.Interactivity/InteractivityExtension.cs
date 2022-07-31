@@ -95,7 +95,6 @@ public class InteractivityExtension : BaseExtension
 		this._compPaginator = new ComponentPaginator(this.Client, this.Config);
 		this._componentEventWaiter = new ComponentEventWaiter(this.Client, this.Config);
 		this._modalEventWaiter = new ModalEventWaiter(this.Client, this.Config);
-
 	}
 
 	/// <summary>
@@ -951,6 +950,9 @@ public class InteractivityExtension : BaseExtension
 	/// </summary>
 	/// <param name="timeout">The timeout.</param>
 	private CancellationToken GetCancellationToken(TimeSpan? timeout = null) => new CancellationTokenSource(timeout ?? this.Config.Timeout).Token;
+
+	public override void Dispose()
+		=> GC.SuppressFinalize(this);
 
 	/// <summary>
 	/// Handles an invalid interaction.

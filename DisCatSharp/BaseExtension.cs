@@ -20,12 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 namespace DisCatSharp;
 
 /// <summary>
 /// Represents base for all DisCatSharp extensions. To implement your own extension, extend this class, and implement its abstract members.
 /// </summary>
-public abstract class BaseExtension
+public abstract class BaseExtension : IDisposable
 {
 	/// <summary>
 	/// Gets the instance of <see cref="DiscordClient"/> this extension is attached to.
@@ -37,4 +39,6 @@ public abstract class BaseExtension
 	/// </summary>
 	/// <param name="client">Discord client to initialize for.</param>
 	protected internal abstract void Setup(DiscordClient client);
+
+	public abstract void Dispose();
 }
