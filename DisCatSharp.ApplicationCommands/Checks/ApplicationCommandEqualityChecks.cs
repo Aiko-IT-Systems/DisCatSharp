@@ -70,17 +70,19 @@ internal static class ApplicationCommandEqualityChecks
 			? type switch
 			{
 				ApplicationCommandType.ChatInput => DeepEqual(source, target, localizationEnabled),
-				_ => (source.Name == target.Name)
-					&& (source.Type == target.Type) && (source.NameLocalizations == target.NameLocalizations)
-					&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions)
+				_ => source.Name == target.Name
+					&& source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
+					&& source.DefaultMemberPermissions == target.DefaultMemberPermissions
+					&& source.DmPermission == target.DmPermission
 				//&& (source.IsNsfw == target.IsNsfw)
 			}
 			: type switch
 			{
 				ApplicationCommandType.ChatInput => DeepEqual(source, target),
-				_ => (source.Name == target.Name)
-					&& (source.Type == target.Type)
-					&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions)
+				_ => source.Name == target.Name
+					&& source.Type == target.Type
+					&& source.DefaultMemberPermissions == target.DefaultMemberPermissions
+					&& source.DmPermission == target.DmPermission
 				//&& (source.IsNsfw == target.IsNsfw)
 			};
 	}
