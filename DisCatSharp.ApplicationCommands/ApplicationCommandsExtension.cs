@@ -1480,13 +1480,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		remove => this._contextMenuExecuted.Unregister(value);
 	}
 	private AsyncEvent<ApplicationCommandsExtension, ContextMenuExecutedEventArgs> _contextMenuExecuted;
-
-	public override void Dispose()
-	{
-		this.Client.InteractionCreated -= this.InteractionHandler;
-		this.Client.ContextMenuInteractionCreated -= this.ContextMenuHandler;
-		GC.SuppressFinalize(this);
-	}
 }
 
 /// <summary>

@@ -1083,12 +1083,4 @@ public class CommandsNextExtension : BaseExtension
 	private Task OnCommandErrored(CommandErrorEventArgs e)
 		=> this._error.InvokeAsync(this, e);
 	#endregion
-
-
-
-	public override void Dispose()
-	{
-		this.Client.MessageCreated -= this.HandleCommandsAsync;
-		GC.SuppressFinalize(this);
-	}
 }
