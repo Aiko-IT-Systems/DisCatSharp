@@ -262,7 +262,4 @@ public sealed class VoiceNextExtension : BaseExtension
 			xe.SetResult(e);
 		}
 	}
-
-	public override void Dispose()
-		=> GC.SuppressFinalize(this);
 }

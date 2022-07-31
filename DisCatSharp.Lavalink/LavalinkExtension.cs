@@ -212,7 +212,4 @@ public sealed class LavalinkExtension : BaseExtension
 	/// <param name="e">The node disconnected event args.</param>
 	private Task Con_Disconnected(LavalinkNodeConnection node, NodeDisconnectedEventArgs e)
 		=> this._nodeDisconnected.InvokeAsync(node, e);
-
-	public override void Dispose()
-		=> GC.SuppressFinalize(this);
 }
