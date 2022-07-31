@@ -3239,7 +3239,15 @@ public sealed partial class DiscordClient
 					c.Value.Discord = this;
 
 					if (guildId.HasValue)
+					{
 						c.Value.GuildId = guildId.Value;
+						try
+						{
+							if (this.Guilds.TryGetValue(guildId.Value, out var guild))
+								if (guild.ChannelsInternal.TryGetValue(c.Key, out var channel) && channel.PermissionOverwritesInternal != null && channel.PermissionOverwritesInternal.Any())
+									c.Value.PermissionOverwritesInternal = channel.PermissionOverwritesInternal;
+						} catch(Exception) { }
+					}
 				}
 			}
 

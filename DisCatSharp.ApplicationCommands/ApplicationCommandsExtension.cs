@@ -1175,6 +1175,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				else if (parameter.ParameterType == typeof(SnowflakeObject))
 				{
 					//Checks through resolved
+					if (e.Interaction.Data.Resolved.Channels != null && e.Interaction.Data.Resolved.Channels.TryGetValue((ulong)option.Value, out var channel))
+						args.Add(channel);
 					if (e.Interaction.Data.Resolved.Roles != null && e.Interaction.Data.Resolved.Roles.TryGetValue((ulong)option.Value, out var role))
 						args.Add(role);
 					else if (e.Interaction.Data.Resolved.Members != null && e.Interaction.Data.Resolved.Members.TryGetValue((ulong)option.Value, out var member))
