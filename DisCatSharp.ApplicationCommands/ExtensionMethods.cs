@@ -63,7 +63,7 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="client">Client to get application commands from.</param>
 	/// <returns>A dictionary of current <see cref="ApplicationCommandsExtension"/> with the key being the shard id.</returns>
-	public static async Task <IReadOnlyDictionary<int, ApplicationCommandsExtension>> GetApplicationCommandsAsync(this DiscordShardedClient client)
+	public static async Task<IReadOnlyDictionary<int, ApplicationCommandsExtension>> GetApplicationCommandsAsync(this DiscordShardedClient client)
 	{
 		await client.InitializeShardsAsync().ConfigureAwait(false);
 		var modules = new Dictionary<int, ApplicationCommandsExtension>();

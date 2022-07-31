@@ -5088,7 +5088,7 @@ public sealed class DiscordApiClient
 	{
 		if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type != ComponentType.InputText && c.Type != ComponentType.Select)))
 			throw new NotSupportedException("Can't send any other type then Input Text or Select as Modal Component.");
-		
+
 		var pld = new RestInteractionModalResponsePayload
 		{
 			Type = type,

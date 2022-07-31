@@ -407,7 +407,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 
 		this._missingScopeGuildIds = failedGuilds;
-		
+
 		await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(Configuration?.ServiceProvider)
 		{
 			GuildsWithoutScope = failedGuilds
@@ -1738,19 +1738,30 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 		[Autocomplete(typeof(DefaultHelpAutoCompleteLevelTwoProvider))]
 		[Option("option_three", "command to provide help for", true)] string commandTwoName = null)
 	{
+		List<DiscordApplicationCommand> applicationCommands = null;
 		var globalCommandsTask = ctx.Client.GetGlobalApplicationCommandsAsync();
-		var guildCommandsTask= ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
+		if (ctx.Guild != null)
+		{
+			var guildCommandsTask= ctx.Client.GetGuildApplicationCommandsAsync(ctx.Guild.Id);
+			await Task.WhenAll(globalCommandsTask, guildCommandsTask);
+			applicationCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
+				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+				.GroupBy(ac => ac.Name).Select(x => x.First())
+				.ToList();
+		}
+		else
+		{
+			await Task.WhenAll(globalCommandsTask);
+			applicationCommands = globalCommandsTask.Result
+				.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
+				.GroupBy(ac => ac.Name).Select(x => x.First())
+				.ToList();
+		}
 
-		await Task.WhenAll(globalCommandsTask, guildCommandsTask);
-
-		var applicationCommands = globalCommandsTask.Result.Concat(guildCommandsTask.Result)
-			.Where(ac => !ac.Name.Equals("help", StringComparison.OrdinalIgnoreCase))
-			.GroupBy(ac => ac.Name).Select(x => x.First())
-			.ToList();
 		if (applicationCommands.Count < 1)
 		{
 			await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-				.WithContent($"There are no slash commands for guild {ctx.Guild.Name}").AsEphemeral(true));
+				.WithContent($"There are no slash commands").AsEphemeral(true));
 			return;
 		}
 		if (commandTwoName is not null && !commandTwoName.Equals("no_options_for_this_command"))
@@ -1771,7 +1782,7 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 				var sb = new StringBuilder();
 
 				foreach (var option in commandOptions)
-					sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
+					sb.Append('`').Append(option.Name).Append("`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
 				sb.Append('\n');
 				discordEmbed.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
@@ -1795,7 +1806,7 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 				var sb = new StringBuilder();
 
 				foreach (var option in commandOptions)
-					sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
+					sb.Append('`').Append(option.Name).Append("`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
 				sb.Append('\n');
 				discordEmbed.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
@@ -1823,7 +1834,7 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 				var sb = new StringBuilder();
 
 				foreach (var option in commandOptions)
-					sb.Append('`').Append(option.Name).Append(" (").Append(")`: ").Append(option.Description ?? "No description provided.").Append('\n');
+					sb.Append('`').Append(option.Name).Append("`: ").Append(option.Description ?? "No description provided.").Append('\n');
 
 				sb.Append('\n');
 				discordEmbed.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
