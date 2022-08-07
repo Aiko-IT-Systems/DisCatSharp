@@ -50,6 +50,7 @@ public sealed partial class DiscordClient
 {
 	#region Private Fields
 
+	private string _resumeGatewayUrl;
 	private string _sessionId;
 	private bool _guildDownloadCompleted;
 
@@ -669,6 +670,7 @@ public sealed partial class DiscordClient
 
 		this.GatewayVersion = ready.GatewayVersion;
 		this._sessionId = ready.SessionId;
+		this._resumeGatewayUrl = ready.ResumeGatewayUrl;
 		var rawGuildIndex = rawGuilds.ToDictionary(xt => (ulong)xt["id"], xt => (JObject)xt);
 
 		this.GuildsInternal.Clear();

@@ -58,6 +58,12 @@ internal class ReadyPayload
 	public string SessionId { get; private set; }
 
 	/// <summary>
+	/// The gateway url for resuming connections
+	/// </summary>
+	[JsonProperty("resume_gateway_url")]
+	public string ResumeGatewayUrl { get; set; }
+
+	/// <summary>
 	/// Gets debug data sent by Discord. This contains a list of servers to which the client is connected.
 	/// </summary>
 	[JsonProperty("_trace")]
