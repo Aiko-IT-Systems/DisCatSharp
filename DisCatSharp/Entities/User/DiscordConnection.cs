@@ -57,7 +57,7 @@ public class DiscordConnection
 	///			<description>false</description>
 	///		</item>
 	///		<item>
-	///			<term>stean</term>
+	///			<term>steam</term>
 	///			<description>false</description>
 	///		</item>
 	///		<item>
