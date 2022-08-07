@@ -161,6 +161,8 @@ public sealed partial class DiscordClient
 		if (this.Configuration.GatewayCompressionLevel == GatewayCompressionLevel.Stream)
 			gwuri.AddParameter("compress", "zlib-stream");
 
+		this.Logger.LogDebug(LoggerEvents.Startup, "Connecting to %gw", this.GatewayUri.AbsoluteUri);
+
 		await this.WebSocketClient.ConnectAsync(gwuri.Build()).ConfigureAwait(false);
 
 		Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
@@ -550,6 +552,7 @@ public sealed partial class DiscordClient
 		};
 		var resumestr = JsonConvert.SerializeObject(resumePayload);
 		this.GatewayUri = new Uri(this._resumeGatewayUrl);
+		this.Logger.LogDebug(LoggerEvents.ConnectionClose, "Request to resume via %gw", this.GatewayUri.AbsoluteUri);
 		await this.WsSendAsync(resumestr).ConfigureAwait(false);
 	}
 	/// <summary>
