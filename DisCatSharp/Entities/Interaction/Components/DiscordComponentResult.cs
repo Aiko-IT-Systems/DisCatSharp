@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections.Generic;
+
 using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
@@ -44,10 +46,16 @@ public sealed class DiscordComponentResult
 	public string CustomId { get; internal set; }
 
 	/// <summary>
-	/// The Id of this component, if applicable. Not applicable on ActionRow(s) and link buttons.
+	/// The selected value.
 	/// </summary>
 	[JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
 	public string Value { get; internal set; }
+
+	/// <summary>
+	/// The selected values. Only applicable to Selects.
+	/// </summary>
+	[JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyList<string> Values { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordComponentResult"/> class.

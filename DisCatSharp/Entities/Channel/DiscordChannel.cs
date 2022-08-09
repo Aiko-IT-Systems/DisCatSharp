@@ -433,12 +433,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Returns a specific message
 	/// </summary>
 	/// <param name="id">The id of the message</param>
+	/// <param name="bypassCache">Whether to bypass the message cache</param>
 	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> GetMessageAsync(ulong id) =>
+	public async Task<DiscordMessage> GetMessageAsync(ulong id, bool bypassCache = false) =>
 		this.Discord.Configuration.MessageCacheSize > 0
+		&& !bypassCache
 		&& this.Discord is DiscordClient dc
 		&& dc.MessageCache != null
 		&& dc.MessageCache.TryGet(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)

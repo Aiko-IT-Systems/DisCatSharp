@@ -758,6 +758,7 @@ public class InteractivityExtension : BaseExtension
 	/// </para>
 	/// </summary>
 	/// <param name="interaction">The interaction to create a response to.</param>
+	/// <param name="deferred">Whether the interaction was deferred.</param>
 	/// <param name="ephemeral">Whether the response should be ephemeral.</param>
 	/// <param name="user">The user to listen for button presses from.</param>
 	/// <param name="pages">The pages to paginate.</param>
@@ -765,7 +766,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="behaviour">Pagination behaviour.</param>
 	/// <param name="deletion">Deletion behaviour.</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
-	public async Task SendPaginatedResponseAsync(DiscordInteraction interaction, bool ephemeral, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons = null, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
+	public async Task SendPaginatedResponseAsync(DiscordInteraction interaction, bool deferred, bool ephemeral, DiscordUser user, IEnumerable<Page> pages, PaginationButtons buttons = null, PaginationBehaviour? behaviour = default, ButtonPaginationBehavior? deletion = default, CancellationToken token = default)
 	{
 		var bhv = behaviour ?? this.Config.PaginationBehaviour;
 		var del = deletion ?? this.Config.ButtonBehavior;
@@ -778,14 +779,26 @@ public class InteractivityExtension : BaseExtension
 			bts.Left.Disable();
 		}
 
-		var builder = new DiscordInteractionResponseBuilder()
+		DiscordMessage message;
+
+		if (deferred)
+		{
+			var builder = new DiscordWebhookBuilder()
+			.WithContent(pages.First().Content)
+			.AddEmbed(pages.First().Embed)
+			.AddComponents(bts.ButtonArray);
+			message = await interaction.EditOriginalResponseAsync(builder).ConfigureAwait(false);
+		}
+		else
+		{
+			var builder = new DiscordInteractionResponseBuilder()
 			.WithContent(pages.First().Content)
 			.AddEmbed(pages.First().Embed)
 			.AsEphemeral(ephemeral)
 			.AddComponents(bts.ButtonArray);
-
-		await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false);
-		var message = await interaction.GetOriginalResponseAsync().ConfigureAwait(false);
+			await interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, builder).ConfigureAwait(false);
+			message = await interaction.GetOriginalResponseAsync().ConfigureAwait(false);
+		}
 
 		var req = new InteractionPaginationRequest(interaction, message, user, bhv, del, bts, pages, token);
 
