@@ -62,12 +62,12 @@ public sealed class DiscordWebhookBuilder
 		}
 	}
 	private string _content;
-    
-  /// <summary>
-  /// Name of the new thread.
-  /// Only works if the webhook is send in a <see cref="ChannelType.Forum"/>.
-  /// </summary>
-  public string ThreadName { get; set; }
+
+	/// <summary>
+	/// Name of the new thread.
+	/// Only works if the webhook is send in a <see cref="ChannelType.Forum"/>.
+	/// </summary>
+	public string ThreadName { get; set; }
 
 
 	/// <summary>
@@ -202,17 +202,17 @@ public sealed class DiscordWebhookBuilder
 		this.Content = content;
 		return this;
 	}
-  
-  /// <summary>
-  /// Sets the thread name to create at the execution of the webhook.
-  /// Only works for <see cref="ChannelType.Forum"/>.
-  /// </summary>
-  /// <param name="name">The thread name.</param>
-  public DiscordWebhookBuilder WithThreadName(string name)
-  {
-    this.ThreadName = name;
-    return this;
-  }
+
+	/// <summary>
+	/// Sets the thread name to create at the execution of the webhook.
+	/// Only works for <see cref="ChannelType.Forum"/>.
+	/// </summary>
+	/// <param name="name">The thread name.</param>
+	public DiscordWebhookBuilder WithThreadName(string name)
+	{
+		this.ThreadName = name;
+		return this;
+	}
 
 	/// <summary>
 	/// Adds an embed to send at the execution of the webhook.
@@ -408,15 +408,15 @@ public sealed class DiscordWebhookBuilder
 	/// </summary>
 	public void Clear()
 	{
-    this.Content = "";
-    this._embeds.Clear();
-    this.IsTts = false;
-    this._mentions.Clear();
-    this._files.Clear();
-    this.AttachmentsInternal.Clear();
-    this._components.Clear();
-    this.KeepAttachmentsInternal = false;
-    this.ThreadName = null;
+		this.Content = "";
+		this._embeds.Clear();
+		this.IsTts = false;
+		this._mentions.Clear();
+		this._files.Clear();
+		this.AttachmentsInternal.Clear();
+		this._components.Clear();
+		this.KeepAttachmentsInternal = false;
+		this.ThreadName = null;
 	}
 
 	/// <summary>

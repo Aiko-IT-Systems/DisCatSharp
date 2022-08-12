@@ -838,7 +838,7 @@ public sealed partial class DiscordClient
 				AvailableTags = channelNew.AvailableTags,
 				Template = channelNew.Template,
 				DefaultReactionEmoji = channelNew.DefaultReactionEmoji
-		};
+			};
 
 			channelNew.Bitrate = channel.Bitrate;
 			channelNew.Name = channel.Name;
@@ -3265,7 +3265,8 @@ public sealed partial class DiscordClient
 							if (this.Guilds.TryGetValue(guildId.Value, out var guild))
 								if (guild.ChannelsInternal.TryGetValue(c.Key, out var channel) && channel.PermissionOverwritesInternal != null && channel.PermissionOverwritesInternal.Any())
 									c.Value.PermissionOverwritesInternal = channel.PermissionOverwritesInternal;
-						} catch(Exception) { }
+						}
+						catch (Exception) { }
 					}
 				}
 			}

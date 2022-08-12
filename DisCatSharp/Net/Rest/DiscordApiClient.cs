@@ -565,7 +565,7 @@ public sealed class DiscordApiClient
 			await dc.OnGuildUpdateEventAsync(guild, rawMembers).ConfigureAwait(false);
 		return guild;
 	}
-	
+
 	/// <summary>
 	/// Enables the guilds mfa requirement.
 	/// </summary>

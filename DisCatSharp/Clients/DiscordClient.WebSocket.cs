@@ -365,7 +365,7 @@ public sealed partial class DiscordClient
 		Interlocked.Decrement(ref this._skippedHeartbeats);
 
 		var ping = (int)(DateTime.Now - this._lastHeartbeat).TotalMilliseconds;
-		
+
 		this.Logger.LogTrace(LoggerEvents.WebSocketReceive, "Received HEARTBEAT_ACK (OP11, {0}ms)", ping);
 
 		Volatile.Write(ref this._ping, ping);

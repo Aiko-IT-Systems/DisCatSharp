@@ -248,7 +248,7 @@ public class GuildFeatures
 	/// Guild has access to home.
 	/// </summary>
 	public bool GuildHomeTest { get; }
-	
+
 	/// <summary>
 	/// Guild has disabled invites.
 	/// </summary>
