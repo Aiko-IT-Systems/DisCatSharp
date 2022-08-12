@@ -760,7 +760,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="description">The description.</param>
 	/// <param name="defaultMessageNotifications">The default message notifications. Defaults to <see cref="DefaultMessageNotifications.MentionsOnly"/></param>
 	/// <param name="reason">The audit log reason.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.Administrator"/> permission.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -796,6 +796,45 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		features = rfeatures;
 
 		return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, features, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Enables invites for the guild.
+	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordGuild> EnableInvitesAsync(string reason = null)
+	{
+		List<string> features = new();
+		var rfeatures = this.RawFeatures.ToList();
+		if (this.Features.InvitesDisabled)
+			rfeatures.Remove("INVITES_DISABLED");
+		features = rfeatures;
+
+		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason);
+	}
+
+	/// <summary>
+	/// Disables invites for the guild.
+	/// </summary>
+	/// <param name="reason"></param>
+	/// <returns></returns>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordGuild> DisableInvitesAsync(string reason = null)
+	{
+		List<string> features = new();
+		var rfeatures = this.RawFeatures.ToList();
+		if (!this.Features.InvitesDisabled)
+			rfeatures.Add("INVITES_DISABLED");
+		features = rfeatures;
+
+		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason);
 	}
 
 	/// <summary>
