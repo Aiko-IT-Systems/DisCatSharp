@@ -362,6 +362,12 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public int? MaxVideoChannelUsers { get; internal set; }
 
 	/// <summary>
+	/// Gets the maximum amount of users allowed per video stage channel.
+	/// </summary>
+	[JsonProperty("max_stage_video_channel_users", NullValueHandling = NullValueHandling.Ignore)]
+	public int? MaxStageVideoChannelUsers { get; internal set; }
+
+	/// <summary>
 	/// Gets a dictionary of all the voice states for this guilds. The key for this dictionary is the ID of the user
 	/// the voice state corresponds to.
 	/// </summary>
