@@ -59,13 +59,16 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 	public new ChannelType Type { get; internal set; }
 
+	[JsonProperty("total_message_sent", DefaultValueHandling = DefaultValueHandling.Ignore)]
+	public int TotalMessagesSent { get; internal set; }
+
 	/// <summary>
 	/// Gets whether this thread is private.
 	/// </summary>
 	[JsonIgnore]
 	public new bool IsPrivate
 		=> this.Type == ChannelType.PrivateThread;
-
+	
 	/// <summary>
 	/// Gets the ID of the last message sent in this thread.
 	/// </summary>
@@ -149,8 +152,8 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
   /// </summary>
   [JsonIgnore]
   public IEnumerable<ForumPostTag> AppliedTags
-    => this.AppliedTagIds.Select(id => this.Parent.GetForumPostTagAsync(id).Result).Where(x => x != null);
-
+    => this.AppliedTagIds.Select(id => this.Parent.GetForumPostTag(id)).Where(x => x != null);
+	
   /// <summary>
   /// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
   /// </summary>

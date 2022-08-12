@@ -46,8 +46,8 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 	/// <summary>
 	/// Gets the unicode emoji of the forum post tag.
 	/// </summary>
-	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Ignore)]
-	internal string UnicodeEmojiString;
+	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Include)]
+	public string UnicodeEmojiString { get; internal set; }
 
 
 	/// <summary>
@@ -57,10 +57,11 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 	public bool Moderated { get; internal set; }
 
 	/// <summary>
-	/// Gets the unicode emoji.
+	/// Gets the emoji.
 	/// </summary>
-	public DiscordEmoji UnicodeEmoji
-		=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : null;
+	[JsonIgnore]
+	public DiscordEmoji Emoji
+		=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : DiscordEmoji.FromGuildEmote(this.Discord, this.EmojiId.Value);
 
 	/// <summary>
 	/// Checks whether this <see cref="ForumPostTag"/> is equal to another object.

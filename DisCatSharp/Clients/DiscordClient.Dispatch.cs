@@ -834,8 +834,11 @@ public sealed partial class DiscordClient
 				PerUserRateLimit = channelNew.PerUserRateLimit,
 				RtcRegionId = channelNew.RtcRegionId,
 				QualityMode = channelNew.QualityMode,
-				DefaultAutoArchiveDuration = channelNew.DefaultAutoArchiveDuration
-			};
+				DefaultAutoArchiveDuration = channelNew.DefaultAutoArchiveDuration,
+				AvailableTags = channelNew.AvailableTags,
+				Template = channelNew.Template,
+				DefaultReactionEmoji = channelNew.DefaultReactionEmoji
+		};
 
 			channelNew.Bitrate = channel.Bitrate;
 			channelNew.Name = channel.Name;
@@ -849,6 +852,8 @@ public sealed partial class DiscordClient
 			channelNew.RtcRegionId = channel.RtcRegionId;
 			channelNew.QualityMode = channel.QualityMode;
 			channelNew.DefaultAutoArchiveDuration = channel.DefaultAutoArchiveDuration;
+			channelNew.Template = channel.Template;
+			channelNew.DefaultReactionEmoji = channel.DefaultReactionEmoji;
 
 			channelNew.PermissionOverwritesInternal.Clear();
 
@@ -857,6 +862,14 @@ public sealed partial class DiscordClient
 				po.Discord = this;
 				po.ChannelId = channel.Id;
 			}
+
+			channelNew.AvailableTags.Clear();
+
+			foreach (var fpt in channel.AvailableTags)
+				fpt.Discord = this;
+
+
+			channelNew.AvailableTags.AddRange(channel.AvailableTags);
 
 			channelNew.PermissionOverwritesInternal.AddRange(channel.PermissionOverwritesInternal);
 
@@ -2578,7 +2591,9 @@ public sealed partial class DiscordClient
 				GuildId = thread.GuildId,
 				LastPinTimestampRaw = threadNew.LastPinTimestampRaw,
 				PerUserRateLimit = threadNew.PerUserRateLimit,
-				CurrentMember = threadNew.CurrentMember
+				CurrentMember = threadNew.CurrentMember,
+				TotalMessagesSent = threadNew.TotalMessagesSent,
+				AppliedTagIdsInternal = threadNew.AppliedTagIdsInternal
 			};
 
 			threadNew.ThreadMetadata = thread.ThreadMetadata;
@@ -2590,6 +2605,8 @@ public sealed partial class DiscordClient
 			threadNew.MemberCount = thread.MemberCount;
 			threadNew.GuildId = thread.GuildId;
 			threadNew.Discord = this;
+			threadNew.TotalMessagesSent = thread.TotalMessagesSent;
+			threadNew.AppliedTagIdsInternal = thread.AppliedTagIdsInternal;
 
 			updateEvent = new ThreadUpdateEventArgs(this.ServiceProvider)
 			{

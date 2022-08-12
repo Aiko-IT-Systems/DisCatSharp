@@ -220,6 +220,13 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public List<ForumPostTag> AvailableTags { get; internal set; }
 
 	/// <summary>
+	/// List of available tags for forum posts.
+	/// </summary>
+	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
+	public ForumReactionEmoji DefaultReactionEmoji { get; internal set; }
+
+
+	/// <summary>
 	/// Gets when the last pinned message was pinned.
 	/// </summary>
 	[JsonIgnore]
@@ -1035,20 +1042,17 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	public async Task<DiscordThreadResult> GetPrivateArchivedThreadsAsync(ulong? before, int? limit)
 		=> await this.Discord.ApiClient.GetPrivateArchivedThreadsAsync(this.Id, before, limit);
 
-  /// <summary>
-  /// Gets a forum channel tag.
-  /// </summary>
-  /// <param name="id">The id of the tag to get.</param>
-  /// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
-  public async Task<ForumPostTag> GetForumPostTagAsync(ulong id)
-    => throw new NotImplementedException();
-
-  /// <summary>
-  /// Gets a list of forum channel tags.
-  /// </summary>
-  /// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
-  public async Task<List<ForumPostTag>> GetForumPostTagsAsync()
-    => throw new NotImplementedException();
+	/// <summary>
+	/// Gets a forum channel tag.
+	/// </summary>
+	/// <param name="id">The id of the tag to get.</param>
+	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
+	public ForumPostTag GetForumPostTag(ulong id)
+	{
+		var tag = this.AvailableTags.First(x => x.Id == id);
+		tag.Discord = this.Discord;
+		return tag;
+	}
 
 	#endregion
 

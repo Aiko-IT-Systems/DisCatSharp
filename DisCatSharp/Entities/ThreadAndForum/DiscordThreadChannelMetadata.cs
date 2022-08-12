@@ -53,6 +53,7 @@ public class DiscordThreadChannelMetadata
 	/// <summary>
 	/// Gets the timestamp when it was archived.
 	/// </summary>
+	[JsonIgnore]
 	public DateTimeOffset? ArchiveTimestamp
 		=> !string.IsNullOrWhiteSpace(this.ArchiveTimestampRaw) && DateTimeOffset.TryParse(this.ArchiveTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
 			dto : null;
@@ -79,6 +80,7 @@ public class DiscordThreadChannelMetadata
 	/// Gets the timestamp when the thread was created.
 	/// Only populated for threads created after 2022-01-09.
 	/// </summary>
+	[JsonIgnore]
 	public DateTimeOffset? CreateTimestamp
 		=> !string.IsNullOrWhiteSpace(this.CreateTimestampRaw) && DateTimeOffset.TryParse(this.CreateTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
 			dto : null;
