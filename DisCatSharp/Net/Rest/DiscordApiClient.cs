@@ -3528,7 +3528,8 @@ public sealed class DiscordApiClient
 			AvatarUrl = builder.AvatarUrl.ValueOrDefault(),
 			IsTts = builder.IsTts,
 			Embeds = builder.Embeds,
-			Components = builder.Components
+			Components = builder.Components,
+			ThreadName = builder.ThreadName
 		};
 
 		if (builder.Mentions != null)
