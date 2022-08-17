@@ -832,6 +832,7 @@ public sealed partial class DiscordClient
 				ParentId = channelNew.ParentId,
 				IsNsfw = channelNew.IsNsfw,
 				PerUserRateLimit = channelNew.PerUserRateLimit,
+				PostCreateUserRateLimit = channelNew.PostCreateUserRateLimit,
 				RtcRegionId = channelNew.RtcRegionId,
 				QualityMode = channelNew.QualityMode,
 				DefaultAutoArchiveDuration = channelNew.DefaultAutoArchiveDuration,
@@ -848,6 +849,7 @@ public sealed partial class DiscordClient
 			channelNew.ParentId = channel.ParentId;
 			channelNew.IsNsfw = channel.IsNsfw;
 			channelNew.PerUserRateLimit = channel.PerUserRateLimit;
+			channelNew.PostCreateUserRateLimit = channel.PostCreateUserRateLimit;
 			channelNew.Type = channel.Type;
 			channelNew.RtcRegionId = channel.RtcRegionId;
 			channelNew.QualityMode = channel.QualityMode;

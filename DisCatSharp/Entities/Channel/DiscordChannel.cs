@@ -481,7 +481,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task ModifyAsync(Action<ForumChannelEditModel> action)
+	public Task ModifyForumAsync(Action<ForumChannelEditModel> action)
 	{
 		if (this.Type != ChannelType.Forum)
 			throw new NotSupportedException("Cannot execute this request on a non-forum channel.");
@@ -495,7 +495,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 
 		return this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Template, mdl.Nsfw,
-			mdl.Parent.Map(p => p?.Id), mdl.DefaultReactionEmoji, mdl.UserLimit, mdl.PerUserRateLimit, mdl.PostCreateUserRateLimit,
+			mdl.Parent.Map(p => p?.Id), mdl.DefaultReactionEmoji, mdl.PerUserRateLimit, mdl.PostCreateUserRateLimit,
 			mdl.DefaultAutoArchiveDuration, mdl.PermissionOverwrites, mdl.AuditLogReason);
 	}
 
