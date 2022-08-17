@@ -27,6 +27,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
@@ -1662,11 +1663,9 @@ public sealed class DiscordApiClient
 	/// <param name="autoArchiveDuration">The default auto archive duration.</param>
 	/// <param name="type">The type.</param>
 	/// <param name="permissionOverwrites">The permission overwrites.</param>
-	/// <param name="bannerb64">The banner.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task ModifyChannelAsync(ulong channelId, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? userLimit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<string> bannerb64, string reason)
+	internal Task ModifyChannelAsync(ulong channelId, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? userLimit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, string reason)
 	{
-
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
 		{
@@ -1689,8 +1688,47 @@ public sealed class DiscordApiClient
 			QualityMode = qualityMode,
 			DefaultAutoArchiveDuration = autoArchiveDuration,
 			Type = type,
-			PermissionOverwrites = restoverwrites,
-			BannerBase64 = bannerb64
+			PermissionOverwrites = restoverwrites
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new {channel_id = channelId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+	}
+	
+	internal Task ModifyForumChannelAsync(ulong channelId, string name, int? position,
+		Optional<string> topic, Optional<string> template, bool? nsfw,
+		Optional<ulong?> parent, Optional<ForumReactionEmoji> defaultReactionEmoji,
+		int? userLimit, Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit,
+		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, string reason)
+	{
+		List<DiscordRestOverwrite> restoverwrites = null;
+		if (permissionOverwrites != null)
+		{
+			restoverwrites = new List<DiscordRestOverwrite>();
+			foreach (var ow in permissionOverwrites)
+				restoverwrites.Add(ow.Build());
+		}
+
+		var pld = new RestChannelModifyPayload
+		{
+			Name = name,
+			Position = position,
+			Topic = topic,
+			//Template = template,
+			Nsfw = nsfw,
+			Parent = parent,
+			PerUserRateLimit = perUserRateLimit,
+			PostCreateUserRateLimit = postCreateUserRateLimit,
+			DefaultAutoArchiveDuration = defaultAutoArchiveDuration,
+			DefaultReactionEmoji = defaultReactionEmoji,
+			PermissionOverwrites = restoverwrites
 		};
 
 		var headers = Utilities.GetBaseHeaders();

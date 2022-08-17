@@ -27,6 +27,18 @@ namespace DisCatSharp.Entities
 	public class ForumReactionEmoji
 	{
 		/// <summary>
+		/// Creates a new forum reaction emoji.
+		/// Use either <paramref name="emojiId"/> or <paramref name="unicodeEmojiString"/>. Not both.
+		/// </summary>
+		/// <param name="emojiId">The emoji id. Has to be from the same server.</param>
+		/// <param name="unicodeEmojiString">The unicode emoji.</param>
+		public ForumReactionEmoji(ulong? emojiId = null, string unicodeEmojiString = null)
+		{
+			this.EmojiId = emojiId;
+			this.EmojiName = unicodeEmojiString;
+		}
+		
+		/// <summary>
 		/// Gets the emoji id of the forum post tag.
 		/// </summary>
 		[JsonProperty("emoji_id", NullValueHandling = NullValueHandling.Include)]
