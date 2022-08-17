@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
 // Copyright (c) 2021-2022 AITSYS
 //
@@ -25,25 +25,36 @@ using System.Collections.Generic;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
-namespace DisCatSharp.Net.Models;
+using Newtonsoft.Json;
+
+namespace DisCatSharp.Net.Abstractions;
 
 /// <summary>
-/// Represents a tag edit model.
+/// Represents the forum tag payload.
 /// </summary>
-public class ForumPostTagEditModel : BaseEditModel
+public class RestForumPostTagPayloads
 {
 	/// <summary>
 	/// Sets the tags's new name.
 	/// </summary>
-	public Optional<string> Name { internal get; set; }
+	[JsonProperty("name")]
+	public string Name { internal get; set; }
 
 	/// <summary>
 	/// Sets the tags's new emoji.
 	/// </summary>
-	public Optional<DiscordEmoji> Emoji { internal get; set; }
+	[JsonProperty("emoji_id", NullValueHandling = NullValueHandling.Include)]
+	public Optional<ulong?> Emoji { internal get; set; }
 
 	/// <summary>
 	/// Sets whether the tag should be mod only.
 	/// </summary>
-	public Optional<bool> Moderated { internal get; set; }
+	[JsonProperty("moderated", NullValueHandling = NullValueHandling.Ignore)]
+	public bool Moderated { internal get; set; }
+
+	/// <summary>
+	/// Gets the unicode emoji of the forum post tag.
+	/// </summary>
+	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Include)]
+	public Optional<string> UnicodeEmojiString { internal get; set; }
 }

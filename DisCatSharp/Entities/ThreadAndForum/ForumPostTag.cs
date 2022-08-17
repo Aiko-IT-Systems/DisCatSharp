@@ -35,6 +35,12 @@ namespace DisCatSharp.Entities;
 public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 {
 	/// <summary>
+	/// Gets the channel id this tag belongs to.
+	/// </summary>
+	[JsonIgnore]
+	internal ulong ChannelId;
+
+	/// <summary>
 	/// Gets the name of this forum post tag.
 	/// </summary>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
@@ -70,21 +76,19 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 	/// Modifies the tag.
 	/// </summary>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
-	public async Task<ForumPostTag> CreateForumPostTagAsync(Action<ForumPostTagEditModel> action)
+	public async Task<ForumPostTag> ModifyAsync(Action<ForumPostTagEditModel> action)
 	{
 		var mdl = new ForumPostTagEditModel();
 		action(mdl);
-		throw new NotImplementedException();
+		return await this.Discord.ApiClient.ModifyForumTagAsync(this.Id, this.ChannelId, mdl.Name.HasValue ? mdl.Name.Value : this.Name, mdl.Emoji.HasValue ? mdl.Emoji.Value : this.Emoji, mdl.Moderated.HasValue ? mdl.Moderated.Value : this.Moderated, mdl.AuditLogReason);
 	}
 
 	/// <summary>
 	/// Deletes the tag.
 	/// </summary>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
-	public Task DeleteForumPostTagAsync()
-	{
-		throw new NotImplementedException();
-	}
+	public Task DeleteForumPostTagAsync(string reason = null)
+		=> this.Discord.ApiClient.DeleteForumTagAsync(this.Id, this.ChannelId, reason);
 
 	/// <summary>
 	/// Checks whether this <see cref="ForumPostTag"/> is equal to another object.

@@ -787,6 +787,11 @@ public sealed partial class DiscordClient
 			xo.Discord = this;
 			xo.ChannelId = channel.Id;
 		}
+		foreach (var xo in channel.AvailableTags)
+		{
+			xo.Discord = this;
+			xo.ChannelId = channel.Id;
+		}
 
 		this.GuildsInternal[channel.GuildId.Value].ChannelsInternal[channel.Id] = channel;
 
@@ -868,7 +873,10 @@ public sealed partial class DiscordClient
 			channelNew.AvailableTags.Clear();
 
 			foreach (var fpt in channel.AvailableTags)
+			{
 				fpt.Discord = this;
+				fpt.ChannelId = channel.Id;
+			}
 
 
 			channelNew.AvailableTags.AddRange(channel.AvailableTags);
