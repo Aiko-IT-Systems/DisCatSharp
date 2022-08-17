@@ -50,6 +50,7 @@ public sealed partial class DiscordClient
 {
 	#region Private Fields
 
+	private string _resumeGatewayUrl;
 	private string _sessionId;
 	private bool _guildDownloadCompleted;
 
@@ -669,6 +670,7 @@ public sealed partial class DiscordClient
 
 		this.GatewayVersion = ready.GatewayVersion;
 		this._sessionId = ready.SessionId;
+		this._resumeGatewayUrl = ready.ResumeGatewayUrl;
 		var rawGuildIndex = rawGuilds.ToDictionary(xt => (ulong)xt["id"], xt => (JObject)xt);
 
 		this.GuildsInternal.Clear();
@@ -785,6 +787,11 @@ public sealed partial class DiscordClient
 			xo.Discord = this;
 			xo.ChannelId = channel.Id;
 		}
+		foreach (var xo in channel.AvailableTags)
+		{
+			xo.Discord = this;
+			xo.ChannelId = channel.Id;
+		}
 
 		this.GuildsInternal[channel.GuildId.Value].ChannelsInternal[channel.Id] = channel;
 
@@ -830,9 +837,13 @@ public sealed partial class DiscordClient
 				ParentId = channelNew.ParentId,
 				IsNsfw = channelNew.IsNsfw,
 				PerUserRateLimit = channelNew.PerUserRateLimit,
+				PostCreateUserRateLimit = channelNew.PostCreateUserRateLimit,
 				RtcRegionId = channelNew.RtcRegionId,
 				QualityMode = channelNew.QualityMode,
-				DefaultAutoArchiveDuration = channelNew.DefaultAutoArchiveDuration
+				DefaultAutoArchiveDuration = channelNew.DefaultAutoArchiveDuration,
+				AvailableTags = channelNew.AvailableTags,
+				Template = channelNew.Template,
+				DefaultReactionEmoji = channelNew.DefaultReactionEmoji
 			};
 
 			channelNew.Bitrate = channel.Bitrate;
@@ -843,10 +854,13 @@ public sealed partial class DiscordClient
 			channelNew.ParentId = channel.ParentId;
 			channelNew.IsNsfw = channel.IsNsfw;
 			channelNew.PerUserRateLimit = channel.PerUserRateLimit;
+			channelNew.PostCreateUserRateLimit = channel.PostCreateUserRateLimit;
 			channelNew.Type = channel.Type;
 			channelNew.RtcRegionId = channel.RtcRegionId;
 			channelNew.QualityMode = channel.QualityMode;
 			channelNew.DefaultAutoArchiveDuration = channel.DefaultAutoArchiveDuration;
+			channelNew.Template = channel.Template;
+			channelNew.DefaultReactionEmoji = channel.DefaultReactionEmoji;
 
 			channelNew.PermissionOverwritesInternal.Clear();
 
@@ -855,6 +869,17 @@ public sealed partial class DiscordClient
 				po.Discord = this;
 				po.ChannelId = channel.Id;
 			}
+
+			channelNew.AvailableTags.Clear();
+
+			foreach (var fpt in channel.AvailableTags)
+			{
+				fpt.Discord = this;
+				fpt.ChannelId = channel.Id;
+			}
+
+
+			channelNew.AvailableTags.AddRange(channel.AvailableTags);
 
 			channelNew.PermissionOverwritesInternal.AddRange(channel.PermissionOverwritesInternal);
 
@@ -2576,7 +2601,9 @@ public sealed partial class DiscordClient
 				GuildId = thread.GuildId,
 				LastPinTimestampRaw = threadNew.LastPinTimestampRaw,
 				PerUserRateLimit = threadNew.PerUserRateLimit,
-				CurrentMember = threadNew.CurrentMember
+				CurrentMember = threadNew.CurrentMember,
+				TotalMessagesSent = threadNew.TotalMessagesSent,
+				AppliedTagIdsInternal = threadNew.AppliedTagIdsInternal
 			};
 
 			threadNew.ThreadMetadata = thread.ThreadMetadata;
@@ -2588,6 +2615,8 @@ public sealed partial class DiscordClient
 			threadNew.MemberCount = thread.MemberCount;
 			threadNew.GuildId = thread.GuildId;
 			threadNew.Discord = this;
+			threadNew.TotalMessagesSent = thread.TotalMessagesSent;
+			threadNew.AppliedTagIdsInternal = thread.AppliedTagIdsInternal;
 
 			updateEvent = new ThreadUpdateEventArgs(this.ServiceProvider)
 			{
@@ -3246,7 +3275,8 @@ public sealed partial class DiscordClient
 							if (this.Guilds.TryGetValue(guildId.Value, out var guild))
 								if (guild.ChannelsInternal.TryGetValue(c.Key, out var channel) && channel.PermissionOverwritesInternal != null && channel.PermissionOverwritesInternal.Any())
 									c.Value.PermissionOverwritesInternal = channel.PermissionOverwritesInternal;
-						} catch(Exception) { }
+						}
+						catch (Exception) { }
 					}
 				}
 			}

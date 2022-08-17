@@ -59,6 +59,12 @@ internal sealed class RestChannelCreatePayload
 	public Optional<string> Topic { get; set; }
 
 	/// <summary>
+	/// Gets or sets the template.
+	/// </summary>
+	[JsonProperty("template")]
+	public Optional<string> Template { get; set; }
+
+	/// <summary>
 	/// Gets or sets the bitrate.
 	/// </summary>
 	[JsonProperty("bitrate", NullValueHandling = NullValueHandling.Ignore)]
@@ -88,6 +94,9 @@ internal sealed class RestChannelCreatePayload
 	[JsonProperty("rate_limit_per_user")]
 	public Optional<int?> PerUserRateLimit { get; set; }
 
+	[JsonProperty("default_thread_rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<int?> PostCreateUserRateLimit { get; internal set; }
+
 	/// <summary>
 	/// Gets or sets the quality mode.
 	/// </summary>
@@ -99,6 +108,12 @@ internal sealed class RestChannelCreatePayload
 	/// </summary>
 	[JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
 	public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; set; }
+
+	/// <summary>
+	/// List of available tags for forum posts.
+	/// </summary>
+	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<ForumReactionEmoji> DefaultReactionEmoji { get; internal set; }
 }
 
 /// <summary>
@@ -131,6 +146,12 @@ internal sealed class RestChannelModifyPayload
 	public Optional<string> Topic { get; set; }
 
 	/// <summary>
+	/// Gets or sets the template.
+	/// </summary>
+	[JsonProperty("template")]
+	public Optional<string> Template { get; set; }
+
+	/// <summary>
 	/// Gets or sets a value indicating whether nsfw.
 	/// </summary>
 	[JsonProperty("nsfw", NullValueHandling = NullValueHandling.Ignore)]
@@ -152,13 +173,16 @@ internal sealed class RestChannelModifyPayload
 	/// Gets or sets the user limit.
 	/// </summary>
 	[JsonProperty("user_limit", NullValueHandling = NullValueHandling.Ignore)]
-	public int? UserLimit { get; set; }
+	public Optional<int?> UserLimit { get; set; }
 
 	/// <summary>
 	/// Gets or sets the per user rate limit.
 	/// </summary>
 	[JsonProperty("rate_limit_per_user")]
 	public Optional<int?> PerUserRateLimit { get; set; }
+
+	[JsonProperty("default_thread_rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<int?> PostCreateUserRateLimit { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets the rtc region.
@@ -185,10 +209,10 @@ internal sealed class RestChannelModifyPayload
 	public IEnumerable<DiscordRestOverwrite> PermissionOverwrites { get; set; }
 
 	/// <summary>
-	/// Gets or sets the banner base64.
+	/// List of available tags for forum posts.
 	/// </summary>
-	[JsonProperty("banner")]
-	public Optional<string> BannerBase64 { get; set; }
+	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<ForumReactionEmoji> DefaultReactionEmoji { get; internal set; }
 }
 
 /// <summary>

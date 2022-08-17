@@ -20,9 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Collections.Generic;
-using System.IO;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
@@ -30,20 +28,14 @@ using DisCatSharp.Enums;
 namespace DisCatSharp.Net.Models;
 
 /// <summary>
-/// Represents a channel edit model.
+/// Represents a forum channel edit model.
 /// </summary>
-public class ChannelEditModel : BaseEditModel
+public class ForumChannelEditModel : BaseEditModel
 {
 	/// <summary>
 	/// Sets the channel's new name.
 	/// </summary>
 	public string Name { internal get; set; }
-
-	/// <summary>
-	/// Sets the channel's type.
-	/// This can only be used to convert between text and news channels.
-	/// </summary>
-	public Optional<ChannelType> Type { internal get; set; }
 
 	/// <summary>
 	/// Sets the channel's new position.
@@ -56,21 +48,24 @@ public class ChannelEditModel : BaseEditModel
 	public Optional<string> Topic { internal get; set; }
 
 	/// <summary>
+	/// Sets the channel's new template.
+	/// <note type="warning">This is not yet released and won't be applied by library.</note>
+	/// </summary>
+	public Optional<string> Template { internal get; set; }
+
+	/// <summary>
 	/// Sets whether the channel is to be marked as NSFW.
 	/// </summary>
 	public bool? Nsfw { internal get; set; }
+
+	public Optional<ForumReactionEmoji> DefaultReactionEmoji { internal get; set; }
 
 	/// <summary>
 	/// <para>Sets the parent of this channel.</para>
 	/// <para>This should be channel with <see cref="DisCatSharp.Entities.DiscordChannel.Type"/> set to <see cref="ChannelType.Category"/>.</para>
 	/// </summary>
 	public Optional<DiscordChannel> Parent { internal get; set; }
-
-	/// <summary>
-	/// Sets the voice channel's new bitrate.
-	/// </summary>
-	public int? Bitrate { internal get; set; }
-
+	
 	/// <summary>
 	/// <para>Sets the voice channel's new user limit.</para>
 	/// <para>Setting this to 0 will disable the user limit.</para>
@@ -84,15 +79,10 @@ public class ChannelEditModel : BaseEditModel
 	public Optional<int?> PerUserRateLimit { internal get; set; }
 
 	/// <summary>
-	/// <para>Sets the voice channel's region override.</para>
-	/// <para>Setting this to null will set it to automatic.</para>
+	/// <para>Sets the channel's new post slow mode timeout.</para>
+	/// <para>Setting this to null or 0 will disable slow mode.</para>
 	/// </summary>
-	public Optional<DiscordVoiceRegion> RtcRegion { internal get; set; }
-
-	/// <summary>
-	/// <para>Sets the voice channel's video quality.</para>
-	/// </summary>
-	public VideoQualityMode? QualityMode { internal get; set; }
+	public Optional<int?> PostCreateUserRateLimit { internal get; set; }
 
 	/// <summary>
 	/// Sets this channel's default duration for newly created threads, in minutes, to automatically archive the thread after recent activity.
@@ -103,10 +93,10 @@ public class ChannelEditModel : BaseEditModel
 	/// Sets the channel's permission overwrites.
 	/// </summary>
 	public IEnumerable<DiscordOverwriteBuilder> PermissionOverwrites { internal get; set; }
-
+	
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ChannelEditModel"/> class.
 	/// </summary>
-	internal ChannelEditModel()
+	internal ForumChannelEditModel()
 	{ }
 }

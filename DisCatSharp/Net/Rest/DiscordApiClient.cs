@@ -27,7 +27,9 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
@@ -507,6 +509,41 @@ public sealed class DiscordApiClient
 			PublicUpdatesChannelId = publicUpdatesChannelId,
 			PreferredLocale = preferredLocale,
 			Description = Optional.FromNullable(description),
+			Features = features
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var json = JObject.Parse(res.Response);
+		var rawMembers = (JArray)json["members"];
+		var guild = json.ToDiscordObject<DiscordGuild>();
+		foreach (var r in guild.RolesInternal.Values)
+			r.GuildId = guild.Id;
+
+		if (this.Discord is DiscordClient dc)
+			await dc.OnGuildUpdateEventAsync(guild, rawMembers).ConfigureAwait(false);
+		return guild;
+	}
+
+	/// <summary>
+	/// Modifies the guild features.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="features">The guild features.</param>
+	/// <param name="reason">The reason.</param>
+	/// <returns></returns>
+	internal async Task<DiscordGuild> ModifyGuildFeaturesAsync(ulong guildId, List<string> features, string reason)
+	{
+		var pld = new RestGuildFeatureModifyPayload
+		{
 			Features = features
 		};
 
@@ -1552,7 +1589,7 @@ public sealed class DiscordApiClient
 
 	#region Channel
 	/// <summary>
-	/// Creates the guild channel async.
+	/// Creates a guild channel.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="name">The name.</param>
@@ -1611,6 +1648,70 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Creates a guild forum channel.
+	/// </summary>
+	/// <param name="guildId">The guild_id.</param>
+	/// <param name="name">The name.</param>
+	/// <param name="parent">The parent.</param>
+	/// <param name="topic">The topic.</param>
+	/// <param name="template">The template.</param>
+	/// <param name="defaultReactionEmoji">The default reaction emoji.</param>
+	/// <param name="permissionOverwrites">The overwrites.</param>
+	/// <param name="nsfw">If true, nsfw.</param>
+	/// <param name="perUserRateLimit">The per user rate limit.</param>
+	/// <param name="postCreateUserRateLimit">The per user post create rate limit.</param>
+	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
+	/// <param name="reason">The reason.</param>
+	internal async Task<DiscordChannel> CreateForumChannelAsync(ulong guildId, string name, ulong? parent,
+		Optional<string> topic, Optional<string> template,
+		bool? nsfw, Optional<ForumReactionEmoji> defaultReactionEmoji,
+		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit,
+		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, string reason)
+	{
+		List<DiscordRestOverwrite> restoverwrites = null;
+		if (permissionOverwrites != null)
+		{
+			restoverwrites = new List<DiscordRestOverwrite>();
+			foreach (var ow in permissionOverwrites)
+				restoverwrites.Add(ow.Build());
+		}
+
+		var pld = new RestChannelCreatePayload
+		{
+			Name = name,
+			Topic = topic,
+			//Template = template,
+			Nsfw = nsfw,
+			Parent = parent,
+			PerUserRateLimit = perUserRateLimit,
+			PostCreateUserRateLimit = postCreateUserRateLimit,
+			DefaultAutoArchiveDuration = defaultAutoArchiveDuration,
+			DefaultReactionEmoji = defaultReactionEmoji,
+			PermissionOverwrites = restoverwrites
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CHANNELS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
+		ret.Discord = this.Discord;
+		foreach (var xo in ret.PermissionOverwritesInternal)
+		{
+			xo.Discord = this.Discord;
+			xo.ChannelId = ret.Id;
+		}
+
+		return ret;
+	}
+
+	/// <summary>
 	/// Modifies the channel async.
 	/// </summary>
 	/// <param name="channelId">The channel_id.</param>
@@ -1627,11 +1728,9 @@ public sealed class DiscordApiClient
 	/// <param name="autoArchiveDuration">The default auto archive duration.</param>
 	/// <param name="type">The type.</param>
 	/// <param name="permissionOverwrites">The permission overwrites.</param>
-	/// <param name="bannerb64">The banner.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task ModifyChannelAsync(ulong channelId, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? userLimit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<string> bannerb64, string reason)
+	internal Task ModifyChannelAsync(ulong channelId, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? userLimit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, string reason)
 	{
-
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
 		{
@@ -1654,8 +1753,7 @@ public sealed class DiscordApiClient
 			QualityMode = qualityMode,
 			DefaultAutoArchiveDuration = autoArchiveDuration,
 			Type = type,
-			PermissionOverwrites = restoverwrites,
-			BannerBase64 = bannerb64
+			PermissionOverwrites = restoverwrites
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1667,6 +1765,139 @@ public sealed class DiscordApiClient
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+	}
+
+	internal Task ModifyForumChannelAsync(ulong channelId, string name, int? position,
+		Optional<string> topic, Optional<string> template, bool? nsfw,
+		Optional<ulong?> parent, Optional<ForumReactionEmoji> defaultReactionEmoji,
+		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit,
+		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, string reason)
+	{
+		List<DiscordRestOverwrite> restoverwrites = null;
+		if (permissionOverwrites != null)
+		{
+			restoverwrites = new List<DiscordRestOverwrite>();
+			foreach (var ow in permissionOverwrites)
+				restoverwrites.Add(ow.Build());
+		}
+
+		var pld = new RestChannelModifyPayload
+		{
+			Name = name,
+			Position = position,
+			Topic = topic,
+			//Template = template,
+			Nsfw = nsfw,
+			Parent = parent,
+			PerUserRateLimit = perUserRateLimit,
+			PostCreateUserRateLimit = postCreateUserRateLimit,
+			DefaultAutoArchiveDuration = defaultAutoArchiveDuration,
+			DefaultReactionEmoji = defaultReactionEmoji,
+			PermissionOverwrites = restoverwrites
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id = channelId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+	}
+
+	internal async Task<ForumPostTag> CreateForumTagAsync(ulong channelId, string name, DiscordEmoji emoji, bool moderated, string reason)
+	{
+		var pld = new RestForumPostTagPayloads
+		{
+			Name = name,
+			Moderated = moderated
+		};
+		if (emoji != null)
+			if (emoji.Id == 0)
+			{
+				pld.Emoji = null;
+				pld.UnicodeEmojiString = emoji.Name;
+			}
+			else
+			{
+				pld.Emoji = emoji.Id;
+				pld.UnicodeEmojiString = null;
+			}
+		else
+		{
+			pld.Emoji = null;
+			pld.UnicodeEmojiString = null;
+		}
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.TAGS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id = channelId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
+		var channel = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
+		channel.Discord = this.Discord;
+		var tag = channel.AvailableTags.First(x => x.Name == name);
+		tag.Discord = this.Discord;
+		return tag;
+	}
+
+	internal async Task<ForumPostTag> ModifyForumTagAsync(ulong id, ulong channelId, string name, DiscordEmoji emoji = null, bool moderated = false, string reason = null)
+	{
+		var pld = new RestForumPostTagPayloads
+		{
+			Name = name,
+			Moderated = moderated
+		};
+		if (emoji != null)
+			if (emoji.Id == 0)
+			{
+				pld.Emoji = null;
+				pld.UnicodeEmojiString = emoji.Name;
+			}
+			else
+			{
+				pld.Emoji = emoji.Id;
+				pld.UnicodeEmojiString = null;
+			}
+		else
+		{
+			pld.Emoji = null;
+			pld.UnicodeEmojiString = null;
+		}
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.TAGS}/:tag_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { channel_id = channelId, tag_id = id }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await  this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld));
+		var channel = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
+		channel.Discord = this.Discord;
+		var tag = channel.AvailableTags.First(x => x.Name == name);
+		tag.Discord = this.Discord;
+		return tag;
+	}
+
+	internal Task DeleteForumTagAsync(ulong id, ulong channelId, string reason)
+	{
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.TAGS}/:tag_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id = channelId, tag_id = id }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
 	}
 
 	/// <summary>
@@ -1685,6 +1916,11 @@ public sealed class DiscordApiClient
 		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
 		ret.Discord = this.Discord;
 		foreach (var xo in ret.PermissionOverwritesInternal)
+		{
+			xo.Discord = this.Discord;
+			xo.ChannelId = ret.Id;
+		}
+		foreach(var xo in ret.AvailableTags)
 		{
 			xo.Discord = this.Discord;
 			xo.ChannelId = ret.Id;
@@ -3493,7 +3729,8 @@ public sealed class DiscordApiClient
 			AvatarUrl = builder.AvatarUrl.ValueOrDefault(),
 			IsTts = builder.IsTts,
 			Embeds = builder.Embeds,
-			Components = builder.Components
+			Components = builder.Components,
+			ThreadName = builder.ThreadName
 		};
 
 		if (builder.Mentions != null)

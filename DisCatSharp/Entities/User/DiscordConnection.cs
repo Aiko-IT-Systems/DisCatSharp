@@ -22,6 +22,8 @@
 
 using System.Collections.Generic;
 
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -44,7 +46,73 @@ public class DiscordConnection
 	public string Name { get; internal set; }
 
 	/// <summary>
-	/// Gets the service of the connection (twitch, youtube, steam, twitter, facebook, spotify, leagueoflegends, reddit)
+	/// <para>Gets the service of the connection.</para>
+	/// <list type="table">
+	///		<listheader>
+	///			<term>Type</term>
+	///			<description>Obsolete (Non-assignable)</description>
+	///		</listheader>
+	///		<item>
+	///			<term>twitch</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>steam</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>youtube</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>twitter</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>facebook</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>spotify</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>xbox</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>playstation</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>epicgames</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>reddit</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>battlenet</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>github</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>leagueoflegends</term>
+	///			<description>true</description>
+	///		</item>
+	///		<item>
+	///			<term>skype</term>
+	///			<description>true</description>
+	///		</item>
+	///		<item>
+	///			<term>samsunggalaxy</term>
+	///			<description>true</description>
+	///		</item>
+	/// </list>
 	/// </summary>
 	[JsonProperty("type")]
 	public string Type { get; internal set; }
@@ -52,8 +120,8 @@ public class DiscordConnection
 	/// <summary>
 	/// Gets whether the connection is revoked.
 	/// </summary>
-	[JsonProperty("revoked")]
-	public bool IsRevoked { get; internal set; }
+	[JsonProperty("revoked", NullValueHandling = NullValueHandling.Include)]
+	public bool? IsRevoked { get; internal set; }
 
 	/// <summary>
 	/// Gets a collection of partial server integrations.
@@ -65,25 +133,26 @@ public class DiscordConnection
 	/// Gets whether the connection is verified.
 	/// </summary>
 	[JsonProperty("verified", NullValueHandling = NullValueHandling.Ignore)]
-	public bool? Verified { get; internal set; }
+	public bool Verified { get; internal set; }
 
 	/// <summary>
 	/// Gets whether the connection will show a activity.
 	/// </summary>
 	[JsonProperty("show_activity", NullValueHandling = NullValueHandling.Ignore)]
-	public bool? ShowActivity { get; internal set; }
+	public bool ShowActivity { get; internal set; }
 
 	/// <summary>
-	/// Whether the connection will sync friends.
+	/// Whether this connection supports console voice transfer.
+	/// Currently in beta rollout for XBox. Playstation soon.
 	/// </summary>
-	[JsonProperty("friend_sync", NullValueHandling = NullValueHandling.Ignore)]
-	public bool? FriendSync { get; internal set; }
+	[JsonProperty("two_way_link", NullValueHandling = NullValueHandling.Ignore)]
+	public bool TwoWayLink { get; internal set; }
 
 	/// <summary>
 	/// Gets the visibility of the connection.
 	/// </summary>
 	[JsonProperty("visibility", NullValueHandling = NullValueHandling.Ignore)]
-	public long? Visibility { get; internal set; }
+	public ConnectionVisibilityType Visibility { get; internal set; }
 
 	/// <summary>
 	/// Gets the client instance this object is tied to.

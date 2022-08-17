@@ -29,7 +29,6 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
-using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Models;
 
@@ -79,20 +78,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	[JsonProperty("template", NullValueHandling = NullValueHandling.Ignore)]
 	public string Template { get; internal set; }
-
-	/// <summary>
-	/// Gets this channel's banner hash, when applicable.
-	/// </summary>
-	[JsonProperty("banner")]
-	public string BannerHash { get; internal set; }
-
-	/// <summary>
-	/// Gets this channel's banner in url form.
-	/// </summary>
-	[JsonIgnore]
-	public string BannerUrl
-		=> !string.IsNullOrWhiteSpace(this.BannerHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Uri}{Endpoints.CHANNELS}/{this.Id.ToString(CultureInfo.InvariantCulture)}{Endpoints.BANNERS}/{this.BannerHash}.{(this.BannerHash.StartsWith("a_") ? "gif" : "png")}" : null;
-
+	
 	/// <summary>
 	/// Gets the position of this channel.
 	/// </summary>
@@ -204,8 +190,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <para>Gets the slow mode delay configured for this channel.</para>
 	/// <para>All bots, as well as users with <see cref="Permissions.ManageChannels"/> or <see cref="Permissions.ManageMessages"/> permissions in the channel are exempt from slow mode.</para>
 	/// </summary>
-	[JsonProperty("rate_limit_per_user")]
+	[JsonProperty("rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
 	public int? PerUserRateLimit { get; internal set; }
+
+	/// <summary>
+	/// <para>Gets the slow mode delay configured for this channel for post creations.</para>
+	/// <para>All bots, as well as users with <see cref="Permissions.ManageChannels"/> or <see cref="Permissions.ManageMessages"/> permissions in the channel are exempt from slow mode.</para>
+	/// </summary>
+	[JsonProperty("default_thread_rate_limit_per_user", NullValueHandling = NullValueHandling.Ignore)]
+	public int? PostCreateUserRateLimit { get; internal set; }
 
 	/// <summary>
 	/// Gets this channel's video quality mode. This is applicable to voice channels only.
@@ -218,6 +211,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
 	public List<ForumPostTag> AvailableTags { get; internal set; }
+
+	/// <summary>
+	/// List of available tags for forum posts.
+	/// </summary>
+	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
+	public ForumReactionEmoji DefaultReactionEmoji { get; internal set; }
 
 	/// <summary>
 	/// Gets when the last pinned message was pinned.
@@ -458,25 +457,46 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ModifyAsync(Action<ChannelEditModel> action)
 	{
+		if (this.Type == ChannelType.Forum)
+			throw new NotSupportedException("Cannot execute this request on a forum channel.");
+		
 		var mdl = new ChannelEditModel();
 		action(mdl);
 
 		if (mdl.DefaultAutoArchiveDuration.HasValue)
-		{
 			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value))
 				throw new NotSupportedException($"Cannot modify DefaultAutoArchiveDuration. Guild needs boost tier {(mdl.DefaultAutoArchiveDuration.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
-		}
-		if (mdl.Banner.HasValue)
-		{
-			if (!this.Guild.Features.CanSetChannelBanner)
-				throw new NotSupportedException($"Cannot modify Banner. Guild needs boost tier three.");
-		}
-
-		var bannerb64 = ImageTool.Base64FromStream(mdl.Banner);
-
+		
 		return this.Discord.ApiClient.ModifyChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Nsfw,
 			mdl.Parent.Map(p => p?.Id), mdl.Bitrate, mdl.UserLimit, mdl.PerUserRateLimit, mdl.RtcRegion.Map(r => r?.Id),
-			mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, bannerb64, mdl.AuditLogReason);
+			mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, mdl.AuditLogReason);
+	}
+
+	/// <summary>
+	/// Modifies the current forum channel.
+	/// </summary>
+	/// <param name="action">Action to perform on this channel</param>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
+	/// <exception cref="System.NotSupportedException">Thrown when the client does not have the correct <see cref="PremiumTier"/> for modifying the <see cref="ThreadAutoArchiveDuration"/>.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task ModifyForumAsync(Action<ForumChannelEditModel> action)
+	{
+		if (this.Type != ChannelType.Forum)
+			throw new NotSupportedException("Cannot execute this request on a non-forum channel.");
+		
+		var mdl = new ForumChannelEditModel();
+		action(mdl);
+
+		if (mdl.DefaultAutoArchiveDuration.HasValue)
+			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value))
+				throw new NotSupportedException($"Cannot modify DefaultAutoArchiveDuration. Guild needs boost tier {(mdl.DefaultAutoArchiveDuration.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+
+
+		return this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Template, mdl.Nsfw,
+			mdl.Parent.Map(p => p?.Id), mdl.DefaultReactionEmoji, mdl.PerUserRateLimit, mdl.PostCreateUserRateLimit,
+			mdl.DefaultAutoArchiveDuration, mdl.PermissionOverwrites, mdl.AuditLogReason);
 	}
 
 	/// <summary>
@@ -1034,6 +1054,44 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordThreadResult> GetPrivateArchivedThreadsAsync(ulong? before, int? limit)
 		=> await this.Discord.ApiClient.GetPrivateArchivedThreadsAsync(this.Id, before, limit);
+
+	/// <summary>
+	/// Gets a forum channel tag.
+	/// </summary>
+	/// <param name="id">The id of the tag to get.</param>
+	public ForumPostTag GetForumPostTag(ulong id)
+	{
+		var tag = this.AvailableTags.First(x => x.Id == id);
+		tag.Discord = this.Discord;
+		tag.ChannelId = this.Id;
+		return tag;
+	}
+
+	/// <summary>
+	/// Creates a forum channel tag.
+	/// </summary>
+	/// <param name="name">The name of the tag.</param>
+	/// <param name="emoji">The emoji of the tag. Has to be either a <see cref="DiscordGuildEmoji"/> of the current guild or a <see cref="DiscordUnicodeEmoji"/>.</param>
+	/// <param name="moderated">Whether only moderators should be able to apply this tag.</param>
+	/// <param name="reason">The audit log reason.</param>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the tag does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<ForumPostTag> CreateForumPostTagAsync(string name, DiscordEmoji emoji, bool moderated = false, string reason = null)
+		=> await this.Discord.ApiClient.CreateForumTagAsync(this.Id, name, emoji, moderated, reason);
+
+	/// <summary>
+	/// Deletes a forum channel tag.
+	/// </summary>
+	/// <param name="id">The id of the tag to delete.</param>
+	/// <param name="reason">The audit log reason.</param>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the tag does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task DeleteForumPostTag(ulong id, string reason = null)
+		=> this.Discord.ApiClient.DeleteForumTagAsync(id, this.Id, reason);
 
 	#endregion
 

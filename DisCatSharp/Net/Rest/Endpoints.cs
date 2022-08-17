@@ -373,6 +373,11 @@ public static class Endpoints
 	public const string THREAD_MEMBERS = "/thread-members";
 
 	/// <summary>
+	/// The tags endpoint.
+	/// </summary>
+	public const string TAGS = "/tags";
+
+	/// <summary>
 	/// The guild scheduled events endpoint.
 	/// </summary>
 	public const string SCHEDULED_EVENTS = "/scheduled-events";
