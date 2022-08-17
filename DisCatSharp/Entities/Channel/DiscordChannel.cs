@@ -1063,6 +1063,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	{
 		var tag = this.AvailableTags.First(x => x.Id == id);
 		tag.Discord = this.Discord;
+		tag.ChannelId = this.Id;
 		return tag;
 	}
 
@@ -1071,22 +1072,26 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="name">The name of the tag.</param>
 	/// <param name="emoji">The emoji of the tag. Has to be either a <see cref="DiscordGuildEmoji"/> of the current guild or a <see cref="DiscordUnicodeEmoji"/>.</param>
-	/// <param name="modOnly">Whether only moderators should be able to apply this tag.</param>
-	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
-	public async Task<ForumPostTag> CreateForumPostTagAsync(string name, DiscordEmoji emoji, bool modOnly = false)
-	{
-		throw new NotImplementedException();	
-	}
+	/// <param name="moderated">Whether only moderators should be able to apply this tag.</param>
+	/// <param name="reason">The audit log reason.</param>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the tag does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<ForumPostTag> CreateForumPostTagAsync(string name, DiscordEmoji emoji, bool moderated = false, string reason = null)
+		=> await this.Discord.ApiClient.CreateForumTagAsync(this.Id, name, emoji, moderated, reason);
 
 	/// <summary>
 	/// Deletes a forum channel tag.
 	/// </summary>
 	/// <param name="id">The id of the tag to delete.</param>
-	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
-	public Task DeleteForumPostTag(ulong id)
-	{
-		throw new NotImplementedException();
-	}
+	/// <param name="reason">The audit log reason.</param>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the tag does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task DeleteForumPostTag(ulong id, string reason = null)
+		=> this.Discord.ApiClient.DeleteForumTagAsync(id, this.Id, reason);
 
 	#endregion
 
