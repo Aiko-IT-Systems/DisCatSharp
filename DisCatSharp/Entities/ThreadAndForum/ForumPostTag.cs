@@ -21,6 +21,9 @@
 // SOFTWARE.
 
 using System;
+using System.Threading.Tasks;
+
+using DisCatSharp.Net.Models;
 
 using Newtonsoft.Json;
 
@@ -31,6 +34,12 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 {
+	/// <summary>
+	/// Gets the channel id this tag belongs to.
+	/// </summary>
+	[JsonIgnore]
+	internal ulong ChannelId;
+
 	/// <summary>
 	/// Gets the name of this forum post tag.
 	/// </summary>
@@ -46,8 +55,8 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 	/// <summary>
 	/// Gets the unicode emoji of the forum post tag.
 	/// </summary>
-	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Ignore)]
-	internal string UnicodeEmojiString;
+	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Include)]
+	public string UnicodeEmojiString { get; internal set; }
 
 
 	/// <summary>
@@ -57,10 +66,29 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 	public bool Moderated { get; internal set; }
 
 	/// <summary>
-	/// Gets the unicode emoji.
+	/// Gets the emoji.
 	/// </summary>
-	public DiscordEmoji UnicodeEmoji
-		=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : null;
+	[JsonIgnore]
+	public DiscordEmoji Emoji
+		=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : DiscordEmoji.FromGuildEmote(this.Discord, this.EmojiId.Value);
+
+	/// <summary>
+	/// Modifies the tag.
+	/// </summary>
+	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
+	public async Task<ForumPostTag> ModifyAsync(Action<ForumPostTagEditModel> action)
+	{
+		var mdl = new ForumPostTagEditModel();
+		action(mdl);
+		return await this.Discord.ApiClient.ModifyForumTagAsync(this.Id, this.ChannelId, mdl.Name.HasValue ? mdl.Name.Value : this.Name, mdl.Emoji.HasValue ? mdl.Emoji.Value : this.Emoji, mdl.Moderated.HasValue ? mdl.Moderated.Value : this.Moderated, mdl.AuditLogReason);
+	}
+
+	/// <summary>
+	/// Deletes the tag.
+	/// </summary>
+	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
+	public Task DeleteForumPostTagAsync(string reason = null)
+		=> this.Discord.ApiClient.DeleteForumTagAsync(this.Id, this.ChannelId, reason);
 
 	/// <summary>
 	/// Checks whether this <see cref="ForumPostTag"/> is equal to another object.

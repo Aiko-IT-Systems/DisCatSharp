@@ -362,6 +362,12 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public int? MaxVideoChannelUsers { get; internal set; }
 
 	/// <summary>
+	/// Gets the maximum amount of users allowed per video stage channel.
+	/// </summary>
+	[JsonProperty("max_stage_video_channel_users", NullValueHandling = NullValueHandling.Ignore)]
+	public int? MaxStageVideoChannelUsers { get; internal set; }
+
+	/// <summary>
 	/// Gets a dictionary of all the voice states for this guilds. The key for this dictionary is the ID of the user
 	/// the voice state corresponds to.
 	/// </summary>
@@ -760,7 +766,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="description">The description.</param>
 	/// <param name="defaultMessageNotifications">The default message notifications. Defaults to <see cref="DefaultMessageNotifications.MentionsOnly"/></param>
 	/// <param name="reason">The audit log reason.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.Administrator"/> permission.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
@@ -796,6 +802,45 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		features = rfeatures;
 
 		return await this.Discord.ApiClient.ModifyGuildCommunitySettingsAsync(this.Id, features, rulesChannelId, publicUpdatesChannelId, preferredLocale, description, defaultMessageNotifications, explicitContentFilter, verificationLevel, reason).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Enables invites for the guild.
+	/// </summary>
+	/// <param name="reason">The audit log reason.</param>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordGuild> EnableInvitesAsync(string reason = null)
+	{
+		List<string> features = new();
+		var rfeatures = this.RawFeatures.ToList();
+		if (this.Features.InvitesDisabled)
+			rfeatures.Remove("INVITES_DISABLED");
+		features = rfeatures;
+
+		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason);
+	}
+
+	/// <summary>
+	/// Disables invites for the guild.
+	/// </summary>
+	/// <param name="reason"></param>
+	/// <returns></returns>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordGuild> DisableInvitesAsync(string reason = null)
+	{
+		List<string> features = new();
+		var rfeatures = this.RawFeatures.ToList();
+		if (!this.Features.InvitesDisabled)
+			rfeatures.Add("INVITES_DISABLED");
+		features = rfeatures;
+
+		return await this.Discord.ApiClient.ModifyGuildFeaturesAsync(this.Id, features, reason);
 	}
 
 	/// <summary>
@@ -1037,6 +1082,28 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordChannel> CreateTextChannelAsync(string name, DiscordChannel parent = null, Optional<string> topic = default, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, string reason = null)
 		=> this.CreateChannelAsync(name, ChannelType.Text, parent, topic, null, null, overwrites, nsfw, perUserRateLimit, null, defaultAutoArchiveDuration, reason);
+
+	/// <summary>
+	/// Creates a new forum channel in this guild.
+	/// <note type="note">The field template is not yet released, so it won't applied.</note>
+	/// </summary>
+	/// <param name="name">Name of the new channel.</param>
+	/// <param name="parent">Category to put this channel in.</param>
+	/// <param name="topic">Topic of the channel.</param>
+	/// <param name="overwrites">Permission overwrites for this channel.</param>
+	/// <param name="nsfw">Whether the channel is to be flagged as not safe for work.</param>
+	/// <param name="defaultReactionEmoji">The default reaction emoji for posts.</param>
+	/// <param name="perUserRateLimit">Slow mode timeout for users.</param>
+	/// <param name="postCreateUserRateLimit">Slow mode timeout for user post creations.</param>
+	/// <param name="defaultAutoArchiveDuration">The default auto archive duration for new threads.</param>
+	/// <param name="reason">Reason for audit logs.</param>
+	/// <returns>The newly-created channel.</returns>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission or the guild does not have the forum channel feature.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordChannel> CreateForumChannelAsync(string name, DiscordChannel parent = null, Optional<string> topic = default, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<ForumReactionEmoji> defaultReactionEmoji = default, Optional<int?> perUserRateLimit = default, Optional<int?> postCreateUserRateLimit = default, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, string reason = null)
+		 => this.Discord.ApiClient.CreateForumChannelAsync(this.Id, name, parent?.Id, topic, null, nsfw, defaultReactionEmoji, perUserRateLimit, postCreateUserRateLimit, defaultAutoArchiveDuration, overwrites, reason);
 
 	/// <summary>
 	/// Creates a new channel category in this guild.

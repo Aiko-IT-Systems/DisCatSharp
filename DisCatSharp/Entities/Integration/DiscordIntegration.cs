@@ -22,6 +22,8 @@
 
 using System;
 
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
@@ -65,7 +67,7 @@ public class DiscordIntegration : SnowflakeObject
 	/// Gets the expiration behaviour.
 	/// </summary>
 	[JsonProperty("expire_behavior", NullValueHandling = NullValueHandling.Ignore)]
-	public int ExpireBehavior { get; internal set; }
+	public IntegrationExpireBehavior ExpireBehavior { get; internal set; }
 
 	/// <summary>
 	/// Gets the grace period before expiring subscribers.
@@ -90,6 +92,24 @@ public class DiscordIntegration : SnowflakeObject
 	/// </summary>
 	[JsonProperty("synced_at", NullValueHandling = NullValueHandling.Ignore)]
 	public DateTimeOffset SyncedAt { get; internal set; }
+
+	/// <summary>
+	/// Gets the subscriber count.
+	/// </summary>
+	[JsonProperty("subscriber_count", NullValueHandling = NullValueHandling.Ignore)]
+	public int? SubscriberCount { get; internal set; }
+
+	/// <summary>
+	/// Whether the integration is revoked.
+	/// </summary>
+	[JsonProperty("revoked", NullValueHandling = NullValueHandling.Ignore)]
+	public bool? Revoked { get; internal set; }
+
+	[JsonProperty("application", NullValueHandling = NullValueHandling.Ignore)]
+	public DiscordApplication Application { get; internal set; }
+
+	[JsonProperty("scopes", NullValueHandling = NullValueHandling.Ignore)]
+	public string[] Scopes { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordIntegration"/> class.

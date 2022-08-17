@@ -378,7 +378,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 
 		var commandsPending = updateList.Select(x => x.Key).Distinct().ToList();
-		s_expectedCount = commandsPending.Count();
+		s_expectedCount = commandsPending.Count;
 
 		foreach (var guild in guilds)
 		{
