@@ -21,6 +21,9 @@
 // SOFTWARE.
 
 using System;
+using System.Threading.Tasks;
+
+using DisCatSharp.Net.Models;
 
 using Newtonsoft.Json;
 
@@ -62,6 +65,26 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 	[JsonIgnore]
 	public DiscordEmoji Emoji
 		=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : DiscordEmoji.FromGuildEmote(this.Discord, this.EmojiId.Value);
+
+	/// <summary>
+	/// Modifies the tag.
+	/// </summary>
+	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
+	public async Task<ForumPostTag> CreateForumPostTagAsync(Action<ForumPostTagEditModel> action)
+	{
+		var mdl = new ForumPostTagEditModel();
+		action(mdl);
+		throw new NotImplementedException();
+	}
+
+	/// <summary>
+	/// Deletes the tag.
+	/// </summary>
+	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
+	public Task DeleteForumPostTagAsync()
+	{
+		throw new NotImplementedException();
+	}
 
 	/// <summary>
 	/// Checks whether this <see cref="ForumPostTag"/> is equal to another object.
