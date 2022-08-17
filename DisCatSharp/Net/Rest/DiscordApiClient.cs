@@ -29,6 +29,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
@@ -1588,7 +1589,7 @@ public sealed class DiscordApiClient
 
 	#region Channel
 	/// <summary>
-	/// Creates the guild channel async.
+	/// Creates a guild channel.
 	/// </summary>
 	/// <param name="guildId">The guild_id.</param>
 	/// <param name="name">The name.</param>
@@ -1646,9 +1647,68 @@ public sealed class DiscordApiClient
 		return ret;
 	}
 
-	internal Task<DiscordChannel> CreateForumChannelAsync()
+	/// <summary>
+	/// Creates a guild forum channel.
+	/// </summary>
+	/// <param name="guildId">The guild_id.</param>
+	/// <param name="name">The name.</param>
+	/// <param name="parent">The parent.</param>
+	/// <param name="topic">The topic.</param>
+	/// <param name="template">The template.</param>
+	/// <param name="defaultReactionEmoji">The default reaction emoji.</param>
+	/// <param name="permissionOverwrites">The overwrites.</param>
+	/// <param name="nsfw">If true, nsfw.</param>
+	/// <param name="perUserRateLimit">The per user rate limit.</param>
+	/// <param name="postCreateUserRateLimit">The per user post create rate limit.</param>
+	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
+	/// <param name="reason">The reason.</param>
+	internal async Task<DiscordChannel> CreateForumChannelAsync(ulong guildId, string name, ulong? parent,
+		Optional<string> topic, Optional<string> template,
+		bool? nsfw, Optional<ForumReactionEmoji> defaultReactionEmoji,
+		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit,
+		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, string reason)
 	{
+		List<DiscordRestOverwrite> restoverwrites = null;
+		if (permissionOverwrites != null)
+		{
+			restoverwrites = new List<DiscordRestOverwrite>();
+			foreach (var ow in permissionOverwrites)
+				restoverwrites.Add(ow.Build());
+		}
 
+		var pld = new RestChannelCreatePayload
+		{
+			Name = name,
+			Topic = topic,
+			//Template = template,
+			Nsfw = nsfw,
+			Parent = parent,
+			PerUserRateLimit = perUserRateLimit,
+			PostCreateUserRateLimit = postCreateUserRateLimit,
+			DefaultAutoArchiveDuration = defaultAutoArchiveDuration,
+			DefaultReactionEmoji = defaultReactionEmoji,
+			PermissionOverwrites = restoverwrites
+		};
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id{Endpoints.CHANNELS}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new {guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
+		ret.Discord = this.Discord;
+		foreach (var xo in ret.PermissionOverwritesInternal)
+		{
+			xo.Discord = this.Discord;
+			xo.ChannelId = ret.Id;
+		}
+
+		return ret;
 	}
 
 	/// <summary>

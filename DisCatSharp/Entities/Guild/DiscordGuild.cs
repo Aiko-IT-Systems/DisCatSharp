@@ -1084,6 +1084,28 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> this.CreateChannelAsync(name, ChannelType.Text, parent, topic, null, null, overwrites, nsfw, perUserRateLimit, null, defaultAutoArchiveDuration, reason);
 
 	/// <summary>
+	/// Creates a new forum channel in this guild.
+	/// <note type="note">The field template is not yet released, so it won't applied.</note>
+	/// </summary>
+	/// <param name="name">Name of the new channel.</param>
+	/// <param name="parent">Category to put this channel in.</param>
+	/// <param name="topic">Topic of the channel.</param>
+	/// <param name="overwrites">Permission overwrites for this channel.</param>
+	/// <param name="nsfw">Whether the channel is to be flagged as not safe for work.</param>
+	/// <param name="defaultReactionEmoji">The default reaction emoji for posts.</param>
+	/// <param name="perUserRateLimit">Slow mode timeout for users.</param>
+	/// <param name="postCreateUserRateLimit">Slow mode timeout for user post creations.</param>
+	/// <param name="defaultAutoArchiveDuration">The default auto archive duration for new threads.</param>
+	/// <param name="reason">Reason for audit logs.</param>
+	/// <returns>The newly-created channel.</returns>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission or the guild does not have the forum channel feature.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild does not exist.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordChannel> CreateForumChannelAsync(string name, DiscordChannel parent = null, Optional<string> topic = default, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<ForumReactionEmoji> defaultReactionEmoji = default, Optional<int?> perUserRateLimit = default, Optional<int?> postCreateUserRateLimit = default, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, string reason = null)
+		 => this.Discord.ApiClient.CreateForumChannelAsync(this.Id, name, parent?.Id, topic, null, nsfw, defaultReactionEmoji, perUserRateLimit, postCreateUserRateLimit, defaultAutoArchiveDuration, overwrites, reason);
+
+	/// <summary>
 	/// Creates a new channel category in this guild.
 	/// </summary>
 	/// <param name="name">Name of the new category.</param>
