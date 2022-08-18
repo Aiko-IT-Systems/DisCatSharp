@@ -870,16 +870,19 @@ public sealed partial class DiscordClient
 				po.ChannelId = channel.Id;
 			}
 
-			channelNew.AvailableTags.Clear();
-
-			foreach (var fpt in channel.AvailableTags)
+			if (channelNew.Type == ChannelType.Forum)
 			{
-				fpt.Discord = this;
-				fpt.ChannelId = channel.Id;
+				if(channelNew.AvailableTags != null && channelNew.AvailableTags.Any())
+				channelNew.AvailableTags.Clear();
+
+				foreach (var fpt in channel.AvailableTags)
+				{
+					fpt.Discord = this;
+					fpt.ChannelId = channel.Id;
+				}
+
+				channelNew.AvailableTags.AddRange(channel.AvailableTags);
 			}
-
-
-			channelNew.AvailableTags.AddRange(channel.AvailableTags);
 
 			channelNew.PermissionOverwritesInternal.AddRange(channel.PermissionOverwritesInternal);
 
