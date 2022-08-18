@@ -136,15 +136,13 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	/// </summary>
 	[JsonIgnore]
 	internal IReadOnlyList<ulong> AppliedTagIds
-	  => this._appliedTagsIdsLazy.Value;
+		=> this.AppliedTagIdsInternal;
 
 	/// <summary>
 	/// List of applied tag ids.
 	/// </summary>
 	[JsonProperty("applied_tags", NullValueHandling = NullValueHandling.Ignore)]
 	internal List<ulong> AppliedTagIdsInternal;
-	[JsonIgnore]
-	private readonly Lazy<IReadOnlyList<ulong>> _appliedTagsIdsLazy;
 
 	/// <summary>
 	/// Gets the list of applied tags.
@@ -158,9 +156,7 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	/// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
 	/// </summary>
 	internal DiscordThreadChannel()
-	{
-		this._appliedTagsIdsLazy = new Lazy<IReadOnlyList<ulong>>(() => new ReadOnlyCollection<ulong>(this.AppliedTagIdsInternal));
-	}
+	{ }
 
 	#region Methods
 
