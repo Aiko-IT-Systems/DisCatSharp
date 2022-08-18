@@ -4169,6 +4169,7 @@ public sealed class DiscordApiClient
 	/// <param name="autoArchiveDuration">The auto_archive_duration for the thread.</param>
 	/// <param name="type">Can be either <see cref="ChannelType.PublicThread"/> or <see cref="ChannelType.PrivateThread"/>.</param>
 	/// <param name="rateLimitPerUser">The rate limit per user.</param>
+	/// <param name="appliedTags">The tags to add on creation.</param>
 	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordThreadChannel> CreateThreadAsync(ulong channelId, ulong? messageId, string name,
 		ThreadAutoArchiveDuration autoArchiveDuration, ChannelType type, int? rateLimitPerUser, IEnumerable<ForumPostTag>? appliedTags, string reason)
@@ -4426,6 +4427,7 @@ public sealed class DiscordApiClient
 	/// <param name="perUserRateLimit">The new per user rate limit.</param>
 	/// <param name="autoArchiveDuration">The new auto archive duration.</param>
 	/// <param name="invitable">The new user invitable state.</param>
+	/// <param name="appliedTags">The tags to add on creation.</param>
 	/// <param name="reason">The reason for the modification.</param>
 	internal Task ModifyThreadAsync(ulong threadId, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<int?> perUserRateLimit, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<bool?> invitable, Optional<IEnumerable<ForumPostTag>?> appliedTags, string reason)
 	{
