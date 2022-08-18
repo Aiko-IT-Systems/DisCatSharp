@@ -194,8 +194,26 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 		{
 			canContinue = this.Guild.Features.CanCreatePrivateThreads;
 		}
-		return canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, mdl.Name, mdl.Locked, mdl.Archived, mdl.PerUserRateLimit, mdl.AutoArchiveDuration, mdl.Invitable, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+		return canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, mdl.Name, mdl.Locked, mdl.Archived, mdl.PerUserRateLimit, mdl.AutoArchiveDuration, mdl.Invitable, mdl.AppliedTags, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 	}
+
+	/// <summary>
+	/// Add a tag to the current thread.
+	/// </summary>
+	/// <param name="tag">The tag to add.</param>
+	/// <param name="reason">The reason for the audit logs.</param>
+	/// <returns></returns>
+	public async Task AddTag(ForumPostTag tag, string reason)
+		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, true, null, null, null, new List<ForumPostTag>(this.AppliedTags) { tag }, reason: reason);
+
+	/// <summary>
+	/// Remove a tag from the current thread.
+	/// </summary>
+	/// <param name="tag">The tag to remove.</param>
+	/// <param name="reason">The reason for the audit logs.</param>
+	/// <returns></returns>
+	public async Task RemoveTag(ForumPostTag tag, string reason)
+		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, true, null, null, null, new List<ForumPostTag>(this.AppliedTags).Where(x => x != tag).ToList(), reason: reason);
 
 	/// <summary>
 	/// Archives a thread.
@@ -207,7 +225,7 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ArchiveAsync(bool locked = true, string reason = null)
-		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, locked, true, null, null, null, reason: reason);
+		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, locked, true, null, null, null, null, reason: reason);
 
 	/// <summary>
 	/// Unarchives a thread.
@@ -217,7 +235,7 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task UnarchiveAsync(string reason = null)
-		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, false, null, null, null, reason: reason);
+		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, false, null, null, null, null, reason: reason);
 
 	/// <summary>
 	/// Gets the members of a thread. Needs the <see cref="DiscordIntents.GuildMembers"/> intent.

@@ -4171,7 +4171,7 @@ public sealed class DiscordApiClient
 	/// <param name="rateLimitPerUser">The rate limit per user.</param>
 	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordThreadChannel> CreateThreadAsync(ulong channelId, ulong? messageId, string name,
-		ThreadAutoArchiveDuration autoArchiveDuration, ChannelType type, int? rateLimitPerUser, string reason)
+		ThreadAutoArchiveDuration autoArchiveDuration, ChannelType type, int? rateLimitPerUser, IEnumerable<ForumPostTag>? appliedTags, string reason)
 	{
 		var pld = new RestThreadChannelCreatePayload
 		{
@@ -4180,6 +4180,16 @@ public sealed class DiscordApiClient
 			PerUserRateLimit = rateLimitPerUser,
 			Type = type
 		};
+
+		if (appliedTags is not null && appliedTags.Any())
+		{
+			var tags = new List<ulong>();
+
+			foreach (var b in appliedTags)
+				tags.Add(b.Id);
+
+			pld.AppliedTags = tags;
+		}
 
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -4417,7 +4427,7 @@ public sealed class DiscordApiClient
 	/// <param name="autoArchiveDuration">The new auto archive duration.</param>
 	/// <param name="invitable">The new user invitable state.</param>
 	/// <param name="reason">The reason for the modification.</param>
-	internal Task ModifyThreadAsync(ulong threadId, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<int?> perUserRateLimit, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<bool?> invitable, string reason)
+	internal Task ModifyThreadAsync(ulong threadId, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<int?> perUserRateLimit, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<bool?> invitable, Optional<IEnumerable<ForumPostTag>?> appliedTags, string reason)
 	{
 		var pld = new RestThreadChannelModifyPayload
 		{
@@ -4428,6 +4438,16 @@ public sealed class DiscordApiClient
 			PerUserRateLimit = perUserRateLimit,
 			Invitable = invitable
 		};
+
+		if (appliedTags.HasValue)
+		{
+			var tags = new List<ulong>();
+
+			foreach (var b in appliedTags.Value)
+				tags.Add(b.Id);
+
+			pld.AppliedTags = tags;
+		}
 
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
