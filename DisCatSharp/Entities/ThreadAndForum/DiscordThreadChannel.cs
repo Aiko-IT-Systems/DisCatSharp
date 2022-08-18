@@ -206,7 +206,7 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task AddTagAsync(ForumPostTag tag, string reason)
+	public async Task AddTagAsync(ForumPostTag tag, string reason = null)
 		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags) { tag }, reason: reason);
 
 	/// <summary>
@@ -218,7 +218,7 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task RemoveTagAsync(ForumPostTag tag, string reason)
+	public async Task RemoveTagAsync(ForumPostTag tag, string reason = null)
 		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags).Where(x => x != tag).ToList(), reason: reason);
 
 	/// <summary>
