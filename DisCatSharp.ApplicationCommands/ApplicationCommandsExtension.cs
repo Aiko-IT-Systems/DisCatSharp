@@ -163,6 +163,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal bool StartupFinished { get; set; }
 
 	/// <summary>
+	/// Gets a list of handled interactions. Fix for double interaction execution bug.
+	/// </summary>
+	internal static List<ulong> HandledInteractions = new();
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="ApplicationCommandsExtension"/> class.
 	/// </summary>
 	/// <param name="configuration">The configuration.</param>
@@ -720,7 +725,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="e">The event args.</param>
 	private Task InteractionHandler(DiscordClient client, InteractionCreateEventArgs e)
 	{
-		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Got interaction on shard {shard}", this.Client.ShardId);
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Got slash interaction on shard {shard}", this.Client.ShardId);
+		if (HandledInteractions.Contains(e.Interaction.Id))
+		{
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received");
+			return Task.FromResult(true);
+		}
+		else
+			HandledInteractions.Add(e.Interaction.Id);
 		_ = Task.Run(async () =>
 		{
 			if (e.Interaction.Type == InteractionType.ApplicationCommand)
@@ -920,6 +932,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="e">The event args.</param>
 	private Task ContextMenuHandler(DiscordClient client, ContextMenuInteractionCreateEventArgs e)
 	{
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Got context menu interaction on shard {shard}", this.Client.ShardId);
+		if (HandledInteractions.Contains(e.Interaction.Id))
+		{
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Ignoring, already received");
+			return Task.FromResult(true);
+		}
+		else
+			HandledInteractions.Add(e.Interaction.Id);
 		_ = Task.Run(async () =>
 		{
 			//Creates the context
