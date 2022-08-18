@@ -484,6 +484,12 @@ internal sealed class RestThreadChannelCreatePayload
 	/// </summary>
 	[JsonProperty("type")]
 	public ChannelType Type { get; set; }
+
+	/// <summary>
+	/// Gets or sets the applied tags.
+	/// </summary>
+	[JsonProperty("applied_tags", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<IEnumerable<ulong>> AppliedTags { internal get; set; }
 }
 
 /// <summary>
@@ -526,4 +532,10 @@ internal sealed class RestThreadChannelModifyPayload
 	/// </summary>
 	[JsonProperty("invitable", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<bool?> Invitable { internal get; set; }
+
+	/// <summary>
+	/// Gets or sets the applied tags.
+	/// </summary>
+	[JsonProperty("applied_tags", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<IEnumerable<ulong>> AppliedTags { internal get; set; }
 }

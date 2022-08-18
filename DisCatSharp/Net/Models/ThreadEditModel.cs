@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Collections;
+using System.Collections.Generic;
+
 using DisCatSharp.Entities;
 
 namespace DisCatSharp.Net.Models;
@@ -58,6 +61,11 @@ public class ThreadEditModel : BaseEditModel
 	/// Sets the thread's invitable state.
 	/// </summary>
 	public Optional<bool?> Invitable { internal get; set; }
+
+	/// <summary>
+	/// Sets the thread's applied tags.
+	/// </summary>
+	public Optional<IEnumerable<ForumPostTag>?> AppliedTags { internal get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ThreadEditModel"/> class.
