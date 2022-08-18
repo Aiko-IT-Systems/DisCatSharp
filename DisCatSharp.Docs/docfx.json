@@ -94,8 +94,8 @@
     "keepFileLink": false,
     "cleanupCacheHistory": false,
 	"sitemap": {
-		"baseUrl": "https://docs.dcs.aitsys.dev/",
-		"changefreq": "hourly",
+		"baseUrl": "https://docs.discatsharp.tech/",
+		"changefreq": "daily",
 		"priority": 1.0
 	}
   }
