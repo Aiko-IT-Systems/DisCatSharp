@@ -204,7 +204,7 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	/// <param name="reason">The reason for the audit logs.</param>
 	/// <returns></returns>
 	public async Task AddTag(ForumPostTag tag, string reason)
-		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, true, null, null, null, new List<ForumPostTag>(this.AppliedTags) { tag }, reason: reason);
+		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags) { tag }, reason: reason);
 
 	/// <summary>
 	/// Remove a tag from the current thread.
@@ -213,7 +213,7 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	/// <param name="reason">The reason for the audit logs.</param>
 	/// <returns></returns>
 	public async Task RemoveTag(ForumPostTag tag, string reason)
-		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, true, null, null, null, new List<ForumPostTag>(this.AppliedTags).Where(x => x != tag).ToList(), reason: reason);
+		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags).Where(x => x != tag).ToList(), reason: reason);
 
 	/// <summary>
 	/// Archives a thread.
