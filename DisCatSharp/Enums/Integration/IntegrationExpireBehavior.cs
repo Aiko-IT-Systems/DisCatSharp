@@ -20,34 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-
-namespace DisCatSharp.Entities;
-
-/// <summary>
-/// Represents a discord thread result.
-/// </summary>
-public class DiscordThreadResult
+namespace DisCatSharp.Enums
 {
 	/// <summary>
-	/// Gets the returned threads.
+	/// Represents the integration expire behavior.
 	/// </summary>
-	public Dictionary<ulong, DiscordThreadChannel> ReturnedThreads { get; internal set; }
+	public enum IntegrationExpireBehavior : int
+	{
+		/// <summary>
+		/// Removes the role from the member.
+		/// </summary>
+		RemoveRole = 0,
 
-	/// <summary>
-	/// Gets the active members.
-	/// </summary>
-	public List<DiscordThreadChannelMember> ActiveMembers { get; internal set; }
-
-	/// <summary>
-	/// Whether there are more results.
-	/// </summary>
-	public bool HasMore { get; internal set; }
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordThreadResult"/> class.
-	/// </summary>
-	internal DiscordThreadResult()
-		: base()
-	{ }
+		/// <summary>
+		/// Kicks the member.
+		/// </summary>
+		Kick = 1
+	}
 }

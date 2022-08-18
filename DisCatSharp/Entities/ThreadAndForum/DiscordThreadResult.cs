@@ -21,51 +21,41 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-
-using DisCatSharp.Entities;
+using System.Linq;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.Net.Abstractions;
+namespace DisCatSharp.Entities;
 
 /// <summary>
-/// Represents data for websocket ready event payload.
+/// Represents a discord thread result.
 /// </summary>
-internal class ReadyPayload
+public class DiscordThreadResult
 {
 	/// <summary>
-	/// Gets the gateway version the client is connected to.
+	/// Gets the returned threads.
 	/// </summary>
-	[JsonProperty("v")]
-	public int GatewayVersion { get; private set; }
+	[JsonIgnore]
+	public Dictionary<ulong, DiscordThreadChannel> ReturnedThreads
+		=> this.Threads == null || !this.Threads.Any() ? new Dictionary<ulong, DiscordThreadChannel>() : this.Threads.Select(t => new { t.Id, t }).ToDictionary(t => t.Id, t => t.t);
+	[JsonProperty("threads", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<DiscordThreadChannel> Threads { get; set; }
 
 	/// <summary>
-	/// Gets the current user.
+	/// Gets the active members.
 	/// </summary>
-	[JsonProperty("user")]
-	public TransportUser CurrentUser { get; private set; }
+	[JsonProperty("members", NullValueHandling = NullValueHandling.Ignore)]
+	public List<DiscordThreadChannelMember> ActiveMembers { get; internal set; }
 
 	/// <summary>
-	/// Gets the guilds available for this shard.
+	/// Whether there are more results.
 	/// </summary>
-	[JsonProperty("guilds")]
-	public IReadOnlyList<DiscordGuild> Guilds { get; private set; }
+	public bool HasMore { get; internal set; }
 
 	/// <summary>
-	/// Gets the current session's ID.
+	/// Initializes a new instance of the <see cref="DiscordThreadResult"/> class.
 	/// </summary>
-	[JsonProperty("session_id")]
-	public string SessionId { get; private set; }
-
-	/// <summary>
-	/// The gateway url for resuming connections
-	/// </summary>
-	[JsonProperty("resume_gateway_url")]
-	public string ResumeGatewayUrl { get; set; }
-
-	/// <summary>
-	/// Gets debug data sent by Discord. This contains a list of servers to which the client is connected.
-	/// </summary>
-	[JsonProperty("_trace")]
-	public IReadOnlyList<string> Trace { get; private set; }
+	internal DiscordThreadResult()
+		: base()
+	{ }
 }

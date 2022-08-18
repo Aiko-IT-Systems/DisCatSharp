@@ -252,6 +252,18 @@ internal sealed class RestGuildMfaLevelModifyPayload
 /// <summary>
 /// Represents a guild community modify payload.
 /// </summary>
+internal sealed class RestGuildFeatureModifyPayload
+{
+	/// <summary>
+	/// Gets or sets the features.
+	/// </summary>
+	[JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
+	public List<string> Features { get; set; }
+}
+
+/// <summary>
+/// Represents a guild community modify payload.
+/// </summary>
 internal sealed class RestGuildCommunityModifyPayload
 {
 	/// <summary>

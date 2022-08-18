@@ -1,4 +1,4 @@
-// This file is part of the DisCatSharp project, based off DSharpPlus.
+﻿// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
 // Copyright (c) 2021-2022 AITSYS
 //
@@ -23,49 +23,27 @@
 using System.Collections.Generic;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
-using Newtonsoft.Json;
-
-namespace DisCatSharp.Net.Abstractions;
+namespace DisCatSharp.Net.Models;
 
 /// <summary>
-/// Represents data for websocket ready event payload.
+/// Represents a tag edit model.
 /// </summary>
-internal class ReadyPayload
+public class ForumPostTagEditModel : BaseEditModel
 {
 	/// <summary>
-	/// Gets the gateway version the client is connected to.
+	/// Sets the tags's new name.
 	/// </summary>
-	[JsonProperty("v")]
-	public int GatewayVersion { get; private set; }
+	public Optional<string> Name { internal get; set; }
 
 	/// <summary>
-	/// Gets the current user.
+	/// Sets the tags's new emoji.
 	/// </summary>
-	[JsonProperty("user")]
-	public TransportUser CurrentUser { get; private set; }
+	public Optional<DiscordEmoji> Emoji { internal get; set; }
 
 	/// <summary>
-	/// Gets the guilds available for this shard.
+	/// Sets whether the tag should be mod only.
 	/// </summary>
-	[JsonProperty("guilds")]
-	public IReadOnlyList<DiscordGuild> Guilds { get; private set; }
-
-	/// <summary>
-	/// Gets the current session's ID.
-	/// </summary>
-	[JsonProperty("session_id")]
-	public string SessionId { get; private set; }
-
-	/// <summary>
-	/// The gateway url for resuming connections
-	/// </summary>
-	[JsonProperty("resume_gateway_url")]
-	public string ResumeGatewayUrl { get; set; }
-
-	/// <summary>
-	/// Gets debug data sent by Discord. This contains a list of servers to which the client is connected.
-	/// </summary>
-	[JsonProperty("_trace")]
-	public IReadOnlyList<string> Trace { get; private set; }
+	public Optional<bool> Moderated { internal get; set; }
 }

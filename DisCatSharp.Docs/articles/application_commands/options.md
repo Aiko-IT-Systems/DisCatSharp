@@ -220,16 +220,31 @@ public static async Task MySlashCommand(InteractionContext context, [Option("cha
 
 This will make it possible to select only text channels.
 
-## Minimum / Maximum Attribute
+## MinimumValue / MaximumValue Attribute
 
 Sometimes we may need to give users the ability to select only a certain range of values.
 
-This can be done by adding the [Minimum](xref:DisCatSharp.ApplicationCommands.Attributes.MaximumAttribute) and [Maximum](xref:DisCatSharp.ApplicationCommands.Attributes.MaximumAttribute) attribute to the option.
+This can be done by adding the [MinimumValue](xref:DisCatSharp.ApplicationCommands.Attributes.MinimumValueAttribute) and [MaximumValue](xref:DisCatSharp.ApplicationCommands.Attributes.MaximumValueAttribute) attribute to the option.
 It can be used only for the types `double`, `int` and `long` tho.
 
 ```cs
 [SlashCommand("my_command", "This is description of the command.")]
-public static async Task MySlashCommand(InteractionContext context, [Option("number", "You can select only a certain range."), Minimum(50), Maximum(100)] int numbers)
+public static async Task MySlashCommand(InteractionContext context, [Option("number", "You can select only a certain range."), MinimumValue(50), MaximumValue(100)] int numbers)
+{
+
+}
+```
+
+## MinimumLength / MaximumLength Attribute
+
+Sometimes we may need to limit the user to a certain string length.
+
+This can be done by adding the [MinimumLength](xref:DisCatSharp.ApplicationCommands.Attributes.MinimumLengthAttribute) and [MaximumLength](xref:DisCatSharp.ApplicationCommands.Attributes.MaximumLengthAttribute) attribute to the option.
+It can be used only for the type `string`.
+
+```cs
+[SlashCommand("my_command", "This is description of the command.")]
+public static async Task MySlashCommand(InteractionContext context, [Option("text", "You can only send text with a length between 10 and 50 characters."), MinimumLength(10), MaximumLength(50)] string text)
 {
 
 }

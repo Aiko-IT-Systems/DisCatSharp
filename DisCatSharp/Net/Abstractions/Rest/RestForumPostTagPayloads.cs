@@ -23,49 +23,38 @@
 using System.Collections.Generic;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Net.Abstractions;
 
 /// <summary>
-/// Represents data for websocket ready event payload.
+/// Represents the forum tag payload.
 /// </summary>
-internal class ReadyPayload
+public class RestForumPostTagPayloads
 {
 	/// <summary>
-	/// Gets the gateway version the client is connected to.
+	/// Sets the tags's new name.
 	/// </summary>
-	[JsonProperty("v")]
-	public int GatewayVersion { get; private set; }
+	[JsonProperty("name")]
+	public string Name { internal get; set; }
 
 	/// <summary>
-	/// Gets the current user.
+	/// Sets the tags's new emoji.
 	/// </summary>
-	[JsonProperty("user")]
-	public TransportUser CurrentUser { get; private set; }
+	[JsonProperty("emoji_id", NullValueHandling = NullValueHandling.Include)]
+	public Optional<ulong?> Emoji { internal get; set; }
 
 	/// <summary>
-	/// Gets the guilds available for this shard.
+	/// Sets whether the tag should be mod only.
 	/// </summary>
-	[JsonProperty("guilds")]
-	public IReadOnlyList<DiscordGuild> Guilds { get; private set; }
+	[JsonProperty("moderated", NullValueHandling = NullValueHandling.Ignore)]
+	public bool Moderated { internal get; set; }
 
 	/// <summary>
-	/// Gets the current session's ID.
+	/// Gets the unicode emoji of the forum post tag.
 	/// </summary>
-	[JsonProperty("session_id")]
-	public string SessionId { get; private set; }
-
-	/// <summary>
-	/// The gateway url for resuming connections
-	/// </summary>
-	[JsonProperty("resume_gateway_url")]
-	public string ResumeGatewayUrl { get; set; }
-
-	/// <summary>
-	/// Gets debug data sent by Discord. This contains a list of servers to which the client is connected.
-	/// </summary>
-	[JsonProperty("_trace")]
-	public IReadOnlyList<string> Trace { get; private set; }
+	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Include)]
+	public Optional<string> UnicodeEmojiString { internal get; set; }
 }

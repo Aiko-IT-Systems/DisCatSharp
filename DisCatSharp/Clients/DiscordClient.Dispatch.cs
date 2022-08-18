@@ -50,6 +50,7 @@ public sealed partial class DiscordClient
 {
 	#region Private Fields
 
+	private string _resumeGatewayUrl;
 	private string _sessionId;
 	private bool _guildDownloadCompleted;
 
@@ -576,7 +577,8 @@ public sealed partial class DiscordClient
 				}
 
 				cid = (ulong)dat["channel_id"];
-				await this.OnInteractionCreateAsync((ulong?)dat["guild_id"], cid, usr, mbr, dat.ToDiscordObject<DiscordInteraction>()).ConfigureAwait(false);
+				// Console.WriteLine(dat.ToString()); // Get raw interaction payload.
+				await this.OnInteractionCreateAsync((ulong?)dat["guild_id"], cid, usr, mbr, dat.ToDiscordObject<DiscordInteraction>(), dat.ToString()).ConfigureAwait(false);
 				break;
 
 			case "application_command_create":
@@ -668,6 +670,7 @@ public sealed partial class DiscordClient
 
 		this.GatewayVersion = ready.GatewayVersion;
 		this._sessionId = ready.SessionId;
+		this._resumeGatewayUrl = ready.ResumeGatewayUrl;
 		var rawGuildIndex = rawGuilds.ToDictionary(xt => (ulong)xt["id"], xt => (JObject)xt);
 
 		this.GuildsInternal.Clear();
@@ -675,8 +678,7 @@ public sealed partial class DiscordClient
 		{
 			guild.Discord = this;
 
-			if (guild.ChannelsInternal == null)
-				guild.ChannelsInternal = new ConcurrentDictionary<ulong, DiscordChannel>();
+			guild.ChannelsInternal ??= new ConcurrentDictionary<ulong, DiscordChannel>();
 
 			foreach (var xc in guild.Channels.Values)
 			{
@@ -689,8 +691,7 @@ public sealed partial class DiscordClient
 				}
 			}
 
-			if (guild.RolesInternal == null)
-				guild.RolesInternal = new ConcurrentDictionary<ulong, DiscordRole>();
+			guild.RolesInternal ??= new ConcurrentDictionary<ulong, DiscordRole>();
 
 			foreach (var xr in guild.Roles.Values)
 			{
@@ -725,38 +726,32 @@ public sealed partial class DiscordClient
 				}
 			}
 
-			if (guild.EmojisInternal == null)
-				guild.EmojisInternal = new ConcurrentDictionary<ulong, DiscordEmoji>();
+			guild.EmojisInternal ??= new ConcurrentDictionary<ulong, DiscordEmoji>();
 
 			foreach (var xe in guild.Emojis.Values)
 				xe.Discord = this;
 
-			if (guild.StickersInternal == null)
-				guild.StickersInternal = new ConcurrentDictionary<ulong, DiscordSticker>();
+			guild.StickersInternal ??= new ConcurrentDictionary<ulong, DiscordSticker>();
 
 			foreach (var xs in guild.Stickers.Values)
 				xs.Discord = this;
 
-			if (guild.VoiceStatesInternal == null)
-				guild.VoiceStatesInternal = new ConcurrentDictionary<ulong, DiscordVoiceState>();
+			guild.VoiceStatesInternal ??= new ConcurrentDictionary<ulong, DiscordVoiceState>();
 
 			foreach (var xvs in guild.VoiceStates.Values)
 				xvs.Discord = this;
 
-			if (guild.ThreadsInternal == null)
-				guild.ThreadsInternal = new ConcurrentDictionary<ulong, DiscordThreadChannel>();
+			guild.ThreadsInternal ??= new ConcurrentDictionary<ulong, DiscordThreadChannel>();
 
 			foreach (var xt in guild.ThreadsInternal.Values)
 				xt.Discord = this;
 
-			if (guild.StageInstancesInternal == null)
-				guild.StageInstancesInternal = new ConcurrentDictionary<ulong, DiscordStageInstance>();
+			guild.StageInstancesInternal ??= new ConcurrentDictionary<ulong, DiscordStageInstance>();
 
 			foreach (var xsi in guild.StageInstancesInternal.Values)
 				xsi.Discord = this;
 
-			if (guild.ScheduledEventsInternal == null)
-				guild.ScheduledEventsInternal = new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
+			guild.ScheduledEventsInternal ??= new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
 
 			foreach (var xse in guild.ScheduledEventsInternal.Values)
 				xse.Discord = this;
@@ -788,6 +783,11 @@ public sealed partial class DiscordClient
 	{
 		channel.Discord = this;
 		foreach (var xo in channel.PermissionOverwritesInternal)
+		{
+			xo.Discord = this;
+			xo.ChannelId = channel.Id;
+		}
+		foreach (var xo in channel.AvailableTags)
 		{
 			xo.Discord = this;
 			xo.ChannelId = channel.Id;
@@ -837,9 +837,13 @@ public sealed partial class DiscordClient
 				ParentId = channelNew.ParentId,
 				IsNsfw = channelNew.IsNsfw,
 				PerUserRateLimit = channelNew.PerUserRateLimit,
+				PostCreateUserRateLimit = channelNew.PostCreateUserRateLimit,
 				RtcRegionId = channelNew.RtcRegionId,
 				QualityMode = channelNew.QualityMode,
-				DefaultAutoArchiveDuration = channelNew.DefaultAutoArchiveDuration
+				DefaultAutoArchiveDuration = channelNew.DefaultAutoArchiveDuration,
+				AvailableTags = channelNew.AvailableTags,
+				Template = channelNew.Template,
+				DefaultReactionEmoji = channelNew.DefaultReactionEmoji
 			};
 
 			channelNew.Bitrate = channel.Bitrate;
@@ -850,10 +854,13 @@ public sealed partial class DiscordClient
 			channelNew.ParentId = channel.ParentId;
 			channelNew.IsNsfw = channel.IsNsfw;
 			channelNew.PerUserRateLimit = channel.PerUserRateLimit;
+			channelNew.PostCreateUserRateLimit = channel.PostCreateUserRateLimit;
 			channelNew.Type = channel.Type;
 			channelNew.RtcRegionId = channel.RtcRegionId;
 			channelNew.QualityMode = channel.QualityMode;
 			channelNew.DefaultAutoArchiveDuration = channel.DefaultAutoArchiveDuration;
+			channelNew.Template = channel.Template;
+			channelNew.DefaultReactionEmoji = channel.DefaultReactionEmoji;
 
 			channelNew.PermissionOverwritesInternal.Clear();
 
@@ -862,6 +869,17 @@ public sealed partial class DiscordClient
 				po.Discord = this;
 				po.ChannelId = channel.Id;
 			}
+
+			channelNew.AvailableTags.Clear();
+
+			foreach (var fpt in channel.AvailableTags)
+			{
+				fpt.Discord = this;
+				fpt.ChannelId = channel.Id;
+			}
+
+
+			channelNew.AvailableTags.AddRange(channel.AvailableTags);
 
 			channelNew.PermissionOverwritesInternal.AddRange(channel.PermissionOverwritesInternal);
 
@@ -993,24 +1011,15 @@ public sealed partial class DiscordClient
 		if (exists)
 			guild = foundGuild;
 
-		if (guild.ChannelsInternal == null)
-			guild.ChannelsInternal = new ConcurrentDictionary<ulong, DiscordChannel>();
-		if (guild.ThreadsInternal == null)
-			guild.ThreadsInternal = new ConcurrentDictionary<ulong, DiscordThreadChannel>();
-		if (guild.RolesInternal == null)
-			guild.RolesInternal = new ConcurrentDictionary<ulong, DiscordRole>();
-		if (guild.ThreadsInternal == null)
-			guild.ThreadsInternal = new ConcurrentDictionary<ulong, DiscordThreadChannel>();
-		if (guild.StickersInternal == null)
-			guild.StickersInternal = new ConcurrentDictionary<ulong, DiscordSticker>();
-		if (guild.EmojisInternal == null)
-			guild.EmojisInternal = new ConcurrentDictionary<ulong, DiscordEmoji>();
-		if (guild.VoiceStatesInternal == null)
-			guild.VoiceStatesInternal = new ConcurrentDictionary<ulong, DiscordVoiceState>();
-		if (guild.MembersInternal == null)
-			guild.MembersInternal = new ConcurrentDictionary<ulong, DiscordMember>();
-		if (guild.ScheduledEventsInternal == null)
-			guild.ScheduledEventsInternal = new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
+		guild.ChannelsInternal ??= new ConcurrentDictionary<ulong, DiscordChannel>();
+		guild.ThreadsInternal ??= new ConcurrentDictionary<ulong, DiscordThreadChannel>();
+		guild.RolesInternal ??= new ConcurrentDictionary<ulong, DiscordRole>();
+		guild.ThreadsInternal ??= new ConcurrentDictionary<ulong, DiscordThreadChannel>();
+		guild.StickersInternal ??= new ConcurrentDictionary<ulong, DiscordSticker>();
+		guild.EmojisInternal ??= new ConcurrentDictionary<ulong, DiscordEmoji>();
+		guild.VoiceStatesInternal ??= new ConcurrentDictionary<ulong, DiscordVoiceState>();
+		guild.MembersInternal ??= new ConcurrentDictionary<ulong, DiscordMember>();
+		guild.ScheduledEventsInternal ??= new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
 
 		this.UpdateCachedGuild(eventGuild, rawMembers);
 
@@ -1171,24 +1180,15 @@ public sealed partial class DiscordClient
 		var eventGuild = guild;
 		guild = this.GuildsInternal[eventGuild.Id];
 
-		if (guild.ChannelsInternal == null)
-			guild.ChannelsInternal = new ConcurrentDictionary<ulong, DiscordChannel>();
-		if (guild.ThreadsInternal == null)
-			guild.ThreadsInternal = new ConcurrentDictionary<ulong, DiscordThreadChannel>();
-		if (guild.RolesInternal == null)
-			guild.RolesInternal = new ConcurrentDictionary<ulong, DiscordRole>();
-		if (guild.EmojisInternal == null)
-			guild.EmojisInternal = new ConcurrentDictionary<ulong, DiscordEmoji>();
-		if (guild.StickersInternal == null)
-			guild.StickersInternal = new ConcurrentDictionary<ulong, DiscordSticker>();
-		if (guild.VoiceStatesInternal == null)
-			guild.VoiceStatesInternal = new ConcurrentDictionary<ulong, DiscordVoiceState>();
-		if (guild.StageInstancesInternal == null)
-			guild.StageInstancesInternal = new ConcurrentDictionary<ulong, DiscordStageInstance>();
-		if (guild.MembersInternal == null)
-			guild.MembersInternal = new ConcurrentDictionary<ulong, DiscordMember>();
-		if (guild.ScheduledEventsInternal == null)
-			guild.ScheduledEventsInternal = new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
+		guild.ChannelsInternal ??= new ConcurrentDictionary<ulong, DiscordChannel>();
+		guild.ThreadsInternal ??= new ConcurrentDictionary<ulong, DiscordThreadChannel>();
+		guild.RolesInternal ??= new ConcurrentDictionary<ulong, DiscordRole>();
+		guild.EmojisInternal ??= new ConcurrentDictionary<ulong, DiscordEmoji>();
+		guild.StickersInternal ??= new ConcurrentDictionary<ulong, DiscordSticker>();
+		guild.VoiceStatesInternal ??= new ConcurrentDictionary<ulong, DiscordVoiceState>();
+		guild.StageInstancesInternal ??= new ConcurrentDictionary<ulong, DiscordStageInstance>();
+		guild.MembersInternal ??= new ConcurrentDictionary<ulong, DiscordMember>();
+		guild.ScheduledEventsInternal ??= new ConcurrentDictionary<ulong, DiscordScheduledEvent>();
 
 		this.UpdateCachedGuild(eventGuild, rawMembers);
 
@@ -2601,7 +2601,9 @@ public sealed partial class DiscordClient
 				GuildId = thread.GuildId,
 				LastPinTimestampRaw = threadNew.LastPinTimestampRaw,
 				PerUserRateLimit = threadNew.PerUserRateLimit,
-				CurrentMember = threadNew.CurrentMember
+				CurrentMember = threadNew.CurrentMember,
+				TotalMessagesSent = threadNew.TotalMessagesSent,
+				AppliedTagIdsInternal = threadNew.AppliedTagIdsInternal
 			};
 
 			threadNew.ThreadMetadata = thread.ThreadMetadata;
@@ -2612,6 +2614,9 @@ public sealed partial class DiscordClient
 			threadNew.MessageCount = thread.MessageCount;
 			threadNew.MemberCount = thread.MemberCount;
 			threadNew.GuildId = thread.GuildId;
+			threadNew.Discord = this;
+			threadNew.TotalMessagesSent = thread.TotalMessagesSent;
+			threadNew.AppliedTagIdsInternal = thread.AppliedTagIdsInternal;
 
 			updateEvent = new ThreadUpdateEventArgs(this.ServiceProvider)
 			{
@@ -3209,8 +3214,10 @@ public sealed partial class DiscordClient
 	/// <param name="user">The transport user.</param>
 	/// <param name="member">The transport member.</param>
 	/// <param name="interaction">The interaction.</param>
-	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction)
+	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, string rawInteraction)
 	{
+		this.Logger.LogTrace("Interaction from {guild} on shard {shard}", guildId.HasValue ? guildId.Value : "dm", this.ShardId);
+		this.Logger.LogTrace("Interaction: {interaction}", rawInteraction);
 		var usr = new DiscordUser(user) { Discord = this };
 
 		interaction.ChannelId = channelId;
@@ -3261,7 +3268,16 @@ public sealed partial class DiscordClient
 					c.Value.Discord = this;
 
 					if (guildId.HasValue)
+					{
 						c.Value.GuildId = guildId.Value;
+						try
+						{
+							if (this.Guilds.TryGetValue(guildId.Value, out var guild))
+								if (guild.ChannelsInternal.TryGetValue(c.Key, out var channel) && channel.PermissionOverwritesInternal != null && channel.PermissionOverwritesInternal.Any())
+									c.Value.PermissionOverwritesInternal = channel.PermissionOverwritesInternal;
+						}
+						catch (Exception) { }
+					}
 				}
 			}
 
@@ -3322,14 +3338,14 @@ public sealed partial class DiscordClient
 				interaction.Data.Resolved.Members?.TryGetValue(targetId, out targetMember);
 				interaction.Data.Resolved.Users?.TryGetValue(targetId, out targetUser);
 
-				var ctea = new ContextMenuInteractionCreateEventArgs(this.ServiceProvider)
+				var ea = new ContextMenuInteractionCreateEventArgs(this.ServiceProvider)
 				{
 					Interaction = interaction,
 					TargetUser = targetMember ?? targetUser,
 					TargetMessage = targetMessage,
-					Type = interaction.Data.Type,
+					Type = interaction.Data.Type
 				};
-				await this._contextMenuInteractionCreated.InvokeAsync(this, ctea).ConfigureAwait(false);
+				await this._contextMenuInteractionCreated.InvokeAsync(this, ea);
 			}
 			else
 			{
@@ -3338,7 +3354,7 @@ public sealed partial class DiscordClient
 					Interaction = interaction
 				};
 
-				await this._interactionCreated.InvokeAsync(this, ea).ConfigureAwait(false);
+				await this._interactionCreated.InvokeAsync(this, ea);
 			}
 		}
 	}

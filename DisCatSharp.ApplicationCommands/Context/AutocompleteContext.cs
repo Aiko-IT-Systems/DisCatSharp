@@ -76,6 +76,11 @@ public class AutocompleteContext
 	public string GuildLocale { get; internal set; }
 
 	/// <summary>
+	/// Gets the applications permissions.
+	/// </summary>
+	public Permissions AppPermissions { get; internal set; }
+
+	/// <summary>
 	/// Gets the slash command module this interaction was created in.
 	/// </summary>
 	public ApplicationCommandsExtension ApplicationCommandsExtension { get; internal set; }

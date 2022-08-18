@@ -97,6 +97,11 @@ public class BaseContext
 	public string GuildLocale { get; internal set; }
 
 	/// <summary>
+	/// Gets the applications permissions.
+	/// </summary>
+	public Permissions AppPermissions { get; internal set; }
+
+	/// <summary>
 	/// Gets the type of this interaction.
 	/// </summary>
 	public ApplicationCommandType Type { get; internal set; }

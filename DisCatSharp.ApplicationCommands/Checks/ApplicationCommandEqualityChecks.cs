@@ -39,7 +39,8 @@ internal static class ApplicationCommandEqualityChecks
 	/// </summary>
 	/// <param name="ac1">Source command.</param>
 	/// <param name="targetApplicationCommand">Command to check against.</param>
-	internal static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand)
+	/// <param name="client">The discord client.</param>
+	internal static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand, DiscordClient client)
 	{
 		if (targetApplicationCommand is null || ac1 is null)
 			return false;
@@ -50,7 +51,7 @@ internal static class ApplicationCommandEqualityChecks
 			ac1.NameLocalizations, ac1.DescriptionLocalizations
 		);
 
-		ApplicationCommandsExtension.ClientInternal.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC Change Check] Command {ac1.Name}\n\n[{JsonConvert.SerializeObject(sourceApplicationCommand)},{JsonConvert.SerializeObject(targetApplicationCommand)}]\n\n");
+		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC Change Check] Command {ac1.Name}\n\n[{JsonConvert.SerializeObject(sourceApplicationCommand)},{JsonConvert.SerializeObject(targetApplicationCommand)}]\n\n");
 
 		return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand, ac1.Type, ApplicationCommandsExtension.Configuration?.EnableLocalization ?? false);
 	}
@@ -69,17 +70,19 @@ internal static class ApplicationCommandEqualityChecks
 			? type switch
 			{
 				ApplicationCommandType.ChatInput => DeepEqual(source, target, localizationEnabled),
-				_ => (source.Name == target.Name)
-					&& (source.Type == target.Type) && (source.NameLocalizations == target.NameLocalizations)
-					&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions)
+				_ => source.Name == target.Name
+					&& source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
+					&& source.DefaultMemberPermissions == target.DefaultMemberPermissions
+					&& source.DmPermission == target.DmPermission
 				//&& (source.IsNsfw == target.IsNsfw)
 			}
 			: type switch
 			{
 				ApplicationCommandType.ChatInput => DeepEqual(source, target),
-				_ => (source.Name == target.Name)
-					&& (source.Type == target.Type)
-					&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions)
+				_ => source.Name == target.Name
+					&& source.Type == target.Type
+					&& source.DefaultMemberPermissions == target.DefaultMemberPermissions
+					&& source.DmPermission == target.DmPermission
 				//&& (source.IsNsfw == target.IsNsfw)
 			};
 	}
@@ -126,7 +129,8 @@ internal static class ApplicationCommandEqualityChecks
 								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
 								subSubOption.MinimumValue, subSubOption.MaximumValue,
 								localizationEnabled ? subSubOption.NameLocalizations : null,
-								localizationEnabled ? subSubOption.DescriptionLocalizations : null
+								localizationEnabled ? subSubOption.DescriptionLocalizations : null,
+								subSubOption.MinimumLength, subSubOption.MaximumLength
 							));
 						}
 
@@ -167,7 +171,8 @@ internal static class ApplicationCommandEqualityChecks
 								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
 								subSubOption.MinimumValue, subSubOption.MaximumValue,
 								localizationEnabled ? subSubOption.NameLocalizations : null,
-								localizationEnabled ? subSubOption.DescriptionLocalizations : null
+								localizationEnabled ? subSubOption.DescriptionLocalizations : null,
+								subSubOption.MinimumLength, subSubOption.MaximumLength
 							));
 						}
 
@@ -210,7 +215,8 @@ internal static class ApplicationCommandEqualityChecks
 							subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
 							subOption.MinimumValue, subOption.MaximumValue,
 							localizationEnabled ? subOption.NameLocalizations : null,
-							localizationEnabled ? subOption.DescriptionLocalizations : null
+							localizationEnabled ? subOption.DescriptionLocalizations : null,
+							subOption.MinimumLength, subOption.MaximumLength
 						));
 					}
 				}
@@ -238,7 +244,8 @@ internal static class ApplicationCommandEqualityChecks
 							subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
 							subOption.MinimumValue, subOption.MaximumValue,
 							localizationEnabled ? subOption.NameLocalizations : null,
-							localizationEnabled ? subOption.DescriptionLocalizations : null
+							localizationEnabled ? subOption.DescriptionLocalizations : null,
+							subOption.MinimumLength, subOption.MaximumLength
 						));
 					}
 				}
@@ -263,7 +270,8 @@ internal static class ApplicationCommandEqualityChecks
 					option.Name, option.Description, option.Type, option.Required ?? false,
 					option.Choices, null, option.ChannelTypes, option.AutoComplete ?? false, option.MinimumValue, option.MaximumValue,
 					localizationEnabled ? option.NameLocalizations : null,
-					localizationEnabled ? option.DescriptionLocalizations : null
+					localizationEnabled ? option.DescriptionLocalizations : null,
+					option.MinimumLength, option.MaximumLength
 				));
 
 			foreach (var option in target.Options)
@@ -271,7 +279,8 @@ internal static class ApplicationCommandEqualityChecks
 					option.Name, option.Description, option.Type, option.Required ?? false,
 					option.Choices, null, option.ChannelTypes, option.AutoComplete ?? false, option.MinimumValue, option.MaximumValue,
 					localizationEnabled ? option.NameLocalizations : null,
-					localizationEnabled ? option.DescriptionLocalizations : null
+					localizationEnabled ? option.DescriptionLocalizations : null,
+					option.MinimumLength, option.MaximumLength
 				));
 
 			return rootCheck && JsonConvert.SerializeObject(minimalSourceOptions) == JsonConvert.SerializeObject(minimalTargetOptions);

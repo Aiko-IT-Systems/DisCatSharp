@@ -41,7 +41,7 @@ internal sealed class ClientProperties
 	/// <summary>
 	/// Gets the client's operating system.
 	/// </summary>
-	[JsonProperty("$os")]
+	[JsonProperty("os")]
 	public string OperatingSystem
 	{
 		get
@@ -73,7 +73,7 @@ internal sealed class ClientProperties
 	/// <summary>
 	/// Gets the client's browser.
 	/// </summary>
-	[JsonProperty("$browser")]
+	[JsonProperty("browser")]
 	public string Browser
 	{
 		get
@@ -93,7 +93,7 @@ internal sealed class ClientProperties
 	/// <summary>
 	/// Gets the client's device.
 	/// </summary>
-	[JsonProperty("$device")]
+	[JsonProperty("device")]
 	public string Device
 		=> this.Browser;
 

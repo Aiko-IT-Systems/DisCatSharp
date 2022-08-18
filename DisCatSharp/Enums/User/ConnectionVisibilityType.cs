@@ -20,26 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
-
-namespace DisCatSharp.ApplicationCommands.Attributes;
-
-/// <summary>
-/// Defines that this application command is only usable within a guild.
-/// </summary>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireNsfwAttribute : SlashCheckBaseAttribute
+namespace DisCatSharp.Enums
 {
 	/// <summary>
-	/// Defines that this command is only usable within a guild.
+	/// The visibility type of user account connections.
 	/// </summary>
-	public ApplicationCommandRequireNsfwAttribute()
-	{ }
+	public enum ConnectionVisibilityType : long
+	{
+		/// <summary>
+		/// This connection type is only visible to the owning user.
+		/// </summary>
+		None = 0,
 
-	/// <summary>
-	/// Runs checks.
-	/// </summary>
-	public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-		=> Task.FromResult(ctx.Guild == null || ctx.Channel.IsNsfw);
+		/// <summary>
+		/// This connection is visible to everyone.
+		/// </summary>
+		Everyone = 1
+	}
 }

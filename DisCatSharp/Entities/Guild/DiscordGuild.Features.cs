@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Linq;
 
 using DisCatSharp.Enums;
@@ -44,6 +45,7 @@ public class GuildFeatures
 	/// <summary>
 	/// Guild has access to use commerce features (i.e. create store channels)
 	/// </summary>
+	[Obsolete("Store applications are EOL.")]
 	public bool CanCreateStoreChannels { get; }
 
 	/// <summary>
@@ -133,12 +135,14 @@ public class GuildFeatures
 	/// Guild has access to the three day archive time for threads.
 	/// Needs Premium Tier 1 (<see cref="PremiumTier.TierOne"/>).
 	/// </summary>
+	[Obsolete("Auto archive duration isn't locked to boosts anymore.")]
 	public bool CanSetThreadArchiveDurationThreeDays { get; }
 
 	/// <summary>
 	/// Guild has access to the seven day archive time for threads.
 	/// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
 	/// </summary>
+	[Obsolete("Auto archive duration isn't locked to boosts anymore.")]
 	public bool CanSetThreadArchiveDurationSevenDays { get; }
 
 	/// <summary>
@@ -241,6 +245,16 @@ public class GuildFeatures
 	public bool CanSetupAutoModeration { get; }
 
 	/// <summary>
+	/// Guild has access to home.
+	/// </summary>
+	public bool GuildHomeTest { get; }
+
+	/// <summary>
+	/// Guild has disabled invites.
+	/// </summary>
+	public bool InvitesDisabled { get; }
+
+	/// <summary>
 	/// String of guild features.
 	/// </summary>
 	public string FeatureString { get; }
@@ -290,6 +304,8 @@ public class GuildFeatures
 		this.IsStaffOnly = guild.RawFeatures.Contains("INTERNAL_EMPLOYEE_ONLY");
 		this.RoleSubscriptionsIsAvailableForPurchase = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE");
 		this.CanSetupAutoModeration = guild.RawFeatures.Contains("AUTO_MODERATION");
+		this.GuildHomeTest = guild.RawFeatures.Contains("GUILD_HOME_TEST");
+		this.InvitesDisabled = guild.RawFeatures.Contains("INVITES_DISABLED");
 
 		var features = guild.RawFeatures.Any() ? "" : "None";
 		foreach (var feature in guild.RawFeatures)

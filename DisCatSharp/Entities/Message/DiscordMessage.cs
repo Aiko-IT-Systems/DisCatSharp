@@ -616,15 +616,16 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <param name="name">The name of the thread.</param>
 	/// <param name="autoArchiveDuration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/></param>
 	/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
+	/// <param name="tags">The tags to add on creation.</param>
 	/// <param name="reason">The reason.</param>
 	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePrivateThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> permission.</exception>
 	/// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="System.NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified.</exception>
-	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, int? rateLimitPerUser = null, string reason = null) =>
+	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, int? rateLimitPerUser = null, IEnumerable<ForumPostTag>? tags = null, string reason = null) =>
 		Utilities.CheckThreadAutoArchiveDurationFeature(this.Channel.Guild, autoArchiveDuration)
-			? await this.Discord.ApiClient.CreateThreadAsync(this.ChannelId, this.Id, name, autoArchiveDuration, this.Channel.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, reason)
+			? await this.Discord.ApiClient.CreateThreadAsync(this.ChannelId, this.Id, name, autoArchiveDuration, this.Channel.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, tags, reason)
 			: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 
 	/// <summary>
