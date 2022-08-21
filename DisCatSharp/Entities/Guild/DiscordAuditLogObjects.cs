@@ -240,6 +240,11 @@ public sealed class DiscordAuditLogChannelEntry : DiscordAuditLogEntry
 	public PropertyChange<ThreadAutoArchiveDuration?> DefaultAutoArchiveDurationChange { get; internal set; }
 
 	/// <summary>
+	/// <see cref="DiscordChannel.InternalAvailableTags"/>
+	/// </summary>
+	public PropertyChange<List<ForumPostTag>> AvailableTagsChange { get; internal set; }
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogChannelEntry"/> class.
 	/// </summary>
 	internal DiscordAuditLogChannelEntry() { }

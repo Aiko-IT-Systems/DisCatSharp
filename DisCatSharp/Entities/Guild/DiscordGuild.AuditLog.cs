@@ -402,6 +402,21 @@ public partial class DiscordGuild
 									After = (ThreadAutoArchiveDuration?)(long?)xc.NewValue
 								};
 								break;
+							case "available_tags":
+								var old_tags = xc.OldValues?.OfType<JObject>()
+									?.Select(xjo => xjo.ToObject<ForumPostTag>())
+									?.Select(xo => { xo.Discord = this.Discord; return xo; });
+
+								var new_tags = xc.NewValues?.OfType<JObject>()
+									?.Select(xjo => xjo.ToObject<ForumPostTag>())
+									?.Select(xo => { xo.Discord = this.Discord; return xo; });
+
+								entrychn.AvailableTagsChange = new PropertyChange<List<ForumPostTag>>
+								{
+									Before = old_tags != null ? new List<ForumPostTag>(new List<ForumPostTag>(old_tags)) : null,
+									After = new_tags != null ? new List<ForumPostTag>(new List<ForumPostTag>(new_tags)) : null
+								};
+								break;
 
 							default:
 								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in channel update: {0} - this should be reported to library developers", xc.Key);
