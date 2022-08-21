@@ -210,7 +210,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	/// List of available tags for forum posts.
 	/// </summary>
-	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonIgnore]
 	public IReadOnlyList<ForumPostTag> AvailableTags => this.InternalAvailableTags;
 
 
