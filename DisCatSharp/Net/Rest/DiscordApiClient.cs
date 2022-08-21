@@ -4172,7 +4172,7 @@ public sealed class DiscordApiClient
 	/// <param name="appliedTags">The tags to add on creation.</param>
 	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordThreadChannel> CreateThreadAsync(ulong channelId, ulong? messageId, string name,
-		ThreadAutoArchiveDuration autoArchiveDuration, ChannelType type, int? rateLimitPerUser, IEnumerable<ForumPostTag>? appliedTags, string reason)
+		ThreadAutoArchiveDuration autoArchiveDuration, ChannelType type, int? rateLimitPerUser, IEnumerable<ForumPostTag>? appliedTags = null , string reason = null)
 	{
 		var pld = new RestThreadChannelCreatePayload
 		{
@@ -4182,9 +4182,9 @@ public sealed class DiscordApiClient
 			Type = type
 		};
 
-		if (appliedTags is not null && appliedTags.Any())
+		if (appliedTags != null && appliedTags.Any())
 		{
-			var tags = new List<ulong>();
+			List<ulong> tags = new();
 
 			foreach (var b in appliedTags)
 				tags.Add(b.Id);
@@ -4421,6 +4421,7 @@ public sealed class DiscordApiClient
 	/// Modifies a thread.
 	/// </summary>
 	/// <param name="threadId">The thread to modify.</param>
+	/// <param name="parentType">The parent channels type as failback to ignore forum fields.</param>
 	/// <param name="name">The new name.</param>
 	/// <param name="locked">The new locked state.</param>
 	/// <param name="archived">The new archived state.</param>
@@ -4429,7 +4430,7 @@ public sealed class DiscordApiClient
 	/// <param name="invitable">The new user invitable state.</param>
 	/// <param name="appliedTags">The tags to add on creation.</param>
 	/// <param name="reason">The reason for the modification.</param>
-	internal Task ModifyThreadAsync(ulong threadId, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<int?> perUserRateLimit, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<bool?> invitable, Optional<IEnumerable<ForumPostTag>?> appliedTags, string reason)
+	internal Task ModifyThreadAsync(ulong threadId, ChannelType parentType, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<int?> perUserRateLimit, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<bool?> invitable, Optional<IEnumerable<ForumPostTag>> appliedTags, string reason)
 	{
 		var pld = new RestThreadChannelModifyPayload
 		{
@@ -4440,15 +4441,18 @@ public sealed class DiscordApiClient
 			PerUserRateLimit = perUserRateLimit,
 			Invitable = invitable
 		};
-
-		if (appliedTags.HasValue)
+		// TODO: Pinned threads in forum
+		if (parentType == ChannelType.Forum)
 		{
-			var tags = new List<ulong>();
+			if (appliedTags.HasValue && appliedTags.Value != null)
+			{
+				List<ulong> tags = new(appliedTags.Value.Count());
 
-			foreach (var b in appliedTags.Value)
-				tags.Add(b.Id);
+				foreach (var b in appliedTags.Value)
+					tags.Add(b.Id);
 
-			pld.AppliedTags = tags;
+				pld.AppliedTags = tags;
+			}
 		}
 
 		var headers = Utilities.GetBaseHeaders();
