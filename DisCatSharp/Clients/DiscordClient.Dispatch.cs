@@ -2620,15 +2620,22 @@ public sealed partial class DiscordClient
 				TotalMessagesSent = threadNew.TotalMessagesSent
 			};
 
-			if (thread.ParentId.HasValue && this.InternalGetCachedChannel(thread.ParentId.Value).Type == ChannelType.Forum)
+			if (this.Guilds != null)
+			{
+				if (thread.ParentId.HasValue && this.InternalGetCachedChannel(thread.ParentId.Value).Type == ChannelType.Forum)
+				{
+					threadOld.AppliedTagIdsInternal = threadNew.AppliedTagIdsInternal;
+					threadNew.AppliedTagIdsInternal = thread.AppliedTagIdsInternal;
+				}
+				else
+				{
+					threadOld.AppliedTagIdsInternal = null;
+					threadNew.AppliedTagIdsInternal = null;
+				}
+			} else
 			{
 				threadOld.AppliedTagIdsInternal = threadNew.AppliedTagIdsInternal;
 				threadNew.AppliedTagIdsInternal = thread.AppliedTagIdsInternal;
-			}
-			else
-			{
-				threadOld.AppliedTagIdsInternal = null;
-				threadNew.AppliedTagIdsInternal = null;
 			}
 
 			threadNew.ThreadMetadata = thread.ThreadMetadata;

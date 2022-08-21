@@ -882,6 +882,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>The requested thread.</returns>
 	internal DiscordThreadChannel InternalGetCachedThread(ulong threadId)
 	{
+		if (this.Guilds == null)
+			return null;
+
 		foreach (var guild in this.Guilds.Values)
 			if (guild.Threads.TryGetValue(threadId, out var foundThread))
 				return foundThread;
@@ -897,6 +900,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>The requested scheduled event.</returns>
 	internal DiscordScheduledEvent InternalGetCachedScheduledEvent(ulong scheduledEventId)
 	{
+		if (this.Guilds == null)
+			return null;
+
 		foreach (var guild in this.Guilds.Values)
 			if (guild.ScheduledEvents.TryGetValue(scheduledEventId, out var foundScheduledEvent))
 				return foundScheduledEvent;
@@ -911,6 +917,9 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <returns>The requested channel.</returns>
 	internal DiscordChannel InternalGetCachedChannel(ulong channelId)
 	{
+		if (this.Guilds == null)
+			return null;
+
 		foreach (var guild in this.Guilds.Values)
 			if (guild.Channels.TryGetValue(channelId, out var foundChannel))
 				return foundChannel;
