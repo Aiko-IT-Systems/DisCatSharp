@@ -150,7 +150,7 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	/// </summary>
 	[JsonIgnore]
 	public IEnumerable<ForumPostTag> AppliedTags
-	  => this.AppliedTagIds.Select(id => this.Parent.GetForumPostTag(id)).Where(x => x != null);
+	  => this.AppliedTagIds?.Select(id => this.Parent.GetForumPostTag(id)).Where(x => x != null);
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
