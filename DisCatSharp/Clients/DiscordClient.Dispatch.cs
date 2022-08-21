@@ -837,14 +837,43 @@ public sealed partial class DiscordClient
 				ParentId = channelNew.ParentId,
 				IsNsfw = channelNew.IsNsfw,
 				PerUserRateLimit = channelNew.PerUserRateLimit,
-				PostCreateUserRateLimit = channelNew.PostCreateUserRateLimit,
 				RtcRegionId = channelNew.RtcRegionId,
 				QualityMode = channelNew.QualityMode,
 				DefaultAutoArchiveDuration = channelNew.DefaultAutoArchiveDuration,
-				InternalAvailableTags = channelNew.InternalAvailableTags,
-				Template = channelNew.Template,
-				DefaultReactionEmoji = channelNew.DefaultReactionEmoji
 			};
+			if (channel.Type == ChannelType.Forum)
+			{
+				channelOld.PostCreateUserRateLimit = channelNew.PostCreateUserRateLimit;
+				channelOld.InternalAvailableTags = channelNew.InternalAvailableTags;
+				channelOld.Template = channelNew.Template;
+				channelOld.DefaultReactionEmoji = channelNew.DefaultReactionEmoji;
+
+				channelNew.PostCreateUserRateLimit = channel.PostCreateUserRateLimit;
+				channelNew.Template = channel.Template;
+				channelNew.DefaultReactionEmoji = channel.DefaultReactionEmoji;
+
+				if (channelNew.InternalAvailableTags != null && channelNew.InternalAvailableTags.Any())
+					channelNew.InternalAvailableTags.Clear();
+
+				foreach (var fpt in channel.InternalAvailableTags)
+				{
+					fpt.Discord = this;
+					fpt.ChannelId = channel.Id;
+				}
+
+				channelNew.InternalAvailableTags.AddRange(channel.InternalAvailableTags);
+			} else
+			{
+				channelOld.PostCreateUserRateLimit = null;
+				channelOld.InternalAvailableTags = null;
+				channelOld.Template = null;
+				channelOld.DefaultReactionEmoji = null;
+
+				channelNew.PostCreateUserRateLimit = null;
+				channelNew.Template = null;
+				channelNew.DefaultReactionEmoji = null;
+				channelNew.InternalAvailableTags = null;
+			}
 
 			channelNew.Bitrate = channel.Bitrate;
 			channelNew.Name = channel.Name;
@@ -854,13 +883,10 @@ public sealed partial class DiscordClient
 			channelNew.ParentId = channel.ParentId;
 			channelNew.IsNsfw = channel.IsNsfw;
 			channelNew.PerUserRateLimit = channel.PerUserRateLimit;
-			channelNew.PostCreateUserRateLimit = channel.PostCreateUserRateLimit;
 			channelNew.Type = channel.Type;
 			channelNew.RtcRegionId = channel.RtcRegionId;
 			channelNew.QualityMode = channel.QualityMode;
 			channelNew.DefaultAutoArchiveDuration = channel.DefaultAutoArchiveDuration;
-			channelNew.Template = channel.Template;
-			channelNew.DefaultReactionEmoji = channel.DefaultReactionEmoji;
 
 			channelNew.PermissionOverwritesInternal.Clear();
 
@@ -868,20 +894,6 @@ public sealed partial class DiscordClient
 			{
 				po.Discord = this;
 				po.ChannelId = channel.Id;
-			}
-
-			if (channelNew.Type == ChannelType.Forum)
-			{
-				if(channelNew.InternalAvailableTags != null && channelNew.InternalAvailableTags.Any())
-				channelNew.InternalAvailableTags.Clear();
-
-				foreach (var fpt in channel.InternalAvailableTags)
-				{
-					fpt.Discord = this;
-					fpt.ChannelId = channel.Id;
-				}
-
-				channelNew.InternalAvailableTags.AddRange(channel.InternalAvailableTags);
 			}
 
 			channelNew.PermissionOverwritesInternal.AddRange(channel.PermissionOverwritesInternal);
@@ -2605,9 +2617,19 @@ public sealed partial class DiscordClient
 				LastPinTimestampRaw = threadNew.LastPinTimestampRaw,
 				PerUserRateLimit = threadNew.PerUserRateLimit,
 				CurrentMember = threadNew.CurrentMember,
-				TotalMessagesSent = threadNew.TotalMessagesSent,
-				AppliedTagIdsInternal = threadNew.AppliedTagIdsInternal
+				TotalMessagesSent = threadNew.TotalMessagesSent
 			};
+
+			if (thread.ParentId.HasValue && this.InternalGetCachedChannel(thread.ParentId.Value).Type == ChannelType.Forum)
+			{
+				threadOld.AppliedTagIdsInternal = threadNew.AppliedTagIdsInternal;
+				threadNew.AppliedTagIdsInternal = thread.AppliedTagIdsInternal;
+			}
+			else
+			{
+				threadOld.AppliedTagIdsInternal = null;
+				threadNew.AppliedTagIdsInternal = null;
+			}
 
 			threadNew.ThreadMetadata = thread.ThreadMetadata;
 			threadNew.ParentId = thread.ParentId;
@@ -2619,7 +2641,6 @@ public sealed partial class DiscordClient
 			threadNew.GuildId = thread.GuildId;
 			threadNew.Discord = this;
 			threadNew.TotalMessagesSent = thread.TotalMessagesSent;
-			threadNew.AppliedTagIdsInternal = thread.AppliedTagIdsInternal;
 
 			updateEvent = new ThreadUpdateEventArgs(this.ServiceProvider)
 			{
