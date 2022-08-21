@@ -538,4 +538,10 @@ internal sealed class RestThreadChannelModifyPayload
 	/// </summary>
 	[JsonProperty("applied_tags", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<IEnumerable<ulong>> AppliedTags { internal get; set; }
+
+	/// <summary>
+	/// Gets or sets the channel flags.
+	/// </summary>
+	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<ChannelFlags> Flags { internal get; set; }
 }
