@@ -1842,7 +1842,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
 		var channel = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
 		channel.Discord = this.Discord;
-		var tag = channel.AvailableTags.First(x => x.Name == name);
+		var tag = channel.InternalAvailableTags.First(x => x.Name == name);
 		tag.Discord = this.Discord;
 		return tag;
 	}
@@ -1882,7 +1882,7 @@ public sealed class DiscordApiClient
 		var res = await  this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld));
 		var channel = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
 		channel.Discord = this.Discord;
-		var tag = channel.AvailableTags.First(x => x.Name == name);
+		var tag = channel.InternalAvailableTags.First(x => x.Name == name);
 		tag.Discord = this.Discord;
 		return tag;
 	}
@@ -1920,7 +1920,7 @@ public sealed class DiscordApiClient
 			xo.Discord = this.Discord;
 			xo.ChannelId = ret.Id;
 		}
-		foreach(var xo in ret.AvailableTags)
+		foreach(var xo in ret.InternalAvailableTags)
 		{
 			xo.Discord = this.Discord;
 			xo.ChannelId = ret.Id;
