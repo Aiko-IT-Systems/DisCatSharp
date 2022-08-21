@@ -787,7 +787,7 @@ public sealed partial class DiscordClient
 			xo.Discord = this;
 			xo.ChannelId = channel.Id;
 		}
-		foreach (var xo in channel.AvailableTags)
+		foreach (var xo in channel.InternalAvailableTags)
 		{
 			xo.Discord = this;
 			xo.ChannelId = channel.Id;
@@ -841,7 +841,7 @@ public sealed partial class DiscordClient
 				RtcRegionId = channelNew.RtcRegionId,
 				QualityMode = channelNew.QualityMode,
 				DefaultAutoArchiveDuration = channelNew.DefaultAutoArchiveDuration,
-				AvailableTags = channelNew.AvailableTags,
+				InternalAvailableTags = channelNew.InternalAvailableTags,
 				Template = channelNew.Template,
 				DefaultReactionEmoji = channelNew.DefaultReactionEmoji
 			};
@@ -872,16 +872,16 @@ public sealed partial class DiscordClient
 
 			if (channelNew.Type == ChannelType.Forum)
 			{
-				if(channelNew.AvailableTags != null && channelNew.AvailableTags.Any())
-				channelNew.AvailableTags.Clear();
+				if(channelNew.InternalAvailableTags != null && channelNew.InternalAvailableTags.Any())
+				channelNew.InternalAvailableTags.Clear();
 
-				foreach (var fpt in channel.AvailableTags)
+				foreach (var fpt in channel.InternalAvailableTags)
 				{
 					fpt.Discord = this;
 					fpt.ChannelId = channel.Id;
 				}
 
-				channelNew.AvailableTags.AddRange(channel.AvailableTags);
+				channelNew.InternalAvailableTags.AddRange(channel.InternalAvailableTags);
 			}
 
 			channelNew.PermissionOverwritesInternal.AddRange(channel.PermissionOverwritesInternal);

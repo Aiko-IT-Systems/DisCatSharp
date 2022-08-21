@@ -206,11 +206,19 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	[JsonProperty("video_quality_mode", NullValueHandling = NullValueHandling.Ignore)]
 	public VideoQualityMode? QualityMode { get; internal set; }
 
+
+	/// <summary>
+	/// List of available tags for forum posts.
+	/// </summary>
+	[JsonIgnore]
+	public IReadOnlyList<ForumPostTag> AvailableTags => this.InternalAvailableTags;
+
+
 	/// <summary>
 	/// List of available tags for forum posts.
 	/// </summary>
 	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
-	public List<ForumPostTag> AvailableTags { get; internal set; }
+	internal List<ForumPostTag> InternalAvailableTags { get; set; }
 
 	/// <summary>
 	/// List of available tags for forum posts.
@@ -1062,7 +1070,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="id">The id of the tag to get.</param>
 	public ForumPostTag GetForumPostTag(ulong id)
 	{
-		var tag = this.AvailableTags.First(x => x.Id == id);
+		var tag = this.InternalAvailableTags.First(x => x.Id == id);
 		tag.Discord = this.Discord;
 		tag.ChannelId = this.Id;
 		return tag;
