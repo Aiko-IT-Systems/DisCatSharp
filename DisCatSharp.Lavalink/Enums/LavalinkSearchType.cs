@@ -40,5 +40,15 @@ public enum LavalinkSearchType
 	/// <summary>
 	/// Provide Lavalink with a plain URL.
 	/// </summary>
-	Plain
+	Plain,
+
+	/// <summary>
+	/// Search on Spotify.
+	/// </summary>
+	Spotify,
+
+	/// <summary>
+	/// Search on Apple Music
+	/// </summary>
+	AppleMusic
 }

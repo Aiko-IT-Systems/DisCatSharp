@@ -118,6 +118,8 @@ public sealed class LavalinkRestClient
 			LavalinkSearchType.Youtube => "ytsearch:",
 			LavalinkSearchType.SoundCloud => "scsearch:",
 			LavalinkSearchType.Plain => "",
+			LavalinkSearchType.Spotify => "spsearch:",
+			LavalinkSearchType.AppleMusic => "amsearch:",
 			_ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
 		};
 		var str = WebUtility.UrlEncode(prefix + searchQuery);
