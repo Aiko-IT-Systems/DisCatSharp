@@ -78,7 +78,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	[JsonProperty("template", NullValueHandling = NullValueHandling.Ignore)]
 	public string Template { get; internal set; }
-	
+
 	/// <summary>
 	/// Gets the position of this channel.
 	/// </summary>
@@ -467,14 +467,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	{
 		if (this.Type == ChannelType.Forum)
 			throw new NotSupportedException("Cannot execute this request on a forum channel.");
-		
+
 		var mdl = new ChannelEditModel();
 		action(mdl);
 
 		if (mdl.DefaultAutoArchiveDuration.HasValue)
 			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value))
 				throw new NotSupportedException($"Cannot modify DefaultAutoArchiveDuration. Guild needs boost tier {(mdl.DefaultAutoArchiveDuration.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
-		
+
 		return this.Discord.ApiClient.ModifyChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Nsfw,
 			mdl.Parent.Map(p => p?.Id), mdl.Bitrate, mdl.UserLimit, mdl.PerUserRateLimit, mdl.RtcRegion.Map(r => r?.Id),
 			mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, mdl.AuditLogReason);
@@ -493,7 +493,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	{
 		if (this.Type != ChannelType.Forum)
 			throw new NotSupportedException("Cannot execute this request on a non-forum channel.");
-		
+
 		var mdl = new ForumChannelEditModel();
 		action(mdl);
 
@@ -1010,7 +1010,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="System.NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>. Or if <see cref="GuildFeatures.CanCreatePrivateThreads"/> is not enabled for guild. This happens, if the guild does not have <see cref="PremiumTier.TierTwo"/></exception>
-	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, int? rateLimitPerUser = null, IEnumerable<ForumPostTag>? tags = null, string reason = null) =>
+	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, int? rateLimitPerUser = null, string reason = null) =>
 		type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread
 			? throw new NotSupportedException("Wrong thread type given.")
 			: !this.IsThreadHolder()
@@ -1018,12 +1018,33 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 				: type == ChannelType.PrivateThread
 					? Utilities.CheckThreadPrivateFeature(this.Guild)
 						? Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
-							? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, type, rateLimitPerUser, tags, reason)
+							? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, type, rateLimitPerUser, isForum: false, reason)
 							: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.")
 						: throw new NotSupportedException($"Cannot create a private thread. Guild needs to be boost tier two.")
 					: Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, autoArchiveDuration)
-						? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, tags, reason)
+						? await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, autoArchiveDuration, this.Type == ChannelType.News ? ChannelType.NewsThread : ChannelType.PublicThread, rateLimitPerUser, isForum: false, reason)
 						: throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(autoArchiveDuration == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+
+	/// <summary>
+	/// Creates a forum post.
+	/// </summary>
+	/// <param name="name">The name of the post.</param>
+	/// <param name="builder">The message of the post.</param>
+	/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
+	/// <param name="tags">The tags to add on creation.</param>
+	/// <param name="reason">Audit log reason.</param>
+	/// <returns>The created thread.</returns>
+	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordThreadChannel> CreatePostAsync(string name, DiscordMessageBuilder builder, int? rateLimitPerUser = null, IEnumerable<ForumPostTag>? tags = null, string reason = null)
+	{
+		if (this.Type != ChannelType.Forum)
+			throw new NotSupportedException("Parent channel must be forum.");
+		else
+			return await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, null, null, rateLimitPerUser, tags, builder, true, reason);
+	}
 
 	/// <summary>
 	/// Gets joined archived private threads. Can contain more threads.

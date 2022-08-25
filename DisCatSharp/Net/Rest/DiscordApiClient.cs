@@ -4172,25 +4172,48 @@ public sealed class DiscordApiClient
 	/// <param name="appliedTags">The tags to add on creation.</param>
 	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordThreadChannel> CreateThreadAsync(ulong channelId, ulong? messageId, string name,
-		ThreadAutoArchiveDuration autoArchiveDuration, ChannelType type, int? rateLimitPerUser, IEnumerable<ForumPostTag>? appliedTags = null , string reason = null)
+		ThreadAutoArchiveDuration autoArchiveDuration, ChannelType type, int? rateLimitPerUser, IEnumerable<ForumPostTag>? appliedTags = null, DiscordMessageBuilder builder = null, bool isForum = false, string reason = null)
 	{
 		var pld = new RestThreadChannelCreatePayload
 		{
 			Name = name,
 			AutoArchiveDuration = autoArchiveDuration,
-			PerUserRateLimit = rateLimitPerUser,
-			Type = type
+			PerUserRateLimit = rateLimitPerUser
 		};
 
-		if (appliedTags != null && appliedTags.Any())
+		if (isForum)
 		{
-			List<ulong> tags = new();
 
-			foreach (var b in appliedTags)
-				tags.Add(b.Id);
+			pld.Message = new RestChannelMessageCreatePayload
+			{
+				Content = builder.Content,
+				Attachments = builder.Attachments,
+				Components = builder.Components,
+				HasContent = true,
+				Embeds = builder.Embeds,
+				//Flags = builder.Flags,
+				Mentions = builder.Mentios,
+				StickersIds = builder.Sticker != null ? new List<ulong>(1)
+				{
+					builder.Sticker.Id
+				} : null
+			};
+			if (appliedTags != null && appliedTags.Any())
+			{
+				List<ulong> tags = new();
 
-			pld.AppliedTags = tags;
+				foreach (var b in appliedTags)
+					tags.Add(b.Id);
+
+				pld.AppliedTags = tags;
+				pld.Type = null;
+			}
+		} else
+		{
+			pld.Type = type;
 		}
+
+		
 
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))

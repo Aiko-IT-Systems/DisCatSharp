@@ -48,7 +48,7 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	public ulong OwnerId { get; internal set; }
 
 	/// <summary>
-	/// Gets the name of this thread.
+	/// Gets the name of the thread.
 	/// </summary>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 	public new string Name { get; internal set; }
