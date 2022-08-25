@@ -473,8 +473,8 @@ internal sealed class RestThreadChannelCreatePayload
 	/// <summary>
 	/// Gets or sets the auto archive duration.
 	/// </summary>
-	[JsonProperty("auto_archive_duration")]
-	public ThreadAutoArchiveDuration AutoArchiveDuration { get; set; }
+	[JsonProperty("auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
+	public ThreadAutoArchiveDuration? AutoArchiveDuration { get; set; }
 
 	/// <summary>
 	/// Gets or sets the rate limit per user.
@@ -486,7 +486,7 @@ internal sealed class RestThreadChannelCreatePayload
 	/// Gets or sets the thread type.
 	/// </summary>
 	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-	public ChannelType Type { get; set; }
+	public ChannelType? Type { get; set; }
 
 	/// <summary>
 	/// Gets or sets the applied tags.

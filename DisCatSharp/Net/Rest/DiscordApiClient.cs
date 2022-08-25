@@ -4172,7 +4172,7 @@ public sealed class DiscordApiClient
 	/// <param name="appliedTags">The tags to add on creation.</param>
 	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordThreadChannel> CreateThreadAsync(ulong channelId, ulong? messageId, string name,
-		ThreadAutoArchiveDuration autoArchiveDuration, ChannelType type, int? rateLimitPerUser, IEnumerable<ForumPostTag>? appliedTags = null, DiscordMessageBuilder builder = null, bool isForum = false, string reason = null)
+		ThreadAutoArchiveDuration? autoArchiveDuration, ChannelType? type, int? rateLimitPerUser, IEnumerable<ForumPostTag>? appliedTags = null, DiscordMessageBuilder builder = null, bool isForum = false, string reason = null)
 	{
 		var pld = new RestThreadChannelCreatePayload
 		{
@@ -4192,7 +4192,7 @@ public sealed class DiscordApiClient
 				HasContent = true,
 				Embeds = builder.Embeds,
 				//Flags = builder.Flags,
-				Mentions = builder.Mentios,
+				//Mentions = builder.Mentions,
 				StickersIds = builder.Sticker != null ? new List<ulong>(1)
 				{
 					builder.Sticker.Id
