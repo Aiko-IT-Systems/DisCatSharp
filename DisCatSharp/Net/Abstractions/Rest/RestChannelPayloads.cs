@@ -467,6 +467,9 @@ internal sealed class RestThreadChannelCreatePayload
 	[JsonProperty("name")]
 	public string Name { get; set; }
 
+	[JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
+	public RestChannelMessageCreatePayload Message { get; set; }
+
 	/// <summary>
 	/// Gets or sets the auto archive duration.
 	/// </summary>
@@ -482,7 +485,7 @@ internal sealed class RestThreadChannelCreatePayload
 	/// <summary>
 	/// Gets or sets the thread type.
 	/// </summary>
-	[JsonProperty("type")]
+	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
 	public ChannelType Type { get; set; }
 
 	/// <summary>
