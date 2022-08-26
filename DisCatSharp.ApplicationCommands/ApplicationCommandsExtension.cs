@@ -615,7 +615,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									}
 									catch (NotFoundException)
 									{
-										this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Could not delete global command {cmd.Id}. Please clean up manually");
+										this.Client.Logger.Log(ApplicationCommandsLogLevel, "Could not delete global command {cmdId}. Please clean up manually", cmd.Id);
 									}
 								}
 							}
@@ -646,7 +646,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 									}
 									catch (NotFoundException)
 									{
-										this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Could not delete guild command {cmd.Id} in guild {guildId.Value}. Please clean up manually");
+										this.Client.Logger.Log(ApplicationCommandsLogLevel, "Could not delete guild command {cmdId} in guild {guildId}. Please clean up manually", cmd.Id, guildId.Value);
 									}
 								}
 							}
@@ -654,7 +654,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					}
 					catch (UnauthorizedException ex)
 					{
-						this.Client.Logger.LogError($"Could not register application commands for guild {guildId}.\nError: {ex.JsonMessage}");
+						this.Client.Logger.LogError("Could not register application commands for guild {guildId}.\nError: {exc}", guildId, ex.JsonMessage);
 						return;
 					}
 					//Creates a guild command if a guild id is specified, otherwise global
