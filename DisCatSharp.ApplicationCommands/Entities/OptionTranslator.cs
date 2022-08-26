@@ -60,6 +60,6 @@ internal class OptionTranslator
 	/// <summary>
 	/// Gets the choice translators, if applicable.
 	/// </summary>
-	[JsonProperty("choices")]
+	[JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
 	public List<ChoiceTranslator> Choices { get; set; }
 }

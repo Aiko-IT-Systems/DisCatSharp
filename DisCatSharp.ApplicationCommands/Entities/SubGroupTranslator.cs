@@ -60,6 +60,6 @@ internal class SubGroupTranslator
 	/// <summary>
 	/// Gets the command translators.
 	/// </summary>
-	[JsonProperty("commands")]
+	[JsonProperty("commands", NullValueHandling = NullValueHandling.Ignore)]
 	public List<CommandTranslator> Commands { get; set; }
 }

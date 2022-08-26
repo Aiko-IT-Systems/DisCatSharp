@@ -60,12 +60,12 @@ internal class GroupTranslator
 	/// <summary>
 	/// Gets the sub group translators, if applicable.
 	/// </summary>
-	[JsonProperty("groups")]
+	[JsonProperty("groups", NullValueHandling = NullValueHandling.Ignore)]
 	public List<SubGroupTranslator> SubGroups { get; set; }
 
 	/// <summary>
 	/// Gets the command translators, if applicable.
 	/// </summary>
-	[JsonProperty("commands")]
+	[JsonProperty("commands", NullValueHandling = NullValueHandling.Ignore)]
 	public List<CommandTranslator> Commands { get; set; }
 }

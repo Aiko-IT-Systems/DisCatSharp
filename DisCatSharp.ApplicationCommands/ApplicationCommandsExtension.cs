@@ -495,8 +495,51 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						updateList.AddRange(slashGroupsTuple.applicationCommands);
 						if (Configuration.GenerateTranslationFilesOnly)
-							foreach (var cmd in updateList)
-								groupTranslation.Add(JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cmd)));
+						{
+							var cgwsgs = new List<CommandGroupWithSubGroups>();
+							var cgs2 = new List<CommandGroup>();
+							foreach (var cmd in slashGroupsTuple.applicationCommands)
+							{
+								if (cmd.Type == ApplicationCommandType.ChatInput)
+								{
+									if (cmd.Options.First().Type == ApplicationCommandOptionType.SubCommandGroup)
+									{
+										var cgs = new List<CommandGroup>();
+										foreach (var scg in cmd.Options)
+										{
+											var cs = new List<Command>();
+											foreach (var sc in scg.Options)
+											{
+												if (sc.Options == null || !sc.Options.Any())
+													cs.Add(new Command(sc.Name, null));
+												else
+													cs.Add(new Command(sc.Name, sc.Options.ToList()));
+											}
+											cgs.Add(new CommandGroup(scg.Name, cs, true));
+										}
+										cgwsgs.Add(new CommandGroupWithSubGroups(cmd.Name, cgs));
+									}
+									else if (cmd.Options.First().Type == ApplicationCommandOptionType.SubCommand)
+									{
+										var cs2 = new List<Command>();
+										foreach (var sc2 in cmd.Options)
+										{
+											if (sc2.Options == null || !sc2.Options.Any())
+												cs2.Add(new Command(sc2.Name, null));
+											else
+												cs2.Add(new Command(sc2.Name, sc2.Options.ToList()));
+										}
+										cgs2.Add(new CommandGroup(cmd.Name, cs2, false));
+									}
+								}
+							}
+							if (cgwsgs.Any())
+								foreach (var cgwsg in cgwsgs)
+									groupTranslation.Add(JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cgwsg)));
+							if (cgs2.Any())
+								foreach (var cg2 in cgs2)
+									groupTranslation.Add(JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cg2)));
+						}
 					}
 
 					if (slashGroupsTuple.commandTypeSources != null && slashGroupsTuple.commandTypeSources.Any())
@@ -530,8 +573,20 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						updateList.AddRange(slashCommands.applicationCommands);
 						if (Configuration.GenerateTranslationFilesOnly)
-							foreach (var cmd in slashCommands.applicationCommands)
-								translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(cmd)));
+						{
+							var cs = new List<Command>();
+							foreach(var cmd in slashCommands.applicationCommands)
+								if (cmd.Type == ApplicationCommandType.ChatInput && (cmd.Options == null || !cmd.Options.Any(x => x.Type == ApplicationCommandOptionType.SubCommand || x.Type == ApplicationCommandOptionType.SubCommandGroup)))
+								{
+									if (cmd.Options == null || !cmd.Options.Any())
+										cs.Add(new Command(cmd.Name, null, cmd.Type));
+									else
+										cs.Add(new Command(cmd.Name, cmd.Options.ToList(), cmd.Type));
+								}
+							if (cs.Any())
+								foreach (var c in cs)
+									translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c)));
+						}
 					}
 
 					if (slashCommands.commandTypeSources != null && slashCommands.commandTypeSources.Any())
@@ -549,8 +604,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					{
 						updateList.AddRange(contextCommands.applicationCommands);
 						if (Configuration.GenerateTranslationFilesOnly)
-							foreach (var cmd in contextCommands.applicationCommands)
-								translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(cmd)));
+						{
+							var cs = new List<Command>();
+							foreach (var cmd in slashCommands.applicationCommands)
+								if ((cmd.Type == ApplicationCommandType.Message || cmd.Type == ApplicationCommandType.User))
+									cs.Add(new Command(cmd.Name, null, cmd.Type));
+							if (cs.Any())
+								foreach (var c in cs)
+									translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c)));
+						}
 					}
 
 					if (contextCommands.commandTypeSources != null && contextCommands.commandTypeSources.Any())
