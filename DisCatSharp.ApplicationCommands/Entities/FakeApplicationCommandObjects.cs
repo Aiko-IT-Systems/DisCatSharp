@@ -34,8 +34,8 @@ internal class CommandGroupWithSubGroups : BaseCommand
 	[JsonProperty("groups")]
 	internal List<CommandGroup> SubGroups { get; set; }
 
-	internal CommandGroupWithSubGroups(string name, List<CommandGroup> commands)
-		: base(name, ApplicationCommandType.ChatInput)
+	internal CommandGroupWithSubGroups(string name, List<CommandGroup> commands, ApplicationCommandType type)
+		: base(name, type)
 	{
 		this.SubGroups = commands;
 	}
@@ -46,8 +46,8 @@ internal class CommandGroup : BaseCommand
 	[JsonProperty("commands")]
 	internal List<Command> Commands { get; set; }
 
-	internal CommandGroup(string name, List<Command> commands, bool hasParent = false)
-		: base(name, hasParent ? null : ApplicationCommandType.ChatInput)
+	internal CommandGroup(string name, List<Command> commands, ApplicationCommandType? type = null)
+		: base(name, type)
 	{
 		this.Commands = commands;
 	}

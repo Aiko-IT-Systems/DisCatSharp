@@ -511,13 +511,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 											foreach (var sc in scg.Options)
 											{
 												if (sc.Options == null || !sc.Options.Any())
-													cs.Add(new Command(sc.Name, null));
+													cs.Add(new Command(sc.Name, null, null));
 												else
-													cs.Add(new Command(sc.Name, sc.Options.ToList()));
+													cs.Add(new Command(sc.Name, sc.Options.ToList(), null));
 											}
-											cgs.Add(new CommandGroup(scg.Name, cs, true));
+											cgs.Add(new CommandGroup(scg.Name, cs, null));
 										}
-										cgwsgs.Add(new CommandGroupWithSubGroups(cmd.Name, cgs));
+										cgwsgs.Add(new CommandGroupWithSubGroups(cmd.Name, cgs, ApplicationCommandType.ChatInput));
 									}
 									else if (cmd.Options.First().Type == ApplicationCommandOptionType.SubCommand)
 									{
@@ -525,11 +525,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 										foreach (var sc2 in cmd.Options)
 										{
 											if (sc2.Options == null || !sc2.Options.Any())
-												cs2.Add(new Command(sc2.Name, null));
+												cs2.Add(new Command(sc2.Name, null, null));
 											else
-												cs2.Add(new Command(sc2.Name, sc2.Options.ToList()));
+												cs2.Add(new Command(sc2.Name, sc2.Options.ToList(), null));
 										}
-										cgs2.Add(new CommandGroup(cmd.Name, cs2, false));
+										cgs2.Add(new CommandGroup(cmd.Name, cs2, ApplicationCommandType.ChatInput));
 									}
 								}
 							}
@@ -579,9 +579,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								if (cmd.Type == ApplicationCommandType.ChatInput && (cmd.Options == null || !cmd.Options.Any(x => x.Type == ApplicationCommandOptionType.SubCommand || x.Type == ApplicationCommandOptionType.SubCommandGroup)))
 								{
 									if (cmd.Options == null || !cmd.Options.Any())
-										cs.Add(new Command(cmd.Name, null, cmd.Type));
+										cs.Add(new Command(cmd.Name, null, ApplicationCommandType.ChatInput));
 									else
-										cs.Add(new Command(cmd.Name, cmd.Options.ToList(), cmd.Type));
+										cs.Add(new Command(cmd.Name, cmd.Options.ToList(), ApplicationCommandType.ChatInput));
 								}
 							if (cs.Any())
 								foreach (var c in cs)
