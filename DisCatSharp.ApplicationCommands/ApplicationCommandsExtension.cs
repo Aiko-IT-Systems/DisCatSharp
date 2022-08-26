@@ -672,10 +672,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					}
 
 					//Adds to the global lists finally
-					s_commandMethods.AddRange(commandMethods);
-					s_groupCommands.AddRange(groupCommands);
-					s_subGroupCommands.AddRange(subGroupCommands);
-					s_contextMenuCommands.AddRange(contextMenuCommands);
+					s_commandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
+					s_groupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
+					s_subGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
+					s_contextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
 
 					s_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildId, commands.ToList()));
 
@@ -840,14 +840,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 				try
 				{
-					if (s_errored)
-						throw new InvalidOperationException("Slash commands failed to register properly on startup.");
+					if (s_errored) {
+						await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Application commands failed to register properly on startup."));
+						throw new InvalidOperationException("Application commands failed to register properly on startup.");
+					}
 
 					var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
 					var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 					var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 					if (!methods.Any() && !groups.Any() && !subgroups.Any())
-						throw new InvalidOperationException("A slash command was executed, but no command was registered for it.");
+					{
+						await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("A application command was executed, but no command was registered for it."));
+						throw new InvalidOperationException("A application command was executed, but no command was registered for it.");
+					}
 
 					if (methods.Any())
 					{
@@ -893,13 +898,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			else if (e.Interaction.Type == InteractionType.AutoComplete)
 			{
 				if (s_errored)
-					throw new InvalidOperationException("Slash commands failed to register properly on startup.");
+				{
+					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Application commands failed to register properly on startup."));
+					throw new InvalidOperationException("Application commands failed to register properly on startup.");
+				}
 
 				var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
 				var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 				var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 				if (!methods.Any() && !groups.Any() && !subgroups.Any())
-					throw new InvalidOperationException("An autocomplete interaction was created, but no command was registered for it.");
+				{
+					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("An autocomplete interaction was created, but no command was registered for it"));
+					throw new InvalidOperationException("An autocomplete interaction was created, but no command was registered for it");
+				}
 
 				try
 				{
@@ -1044,13 +1055,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			try
 			{
 				if (s_errored)
+				{
+					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Context menus failed to register properly on startup."));
 					throw new InvalidOperationException("Context menus failed to register properly on startup.");
+				}
 
 				//Gets the method for the command
 				var method = s_contextMenuCommands.FirstOrDefault(x => x.CommandId == e.Interaction.Data.Id);
 
 				if (method == null)
-					throw new InvalidOperationException("A context menu was executed, but no command was registered for it.");
+				{
+					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("A context menu command was executed, but no command was registered for it."));
+					throw new InvalidOperationException("A context menu command was executed, but no command was registered for it.");
+				}
 
 				await this.RunCommandAsync(context, method.Method, new[] { context });
 
