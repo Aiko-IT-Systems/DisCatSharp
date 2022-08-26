@@ -91,7 +91,7 @@ public class ApplicationCommandsConfiguration
 	/// <para>>Whether to only generate translations files and abort after that.</para>
 	/// <para>Defaults to <see langword="false"/>.</para>
 	/// </summary>
-	public bool GenerateTranslationsFilesOnly { internal get; set; } = false;
+	public bool GenerateTranslationFilesOnly { internal get; set; } = false;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
@@ -116,6 +116,6 @@ public class ApplicationCommandsConfiguration
 		this.ManualOverride = acc.ManualOverride;
 		this.AutoDefer = acc.AutoDefer;
 		this.EnableLocalization = acc.EnableLocalization;
-		this.GenerateTranslationsFilesOnly = acc.GenerateTranslationsFilesOnly;
+		this.GenerateTranslationFilesOnly = acc.GenerateTranslationFilesOnly;
 	}
 }

@@ -27,6 +27,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.ApplicationCommands.EventArgs;
@@ -455,7 +456,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		var updateList = new List<DiscordApplicationCommand>();
 
 		var commandTypeSources = new List<KeyValuePair<Type, Type>>();
-
+		var groupTranslation = new List<GroupTranslator>();
+		var translation = new List<CommandTranslator>();
 		//Iterates over all the modules
 		foreach (var config in types)
 		{
@@ -478,33 +480,39 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					//Otherwise add the nested groups
 					classes = module.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
 				}
+				if (module.GetCustomAttribute<SlashCommandGroupAttribute>() != null)
+					{
+					List<GroupTranslator> groupTranslations = null;
 
-				List<GroupTranslator> groupTranslations = null;
+					if (!string.IsNullOrEmpty(ctx.Translations))
+					{
+						groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
+					}
 
-				if (!string.IsNullOrEmpty(ctx.Translations))
-				{
-					groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
+					var slashGroupsTuple = await NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations);
+
+					if (slashGroupsTuple.applicationCommands != null && slashGroupsTuple.applicationCommands.Any())
+					{
+						updateList.AddRange(slashGroupsTuple.applicationCommands);
+						if (Configuration.GenerateTranslationFilesOnly)
+							foreach (var cmd in updateList)
+								groupTranslation.Add(JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cmd)));
+					}
+
+					if (slashGroupsTuple.commandTypeSources != null && slashGroupsTuple.commandTypeSources.Any())
+						commandTypeSources.AddRange(slashGroupsTuple.commandTypeSources);
+
+					if (slashGroupsTuple.singletonModules != null && slashGroupsTuple.singletonModules.Any())
+						s_singletonModules.AddRange(slashGroupsTuple.singletonModules);
+
+					if (slashGroupsTuple.groupCommands != null && slashGroupsTuple.groupCommands.Any())
+						groupCommands.AddRange(slashGroupsTuple.groupCommands);
+
+					if (slashGroupsTuple.subGroupCommands != null && slashGroupsTuple.subGroupCommands.Any())
+						subGroupCommands.AddRange(slashGroupsTuple.subGroupCommands);
 				}
-
-				var slashGroupsTuple = await NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations);
-
-				if (slashGroupsTuple.applicationCommands != null && slashGroupsTuple.applicationCommands.Any())
-					updateList.AddRange(slashGroupsTuple.applicationCommands);
-
-				if (slashGroupsTuple.commandTypeSources != null && slashGroupsTuple.commandTypeSources.Any())
-					commandTypeSources.AddRange(slashGroupsTuple.commandTypeSources);
-
-				if (slashGroupsTuple.singletonModules != null && slashGroupsTuple.singletonModules.Any())
-					s_singletonModules.AddRange(slashGroupsTuple.singletonModules);
-
-				if (slashGroupsTuple.groupCommands != null && slashGroupsTuple.groupCommands.Any())
-					groupCommands.AddRange(slashGroupsTuple.groupCommands);
-
-				if (slashGroupsTuple.subGroupCommands != null && slashGroupsTuple.subGroupCommands.Any())
-					subGroupCommands.AddRange(slashGroupsTuple.subGroupCommands);
-
 				//Handles methods and context menus, only if the module isn't a group itself
-				if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
+				else if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
 				{
 					List<CommandTranslator> commandTranslations = null;
 
@@ -519,7 +527,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					var slashCommands = await CommandWorker.ParseBasicSlashCommandsAsync(type, methods, guildId, commandTranslations);
 
 					if (slashCommands.applicationCommands != null && slashCommands.applicationCommands.Any())
+					{
 						updateList.AddRange(slashCommands.applicationCommands);
+						if (Configuration.GenerateTranslationFilesOnly)
+							foreach (var cmd in slashCommands.applicationCommands)
+								translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(cmd)));
+					}
 
 					if (slashCommands.commandTypeSources != null && slashCommands.commandTypeSources.Any())
 						commandTypeSources.AddRange(slashCommands.commandTypeSources);
@@ -533,7 +546,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					var contextCommands = await CommandWorker.ParseContextMenuCommands(type, contextMethods, commandTranslations);
 
 					if (contextCommands.applicationCommands != null && contextCommands.applicationCommands.Any())
+					{
 						updateList.AddRange(contextCommands.applicationCommands);
+						if (Configuration.GenerateTranslationFilesOnly)
+							foreach (var cmd in contextCommands.applicationCommands)
+								translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(cmd)));
+					}
 
 					if (contextCommands.commandTypeSources != null && contextCommands.commandTypeSources.Any())
 						commandTypeSources.AddRange(contextCommands.commandTypeSources);
@@ -564,15 +582,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 		if (!s_errored)
 		{
-			if (Configuration.GenerateTranslationsFilesOnly)
+			updateList = updateList.DistinctBy(x => x.Name).ToList();
+			if (Configuration.GenerateTranslationFilesOnly)
 			{
-				List<CommandTranslator> translation = new();
-				foreach(var cmd in updateList)
-				{
-					translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(cmd)));
-				}
 				s_registrationCount++;
-				this.CheckRegistrationStartup(ManOr, translation);
+				this.CheckRegistrationStartup(ManOr, translation, groupTranslation);
 			}
 			else
 			{
@@ -712,7 +726,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 	}
 
-	private async void CheckRegistrationStartup(bool man = false, List<CommandTranslator> translation = null)
+	private async void CheckRegistrationStartup(bool man = false, List<CommandTranslator> translation = null, List<GroupTranslator> groupTranslation = null)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Checking counts...\n\n" +
 			$"Expected Count: {s_expectedCount}\n" +
@@ -727,24 +741,45 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				RegisteredGuildCommands = GuildCommandsInternal,
 				GuildsWithoutScope = this._missingScopeGuildIds
 			});
-			if (Configuration.GenerateTranslationsFilesOnly)
+			if (Configuration.GenerateTranslationFilesOnly)
 			{
 				try
 				{
-					var file_name = $"translation_generator_export-shard{this.Client.ShardId}-{s_registrationCount}_of_{s_expectedCount}.json";
-					var fs = File.Create(file_name);
-					var ms = new MemoryStream();
-					var writer = new StreamWriter(ms);
-					await writer.WriteAsync(JsonConvert.SerializeObject(translation, Formatting.Indented));
-					await writer.FlushAsync();
-					ms.Position = 0;
-					await ms.CopyToAsync(fs);
-					await fs.FlushAsync();
-					fs.Close();
-					await fs.DisposeAsync();
-					ms.Close();
-					await ms.DisposeAsync();
-					this.Client.Logger.LogInformation("Exported base translation to {exppath}", file_name);
+					if (translation != null && translation.Any())
+					{
+						var file_name = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE-{s_registrationCount}_of_{s_expectedCount}.json";
+						var fs = File.Create(file_name);
+						var ms = new MemoryStream();
+						var writer = new StreamWriter(ms);
+						await writer.WriteAsync(JsonConvert.SerializeObject(translation.DistinctBy(x => x.Name), Formatting.Indented));
+						await writer.FlushAsync();
+						ms.Position = 0;
+						await ms.CopyToAsync(fs);
+						await fs.FlushAsync();
+						fs.Close();
+						await fs.DisposeAsync();
+						ms.Close();
+						await ms.DisposeAsync();
+						this.Client.Logger.LogInformation("Exported base translation to {exppath}", file_name);
+					}
+
+					if (groupTranslation != null && groupTranslation.Any())
+					{
+						var file_name = $"translation_generator_export-shard{this.Client.ShardId}-GROUP-{s_registrationCount}_of_{s_expectedCount}.json";
+						var fs = File.Create(file_name);
+						var ms = new MemoryStream();
+						var writer = new StreamWriter(ms);
+						await writer.WriteAsync(JsonConvert.SerializeObject(groupTranslation.DistinctBy(x => x.Name), Formatting.Indented));
+						await writer.FlushAsync();
+						ms.Position = 0;
+						await ms.CopyToAsync(fs);
+						await fs.FlushAsync();
+						fs.Close();
+						await fs.DisposeAsync();
+						ms.Close();
+						await ms.DisposeAsync();
+						this.Client.Logger.LogInformation("Exported base translation to {exppath}", file_name);
+					}
 				}
 				catch (Exception ex)
 				{
