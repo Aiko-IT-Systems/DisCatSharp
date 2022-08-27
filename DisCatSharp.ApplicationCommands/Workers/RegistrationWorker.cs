@@ -72,10 +72,8 @@ internal class RegistrationWorker
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
 					if(command.Options != null && command.Options.Any())
 						action.Options = Optional.Some(command.Options);
-					if (command.DefaultMemberPermissions.HasValue)
-						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
-					if (command.DmPermission.HasValue)
-						action.DmPermission = command.DmPermission.Value;
+					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
+					action.DmPermission = command.DmPermission ?? true;
 					//action.IsNsfw = command.IsNsfw;
 				});
 
@@ -106,10 +104,8 @@ internal class RegistrationWorker
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Optional.Some(command.Options);
-						if (command.DefaultMemberPermissions.HasValue)
-							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
-						if (command.DmPermission.HasValue)
-							action.DmPermission = command.DmPermission.Value;
+						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
+						action.DmPermission = command.DmPermission ?? true;
 						//action.IsNsfw = command.IsNsfw;
 					});
 
@@ -134,10 +130,8 @@ internal class RegistrationWorker
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
 					if(command.Options != null && command.Options.Any())
 						action.Options = Optional.Some(command.Options);
-					if (command.DefaultMemberPermissions.HasValue)
-						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
-					if (command.DmPermission.HasValue)
-						action.DmPermission = command.DmPermission.Value;
+					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
+					action.DmPermission = command.DmPermission ?? true;
 					//action.IsNsfw = command.IsNsfw;
 				});
 
@@ -226,10 +220,8 @@ internal class RegistrationWorker
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
 					if(command.Options != null && command.Options.Any())
 						action.Options = Optional.Some(command.Options);
-					if (command.DefaultMemberPermissions.HasValue)
-						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
-					if (command.DmPermission.HasValue)
-						action.DmPermission = command.DmPermission.Value;
+					action.DefaultMemberPermissions = command.DefaultMemberPermissions;
+					action.DmPermission = command.DmPermission ?? true;
 					//action.IsNsfw = command.IsNsfw;
 				});
 
@@ -260,10 +252,8 @@ internal class RegistrationWorker
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
 							action.Options = Optional.Some(command.Options);
-						if (command.DefaultMemberPermissions.HasValue)
-							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
-						if (command.DmPermission.HasValue)
-							action.DmPermission = command.DmPermission.Value;
+						action.DefaultMemberPermissions = command.DefaultMemberPermissions;
+						action.DmPermission = command.DmPermission ?? true;
 						//action.IsNsfw = command.IsNsfw;
 					});
 

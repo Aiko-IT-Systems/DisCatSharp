@@ -26,6 +26,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.Enums;
+
 namespace DisCatSharp.Entities;
 
 /// <summary>

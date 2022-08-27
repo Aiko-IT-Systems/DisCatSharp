@@ -749,7 +749,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						var app = types.First(t => t.Type == command.Method.DeclaringType);
 					}
 
-					this.Client.Logger.Log(ApplicationCommandsLogLevel, @"Expected Count: {exp}\nCurrent Count: {cur}", s_expectedCount, s_registrationCount);
+					this.Client.Logger.Log(ApplicationCommandsLogLevel, "Expected Count: {exp}\nCurrent Count: {cur}", s_expectedCount, s_registrationCount);
 
 					if (guildId.HasValue)
 					{

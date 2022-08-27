@@ -616,7 +616,6 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// <param name="name">The name of the thread.</param>
 	/// <param name="autoArchiveDuration"><see cref="ThreadAutoArchiveDuration"/> till it gets archived. Defaults to <see cref="ThreadAutoArchiveDuration.OneHour"/></param>
 	/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
-	/// <param name="tags">The tags to add on creation.</param>
 	/// <param name="reason">The reason.</param>
 	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePrivateThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> permission.</exception>
 	/// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>

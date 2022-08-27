@@ -84,32 +84,32 @@ public sealed class DiscordApplicationCommandOption
 	/// Gets whether this command parameter is required.
 	/// </summary>
 	[JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
-	public bool? Required { get; internal set; }
+	public bool Required { get; internal set; } = false;
 
 	/// <summary>
 	/// Gets the optional choices for this command parameter.
 	/// Not applicable for auto-complete options.
 	/// </summary>
 	[JsonProperty("choices", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordApplicationCommandOptionChoice> Choices { get; internal set; }
+	public List<DiscordApplicationCommandOptionChoice>? Choices { get; internal set; } = null;
 
 	/// <summary>
 	/// Gets the optional subcommand parameters for this parameter.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordApplicationCommandOption> Options { get; internal set; }
+	public List<DiscordApplicationCommandOption>? Options { get; internal set; } = null;
 
 	/// <summary>
 	/// Gets the optional allowed channel types.
 	/// </summary>
 	[JsonProperty("channel_types", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<ChannelType> ChannelTypes { get; internal set; }
+	public List<ChannelType>? ChannelTypes { get; internal set; } = null;
 
 	/// <summary>
 	/// Gets whether this option provides autocompletion.
 	/// </summary>
 	[JsonProperty("autocomplete", NullValueHandling = NullValueHandling.Ignore)]
-	public bool? AutoComplete { get; internal set; }
+	public bool AutoComplete { get; internal set; } = false;
 
 	/// <summary>
 	/// Gets the minimum value for this slash command parameter.
@@ -152,7 +152,7 @@ public sealed class DiscordApplicationCommandOption
 	/// <param name="descriptionLocalizations">The localizations of the parameter description.</param>
 	/// <param name="minimumLength">The minimum allowed length of the string. (Min 0)</param>
 	/// <param name="maximumLength">The maximum allowed length of the string. (Min 1)</param>
-	public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool? required = null, IEnumerable<DiscordApplicationCommandOptionChoice> choices = null, IEnumerable<DiscordApplicationCommandOption> options = null, IEnumerable<ChannelType> channelTypes = null, bool? autocomplete = null, object minimumValue = null, object maximumValue = null, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null, int? minimumLength = null, int? maximumLength = null)
+	public DiscordApplicationCommandOption(string name, string description, ApplicationCommandOptionType type, bool required = false, IEnumerable<DiscordApplicationCommandOptionChoice>? choices = null, IEnumerable<DiscordApplicationCommandOption>? options = null, IEnumerable<ChannelType>? channelTypes = null, bool autocomplete = false, object minimumValue = null, object maximumValue = null, DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null, int? minimumLength = null, int? maximumLength = null)
 	{
 		if (!Utilities.IsValidSlashCommandName(name))
 			throw new ArgumentException("Invalid application command option name specified. It must be below 32 characters and not contain any whitespace.", nameof(name));
@@ -160,16 +160,16 @@ public sealed class DiscordApplicationCommandOption
 			throw new ArgumentException("Application command option name cannot have any upper case characters.", nameof(name));
 		if (description.Length > 100)
 			throw new ArgumentException("Application command option description cannot exceed 100 characters.", nameof(description));
-		if ((autocomplete ?? false) && (choices?.Any() ?? false))
+		if (autocomplete && (choices?.Any() ?? false))
 			throw new InvalidOperationException("Auto-complete slash command options cannot provide choices.");
 
 		this.Name = name;
 		this.Description = description;
 		this.Type = type;
 		this.Required = required;
-		this.Choices = choices != null ? new ReadOnlyCollection<DiscordApplicationCommandOptionChoice>(choices.ToList()) : null;
-		this.Options = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;
-		this.ChannelTypes = channelTypes != null ? new ReadOnlyCollection<ChannelType>(channelTypes.ToList()) : null;
+		this.Choices = choices != null && choices.Any() ? choices.ToList() : null;
+		this.Options = options != null && options.Any() ? options.ToList() : null;
+		this.ChannelTypes = channelTypes != null && channelTypes.Any() ? channelTypes.ToList() : null;
 		this.AutoComplete = autocomplete;
 		this.MinimumValue = minimumValue;
 		this.MaximumValue = maximumValue;

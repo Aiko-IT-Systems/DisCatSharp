@@ -466,7 +466,7 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public new async Task<DiscordMessage> GetMessageAsync(ulong id) =>
+	public async Task<DiscordMessage> GetMessageAsync(ulong id) =>
 		this.Discord.Configuration.MessageCacheSize > 0
 		&& this.Discord is DiscordClient dc
 		&& dc.MessageCache != null
