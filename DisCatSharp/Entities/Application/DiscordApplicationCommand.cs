@@ -90,7 +90,7 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	/// Gets the potential parameters for this command.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyCollection<DiscordApplicationCommandOption> Options { get; internal set; }
+	public List<DiscordApplicationCommandOption>? Options { get; internal set; } = null;
 
 	/// <summary>
 	/// Gets the commands needed permissions.
@@ -137,7 +137,7 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	/// <param name="isNsfw">Whether this command is NSFW.</param>
 	public DiscordApplicationCommand(
 		string name, string description,
-		IEnumerable<DiscordApplicationCommandOption> options = null,
+		IEnumerable<DiscordApplicationCommandOption>? options = null,
 		ApplicationCommandType type = ApplicationCommandType.ChatInput,
 		DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null,
 		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false)
@@ -165,7 +165,7 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 			this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
 		}
 
-		var optionsList = options != null ? new ReadOnlyCollection<DiscordApplicationCommandOption>(options.ToList()) : null;
+		var optionsList = options != null && options.Any() ? options.ToList() : null;
 
 		this.Type = type;
 		this.Name = name;

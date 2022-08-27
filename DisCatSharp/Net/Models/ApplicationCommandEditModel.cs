@@ -75,12 +75,12 @@ public class ApplicationCommandEditModel
 	/// <summary>
 	/// Sets the command's new options.
 	/// </summary>
-	public Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> Options { internal get; set; }
+	public Optional<List<DiscordApplicationCommandOption>?> Options { internal get; set; }
 
 	/// <summary>
 	/// Sets the command's needed permissions.
 	/// </summary>
-	public Optional<Permissions> DefaultMemberPermissions { internal get; set; }
+	public Optional<Permissions?> DefaultMemberPermissions { internal get; set; }
 
 	/// <summary>
 	/// Sets whether the command can be used in direct messages.

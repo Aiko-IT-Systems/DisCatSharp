@@ -127,20 +127,14 @@ internal class RestApplicationCommandEditPayload
 	/// <summary>
 	/// Gets the options.
 	/// </summary>
-	[JsonProperty("options")]
-	public Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> Options { get; set; }
-
-	/// <summary>
-	/// Gets the default permission.
-	/// </summary>
-	[JsonProperty("default_permission", NullValueHandling = NullValueHandling.Include)]
-	public bool? DefaultPermission { get; set; } = null;
+	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<List<DiscordApplicationCommandOption>> Options { get; set; }
 
 	/// <summary>
 	/// The command needed permissions.
 	/// </summary>
 	[JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Include)]
-	public Optional<Permissions> DefaultMemberPermission { get; set; }
+	public Optional<Permissions?> DefaultMemberPermission { get; set; }
 
 	/// <summary>
 	/// Whether the command is allowed for dms.

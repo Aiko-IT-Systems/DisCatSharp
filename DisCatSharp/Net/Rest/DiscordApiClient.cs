@@ -180,8 +180,7 @@ public sealed class DiscordApiClient
 
 		ret.PopulateMentions();
 
-		if (ret.ReactionsInternal == null)
-			ret.ReactionsInternal = new List<DiscordReaction>();
+		ret.ReactionsInternal ??= new List<DiscordReaction>();
 		foreach (var xr in ret.ReactionsInternal)
 			xr.Emoji.Discord = this.Discord;
 	}
@@ -4998,9 +4997,9 @@ public sealed class DiscordApiClient
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId,
-		Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
+		Optional<string> name, Optional<string> description, Optional<List<DiscordApplicationCommandOption>?> options,
 		Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
-		Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
+		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
 	{
 		var pld = new RestApplicationCommandEditPayload
 		{
@@ -5171,9 +5170,9 @@ public sealed class DiscordApiClient
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId,
-		Optional<string> name, Optional<string> description, Optional<IReadOnlyCollection<DiscordApplicationCommandOption>> options,
+		Optional<string> name, Optional<string> description, Optional<List<DiscordApplicationCommandOption>?> options,
 		Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
-		Optional<Permissions> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
+		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
 	{
 		var pld = new RestApplicationCommandEditPayload
 		{

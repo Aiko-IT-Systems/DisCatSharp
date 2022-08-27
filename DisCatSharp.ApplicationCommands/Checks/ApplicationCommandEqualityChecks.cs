@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,7 +49,8 @@ internal static class ApplicationCommandEqualityChecks
 		DiscordApplicationCommand sourceApplicationCommand = new(
 			ac1.Name, ac1.Description, ac1.Options,
 			ac1.Type,
-			ac1.NameLocalizations, ac1.DescriptionLocalizations
+			ac1.NameLocalizations, ac1.DescriptionLocalizations,
+			ac1.DefaultMemberPermissions, ac1.DmPermission ?? true//, ac1.IsNsfw
 		);
 
 		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, "[AC Change Check] Command {name}\n\n[{jsonOne},{jsontwo}]\n\n", ac1.Name, JsonConvert.SerializeObject(sourceApplicationCommand), JsonConvert.SerializeObject(targetApplicationCommand));
@@ -66,23 +68,25 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="localizationEnabled">Whether localization is enabled.</param>
 	internal static bool SoftEqual(this DiscordApplicationCommand source, DiscordApplicationCommand target, ApplicationCommandType type, bool localizationEnabled = false)
 	{
+		var sDmPerm = source.DmPermission ?? true;
+		var tDmPerm = target.DmPermission ?? true;
 		return localizationEnabled
 			? type switch
 			{
-				ApplicationCommandType.ChatInput => DeepEqual(source, target, localizationEnabled),
+				ApplicationCommandType.ChatInput => DeepEqual(source, target, true, sDmPerm, tDmPerm),
 				_ => source.Name == target.Name
 					&& source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
 					&& source.DefaultMemberPermissions == target.DefaultMemberPermissions
-					&& source.DmPermission == target.DmPermission
+					&& sDmPerm == tDmPerm
 				//&& (source.IsNsfw == target.IsNsfw)
 			}
 			: type switch
 			{
-				ApplicationCommandType.ChatInput => DeepEqual(source, target),
+				ApplicationCommandType.ChatInput => DeepEqual(source, target, false, sDmPerm, tDmPerm),
 				_ => source.Name == target.Name
 					&& source.Type == target.Type
 					&& source.DefaultMemberPermissions == target.DefaultMemberPermissions
-					&& source.DmPermission == target.DmPermission
+					&& sDmPerm == tDmPerm
 				//&& (source.IsNsfw == target.IsNsfw)
 			};
 	}
@@ -94,13 +98,20 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="source">Source application command.</param>
 	/// <param name="target">Application command to check against.</param>
 	/// <param name="localizationEnabled">Whether localization is enabled.</param>
-	internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target, bool localizationEnabled = false)
+	/// <param name="sDmPerm">The source dm permission.</param>
+	/// <param name="tDmPerm">The target dm permission.</param>
+	internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target, bool localizationEnabled = false, bool sDmPerm = true, bool tDmPerm = true)
 	{
-		var rootCheck = source.Name == target.Name && source.Description == target.Description && source.Type == target.Type
-			&& source.DefaultMemberPermissions == target.DefaultMemberPermissions && source.DmPermission == target.DmPermission/* && (source.IsNsfw == target.IsNsfw)*/;
+		var rootCheck = true;
+		/*//Console.WriteLine($"{source.Name == target.Name}");
+		//Console.WriteLine($"{source.Description == target.Description}");
+		//Console.WriteLine($"{source.Type == target.Type}");
+		//Console.WriteLine($"{source.DefaultMemberPermissions == target.DefaultMemberPermissions}");
+		//Console.WriteLine($"{sDmPerm == tDmPerm}");*/
+		rootCheck = source.Name == target.Name && source.Description == target.Description && source.Type == target.Type && source.DefaultMemberPermissions == target.DefaultMemberPermissions && sDmPerm == tDmPerm;
 		if (localizationEnabled)
 			rootCheck = rootCheck && source.NameLocalizations == target.NameLocalizations && source.DescriptionLocalizations == target.DescriptionLocalizations;
-
+		////Console.WriteLine($"{rootCheck}");
 		if (source.Options == null && target.Options == null)
 			return rootCheck;
 		else if ((source.Options != null && target.Options == null) || (source.Options == null && target.Options != null))
@@ -124,8 +135,8 @@ internal static class ApplicationCommandEqualityChecks
 
 						foreach (var subSubOption in subOption.Options)
 							minimalSubSubSourceOptions.Add(new DiscordApplicationCommandOption(
-								subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required ?? false,
-								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
+								subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required,
+								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete,
 								subSubOption.MinimumValue, subSubOption.MaximumValue,
 								localizationEnabled ? subSubOption.NameLocalizations : null,
 								localizationEnabled ? subSubOption.DescriptionLocalizations : null,
@@ -164,8 +175,8 @@ internal static class ApplicationCommandEqualityChecks
 
 						foreach (var subSubOption in subOption.Options)
 							minimalSubSubTargetOptions.Add(new DiscordApplicationCommandOption(
-								subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required ?? false,
-								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
+								subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required,
+								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete,
 								subSubOption.MinimumValue, subSubOption.MaximumValue,
 								localizationEnabled ? subSubOption.NameLocalizations : null,
 								localizationEnabled ? subSubOption.DescriptionLocalizations : null,
@@ -189,7 +200,14 @@ internal static class ApplicationCommandEqualityChecks
 				));
 			}
 
-			return rootCheck && JsonConvert.SerializeObject(minimalSourceOptions) == JsonConvert.SerializeObject(minimalTargetOptions);
+			var sOpt = JsonConvert.SerializeObject(minimalSourceOptions, Formatting.None);
+			var tOpt = JsonConvert.SerializeObject(minimalTargetOptions, Formatting.None);
+
+			//Console.WriteLine("Checking equality subcommandgroup");
+			//Console.WriteLine($"{rootCheck}");
+			//Console.WriteLine($"{sOpt}");
+			//Console.WriteLine($"{tOpt}");
+			return rootCheck && sOpt == tOpt;
 		}
 		else if (source.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand) && target.Options.Any(o => o.Type == ApplicationCommandOptionType.SubCommand))
 		{
@@ -206,8 +224,8 @@ internal static class ApplicationCommandEqualityChecks
 
 					foreach (var subOption in option.Options)
 						minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
-							subOption.Name, subOption.Description, subOption.Type, subOption.Required ?? false,
-							subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
+							subOption.Name, subOption.Description, subOption.Type, subOption.Required,
+							subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete,
 							subOption.MinimumValue, subOption.MaximumValue,
 							localizationEnabled ? subOption.NameLocalizations : null,
 							localizationEnabled ? subOption.DescriptionLocalizations : null,
@@ -233,8 +251,8 @@ internal static class ApplicationCommandEqualityChecks
 
 					foreach (var subOption in option.Options)
 						minimalSubTargetOptions.Add(new DiscordApplicationCommandOption(
-							subOption.Name, subOption.Description, subOption.Type, subOption.Required ?? false,
-							subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
+							subOption.Name, subOption.Description, subOption.Type, subOption.Required,
+							subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete,
 							subOption.MinimumValue, subOption.MaximumValue,
 							localizationEnabled ? subOption.NameLocalizations : null,
 							localizationEnabled ? subOption.DescriptionLocalizations : null,
@@ -250,7 +268,14 @@ internal static class ApplicationCommandEqualityChecks
 				));
 			}
 
-			return rootCheck && JsonConvert.SerializeObject(minimalSourceOptions) == JsonConvert.SerializeObject(minimalTargetOptions);
+			var sOpt = JsonConvert.SerializeObject(minimalSourceOptions, Formatting.None);
+			var tOpt = JsonConvert.SerializeObject(minimalTargetOptions, Formatting.None);
+
+			//Console.WriteLine("Checking equality subcommand");
+			//Console.WriteLine($"{rootCheck}");
+			//Console.WriteLine($"{sOpt}");
+			//Console.WriteLine($"{tOpt}");
+			return rootCheck && sOpt == tOpt;
 		}
 		else
 		{
@@ -259,8 +284,8 @@ internal static class ApplicationCommandEqualityChecks
 
 			foreach (var option in source.Options)
 				minimalSourceOptions.Add(new DiscordApplicationCommandOption(
-					option.Name, option.Description, option.Type, option.Required ?? false,
-					option.Choices, null, option.ChannelTypes, option.AutoComplete ?? false, option.MinimumValue, option.MaximumValue,
+					option.Name, option.Description, option.Type, option.Required,
+					option.Choices, null, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
 					localizationEnabled ? option.NameLocalizations : null,
 					localizationEnabled ? option.DescriptionLocalizations : null,
 					option.MinimumLength, option.MaximumLength
@@ -268,14 +293,20 @@ internal static class ApplicationCommandEqualityChecks
 
 			foreach (var option in target.Options)
 				minimalTargetOptions.Add(new DiscordApplicationCommandOption(
-					option.Name, option.Description, option.Type, option.Required ?? false,
-					option.Choices, null, option.ChannelTypes, option.AutoComplete ?? false, option.MinimumValue, option.MaximumValue,
+					option.Name, option.Description, option.Type, option.Required,
+					option.Choices, null, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
 					localizationEnabled ? option.NameLocalizations : null,
 					localizationEnabled ? option.DescriptionLocalizations : null,
 					option.MinimumLength, option.MaximumLength
 				));
+			var sOpt = JsonConvert.SerializeObject(minimalSourceOptions, Formatting.None);
+			var tOpt = JsonConvert.SerializeObject(minimalTargetOptions, Formatting.None);
 
-			return rootCheck && JsonConvert.SerializeObject(minimalSourceOptions) == JsonConvert.SerializeObject(minimalTargetOptions);
+			//Console.WriteLine("Checking equality other");
+			//Console.WriteLine($"{rootCheck}");
+			//Console.WriteLine($"{sOpt}");
+			//Console.WriteLine($"{tOpt}");
+			return rootCheck && sOpt == tOpt;
 		}
 	}
 }
