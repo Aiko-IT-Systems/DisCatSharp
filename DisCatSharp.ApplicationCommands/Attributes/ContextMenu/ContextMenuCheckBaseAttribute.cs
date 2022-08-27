@@ -23,7 +23,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DisCatSharp.ApplicationCommands;
+using DisCatSharp.ApplicationCommands.Context;
+
+namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
 /// The base class for a pre-execution check for a context menu.

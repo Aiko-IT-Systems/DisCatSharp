@@ -30,7 +30,7 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Checks;
 
 internal static class ApplicationCommandEqualityChecks
 {
@@ -51,13 +51,13 @@ internal static class ApplicationCommandEqualityChecks
 			ac1.NameLocalizations, ac1.DescriptionLocalizations
 		);
 
-		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, $"[AC Change Check] Command {ac1.Name}\n\n[{JsonConvert.SerializeObject(sourceApplicationCommand)},{JsonConvert.SerializeObject(targetApplicationCommand)}]\n\n");
+		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, "[AC Change Check] Command {name}\n\n[{jsonOne},{jsontwo}]\n\n", ac1.Name, JsonConvert.SerializeObject(sourceApplicationCommand), JsonConvert.SerializeObject(targetApplicationCommand));
 
 		return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand, ac1.Type, ApplicationCommandsExtension.Configuration?.EnableLocalization ?? false);
 	}
 
 	/// <summary>
-	/// Checks softly whether two <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/>s are the same.
+	/// Checks softly whether two <see cref="DiscordApplicationCommand"/>s are the same.
 	/// Excluding id, application id and version here.
 	/// </summary>
 	/// <param name="source">Source application command.</param>
@@ -88,7 +88,7 @@ internal static class ApplicationCommandEqualityChecks
 	}
 
 	/// <summary>
-	/// Checks deeply whether two <see cref="DisCatSharp.Entities.DiscordApplicationCommand"/>s are the same.
+	/// Checks deeply whether two <see cref="DiscordApplicationCommand"/>s are the same.
 	/// Excluding id, application id and version here.
 	/// </summary>
 	/// <param name="source">Source application command.</param>
@@ -96,10 +96,10 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="localizationEnabled">Whether localization is enabled.</param>
 	internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target, bool localizationEnabled = false)
 	{
-		var rootCheck = (source.Name == target.Name) && (source.Description == target.Description) && (source.Type == target.Type)
-			&& (source.DefaultMemberPermissions == target.DefaultMemberPermissions) && (source.DmPermission == target.DmPermission)/* && (source.IsNsfw == target.IsNsfw)*/;
+		var rootCheck = source.Name == target.Name && source.Description == target.Description && source.Type == target.Type
+			&& source.DefaultMemberPermissions == target.DefaultMemberPermissions && source.DmPermission == target.DmPermission/* && (source.IsNsfw == target.IsNsfw)*/;
 		if (localizationEnabled)
-			rootCheck = rootCheck && (source.NameLocalizations == target.NameLocalizations) && (source.DescriptionLocalizations == target.DescriptionLocalizations);
+			rootCheck = rootCheck && source.NameLocalizations == target.NameLocalizations && source.DescriptionLocalizations == target.DescriptionLocalizations;
 
 		if (source.Options == null && target.Options == null)
 			return rootCheck;
@@ -123,7 +123,6 @@ internal static class ApplicationCommandEqualityChecks
 						minimalSubSubSourceOptions = new();
 
 						foreach (var subSubOption in subOption.Options)
-						{
 							minimalSubSubSourceOptions.Add(new DiscordApplicationCommandOption(
 								subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required ?? false,
 								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
@@ -132,7 +131,6 @@ internal static class ApplicationCommandEqualityChecks
 								localizationEnabled ? subSubOption.DescriptionLocalizations : null,
 								subSubOption.MinimumLength, subSubOption.MaximumLength
 							));
-						}
 
 						minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
 							subOption.Name, subOption.Description, subOption.Type,
@@ -165,7 +163,6 @@ internal static class ApplicationCommandEqualityChecks
 						minimalSubSubTargetOptions = new();
 
 						foreach (var subSubOption in subOption.Options)
-						{
 							minimalSubSubTargetOptions.Add(new DiscordApplicationCommandOption(
 								subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required ?? false,
 								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete ?? false,
@@ -174,7 +171,6 @@ internal static class ApplicationCommandEqualityChecks
 								localizationEnabled ? subSubOption.DescriptionLocalizations : null,
 								subSubOption.MinimumLength, subSubOption.MaximumLength
 							));
-						}
 
 						minimalSubTargetOptions.Add(new DiscordApplicationCommandOption(
 							subOption.Name, subOption.Description, subOption.Type,
@@ -209,7 +205,6 @@ internal static class ApplicationCommandEqualityChecks
 					minimalSubSourceOptions = new();
 
 					foreach (var subOption in option.Options)
-					{
 						minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
 							subOption.Name, subOption.Description, subOption.Type, subOption.Required ?? false,
 							subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
@@ -218,7 +213,6 @@ internal static class ApplicationCommandEqualityChecks
 							localizationEnabled ? subOption.DescriptionLocalizations : null,
 							subOption.MinimumLength, subOption.MaximumLength
 						));
-					}
 				}
 
 				minimalSourceOptions.Add(new DiscordApplicationCommandOption(
@@ -238,7 +232,6 @@ internal static class ApplicationCommandEqualityChecks
 					minimalSubTargetOptions = new();
 
 					foreach (var subOption in option.Options)
-					{
 						minimalSubTargetOptions.Add(new DiscordApplicationCommandOption(
 							subOption.Name, subOption.Description, subOption.Type, subOption.Required ?? false,
 							subOption.Choices, null, subOption.ChannelTypes, subOption.AutoComplete ?? false,
@@ -247,7 +240,6 @@ internal static class ApplicationCommandEqualityChecks
 							localizationEnabled ? subOption.DescriptionLocalizations : null,
 							subOption.MinimumLength, subOption.MaximumLength
 						));
-					}
 				}
 
 				minimalTargetOptions.Add(new DiscordApplicationCommandOption(

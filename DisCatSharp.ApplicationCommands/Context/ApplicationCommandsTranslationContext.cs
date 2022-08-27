@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Context;
 
 /// <summary>
 /// The application commands translation context.

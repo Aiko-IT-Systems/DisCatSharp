@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
 /// Marks this method as a slash command

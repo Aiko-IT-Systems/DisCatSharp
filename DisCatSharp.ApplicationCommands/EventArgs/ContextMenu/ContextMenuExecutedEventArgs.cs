@@ -22,6 +22,8 @@
 
 using System;
 
+using DisCatSharp.ApplicationCommands.Context;
+
 using DisCatSharp.EventArgs;
 
 namespace DisCatSharp.ApplicationCommands.EventArgs;

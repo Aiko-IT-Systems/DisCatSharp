@@ -27,7 +27,7 @@ using DisCatSharp.Entities;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Context;
 
 /// <summary>
 /// Represents a context for an autocomplete interaction.

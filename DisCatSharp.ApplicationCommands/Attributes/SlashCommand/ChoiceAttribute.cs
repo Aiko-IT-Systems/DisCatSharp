@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
 /// Adds a choice for this slash command option

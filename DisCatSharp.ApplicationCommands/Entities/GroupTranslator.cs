@@ -27,7 +27,7 @@ using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Entities;
 
 /// <summary>
 /// Represents a group translator.
@@ -39,6 +39,12 @@ internal class GroupTranslator
 	/// </summary>
 	[JsonProperty("name")]
 	public string Name { get; set; }
+
+	/// <summary>
+	/// Gets the group description.
+	/// </summary>
+	[JsonProperty("description")]
+	public string Description { get; set; }
 
 	/// <summary>
 	/// Gets the application command type.
@@ -69,11 +75,11 @@ internal class GroupTranslator
 	/// Gets the sub group translators, if applicable.
 	/// </summary>
 	[JsonProperty("groups", NullValueHandling = NullValueHandling.Ignore)]
-	public List<SubGroupTranslator>? SubGroups { get; set; }
+	public List<SubGroupTranslator> SubGroups { get; set; }
 
 	/// <summary>
 	/// Gets the command translators, if applicable.
 	/// </summary>
 	[JsonProperty("commands", NullValueHandling = NullValueHandling.Ignore)]
-	public List<CommandTranslator>? Commands { get; set; }
+	public List<CommandTranslator> Commands { get; set; }
 }

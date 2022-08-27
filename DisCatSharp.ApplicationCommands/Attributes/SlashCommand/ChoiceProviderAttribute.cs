@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
 /// Sets a IChoiceProvider for a command options. ChoiceProviders can be used to provide

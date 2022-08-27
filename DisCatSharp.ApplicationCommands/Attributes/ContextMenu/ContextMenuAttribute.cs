@@ -24,7 +24,7 @@ using System;
 
 using DisCatSharp.Enums;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
 /// Marks this method as a context menu.
