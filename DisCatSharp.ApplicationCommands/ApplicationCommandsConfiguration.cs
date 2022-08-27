@@ -88,6 +88,12 @@ public class ApplicationCommandsConfiguration
 	public bool DebugStartup { internal get; set; } = false;
 
 	/// <summary>
+	/// <para>>Whether to only generate translations files and abort after that.</para>
+	/// <para>Defaults to <see langword="false"/>.</para>
+	/// </summary>
+	public bool GenerateTranslationFilesOnly { internal get; set; } = false;
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="ApplicationCommandsConfiguration"/> class.
 	/// </summary>
 	/// <param name="provider">The service provider.</param>
@@ -110,5 +116,6 @@ public class ApplicationCommandsConfiguration
 		this.ManualOverride = acc.ManualOverride;
 		this.AutoDefer = acc.AutoDefer;
 		this.EnableLocalization = acc.EnableLocalization;
+		this.GenerateTranslationFilesOnly = acc.GenerateTranslationFilesOnly;
 	}
 }

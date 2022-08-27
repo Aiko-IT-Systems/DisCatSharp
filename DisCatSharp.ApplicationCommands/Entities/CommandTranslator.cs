@@ -44,8 +44,8 @@ internal class CommandTranslator
 	/// Gets the application command type.
 	/// Used to determine whether it is an translator for context menu or not.
 	/// </summary>
-	[JsonProperty("type")]
-	public ApplicationCommandType Type { get; set; }
+	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+	public ApplicationCommandType? Type { get; set; }
 
 	/// <summary>
 	/// Gets the command name translations.
@@ -68,6 +68,6 @@ internal class CommandTranslator
 	/// <summary>
 	/// Gets the option translators, if applicable.
 	/// </summary>
-	[JsonProperty("options")]
+	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
 	public List<OptionTranslator> Options { get; set; }
 }

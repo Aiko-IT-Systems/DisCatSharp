@@ -23,43 +23,59 @@
 using System.Collections.Generic;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 
 namespace DisCatSharp.ApplicationCommands;
 
-/// <summary>
-/// Represents a sub group translator.
-/// </summary>
-internal class SubGroupTranslator
+internal class CommandGroupWithSubGroups : BaseCommand
 {
-	/// <summary>
-	/// Gets the sub group name.
-	/// </summary>
+	[JsonProperty("groups")]
+	internal List<CommandGroup> SubGroups { get; set; }
+
+	internal CommandGroupWithSubGroups(string name, List<CommandGroup> commands, ApplicationCommandType type)
+		: base(name, type)
+	{
+		this.SubGroups = commands;
+	}
+}
+
+internal class CommandGroup : BaseCommand
+{
+	[JsonProperty("commands")]
+	internal List<Command> Commands { get; set; }
+
+	internal CommandGroup(string name, List<Command> commands, ApplicationCommandType? type = null)
+		: base(name, type)
+	{
+		this.Commands = commands;
+	}
+}
+
+internal class Command : BaseCommand
+{
+	[JsonProperty("options")]
+	internal List<DiscordApplicationCommandOption>? Options { get; set; }
+
+	internal Command(string name, List<DiscordApplicationCommandOption>? options = null, ApplicationCommandType? type = null)
+		: base(name, type)
+	{
+		this.Options = options;
+	}
+}
+
+internal class BaseCommand
+{
 	[JsonProperty("name")]
-	public string Name { get; set; }
+	internal string Name { get; set; }
 
-	/// <summary>
-	/// Gets the sub group name translations.
-	/// </summary>
-	[JsonProperty("name_translations")]
-	internal Dictionary<string, string> NameTranslationsDictionary { get; set; }
-	[JsonIgnore]
-	public DiscordApplicationCommandLocalization NameTranslations
-		=> new(this.NameTranslationsDictionary);
+	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+	internal ApplicationCommandType? Type { get; set; }
 
-	/// <summary>
-	/// Gets the sub group description translations.
-	/// </summary>
-	[JsonProperty("description_translations")]
-	internal Dictionary<string, string> DescriptionTranslationsDictionary { get; set; }
-	[JsonIgnore]
-	public DiscordApplicationCommandLocalization DescriptionTranslations
-		=> new(this.DescriptionTranslationsDictionary);
-
-	/// <summary>
-	/// Gets the command translators.
-	/// </summary>
-	[JsonProperty("commands", NullValueHandling = NullValueHandling.Ignore)]
-	public List<CommandTranslator> Commands { get; set; }
+	internal BaseCommand(string name, ApplicationCommandType? type = null)
+	{
+		this.Name = name;
+		this.Type = type;
+	}
 }
