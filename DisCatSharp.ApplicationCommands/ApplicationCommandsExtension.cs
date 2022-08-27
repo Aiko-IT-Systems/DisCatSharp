@@ -484,7 +484,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					classes = module.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
 				}
 				if (module.GetCustomAttribute<SlashCommandGroupAttribute>() != null)
-					{
+				{
 					List<GroupTranslator> groupTranslations = null;
 
 					if (!string.IsNullOrEmpty(ctx.Translations))
@@ -578,7 +578,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						if (Configuration.GenerateTranslationFilesOnly)
 						{
 							var cs = new List<Command>();
-							foreach(var cmd in slashCommands.applicationCommands)
+							foreach (var cmd in slashCommands.applicationCommands)
 								if (cmd.Type == ApplicationCommandType.ChatInput && (cmd.Options == null || !cmd.Options.Any(x => x.Type == ApplicationCommandOptionType.SubCommand || x.Type == ApplicationCommandOptionType.SubCommandGroup)))
 								{
 									if (cmd.Options == null || !cmd.Options.Any())
@@ -903,7 +903,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 				try
 				{
-					if (s_errored) {
+					if (s_errored)
+					{
 						await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Application commands failed to register properly on startup."));
 						throw new InvalidOperationException("Application commands failed to register properly on startup.");
 					}
