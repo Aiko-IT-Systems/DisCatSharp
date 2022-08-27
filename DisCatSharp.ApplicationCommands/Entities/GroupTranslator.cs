@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 
@@ -38,6 +39,13 @@ internal class GroupTranslator
 	/// </summary>
 	[JsonProperty("name")]
 	public string Name { get; set; }
+
+	/// <summary>
+	/// Gets the application command type.
+	/// Used to determine whether it is an translator for context menu or not.
+	/// </summary>
+	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+	public ApplicationCommandType? Type { get; set; }
 
 	/// <summary>
 	/// Gets the group name translations.
@@ -60,12 +68,12 @@ internal class GroupTranslator
 	/// <summary>
 	/// Gets the sub group translators, if applicable.
 	/// </summary>
-	[JsonProperty("groups")]
-	public List<SubGroupTranslator> SubGroups { get; set; }
+	[JsonProperty("groups", NullValueHandling = NullValueHandling.Ignore)]
+	public List<SubGroupTranslator>? SubGroups { get; set; }
 
 	/// <summary>
 	/// Gets the command translators, if applicable.
 	/// </summary>
-	[JsonProperty("commands")]
-	public List<CommandTranslator> Commands { get; set; }
+	[JsonProperty("commands", NullValueHandling = NullValueHandling.Ignore)]
+	public List<CommandTranslator>? Commands { get; set; }
 }

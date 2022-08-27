@@ -69,7 +69,7 @@ internal class RegistrationWorker
 					action.Description = command.Description;
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
 					if(command.Options != null && command.Options.Any())
-						action.Options = Entities.Optional.Some(command.Options);
+						action.Options = Optional.Some(command.Options);
 					if (command.DefaultMemberPermissions.HasValue)
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 					if (command.DmPermission.HasValue)
@@ -104,7 +104,7 @@ internal class RegistrationWorker
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
-							action.Options = Entities.Optional.Some(command.Options);
+							action.Options = Optional.Some(command.Options);
 						if (command.DefaultMemberPermissions.HasValue)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 						if (command.DmPermission.HasValue)
@@ -133,7 +133,7 @@ internal class RegistrationWorker
 					action.Description = command.Description;
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
 					if(command.Options != null && command.Options.Any())
-						action.Options = Entities.Optional.Some(command.Options);
+						action.Options = Optional.Some(command.Options);
 					if (command.DefaultMemberPermissions.HasValue)
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 					if (command.DmPermission.HasValue)
@@ -227,7 +227,7 @@ internal class RegistrationWorker
 					action.Description = command.Description;
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
 					if(command.Options != null && command.Options.Any())
-						action.Options = Entities.Optional.Some(command.Options);
+						action.Options = Optional.Some(command.Options);
 					if (command.DefaultMemberPermissions.HasValue)
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 					if (command.DmPermission.HasValue)
@@ -262,7 +262,7 @@ internal class RegistrationWorker
 						action.Description = command.Description;
 						action.DescriptionLocalizations = command.DescriptionLocalizations;
 						if(command.Options != null && command.Options.Any())
-							action.Options = Entities.Optional.Some(command.Options);
+							action.Options = Optional.Some(command.Options);
 						if (command.DefaultMemberPermissions.HasValue)
 							action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 						if (command.DmPermission.HasValue)
@@ -291,7 +291,7 @@ internal class RegistrationWorker
 					action.Description = command.Description;
 					action.DescriptionLocalizations = command.DescriptionLocalizations;
 					if(command.Options != null && command.Options.Any())
-						action.Options = Entities.Optional.Some(command.Options);
+						action.Options = Optional.Some(command.Options);
 					if (command.DefaultMemberPermissions.HasValue)
 						action.DefaultMemberPermissions = command.DefaultMemberPermissions.Value;
 					if (command.DmPermission.HasValue)

@@ -22,10 +22,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 using DisCatSharp.ApplicationCommands.Attributes;
 using DisCatSharp.ApplicationCommands.EventArgs;
@@ -454,7 +456,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		var updateList = new List<DiscordApplicationCommand>();
 
 		var commandTypeSources = new List<KeyValuePair<Type, Type>>();
-
+		var groupTranslation = new List<GroupTranslator>();
+		var translation = new List<CommandTranslator>();
 		//Iterates over all the modules
 		foreach (var config in types)
 		{
@@ -477,33 +480,82 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					//Otherwise add the nested groups
 					classes = module.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
 				}
+				if (module.GetCustomAttribute<SlashCommandGroupAttribute>() != null)
+					{
+					List<GroupTranslator> groupTranslations = null;
 
-				List<GroupTranslator> groupTranslations = null;
+					if (!string.IsNullOrEmpty(ctx.Translations))
+					{
+						groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
+					}
 
-				if (!string.IsNullOrEmpty(ctx.Translations))
-				{
-					groupTranslations = JsonConvert.DeserializeObject<List<GroupTranslator>>(ctx.Translations);
+					var slashGroupsTuple = await NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations);
+
+					if (slashGroupsTuple.applicationCommands != null && slashGroupsTuple.applicationCommands.Any())
+					{
+						updateList.AddRange(slashGroupsTuple.applicationCommands);
+						if (Configuration.GenerateTranslationFilesOnly)
+						{
+							var cgwsgs = new List<CommandGroupWithSubGroups>();
+							var cgs2 = new List<CommandGroup>();
+							foreach (var cmd in slashGroupsTuple.applicationCommands)
+							{
+								if (cmd.Type == ApplicationCommandType.ChatInput)
+								{
+									if (cmd.Options.First().Type == ApplicationCommandOptionType.SubCommandGroup)
+									{
+										var cgs = new List<CommandGroup>();
+										foreach (var scg in cmd.Options)
+										{
+											var cs = new List<Command>();
+											foreach (var sc in scg.Options)
+											{
+												if (sc.Options == null || !sc.Options.Any())
+													cs.Add(new Command(sc.Name, null, null));
+												else
+													cs.Add(new Command(sc.Name, sc.Options.ToList(), null));
+											}
+											cgs.Add(new CommandGroup(scg.Name, cs, null));
+										}
+										cgwsgs.Add(new CommandGroupWithSubGroups(cmd.Name, cgs, ApplicationCommandType.ChatInput));
+									}
+									else if (cmd.Options.First().Type == ApplicationCommandOptionType.SubCommand)
+									{
+										var cs2 = new List<Command>();
+										foreach (var sc2 in cmd.Options)
+										{
+											if (sc2.Options == null || !sc2.Options.Any())
+												cs2.Add(new Command(sc2.Name, null, null));
+											else
+												cs2.Add(new Command(sc2.Name, sc2.Options.ToList(), null));
+										}
+										cgs2.Add(new CommandGroup(cmd.Name, cs2, ApplicationCommandType.ChatInput));
+									}
+								}
+							}
+							if (cgwsgs.Any())
+								foreach (var cgwsg in cgwsgs)
+									groupTranslation.Add(JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cgwsg)));
+							if (cgs2.Any())
+								foreach (var cg2 in cgs2)
+									groupTranslation.Add(JsonConvert.DeserializeObject<GroupTranslator>(JsonConvert.SerializeObject(cg2)));
+						}
+					}
+
+					if (slashGroupsTuple.commandTypeSources != null && slashGroupsTuple.commandTypeSources.Any())
+						commandTypeSources.AddRange(slashGroupsTuple.commandTypeSources);
+
+					if (slashGroupsTuple.singletonModules != null && slashGroupsTuple.singletonModules.Any())
+						s_singletonModules.AddRange(slashGroupsTuple.singletonModules);
+
+					if (slashGroupsTuple.groupCommands != null && slashGroupsTuple.groupCommands.Any())
+						groupCommands.AddRange(slashGroupsTuple.groupCommands);
+
+					if (slashGroupsTuple.subGroupCommands != null && slashGroupsTuple.subGroupCommands.Any())
+						subGroupCommands.AddRange(slashGroupsTuple.subGroupCommands);
 				}
-
-				var slashGroupsTuple = await NestedCommandWorker.ParseSlashGroupsAsync(type, classes, guildId, groupTranslations);
-
-				if (slashGroupsTuple.applicationCommands != null && slashGroupsTuple.applicationCommands.Any())
-					updateList.AddRange(slashGroupsTuple.applicationCommands);
-
-				if (slashGroupsTuple.commandTypeSources != null && slashGroupsTuple.commandTypeSources.Any())
-					commandTypeSources.AddRange(slashGroupsTuple.commandTypeSources);
-
-				if (slashGroupsTuple.singletonModules != null && slashGroupsTuple.singletonModules.Any())
-					s_singletonModules.AddRange(slashGroupsTuple.singletonModules);
-
-				if (slashGroupsTuple.groupCommands != null && slashGroupsTuple.groupCommands.Any())
-					groupCommands.AddRange(slashGroupsTuple.groupCommands);
-
-				if (slashGroupsTuple.subGroupCommands != null && slashGroupsTuple.subGroupCommands.Any())
-					subGroupCommands.AddRange(slashGroupsTuple.subGroupCommands);
-
 				//Handles methods and context menus, only if the module isn't a group itself
-				if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
+				else if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
 				{
 					List<CommandTranslator> commandTranslations = null;
 
@@ -518,7 +570,24 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					var slashCommands = await CommandWorker.ParseBasicSlashCommandsAsync(type, methods, guildId, commandTranslations);
 
 					if (slashCommands.applicationCommands != null && slashCommands.applicationCommands.Any())
+					{
 						updateList.AddRange(slashCommands.applicationCommands);
+						if (Configuration.GenerateTranslationFilesOnly)
+						{
+							var cs = new List<Command>();
+							foreach(var cmd in slashCommands.applicationCommands)
+								if (cmd.Type == ApplicationCommandType.ChatInput && (cmd.Options == null || !cmd.Options.Any(x => x.Type == ApplicationCommandOptionType.SubCommand || x.Type == ApplicationCommandOptionType.SubCommandGroup)))
+								{
+									if (cmd.Options == null || !cmd.Options.Any())
+										cs.Add(new Command(cmd.Name, null, ApplicationCommandType.ChatInput));
+									else
+										cs.Add(new Command(cmd.Name, cmd.Options.ToList(), ApplicationCommandType.ChatInput));
+								}
+							if (cs.Any())
+								foreach (var c in cs)
+									translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c)));
+						}
+					}
 
 					if (slashCommands.commandTypeSources != null && slashCommands.commandTypeSources.Any())
 						commandTypeSources.AddRange(slashCommands.commandTypeSources);
@@ -532,7 +601,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					var contextCommands = await CommandWorker.ParseContextMenuCommands(type, contextMethods, commandTranslations);
 
 					if (contextCommands.applicationCommands != null && contextCommands.applicationCommands.Any())
+					{
 						updateList.AddRange(contextCommands.applicationCommands);
+						if (Configuration.GenerateTranslationFilesOnly)
+						{
+							var cs = new List<Command>();
+							foreach (var cmd in slashCommands.applicationCommands)
+								if ((cmd.Type == ApplicationCommandType.Message || cmd.Type == ApplicationCommandType.User))
+									cs.Add(new Command(cmd.Name, null, cmd.Type));
+							if (cs.Any())
+								foreach (var c in cs)
+									translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c)));
+						}
+					}
 
 					if (contextCommands.commandTypeSources != null && contextCommands.commandTypeSources.Any())
 						commandTypeSources.AddRange(contextCommands.commandTypeSources);
@@ -563,142 +644,151 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 		if (!s_errored)
 		{
-			try
+			updateList = updateList.DistinctBy(x => x.Name).ToList();
+			if (Configuration.GenerateTranslationFilesOnly)
 			{
-				List<DiscordApplicationCommand> commands = new();
-
+				s_registrationCount++;
+				this.CheckRegistrationStartup(ManOr, translation, groupTranslation);
+			}
+			else
+			{
 				try
 				{
-					if (guildId == null)
+					List<DiscordApplicationCommand> commands = new();
+
+					try
 					{
-						if (updateList != null && updateList.Any())
+						if (guildId == null)
 						{
-							var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(this.Client, updateList);
-							var actualCommands = regCommands.Distinct().ToList();
-							commands.AddRange(actualCommands);
-							GlobalCommandsInternal.AddRange(actualCommands);
+							if (updateList != null && updateList.Any())
+							{
+								var regCommands = await RegistrationWorker.RegisterGlobalCommandsAsync(this.Client, updateList);
+								var actualCommands = regCommands.Distinct().ToList();
+								commands.AddRange(actualCommands);
+								GlobalCommandsInternal.AddRange(actualCommands);
+							}
+							else
+							{
+								foreach (var cmd in GlobalDiscordCommands)
+								{
+									try
+									{
+										await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id);
+									}
+									catch (NotFoundException)
+									{
+										this.Client.Logger.Log(ApplicationCommandsLogLevel, "Could not delete global command {cmdId}. Please clean up manually", cmd.Id);
+									}
+								}
+							}
 						}
 						else
 						{
-							foreach (var cmd in GlobalDiscordCommands)
+							if (updateList != null && updateList.Any())
 							{
-								try
+								var regCommands = await  RegistrationWorker.RegisterGuildCommandsAsync(this.Client, guildId.Value, updateList);
+								var actualCommands = regCommands.Distinct().ToList();
+								commands.AddRange(actualCommands);
+								GuildCommandsInternal.Add(guildId.Value, actualCommands);
+								/*
+								if (client.Guilds.TryGetValue(guildId.Value, out var guild))
 								{
-									await this.Client.DeleteGlobalApplicationCommandAsync(cmd.Id);
+									guild.InternalRegisteredApplicationCommands = new();
+									guild.InternalRegisteredApplicationCommands.AddRange(actualCommands);
 								}
-								catch (NotFoundException)
+								*/
+							}
+							else
+							{
+								foreach (var cmd in GuildDiscordCommands.First(x => x.Key == guildId.Value).Value)
 								{
-									this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Could not delete global command {cmd.Id}. Please clean up manually");
+									try
+									{
+										await this.Client.DeleteGuildApplicationCommandAsync(guildId.Value, cmd.Id);
+									}
+									catch (NotFoundException)
+									{
+										this.Client.Logger.Log(ApplicationCommandsLogLevel, "Could not delete guild command {cmdId} in guild {guildId}. Please clean up manually", cmd.Id, guildId.Value);
+									}
 								}
 							}
 						}
 					}
-					else
+					catch (UnauthorizedException ex)
 					{
-						if (updateList != null && updateList.Any())
-						{
-							var regCommands = await  RegistrationWorker.RegisterGuildCommandsAsync(this.Client, guildId.Value, updateList);
-							var actualCommands = regCommands.Distinct().ToList();
-							commands.AddRange(actualCommands);
-							GuildCommandsInternal.Add(guildId.Value, actualCommands);
-							/*
-							if (client.Guilds.TryGetValue(guildId.Value, out var guild))
-							{
-								guild.InternalRegisteredApplicationCommands = new();
-								guild.InternalRegisteredApplicationCommands.AddRange(actualCommands);
-							}
-							*/
-						}
-						else
-						{
-							foreach (var cmd in GuildDiscordCommands.First(x => x.Key == guildId.Value).Value)
-							{
-								try
-								{
-									await this.Client.DeleteGuildApplicationCommandAsync(guildId.Value, cmd.Id);
-								}
-								catch (NotFoundException)
-								{
-									this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Could not delete guild command {cmd.Id} in guild {guildId.Value}. Please clean up manually");
-								}
-							}
-						}
+						this.Client.Logger.LogError("Could not register application commands for guild {guildId}.\nError: {exc}", guildId, ex.JsonMessage);
+						return;
 					}
-				}
-				catch (UnauthorizedException ex)
-				{
-					this.Client.Logger.LogError($"Could not register application commands for guild {guildId}.\nError: {ex.JsonMessage}");
-					return;
-				}
-				//Creates a guild command if a guild id is specified, otherwise global
-				//Checks against the ids and adds them to the command method lists
-				foreach (var command in commands)
-				{
-					if (commandMethods.GetFirstValueWhere(x => x.Name == command.Name, out var com))
-						com.CommandId = command.Id;
-					else if (groupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
-						groupCom.CommandId = command.Id;
-					else if (subGroupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var subCom))
-						subCom.CommandId = command.Id;
-					else if (contextMenuCommands.GetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
-						cmCom.CommandId = command.Id;
-				}
-
-				//Adds to the global lists finally
-				s_commandMethods.AddRange(commandMethods);
-				s_groupCommands.AddRange(groupCommands);
-				s_subGroupCommands.AddRange(subGroupCommands);
-				s_contextMenuCommands.AddRange(contextMenuCommands);
-
-				s_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildId, commands.ToList()));
-
-				foreach (var command in commandMethods)
-				{
-					var app = types.First(t => t.Type == command.Method.DeclaringType);
-				}
-
-				this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Expected Count: {s_expectedCount}\nCurrent Count: {s_registrationCount}");
-
-				if (guildId.HasValue)
-				{
-					await this._guildApplicationCommandsRegistered.InvokeAsync(this, new GuildApplicationCommandsRegisteredEventArgs(Configuration?.ServiceProvider)
+					//Creates a guild command if a guild id is specified, otherwise global
+					//Checks against the ids and adds them to the command method lists
+					foreach (var command in commands)
 					{
-						Handled = true,
-						GuildId = guildId.Value,
-						RegisteredCommands = GuildCommandsInternal.Any(c => c.Key == guildId.Value) ? GuildCommandsInternal.FirstOrDefault(c => c.Key == guildId.Value).Value : null
-					});
-				}
-				else
-				{
-					await this._globalApplicationCommandsRegistered.InvokeAsync(this, new GlobalApplicationCommandsRegisteredEventArgs(Configuration?.ServiceProvider)
-					{
-						Handled = true,
-						RegisteredCommands = GlobalCommandsInternal
-					});
-				}
+						if (commandMethods.GetFirstValueWhere(x => x.Name == command.Name, out var com))
+							com.CommandId = command.Id;
+						else if (groupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var groupCom))
+							groupCom.CommandId = command.Id;
+						else if (subGroupCommands.GetFirstValueWhere(x => x.Name == command.Name, out var subCom))
+							subCom.CommandId = command.Id;
+						else if (contextMenuCommands.GetFirstValueWhere(x => x.Name == command.Name, out var cmCom))
+							cmCom.CommandId = command.Id;
+					}
 
-				s_registrationCount++;
-				this.CheckRegistrationStartup(ManOr);
-			}
-			catch (Exception ex)
-			{
-				if (ex is BadRequestException brex)
-				{
-					this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.WebResponse.Response}");
-				}
-				else
-				{
-					if (ex.InnerException is not null && ex.InnerException is BadRequestException brex1)
-						this.Client.Logger.LogCritical(brex1, $"There was an error registering application commands: {brex1.WebResponse.Response}");
+					//Adds to the global lists finally
+					s_commandMethods.AddRange(commandMethods.DistinctBy(x => x.Name));
+					s_groupCommands.AddRange(groupCommands.DistinctBy(x => x.Name));
+					s_subGroupCommands.AddRange(subGroupCommands.DistinctBy(x => x.Name));
+					s_contextMenuCommands.AddRange(contextMenuCommands.DistinctBy(x => x.Name));
+
+					s_registeredCommands.Add(new KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>(guildId, commands.ToList()));
+
+					foreach (var command in commandMethods)
+					{
+						var app = types.First(t => t.Type == command.Method.DeclaringType);
+					}
+
+					this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Expected Count: {s_expectedCount}\nCurrent Count: {s_registrationCount}");
+
+					if (guildId.HasValue)
+					{
+						await this._guildApplicationCommandsRegistered.InvokeAsync(this, new GuildApplicationCommandsRegisteredEventArgs(Configuration?.ServiceProvider)
+						{
+							Handled = true,
+							GuildId = guildId.Value,
+							RegisteredCommands = GuildCommandsInternal.Any(c => c.Key == guildId.Value) ? GuildCommandsInternal.FirstOrDefault(c => c.Key == guildId.Value).Value : null
+						});
+					}
 					else
-						this.Client.Logger.LogCritical(ex, $"There was an general error registering application commands");
+					{
+						await this._globalApplicationCommandsRegistered.InvokeAsync(this, new GlobalApplicationCommandsRegisteredEventArgs(Configuration?.ServiceProvider)
+						{
+							Handled = true,
+							RegisteredCommands = GlobalCommandsInternal
+						});
+					}
+
+					s_registrationCount++;
+					this.CheckRegistrationStartup(ManOr);
 				}
-				s_errored = true;
+				catch (Exception ex)
+				{
+					if (ex is BadRequestException brex)
+					{
+						this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.WebResponse.Response}");
+					}
+					else
+					{
+						if (ex.InnerException is not null && ex.InnerException is BadRequestException brex1)
+							this.Client.Logger.LogCritical(brex1, $"There was an error registering application commands: {brex1.WebResponse.Response}");
+						else
+							this.Client.Logger.LogCritical(ex, $"There was an general error registering application commands");
+					}
+					s_errored = true;
+				}
 			}
 		}
 	}
 
-	private async void CheckRegistrationStartup(bool man = false)
+	private async void CheckRegistrationStartup(bool man = false, List<CommandTranslator> translation = null, List<GroupTranslator> groupTranslation = null)
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Checking counts...\n\n" +
 			$"Expected Count: {s_expectedCount}\n" +
@@ -713,8 +803,58 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				RegisteredGuildCommands = GuildCommandsInternal,
 				GuildsWithoutScope = this._missingScopeGuildIds
 			});
+			if (Configuration.GenerateTranslationFilesOnly)
+			{
+				try
+				{
+					if (translation != null && translation.Any())
+					{
+						var file_name = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE-{s_registrationCount}_of_{s_expectedCount}.json";
+						var fs = File.Create(file_name);
+						var ms = new MemoryStream();
+						var writer = new StreamWriter(ms);
+						await writer.WriteAsync(JsonConvert.SerializeObject(translation.DistinctBy(x => x.Name), Formatting.Indented));
+						await writer.FlushAsync();
+						ms.Position = 0;
+						await ms.CopyToAsync(fs);
+						await fs.FlushAsync();
+						fs.Close();
+						await fs.DisposeAsync();
+						ms.Close();
+						await ms.DisposeAsync();
+						this.Client.Logger.LogInformation("Exported base translation to {exppath}", file_name);
+					}
 
-			this.FinishedRegistration();
+					if (groupTranslation != null && groupTranslation.Any())
+					{
+						var file_name = $"translation_generator_export-shard{this.Client.ShardId}-GROUP-{s_registrationCount}_of_{s_expectedCount}.json";
+						var fs = File.Create(file_name);
+						var ms = new MemoryStream();
+						var writer = new StreamWriter(ms);
+						await writer.WriteAsync(JsonConvert.SerializeObject(groupTranslation.DistinctBy(x => x.Name), Formatting.Indented));
+						await writer.FlushAsync();
+						ms.Position = 0;
+						await ms.CopyToAsync(fs);
+						await fs.FlushAsync();
+						fs.Close();
+						await fs.DisposeAsync();
+						ms.Close();
+						await ms.DisposeAsync();
+						this.Client.Logger.LogInformation("Exported base translation to {exppath}", file_name);
+					}
+				}
+				catch (Exception ex)
+				{
+					this.Client.Logger.LogError(ex.Message);
+					this.Client.Logger.LogError(ex.StackTrace);
+				}
+				this.FinishedRegistration();
+				await this.Client.DisconnectAsync();
+			}
+			else
+			{
+				this.FinishedRegistration();
+			}
 		}
 	}
 
@@ -762,14 +902,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 				try
 				{
-					if (s_errored)
-						throw new InvalidOperationException("Slash commands failed to register properly on startup.");
+					if (s_errored) {
+						await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Application commands failed to register properly on startup."));
+						throw new InvalidOperationException("Application commands failed to register properly on startup.");
+					}
 
 					var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
 					var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 					var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 					if (!methods.Any() && !groups.Any() && !subgroups.Any())
-						throw new InvalidOperationException("A slash command was executed, but no command was registered for it.");
+					{
+						await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("A application command was executed, but no command was registered for it."));
+						throw new InvalidOperationException("A application command was executed, but no command was registered for it.");
+					}
 
 					if (methods.Any())
 					{
@@ -815,13 +960,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			else if (e.Interaction.Type == InteractionType.AutoComplete)
 			{
 				if (s_errored)
-					throw new InvalidOperationException("Slash commands failed to register properly on startup.");
+				{
+					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Application commands failed to register properly on startup."));
+					throw new InvalidOperationException("Application commands failed to register properly on startup.");
+				}
 
 				var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
 				var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 				var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
 				if (!methods.Any() && !groups.Any() && !subgroups.Any())
-					throw new InvalidOperationException("An autocomplete interaction was created, but no command was registered for it.");
+				{
+					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("An autocomplete interaction was created, but no command was registered for it"));
+					throw new InvalidOperationException("An autocomplete interaction was created, but no command was registered for it");
+				}
 
 				try
 				{
@@ -966,13 +1117,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			try
 			{
 				if (s_errored)
+				{
+					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("Context menus failed to register properly on startup."));
 					throw new InvalidOperationException("Context menus failed to register properly on startup.");
+				}
 
 				//Gets the method for the command
 				var method = s_contextMenuCommands.FirstOrDefault(x => x.CommandId == e.Interaction.Data.Id);
 
 				if (method == null)
-					throw new InvalidOperationException("A context menu was executed, but no command was registered for it.");
+				{
+					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("A context menu command was executed, but no command was registered for it."));
+					throw new InvalidOperationException("A context menu command was executed, but no command was registered for it.");
+				}
 
 				await this.RunCommandAsync(context, method.Method, new[] { context });
 
