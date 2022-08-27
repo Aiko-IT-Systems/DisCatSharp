@@ -26,6 +26,9 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.ApplicationCommands.Attributes;
+using DisCatSharp.ApplicationCommands.Context;
+
 namespace DisCatSharp.ApplicationCommands;
 
 /// <summary>
@@ -140,8 +143,7 @@ public static class ExtensionMethods
 		foreach (var shard in client.ShardClients.Values)
 		{
 			var scomm = shard.GetExtension<ApplicationCommandsExtension>();
-			if (scomm == null)
-				scomm = shard.UseApplicationCommands(config);
+			scomm ??= shard.UseApplicationCommands(config);
 
 			modules[shard.ShardId] = scomm;
 		}

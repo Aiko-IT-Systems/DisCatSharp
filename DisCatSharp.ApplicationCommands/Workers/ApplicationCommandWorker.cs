@@ -26,10 +26,13 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using DisCatSharp.ApplicationCommands.Attributes;
+using DisCatSharp.ApplicationCommands.Context;
+using DisCatSharp.ApplicationCommands.Entities;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Workers;
 
 /// <summary>
 /// Represents a <see cref="CommandWorker"/>.
@@ -129,12 +132,8 @@ internal class CommandWorker
 				{
 					var choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
 					if (option.Choices != null)
-					{
 						foreach (var choice in option.Choices)
-						{
 							choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, commandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
-						}
-					}
 
 					localizedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
 						choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
@@ -194,9 +193,7 @@ internal class NestedCommandWorker
 			var submethods = subclassInfo.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null).ToList();
 			var subclasses = subclassInfo.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
 			if (subclasses.Any() && submethods.Any())
-			{
 				throw new ArgumentException("Slash command groups cannot have both subcommands and subgroups!");
-			}
 
 			DiscordApplicationCommandLocalization nameLocalizations = null;
 			DiscordApplicationCommandLocalization descriptionLocalizations = null;
@@ -245,12 +242,8 @@ internal class NestedCommandWorker
 						{
 							var choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
 							if (option.Choices != null)
-							{
 								foreach (var choice in option.Choices)
-								{
 									choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, subCommandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
-								}
-							}
 
 							localizedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
 								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
@@ -334,12 +327,8 @@ internal class NestedCommandWorker
 						{
 							var choices = option.Choices != null ? new List<DiscordApplicationCommandOptionChoice>(option.Choices.Count) : null;
 							if (option.Choices != null)
-							{
 								foreach (var choice in option.Choices)
-								{
 									choices.Add(new DiscordApplicationCommandOptionChoice(choice.Name, choice.Value, subSubCommandTranslation.Options.Single(o => o.Name == option.Name).Choices.Single(c => c.Name == choice.Name).NameTranslations));
-								}
-							}
 
 							localizedOptions.Add(new DiscordApplicationCommandOption(option.Name, option.Description, option.Type, option.Required,
 								choices, option.Options, option.ChannelTypes, option.AutoComplete, option.MinimumValue, option.MaximumValue,
@@ -366,18 +355,14 @@ internal class NestedCommandWorker
 
 				//Accounts for lifespans for the sub group
 				if (subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && subclass.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
-				{
 					singletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclass, ApplicationCommandsExtension.Configuration?.ServiceProvider));
-				}
 			}
 			if (command.SubCommands.Any()) subGroupCommands.Add(command);
 			commands.Add(payload);
 
 			//Accounts for lifespans
 			if (subclassInfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>() != null && subclassInfo.GetCustomAttribute<ApplicationCommandModuleLifespanAttribute>().Lifespan == ApplicationCommandModuleLifespan.Singleton)
-			{
 				singletonModules.Add(ApplicationCommandsExtension.CreateInstance(subclassInfo, ApplicationCommandsExtension.Configuration?.ServiceProvider));
-			}
 		}
 
 		return (commands, commandTypeSources, singletonModules, groupCommands, subGroupCommands, translator != null);

@@ -24,6 +24,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp.ApplicationCommands.Context;
+
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>

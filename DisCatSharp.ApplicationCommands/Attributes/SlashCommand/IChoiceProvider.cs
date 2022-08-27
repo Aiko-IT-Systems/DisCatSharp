@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
 /// All choice providers must inherit from this interface

@@ -28,7 +28,7 @@ using DisCatSharp.Enums;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Context;
 
 /// <summary>
 /// Represents a base context for application command contexts.

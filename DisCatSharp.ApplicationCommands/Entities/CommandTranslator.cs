@@ -27,7 +27,7 @@ using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Entities;
 
 /// <summary>
 /// Represents a command translator.
@@ -39,6 +39,12 @@ internal class CommandTranslator
 	/// </summary>
 	[JsonProperty("name")]
 	public string Name { get; set; }
+
+	/// <summary>
+	/// Gets the command description.
+	/// </summary>
+	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+	public string? Description { get; set; }
 
 	/// <summary>
 	/// Gets the application command type.

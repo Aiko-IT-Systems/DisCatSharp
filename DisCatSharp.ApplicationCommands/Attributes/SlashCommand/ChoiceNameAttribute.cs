@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
 /// Sets the name for this enum choice.

@@ -26,6 +26,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp;
+using DisCatSharp.ApplicationCommands.Context;
+
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>

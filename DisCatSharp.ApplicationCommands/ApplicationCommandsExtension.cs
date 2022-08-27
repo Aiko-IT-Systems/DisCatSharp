@@ -27,10 +27,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Transactions;
 
 using DisCatSharp.ApplicationCommands.Attributes;
+using DisCatSharp.ApplicationCommands.Context;
+using DisCatSharp.ApplicationCommands.Entities;
 using DisCatSharp.ApplicationCommands.EventArgs;
+using DisCatSharp.ApplicationCommands.Exceptions;
+using DisCatSharp.ApplicationCommands.Workers;
 using DisCatSharp.Common;
 using DisCatSharp.Common.Utilities;
 using DisCatSharp.Entities;
@@ -511,13 +514,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 											foreach (var sc in scg.Options)
 											{
 												if (sc.Options == null || !sc.Options.Any())
-													cs.Add(new Command(sc.Name, null, null));
+													cs.Add(new Command(sc.Name, sc.Description, null, null));
 												else
-													cs.Add(new Command(sc.Name, sc.Options.ToList(), null));
+													cs.Add(new Command(sc.Name, sc.Description, sc.Options.ToList(), null));
 											}
-											cgs.Add(new CommandGroup(scg.Name, cs, null));
+											cgs.Add(new CommandGroup(scg.Name, scg.Description, cs, null));
 										}
-										cgwsgs.Add(new CommandGroupWithSubGroups(cmd.Name, cgs, ApplicationCommandType.ChatInput));
+										cgwsgs.Add(new CommandGroupWithSubGroups(cmd.Name, cmd.Description, cgs, ApplicationCommandType.ChatInput));
 									}
 									else if (cmd.Options.First().Type == ApplicationCommandOptionType.SubCommand)
 									{
@@ -525,11 +528,11 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 										foreach (var sc2 in cmd.Options)
 										{
 											if (sc2.Options == null || !sc2.Options.Any())
-												cs2.Add(new Command(sc2.Name, null, null));
+												cs2.Add(new Command(sc2.Name, sc2.Description, null, null));
 											else
-												cs2.Add(new Command(sc2.Name, sc2.Options.ToList(), null));
+												cs2.Add(new Command(sc2.Name, sc2.Description, sc2.Options.ToList(), null));
 										}
-										cgs2.Add(new CommandGroup(cmd.Name, cs2, ApplicationCommandType.ChatInput));
+										cgs2.Add(new CommandGroup(cmd.Name, cmd.Description, cs2, ApplicationCommandType.ChatInput));
 									}
 								}
 							}
@@ -579,9 +582,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								if (cmd.Type == ApplicationCommandType.ChatInput && (cmd.Options == null || !cmd.Options.Any(x => x.Type == ApplicationCommandOptionType.SubCommand || x.Type == ApplicationCommandOptionType.SubCommandGroup)))
 								{
 									if (cmd.Options == null || !cmd.Options.Any())
-										cs.Add(new Command(cmd.Name, null, ApplicationCommandType.ChatInput));
+										cs.Add(new Command(cmd.Name, cmd.Description, null, ApplicationCommandType.ChatInput));
 									else
-										cs.Add(new Command(cmd.Name, cmd.Options.ToList(), ApplicationCommandType.ChatInput));
+										cs.Add(new Command(cmd.Name, cmd.Description, cmd.Options.ToList(), ApplicationCommandType.ChatInput));
 								}
 							if (cs.Any())
 								foreach (var c in cs)
@@ -607,8 +610,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						{
 							var cs = new List<Command>();
 							foreach (var cmd in slashCommands.applicationCommands)
-								if ((cmd.Type == ApplicationCommandType.Message || cmd.Type == ApplicationCommandType.User))
-									cs.Add(new Command(cmd.Name, null, cmd.Type));
+								if (cmd.Type == ApplicationCommandType.Message || cmd.Type == ApplicationCommandType.User)
+									cs.Add(new Command(cmd.Name, null, null, cmd.Type));
 							if (cs.Any())
 								foreach (var c in cs)
 									translation.Add(JsonConvert.DeserializeObject<CommandTranslator>(JsonConvert.SerializeObject(c)));
@@ -630,14 +633,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			{
 				if (ex is BadRequestException brex)
 				{
-					this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.WebResponse.Response}");
+					this.Client.Logger.LogCritical(brex, @"There was an error registering application commands: {res}", brex.WebResponse.Response);
 				}
 				else
 				{
 					if (ex.InnerException is not null && ex.InnerException is BadRequestException brex1)
-						this.Client.Logger.LogCritical(brex1, $"There was an error registering application commands: {brex1.WebResponse.Response}");
+						this.Client.Logger.LogCritical(brex1, @"There was an error registering application commands: {res}", brex1.WebResponse.Response);
 					else
-						this.Client.Logger.LogCritical(ex, $"There was an error parsing the application commands");
+						this.Client.Logger.LogCritical(ex, @"There was an error parsing the application commands");
 				}
 				s_errored = true;
 			}
@@ -746,7 +749,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						var app = types.First(t => t.Type == command.Method.DeclaringType);
 					}
 
-					this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Expected Count: {s_expectedCount}\nCurrent Count: {s_registrationCount}");
+					this.Client.Logger.Log(ApplicationCommandsLogLevel, @"Expected Count: {exp}\nCurrent Count: {cur}", s_expectedCount, s_registrationCount);
 
 					if (guildId.HasValue)
 					{
@@ -773,14 +776,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					if (ex is BadRequestException brex)
 					{
-						this.Client.Logger.LogCritical(brex, $"There was an error registering application commands: {brex.WebResponse.Response}");
+						this.Client.Logger.LogCritical(brex, @"There was an error registering application commands: {res}", brex.WebResponse.Response);
 					}
 					else
 					{
 						if (ex.InnerException is not null && ex.InnerException is BadRequestException brex1)
-							this.Client.Logger.LogCritical(brex1, $"There was an error registering application commands: {brex1.WebResponse.Response}");
+							this.Client.Logger.LogCritical(brex1, @"There was an error registering application commands: {res}", brex1.WebResponse.Response);
 						else
-							this.Client.Logger.LogCritical(ex, $"There was an general error registering application commands");
+							this.Client.Logger.LogCritical(ex, @"There was an general error registering application commands");
 					}
 					s_errored = true;
 				}
@@ -790,9 +793,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 	private async void CheckRegistrationStartup(bool man = false, List<CommandTranslator> translation = null, List<GroupTranslator> groupTranslation = null)
 	{
-		this.Client.Logger.Log(ApplicationCommandsLogLevel, $"Checking counts...\n\n" +
-			$"Expected Count: {s_expectedCount}\n" +
-			$"Current Count: {s_registrationCount}");
+		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Checking counts...\n\nExpected Count: {exp}\nCurrent Count: {cur}", s_expectedCount, s_registrationCount);
 
 		if ((s_registrationCount == s_expectedCount) || man)
 		{
@@ -845,8 +846,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 				catch (Exception ex)
 				{
-					this.Client.Logger.LogError(ex.Message);
-					this.Client.Logger.LogError(ex.StackTrace);
+					this.Client.Logger.LogError(@"{msg}", ex.Message);
+					this.Client.Logger.LogError(@"{stack}", ex.StackTrace);
 				}
 				this.FinishedRegistration();
 				await this.Client.DisconnectAsync();
@@ -951,8 +952,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 				catch (Exception ex)
 				{
-					this.Client.Logger.LogError(ex.Message);
-					this.Client.Logger.LogError(ex.StackTrace);
+					this.Client.Logger.LogError(@"{msg}", ex.Message);
+					this.Client.Logger.LogError(@"{stack}", ex.StackTrace);
 
 					await this._slashError.InvokeAsync(this, new SlashCommandErrorEventArgs(this.Client.ServiceProvider) { Context = context, Exception = ex });
 				}

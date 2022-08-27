@@ -22,7 +22,7 @@
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Context;
 
 /// <summary>
 /// Represents a context for a context menu.

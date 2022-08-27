@@ -41,3 +41,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("DisCatSharp.DevTools")]
 [assembly: InternalsVisibleTo("DisCatSharp.DocsGenerator")]
 [assembly: InternalsVisibleTo("DisCatSharp.StaffApps")]
+[assembly: InternalsVisibleTo("TranslatorGenerator")]

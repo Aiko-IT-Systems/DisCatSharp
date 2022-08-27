@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 
 using DisCatSharp.Entities;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
 /// Implementation of <see cref="IChoiceProvider"/> with access to service collection.

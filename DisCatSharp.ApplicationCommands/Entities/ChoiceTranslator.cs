@@ -26,7 +26,7 @@ using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Entities;
 
 /// <summary>
 /// Represents a choice translator.

@@ -23,7 +23,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace DisCatSharp.ApplicationCommands;
+using DisCatSharp.ApplicationCommands.Attributes;
+
+namespace DisCatSharp.ApplicationCommands.Exceptions;
 
 /// <summary>
 /// Thrown when a pre-execution check for a context menu command fails.

@@ -22,6 +22,8 @@
 
 using System.Threading.Tasks;
 
+using DisCatSharp.ApplicationCommands.Context;
+
 namespace DisCatSharp.ApplicationCommands;
 
 /// <summary>

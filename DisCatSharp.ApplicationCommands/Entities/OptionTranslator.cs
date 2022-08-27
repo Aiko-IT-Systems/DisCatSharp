@@ -26,7 +26,7 @@ using DisCatSharp.Entities;
 
 using Newtonsoft.Json;
 
-namespace DisCatSharp.ApplicationCommands;
+namespace DisCatSharp.ApplicationCommands.Entities;
 
 /// <summary>
 /// Represents a option translator.
@@ -38,6 +38,12 @@ internal class OptionTranslator
 	/// </summary>
 	[JsonProperty("name")]
 	public string Name { get; set; }
+
+	/// <summary>
+	/// Gets the option description.
+	/// </summary>
+	[JsonProperty("description")]
+	public string Description { get; set; }
 
 	/// <summary>
 	/// Gets the option name translations.
