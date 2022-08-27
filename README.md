@@ -22,6 +22,7 @@
 ## **NEW!**
 
 - Support for application commands (guild and global) in shards
+- Translation template export based on your own code.
 
 ## Why DisCatSharp?
 
@@ -44,9 +45,13 @@ The documentation of the nightly versions is available at [docs.dcs.aitsys.dev](
 
 Fallback docs are available at [docs-alt.dcs.aitsys.dev](https://docs-alt.dcs.aitsys.dev).
 
+##### Note: DocFx is broken right now, waiting for fix from upstream. So the documentation is outdated.
+
 ## Bugs or Feature requests?
 
-Write a mail to [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
+Either join our official support guild at https://discord.gg/Uk7sggRBTm
+
+Or write us an mail at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
 All requests are tracked at [aitsys.dev](https://aitsys.dev).
 
@@ -102,7 +107,7 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev).
 
 ----
 
-## Sponsors [![Sponsors](https://img.shields.io/github/sponsors/Aiko-IT-Systems?label=&style=flat-square&logo=github)](https://github.com/sponsors/Aiko-IT-Systems)
+## Sponsors [![Sponsors](https://img.shields.io/github/sponsors/Aiko-IT-Systems?label=&style=flat-square&logo=github)](https://github.com/sponsors/Aiko-IT-Systems) / [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=&style=flat-square&logo=github)](https://github.com/sponsors/Lulalaby)
 
 - [Deividas Kazakevicius](https://github.com/DeividasKaza)
 - [Will](https://github.com/villChurch)
@@ -116,6 +121,7 @@ Big thanks goes to the following people who helped us ♥️
 - [Geferon](https://github.com/geferon)
 - [Alice](https://github.com/QuantuChi)
 - [Will](https://github.com/villChurch)
+- [Mira](https://github.com/TheXorog)
 
 ## Special Thanks
 
