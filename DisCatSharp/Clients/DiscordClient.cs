@@ -427,6 +427,26 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
+	/// Removes all global application commands.
+	/// </summary>
+	public async Task RemoveGlobalApplicationCommandsAsync()
+		=> await this.ApiClient.BulkOverwriteGlobalApplicationCommandsAsync(this.CurrentApplication.Id, Array.Empty<DiscordApplicationCommand>());
+
+	/// <summary>
+	/// Removes all global application commands for a specific guild id.
+	/// </summary>
+	/// <param name="guildId">The target guild id.</param> 
+	public async Task RemoveGuildApplicationCommandsAsync(ulong guildId)
+		=> await this.ApiClient.BulkOverwriteGuildApplicationCommandsAsync(this.CurrentApplication.Id, guildId, Array.Empty<DiscordApplicationCommand>());
+
+	/// <summary>
+	/// Removes all global application commands for a specific guild.
+	/// </summary>
+	/// <param name="guild">The target guild.</param> 
+	public async Task RemoveGuildApplicationCommandsAsync(DiscordGuild guild)
+		=> await this.RemoveGuildApplicationCommandsAsync(guild.Id);
+
+	/// <summary>
 	/// Gets a channel.
 	/// </summary>
 	/// <param name="id">The id of the channel to get.</param>
