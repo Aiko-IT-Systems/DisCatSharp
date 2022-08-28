@@ -420,7 +420,7 @@ internal class RegistrationWorker
 
 		foreach (var cmd in updateList)
 			if (discord.GetFirstValueWhere(d => d.Name == cmd.Name, out var command))
-				if (command.IsEqualTo(cmd, client))
+				if (command.IsEqualTo(cmd, client, true))
 				{
 					if (ApplicationCommandsExtension.DebugEnabled)
 						client.Logger.LogDebug(@"[AC] Command {cmdName} unchanged", cmd.Name);
@@ -520,7 +520,7 @@ internal class RegistrationWorker
 		List<DiscordApplicationCommand> unchangedCommands = new();
 		foreach (var cmd in updateList)
 			if (discord.GetFirstValueWhere(d => d.Name == cmd.Name, out var command))
-				if (command.IsEqualTo(cmd, client))
+				if (command.IsEqualTo(cmd, client, false))
 				{
 					if (ApplicationCommandsExtension.DebugEnabled)
 						client.Logger.LogDebug(@"[AC] Command {cmdName} unchanged", cmd.Name);

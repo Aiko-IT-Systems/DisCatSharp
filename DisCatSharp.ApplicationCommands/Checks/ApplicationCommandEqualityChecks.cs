@@ -41,7 +41,8 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="ac1">Source command.</param>
 	/// <param name="targetApplicationCommand">Command to check against.</param>
 	/// <param name="client">The discord client.</param>
-	internal static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand, DiscordClient client)
+	/// <param name="IsGuild">Whether the equal check is performed for a guild command.</param>
+	internal static bool IsEqualTo(this DiscordApplicationCommand ac1, DiscordApplicationCommand targetApplicationCommand, DiscordClient client, bool IsGuild)
 	{
 		if (targetApplicationCommand is null || ac1 is null)
 			return false;
@@ -52,6 +53,12 @@ internal static class ApplicationCommandEqualityChecks
 			ac1.NameLocalizations, ac1.DescriptionLocalizations,
 			ac1.DefaultMemberPermissions, ac1.DmPermission ?? true//, ac1.IsNsfw
 		);
+
+		if (IsGuild)
+		{
+			sourceApplicationCommand.DmPermission = true;
+			targetApplicationCommand.DmPermission = true;
+		}
 
 		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, "[AC Change Check] Command {name}\n\n[{jsonOne},{jsontwo}]\n\n", ac1.Name, JsonConvert.SerializeObject(sourceApplicationCommand), JsonConvert.SerializeObject(targetApplicationCommand));
 
