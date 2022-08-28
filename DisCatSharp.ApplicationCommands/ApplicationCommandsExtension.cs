@@ -568,8 +568,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					if (slashGroupsTuple.subGroupCommands != null && slashGroupsTuple.subGroupCommands.Any())
 						subGroupCommands.AddRange(slashGroupsTuple.subGroupCommands);
 				}
+
 				//Handles methods and context menus, only if the module isn't a group itself
-				else if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
+				if (module.GetCustomAttribute<SlashCommandGroupAttribute>() == null)
 				{
 					List<CommandTranslator> commandTranslations = null;
 
