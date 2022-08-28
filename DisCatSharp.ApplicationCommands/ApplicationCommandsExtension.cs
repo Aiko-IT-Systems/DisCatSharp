@@ -461,6 +461,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		var commandTypeSources = new List<KeyValuePair<Type, Type>>();
 		var groupTranslation = new List<GroupTranslator>();
 		var translation = new List<CommandTranslator>();
+
 		//Iterates over all the modules
 		foreach (var config in types)
 		{
@@ -474,16 +475,26 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				config.Translations?.Invoke(ctx);
 
 				//Add module to classes list if it's a group
+				var extremeNestedGroup = false;
 				if (module.GetCustomAttribute<SlashCommandGroupAttribute>() != null)
 				{
 					classes.Add(module);
+				}
+				else if (module.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).Any(x => x.IsDefined(typeof(SlashCommandGroupAttribute))))
+				{
+					//Otherwise add the extreme nested groups
+					classes = module.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
+						.Where(x => x.IsDefined(typeof(SlashCommandGroupAttribute)))
+						.Select(x => module.GetNestedType(x.Name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).GetTypeInfo()).ToList();
+					extremeNestedGroup = true;
 				}
 				else
 				{
 					//Otherwise add the nested groups
 					classes = module.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
 				}
-				if (module.GetCustomAttribute<SlashCommandGroupAttribute>() != null)
+
+				if (module.GetCustomAttribute<SlashCommandGroupAttribute>() != null || extremeNestedGroup)
 				{
 					List<GroupTranslator> groupTranslations = null;
 
