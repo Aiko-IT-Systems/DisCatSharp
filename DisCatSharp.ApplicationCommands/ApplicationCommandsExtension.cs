@@ -480,12 +480,12 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					classes.Add(module);
 				}
-				else if (module.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).Any(x => x.IsDefined(typeof(SlashCommandGroupAttribute))))
+				else if (module.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static).Any(x => x.IsDefined(typeof(SlashCommandGroupAttribute))))
 				{
 					//Otherwise add the extreme nested groups
-					classes = module.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
+					classes = module.GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
 						.Where(x => x.IsDefined(typeof(SlashCommandGroupAttribute)))
-						.Select(x => module.GetNestedType(x.Name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance).GetTypeInfo()).ToList();
+						.Select(x => module.GetNestedType(x.Name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static).GetTypeInfo()).ToList();
 					extremeNestedGroup = true;
 				}
 				else
