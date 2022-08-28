@@ -20,21 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Enums
+namespace DisCatSharp.Enums;
+
+/// <summary>
+/// Represents the integration expire behavior.
+/// </summary>
+public enum IntegrationExpireBehavior : int
 {
 	/// <summary>
-	/// Represents the integration expire behavior.
+	/// Removes the role from the member.
 	/// </summary>
-	public enum IntegrationExpireBehavior : int
-	{
-		/// <summary>
-		/// Removes the role from the member.
-		/// </summary>
-		RemoveRole = 0,
+	RemoveRole = 0,
 
-		/// <summary>
-		/// Kicks the member.
-		/// </summary>
-		Kick = 1
-	}
+	/// <summary>
+	/// Kicks the member.
+	/// </summary>
+	Kick = 1
 }

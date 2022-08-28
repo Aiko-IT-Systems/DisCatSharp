@@ -621,7 +621,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						if (Configuration.GenerateTranslationFilesOnly)
 						{
 							var cs = new List<Command>();
-							foreach (var cmd in slashCommands.applicationCommands)
+							foreach (var cmd in contextCommands.applicationCommands)
 								if (cmd.Type == ApplicationCommandType.Message || cmd.Type == ApplicationCommandType.User)
 									cs.Add(new Command(cmd.Name, null, null, cmd.Type));
 							if (cs.Any())

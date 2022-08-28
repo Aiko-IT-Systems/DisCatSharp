@@ -20,21 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.Enums
+namespace DisCatSharp.Enums;
+
+/// <summary>
+/// The visibility type of user account connections.
+/// </summary>
+public enum ConnectionVisibilityType : long
 {
 	/// <summary>
-	/// The visibility type of user account connections.
+	/// This connection type is only visible to the owning user.
 	/// </summary>
-	public enum ConnectionVisibilityType : long
-	{
-		/// <summary>
-		/// This connection type is only visible to the owning user.
-		/// </summary>
-		None = 0,
+	None = 0,
 
-		/// <summary>
-		/// This connection is visible to everyone.
-		/// </summary>
-		Everyone = 1
-	}
+	/// <summary>
+	/// This connection is visible to everyone.
+	/// </summary>
+	Everyone = 1
 }
