@@ -27,6 +27,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 using DisCatSharp.Common;
@@ -683,12 +684,7 @@ public sealed partial class DiscordClient
 			foreach (var xc in guild.Channels.Values)
 			{
 				xc.GuildId = guild.Id;
-				xc.Discord = this;
-				foreach (var xo in xc.PermissionOverwritesInternal)
-				{
-					xo.Discord = this;
-					xo.ChannelId = xc.Id;
-				}
+				xc.Initialize(this);
 			}
 
 			guild.RolesInternal ??= new ConcurrentDictionary<ulong, DiscordRole>();
@@ -781,17 +777,7 @@ public sealed partial class DiscordClient
 	/// <param name="channel">The channel.</param>
 	internal async Task OnChannelCreateEventAsync(DiscordChannel channel)
 	{
-		channel.Discord = this;
-		foreach (var xo in channel.PermissionOverwritesInternal)
-		{
-			xo.Discord = this;
-			xo.ChannelId = channel.Id;
-		}
-		foreach (var xo in channel.InternalAvailableTags)
-		{
-			xo.Discord = this;
-			xo.ChannelId = channel.Id;
-		}
+		channel.Initialize(this);
 
 		this.GuildsInternal[channel.GuildId.Value].ChannelsInternal[channel.Id] = channel;
 
@@ -890,11 +876,7 @@ public sealed partial class DiscordClient
 
 			channelNew.PermissionOverwritesInternal.Clear();
 
-			foreach (var po in channel.PermissionOverwritesInternal)
-			{
-				po.Discord = this;
-				po.ChannelId = channel.Id;
-			}
+			channel.Initialize(this);
 
 			channelNew.PermissionOverwritesInternal.AddRange(channel.PermissionOverwritesInternal);
 
@@ -960,12 +942,7 @@ public sealed partial class DiscordClient
 		guild.ChannelsInternal.Clear();
 		foreach (var channel in channels.ToList())
 		{
-			channel.Discord = this;
-			foreach (var xo in channel.PermissionOverwritesInternal)
-			{
-				xo.Discord = this;
-				xo.ChannelId = channel.Id;
-			}
+			channel.Initialize(this);
 			guild.ChannelsInternal[channel.Id] = channel;
 		}
 	}
@@ -1061,12 +1038,7 @@ public sealed partial class DiscordClient
 		foreach (var xc in guild.ChannelsInternal.Values)
 		{
 			xc.GuildId = guild.Id;
-			xc.Discord = this;
-			foreach (var xo in xc.PermissionOverwritesInternal)
-			{
-				xo.Discord = this;
-				xo.ChannelId = xc.Id;
-			}
+			xc.Initialize(this);
 		}
 		foreach (var xt in guild.ThreadsInternal.Values)
 		{
@@ -1210,12 +1182,7 @@ public sealed partial class DiscordClient
 		foreach (var xc in guild.ChannelsInternal.Values)
 		{
 			xc.GuildId = guild.Id;
-			xc.Discord = this;
-			foreach (var xo in xc.PermissionOverwritesInternal)
-			{
-				xo.Discord = this;
-				xo.ChannelId = xc.Id;
-			}
+			xc.Initialize(this);
 		}
 		foreach (var xc in guild.ThreadsInternal.Values)
 		{
