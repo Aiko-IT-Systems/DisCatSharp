@@ -54,15 +54,18 @@ internal static class ApplicationCommandEqualityChecks
 			ac1.DefaultMemberPermissions, ac1.DmPermission ?? true//, ac1.IsNsfw
 		);
 
+		if (sourceApplicationCommand.DefaultMemberPermissions == Permissions.None && targetApplicationCommand.DefaultMemberPermissions == null)
+			sourceApplicationCommand.DefaultMemberPermissions = null;
+
 		if (IsGuild)
 		{
-			sourceApplicationCommand.DmPermission = true;
-			targetApplicationCommand.DmPermission = true;
+			sourceApplicationCommand.DmPermission = null;
+			targetApplicationCommand.DmPermission = null;
 		}
 
 		client.Logger.Log(ApplicationCommandsExtension.ApplicationCommandsLogLevel, "[AC Change Check] Command {name}\n\n[{jsonOne},{jsontwo}]\n\n", ac1.Name, JsonConvert.SerializeObject(sourceApplicationCommand), JsonConvert.SerializeObject(targetApplicationCommand));
 
-		return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand, ac1.Type, ApplicationCommandsExtension.Configuration?.EnableLocalization ?? false);
+		return ac1.Type == targetApplicationCommand.Type && sourceApplicationCommand.SoftEqual(targetApplicationCommand, ac1.Type, ApplicationCommandsExtension.Configuration?.EnableLocalization ?? false, IsGuild);
 	}
 
 	/// <summary>
@@ -73,10 +76,15 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="target">Application command to check against.</param>
 	/// <param name="type">The application command type.</param>
 	/// <param name="localizationEnabled">Whether localization is enabled.</param>
-	internal static bool SoftEqual(this DiscordApplicationCommand source, DiscordApplicationCommand target, ApplicationCommandType type, bool localizationEnabled = false)
+	internal static bool SoftEqual(this DiscordApplicationCommand source, DiscordApplicationCommand target, ApplicationCommandType type, bool localizationEnabled = false, bool guild = false)
 	{
-		var sDmPerm = source.DmPermission ?? true;
-		var tDmPerm = target.DmPermission ?? true;
+		bool? sDmPerm = source.DmPermission ?? true;
+		bool? tDmPerm = target.DmPermission ?? true;
+		if (guild)
+		{
+			sDmPerm = null;
+			tDmPerm = null;
+		}
 		return localizationEnabled
 			? type switch
 			{
@@ -107,18 +115,18 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="localizationEnabled">Whether localization is enabled.</param>
 	/// <param name="sDmPerm">The source dm permission.</param>
 	/// <param name="tDmPerm">The target dm permission.</param>
-	internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target, bool localizationEnabled = false, bool sDmPerm = true, bool tDmPerm = true)
+	internal static bool DeepEqual(DiscordApplicationCommand source, DiscordApplicationCommand target, bool localizationEnabled = false, bool? sDmPerm = null, bool? tDmPerm = null)
 	{
 		var rootCheck = true;
-		/*//Console.WriteLine($"{source.Name == target.Name}");
-		//Console.WriteLine($"{source.Description == target.Description}");
-		//Console.WriteLine($"{source.Type == target.Type}");
-		//Console.WriteLine($"{source.DefaultMemberPermissions == target.DefaultMemberPermissions}");
-		//Console.WriteLine($"{sDmPerm == tDmPerm}");*/
+		Console.WriteLine($"{source.Name == target.Name}");
+		Console.WriteLine($"{source.Description == target.Description}");
+		Console.WriteLine($"{source.Type == target.Type}");
+		Console.WriteLine($"{source.DefaultMemberPermissions == target.DefaultMemberPermissions} - {source.DefaultMemberPermissions} == {target.DefaultMemberPermissions}");
+		Console.WriteLine($"{sDmPerm == tDmPerm}");
 		rootCheck = source.Name == target.Name && source.Description == target.Description && source.Type == target.Type && source.DefaultMemberPermissions == target.DefaultMemberPermissions && sDmPerm == tDmPerm;
 		if (localizationEnabled)
 			rootCheck = rootCheck && source.NameLocalizations == target.NameLocalizations && source.DescriptionLocalizations == target.DescriptionLocalizations;
-		////Console.WriteLine($"{rootCheck}");
+		Console.WriteLine($"{rootCheck}");
 		if (source.Options == null && target.Options == null)
 			return rootCheck;
 		else if ((source.Options != null && target.Options == null) || (source.Options == null && target.Options != null))

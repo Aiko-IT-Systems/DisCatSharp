@@ -96,7 +96,7 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	/// Gets the commands needed permissions.
 	/// </summary>
 	[JsonProperty("default_member_permissions", NullValueHandling = NullValueHandling.Ignore)]
-	public Permissions? DefaultMemberPermissions { get; internal set; }
+	public Permissions? DefaultMemberPermissions { get; internal set; } = null;
 
 	/// <summary>
 	/// Gets whether the command can be used in direct messages.
