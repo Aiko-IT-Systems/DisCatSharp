@@ -616,10 +616,13 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			xo.Discord = this.Discord;
 			xo.ChannelId = this.Id;
 		}
-		foreach (var xo in this.InternalAvailableTags)
+		if (this.InternalAvailableTags != null)
 		{
-			xo.Discord = this.Discord;
-			xo.ChannelId = this.Id;
+			foreach (var xo in this.InternalAvailableTags)
+			{
+				xo.Discord = this.Discord;
+				xo.ChannelId = this.Id;
+			}
 		}
 	}
 

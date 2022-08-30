@@ -862,13 +862,8 @@ public sealed partial class DiscordClient
 				if (channelNew.InternalAvailableTags != null && channelNew.InternalAvailableTags.Any())
 					channelNew.InternalAvailableTags.Clear();
 
-				foreach (var fpt in channel.InternalAvailableTags)
-				{
-					fpt.Discord = this;
-					fpt.ChannelId = channel.Id;
-				}
-
-				channelNew.InternalAvailableTags.AddRange(channel.InternalAvailableTags);
+				if (channel.InternalAvailableTags != null && channel.InternalAvailableTags.Any())
+					channelNew.InternalAvailableTags.AddRange(channel.InternalAvailableTags);
 			}
 			else
 			{
