@@ -1223,7 +1223,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordWebhook>> GetWebhooksAsync()
-		=> this.Discord.ApiClient.GetChannelWebhooksAsync(this.Id);
+		=> this.IsThread() ? this.Discord.ApiClient.GetChannelWebhooksAsync(this.Parent.Id) : this.Discord.ApiClient.GetChannelWebhooksAsync(this.Id);
 
 	/// <summary>
 	/// Moves a member to this voice channel.
