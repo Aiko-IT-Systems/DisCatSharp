@@ -1316,6 +1316,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					args.Add(option.Value.ToString());
 				else if (parameter.ParameterType.IsEnum)
 					args.Add(Enum.Parse(parameter.ParameterType, (string)option.Value));
+				else if (parameter.ParameterType == typeof(ulong) || parameter.ParameterType == typeof(ulong?))
+					args.Add((ulong?)option.Value);
+				else if (parameter.ParameterType == typeof(int) || parameter.ParameterType == typeof(int?))
+					args.Add((int?)option.Value);
 				else if (parameter.ParameterType == typeof(long) || parameter.ParameterType == typeof(long?))
 					args.Add((long?)option.Value);
 				else if (parameter.ParameterType == typeof(bool) || parameter.ParameterType == typeof(bool?))
