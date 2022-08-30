@@ -827,6 +827,27 @@ public sealed partial class DiscordClient
 				QualityMode = channelNew.QualityMode,
 				DefaultAutoArchiveDuration = channelNew.DefaultAutoArchiveDuration,
 			};
+
+			channelNew.Bitrate = channel.Bitrate;
+			channelNew.Name = channel.Name;
+			channelNew.Position = channel.Position;
+			channelNew.Topic = channel.Topic;
+			channelNew.UserLimit = channel.UserLimit;
+			channelNew.ParentId = channel.ParentId;
+			channelNew.IsNsfw = channel.IsNsfw;
+			channelNew.PerUserRateLimit = channel.PerUserRateLimit;
+			channelNew.Type = channel.Type;
+			channelNew.RtcRegionId = channel.RtcRegionId;
+			channelNew.QualityMode = channel.QualityMode;
+			channelNew.DefaultAutoArchiveDuration = channel.DefaultAutoArchiveDuration;
+
+			channelNew.PermissionOverwritesInternal.Clear();
+
+			channel.Initialize(this);
+
+			channelNew.PermissionOverwritesInternal.AddRange(channel.PermissionOverwritesInternal);
+
+
 			if (channel.Type == ChannelType.Forum)
 			{
 				channelOld.PostCreateUserRateLimit = channelNew.PostCreateUserRateLimit;
@@ -848,7 +869,8 @@ public sealed partial class DiscordClient
 				}
 
 				channelNew.InternalAvailableTags.AddRange(channel.InternalAvailableTags);
-			} else
+			}
+			else
 			{
 				channelOld.PostCreateUserRateLimit = null;
 				channelOld.InternalAvailableTags = null;
@@ -860,25 +882,8 @@ public sealed partial class DiscordClient
 				channelNew.DefaultReactionEmoji = null;
 				channelNew.InternalAvailableTags = null;
 			}
-
-			channelNew.Bitrate = channel.Bitrate;
-			channelNew.Name = channel.Name;
-			channelNew.Position = channel.Position;
-			channelNew.Topic = channel.Topic;
-			channelNew.UserLimit = channel.UserLimit;
-			channelNew.ParentId = channel.ParentId;
-			channelNew.IsNsfw = channel.IsNsfw;
-			channelNew.PerUserRateLimit = channel.PerUserRateLimit;
-			channelNew.Type = channel.Type;
-			channelNew.RtcRegionId = channel.RtcRegionId;
-			channelNew.QualityMode = channel.QualityMode;
-			channelNew.DefaultAutoArchiveDuration = channel.DefaultAutoArchiveDuration;
-
-			channelNew.PermissionOverwritesInternal.Clear();
-
-			channel.Initialize(this);
-
-			channelNew.PermissionOverwritesInternal.AddRange(channel.PermissionOverwritesInternal);
+			channelOld.Initialize(this);
+			channelNew.Initialize(this);
 
 			if (this.Configuration.AutoRefreshChannelCache && gld != null)
 			{
