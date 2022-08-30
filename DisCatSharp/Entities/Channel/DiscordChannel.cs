@@ -1226,10 +1226,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordWebhook> CreateWebhookAsync(string name, Optional<Stream> avatar = default, string reason = null)
-	{
-		var av64 = ImageTool.Base64FromStream(avatar);
-		return await this.Discord.ApiClient.CreateWebhookAsync(this.Id, name, av64, reason).ConfigureAwait(false);
-	}
+		=> await this.Discord.ApiClient.CreateWebhookAsync(this.IsThread() ? this.ParentId!.Value : this.Id, name,
+			ImageTool.Base64FromStream(avatar), reason).ConfigureAwait(false);
 
 	/// <summary>
 	/// Returns a list of webhooks.
@@ -1238,7 +1236,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordWebhook>> GetWebhooksAsync()
-		=> this.IsThread() ? this.Discord.ApiClient.GetChannelWebhooksAsync(this.Parent.Id) : this.Discord.ApiClient.GetChannelWebhooksAsync(this.Id);
+		=> this.Discord.ApiClient.GetChannelWebhooksAsync(this.IsThread() ? this.ParentId!.Value : this.Id);
 
 	/// <summary>
 	/// Moves a member to this voice channel.
