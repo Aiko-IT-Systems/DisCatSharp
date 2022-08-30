@@ -167,6 +167,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	internal bool StartupFinished { get; set; }
 
+
+	/// <summary>
+	/// Gets the service provider this module was configured with.
+	/// </summary>
+	public IServiceProvider Services
+		=> Configuration.ServiceProvider;
+
 	/// <summary>
 	/// Gets a list of handled interactions. Fix for double interaction execution bug.
 	/// </summary>
