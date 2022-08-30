@@ -1148,11 +1148,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			{
 				if (guild.ChannelsInternal.TryGetValue(channel.Id, out _)) continue;
 
-				foreach (var overwrite in channel.PermissionOverwritesInternal)
-				{
-					overwrite.Discord = this;
-					overwrite.ChannelId = channel.Id;
-				}
+				channel.Initialize(this);
 
 				guild.ChannelsInternal[channel.Id] = channel;
 			}

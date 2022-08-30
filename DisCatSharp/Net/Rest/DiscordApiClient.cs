@@ -1636,12 +1636,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
-		ret.Discord = this.Discord;
-		foreach (var xo in ret.PermissionOverwritesInternal)
-		{
-			xo.Discord = this.Discord;
-			xo.ChannelId = ret.Id;
-		}
+		ret.Initialize(this.Discord);
 
 		return ret;
 	}
@@ -1700,12 +1695,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
-		ret.Discord = this.Discord;
-		foreach (var xo in ret.PermissionOverwritesInternal)
-		{
-			xo.Discord = this.Discord;
-			xo.ChannelId = ret.Id;
-		}
+		ret.Initialize(this.Discord);
 
 		return ret;
 	}
@@ -1913,17 +1903,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
-		ret.Discord = this.Discord;
-		foreach (var xo in ret.PermissionOverwritesInternal)
-		{
-			xo.Discord = this.Discord;
-			xo.ChannelId = ret.Id;
-		}
-		foreach(var xo in ret.InternalAvailableTags)
-		{
-			xo.Discord = this.Discord;
-			xo.ChannelId = ret.Id;
-		}
+		ret.Initialize(this.Discord);
 
 		return ret;
 	}
@@ -2120,11 +2100,7 @@ public sealed class DiscordApiClient
 		var channelsRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordChannel>>(res.Response).Select(xc => { xc.Discord = this.Discord; return xc; });
 
 		foreach (var ret in channelsRaw)
-			foreach (var xo in ret.PermissionOverwritesInternal)
-			{
-				xo.Discord = this.Discord;
-				xo.ChannelId = ret.Id;
-			}
+			ret.Initialize(this.Discord);
 
 		return new ReadOnlyCollection<DiscordChannel>(new List<DiscordChannel>(channelsRaw));
 	}

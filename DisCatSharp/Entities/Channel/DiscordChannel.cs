@@ -218,7 +218,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// List of available tags for forum posts.
 	/// </summary>
 	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
-	internal List<ForumPostTag> InternalAvailableTags { get; set; }
+	internal List<ForumPostTag> InternalAvailableTags { get; set; } = new();
 
 	/// <summary>
 	/// List of available tags for forum posts.
@@ -414,6 +414,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		foreach (var ovr in this.PermissionOverwritesInternal)
 			ovrs.Add(await new DiscordOverwriteBuilder().FromAsync(ovr).ConfigureAwait(false));
 
+		// TODO: Add forum tags option missing?
+
 		var bitrate = this.Bitrate;
 		var userLimit = this.UserLimit;
 		Optional<int?> perUserRateLimit = this.PerUserRateLimit;
@@ -606,6 +608,24 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		return this.Guild.Channels.Values.ToList().AsReadOnly();
 	}
 
+	internal void Initialize(BaseDiscordClient client)
+	{
+		this.Discord = client;
+		foreach (var xo in this.PermissionOverwritesInternal)
+		{
+			xo.Discord = this.Discord;
+			xo.ChannelId = this.Id;
+		}
+		if (this.InternalAvailableTags != null)
+		{
+			foreach (var xo in this.InternalAvailableTags)
+			{
+				xo.Discord = this.Discord;
+				xo.ChannelId = this.Id;
+			}
+		}
+	}
+
 	/// <summary>
 	/// Refreshes the positions.
 	/// </summary>
@@ -615,12 +635,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		this.Guild.ChannelsInternal.Clear();
 		foreach (var channel in channels.ToList())
 		{
-			channel.Discord = this.Discord;
-			foreach (var xo in channel.PermissionOverwritesInternal)
-			{
-				xo.Discord = this.Discord;
-				xo.ChannelId = channel.Id;
-			}
+			channel.Initialize(this.Discord);
 			this.Guild.ChannelsInternal[channel.Id] = channel;
 		}
 	}
