@@ -683,12 +683,7 @@ public sealed partial class DiscordClient
 			foreach (var xc in guild.Channels.Values)
 			{
 				xc.GuildId = guild.Id;
-				xc.Discord = this;
-				foreach (var xo in xc.PermissionOverwritesInternal)
-				{
-					xo.Discord = this;
-					xo.ChannelId = xc.Id;
-				}
+				xc.Initialize(this);
 			}
 
 			guild.RolesInternal ??= new ConcurrentDictionary<ulong, DiscordRole>();
@@ -781,17 +776,7 @@ public sealed partial class DiscordClient
 	/// <param name="channel">The channel.</param>
 	internal async Task OnChannelCreateEventAsync(DiscordChannel channel)
 	{
-		channel.Discord = this;
-		foreach (var xo in channel.PermissionOverwritesInternal)
-		{
-			xo.Discord = this;
-			xo.ChannelId = channel.Id;
-		}
-		foreach (var xo in channel.InternalAvailableTags)
-		{
-			xo.Discord = this;
-			xo.ChannelId = channel.Id;
-		}
+		channel.Initialize(this);
 
 		this.GuildsInternal[channel.GuildId.Value].ChannelsInternal[channel.Id] = channel;
 
@@ -841,39 +826,6 @@ public sealed partial class DiscordClient
 				QualityMode = channelNew.QualityMode,
 				DefaultAutoArchiveDuration = channelNew.DefaultAutoArchiveDuration,
 			};
-			if (channel.Type == ChannelType.Forum)
-			{
-				channelOld.PostCreateUserRateLimit = channelNew.PostCreateUserRateLimit;
-				channelOld.InternalAvailableTags = channelNew.InternalAvailableTags;
-				channelOld.Template = channelNew.Template;
-				channelOld.DefaultReactionEmoji = channelNew.DefaultReactionEmoji;
-
-				channelNew.PostCreateUserRateLimit = channel.PostCreateUserRateLimit;
-				channelNew.Template = channel.Template;
-				channelNew.DefaultReactionEmoji = channel.DefaultReactionEmoji;
-
-				if (channelNew.InternalAvailableTags != null && channelNew.InternalAvailableTags.Any())
-					channelNew.InternalAvailableTags.Clear();
-
-				foreach (var fpt in channel.InternalAvailableTags)
-				{
-					fpt.Discord = this;
-					fpt.ChannelId = channel.Id;
-				}
-
-				channelNew.InternalAvailableTags.AddRange(channel.InternalAvailableTags);
-			} else
-			{
-				channelOld.PostCreateUserRateLimit = null;
-				channelOld.InternalAvailableTags = null;
-				channelOld.Template = null;
-				channelOld.DefaultReactionEmoji = null;
-
-				channelNew.PostCreateUserRateLimit = null;
-				channelNew.Template = null;
-				channelNew.DefaultReactionEmoji = null;
-				channelNew.InternalAvailableTags = null;
-			}
 
 			channelNew.Bitrate = channel.Bitrate;
 			channelNew.Name = channel.Name;
@@ -890,13 +842,42 @@ public sealed partial class DiscordClient
 
 			channelNew.PermissionOverwritesInternal.Clear();
 
-			foreach (var po in channel.PermissionOverwritesInternal)
-			{
-				po.Discord = this;
-				po.ChannelId = channel.Id;
-			}
+			channel.Initialize(this);
 
 			channelNew.PermissionOverwritesInternal.AddRange(channel.PermissionOverwritesInternal);
+
+
+			if (channel.Type == ChannelType.Forum)
+			{
+				channelOld.PostCreateUserRateLimit = channelNew.PostCreateUserRateLimit;
+				channelOld.InternalAvailableTags = channelNew.InternalAvailableTags;
+				channelOld.Template = channelNew.Template;
+				channelOld.DefaultReactionEmoji = channelNew.DefaultReactionEmoji;
+
+				channelNew.PostCreateUserRateLimit = channel.PostCreateUserRateLimit;
+				channelNew.Template = channel.Template;
+				channelNew.DefaultReactionEmoji = channel.DefaultReactionEmoji;
+
+				if (channelNew.InternalAvailableTags != null && channelNew.InternalAvailableTags.Any())
+					channelNew.InternalAvailableTags.Clear();
+
+				if (channel.InternalAvailableTags != null && channel.InternalAvailableTags.Any())
+					channelNew.InternalAvailableTags.AddRange(channel.InternalAvailableTags);
+			}
+			else
+			{
+				channelOld.PostCreateUserRateLimit = null;
+				channelOld.InternalAvailableTags = null;
+				channelOld.Template = null;
+				channelOld.DefaultReactionEmoji = null;
+
+				channelNew.PostCreateUserRateLimit = null;
+				channelNew.Template = null;
+				channelNew.DefaultReactionEmoji = null;
+				channelNew.InternalAvailableTags = null;
+			}
+			channelOld.Initialize(this);
+			channelNew.Initialize(this);
 
 			if (this.Configuration.AutoRefreshChannelCache && gld != null)
 			{
@@ -960,12 +941,7 @@ public sealed partial class DiscordClient
 		guild.ChannelsInternal.Clear();
 		foreach (var channel in channels.ToList())
 		{
-			channel.Discord = this;
-			foreach (var xo in channel.PermissionOverwritesInternal)
-			{
-				xo.Discord = this;
-				xo.ChannelId = channel.Id;
-			}
+			channel.Initialize(this);
 			guild.ChannelsInternal[channel.Id] = channel;
 		}
 	}
@@ -1061,12 +1037,7 @@ public sealed partial class DiscordClient
 		foreach (var xc in guild.ChannelsInternal.Values)
 		{
 			xc.GuildId = guild.Id;
-			xc.Discord = this;
-			foreach (var xo in xc.PermissionOverwritesInternal)
-			{
-				xo.Discord = this;
-				xo.ChannelId = xc.Id;
-			}
+			xc.Initialize(this);
 		}
 		foreach (var xt in guild.ThreadsInternal.Values)
 		{
@@ -1210,12 +1181,7 @@ public sealed partial class DiscordClient
 		foreach (var xc in guild.ChannelsInternal.Values)
 		{
 			xc.GuildId = guild.Id;
-			xc.Discord = this;
-			foreach (var xo in xc.PermissionOverwritesInternal)
-			{
-				xo.Discord = this;
-				xo.ChannelId = xc.Id;
-			}
+			xc.Initialize(this);
 		}
 		foreach (var xc in guild.ThreadsInternal.Values)
 		{
