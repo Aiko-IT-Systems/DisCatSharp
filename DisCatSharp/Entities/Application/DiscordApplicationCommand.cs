@@ -150,6 +150,8 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 				throw new ArgumentException("Slash command name cannot have any upper case characters.", nameof(name));
 			if (description.Length > 100)
 				throw new ArgumentException("Slash command description cannot exceed 100 characters.", nameof(description));
+			if (string.IsNullOrWhiteSpace(description))
+				throw new ArgumentException("Slash commands need a description.", nameof(description));
 
 			this.RawNameLocalizations = nameLocalizations?.GetKeyValuePairs();
 			this.RawDescriptionLocalizations = descriptionLocalizations?.GetKeyValuePairs();

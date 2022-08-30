@@ -162,6 +162,9 @@ public sealed class DiscordApplicationCommandOption
 			throw new ArgumentException("Application command option description cannot exceed 100 characters.", nameof(description));
 		if (autocomplete && (choices?.Any() ?? false))
 			throw new InvalidOperationException("Auto-complete slash command options cannot provide choices.");
+		if (type == ApplicationCommandOptionType.SubCommand || type == ApplicationCommandOptionType.SubCommandGroup)
+			if (string.IsNullOrWhiteSpace(description))
+				throw new ArgumentException("Slash commands need a description.", nameof(description));
 
 		this.Name = name;
 		this.Description = description;
