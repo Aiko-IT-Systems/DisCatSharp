@@ -72,7 +72,7 @@ public static class Internals
 	/// Whether the <see cref="DiscordChannel"/> is related to threads.
 	/// </summary>
 	/// <param name="channel">The channel.</param>
-	internal static bool IsThread(this DiscordChannel channel) => channel.Type == ChannelType.PublicThread || channel.Type == ChannelType.PrivateThread || channel.Type == ChannelType.NewsThread;
+	internal static bool IsThread(this DiscordChannel channel) => channel is DiscordThreadChannel;
 
 	/// <summary>
 	/// Whether users can write the <see cref="DiscordChannel"/>.
