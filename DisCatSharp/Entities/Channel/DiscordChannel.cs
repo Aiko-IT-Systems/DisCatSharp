@@ -127,7 +127,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	[JsonIgnore]
 	public bool IsPrivate
-		=> this.Type == ChannelType.Private || this.Type == ChannelType.Group;
+		=> this.Type is ChannelType.Private or ChannelType.Group or ChannelType.PrivateThread;
 
 	/// <summary>
 	/// Gets whether this channel is a channel category.
