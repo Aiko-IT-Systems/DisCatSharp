@@ -53,12 +53,6 @@ public class DiscordThreadChannel : DiscordChannel, IEquatable<DiscordThreadChan
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 	public new string Name { get; internal set; }
 
-	/// <summary>
-	/// Gets the type of this thread.
-	/// </summary>
-	[JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-	public new ChannelType Type { get; internal set; }
-
 	[JsonProperty("total_message_sent", DefaultValueHandling = DefaultValueHandling.Ignore)]
 	public int TotalMessagesSent { get; internal set; }
 
