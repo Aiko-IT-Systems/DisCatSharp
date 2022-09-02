@@ -24,8 +24,8 @@ Command options can be of the following types:
 >[!NOTE]
 >Options can only be added in the slash commands. Context menus do not support this!
 
-All of options must contain the [Option](xref:DisCatSharp.ApplicationCommands.OptionAttribute) attribute.
-They should be after [InteractionContext](xref:DisCatSharp.ApplicationCommands.InteractionContext).
+All of options must contain the [Option](xref:DisCatSharp.ApplicationCommands.Attributes.OptionAttribute) attribute.
+They should be after [InteractionContext](xref:DisCatSharp.ApplicationCommands.Context.InteractionContext).
 
 ```cs
 public class MyCommand : ApplicationCommandsModule
@@ -47,8 +47,8 @@ We can of course add a string or long parameter and let users guess the options,
 
 We have 3 ways to make choices:
 - Enums
-- [Choice Attribute](xref:DisCatSharp.ApplicationCommands.ChoiceAttribute)
-- [Choice Providers](xref:DisCatSharp.ApplicationCommands.IChoiceProvider)
+- [Choice Attribute](xref:DisCatSharp.ApplicationCommands.Attributes.ChoiceAttribute)
+- [Choice Providers](xref:DisCatSharp.ApplicationCommands.Attributes.IChoiceProvider)
 
 ### Enums
 
@@ -86,7 +86,7 @@ public enum MyEnum
 ### Choice Attribute
 
 With this way, you can get rid of unnecessary conversions within the command.
-To do this, you need to add one or more [Choice Attributes](xref:DisCatSharp.ApplicationCommands.ChoiceAttribute) before the [Option](xref:DisCatSharp.ApplicationCommands.OptionAttribute) attribute
+To do this, you need to add one or more [Choice Attributes](xref:DisCatSharp.ApplicationCommands.Attributes.ChoiceAttribute) before the [Option](xref:DisCatSharp.ApplicationCommands.Attributes.OptionAttribute) attribute
 ```cs
 [SlashCommand("my_command", "This is description of the command.")]
 public static async Task MySlashCommand(InteractionContext context, [Choice("First option", 1)] [Choice("Second option", 2)] [Option("option", "Description")] long firstParam)
@@ -95,7 +95,7 @@ public static async Task MySlashCommand(InteractionContext context, [Choice("Fir
 }
 ```
 
-As the first parameter, [Choice](xref:DisCatSharp.ApplicationCommands.ChoiceAttribute) takes a name that will be visible to the user, and the second - a value that will be passed to the command.
+As the first parameter, [Choice](xref:DisCatSharp.ApplicationCommands.Attributes.ChoiceAttribute) takes a name that will be visible to the user, and the second - a value that will be passed to the command.
 You can also use strings.
 
 ### Choice Provider
@@ -103,7 +103,7 @@ You can also use strings.
 Perhaps the most difficult way. It consists in writing a method that will generate a list of options when registering commands.
 This way we don't have to list all of them in the code when there are many of them.
 
-To create your own provider, you need to create a class that inherits [IChoiceProvider](xref:DisCatSharp.ApplicationCommands.IChoiceProvider) and contains the `Provider()` method.
+To create your own provider, you need to create a class that inherits [IChoiceProvider](xref:DisCatSharp.ApplicationCommands.Attributes.IChoiceProvider) and contains the `Provider()` method.
 ```cs
 public class MyChoiceProvider : IChoiceProvider
 {
@@ -191,7 +191,7 @@ public class MyAutocompleteProvider : IAutocompleteProvider
 }
 ```
 
-The changes are that instead of [IChoiceProvider](xref:DisCatSharp.ApplicationCommands.IChoiceProvider), the class inherits [IAutocompleteProvider](xref:DisCatSharp.ApplicationCommands.Attributes.IAutocompleteProvider), and the Provider method should return a list with [DiscordApplicationCommandAutocompleteChoice](xref:DisCatSharp.Entities.DiscordApplicationCommandAutocompleteChoice).
+The changes are that instead of [IChoiceProvider](xref:DisCatSharp.ApplicationCommands.Attributes.IChoiceProvider), the class inherits [IAutocompleteProvider](xref:DisCatSharp.ApplicationCommands.Attributes.IAutocompleteProvider), and the Provider method should return a list with [DiscordApplicationCommandAutocompleteChoice](xref:DisCatSharp.Entities.DiscordApplicationCommandAutocompleteChoice).
 
 Now we add it to the command:
 ```cs
@@ -202,7 +202,7 @@ public static async Task MySlashCommand(InteractionContext context, [Autocomplet
 }
 ```
 
-Note that we have not only replaced [ChoiceProvider](xref:DisCatSharp.ApplicationCommands.ChoiceProviderAttribute) with [Autocomplete](xref:DisCatSharp.ApplicationCommands.Attributes.AutocompleteAttribute), but also added `true` to [Option](xref:DisCatSharp.ApplicationCommands.OptionAttribute).
+Note that we have not only replaced [ChoiceProvider](xref:DisCatSharp.ApplicationCommands.Attributes.ChoiceProviderAttribute) with [Autocomplete](xref:DisCatSharp.ApplicationCommands.Attributes.AutocompleteAttribute), but also added `true` to [Option](xref:DisCatSharp.ApplicationCommands.Attributes.OptionAttribute).
 
 ## Channel types
 
