@@ -166,7 +166,7 @@ public class MyChoiceProvider : IChoiceProvider
 }
 ```
 
-That's all, for a better example for [ChoiceProvider](xref:DisCatSharp.ApplicationCommands.IChoiceProvider) refer to the examples.
+That's all, for a better example for [ChoiceProvider](xref:DisCatSharp.ApplicationCommands.Attributes.IChoiceProvider) refer to the examples.
 
 ## Autocomplete
 Autocomplete works in the same way as ChoiceProvider, with one difference:
