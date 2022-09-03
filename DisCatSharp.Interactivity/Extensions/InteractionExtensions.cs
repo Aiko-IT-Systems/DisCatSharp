@@ -107,8 +107,7 @@ public static class InteractionExtensions
 			if (modalResult.TimedOut)
 				return new PaginatedModalResponse { TimedOut = true };
 
-			foreach (var row in modalResult.Result.Interaction.Data.Components)
-				foreach (var submissions in row.Components)
+			foreach (var submissions in modalResult.Result.Interaction.Data.Components)
 					caughtResponses.Add(submissions.CustomId, submissions.Value);
 
 			previousInteraction = modalResult.Result.Interaction;
