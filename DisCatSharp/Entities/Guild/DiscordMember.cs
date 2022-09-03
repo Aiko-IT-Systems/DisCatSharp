@@ -524,6 +524,11 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	}
 
 	/// <summary>
+	/// Disconnects the member from their current voice channel.
+	/// </summary>
+	public async Task DisconnectFromVoiceAsync() => await this.ModifyAsync(x => x.VoiceChannel = null);
+
+	/// <summary>
 	/// Adds a timeout to a member.
 	/// </summary>
 	/// <param name="until">The datetime offset to time out the user. Up to 28 days.</param>

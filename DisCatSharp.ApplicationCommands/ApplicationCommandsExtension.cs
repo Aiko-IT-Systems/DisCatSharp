@@ -165,7 +165,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Whether this module finished the startup.
 	/// </summary>
-	internal bool StartupFinished { get; set; }
+	internal bool StartupFinished { get; set; } = false;
 
 
 	/// <summary>
@@ -213,7 +213,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this._globalApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs>("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 		this._guildApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs>("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 
-		this.StartupFinished = false;
 		this.Client.GuildDownloadCompleted += async (c, e) => await this.UpdateAsync();
 		this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
 		this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
@@ -373,6 +372,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal async Task UpdateAsync()
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Request to register commands on shard {shard}", this.Client.ShardId);
+
+		if (this.StartupFinished)
+		{
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} already setup, skipping", this.Client.ShardId);
+			this.FinishedRegistration();
+			return;
+		}
+
 		GlobalDiscordCommands = new();
 		GuildDiscordCommands = new();
 
@@ -1981,8 +1988,12 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 
 		if (applicationCommands.Count < 1)
 		{
-			await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-				.WithContent($"There are no slash commands").AsEphemeral(true));
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder()
+							.WithContent($"There are no slash commands"));
+			else
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+							.WithContent($"There are no slash commands").AsEphemeral(true));
 			return;
 		}
 		if (commandTwoName is not null && !commandTwoName.Equals("no_options_for_this_command"))
@@ -2008,8 +2019,12 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 				sb.Append('\n');
 				discordEmbed.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
 			}
-			await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-				new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder()
+							.AddEmbed(discordEmbed));
+			else
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
 		}
 		else if (commandOneName is not null && commandTwoName is null && !commandOneName.Equals("no_options_for_this_command"))
 		{
@@ -2032,6 +2047,10 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 				sb.Append('\n');
 				discordEmbed.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
 			}
+
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(discordEmbed));
+			else
 			await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
 				new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
 		}
@@ -2040,7 +2059,11 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 			var command = applicationCommands.FirstOrDefault(cm => cm.Name.Equals(commandName, StringComparison.OrdinalIgnoreCase));
 			if (command is null)
 			{
-				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
+				if (ApplicationCommandsExtension.Configuration.AutoDefer)
+					await ctx.EditResponseAsync(new DiscordWebhookBuilder()
+						.WithContent($"No command called {commandName} in guild {ctx.Guild.Name}"));
+				else
+					await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
 						.WithContent($"No command called {commandName} in guild {ctx.Guild.Name}").AsEphemeral(true));
 				return;
 			}
@@ -2060,7 +2083,10 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 				sb.Append('\n');
 				discordEmbed.AddField(new DiscordEmbedField("Arguments", sb.ToString().Trim()));
 			}
-			await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+			if (ApplicationCommandsExtension.Configuration.AutoDefer)
+				await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(discordEmbed));
+			else
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
 				new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
 		}
 	}

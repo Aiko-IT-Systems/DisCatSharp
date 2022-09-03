@@ -22,8 +22,8 @@ At the moment it is possible to create such commands:
 >[!NOTE]
 > In order for the bot to be able to create commands in the guild, it must be added to a guild with `applications.commands` scope.
 
-Each command is a method with the attribute [SlashCommand](xref:DisCatSharp.ApplicationCommands.SlashCommandAttribute) or [ContextMenu](xref:DisCatSharp.ApplicationCommands.ContextMenuAttribute). They must be in classes that inherit from [ApplicationCommandsModule](xref:DisCatSharp.ApplicationCommands.ApplicationCommandsModule).
-Also, the first argument to the method must be [InteractionContext](xref:DisCatSharp.ApplicationCommands.InteractionContext) or [ContextMenuContext](xref:DisCatSharp.ApplicationCommands.ContextMenuContext).
+Each command is a method with the attribute [SlashCommand](xref:DisCatSharp.ApplicationCommands.Attributes.SlashCommandAttribute) or [ContextMenu](xref:DisCatSharp.ApplicationCommands.Attributes.ContextMenuAttribute). They must be in classes that inherit from [ApplicationCommandsModule](xref:DisCatSharp.ApplicationCommands.ApplicationCommandsModule).
+Also, the first argument to the method must be [InteractionContext](xref:DisCatSharp.ApplicationCommands.Context.InteractionContext) or [ContextMenuContext](xref:DisCatSharp.ApplicationCommands.Context.ContextMenuContext).
 
 Simple slash command:
 ```cs
@@ -101,7 +101,7 @@ appCommands.RegisterGuildCommands<MySecondCommand>(<guildId>);
 ## Command Groups
 
 Sometimes we may need to combine slash commands into groups.
-In this case, we need to wrap our class with commands in another class and add the [SlashCommandGroup](xref:DisCatSharp.ApplicationCommands.SlashCommandGroupAttribute) attribute.
+In this case, we need to wrap our class with commands in another class and add the [SlashCommandGroup](xref:DisCatSharp.ApplicationCommands.Attributes.SlashCommandGroupAttribute) attribute.
 
 ```cs
 public class MyCommand : ApplicationCommandsModule

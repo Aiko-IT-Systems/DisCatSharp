@@ -190,7 +190,7 @@ To see the available locales, visit [this](xref:application_commands_translation
 Yes, you can!
 Discord sends the user on all [interaction types](xref:DisCatSharp.InteractionType), except `Ping`.
 
-We introduced two new properties `Locale` and `GuildLocale` on [InteractionContext](xref:DisCatSharp.ApplicationCommands.InteractionContext), [ContextMenuContext](xref:DisCatSharp.ApplicationCommands.ContextMenuContext), [AutoCompleteContext](xref:DisCatSharp.ApplicationCommands.AutocompleteContext) and [DiscordInteraction](xref:DisCatSharp.Entities.DiscordInteraction).
+We introduced two new properties `Locale` and `GuildLocale` on [InteractionContext](xref:DisCatSharp.ApplicationCommands.Context.InteractionContext), [ContextMenuContext](xref:DisCatSharp.ApplicationCommands.Context.ContextMenuContext), [AutoCompleteContext](xref:DisCatSharp.ApplicationCommands.Context.AutocompleteContext) and [DiscordInteraction](xref:DisCatSharp.Entities.DiscordInteraction).
 `Locale` is the locale of the user and always represented.
 `GuildLocale` is only represented, when the interaction is **not** in a DM.
 

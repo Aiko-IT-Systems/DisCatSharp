@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using DisCatSharp.Enums;
 
@@ -44,13 +45,17 @@ public sealed class DiscordInteractionData : SnowflakeObject
 	/// Gets the parameters and values of the invoked interaction.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordInteractionDataOption> Options { get; internal set; }
+	public IReadOnlyList<DiscordInteractionDataOption> Options { get; internal set; }
 
 	/// <summary>
-	/// Gets the components (Applicable to modal submits).
+	/// Gets the component rows (Applicable to modal submits).
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordActionRowComponentResult> Components { get; internal set; }
+	internal List<DiscordActionRowComponentResult> ComponentsInternal { get; set; }
+
+	[JsonIgnore]
+	public IReadOnlyList<DiscordComponentResult> Components
+		=> this.ComponentsInternal.Select(x => x.Components.First()).ToList();
 
 	/// <summary>
 	/// Gets the Discord snowflake objects resolved from this interaction's arguments.
