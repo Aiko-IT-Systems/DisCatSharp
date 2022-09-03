@@ -145,6 +145,7 @@ public abstract class BaseDiscordClient : IDisposable
 
 		this.RestClient = new();
 		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
+		this.RestClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Discord-Locale", this.Configuration.Locale);
 
 		var a = typeof(DiscordClient).GetTypeInfo().Assembly;
 

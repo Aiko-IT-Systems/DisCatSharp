@@ -307,6 +307,7 @@ public sealed partial class DiscordShardedClient
 
 		http.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
 		http.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", Utilities.GetFormattedToken(this._configuration));
+		http.DefaultRequestHeaders.TryAddWithoutValidation("X-Discord-Locale", this._configuration.Locale);
 		if (this._configuration != null && this._configuration.Override != null)
 		{
 			http.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._configuration.Override);

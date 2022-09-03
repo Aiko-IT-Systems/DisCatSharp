@@ -23,6 +23,7 @@
 using System;
 using System.Net;
 
+using DisCatSharp.Entities;
 using DisCatSharp.Net.Udp;
 using DisCatSharp.Net.WebSocket;
 
@@ -226,6 +227,11 @@ public sealed class DiscordConfiguration
 	public string Override { internal get; set; }
 
 	/// <summary>
+	/// Sets your preferred API language. See <see cref="DiscordLocales" /> for valid locales.
+	/// </summary>
+	public string Locale { internal get; set; } = DiscordLocales.AMERICAN_ENGLISH;
+
+	/// <summary>
 	/// <para>Sets the service provider.</para>
 	/// <para>This allows passing data around without resorting to static members.</para>
 	/// <para>Defaults to an empty service provider.</para>
@@ -279,5 +285,6 @@ public sealed class DiscordConfiguration
 		this.ApiVersion = other.ApiVersion;
 		this.ServiceProvider = other.ServiceProvider;
 		this.Override = other.Override;
+		this.Locale = other.Locale;
 	}
 }

@@ -148,6 +148,7 @@ internal sealed class RestClient : IDisposable
 		{
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._discord.Configuration.Override);
 		}
+		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Discord-Locale", this._discord.Configuration.Locale);
 
 		this._routesToHashes = new ConcurrentDictionary<string, string>();
 		this._hashesToBuckets = new ConcurrentDictionary<string, RateLimitBucket>();
