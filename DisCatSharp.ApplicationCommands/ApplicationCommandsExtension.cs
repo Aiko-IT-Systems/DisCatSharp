@@ -165,7 +165,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Whether this module finished the startup.
 	/// </summary>
-	internal bool StartupFinished { get; set; }
+	internal bool StartupFinished { get; set; } = false;
 
 
 	/// <summary>
@@ -213,7 +213,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		this._globalApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs>("GLOBAL_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 		this._guildApplicationCommandsRegistered = new AsyncEvent<ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs>("GUILD_COMMANDS_REGISTERED", TimeSpan.Zero, null);
 
-		this.StartupFinished = false;
 		this.Client.GuildDownloadCompleted += async (c, e) => await this.UpdateAsync();
 		this.Client.InteractionCreated += this.CatchInteractionsOnStartup;
 		this.Client.ContextMenuInteractionCreated += this.CatchContextMenuInteractionsOnStartup;
@@ -373,6 +372,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	internal async Task UpdateAsync()
 	{
 		this.Client.Logger.Log(ApplicationCommandsLogLevel, "Request to register commands on shard {shard}", this.Client.ShardId);
+
+		if (this.StartupFinished)
+		{
+			this.Client.Logger.Log(ApplicationCommandsLogLevel, "Shard {shard} already setup, skipping", this.Client.ShardId);
+			this.FinishedRegistration();
+			return;
+		}
+
 		GlobalDiscordCommands = new();
 		GuildDiscordCommands = new();
 
