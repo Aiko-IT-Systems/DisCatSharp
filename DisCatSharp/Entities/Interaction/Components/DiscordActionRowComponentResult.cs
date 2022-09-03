@@ -43,7 +43,7 @@ public sealed class DiscordActionRowComponentResult
 	/// The components contained within the resolved action row.
 	/// </summary>
 	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
-	public List<DiscordComponentResult> Components { get; internal set; }
+	public IReadOnlyList<DiscordComponentResult> Components { get; internal set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordActionRowComponentResult"/> class.
