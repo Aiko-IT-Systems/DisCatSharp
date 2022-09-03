@@ -377,7 +377,7 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Reconnects to the gateway.
 	/// </summary>
 	/// <param name="startNewSession">Whether to start a new session.</param>
-	public Task ReconnectAsync(bool startNewSession = false)
+	public Task ReconnectAsync(bool startNewSession = true)
 		=> this.InternalReconnectAsync(startNewSession, code: startNewSession ? 1000 : 4002);
 
 	/// <summary>
