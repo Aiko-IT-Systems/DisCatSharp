@@ -46,7 +46,7 @@ public sealed class DiscordComponentResult
 	public string CustomId { get; internal set; }
 
 	/// <summary>
-	/// The selected value.
+	/// The users typed value.
 	/// </summary>
 	[JsonProperty("value", NullValueHandling = NullValueHandling.Ignore)]
 	public string Value { get; internal set; }
