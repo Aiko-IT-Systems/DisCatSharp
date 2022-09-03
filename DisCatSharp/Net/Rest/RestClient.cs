@@ -145,10 +145,9 @@ internal sealed class RestClient : IDisposable
 
 		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Utilities.GetUserAgent());
 		if (this._discord != null && this._discord.Configuration != null && this._discord.Configuration.Override != null)
-		{
 			this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("x-super-properties", this._discord.Configuration.Override);
-		}
-		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Discord-Locale", this._discord.Configuration.Locale);
+
+		this.HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Discord-Locale", this._discord?.Configuration?.Locale ?? "en-US");
 
 		this._routesToHashes = new ConcurrentDictionary<string, string>();
 		this._hashesToBuckets = new ConcurrentDictionary<string, RateLimitBucket>();
