@@ -19,7 +19,7 @@ public static class DiscordLocales
 	public const string ROMANIAN = "ro";
 	public const string FINNISH = "fi";
 	public const string SWEDISH = "sv-SE";
-	public const string VIATNAMESE = "vi";
+	public const string VIETNAMESE = "vi";
 	public const string TURKISH = "tr";
 	public const string CZECH = "cs";
 	public const string GREEK = "el";
