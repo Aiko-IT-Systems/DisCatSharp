@@ -8,7 +8,7 @@ public static class DiscordLocales
 	public const string AMERICAN_ENGLISH = "en-US";
 	public const string SPANISH = "es-ES";
 	public const string FRENCH = "fr";
-	public const string CROATION = "hr";
+	public const string CROATIAN = "hr";
 	public const string ITALIAN = "it";
 	public const string LITHUANIAN = "lt";
 	public const string HUNGARIAN = "hu";
