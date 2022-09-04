@@ -4464,24 +4464,6 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
-	/// <summary>
-	/// Deletes a thread.
-	/// </summary>
-	/// <param name="threadId">The thread to delete.</param>
-	/// <param name="reason">The reason for deletion.</param>
-	internal Task DeleteThreadAsync(ulong threadId, string reason)
-	{
-		var headers = Utilities.GetBaseHeaders();
-		if (!string.IsNullOrWhiteSpace(reason))
-			headers.Add(REASON_HEADER_NAME, reason);
-
-		var route = $"{Endpoints.CHANNELS}/:thread_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {thread_id = threadId }, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
-	}
-
 	#endregion
 
 	#region Emoji

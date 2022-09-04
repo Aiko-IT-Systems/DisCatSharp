@@ -78,7 +78,8 @@ public static class Internals
 	/// Whether users can write the <see cref="DiscordChannel"/>.
 	/// </summary>
 	/// <param name="channel">The channel.</param>
-	internal static bool IsWritable(this DiscordChannel channel) => channel.Type == ChannelType.PublicThread || channel.Type == ChannelType.PrivateThread || channel.Type == ChannelType.NewsThread || channel.Type == ChannelType.Text || channel.Type == ChannelType.News || channel.Type == ChannelType.Group || channel.Type == ChannelType.Private || channel.Type == ChannelType.Voice;
+	internal static bool IsWritable(this DiscordChannel channel) => channel.Type is
+		ChannelType.PublicThread or ChannelType.PrivateThread or ChannelType.NewsThread or ChannelType.Text or ChannelType.News or ChannelType.Group or ChannelType.Private or ChannelType.Voice;
 
 	/// <summary>
 	/// Whether the <see cref="DiscordChannel"/> is moveable in a parent.
