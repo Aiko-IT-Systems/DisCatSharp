@@ -55,6 +55,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.Username = transport.Username;
 		this.Discriminator = transport.Discriminator;
 		this.AvatarHash = transport.AvatarHash;
+		this.AvatarDecorationHash = transport.AvatarDecorationHash;
 		this.BannerHash = transport.BannerHash;
 		this.BannerColorInternal = transport.BannerColor;
 		this.IsBot = transport.IsBot;
@@ -135,6 +136,12 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public virtual string AvatarHash { get; internal set; }
 
 	/// <summary>
+	/// Gets the user's avatar decoration hash.
+	/// </summary>
+	[JsonProperty("avatar_decoration", NullValueHandling = NullValueHandling.Ignore)]
+	public virtual string AvatarDecorationHash { get; internal set; }
+
+	/// <summary>
 	/// Returns a uri to this users profile.
 	/// </summary>
 	[JsonIgnore]
@@ -153,6 +160,13 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	[JsonIgnore]
 	public string AvatarUrl
 		=> string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
+
+	/// <summary>
+	/// Gets the user's avatar decoration URL.s
+	/// </summary>
+	[JsonIgnore]
+	public string? AvatarDecorationUrl
+		=> string.IsNullOrWhiteSpace(this.AvatarDecorationHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS_DECORATIONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarDecorationUrl}.png?size=1024";
 
 	/// <summary>
 	/// Gets the URL of default avatar for this user.

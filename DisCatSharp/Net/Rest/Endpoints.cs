@@ -200,6 +200,11 @@ public static class Endpoints
 	public const string AVATARS = "/avatars";
 
 	/// <summary>
+	/// The avatars endpoint.
+	/// </summary>
+	public const string AVATARS_DECORATIONS = "/avatars-decorations";
+
+	/// <summary>
 	/// The bans endpoint.
 	/// </summary>
 	public const string BANS = "/bans";
