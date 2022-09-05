@@ -166,7 +166,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// </summary>
 	[JsonIgnore]
 	public string? AvatarDecorationUrl
-		=> string.IsNullOrWhiteSpace(this.AvatarDecorationHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS_DECORATIONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarDecorationUrl}.png?size=1024";
+		=> string.IsNullOrWhiteSpace(this.AvatarDecorationHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS_DECORATIONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarDecorationHash}.{(this.AvatarDecorationHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>
 	/// Gets the URL of default avatar for this user.
