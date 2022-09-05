@@ -155,14 +155,14 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	public string ProfileUrl => this.ProfileUri.AbsoluteUri;
 
 	/// <summary>
-	/// Gets the user's avatar URL.s
+	/// Gets the user's avatar url.
 	/// </summary>
 	[JsonIgnore]
 	public string AvatarUrl
 		=> string.IsNullOrWhiteSpace(this.AvatarHash) ? this.DefaultAvatarUrl : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarHash}.{(this.AvatarHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>
-	/// Gets the user's avatar decoration URL.s
+	/// Gets the user's avatar decoration url.
 	/// </summary>
 	[JsonIgnore]
 	public string? AvatarDecorationUrl
