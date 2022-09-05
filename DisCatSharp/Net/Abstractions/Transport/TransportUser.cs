@@ -60,6 +60,12 @@ internal class TransportUser
 	public string AvatarHash { get; internal set; }
 
 	/// <summary>
+	/// Gets the avatar decoration hash.
+	/// </summary>
+	[JsonProperty("avatar_decoration", NullValueHandling = NullValueHandling.Ignore)]
+	public string AvatarDecorationHash { get; internal set; }
+
+	/// <summary>
 	/// Gets the banner hash.
 	/// </summary>
 	[JsonProperty("banner", NullValueHandling = NullValueHandling.Ignore)]
