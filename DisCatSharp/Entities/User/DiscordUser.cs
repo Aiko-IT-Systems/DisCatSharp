@@ -59,7 +59,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.AvatarDecorationHash = transport.AvatarDecorationHash;
 		this.BannerHash = transport.BannerHash;
 		this.BannerColorInternal = transport.BannerColor;
-		this.ThemeColorsInternal = (transport.ThemeColors ?? new int[] {}).ToList();
+		this.ThemeColorsInternal = (transport.ThemeColors ?? Array.Empty<int>()).ToList();
 		this.IsBot = transport.IsBot;
 		this.MfaEnabled = transport.MfaEnabled;
 		this.Verified = transport.Verified;

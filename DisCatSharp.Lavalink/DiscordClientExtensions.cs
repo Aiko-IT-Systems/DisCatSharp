@@ -69,8 +69,7 @@ public static class DiscordClientExtensions
 		foreach (var shard in client.ShardClients.Select(xkvp => xkvp.Value))
 		{
 			var lava = shard.GetExtension<LavalinkExtension>();
-			if (lava == null)
-				lava = shard.UseLavalink();
+			lava ??= shard.UseLavalink();
 
 			modules[shard.ShardId] = lava;
 		}

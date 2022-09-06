@@ -74,8 +74,7 @@ public static class DiscordClientExtensions
 		foreach (var shard in client.ShardClients.Select(xkvp => xkvp.Value))
 		{
 			var vnext = shard.GetExtension<VoiceNextExtension>();
-			if (vnext == null)
-				vnext = shard.UseVoiceNext(config);
+			vnext ??= shard.UseVoiceNext(config);
 
 			modules[shard.ShardId] = vnext;
 		}

@@ -206,8 +206,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <returns>This application's assets.</returns>
 	public async Task<IReadOnlyList<DiscordApplicationAsset>> GetAssetsAsync()
 	{
-		if (this._assets == null)
-			this._assets = await this.Discord.ApiClient.GetApplicationAssetsAsync(this).ConfigureAwait(false);
+		this._assets ??= await this.Discord.ApiClient.GetApplicationAssetsAsync(this).ConfigureAwait(false);
 
 		return this._assets;
 	}

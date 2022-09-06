@@ -171,6 +171,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Gets the service provider this module was configured with.
 	/// </summary>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
 	public IServiceProvider Services
 		=> Configuration.ServiceProvider;
 
@@ -954,23 +955,23 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					}
 					else if (groups.Any())
 					{
-						var command = e.Interaction.Data.Options.First();
+						var command = e.Interaction.Data.Options[0];
 						var method = groups.First().Methods.First(x => x.Key == command.Name).Value;
 
 						this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
-						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options.First().Options);
+						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options);
 
 						await this.RunCommandAsync(context, method, args);
 					}
 					else if (subgroups.Any())
 					{
-						var command = e.Interaction.Data.Options.First();
+						var command = e.Interaction.Data.Options[0];
 						var group = subgroups.First().SubCommands.First(x => x.Name == command.Name);
 
 						var method = group.Methods.First(x => x.Key == command.Options.First().Name).Value;
 
 						this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
-						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options.First().Options.First().Options);
+						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options.First().Options);
 
 						await this.RunCommandAsync(context, method, args);
 					}
@@ -1035,7 +1036,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					}
 					else if (groups.Any())
 					{
-						var command = e.Interaction.Data.Options.First();
+						var command = e.Interaction.Data.Options[0];
 						var group = groups.First().Methods.First(x => x.Key == command.Name).Value;
 
 						var focusedOption = command.Options.First(o => o.Focused);
@@ -1065,7 +1066,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					}
 					else if (subgroups.Any())
 					{
-						var command = e.Interaction.Data.Options.First();
+						var command = e.Interaction.Data.Options[0];
 						var group = subgroups.First().SubCommands.First(x => x.Name == command.Name).Methods.First(x => x.Key == command.Options.First().Name).Value;
 
 						var focusedOption = command.Options.First().Options.First(o => o.Focused);

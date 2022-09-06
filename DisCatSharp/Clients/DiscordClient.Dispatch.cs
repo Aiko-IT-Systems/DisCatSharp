@@ -1769,6 +1769,7 @@ public sealed partial class DiscordClient
 	/// Handles timeout events.
 	/// </summary>
 	/// <param name="state">Internally used as uid for the timer data.</param>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
 	private async void TimeoutTimer(object state)
 	{
 		var tid = (string)state;
@@ -3211,6 +3212,7 @@ public sealed partial class DiscordClient
 	/// <param name="user">The transport user.</param>
 	/// <param name="member">The transport member.</param>
 	/// <param name="interaction">The interaction.</param>
+	/// <param name="rawInteraction">Debug.</param>
 	internal async Task OnInteractionCreateAsync(ulong? guildId, ulong channelId, TransportUser user, TransportMember member, DiscordInteraction interaction, string rawInteraction)
 	{
 		this.Logger.LogTrace("Interaction from {guild} on shard {shard}", guildId.HasValue ? guildId.Value : "dm", this.ShardId);

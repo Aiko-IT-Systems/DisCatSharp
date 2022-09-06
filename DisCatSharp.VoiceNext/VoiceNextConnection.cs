@@ -895,8 +895,7 @@ public sealed class VoiceNextConnection : IDisposable
 		if (!AudioFormat.AllowedSampleDurations.Contains(sampleDuration))
 			throw new ArgumentOutOfRangeException(nameof(sampleDuration), "Invalid PCM sample duration specified.");
 
-		if (this._transmitStream == null)
-			this._transmitStream = new VoiceTransmitSink(this, sampleDuration);
+		this._transmitStream ??= new VoiceTransmitSink(this, sampleDuration);
 
 		return this._transmitStream;
 	}

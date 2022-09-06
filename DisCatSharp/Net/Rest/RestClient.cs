@@ -257,11 +257,9 @@ internal sealed class RestClient : IDisposable
 		{
 			await this._globalRateLimitEvent.WaitAsync().ConfigureAwait(false);
 
-			if (bucket == null)
-				bucket = request.RateLimitBucket;
+			bucket ??= request.RateLimitBucket;
 
-			if (ratelimitTcs == null)
-				ratelimitTcs = await this.WaitForInitialRateLimit(bucket).ConfigureAwait(false);
+			ratelimitTcs ??= await this.WaitForInitialRateLimit(bucket).ConfigureAwait(false);
 
 			if (ratelimitTcs == null) // check rate limit only if we are not the probe request
 			{
@@ -799,8 +797,7 @@ internal sealed class RestClient : IDisposable
 
 			foreach (var kvp in this._hashesToBuckets)
 			{
-				if (bucketIdStrBuilder == null)
-					bucketIdStrBuilder = new StringBuilder();
+				bucketIdStrBuilder ??= new StringBuilder();
 
 				var key = kvp.Key;
 				var value = kvp.Value;

@@ -155,17 +155,14 @@ internal class EventWaiter<T> : IDisposable where T : AsyncEventArgs
 	public void Dispose()
 	{
 		this._disposed = true;
-		if (this._event != null)
-			this._event.Unregister(this._handler);
+		this._event?.Unregister(this._handler);
 
 		this._event = null;
 		this._handler = null;
 		this._client = null;
 
-		if (this._matchRequests != null)
-			this._matchRequests.Clear();
-		if (this._collectRequests != null)
-			this._collectRequests.Clear();
+		this._matchRequests?.Clear();
+		this._collectRequests?.Clear();
 
 		this._matchRequests = null;
 		this._collectRequests = null;

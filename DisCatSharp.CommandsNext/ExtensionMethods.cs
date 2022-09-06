@@ -78,8 +78,7 @@ public static class ExtensionMethods
 		foreach (var shard in client.ShardClients.Select(xkvp => xkvp.Value))
 		{
 			var cnext = shard.GetExtension<CommandsNextExtension>();
-			if (cnext == null)
-				cnext = shard.UseCommandsNext(cfg);
+			cnext ??= shard.UseCommandsNext(cfg);
 
 			modules[shard.ShardId] = cnext;
 		}

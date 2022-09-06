@@ -168,10 +168,7 @@ public sealed class ImageTool : IDisposable
 	/// Disposes this image tool.
 	/// </summary>
 	public void Dispose()
-	{
-		if (this.SourceStream != null)
-			this.SourceStream.Dispose();
-	}
+		=> this.SourceStream?.Dispose();
 
 	/// <summary>
 	/// Utility function to convert an image stream into a base 64 string.
