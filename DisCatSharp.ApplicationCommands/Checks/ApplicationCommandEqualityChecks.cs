@@ -140,31 +140,33 @@ internal static class ApplicationCommandEqualityChecks
 			foreach (var option in source.Options)
 			{
 				List<DiscordApplicationCommandOption> minimalSubSourceOptions = new();
-
-				foreach (var subOption in option.Options)
+				if (option.Options != null)
 				{
-					List<DiscordApplicationCommandOption> minimalSubSubSourceOptions = null;
-
-					if (subOption.Options != null)
+					foreach (var subOption in option.Options)
 					{
-						minimalSubSubSourceOptions = new();
+						List<DiscordApplicationCommandOption> minimalSubSubSourceOptions = null;
 
-						foreach (var subSubOption in subOption.Options)
-							minimalSubSubSourceOptions.Add(new DiscordApplicationCommandOption(
-								subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required,
-								subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete,
-								subSubOption.MinimumValue, subSubOption.MaximumValue,
-								localizationEnabled ? subSubOption.NameLocalizations : null,
-								localizationEnabled ? subSubOption.DescriptionLocalizations : null,
-								subSubOption.MinimumLength, subSubOption.MaximumLength
+						if (subOption.Options != null)
+						{
+							minimalSubSubSourceOptions = new();
+
+							foreach (var subSubOption in subOption.Options)
+								minimalSubSubSourceOptions.Add(new DiscordApplicationCommandOption(
+									subSubOption.Name, subSubOption.Description, subSubOption.Type, subSubOption.Required,
+									subSubOption.Choices, null, subSubOption.ChannelTypes, subSubOption.AutoComplete,
+									subSubOption.MinimumValue, subSubOption.MaximumValue,
+									localizationEnabled ? subSubOption.NameLocalizations : null,
+									localizationEnabled ? subSubOption.DescriptionLocalizations : null,
+									subSubOption.MinimumLength, subSubOption.MaximumLength
+								));
+
+							minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
+								subOption.Name, subOption.Description, subOption.Type,
+								options: minimalSubSubSourceOptions,
+								nameLocalizations: localizationEnabled ? subOption.NameLocalizations : null,
+								descriptionLocalizations: localizationEnabled ? subOption.DescriptionLocalizations : null
 							));
-
-						minimalSubSourceOptions.Add(new DiscordApplicationCommandOption(
-							subOption.Name, subOption.Description, subOption.Type,
-							options: minimalSubSubSourceOptions,
-							nameLocalizations: localizationEnabled ? subOption.NameLocalizations : null,
-							descriptionLocalizations: localizationEnabled ? subOption.DescriptionLocalizations : null
-						));
+						}
 					}
 
 				}

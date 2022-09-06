@@ -1336,7 +1336,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				else if (parameter.ParameterType == typeof(int) || parameter.ParameterType == typeof(int?))
 					args.Add((int?)option.Value);
 				else if (parameter.ParameterType == typeof(long) || parameter.ParameterType == typeof(long?))
-					args.Add((long?)option.Value);
+					if (option.Value == null)
+						args.Add(null);
+					else
+						args.Add(Convert.ToInt64(option.Value));
 				else if (parameter.ParameterType == typeof(bool) || parameter.ParameterType == typeof(bool?))
 					args.Add((bool?)option.Value);
 				else if (parameter.ParameterType == typeof(double) || parameter.ParameterType == typeof(double?))
