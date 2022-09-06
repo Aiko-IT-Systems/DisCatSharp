@@ -2757,6 +2757,15 @@ public sealed class DiscordApiClient
 			return old;
 		});
 
+		if (this.Discord.Configuration.Intents.HasIntent(DiscordIntents.GuildPresences) && usr.Presence == null && this.Discord is DiscordClient dc)
+			dc.PresencesInternal[usr.Id] = new DiscordPresence
+			{
+				Discord = dc,
+				RawActivity = new TransportActivity(),
+				Activity = new DiscordActivity(),
+				Status = UserStatus.Offline
+			};
+
 		return new DiscordMember(tm)
 		{
 			Discord = this.Discord,
