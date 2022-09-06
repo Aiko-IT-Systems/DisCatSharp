@@ -120,8 +120,8 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	/// Gets the user's theme color integers.
 	/// </summary>
-	[JsonProperty("theme_colors")]
-	internal List<int> ThemeColorsInternal;
+	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<int>? ThemeColorsInternal;
 
 	/// <summary>
 	/// Gets the user's banner url
