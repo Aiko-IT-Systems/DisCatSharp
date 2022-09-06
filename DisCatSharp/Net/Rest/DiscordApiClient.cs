@@ -2719,6 +2719,15 @@ public sealed class DiscordApiClient
 
 		var userRaw = JsonConvert.DeserializeObject<TransportUser>(res.Response);
 		var duser = new DiscordUser(userRaw) { Discord = this.Discord };
+		if (this.Discord.Configuration.Intents.HasIntent(DiscordIntents.GuildPresences) && duser.Presence == null && this.Discord is DiscordClient dc)
+			dc.PresencesInternal[duser.Id] = new DiscordPresence
+			{
+				Discord = dc,
+				RawActivity = new TransportActivity(),
+				Activity = new DiscordActivity(),
+				Status = UserStatus.Offline,
+				InternalUser = userRaw
+			};
 
 		return duser;
 	}
