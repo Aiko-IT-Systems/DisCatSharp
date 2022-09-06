@@ -78,6 +78,12 @@ internal class TransportUser
 	public int? BannerColor { get; internal set; }
 
 	/// <summary>
+	/// Gets the users theme colors.
+	/// </summary>
+	[JsonProperty("theme_colors")]
+	public int[]? ThemeColors { get; internal set; }
+
+	/// <summary>
 	/// Gets a value indicating whether is bot.
 	/// </summary>
 	[JsonProperty("bot", NullValueHandling = NullValueHandling.Ignore)]

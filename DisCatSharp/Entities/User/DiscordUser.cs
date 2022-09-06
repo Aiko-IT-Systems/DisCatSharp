@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
@@ -58,6 +59,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		this.AvatarDecorationHash = transport.AvatarDecorationHash;
 		this.BannerHash = transport.BannerHash;
 		this.BannerColorInternal = transport.BannerColor;
+		this.ThemeColorsInternal = (transport.ThemeColors ?? new int[] {}).ToList();
 		this.IsBot = transport.IsBot;
 		this.MfaEnabled = transport.MfaEnabled;
 		this.Verified = transport.Verified;
@@ -104,10 +106,22 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		=> !this.BannerColorInternal.HasValue ? null : new DiscordColor(this.BannerColorInternal.Value);
 
 	/// <summary>
+	/// Gets the user's theme colors, if set.
+	/// </summary>
+	public virtual IReadOnlyList<DiscordColor>? ThemeColors
+		=> !(this.ThemeColorsInternal is not null && this.ThemeColorsInternal.Count != 0) ? null : this.ThemeColorsInternal.Select(x => new DiscordColor(x)).ToList();
+
+	/// <summary>
 	/// Gets the user's banner color integer.
 	/// </summary>
 	[JsonProperty("accent_color")]
 	internal int? BannerColorInternal;
+
+	/// <summary>
+	/// Gets the user's theme color integers.
+	/// </summary>
+	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
+	internal List<int>? ThemeColorsInternal;
 
 	/// <summary>
 	/// Gets the user's banner url
