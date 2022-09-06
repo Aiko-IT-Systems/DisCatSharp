@@ -76,6 +76,7 @@ internal static class ApplicationCommandEqualityChecks
 	/// <param name="target">Application command to check against.</param>
 	/// <param name="type">The application command type.</param>
 	/// <param name="localizationEnabled">Whether localization is enabled.</param>
+	/// <param name="guild">Whether the equal check is performed for a guild command.</param>
 	internal static bool SoftEqual(this DiscordApplicationCommand source, DiscordApplicationCommand target, ApplicationCommandType type, bool localizationEnabled = false, bool guild = false)
 	{
 		bool? sDmPerm = source.DmPermission ?? true;

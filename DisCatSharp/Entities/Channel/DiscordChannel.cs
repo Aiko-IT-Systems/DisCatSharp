@@ -713,7 +713,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 				if (x.Id == this.Id)
 				{
 					pmd.Position = position;
-					pmd.ParentId = newParent is not null ? newParent.Id : null;
+					pmd.ParentId = newParent?.Id;
 					pmd.LockPermissions = lockPermissions;
 				}
 

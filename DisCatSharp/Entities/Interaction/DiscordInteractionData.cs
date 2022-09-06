@@ -55,7 +55,7 @@ public sealed class DiscordInteractionData : SnowflakeObject
 
 	[JsonIgnore]
 	public IReadOnlyList<DiscordComponentResult> Components
-		=> this.ComponentsInternal.Select(x => x.Components.First()).ToList();
+		=> this.ComponentsInternal.Select(x => x.Components[0]).ToList();
 
 	/// <summary>
 	/// Gets the Discord snowflake objects resolved from this interaction's arguments.
