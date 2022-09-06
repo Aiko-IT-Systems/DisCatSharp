@@ -1413,9 +1413,9 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="userId">ID of the member to get.</param>
 	/// <returns>The requested member.</returns>
 	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMember> GetMemberAsync(ulong userId)
+	public async Task<DiscordMember> GetMemberAsync(ulong userId, bool fetch = false)
 	{
-		if (this.MembersInternal != null && this.MembersInternal.TryGetValue(userId, out var mbr))
+		if (!fetch && this.MembersInternal != null && this.MembersInternal.TryGetValue(userId, out var mbr))
 			return mbr;
 
 		mbr = await this.Discord.ApiClient.GetGuildMemberAsync(this.Id, userId).ConfigureAwait(false);
