@@ -455,8 +455,8 @@ public sealed class DiscordWebhookBuilder
 		}
 		else
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any())
-				throw new ArgumentException("You must specify content, an embed, or at least one file.");
+			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && !this.Embeds.Any() && !this.Components.Any())
+				throw new ArgumentException("You must specify content, an embed, a component, or at least one file.");
 		}
 	}
 }
