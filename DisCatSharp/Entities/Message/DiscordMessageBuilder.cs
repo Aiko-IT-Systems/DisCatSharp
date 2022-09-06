@@ -446,8 +446,8 @@ public sealed class DiscordMessageBuilder
 
 		if (!isModify)
 		{
-			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null)
-				throw new ArgumentException("You must specify content, an embed, a sticker or at least one file.");
+			if (this.Files?.Count == 0 && string.IsNullOrEmpty(this.Content) && (!this.Embeds?.Any() ?? true) && this.Sticker is null && (!this.Embeds?.Any() ?? true))
+				throw new ArgumentException("You must specify content, an embed, a sticker, a component or at least one file.");
 
 			if (this.Components.Count > 5)
 				throw new InvalidOperationException("You can only have 5 action rows per message.");
