@@ -39,12 +39,13 @@ using DisCatSharp.Net.Serialization;
 
 using Microsoft.Extensions.Logging;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp;
 
 /// <summary>
-/// Represents a discord client.
+/// Represents a discord Logger.ent.L
 /// </summary>
 public sealed partial class DiscordClient
 {
@@ -408,7 +409,6 @@ public sealed partial class DiscordClient
 						refMbr = rawRefMsg.SelectToken("member").ToObject<TransportMember>();
 					}
 				}
-
 				await this.OnMessageCreateEventAsync(dat.ToDiscordObject<DiscordMessage>(), dat["author"].ToObject<TransportUser>(), mbr, refUsr, refMbr).ConfigureAwait(false);
 				break;
 

@@ -50,6 +50,12 @@ public class MessageCreateEventArgs : DiscordEventArgs
 		=> this.Channel.Guild;
 
 	/// <summary>
+	/// Gets the guild id in case it couldn't convert.
+	/// </summary>
+	public ulong? GuildId
+		=> this.Message.GuildId;
+
+	/// <summary>
 	/// Gets the author of the message.
 	/// </summary>
 	public DiscordUser Author
