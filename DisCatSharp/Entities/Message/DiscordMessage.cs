@@ -368,7 +368,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	/// Gets the guild id.
 	/// </summary>
 	[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
-	internal ulong? GuildId { get; set; }
+	public ulong? GuildId { get; internal set; }
 
 	/// <summary>
 	/// Gets the message object for the referenced message
