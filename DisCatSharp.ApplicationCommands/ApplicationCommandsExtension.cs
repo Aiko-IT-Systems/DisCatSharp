@@ -980,9 +980,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				}
 				catch (Exception ex)
 				{
-					this.Client.Logger.LogError(@"{msg}", ex.Message);
-					this.Client.Logger.LogError(@"{stack}", ex.StackTrace);
-
 					await this._slashError.InvokeAsync(this, new SlashCommandErrorEventArgs(this.Client.ServiceProvider) { Context = context, Exception = ex });
 				}
 			}
