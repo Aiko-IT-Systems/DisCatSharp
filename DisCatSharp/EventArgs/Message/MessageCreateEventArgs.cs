@@ -79,8 +79,5 @@ public class MessageCreateEventArgs : DiscordEventArgs
 	/// <summary>
 	/// Initializes a new instance of the <see cref="MessageCreateEventArgs"/> class.
 	/// </summary>
-	internal MessageCreateEventArgs(IServiceProvider provider) : base(provider)
-	{
-		this.Message.Channel.GuildId = this.Message.GuildId;
-	}
+	internal MessageCreateEventArgs(IServiceProvider provider) : base(provider) { }
 }
