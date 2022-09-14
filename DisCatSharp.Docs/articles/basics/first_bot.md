@@ -57,7 +57,7 @@ Package|Description
 `DisCatSharp.CommandsNext`|Add-on which provides a command framework.
 `DisCatSharp.Common`|Common tools & converters
 `DisCatSharp.Interactivity`|Add-on which allows for interactive commands.
-`DisCatSharp.Lavalink`|Client implementation for [Lavalink](xref:audio_lavalink_setup). Useful for music bots.
+`DisCatSharp.Lavalink`|Client implementation for [Lavalink](xref:modules_audio_lavalink_setup). Useful for music bots.
 `DisCatSharp.ApplicationCommands`|Add-on which makes dealing with application commands easier.
 `DisCatSharp.VoiceNext`|Add-on which enables connectivity to Discord voice channels.
 `DisCatSharp.VoiceNext.Natives`|Voice next natives.
@@ -223,4 +223,5 @@ Congrats, your bot now does something!
 Now that you have a basic bot up and running, you should take a look at the following:
 
 * [Events](xref:beyond_basics_events)
-* [CommandsNext](xref:commands_intro)
+* [CommandsNext](xref:modules_commandsntext_intro)
+* [ApplicationCommands](xref:modules_application_commands_intro)

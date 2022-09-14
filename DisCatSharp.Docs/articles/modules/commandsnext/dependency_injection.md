@@ -40,7 +40,7 @@ var commands = discord.UseCommandsNext(new CommandsNextConfiguration()
 
 ### Using Your Services
 Now that we have our services set up, we're able to use them in commands.<br/>
-We'll be tweaking our [random number command](xref:commands_intro#argument-converters) to demonstrate.
+We'll be tweaking our [random number command](xref:modules_commandsnext_intro#argument-converters) to demonstrate.
 
 Add a new property to the command module named *Rng*. Make sure it has a `public` setter.
 ```cs

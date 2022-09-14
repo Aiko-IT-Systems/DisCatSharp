@@ -70,7 +70,7 @@ await ctx.EditResponseAsync(new DiscordWebhookBuilder()
 ```
 
 >[!NOTE]
-> Note that you can make your commands static, but then you cannot use [Dependency Injection](xref:commands_dependency_injection) in them.
+> Note that you can make your commands static, but then you cannot use [Dependency Injection](xref:modules_commandsnext_dependency_injection) in them.
 
 
 ### Registration of commands

@@ -237,7 +237,7 @@ Date|`DateTime`, `DateTimeOffset`, `TimeSpan`
 Character|`string`, `char`
 Boolean|`bool`
 
-You're also able to create and provide your own [custom argument converters](xref:commands_argument_converters), if desired.
+You're also able to create and provide your own [custom argument converters](xref:modules_commandsnext_argument_converters), if desired.
 
 
 <br/>
@@ -324,7 +324,7 @@ The additional attributes and checks applied to the first method will also be ap
 ## Further Reading
 Now that you've gotten an understanding of CommandsNext, it'd be a good idea check out the following:
 
-* [Command Attributes](xref:commands_command_attributes)
-* [Help Formatter](xref:commands_help_formatter)
-* [Dependency Injection](xref:commands_dependency_injection)
+* [Command Attributes](xref:modules_commandsnext_command_attributes)
+* [Help Formatter](xref:modules_commandsnext_help_formatter)
+* [Dependency Injection](xref:modules_commandsnext_dependency_injection)
 

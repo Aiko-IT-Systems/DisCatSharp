@@ -24,7 +24,7 @@ To troubleshoot, please ensure that:
 * You are using the latest version of DisCatSharp.
 * You have properly enabled VoiceNext with your instance of @DisCatSharp.DiscordClient.
 * You are *not* using VoiceNext in an event handler.
-* You have [opus and libsodium](xref:voicenext_prerequisites) available in your target environment.
+* You have [opus and libsodium](xref:modules_audio_voicenext_prerequisites) available in your target environment.
 
 
 ### Why am I getting *heartbeat skipped* message in my console?
@@ -50,7 +50,7 @@ In order to modify a user, the highest role of your bot account must be higher t
 Changing the properties of a role requires that your bot account have a role higher than that role.
 
 ### Does CommandsNext support dependency injection?
-It does! Please take a look at our [article](xref:commands_dependency_injection) on the subject.
+It does! Please take a look at our [article](xref:modules_commandsnext_dependency_injection) on the subject.
 
 ### Can I use a user token?
 Automating a user account is against Discord's [Terms of Service](https://dis.gd/terms) and is not supported by DisCatSharp.

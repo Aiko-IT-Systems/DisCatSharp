@@ -70,7 +70,7 @@ public class MyCommand : ApplicationCommandsModule
 }
 ```
 
-The translation json is a object of [Command Group Objects](xref:application_commands_translations_reference#command-group-object)
+The translation json is a object of [Command Group Objects](xref:modules_application_commands_translations_reference#command-group-object)
 A correct translation json for english and german would look like that:
 ```json
 [
@@ -147,10 +147,10 @@ public class MySimpleCommands : ApplicationCommandsModule
 }
 ```
 
-The slash command is a simple [Command Object](xref:application_commands_translations_reference#command-object).
+The slash command is a simple [Command Object](xref:modules_application_commands_translations_reference#command-object).
 Same goes for the context menu command, but note that it can't have a description.
 
-Slash Commands has the [type](xref:application_commands_translations_reference#application-command-type) `1` and context menu commands the [type](xref:application_commands_translations_reference#application-command-type) `2` or `3`.
+Slash Commands has the [type](xref:modules_application_commands_translations_reference#application-command-type) `1` and context menu commands the [type](xref:modules_application_commands_translations_reference#application-command-type) `2` or `3`.
 We use this to determine, where the translation belongs to.
 
 Please note that the description field is optional. We suggest setting it for slash commands if you want to use our translation generator, which we're building right now.
@@ -187,7 +187,7 @@ A correct json for this example would look like that:
 ## Available Locales
 
 Discord has a limited choice of locales, in particular, the ones you can select in the client.
-To see the available locales, visit [this](xref:application_commands_translations_reference#valid-locales) page.
+To see the available locales, visit [this](xref:modules_application_commands_translations_reference#valid-locales) page.
 
 ## Can We Get The User And Guild Locale?
 
