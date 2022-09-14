@@ -107,7 +107,7 @@ Our example here will use its alternate overload which accepts an additional pre
 ```cs
 public async Task ActionCommand(CommandContext ctx)
 {
-    await ctx.RespondAsync("Respond with *confirm* to continue.");
+    await ctx.RespondAsync("Respond with `confirm` to continue.");
     var result = await ctx.Message.GetNextMessageAsync(m =>
     {
         return m.Content.ToLower() == "confirm";
