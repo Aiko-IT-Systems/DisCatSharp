@@ -18,8 +18,6 @@ The majority of these attributes can be applied to your command methods and comm
 - @DisCatSharp.CommandsNext.Attributes.RequireBotPermissionsAttribute
 - @DisCatSharp.CommandsNext.Attributes.RequireCommunityAttribute
 - @DisCatSharp.CommandsNext.Attributes.RequireDirectMessageAttribute
-- @DisCatSharp.CommandsNext.Attributes.RequireDiscordCertifiedModeratorAttribute
-- @DisCatSharp.CommandsNext.Attributes.RequireDiscordEmployeeAttribute
 - @DisCatSharp.CommandsNext.Attributes.RequireGuildAttribute
 - @DisCatSharp.CommandsNext.Attributes.RequireGuildOwnerAttribute
 - @DisCatSharp.CommandsNext.Attributes.RequireMemberVerificationGateAttribute

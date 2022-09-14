@@ -63,7 +63,7 @@ public async Task RandomCommand(CommandContext ctx, int min, int max)
 
 Then we can give it a try!
 
-![Command Execution](/images/commands_dependency_injection_01.png)
+![Command Execution](/images/commands_intro_05.png)
 
 <br/>
 CommandsNext has automatically injected our singleton `Random` instance into the `Rng` property when our command module was instantiated.
