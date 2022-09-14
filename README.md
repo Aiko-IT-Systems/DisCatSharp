@@ -9,7 +9,7 @@
 [![Documentation](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/docs.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/docs.yml)
 [![Typos](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/typos.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/typos.yml)
 [![CodeQL](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/codeql.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/codeql.yml)
-![Wakatime](https://wakatime.com/badge/github/Aiko-IT-Systems/DisCatSharp.svg)
+<!--![Wakatime](https://wakatime.com/badge/github/Aiko-IT-Systems/DisCatSharp.svg)-->
 
 [![AppVeyor](https://img.shields.io/appveyor/build/AITSYS/DisCatSharp?label=Appveyor&logo=appveyor&style=flat-square)](https://ci.appveyor.com/project/AITSYS/discatsharp)
 [![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit&style=flat-square&logo=github)](https://aitsys.dev/source/DisCatSharp/history/)
@@ -18,11 +18,17 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Aiko-IT-Systems/DisCatSharp?label=Size&style=flat-square&logo=github)
 
 ----
+# News
 
-## **NEW!**
+## New in DisCatSharp 10.1.0
 
 - Support for application commands (guild and global) in shards
 - Translation template export based on your own code.
+
+## Upcoming
+- We're building a translation generator tool for the template export function introduced in 10.1.0.
+
+# About
 
 ## Why DisCatSharp?
 
@@ -35,17 +41,18 @@ Then this is the right place for you!
 
 ## Installing
 
-You can install the library from following source: [NuGet](https://www.nuget.org/profiles/DisCatSharp).
+You can install the library from the following sources:
+- [NuGet](https://www.nuget.org/profiles/DisCatSharp)
+- [GitHub](https://github.com/orgs/Aiko-IT-Systems/packages?tab=packages&q=DisCatSharp)
 
 ## Documentation
 
-<!--The documentation for the stable version is available at [docs.dcs.aitsys.dev/lts](https://docs.discatsharp.tech/lts).-->
+The documentation of the nightly versions is available at [docs.discatsharp.tech](https://docs.discatsharp.tech).
 
-The documentation of the nightly versions is available at [docs.dcs.aitsys.dev](https://docs.discatsharp.tech).
+Alternative hosts for our docs are:
+- Backup Host [docs-alt.dcs.aitsys.dev](https://docs-alt.dcs.aitsys.dev)
+- Cloudflare [fallback-docs.dcs.aitsys.dev](https://fallback-docs.dcs.aitsys.dev) or [discatsharp-docs.pages.dev](https://discatsharp-docs.pages.dev)
 
-Fallback docs are available at [docs-alt.dcs.aitsys.dev](https://docs-alt.dcs.aitsys.dev).
-
-##### Note: DocFx is broken right now, waiting for fix from upstream. So the documentation is outdated.
 
 ## Bugs or Feature requests?
 
@@ -53,7 +60,7 @@ Either join our official support guild at https://discord.gg/Uk7sggRBTm
 
 Or write us an mail at [bugs@aitsys.dev](mailto:bugs@aitsys.dev).
 
-All requests are tracked at [aitsys.dev](https://aitsys.dev).
+All requests are tracked at [aitsys.dev](https://aitsys.dev/project/view/1/).
 
 ## Tutorials
 
@@ -114,15 +121,13 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev).
 
 ## Thanks
 
-Big thanks goes to the following people who helped us ♥️
+Big thanks goes to the following people who helped us without being part of the core team ♥️
 - [Auros Nexus](https://github.com/Auros)
 - [Lunar Starstrum](https://github.com/OoLunar)
-- [Johannes](https://github.com/JMLutra)
 - [Geferon](https://github.com/geferon)
 - [Alice](https://github.com/QuantuChi)
 - [Will](https://github.com/villChurch)
-- [Mira](https://github.com/TheXorog)
 
 ## Special Thanks
 
-The special thanks goes to Nagisa. Make sure to check out her [instagram](https://www.instagram.com/nagisaarts_/) ♥️♥️
+The special thanks goes to Nagisa. Make sure to check out her [Instagram](https://www.instagram.com/nagisaarts_/) ♥️♥️

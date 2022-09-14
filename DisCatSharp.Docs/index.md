@@ -1,13 +1,23 @@
 ---
 uid: index
-title: DisCatSharp 10.0.0 Documentation
+title: DisCatSharp 10.1.0 Documentation
 ---
 
-<h1 class="delete-this">DisCatSharp 10.0.0 Documentation</h1>
+# DisCatSharp ![Stable](https://img.shields.io/nuget/v/DisCatSharp?color=%23ebb34b&label=Stable&style=flat-square&logo=nuget) ![Nightly](https://img.shields.io/nuget/vpre/DisCatSharp?color=%23ff1493&label=Nightly&style=flat-square&logo=nuget)
+
 <h1 class="logo-center">![DisCatSharp Logo](/logobig.png "DisCatSharp Documentation")</h1>
-## DisCatSharp 10.0.0 Documentation
-[DisCatSharp](https://github.com/Aiko-IT-Systems/DisCatSharp) (DCS) is an unofficial .NET wrapper for the [Discord API](https://discordapp.com/developers/docs/intro "Discord API") based off [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus).<br/>
-The library has been rewritten to fit quality and API standards as well as target wider range of .NET implementations. Furthermore this lib will includes many new features of Discord and is pretty fast with keeping up with Discords API.
+## DisCatSharp 10.1.0 Documentation
+[DisCatSharp](https://github.com/Aiko-IT-Systems/DisCatSharp) (DCS) is an unofficial .NET wrapper for the [Discord API](https://discord.com/developers/docs/intro "Discord API") based off DSharpPlus.<br/>
+The library has been rewritten to fit quality and API standards. Furthermore this lib includes many new features of Discord and is pretty fast with keeping up with Discords API.
+
+## Why DisCatSharp?
+
+If you:
+- want a library where you get kind and efficient help
+- would like to have and use the most recent features of the Discord API
+- are ready to build great things
+
+Then this is the right place for you!
 
 ## Getting Started
 New users probably want to take a look into the [articles](xref:preamble) for quick start guides, tutorials, and examples of use.<br/>
@@ -16,3 +26,21 @@ Once you've gotten through the articles, head over to the [API Documentation](/a
 ## Source and Contributors
 DisCatSharp is licensed under MIT License, as detailed in the [license](https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/LICENSE.md) found in the repository.<br/>
 The repository containing the source code for this library can be found [here](https://github.com/Aiko-IT-Systems/DisCatSharp). Contributions are welcomed.<br/>
+
+### Sponsors [![Sponsors](https://img.shields.io/github/sponsors/Aiko-IT-Systems?label=&style=flat-square&logo=github)](https://github.com/sponsors/Aiko-IT-Systems) / [![Sponsors](https://img.shields.io/github/sponsors/Lulalaby?label=&style=flat-square&logo=github)](https://github.com/sponsors/Lulalaby)
+
+- [Deividas Kazakevicius](https://github.com/DeividasKaza)
+- [Will](https://github.com/villChurch)
+
+### Thanks
+
+Big thanks goes to the following people who helped us without being part of the core team ♥️
+- [Auros Nexus](https://github.com/Auros)
+- [Lunar Starstrum](https://github.com/OoLunar)
+- [Geferon](https://github.com/geferon)
+- [Alice](https://github.com/QuantuChi)
+- [Will](https://github.com/villChurch)
+
+### Special Thanks
+
+The special thanks goes to Nagisa. Make sure to check out her [Instagram](https://www.instagram.com/nagisaarts_/) ♥️♥️

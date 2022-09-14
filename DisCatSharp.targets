@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Authors>AITSYS, aiko, J_M_Lutra , Xorog, Badger2-3, AITSYS Contributors</Authors>
+    <Authors>AITSYS, DisCatSharp, DisCatSharp Contributors</Authors>
     <Company>AITSYS</Company>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>

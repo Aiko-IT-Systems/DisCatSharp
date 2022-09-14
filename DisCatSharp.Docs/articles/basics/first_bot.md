@@ -7,7 +7,7 @@ title: Your First Bot
  >[!NOTE]
  > This article assumes the following:
  > * You have [created a bot account](xref:basics_bot_account "Creating a Bot Account") and have a bot token.
- > * You have [Visual Studio 2019](https://visualstudio.microsoft.com/vs/) installed on your computer.
+ > * You have [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) installed on your computer.
 
 
 ## Create a Project
@@ -16,7 +16,7 @@ Open up Visual Studio and click on `Create a new project` towards the bottom rig
 ![Visual Studio Start Screen](/images/basics_first_bot_01.png)
 
 <br/>
-Select `Console App (.NET Core)` then click on the `Next` button.
+Select `Console App` then click on the `Next` button.
 
 ![New Project Screen](/images/basics_first_bot_02.png)
 
@@ -29,23 +29,27 @@ Enter your desired project name, then click on the `Create` button.
 ![Name Project Screen](/images/basics_first_bot_03.png)
 
 <br/>
-Voilà! Your project has been created!
+Now select `.NET 6.0 (Long-term support)` from the dropdown menu, tick the `Do not use top-level statements` checkbox and click on the `Next` button.
 
-![Visual Studio IDE](/images/basics_first_bot_04.png)
+![Framework Project Screen](/images/basics_first_bot_04.png)
+
+<br/>
+Voilà! Your project has been created!
+![Visual Studio IDE](/images/basics_first_bot_05.png)
 
 
 ## Install Package
 Now that you have a project created, you'll want to get DisCatSharp installed.
 Locate the *solution explorer* on the right side, then right click on `Dependencies` and select `Manage NuGet Packages` from the context menu.
 
-![Dependencies Context Menu](/images/basics_first_bot_05.png)
+![Dependencies Context Menu](/images/basics_first_bot_06.png)
 
 <br/>
 You'll then be greeted by the NuGet package manager.
 
 Select the `Browse` tab towards the top left, then type `DisCatSharp` into the search text box with the Pre-release checkbox checked **ON**.
 
-![NuGet Package Search](/images/basics_first_bot_06.png)
+![NuGet Package Search](/images/basics_first_bot_07.png)
 
 <br/>
 The first results should be the DisCatSharp packages.
@@ -57,14 +61,14 @@ Package|Description
 `DisCatSharp.CommandsNext`|Add-on which provides a command framework.
 `DisCatSharp.Common`|Common tools & converters
 `DisCatSharp.Interactivity`|Add-on which allows for interactive commands.
-`DisCatSharp.Lavalink`|Client implementation for [Lavalink](xref:audio_lavalink_setup). Useful for music bots.
+`DisCatSharp.Lavalink`|Client implementation for [Lavalink](xref:modules_audio_lavalink_setup). Useful for music bots.
 `DisCatSharp.ApplicationCommands`|Add-on which makes dealing with application commands easier.
 `DisCatSharp.VoiceNext`|Add-on which enables connectivity to Discord voice channels.
 `DisCatSharp.VoiceNext.Natives`|Voice next natives.
 
 <br/>
 We'll only need the `DisCatSharp` package for the basic bot we'll be writing in this article.<br/>
-Select it from the list then click the `Install` button to the right (after verifying that you will be installing the **latest 4.0 version**).
+Select it from the list then click the `Install` button to the right.
 
 ![Install DisCatSharp](/images/basics_first_bot_08.png)
 
@@ -113,7 +117,9 @@ We'll now create a new `DiscordClient` instance in our brand new asynchronous me
 
 Create a new variable in `MainAsync` and assign it a new `DiscordClient` instance, then pass an instance of `DiscordConfiguration` to its constructor.
 Create an object initializer for `DiscordConfiguration` and populate the `Token` property with your bot token then set the `TokenType` property to `TokenType.Bot`.
-Next add the `Intents` Property and Populated it with the @DisCatSharp.DiscordIntents.AllUnprivileged value. These Intents
+Next add the `Intents` Property and Populated it with the @DisCatSharp.DiscordIntents.AllUnprivileged and DiscordIntents.MessageContent values.
+The message content intent must be enabled in the developer portal as well.
+These Intents
 are required for certain Events to be fired.  Please visit this [article](xref:beyond_basics_intents) for more information.
 
 ```cs
@@ -121,7 +127,7 @@ var discord = new DiscordClient(new DiscordConfiguration()
 {
     Token = "My First Token",
     TokenType = TokenType.Bot,
-    Intents = DiscordIntents.AllUnprivileged
+    Intents = DiscordIntents.AllUnprivileged | DiscordIntents.MessageContent
 });
 ```
 
@@ -193,8 +199,9 @@ namespace MyFirstBot
         {
             var discord = new DiscordClient(new DiscordConfiguration()
             {
-                Token = "My First Token",
-                TokenType = TokenType.Bot
+				Token = "My First Token",
+				TokenType = TokenType.Bot,
+				Intents = DiscordIntents.AllUnprivileged | DiscordIntents.MessageContent
             });
 
             discord.MessageCreated += async (s, e) =>
@@ -223,4 +230,5 @@ Congrats, your bot now does something!
 Now that you have a basic bot up and running, you should take a look at the following:
 
 * [Events](xref:beyond_basics_events)
-* [CommandsNext](xref:commands_intro)
+* [CommandsNext](xref:modules_commandsnext_intro)
+* [ApplicationCommands](xref:modules_application_commands_intro)
