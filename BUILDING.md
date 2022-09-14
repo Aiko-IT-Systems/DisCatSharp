@@ -27,7 +27,7 @@ On GNU/Linux, we support building via Visual Studio Code and .NET Core SDK. Othe
 
 While these should apply to any modern distribution, we only test against Debian 10. Your mileage may vary.
 
-When installing the below, make sure you install all the dependencies properly. We might ship a build environmnent as a docker container in the future.
+When installing the below, make sure you install all the dependencies properly. We might ship a build environment as a docker container in the future.
 
 * **Any modern GNU/Linux distribution** - like Debian 10.
 * **Git** - to clone the repository.
