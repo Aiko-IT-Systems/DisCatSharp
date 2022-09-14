@@ -5,7 +5,7 @@ title: VoiceNext Prerequisites
 
 # VoiceNext Prerequisites
 
-> [!INFO]
+> [!NOTE]
  > We highly suggest using the [DisCatSharp.Lavalink](xref:modules_audio_lavalink_configuration) package for audio playback. It is much easier to use and has a lot of features that VoiceNext does not have.
 
 ## Required Libraries
