@@ -1,12 +1,12 @@
 ---
-uid: audio_lavalink_setup
+uid: modules_audio_lavalink_setup
 title: Lavalink Setup
 ---
 
 # Lavalink - the newer, better way to do music
-[Lavalink](https://github.com/freyacodes/Lavalink) is a standalone program, written in Java. It's a 
-lightweight solution for playing music from sources such as YouTube or 
-Soundcloud. Unlike raw voice solutions, such as VoiceNext, Lavalink can handle 
+[Lavalink](https://github.com/freyacodes/Lavalink) is a standalone program, written in Java. It's a
+lightweight solution for playing music from sources such as YouTube or
+Soundcloud. Unlike raw voice solutions, such as VoiceNext, Lavalink can handle
 hundreds of concurrent streams, and supports sharding.
 
 ## Configuring Java
@@ -15,7 +15,7 @@ The latest releases can be found [here](https://www.oracle.com/technetwork/java/
 
 Make sure the location of the newest JRE's bin folder is added to your system variable's path. This will make the `java` command run from the latest runtime. You can verify that you have the right version by entering `java -version` in your command prompt or terminal.
 
-## Downloading Lavalink  
+## Downloading Lavalink
 Next, head over to the [releases](https://github.com/freyacodes/Lavalink/releases) tab on the Lavalink GitHub page and download the Jar file from the latest version. Alternatively, stable builds with the latest changes can be found on their [CI Server](https://ci.fredboat.com/viewLog.html?buildId=lastSuccessful&buildTypeId=Lavalink_Build&tab=artifacts&guest=1).
 
 The program will not be ready to run yet, as you will need to create a configuration file first. To do so, create a new YAML file called `application.yml`, and use the [example file](https://github.com/freyacodes/Lavalink/blob/master/LavalinkServer/application.yml.example), or copy this text:
@@ -71,7 +71,7 @@ YAML is whitespace-sensitive. Make sure you are using a text editor which proper
 
 There are a few values to keep in mind.
 
-`host` is the IP of the Lavalink host. This will be `0.0.0.0` by default, but it should be changed as it is a security risk. For this guide, set this to `127.0.0.1` as we will be running Lavalink locally. 
+`host` is the IP of the Lavalink host. This will be `0.0.0.0` by default, but it should be changed as it is a security risk. For this guide, set this to `127.0.0.1` as we will be running Lavalink locally.
 
 `port` is the allowed port for the Lavalink connection. `2333` is the default port, and is what will be used for this guide.
 
@@ -85,7 +85,7 @@ Keep note of your `port`, `address`, and `password` values, as you will need the
 
 Open your command prompt or terminal and navigate to the directory containing Lavalink. Once there, type `java -jar Lavalink.jar`. You should start seeing log output from Lavalink.
 
-If everything is configured properly, you should see this appear somewhere in the log output without any errors: 
+If everything is configured properly, you should see this appear somewhere in the log output without any errors:
 ```
 [           main] lavalink.server.Launcher                 : Started Launcher in 5.769 seconds (JVM running for 6.758)
 ```

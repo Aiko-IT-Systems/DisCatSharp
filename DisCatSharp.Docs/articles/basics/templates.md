@@ -12,9 +12,9 @@ To Install the latest:
 dotnet new --install DisCatSharp.ProjectTemplates
 ```
 
-To install a specific version (example uses 9.8.4.1):
+To install a specific version (example uses 10.0.0):
 ```powershell
-dotnet new --install DisCatSharp.ProjectTemplates::9.8.4.1
+dotnet new --install DisCatSharp.ProjectTemplates::10.0.0
 ```
 
 # Steps

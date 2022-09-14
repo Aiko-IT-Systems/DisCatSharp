@@ -1,5 +1,5 @@
 ---
-uid: voicenext_receive
+uid: modules_voicenext_receive
 title: Receiving
 ---
 
@@ -30,7 +30,7 @@ We'll be able to receive incoming audio from the `VoiceReceived` event fired by 
 connection.VoiceReceived += ReceiveHandler;
 ```
 
-Writing the logic for this event handler will depend on your overall goal. 
+Writing the logic for this event handler will depend on your overall goal.
 
 The event arguments will contain a PCM audio packet for you to make use of.
 You can convert each packet to another format, concatenate them all together, feed them into an external program, or process the packets any way that'll suit your needs.

@@ -109,11 +109,11 @@
 			href: modules/audio/voicenext/receive.md
 	- name: Interactivity
 	href: modules/interactivity.md
-	- name: Hosting
-	href: modules/hosting.md
 - name: Miscellaneous
   items:
   - name: Nightly Builds
     href: misc/nightly_builds.md
   - name: Reporting Issues
     href: misc/reporting_issues.md
+  - name: Hosting
+	href: misc/hosting.md

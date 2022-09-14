@@ -1,5 +1,5 @@
 ---
-uid: hosting
+uid: misc_hosting
 title: Hosting Solutions
 ---
 

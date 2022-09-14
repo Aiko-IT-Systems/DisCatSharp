@@ -1,5 +1,5 @@
 ---
-uid: audio_lavalink_music_commands
+uid: modules_audio_lavalink_music_commands
 title: Lavalink Music Commands
 ---
 

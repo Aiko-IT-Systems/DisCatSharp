@@ -1,5 +1,5 @@
 ---
-uid: voicenext_prerequisites
+uid: modules_voicenext_prerequisites
 title: VoiceNext Prerequisites
 ---
 

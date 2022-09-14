@@ -1,5 +1,5 @@
 ---
-uid: voicenext_transmit
+uid: modules_voicenext_transmit
 title: Transmitting
 ---
 

@@ -1,5 +1,5 @@
 ---
-uid: audio_lavalink_configuration
+uid: modules_audio_lavalink_configuration
 title: Lavalink Configuration
 ---
 
