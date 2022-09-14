@@ -55,60 +55,60 @@
     href: beyond_basics/workarounds.md
 - name: Modules
   items:
-	- name: Application Commands
-		items:
-		- name: Introduction
-			href: modules/application_commands/intro.md
-		- name: Options
-			href: modules/application_commands/options.md
-		- name: Events
-			href: modules/application_commands/events.md
-		- name: Translations
-			items:
-			- name: Using Translations
-				href: modules/application_commands/translations/using.md
-			- name: Translation Reference
-				href: modules/application_commands/translations/reference.md
-		- name: Modals
-			href: modules/application_commands/modals.md
-		- name: Paginated Modals
-			href: modules/application_commands/paginated_modals.md
-	- name: CommandsNext
-		items:
-		- name: Introduction
-			href: modules/commandsnext/intro.md
-		- name: Command Attributes
-			href: modules/commandsnext/command_attributes.md
-		- name: Dependency Injection
-			href: modules/commandsnext/dependency_injection.md
-		- name: Customization
-			items:
-			- name: Help Formatter
-			href: modules/commandsnext/help_formatter.md
-			- name: Argument Converters
-			href: modules/commandsnext/argument_converters.md
-			- name: Command Handler
-			href: modules/commandsnext/command_handler.md
-	- name: Audio
-		items:
-		- name: Lavalink
-			items:
-			- name: Setup
-			href: modules/audio/lavalink/setup.md
-			- name: Configuration
-			href: modules/audio/lavalink/configuration.md
-			- name: Music Commands
-			href: modules/audio/lavalink/music_commands.md
-		- name: VoiceNext
-			items:
-			- name: Prerequisites
-			href: modules/audio/voicenext/prerequisites.md
-			- name: Transmitting
-			href: modules/audio/voicenext/transmit.md
-			- name: Receiving
-			href: modules/audio/voicenext/receive.md
-	- name: Interactivity
-	href: modules/interactivity.md
+  - name: Application Commands
+    items:
+    - name: Introduction
+      href: modules/application_commands/intro.md
+    - name: Options
+      href: modules/application_commands/options.md
+    - name: Events
+      href: modules/application_commands/events.md
+    - name: Translations
+      items:
+      - name: Using Translations
+        href: modules/application_commands/translations/using.md
+      - name: Translation Reference
+        href: modules/application_commands/translations/reference.md
+    - name: Modals
+      href: modules/application_commands/modals.md
+    - name: Paginated Modals
+      href: modules/application_commands/paginated_modals.md
+  - name: CommandsNext
+    items:
+    - name: Introduction
+      href: modules/commandsnext/intro.md
+    - name: Command Attributes
+      href: modules/commandsnext/command_attributes.md
+    - name: Dependency Injection
+      href: modules/commandsnext/dependency_injection.md
+    - name: Customization
+      items:
+      - name: Help Formatter
+        href: modules/commandsnext/help_formatter.md
+      - name: Argument Converters
+        href: modules/commandsnext/argument_converters.md
+      - name: Command Handler
+        href: modules/commandsnext/command_handler.md
+  - name: Audio
+    items:
+    - name: Lavalink
+      items:
+      - name: Setup
+        href: modules/audio/lavalink/setup.md
+      - name: Configuration
+        href: modules/audio/lavalink/configuration.md
+      - name: Music Commands
+        href: modules/audio/lavalink/music_commands.md
+    - name: VoiceNext
+      items:
+      - name: Prerequisites
+        href: modules/audio/voicenext/prerequisites.md
+      - name: Transmitting
+        href: modules/audio/voicenext/transmit.md
+      - name: Receiving
+        href: modules/audio/voicenext/receive.md
+  - name: Interactivity
+    href: modules/interactivity.md
 - name: Miscellaneous
   items:
   - name: Nightly Builds
@@ -116,4 +116,4 @@
   - name: Reporting Issues
     href: misc/reporting_issues.md
   - name: Hosting
-	href: misc/hosting.md
+    href: misc/hosting.md
