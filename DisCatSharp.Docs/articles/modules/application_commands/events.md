@@ -95,7 +95,9 @@ public class MyGuildCommands : ApplicationCommandsModule
 
 ## Error handling
 
-If you want to handle errors in the commands, subscribe to the [SlashCommandErrored](xref:DisCatSharp.ApplicationCommands.SlashCommandErrored) event.
+If you want to handle errors for slash commands, subscribe to the [SlashCommandErrored](xref:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension#DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_SlashCommandErrored) event.
+
+A separate method exists for context menus as [ContextMenuErrored](xref:DisCatSharp.ApplicationCommands.ApplicationCommandsExtension#DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_ContextMenuErrored) event.
 
 It contains a castable field `Exception` with the exception that was thrown during the execution of the command.
 
