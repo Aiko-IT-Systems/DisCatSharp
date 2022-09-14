@@ -14,6 +14,7 @@ title: Translation Reference
 | Key                      | Value                                         | Description                                                                                                 |
 | ------------------------ | --------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | name                     | string                                        | name of the application command                                                                             |
+| description?             | string                                        | description of the application command                                                                      |
 | type                     | int                                           | [type](#application-command-type) of application command, used to map command types                         |
 | name_translations        | array of [Translation KVPs](#translation-kvp) | array of translation key-value-pairs for the application command name                                       |
 | description_translations | array of [Translation KVPs](#translation-kvp) | array of translation key-value-pairs for the application command description, only valid for slash commands |
@@ -32,6 +33,7 @@ title: Translation Reference
 | Key                      | Value                                                           | Description                                                                        |
 | ------------------------ | --------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | name                     | string                                                          | name of the application command group                                              |
+| description?             | string                                                          | description of the application command group                                       |
 | name_translations        | array of [Translation KVPs](#translation-kvp)                   | array of translation key-value-pairs for the application command group name        |
 | description_translations | array of [Translation KVPs](#translation-kvp)                   | array of translation key-value-pairs for the application command group description |
 | commands                 | array of [Command Objects](#command-object)                     | array of command objects containing translations                                   |
@@ -42,6 +44,7 @@ title: Translation Reference
 | Key                      | Value                                         | Description                                                                            |
 | ------------------------ | --------------------------------------------- | -------------------------------------------------------------------------------------- |
 | name                     | string                                        | name of the application command sub group                                              |
+| description?             | string                                        | description of the application command group                                           |
 | name_translations        | array of [Translation KVPs](#translation-kvp) | array of translation key-value-pairs for the application command sub group name        |
 | description_translations | array of [Translation KVPs](#translation-kvp) | array of translation key-value-pairs for the application command sub group description |
 | commands                 | array of [Command Objects](#command-object)   | array of command objects containing translations                                       |
@@ -51,6 +54,7 @@ title: Translation Reference
 | Key                      | Value                                                   | Description                                                                         |
 | ------------------------ | ------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | name                     | string                                                  | name of the application command option                                              |
+| description?             | string                                                  | description of the application command group                                        |
 | name_translations        | array of [Translation KVPs](#translation-kvp)           | array of translation key-value-pairs for the application command option name        |
 | description_translations | array of [Translation KVPs](#translation-kvp)           | array of translation key-value-pairs for the application command option description |
 | choices                  | array of [Option Choice Objects](#option-choice-object) | array of option choice objects containing translations                              |

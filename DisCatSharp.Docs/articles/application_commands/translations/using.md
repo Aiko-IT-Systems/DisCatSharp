@@ -153,11 +153,15 @@ Same goes for the context menu command, but note that it can't have a descriptio
 Slash Commands has the [type](xref:application_commands_translations_reference#application-command-type) `1` and context menu commands the [type](xref:application_commands_translations_reference#application-command-type) `2` or `3`.
 We use this to determine, where the translation belongs to.
 
+Please note that the description field is optional. We suggest setting it for slash commands if you want to use our translation generator, which we're building right now.
+Context menu commands can't have a description, so omit it.
+
 A correct json for this example would look like that:
 ```json
 [
    {
       "name":"my_command",
+	  "description": "This is description of the command.",
       "type": 1, // Type 1 for slash command
       "name_translations":{
          "en-US":"my_command",
