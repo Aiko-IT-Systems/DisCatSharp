@@ -223,5 +223,5 @@ Congrats, your bot now does something!
 Now that you have a basic bot up and running, you should take a look at the following:
 
 * [Events](xref:beyond_basics_events)
-* [CommandsNext](xref:modules_commandsntext_intro)
+* [CommandsNext](xref:modules_commandsnext_intro)
 * [ApplicationCommands](xref:modules_application_commands_intro)

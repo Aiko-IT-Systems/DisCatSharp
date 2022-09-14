@@ -5,7 +5,7 @@ title: Lavalink Music Commands
 
 # Adding Music Commands
 
-This article assumes that you know how to use CommandsNext. If you do not, you should learn [here](xref:commands_intro) before continuing with this guide.
+This article assumes that you know how to use CommandsNext. If you do not, you should learn [here](xref:modules_commandsnext_intro) before continuing with this guide.
 
 ## Prerequisites
 

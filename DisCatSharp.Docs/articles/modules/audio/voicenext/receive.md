@@ -1,5 +1,5 @@
 ---
-uid: modules_voicenext_receive
+uid: modules_audio_voicenext_receive
 title: Receiving
 ---
 
