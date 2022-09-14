@@ -3,6 +3,10 @@ uid: voicenext_prerequisites
 title: VoiceNext Prerequisites
 ---
 
+# VoiceNext Prerequisites
+
+> Note: We highly suggest using the [DisCatSharp.Lavalink](xref:audio_lavalink_configuration) package for audio playback. It is much easier to use and has a lot of features that VoiceNext does not have.
+
 ## Required Libraries
 VoiceNext depends on the [libsodium](https://github.com/jedisct1/libsodium) and [Opus](https://opus-codec.org/) libraries to decrypt and process audio packets.<br/>
 Both *must* be available on your development and host machines otherwise VoiceNext will *not* work.
