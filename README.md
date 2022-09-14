@@ -9,7 +9,7 @@
 [![Documentation](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/docs.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/docs.yml)
 [![Typos](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/typos.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/typos.yml)
 [![CodeQL](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/codeql.yml/badge.svg)](https://github.com/Aiko-IT-Systems/DisCatSharp/actions/workflows/codeql.yml)
-![Wakatime](https://wakatime.com/badge/github/Aiko-IT-Systems/DisCatSharp.svg)
+<!--![Wakatime](https://wakatime.com/badge/github/Aiko-IT-Systems/DisCatSharp.svg)-->
 
 [![AppVeyor](https://img.shields.io/appveyor/build/AITSYS/DisCatSharp?label=Appveyor&logo=appveyor&style=flat-square)](https://ci.appveyor.com/project/AITSYS/discatsharp)
 [![GitHub last commit](https://img.shields.io/github/last-commit/Aiko-IT-Systems/DisCatSharp?label=Last%20Commit&style=flat-square&logo=github)](https://aitsys.dev/source/DisCatSharp/history/)
