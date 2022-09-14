@@ -1,5 +1,5 @@
 ---
-uid: commands_command_attributes
+uid: modules_commandsnext_command_attributes
 title: Command Attributes
 ---
 

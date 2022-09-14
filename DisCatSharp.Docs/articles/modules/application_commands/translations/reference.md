@@ -1,5 +1,5 @@
 ---
-uid: application_commands_translations_reference
+uid: modules_application_commands_translations_reference
 title: Translation Reference
 ---
 

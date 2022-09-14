@@ -1,5 +1,5 @@
 ---
-uid: commands_help_formatter
+uid: modules_commandsnext_help_formatter
 title: Help Formatter
 ---
 
@@ -20,16 +20,16 @@ public class CustomHelpFormatter : BaseHelpFormatter
     {
         // _embed = new DiscordEmbedBuilder();
         // _strBuilder = new StringBuilder();
-		
+
 		// Help formatters do support dependency injection.
-		// Any required services can be specified by declaring constructor parameters. 
+		// Any required services can be specified by declaring constructor parameters.
 
         // Other required initialization here ...
     }
 
     public override BaseHelpFormatter WithCommand(Command command)
     {
-        // _embed.AddField(command.Name, command.Description);            
+        // _embed.AddField(command.Name, command.Description);
         // _strBuilder.AppendLine($"{command.Name} - {command.Description}");
 
         return this;
@@ -39,7 +39,7 @@ public class CustomHelpFormatter : BaseHelpFormatter
     {
         foreach (var cmd in cmds)
         {
-            // _embed.AddField(cmd.Name, cmd.Description);            
+            // _embed.AddField(cmd.Name, cmd.Description);
             // _strBuilder.AppendLine($"{cmd.Name} - {cmd.Description}");
         }
 

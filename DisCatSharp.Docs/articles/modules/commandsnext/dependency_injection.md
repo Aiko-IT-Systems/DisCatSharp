@@ -1,5 +1,5 @@
 ---
-uid: commands_dependency_injection
+uid: modules_commandsnext_dependency_injection
 title: Dependency Injection
 ---
 
@@ -17,7 +17,7 @@ We'll go through a simple example of this process to help you understand better.
 To begin, we'll need to create a service provider; this will act as the container for the services you need for your commands.
 Create a new variable just before you register CommandsNext with your `DiscordClient` and assign it a new instance of `ServiceCollection`.
 ```cs
-var discord = new DiscordClient();	
+var discord = new DiscordClient();
 var services = new ServiceCollection();	// Right here!
 var commands = discord.UseCommandsNext();
 ```

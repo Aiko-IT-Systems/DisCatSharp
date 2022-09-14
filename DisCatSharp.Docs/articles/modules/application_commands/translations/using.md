@@ -1,5 +1,5 @@
 ---
-uid: application_commands_translations_using
+uid: modules_application_commands_translations_using
 title: Using Translations
 ---
 

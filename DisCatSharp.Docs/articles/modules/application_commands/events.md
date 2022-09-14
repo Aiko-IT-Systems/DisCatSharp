@@ -1,5 +1,5 @@
 ---
-uid: application_commands_events
+uid: modules_application_commands_events
 title: Application Commands Events
 ---
 

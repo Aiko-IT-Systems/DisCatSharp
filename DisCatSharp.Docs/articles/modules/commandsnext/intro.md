@@ -1,5 +1,5 @@
 ---
-uid: commands_intro
+uid: modules_commandsnext_intro
 title: CommandsNext Introduction
 ---
 

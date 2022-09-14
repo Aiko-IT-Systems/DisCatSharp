@@ -1,5 +1,5 @@
 ---
-uid: commands_command_handler
+uid: modules_commandsnext_command_handler
 title: Custom Command Handler
 ---
 
@@ -7,7 +7,7 @@ title: Custom Command Handler
  > [!IMPORTANT]
  > Writing your own handler logic should only be done if *you know what you're doing*.<br/>
  > You will be responsible for command execution and preventing deadlocks.
- 
+
 ### Disable Default Handler
 To begin, we'll need to disable the default command handler provided by CommandsNext.<br/>
 This is done by setting the `UseDefaultCommandHandler` configuration property to `false`.
@@ -86,7 +86,7 @@ private Task CommandHandler(DiscordClient client, MessageCreateEventArgs e)
 
     var ctx = cnext.CreateContext(msg, prefix, command, args);
     Task.Run(async () => await cnext.ExecuteCommandAsync(ctx));
-	
+
     return Task.CompletedTask;
 }
 ```

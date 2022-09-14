@@ -1,5 +1,5 @@
 ---
-uid: commands_argument_converters
+uid: modules_commandsnext_argument_converters
 title: Argument Converter
 ---
 
@@ -17,7 +17,7 @@ public class CustomArgumentConverter : IArgumentConverter<bool>
         if (bool.TryParse(value, out var boolean))
         {
             return Task.FromResult(Optional.FromValue(boolean));
-        }           
+        }
 
         switch (value.ToLower())
         {
@@ -33,8 +33,8 @@ public class CustomArgumentConverter : IArgumentConverter<bool>
 
             default:
                 return Task.FromResult(Optional.FromNoValue<bool>());
-        } 
-    }	
+        }
+    }
 }
 ```
 

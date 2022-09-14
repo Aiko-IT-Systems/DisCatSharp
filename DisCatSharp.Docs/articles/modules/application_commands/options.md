@@ -1,5 +1,5 @@
 ---
-uid: application_commands_options
+uid: modules_application_commands_options
 title: Application Commands Options
 ---
 

@@ -1,5 +1,5 @@
 ---
-uid: application_commands_modals
+uid: modules_application_commands_modals
 title: Modals
 ---
 
