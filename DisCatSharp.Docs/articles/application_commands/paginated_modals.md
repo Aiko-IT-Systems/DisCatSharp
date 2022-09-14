@@ -1,5 +1,5 @@
 ---
-uid: paginated_modals
+uid: application_commands_paginated_modals
 title: Paginated Modals
 ---
 
