@@ -92,3 +92,11 @@ public class MyGuildCommands : ApplicationCommandsModule
     }
 }
 ```
+
+## Error handling
+
+If you want to handle errors in the commands, subscribe to the [SlashCommandErrored](xref:DisCatSharp.ApplicationCommands.SlashCommandErrored) event.
+
+It contains a castable field `Exception` with the exception that was thrown during the execution of the command.
+
+As example it can be a type of [SlashExecutionChecksFailedException](xref:DisCatSharp.ApplicationCommands.Exceptions.SlashExecutionChecksFailedException) or [ContextMenuExecutionChecksFailedException](xref:DisCatSharp.ApplicationCommands.Exceptions.ContextMenuExecutionChecksFailedException) which contains a list of failed checks.
