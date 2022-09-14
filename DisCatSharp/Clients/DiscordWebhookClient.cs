@@ -171,22 +171,6 @@ public class DiscordWebhookClient
 
 		var wh = await client.ApiClient.GetWebhookAsync(id).ConfigureAwait(false);
 
-		// personally I don't think we need to override anything.
-		// it would even make sense to keep the hook as-is, in case
-		// it's returned without a token for some bizarre reason
-		// remember -- discord is not really consistent
-		//var nwh = new DiscordWebhook()
-		//{
-		//    ApiClient = _apiclient,
-		//    AvatarHash = wh.AvatarHash,
-		//    ChannelId = wh.ChannelId,
-		//    GuildId = wh.GuildId,
-		//    Id = wh.Id,
-		//    Name = wh.Name,
-		//    Token = wh.Token,
-		//    User = wh.User,
-		//    Discord = null
-		//};
 		this.Hooks.Add(wh);
 
 		return wh;
@@ -205,18 +189,7 @@ public class DiscordWebhookClient
 		if (this.Hooks.Any(x => x.Id == webhook.Id))
 			throw new ArgumentException("This webhook is already registered with this client.");
 
-		//var nwh = new DiscordWebhook()
-		//{
-		//    ApiClient = _apiclient,
-		//    AvatarHash = webhook.AvatarHash,
-		//    ChannelId = webhook.ChannelId,
-		//    GuildId = webhook.GuildId,
-		//    Id = webhook.Id,
-		//    Name = webhook.Name,
-		//    Token = webhook.Token,
-		//    User = webhook.User,
-		//    Discord = null
-		//};
+		webhook.ApiClient = this.Apiclient;
 		this.Hooks.Add(webhook);
 
 		return webhook;
