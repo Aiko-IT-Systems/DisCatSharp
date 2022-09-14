@@ -292,7 +292,6 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	public void RegisterGuildCommands<T>(ulong guildId, Action<ApplicationCommandsTranslationContext> translationSetup = null) where T : ApplicationCommandsModule
 		=> this._updateList.Add(new KeyValuePair<ulong?, ApplicationCommandsModuleConfiguration>(guildId, new ApplicationCommandsModuleConfiguration(typeof(T), translationSetup)));
 
-
 	/// <summary>
 	/// Registers a command class with optional translation setup for a guild.
 	/// </summary>

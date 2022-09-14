@@ -36,14 +36,14 @@ public sealed class DiscordApplicationCommandLocalization
 	public Dictionary<string, string> Localizations { get; internal set; }
 
 	/// <summary>
-	/// Gets valid [locales](xref:application_commands_translations_reference#valid-locales) for Discord.
+	/// Gets valid [locales](xref:modules_application_commands_translations_reference#valid-locales) for Discord.
 	/// </summary>
 	internal List<string> ValidLocales = new() { "ru", "fi", "hr", "de", "hu", "sv-SE", "cs", "fr", "it", "en-GB", "pt-BR", "ja", "tr", "en-US", "es-ES", "uk", "hi", "th", "el", "no", "ro", "ko", "zh-TW", "vi", "zh-CN", "pl", "bg", "da", "nl", "lt" };
 
 	/// <summary>
 	/// Adds a localization.
 	/// </summary>
-	/// <param name="locale">The [locale](xref:application_commands_translations_reference#valid-locales) to add.</param>
+	/// <param name="locale">The [locale](xref:modules_application_commands_translations_reference#valid-locales) to add.</param>
 	/// <param name="value">The translation to add.</param>
 	public void AddLocalization(string locale, string value)
 	{
@@ -61,7 +61,7 @@ public sealed class DiscordApplicationCommandLocalization
 	/// <summary>
 	/// Removes a localization.
 	/// </summary>
-	/// <param name="locale">The [locale](xref:application_commands_translations_reference#valid-locales) to remove.</param>
+	/// <param name="locale">The [locale](xref:modules_application_commands_translations_reference#valid-locales) to remove.</param>
 	public void RemoveLocalization(string locale)
 		=> this.Localizations.Remove(locale);
 
@@ -97,9 +97,9 @@ public sealed class DiscordApplicationCommandLocalization
 			=> this.Localizations;
 
 	/// <summary>
-	/// Whether the [locale](xref:application_commands_translations_reference#valid-locales) to be added is valid for Discord.
+	/// Whether the [locale](xref:modules_application_commands_translations_reference#valid-locales) to be added is valid for Discord.
 	/// </summary>
-	/// <param name="lang">[Locale](xref:application_commands_translations_reference#valid-locales) string.</param>
+	/// <param name="lang">[Locale](xref:modules_application_commands_translations_reference#valid-locales) string.</param>
 	public bool Validate(string lang)
 		=> this.ValidLocales.Contains(lang);
 }
