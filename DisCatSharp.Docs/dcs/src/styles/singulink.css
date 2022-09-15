@@ -64,7 +64,7 @@ h4 {
     margin-block-end: 1em;
     padding-bottom: 0;
     border-bottom: none;
-} 
+}
 
 h5 {
     font-size: 1.1em;
@@ -348,7 +348,7 @@ ul.level4 > li > a, ul.level4 > li > a.sidebar-item {
     margin-top: 1.5em;
 }
 
-#search-results .item-href {    
+#search-results .item-href {
     font-size: 0.85em;
 }
 
@@ -431,11 +431,11 @@ p .xref, code {
 span.parametername {
     font-family: monospace;
 }
-
+/*
 .table {
     width: auto;
 }
-
+*/
 .table-responsive {
     margin-bottom: 0;
 }
