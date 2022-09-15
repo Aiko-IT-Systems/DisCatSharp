@@ -134,6 +134,7 @@ nav {
     width: 94%;
     max-width: var(--sidebar-width);
     left: calc(var(--sidebar-width) * -1);
+	border-right: 3px solid black;
 }
 
 @media (max-width: 1023.98px) {
@@ -257,6 +258,14 @@ nav a.active, nav a.active:hover, nav a.active:focus {
     left: 6px;
 }
 
+#navbar > ul.level1 > li > a {
+	background-color: var(--sidebar-level1-item-bg-color) !important;
+	border-radius: 2px;
+	font-weight: 500;
+	margin-bottom: 10px;
+	padding: 5px 10px;
+}
+
 #toc ul.level2
 {
     margin-bottom: 20px;
@@ -318,6 +327,9 @@ ul.level4 > li > a, ul.level4 > li > a.sidebar-item {
 
 .subnav.navbar {
     margin: 0 -15px;
+	/*border-bottom: 4px solid darkmagenta;*/
+	border-radius: 25px;
+	background-color: rgba(205, 23, 117, 0.6);
 }
 
 #breadcrumb {
