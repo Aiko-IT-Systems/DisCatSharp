@@ -3,7 +3,7 @@
     {
       "src": [
         {
-          "src": "../",
+          "src": "../DisCatSharp",
           "files": [
             "**.csproj"
           ],
@@ -14,9 +14,32 @@
           ]
         }
       ],
-      "dest": "api",
-      "filter": "filter_config.yml"
-    }
+      "dest": "api/DisCatSharp",
+      "filter": "filter_config.yml",
+	  "properties": {
+		"TargetFramework": "net6.0"
+		}
+    },
+	{
+		"src": [
+		  {
+			"src": "../DisCatSharp.Interactivity",
+			"files": [
+			  "**.csproj"
+			],
+			"exclude": [
+			  "**/obj/**",
+			  "**/bin/**",
+			  "_site/**"
+			]
+		  }
+		],
+		"dest": "api/DisCatSharp.Interactivity",
+		"filter": "filter_config.yml",
+		"properties": {
+		  "TargetFramework": "net6.0"
+		  }
+	  }
   ],
   "build": {
 	"content": [
