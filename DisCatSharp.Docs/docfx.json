@@ -1,102 +1,258 @@
 {
-  "metadata": [
-    {
-      "src": [
-        {
-          "src": "../",
-          "files": [
-            "**.csproj"
-          ],
-          "exclude": [
-            "**/obj/**",
-            "**/bin/**",
-            "_site/**"
-          ]
-        }
-      ],
-      "dest": "api",
-      "filter": "filter_config.yml"
-    }
-  ],
-  "build": {
-	"content": [
-      {
-        "files": [
-          "api/**.yml",
-          "api/**.md"
-        ]
-      },
-      {
-        "files": [
-			"**.md",
-			"toc.yml",
-			"faq/**.yml",
-			"faq/**.md",
-			"articles/**.yml",
-			"articles/**.md",
-			"natives/**.yml",
-			"natives/**.md"
-        ],
-        "exclude": [
-            "**/bin/**",
-            "**/obj/**",
-            "_site/**",
-			"dcs/**"
-        ]
-      }
-    ],
-    "resource": [
-      {
-        "files": [
-          "images/**",
-          "natives/**.zip"
-        ],
-        "exclude": [
-            "**/bin/**",
-            "**/obj/**",
-            "_site/**",
-			"images/_**"
-        ]
-      }
-    ],
-    "overwrite": [
-      {
-        "files": [],
-        "exclude": [
-          "**/bin/**",
-          "**/obj/**",
-          "_site/**"
-        ]
-      }
-    ],
-    "dest": "_site",
-	"globalMetadata": {
-		"_appFooter": "© 2021-2022 Aiko IT Systems",
-		"_enableSearch": true,
-		"_enableNewTab": true,
-		"_appTitle": "DisCatSharp Docs",
-		"_gitUrlPattern": "git",
-		"_gitContribute": {
-			"repo": "https://github.com/Aiko-IT-Systems/DisCatSharp",
-			"branch": "main"
+	"metadata":[
+		{
+			"src":[
+				{
+					"src":"../DisCatSharp/",
+					"files":[
+						"**.csproj"
+					],
+					"exclude":[
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest":"api/DisCatSharp",
+			"filter":"filter_config.yml"
+		},
+		{
+			"src":[
+				{
+					"src":"../DisCatSharp.Interactivity/",
+					"files":[
+						"**.csproj"
+					],
+					"exclude":[
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest":"api/DisCatSharp.Interactivity",
+			"filter":"filter_config.yml"
+		},
+		{
+			"src":[
+				{
+					"src":"../DisCatSharp.Common/",
+					"files":[
+						"**.csproj"
+					],
+					"exclude":[
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest":"api/DisCatSharp.Common",
+			"filter":"filter_config.yml"
+		},
+		{
+			"src":[
+				{
+					"src":"../DisCatSharp.Hosting/",
+					"files":[
+						"**.csproj"
+					],
+					"exclude":[
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest":"api/DisCatSharp.Hosting",
+			"filter":"filter_config.yml"
+		},
+		{
+			"src":[
+				{
+					"src":"../DisCatSharp.Configuration/",
+					"files":[
+						"**.csproj"
+					],
+					"exclude":[
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest":"api/DisCatSharp.Configuration",
+			"filter":"filter_config.yml"
+		},
+		{
+			"src":[
+				{
+					"src":"../DisCatSharp.ApplicationCommands/",
+					"files":[
+						"**.csproj"
+					],
+					"exclude":[
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest":"api/DisCatSharp.ApplicationCommands",
+			"filter":"filter_config.yml"
+		},
+		{
+			"src":[
+				{
+					"src":"../DisCatSharp.CommandsNext/",
+					"files":[
+						"**.csproj"
+					],
+					"exclude":[
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest":"api/DisCatSharp.CommandsNext",
+			"filter":"filter_config.yml"
+		},
+		{
+			"src":[
+				{
+					"src":"../DisCatSharp.Hosting.DependencyInjection/",
+					"files":[
+						"**.csproj"
+					],
+					"exclude":[
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest":"api/DisCatSharp.Hosting.DependencyInjection",
+			"filter":"filter_config.yml"
+		},
+		{
+			"src":[
+				{
+					"src":"../DisCatSharp.Lavalink/",
+					"files":[
+						"**.csproj"
+					],
+					"exclude":[
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest":"api/DisCatSharp.Lavalink",
+			"filter":"filter_config.yml"
+		},
+		{
+			"src":[
+				{
+					"src":"../DisCatSharp.VoiceNext/",
+					"files":[
+						"**.csproj"
+					],
+					"exclude":[
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest":"api/DisCatSharp.VoiceNext",
+			"filter":"filter_config.yml"
 		}
-    },
-	"disableGitFeatures": false,
-	"exportRawModel": true,
-	"rawModelOutputFolder": "_site/.bot-query/raw/",
-    "globalMetadataFiles": [],
-    "fileMetadataFiles": [],
-    "template": [
-		"dcs"
-    ],
-    "postProcessors": ["ExtractSearchIndex", "CustomMemberIndexer"],
-    "noLangKeyword": false,
-    "keepFileLink": false,
-    "cleanupCacheHistory": false,
-	"sitemap": {
-		"baseUrl": "https://docs.discatsharp.tech/",
-		"changefreq": "daily",
-		"priority": 1.0
+	],
+	"build":{
+		"xrefService":[
+			"https://xref.docs.microsoft.com/query?uid={uid}"
+		],
+		"content":[
+			{
+				"files":[
+					"api/**/**.yml",
+					"api/**/**.md",
+					"api/**.yml",
+					"api/**.md"
+				]
+			},
+			{
+				"files":[
+					"**.md",
+					"toc.yml",
+					"faq/**.yml",
+					"faq/**.md",
+					"articles/**.yml",
+					"articles/**.md",
+					"natives/**.yml",
+					"natives/**.md"
+				],
+				"exclude":[
+					"**/bin/**",
+					"**/obj/**",
+					"_site/**",
+					"dcs/**"
+				]
+			}
+		],
+		"resource":[
+			{
+				"files":[
+					"images/**",
+					"natives/**.zip"
+				],
+				"exclude":[
+					"**/bin/**",
+					"**/obj/**",
+					"_site/**",
+					"images/_**"
+				]
+			}
+		],
+		"overwrite":[
+			{
+				"files":[
+
+				],
+				"exclude":[
+					"**/bin/**",
+					"**/obj/**",
+					"_site/**"
+				]
+			}
+		],
+		"dest":"_site",
+		"globalMetadata":{
+			"_appFooter":"© 2021-2022 Aiko IT Systems",
+			"_enableSearch":true,
+			"_enableNewTab":true,
+			"_appTitle":"DisCatSharp Docs",
+			"_gitUrlPattern":"git",
+			"_gitContribute":{
+				"repo":"https://github.com/Aiko-IT-Systems/DisCatSharp",
+				"branch":"main"
+			}
+		},
+		"disableGitFeatures":false,
+		"exportRawModel":true,
+		"globalMetadataFiles":[
+
+		],
+		"fileMetadataFiles":[
+
+		],
+		"template":[
+			"dcs"
+		],
+		"postProcessors":[
+			"ExtractSearchIndex",
+			"CustomMemberIndexer"
+		],
+		"noLangKeyword":false,
+		"keepFileLink":false,
+		"cleanupCacheHistory":false,
+		"sitemap":{
+			"baseUrl":"https://docs.discatsharp.tech/",
+			"changefreq":"daily",
+			"priority":1.0
+		}
 	}
-  }
 }
