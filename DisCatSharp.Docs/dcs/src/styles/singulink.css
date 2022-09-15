@@ -345,6 +345,10 @@ ul.level4 > li > a, ul.level4 > li > a.sidebar-item {
     white-space: nowrap;
 }
 
+p.lsearch {
+    text-align: center;
+}
+
 #breadcrumb wbr {
     display: none;
 }
@@ -353,11 +357,33 @@ ul.level4 > li > a, ul.level4 > li > a.sidebar-item {
 
 #search-results h1 {
     margin-block-start: 0.5em;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.sr-item {
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 20px;
+	margin-bottom: 20px;
+	box-sizing: border-box;
+	overflow: hidden;
+	box-shadow: 0 5px 15px 0 rgb(11, 79, 5);
+	transform: translatey(0px);
+}
+
+mark {
+    /*background-color: rgba(31, 249, 157, 0.96);*/
+    background-image: linear-gradient(to right, #f90c91, #dd0220cc, #2a9955cc);
+}
+
+i.index-loading {
+    text-align: center;
 }
 
 #search-results .item-title {
     font-size: 1.3em;
-    margin-top: 1.5em;
+    margin-top: 1.0em;
 }
 
 #search-results .item-href {
@@ -366,13 +392,37 @@ ul.level4 > li > a, ul.level4 > li > a.sidebar-item {
 
 #search-results .item-brief {
     margin-top: 0.7em;
+    margin-bottom: 1.0em;
 }
 
 #search-results ul.pagination {
     text-align: center;
-    padding: 10px 0 0 0;
+    padding: 10px 0 15px 0;
     margin-block-start: 40px;
     border-top: 1px solid var(--separator-color);
+    background-color: rgba(205, 23, 117, 0.6);
+    border-radius: 25px;
+}
+
+#search-results ul.pagination > li.active > a {
+    background-color: orangered;
+}
+
+#search-results ul.pagination > li > a {
+	min-width: 32px;
+	padding: 5px 10px;
+	font-style: normal;
+	line-height: 20px;
+	color: var(--color-fg-default);
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	cursor: pointer;
+	-webkit-user-select: none;
+	user-select: none;
+	border: 1px solid transparent;
+	border-radius: 6px;
+	transition: border-color .2s cubic-bezier(0.3, 0, 0.5, 1);
 }
 
 #search-results ul.pagination > li {
@@ -381,7 +431,7 @@ ul.level4 > li > a, ul.level4 > li > a.sidebar-item {
 }
 
 #search-results ul.pagination > li.disabled a, #search-results ul.pagination > li.disabled a:hover {
-    color: var(--text-color);
+    color: gray;
     cursor: txt;
     text-decoration: none;
 }

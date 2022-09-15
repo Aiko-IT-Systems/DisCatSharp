@@ -3,7 +3,7 @@
 <div id="search-results" style="display: none;">
   <h1 class="search-list">{{__global.searchResults}} <span></span></h1>
   <div class="sr-items">
-    <p><i class="bi bi-hourglass-split index-loading"></i></p>
+    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
   </div>
   <ul id="pagination" data-first={{__global.pageFirst}} data-prev={{__global.pagePrev}} data-next={{__global.pageNext}} data-last={{__global.pageLast}}></ul>
 </div>
