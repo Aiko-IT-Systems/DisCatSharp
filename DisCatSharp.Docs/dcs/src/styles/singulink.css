@@ -373,8 +373,8 @@ p.lsearch {
 }
 
 mark {
-    /*background-color: rgba(31, 249, 157, 0.96);*/
-    background-image: linear-gradient(to right, #f90c91, #dd0220cc, #2a9955cc);
+    background-image: linear-gradient(to right, #f90c91, #dd0220cc);
+	color: white;
 }
 
 i.index-loading {
