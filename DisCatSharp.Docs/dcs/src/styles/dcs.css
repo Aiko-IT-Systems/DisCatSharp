@@ -8,6 +8,14 @@ body {
     }
 }
 
+h1.logo-center > img {
+    max-height: 128px;
+}
+
+h1.main-title {
+	text-align: center;
+}
+
 /* Headings */
 
 h1, h2, h3, h4, h5 {
