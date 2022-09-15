@@ -8,6 +8,23 @@
   <meta name="title" content="{{#title}}{{title}}{{/title}}{{^title}}{{>partials/title}}{{/title}} {{#_appTitle}}| {{_appTitle}} {{/_appTitle}}">
   <meta name="generator" content="docfx {{_docfxVersion}}">
   {{#_description}}<meta name="description" content="{{_description}}">{{/_description}}
+<link rel="apple-touch-icon" sizes="57x57" href="{{_rel}}apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="{{_rel}}apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="{{_rel}}apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="{{_rel}}apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="{{_rel}}apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="{{_rel}}apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="{{_rel}}apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="{{_rel}}apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="{{_rel}}apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="{{_rel}}android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="{{_rel}}favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="{{_rel}}favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="{{_rel}}favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="{{_rel}}ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
   <link rel="shortcut icon" href="{{_rel}}{{{_appFaviconPath}}}{{^_appFaviconPath}}favicon.ico{{/_appFaviconPath}}">
   <link rel="stylesheet" href="{{_rel}}src/styles/docfx.vendor.css">
   <link rel="stylesheet" href="{{_rel}}src/styles/docfx.css">
