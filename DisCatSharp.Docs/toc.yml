@@ -3,7 +3,6 @@
 - name: FAQ
   href: faq.md
 - name: API Documentation
-  href: api/
-  homepage: api/index.md
+  href: api/index.md
 - name: Voice Natives
   href: natives/index.md
