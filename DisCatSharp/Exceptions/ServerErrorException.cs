@@ -49,7 +49,7 @@ public class ServerErrorException : Exception
 	public string JsonMessage { get; internal set; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DisCatSharp.Exceptions.ServerErrorException"/> class.
+	/// Initializes a new instance of the <see cref="ServerErrorException"/> class.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="response">The response.</param>

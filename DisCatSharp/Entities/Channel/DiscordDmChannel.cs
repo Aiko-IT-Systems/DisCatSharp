@@ -73,9 +73,9 @@ public class DiscordDmChannel : DiscordChannel
 	/// <param name="userId">The id of the user to add.</param>
 	/// <param name="accessToken">The OAuth2 access token.</param>
 	/// <param name="nickname">The nickname to give to the user.</param>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task AddDmRecipientAsync(ulong userId, string accessToken, string nickname)
 		=> this.Discord.ApiClient.AddGroupDmRecipientAsync(this.Id, userId, accessToken, nickname);
 
@@ -84,9 +84,9 @@ public class DiscordDmChannel : DiscordChannel
 	/// </summary>
 	/// <param name="userId">The id of the User to remove.</param>
 	/// <param name="accessToken">The OAuth2 access token.</param>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RemoveDmRecipientAsync(ulong userId, string accessToken)
 		=> this.Discord.ApiClient.RemoveGroupDmRecipientAsync(this.Id, userId);
 }

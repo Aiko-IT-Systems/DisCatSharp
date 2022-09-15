@@ -154,7 +154,7 @@ public sealed class DiscordMessageBuilder
 	/// </summary>
 	/// <param name="components">The components to add to the message.</param>
 	/// <returns>The current builder to be chained.</returns>
-	/// <exception cref="System.ArgumentOutOfRangeException">No components were passed.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
 	public DiscordMessageBuilder AddComponents(params DiscordComponent[] components)
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
 
@@ -182,7 +182,7 @@ public sealed class DiscordMessageBuilder
 	/// </summary>
 	/// <param name="components">The components to add to the message.</param>
 	/// <returns>The current builder to be chained.</returns>
-	/// <exception cref="System.ArgumentOutOfRangeException">No components were passed.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
 	public DiscordMessageBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
 		var cmpArr = components.ToArray();

@@ -83,7 +83,7 @@ public sealed class DiscordInteractionModalBuilder
 	/// </summary>
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	/// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
+	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionModalBuilder AddTextComponents(params DiscordTextComponent[] components)
 		=> this.AddModalComponents(components);
 
@@ -92,7 +92,7 @@ public sealed class DiscordInteractionModalBuilder
 	/// </summary>
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	/// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
+	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionModalBuilder AddSelectComponents(params DiscordSelectComponent[] components)
 		=> this.AddModalComponents(components);
 
@@ -117,7 +117,7 @@ public sealed class DiscordInteractionModalBuilder
 	/// </summary>
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	/// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
+	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionModalBuilder AddModalComponents(params DiscordComponent[] components)
 	{
 		var ara = components.ToArray();
@@ -139,7 +139,7 @@ public sealed class DiscordInteractionModalBuilder
 	/// </summary>
 	/// <param name="components">The rows of components to add, holding up to five each.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	/// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
+	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionModalBuilder AddModalComponents(IEnumerable<DiscordActionRowComponent> components)
 	{
 		var ara = components.ToArray();

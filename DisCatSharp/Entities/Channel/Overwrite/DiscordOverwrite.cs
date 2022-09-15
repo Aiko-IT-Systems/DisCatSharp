@@ -60,10 +60,10 @@ public class DiscordOverwrite : SnowflakeObject
 	/// Deletes this channel overwrite.
 	/// </summary>
 	/// <param name="reason">Reason as to why this overwrite gets deleted.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the overwrite does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the overwrite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task DeleteAsync(string reason = null) => this.Discord.ApiClient.DeleteChannelPermissionAsync(this.ChannelId, this.Id, reason);
 
 	/// <summary>
@@ -72,10 +72,10 @@ public class DiscordOverwrite : SnowflakeObject
 	/// <param name="allow">Permissions that are allowed.</param>
 	/// <param name="deny">Permissions that are denied.</param>
 	/// <param name="reason">Reason as to why you made this change.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the overwrite does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the overwrite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task UpdateAsync(Permissions? allow = null, Permissions? deny = null, string reason = null)
 		=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.ChannelId, this.Id, allow ?? this.Allowed, deny ?? this.Denied, this.Type.ToString().ToLowerInvariant(), reason);
 
@@ -83,10 +83,10 @@ public class DiscordOverwrite : SnowflakeObject
 	/// Gets the DiscordMember that is affected by this overwrite.
 	/// </summary>
 	/// <returns>The DiscordMember that is affected by this overwrite</returns>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the overwrite does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the overwrite does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMember> GetMemberAsync() =>
 		this.Type != OverwriteType.Member
 			? throw new ArgumentException(nameof(this.Type), "This overwrite is for a role, not a member.")
@@ -96,9 +96,9 @@ public class DiscordOverwrite : SnowflakeObject
 	/// Gets the DiscordRole that is affected by this overwrite.
 	/// </summary>
 	/// <returns>The DiscordRole that is affected by this overwrite</returns>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the role does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the role does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordRole> GetRoleAsync() =>
 		this.Type != OverwriteType.Role
 			? throw new ArgumentException(nameof(this.Type), "This overwrite is for a member, not a role.")

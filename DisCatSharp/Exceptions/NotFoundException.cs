@@ -49,7 +49,7 @@ public class NotFoundException : Exception
 	public string JsonMessage { get; internal set; }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DisCatSharp.Exceptions.NotFoundException"/> class.
+	/// Initializes a new instance of the <see cref="NotFoundException"/> class.
 	/// </summary>
 	/// <param name="request">The request.</param>
 	/// <param name="response">The response.</param>

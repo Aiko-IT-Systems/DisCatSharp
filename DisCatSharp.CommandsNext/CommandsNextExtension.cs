@@ -185,7 +185,7 @@ public class CommandsNextExtension : BaseExtension
 	/// DO NOT USE THIS MANUALLY.
 	/// </summary>
 	/// <param name="client">DO NOT USE THIS MANUALLY.</param>
-	/// <exception cref="System.InvalidOperationException"/>
+	/// <exception cref="InvalidOperationException"/>
 	protected internal override void Setup(DiscordClient client)
 	{
 		if (this.Client != null)

@@ -152,8 +152,8 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	/// Initializes and connects all shards.
 	/// </summary>
-	/// <exception cref="System.AggregateException"></exception>
-	/// <exception cref="System.InvalidOperationException"></exception>
+	/// <exception cref="AggregateException"></exception>
+	/// <exception cref="InvalidOperationException"></exception>
 	public async Task StartAsync()
 	{
 		if (this._isStarted)
@@ -206,7 +206,7 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	/// Disconnects and disposes all shards.
 	/// </summary>
-	/// <exception cref="System.InvalidOperationException"></exception>
+	/// <exception cref="InvalidOperationException"></exception>
 	public Task StopAsync()
 		=> this.InternalStopAsync();
 

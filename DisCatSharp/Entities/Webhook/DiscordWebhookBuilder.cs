@@ -119,7 +119,7 @@ public sealed class DiscordWebhookBuilder
 	/// </summary>
 	/// <param name="components">The components to add to the builder.</param>
 	/// <returns>The current builder to be chained.</returns>
-	/// <exception cref="System.ArgumentOutOfRangeException">No components were passed.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
 	public DiscordWebhookBuilder AddComponents(params DiscordComponent[] components)
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
 
@@ -147,7 +147,7 @@ public sealed class DiscordWebhookBuilder
 	/// </summary>
 	/// <param name="components">The components to add to the builder.</param>
 	/// <returns>The current builder to be chained.</returns>
-	/// <exception cref="System.ArgumentOutOfRangeException">No components were passed.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">No components were passed.</exception>
 	public DiscordWebhookBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
 		var cmpArr = components.ToArray();

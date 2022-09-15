@@ -315,10 +315,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="content">Content of the message to send.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is true and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is true and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SendMessageAsync(string content) =>
 		!this.IsWritable()
 			? throw new ArgumentException("Cannot send a text message to a non-text channel.")
@@ -329,10 +329,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed) =>
 		!this.IsWritable()
 			? throw new ArgumentException("Cannot send a text message to a non-text channel.")
@@ -344,10 +344,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <param name="content">Content of the message to send.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is true and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission if TTS is true and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed) =>
 		!this.IsWritable()
 			? throw new ArgumentException("Cannot send a text message to a non-text channel.")
@@ -358,10 +358,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="builder">The builder with all the items to send.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission TTS is true and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission TTS is true and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder builder)
 		=> this.Discord.ApiClient.CreateMessageAsync(this.Id, builder);
 
@@ -370,10 +370,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="action">The builder with all the items to send.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission TTS is true and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission TTS is true and <see cref="Permissions.SendTtsMessages"/> if TTS is true.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordMessage> SendMessageAsync(Action<DiscordMessageBuilder> action)
 	{
 		var builder = new DiscordMessageBuilder();
@@ -389,10 +389,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Deletes a guild channel
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task DeleteAsync(string reason = null)
 		=> this.Discord.ApiClient.DeleteChannelAsync(this.Id, reason);
 
@@ -401,10 +401,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <returns>Newly-created channel.</returns>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordChannel> CloneAsync(string reason = null)
 	{
 		if (this.Guild == null)
@@ -443,10 +443,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="id">The id of the message</param>
 	/// <param name="bypassCache">Whether to bypass the message cache</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> GetMessageAsync(ulong id, bool bypassCache = false) =>
 		this.Discord.Configuration.MessageCacheSize > 0
 		&& !bypassCache
@@ -460,11 +460,11 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Modifies the current channel.
 	/// </summary>
 	/// <param name="action">Action to perform on this channel</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
-	/// <exception cref="System.NotSupportedException">Thrown when the client does not have the correct <see cref="PremiumTier"/> for modifying the <see cref="ThreadAutoArchiveDuration"/>.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
+	/// <exception cref="NotSupportedException">Thrown when the client does not have the correct <see cref="PremiumTier"/> for modifying the <see cref="ThreadAutoArchiveDuration"/>.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ModifyAsync(Action<ChannelEditModel> action)
 	{
 		if (this.Type == ChannelType.Forum)
@@ -486,11 +486,11 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Modifies the current forum channel.
 	/// </summary>
 	/// <param name="action">Action to perform on this channel</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
-	/// <exception cref="System.NotSupportedException">Thrown when the client does not have the correct <see cref="PremiumTier"/> for modifying the <see cref="ThreadAutoArchiveDuration"/>.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
+	/// <exception cref="NotSupportedException">Thrown when the client does not have the correct <see cref="PremiumTier"/> for modifying the <see cref="ThreadAutoArchiveDuration"/>.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ModifyForumAsync(Action<ForumChannelEditModel> action)
 	{
 		if (this.Type != ChannelType.Forum)
@@ -518,10 +518,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="position">Position the channel should be moved to.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ModifyPositionAsync(int position, string reason = null)
 	{
 		if (this.Guild == null)
@@ -550,12 +550,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="position">The position.</param>
 	/// <param name="reason">The reason.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	/// <exception cref="System.IndexOutOfRangeException">Thrown when <paramref name="position"/> is out of range.</exception>
-	/// <exception cref="System.ArgumentException">Thrown when function is called on a channel without a parent channel.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="IndexOutOfRangeException">Thrown when <paramref name="position"/> is out of range.</exception>
+	/// <exception cref="ArgumentException">Thrown when function is called on a channel without a parent channel.</exception>
 	public async Task ModifyPositionInCategoryAsync(int position, string reason = null)
 	{
 		if (!this.IsMovableInParent())
@@ -651,12 +651,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="mode">The mode. Valid: '+' or 'down' to move a channel down | '-' or 'up' to move a channel up</param>
 	/// <param name="position">The position.</param>
 	/// <param name="reason">The reason.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	/// <exception cref="System.IndexOutOfRangeException">Thrown when <paramref name="position"/> is out of range.</exception>
-	/// <exception cref="System.ArgumentException">Thrown when function is called on a channel without a parent channel, a wrong mode is given or given position is zero.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="IndexOutOfRangeException">Thrown when <paramref name="position"/> is out of range.</exception>
+	/// <exception cref="ArgumentException">Thrown when function is called on a channel without a parent channel, a wrong mode is given or given position is zero.</exception>
 	public Task ModifyPositionInCategorySmartAsync(string mode, int position, string reason = null)
 	{
 		if (!this.IsMovableInParent())
@@ -684,10 +684,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="newParent">New parent for channel. Use <see cref="RemoveParentAsync(string)"/> to remove from parent.</param>
 	/// <param name="lockPermissions">Sync permissions with parent. Defaults to null.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ModifyParentAsync(DiscordChannel newParent, bool? lockPermissions = null, string reason = null)
 	{
 		if (this.Guild == null)
@@ -727,10 +727,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Moves the channel out of a category.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RemoveParentAsync(string reason = null)
 	{
 		if (this.Guild == null)
@@ -764,10 +764,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="limit">The amount of messages to fetch.</param>
 	/// <param name="before">Message to fetch before from.</param>
 	/// </summary>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordMessage>> GetMessagesBeforeAsync(ulong before, int limit = 100)
 		=> this.GetMessagesInternalAsync(limit, before, null, null);
 
@@ -776,10 +776,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="limit">The amount of messages to fetch.</param>
 	/// <param name="after">Message to fetch after from.</param>
 	/// </summary>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordMessage>> GetMessagesAfterAsync(ulong after, int limit = 100)
 		=> this.GetMessagesInternalAsync(limit, null, after, null);
 
@@ -788,10 +788,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="limit">The amount of messages to fetch.</param>
 	/// <param name="around">Message to fetch around from.</param>
 	/// </summary>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordMessage>> GetMessagesAroundAsync(ulong around, int limit = 100)
 		=> this.GetMessagesInternalAsync(limit, null, null, around);
 
@@ -799,10 +799,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Returns a list of messages from the last message in the channel.
 	/// <param name="limit">The amount of messages to fetch.</param>
 	/// </summary>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordMessage>> GetMessagesAsync(int limit = 100) =>
 		this.GetMessagesInternalAsync(limit, null, null, null);
 
@@ -859,14 +859,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Deletes multiple messages if they are less than 14 days old.  If they are older, none of the messages will be deleted and you will receive a <see cref="DisCatSharp.Exceptions.BadRequestException"/> error.
+	/// Deletes multiple messages if they are less than 14 days old.  If they are older, none of the messages will be deleted and you will receive a <see cref="BadRequestException"/> error.
 	/// </summary>
 	/// <param name="messages">A collection of messages to delete.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task DeleteMessagesAsync(IEnumerable<DiscordMessage> messages, string reason = null)
 	{
 		// don't enumerate more than once
@@ -889,20 +889,20 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="message">The message to be deleted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageMessages"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task DeleteMessageAsync(DiscordMessage message, string reason = null)
 		=> this.Discord.ApiClient.DeleteMessageAsync(this.Id, message.Id, reason);
 
 	/// <summary>
 	/// Returns a list of invite objects
 	/// </summary>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordInvite>> GetInvitesAsync() =>
 		this.Guild == null
 			? throw new ArgumentException("Cannot get the invites of a channel that does not belong to a guild.")
@@ -919,10 +919,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="targetApplication">The target activity. Defaults to null.</param>
 	/// <param name="targetUser">The target user id. Defaults to null.</param>
 	/// <param name="reason">The audit log reason.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordInvite> CreateInviteAsync(int maxAge = 86400, int maxUses = 0, bool temporary = false, bool unique = false, TargetType? targetType = null, TargetActivity? targetApplication = null, ulong? targetUser = null, string reason = null)
 		=> this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, maxAge, maxUses, targetType, targetApplication, targetUser, temporary, unique, reason);
 
@@ -936,10 +936,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="privacyLevel">Privacy level of the stage (Defaults to <see cref="StagePrivacyLevel.GuildOnly"/>.</param>
 	/// <param name="reason">Audit log reason.</param>
 	/// <returns>Stage instance</returns>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordStageInstance> OpenStageAsync(string topic, bool sendStartNotification = false, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly, string reason = null)
 		=> await this.Discord.ApiClient.CreateStageInstanceAsync(this.Id, topic, sendStartNotification, privacyLevel, reason);
 
@@ -949,10 +949,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="topic">New topic of the stage.</param>
 	/// <param name="privacyLevel">New privacy level of the stage.</param>
 	/// <param name="reason">Audit log reason.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task ModifyStageAsync(Optional<string> topic, Optional<StagePrivacyLevel> privacyLevel, string reason = null)
 		=> await this.Discord.ApiClient.ModifyStageInstanceAsync(this.Id, topic, privacyLevel, reason);
 
@@ -960,10 +960,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Closes a stage.
 	/// </summary>
 	/// <param name="reason">Audit log reason.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task CloseStageAsync(string reason = null)
 		=> await this.Discord.ApiClient.DeleteStageInstanceAsync(this.Id, reason);
 
@@ -971,10 +971,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Gets a stage.
 	/// </summary>
 	/// <returns>The requested stage.</returns>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or <see cref="Permissions.UseVoice"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> or <see cref="Permissions.UseVoice"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordStageInstance> GetStageAsync()
 		=> await this.Discord.ApiClient.GetStageInstanceAsync(this.Id);
 
@@ -991,9 +991,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="coverImage">The cover image.</param>
 	/// <param name="reason">The reason.</param>
 	/// <returns>A scheduled event.</returns>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the resource does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the resource does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordScheduledEvent> CreateScheduledEventAsync(string name, DateTimeOffset scheduledStartTime, string description = null, Optional<Stream> coverImage = default, string reason = null)
 	{
 		if (!this.IsVoiceJoinable())
@@ -1019,11 +1019,11 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="rateLimitPerUser">The per user ratelimit, aka slowdown.</param>
 	/// <param name="reason">Audit log reason.</param>
 	/// <returns>The created thread.</returns>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePublicThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> or if creating a private thread the <see cref="Permissions.CreatePrivateThreads"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	/// <exception cref="System.NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>. Or if <see cref="GuildFeatures.CanCreatePrivateThreads"/> is not enabled for guild. This happens, if the guild does not have <see cref="PremiumTier.TierTwo"/></exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreatePublicThreads"/> or <see cref="Permissions.SendMessagesInThreads"/> or if creating a private thread the <see cref="Permissions.CreatePrivateThreads"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>. Or if <see cref="GuildFeatures.CanCreatePrivateThreads"/> is not enabled for guild. This happens, if the guild does not have <see cref="PremiumTier.TierTwo"/></exception>
 	public async Task<DiscordThreadChannel> CreateThreadAsync(string name, ThreadAutoArchiveDuration autoArchiveDuration = ThreadAutoArchiveDuration.OneHour, ChannelType type = ChannelType.PublicThread, int? rateLimitPerUser = null, string reason = null) =>
 		type != ChannelType.NewsThread && type != ChannelType.PublicThread && type != ChannelType.PrivateThread
 			? throw new NotSupportedException("Wrong thread type given.")
@@ -1048,10 +1048,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="tags">The tags to add on creation.</param>
 	/// <param name="reason">Audit log reason.</param>
 	/// <returns>The created thread.</returns>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.SendMessages"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the guild hasn't enabled threads atm.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordThreadChannel> CreatePostAsync(string name, DiscordMessageBuilder builder, int? rateLimitPerUser = null, IEnumerable<ForumPostTag>? tags = null, string reason = null)
 	{
 		if (this.Type != ChannelType.Forum)
@@ -1066,10 +1066,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="before">Get threads created before this thread id.</param>
 	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult"/>.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordThreadResult> GetJoinedPrivateArchivedThreadsAsync(ulong? before, int? limit)
 		=> await this.Discord.ApiClient.GetJoinedPrivateArchivedThreadsAsync(this.Id, before, limit);
 
@@ -1079,10 +1079,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="before">Get threads created before this thread id.</param>
 	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult"/>.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordThreadResult> GetPublicArchivedThreadsAsync(ulong? before, int? limit)
 		=> await this.Discord.ApiClient.GetPublicArchivedThreadsAsync(this.Id, before, limit);
 
@@ -1092,10 +1092,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="before">Get threads created before this thread id.</param>
 	/// <param name="limit">Defines the limit of returned <see cref="DiscordThreadResult"/>.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> or <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> or <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordThreadResult> GetPrivateArchivedThreadsAsync(ulong? before, int? limit)
 		=> await this.Discord.ApiClient.GetPrivateArchivedThreadsAsync(this.Id, before, limit);
 
@@ -1118,10 +1118,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="emoji">The emoji of the tag. Has to be either a <see cref="DiscordGuildEmoji"/> of the current guild or a <see cref="DiscordUnicodeEmoji"/>.</param>
 	/// <param name="moderated">Whether only moderators should be able to apply this tag.</param>
 	/// <param name="reason">The audit log reason.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the tag does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the tag does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<ForumPostTag> CreateForumPostTagAsync(string name, DiscordEmoji emoji, bool moderated = false, string reason = null)
 		=> await this.Discord.ApiClient.CreateForumTagAsync(this.Id, name, emoji, moderated, reason);
 
@@ -1130,10 +1130,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="id">The id of the tag to delete.</param>
 	/// <param name="reason">The audit log reason.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the tag does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the tag does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task DeleteForumPostTag(ulong id, string reason = null)
 		=> this.Discord.ApiClient.DeleteForumTagAsync(id, this.Id, reason);
 
@@ -1146,10 +1146,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="allow">The permissions to allow.</param>
 	/// <param name="deny">The permissions to deny.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task AddOverwriteAsync(DiscordRole role, Permissions allow = Permissions.None, Permissions deny = Permissions.None, string reason = null)
 		=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.Id, role.Id, allow, deny, "role", reason);
 
@@ -1161,10 +1161,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="allow">The permissions to allow.</param>
 	/// <param name="deny">The permissions to deny.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task AddOverwriteAsync(DiscordMember member, Permissions allow = Permissions.None, Permissions deny = Permissions.None, string reason = null)
 		=> this.Discord.ApiClient.EditChannelPermissionsAsync(this.Id, member.Id, allow, deny, "member", reason);
 
@@ -1173,10 +1173,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="member">The member to have the permission deleted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task DeleteOverwriteAsync(DiscordMember member, string reason = null)
 		=> this.Discord.ApiClient.DeleteChannelPermissionAsync(this.Id, member.Id, reason);
 
@@ -1185,19 +1185,19 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="role">The role to have the permission deleted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task DeleteOverwriteAsync(DiscordRole role, string reason = null)
 		=> this.Discord.ApiClient.DeleteChannelPermissionAsync(this.Id, role.Id, reason);
 
 	/// <summary>
 	/// Post a typing indicator.
 	/// </summary>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task TriggerTypingAsync() =>
 		!this.IsWritable()
 			? throw new ArgumentException("Cannot start typing in a non-text channel.")
@@ -1206,10 +1206,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	/// Returns all pinned messages.
 	/// </summary>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.AccessChannels"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordMessage>> GetPinnedMessagesAsync() =>
 		!this.IsWritable()
 			? throw new ArgumentException("A non-text channel does not have pinned messages.")
@@ -1221,10 +1221,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="name">The name of the webhook.</param>
 	/// <param name="avatar">The image for the default webhook avatar.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageWebhooks"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageWebhooks"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordWebhook> CreateWebhookAsync(string name, Optional<Stream> avatar = default, string reason = null)
 		=> await this.Discord.ApiClient.CreateWebhookAsync(this.IsThread() ? this.ParentId!.Value : this.Id, name,
 			ImageTool.Base64FromStream(avatar), reason).ConfigureAwait(false);
@@ -1232,9 +1232,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <summary>
 	/// Returns a list of webhooks.
 	/// </summary>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageWebhooks"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageWebhooks"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordWebhook>> GetWebhooksAsync()
 		=> this.Discord.ApiClient.GetChannelWebhooksAsync(this.IsThread() ? this.ParentId!.Value : this.Id);
 
@@ -1242,10 +1242,10 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Moves a member to this voice channel.
 	/// </summary>
 	/// <param name="member">The member to be moved.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MoveMembers"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the channel does not exists or if the Member does not exists.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MoveMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the channel does not exists or if the Member does not exists.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task PlaceMemberAsync(DiscordMember member)
 	{
 		if (!this.IsVoiceJoinable())
@@ -1259,8 +1259,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Follows a news channel.
 	/// </summary>
 	/// <param name="targetChannel">Channel to crosspost messages to.</param>
-	/// <exception cref="System.ArgumentException">Thrown when trying to follow a non-news channel.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the current user doesn't have <see cref="Permissions.ManageWebhooks"/> on the target channel.</exception>
+	/// <exception cref="ArgumentException">Thrown when trying to follow a non-news channel.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the current user doesn't have <see cref="Permissions.ManageWebhooks"/> on the target channel.</exception>
 	public Task<DiscordFollowedChannel> FollowAsync(DiscordChannel targetChannel) =>
 		this.Type != ChannelType.News
 			? throw new ArgumentException("Cannot follow a non-news channel.")
@@ -1270,8 +1270,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Publishes a message in a news channel to following channels.
 	/// </summary>
 	/// <param name="message">Message to publish.</param>
-	/// <exception cref="System.ArgumentException">Thrown when the message has already been crossposted.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">
+	/// <exception cref="ArgumentException">Thrown when the message has already been crossposted.</exception>
+	/// <exception cref="UnauthorizedException">
 	///     Thrown when the current user doesn't have <see cref="Permissions.ManageWebhooks"/> and/or <see cref="Permissions.SendMessages"/>
 	/// </exception>
 	public Task<DiscordMessage> CrosspostMessageAsync(DiscordMessage message) =>
@@ -1284,7 +1284,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	/// <param name="suppress">Toggles the suppress state.</param>
 	/// <param name="requestToSpeakTimestamp">Sets the time the user requested to speak.</param>
-	/// <exception cref="System.ArgumentException">Thrown when the channel is not a stage channel.</exception>
+	/// <exception cref="ArgumentException">Thrown when the channel is not a stage channel.</exception>
 	public async Task UpdateCurrentUserVoiceStateAsync(bool? suppress, DateTimeOffset? requestToSpeakTimestamp = null)
 	{
 		if (this.Type != ChannelType.Stage)

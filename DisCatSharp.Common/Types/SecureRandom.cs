@@ -29,7 +29,7 @@ using System.Security.Cryptography;
 namespace DisCatSharp.Common;
 
 /// <summary>
-/// Provides a cryptographically-secure pseudorandom number generator (CSPRNG) implementation compatible with <see cref="System.Random"/>.
+/// Provides a cryptographically-secure pseudorandom number generator (CSPRNG) implementation compatible with <see cref="Random"/>.
 /// </summary>
 public sealed class SecureRandom : Random, IDisposable
 {

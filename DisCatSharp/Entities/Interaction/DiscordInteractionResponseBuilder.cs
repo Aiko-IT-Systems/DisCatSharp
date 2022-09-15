@@ -114,7 +114,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// </summary>
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	/// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
+	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionResponseBuilder AddComponents(params DiscordComponent[] components)
 		=> this.AddComponents((IEnumerable<DiscordComponent>)components);
 
@@ -141,7 +141,7 @@ public sealed class DiscordInteractionResponseBuilder
 	/// </summary>
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	/// <exception cref="System.ArgumentException">Thrown when passing more than 5 components.</exception>
+	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
 	public DiscordInteractionResponseBuilder AddComponents(IEnumerable<DiscordComponent> components)
 	{
 		var compArr = components.ToArray();
