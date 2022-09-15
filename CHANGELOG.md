@@ -39,10 +39,10 @@ NuGet packages now support Source Link & Deterministic Builds.
 - Added support for the `X-Discord-Locale` Header in the [DiscordConfiguration]
 - Added support for sending component-only messages
 - Implemented `ResumeGatewayUrl`
-- Added `GuildFeatures` `GuildHomeTest` (Experimental) & `InvitesDisabled`
+- Added `GuildFeatures`: `GuildHomeTest` (Experimental) & `InvitesDisabled`
 - Implemented `DiscordWebhookBuilder.WithThreadName` to create forum posts via a webhook
 - Added `DisCatSharp.ApplicationFlags.ApplicationCommandBadge`
-- Added a `bypassCache` Option to `DiscordChannel.GetMessageAsync`
+- Added a `bypassCache` option to `DiscordChannel.GetMessageAsync`
 - Added the new field app_permissions to the interaction entity and the context entities.
 - Added function `DiscordGuild.EnableMfaAsync`
 - Added function `DiscordGuild.DisableMfaAsync`
@@ -64,7 +64,7 @@ NuGet packages now support Source Link & Deterministic Builds.
 <br></br>
 - Fixed webhooks for threads
 (xref:DisCatSharp.DiscordConfiguration#DisCatSharp_DiscordConfiguration_Locale).
-- Dropped support for channel banners, it sadly never made it's way into discord
+- Dropped support for channel banners, it sadly never made its way into discord
 
 ### DisCatSharp.ApplicationCommands
 - Added support for slash commands in shards
