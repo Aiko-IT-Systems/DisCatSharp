@@ -5,9 +5,9 @@
     {{^_disableSideFilter}}
     <div class="sidefilter">
       <form class="toc-filter">
-        <span class="glyphicon glyphicon-filter filter-icon"></span>
-        <span class="glyphicon glyphicon-remove clear-icon" id="toc_filter_clear"></span>
-        <input type="text" id="toc_filter_input" placeholder="{{__global.tocFilter}}" onkeypress="if(event.keyCode==13) {return false;}">
+        <i class="bi bi-funnel-fill filter-icon"></i>
+        <i id="toc_filter_clear" class="bi bi-x-lg clear-icon"></i>
+        <input type="text" id="toc_filter_input" placeholder="{{__global.tocFilter}}" autocomplete="off" onkeypress="if(event.keyCode==13) {return false;}">
       </form>
     </div>
     {{/_disableSideFilter}}

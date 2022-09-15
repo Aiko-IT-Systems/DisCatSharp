@@ -221,10 +221,15 @@
 		],
 		"dest":"_site",
 		"globalMetadata":{
-			"_appFooter":"© 2021-2022 Aiko IT Systems",
+			"_appTitle": "DisCatSharp Docs",
+			"_appName": "DisCatSharp",
+			"_appFooter": "<strong>Made with ♥ by AITSYS</strong>",
+			"_copyrightFooter": "© Aiko IT Systems. ALl rights reserved.",
 			"_enableSearch":true,
+			"_disableSideFilter": false,
 			"_enableNewTab":true,
-			"_appTitle":"DisCatSharp Docs",
+			"_disableContribution": false,
+			"_disableBreadcrumb": false,
 			"_gitUrlPattern":"git",
 			"_gitContribute":{
 				"repo":"https://github.com/Aiko-IT-Systems/DisCatSharp",
