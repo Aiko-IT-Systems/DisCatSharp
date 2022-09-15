@@ -6,6 +6,6 @@ title: DisCatSharp Global API
 
 Welcome to the DisCatSharp Global API reference.
 
-To begin, a package on the left.
-
-If you encounter any problems or see typos, please inform us on our [Discord server](https://discord.gg/Uk7sggRBTm).
+List of all packages:
+- [DisCatSharp](xref:api_discatsharp_index.md)
+- [DisCatSharp.Interactivity](xref:api_discatsharp_interactivity_index.md)
