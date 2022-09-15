@@ -4,11 +4,5 @@
   href: faq.md
 - name: API Documentation
   href: api/
-  homepage: api/index.md
-  items:
-  - name: DisCatSharp
-    href: DisCatSharp/
-  - name: DisCatSharp.Interactivity
-    href: DisCatSharp.Interactivity/
 - name: Voice Natives
   href: natives/index.md
