@@ -37,50 +37,58 @@
 {{!include(token.json)}}
 {{!include(browserconfig.xml)}}
 <!DOCTYPE html>
+<!--[if IE]><![endif]-->
 <html>
-  {{>partials/head}}
-  <body data-spy="scroll" data-target="#affix" data-offset="120">
-    <div id="wrapper">
-      <header>
-        {{^_disableNavbar}}
-        {{>partials/navbar}}
-        {{/_disableNavbar}}
-        {{^_disableBreadcrumb}}
-        {{>partials/breadcrumb}}
-        {{/_disableBreadcrumb}}
-      </header>
-      {{#_enableSearch}}
-      <div class="container body-content">
-        {{>partials/searchResults}}
-      </div>
-      {{/_enableSearch}}
-      <div role="main" class="container body-content hide-when-search">
-      {{^_disableToc}}
-        {{>partials/toc}}
-        <div class="article row grid-right">
-      {{/_disableToc}}
-      {{#_disableToc}}
-        <div class="article row grid">
-        {{/_disableToc}}
-          {{#_disableAffix}}
-          <div class="col-md-12">
-          {{/_disableAffix}}
-          {{^_disableAffix}}
-          <div class="col-md-10">
-          {{/_disableAffix}}
-            <article class="content wrap" id="_content" data-uid="{{uid}}">
-                {{!body}}
-            </article>
-          </div>
-          {{^_disableAffix}}
-          {{>partials/affix}}
-          {{/_disableAffix}}
+    {{>partials/head}}
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger"
+                    style="vertical-align: middle;"
+                    width="34" height="34" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+            {{>partials/logo}}
         </div>
-      </div>
-      {{^_disableFooter}}
-      {{>partials/footer}}
-      {{/_disableFooter}}
-    </div>
-    {{>partials/scripts}}
-  </body>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+                    {{>partials/navbar}}
+                    <div class="sidebar-item-separator"></div>
+                    {{^_disableToc}}
+                        {{>partials/toc}}
+                    {{/_disableToc}}
+                </div>
+                {{>partials/footer}}
+            </nav>
+
+            <main class="main-panel">
+                {{#_enableSearch}}
+                {{>partials/searchResults}}
+                {{/_enableSearch}}
+
+                <div role="main" class="hide-when-search" >
+                    {{^_disableBreadcrumb}}
+                        {{>partials/breadcrumb}}
+                    {{/_disableBreadcrumb}}
+
+                    <article class="content wrap" id="_content" data-uid="{{uid}}">
+                      {{!body}}
+                    </article>
+                </div>
+
+                {{#_copyrightFooter}}
+                <div class="copyright-footer">
+                    <span>{{_copyrightFooter}}</span>
+                </div>
+                {{/_copyrightFooter}}
+            </main>
+        </div>
+
+        {{>partials/scripts}}
+    </body>
 </html>
