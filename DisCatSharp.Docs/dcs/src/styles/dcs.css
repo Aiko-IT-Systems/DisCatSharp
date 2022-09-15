@@ -341,7 +341,7 @@ ul.level4 > li > a, ul.level4 > li > a.sidebar-item {
 }
 
 #breadcrumb {
-    overflow: scroll;
+    overflow: hidden;
     margin-bottom: 0;
 }
 
