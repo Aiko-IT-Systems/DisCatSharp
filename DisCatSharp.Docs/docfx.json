@@ -15,10 +15,7 @@
         }
       ],
       "dest": "api/DisCatSharp",
-      "filter": "filter_config.yml",
-	  "properties": {
-		"TargetFramework": "net6.0.400"
-		}
+      "filter": "filter_config.yml"
     },
 	{
 		"src": [
@@ -35,10 +32,7 @@
 		  }
 		],
 		"dest": "api/DisCatSharp.Interactivity",
-		"filter": "filter_config.yml",
-		"properties": {
-		  "TargetFramework": "net6.0.400"
-		  }
+		"filter": "filter_config.yml"
 	  }
   ],
   "build": {
