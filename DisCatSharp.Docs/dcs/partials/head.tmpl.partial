@@ -32,7 +32,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
   <link rel="stylesheet" href="{{_rel}}src/styles/config.css">
   <link rel="stylesheet" href="{{_rel}}src/styles/discord.css">
-  <link rel="stylesheet" href="{{_rel}}src/styles/singulink.css">
+  <link rel="stylesheet" href="{{_rel}}src/styles/dcs.css">
   <link rel="stylesheet" href="{{_rel}}src/styles/main.css">
   <link rel="stylesheet" href="{{_rel}}src/styles/colors.css">
   <link rel="stylesheet" href="{{_rel}}src/styles/highlight/github-dark.min.css">
