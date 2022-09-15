@@ -21,8 +21,8 @@ NuGet packages now support Source Link & Deterministic Builds.
 - Implemented Forum Channels
 	* Added fields (`DiscordChannel.PostCreateUserRateLimit`, `.DefaultReactionEmoji` (new entity `ForumReactionEmoji`), `.AvailableTags` and `DiscordThreadChannel.TotalMessagesSent`, `.AppliedTags`)
 	* Added function to create a forum through the guild entity (`DiscordGuild.CreateForumChannelAsync`)
-	* Added function to modify a forum channel (`DiscordChannel.ModifyForumAsync`)
-	* Added funtion to create and delete tags (`DiscordChannel.CreateForumPostTagAsync`, `.GetForumPostTag`, `.DeleteForumPostTag`)
+	* Added functions to modify a forum channel (`DiscordChannel.ModifyForumAsync`)
+	* Added functions to create and delete tags (`DiscordChannel.CreateForumPostTagAsync`, `.GetForumPostTag`, `.DeleteForumPostTag`)
 	* Added functions to modify tags (new entity ForumPostTag) (`ForumPostTag.ModifyAsync`, `.DeleteAsync`)
 	* Fixed bugs in forum channel post creation
 	* Added forum post tag operations on threads
