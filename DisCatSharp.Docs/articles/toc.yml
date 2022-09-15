@@ -1,6 +1,6 @@
 - name: Preamble
   href: preamble.md
-- name: Important Changes
+- name: Changelog
   items:
   - name: Version 10.1.0
     href: important_changes/10_1_0.md
