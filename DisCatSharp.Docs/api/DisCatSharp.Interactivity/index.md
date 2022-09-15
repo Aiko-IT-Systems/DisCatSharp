@@ -1,3 +1,8 @@
+---
+uid: api_discatsharp_interactivity_index
+title: DisCatSharp.Interactivity API Reference
+---
+
 # API Reference
 
 Welcome to the DisCatSharp.Interactivity API reference.

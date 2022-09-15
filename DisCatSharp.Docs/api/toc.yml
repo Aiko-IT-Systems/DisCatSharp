@@ -1,3 +1,5 @@
+- name: Intro
+  href: index.md
 - name: DisCatSharp
   href: DisCatSharp/
 - name: DisCatSharp.Interactivity

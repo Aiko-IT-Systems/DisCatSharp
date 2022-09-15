@@ -1,3 +1,8 @@
+---
+uid: api_discatsharp_index
+title: DisCatSharp API Reference
+---
+
 # API Reference
 
 Welcome to the DisCatSharp API reference.
