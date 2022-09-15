@@ -577,7 +577,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			orderedChannels.Add(channel.Id, new List<DiscordChannel>());
 		}
 
-		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
+		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News || c.Type == ChannelType.Forum)).OrderBy(c => c.Position))
 		{
 			orderedChannels[channel.ParentId.Value].Add(channel);
 		}
@@ -586,7 +586,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			orderedChannels[channel.ParentId.Value].Add(channel);
 		}
 
-		foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
+		foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News || c.Type == ChannelType.Forum)).OrderBy(c => c.Position))
 		{
 			orderedChannels[0].Add(channel);
 		}
@@ -619,7 +619,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			orderedChannels.Add(channel.Id, new List<DiscordChannel>());
 		}
 
-		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
+		foreach (var channel in rawChannels.Where(c => c.ParentId.HasValue && (c.Type == ChannelType.Text || c.Type == ChannelType.News || c.Type == ChannelType.Forum)).OrderBy(c => c.Position))
 		{
 			orderedChannels[channel.ParentId.Value].Add(channel);
 		}
@@ -628,7 +628,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 			orderedChannels[channel.ParentId.Value].Add(channel);
 		}
 
-		foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News)).OrderBy(c => c.Position))
+		foreach (var channel in rawChannels.Where(c => !c.ParentId.HasValue && c.Type != ChannelType.Category && (c.Type == ChannelType.Text || c.Type == ChannelType.News || c.Type == ChannelType.Forum)).OrderBy(c => c.Position))
 		{
 			orderedChannels[0].Add(channel);
 		}
