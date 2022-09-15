@@ -117,11 +117,11 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Modifies the current thread.
 	/// </summary>
 	/// <param name="action">Action to perform on this thread</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	/// <exception cref="System.NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotSupportedException">Thrown when the <see cref="ThreadAutoArchiveDuration"/> cannot be modified. This happens, when the guild hasn't reached a certain boost <see cref="PremiumTier"/>.</exception>
 	public Task ModifyAsync(Action<ThreadEditModel> action)
 	{
 		var mdl = new ThreadEditModel();
@@ -140,10 +140,10 @@ public class DiscordThreadChannel : DiscordChannel
 	/// </summary>
 	/// <param name="tag">The tag to add.</param>
 	/// <param name="reason">The reason for the audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task AddTagAsync(ForumPostTag tag, string reason = null)
 		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags) { tag }, reason: reason);
 
@@ -152,10 +152,10 @@ public class DiscordThreadChannel : DiscordChannel
 	/// </summary>
 	/// <param name="tag">The tag to remove.</param>
 	/// <param name="reason">The reason for the audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task RemoveTagAsync(ForumPostTag tag, string reason = null)
 		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags).Where(x => x != tag).ToList(), reason: reason);
 
@@ -164,10 +164,10 @@ public class DiscordThreadChannel : DiscordChannel
 	/// </summary>
 	/// <param name="locked">Whether the thread should be locked.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageThreads"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ArchiveAsync(bool locked = true, string reason = null)
 		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, locked, true, null, null, null, null, reason: reason);
 
@@ -175,18 +175,18 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Unarchives a thread.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task UnarchiveAsync(string reason = null)
 		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, false, null, null, null, null, reason: reason);
 
 	/// <summary>
 	/// Gets the members of a thread. Needs the <see cref="DiscordIntents.GuildMembers"/> intent.
 	/// </summary>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyList<DiscordThreadChannelMember>> GetMembersAsync()
 		=> await this.Discord.ApiClient.GetThreadMembersAsync(this.Id);
 
@@ -194,9 +194,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Adds a member to this thread.
 	/// </summary>
 	/// <param name="memberId">The member id to be added.</param>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task AddMemberAsync(ulong memberId)
 		=> this.Discord.ApiClient.AddThreadMemberAsync(this.Id, memberId);
 
@@ -204,9 +204,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Adds a member to this thread.
 	/// </summary>
 	/// <param name="member">The member to be added.</param>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task AddMemberAsync(DiscordMember member)
 		=> this.AddMemberAsync(member.Id);
 
@@ -214,9 +214,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Gets a member in this thread.
 	/// </summary>
 	/// <param name="memberId">The member to be added.</param>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member is not part of the thread.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member is not part of the thread.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordThreadChannelMember> GetMemberAsync(ulong memberId)
 		=> this.Discord.ApiClient.GetThreadMemberAsync(this.Id, memberId);
 
@@ -224,9 +224,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Gets a member in this thread.
 	/// </summary>
 	/// <param name="member">The member to be added.</param>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the member is not part of the thread.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member is not part of the thread.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordThreadChannelMember> GetMemberAsync(DiscordMember member)
 		=> this.Discord.ApiClient.GetThreadMemberAsync(this.Id, member.Id);
 
@@ -234,9 +234,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Removes a member from this thread.
 	/// </summary>
 	/// <param name="memberId">The member id to be removed.</param>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RemoveMemberAsync(ulong memberId)
 		=> this.Discord.ApiClient.RemoveThreadMemberAsync(this.Id, memberId);
 
@@ -244,9 +244,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Removes a member from this thread. Only applicable to private threads.
 	/// </summary>
 	/// <param name="member">The member to be removed.</param>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RemoveMemberAsync(DiscordMember member)
 		=> this.RemoveMemberAsync(member.Id);
 
@@ -254,9 +254,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Adds a role to this thread. Only applicable to private threads.
 	/// </summary>
 	/// <param name="roleId">The role id to be added.</param>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task AddRoleAsync(ulong roleId)
 	{
 		var role = this.Guild.GetRole(roleId);
@@ -272,9 +272,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Adds a role to this thread. Only applicable to private threads.
 	/// </summary>
 	/// <param name="role">The role to be added.</param>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task AddRoleAsync(DiscordRole role)
 		=> this.AddRoleAsync(role.Id);
 
@@ -282,9 +282,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Removes a role from this thread. Only applicable to private threads.
 	/// </summary>
 	/// <param name="roleId">The role id to be removed.</param>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task RemoveRoleAsync(ulong roleId)
 	{
 		var role = this.Guild.GetRole(roleId);
@@ -300,29 +300,29 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Removes a role from this thread. Only applicable to private threads.
 	/// </summary>
 	/// <param name="role">The role to be removed.</param>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RemoveRoleAsync(DiscordRole role)
 		=> this.RemoveRoleAsync(role.Id);
 
 	/// <summary>
 	/// Joins a thread.
 	/// </summary>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client has no access to this thread.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client has no access to this thread.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task JoinAsync()
 		=> this.Discord.ApiClient.JoinThreadAsync(this.Id);
 
 	/// <summary>
 	/// Leaves a thread.
 	/// </summary>
-	/// <exception cref="DisCatSharp.Exceptions.UnauthorizedException">Thrown when the client has no access to this thread.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.NotFoundException">Thrown when the thread does not exist.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="DisCatSharp.Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client has no access to this thread.</exception>
+	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task LeaveAsync()
 		=> this.Discord.ApiClient.LeaveThreadAsync(this.Id);
 

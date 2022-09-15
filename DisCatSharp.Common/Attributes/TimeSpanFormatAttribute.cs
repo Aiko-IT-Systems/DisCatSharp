@@ -26,7 +26,7 @@ using System;
 namespace DisCatSharp.Common.Serialization;
 
 /// <summary>
-/// Defines the format for string-serialized <see cref="System.TimeSpan"/> objects.
+/// Defines the format for string-serialized <see cref="TimeSpan"/> objects.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class TimeSpanFormatAttribute : SerializationAttribute
@@ -90,7 +90,7 @@ public sealed class TimeSpanFormatAttribute : SerializationAttribute
 }
 
 /// <summary>
-/// <para>Defines which built-in format to use for <see cref="System.TimeSpan"/> serialization.</para>
+/// <para>Defines which built-in format to use for <see cref="TimeSpan"/> serialization.</para>
 /// <para>See https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-timespan-format-strings and https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-timespan-format-strings for more details.</para>
 /// </summary>
 public enum TimeSpanFormatKind : int

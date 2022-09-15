@@ -67,7 +67,7 @@ public class RingBuffer<T> : ICollection<T>
 	/// Creates a new ring buffer with specified size.
 	/// </summary>
 	/// <param name="size">Size of the buffer to create.</param>
-	/// <exception cref="System.ArgumentOutOfRangeException" />
+	/// <exception cref="ArgumentOutOfRangeException" />
 	public RingBuffer(int size)
 	{
 		if (size <= 0)
@@ -82,8 +82,8 @@ public class RingBuffer<T> : ICollection<T>
 	/// Creates a new ring buffer, filled with specified elements.
 	/// </summary>
 	/// <param name="elements">Elements to fill the buffer with.</param>
-	/// <exception cref="System.ArgumentException" />
-	/// <exception cref="System.ArgumentOutOfRangeException" />
+	/// <exception cref="ArgumentException" />
+	/// <exception cref="ArgumentOutOfRangeException" />
 	public RingBuffer(IEnumerable<T> elements)
 		: this(elements, 0)
 	{ }
@@ -93,8 +93,8 @@ public class RingBuffer<T> : ICollection<T>
 	/// </summary>
 	/// <param name="elements">Elements to fill the buffer with.</param>
 	/// <param name="index">Starting element index.</param>
-	/// <exception cref="System.ArgumentException" />
-	/// <exception cref="System.ArgumentOutOfRangeException" />
+	/// <exception cref="ArgumentException" />
+	/// <exception cref="ArgumentOutOfRangeException" />
 	public RingBuffer(IEnumerable<T> elements, int index)
 	{
 		if (elements == null || !elements.Any())
@@ -166,7 +166,7 @@ public class RingBuffer<T> : ICollection<T>
 	/// </summary>
 	/// <param name="item">Item to check for.</param>
 	/// <returns>Whether the buffer contains the item.</returns>
-	/// <exception cref="System.NotImplementedException" />
+	/// <exception cref="NotImplementedException" />
 	public bool Contains(T item) => throw new NotImplementedException("This method is not implemented. Use .Contains(predicate) instead.");
 
 	/// <summary>

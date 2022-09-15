@@ -26,7 +26,7 @@ using System;
 namespace DisCatSharp.Common.Serialization;
 
 /// <summary>
-/// Defines the format for string-serialized <see cref="System.DateTime"/> and <see cref="System.DateTimeOffset"/> objects.
+/// Defines the format for string-serialized <see cref="DateTime"/> and <see cref="DateTimeOffset"/> objects.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class DateTimeFormatAttribute : SerializationAttribute
@@ -90,7 +90,7 @@ public sealed class DateTimeFormatAttribute : SerializationAttribute
 }
 
 /// <summary>
-/// <para>Defines which built-in format to use for for <see cref="System.DateTime"/> and <see cref="System.DateTimeOffset"/> serialization.</para>
+/// <para>Defines which built-in format to use for for <see cref="DateTime"/> and <see cref="System.DateTimeOffset"/> serialization.</para>
 /// <para>See https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings and https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings for more details.</para>
 /// </summary>
 public enum DateTimeFormatKind : int

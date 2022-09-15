@@ -195,10 +195,10 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// Modifies the current scheduled event.
 	/// </summary>
 	/// <param name="action">Action to perform on this thread</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task ModifyAsync(Action<ScheduledEventEditModel> action)
 	{
 		var mdl = new ScheduledEventEditModel();
@@ -223,10 +223,10 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <summary>
 	/// Starts the current scheduled event.
 	/// </summary>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordScheduledEvent> StartAsync(string reason = null)
 		=> this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Active, reason) : throw new InvalidOperationException("You can only start scheduled events");
 
@@ -234,10 +234,10 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// Cancels the current scheduled event.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordScheduledEvent> CancelAsync(string reason = null)
 		=> this.Status == ScheduledEventStatus.Scheduled ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Canceled, reason) : throw new InvalidOperationException("You can only cancel scheduled events");
 
@@ -245,10 +245,10 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// Ends the current scheduled event.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordScheduledEvent> EndAsync(string reason = null)
 		=> this.Status == ScheduledEventStatus.Active ? await this.Discord.ApiClient.ModifyGuildScheduledEventStatusAsync(this.GuildId, this.Id, ScheduledEventStatus.Completed, reason) : throw new InvalidOperationException("You can only stop active events");
 
@@ -259,10 +259,10 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// <param name="before">Get results of <see cref="DiscordScheduledEventUser"/> before the given snowflake.</param>
 	/// <param name="after">Get results of <see cref="DiscordScheduledEventUser"/> after the given snowflake.</param>
 	/// <param name="withMember">Whether to include guild member data.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the correct permissions.</exception>
+	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyDictionary<ulong, DiscordScheduledEventUser>> GetUsersAsync(int? limit = null, ulong? before = null, ulong? after = null, bool? withMember = null)
 		=> await this.Discord.ApiClient.GetGuildScheduledEventRspvUsersAsync(this.GuildId, this.Id, limit, before, after, withMember);
 
@@ -270,10 +270,10 @@ public class DiscordScheduledEvent : SnowflakeObject, IEquatable<DiscordSchedule
 	/// Deletes a scheduled event.
 	/// </summary>
 	/// <param name="reason">The audit log reason.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the event does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageEvents"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the event does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task DeleteAsync(string reason = null)
 		=> await this.Discord.ApiClient.DeleteGuildScheduledEventAsync(this.GuildId, this.Id, reason);
 

@@ -386,10 +386,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Creates a direct message channel to this member.
 	/// </summary>
 	/// <returns>Direct message channel to this member.</returns>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordDmChannel> CreateDmChannelAsync()
 		=> this.Discord.ApiClient.CreateDmAsync(this.Id);
 
@@ -398,10 +398,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="content">Content of the message to send.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> SendMessageAsync(string content)
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
@@ -416,10 +416,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
@@ -435,10 +435,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <param name="content">Content of the message to send.</param>
 	/// <param name="embed">Embed to attach to the message.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
@@ -453,10 +453,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="message">Builder to with the message.</param>
 	/// <returns>The sent message.</returns>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the member has the bot blocked, the member is no longer in the guild, or if the member has Allow DM from server members off.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder message)
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
@@ -471,10 +471,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="mute">Whether the member is to be muted.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task SetMuteAsync(bool mute, string reason = null)
 		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, mute, default, default, reason);
 
@@ -483,10 +483,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="deaf">Whether the member is to be deafened.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.DeafenMembers"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.DeafenMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task SetDeafAsync(bool deaf, string reason = null)
 		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, deaf, default, reason);
 
@@ -494,10 +494,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Modifies this member.
 	/// </summary>
 	/// <param name="action">Action to perform on this member.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageNicknames"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageNicknames"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task ModifyAsync(Action<MemberEditModel> action)
 	{
 		var mdl = new MemberEditModel();
@@ -533,10 +533,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="until">The datetime offset to time out the user. Up to 28 days.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task TimeoutAsync(DateTimeOffset until, string reason = null)
 		=> until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, until, reason);
 
@@ -545,10 +545,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="until">The timespan to time out the user. Up to 28 days.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task TimeoutAsync(TimeSpan until, string reason = null)
 		=> this.TimeoutAsync(DateTimeOffset.UtcNow + until, reason);
 
@@ -557,10 +557,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="until">The datetime to time out the user. Up to 28 days.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task TimeoutAsync(DateTime until, string reason = null)
 		=> this.TimeoutAsync(until.ToUniversalTime() - DateTime.UtcNow, reason);
 
@@ -568,10 +568,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Removes the timeout from a member.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ModerateMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RemoveTimeoutAsync(string reason = null) => this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, null, reason);
 
 	/// <summary>
@@ -579,10 +579,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="role">Role to grant.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task GrantRoleAsync(DiscordRole role, string reason = null)
 		=> this.Discord.ApiClient.AddGuildMemberRoleAsync(this.Guild.Id, this.Id, role.Id, reason);
 
@@ -591,10 +591,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="role">Role to revoke.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RevokeRoleAsync(DiscordRole role, string reason = null)
 		=> this.Discord.ApiClient.RemoveGuildMemberRoleAsync(this.Guild.Id, this.Id, role.Id, reason);
 
@@ -603,10 +603,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="roles">Roles to set.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageRoles"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ReplaceRolesAsync(IEnumerable<DiscordRole> roles, string reason = null)
 		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, default,
 			Optional.Some(roles.Select(xr => xr.Id)), default, default, default, reason);
@@ -616,10 +616,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="deleteMessageDays">How many days to remove messages from.</param>
 	/// <param name="reason">Reason for audit logs.</param>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.BanMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task BanAsync(int deleteMessageDays = 0, string reason = null)
 		=> this.Guild.BanMemberAsync(this, deleteMessageDays, reason);
 
@@ -627,9 +627,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Unbans this member from their guild.
 	/// </summary>
 	/// <exception cref = "Exceptions.UnauthorizedException" > Thrown when the client does not have the<see cref="Permissions.BanMembers"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task UnbanAsync(string reason = null) => this.Guild.UnbanMemberAsync(this, reason);
 
 	/// <summary>
@@ -637,10 +637,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <returns></returns>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.KickMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RemoveAsync(string reason = null)
 		=> this.Discord.ApiClient.RemoveGuildMemberAsync(this.GuildId, this.Id, reason);
 
@@ -649,10 +649,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="channel"></param>
 
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MoveMembers"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MoveMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task PlaceInAsync(DiscordChannel channel)
 		=> channel.PlaceMemberAsync(this);
 
@@ -661,7 +661,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// </summary>
 	/// <param name="channel">The channel the member is currently in.</param>
 	/// <param name="suppress">Toggles the member's suppress state.</param>
-	/// <exception cref="System.ArgumentException">Thrown when the channel in not a voice channel.</exception>
+	/// <exception cref="ArgumentException">Thrown when the channel in not a voice channel.</exception>
 	public async Task UpdateVoiceStateAsync(DiscordChannel channel, bool? suppress)
 	{
 		if (channel.Type != ChannelType.Stage)
@@ -673,11 +673,11 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	/// Makes the user a speaker.
 	/// </summary>
-	/// <exception cref="System.ArgumentException">Thrown when the user is not inside an stage channel.</exception>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="ArgumentException">Thrown when the user is not inside an stage channel.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task MakeSpeakerAsync()
 	{
 		var vs = this.VoiceState;
@@ -690,11 +690,11 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	/// Moves the user to audience.
 	/// </summary>
-	/// <exception cref="System.ArgumentException">Thrown when the user is not inside an stage channel.</exception>
-	/// <exception cref="Exceptions.UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
-	/// <exception cref="Exceptions.NotFoundException">Thrown when the member does not exist.</exception>
-	/// <exception cref="Exceptions.BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="ArgumentException">Thrown when the user is not inside an stage channel.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MuteMembers"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task MoveToAudienceAsync()
 	{
 		var vs = this.VoiceState;

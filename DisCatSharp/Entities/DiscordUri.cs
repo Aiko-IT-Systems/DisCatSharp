@@ -87,11 +87,11 @@ public class DiscordUri
 	public override string ToString() => this._value.ToString();
 
 	/// <summary>
-	/// Converts this DiscordUri into a canonical representation of a <see cref="System.Uri"/> if it can be represented as
+	/// Converts this DiscordUri into a canonical representation of a <see cref="Uri"/> if it can be represented as
 	/// such, throwing an exception otherwise.
 	/// </summary>
 	/// <returns>A canonical representation of this DiscordUri.</returns>
-	/// <exception cref="System.UriFormatException">If <see cref="System.Type"/> is not <see cref="DiscordUriType.Standard"/>, as
+	/// <exception cref="UriFormatException">If <see cref="System.Type"/> is not <see cref="DiscordUriType.Standard"/>, as
 	/// that would mean creating an invalid Uri, which would result in loss of data.</exception>
 	public Uri ToUri()
 		=> this.Type == DiscordUriType.Standard
@@ -148,7 +148,7 @@ public class DiscordUri
 public enum DiscordUriType : byte
 {
 	/// <summary>
-	/// Represents a URI that conforms to RFC 3986, meaning it's stored internally as a <see cref="System.Uri"/> and will
+	/// Represents a URI that conforms to RFC 3986, meaning it's stored internally as a <see cref="Uri"/> and will
 	/// contain a trailing slash after the domain name.
 	/// </summary>
 	Standard,

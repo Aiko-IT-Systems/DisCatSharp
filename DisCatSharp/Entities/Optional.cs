@@ -56,7 +56,7 @@ public static class Optional
 		=> value;
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="value"></param>
@@ -131,7 +131,7 @@ public readonly struct Optional<T> : IEquatable<Optional<T>>, IEquatable<T>, IOp
 	/// <summary>
 	/// Gets the value of this <see cref="Optional{T}"/>.
 	/// </summary>
-	/// <exception cref="System.InvalidOperationException">If this <see cref="Optional{T}"/> has no value.</exception>
+	/// <exception cref="InvalidOperationException">If this <see cref="Optional{T}"/> has no value.</exception>
 	public T Value => this.HasValue ? this._val : throw new InvalidOperationException("Value is not set.");
 
 	/// <summary>

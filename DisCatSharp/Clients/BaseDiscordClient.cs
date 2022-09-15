@@ -83,7 +83,7 @@ public abstract class BaseDiscordClient : IDisposable
 	public DiscordApplication CurrentApplication { get; internal set; }
 
 	/// <summary>
-	/// Exposes a <see cref="System.Net.Http.HttpClient">Http Client</see> for custom operations.
+	/// Exposes a <see cref="HttpClient">Http Client</see> for custom operations.
 	/// </summary>
 	public HttpClient RestClient { get; internal set; }
 
@@ -230,7 +230,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <summary>
 	/// Gets a list of voice regions.
 	/// </summary>
-	/// <exception cref="Exceptions.ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync()
 		=> this.ApiClient.ListVoiceRegionsAsync();
 
