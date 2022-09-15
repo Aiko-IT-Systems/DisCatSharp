@@ -602,10 +602,10 @@ ul.level1 > li > .expand-stub
     transform: none;
 }
 
-li > ul
+/*li > ul
 {
     display: none;
-}
+}*/
 
 li.in > ul
 {
