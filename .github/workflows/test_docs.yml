@@ -1,5 +1,7 @@
 name: "Test Documentation"
 on:
+  push:
+    branches: [ test ]
   workflow_dispatch:
 
 env:
