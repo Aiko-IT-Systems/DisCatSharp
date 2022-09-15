@@ -9,5 +9,5 @@
 <script>hljs.highlightAll();</script>
 <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
 <script type="text/javascript" src="{{_rel}}src/scripts/jquery.twbsPagination.js"></script>
-<script type="text/javascript" src="{{_rel}}src/scripts/singulink.js"></script>
+<script type="text/javascript" src="{{_rel}}src/scripts/dcs.js"></script>
 <script type="text/javascript" src="{{_rel}}src/scripts/main.js"></script>
