@@ -1,3 +1,5 @@
+- name: Changelog Intro
+  href: index.md
 - name: Changelogs
   items:
   - name: Version 10.X
