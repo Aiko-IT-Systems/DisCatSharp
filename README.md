@@ -20,11 +20,6 @@
 ----
 # News
 
-## New in DisCatSharp 10.1.0
-
-- Support for application commands (guild and global) in shards
-- Translation template export based on your own code.
-
 ## Upcoming
 - We're building a translation generator tool for the template export function introduced in 10.1.0.
 
