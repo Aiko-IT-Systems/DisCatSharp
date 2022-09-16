@@ -1,7 +1,7 @@
 -
   branches:
     only:
-    - main
+    - disabled
   version: 10.1.1-nightly-{build}
   pull_requests:
     do_not_increment_build_number: true
@@ -72,7 +72,7 @@
 -
   branches:
     only:
-    - /release/
+    - /fuck/
   version: 10.1.0
   pull_requests:
     do_not_increment_build_number: true
