@@ -182,6 +182,8 @@
 					"faq/**.md",
 					"articles/**.yml",
 					"articles/**.md",
+					"changelogs/**.yml",
+					"changelogs/**.md",
 					"natives/**.yml",
 					"natives/**.md"
 				],
