@@ -99,6 +99,8 @@
         href: modules/audio/lavalink/configuration.md
       - name: Music Commands
         href: modules/audio/lavalink/music_commands.md
+      - name: Advanced
+        href: modules/audio/lavalink/advanced.md
     - name: VoiceNext
       items:
       - name: Prerequisites
