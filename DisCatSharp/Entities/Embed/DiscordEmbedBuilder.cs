@@ -361,6 +361,17 @@ public sealed class DiscordEmbedBuilder
 	/// <summary>
 	/// Adds a field to this embed.
 	/// </summary>
+	/// <param name="name">Name of the field to add.</param>
+	/// <param name="value">Value of the field to add.</param>
+	/// <param name="inline">Whether the field is to be inline or not.</param>
+	/// <returns>This embed builder.</returns>
+	[Obsolete("DiscordEmbedFields should be constructed manually.")]
+	public DiscordEmbedBuilder AddField(string name, string value, bool inline = false)
+		=> this.AddField(new DiscordEmbedField(name, value, inline));
+
+	/// <summary>
+	/// Adds a field to this embed.
+	/// </summary>
 	/// <param name="field">The field to add.</param>
 	/// <returns>This embed builder.</returns>
 	public DiscordEmbedBuilder AddField(DiscordEmbedField field)
