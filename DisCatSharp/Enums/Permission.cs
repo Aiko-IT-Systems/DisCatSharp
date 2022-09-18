@@ -32,7 +32,7 @@ public static class PermissionMethods
 	/// <summary>
 	/// Gets the full permissions enum (long).
 	/// </summary>
-	internal static Permissions FullPerms { get; } = (Permissions)2199023255551L;
+	internal static Permissions FullPerms { get; } = (Permissions)4398046511103L;
 
 	/// <summary>
 	/// Calculates whether this permission set contains the given permission.
@@ -98,7 +98,7 @@ public enum Permissions : long
 	/// Indicates all permissions are granted
 	/// </summary>
 	[PermissionString("All permissions")]
-	All = 0b0001_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111,
+	All = 0b0011_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111,
 
 	/// <summary>
 	/// Allows creation of instant channel invites.
@@ -350,7 +350,7 @@ public enum Permissions : long
 	/// Allows to view creator monetization insights
 	/// </summary>
 	[PermissionString("Moderate Members")]
-	ViewCreatorMonetizationInsights = 1<<41L
+	ViewCreatorMonetizationInsights = 1L << 41
 }
 
 /// <summary>
