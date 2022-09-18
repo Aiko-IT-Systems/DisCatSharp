@@ -214,6 +214,9 @@ public enum Permissions : long
 	[PermissionString("Use external emojis")]
 	UseExternalEmojis = 1L << 18,
 
+	/// <summary>
+	/// Allows to view guild insights.
+	/// </summary>
 	[PermissionString("View guild insights")]
 	ViewGuildInsights = 1L << 19,
 
@@ -341,7 +344,13 @@ public enum Permissions : long
 	/// Allows to perform limited moderation actions (timeout).
 	/// </summary>
 	[PermissionString("Moderate Members")]
-	ModerateMembers = 1L << 40
+	ModerateMembers = 1L << 40,
+	
+	/// <summary>
+	/// Allows to view creator monetization insights
+	/// </summary>
+	[PermissionString("Moderate Members")]
+	ViewCreatorMonetizationInsights = 1<<41L
 }
 
 /// <summary>
