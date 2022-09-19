@@ -75,6 +75,13 @@
                     {{^_disableBreadcrumb}}
                         {{>partials/breadcrumb}}
                     {{/_disableBreadcrumb}}
+					{{^_disableToc}}
+						{{>partials/toc}}
+						<div class="article row grid-right">
+					{{/_disableToc}}
+					{{#_disableToc}}
+						<div class="article row grid">
+					{{/_disableToc}}
 
                     <article class="content wrap" id="_content" data-uid="{{uid}}">
                       {{!body}}

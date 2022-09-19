@@ -32,7 +32,7 @@ public enum ApplicationFlags
 {
 	/// <summary>
 	/// The application is embedded and can be used by users.
-	/// This was introdruced to avoid users using in-dev apps.
+	/// This was introduced to avoid users using in-dev apps.
 	/// </summary>
 	EmbeddedReleased = 1 << 1,
 
@@ -95,7 +95,7 @@ public enum ApplicationFlags
 	/// Related to embedded applications.
 	/// </summary>
 	EmbeddedFirstParty = 1 << 20,
-	
+
 	/// <summary>
 	/// To be datamined.
 	/// </summary>
