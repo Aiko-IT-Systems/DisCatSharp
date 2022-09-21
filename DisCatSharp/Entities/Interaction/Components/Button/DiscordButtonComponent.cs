@@ -124,4 +124,31 @@ public sealed class DiscordButtonComponent : DiscordComponent
 		}
 		this.Type = ComponentType.Button;
 	}
+
+	/// <summary>
+	/// Constructs a new button with the specified options.
+	/// </summary>
+	/// <param name="style">The style/color of the button.</param>
+	/// <param name="customId">The Id to assign to the button. This is sent back when a user presses it.</param>
+	/// <param name="label">The text to display on the button, up to 80 characters. Can be left blank if <paramref name="emoji"/>is set.</param>
+	/// <param name="disabled">Whether this button should be initialized as being disabled. User sees a greyed out button that cannot be interacted with.</param>
+	/// <param name="emoji">The emoji to add to the button. This is required if <paramref name="label"/> is empty or null.</param>
+	/// <exception cref="ArgumentException">Is thrown when neither the <paramref name="emoji"/> nor the <paramref name="label"/> is set.</exception>
+	public DiscordButtonComponent(ButtonStyle style, string customId = null, string label = null, bool disabled = false, DiscordEmoji emoji = null)
+	{
+		this.Style = style;
+		this.CustomId = customId ?? Guid.NewGuid().ToString();
+		this.Disabled = disabled;
+		if (emoji != null)
+		{
+			this.Label = label;
+			this.Emoji = new DiscordComponentEmoji(emoji);
+		}
+		else
+		{
+			this.Label = label ?? throw new ArgumentException("Label can only be null if emoji is set.");
+			this.Emoji = null;
+		}
+		this.Type = ComponentType.Button;
+	}
 }
