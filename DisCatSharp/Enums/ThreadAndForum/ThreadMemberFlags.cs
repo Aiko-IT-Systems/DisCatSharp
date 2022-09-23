@@ -20,30 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
+namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents the auto-archive duration for a thread.
+/// Represents notification settings for a thread.
 /// </summary>
-public enum ThreadAutoArchiveDuration : int
+public enum ThreadMemberFlags : int
 {
 	/// <summary>
-	/// Indicates that the thread will be auto archived after one hour.
+	/// Indicates that the notification setting is set to has interacted.
 	/// </summary>
-	OneHour = 60,
+	HasInteracted = 1,
 
 	/// <summary>
-	/// Indicates that the thread will be auto archived after one day / 24 hours.
+	/// Indicates that the notification setting is set to all messages.
 	/// </summary>
-	OneDay = 1440,
+	AllMessages = 2,
 
 	/// <summary>
-	/// Indicates that the thread will be auto archived after three days.
+	/// Indicates that the notification setting is set to only mentions.
 	/// </summary>
-	ThreeDays = 4320,
+	OnlyMentions = 4,
 
 	/// <summary>
-	/// Indicates that the thread will be auto archived after a week.
+	/// Indicates that the notification setting is set to none.
 	/// </summary>
-	OneWeek = 10080
+	None = 8
 }

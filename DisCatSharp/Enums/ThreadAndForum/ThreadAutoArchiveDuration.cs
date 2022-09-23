@@ -23,27 +23,27 @@
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents the status for a scheduled event.
+/// Represents the auto-archive duration for a thread.
 /// </summary>
-public enum ScheduledEventStatus : int
+public enum ThreadAutoArchiveDuration : int
 {
 	/// <summary>
-	/// Indicates that the event is scheduled.
+	/// Indicates that the thread will be auto archived after one hour.
 	/// </summary>
-	Scheduled = 1,
+	OneHour = 60,
 
 	/// <summary>
-	/// Indicates that the event is active.
+	/// Indicates that the thread will be auto archived after one day / 24 hours.
 	/// </summary>
-	Active = 2,
+	OneDay = 1440,
 
 	/// <summary>
-	/// Indicates that the event is completed.
+	/// Indicates that the thread will be auto archived after three days.
 	/// </summary>
-	Completed = 3,
+	ThreeDays = 4320,
 
 	/// <summary>
-	/// Indicates that the event is canceled.
+	/// Indicates that the thread will be auto archived after a week.
 	/// </summary>
-	Canceled = 4
+	OneWeek = 10080
 }

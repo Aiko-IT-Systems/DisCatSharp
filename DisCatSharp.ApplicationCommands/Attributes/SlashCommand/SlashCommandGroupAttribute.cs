@@ -22,6 +22,8 @@
 
 using System;
 
+using DisCatSharp.Enums;
+
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>

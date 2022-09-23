@@ -24,6 +24,7 @@ using System;
 using System.Net;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 using DisCatSharp.Net.Udp;
 using DisCatSharp.Net.WebSocket;
 

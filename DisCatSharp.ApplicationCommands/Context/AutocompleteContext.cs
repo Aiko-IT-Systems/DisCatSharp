@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 using Microsoft.Extensions.DependencyInjection;
 

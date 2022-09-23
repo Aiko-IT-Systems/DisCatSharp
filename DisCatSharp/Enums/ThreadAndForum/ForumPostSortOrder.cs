@@ -20,30 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
+namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents notification settings for a thread.
+/// Represents the default sort order for posts in a forum channel.
 /// </summary>
-public enum ThreadMemberFlags : int
+public enum ForumPostSortOrder : int
 {
 	/// <summary>
-	/// Indicates that the notification setting is set to has interacted.
+	/// Sort forum posts by activity.
 	/// </summary>
-	HasInteracted = 1,
+	LatestActivity = 0,
 
 	/// <summary>
-	/// Indicates that the notification setting is set to all messages.
+	/// Sort forum posts by creation time (from most recent to oldest).
 	/// </summary>
-	AllMessages = 2,
-
-	/// <summary>
-	/// Indicates that the notification setting is set to only mentions.
-	/// </summary>
-	OnlyMentions = 4,
-
-	/// <summary>
-	/// Indicates that the notification setting is set to none.
-	/// </summary>
-	None = 8
+	CreationDate = 1
 }

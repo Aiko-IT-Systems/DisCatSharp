@@ -1603,7 +1603,7 @@ public sealed class DiscordApiClient
 	/// <param name="qualityMode">The quality mode.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, string reason)
+	internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, Optional<ChannelFlags?> flags, string reason)
 	{
 		var restOverwrites = new List<DiscordRestOverwrite>();
 		if (overwrites != null)
@@ -1622,7 +1622,8 @@ public sealed class DiscordApiClient
 			Nsfw = nsfw,
 			PerUserRateLimit = perUserRateLimit,
 			QualityMode = qualityMode,
-			DefaultAutoArchiveDuration = defaultAutoArchiveDuration
+			DefaultAutoArchiveDuration = defaultAutoArchiveDuration,
+			Flags = flags
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1659,8 +1660,8 @@ public sealed class DiscordApiClient
 	internal async Task<DiscordChannel> CreateForumChannelAsync(ulong guildId, string name, ulong? parent,
 		Optional<string> topic, Optional<string> template,
 		bool? nsfw, Optional<ForumReactionEmoji> defaultReactionEmoji,
-		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit,
-		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, string reason)
+		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit, Optional<ForumPostSortOrder> defaultSortOrder,
+		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
@@ -1681,7 +1682,9 @@ public sealed class DiscordApiClient
 			PostCreateUserRateLimit = postCreateUserRateLimit,
 			DefaultAutoArchiveDuration = defaultAutoArchiveDuration,
 			DefaultReactionEmoji = defaultReactionEmoji,
-			PermissionOverwrites = restoverwrites
+			PermissionOverwrites = restoverwrites,
+			DefaultSortOrder = defaultSortOrder,
+			Flags = flags
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1718,7 +1721,7 @@ public sealed class DiscordApiClient
 	/// <param name="type">The type.</param>
 	/// <param name="permissionOverwrites">The permission overwrites.</param>
 	/// <param name="reason">The reason.</param>
-	internal Task ModifyChannelAsync(ulong channelId, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? userLimit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, string reason)
+	internal Task ModifyChannelAsync(ulong channelId, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? userLimit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
@@ -1742,6 +1745,7 @@ public sealed class DiscordApiClient
 			QualityMode = qualityMode,
 			DefaultAutoArchiveDuration = autoArchiveDuration,
 			Type = type,
+			Flags = flags,
 			PermissionOverwrites = restoverwrites
 		};
 
@@ -1759,8 +1763,8 @@ public sealed class DiscordApiClient
 	internal Task ModifyForumChannelAsync(ulong channelId, string name, int? position,
 		Optional<string> topic, Optional<string> template, bool? nsfw,
 		Optional<ulong?> parent, Optional<ForumReactionEmoji> defaultReactionEmoji,
-		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit,
-		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, string reason)
+		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit, Optional<ForumPostSortOrder> defaultSortOrder,
+		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
@@ -1782,7 +1786,9 @@ public sealed class DiscordApiClient
 			PostCreateUserRateLimit = postCreateUserRateLimit,
 			DefaultAutoArchiveDuration = defaultAutoArchiveDuration,
 			DefaultReactionEmoji = defaultReactionEmoji,
-			PermissionOverwrites = restoverwrites
+			PermissionOverwrites = restoverwrites,
+			DefaultSortOrder = defaultSortOrder,
+			Flags = flags
 		};
 
 		var headers = Utilities.GetBaseHeaders();

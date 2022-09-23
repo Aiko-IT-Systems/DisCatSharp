@@ -853,10 +853,12 @@ public sealed partial class DiscordClient
 				channelOld.InternalAvailableTags = channelNew.InternalAvailableTags;
 				channelOld.Template = channelNew.Template;
 				channelOld.DefaultReactionEmoji = channelNew.DefaultReactionEmoji;
+				channelOld.DefaultSortOrder = channelNew.DefaultSortOrder;
 
 				channelNew.PostCreateUserRateLimit = channel.PostCreateUserRateLimit;
 				channelNew.Template = channel.Template;
 				channelNew.DefaultReactionEmoji = channel.DefaultReactionEmoji;
+				channelNew.DefaultSortOrder = channel.DefaultSortOrder;
 
 				if (channelNew.InternalAvailableTags != null && channelNew.InternalAvailableTags.Any())
 					channelNew.InternalAvailableTags.Clear();
@@ -870,11 +872,13 @@ public sealed partial class DiscordClient
 				channelOld.InternalAvailableTags = null;
 				channelOld.Template = null;
 				channelOld.DefaultReactionEmoji = null;
+				channelOld.DefaultSortOrder = null;
 
 				channelNew.PostCreateUserRateLimit = null;
+				channelNew.InternalAvailableTags = null;
 				channelNew.Template = null;
 				channelNew.DefaultReactionEmoji = null;
-				channelNew.InternalAvailableTags = null;
+				channelNew.DefaultSortOrder = null;
 			}
 			channelOld.Initialize(this);
 			channelNew.Initialize(this);

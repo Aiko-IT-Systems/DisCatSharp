@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using DisCatSharp.Configuration.Models;
+using DisCatSharp.Enums;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
