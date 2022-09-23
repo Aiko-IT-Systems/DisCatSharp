@@ -24,6 +24,7 @@ using System;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Context;
+using DisCatSharp.Enums;
 
 namespace DisCatSharp.ApplicationCommands.Attributes;
 

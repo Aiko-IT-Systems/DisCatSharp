@@ -24,6 +24,7 @@ using System;
 using System.IO;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 namespace DisCatSharp.Net.Models;
 

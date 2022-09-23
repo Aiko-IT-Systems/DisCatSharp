@@ -22,6 +22,8 @@
 
 using System.Collections.Generic;
 
+using DisCatSharp.Enums;
+
 using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;

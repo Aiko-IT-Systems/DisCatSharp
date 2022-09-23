@@ -23,6 +23,7 @@
 using System;
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 namespace DisCatSharp.EventArgs;
 

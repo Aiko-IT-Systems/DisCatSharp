@@ -58,7 +58,15 @@ public class ForumChannelEditModel : BaseEditModel
 	/// </summary>
 	public bool? Nsfw { internal get; set; }
 
+	/// <summary>
+	/// Sets the default reaction emoji.
+	/// </summary>
 	public Optional<ForumReactionEmoji> DefaultReactionEmoji { internal get; set; }
+
+	/// <summary>
+	/// Sets the default forum post sort order
+	/// </summary>
+	public Optional<ForumPostSortOrder> DefaultSortOrder { internal get; set; }
 
 	/// <summary>
 	/// <para>Sets the parent of this channel.</para>
@@ -93,7 +101,9 @@ public class ForumChannelEditModel : BaseEditModel
 	/// Sets the channel's permission overwrites.
 	/// </summary>
 	public IEnumerable<DiscordOverwriteBuilder> PermissionOverwrites { internal get; set; }
-	
+
+	public Optional<ChannelFlags?> Flags { internal get; set; }
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ChannelEditModel"/> class.
 	/// </summary>

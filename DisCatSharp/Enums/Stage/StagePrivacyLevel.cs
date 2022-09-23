@@ -20,11 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp;
+using System;
+
+namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the privacy level for a stage.
 /// </summary>
+[Obsolete("Not uses anymore")]
 public enum StagePrivacyLevel : int
 {
 	/// <summary>

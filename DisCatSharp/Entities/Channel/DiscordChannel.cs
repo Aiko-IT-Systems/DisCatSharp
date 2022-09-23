@@ -29,6 +29,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Models;
 
@@ -225,6 +226,9 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// </summary>
 	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
 	public ForumReactionEmoji DefaultReactionEmoji { get; internal set; }
+
+	[JsonProperty("default_sort_order", NullValueHandling = NullValueHandling.Include)]
+	public ForumPostSortOrder? DefaultSortOrder { get; internal set; }
 
 	/// <summary>
 	/// Gets when the last pinned message was pinned.
@@ -435,7 +439,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			perUserRateLimit = Optional.None;
 		}
 
-		return await this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNsfw, perUserRateLimit, this.QualityMode, this.DefaultAutoArchiveDuration, reason).ConfigureAwait(false);
+		return await this.Guild.CreateChannelAsync(this.Name, this.Type, this.Parent, this.Topic, bitrate, userLimit, ovrs, this.IsNsfw, perUserRateLimit, this.QualityMode, this.DefaultAutoArchiveDuration, this.Flags, reason).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -479,7 +483,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		return this.Discord.ApiClient.ModifyChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Nsfw,
 			mdl.Parent.Map(p => p?.Id), mdl.Bitrate, mdl.UserLimit, mdl.PerUserRateLimit, mdl.RtcRegion.Map(r => r?.Id),
-			mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, mdl.AuditLogReason);
+			mdl.QualityMode, mdl.DefaultAutoArchiveDuration, mdl.Type, mdl.PermissionOverwrites, mdl.Flags, mdl.AuditLogReason);
 	}
 
 	/// <summary>
@@ -506,7 +510,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 		return this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Template, mdl.Nsfw,
 			mdl.Parent.Map(p => p?.Id), mdl.DefaultReactionEmoji, mdl.PerUserRateLimit, mdl.PostCreateUserRateLimit,
-			mdl.DefaultAutoArchiveDuration, mdl.PermissionOverwrites, mdl.AuditLogReason);
+			mdl.DefaultSortOrder, mdl.DefaultAutoArchiveDuration, mdl.PermissionOverwrites, mdl.Flags, mdl.AuditLogReason);
 	}
 
 	/// <summary>

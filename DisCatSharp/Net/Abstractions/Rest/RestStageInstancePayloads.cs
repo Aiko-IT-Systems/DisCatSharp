@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using DisCatSharp.Entities;
+using DisCatSharp.Enums;
 
 using Newtonsoft.Json;
 

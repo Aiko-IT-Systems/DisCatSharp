@@ -114,6 +114,18 @@ internal sealed class RestChannelCreatePayload
 	/// </summary>
 	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<ForumReactionEmoji> DefaultReactionEmoji { get; internal set; }
+
+	/// <summary>
+	/// Gets the default forum post sort order
+	/// </summary>
+	[JsonProperty("default_sort_order", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<ForumPostSortOrder> DefaultSortOrder { get; internal set; }
+
+	/// <summary>
+	/// Gets or sets the channel flags.
+	/// </summary>
+	[JsonProperty("flags", NullValueHandling = NullValueHandling.Include)]
+	public Optional<ChannelFlags?> Flags { internal get; set; }
 }
 
 /// <summary>
@@ -213,6 +225,18 @@ internal sealed class RestChannelModifyPayload
 	/// </summary>
 	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<ForumReactionEmoji> DefaultReactionEmoji { get; internal set; }
+
+	/// <summary>
+	/// Gets the default forum post sort order
+	/// </summary>
+	[JsonProperty("default_sort_order", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<ForumPostSortOrder> DefaultSortOrder { get; internal set; }
+
+	/// <summary>
+	/// Gets or sets the channel flags.
+	/// </summary>
+	[JsonProperty("flags", NullValueHandling = NullValueHandling.Include)]
+	public Optional<ChannelFlags?> Flags { internal get; set; }
 }
 
 /// <summary>
@@ -545,6 +569,6 @@ internal sealed class RestThreadChannelModifyPayload
 	/// <summary>
 	/// Gets or sets the channel flags.
 	/// </summary>
-	[JsonProperty("flags", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<ChannelFlags> Flags { internal get; set; }
+	[JsonProperty("flags", NullValueHandling = NullValueHandling.Include)]
+	public Optional<ChannelFlags?> Flags { internal get; set; }
 }

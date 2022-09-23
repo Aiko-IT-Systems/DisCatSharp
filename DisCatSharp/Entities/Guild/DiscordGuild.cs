@@ -30,6 +30,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Models;
@@ -1080,8 +1081,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordChannel> CreateTextChannelAsync(string name, DiscordChannel parent = null, Optional<string> topic = default, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, string reason = null)
-		=> this.CreateChannelAsync(name, ChannelType.Text, parent, topic, null, null, overwrites, nsfw, perUserRateLimit, null, defaultAutoArchiveDuration, reason);
+	public Task<DiscordChannel> CreateTextChannelAsync(string name, DiscordChannel parent = null, Optional<string> topic = default, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, Optional<ChannelFlags?> flags = default, string reason = null)
+		=> this.CreateChannelAsync(name, ChannelType.Text, parent, topic, null, null, overwrites, nsfw, perUserRateLimit, null, defaultAutoArchiveDuration, flags, reason);
 
 	/// <summary>
 	/// Creates a new forum channel in this guild.
@@ -1102,8 +1103,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordChannel> CreateForumChannelAsync(string name, DiscordChannel parent = null, Optional<string> topic = default, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<ForumReactionEmoji> defaultReactionEmoji = default, Optional<int?> perUserRateLimit = default, Optional<int?> postCreateUserRateLimit = default, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, string reason = null)
-		 => this.Discord.ApiClient.CreateForumChannelAsync(this.Id, name, parent?.Id, topic, null, nsfw, defaultReactionEmoji, perUserRateLimit, postCreateUserRateLimit, defaultAutoArchiveDuration, overwrites, reason);
+	public Task<DiscordChannel> CreateForumChannelAsync(string name, DiscordChannel parent = null, Optional<string> topic = default, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<ForumReactionEmoji> defaultReactionEmoji = default, Optional<int?> perUserRateLimit = default, Optional<int?> postCreateUserRateLimit = default, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, Optional<ForumPostSortOrder> defaultSortOrder = default, Optional<ChannelFlags?> flags = default, string reason = null)
+		 => this.Discord.ApiClient.CreateForumChannelAsync(this.Id, name, parent?.Id, topic, null, nsfw, defaultReactionEmoji, perUserRateLimit, postCreateUserRateLimit, defaultSortOrder, defaultAutoArchiveDuration, overwrites, flags, reason);
 
 	/// <summary>
 	/// Creates a new channel category in this guild.
@@ -1117,7 +1118,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordChannel> CreateChannelCategoryAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-		=> this.CreateChannelAsync(name, ChannelType.Category, null, Optional.None, null, null, overwrites, null, Optional.None, null, null, reason);
+		=> this.CreateChannelAsync(name, ChannelType.Category, null, Optional.None, null, null, overwrites, null, Optional.None, null, null, Optional.None, reason);
 
 	/// <summary>
 	/// Creates a new stage channel in this guild.
@@ -1132,7 +1133,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="NotSupportedException">Thrown when the guilds has not enabled community.</exception>
 	public Task<DiscordChannel> CreateStageChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-		=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.None, null, null, overwrites, null, Optional.None, null, null, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
+		=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.None, null, null, overwrites, null, Optional.None, null, null, Optional.None, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
 
 	/// <summary>
 	/// Creates a new news channel in this guild.
@@ -1147,8 +1148,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="NotSupportedException">Thrown when the guilds has not enabled community.</exception>
-	public Task<DiscordChannel> CreateNewsChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay)
-		=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.None, null, null, overwrites, null, Optional.None, null, defaultAutoArchiveDuration, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
+	public Task<DiscordChannel> CreateNewsChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, Optional<ChannelFlags?> flags = default)
+		=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.None, null, null, overwrites, null, Optional.None, null, defaultAutoArchiveDuration, flags, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
 
 	/// <summary>
 	/// Creates a new voice channel in this guild.
@@ -1165,8 +1166,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordChannel> CreateVoiceChannelAsync(string name, DiscordChannel parent = null, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, VideoQualityMode? qualityMode = null, string reason = null)
-		=> this.CreateChannelAsync(name, ChannelType.Voice, parent, Optional.None, bitrate, userLimit, overwrites, null, Optional.None, qualityMode, null, reason);
+	public Task<DiscordChannel> CreateVoiceChannelAsync(string name, DiscordChannel parent = null, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, VideoQualityMode? qualityMode = null, Optional<ChannelFlags?> flags = default, string reason = null)
+		=> this.CreateChannelAsync(name, ChannelType.Voice, parent, Optional.None, bitrate, userLimit, overwrites, null, Optional.None, qualityMode, null, flags, reason);
 
 	/// <summary>
 	/// Creates a new channel in this guild.
@@ -1188,13 +1189,13 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordChannel> CreateChannelAsync(string name, ChannelType type, DiscordChannel parent = null, Optional<string> topic = default, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, VideoQualityMode? qualityMode = null, ThreadAutoArchiveDuration? defaultAutoArchiveDuration = null, string reason = null) =>
+	public Task<DiscordChannel> CreateChannelAsync(string name, ChannelType type, DiscordChannel parent = null, Optional<string> topic = default, int? bitrate = null, int? userLimit = null, IEnumerable<DiscordOverwriteBuilder> overwrites = null, bool? nsfw = null, Optional<int?> perUserRateLimit = default, VideoQualityMode? qualityMode = null, ThreadAutoArchiveDuration? defaultAutoArchiveDuration = null, Optional<ChannelFlags?> flags = default, string reason = null) =>
 		// technically you can create news/store channels but not always
 		type != ChannelType.Text && type != ChannelType.Voice && type != ChannelType.Category && type != ChannelType.News && type != ChannelType.Store && type != ChannelType.Stage
 			? throw new ArgumentException("Channel type must be text, voice, stage, or category.", nameof(type))
 			: type == ChannelType.Category && parent != null
 				? throw new ArgumentException("Cannot specify parent of a channel category.", nameof(parent))
-				: this.Discord.ApiClient.CreateGuildChannelAsync(this.Id, name, type, parent?.Id, topic, bitrate, userLimit, overwrites, nsfw, perUserRateLimit, qualityMode, defaultAutoArchiveDuration, reason);
+				: this.Discord.ApiClient.CreateGuildChannelAsync(this.Id, name, type, parent?.Id, topic, bitrate, userLimit, overwrites, nsfw, perUserRateLimit, qualityMode, defaultAutoArchiveDuration, flags, reason);
 
 	/// <summary>
 	/// Gets active threads. Can contain more threads.
@@ -1808,7 +1809,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public DiscordChannel GetDefaultChannel() =>
 		this.ChannelsInternal?.Values.Where(xc => xc.Type == ChannelType.Text)
 			.OrderBy(xc => xc.Position)
-			.FirstOrDefault(xc => (xc.PermissionsFor(this.CurrentMember) & DisCatSharp.Permissions.AccessChannels) == DisCatSharp.Permissions.AccessChannels);
+			.FirstOrDefault(xc => (xc.PermissionsFor(this.CurrentMember) & DisCatSharp.Enums.Permissions.AccessChannels) == DisCatSharp.Enums.Permissions.AccessChannels);
 
 	/// <summary>
 	/// Gets the guild's widget
