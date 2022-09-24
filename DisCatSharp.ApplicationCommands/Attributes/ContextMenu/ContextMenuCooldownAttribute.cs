@@ -54,7 +54,7 @@ public sealed class ContextMenuCooldownAttribute : ContextMenuCheckBaseAttribute
 	/// <summary>
 	/// Gets the cooldown buckets for this command.
 	/// </summary>
-	private readonly ConcurrentDictionary<string, ContextMenuCooldownBucket> _buckets;
+	internal readonly ConcurrentDictionary<string, ContextMenuCooldownBucket> _buckets;
 
 	/// <summary>
 	/// Defines a cooldown for this command. This means that users will be able to use the command a specific number of times before they have to wait to use it again.

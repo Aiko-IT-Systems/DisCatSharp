@@ -54,7 +54,7 @@ public sealed class SlashCommandCooldownAttribute : SlashCheckBaseAttribute, ICo
 	/// <summary>
 	/// Gets the cooldown buckets for this command.
 	/// </summary>
-	private readonly ConcurrentDictionary<string, SlashCommandCooldownBucket> _buckets;
+	internal readonly ConcurrentDictionary<string, SlashCommandCooldownBucket> _buckets;
 
 	/// <summary>
 	/// Defines a cooldown for this command. This means that users will be able to use the command a specific number of times before they have to wait to use it again.
