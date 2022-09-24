@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
 // Copyright (c) 2021-2022 AITSYS
 //
@@ -25,7 +25,7 @@ using System;
 using DisCatSharp.ApplicationCommands.Context;
 using DisCatSharp.ApplicationCommands.Enums;
 
-namespace DisCatSharp.ApplicationCommands.Attributes;
+namespace DisCatSharp.ApplicationCommands.Entities;
 
 /// <summary>
 /// Cooldown feature contract
