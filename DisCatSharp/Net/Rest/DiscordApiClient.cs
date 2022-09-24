@@ -1789,7 +1789,7 @@ public sealed class DiscordApiClient
 			PermissionOverwrites = restoverwrites,
 			DefaultSortOrder = defaultSortOrder,
 			Flags = flags,
-			AvailableTags = (availableTags ?? new List<ForumPostTag>()).Select(x => x.Id).ToList()
+			AvailableTags = availableTags
 		};
 
 		var headers = Utilities.GetBaseHeaders();

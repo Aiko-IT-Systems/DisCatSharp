@@ -242,7 +242,7 @@ internal sealed class RestChannelModifyPayload
 	/// Gets or sets the available tags.
 	/// </summary>
 	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<IEnumerable<ulong>> AvailableTags { internal get; set; }
+	public IEnumerable<ForumPostTag>? AvailableTags { internal get; set; }
 }
 
 /// <summary>
