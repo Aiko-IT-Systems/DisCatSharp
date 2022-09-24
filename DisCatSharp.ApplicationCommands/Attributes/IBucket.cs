@@ -22,46 +22,52 @@
 
 using System;
 
-using DisCatSharp.ApplicationCommands.Context;
-using DisCatSharp.ApplicationCommands.Enums;
-
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Cooldown feature contract
+/// Defines the standard contract for bucket feature
 /// </summary>
-/// <typeparam name="TContextType">Type of <see cref="BaseContext"/> in which this cooldown handles</typeparam>
-/// <typeparam name="TBucketType">Type of Cooldown bucket</typeparam>
-public interface ICooldown<in TContextType, out TBucketType>
-	where TContextType : BaseContext
-	where TBucketType : CooldownBucket
+public interface IBucket
 {
 	/// <summary>
-	/// Gets the maximum number of uses before this command triggers a cooldown for its bucket.
+	/// Gets the ID of the user whom this cooldown is associated
+	/// </summary>
+	ulong UserId { get; }
+
+	/// <summary>
+	/// Gets the ID of the channel with which this cooldown is associated
+	/// </summary>
+	ulong ChannelId { get; }
+
+	/// <summary>
+	/// Gets the ID of the guild with which this cooldown is associated
+	/// </summary>
+	ulong GuildId { get; }
+
+	/// <summary>
+	/// Gets the ID of the bucket. This is used to distinguish between cooldown buckets
+	/// </summary>
+	string BucketId { get; }
+
+	/// <summary>
+	/// Gets the remaining number of uses before the cooldown is triggered
+	/// </summary>
+	int RemainingUses { get; }
+
+	/// <summary>
+	/// Gets the maximum number of times this command can be used in a given timespan
 	/// </summary>
 	int MaxUses { get; }
 
 	/// <summary>
-	/// Gets the time after which the cooldown is reset.
+	/// Gets the date and time at which the cooldown resets
+	/// </summary>
+	DateTimeOffset ResetsAt { get; }
+
+	/// <summary>
+	/// Get the time after which this cooldown resets
 	/// </summary>
 	TimeSpan Reset { get; }
 
-	/// <summary>
-	/// Gets the type of the cooldown bucket. This determines how a cooldown is applied.
-	/// </summary>
-	CooldownBucketType BucketType { get; }
 
-	/// <summary>
-	/// Calculates the cooldown remaining for given context.
-	/// </summary>
-	/// <param name="ctx">Context for which to calculate the cooldown.</param>
-	/// <returns>Remaining cooldown, or zero if no cooldown is active</returns>
-	TimeSpan GetRemainingCooldown(TContextType ctx);
-
-	/// <summary>
-	/// Gets a cooldown bucket for given context
-	/// </summary>
-	/// <param name="ctx">Command context to get cooldown bucket for.</param>
-	/// <returns>Requested cooldown bucket, or null if one wasn't present</returns>
-	TBucketType GetBucket(TContextType ctx);
 }
