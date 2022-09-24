@@ -1128,12 +1128,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the tag does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<ForumPostTag> CreateForumPostTagAsync(string name, DiscordEmoji emoji, bool moderated = false, string reason = null)
+	public async Task<ForumPostTag> CreateForumPostTagAsync(string name, DiscordEmoji emoji = null, bool moderated = false, string reason = null)
 		=> (await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, null, null, null, null, this.AvailableTags.Append(new ForumPostTag
 		{
 			Name = name,
-			EmojiId = emoji.Id,
-			Moderated = moderated
+			EmojiId = emoji?.Id,
+			UnicodeEmojiString = emoji?.Name,
+			Moderated = moderated,
+			Discord = this.Discord,
 		}), null, null, null, null, null, null, null, reason)).AvailableTags.First(x => x.Name == name);
 
 	/// <summary>
