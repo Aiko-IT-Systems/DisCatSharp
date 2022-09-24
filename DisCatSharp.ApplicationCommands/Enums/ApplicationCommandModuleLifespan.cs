@@ -20,29 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-
-using DisCatSharp.ApplicationCommands.Enums;
-
-namespace DisCatSharp.ApplicationCommands.Attributes;
+namespace DisCatSharp.ApplicationCommands.Enums;
 
 /// <summary>
-/// Defines this application command module's lifespan. Module lifespans are transient by default.
+/// Represents a application command module lifespan.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class)]
-public class ApplicationCommandModuleLifespanAttribute : Attribute
+public enum ApplicationCommandModuleLifespan
 {
 	/// <summary>
-	/// Gets the lifespan.
+	/// Whether this module should be initiated every time a command is run, with dependencies injected from a scope.
 	/// </summary>
-	public ApplicationCommandModuleLifespan Lifespan { get; }
+	Scoped,
 
 	/// <summary>
-	/// Defines this application command module's lifespan.
+	/// Whether this module should be initiated every time a command is run.
 	/// </summary>
-	/// <param name="lifespan">The lifespan of the module. Module lifespans are transient by default.</param>
-	public ApplicationCommandModuleLifespanAttribute(ApplicationCommandModuleLifespan lifespan)
-	{
-		this.Lifespan = lifespan;
-	}
+	Transient,
+
+	/// <summary>
+	/// Whether this module should be initiated at startup.
+	/// </summary>
+	Singleton
 }
