@@ -104,6 +104,7 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 	internal async Task<bool> DecrementUseAsync()
 	{
 		await this._usageSemaphore.WaitAsync().ConfigureAwait(false);
+		Console.WriteLine($"[DecrementUseAsync]: Remaining: {this.RemainingUses}/{this.MaxUses} Resets: {this.ResetsAt} Vars[u,c,g]: {this.UserId} {this.ChannelId} {this.GuildId} Id: {this.BucketId}");
 
 		// if we're past reset time...
 		var now = DateTimeOffset.UtcNow;
@@ -122,7 +123,7 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 			Interlocked.Decrement(ref this._remainingUses);
 			success = true;
 		}
-
+		Console.WriteLine($"[DecrementUseAsync]: Remaining: {this.RemainingUses}/{this.MaxUses} Resets: {this.ResetsAt} Vars[u,c,g]: {this.UserId} {this.ChannelId} {this.GuildId} Id: {this.BucketId}");
 		// ...otherwise just fail
 		this._usageSemaphore.Release();
 		return success;
