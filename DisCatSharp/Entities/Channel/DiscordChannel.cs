@@ -509,7 +509,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 
 
 		return this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Template, mdl.Nsfw,
-			mdl.Parent.Map(p => p?.Id), mdl.DefaultReactionEmoji, mdl.PerUserRateLimit, mdl.PostCreateUserRateLimit,
+			mdl.Parent.Map(p => p?.Id), mdl.AvailableTags, mdl.DefaultReactionEmoji, mdl.PerUserRateLimit, mdl.PostCreateUserRateLimit,
 			mdl.DefaultSortOrder, mdl.DefaultAutoArchiveDuration, mdl.PermissionOverwrites, mdl.Flags, mdl.AuditLogReason);
 	}
 
@@ -626,6 +626,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			{
 				xo.Discord = this.Discord;
 				xo.ChannelId = this.Id;
+				xo.Channel = this;
 			}
 		}
 	}
@@ -1112,6 +1113,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var tag = this.InternalAvailableTags.First(x => x.Id == id);
 		tag.Discord = this.Discord;
 		tag.ChannelId = this.Id;
+		tag.Channel = this;
 		return tag;
 	}
 
@@ -1127,7 +1129,12 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<ForumPostTag> CreateForumPostTagAsync(string name, DiscordEmoji emoji, bool moderated = false, string reason = null)
-		=> await this.Discord.ApiClient.CreateForumTagAsync(this.Id, name, emoji, moderated, reason);
+		=> (await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, null, null, null, null, this.AvailableTags.Append(new ForumPostTag
+		{
+			Name = name,
+			EmojiId = emoji.Id,
+			Moderated = moderated
+		}), null, null, null, null, null, null, null, reason)).AvailableTags.First(x => x.Name == name);
 
 	/// <summary>
 	/// Deletes a forum channel tag.
@@ -1139,7 +1146,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task DeleteForumPostTag(ulong id, string reason = null)
-		=> this.Discord.ApiClient.DeleteForumTagAsync(id, this.Id, reason);
+		=> this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, null, null, null, null, this.AvailableTags.Where(x => x.Id != id), null, null, null, null, null, null, null, reason);
 
 	#endregion
 

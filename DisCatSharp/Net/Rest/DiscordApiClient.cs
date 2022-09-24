@@ -1760,10 +1760,10 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
-	internal Task ModifyForumChannelAsync(ulong channelId, string name, int? position,
+	internal async Task<DiscordChannel> ModifyForumChannelAsync(ulong channelId, string name, int? position,
 		Optional<string> topic, Optional<string> template, bool? nsfw,
-		Optional<ulong?> parent, Optional<ForumReactionEmoji> defaultReactionEmoji,
-		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit, Optional<ForumPostSortOrder> defaultSortOrder,
+		Optional<ulong?> parent, IEnumerable<ForumPostTag> availableTags, Optional<ForumReactionEmoji> defaultReactionEmoji,
+		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit, Optional<ForumPostSortOrder?> defaultSortOrder,
 		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
@@ -1788,7 +1788,8 @@ public sealed class DiscordApiClient
 			DefaultReactionEmoji = defaultReactionEmoji,
 			PermissionOverwrites = restoverwrites,
 			DefaultSortOrder = defaultSortOrder,
-			Flags = flags
+			Flags = flags,
+			AvailableTags = (availableTags ?? new List<ForumPostTag>()).Select(x => x.Id).ToList()
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1799,100 +1800,11 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id = channelId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
-	}
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
+		ret.Initialize(this.Discord);
 
-	internal async Task<ForumPostTag> CreateForumTagAsync(ulong channelId, string name, DiscordEmoji emoji, bool moderated, string reason)
-	{
-		var pld = new RestForumPostTagPayloads
-		{
-			Name = name,
-			Moderated = moderated
-		};
-		if (emoji != null)
-			if (emoji.Id == 0)
-			{
-				pld.Emoji = null;
-				pld.UnicodeEmojiString = emoji.Name;
-			}
-			else
-			{
-				pld.Emoji = emoji.Id;
-				pld.UnicodeEmojiString = null;
-			}
-		else
-		{
-			pld.Emoji = null;
-			pld.UnicodeEmojiString = null;
-		}
-
-		var headers = Utilities.GetBaseHeaders();
-		if (!string.IsNullOrWhiteSpace(reason))
-			headers.Add(REASON_HEADER_NAME, reason);
-
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.TAGS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id = channelId }, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
-		var channel = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
-		channel.Discord = this.Discord;
-		var tag = channel.InternalAvailableTags.First(x => x.Name == name);
-		tag.Discord = this.Discord;
-		return tag;
-	}
-
-	internal async Task<ForumPostTag> ModifyForumTagAsync(ulong id, ulong channelId, string name, DiscordEmoji emoji = null, bool moderated = false, string reason = null)
-	{
-		var pld = new RestForumPostTagPayloads
-		{
-			Name = name,
-			Moderated = moderated
-		};
-		if (emoji != null)
-			if (emoji.Id == 0)
-			{
-				pld.Emoji = null;
-				pld.UnicodeEmojiString = emoji.Name;
-			}
-			else
-			{
-				pld.Emoji = emoji.Id;
-				pld.UnicodeEmojiString = null;
-			}
-		else
-		{
-			pld.Emoji = null;
-			pld.UnicodeEmojiString = null;
-		}
-
-		var headers = Utilities.GetBaseHeaders();
-		if (!string.IsNullOrWhiteSpace(reason))
-			headers.Add(REASON_HEADER_NAME, reason);
-
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.TAGS}/:tag_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { channel_id = channelId, tag_id = id }, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await  this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld));
-		var channel = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
-		channel.Discord = this.Discord;
-		var tag = channel.InternalAvailableTags.First(x => x.Name == name);
-		tag.Discord = this.Discord;
-		return tag;
-	}
-
-	internal Task DeleteForumTagAsync(ulong id, ulong channelId, string reason)
-	{
-		var headers = Utilities.GetBaseHeaders();
-		if (!string.IsNullOrWhiteSpace(reason))
-			headers.Add(REASON_HEADER_NAME, reason);
-
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.TAGS}/:tag_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id = channelId, tag_id = id }, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
+		return ret;
 	}
 
 	/// <summary>

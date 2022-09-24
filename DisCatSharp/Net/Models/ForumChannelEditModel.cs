@@ -59,6 +59,11 @@ public class ForumChannelEditModel : BaseEditModel
 	public bool? Nsfw { internal get; set; }
 
 	/// <summary>
+	/// Sets the available tags.
+	/// </summary>
+	public IEnumerable<ForumPostTag>? AvailableTags { internal get; set; }
+
+	/// <summary>
 	/// Sets the default reaction emoji.
 	/// </summary>
 	public Optional<ForumReactionEmoji> DefaultReactionEmoji { internal get; set; }
@@ -66,7 +71,7 @@ public class ForumChannelEditModel : BaseEditModel
 	/// <summary>
 	/// Sets the default forum post sort order
 	/// </summary>
-	public Optional<ForumPostSortOrder> DefaultSortOrder { internal get; set; }
+	public Optional<ForumPostSortOrder?> DefaultSortOrder { internal get; set; }
 
 	/// <summary>
 	/// <para>Sets the parent of this channel.</para>
