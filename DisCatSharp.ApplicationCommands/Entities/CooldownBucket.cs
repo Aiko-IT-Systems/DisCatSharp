@@ -1,4 +1,4 @@
-﻿// This file is part of the DisCatSharp project, based off DSharpPlus.
+// This file is part of the DisCatSharp project, based off DSharpPlus.
 //
 // Copyright (c) 2021-2022 AITSYS
 //
@@ -25,7 +25,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DisCatSharp.ApplicationCommands.Attributes;
+namespace DisCatSharp.ApplicationCommands.Entities;
 
 public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 {

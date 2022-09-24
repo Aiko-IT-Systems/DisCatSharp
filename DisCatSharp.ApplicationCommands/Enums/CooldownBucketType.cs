@@ -22,13 +22,17 @@
 
 namespace DisCatSharp.ApplicationCommands.Enums;
 
-// TODO: Add for role
-
 /// <summary>
 /// Defines how are command cooldowns applied.
 /// </summary>
 public enum CooldownBucketType : int
 {
+
+	/// <summary>
+	/// Denotes that the command will have its cooldown applied globally.
+	/// </summary>
+	Global = 0,
+
 	/// <summary>
 	/// Denotes that the command will have its cooldown applied per-user.
 	/// </summary>
@@ -42,10 +46,5 @@ public enum CooldownBucketType : int
 	/// <summary>
 	/// Denotes that the command will have its cooldown applied per-guild. In DMs, this applies the cooldown per-channel.
 	/// </summary>
-	Guild = 4,
-
-	/// <summary>
-	/// Denotes that the command will have its cooldown applied globally.
-	/// </summary>
-	Global = 0
+	Guild = 4
 }
