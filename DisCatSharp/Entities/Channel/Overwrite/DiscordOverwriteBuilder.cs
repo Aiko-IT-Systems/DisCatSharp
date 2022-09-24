@@ -44,14 +44,14 @@ public sealed class DiscordOverwriteBuilder
 	public Permissions Denied { get; set; }
 
 	/// <summary>
-	/// Gets the type of this overwrite's target.
+	/// Gets or sets the type of this overwrite's target.
 	/// </summary>
-	public OverwriteType Type { get; private set; }
+	public OverwriteType Type { get; set; }
 
 	/// <summary>
-	/// Gets the target for this overwrite.
+	/// Gets or sets the target for this overwrite.
 	/// </summary>
-	public SnowflakeObject Target { get; private set; }
+	public SnowflakeObject Target { get; set; }
 
 	/// <summary>
 	/// Creates a new Discord permission overwrite builder for a member. This class can be used to construct permission overwrites for guild channels, used when creating channels.
