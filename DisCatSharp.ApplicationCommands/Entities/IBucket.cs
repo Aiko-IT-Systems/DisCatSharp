@@ -68,6 +68,4 @@ public interface IBucket
 	/// Get the time after which this cooldown resets
 	/// </summary>
 	TimeSpan Reset { get; }
-
-
 }

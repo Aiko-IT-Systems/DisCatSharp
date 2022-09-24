@@ -29,13 +29,44 @@ namespace DisCatSharp.ApplicationCommands.Entities;
 
 public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 {
+	/// <summary>
+	/// The user id for this bucket.
+	/// </summary>
 	public ulong UserId { get; }
+
+	/// <summary>
+	/// The channel id for this bucket.
+	/// </summary>
 	public ulong ChannelId { get; }
+
+	/// <summary>
+	/// The guild  id for this bucket.
+	/// </summary>
 	public ulong GuildId { get; }
+
+	/// <summary>
+	/// The id for this bucket.
+	/// </summary>
 	public string BucketId { get; }
+
+	/// <summary>
+	/// The remaining uses for this bucket.
+	/// </summary>
 	public int RemainingUses => Volatile.Read(ref this._remainingUses);
+
+	/// <summary>
+	/// The max uses for this bucket.
+	/// </summary>
 	public int MaxUses { get; }
+
+	/// <summary>
+	/// The datetime offset when this bucket resets.
+	/// </summary>
 	public DateTimeOffset ResetsAt { get; internal set; }
+
+	/// <summary>
+	/// The timespan when this bucket resets.
+	/// </summary>
 	public TimeSpan Reset { get; internal set; }
 
 	/// <summary>
@@ -97,7 +128,7 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 		return success;
 	}
 
-	// <summary>
+	/// <summary>
 	/// Checks whether this <see cref="CooldownBucket"/> is equal to another object.
 	/// </summary>
 	/// <param name="obj">Object to compare to.</param>
