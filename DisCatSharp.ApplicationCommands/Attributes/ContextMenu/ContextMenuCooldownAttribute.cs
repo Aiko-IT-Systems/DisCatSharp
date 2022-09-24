@@ -248,7 +248,7 @@ public sealed class ContextMenuCooldownBucket : IEquatable<ContextMenuCooldownBu
 	/// Returns a string representation of this command cooldown bucket.
 	/// </summary>
 	/// <returns>String representation of this command cooldown bucket.</returns>
-	public override string ToString() => $"Command bucket {this.BucketId}";
+	public override string ToString() => $"Context Menu Command bucket {this.BucketId}";
 
 	/// <summary>
 	/// Checks whether this <see cref="ContextMenuCooldownBucket"/> is equal to another object.
