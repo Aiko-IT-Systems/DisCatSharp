@@ -35,7 +35,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// Defines a cooldown for this command. This allows you to define how many times can users execute a specific command
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public sealed class ContextMenuCooldownAttribute : ContextMenuCheckBaseAttribute
+public sealed class ContextMenuCooldownAttribute : ContextMenuCheckBaseAttribute, ICooldown<ContextMenuContext, ContextMenuCooldownBucket>
 {
 	/// <summary>
 	/// Gets the maximum number of uses before this command triggers a cooldown for its bucket.
