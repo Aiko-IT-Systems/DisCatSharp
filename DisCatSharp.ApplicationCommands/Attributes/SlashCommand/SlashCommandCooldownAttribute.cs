@@ -118,7 +118,7 @@ public sealed class SlashCommandCooldownAttribute : SlashCheckBaseAttribute, ICo
 		if (ctx.Guild != null && (this.BucketType & CooldownBucketType.Guild) != 0)
 			guildId = ctx.Guild.Id;
 
-		var bid = SlashCommandCooldownBucket.MakeId(userId, channelId, guildId);
+		var bid = CooldownBucket.MakeId(userId, channelId, guildId);
 		return bid;
 	}
 
@@ -142,164 +142,17 @@ public sealed class SlashCommandCooldownAttribute : SlashCheckBaseAttribute, ICo
 /// <summary>
 /// Represents a cooldown bucket for commands.
 /// </summary>
-public sealed class SlashCommandCooldownBucket : IEquatable<SlashCommandCooldownBucket>
+public sealed class SlashCommandCooldownBucket : CooldownBucket
 {
-	/// <summary>
-	/// Gets the ID of the user with whom this cooldown is associated.
-	/// </summary>
-	public ulong UserId { get; }
-
-	/// <summary>
-	/// Gets the ID of the channel with which this cooldown is associated.
-	/// </summary>
-	public ulong ChannelId { get; }
-
-	/// <summary>
-	/// Gets the ID of the guild with which this cooldown is associated.
-	/// </summary>
-	public ulong GuildId { get; }
-
-	/// <summary>
-	/// Gets the ID of the bucket. This is used to distinguish between cooldown buckets.
-	/// </summary>
-	public string BucketId { get; }
-
-	/// <summary>
-	/// Gets the remaining number of uses before the cooldown is triggered.
-	/// </summary>
-	public int RemainingUses
-		=> Volatile.Read(ref this._remainingUses);
-
-	private int _remainingUses;
-
-	/// <summary>
-	/// Gets the maximum number of times this command can be used in given timespan.
-	/// </summary>
-	public int MaxUses { get; }
-
-	/// <summary>
-	/// Gets the date and time at which the cooldown resets.
-	/// </summary>
-	public DateTimeOffset ResetsAt { get; internal set; }
-
-	/// <summary>
-	/// Gets the time after which this cooldown resets.
-	/// </summary>
-	public TimeSpan Reset { get; internal set; }
-
-	/// <summary>
-	/// Gets the semaphore used to lock the use value.
-	/// </summary>
-	private readonly SemaphoreSlim _usageSemaphore;
-
-	/// <summary>
-	/// Creates a new command cooldown bucket.
-	/// </summary>
-	/// <param name="maxUses">Maximum number of uses for this bucket.</param>
-	/// <param name="resetAfter">Time after which this bucket resets.</param>
-	/// <param name="userId">ID of the user with which this cooldown is associated.</param>
-	/// <param name="channelId">ID of the channel with which this cooldown is associated.</param>
-	/// <param name="guildId">ID of the guild with which this cooldown is associated.</param>
-	internal SlashCommandCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
-	{
-		this._remainingUses = maxUses;
-		this.MaxUses = maxUses;
-		this.ResetsAt = DateTimeOffset.UtcNow + resetAfter;
-		this.Reset = resetAfter;
-		this.UserId = userId;
-		this.ChannelId = channelId;
-		this.GuildId = guildId;
-		this.BucketId = MakeId(userId, channelId, guildId);
-		this._usageSemaphore = new SemaphoreSlim(1, 1);
-	}
-
-	/// <summary>
-	/// Decrements the remaining use counter.
-	/// </summary>
-	/// <returns>Whether decrement succeeded or not.</returns>
-	internal async Task<bool> DecrementUseAsync()
-	{
-		await this._usageSemaphore.WaitAsync().ConfigureAwait(false);
-
-		// if we're past reset time...
-		var now = DateTimeOffset.UtcNow;
-		if (now >= this.ResetsAt)
-		{
-			// ...do the reset and set a new reset time
-			Interlocked.Exchange(ref this._remainingUses, this.MaxUses);
-			this.ResetsAt = now + this.Reset;
-		}
-
-		// check if we have any uses left, if we do...
-		var success = false;
-		if (this.RemainingUses > 0)
-		{
-			// ...decrement, and return success...
-			Interlocked.Decrement(ref this._remainingUses);
-			success = true;
-		}
-
-		// ...otherwise just fail
-		this._usageSemaphore.Release();
-		return success;
-	}
-
 	/// <summary>
 	/// Returns a string representation of this command cooldown bucket.
 	/// </summary>
 	/// <returns>String representation of this command cooldown bucket.</returns>
 	public override string ToString() => $"Slash Command bucket {this.BucketId}";
 
-	/// <summary>
-	/// Checks whether this <see cref="SlashCommandCooldownBucket"/> is equal to another object.
-	/// </summary>
-	/// <param name="obj">Object to compare to.</param>
-	/// <returns>Whether the object is equal to this <see cref="SlashCommandCooldownBucket"/>.</returns>
-	public override bool Equals(object obj) => this.Equals(obj as SlashCommandCooldownBucket);
-
-	/// <summary>
-	/// Checks whether this <see cref="SlashCommandCooldownBucket"/> is equal to another <see cref="SlashCommandCooldownBucket"/>.
-	/// </summary>
-	/// <param name="other"><see cref="SlashCommandCooldownBucket"/> to compare to.</param>
-	/// <returns>Whether the <see cref="SlashCommandCooldownBucket"/> is equal to this <see cref="SlashCommandCooldownBucket"/>.</returns>
-	public bool Equals(SlashCommandCooldownBucket other) => other is not null && (ReferenceEquals(this, other) || (this.UserId == other.UserId && this.ChannelId == other.ChannelId && this.GuildId == other.GuildId));
-
-	/// <summary>
-	/// Gets the hash code for this <see cref="SlashCommandCooldownBucket"/>.
-	/// </summary>
-	/// <returns>The hash code for this <see cref="SlashCommandCooldownBucket"/>.</returns>
-	public override int GetHashCode() => HashCode.Combine(this.UserId, this.ChannelId, this.GuildId);
-
-	/// <summary>
-	/// Gets whether the two <see cref="SlashCommandCooldownBucket"/> objects are equal.
-	/// </summary>
-	/// <param name="bucket1">First bucket to compare.</param>
-	/// <param name="bucket2">Second bucket to compare.</param>
-	/// <returns>Whether the two buckets are equal.</returns>
-	public static bool operator ==(SlashCommandCooldownBucket bucket1, SlashCommandCooldownBucket bucket2)
+	internal SlashCommandCooldownBucket(int maxUses, TimeSpan resetAfter, ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
+		: base(maxUses, resetAfter, userId, channelId, guildId)
 	{
-		var null1 = bucket1 is null;
-		var null2 = bucket2 is null;
 
-		return (null1 && null2) || (null1 == null2 && null1.Equals(null2));
 	}
-
-	/// <summary>
-	/// Gets whether the two <see cref="SlashCommandCooldownBucket"/> objects are not equal.
-	/// </summary>
-	/// <param name="bucket1">First bucket to compare.</param>
-	/// <param name="bucket2">Second bucket to compare.</param>
-	/// <returns>Whether the two buckets are not equal.</returns>
-	public static bool operator !=(SlashCommandCooldownBucket bucket1, SlashCommandCooldownBucket bucket2)
-		=> !(bucket1 == bucket2);
-
-	/// <summary>
-	/// Creates a bucket ID from given bucket parameters.
-	/// </summary>
-	/// <param name="userId">ID of the user with which this cooldown is associated.</param>
-	/// <param name="channelId">ID of the channel with which this cooldown is associated.</param>
-	/// <param name="guildId">ID of the guild with which this cooldown is associated.</param>
-	/// <returns>Generated bucket ID.</returns>
-	public static string MakeId(ulong userId = 0, ulong channelId = 0, ulong guildId = 0)
-		=> $"{userId.ToString(CultureInfo.InvariantCulture)}:{channelId.ToString(CultureInfo.InvariantCulture)}:{guildId.ToString(CultureInfo.InvariantCulture)}";
 }
