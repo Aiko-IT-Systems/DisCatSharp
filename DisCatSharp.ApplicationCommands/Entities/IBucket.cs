@@ -20,31 +20,54 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DisCatSharp.ApplicationCommands.Enums;
+using System;
+
+namespace DisCatSharp.ApplicationCommands.Entities;
 
 /// <summary>
-/// Defines how are command cooldowns applied.
+/// Defines the standard contract for bucket feature
 /// </summary>
-public enum CooldownBucketType : int
+public interface IBucket
 {
+	/// <summary>
+	/// Gets the ID of the user whom this cooldown is associated
+	/// </summary>
+	ulong UserId { get; }
 
 	/// <summary>
-	/// Denotes that the command will have its cooldown applied globally.
+	/// Gets the ID of the channel with which this cooldown is associated
 	/// </summary>
-	Global = 0,
+	ulong ChannelId { get; }
 
 	/// <summary>
-	/// Denotes that the command will have its cooldown applied per-user.
+	/// Gets the ID of the guild with which this cooldown is associated
 	/// </summary>
-	User = 1,
+	ulong GuildId { get; }
 
 	/// <summary>
-	/// Denotes that the command will have its cooldown applied per-channel.
+	/// Gets the ID of the bucket. This is used to distinguish between cooldown buckets
 	/// </summary>
-	Channel = 2,
+	string BucketId { get; }
 
 	/// <summary>
-	/// Denotes that the command will have its cooldown applied per-guild. In DMs, this applies the cooldown per-channel.
+	/// Gets the remaining number of uses before the cooldown is triggered
 	/// </summary>
-	Guild = 4
+	int RemainingUses { get; }
+
+	/// <summary>
+	/// Gets the maximum number of times this command can be used in a given timespan
+	/// </summary>
+	int MaxUses { get; }
+
+	/// <summary>
+	/// Gets the date and time at which the cooldown resets
+	/// </summary>
+	DateTimeOffset ResetsAt { get; }
+
+	/// <summary>
+	/// Get the time after which this cooldown resets
+	/// </summary>
+	TimeSpan Reset { get; }
+
+
 }
