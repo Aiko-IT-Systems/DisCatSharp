@@ -976,6 +976,24 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> this.Discord.ApiClient.GetGuildBanAsync(this.Id, userId);
 
 	/// <summary>
+	/// Tries to get a ban for a specific user.
+	/// </summary>
+	/// <param name="userId">The Id of the user to get the ban for.</param>
+	/// <returns>The requested ban object or null if not found.</returns>
+	public async Task<DiscordBan?> TryGetBanAsync(ulong userId)
+	{
+		try
+		{
+			return await this.GetBanAsync(userId).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+
+
+	/// <summary>
 	/// Gets a ban for a specific user.
 	/// </summary>
 	/// <param name="user">The user to get the ban for.</param>
@@ -983,6 +1001,23 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the specified user is not banned.</exception>
 	public Task<DiscordBan> GetBanAsync(DiscordUser user)
 		=> this.GetBanAsync(user.Id);
+
+	/// <summary>
+	/// Tries to get a ban for a specific user.
+	/// </summary>
+	/// <param name="user">The user to get the ban for.</param>
+	/// <returns>The requested ban object or null if not found.</returns>
+	public async Task<DiscordBan?> TryGetBanAsync(DiscordUser user)
+	{
+		try
+		{
+			return await this.GetBanAsync(user).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
 
 	#region Scheduled Events
 
@@ -1042,6 +1077,26 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		=> this.ScheduledEventsInternal.TryGetValue(scheduledEventId, out var ev) ? ev : await this.Discord.ApiClient.GetGuildScheduledEventAsync(this.Id, scheduledEventId, withUserCount);
 
 	/// <summary>
+	/// Tries to get a specific scheduled events.
+	/// </summary>
+	/// <param name="scheduledEventId">The Id of the event to get.</param>
+	/// <param name="withUserCount">Whether to include user count.</param>
+	/// <returns>A scheduled event or null if not found.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordScheduledEvent?> TryGetScheduledEventAsync(ulong scheduledEventId, bool? withUserCount = null)
+	{
+		try
+		{
+			return await this.GetScheduledEventAsync(scheduledEventId, withUserCount).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+
+	/// <summary>
 	/// Gets a specific scheduled events.
 	/// </summary>
 	/// <param name="scheduledEvent">The event to get.</param>
@@ -1052,6 +1107,26 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordScheduledEvent> GetScheduledEventAsync(DiscordScheduledEvent scheduledEvent, bool? withUserCount = null)
 		=> await this.GetScheduledEventAsync(scheduledEvent.Id, withUserCount);
+
+	/// <summary>
+	/// Tries to get a specific scheduled events.
+	/// </summary>
+	/// <param name="scheduledEvent">The event to get.</param>
+	/// <param name="withUserCount">Whether to include user count.</param>
+	/// <returns>A scheduled event or null if not found.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordScheduledEvent?> TryGetScheduledEventAsync(DiscordScheduledEvent scheduledEvent, bool? withUserCount = null)
+	{
+		try
+		{
+			return await this.GetScheduledEventAsync(scheduledEvent, withUserCount).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
 
 	/// <summary>
 	/// Gets the guilds scheduled events.

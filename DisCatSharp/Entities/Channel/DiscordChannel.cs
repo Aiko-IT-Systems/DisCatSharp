@@ -443,22 +443,42 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	}
 
 	/// <summary>
-	/// Returns a specific message
+	/// Gets a specific message.
 	/// </summary>
 	/// <param name="id">The id of the message</param>
-	/// <param name="bypassCache">Whether to bypass the message cache</param>
+	/// <param name="fetch">Whether to bypass the cache. Defaults to false.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> GetMessageAsync(ulong id, bool bypassCache = false) =>
+	public async Task<DiscordMessage> GetMessageAsync(ulong id, bool fetch = false) =>
 		this.Discord.Configuration.MessageCacheSize > 0
-		&& !bypassCache
+		&& !fetch
 		&& this.Discord is DiscordClient dc
 		&& dc.MessageCache != null
 		&& dc.MessageCache.TryGet(xm => xm.Id == id && xm.ChannelId == this.Id, out var msg)
 			? msg
 			: await this.Discord.ApiClient.GetMessageAsync(this.Id, id).ConfigureAwait(false);
+
+	/// <summary>
+	/// Tries to get a specific message.
+	/// </summary>
+	/// <param name="id">The id of the message</param>
+	/// <param name="fetch">Whether to bypass the cache. Defaults to true.</param>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ReadMessageHistory"/> permission.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordMessage?> TryGetMessageAsync(ulong id, bool fetch = true)
+	{
+		try
+		{
+			return await this.GetMessageAsync(id, fetch).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
 
 	/// <summary>
 	/// Modifies the current channel.
@@ -1107,11 +1127,27 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// Gets a forum channel tag.
 	/// </summary>
 	/// <param name="id">The id of the tag to get.</param>
+	/// <exception cref="InvalidOperationException">Thrown when the tag does not exist.</exception>
 	public ForumPostTag GetForumPostTag(ulong id)
 	{
 		var tag = this.InternalAvailableTags.First(x => x.Id == id);
 		tag.Discord = this.Discord;
 		tag.ChannelId = this.Id;
+		return tag;
+	}
+
+	/// <summary>
+	/// Tries to get a forum channel tag.
+	/// </summary>
+	/// <param name="id">The id of the tag to get or null if not found.</param>
+	public ForumPostTag? TryGetForumPostTag(ulong id)
+	{
+		var tag = this.InternalAvailableTags.FirstOrDefault(x => x.Id == id);
+		if (tag is not null)
+		{
+			tag.Discord = this.Discord;
+			tag.ChannelId = this.Id;
+		}
 		return tag;
 	}
 
