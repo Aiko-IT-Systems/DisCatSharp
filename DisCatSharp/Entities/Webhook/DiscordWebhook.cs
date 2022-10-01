@@ -25,6 +25,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 
 using Newtonsoft.Json;
@@ -134,8 +135,25 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> GetMessageAsync(ulong messageId)
-		=> await (this.Discord?.ApiClient ?? this.ApiClient).GetWebhookMessageAsync(this.Id, this.Token, messageId).ConfigureAwait(false);
+	public Task<DiscordMessage> GetMessageAsync(ulong messageId)
+		=> (this.Discord?.ApiClient ?? this.ApiClient).GetWebhookMessageAsync(this.Id, this.Token, messageId);
+
+	/// <summary>
+	/// Tries to get a previously-sent webhook message.
+	/// </summary>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordMessage?> TryGetMessageAsync(ulong messageId)
+	{
+		try
+		{
+			return await this.GetMessageAsync(messageId).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
 
 	/// <summary>
 	/// Gets a previously-sent webhook message.
@@ -143,9 +161,26 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// <exception cref="NotFoundException">Thrown when the webhook does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordMessage> GetMessageAsync(ulong messageId, ulong threadId)
-		=> await (this.Discord?.ApiClient ?? this.ApiClient).GetWebhookMessageAsync(this.Id, this.Token, messageId, threadId).ConfigureAwait(false);
+	public Task<DiscordMessage> GetMessageAsync(ulong messageId, ulong threadId)
+		=> (this.Discord?.ApiClient ?? this.ApiClient).GetWebhookMessageAsync(this.Id, this.Token, messageId, threadId);
 
+	/// <summary>
+	/// Tries to get a previously-sent webhook message.
+	/// </summary>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordMessage> TryGetMessageAsync(ulong messageId, ulong threadId)
+	{
+		try
+		{
+			return await this.GetMessageAsync(messageId, threadId).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+	
 	/// <summary>
 	/// Permanently deletes this webhook.
 	/// </summary>
