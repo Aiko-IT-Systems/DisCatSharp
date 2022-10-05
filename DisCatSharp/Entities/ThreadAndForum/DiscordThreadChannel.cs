@@ -29,6 +29,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net.Models;
 using DisCatSharp.Net.Serialization;
 
@@ -213,23 +214,60 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <summary>
 	/// Gets a member in this thread.
 	/// </summary>
-	/// <param name="memberId">The member to be added.</param>
+	/// <param name="memberId">The id of the member to get.</param>
 	/// <exception cref="NotFoundException">Thrown when the member is not part of the thread.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordThreadChannelMember> GetMemberAsync(ulong memberId)
 		=> this.Discord.ApiClient.GetThreadMemberAsync(this.Id, memberId);
 
+
+	/// <summary>
+	/// Tries to get a member in this thread.
+	/// </summary>
+	/// <param name="memberId">The id of the member to get.</param>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordThreadChannelMember?> TryGetMemberAsync(ulong memberId)
+	{
+		try
+		{
+			return await this.GetMemberAsync(memberId).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+
 	/// <summary>
 	/// Gets a member in this thread.
 	/// </summary>
-	/// <param name="member">The member to be added.</param>
+	/// <param name="member">The member to get.</param>
 	/// <exception cref="NotFoundException">Thrown when the member is not part of the thread.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordThreadChannelMember> GetMemberAsync(DiscordMember member)
 		=> this.Discord.ApiClient.GetThreadMemberAsync(this.Id, member.Id);
 
+	/// <summary>
+	/// Tries to get a member in this thread.
+	/// </summary>
+	/// <param name="member">The member to get.</param>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordThreadChannelMember?> TryGetMemberAsync(DiscordMember member)
+	{
+		try
+		{
+			return await this.GetMemberAsync(member).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+	
 	/// <summary>
 	/// Removes a member from this thread.
 	/// </summary>
