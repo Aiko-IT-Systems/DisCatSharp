@@ -20,29 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-
-using DisCatSharp.ApplicationCommands.Enums;
-
-namespace DisCatSharp.ApplicationCommands.Attributes;
+namespace DisCatSharp.ApplicationCommands.Enums;
 
 /// <summary>
-/// Defines this application command module's lifespan. Module lifespans are transient by default.
+/// Defines how are command cooldowns applied.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class)]
-public class ApplicationCommandModuleLifespanAttribute : Attribute
+public enum CooldownBucketType : int
 {
-	/// <summary>
-	/// Gets the lifespan.
-	/// </summary>
-	public ApplicationCommandModuleLifespan Lifespan { get; }
 
 	/// <summary>
-	/// Defines this application command module's lifespan.
+	/// Denotes that the command will have its cooldown applied globally.
 	/// </summary>
-	/// <param name="lifespan">The lifespan of the module. Module lifespans are transient by default.</param>
-	public ApplicationCommandModuleLifespanAttribute(ApplicationCommandModuleLifespan lifespan)
-	{
-		this.Lifespan = lifespan;
-	}
+	Global = 0,
+
+	/// <summary>
+	/// Denotes that the command will have its cooldown applied per-user.
+	/// </summary>
+	User = 1,
+
+	/// <summary>
+	/// Denotes that the command will have its cooldown applied per-channel.
+	/// </summary>
+	Channel = 2,
+
+	/// <summary>
+	/// Denotes that the command will have its cooldown applied per-guild. In DMs, this applies the cooldown per-channel.
+	/// </summary>
+	Guild = 4
 }
