@@ -405,7 +405,7 @@ internal sealed class RestChannelInviteCreatePayload
 	/// Gets or sets the target application.
 	/// </summary>
 	[JsonProperty("target_application_id", NullValueHandling = NullValueHandling.Ignore)]
-	public TargetActivity? TargetApplication { get; set; }
+	public ulong? TargetApplicationId { get; set; }
 
 	/// <summary>
 	/// Gets or sets the target user id.
