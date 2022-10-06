@@ -2422,7 +2422,7 @@ public sealed class DiscordApiClient
 	/// <param name="unique">If true, unique.</param>
 	/// <param name="reason">The reason.</param>
 
-	internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channelId, int maxAge, int maxUses, TargetType? targetType, TargetActivity? targetApplication, ulong? targetUser, bool temporary, bool unique, string reason)
+	internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channelId, int maxAge, int maxUses, TargetType? targetType, ulong? targetApplication, ulong? targetUser, bool temporary, bool unique, string reason)
 	{
 		var pld = new RestChannelInviteCreatePayload
 		{
