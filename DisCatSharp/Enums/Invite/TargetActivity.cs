@@ -45,19 +45,19 @@ public enum TargetActivity : ulong
 	ChessInThePark = 832012774040141894,
 
 	/// <summary>
-	/// Represents the embedded application Doodle Crew.
-	/// </summary>
-	DoodleCrew = 878067389634314250,
-
-	/// <summary>
 	/// Represents the embedded application Fishington.io.
 	/// </summary>
 	Fishington = 814288819477020702,
 
 	/// <summary>
-	/// Represents the embedded application Letter Tile.
+	/// Represents the embedded application Sketch Heads.
 	/// </summary>
-	LetterTile = 879863686565621790,
+	SketchHeads = 902271654783242291,
+
+	/// <summary>
+	/// Represents the embedded application Letter League.
+	/// </summary>
+	LetterLeague = 879863686565621790,
 
 	/// <summary>
 	/// Represents the embedded application Poker Night.
@@ -75,12 +75,6 @@ public enum TargetActivity : ulong
 	WatchTogether = 880218394199220334,
 
 	/// <summary>
-	/// Represents the embedded application Watch Together.
-	/// This is the dev version.
-	/// </summary>
-	WatchTogetherDev = 880218832743055411,
-
-	/// <summary>
 	/// Represents the embedded application Word Snacks.
 	/// </summary>
 	WordSnacks = 879863976006127627,
@@ -90,40 +84,50 @@ public enum TargetActivity : ulong
 	/// </summary>
 	YouTubeTogether = 755600276941176913,
 
+	/// <summary>
+	/// Represents the embedded application Putt Party.
+	/// </summary>
+	PuttParty = 945737671223947305,
+
+	/// <summary>
+	/// Represents the embedded application Land-io.
+	/// </summary>
+	LandIo = 903769130790969345,
+
+	/// <summary>
+	/// Represents the embedded application Bobble League.
+	/// </summary>
+	BobbleLeague = 947957217959759964,
+
+	/// <summary>
+	/// Represents the embedded application Ask Away.
+	/// </summary>
+	AskAway = 976052223358406656,
+
+	/// <summary>
+	/// Represents the embedded application Know What I Meme.
+	/// </summary>
+	KnowWhatIMeme = 950505761862189096,
+
+	/// <summary>
+	/// Represents the embedded application Bash Out.
+	/// </summary>
+	BashOut = 1006584476094177371,
+
+
 	#region New Prod
 	/// <summary>
-	/// Represents the embedded application Awkword.
+	/// Represents the embedded application Checkers In The Park.
 	/// </summary>
-	Awkword = 879863881349087252,
+	CheckersInThePark = 832013003968348200,
 
 	/// <summary>
-	/// Represents the embedded application Putts.
+	/// Represents the embedded application Blazing 8s.
 	/// </summary>
-	Putts = 832012854282158180,
-
-	/// <summary>
-	/// Represents the embedded application CG3 Prod.
-	/// </summary>
-	CG3Prod = 832013003968348200,
-
-	/// <summary>
-	/// Represents the embedded application CG4 Prod.
-	/// </summary>
-	CG4Prod = 832025144389533716,
-
-	/// <summary>
-	/// Represents the embedded application Sketchy Artist.
-	/// </summary>
-	SketchyArtist = 879864070101172255,
+	Blazing8s = 832025144389533716,
 	#endregion
 
 	#region New Dev
-	/// <summary>
-	/// Represents the embedded application Sketchy Artist.
-	/// This is the dev version.
-	/// </summary>
-	SketchyArtistDev = 879864104980979792,
-
 	/// <summary>
 	/// Represents the embedded application Word Snacks.
 	/// This is the dev version.
@@ -131,16 +135,10 @@ public enum TargetActivity : ulong
 	WordSnacksDev = 879864010126786570,
 
 	/// <summary>
-	/// Represents the embedded application Doodle Crew.
+	/// Represents the embedded application CG 2 Dev.
 	/// This is the dev version.
 	/// </summary>
-	DoodleCrewDev = 878067427668275241,
-
-	/// <summary>
-	/// Represents the embedded application Chess in the park.
-	/// This is the dev version.
-	/// </summary>
-	ChessInTheParkDev = 832012586023256104,
+	CG2Dev = 832012586023256104,
 
 	/// <summary>
 	/// Represents the embedded application CG3 Dev.
@@ -152,13 +150,38 @@ public enum TargetActivity : ulong
 	/// Represents the embedded application CG4 Dev.
 	/// This is the dev version.
 	/// </summary>
-	CG4kDev = 832013108234289153,
+	CG4Dev = 832013108234289153,
+
 
 	/// <summary>
-	/// Represents the embedded application Decoders.
+	/// Represents the embedded application PN Dev.
 	/// This is the dev version.
 	/// </summary>
-	DecodersDev = 891001866073296967,
+	PNDev = 763133495793942528,
+
+	/// <summary>
+	/// Represents the embedded application Watch Together Dev.
+	/// This is the dev version.
+	/// </summary>
+	WatchTogetherDev = 880218832743055411,
+
+	/// <summary>
+	/// Represents the embedded application Sketch Heads Dev.
+	/// This is the dev version.
+	/// </summary>
+	SketchHeadsDev = 902271746701414431,
+
+	/// <summary>
+	/// Represents the embedded application Better League Dev.
+	/// This is the dev version.
+	/// </summary>
+	BetterLeagueDev = 879863753519292467,
+
+	/// <summary>
+	/// Represents the embedded application Putt Party Dev.
+	/// This is the dev version.
+	/// </summary>
+	PuttPartyDev = 910224161476083792,
 	#endregion
 
 	#region New Staging
@@ -185,6 +208,18 @@ public enum TargetActivity : ulong
 	/// This is the staging version.
 	/// </summary>
 	CG4Staging = 832025061657280566,
+
+	/// <summary>
+	/// Represents the embedded application Putt Party.
+	/// This is the staging version.
+	/// </summary>
+	PuttPartyStaging = 945732077960188005,
+
+	/// <summary>
+	/// Represents the embedded application Spell Cast.
+	/// This is the staging version.
+	/// </summary>
+	SpellCastStaging = 893449443918086174,
 	#endregion
 
 	#region New QA
@@ -211,5 +246,11 @@ public enum TargetActivity : ulong
 	/// This is the QA version.
 	/// </summary>
 	CG4QA = 832025114077298718,
+
+	/// <summary>
+	/// Represents the embedded application Putt Party.
+	/// This is the QA version.
+	/// </summary>
+	PuttPartyQA = 945748195256979606
 	#endregion
 }
