@@ -1684,7 +1684,8 @@ public sealed class DiscordApiClient
 			DefaultReactionEmoji = defaultReactionEmoji,
 			PermissionOverwrites = restoverwrites,
 			DefaultSortOrder = defaultSortOrder,
-			Flags = flags
+			Flags = flags,
+			Type = ChannelType.Forum
 		};
 
 		var headers = Utilities.GetBaseHeaders();
