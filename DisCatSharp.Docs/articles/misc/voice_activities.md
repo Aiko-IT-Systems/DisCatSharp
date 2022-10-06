@@ -1,5 +1,5 @@
 ---
-uid: voiceactivities
+uid: misc_voice_activities
 title: Voice Activities
 ---
 
