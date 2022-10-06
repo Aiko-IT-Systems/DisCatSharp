@@ -93,6 +93,17 @@ public class DiscordGuildPreview : SnowflakeObject
 	internal ConcurrentDictionary<ulong, DiscordEmoji> EmojisInternal;
 
 	/// <summary>
+	/// Gets a collection of this guild's stickers.
+	/// </summary>
+	[JsonIgnore]
+	public IReadOnlyDictionary<ulong, DiscordSticker> Stickers => new ReadOnlyConcurrentDictionary<ulong, DiscordSticker>(this.StickersInternal);
+
+	[JsonProperty("stickers", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonConverter(typeof(SnowflakeArrayAsDictionaryJsonConverter))]
+	internal ConcurrentDictionary<ulong, DiscordSticker> StickersInternal;
+
+
+	/// <summary>
 	/// Gets a collection of this guild's features.
 	/// </summary>
 	[JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
