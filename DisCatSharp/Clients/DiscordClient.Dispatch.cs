@@ -106,7 +106,6 @@ public sealed partial class DiscordClient
 	/// Handles the dispatch payloads.
 	/// </summary>
 	/// <param name="payload">The payload.</param>
-
 	internal async Task HandleDispatchAsync(GatewayPayload payload)
 	{
 		if (payload.Data is not JObject dat)
