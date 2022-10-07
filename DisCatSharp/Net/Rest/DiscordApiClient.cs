@@ -965,7 +965,7 @@ public sealed class DiscordApiClient
 
 		var ret = json.ToDiscordObject<DiscordWidget>();
 		ret.Discord = this.Discord;
-		ret.Guild = this.Discord.Guilds[guildId];
+		ret.Guild = (this.Discord.Guilds.ContainsKey(guildId)) ? this.Discord.Guilds[guildId] : null;
 
 		ret.Channels = ret.Guild == null
 			? rawChannels.Select(r => new DiscordChannel
