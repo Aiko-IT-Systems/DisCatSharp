@@ -21,31 +21,49 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DisCatSharp;
 using DisCatSharp.ApplicationCommands.Context;
 
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Defines that this application command is restricted to the owner of the bot.
+/// Requires ownership of the bot or a whitelisted id to execute this command.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireDisCatSharpDeveloperAttribute : SlashCheckBaseAttribute
+public sealed class ApplicationCommandRequireOwnerOrIdAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
-	/// Defines that this application command is restricted to the owner of the bot.
+	/// Allowed user ids
 	/// </summary>
-	public ApplicationCommandRequireDisCatSharpDeveloperAttribute()
-	{ }
+	public IReadOnlyList<ulong> UserIds { get; }
 
 	/// <summary>
-	/// Runs checks.
+	/// Defines that usage of this command is restricted to the owner or whitelisted ids of the bot.
 	/// </summary>
-	public override async Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+	/// <param name="userIds">List of allowed user ids</param>
+	public ApplicationCommandRequireOwnerOrIdAttribute(params ulong[] userIds)
 	{
-		var team = (await ctx.Client.GetLibraryDevelopmentTeamAsync()).Developers;
-		return team?.Any(x => x.Id == ctx.User.Id) ?? false;
+		this.UserIds = new ReadOnlyCollection<ulong>(userIds);
+	}
+
+	/// <summary>
+	/// Executes the a check.
+	/// </summary>
+	/// <param name="ctx">The command context.</param>s
+	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
+	{
+		var app = ctx.Client.CurrentApplication;
+		var me = ctx.Client.CurrentUser;
+
+		var owner = app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
+
+		var allowed = this.UserIds.Contains(ctx.User.Id);
+
+		return allowed ? Task.FromResult(true) : owner;
 	}
 }

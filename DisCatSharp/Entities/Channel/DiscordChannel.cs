@@ -941,15 +941,15 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <param name="temporary">Whether this invite should be temporary. Defaults to false.</param>
 	/// <param name="unique">Whether this invite should be unique. Defaults to false.</param>
 	/// <param name="targetType">The target type. Defaults to null.</param>
-	/// <param name="targetApplication">The target activity. Defaults to null.</param>
+	/// <param name="targetApplicationId">The target activity ID. Defaults to null.</param>
 	/// <param name="targetUser">The target user id. Defaults to null.</param>
 	/// <param name="reason">The audit log reason.</param>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.CreateInstantInvite"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task<DiscordInvite> CreateInviteAsync(int maxAge = 86400, int maxUses = 0, bool temporary = false, bool unique = false, TargetType? targetType = null, TargetActivity? targetApplication = null, ulong? targetUser = null, string reason = null)
-		=> this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, maxAge, maxUses, targetType, targetApplication, targetUser, temporary, unique, reason);
+	public Task<DiscordInvite> CreateInviteAsync(int maxAge = 86400, int maxUses = 0, bool temporary = false, bool unique = false, TargetType? targetType = null, ulong? targetApplicationId = null, ulong? targetUser = null, string reason = null)
+		=> this.Discord.ApiClient.CreateChannelInviteAsync(this.Id, maxAge, maxUses, targetType, targetApplicationId, targetUser, temporary, unique, reason);
 
 	#region Stage
 

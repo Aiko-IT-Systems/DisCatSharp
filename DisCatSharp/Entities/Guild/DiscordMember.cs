@@ -170,8 +170,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Gets the list of roles associated with this member.
 	/// </summary>
 	[JsonIgnore]
-	public IEnumerable<DiscordRole> Roles
-		=> this.RoleIds.Select(id => this.Guild.GetRole(id)).Where(x => x != null);
+	public IReadOnlyList<DiscordRole> Roles
+		=> this.RoleIds.Select(id => this.Guild.GetRole(id)).Where(x => x != null).ToList();
 
 	/// <summary>
 	/// Gets the color associated with this user's top color-giving role, otherwise 0 (no color).

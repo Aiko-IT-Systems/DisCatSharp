@@ -75,10 +75,6 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	public DiscordApplication CurrentApplication { get; private set; }
 
-	[Obsolete("Use GetLibraryDevelopmentTeamAsync")]
-	public DisCatSharpTeam LibraryDeveloperTeam
-		=> this.GetLibraryDevelopmentTeamAsync().Result;
-
 	/// <summary>
 	/// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
 	/// </summary>
@@ -257,6 +253,7 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	/// <see cref="BaseDiscordClient.GetLibraryDevelopmentTeamAsync"/>
 	/// </summary>
+	[Obsolete("Don't use this right now, inactive")]
 	public async Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
 		=> await this.GetShard(0).GetLibraryDevelopmentTeamAsync().ConfigureAwait(false);
 

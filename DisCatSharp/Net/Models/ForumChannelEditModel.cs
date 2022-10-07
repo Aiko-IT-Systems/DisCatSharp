@@ -78,7 +78,7 @@ public class ForumChannelEditModel : BaseEditModel
 	/// <para>This should be channel with <see cref="DisCatSharp.Entities.DiscordChannel.Type"/> set to <see cref="ChannelType.Category"/>.</para>
 	/// </summary>
 	public Optional<DiscordChannel> Parent { internal get; set; }
-	
+
 	/// <summary>
 	/// <para>Sets the voice channel's new user limit.</para>
 	/// <para>Setting this to 0 will disable the user limit.</para>
