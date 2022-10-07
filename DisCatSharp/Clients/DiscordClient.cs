@@ -398,11 +398,12 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Gets a user.
 	/// </summary>
 	/// <param name="userId">Id of the user</param>
-	/// <param name="fetch">Whether to fetch the user again. Defaults to true.</param>
+	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
 	/// <returns>The requested user.</returns>
+	/// <exception cref="NotFoundException">Thrown when the user does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordUser> GetUserAsync(ulong userId, bool fetch = true)
+	public async Task<DiscordUser> GetUserAsync(ulong userId, bool fetch = false)
 	{
 		if (!fetch)
 		{
@@ -425,6 +426,26 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			});
 
 			return usr;
+		}
+	}
+
+	/// <summary>
+	/// Tries to get a user.
+	/// </summary>
+	/// <param name="userId">Id of the user.</param>
+	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
+	/// <returns>The requested user or null if not found.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordUser?> TryGetUserAsync(ulong userId, bool fetch = true)
+	{
+		try
+		{
+			return await this.GetUserAsync(userId, fetch).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
 		}
 	}
 
@@ -452,23 +473,65 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Gets a channel.
 	/// </summary>
 	/// <param name="id">The id of the channel to get.</param>
+	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
 	/// <returns>The requested channel.</returns>
 	/// <exception cref="NotFoundException">Thrown when the channel does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordChannel> GetChannelAsync(ulong id)
-		=> this.InternalGetCachedChannel(id) ?? await this.ApiClient.GetChannelAsync(id).ConfigureAwait(false);
+	public async Task<DiscordChannel> GetChannelAsync(ulong id, bool fetch = false)
+		=> (fetch ? null : this.InternalGetCachedChannel(id)) ?? await this.ApiClient.GetChannelAsync(id).ConfigureAwait(false);
+
+	/// <summary>
+	/// Tries to get a channel.
+	/// </summary>
+	/// <param name="id">The id of the channel to get.</param>
+	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
+	/// <returns>The requested channel or null if not found.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordChannel?> TryGetChannelAsync(ulong id, bool fetch = true)
+	{
+		try
+		{
+			return await this.GetChannelAsync(id, fetch).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
 
 	/// <summary>
 	/// Gets a thread.
 	/// </summary>
 	/// <param name="id">The id of the thread to get.</param>
+	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
 	/// <returns>The requested thread.</returns>
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordThreadChannel> GetThreadAsync(ulong id)
-		=> this.InternalGetCachedThread(id) ?? await this.ApiClient.GetThreadAsync(id).ConfigureAwait(false);
+	public async Task<DiscordThreadChannel> GetThreadAsync(ulong id, bool fetch = false)
+		=> (fetch ? null : this.InternalGetCachedThread(id)) ?? await this.ApiClient.GetThreadAsync(id).ConfigureAwait(false);
+
+	/// <summary>
+	/// Tries to get a thread.
+	/// </summary>
+	/// <param name="id">The id of the thread to get.</param>
+	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
+	/// <returns>The requested thread or null if not found.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordThreadChannel?> TryGetThreadAsync(ulong id, bool fetch = true)
+	{
+		try
+		{
+			return await this.GetThreadAsync(id, fetch).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
 
 	/// <summary>
 	/// Sends a normal message.
@@ -612,13 +675,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// </summary>
 	/// <param name="id">The guild ID to search for.</param>
 	/// <param name="withCounts">Whether to include approximate presence and member counts in the returned guild.</param>
+	/// <param name="fetch">Whether to ignore the cache. Defaults to false.</param>
 	/// <returns>The requested Guild.</returns>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordGuild> GetGuildAsync(ulong id, bool? withCounts = null)
+	public async Task<DiscordGuild> GetGuildAsync(ulong id, bool? withCounts = null, bool fetch = false)
 	{
-		if (this.GuildsInternal.TryGetValue(id, out var guild) && (!withCounts.HasValue || !withCounts.Value))
+		if (!fetch && this.GuildsInternal.TryGetValue(id, out var guild) && (!withCounts.HasValue || !withCounts.Value))
 			return guild;
 
 		guild = await this.ApiClient.GetGuildAsync(id, withCounts).ConfigureAwait(false);
@@ -629,15 +693,56 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
+	/// Tries to get a guild.
+	/// <para>Setting <paramref name="withCounts"/> to true will make a REST request.</para>
+	/// </summary>
+	/// <param name="id">The guild ID to search for.</param>
+	/// <param name="withCounts">Whether to include approximate presence and member counts in the returned guild.</param>
+	/// <param name="fetch">Whether to ignore the cache. Defaults to true.</param>
+	/// <returns>The requested Guild or null if not found.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordGuild?> TryGetGuildAsync(ulong id, bool? withCounts = null, bool fetch = true)
+	{
+		try
+		{
+			return await this.GetGuildAsync(id, withCounts, fetch).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+
+	/// <summary>
 	/// Gets a guild preview.
 	/// </summary>
 	/// <param name="id">The guild ID.</param>
-	/// <returns></returns>
+	/// <returns>A preview of the requested guild.</returns>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordGuildPreview> GetGuildPreviewAsync(ulong id)
 		=> this.ApiClient.GetGuildPreviewAsync(id);
+
+	/// <summary>
+	/// Tries to get a guild preview.
+	/// </summary>
+	/// <param name="id">The guild ID.</param>
+	/// <returns>A preview of the requested guild or null if not found.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordGuildPreview?> TryGetGuildPreviewAsync(ulong id)
+	{
+		try
+		{
+			return await this.ApiClient.GetGuildPreviewAsync(id).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
 
 	/// <summary>
 	/// Gets an invite.
@@ -646,12 +751,34 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <param name="withCounts">Whether to include presence and total member counts in the returned invite.</param>
 	/// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
 	/// <param name="scheduledEventId">The scheduled event id.</param>
-	/// <returns>The requested Invite.</returns>
+	/// <returns>The requested invite.</returns>
 	/// <exception cref="NotFoundException">Thrown when the invite does not exists.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordInvite> GetInviteByCodeAsync(string code, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
 		=> this.ApiClient.GetInviteAsync(code, withCounts, withExpiration, scheduledEventId);
+
+	/// <summary>
+	/// Tries to get an invite.
+	/// </summary>
+	/// <param name="code">The invite code.</param>
+	/// <param name="withCounts">Whether to include presence and total member counts in the returned invite.</param>
+	/// <param name="withExpiration">Whether to include the expiration date in the returned invite.</param>
+	/// <param name="scheduledEventId">The scheduled event id.</param>
+	/// <returns>The requested invite or null if not found.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordInvite?> TryGetInviteByCodeAsync(string code, bool? withCounts = null, bool? withExpiration = null, ulong? scheduledEventId = null)
+	{
+		try
+		{
+			return await this.GetInviteByCodeAsync(code, withCounts, withExpiration, scheduledEventId).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
 
 	/// <summary>
 	/// Gets a list of user connections.
@@ -671,6 +798,25 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordSticker> GetStickerAsync(ulong id)
 		=> this.ApiClient.GetStickerAsync(id);
+
+	/// <summary>
+	/// Tries to get a sticker.
+	/// </summary>
+	/// <returns>The requested sticker or null if not found.</returns>
+	/// <param name="id">The id of the sticker.</param>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordSticker?> TryGetStickerAsync(ulong id)
+	{
+		try
+		{
+			return await this.GetStickerAsync(id).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
 
 
 	/// <summary>
@@ -715,7 +861,27 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		=> this.ApiClient.GetWebhookAsync(id);
 
 	/// <summary>
-	/// Gets a webhook.
+	/// Tries to get a webhook.
+	/// </summary>
+	/// <param name="id">The target webhook id.</param>
+	/// <returns>The requested webhook or null if not found.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordWebhook?> TryGetWebhookAsync(ulong id)
+	{
+		try
+		{
+			return await this.GetWebhookAsync(id).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+
+
+	/// <summary>
+	/// Gets a webhook with a token.
 	/// </summary>
 	/// <param name="id">The target webhook id.</param>
 	/// <param name="token">The target webhook token.</param>
@@ -725,6 +891,27 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordWebhook> GetWebhookWithTokenAsync(ulong id, string token)
 		=> this.ApiClient.GetWebhookWithTokenAsync(id, token);
+
+	/// <summary>
+	/// Tries to get a webhook with a token.
+	/// </summary>
+	/// <param name="id">The target webhook id.</param>
+	/// <param name="token">The target webhook token.</param>
+	/// <returns>The requested webhook or null if not found.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordWebhook?> TryGetWebhookWithTokenAsync(ulong id, string token)
+	{
+		try
+		{
+			return await this.GetWebhookWithTokenAsync(id, token).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+
 
 	/// <summary>
 	/// Updates current user's activity and status.
