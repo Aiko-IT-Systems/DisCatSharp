@@ -139,7 +139,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Gets the guild ids where the applications.commands scope is missing.
 	/// </summary>
-	private ConcurrentBag<ulong> _missingScopeGuildIds;
+	private List<ulong> _missingScopeGuildIds;
 
 	/// <summary>
 	/// Gets whether debug is enabled.
@@ -826,7 +826,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				Handled = true,
 				RegisteredGlobalCommands = GlobalCommandsInternal,
 				RegisteredGuildCommands = GuildCommandsInternal,
-				GuildsWithoutScope = this._missingScopeGuildIds.ToList()
+				GuildsWithoutScope = this._missingScopeGuildIds
 			});
 			if (Configuration.GenerateTranslationFilesOnly)
 			{
