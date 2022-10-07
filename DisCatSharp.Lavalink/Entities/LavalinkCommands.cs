@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Newtonsoft.Json;
 
@@ -225,7 +226,7 @@ internal sealed class LavalinkEqualizer : LavalinkPayload
 	/// Gets the bands.
 	/// </summary>
 	[JsonProperty("bands")]
-	public IEnumerable<LavalinkBandAdjustment> Bands { get; }
+	public List<LavalinkBandAdjustment> Bands { get; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="LavalinkEqualizer"/> class.
@@ -235,6 +236,6 @@ internal sealed class LavalinkEqualizer : LavalinkPayload
 	public LavalinkEqualizer(LavalinkGuildConnection lvl, IEnumerable<LavalinkBandAdjustment> bands)
 		: base("equalizer", lvl.GuildIdString)
 	{
-		this.Bands = bands;
+		this.Bands = bands.ToList();
 	}
 }

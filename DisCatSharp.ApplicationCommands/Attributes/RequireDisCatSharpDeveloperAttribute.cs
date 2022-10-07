@@ -24,25 +24,24 @@ using System;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Context;
-using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Defines that this application command is only usable within a direct message channel.
+/// Defines that this application command is restricted to the owner of the bot.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireDirectMessageAttribute : SlashCheckBaseAttribute
+public sealed class ApplicationCommandRequireDisCatSharpDeveloperAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
-	/// Defines that this command is only usable within a direct message channel.
+	/// Defines that this application command is restricted to the owner of the bot.
 	/// </summary>
-	public ApplicationCommandRequireDirectMessageAttribute()
+	public ApplicationCommandRequireDisCatSharpDeveloperAttribute()
 	{ }
 
 	/// <summary>
 	/// Runs checks.
 	/// </summary>
-	public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-		=> Task.FromResult(ctx.Channel is DiscordDmChannel);
+	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
+		=> Task.FromResult(true);
 }

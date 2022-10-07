@@ -90,7 +90,7 @@ internal sealed class TransportActivity
 	[JsonIgnore]
 	public ulong? ApplicationId
 	{
-		get => this.ApplicationIdStr != null ? (ulong?)ulong.Parse(this.ApplicationIdStr, CultureInfo.InvariantCulture) : null;
+		get => this.ApplicationIdStr != null ? ulong.Parse(this.ApplicationIdStr, CultureInfo.InvariantCulture) : null;
 		internal set => this.ApplicationIdStr = value?.ToString(CultureInfo.InvariantCulture);
 	}
 
@@ -278,7 +278,7 @@ internal sealed class TransportActivity
 		/// </summary>
 		[JsonIgnore]
 		public DateTimeOffset? Start
-			=> this.StartInternal != null ? (DateTimeOffset?)Utilities.GetDateTimeOffsetFromMilliseconds(this.StartInternal.Value, false) : null;
+			=> this.StartInternal != null ? Utilities.GetDateTimeOffsetFromMilliseconds(this.StartInternal.Value, false) : null;
 
 		[JsonProperty("start", NullValueHandling = NullValueHandling.Ignore)]
 		internal long? StartInternal;
@@ -288,7 +288,7 @@ internal sealed class TransportActivity
 		/// </summary>
 		[JsonIgnore]
 		public DateTimeOffset? End
-			=> this.EndInternal != null ? (DateTimeOffset?)Utilities.GetDateTimeOffsetFromMilliseconds(this.EndInternal.Value, false) : null;
+			=> this.EndInternal != null ? Utilities.GetDateTimeOffsetFromMilliseconds(this.EndInternal.Value, false) : null;
 
 		[JsonProperty("end", NullValueHandling = NullValueHandling.Ignore)]
 		internal long? EndInternal;

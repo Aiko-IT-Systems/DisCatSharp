@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Context;
@@ -29,25 +28,20 @@ using DisCatSharp.ApplicationCommands.Context;
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Defines that this application command is restricted to the owner of the bot.
+/// Defines that this application command is only usable within a guild.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireOwnerAttribute : SlashCheckBaseAttribute
+public sealed class ApplicationCommandRequireNsfwAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
-	/// Defines that this application command is restricted to the owner of the bot.
+	/// Defines that this command is only usable within a guild.
 	/// </summary>
-	public ApplicationCommandRequireOwnerAttribute()
+	public ApplicationCommandRequireNsfwAttribute()
 	{ }
 
 	/// <summary>
 	/// Runs checks.
 	/// </summary>
-	public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-	{
-		var app = ctx.Client.CurrentApplication;
-		var me = ctx.Client.CurrentUser;
-
-		return app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
-	}
+	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
+		=> Task.FromResult(ctx.Guild == null || ctx.Channel.IsNsfw);
 }

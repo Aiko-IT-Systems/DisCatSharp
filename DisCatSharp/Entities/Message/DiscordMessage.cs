@@ -171,7 +171,7 @@ public class DiscordMessage : SnowflakeObject, IEquatable<DiscordMessage>
 	[JsonIgnore]
 	public DateTimeOffset? EditedTimestamp
 		=> !string.IsNullOrWhiteSpace(this.EditedTimestampRaw) && DateTimeOffset.TryParse(this.EditedTimestampRaw, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dto) ?
-			(DateTimeOffset?)dto : null;
+			dto : null;
 
 	/// <summary>
 	/// Gets the message's edit timestamp as raw string. Will be null if the message was not edited.

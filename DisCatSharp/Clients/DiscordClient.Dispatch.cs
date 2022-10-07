@@ -39,7 +39,6 @@ using DisCatSharp.Net.Serialization;
 
 using Microsoft.Extensions.Logging;
 
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp;
@@ -106,7 +105,6 @@ public sealed partial class DiscordClient
 	/// Handles the dispatch payloads.
 	/// </summary>
 	/// <param name="payload">The payload.</param>
-
 	internal async Task HandleDispatchAsync(GatewayPayload payload)
 	{
 		if (payload.Data is not JObject dat)
@@ -2603,7 +2601,8 @@ public sealed partial class DiscordClient
 					threadOld.AppliedTagIdsInternal = null;
 					threadNew.AppliedTagIdsInternal = null;
 				}
-			} else
+			}
+			else
 			{
 				threadOld.AppliedTagIdsInternal = threadNew.AppliedTagIdsInternal;
 				threadNew.AppliedTagIdsInternal = thread.AppliedTagIdsInternal;

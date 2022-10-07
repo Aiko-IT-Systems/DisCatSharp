@@ -31,7 +31,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// Defines that this application command is only usable within a guild.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireGuildAttribute : SlashCheckBaseAttribute
+public sealed class ApplicationCommandRequireGuildAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
 	/// Defines that this command is only usable within a guild.
@@ -42,6 +42,6 @@ public sealed class ApplicationCommandRequireGuildAttribute : SlashCheckBaseAttr
 	/// <summary>
 	/// Runs checks.
 	/// </summary>
-	public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
 		=> Task.FromResult(ctx.Guild != null);
 }

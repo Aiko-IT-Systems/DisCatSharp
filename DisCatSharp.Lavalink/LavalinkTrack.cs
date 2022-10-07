@@ -185,7 +185,7 @@ public class LavalinkLoadResult
 	/// </summary>
 	//[JsonProperty("tracks")]
 	[JsonIgnore]
-	public IEnumerable<LavalinkTrack> Tracks { get; internal set; }
+	public List<LavalinkTrack> Tracks { get; internal set; }
 }
 
 /// <summary>
