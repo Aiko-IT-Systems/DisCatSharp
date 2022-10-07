@@ -17,11 +17,11 @@
   <PropertyGroup>
     <PackageId>DisCatSharp.VoiceNext.Natives</PackageId>
 	<Description>
-	  Natives for DisCatSharp Voice Next Extension
+Natives for DisCatSharp Voice Next Extension
 
-	  Manual Download: https://docs.discatsharp.tech/natives/index.html
+Manual Download: https://docs.discatsharp.tech/natives/index.html
 	</Description>
-	<PackageTags>DisCatSharp;Discord API Wrapper;Discord;Bots;Discord Bots;AITSYS;Net6;Voice;Audio Player</PackageTags>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Voice,Audio Player</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
