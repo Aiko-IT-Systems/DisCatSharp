@@ -109,14 +109,14 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// Gets a list of registered commands. The key is the guild id (null if global).
 	/// </summary>
 	public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> RegisteredCommands
-		=> s_registeredCommands.ToList();
+		=> s_registeredCommands;
 	private static List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
 
 	/// <summary>
 	/// Gets a list of registered global commands.
 	/// </summary>
 	public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
-		=> GlobalCommandsInternal.ToList();
+		=> GlobalCommandsInternal;
 	internal static List<DiscordApplicationCommand> GlobalCommandsInternal = new();
 
 	/// <summary>
