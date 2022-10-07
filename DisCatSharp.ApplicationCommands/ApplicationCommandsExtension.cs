@@ -1414,19 +1414,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		if (context is InteractionContext ctx)
 		{
 			//Gets all attributes from parent classes as well and stuff
-			var attributes = new List<SlashCheckBaseAttribute>();
-			attributes.AddRange(method.GetCustomAttributes<SlashCheckBaseAttribute>(true));
-			attributes.AddRange(method.DeclaringType.GetCustomAttributes<SlashCheckBaseAttribute>());
+			var attributes = new List<ApplicationCommandCheckBaseAttribute>();
+			attributes.AddRange(method.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>(true));
+			attributes.AddRange(method.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
 			if (method.DeclaringType.DeclaringType != null)
 			{
-				attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<SlashCheckBaseAttribute>());
+				attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
 				if (method.DeclaringType.DeclaringType.DeclaringType != null)
 				{
-					attributes.AddRange(method.DeclaringType.DeclaringType.DeclaringType.GetCustomAttributes<SlashCheckBaseAttribute>());
+					attributes.AddRange(method.DeclaringType.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
 				}
 			}
 
-			var dict = new Dictionary<SlashCheckBaseAttribute, bool>();
+			var dict = new Dictionary<ApplicationCommandCheckBaseAttribute, bool>();
 			foreach (var att in attributes)
 			{
 				//Runs the check and adds the result to a list
@@ -1440,19 +1440,19 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		}
 		if (context is ContextMenuContext cMctx)
 		{
-			var attributes = new List<ContextMenuCheckBaseAttribute>();
-			attributes.AddRange(method.GetCustomAttributes<ContextMenuCheckBaseAttribute>(true));
-			attributes.AddRange(method.DeclaringType.GetCustomAttributes<ContextMenuCheckBaseAttribute>());
+			var attributes = new List<ApplicationCommandCheckBaseAttribute>();
+			attributes.AddRange(method.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>(true));
+			attributes.AddRange(method.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
 			if (method.DeclaringType.DeclaringType != null)
 			{
-				attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<ContextMenuCheckBaseAttribute>());
+				attributes.AddRange(method.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
 				if (method.DeclaringType.DeclaringType.DeclaringType != null)
 				{
-					attributes.AddRange(method.DeclaringType.DeclaringType.DeclaringType.GetCustomAttributes<ContextMenuCheckBaseAttribute>());
+					attributes.AddRange(method.DeclaringType.DeclaringType.DeclaringType.GetCustomAttributes<ApplicationCommandCheckBaseAttribute>());
 				}
 			}
 
-			var dict = new Dictionary<ContextMenuCheckBaseAttribute, bool>();
+			var dict = new Dictionary<ApplicationCommandCheckBaseAttribute, bool>();
 			foreach (var att in attributes)
 			{
 				//Runs the check and adds the result to a list

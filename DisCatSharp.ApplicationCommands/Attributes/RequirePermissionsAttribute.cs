@@ -32,7 +32,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// Defines that usage of this application command is restricted to members with specified permissions. This check also verifies that the bot has the same permissions.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequirePermissionsAttribute : SlashCheckBaseAttribute
+public sealed class ApplicationCommandRequirePermissionsAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
 	/// Gets the permissions required by this attribute.
@@ -58,7 +58,7 @@ public sealed class ApplicationCommandRequirePermissionsAttribute : SlashCheckBa
 	/// <summary>
 	/// Runs checks.
 	/// </summary>
-	public override async Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+	public override async Task<bool> ExecuteChecksAsync(BaseContext ctx)
 	{
 		if (ctx.Guild == null)
 			return this.IgnoreDms;

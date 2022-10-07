@@ -28,14 +28,20 @@ using DisCatSharp.ApplicationCommands.Context;
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// The base class for a pre-execution check for a context menu.
+/// Defines that this application command is only usable within a guild.
 /// </summary>
-public abstract class ContextMenuCheckBaseAttribute : Attribute
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+public sealed class ApplicationCommandRequireGuildAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
-	/// Checks whether this command can be executed within the current context.
+	/// Defines that this command is only usable within a guild.
 	/// </summary>
-	/// <param name="ctx">The context.</param>
-	/// <returns>Whether the checks passed.</returns>
-	public abstract Task<bool> ExecuteChecksAsync(ContextMenuContext ctx);
+	public ApplicationCommandRequireGuildAttribute()
+	{ }
+
+	/// <summary>
+	/// Runs checks.
+	/// </summary>
+	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
+		=> Task.FromResult(ctx.Guild != null);
 }

@@ -24,25 +24,18 @@ using System;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Context;
-using DisCatSharp.Entities;
 
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// Defines that this application command is only usable within a direct message channel.
+/// The base class for a pre-execution check for a application command.
 /// </summary>
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireDirectMessageAttribute : SlashCheckBaseAttribute
+public abstract class ApplicationCommandCheckBaseAttribute : Attribute
 {
 	/// <summary>
-	/// Defines that this command is only usable within a direct message channel.
+	/// Checks whether this command can be executed within the current context.
 	/// </summary>
-	public ApplicationCommandRequireDirectMessageAttribute()
-	{ }
-
-	/// <summary>
-	/// Runs checks.
-	/// </summary>
-	public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-		=> Task.FromResult(ctx.Channel is DiscordDmChannel);
+	/// <param name="ctx">The context.</param>
+	/// <returns>Whether the checks passed.</returns>
+	public abstract Task<bool> ExecuteChecksAsync(BaseContext ctx);
 }

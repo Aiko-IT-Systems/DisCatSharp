@@ -32,22 +32,17 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// Defines that this application command is restricted to the owner of the bot.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-public sealed class ApplicationCommandRequireOwnerAttribute : SlashCheckBaseAttribute
+public sealed class ApplicationCommandRequireDisCatSharpDeveloperAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
 	/// Defines that this application command is restricted to the owner of the bot.
 	/// </summary>
-	public ApplicationCommandRequireOwnerAttribute()
+	public ApplicationCommandRequireDisCatSharpDeveloperAttribute()
 	{ }
 
 	/// <summary>
 	/// Runs checks.
 	/// </summary>
-	public override Task<bool> ExecuteChecksAsync(InteractionContext ctx)
-	{
-		var app = ctx.Client.CurrentApplication;
-		var me = ctx.Client.CurrentUser;
-
-		return app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
-	}
+	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
+		=> Task.FromResult(true);
 }

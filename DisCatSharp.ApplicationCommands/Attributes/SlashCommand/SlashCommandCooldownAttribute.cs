@@ -34,7 +34,7 @@ namespace DisCatSharp.ApplicationCommands.Attributes;
 /// Defines a cooldown for this command. This allows you to define how many times can users execute a specific command
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-public sealed class SlashCommandCooldownAttribute : SlashCheckBaseAttribute, ICooldown<InteractionContext, SlashCommandCooldownBucket>
+public sealed class SlashCommandCooldownAttribute : ApplicationCommandCheckBaseAttribute, ICooldown<BaseContext, SlashCommandCooldownBucket>
 {
 	/// <summary>
 	/// Gets the maximum number of uses before this command triggers a cooldown for its bucket.
@@ -75,7 +75,7 @@ public sealed class SlashCommandCooldownAttribute : SlashCheckBaseAttribute, ICo
 	/// </summary>
 	/// <param name="ctx">Command context to get cooldown bucket for.</param>
 	/// <returns>Requested cooldown bucket, or null if one wasn't present.</returns>
-	public SlashCommandCooldownBucket GetBucket(InteractionContext ctx)
+	public SlashCommandCooldownBucket GetBucket(BaseContext ctx)
 	{
 		var bid = this.GetBucketId(ctx, out _, out _, out _);
 		this._buckets.TryGetValue(bid, out var bucket);
@@ -87,7 +87,7 @@ public sealed class SlashCommandCooldownAttribute : SlashCheckBaseAttribute, ICo
 	/// </summary>
 	/// <param name="ctx">Context for which to calculate the cooldown.</param>
 	/// <returns>Remaining cooldown, or zero if no cooldown is active.</returns>
-	public TimeSpan GetRemainingCooldown(InteractionContext ctx)
+	public TimeSpan GetRemainingCooldown(BaseContext ctx)
 	{
 		var bucket = this.GetBucket(ctx);
 		return bucket == null ? TimeSpan.Zero : bucket.RemainingUses > 0 ? TimeSpan.Zero : bucket.ResetsAt - DateTimeOffset.UtcNow;
@@ -101,7 +101,7 @@ public sealed class SlashCommandCooldownAttribute : SlashCheckBaseAttribute, ICo
 	/// <param name="channelId">ID of the channel with which this bucket is associated.</param>
 	/// <param name="guildId">ID of the guild with which this bucket is associated.</param>
 	/// <returns>Calculated bucket ID.</returns>
-	private string GetBucketId(InteractionContext ctx, out ulong userId, out ulong channelId, out ulong guildId)
+	private string GetBucketId(BaseContext ctx, out ulong userId, out ulong channelId, out ulong guildId)
 	{
 		userId = 0ul;
 		if ((this.BucketType & CooldownBucketType.User) != 0)
@@ -125,7 +125,7 @@ public sealed class SlashCommandCooldownAttribute : SlashCheckBaseAttribute, ICo
 	/// Executes a check.
 	/// </summary>
 	/// <param name="ctx">The command context.</param>
-	public override async Task<bool> ExecuteChecksAsync(InteractionContext ctx)
+	public override async Task<bool> ExecuteChecksAsync(BaseContext ctx)
 	{
 		var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld);
 		if (!this._buckets.TryGetValue(bid, out var bucket))
