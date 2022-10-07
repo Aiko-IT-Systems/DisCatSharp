@@ -180,7 +180,7 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 			return null;
 		}
 	}
-	
+
 	/// <summary>
 	/// Permanently deletes this webhook.
 	/// </summary>

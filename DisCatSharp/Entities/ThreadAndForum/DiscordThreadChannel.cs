@@ -23,8 +23,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -267,7 +265,7 @@ public class DiscordThreadChannel : DiscordChannel
 			return null;
 		}
 	}
-	
+
 	/// <summary>
 	/// Removes a member from this thread.
 	/// </summary>

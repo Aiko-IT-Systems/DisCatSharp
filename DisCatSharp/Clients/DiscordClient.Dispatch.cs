@@ -39,7 +39,6 @@ using DisCatSharp.Net.Serialization;
 
 using Microsoft.Extensions.Logging;
 
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp;
@@ -2602,7 +2601,8 @@ public sealed partial class DiscordClient
 					threadOld.AppliedTagIdsInternal = null;
 					threadNew.AppliedTagIdsInternal = null;
 				}
-			} else
+			}
+			else
 			{
 				threadOld.AppliedTagIdsInternal = threadNew.AppliedTagIdsInternal;
 				threadNew.AppliedTagIdsInternal = thread.AppliedTagIdsInternal;

@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -721,7 +720,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								var actualCommands = regCommands.Distinct().ToList();
 								commands.AddRange(actualCommands);
 								GuildCommandsInternal.Add(guildId.Value, actualCommands);
-								
+
 								if (this.Client.Guilds.TryGetValue(guildId.Value, out var guild))
 									guild.InternalRegisteredApplicationCommands.AddRange(actualCommands);
 							}
@@ -2049,8 +2048,8 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 			if (ApplicationCommandsExtension.Configuration.AutoDefer)
 				await ctx.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(discordEmbed));
 			else
-			await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-				new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
+				await ctx.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
+					new DiscordInteractionResponseBuilder().AddEmbed(discordEmbed).AsEphemeral(true));
 		}
 		else
 		{
