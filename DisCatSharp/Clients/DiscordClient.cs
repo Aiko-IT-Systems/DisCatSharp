@@ -715,6 +715,35 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
+	/// Gets a guild widget.
+	/// </summary>
+	/// <param name="id">The Guild Id.</param>
+	/// <returns>A guild widget.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordWidget> GetGuildWidgetAsync(ulong id)
+		=> this.ApiClient.GetGuildWidgetAsync(id);
+
+	/// <summary>
+	/// Tries to get a guild widget.
+	/// </summary>
+	/// <param name="id">The Guild Id.</param>
+	/// <returns>The requested guild widget or null if not found.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordWidget?> TryGetGuildWidgetAsync(ulong id)
+	{
+		try
+		{
+			return await this.ApiClient.GetGuildWidgetAsync(id);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+
+	/// <summary>
 	/// Gets an invite.
 	/// </summary>
 	/// <param name="code">The invite code.</param>
