@@ -640,36 +640,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Executes a raw request.
-	/// </summary>
-	/// <example>
-	/// <c>
-	/// var request = await Client.ExecuteRawRequestAsync(RestRequestMethod.GET, $"{Endpoints.CHANNELS}/243184972190742178964/{Endpoints.INVITES}");
-	/// List&lt;DiscordInvite&gt; invites = DiscordJson.ToDiscordObject&lt;List&lt;DiscordInvite&gt;&gt;(request.Response);
-	/// </c>
-	/// </example>
-	/// <param name="method">The method.</param>
-	/// <param name="route">The route.</param>
-	/// <param name="routeParams">The route parameters.</param>
-	/// <param name="jsonBody">The json body.</param>
-	/// <param name="additionalHeaders">The additional headers.</param>
-	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-	/// <exception cref="NotFoundException">Thrown when the resource does not exist.</exception>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	/// <returns>A awaitable RestResponse</returns>
-	[Obsolete("This is no longer needed. Use DiscordClient.RestClient instead.", false)]
-	public async Task<RestResponse> ExecuteRawRequestAsync(RestRequestMethod method, string route, object routeParams, string jsonBody = null, Dictionary<string, string> additionalHeaders = null, double? ratelimitWaitOverride = null)
-	{
-		var bucket = this.ApiClient.Rest.GetBucket(method, route, routeParams, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Configuration);
-		var res = await this.ApiClient.DoRequestAsync(this, bucket, url, method, route, additionalHeaders, DiscordJson.SerializeObject(jsonBody), ratelimitWaitOverride);
-
-		return res;
-	}
-
-	/// <summary>
 	/// Gets a guild.
 	/// <para>Setting <paramref name="withCounts"/> to true will make a REST request.</para>
 	/// </summary>
@@ -818,7 +788,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		}
 	}
 
-
 	/// <summary>
 	/// Gets all nitro sticker packs.
 	/// </summary>
@@ -827,7 +796,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
 		=> this.ApiClient.GetStickerPacksAsync();
-
 
 	/// <summary>
 	/// Gets the In-App OAuth Url.
@@ -879,7 +847,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		}
 	}
 
-
 	/// <summary>
 	/// Gets a webhook with a token.
 	/// </summary>
@@ -911,7 +878,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			return null;
 		}
 	}
-
 
 	/// <summary>
 	/// Updates current user's activity and status.

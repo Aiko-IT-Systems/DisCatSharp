@@ -287,6 +287,7 @@ public abstract class BaseDiscordClient : IDisposable
 	/// <para>Note: This call contacts servers managed by the DCS team, no information is collected.</para>
 	/// <returns>The team, or null with errors being logged on failure.</returns>
 	/// </summary>
+	[Obsolete("Don't use this right now, inactive")]
 	public async Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
 		=> await DisCatSharpTeam.Get(this.RestClient, this.Logger, this.ApiClient).ConfigureAwait(false);
 
