@@ -16,9 +16,9 @@
     <PackageId>DisCatSharp</PackageId>
     <Description>
 	  DisCatSharp
-	  
-	  Your library to write discord bots in C# with the focus on current and future discord features.
-	  Written with love for everyone.
+
+	  Your library to write discord bots in C# with a focus on always providing access to the latest discord features.
+	  Written with love and for everyone.
 	</Description>
     <PackageTags>DisCatSharp;Discord API Wrapper;Discord;Bots;Discord Bots;AITSYS;Net6</PackageTags>
   </PropertyGroup>
