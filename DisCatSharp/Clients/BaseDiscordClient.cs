@@ -195,7 +195,7 @@ public abstract class BaseDiscordClient : IDisposable
 
 		if (tapp.Team == null)
 		{
-			app.Owners = new ReadOnlyCollection<DiscordUser>(new[] { new DiscordUser(tapp.Owner) });
+			app.Owners = new List<DiscordUser>(new[] { new DiscordUser(tapp.Owner) });
 			app.Team = null;
 			app.TeamName = null;
 		}
@@ -212,9 +212,9 @@ public abstract class BaseDiscordClient : IDisposable
 				.Select(x => x.User)
 				.ToArray();
 
-			app.Owners = new ReadOnlyCollection<DiscordUser>(owners);
+			app.Owners = new List<DiscordUser>(owners);
 			app.Team.Owner = owners.FirstOrDefault(x => x.Id == tapp.Team.OwnerId);
-			app.Team.Members = new ReadOnlyCollection<DiscordTeamMember>(members);
+			app.Team.Members = new List<DiscordTeamMember>(members);
 			app.TeamName = app.Team.Name;
 		}
 

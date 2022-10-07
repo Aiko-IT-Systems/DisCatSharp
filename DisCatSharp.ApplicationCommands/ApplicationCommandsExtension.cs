@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -108,22 +109,22 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// Gets a list of registered commands. The key is the guild id (null if global).
 	/// </summary>
 	public IReadOnlyList<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> RegisteredCommands
-		=> s_registeredCommands;
-	private static readonly List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
+		=> s_registeredCommands.ToList();
+	private static List<KeyValuePair<ulong?, IReadOnlyList<DiscordApplicationCommand>>> s_registeredCommands = new();
 
 	/// <summary>
 	/// Gets a list of registered global commands.
 	/// </summary>
 	public IReadOnlyList<DiscordApplicationCommand> GlobalCommands
-		=> GlobalCommandsInternal;
-	internal static readonly List<DiscordApplicationCommand> GlobalCommandsInternal = new();
+		=> GlobalCommandsInternal.ToList();
+	internal static List<DiscordApplicationCommand> GlobalCommandsInternal = new();
 
 	/// <summary>
 	/// Gets a list of registered guild commands mapped by guild id.
 	/// </summary>
 	public IReadOnlyDictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommands
 		=> GuildCommandsInternal;
-	internal static readonly Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommandsInternal = new();
+	internal static Dictionary<ulong, IReadOnlyList<DiscordApplicationCommand>> GuildCommandsInternal = new();
 
 	/// <summary>
 	/// Gets the registration count.
@@ -138,7 +139,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <summary>
 	/// Gets the guild ids where the applications.commands scope is missing.
 	/// </summary>
-	private IReadOnlyList<ulong> _missingScopeGuildIds;
+	private ConcurrentBag<ulong> _missingScopeGuildIds;
 
 	/// <summary>
 	/// Gets whether debug is enabled.
@@ -449,7 +450,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			await this.RegisterCommands(updateList.Where(x => x.Key == key).Select(x => x.Value).ToList(), key);
 		}
 
-		this._missingScopeGuildIds = failedGuilds;
+		this._missingScopeGuildIds = new(failedGuilds);
 
 		await this._applicationCommandsModuleReady.InvokeAsync(this, new ApplicationCommandsModuleReadyEventArgs(Configuration?.ServiceProvider)
 		{
@@ -829,7 +830,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				Handled = true,
 				RegisteredGlobalCommands = GlobalCommandsInternal,
 				RegisteredGuildCommands = GuildCommandsInternal,
-				GuildsWithoutScope = this._missingScopeGuildIds
+				GuildsWithoutScope = this._missingScopeGuildIds.ToList()
 			});
 			if (Configuration.GenerateTranslationFilesOnly)
 			{

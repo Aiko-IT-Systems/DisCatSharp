@@ -49,13 +49,13 @@ internal class DiscordInteractionApplicationCommandCallbackData
 	/// Gets the embeds.
 	/// </summary>
 	[JsonProperty("embeds", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<DiscordEmbed> Embeds { get; internal set; }
+	public IReadOnlyList<DiscordEmbed> Embeds { get; internal set; }
 
 	/// <summary>
 	/// Gets the mentions.
 	/// </summary>
 	[JsonProperty("allowed_mentions", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<IMention> Mentions { get; internal set; }
+	public IReadOnlyList<IMention> Mentions { get; internal set; }
 
 	/// <summary>
 	/// Gets the flags.

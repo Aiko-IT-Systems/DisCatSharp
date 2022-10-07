@@ -103,8 +103,8 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Only applicable for forum channel posts.
 	/// </summary>
 	[JsonIgnore]
-	public IEnumerable<ForumPostTag> AppliedTags
-	  => this.AppliedTagIds?.Select(id => this.Parent.GetForumPostTag(id)).Where(x => x != null);
+	public IReadOnlyList<ForumPostTag> AppliedTags
+	  => this.AppliedTagIds?.Select(id => this.Parent.GetForumPostTag(id)).Where(x => x != null).ToList();
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
