@@ -721,13 +721,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								var actualCommands = regCommands.Distinct().ToList();
 								commands.AddRange(actualCommands);
 								GuildCommandsInternal.Add(guildId.Value, actualCommands);
-								/*
-								if (client.Guilds.TryGetValue(guildId.Value, out var guild))
-								{
-									guild.InternalRegisteredApplicationCommands = new();
+								
+								if (this.Client.Guilds.TryGetValue(guildId.Value, out var guild))
 									guild.InternalRegisteredApplicationCommands.AddRange(actualCommands);
-								}
-								*/
 							}
 							else
 							{

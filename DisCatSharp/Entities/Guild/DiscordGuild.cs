@@ -150,9 +150,9 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	[JsonIgnore]
 	public ReadOnlyCollection<DiscordApplicationCommand> RegisteredApplicationCommands
-		=> new(this.InternalRegisteredApplicationCommands.ToArray());
+		=> new(this.InternalRegisteredApplicationCommands);
 	[JsonIgnore]
-	internal ConcurrentBag<DiscordApplicationCommand> InternalRegisteredApplicationCommands { get; set; } = null;
+	internal List<DiscordApplicationCommand> InternalRegisteredApplicationCommands { get; set; } = new();
 
 	/// <summary>
 	/// Gets the guild's AFK timeout.
