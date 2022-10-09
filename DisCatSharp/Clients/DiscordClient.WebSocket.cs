@@ -123,12 +123,9 @@ public sealed partial class DiscordClient
 				RawActivity = new TransportActivity(),
 				Activity = new DiscordActivity(),
 				Status = UserStatus.Online,
-				InternalUser = new TransportUser
+				InternalUser = new UserWithIdOnly()
 				{
-					Id = this.CurrentUser.Id,
-					Username = this.CurrentUser.Username,
-					Discriminator = this.CurrentUser.Discriminator,
-					AvatarHash = this.CurrentUser.AvatarHash
+					Id = this.CurrentUser.Id
 				}
 			};
 		}
@@ -444,7 +441,7 @@ public sealed partial class DiscordClient
 				Discord = this,
 				Activity = act,
 				Status = userStatus ?? UserStatus.Online,
-				InternalUser = new TransportUser { Id = this.CurrentUser.Id }
+				InternalUser = new UserWithIdOnly { Id = this.CurrentUser.Id }
 			};
 		}
 		else

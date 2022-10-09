@@ -2731,7 +2731,7 @@ public sealed class DiscordApiClient
 				RawActivity = new TransportActivity(),
 				Activity = new DiscordActivity(),
 				Status = UserStatus.Offline,
-				InternalUser = userRaw
+				InternalUser = new UserWithIdOnly { Id = duser.Id}
 			};
 
 		return duser;

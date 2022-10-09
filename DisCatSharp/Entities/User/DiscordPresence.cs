@@ -42,8 +42,8 @@ public sealed class DiscordPresence
 	/// <summary>
 	/// Gets the internal user.
 	/// </summary>
-	[JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
-	internal TransportUser InternalUser { get; set; }
+	[JsonProperty("user")]
+	internal UserWithIdOnly InternalUser { get; set; }
 
 	/// <summary>
 	/// Gets the user that owns this presence.
@@ -67,7 +67,8 @@ public sealed class DiscordPresence
 	/// Gets the user's current activities.
 	/// </summary>
 	[JsonIgnore]
-	public IReadOnlyList<DiscordActivity> Activities => this.InternalActivities;
+	public IReadOnlyList<DiscordActivity> Activities
+		=> this.InternalActivities;
 
 	[JsonIgnore]
 	internal DiscordActivity[] InternalActivities;
@@ -121,8 +122,17 @@ public sealed class DiscordPresence
 		this.InternalActivities = (DiscordActivity[])other.InternalActivities?.Clone();
 		this.RawActivities = (TransportActivity[])other.RawActivities?.Clone();
 		this.Status = other.Status;
-		this.InternalUser = new TransportUser(other.InternalUser);
+		this.InternalUser = other.InternalUser;
 	}
+}
+
+/// <summary>
+/// Represents a user with only its id.
+/// </summary>
+public sealed class UserWithIdOnly
+{
+	[JsonProperty("id")]
+	public ulong Id { get; internal set; }
 }
 
 /// <summary>
