@@ -29,10 +29,20 @@ using DisCatSharp.Enums;
 
 namespace DisCatSharp.Entities;
 
+/// <summary>
+/// Represents the guild features.
+/// </summary>
 public class GuildFeatures
 {
+	/// <summary>
+	/// List of all guild features.
+	/// </summary>
 	public List<GuildFeaturesEnum> Features { get; }
 
+	/// <summary>
+	/// Checks the guild features and constructs a new <see cref="GuildFeatures"/> object.
+	/// </summary>
+	/// <param name="guild">Guild to check</param>
 	public GuildFeatures(DiscordGuild guild)
 	{
 		this.Features = new List<GuildFeaturesEnum>();
@@ -77,7 +87,13 @@ public class GuildFeatures
 		if (guild.RawFeatures.Contains("INVITES_DISABLED")) this.Features.Add(GuildFeaturesEnum.InvitesDisabled);
 	}
 
-	public bool HasFeature(GuildFeaturesEnum flag) => this.Features.Contains(flag);
+	/// <summary>
+	/// Checks whether the guild has a feature enabled.
+	/// </summary>
+	/// <param name="flag">The feature you'd like to check for.</param>
+	/// <returns>Whether the guild has the requested feature.</returns>
+	public bool HasFeature(GuildFeaturesEnum flag)
+		=> this.Features.Contains(flag);
 
 	public string ToString(string separator, bool humanReadable)
 	{
@@ -91,6 +107,11 @@ public class GuildFeatures
 		}
 	}
 
+	/// <summary>
+	/// Converts a string of characters (here: enum) into a string of characters seperated by spaces after a capital letter.
+	/// </summary>
+	/// <param name="text">String of text to convert</param>
+	/// <returns>String seperated by a space after every capital letter.</returns>
 	private static string AddSpacesToWord(string text)
 	{
 		if (string.IsNullOrWhiteSpace(text))
