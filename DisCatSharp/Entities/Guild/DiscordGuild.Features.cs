@@ -108,10 +108,10 @@ public class GuildFeatures
 	}
 
 	/// <summary>
-	/// Converts a string of characters (here: enum) into a string of characters seperated by spaces after a capital letter.
+	/// Converts a string of characters (here: enum) into a string of characters separated by spaces after a capital letter.
 	/// </summary>
 	/// <param name="text">String of text to convert</param>
-	/// <returns>String seperated by a space after every capital letter.</returns>
+	/// <returns>String separated by a space after every capital letter.</returns>
 	private static string AddSpacesToWord(string text)
 	{
 		if (string.IsNullOrWhiteSpace(text))
