@@ -490,19 +490,19 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Whether this guild has the community feature enabled.
 	/// </summary>
 	[JsonIgnore]
-	public bool IsCommunity => this.Features.HasCommunityEnabled;
+	public bool IsCommunity => this.Features.HasFeature(GuildFeaturesEnum.HasCommunityEnabled);
 
 	/// <summary>
 	/// Whether this guild has enabled the welcome screen.
 	/// </summary>
 	[JsonIgnore]
-	public bool HasWelcomeScreen => this.Features.HasWelcomeScreenEnabled;
+	public bool HasWelcomeScreen => this.Features.HasFeature(GuildFeaturesEnum.HasWelcomeScreenEnabled);
 
 	/// <summary>
 	/// Whether this guild has enabled membership screening.
 	/// </summary>
 	[JsonIgnore]
-	public bool HasMemberVerificationGate => this.Features.HasMembershipScreeningEnabled;
+	public bool HasMemberVerificationGate => this.Features.HasFeature(GuildFeaturesEnum.HasMembershipScreeningEnabled);
 
 	/// <summary>
 	/// Gets this guild's premium tier (Nitro boosting).
@@ -817,7 +817,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		List<string> features = new();
 		var rfeatures = this.RawFeatures.ToList();
-		if (this.Features.InvitesDisabled)
+		if (this.Features.HasFeature(GuildFeaturesEnum.InvitesDisabled))
 			rfeatures.Remove("INVITES_DISABLED");
 		features = rfeatures;
 
@@ -837,7 +837,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		List<string> features = new();
 		var rfeatures = this.RawFeatures.ToList();
-		if (!this.Features.InvitesDisabled)
+		if (!this.Features.HasFeature(GuildFeaturesEnum.InvitesDisabled))
 			rfeatures.Add("INVITES_DISABLED");
 		features = rfeatures;
 
@@ -1208,7 +1208,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="NotSupportedException">Thrown when the guilds has not enabled community.</exception>
 	public Task<DiscordChannel> CreateStageChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-		=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.None, null, null, overwrites, null, Optional.None, null, null, Optional.None, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
+		=> this.Features.HasFeature(GuildFeaturesEnum.HasCommunityEnabled) ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.None, null, null, overwrites, null, Optional.None, null, null, Optional.None, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
 
 	/// <summary>
 	/// Creates a new news channel in this guild.
@@ -1224,7 +1224,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="NotSupportedException">Thrown when the guilds has not enabled community.</exception>
 	public Task<DiscordChannel> CreateNewsChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, Optional<ChannelFlags?> flags = default)
-		=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.None, null, null, overwrites, null, Optional.None, null, defaultAutoArchiveDuration, flags, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
+		=> this.Features.HasFeature(GuildFeaturesEnum.HasCommunityEnabled) ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.None, null, null, overwrites, null, Optional.None, null, defaultAutoArchiveDuration, flags, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
 
 	/// <summary>
 	/// Creates a new voice channel in this guild.
