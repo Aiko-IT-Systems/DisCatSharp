@@ -79,15 +79,15 @@ public class GuildFeatures
 
 	public bool HasFeature(GuildFeaturesEnum flag) => this.Features.Contains(flag);
 
-	public string ToString(string seperator, bool humanReadable)
+	public string ToString(string separator, bool humanReadable)
 	{
-		if (!humanReadable) return string.Join(seperator, this.Features);
+		if (!humanReadable) return string.Join(separator, this.Features);
 
 		else
 		{
 			var humanReadableFeatures = this.Features.Select(x => AddSpacesToWord(x.ToString()));
 
-			return string.Join(seperator, humanReadableFeatures);
+			return string.Join(separator, humanReadableFeatures);
 		}
 	}
 
