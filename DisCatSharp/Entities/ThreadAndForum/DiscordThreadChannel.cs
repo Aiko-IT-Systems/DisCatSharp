@@ -129,7 +129,7 @@ public class DiscordThreadChannel : DiscordChannel
 		var canContinue = !mdl.AutoArchiveDuration.HasValue || !mdl.AutoArchiveDuration.Value.HasValue || Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.AutoArchiveDuration.Value.Value);
 		if (mdl.Invitable.HasValue)
 		{
-			canContinue = this.Guild.Features.CanCreatePrivateThreads;
+			canContinue = this.Guild.Features.HasFeature(GuildFeaturesEnum.CanCreatePrivateThreads);
 		}
 		return canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, mdl.Name, mdl.Locked, mdl.Archived, mdl.PerUserRateLimit, mdl.AutoArchiveDuration, mdl.Invitable, mdl.AppliedTags, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 	}

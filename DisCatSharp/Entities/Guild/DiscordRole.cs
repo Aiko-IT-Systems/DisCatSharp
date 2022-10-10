@@ -188,7 +188,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 
 		var canContinue = true;
 		if ((mdl.Icon.HasValue && mdl.Icon.Value != null) || (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null))
-			canContinue = this.Discord.Guilds[this.GuildId].Features.CanSetRoleIcons;
+			canContinue = this.Discord.Guilds[this.GuildId].Features.HasFeature(GuildFeaturesEnum.CanSetRoleIcons);
 
 		var iconb64 = Optional.FromNullable<string>(null);
 		if (mdl.Icon.HasValue && mdl.Icon.Value != null)

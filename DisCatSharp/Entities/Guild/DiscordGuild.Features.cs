@@ -21,7 +21,9 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 using DisCatSharp.Enums;
 
@@ -33,231 +35,9 @@ namespace DisCatSharp.Entities;
 public class GuildFeatures
 {
 	/// <summary>
-	/// Guild has access to set an animated guild icon.
+	/// List of all guild features.
 	/// </summary>
-	public bool CanSetAnimatedIcon { get; }
-
-	/// <summary>
-	/// Guild has access to set a guild banner image.
-	/// </summary>
-	public bool CanSetBanner { get; }
-
-	/// <summary>
-	/// Guild has access to use commerce features (i.e. create store channels)
-	/// </summary>
-	[Obsolete("Store applications are EOL.")]
-	public bool CanCreateStoreChannels { get; }
-
-	/// <summary>
-	/// Guild can enable Welcome Screen, Membership Screening, Stage Channels, News Channels and receives community updates.
-	/// Furthermore the guild can apply as a partner and for the discovery (if the prerequisites are given).
-	/// <see cref="ChannelType.Stage"/> and <see cref="ChannelType.News"/> is usable.
-	/// </summary>
-	public bool HasCommunityEnabled { get; }
-
-	/// <summary>
-	/// Guild is able to be discovered in the discovery.
-	/// </summary>
-	public bool IsDiscoverable { get; }
-
-	/// <summary>
-	/// Guild is able to be featured in the discovery.
-	/// </summary>
-	public bool IsFeatureable { get; }
-
-	/// <summary>
-	/// Guild has access to set an invite splash background.
-	/// </summary>
-	public bool CanSetInviteSplash { get; }
-
-	/// <summary>
-	/// Guild has enabled Membership Screening.
-	/// </summary>
-	public bool HasMembershipScreeningEnabled { get; }
-
-	/// <summary>
-	/// Guild has access to create news channels.
-	/// <see cref="ChannelType.News"/> is usable.
-	/// </summary>
-	public bool CanCreateNewsChannels { get; }
-
-	/// <summary>
-	/// Guild is partnered.
-	/// </summary>
-	public bool IsPartnered { get; }
-
-	/// <summary>
-	/// Guild has increased custom emoji slots.
-	/// </summary>
-	public bool CanUploadMoreEmojis { get; }
-
-	/// <summary>
-	/// Guild can be previewed before joining via Membership Screening or the discovery.
-	/// </summary>
-	public bool HasPreviewEnabled { get; }
-
-	/// <summary>
-	/// Guild has access to set a vanity URL.
-	/// </summary>
-	public bool CanSetVanityUrl { get; }
-
-	/// <summary>
-	/// Guild is verified.
-	/// </summary>
-	public bool IsVerified { get; }
-
-	/// <summary>
-	/// Guild has access to set 384kbps bitrate in voice (previously VIP voice servers).
-	/// </summary>
-	public bool CanAccessVipRegions { get; }
-
-	/// <summary>
-	/// Guild has enabled the welcome screen.
-	/// </summary>
-	public bool HasWelcomeScreenEnabled { get; }
-
-	/// <summary>
-	/// Guild has enabled ticketed events.
-	/// </summary>
-	public bool HasTicketedEventsEnabled { get; }
-
-	/// <summary>
-	/// Guild has enabled monetization.
-	/// </summary>
-	public bool HasMonetizationEnabled { get; }
-
-	/// <summary>
-	/// Guild has increased custom sticker slots.
-	/// </summary>
-	public bool CanUploadMoreStickers { get; }
-
-	/// <summary>
-	/// Guild has access to the three day archive time for threads.
-	/// Needs Premium Tier 1 (<see cref="PremiumTier.TierOne"/>).
-	/// </summary>
-	[Obsolete("Auto archive duration isn't locked to boosts anymore.")]
-	public bool CanSetThreadArchiveDurationThreeDays { get; }
-
-	/// <summary>
-	/// Guild has access to the seven day archive time for threads.
-	/// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
-	/// </summary>
-	[Obsolete("Auto archive duration isn't locked to boosts anymore.")]
-	public bool CanSetThreadArchiveDurationSevenDays { get; }
-
-	/// <summary>
-	/// Guild has access to create private threads.
-	/// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
-	/// </summary>
-	public bool CanCreatePrivateThreads { get; }
-
-	/// <summary>
-	/// Guild is a hub.
-	/// <see cref="ChannelType.GuildDirectory"/> is usable.
-	/// </summary>
-	public bool IsHub { get; }
-
-	/// <summary>
-	/// Guild is in a hub.
-	/// https://github.com/discord/discord-api-docs/pull/3757/commits/4932d92c9d0c783861bc715bf7ebbabb15114e34
-	/// </summary>
-	public bool HasDirectoryEntry { get; }
-
-	/// <summary>
-	/// Guild is linked to a hub.
-	/// </summary>
-	public bool IsLinkedToHub { get; }
-
-	/// <summary>
-	/// Guild has full access to threads.
-	/// Old Feature.
-	/// </summary>
-	public bool HasThreadTestingEnabled { get; }
-
-	/// <summary>
-	/// Guild has access to threads.
-	/// </summary>
-	public bool HasThreadsEnabled { get; }
-
-	/// <summary>
-	/// Guild can set role icons.
-	/// </summary>
-	public bool CanSetRoleIcons { get; }
-
-	/// <summary>
-	/// Guild has the new thread permissions.
-	/// Old Feature.
-	/// </summary>
-	public bool HasNewThreadPermissions { get; }
-
-	/// <summary>
-	/// Guild can set thread default auto archive duration.
-	/// Old Feature.
-	/// </summary>
-	public bool CanSetThreadDefaultAutoArchiveDuration { get; }
-
-	/// <summary>
-	/// Guild has enabled role subscriptions.
-	/// </summary>
-	public bool HasRoleSubscriptionsEnabled { get; }
-
-	/// <summary>
-	/// Guild role subscriptions as purchaseable.
-	/// </summary>
-	public bool RoleSubscriptionsIsAvailableForPurchase { get; }
-
-	/// <summary>
-	/// Guild has premium tier 3 override.
-	/// </summary>
-	public bool PremiumTierThreeOverride { get; }
-
-	/// <summary>
-	/// Guild has access to text in voice.
-	/// Restricted to <see cref="IsStaffOnly"/>.
-	/// </summary>
-	public bool TextInVoiceEnabled { get; }
-
-	/// <summary>
-	/// Guild can set an animated banner.
-	/// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
-	/// </summary>
-	public bool CanSetAnimatedBanner { get; }
-
-	/// <summary>
-	/// Guild can set an animated banner.
-	/// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
-	/// </summary>
-	public bool CanSetChannelBanner { get; }
-
-	/// <summary>
-	/// Allows members to customize their avatar, banner and bio for that server.
-	/// </summary>
-	public bool HasMemberProfiles { get; }
-
-	/// <summary>
-	/// Guild is restricted to users with the <see cref="UserFlags.Staff"/> badge.
-	/// </summary>
-	public bool IsStaffOnly { get; }
-
-	/// <summary>
-	/// Guild can use and setup the experimental auto moderation feature.
-	/// </summary>
-	public bool CanSetupAutoModeration { get; }
-
-	/// <summary>
-	/// Guild has access to home.
-	/// </summary>
-	public bool GuildHomeTest { get; }
-
-	/// <summary>
-	/// Guild has disabled invites.
-	/// </summary>
-	public bool InvitesDisabled { get; }
-
-	/// <summary>
-	/// String of guild features.
-	/// </summary>
-	public string FeatureString { get; }
+	public List<GuildFeaturesEnum> Features { get; }
 
 	/// <summary>
 	/// Checks the guild features and constructs a new <see cref="GuildFeatures"/> object.
@@ -265,54 +45,313 @@ public class GuildFeatures
 	/// <param name="guild">Guild to check</param>
 	public GuildFeatures(DiscordGuild guild)
 	{
-		this.CanSetAnimatedIcon = guild.RawFeatures.Contains("ANIMATED_ICON");
-		this.CanSetAnimatedBanner = guild.RawFeatures.Contains("ANIMATED_BANNER");
-		this.CanSetBanner = guild.RawFeatures.Contains("BANNER");
-		this.CanSetChannelBanner = guild.RawFeatures.Contains("CHANNEL_BANNER");
-		this.CanCreateStoreChannels = guild.RawFeatures.Contains("COMMERCE");
-		this.HasCommunityEnabled = guild.RawFeatures.Contains("COMMUNITY");
-		this.IsDiscoverable = !guild.RawFeatures.Contains("DISCOVERABLE_DISABLED") && guild.RawFeatures.Contains("DISCOVERABLE");
-		this.IsFeatureable = guild.RawFeatures.Contains("FEATUREABLE");
-		this.CanSetInviteSplash = guild.RawFeatures.Contains("INVITE_SPLASH");
-		this.HasMembershipScreeningEnabled = guild.RawFeatures.Contains("MEMBER_VERIFICATION_GATE_ENABLED");
-		this.CanCreateNewsChannels = guild.RawFeatures.Contains("NEWS");
-		this.IsPartnered = guild.RawFeatures.Contains("PARTNERED");
-		this.CanUploadMoreEmojis = guild.RawFeatures.Contains("MORE_EMOJI");
-		this.HasPreviewEnabled = guild.RawFeatures.Contains("PREVIEW_ENABLED");
-		this.CanSetVanityUrl = guild.RawFeatures.Contains("VANITY_URL");
-		this.IsVerified = guild.RawFeatures.Contains("VERIFIED");
-		this.CanAccessVipRegions = guild.RawFeatures.Contains("VIP_REGIONS");
-		this.HasWelcomeScreenEnabled = guild.RawFeatures.Contains("WELCOME_SCREEN_ENABLED");
-		this.HasTicketedEventsEnabled = guild.RawFeatures.Contains("TICKETED_EVENTS_ENABLED");
-		this.HasMonetizationEnabled = guild.RawFeatures.Contains("MONETIZATION_ENABLED");
-		this.CanUploadMoreStickers = guild.RawFeatures.Contains("MORE_STICKERS");
-		this.CanSetThreadArchiveDurationThreeDays = guild.RawFeatures.Contains("THREE_DAY_THREAD_ARCHIVE");
-		this.CanSetThreadArchiveDurationSevenDays = guild.RawFeatures.Contains("SEVEN_DAY_THREAD_ARCHIVE");
-		this.CanCreatePrivateThreads = guild.RawFeatures.Contains("PRIVATE_THREADS");
-		this.IsHub = guild.RawFeatures.Contains("HUB");
-		this.HasThreadTestingEnabled = guild.RawFeatures.Contains("THREADS_ENABLED_TESTING");
-		this.HasThreadsEnabled = guild.RawFeatures.Contains("THREADS_ENABLED");
-		this.CanSetRoleIcons = guild.RawFeatures.Contains("ROLE_ICONS");
-		this.HasNewThreadPermissions = guild.RawFeatures.Contains("NEW_THREAD_PERMISSIONS");
-		this.HasRoleSubscriptionsEnabled = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_ENABLED");
-		this.PremiumTierThreeOverride = guild.RawFeatures.Contains("PREMIUM_TIER_3_OVERRIDE");
-		this.CanSetThreadDefaultAutoArchiveDuration = guild.RawFeatures.Contains("THREAD_DEFAULT_AUTO_ARCHIVE_DURATION");
-		this.TextInVoiceEnabled = guild.RawFeatures.Contains("TEXT_IN_VOICE_ENABLED");
-		this.HasDirectoryEntry = guild.RawFeatures.Contains("HAS_DIRECTORY_ENTRY");
-		this.IsLinkedToHub = guild.RawFeatures.Contains("LINKED_TO_HUB");
-		this.HasMemberProfiles = guild.RawFeatures.Contains("MEMBER_PROFILES");
-		this.IsStaffOnly = guild.RawFeatures.Contains("INTERNAL_EMPLOYEE_ONLY");
-		this.RoleSubscriptionsIsAvailableForPurchase = guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE");
-		this.CanSetupAutoModeration = guild.RawFeatures.Contains("AUTO_MODERATION");
-		this.GuildHomeTest = guild.RawFeatures.Contains("GUILD_HOME_TEST");
-		this.InvitesDisabled = guild.RawFeatures.Contains("INVITES_DISABLED");
+		this.Features = new List<GuildFeaturesEnum>();
 
-		var features = guild.RawFeatures.Any() ? "" : "None";
-		foreach (var feature in guild.RawFeatures)
-		{
-			features += feature + " ";
-		}
-		this.FeatureString = features;
-
+		if (guild.RawFeatures.Contains("ANIMATED_ICON")) this.Features.Add(GuildFeaturesEnum.CanSetAnimatedIcon);
+		if (guild.RawFeatures.Contains("ANIMATED_BANNER")) this.Features.Add(GuildFeaturesEnum.CanSetAnimatedBanner);
+		if (guild.RawFeatures.Contains("BANNER")) this.Features.Add(GuildFeaturesEnum.CanSetBanner);
+		if (guild.RawFeatures.Contains("CHANNEL_BANNER")) this.Features.Add(GuildFeaturesEnum.CanSetChannelBanner);
+		if (guild.RawFeatures.Contains("COMMUNITY")) this.Features.Add(GuildFeaturesEnum.HasCommunityEnabled);
+		if (!guild.RawFeatures.Contains("DISCOVERABLE_DISABLED") && guild.RawFeatures.Contains("DISCOVERABLE")) this.Features.Add(GuildFeaturesEnum.IsDiscoverable);
+		if (guild.RawFeatures.Contains("FEATUREABLE")) this.Features.Add(GuildFeaturesEnum.IsFeatureable);
+		if (guild.RawFeatures.Contains("INVITE_SPLASH")) this.Features.Add(GuildFeaturesEnum.CanSetInviteSplash);
+		if (guild.RawFeatures.Contains("MEMBER_VERIFICATION_GATE_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasMembershipScreeningEnabled);
+		if (guild.RawFeatures.Contains("NEWS")) this.Features.Add(GuildFeaturesEnum.CanCreateNewsChannels);
+		if (guild.RawFeatures.Contains("PARTNERED")) this.Features.Add(GuildFeaturesEnum.IsPartnered);
+		if (guild.RawFeatures.Contains("MORE_EMOJI")) this.Features.Add(GuildFeaturesEnum.CanUploadMoreEmojis);
+		if (guild.RawFeatures.Contains("PREVIEW_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasPreviewEnabled);
+		if (guild.RawFeatures.Contains("VANITY_URL")) this.Features.Add(GuildFeaturesEnum.CanSetVanityUrl);
+		if (guild.RawFeatures.Contains("VERIFIED")) this.Features.Add(GuildFeaturesEnum.IsVerified);
+		if (guild.RawFeatures.Contains("VIP_REGIONS")) this.Features.Add(GuildFeaturesEnum.CanAccessVipRegions);
+		if (guild.RawFeatures.Contains("WELCOME_SCREEN_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasWelcomeScreenEnabled);
+		if (guild.RawFeatures.Contains("TICKETED_EVENTS_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasTicketedEventsEnabled);
+		if (guild.RawFeatures.Contains("MONETIZATION_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasMonetizationEnabled);
+		if (guild.RawFeatures.Contains("MORE_STICKERS")) this.Features.Add(GuildFeaturesEnum.CanUploadMoreStickers);
+		if (guild.RawFeatures.Contains("PRIVATE_THREADS")) this.Features.Add(GuildFeaturesEnum.CanCreatePrivateThreads);
+		if (guild.RawFeatures.Contains("HUB")) this.Features.Add(GuildFeaturesEnum.IsHub);
+		if (guild.RawFeatures.Contains("THREADS_ENABLED_TESTING")) this.Features.Add(GuildFeaturesEnum.HasThreadTestingEnabled);
+		if (guild.RawFeatures.Contains("THREADS_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasThreadsEnabled);
+		if (guild.RawFeatures.Contains("ROLE_ICONS")) this.Features.Add(GuildFeaturesEnum.CanSetRoleIcons);
+		if (guild.RawFeatures.Contains("NEW_THREAD_PERMISSIONS")) this.Features.Add(GuildFeaturesEnum.HasNewThreadPermissions);
+		if (guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasRoleSubscriptionsEnabled);
+		if (guild.RawFeatures.Contains("PREMIUM_TIER_3_OVERRIDE")) this.Features.Add(GuildFeaturesEnum.PremiumTierThreeOverride);
+		if (guild.RawFeatures.Contains("THREAD_DEFAULT_AUTO_ARCHIVE_DURATION")) this.Features.Add(GuildFeaturesEnum.CanSetThreadDefaultAutoArchiveDuration);
+		if (guild.RawFeatures.Contains("TEXT_IN_VOICE_ENABLED")) this.Features.Add(GuildFeaturesEnum.TextInVoiceEnabled);
+		if (guild.RawFeatures.Contains("HAS_DIRECTORY_ENTRY")) this.Features.Add(GuildFeaturesEnum.HasDirectoryEntry);
+		if (guild.RawFeatures.Contains("LINKED_TO_HUB")) this.Features.Add(GuildFeaturesEnum.IsLinkedToHub);
+		if (guild.RawFeatures.Contains("MEMBER_PROFILES")) this.Features.Add(GuildFeaturesEnum.HasMemberProfiles);
+		if (guild.RawFeatures.Contains("INTERNAL_EMPLOYEE_ONLY")) this.Features.Add(GuildFeaturesEnum.IsStaffOnly);
+		if (guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE")) this.Features.Add(GuildFeaturesEnum.RoleSubscriptionsIsAvailableForPurchase);
+		if (guild.RawFeatures.Contains("AUTO_MODERATION")) this.Features.Add(GuildFeaturesEnum.CanSetupAutoModeration);
+		if (guild.RawFeatures.Contains("GUILD_HOME_TEST")) this.Features.Add(GuildFeaturesEnum.GuildHomeTest);
+		if (guild.RawFeatures.Contains("INVITES_DISABLED")) this.Features.Add(GuildFeaturesEnum.InvitesDisabled);
 	}
+
+	/// <summary>
+	/// Checks whether the guild has a feature enabled.
+	/// </summary>
+	/// <param name="flag">The feature you'd like to check for.</param>
+	/// <returns>Whether the guild has the requested feature.</returns>
+	public bool HasFeature(GuildFeaturesEnum flag)
+		=> this.Features.Contains(flag);
+
+	public string ToString(string separator, bool humanReadable)
+	{
+		if (!humanReadable) return string.Join(separator, this.Features);
+
+		else
+		{
+			var humanReadableFeatures = this.Features.Select(x => AddSpacesToWord(x.ToString()));
+
+			return string.Join(separator, humanReadableFeatures);
+		}
+	}
+
+	/// <summary>
+	/// Converts a string of characters (here: enum) into a string of characters separated by spaces after a capital letter.
+	/// </summary>
+	/// <param name="text">String of text to convert</param>
+	/// <returns>String separated by a space after every capital letter.</returns>
+	private static string AddSpacesToWord(string text)
+	{
+		if (string.IsNullOrWhiteSpace(text))
+			return "";
+		var newText = new StringBuilder(text.Length * 2);
+		newText.Append(text[0]);
+		for (int i = 1; i < text.Length; i++)
+		{
+			if (char.IsUpper(text[i]) && text[i - 1] != ' ')
+				newText.Append(' ');
+			newText.Append(text[i]);
+		}
+		return newText.ToString();
+	}
+}
+
+/// <summary>
+/// Represents the guild features.
+/// </summary>
+public enum GuildFeaturesEnum
+{
+	/// <summary>
+	/// Guild has access to set an animated guild icon.
+	/// </summary>
+	CanSetAnimatedIcon,
+
+	/// <summary>
+	/// Guild has access to set a guild banner image.
+	/// </summary>
+	CanSetBanner,
+
+	/// <summary>
+	/// Guild has access to use commerce features (i.e. create store channels)
+	/// </summary>
+	[Obsolete("Store applications are EOL.")]
+	CanCreateStoreChannels,
+
+	/// <summary>
+	/// Guild can enable Welcome Screen, Membership Screening, Stage Channels, News Channels and receives community updates.
+	/// Furthermore the guild can apply as a partner and for the discovery (if the prerequisites are given).
+	/// <see cref="ChannelType.Stage"/> and <see cref="ChannelType.News"/> is usable.
+	/// </summary>
+	HasCommunityEnabled,
+
+	/// <summary>
+	/// Guild is able to be discovered in the discovery.
+	/// </summary>
+	IsDiscoverable,
+
+	/// <summary>
+	/// Guild is able to be featured in the discovery.
+	/// </summary>
+	IsFeatureable,
+
+	/// <summary>
+	/// Guild has access to set an invite splash background.
+	/// </summary>
+	CanSetInviteSplash,
+
+	/// <summary>
+	/// Guild has enabled Membership Screening.
+	/// </summary>
+	HasMembershipScreeningEnabled,
+
+	/// <summary>
+	/// Guild has access to create news channels.
+	/// <see cref="ChannelType.News"/> is usable.
+	/// </summary>
+	CanCreateNewsChannels,
+
+	/// <summary>
+	/// Guild is partnered.
+	/// </summary>
+	IsPartnered,
+
+	/// <summary>
+	/// Guild has increased custom emoji slots.
+	/// </summary>
+	CanUploadMoreEmojis,
+
+	/// <summary>
+	/// Guild can be previewed before joining via Membership Screening or the discovery.
+	/// </summary>
+	HasPreviewEnabled,
+
+	/// <summary>
+	/// Guild has access to set a vanity URL.
+	/// </summary>
+	CanSetVanityUrl,
+
+	/// <summary>
+	/// Guild is verified.
+	/// </summary>
+	IsVerified,
+
+	/// <summary>
+	/// Guild has access to set 384kbps bitrate in voice (previously VIP voice servers).
+	/// </summary>
+	CanAccessVipRegions,
+
+	/// <summary>
+	/// Guild has enabled the welcome screen.
+	/// </summary>
+	HasWelcomeScreenEnabled,
+
+	/// <summary>
+	/// Guild has enabled ticketed events.
+	/// </summary>
+	HasTicketedEventsEnabled,
+
+	/// <summary>
+	/// Guild has enabled monetization.
+	/// </summary>
+	HasMonetizationEnabled,
+
+	/// <summary>
+	/// Guild has increased custom sticker slots.
+	/// </summary>
+	CanUploadMoreStickers,
+
+	/// <summary>
+	/// Guild has access to the three day archive time for threads.
+	/// Needs Premium Tier 1 (<see cref="PremiumTier.TierOne"/>).
+	/// </summary>
+	[Obsolete("Auto archive duration isn't locked to boosts anymore.")]
+	CanSetThreadArchiveDurationThreeDays,
+
+	/// <summary>
+	/// Guild has access to the seven day archive time for threads.
+	/// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
+	/// </summary>
+	[Obsolete("Auto archive duration isn't locked to boosts anymore.")]
+	CanSetThreadArchiveDurationSevenDays,
+
+	/// <summary>
+	/// Guild has access to create private threads.
+	/// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
+	/// </summary>
+	CanCreatePrivateThreads,
+
+	/// <summary>
+	/// Guild is a hub.
+	/// <see cref="ChannelType.GuildDirectory"/> is usable.
+	/// </summary>
+	IsHub,
+
+	/// <summary>
+	/// Guild is in a hub.
+	/// https://github.com/discord/discord-api-docs/pull/3757/commits/4932d92c9d0c783861bc715bf7ebbabb15114e34
+	/// </summary>
+	HasDirectoryEntry,
+
+	/// <summary>
+	/// Guild is linked to a hub.
+	/// </summary>
+	IsLinkedToHub,
+
+	/// <summary>
+	/// Guild has full access to threads.
+	/// Old Feature.
+	/// </summary>
+	HasThreadTestingEnabled,
+
+	/// <summary>
+	/// Guild has access to threads.
+	/// </summary>
+	HasThreadsEnabled,
+
+	/// <summary>
+	/// Guild can set role icons.
+	/// </summary>
+	CanSetRoleIcons,
+
+	/// <summary>
+	/// Guild has the new thread permissions.
+	/// Old Feature.
+	/// </summary>
+	HasNewThreadPermissions,
+
+	/// <summary>
+	/// Guild can set thread default auto archive duration.
+	/// Old Feature.
+	/// </summary>
+	CanSetThreadDefaultAutoArchiveDuration,
+
+	/// <summary>
+	/// Guild has enabled role subscriptions.
+	/// </summary>
+	HasRoleSubscriptionsEnabled,
+
+	/// <summary>
+	/// Guild role subscriptions as purchaseable.
+	/// </summary>
+	RoleSubscriptionsIsAvailableForPurchase,
+
+	/// <summary>
+	/// Guild has premium tier 3 override.
+	/// </summary>
+	PremiumTierThreeOverride,
+
+	/// <summary>
+	/// Guild has access to text in voice.
+	/// Restricted to <see cref="IsStaffOnly"/>.
+	/// </summary>
+	TextInVoiceEnabled,
+
+	/// <summary>
+	/// Guild can set an animated banner.
+	/// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
+	/// </summary>
+	CanSetAnimatedBanner,
+
+	/// <summary>
+	/// Guild can set an animated banner.
+	/// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
+	/// </summary>
+	CanSetChannelBanner,
+
+	/// <summary>
+	/// Allows members to customize their avatar, banner and bio for that server.
+	/// </summary>
+	HasMemberProfiles,
+
+	/// <summary>
+	/// Guild is restricted to users with the <see cref="UserFlags.Staff"/> badge.
+	/// </summary>
+	IsStaffOnly,
+
+	/// <summary>
+	/// Guild can use and setup the experimental auto moderation feature.
+	/// </summary>
+	CanSetupAutoModeration,
+
+	/// <summary>
+	/// Guild has access to home.
+	/// </summary>
+	GuildHomeTest,
+
+	/// <summary>
+	/// Guild has disabled invites.
+	/// </summary>
+	InvitesDisabled,
 }
