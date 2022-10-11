@@ -110,7 +110,7 @@ internal sealed class RestChannelCreatePayload
 	public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; set; }
 
 	/// <summary>
-	/// List of available tags for forum posts.
+	/// Gets the default reaction emoji for forum posts.
 	/// </summary>
 	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<ForumReactionEmoji> DefaultReactionEmoji { get; internal set; }
@@ -221,7 +221,7 @@ internal sealed class RestChannelModifyPayload
 	public IEnumerable<DiscordRestOverwrite> PermissionOverwrites { get; set; }
 
 	/// <summary>
-	/// List of available tags for forum posts.
+	/// Gets the default reaction emoji for forum posts.
 	/// </summary>
 	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<ForumReactionEmoji> DefaultReactionEmoji { get; internal set; }
@@ -230,13 +230,19 @@ internal sealed class RestChannelModifyPayload
 	/// Gets the default forum post sort order
 	/// </summary>
 	[JsonProperty("default_sort_order", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<ForumPostSortOrder> DefaultSortOrder { get; internal set; }
+	public Optional<ForumPostSortOrder?> DefaultSortOrder { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets the channel flags.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Include)]
 	public Optional<ChannelFlags?> Flags { internal get; set; }
+
+	/// <summary>
+	/// Gets or sets the available tags.
+	/// </summary>
+	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
+	public IEnumerable<ForumPostTag>? AvailableTags { internal get; set; }
 }
 
 /// <summary>
