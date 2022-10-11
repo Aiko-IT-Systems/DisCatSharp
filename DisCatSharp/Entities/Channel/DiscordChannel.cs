@@ -1160,13 +1160,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordChannel> CreateForumPostTagAsync(string name, DiscordEmoji emoji = null, bool moderated = false, string reason = null)
-		=> await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, null, null, null, null, this.InternalAvailableTags.Append(new ForumPostTag()
+		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Channel needs to be type of Forum") : await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags.Append(new ForumPostTag()
 		{
 			Name = name,
-			EmojiId = emoji?.Id != null ? emoji?.Id : null,
-			UnicodeEmojiString = emoji?.Id == null ? emoji?.Name ?? null : null,
-			Moderated = moderated
-		}).ToList(), null, null, null, null, null, null, null, reason);
+			EmojiId = emoji != null && emoji.Id != 0 ? emoji.Id : null,
+			UnicodeEmojiString = emoji?.Id == null || emoji?.Id == 0 ? emoji?.Name ?? null : null,
+			Moderated = moderated,
+			Id = null
+		}).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason);
 
 	/// <summary>
 	/// Deletes a forum channel tag.
@@ -1178,7 +1179,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordChannel> DeleteForumPostTag(ulong id, string reason = null)
-		=> await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, null, null, null, null, this.InternalAvailableTags.Where(x => x.Id != id).ToList(), null, null, null, null, null, null, null, reason);
+		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Channel needs to be type of Forum") : await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags?.Where(x => x.Id != id)?.ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason);
 
 	#endregion
 

@@ -1799,6 +1799,7 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id = channelId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
 		ret.Initialize(this.Discord);
@@ -4113,7 +4114,7 @@ public sealed class DiscordApiClient
 				List<ulong> tags = new();
 
 				foreach (var b in appliedTags)
-					tags.Add(b.Id);
+					tags.Add(b.Id.Value);
 
 				pld.AppliedTags = tags;
 				pld.Type = null;
@@ -4383,7 +4384,7 @@ public sealed class DiscordApiClient
 				List<ulong> tags = new(appliedTags.Value.Count());
 
 				foreach (var b in appliedTags.Value)
-					tags.Add(b.Id);
+					tags.Add(b.Id.Value);
 
 				pld.AppliedTags = tags;
 			}
