@@ -1177,8 +1177,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the tag does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteForumPostTag(ulong id, string reason = null)
-		=> this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, null, null, null, null, this.InternalAvailableTags.Where(x => x.Id != id).ToList(), null, null, null, null, null, null, null, reason);
+	public async Task<DiscordChannel> DeleteForumPostTag(ulong id, string reason = null)
+		=> await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, null, null, null, null, this.InternalAvailableTags.Where(x => x.Id != id).ToList(), null, null, null, null, null, null, null, reason);
 
 	#endregion
 
