@@ -1163,8 +1163,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, null, null, null, null, this.InternalAvailableTags.Append(new ForumPostTag()
 		{
 			Name = name,
-			EmojiId = emoji?.Id != null ? emoji.Id : null,
-			UnicodeEmojiString = emoji?.Id == null ? emoji.Name : null,
+			EmojiId = emoji?.Id != null ? emoji?.Id : null,
+			UnicodeEmojiString = emoji?.Id == null ? emoji?.Name : null,
 			Moderated = moderated
 		}).ToList(), null, null, null, null, null, null, null, reason);
 
