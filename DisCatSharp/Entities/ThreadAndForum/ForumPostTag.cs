@@ -109,7 +109,7 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 	/// </summary>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
 	public Task DeleteForumPostTagAsync(string reason = null)
-		=> this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null, null, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList(), null, null, null, null, null, null, null, reason);
+		=> this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, Optional.None, Optional.None, null, Optional.None, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason);
 
 	/// <summary>
 	/// Checks whether this <see cref="ForumPostTag"/> is equal to another object.
