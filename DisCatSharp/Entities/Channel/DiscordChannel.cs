@@ -1164,7 +1164,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		{
 			Name = name,
 			EmojiId = emoji?.Id != null ? emoji?.Id : null,
-			UnicodeEmojiString = emoji?.Id == null ? emoji?.Name : null,
+			UnicodeEmojiString = emoji?.Id == null ? emoji?.Name ?? null : null,
 			Moderated = moderated
 		}).ToList(), null, null, null, null, null, null, null, reason);
 
