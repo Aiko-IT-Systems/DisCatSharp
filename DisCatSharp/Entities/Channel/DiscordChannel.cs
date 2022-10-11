@@ -523,8 +523,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var mdl = new ForumChannelEditModel();
 		action(mdl);
 
-		if (mdl.DefaultAutoArchiveDuration.HasValue)
-			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value))
+		if (mdl.DefaultAutoArchiveDuration.HasValue && mdl.DefaultAutoArchiveDuration.Value.HasValue)
+			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value.Value))
 				throw new NotSupportedException($"Cannot modify DefaultAutoArchiveDuration. Guild needs boost tier {(mdl.DefaultAutoArchiveDuration.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 
 
@@ -1159,15 +1159,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the tag does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<ForumPostTag> CreateForumPostTagAsync(string name, DiscordEmoji emoji = null, bool moderated = false, string reason = null)
-		=> (await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, null, null, null, null, this.AvailableTags.Append(new ForumPostTag
+	public async Task<DiscordChannel> CreateForumPostTagAsync(string name, DiscordEmoji emoji = null, bool moderated = false, string reason = null)
+		=> await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, null, null, null, null, this.InternalAvailableTags.Append(new ForumPostTag()
 		{
 			Name = name,
-			EmojiId = emoji?.Id,
-			UnicodeEmojiString = emoji?.Name,
-			Moderated = moderated,
-			Discord = this.Discord,
-		}), null, null, null, null, null, null, null, reason)).AvailableTags.First(x => x.Name == name);
+			EmojiId = emoji.Id != 0 ? emoji.Id : null,
+			UnicodeEmojiString = emoji.Id == 0 ? emoji.Name : null,
+			Moderated = moderated
+		}).ToList(), null, null, null, null, null, null, null, reason);
 
 	/// <summary>
 	/// Deletes a forum channel tag.
@@ -1179,7 +1178,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task DeleteForumPostTag(ulong id, string reason = null)
-		=> this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, null, null, null, null, this.AvailableTags.Where(x => x.Id != id), null, null, null, null, null, null, null, reason);
+		=> this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, null, null, null, null, this.InternalAvailableTags.Where(x => x.Id != id).ToList(), null, null, null, null, null, null, null, reason);
 
 	#endregion
 

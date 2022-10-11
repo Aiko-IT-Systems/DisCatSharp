@@ -87,17 +87,18 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 	{
 		var mdl = new ForumPostTagEditModel();
 		action(mdl);
-		return (await this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null, null, this.Channel.AvailableTags.Where(x => x.Id != this.Id).Append(new ForumPostTag
+		var res = await this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null, null, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList().Append(new ForumPostTag()
 		{
 			Id = this.Id,
 			Discord = this.Discord,
 			ChannelId = this.ChannelId,
 			Channel = this.Channel,
-			EmojiId = (mdl.Emoji.HasValue ? mdl.Emoji.Value.Id : this.EmojiId),
-			Moderated = (mdl.Moderated.HasValue ? mdl.Moderated.Value : this.Moderated),
-			Name = (mdl.Name.HasValue ? mdl.Name.Value : this.Name),
-			UnicodeEmojiString = (mdl.Emoji.HasValue ? mdl.Emoji.Value.Name : this.UnicodeEmojiString),
-		}), null, null, null, null, null, null, null, null)).AvailableTags.First(x => x.Name == (mdl.Name.HasValue ? mdl.Name.Value : this.Name));
+			EmojiId = mdl.Emoji.HasValue ? mdl.Emoji.Value.Id : this.EmojiId,
+			Moderated = mdl.Moderated.HasValue ? mdl.Moderated.Value : this.Moderated,
+			Name = mdl.Name.HasValue ? mdl.Name.Value : this.Name,
+			UnicodeEmojiString = mdl.Emoji.HasValue ? mdl.Emoji.Value.Name : this.UnicodeEmojiString
+		}).ToList(), null, null, null, null, null, null, null, mdl.AuditLogReason);
+		return res.InternalAvailableTags.First(x => x.Id == this.Id);
 	}
 
 	/// <summary>
@@ -105,7 +106,7 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 	/// </summary>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
 	public Task DeleteForumPostTagAsync(string reason = null)
-		=> this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null, null, this.Channel.AvailableTags.Where(x => x.Id != this.Id), null, null, null, null, null, null, null, null);
+		=> this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null, null, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList(), null, null, null, null, null, null, null, reason);
 
 	/// <summary>
 	/// Checks whether this <see cref="ForumPostTag"/> is equal to another object.

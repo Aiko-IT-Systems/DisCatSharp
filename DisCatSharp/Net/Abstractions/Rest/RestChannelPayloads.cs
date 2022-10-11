@@ -107,7 +107,7 @@ internal sealed class RestChannelCreatePayload
 	/// Gets or sets the default auto archive duration.
 	/// </summary>
 	[JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
-	public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; set; }
+	public Optional<ThreadAutoArchiveDuration?> DefaultAutoArchiveDuration { get; set; }
 
 	/// <summary>
 	/// Gets the default reaction emoji for forum posts.
@@ -212,7 +212,7 @@ internal sealed class RestChannelModifyPayload
 	/// Gets or sets the default auto archive duration.
 	/// </summary>
 	[JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
-	public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; set; }
+	public Optional<ThreadAutoArchiveDuration?> DefaultAutoArchiveDuration { get; set; }
 
 	/// <summary>
 	/// Gets or sets the permission overwrites.
@@ -242,7 +242,7 @@ internal sealed class RestChannelModifyPayload
 	/// Gets or sets the available tags.
 	/// </summary>
 	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<ForumPostTag>? AvailableTags { internal get; set; }
+	public Optional<List<ForumPostTag>?> AvailableTags { internal get; set; }
 }
 
 /// <summary>
@@ -504,7 +504,7 @@ internal sealed class RestThreadChannelCreatePayload
 	/// Gets or sets the auto archive duration.
 	/// </summary>
 	[JsonProperty("auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
-	public ThreadAutoArchiveDuration? AutoArchiveDuration { get; set; }
+	public Optional<ThreadAutoArchiveDuration?> AutoArchiveDuration { get; set; }
 
 	/// <summary>
 	/// Gets or sets the rate limit per user.

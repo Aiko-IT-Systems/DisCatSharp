@@ -1761,9 +1761,9 @@ public sealed class DiscordApiClient
 
 	internal async Task<DiscordChannel> ModifyForumChannelAsync(ulong channelId, string name, int? position,
 		Optional<string> topic, Optional<string> template, bool? nsfw,
-		Optional<ulong?> parent, IEnumerable<ForumPostTag> availableTags, Optional<ForumReactionEmoji> defaultReactionEmoji,
+		Optional<ulong?> parent, Optional<List<ForumPostTag>?> availableTags, Optional<ForumReactionEmoji> defaultReactionEmoji,
 		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit, Optional<ForumPostSortOrder?> defaultSortOrder,
-		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
+		Optional<ThreadAutoArchiveDuration?> defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)

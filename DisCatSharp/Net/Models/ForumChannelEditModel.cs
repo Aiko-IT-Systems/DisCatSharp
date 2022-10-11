@@ -61,7 +61,7 @@ public class ForumChannelEditModel : BaseEditModel
 	/// <summary>
 	/// Sets the available tags.
 	/// </summary>
-	public IEnumerable<ForumPostTag>? AvailableTags { internal get; set; }
+	public Optional<List<ForumPostTag>?> AvailableTags { internal get; set; }
 
 	/// <summary>
 	/// Sets the default reaction emoji.
@@ -100,7 +100,7 @@ public class ForumChannelEditModel : BaseEditModel
 	/// <summary>
 	/// Sets this channel's default duration for newly created threads, in minutes, to automatically archive the thread after recent activity.
 	/// </summary>
-	public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { internal get; set; }
+	public Optional<ThreadAutoArchiveDuration?> DefaultAutoArchiveDuration { internal get; set; }
 
 	/// <summary>
 	/// Sets the channel's permission overwrites.
