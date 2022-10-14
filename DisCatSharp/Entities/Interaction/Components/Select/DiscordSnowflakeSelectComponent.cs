@@ -20,51 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 using DisCatSharp.Enums;
-
-using Newtonsoft.Json;
 
 namespace DisCatSharp.Entities;
 
 /// <summary>
 /// A select menu with multiple options to choose from.
 /// </summary>
-public sealed class DiscordSnowflakeSelectComponent : DiscordComponent
+public sealed class DiscordSnowflakeSelectComponent : DiscordBaseSelectComponent
 {
-	/// <summary>
-	/// The text to show when no option is selected.
-	/// </summary>
-	[JsonProperty("placeholder", NullValueHandling = NullValueHandling.Ignore)]
-	public string Placeholder { get; internal set; }
-
-	/// <summary>
-	/// The minimum amount of options that can be selected. Must be less than or equal to <see cref="MaximumSelectedValues"/>. Defaults to one.
-	/// </summary>
-	[JsonProperty("min_values", NullValueHandling = NullValueHandling.Ignore)]
-	public int? MinimumSelectedValues { get; internal set; } = 1;
-
-	/// <summary>
-	/// The maximum amount of options that can be selected. Must be greater than or equal to zero or <see cref="MinimumSelectedValues"/>. Defaults to one.
-	/// </summary>
-	[JsonProperty("max_values", NullValueHandling = NullValueHandling.Ignore)]
-	public int? MaximumSelectedValues { get; internal set; } = 1;
-
-	/// <summary>
-	/// Whether this select can be used.
-	/// </summary>
-	[JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
-	public bool Disabled { get; internal set; }
-
-	/// <summary>
-	/// Label of component, if used in modal.
-	/// </summary>
-	[JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
-	public string Label { get; internal set; } = null;
-
 	/// <summary>
 	/// Enables this component if it was disabled before.
 	/// </summary>
@@ -95,14 +59,9 @@ public sealed class DiscordSnowflakeSelectComponent : DiscordComponent
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
-	public DiscordSnowflakeSelectComponent(string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
-	{
-		this.CustomId = customId ?? Guid.NewGuid().ToString(); ;
-		this.Disabled = disabled;
-		this.Placeholder = placeholder;
-		this.MinimumSelectedValues = minOptions;
-		this.MaximumSelectedValues = maxOptions;
-	}
+	public DiscordSnowflakeSelectComponent(string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false)
+		: base(ComponentType.MentionableSelect, placeholder, customId, minOptions, maxOptions, disabled)
+	{ }
 
 	/// <summary>
 	/// Constructs a new <see cref="DiscordSnowflakeSelectComponent"/> for modals.
@@ -113,20 +72,14 @@ public sealed class DiscordSnowflakeSelectComponent : DiscordComponent
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
-	public DiscordSnowflakeSelectComponent(string label, string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
-	{
-		this.Label = label;
-		this.CustomId = customId ?? Guid.NewGuid().ToString(); ;
-		this.Disabled = disabled;
-		this.Placeholder = placeholder;
-		this.MinimumSelectedValues = minOptions;
-		this.MaximumSelectedValues = maxOptions;
-	}
+	public DiscordSnowflakeSelectComponent(string label, string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false)
+		: base(ComponentType.MentionableSelect, label, placeholder, customId, minOptions, maxOptions, disabled)
+	{ }
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordSnowflakeSelectComponent"/> class.
+	/// Constructs a new <see cref="DiscordSnowflakeSelectComponent"/>.
 	/// </summary>
-	public DiscordSnowflakeSelectComponent()
+	public DiscordSnowflakeSelectComponent() : base()
 	{
 		this.Type = ComponentType.MentionableSelect;
 	}

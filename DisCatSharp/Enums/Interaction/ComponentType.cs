@@ -38,9 +38,9 @@ public enum ComponentType
 	Button = 2,
 
 	/// <summary>
-	/// A select menu.
+	/// A select menu to select strings.
 	/// </summary>
-	Select = 3,
+	StringSelect = 3,
 
 	/// <summary>
 	/// A input text.
