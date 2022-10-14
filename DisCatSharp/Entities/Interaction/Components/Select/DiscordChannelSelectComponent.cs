@@ -42,6 +42,12 @@ public sealed class DiscordChannelSelectComponent : DiscordComponent
 	public string Placeholder { get; internal set; }
 
 	/// <summary>
+	/// The channel types to filter by.
+	/// </summary>
+	[JsonProperty("channel_types", NullValueHandling = NullValueHandling.Ignore)]
+	public IReadOnlyList<ChannelType> ChannelTypes { get; internal set; } = null;
+
+	/// <summary>
 	/// The minimum amount of options that can be selected. Must be less than or equal to <see cref="MaximumSelectedValues"/>. Defaults to one.
 	/// </summary>
 	[JsonProperty("min_values", NullValueHandling = NullValueHandling.Ignore)]
@@ -91,15 +97,17 @@ public sealed class DiscordChannelSelectComponent : DiscordComponent
 	/// Constructs a new <see cref="DiscordChannelSelectComponent"/>.
 	/// </summary>
 	/// <param name="placeholder">Text to show if no option is selected.</param>
+	/// <param name="channelTypes">The channel types to filter by.</param>
 	/// <param name="customId">The Id to assign to the select component.</param>
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
-	public DiscordChannelSelectComponent(string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
+	public DiscordChannelSelectComponent(string placeholder, IEnumerable<ChannelType> channelTypes = null, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
 	{
 		this.CustomId = customId ?? Guid.NewGuid().ToString(); ;
 		this.Disabled = disabled;
 		this.Placeholder = placeholder;
+		this.ChannelTypes = channelTypes.ToList().AsReadOnly();
 		this.MinimumSelectedValues = minOptions;
 		this.MaximumSelectedValues = maxOptions;
 	}
@@ -109,16 +117,18 @@ public sealed class DiscordChannelSelectComponent : DiscordComponent
 	/// </summary>
 	/// <param name="label">Maximum count of selectable options.</param>
 	/// <param name="placeholder">Text to show if no option is selected.</param>
+	/// <param name="channelTypes">The channel types to filter by.</param>
 	/// <param name="customId">The Id to assign to the select component.</param>
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
-	public DiscordChannelSelectComponent(string label, string placeholder, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
+	public DiscordChannelSelectComponent(string label, string placeholder, IEnumerable<ChannelType> channelTypes = null, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
 	{
 		this.Label = label;
 		this.CustomId = customId ?? Guid.NewGuid().ToString(); ;
 		this.Disabled = disabled;
 		this.Placeholder = placeholder;
+		this.ChannelTypes = channelTypes.ToList().AsReadOnly();
 		this.MinimumSelectedValues = minOptions;
 		this.MaximumSelectedValues = maxOptions;
 	}
