@@ -131,7 +131,9 @@ public class DiscordThreadChannel : DiscordChannel
 		{
 			canContinue = this.Guild.Features.HasFeature(GuildFeaturesEnum.CanCreatePrivateThreads);
 		}
-		return canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, mdl.Name, mdl.Locked, mdl.Archived, mdl.PerUserRateLimit, mdl.AutoArchiveDuration, mdl.Invitable, mdl.AppliedTags, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+		return this.Parent.Type == ChannelType.Forum && mdl.AppliedTags.HasValue && mdl.AppliedTags.Value.Count() > 5
+			? throw new NotSupportedException("Cannot have more than 5 applied tags.")
+			: canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, mdl.Name, mdl.Locked, mdl.Archived, mdl.PerUserRateLimit, mdl.AutoArchiveDuration, mdl.Invitable, mdl.AppliedTags, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 	}
 
 	/// <summary>
@@ -143,8 +145,10 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task AddTagAsync(ForumPostTag tag, string reason = null)
-		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags) { tag }, reason: reason);
+	public Task AddTagAsync(ForumPostTag tag, string reason = null)
+		=> this.AppliedTagIds.Count == 5 ?
+			throw new NotSupportedException("Cannot have more than 5 applied tags.") :
+			this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags) { tag }, reason: reason);
 
 	/// <summary>
 	/// Remove a tag from the current thread.

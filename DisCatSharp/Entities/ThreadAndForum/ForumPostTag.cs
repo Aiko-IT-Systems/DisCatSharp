@@ -83,6 +83,28 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 		=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : DiscordEmoji.FromGuildEmote(this.Discord, this.EmojiId.Value);
 
 	/// <summary>
+	/// Initializes a new instance of the <see cref="ForumPostTag"/> class.
+	/// </summary>
+	internal ForumPostTag()
+	{ }
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="ForumPostTag"/> class.
+	/// </summary>
+	/// <param name="name">The tags name.</param>
+	/// <param name="emojiId">The tags emoji id. Defaults to <see langword="null"/>.</param>
+	/// <param name="emojiName">The tags emoji name (unicode emoji). Defaults to <see langword="null"/>.</param>
+	/// <param name="moderated">Whether this tag can only be applied by moderators. Defaults to <see langword="false"/>.</param>
+	public ForumPostTag(string name, ulong? emojiId = null, string? emojiName = null, bool moderated = false)
+	{
+		this.Id = null;
+		this.Name = name;
+		this.EmojiId = emojiId;
+		this.UnicodeEmojiString = emojiName;
+		this.Moderated = moderated;
+	}
+
+	/// <summary>
 	/// Modifies the tag.
 	/// </summary>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
