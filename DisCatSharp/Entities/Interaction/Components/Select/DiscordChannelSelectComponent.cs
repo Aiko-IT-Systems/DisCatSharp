@@ -88,7 +88,7 @@ public sealed class DiscordChannelSelectComponent : DiscordBaseSelectComponent
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
 	public DiscordChannelSelectComponent(string label, string placeholder, IEnumerable<ChannelType> channelTypes = null, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false)
-		: base(ComponentType.RoleSelect, label, placeholder, customId, minOptions, maxOptions, disabled)
+		: base(ComponentType.ChannelSelect, label, placeholder, customId, minOptions, maxOptions, disabled)
 	{
 		this.ChannelTypes = channelTypes.ToArray();
 	}
