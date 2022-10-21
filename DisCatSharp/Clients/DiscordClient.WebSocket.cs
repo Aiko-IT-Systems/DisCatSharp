@@ -166,36 +166,40 @@ public sealed partial class DiscordClient
 		Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
 			=> this._socketOpened.InvokeAsync(this, e);
 
-		async Task SocketOnMessage(IWebSocketClient sender, SocketMessageEventArgs e)
+		Task SocketOnMessage(IWebSocketClient sender, SocketMessageEventArgs e)
 		{
-			string msg = null;
-			if (e is SocketTextMessageEventArgs etext)
+			_ = Task.Run(async() =>
 			{
-				msg = etext.Message;
-			}
-			else if (e is SocketBinaryMessageEventArgs ebin)
-			{
-				using var ms = new MemoryStream();
-				if (!this._payloadDecompressor.TryDecompress(new ArraySegment<byte>(ebin.Message), ms))
+				string msg = null;
+				if (e is SocketTextMessageEventArgs etext)
 				{
-					this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, "Payload decompression failed");
-					return;
+					msg = etext.Message;
+				}
+				else if (e is SocketBinaryMessageEventArgs ebin)
+				{
+					using var ms = new MemoryStream();
+					if (!this._payloadDecompressor.TryDecompress(new ArraySegment<byte>(ebin.Message), ms))
+					{
+						this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, "Payload decompression failed");
+						return;
+					}
+
+					ms.Position = 0;
+					using var sr = new StreamReader(ms, Utilities.UTF8);
+					msg = await sr.ReadToEndAsync().ConfigureAwait(false);
 				}
 
-				ms.Position = 0;
-				using var sr = new StreamReader(ms, Utilities.UTF8);
-				msg = await sr.ReadToEndAsync().ConfigureAwait(false);
-			}
-
-			try
-			{
-				this.Logger.LogTrace(LoggerEvents.GatewayWsRx, msg);
-				await this.HandleSocketMessageAsync(msg).ConfigureAwait(false);
-			}
-			catch (Exception ex)
-			{
-				this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, ex, "Socket handler suppressed an exception");
-			}
+				try
+				{
+					this.Logger.LogTrace(LoggerEvents.GatewayWsRx, msg);
+					await this.HandleSocketMessageAsync(msg).ConfigureAwait(false);
+				}
+				catch (Exception ex)
+				{
+					this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, ex, "Socket handler suppressed an exception");
+				}
+			});
+			return Task.CompletedTask;
 		}
 
 		Task SocketOnException(IWebSocketClient sender, SocketErrorEventArgs e)
