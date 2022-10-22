@@ -166,40 +166,36 @@ public sealed partial class DiscordClient
 		Task SocketOnConnect(IWebSocketClient sender, SocketEventArgs e)
 			=> this._socketOpened.InvokeAsync(this, e);
 
-		Task SocketOnMessage(IWebSocketClient sender, SocketMessageEventArgs e)
+		async Task SocketOnMessage(IWebSocketClient sender, SocketMessageEventArgs e)
 		{
-			_ = Task.Run(async() =>
+			string msg = null;
+			if (e is SocketTextMessageEventArgs etext)
 			{
-				string msg = null;
-				if (e is SocketTextMessageEventArgs etext)
+				msg = etext.Message;
+			}
+			else if (e is SocketBinaryMessageEventArgs ebin)
+			{
+				using var ms = new MemoryStream();
+				if (!this._payloadDecompressor.TryDecompress(new ArraySegment<byte>(ebin.Message), ms))
 				{
-					msg = etext.Message;
-				}
-				else if (e is SocketBinaryMessageEventArgs ebin)
-				{
-					using var ms = new MemoryStream();
-					if (!this._payloadDecompressor.TryDecompress(new ArraySegment<byte>(ebin.Message), ms))
-					{
-						this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, "Payload decompression failed");
-						return;
-					}
-
-					ms.Position = 0;
-					using var sr = new StreamReader(ms, Utilities.UTF8);
-					msg = await sr.ReadToEndAsync().ConfigureAwait(false);
+					this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, "Payload decompression failed");
+					return;
 				}
 
-				try
-				{
-					this.Logger.LogTrace(LoggerEvents.GatewayWsRx, msg);
-					await this.HandleSocketMessageAsync(msg).ConfigureAwait(false);
-				}
-				catch (Exception ex)
-				{
-					this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, ex, "Socket handler suppressed an exception");
-				}
-			});
-			return Task.CompletedTask;
+				ms.Position = 0;
+				using var sr = new StreamReader(ms, Utilities.UTF8);
+				msg = await sr.ReadToEndAsync().ConfigureAwait(false);
+			}
+
+			try
+			{
+				this.Logger.LogTrace(LoggerEvents.GatewayWsRx, msg);
+				await this.HandleSocketMessageAsync(msg).ConfigureAwait(false);
+			}
+			catch (Exception ex)
+			{
+				this.Logger.LogError(LoggerEvents.WebSocketReceiveFailure, ex, "Socket handler suppressed an exception");
+			}
 		}
 
 		Task SocketOnException(IWebSocketClient sender, SocketErrorEventArgs e)
@@ -253,7 +249,7 @@ public sealed partial class DiscordClient
 		switch (payload.OpCode)
 		{
 			case GatewayOpCode.Dispatch:
-				await this.HandleDispatchAsync(payload).ConfigureAwait(false);
+				await Task.Run(async () => await this.HandleDispatchAsync(payload).ConfigureAwait(false));
 				break;
 
 			case GatewayOpCode.Heartbeat:
