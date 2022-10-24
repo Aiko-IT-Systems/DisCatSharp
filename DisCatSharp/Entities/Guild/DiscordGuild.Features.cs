@@ -328,6 +328,7 @@ public enum GuildFeaturesEnum
 	/// Guild can set an animated banner.
 	/// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
 	/// </summary>
+	[Obsolete("Feature was removed")]
 	CanSetChannelBanner,
 
 	/// <summary>
