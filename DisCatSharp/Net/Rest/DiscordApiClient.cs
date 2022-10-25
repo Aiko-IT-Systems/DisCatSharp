@@ -1874,16 +1874,16 @@ public sealed class DiscordApiClient
 	/// <param name="replyMessageId">The reply message id.</param>
 	/// <param name="mentionReply">If true, mention reply.</param>
 	/// <param name="failOnInvalidReply">If true, fail on invalid reply.</param>
-
-	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply)
+	/// <param name="components">The components.</param>
+	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordActionRowComponent>? components = null)
 	{
 		if (content != null && content.Length > 2000)
 			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
 
 		if (!embeds?.Any() ?? true)
 		{
-			if (content == null && sticker == null)
-				throw new ArgumentException("You must specify message content, a sticker or an embed.");
+			if (content == null && sticker == null && components == null)
+				throw new ArgumentException("You must specify message content, a sticker, components or an embed.");
 			if (content.Length == 0)
 				throw new ArgumentException("Message content must not be empty.");
 		}
@@ -1900,7 +1900,8 @@ public sealed class DiscordApiClient
 			StickersIds = sticker is null ? Array.Empty<ulong>() : new[] {sticker.Id},
 			IsTts = false,
 			HasEmbed = embeds?.Any() ?? false,
-			Embeds = embeds
+			Embeds = embeds,
+			Components = components
 		};
 
 		if (replyMessageId != null)
