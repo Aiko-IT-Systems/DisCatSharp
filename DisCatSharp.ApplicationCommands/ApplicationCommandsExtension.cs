@@ -964,10 +964,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						var command = e.Interaction.Data.Options[0];
 						var group = subgroups.First().SubCommands.First(x => x.Name == command.Name);
 
-						var method = group.Methods.First(x => x.Key == command.Options.First().Name).Value;
+						var method = group.Methods.First(x => x.Key == command.Options[0].Name).Value;
 
 						this.Client.Logger.LogDebug("Executing {cmd}", method.Name);
-						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options.First().Options);
+						var args = await this.ResolveInteractionCommandParameters(e, context, method, e.Interaction.Data.Options[0].Options[0].Options);
 
 						await this.RunCommandAsync(context, method, args);
 					}
@@ -1060,9 +1060,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					else if (subgroups.Any())
 					{
 						var command = e.Interaction.Data.Options[0];
-						var group = subgroups.First().SubCommands.First(x => x.Name == command.Name).Methods.First(x => x.Key == command.Options.First().Name).Value;
+						var group = subgroups.First().SubCommands.First(x => x.Name == command.Name).Methods.First(x => x.Key == command.Options[0].Name).Value;
 
-						var focusedOption = command.Options.First().Options.First(o => o.Focused);
+						var focusedOption = command.Options[0].Options.First(o => o.Focused);
 
 						var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
 						var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
@@ -1078,7 +1078,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							Guild = e.Interaction.Guild,
 							Channel = e.Interaction.Channel,
 							User = e.Interaction.User,
-							Options = command.Options.First().Options.ToList(),
+							Options = command.Options[0].Options.ToList(),
 							FocusedOption = focusedOption,
 							Locale = e.Interaction.Locale,
 							GuildLocale = e.Interaction.GuildLocale,

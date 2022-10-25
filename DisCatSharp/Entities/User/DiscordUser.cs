@@ -102,12 +102,14 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	/// Gets the user's banner color, if set. Mutually exclusive with <see cref="BannerHash"/>.
 	/// </summary>
+	[JsonIgnore]
 	public virtual DiscordColor? BannerColor
 		=> !this.BannerColorInternal.HasValue ? null : new DiscordColor(this.BannerColorInternal.Value);
 
 	/// <summary>
 	/// Gets the user's theme colors, if set.
 	/// </summary>
+	[JsonIgnore]
 	public virtual IReadOnlyList<DiscordColor>? ThemeColors
 		=> !(this.ThemeColorsInternal is not null && this.ThemeColorsInternal.Count != 0) ? null : this.ThemeColorsInternal.Select(x => new DiscordColor(x)).ToList();
 
