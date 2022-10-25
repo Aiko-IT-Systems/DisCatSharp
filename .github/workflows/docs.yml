@@ -1,7 +1,7 @@
 name: "Documentation"
 on:
   push:
-    branches: [ main ]
+    branches: [ main, hacktober/main ]
   workflow_dispatch:
 
 env:
