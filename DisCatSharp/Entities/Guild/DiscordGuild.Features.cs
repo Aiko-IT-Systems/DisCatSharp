@@ -355,4 +355,174 @@ public enum GuildFeaturesEnum
 	/// Guild has disabled invites.
 	/// </summary>
 	InvitesDisabled,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	ActivitiesAlpha,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	ActivitiesEmployee,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	ActivitiesInternalDev,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	AutomodTriggerKeywordFilter,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	AutomodTriggerMlSpamFilter,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	AutomodTriggerSpamLinkFilterGuild,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	AutomodDefaultList,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	Bfg,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	BoostingTiersExperimentMediumGuild,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	BoostingTiersExperimentSmallGuild,
+
+	/// <summary>
+	/// Guild has early access features for bot and library developers.
+	/// </summary>
+	BotDeveloperEarlyAccess,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	CreatorMonetizable,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	CreatorMonetizableDisabled,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	CreatorMonetizableProvisional,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	CreatorMonetizableWhiteGlove,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	CreatorMonetizationApplicationAllowlist,
+
+	/// <summary>
+	/// Guild is set as a support server for an app in App Directory.
+	/// </summary>
+	DeveloperSupportServer,
+
+	/// <summary>
+	/// Guild was previously in the 2021-11_activities_baseline_engagement_bundle experiment.
+	/// </summary>
+	ExposedToActivitiesWtpExperiment,
+
+	/// <summary>
+	/// Guild was previously in the 2021-11_guild_communication_disabled_guilds experiment.
+	/// </summary>
+	GuildCommunicationDisabledGuilds,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	DisableGuildCommunication,
+
+	/// <summary>
+	/// Guild has access to the Home feature, enables Treatment 2 of the 2022-01_home_tab_guild experiment.
+	/// </summary>
+	GuildHomeOverride,
+
+	/// <summary>
+	/// Guild was previously in the 2022-03_guild_automod_default_list experiment.
+	/// </summary>
+	GuildAutomodDefaultList,
+
+	/// <summary>
+	/// Guild was previously in the 2021-06_guild_role_subscriptions experiment.
+	/// </summary>
+	GuildMemberVerificationExperiment,
+
+	/// <summary>
+	/// Guilds was previously in the 2022-05_mobile_web_role_subscription_purchase_page experiment.
+	/// </summary>
+	GuildRoleSubscriptionPurchaseFeedbackLoop,
+
+	/// <summary>
+	/// Guilds previously in the 2022-01_guild_role_subscription_trials experiment.
+	/// </summary>
+	GuildRoleSubscriptionTrials,
+
+	/// <summary>
+	/// Guild previously had access to voice channel activities and can bypass the boost level requirement.
+	/// </summary>
+	HadEarlyActivitiesAccess,
+
+	/// <summary>
+	/// Allows the guild to have 1,000+ active threads.
+	/// </summary>
+	IncreasedThreadLimit,
+
+	/// <summary>
+	/// Guild was previously in the 2022-05_mobile_web_role_subscription_purchase_page experiment.
+	/// </summary>
+	MobileWebRoleSubscriptionPurchasePage,
+
+	/// <summary>
+	/// Shards connections to the guild to different nodes that relay information between each other.
+	/// </summary>
+	RelayEnabled,
+
+	/// <summary>
+	/// 
+	/// </summary>
+	RestrictSpamRiskGuilds,
+
+	/// <summary>
+	/// Allows guild's members to purchase role subscriptions.
+	/// </summary>
+	RoleSubscriptionsAvailableForPurchase,
+
+	/// <summary>
+	/// Used by bot developers to test their bots with threads in guilds with 5 or less members and a bot.
+	/// </summary>
+	ThreadsEnabledTesting,
+
+	/// <summary>
+	/// Guild was previously in the 2022-06_voice_channel_effects experiment.
+	/// </summary>
+	VoiceChannelEffects,
+
+	/// <summary>
+	/// Guild was previously in the 2021-12_soundboardl experiment.
+	/// </summary>
+	Soundboard,
 }
