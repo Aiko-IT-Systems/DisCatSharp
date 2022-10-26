@@ -119,6 +119,17 @@ public class GuildFeatures
 		if (guild.RawFeatures.Contains("THREADS_ENABLED_TESTING")) this.Features.Add(GuildFeaturesEnum.ThreadsEnabledTesting);
 		if (guild.RawFeatures.Contains("VOICE_CHANNEL_EFFECTS")) this.Features.Add(GuildFeaturesEnum.VoiceChannelEffects);
 		if (guild.RawFeatures.Contains("SOUNDBOARD")) this.Features.Add(GuildFeaturesEnum.Soundboard);
+
+		if (guild.RawFeatures.Contains("COMMERCE")) this.Features.Add(GuildFeaturesEnum.Commerce);
+		if (guild.RawFeatures.Contains("EXPOSED_TO_BOOSTING_TIERS_EXPERIMENT")) this.Features.Add(GuildFeaturesEnum.ExposedToBoostingTiersExperiment);
+		if (guild.RawFeatures.Contains("PUBLIC_DISABLED")) this.Features.Add(GuildFeaturesEnum.PublicDisabled);
+		if (guild.RawFeatures.Contains("PUBLIC")) this.Features.Add(GuildFeaturesEnum.Public);
+		if (guild.RawFeatures.Contains("SEVEN_DAY_THREAD_ARCHIVE")) this.Features.Add(GuildFeaturesEnum.SevenDayThreadArchive);
+		if (guild.RawFeatures.Contains("THREE_DAY_THREAD_ARCHIVE")) this.Features.Add(GuildFeaturesEnum.ThreeDayThreadArchive);
+		if (guild.RawFeatures.Contains("FEATURABLE")) this.Features.Add(GuildFeaturesEnum.Featurable);
+		if (guild.RawFeatures.Contains("FORCE_RELAY")) this.Features.Add(GuildFeaturesEnum.ForceRelay);
+		if (guild.RawFeatures.Contains("LURKABLE")) this.Features.Add(GuildFeaturesEnum.Lurkable);
+		if (guild.RawFeatures.Contains("MEMBER_LIST_DISABLED")) this.Features.Add(GuildFeaturesEnum.MemberListDisabled);
 	}
 
 	/// <summary>
@@ -559,4 +570,64 @@ public enum GuildFeaturesEnum
 	/// Guild had early access to the soundboard feature.
 	/// </summary>
 	Soundboard,
+
+	/// <summary>
+	/// Ability to create and use store channels.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	Commerce,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	ExposedToBoostingTiersExperiment,
+
+	/// <summary>
+	/// Deprecated in favor of Community.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	PublicDisabled,
+
+	/// <summary>
+	/// Deprecated in favor of Community.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	Public,
+
+	/// <summary>
+	/// The guild can use the seven-day archive time for threads.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	SevenDayThreadArchive,
+
+	/// <summary>
+	/// The guild can use the three-day archive time for threads.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	ThreeDayThreadArchive,
+
+	/// <summary>
+	/// Previously used to control which servers were displayed under the "Featured" category in Discovery.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	Featurable,
+
+	/// <summary>
+	/// Shards connections to the guild to different nodes that relay information between each other.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	ForceRelay,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	Lurkable,
+
+	/// <summary>
+	/// Created for the Fortnite server blackout event on Oct 13, 2019, when viewing the member list it would show "There's nothing to see here.".
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	MemberListDisabled,
 }
