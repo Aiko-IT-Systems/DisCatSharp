@@ -391,52 +391,52 @@ public enum GuildFeaturesEnum
 	InvitesDisabled,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	ActivitiesAlpha,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	ActivitiesEmployee,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	ActivitiesInternalDev,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	AutomodTriggerKeywordFilter,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	AutomodTriggerMlSpamFilter,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	AutomodTriggerSpamLinkFilterGuild,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	AutomodDefaultList,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	Bfg,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	BoostingTiersExperimentMediumGuild,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	BoostingTiersExperimentSmallGuild,
 
@@ -446,27 +446,27 @@ public enum GuildFeaturesEnum
 	BotDeveloperEarlyAccess,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	CreatorMonetizable,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	CreatorMonetizableDisabled,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	CreatorMonetizableProvisional,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	CreatorMonetizableWhiteGlove,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	CreatorMonetizationApplicationAllowlist,
 
@@ -481,27 +481,27 @@ public enum GuildFeaturesEnum
 	ExposedToActivitiesWtpExperiment,
 
 	/// <summary>
-	/// Guild was previously in the 2021-11_guild_communication_disabled_guilds experiment.
+	/// Guild had early access to the user timeouts.
 	/// </summary>
 	GuildCommunicationDisabledGuilds,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	DisableGuildCommunication,
 
 	/// <summary>
-	/// Guild has access to the Home feature, enables Treatment 2 of the 2022-01_home_tab_guild experiment.
+	/// Guild has access to the Home feature.
 	/// </summary>
 	GuildHomeOverride,
 
 	/// <summary>
-	/// Guild was previously in the 2022-03_guild_automod_default_list experiment.
+	/// Guild had early access to the Automod Default List.
 	/// </summary>
 	GuildAutomodDefaultList,
 
 	/// <summary>
-	/// Guild was previously in the 2021-06_guild_role_subscriptions experiment.
+	/// Guild had early access to approving membership manually.
 	/// </summary>
 	GuildMemberVerificationExperiment,
 
@@ -511,7 +511,7 @@ public enum GuildFeaturesEnum
 	GuildRoleSubscriptionPurchaseFeedbackLoop,
 
 	/// <summary>
-	/// Guilds previously in the 2022-01_guild_role_subscription_trials experiment.
+	/// Guild was previously in the 2022-01_guild_role_subscription_trials experiment.
 	/// </summary>
 	GuildRoleSubscriptionTrials,
 
@@ -536,7 +536,7 @@ public enum GuildFeaturesEnum
 	RelayEnabled,
 
 	/// <summary>
-	/// 
+	/// Currently unknown.
 	/// </summary>
 	RestrictSpamRiskGuilds,
 
@@ -551,12 +551,12 @@ public enum GuildFeaturesEnum
 	ThreadsEnabledTesting,
 
 	/// <summary>
-	/// Guild was previously in the 2022-06_voice_channel_effects experiment.
+	/// Guild had early access to the voice channel effects.
 	/// </summary>
 	VoiceChannelEffects,
 
 	/// <summary>
-	/// Guild was previously in the 2021-12_soundboardl experiment.
+	/// Guild had early access to the soundboard feature.
 	/// </summary>
 	Soundboard,
 }
