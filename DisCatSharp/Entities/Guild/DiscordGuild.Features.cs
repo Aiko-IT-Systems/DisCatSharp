@@ -85,6 +85,40 @@ public class GuildFeatures
 		if (guild.RawFeatures.Contains("AUTO_MODERATION")) this.Features.Add(GuildFeaturesEnum.CanSetupAutoModeration);
 		if (guild.RawFeatures.Contains("GUILD_HOME_TEST")) this.Features.Add(GuildFeaturesEnum.GuildHomeTest);
 		if (guild.RawFeatures.Contains("INVITES_DISABLED")) this.Features.Add(GuildFeaturesEnum.InvitesDisabled);
+		if (guild.RawFeatures.Contains("ACTIVITIES_ALPHA")) this.Features.Add(GuildFeaturesEnum.ActivitiesAlpha);
+		if (guild.RawFeatures.Contains("ACTIVITIES_EMPLOYEE")) this.Features.Add(GuildFeaturesEnum.ActivitiesEmployee);
+		if (guild.RawFeatures.Contains("ACTIVITIES_INTERNAL_DEV")) this.Features.Add(GuildFeaturesEnum.ActivitiesInternalDev);
+		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_KEYWORD_FILTER")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerKeywordFilter);
+		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_ML_SPAM_FILTER")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerMlSpamFilter);
+		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_SPAM_LINK_FILTERGuild")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerSpamLinkFilterGuild);
+		if (guild.RawFeatures.Contains("AUTOMOD_DEFAULT_LIST")) this.Features.Add(GuildFeaturesEnum.AutomodDefaultList);
+		if (guild.RawFeatures.Contains("BFG")) this.Features.Add(GuildFeaturesEnum.Bfg);
+		if (guild.RawFeatures.Contains("BOOSTING_TIERS_EXPERIMENT_MEDIUM_GUILD")) this.Features.Add(GuildFeaturesEnum.BoostingTiersExperimentMediumGuild);
+		if (guild.RawFeatures.Contains("BOOSTING_TIERS_EXPERIMENT_SMALL_GUILD")) this.Features.Add(GuildFeaturesEnum.BoostingTiersExperimentSmallGuild);
+		if (guild.RawFeatures.Contains("BOT_DEVELOPER_EARLY_ACCESS")) this.Features.Add(GuildFeaturesEnum.BotDeveloperEarlyAccess);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizable);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_DISABLED")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableDisabled);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_PROVISIONAL")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableProvisional);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_WHITEGLOVE")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableWhiteGlove);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZATION_APPLICATION_ALLOWLIST")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizationApplicationAllowlist);
+		if (guild.RawFeatures.Contains("DEVELOPER_SUPPORT_SERVER")) this.Features.Add(GuildFeaturesEnum.DeveloperSupportServer);
+		if (guild.RawFeatures.Contains("EXPOSED_TO_ACTIVITIES_WTP_EXPERIMENT")) this.Features.Add(GuildFeaturesEnum.ExposedToActivitiesWtpExperiment);
+		if (guild.RawFeatures.Contains("GUILD_COMMUNICATION_DISABLED_GUILDS")) this.Features.Add(GuildFeaturesEnum.GuildCommunicationDisabledGuilds);
+		if (guild.RawFeatures.Contains("DISABLE_GUILD_COMMUNICATION")) this.Features.Add(GuildFeaturesEnum.DisableGuildCommunication);
+		if (guild.RawFeatures.Contains("GUILD_HOME_OVERRIDE")) this.Features.Add(GuildFeaturesEnum.GuildHomeOverride);
+		if (guild.RawFeatures.Contains("GUILD_AUTOMOD_DEFAULT_LIST")) this.Features.Add(GuildFeaturesEnum.GuildAutomodDefaultList);
+		if (guild.RawFeatures.Contains("GUILD_MEMBER_VERIFICATION_EXPERIMENT")) this.Features.Add(GuildFeaturesEnum.GuildMemberVerificationExperiment);
+		if (guild.RawFeatures.Contains("GUILD_ROLE_SUBSCRIPTION_PURCHASE_FEEDBACK_LOOP")) this.Features.Add(GuildFeaturesEnum.GuildRoleSubscriptionPurchaseFeedbackLoop);
+		if (guild.RawFeatures.Contains("GUILD_ROLE_SUBSCRIPTION_TRIALS")) this.Features.Add(GuildFeaturesEnum.GuildRoleSubscriptionTrials);
+		if (guild.RawFeatures.Contains("HAD_EARLY_ACTIVITIES_ACCESS")) this.Features.Add(GuildFeaturesEnum.HadEarlyActivitiesAccess);
+		if (guild.RawFeatures.Contains("INCREASED_THREAD_LIMIT")) this.Features.Add(GuildFeaturesEnum.IncreasedThreadLimit);
+		if (guild.RawFeatures.Contains("MOBILE_WEB_ROLE_SUBSCRIPTION_PURCHASE_PAGE")) this.Features.Add(GuildFeaturesEnum.MobileWebRoleSubscriptionPurchasePage);
+		if (guild.RawFeatures.Contains("RELAY_ENABLED")) this.Features.Add(GuildFeaturesEnum.RelayEnabled);
+		if (guild.RawFeatures.Contains("RESTRICT_SPAM_RISK_GUILDS")) this.Features.Add(GuildFeaturesEnum.RestrictSpamRiskGuilds);
+		if (guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE")) this.Features.Add(GuildFeaturesEnum.RoleSubscriptionsAvailableForPurchase);
+		if (guild.RawFeatures.Contains("THREADS_ENABLED_TESTING")) this.Features.Add(GuildFeaturesEnum.ThreadsEnabledTesting);
+		if (guild.RawFeatures.Contains("VOICE_CHANNEL_EFFECTS")) this.Features.Add(GuildFeaturesEnum.VoiceChannelEffects);
+		if (guild.RawFeatures.Contains("SOUNDBOARD")) this.Features.Add(GuildFeaturesEnum.Soundboard);
 	}
 
 	/// <summary>
