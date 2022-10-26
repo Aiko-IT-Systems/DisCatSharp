@@ -85,6 +85,51 @@ public class GuildFeatures
 		if (guild.RawFeatures.Contains("AUTO_MODERATION")) this.Features.Add(GuildFeaturesEnum.CanSetupAutoModeration);
 		if (guild.RawFeatures.Contains("GUILD_HOME_TEST")) this.Features.Add(GuildFeaturesEnum.GuildHomeTest);
 		if (guild.RawFeatures.Contains("INVITES_DISABLED")) this.Features.Add(GuildFeaturesEnum.InvitesDisabled);
+		if (guild.RawFeatures.Contains("ACTIVITIES_ALPHA")) this.Features.Add(GuildFeaturesEnum.ActivitiesAlpha);
+		if (guild.RawFeatures.Contains("ACTIVITIES_EMPLOYEE")) this.Features.Add(GuildFeaturesEnum.ActivitiesEmployee);
+		if (guild.RawFeatures.Contains("ACTIVITIES_INTERNAL_DEV")) this.Features.Add(GuildFeaturesEnum.ActivitiesInternalDev);
+		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_KEYWORD_FILTER")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerKeywordFilter);
+		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_ML_SPAM_FILTER")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerMlSpamFilter);
+		if (guild.RawFeatures.Contains("AUTOMOD_TRIGGER_SPAM_LINK_FILTERGuild")) this.Features.Add(GuildFeaturesEnum.AutomodTriggerSpamLinkFilterGuild);
+		if (guild.RawFeatures.Contains("AUTOMOD_DEFAULT_LIST")) this.Features.Add(GuildFeaturesEnum.AutomodDefaultList);
+		if (guild.RawFeatures.Contains("BFG")) this.Features.Add(GuildFeaturesEnum.Bfg);
+		if (guild.RawFeatures.Contains("BOOSTING_TIERS_EXPERIMENT_MEDIUM_GUILD")) this.Features.Add(GuildFeaturesEnum.BoostingTiersExperimentMediumGuild);
+		if (guild.RawFeatures.Contains("BOOSTING_TIERS_EXPERIMENT_SMALL_GUILD")) this.Features.Add(GuildFeaturesEnum.BoostingTiersExperimentSmallGuild);
+		if (guild.RawFeatures.Contains("BOT_DEVELOPER_EARLY_ACCESS")) this.Features.Add(GuildFeaturesEnum.BotDeveloperEarlyAccess);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizable);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_DISABLED")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableDisabled);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_PROVISIONAL")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableProvisional);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_WHITEGLOVE")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableWhiteGlove);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZATION_APPLICATION_ALLOWLIST")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizationApplicationAllowlist);
+		if (guild.RawFeatures.Contains("DEVELOPER_SUPPORT_SERVER")) this.Features.Add(GuildFeaturesEnum.DeveloperSupportServer);
+		if (guild.RawFeatures.Contains("EXPOSED_TO_ACTIVITIES_WTP_EXPERIMENT")) this.Features.Add(GuildFeaturesEnum.ExposedToActivitiesWtpExperiment);
+		if (guild.RawFeatures.Contains("GUILD_COMMUNICATION_DISABLED_GUILDS")) this.Features.Add(GuildFeaturesEnum.GuildCommunicationDisabledGuilds);
+		if (guild.RawFeatures.Contains("DISABLE_GUILD_COMMUNICATION")) this.Features.Add(GuildFeaturesEnum.DisableGuildCommunication);
+		if (guild.RawFeatures.Contains("GUILD_HOME_OVERRIDE")) this.Features.Add(GuildFeaturesEnum.GuildHomeOverride);
+		if (guild.RawFeatures.Contains("GUILD_AUTOMOD_DEFAULT_LIST")) this.Features.Add(GuildFeaturesEnum.GuildAutomodDefaultList);
+		if (guild.RawFeatures.Contains("GUILD_MEMBER_VERIFICATION_EXPERIMENT")) this.Features.Add(GuildFeaturesEnum.GuildMemberVerificationExperiment);
+		if (guild.RawFeatures.Contains("GUILD_ROLE_SUBSCRIPTION_PURCHASE_FEEDBACK_LOOP")) this.Features.Add(GuildFeaturesEnum.GuildRoleSubscriptionPurchaseFeedbackLoop);
+		if (guild.RawFeatures.Contains("GUILD_ROLE_SUBSCRIPTION_TRIALS")) this.Features.Add(GuildFeaturesEnum.GuildRoleSubscriptionTrials);
+		if (guild.RawFeatures.Contains("HAD_EARLY_ACTIVITIES_ACCESS")) this.Features.Add(GuildFeaturesEnum.HadEarlyActivitiesAccess);
+		if (guild.RawFeatures.Contains("INCREASED_THREAD_LIMIT")) this.Features.Add(GuildFeaturesEnum.IncreasedThreadLimit);
+		if (guild.RawFeatures.Contains("MOBILE_WEB_ROLE_SUBSCRIPTION_PURCHASE_PAGE")) this.Features.Add(GuildFeaturesEnum.MobileWebRoleSubscriptionPurchasePage);
+		if (guild.RawFeatures.Contains("RELAY_ENABLED")) this.Features.Add(GuildFeaturesEnum.RelayEnabled);
+		if (guild.RawFeatures.Contains("RESTRICT_SPAM_RISK_GUILDS")) this.Features.Add(GuildFeaturesEnum.RestrictSpamRiskGuilds);
+		if (guild.RawFeatures.Contains("ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE")) this.Features.Add(GuildFeaturesEnum.RoleSubscriptionsAvailableForPurchase);
+		if (guild.RawFeatures.Contains("THREADS_ENABLED_TESTING")) this.Features.Add(GuildFeaturesEnum.ThreadsEnabledTesting);
+		if (guild.RawFeatures.Contains("VOICE_CHANNEL_EFFECTS")) this.Features.Add(GuildFeaturesEnum.VoiceChannelEffects);
+		if (guild.RawFeatures.Contains("SOUNDBOARD")) this.Features.Add(GuildFeaturesEnum.Soundboard);
+
+		if (guild.RawFeatures.Contains("COMMERCE")) this.Features.Add(GuildFeaturesEnum.Commerce);
+		if (guild.RawFeatures.Contains("EXPOSED_TO_BOOSTING_TIERS_EXPERIMENT")) this.Features.Add(GuildFeaturesEnum.ExposedToBoostingTiersExperiment);
+		if (guild.RawFeatures.Contains("PUBLIC_DISABLED")) this.Features.Add(GuildFeaturesEnum.PublicDisabled);
+		if (guild.RawFeatures.Contains("PUBLIC")) this.Features.Add(GuildFeaturesEnum.Public);
+		if (guild.RawFeatures.Contains("SEVEN_DAY_THREAD_ARCHIVE")) this.Features.Add(GuildFeaturesEnum.SevenDayThreadArchive);
+		if (guild.RawFeatures.Contains("THREE_DAY_THREAD_ARCHIVE")) this.Features.Add(GuildFeaturesEnum.ThreeDayThreadArchive);
+		if (guild.RawFeatures.Contains("FEATURABLE")) this.Features.Add(GuildFeaturesEnum.Featurable);
+		if (guild.RawFeatures.Contains("FORCE_RELAY")) this.Features.Add(GuildFeaturesEnum.ForceRelay);
+		if (guild.RawFeatures.Contains("LURKABLE")) this.Features.Add(GuildFeaturesEnum.Lurkable);
+		if (guild.RawFeatures.Contains("MEMBER_LIST_DISABLED")) this.Features.Add(GuildFeaturesEnum.MemberListDisabled);
 	}
 
 	/// <summary>
@@ -355,4 +400,234 @@ public enum GuildFeaturesEnum
 	/// Guild has disabled invites.
 	/// </summary>
 	InvitesDisabled,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	ActivitiesAlpha,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	ActivitiesEmployee,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	ActivitiesInternalDev,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	AutomodTriggerKeywordFilter,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	AutomodTriggerMlSpamFilter,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	AutomodTriggerSpamLinkFilterGuild,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	AutomodDefaultList,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	Bfg,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	BoostingTiersExperimentMediumGuild,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	BoostingTiersExperimentSmallGuild,
+
+	/// <summary>
+	/// Guild has early access features for bot and library developers.
+	/// </summary>
+	BotDeveloperEarlyAccess,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	CreatorMonetizable,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	CreatorMonetizableDisabled,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	CreatorMonetizableProvisional,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	CreatorMonetizableWhiteGlove,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	CreatorMonetizationApplicationAllowlist,
+
+	/// <summary>
+	/// Guild is set as a support server for an app in App Directory.
+	/// </summary>
+	DeveloperSupportServer,
+
+	/// <summary>
+	/// Guild was previously in the 2021-11_activities_baseline_engagement_bundle experiment.
+	/// </summary>
+	ExposedToActivitiesWtpExperiment,
+
+	/// <summary>
+	/// Guild had early access to the user timeouts.
+	/// </summary>
+	GuildCommunicationDisabledGuilds,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	DisableGuildCommunication,
+
+	/// <summary>
+	/// Guild has access to the Home feature.
+	/// </summary>
+	GuildHomeOverride,
+
+	/// <summary>
+	/// Guild had early access to the Automod Default List.
+	/// </summary>
+	GuildAutomodDefaultList,
+
+	/// <summary>
+	/// Guild had early access to approving membership manually.
+	/// </summary>
+	GuildMemberVerificationExperiment,
+
+	/// <summary>
+	/// Guilds was previously in the 2022-05_mobile_web_role_subscription_purchase_page experiment.
+	/// </summary>
+	GuildRoleSubscriptionPurchaseFeedbackLoop,
+
+	/// <summary>
+	/// Guild was previously in the 2022-01_guild_role_subscription_trials experiment.
+	/// </summary>
+	GuildRoleSubscriptionTrials,
+
+	/// <summary>
+	/// Guild previously had access to voice channel activities and can bypass the boost level requirement.
+	/// </summary>
+	HadEarlyActivitiesAccess,
+
+	/// <summary>
+	/// Allows the guild to have 1,000+ active threads.
+	/// </summary>
+	IncreasedThreadLimit,
+
+	/// <summary>
+	/// Guild was previously in the 2022-05_mobile_web_role_subscription_purchase_page experiment.
+	/// </summary>
+	MobileWebRoleSubscriptionPurchasePage,
+
+	/// <summary>
+	/// Shards connections to the guild to different nodes that relay information between each other.
+	/// </summary>
+	RelayEnabled,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	RestrictSpamRiskGuilds,
+
+	/// <summary>
+	/// Allows guild's members to purchase role subscriptions.
+	/// </summary>
+	RoleSubscriptionsAvailableForPurchase,
+
+	/// <summary>
+	/// Used by bot developers to test their bots with threads in guilds with 5 or less members and a bot.
+	/// </summary>
+	ThreadsEnabledTesting,
+
+	/// <summary>
+	/// Guild had early access to the voice channel effects.
+	/// </summary>
+	VoiceChannelEffects,
+
+	/// <summary>
+	/// Guild had early access to the soundboard feature.
+	/// </summary>
+	Soundboard,
+
+	/// <summary>
+	/// Ability to create and use store channels.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	Commerce,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	ExposedToBoostingTiersExperiment,
+
+	/// <summary>
+	/// Deprecated in favor of Community.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	PublicDisabled,
+
+	/// <summary>
+	/// Deprecated in favor of Community.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	Public,
+
+	/// <summary>
+	/// The guild can use the seven-day archive time for threads.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	SevenDayThreadArchive,
+
+	/// <summary>
+	/// The guild can use the three-day archive time for threads.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	ThreeDayThreadArchive,
+
+	/// <summary>
+	/// Previously used to control which servers were displayed under the "Featured" category in Discovery.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	Featurable,
+
+	/// <summary>
+	/// Shards connections to the guild to different nodes that relay information between each other.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	ForceRelay,
+
+	/// <summary>
+	/// Currently unknown.
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	Lurkable,
+
+	/// <summary>
+	/// Created for the Fortnite server blackout event on Oct 13, 2019, when viewing the member list it would show "There's nothing to see here.".
+	/// </summary>
+	[Obsolete("This feature is depcreated")]
+	MemberListDisabled,
 }
