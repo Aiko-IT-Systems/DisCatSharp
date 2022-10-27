@@ -348,19 +348,23 @@
 		"content":[
 			{
 				"files":[
-					"api/**/**.yml",
-					"api/**/**.md",
-					"api/**.yml",
-					"api/**.md"
-				]
+					"**/**.yml",
+					"**/**.md",
+					"**.yml",
+					"**.md"
+				],
+				"src":"api/",
+				"dest":"api/"
 			},
 			{
 				"files":[
-					"libdev/**/**.yml",
-					"libdev/**/**.md",
-					"libdev/**.yml",
-					"libdev/**.md"
-				]
+					"**/**.yml",
+					"**/**.md",
+					"**.yml",
+					"**.md"
+				],
+				"src":"libdev/",
+				"dest":"libdev/"
 			},
 			{
 				"files":[
