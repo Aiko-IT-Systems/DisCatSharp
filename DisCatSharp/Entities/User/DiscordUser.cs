@@ -319,7 +319,7 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 		=> await this.Discord.ApiClient.GetUserAsync(this.Id);
 
 	/// <summary>
-	/// Gets additional informations about an application if the user is an bot.
+	/// Gets additional information about an application if the user is an bot.
 	/// </summary>
 	/// <returns>The rpc info or <see langword="null"/></returns>
 	/// <exception cref="NotFoundException">Thrown when the application does not exist.</exception>
