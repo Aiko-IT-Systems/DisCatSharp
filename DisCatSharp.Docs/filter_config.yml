@@ -6,7 +6,7 @@ apiRules:
 - exclude:
     uidRegex: ^DisCatSharp\.Configuration\.Tests$
 - include:
-    uidRegex: ^DisCatSharp$
+    uidRegex: ^DisCatSharp
 - exclude:
     uidRegex: ^Newtonsoft\.Json$
 - exclude:
