@@ -1,8 +1,8 @@
-# API Reference
 ---
 uid: api_index
 title: DisCatSharp Global API
 ---
+# API Reference
 
 Welcome to the DisCatSharp Global API reference.
 

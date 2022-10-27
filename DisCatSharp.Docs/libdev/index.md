@@ -1,8 +1,8 @@
-# API Reference
 ---
 uid: libdev_index
 title: DisCatSharp Library Development API
 ---
+# API Reference
 
 Welcome to the DisCatSharp Library Development API reference.
 

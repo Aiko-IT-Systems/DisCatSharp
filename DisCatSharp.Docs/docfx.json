@@ -355,8 +355,7 @@
 				],
 				"exclude":[
 					"libdev/**"
-				],
-				"version":"latest"
+				]
 			},
 			{
 				"files":[
@@ -381,15 +380,15 @@
 					"changelogs/**.yml",
 					"changelogs/**.md",
 					"natives/**.yml",
-					"natives/**.md"
+					"natives/**.md",
+					".htaccess"
 				],
 				"exclude":[
 					"**/bin/**",
 					"**/obj/**",
 					"_site/**",
 					"dcs/**"
-				],
-				"version":"latest"
+				]
 			}
 		],
 		"resource":[
@@ -403,8 +402,7 @@
 					"**/obj/**",
 					"_site/**",
 					"images/_**"
-				],
-				"version":"latest"
+				]
 			}
 		],
 		"overwrite":[],
@@ -427,12 +425,8 @@
 		},
 		"disableGitFeatures":false,
 		"exportRawModel":true,
-		"globalMetadataFiles":[
-
-		],
-		"fileMetadataFiles":[
-
-		],
+		"globalMetadataFiles":[],
+		"fileMetadataFiles":[],
 		"template":[
 			"dcs"
 		],
