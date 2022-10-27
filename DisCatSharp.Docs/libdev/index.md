@@ -5,8 +5,11 @@ title: DisCatSharp Library Development API
 ---
 
 Welcome to the DisCatSharp Library Development API reference.
+
 This documentation is intended for developers who wish to contribute to the DisCatSharp library.
+
 You find internal and private methods and properties here.
+
 
 ## Main packages
 - [DisCatSharp](xref:libdev_discatsharp_index)
