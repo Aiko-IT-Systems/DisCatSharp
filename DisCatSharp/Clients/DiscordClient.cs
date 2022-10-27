@@ -430,6 +430,17 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
+	/// Gets a applications rpc information.
+	/// </summary>
+	/// <param name="applicationId">Id of the application</param>
+	/// <returns>The requested application.</returns>
+	/// <exception cref="NotFoundException">Thrown when the application does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordRpcApplication> GetRpcApplicationAsync(ulong applicationId)
+		=> await this.ApiClient.GetApplicationInfoAsync(applicationId);
+
+	/// <summary>
 	/// Tries to get a user.
 	/// </summary>
 	/// <param name="userId">Id of the user.</param>

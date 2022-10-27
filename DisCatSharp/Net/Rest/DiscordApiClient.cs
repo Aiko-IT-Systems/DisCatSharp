@@ -5419,25 +5419,22 @@ public sealed class DiscordApiClient
 
 	#region Misc
 	/// <summary>
-	/// Gets the current application info async.
+	/// Gets the current application info.
 	/// </summary>
-
 	internal Task<TransportApplication> GetCurrentApplicationInfoAsync()
 		=> this.GetApplicationInfoAsync("@me");
 
 	/// <summary>
-	/// Gets the application info async.
+	/// Gets the application rpc info.
 	/// </summary>
 	/// <param name="applicationId">The application_id.</param>
-
-	internal Task<TransportApplication> GetApplicationInfoAsync(ulong applicationId)
-		=> this.GetApplicationInfoAsync(applicationId.ToString(CultureInfo.InvariantCulture));
+	internal Task<DiscordRpcApplication> GetApplicationInfoAsync(ulong applicationId)
+		=> this.GetApplicationRpcInfoAsync(applicationId.ToString(CultureInfo.InvariantCulture));
 
 	/// <summary>
-	/// Gets the application info async.
+	/// Gets the application info.
 	/// </summary>
 	/// <param name="applicationId">The application_id.</param>
-
 	private async Task<TransportApplication> GetApplicationInfoAsync(string applicationId)
 	{
 		var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id";
@@ -5450,10 +5447,24 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Gets the application info.
+	/// </summary>
+	/// <param name="applicationId">The application_id.</param>
+	private async Task<DiscordRpcApplication> GetApplicationRpcInfoAsync(string applicationId)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.RPC}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {application_id = applicationId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return JsonConvert.DeserializeObject<DiscordRpcApplication>(res.Response);
+	}
+
+	/// <summary>
 	/// Gets the application assets async.
 	/// </summary>
 	/// <param name="application">The application.</param>
-
 	internal async Task<IReadOnlyList<DiscordApplicationAsset>> GetApplicationAssetsAsync(DiscordApplication application)
 	{
 		var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id{Endpoints.ASSETS}";
@@ -5475,7 +5486,6 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Gets the gateway info async.
 	/// </summary>
-
 	internal async Task<GatewayInfo> GetGatewayInfoAsync()
 	{
 		var headers = Utilities.GetBaseHeaders();
