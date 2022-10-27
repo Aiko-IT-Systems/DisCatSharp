@@ -356,7 +356,6 @@
 				"exclude":[
 					"libdev/**"
 				],
-				"dest":"api/",
 				"version":"latest"
 			},
 			{
@@ -369,7 +368,6 @@
 				"exclude":[
 					"api/**"
 				],
-				"dest":"libdev/",
 				"version":"internal"
 			},
 			{
