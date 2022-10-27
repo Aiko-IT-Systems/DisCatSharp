@@ -354,7 +354,8 @@
 					"**.md"
 				],
 				"src":"api/",
-				"dest":"api/"
+				"dest":"api/",
+				"version":"latest"
 			},
 			{
 				"files":[
@@ -364,7 +365,8 @@
 					"**.md"
 				],
 				"src":"libdev/",
-				"dest":"libdev/"
+				"dest":"libdev/",
+				"version":"internal"
 			},
 			{
 				"files":[
