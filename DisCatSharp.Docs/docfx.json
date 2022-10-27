@@ -348,23 +348,27 @@
 		"content":[
 			{
 				"files":[
-					"**/**.yml",
-					"**/**.md",
-					"**.yml",
-					"**.md"
+					"api/**/**.yml",
+					"api/**/**.md",
+					"api/**.yml",
+					"api/**.md"
 				],
-				"src":"api/",
+				"exclude":[
+					"libdev/**"
+				],
 				"dest":"api/",
 				"version":"latest"
 			},
 			{
 				"files":[
-					"**/**.yml",
-					"**/**.md",
-					"**.yml",
-					"**.md"
+					"libdev/**/**.yml",
+					"libdev/**/**.md",
+					"libdev/**.yml",
+					"libdev/**.md"
 				],
-				"src":"libdev/",
+				"exclude":[
+					"api/**"
+				],
 				"dest":"libdev/",
 				"version":"internal"
 			},
@@ -386,7 +390,8 @@
 					"**/obj/**",
 					"_site/**",
 					"dcs/**"
-				]
+				],
+				"version":"latest"
 			}
 		],
 		"resource":[
@@ -400,21 +405,11 @@
 					"**/obj/**",
 					"_site/**",
 					"images/_**"
-				]
-			}
-		],
-		"overwrite":[
-			{
-				"files":[
-
 				],
-				"exclude":[
-					"**/bin/**",
-					"**/obj/**",
-					"_site/**"
-				]
+				"version":"latest"
 			}
 		],
+		"overwrite":[],
 		"dest":"_site",
 		"globalMetadata":{
 			"_appTitle": "DisCatSharp Docs",
