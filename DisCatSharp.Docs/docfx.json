@@ -356,6 +356,14 @@
 			},
 			{
 				"files":[
+					"libdev/**/**.yml",
+					"libdev/**/**.md",
+					"libdev/**.yml",
+					"libdev/**.md"
+				]
+			},
+			{
+				"files":[
 					"**.md",
 					"toc.yml",
 					"faq/**.yml",
