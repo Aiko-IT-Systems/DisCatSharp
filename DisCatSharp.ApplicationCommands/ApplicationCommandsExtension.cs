@@ -1561,7 +1561,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="parameters">The parameters.</param>
 	/// <param name="guildId">The optional guild id.</param>
-	internal static async Task<List<DiscordApplicationCommandOption>> ParseParametersAsync(IEnumerable<ParameterInfo> parameters, ulong? guildId)
+	internal static async Task<List<DiscordApplicationCommandOption>> ParseParametersAsync(IEnumerable<ParameterInfo> parameters, string commandName, ulong? guildId)
 	{
 		var options = new List<DiscordApplicationCommandOption>();
 		foreach (var parameter in parameters)
@@ -1569,7 +1569,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			//Gets the attribute
 			var optionAttribute = parameter.GetCustomAttribute<OptionAttribute>();
 			if (optionAttribute == null)
-				throw new ArgumentException("Arguments must have the Option attribute!");
+				throw new ArgumentException($"One or more arguments of the command '{commandName}' are missing the Option attribute!");
 
 			var minimumValue = parameter.GetCustomAttribute<MinimumValueAttribute>()?.Value ?? null;
 			var maximumValue = parameter.GetCustomAttribute<MaximumValueAttribute>()?.Value ?? null;
@@ -1579,9 +1579,9 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 			var autocompleteAttribute = parameter.GetCustomAttribute<AutocompleteAttribute>();
 			if (optionAttribute.Autocomplete && autocompleteAttribute == null)
-				throw new ArgumentException("Autocomplete options must have the Autocomplete attribute!");
+				throw new ArgumentException($"The command '{commandName}' has autocomplete enabled but is missing an autocomplete attribute!");
 			if (!optionAttribute.Autocomplete && autocompleteAttribute != null)
-				throw new ArgumentException("Setting an autocomplete provider requires the option to have autocomplete set to true!");
+				throw new ArgumentException($"The command '{commandName}' has an autocomplete provider but the option to have autocomplete set to false!");
 
 			//Sets the type
 			var type = parameter.ParameterType;
