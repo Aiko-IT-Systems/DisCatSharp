@@ -1282,6 +1282,30 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
 	}
+
+	internal async Task<ReadOnlyCollection<AutomodRule>> GetAutomodRulesAsync(ulong guildId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
+
+		var ret = JsonConvert.DeserializeObject<List<AutomodRule>>(res.Response);
+		return new ReadOnlyCollection<AutomodRule>(ret);
+	}
+
+	internal async Task<AutomodRule> GetAutoModRuleAsync(ulong guildId, ulong ruleId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules/:rule_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId, rule_id = ruleId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
+
+		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+		return ret;
+	}
 	#endregion
 
 	#region Guild Scheduled Events
