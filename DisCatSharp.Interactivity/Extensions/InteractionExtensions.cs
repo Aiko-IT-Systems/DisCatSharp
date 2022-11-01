@@ -109,7 +109,7 @@ public static class InteractionExtensions
 				return new PaginatedModalResponse { TimedOut = true };
 
 			foreach (var submissions in modalResult.Result.Interaction.Data.Components)
-					caughtResponses.Add(submissions.CustomId, submissions.Value);
+				caughtResponses.Add(submissions.CustomId, submissions.Value);
 
 			previousInteraction = modalResult.Result.Interaction;
 		}

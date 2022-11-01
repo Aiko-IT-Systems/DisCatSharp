@@ -140,13 +140,13 @@ public class DiscordConnection
 	/// </summary>
 	[JsonProperty("show_activity", NullValueHandling = NullValueHandling.Ignore)]
 	public bool ShowActivity { get; internal set; }
-	
+
 	/// <summary>
 	/// Whether the connection will sync friends.
 	/// </summary>
 	[JsonProperty("friend_sync", NullValueHandling = NullValueHandling.Ignore)]
-    public bool? FriendSync { get; internal set; }
-	
+	public bool? FriendSync { get; internal set; }
+
 	/// <summary>
 	/// Whether this connection supports console voice transfer.
 	/// Currently in beta rollout for XBox. Playstation soon.

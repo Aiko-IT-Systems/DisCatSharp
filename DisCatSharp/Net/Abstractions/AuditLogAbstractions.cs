@@ -375,8 +375,8 @@ internal sealed class AuditLogActionChange
 	/// Gets the old values.
 	/// </summary>
 	[JsonIgnore]
-	public IEnumerable<JObject> OldValues
-		=> (this.OldValue as JArray)?.ToObject<IEnumerable<JObject>>();
+	public IReadOnlyList<JObject> OldValues
+		=> (this.OldValue as JArray)?.ToObject<IReadOnlyList<JObject>>();
 
 	/// <summary>
 	/// Gets the old value ulong.
@@ -403,8 +403,8 @@ internal sealed class AuditLogActionChange
 	/// Gets the new values.
 	/// </summary>
 	[JsonIgnore]
-	public IEnumerable<JObject> NewValues
-		=> (this.NewValue as JArray)?.ToObject<IEnumerable<JObject>>();
+	public IReadOnlyList<JObject> NewValues
+		=> (this.NewValue as JArray)?.ToObject<IReadOnlyList<JObject>>();
 
 	/// <summary>
 	/// Gets the new value ulong.
@@ -508,7 +508,7 @@ internal sealed class AuditLogAction
 	/// Gets or sets the changes.
 	/// </summary>
 	[JsonProperty("changes")]
-	public IEnumerable<AuditLogActionChange> Changes { get; set; }
+	public IReadOnlyList<AuditLogActionChange> Changes { get; set; }
 
 	/// <summary>
 	/// Gets or sets the options.
@@ -532,38 +532,38 @@ internal sealed class AuditLog
 	/// Gets or sets the webhooks.
 	/// </summary>
 	[JsonProperty("webhooks")]
-	public IEnumerable<AuditLogWebhook> Webhooks { get; set; }
+	public IReadOnlyList<AuditLogWebhook> Webhooks { get; set; }
 
 	/// <summary>
 	/// Gets or sets the users.
 	/// </summary>
 	[JsonProperty("users")]
-	public IEnumerable<AuditLogUser> Users { get; set; }
+	public IReadOnlyList<AuditLogUser> Users { get; set; }
 
 	/// <summary>
 	/// Gets or sets the entries.
 	/// </summary>
 	[JsonProperty("audit_log_entries")]
-	public IEnumerable<AuditLogAction> Entries { get; set; }
+	public IReadOnlyList<AuditLogAction> Entries { get; set; }
 
 	/// <summary>
 	/// Gets or sets the scheduled events.
 	/// </summary>
 	[JsonProperty("guild_scheduled_events")]
-	public IEnumerable<AuditLogGuildScheduledEvent> ScheduledEvents { get; set; }
+	public IReadOnlyList<AuditLogGuildScheduledEvent> ScheduledEvents { get; set; }
 
 	/// <summary>
 	/// Gets or sets the threads.
 	/// </summary>
 	[JsonProperty("threads")]
-	public IEnumerable<AuditLogThread> Threads { get; set; }
+	public IReadOnlyList<AuditLogThread> Threads { get; set; }
 
 	/// <summary>
 	/// Gets or sets the integrations.
 	/// Twitch related.
 	/// </summary>
 	[JsonProperty("integrations")]
-	public IEnumerable<AuditLogIntegration> Integrations { get; set; }
+	public IReadOnlyList<AuditLogIntegration> Integrations { get; set; }
 
 	/*
         /// <summary>
@@ -571,6 +571,6 @@ internal sealed class AuditLog
         /// Related to Permissions V2.
         /// </summary>
         [JsonProperty("application_commands")]
-        public IEnumerable<AuditLogApplicationCommand> ApplicationCommands { get; set; }
+        public IReadOnlyList<AuditLogApplicationCommand> ApplicationCommands { get; set; }
         */
 }

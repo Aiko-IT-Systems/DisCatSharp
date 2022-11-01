@@ -364,8 +364,8 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="predicate">A filter predicate.</param>
 	/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
 	/// <exception cref="ArgumentException">Thrown when the Provided message does not contain any dropdowns</exception>
-	public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, TimeSpan? timeoutOverride = null)
-		=> this.WaitForSelectAsync(message, predicate, this.GetCancellationToken(timeoutOverride));
+	public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, ComponentType selectType, TimeSpan? timeoutOverride = null)
+		=> this.WaitForSelectAsync(message, predicate, selectType, this.GetCancellationToken(timeoutOverride));
 
 	/// <summary>
 	/// Waits for any dropdown to be interacted with.
@@ -374,7 +374,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="predicate">A filter predicate.</param>
 	/// <param name="token">A token that can be used to cancel interactivity. Pass <see cref="CancellationToken.None"/> to wait indefinitely.</param>
 	/// <exception cref="ArgumentException">Thrown when the Provided message does not contain any dropdowns</exception>
-	public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, CancellationToken token)
+	public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, ComponentType selectType, CancellationToken token)
 	{
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
@@ -382,12 +382,12 @@ public class InteractivityExtension : BaseExtension
 		if (!message.Components.Any())
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Select))
+		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type == selectType))
 			throw new ArgumentException("Message does not contain any select components.");
 
 		var result = await this
 			._componentEventWaiter
-			.WaitForMatchAsync(new ComponentMatchRequest(message, c => c.Interaction.Data.ComponentType is ComponentType.Select && predicate(c), token))
+			.WaitForMatchAsync(new ComponentMatchRequest(message, c => c.Interaction.Data.ComponentType == selectType && predicate(c), token))
 			.ConfigureAwait(false);
 
 		return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
@@ -401,8 +401,8 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="id">The Id of the dropdown to wait on.</param>
 	/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
 	/// <exception cref="ArgumentException">Thrown when the message does not have any dropdowns or any dropdown with the specified Id.</exception>
-	public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, string id, TimeSpan? timeoutOverride = null)
-		=> this.WaitForSelectAsync(message, id, this.GetCancellationToken(timeoutOverride));
+	public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, string id, ComponentType selectType, TimeSpan? timeoutOverride = null)
+		=> this.WaitForSelectAsync(message, id, selectType, this.GetCancellationToken(timeoutOverride));
 
 	/// <summary>
 	/// Waits for a dropdown to be interacted with.
@@ -411,7 +411,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="id">The Id of the dropdown to wait on.</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 	/// <exception cref="ArgumentException">Thrown when the message does not have any dropdowns or any dropdown with the specified Id.</exception>
-	public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, string id, CancellationToken token)
+	public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, string id, ComponentType selectType, CancellationToken token)
 	{
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
@@ -419,15 +419,15 @@ public class InteractivityExtension : BaseExtension
 		if (!message.Components.Any())
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Select))
+		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type == selectType))
 			throw new ArgumentException("Message does not contain any select components.");
 
-		if (message.Components.SelectMany(c => c.Components).OfType<DiscordSelectComponent>().All(c => c.CustomId != id))
+		if (message.Components.SelectMany(c => c.Components).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
 			throw new ArgumentException($"Message does not contain select component with Id of '{id}'.");
 
 		var result = await this
 			._componentEventWaiter
-			.WaitForMatchAsync(new ComponentMatchRequest(message, (c) => c.Interaction.Data.ComponentType is ComponentType.Select && c.Id == id, token))
+			.WaitForMatchAsync(new ComponentMatchRequest(message, (c) => c.Interaction.Data.ComponentType == selectType && c.Id == id, token))
 			.ConfigureAwait(false);
 
 		return new InteractivityResult<ComponentInteractionCreateEventArgs>(result is null, result);
@@ -441,8 +441,8 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="id">The Id of the dropdown to wait on.</param>
 	/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
 	/// <exception cref="ArgumentException">Thrown when the message does not have any dropdowns or any dropdown with the specified Id.</exception>
-	public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, DiscordUser user, string id, TimeSpan? timeoutOverride = null)
-		=> this.WaitForSelectAsync(message, user, id, this.GetCancellationToken(timeoutOverride));
+	public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, DiscordUser user, string id, ComponentType selectType, TimeSpan? timeoutOverride = null)
+		=> this.WaitForSelectAsync(message, user, id, selectType, this.GetCancellationToken(timeoutOverride));
 
 	/// <summary>
 	/// Waits for a dropdown to be interacted with by a specific user.
@@ -452,7 +452,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="id">The Id of the dropdown to wait on.</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 	/// <exception cref="ArgumentException">Thrown when the message does not have any dropdowns or any dropdown with the specified Id.</exception>
-	public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, DiscordUser user, string id, CancellationToken token)
+	public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, DiscordUser user, string id, ComponentType selectType, CancellationToken token)
 	{
 		if (message.Author != this.Client.CurrentUser)
 			throw new InvalidOperationException("Interaction events are only sent to the application that created them.");
@@ -460,10 +460,10 @@ public class InteractivityExtension : BaseExtension
 		if (!message.Components.Any())
 			throw new ArgumentException("Provided message does not contain any components.");
 
-		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type is ComponentType.Select))
+		if (!message.Components.SelectMany(c => c.Components).Any(c => c.Type == selectType))
 			throw new ArgumentException("Message does not contain any select components.");
 
-		if (message.Components.SelectMany(c => c.Components).OfType<DiscordSelectComponent>().All(c => c.CustomId != id))
+		if (message.Components.SelectMany(c => c.Components).OfType<DiscordBaseSelectComponent>().All(c => c.CustomId != id))
 			throw new ArgumentException($"Message does not contain select with Id of '{id}'.");
 
 		var result = await this

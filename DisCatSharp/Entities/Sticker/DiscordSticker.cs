@@ -93,7 +93,7 @@ public class DiscordSticker : SnowflakeObject, IEquatable<DiscordSticker>
 	/// Gets the list of tags for the sticker.
 	/// </summary>
 	[JsonIgnore]
-	public IEnumerable<string> Tags
+	public IReadOnlyList<string> Tags
 		=> this.InternalTags != null ? this.InternalTags.Split(',') : Array.Empty<string>();
 
 	/// <summary>

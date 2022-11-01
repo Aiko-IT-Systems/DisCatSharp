@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Net.Models;
@@ -34,11 +35,20 @@ namespace DisCatSharp.Entities;
 /// </summary>
 public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 {
+	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+	public new ulong? Id;
+
 	/// <summary>
 	/// Gets the channel id this tag belongs to.
 	/// </summary>
 	[JsonIgnore]
 	internal ulong ChannelId;
+
+	/// <summary>
+	/// Gets the channel this tag belongs to.
+	/// </summary>
+	[JsonIgnore]
+	internal DiscordChannel Channel;
 
 	/// <summary>
 	/// Gets the name of this forum post tag.
@@ -56,14 +66,14 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 	/// Gets the unicode emoji of the forum post tag.
 	/// </summary>
 	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Include)]
-	public string UnicodeEmojiString { get; internal set; }
+	public string? UnicodeEmojiString { get; internal set; }
 
 
 	/// <summary>
 	/// Gets whether the tag can only be used by moderators.
 	/// </summary>
 	[JsonProperty("moderated", NullValueHandling = NullValueHandling.Ignore)]
-	public bool Moderated { get; internal set; }
+	public bool? Moderated { get; internal set; }
 
 	/// <summary>
 	/// Gets the emoji.
@@ -73,6 +83,28 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 		=> this.UnicodeEmojiString != null ? DiscordEmoji.FromName(this.Discord, $":{this.UnicodeEmojiString}:", false) : DiscordEmoji.FromGuildEmote(this.Discord, this.EmojiId.Value);
 
 	/// <summary>
+	/// Initializes a new instance of the <see cref="ForumPostTag"/> class.
+	/// </summary>
+	internal ForumPostTag()
+	{ }
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="ForumPostTag"/> class.
+	/// </summary>
+	/// <param name="name">The tags name.</param>
+	/// <param name="emojiId">The tags emoji id. Defaults to <see langword="null"/>.</param>
+	/// <param name="emojiName">The tags emoji name (unicode emoji). Defaults to <see langword="null"/>.</param>
+	/// <param name="moderated">Whether this tag can only be applied by moderators. Defaults to <see langword="false"/>.</param>
+	public ForumPostTag(string name, ulong? emojiId = null, string? emojiName = null, bool moderated = false)
+	{
+		this.Id = null;
+		this.Name = name;
+		this.EmojiId = emojiId;
+		this.UnicodeEmojiString = emojiName;
+		this.Moderated = moderated;
+	}
+
+	/// <summary>
 	/// Modifies the tag.
 	/// </summary>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
@@ -80,15 +112,26 @@ public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
 	{
 		var mdl = new ForumPostTagEditModel();
 		action(mdl);
-		return await this.Discord.ApiClient.ModifyForumTagAsync(this.Id, this.ChannelId, mdl.Name.HasValue ? mdl.Name.Value : this.Name, mdl.Emoji.HasValue ? mdl.Emoji.Value : this.Emoji, mdl.Moderated.HasValue ? mdl.Moderated.Value : this.Moderated, mdl.AuditLogReason);
+		var res = await this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, null, null, null, null, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList().Append(new ForumPostTag()
+		{
+			Id = this.Id,
+			Discord = this.Discord,
+			ChannelId = this.ChannelId,
+			Channel = this.Channel,
+			EmojiId = mdl.Emoji.HasValue ? mdl.Emoji.Value.Id : this.EmojiId,
+			Moderated = mdl.Moderated.HasValue ? mdl.Moderated.Value : this.Moderated,
+			Name = mdl.Name.HasValue ? mdl.Name.Value : this.Name,
+			UnicodeEmojiString = mdl.Emoji.HasValue ? mdl.Emoji.Value.Name : this.UnicodeEmojiString
+		}).ToList(), null, null, null, null, null, null, null, mdl.AuditLogReason);
+		return res.InternalAvailableTags.First(x => x.Id == this.Id);
 	}
 
 	/// <summary>
 	/// Deletes the tag.
 	/// </summary>
 	/// <exception cref="NotImplementedException">This method is currently not implemented.</exception>
-	public Task DeleteForumPostTagAsync(string reason = null)
-		=> this.Discord.ApiClient.DeleteForumTagAsync(this.Id, this.ChannelId, reason);
+	public Task DeleteAsync(string reason = null)
+		=> this.Discord.ApiClient.ModifyForumChannelAsync(this.ChannelId, null, null, Optional.None, Optional.None, null, Optional.None, this.Channel.InternalAvailableTags.Where(x => x.Id != this.Id).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason);
 
 	/// <summary>
 	/// Checks whether this <see cref="ForumPostTag"/> is equal to another object.

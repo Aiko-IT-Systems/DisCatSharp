@@ -17,8 +17,12 @@
 
   <PropertyGroup>
     <PackageId>DisCatSharp.Common</PackageId>
-    <Description>Assortment of various common types and utilities for DisCatSharp's projects.</Description>
-    <PackageTags>common utilities dotnet dotnet-core dotnetfx netfx netcore csharp</PackageTags>
+	<Description>
+DisCatSharp Common Extension
+
+Common tools for DisCatSharp, like regexes and converters!
+	</Description>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Common Tools</PackageTags>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 

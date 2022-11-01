@@ -201,7 +201,7 @@ public class Command
 	/// <returns>Whether this command is equal to another object.</returns>
 	public override bool Equals(object obj)
 	{
-		var o1 = obj as object;
+		var o1 = obj;
 		var o2 = this as object;
 
 		if (o1 == null && o2 != null)

@@ -16,8 +16,8 @@
 
     <PropertyGroup>
       <PackageId>DisCatSharp.Configuration</PackageId>
-      <Description>Configuration for DisCatSharp.</Description>
-      <PackageTags>discord, discord-api, bots, discord-bots, net-sdk, dcs, discatsharp, csharp, dotnet, vb-net, fsharp</PackageTags>
+      <Description>Configuration for the DisCatSharp Hosting Extension.</Description>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Hosting,Web,Configuration</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

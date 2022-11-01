@@ -45,6 +45,13 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 	public string Name { get; internal set; }
 
+
+	/// <summary>
+	/// Gets the description of this role.
+	/// </summary>
+	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+	public string Description { get; internal set; }
+
 	/// <summary>
 	/// Gets the color of this role.
 	/// </summary>

@@ -523,13 +523,14 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var mdl = new ForumChannelEditModel();
 		action(mdl);
 
-		if (mdl.DefaultAutoArchiveDuration.HasValue)
-			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value))
+		if (mdl.DefaultAutoArchiveDuration.HasValue && mdl.DefaultAutoArchiveDuration.Value.HasValue)
+			if (!Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.DefaultAutoArchiveDuration.Value.Value))
 				throw new NotSupportedException($"Cannot modify DefaultAutoArchiveDuration. Guild needs boost tier {(mdl.DefaultAutoArchiveDuration.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 
-
-		return this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Template, mdl.Nsfw,
-			mdl.Parent.Map(p => p?.Id), mdl.DefaultReactionEmoji, mdl.PerUserRateLimit, mdl.PostCreateUserRateLimit,
+		return mdl.AvailableTags.HasValue && mdl.AvailableTags.Value.Count > 20
+			? throw new NotSupportedException("Cannot have more than 20 tags in a forum channel.")
+			: (Task)this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, mdl.Name, mdl.Position, mdl.Topic, mdl.Template, mdl.Nsfw,
+			mdl.Parent.Map(p => p?.Id), mdl.AvailableTags, mdl.DefaultReactionEmoji, mdl.PerUserRateLimit, mdl.PostCreateUserRateLimit,
 			mdl.DefaultSortOrder, mdl.DefaultAutoArchiveDuration, mdl.PermissionOverwrites, mdl.Flags, mdl.AuditLogReason);
 	}
 
@@ -646,6 +647,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 			{
 				xo.Discord = this.Discord;
 				xo.ChannelId = this.Id;
+				xo.Channel = this;
 			}
 		}
 	}
@@ -1077,12 +1079,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordThreadChannel> CreatePostAsync(string name, DiscordMessageBuilder builder, int? rateLimitPerUser = null, IEnumerable<ForumPostTag>? tags = null, string reason = null)
-	{
-		if (this.Type != ChannelType.Forum)
-			throw new NotSupportedException("Parent channel must be forum.");
-		else
-			return await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, null, null, rateLimitPerUser, tags, builder, true, reason);
-	}
+		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Parent channel must be forum.") : await this.Discord.ApiClient.CreateThreadAsync(this.Id, null, name, null, null, rateLimitPerUser, tags, builder, true, reason);
 
 	/// <summary>
 	/// Gets joined archived private threads. Can contain more threads.
@@ -1133,6 +1130,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var tag = this.InternalAvailableTags.First(x => x.Id == id);
 		tag.Discord = this.Discord;
 		tag.ChannelId = this.Id;
+		tag.Channel = this;
 		return tag;
 	}
 
@@ -1162,8 +1160,18 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the tag does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<ForumPostTag> CreateForumPostTagAsync(string name, DiscordEmoji emoji, bool moderated = false, string reason = null)
-		=> await this.Discord.ApiClient.CreateForumTagAsync(this.Id, name, emoji, moderated, reason);
+	public async Task<DiscordChannel> CreateForumPostTagAsync(string name, DiscordEmoji emoji = null, bool moderated = false, string reason = null)
+		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Channel needs to be type of Forum") :
+		this.AvailableTags.Count == 20 ?
+		throw new NotSupportedException("Cannot have more than 20 tags in a forum channel.") :
+		await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags.Append(new ForumPostTag()
+		{
+			Name = name,
+			EmojiId = emoji != null && emoji.Id != 0 ? emoji.Id : null,
+			UnicodeEmojiString = emoji?.Id == null || emoji?.Id == 0 ? emoji?.Name ?? null : null,
+			Moderated = moderated,
+			Id = null
+		}).ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason);
 
 	/// <summary>
 	/// Deletes a forum channel tag.
@@ -1174,8 +1182,8 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 	/// <exception cref="NotFoundException">Thrown when the tag does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task DeleteForumPostTag(ulong id, string reason = null)
-		=> this.Discord.ApiClient.DeleteForumTagAsync(id, this.Id, reason);
+	public async Task<DiscordChannel> DeleteForumPostTag(ulong id, string reason = null)
+		=> this.Type != ChannelType.Forum ? throw new NotSupportedException("Channel needs to be type of Forum") : await this.Discord.ApiClient.ModifyForumChannelAsync(this.Id, null, null, Optional.None, Optional.None, null, Optional.None, this.InternalAvailableTags?.Where(x => x.Id != id)?.ToList(), Optional.None, Optional.None, Optional.None, Optional.None, Optional.None, null, Optional.None, reason);
 
 	#endregion
 

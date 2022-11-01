@@ -60,7 +60,7 @@ public partial class DiscordGuild
 			rmn = Math.Min(100, rmn);
 			if (rmn <= 0) break;
 
-			var alr = await this.Discord.ApiClient.GetAuditLogsAsync(this.Id, rmn, null, last == 0 ? null : (ulong?)last, byMember?.Id, (int?)actionType).ConfigureAwait(false);
+			var alr = await this.Discord.ApiClient.GetAuditLogsAsync(this.Id, rmn, null, last == 0 ? null : last, byMember?.Id, (int?)actionType).ConfigureAwait(false);
 			ac = alr.Entries.Count();
 			tc += ac;
 			if (ac > 0)
@@ -475,8 +475,8 @@ public partial class DiscordGuild
 
 								entryovr.TargetIdChange = new PropertyChange<ulong?>
 								{
-									Before = p1 ? (ulong?)t1 : null,
-									After = p2 ? (ulong?)t2 : null
+									Before = p1 ? t1 : null,
+									After = p2 ? t2 : null
 								};
 								break;
 
@@ -595,8 +595,8 @@ public partial class DiscordGuild
 
 								entryrol.ColorChange = new PropertyChange<int?>
 								{
-									Before = p1 ? (int?)t3 : null,
-									After = p2 ? (int?)t4 : null
+									Before = p1 ? t3 : null,
+									After = p2 ? t4 : null
 								};
 								break;
 
@@ -675,8 +675,8 @@ public partial class DiscordGuild
 
 								entryinv.MaxAgeChange = new PropertyChange<int?>
 								{
-									Before = p1 ? (int?)t3 : null,
-									After = p2 ? (int?)t4 : null
+									Before = p1 ? t3 : null,
+									After = p2 ? t4 : null
 								};
 								break;
 
@@ -736,8 +736,8 @@ public partial class DiscordGuild
 
 								entryinv.UsesChange = new PropertyChange<int?>
 								{
-									Before = p1 ? (int?)t3 : null,
-									After = p2 ? (int?)t4 : null
+									Before = p1 ? t3 : null,
+									After = p2 ? t4 : null
 								};
 								break;
 
@@ -747,8 +747,8 @@ public partial class DiscordGuild
 
 								entryinv.MaxUsesChange = new PropertyChange<int?>
 								{
-									Before = p1 ? (int?)t3 : null,
-									After = p2 ? (int?)t4 : null
+									Before = p1 ? t3 : null,
+									After = p2 ? t4 : null
 								};
 								break;
 
@@ -812,8 +812,8 @@ public partial class DiscordGuild
 
 								entrywhk.TypeChange = new PropertyChange<int?>
 								{
-									Before = p1 ? (int?)t3 : null,
-									After = p2 ? (int?)t4 : null
+									Before = p1 ? t3 : null,
+									After = p2 ? t4 : null
 								};
 								break;
 
