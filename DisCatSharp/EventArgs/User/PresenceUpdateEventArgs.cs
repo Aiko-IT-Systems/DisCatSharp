@@ -57,16 +57,6 @@ public class PresenceUpdateEventArgs : DiscordEventArgs
 	public DiscordPresence PresenceAfter { get; internal set; }
 
 	/// <summary>
-	/// Gets the user prior to presence update.
-	/// </summary>
-	public DiscordUser UserBefore { get; internal set; }
-
-	/// <summary>
-	/// Gets the user after the presence update.
-	/// </summary>
-	public DiscordUser UserAfter { get; internal set; }
-
-	/// <summary>
 	/// Initializes a new instance of the <see cref="PresenceUpdateEventArgs"/> class.
 	/// </summary>
 	internal PresenceUpdateEventArgs(IServiceProvider provider) : base(provider) { }

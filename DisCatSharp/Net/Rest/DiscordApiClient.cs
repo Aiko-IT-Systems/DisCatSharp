@@ -27,9 +27,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Channels;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
@@ -967,7 +965,7 @@ public sealed class DiscordApiClient
 
 		var ret = json.ToDiscordObject<DiscordWidget>();
 		ret.Discord = this.Discord;
-		ret.Guild = this.Discord.Guilds[guildId];
+		ret.Guild = (this.Discord.Guilds.ContainsKey(guildId)) ? this.Discord.Guilds[guildId] : null;
 
 		ret.Channels = ret.Guild == null
 			? rawChannels.Select(r => new DiscordChannel
@@ -1684,7 +1682,8 @@ public sealed class DiscordApiClient
 			DefaultReactionEmoji = defaultReactionEmoji,
 			PermissionOverwrites = restoverwrites,
 			DefaultSortOrder = defaultSortOrder,
-			Flags = flags
+			Flags = flags,
+			Type = ChannelType.Forum
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1760,11 +1759,11 @@ public sealed class DiscordApiClient
 		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
 	}
 
-	internal Task ModifyForumChannelAsync(ulong channelId, string name, int? position,
+	internal async Task<DiscordChannel> ModifyForumChannelAsync(ulong channelId, string name, int? position,
 		Optional<string> topic, Optional<string> template, bool? nsfw,
-		Optional<ulong?> parent, Optional<ForumReactionEmoji> defaultReactionEmoji,
-		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit, Optional<ForumPostSortOrder> defaultSortOrder,
-		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
+		Optional<ulong?> parent, Optional<List<ForumPostTag>?> availableTags, Optional<ForumReactionEmoji> defaultReactionEmoji,
+		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit, Optional<ForumPostSortOrder?> defaultSortOrder,
+		Optional<ThreadAutoArchiveDuration?> defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
@@ -1788,7 +1787,8 @@ public sealed class DiscordApiClient
 			DefaultReactionEmoji = defaultReactionEmoji,
 			PermissionOverwrites = restoverwrites,
 			DefaultSortOrder = defaultSortOrder,
-			Flags = flags
+			Flags = flags,
+			AvailableTags = availableTags
 		};
 
 		var headers = Utilities.GetBaseHeaders();
@@ -1799,100 +1799,12 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { channel_id = channelId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
-	}
 
-	internal async Task<ForumPostTag> CreateForumTagAsync(ulong channelId, string name, DiscordEmoji emoji, bool moderated, string reason)
-	{
-		var pld = new RestForumPostTagPayloads
-		{
-			Name = name,
-			Moderated = moderated
-		};
-		if (emoji != null)
-			if (emoji.Id == 0)
-			{
-				pld.Emoji = null;
-				pld.UnicodeEmojiString = emoji.Name;
-			}
-			else
-			{
-				pld.Emoji = emoji.Id;
-				pld.UnicodeEmojiString = null;
-			}
-		else
-		{
-			pld.Emoji = null;
-			pld.UnicodeEmojiString = null;
-		}
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, DiscordJson.SerializeObject(pld));
+		var ret = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
+		ret.Initialize(this.Discord);
 
-		var headers = Utilities.GetBaseHeaders();
-		if (!string.IsNullOrWhiteSpace(reason))
-			headers.Add(REASON_HEADER_NAME, reason);
-
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.TAGS}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { channel_id = channelId }, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, DiscordJson.SerializeObject(pld));
-		var channel = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
-		channel.Discord = this.Discord;
-		var tag = channel.InternalAvailableTags.First(x => x.Name == name);
-		tag.Discord = this.Discord;
-		return tag;
-	}
-
-	internal async Task<ForumPostTag> ModifyForumTagAsync(ulong id, ulong channelId, string name, DiscordEmoji emoji = null, bool moderated = false, string reason = null)
-	{
-		var pld = new RestForumPostTagPayloads
-		{
-			Name = name,
-			Moderated = moderated
-		};
-		if (emoji != null)
-			if (emoji.Id == 0)
-			{
-				pld.Emoji = null;
-				pld.UnicodeEmojiString = emoji.Name;
-			}
-			else
-			{
-				pld.Emoji = emoji.Id;
-				pld.UnicodeEmojiString = null;
-			}
-		else
-		{
-			pld.Emoji = null;
-			pld.UnicodeEmojiString = null;
-		}
-
-		var headers = Utilities.GetBaseHeaders();
-		if (!string.IsNullOrWhiteSpace(reason))
-			headers.Add(REASON_HEADER_NAME, reason);
-
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.TAGS}/:tag_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { channel_id = channelId, tag_id = id }, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await  this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, headers, DiscordJson.SerializeObject(pld));
-		var channel = JsonConvert.DeserializeObject<DiscordChannel>(res.Response);
-		channel.Discord = this.Discord;
-		var tag = channel.InternalAvailableTags.First(x => x.Name == name);
-		tag.Discord = this.Discord;
-		return tag;
-	}
-
-	internal Task DeleteForumTagAsync(ulong id, ulong channelId, string reason)
-	{
-		var headers = Utilities.GetBaseHeaders();
-		if (!string.IsNullOrWhiteSpace(reason))
-			headers.Add(REASON_HEADER_NAME, reason);
-
-		var route = $"{Endpoints.CHANNELS}/:channel_id{Endpoints.TAGS}/:tag_id";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { channel_id = channelId, tag_id = id }, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers);
+		return ret;
 	}
 
 	/// <summary>
@@ -1962,16 +1874,16 @@ public sealed class DiscordApiClient
 	/// <param name="replyMessageId">The reply message id.</param>
 	/// <param name="mentionReply">If true, mention reply.</param>
 	/// <param name="failOnInvalidReply">If true, fail on invalid reply.</param>
-
-	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply)
+	/// <param name="components">The components.</param>
+	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordActionRowComponent>? components = null)
 	{
 		if (content != null && content.Length > 2000)
 			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
 
 		if (!embeds?.Any() ?? true)
 		{
-			if (content == null && sticker == null)
-				throw new ArgumentException("You must specify message content, a sticker or an embed.");
+			if (content == null && sticker == null && components == null)
+				throw new ArgumentException("You must specify message content, a sticker, components or an embed.");
 			if (content.Length == 0)
 				throw new ArgumentException("Message content must not be empty.");
 		}
@@ -1988,7 +1900,8 @@ public sealed class DiscordApiClient
 			StickersIds = sticker is null ? Array.Empty<ulong>() : new[] {sticker.Id},
 			IsTts = false,
 			HasEmbed = embeds?.Any() ?? false,
-			Embeds = embeds
+			Embeds = embeds,
+			Components = components
 		};
 
 		if (replyMessageId != null)
@@ -2416,20 +2329,20 @@ public sealed class DiscordApiClient
 	/// <param name="maxAge">The max_age.</param>
 	/// <param name="maxUses">The max_uses.</param>
 	/// <param name="targetType">The target_type.</param>
-	/// <param name="targetApplication">The target_application.</param>
+	/// <param name="targetApplicationId">The target_application.</param>
 	/// <param name="targetUser">The target_user.</param>
 	/// <param name="temporary">If true, temporary.</param>
 	/// <param name="unique">If true, unique.</param>
 	/// <param name="reason">The reason.</param>
 
-	internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channelId, int maxAge, int maxUses, TargetType? targetType, TargetActivity? targetApplication, ulong? targetUser, bool temporary, bool unique, string reason)
+	internal async Task<DiscordInvite> CreateChannelInviteAsync(ulong channelId, int maxAge, int maxUses, TargetType? targetType, ulong? targetApplicationId, ulong? targetUser, bool temporary, bool unique, string reason)
 	{
 		var pld = new RestChannelInviteCreatePayload
 		{
 			MaxAge = maxAge,
 			MaxUses = maxUses,
 			TargetType = targetType,
-			TargetApplication = targetApplication,
+			TargetApplicationId = targetApplicationId,
 			TargetUserId = targetUser,
 			Temporary = temporary,
 			Unique = unique
@@ -2732,7 +2645,7 @@ public sealed class DiscordApiClient
 				RawActivity = new TransportActivity(),
 				Activity = new DiscordActivity(),
 				Status = UserStatus.Offline,
-				InternalUser = userRaw
+				InternalUser = new UserWithIdOnly { Id = duser.Id }
 			};
 
 		return duser;
@@ -4037,7 +3950,7 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new {channel_id = channelId, message_id = messageId, emoji }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : (double?)0.26);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : 0.26);
 	}
 
 	/// <summary>
@@ -4053,7 +3966,7 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {channel_id = channelId, message_id = messageId, emoji }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : (double?)0.26);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : 0.26);
 	}
 
 	/// <summary>
@@ -4075,7 +3988,7 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {channel_id = channelId, message_id = messageId, emoji, user_id = userId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : (double?)0.26);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : 0.26);
 	}
 
 	/// <summary>
@@ -4137,7 +4050,7 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {channel_id = channelId, message_id = messageId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : (double?)0.26);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : 0.26);
 	}
 
 	/// <summary>
@@ -4153,7 +4066,7 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new {channel_id = channelId, message_id = messageId, emoji }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : (double?)0.26);
+		return this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, ratelimitWaitOverride: this.Discord.Configuration.UseRelativeRatelimit ? null : 0.26);
 	}
 	#endregion
 
@@ -4202,17 +4115,18 @@ public sealed class DiscordApiClient
 				List<ulong> tags = new();
 
 				foreach (var b in appliedTags)
-					tags.Add(b.Id);
+					tags.Add(b.Id.Value);
 
 				pld.AppliedTags = tags;
 				pld.Type = null;
 			}
-		} else
+		}
+		else
 		{
 			pld.Type = type;
 		}
 
-		
+
 
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
@@ -4471,7 +4385,7 @@ public sealed class DiscordApiClient
 				List<ulong> tags = new(appliedTags.Value.Count());
 
 				foreach (var b in appliedTags.Value)
-					tags.Add(b.Id);
+					tags.Add(b.Id.Value);
 
 				pld.AppliedTags = tags;
 			}
@@ -5353,8 +5267,8 @@ public sealed class DiscordApiClient
 	/// <param name="builder">The builder.</param>
 	internal async Task CreateInteractionModalResponseAsync(ulong interactionId, string interactionToken, InteractionResponseType type, DiscordInteractionModalBuilder builder)
 	{
-		if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type != ComponentType.InputText && c.Type != ComponentType.Select)))
-			throw new NotSupportedException("Can't send any other type then Input Text or Select as Modal Component.");
+		if (builder.ModalComponents.Any(mc => mc.Components.Any(c => c.Type != ComponentType.InputText)))
+			throw new NotSupportedException("Can't send any other type then Input Text as Modal Component.");
 
 		var pld = new RestInteractionModalResponsePayload
 		{
@@ -5505,25 +5419,22 @@ public sealed class DiscordApiClient
 
 	#region Misc
 	/// <summary>
-	/// Gets the current application info async.
+	/// Gets the current application info.
 	/// </summary>
-
 	internal Task<TransportApplication> GetCurrentApplicationInfoAsync()
 		=> this.GetApplicationInfoAsync("@me");
 
 	/// <summary>
-	/// Gets the application info async.
+	/// Gets the application rpc info.
 	/// </summary>
 	/// <param name="applicationId">The application_id.</param>
-
-	internal Task<TransportApplication> GetApplicationInfoAsync(ulong applicationId)
-		=> this.GetApplicationInfoAsync(applicationId.ToString(CultureInfo.InvariantCulture));
+	internal Task<DiscordRpcApplication> GetApplicationInfoAsync(ulong applicationId)
+		=> this.GetApplicationRpcInfoAsync(applicationId.ToString(CultureInfo.InvariantCulture));
 
 	/// <summary>
-	/// Gets the application info async.
+	/// Gets the application info.
 	/// </summary>
 	/// <param name="applicationId">The application_id.</param>
-
 	private async Task<TransportApplication> GetApplicationInfoAsync(string applicationId)
 	{
 		var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id";
@@ -5536,10 +5447,24 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
+	/// Gets the application info.
+	/// </summary>
+	/// <param name="applicationId">The application_id.</param>
+	private async Task<DiscordRpcApplication> GetApplicationRpcInfoAsync(string applicationId)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.RPC}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new {application_id = applicationId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		return JsonConvert.DeserializeObject<DiscordRpcApplication>(res.Response);
+	}
+
+	/// <summary>
 	/// Gets the application assets async.
 	/// </summary>
 	/// <param name="application">The application.</param>
-
 	internal async Task<IReadOnlyList<DiscordApplicationAsset>> GetApplicationAssetsAsync(DiscordApplication application)
 	{
 		var route = $"{Endpoints.OAUTH2}{Endpoints.APPLICATIONS}/:application_id{Endpoints.ASSETS}";
@@ -5561,7 +5486,6 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Gets the gateway info async.
 	/// </summary>
-
 	internal async Task<GatewayInfo> GetGatewayInfoAsync()
 	{
 		var headers = Utilities.GetBaseHeaders();

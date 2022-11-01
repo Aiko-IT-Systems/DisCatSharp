@@ -23,8 +23,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -103,8 +101,8 @@ public class DiscordThreadChannel : DiscordChannel
 	/// Only applicable for forum channel posts.
 	/// </summary>
 	[JsonIgnore]
-	public IEnumerable<ForumPostTag> AppliedTags
-	  => this.AppliedTagIds?.Select(id => this.Parent.GetForumPostTag(id)).Where(x => x != null);
+	public IReadOnlyList<ForumPostTag> AppliedTags
+	  => this.AppliedTagIds?.Select(id => this.Parent.GetForumPostTag(id)).Where(x => x != null).ToList();
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordThreadChannel"/> class.
@@ -131,9 +129,11 @@ public class DiscordThreadChannel : DiscordChannel
 		var canContinue = !mdl.AutoArchiveDuration.HasValue || !mdl.AutoArchiveDuration.Value.HasValue || Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.AutoArchiveDuration.Value.Value);
 		if (mdl.Invitable.HasValue)
 		{
-			canContinue = this.Guild.Features.CanCreatePrivateThreads;
+			canContinue = this.Guild.Features.HasFeature(GuildFeaturesEnum.CanCreatePrivateThreads);
 		}
-		return canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, mdl.Name, mdl.Locked, mdl.Archived, mdl.PerUserRateLimit, mdl.AutoArchiveDuration, mdl.Invitable, mdl.AppliedTags, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+		return this.Parent.Type == ChannelType.Forum && mdl.AppliedTags.HasValue && mdl.AppliedTags.Value.Count() > 5
+			? throw new NotSupportedException("Cannot have more than 5 applied tags.")
+			: canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, mdl.Name, mdl.Locked, mdl.Archived, mdl.PerUserRateLimit, mdl.AutoArchiveDuration, mdl.Invitable, mdl.AppliedTags, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
 	}
 
 	/// <summary>
@@ -145,8 +145,10 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="NotFoundException">Thrown when the thread does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task AddTagAsync(ForumPostTag tag, string reason = null)
-		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags) { tag }, reason: reason);
+	public Task AddTagAsync(ForumPostTag tag, string reason = null)
+		=> this.AppliedTagIds.Count == 5 ?
+			throw new NotSupportedException("Cannot have more than 5 applied tags.") :
+			this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags) { tag }, reason: reason);
 
 	/// <summary>
 	/// Remove a tag from the current thread.
@@ -267,7 +269,7 @@ public class DiscordThreadChannel : DiscordChannel
 			return null;
 		}
 	}
-	
+
 	/// <summary>
 	/// Removes a member from this thread.
 	/// </summary>

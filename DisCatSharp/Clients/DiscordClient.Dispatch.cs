@@ -39,7 +39,6 @@ using DisCatSharp.Net.Serialization;
 
 using Microsoft.Extensions.Logging;
 
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp;
@@ -106,7 +105,6 @@ public sealed partial class DiscordClient
 	/// Handles the dispatch payloads.
 	/// </summary>
 	/// <param name="payload">The payload.</param>
-
 	internal async Task HandleDispatchAsync(GatewayPayload payload)
 	{
 		if (payload.Data is not JObject dat)
@@ -2603,7 +2601,8 @@ public sealed partial class DiscordClient
 					threadOld.AppliedTagIdsInternal = null;
 					threadNew.AppliedTagIdsInternal = null;
 				}
-			} else
+			}
+			else
 			{
 				threadOld.AppliedTagIdsInternal = threadNew.AppliedTagIdsInternal;
 				threadNew.AppliedTagIdsInternal = thread.AppliedTagIdsInternal;
@@ -2879,37 +2878,13 @@ public sealed partial class DiscordClient
 			}
 		}
 
-		if (this.UserCache.TryGetValue(uid, out var usr))
-		{
-			if (old != null)
-			{
-				old.InternalUser.Username = usr.Username;
-				old.InternalUser.Discriminator = usr.Discriminator;
-				old.InternalUser.AvatarHash = usr.AvatarHash;
-			}
-
-			if (rawUser["username"] is object)
-				usr.Username = (string)rawUser["username"];
-			if (rawUser["discriminator"] is object)
-				usr.Discriminator = (string)rawUser["discriminator"];
-			if (rawUser["avatar"] is object)
-				usr.AvatarHash = (string)rawUser["avatar"];
-
-			presence.InternalUser.Username = usr.Username;
-			presence.InternalUser.Discriminator = usr.Discriminator;
-			presence.InternalUser.AvatarHash = usr.AvatarHash;
-		}
-
-		var usrafter = usr ?? new DiscordUser(presence.InternalUser);
 		var ea = new PresenceUpdateEventArgs(this.ServiceProvider)
 		{
 			Status = presence.Status,
 			Activity = presence.Activity,
-			User = usr,
+			User = presence.User,
 			PresenceBefore = old,
-			PresenceAfter = presence,
-			UserBefore = old != null ? new DiscordUser(old.InternalUser) : usrafter,
-			UserAfter = usrafter
+			PresenceAfter = presence
 		};
 		await this._presenceUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}

@@ -59,6 +59,11 @@ public class ForumChannelEditModel : BaseEditModel
 	public bool? Nsfw { internal get; set; }
 
 	/// <summary>
+	/// Sets the available tags.
+	/// </summary>
+	public Optional<List<ForumPostTag>?> AvailableTags { internal get; set; }
+
+	/// <summary>
 	/// Sets the default reaction emoji.
 	/// </summary>
 	public Optional<ForumReactionEmoji> DefaultReactionEmoji { internal get; set; }
@@ -66,14 +71,14 @@ public class ForumChannelEditModel : BaseEditModel
 	/// <summary>
 	/// Sets the default forum post sort order
 	/// </summary>
-	public Optional<ForumPostSortOrder> DefaultSortOrder { internal get; set; }
+	public Optional<ForumPostSortOrder?> DefaultSortOrder { internal get; set; }
 
 	/// <summary>
 	/// <para>Sets the parent of this channel.</para>
 	/// <para>This should be channel with <see cref="DisCatSharp.Entities.DiscordChannel.Type"/> set to <see cref="ChannelType.Category"/>.</para>
 	/// </summary>
 	public Optional<DiscordChannel> Parent { internal get; set; }
-	
+
 	/// <summary>
 	/// <para>Sets the voice channel's new user limit.</para>
 	/// <para>Setting this to 0 will disable the user limit.</para>
@@ -95,7 +100,7 @@ public class ForumChannelEditModel : BaseEditModel
 	/// <summary>
 	/// Sets this channel's default duration for newly created threads, in minutes, to automatically archive the thread after recent activity.
 	/// </summary>
-	public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { internal get; set; }
+	public Optional<ThreadAutoArchiveDuration?> DefaultAutoArchiveDuration { internal get; set; }
 
 	/// <summary>
 	/// Sets the channel's permission overwrites.

@@ -114,6 +114,14 @@ All requests are tracked at [aitsys.dev](https://aitsys.dev/project/view/1/).
 - [Deividas Kazakevicius](https://github.com/DeividasKaza)
 - [Will](https://github.com/villChurch)
 
+## Hacktober Participants
+
+The following users participated in Hacktoberfest 2022 and contributed to DisCatSharp:
+- [Mira](https://github.com/TheXorog)
+- [Sh1be](https://github.com/xMaxximum)
+- [Lulalaby](https://github.com/Lulalaby)
+- [Badger](https://github.com/JBraunsmaJr)
+
 ## Thanks
 
 Big thanks goes to the following people who helped us without being part of the core team ♥️

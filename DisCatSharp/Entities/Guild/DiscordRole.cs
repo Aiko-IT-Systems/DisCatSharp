@@ -45,6 +45,13 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 	[JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
 	public string Name { get; internal set; }
 
+
+	/// <summary>
+	/// Gets the description of this role.
+	/// </summary>
+	[JsonProperty("description", NullValueHandling = NullValueHandling.Ignore)]
+	public string Description { get; internal set; }
+
 	/// <summary>
 	/// Gets the color of this role.
 	/// </summary>
@@ -188,7 +195,7 @@ public class DiscordRole : SnowflakeObject, IEquatable<DiscordRole>
 
 		var canContinue = true;
 		if ((mdl.Icon.HasValue && mdl.Icon.Value != null) || (mdl.UnicodeEmoji.HasValue && mdl.UnicodeEmoji.Value != null))
-			canContinue = this.Discord.Guilds[this.GuildId].Features.CanSetRoleIcons;
+			canContinue = this.Discord.Guilds[this.GuildId].Features.HasFeature(GuildFeaturesEnum.CanSetRoleIcons);
 
 		var iconb64 = Optional.FromNullable<string>(null);
 		if (mdl.Icon.HasValue && mdl.Icon.Value != null)

@@ -80,7 +80,7 @@ public class LavalinkRouteStatusDetails
 	/// Gets the collection of failed addresses.
 	/// </summary>
 	[JsonProperty("failingAddresses", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<LavalinkFailedAddress> FailedAddresses { get; internal set; }
+	public List<LavalinkFailedAddress> FailedAddresses { get; internal set; }
 
 	/// <summary>
 	/// Gets the number of rotations since the restart of Lavalink.

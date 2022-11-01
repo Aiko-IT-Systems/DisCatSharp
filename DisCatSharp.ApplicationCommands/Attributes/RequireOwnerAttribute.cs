@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.ApplicationCommands.Context;
@@ -28,14 +29,25 @@ using DisCatSharp.ApplicationCommands.Context;
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
 /// <summary>
-/// The base class for a pre-execution check for a application command.
+/// Defines that this application command is restricted to the owner of the bot.
 /// </summary>
-public abstract class SlashCheckBaseAttribute : Attribute
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
+public sealed class ApplicationCommandRequireOwnerAttribute : ApplicationCommandCheckBaseAttribute
 {
 	/// <summary>
-	/// Checks whether this command can be executed within the current context.
+	/// Defines that this application command is restricted to the owner of the bot.
 	/// </summary>
-	/// <param name="ctx">The context.</param>
-	/// <returns>Whether the checks passed.</returns>
-	public abstract Task<bool> ExecuteChecksAsync(InteractionContext ctx);
+	public ApplicationCommandRequireOwnerAttribute()
+	{ }
+
+	/// <summary>
+	/// Runs checks.
+	/// </summary>
+	public override Task<bool> ExecuteChecksAsync(BaseContext ctx)
+	{
+		var app = ctx.Client.CurrentApplication;
+		var me = ctx.Client.CurrentUser;
+
+		return app != null ? Task.FromResult(app.Owners.Any(x => x.Id == ctx.User.Id)) : Task.FromResult(ctx.User.Id == me.Id);
+	}
 }
