@@ -33,49 +33,19 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// A select menu with multiple options to choose from.
 /// </summary>
-public sealed class DiscordSelectComponent : DiscordComponent
+public sealed class DiscordStringSelectComponent : DiscordBaseSelectComponent
 {
 	/// <summary>
 	/// The options to pick from on this component.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-	public IReadOnlyList<DiscordSelectComponentOption> Options { get; internal set; } = Array.Empty<DiscordSelectComponentOption>();
-
-	/// <summary>
-	/// The text to show when no option is selected.
-	/// </summary>
-	[JsonProperty("placeholder", NullValueHandling = NullValueHandling.Ignore)]
-	public string Placeholder { get; internal set; }
-
-	/// <summary>
-	/// The minimum amount of options that can be selected. Must be less than or equal to <see cref="MaximumSelectedValues"/>. Defaults to one.
-	/// </summary>
-	[JsonProperty("min_values", NullValueHandling = NullValueHandling.Ignore)]
-	public int? MinimumSelectedValues { get; internal set; } = 1;
-
-	/// <summary>
-	/// The maximum amount of options that can be selected. Must be greater than or equal to zero or <see cref="MinimumSelectedValues"/>. Defaults to one.
-	/// </summary>
-	[JsonProperty("max_values", NullValueHandling = NullValueHandling.Ignore)]
-	public int? MaximumSelectedValues { get; internal set; } = 1;
-
-	/// <summary>
-	/// Whether this select can be used.
-	/// </summary>
-	[JsonProperty("disabled", NullValueHandling = NullValueHandling.Ignore)]
-	public bool Disabled { get; internal set; }
-
-	/// <summary>
-	/// Label of component, if used in modal.
-	/// </summary>
-	[JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
-	public string Label { get; internal set; } = null;
+	public IReadOnlyList<DiscordStringSelectComponentOption> Options { get; internal set; } = Array.Empty<DiscordStringSelectComponentOption>();
 
 	/// <summary>
 	/// Enables this component if it was disabled before.
 	/// </summary>
 	/// <returns>The current component.</returns>
-	public DiscordSelectComponent Enable()
+	public DiscordStringSelectComponent Enable()
 	{
 		this.Disabled = false;
 		return this;
@@ -85,16 +55,14 @@ public sealed class DiscordSelectComponent : DiscordComponent
 	/// Disables this component.
 	/// </summary>
 	/// <returns>The current component.</returns>
-	public DiscordSelectComponent Disable()
+	public DiscordStringSelectComponent Disable()
 	{
 		this.Disabled = true;
 		return this;
 	}
 
-	// TODO: Can we set required
-
 	/// <summary>
-	/// Constructs a new <see cref="DiscordSelectComponent"/>.
+	/// Constructs a new <see cref="DiscordStringSelectComponent"/>.
 	/// </summary>
 	/// <param name="placeholder">Text to show if no option is selected.</param>
 	/// <param name="options">Array of options</param>
@@ -102,18 +70,14 @@ public sealed class DiscordSelectComponent : DiscordComponent
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
-	public DiscordSelectComponent(string placeholder, IEnumerable<DiscordSelectComponentOption> options, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
+	public DiscordStringSelectComponent(string placeholder, IEnumerable<DiscordStringSelectComponentOption> options, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false)
+		: base(ComponentType.StringSelect, placeholder, customId, minOptions, maxOptions, disabled)
 	{
-		this.CustomId = customId ?? Guid.NewGuid().ToString(); ;
-		this.Disabled = disabled;
 		this.Options = options.ToArray();
-		this.Placeholder = placeholder;
-		this.MinimumSelectedValues = minOptions;
-		this.MaximumSelectedValues = maxOptions;
 	}
 
 	/// <summary>
-	/// Constructs a new <see cref="DiscordSelectComponent"/> for modals.
+	/// Constructs a new <see cref="DiscordStringSelectComponent"/> for modals.
 	/// </summary>
 	/// <param name="label">Maximum count of selectable options.</param>
 	/// <param name="placeholder">Text to show if no option is selected.</param>
@@ -122,22 +86,17 @@ public sealed class DiscordSelectComponent : DiscordComponent
 	/// <param name="minOptions">Minimum count of selectable options.</param>
 	/// <param name="maxOptions">Maximum count of selectable options.</param>
 	/// <param name="disabled">Whether this select component should be initialized as being disabled. User sees a greyed out select component that cannot be interacted with.</param>
-	public DiscordSelectComponent(string label, string placeholder, IEnumerable<DiscordSelectComponentOption> options, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false) : this()
+	public DiscordStringSelectComponent(string label, string placeholder, IEnumerable<DiscordStringSelectComponentOption> options, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false)
+		: base(ComponentType.StringSelect, label, placeholder, customId, minOptions, maxOptions, disabled)
 	{
-		this.Label = label;
-		this.CustomId = customId ?? Guid.NewGuid().ToString(); ;
-		this.Disabled = disabled;
 		this.Options = options.ToArray();
-		this.Placeholder = placeholder;
-		this.MinimumSelectedValues = minOptions;
-		this.MaximumSelectedValues = maxOptions;
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="DiscordSelectComponent"/> class.
+	/// Constructs a new <see cref="DiscordStringSelectComponent"/>.
 	/// </summary>
-	public DiscordSelectComponent()
+	public DiscordStringSelectComponent() : base()
 	{
-		this.Type = ComponentType.Select;
+		this.Type = ComponentType.StringSelect;
 	}
 }

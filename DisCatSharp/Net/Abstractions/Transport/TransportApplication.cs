@@ -170,7 +170,7 @@ internal sealed class TransportApplication
 	/// Gets or sets the tags.
 	/// </summary>
 	[JsonProperty("tags", NullValueHandling = NullValueHandling.Include)]
-	public IEnumerable<string> Tags { get; set; }
+	public List<string> Tags { get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportApplication"/> class.

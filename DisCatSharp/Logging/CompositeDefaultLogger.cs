@@ -36,7 +36,7 @@ internal class CompositeDefaultLogger : ILogger<BaseDiscordClient>
 	/// <summary>
 	/// Gets the loggers.
 	/// </summary>
-	private readonly IEnumerable<ILogger<BaseDiscordClient>> _loggers;
+	private readonly List<ILogger<BaseDiscordClient>> _loggers;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="CompositeDefaultLogger"/> class.

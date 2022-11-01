@@ -102,12 +102,14 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <summary>
 	/// Gets the user's banner color, if set. Mutually exclusive with <see cref="BannerHash"/>.
 	/// </summary>
+	[JsonIgnore]
 	public virtual DiscordColor? BannerColor
 		=> !this.BannerColorInternal.HasValue ? null : new DiscordColor(this.BannerColorInternal.Value);
 
 	/// <summary>
 	/// Gets the user's theme colors, if set.
 	/// </summary>
+	[JsonIgnore]
 	public virtual IReadOnlyList<DiscordColor>? ThemeColors
 		=> !(this.ThemeColorsInternal is not null && this.ThemeColorsInternal.Count != 0) ? null : this.ThemeColorsInternal.Select(x => new DiscordColor(x)).ToList();
 
@@ -315,6 +317,16 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <returns>The user with fresh data from the API.</returns>
 	public async Task<DiscordUser> GetFromApiAsync()
 		=> await this.Discord.ApiClient.GetUserAsync(this.Id);
+
+	/// <summary>
+	/// Gets additional information about an application if the user is an bot.
+	/// </summary>
+	/// <returns>The rpc info or <see langword="null"/></returns>
+	/// <exception cref="NotFoundException">Thrown when the application does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordRpcApplication?> GetRpcInfoAsync()
+		=> this.IsBot ? await this.Discord.ApiClient.GetApplicationInfoAsync(this.Id) : await Task.FromResult<DiscordRpcApplication?>(null);
 
 	/// <summary>
 	/// Whether this user is in a <see cref="DiscordGuild"/>

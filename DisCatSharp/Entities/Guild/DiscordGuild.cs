@@ -152,7 +152,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public ReadOnlyCollection<DiscordApplicationCommand> RegisteredApplicationCommands
 		=> new(this.InternalRegisteredApplicationCommands);
 	[JsonIgnore]
-	internal List<DiscordApplicationCommand> InternalRegisteredApplicationCommands { get; set; } = null;
+	internal List<DiscordApplicationCommand> InternalRegisteredApplicationCommands { get; set; } = new();
 
 	/// <summary>
 	/// Gets the guild's AFK timeout.
@@ -345,13 +345,13 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	public int? MaxPresences { get; internal set; }
 
 	/// <summary>
-	/// Gets the approximate number of members in this guild, when using <see cref="DiscordClient.GetGuildAsync(ulong, bool?)"/> and having withCounts set to true.
+	/// Gets the approximate number of members in this guild, when using <see cref="DiscordClient.GetGuildAsync(ulong, bool?, bool)"/> and having withCounts set to true.
 	/// </summary>
 	[JsonProperty("approximate_member_count", NullValueHandling = NullValueHandling.Ignore)]
 	public int? ApproximateMemberCount { get; internal set; }
 
 	/// <summary>
-	/// Gets the approximate number of presences in this guild, when using <see cref="DiscordClient.GetGuildAsync(ulong, bool?)"/> and having withCounts set to true.
+	/// Gets the approximate number of presences in this guild, when using <see cref="DiscordClient.GetGuildAsync(ulong, bool?, bool)"/> and having withCounts set to true.
 	/// </summary>
 	[JsonProperty("approximate_presence_count", NullValueHandling = NullValueHandling.Ignore)]
 	public int? ApproximatePresenceCount { get; internal set; }
@@ -490,19 +490,19 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Whether this guild has the community feature enabled.
 	/// </summary>
 	[JsonIgnore]
-	public bool IsCommunity => this.Features.HasCommunityEnabled;
+	public bool IsCommunity => this.Features.HasFeature(GuildFeaturesEnum.HasCommunityEnabled);
 
 	/// <summary>
 	/// Whether this guild has enabled the welcome screen.
 	/// </summary>
 	[JsonIgnore]
-	public bool HasWelcomeScreen => this.Features.HasWelcomeScreenEnabled;
+	public bool HasWelcomeScreen => this.Features.HasFeature(GuildFeaturesEnum.HasWelcomeScreenEnabled);
 
 	/// <summary>
 	/// Whether this guild has enabled membership screening.
 	/// </summary>
 	[JsonIgnore]
-	public bool HasMemberVerificationGate => this.Features.HasMembershipScreeningEnabled;
+	public bool HasMemberVerificationGate => this.Features.HasFeature(GuildFeaturesEnum.HasMembershipScreeningEnabled);
 
 	/// <summary>
 	/// Gets this guild's premium tier (Nitro boosting).
@@ -760,7 +760,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Modifies the community settings async.
 	/// This sets <see cref="VerificationLevel.High"/> if not highest and <see cref="ExplicitContentFilter.AllMembers"/>.
 	/// </summary>
-	/// <param name="enabled">If true, enable <see cref="GuildFeatures.HasCommunityEnabled"/>.</param>
+	/// <param name="enabled">If true, enables <see cref="GuildFeaturesEnum.HasCommunityEnabled"/>.</param>
 	/// <param name="rulesChannel">The rules channel.</param>
 	/// <param name="publicUpdatesChannel">The public updates channel.</param>
 	/// <param name="preferredLocale">The preferred locale. Defaults to en-US.</param>
@@ -771,7 +771,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="NotFoundException">Thrown when the guild does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<DiscordGuild> ModifyCommunitySettingsAsync(bool enabled, DiscordChannel rulesChannel = null, DiscordChannel publicUpdatesChannel = null, string preferredLocale = "en-US", string description = null, DefaultMessageNotifications defaultMessageNotifications = DefaultMessageNotifications.MentionsOnly, string reason = null)
+	public async Task<DiscordGuild> ModifyCommunitySettingsAsync(bool enabled, DiscordChannel rulesChannel, DiscordChannel publicUpdatesChannel, string preferredLocale = "en-US", string description = null, DefaultMessageNotifications defaultMessageNotifications = DefaultMessageNotifications.MentionsOnly, string reason = null)
 	{
 		var verificationLevel = this.VerificationLevel;
 		if (this.VerificationLevel != VerificationLevel.Highest)
@@ -817,7 +817,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		List<string> features = new();
 		var rfeatures = this.RawFeatures.ToList();
-		if (this.Features.InvitesDisabled)
+		if (this.Features.HasFeature(GuildFeaturesEnum.InvitesDisabled))
 			rfeatures.Remove("INVITES_DISABLED");
 		features = rfeatures;
 
@@ -837,7 +837,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		List<string> features = new();
 		var rfeatures = this.RawFeatures.ToList();
-		if (!this.Features.InvitesDisabled)
+		if (!this.Features.HasFeature(GuildFeaturesEnum.InvitesDisabled))
 			rfeatures.Add("INVITES_DISABLED");
 		features = rfeatures;
 
@@ -1150,6 +1150,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="nsfw">Whether the channel is to be flagged as not safe for work.</param>
 	/// <param name="perUserRateLimit">Slow mode timeout for users.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration for new threads.</param>
+	/// <param name="flags">The flags of the new channel.</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <returns>The newly-created channel.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
@@ -1172,6 +1173,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="perUserRateLimit">Slow mode timeout for users.</param>
 	/// <param name="postCreateUserRateLimit">Slow mode timeout for user post creations.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration for new threads.</param>
+	/// <param name="defaultSortOrder">The default sort order for posts in the new channel.</param>
+	/// <param name="flags">The flags of the new channel.</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <returns>The newly-created channel.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission or the guild does not have the forum channel feature.</exception>
@@ -1208,7 +1211,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="NotSupportedException">Thrown when the guilds has not enabled community.</exception>
 	public Task<DiscordChannel> CreateStageChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null)
-		=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.None, null, null, overwrites, null, Optional.None, null, null, Optional.None, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
+		=> this.Features.HasFeature(GuildFeaturesEnum.HasCommunityEnabled) ? this.CreateChannelAsync(name, ChannelType.Stage, null, Optional.None, null, null, overwrites, null, Optional.None, null, null, Optional.None, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a stage channel.");
 
 	/// <summary>
 	/// Creates a new news channel in this guild.
@@ -1216,6 +1219,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="name">Name of the new news channel.</param>
 	/// <param name="overwrites">Permission overwrites for this news channel.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration for new threads.</param>
+	/// <param name="flags">The flags of the new channel.</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <returns>The newly-created news channel.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/>.</exception>
@@ -1224,7 +1228,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	/// <exception cref="NotSupportedException">Thrown when the guilds has not enabled community.</exception>
 	public Task<DiscordChannel> CreateNewsChannelAsync(string name, IEnumerable<DiscordOverwriteBuilder> overwrites = null, string reason = null, ThreadAutoArchiveDuration defaultAutoArchiveDuration = ThreadAutoArchiveDuration.OneDay, Optional<ChannelFlags?> flags = default)
-		=> this.Features.HasCommunityEnabled ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.None, null, null, overwrites, null, Optional.None, null, defaultAutoArchiveDuration, flags, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
+		=> this.Features.HasFeature(GuildFeaturesEnum.HasCommunityEnabled) ? this.CreateChannelAsync(name, ChannelType.News, null, Optional.None, null, null, overwrites, null, Optional.None, null, defaultAutoArchiveDuration, flags, reason) : throw new NotSupportedException("Guild has not enabled community. Can not create a news channel.");
 
 	/// <summary>
 	/// Creates a new voice channel in this guild.
@@ -1234,6 +1238,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="bitrate">Bitrate of the channel.</param>
 	/// <param name="userLimit">Maximum number of users in the channel.</param>
 	/// <param name="overwrites">Permission overwrites for this channel.</param>
+	/// <param name="flags">The flags of the new channel.</param>
 	/// <param name="qualityMode">Video quality mode of the channel.</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <returns>The newly-created channel.</returns>
@@ -1258,6 +1263,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="perUserRateLimit">Slow mode timeout for users.</param>
 	/// <param name="qualityMode">Video quality mode of the channel. Applies to voice only.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration for new threads.</param>
+	/// <param name="flags">The flags of the new channel.</param>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <returns>The newly-created channel.</returns>
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageChannels"/> permission.</exception>
@@ -1487,6 +1493,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// Gets a member of this guild by their user ID.
 	/// </summary>
 	/// <param name="userId">ID of the member to get.</param>
+	/// <param name="fetch">Whether to fetch the member from the api prior to cache.</param>
 	/// <returns>The requested member.</returns>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMember> GetMemberAsync(ulong userId, bool fetch = false)
@@ -1522,7 +1529,7 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		var last = 0ul;
 		while (recd > 0)
 		{
-			var tms = await this.Discord.ApiClient.ListGuildMembersAsync(this.Id, 1000, last == 0 ? null : (ulong?)last).ConfigureAwait(false);
+			var tms = await this.Discord.ApiClient.ListGuildMembersAsync(this.Id, 1000, last == 0 ? null : last).ConfigureAwait(false);
 			recd = tms.Count;
 
 			foreach (var xtm in tms)

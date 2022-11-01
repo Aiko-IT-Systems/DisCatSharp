@@ -52,19 +52,19 @@ internal class DiscordMentions
 	/// Collection roles to serialize
 	/// </summary>
 	[JsonProperty("roles", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<ulong> Roles { get; }
+	public IReadOnlyList<ulong> Roles { get; }
 
 	/// <summary>
 	/// Collection of users to serialize
 	/// </summary>
 	[JsonProperty("users", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<ulong> Users { get; }
+	public IReadOnlyList<ulong> Users { get; }
 
 	/// <summary>
 	/// The values to be parsed
 	/// </summary>
 	[JsonProperty("parse", NullValueHandling = NullValueHandling.Ignore)]
-	public IEnumerable<string> Parse { get; }
+	public IReadOnlyList<string> Parse { get; }
 
 	/// <summary>
 	/// For replies, whether to mention the author of the message being replied to.
@@ -131,12 +131,12 @@ internal class DiscordMentions
 		}
 
 		if (!parse.Contains(PARSE_USERS) && users.Count > 0)
-			this.Users = users;
+			this.Users = users.ToArray();
 
 		if (!parse.Contains(PARSE_ROLES) && roles.Count > 0)
-			this.Roles = roles;
+			this.Roles = roles.ToArray();
 
 		if (parse.Count > 0)
-			this.Parse = parse;
+			this.Parse = parse.ToArray();
 	}
 }

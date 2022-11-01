@@ -75,9 +75,9 @@ internal class CommandWorker
 
 			var parameters = contextMethod.GetParameters();
 			if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(ContextMenuContext)))
-				throw new ArgumentException($"The first argument must be a ContextMenuContext!");
+				throw new ArgumentException($"The first argument of the command '{contextAttribute.Name}' has to be an ContextMenuContext!");
 			if (parameters.Length > 1)
-				throw new ArgumentException($"A context menu cannot have parameters!");
+				throw new ArgumentException($"The context menu command '{contextAttribute.Name}' cannot have parameters!");
 
 			contextMenuCommands.Add(new ContextMenuCommand { Method = contextMethod, Name = contextAttribute.Name });
 
@@ -115,8 +115,8 @@ internal class CommandWorker
 
 			var parameters = method.GetParameters();
 			if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.FirstOrDefault()?.ParameterType, typeof(InteractionContext)))
-				throw new ArgumentException($"The first argument must be an InteractionContext!");
-			var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), guildId);
+				throw new ArgumentException($"The first argument of the command '{commandAttribute.Name}' has to be an InteractionContext!");
+			var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), commandAttribute.Name, guildId);
 
 			commandMethods.Add(new CommandMethod { Method = method, Name = commandAttribute.Name });
 
@@ -194,7 +194,7 @@ internal class NestedCommandWorker
 			var submethods = subclassInfo.DeclaredMethods.Where(x => x.GetCustomAttribute<SlashCommandAttribute>() != null).ToList();
 			var subclasses = subclassInfo.DeclaredNestedTypes.Where(x => x.GetCustomAttribute<SlashCommandGroupAttribute>() != null).ToList();
 			if (subclasses.Any() && submethods.Any())
-				throw new ArgumentException("Slash command groups cannot have both subcommands and subgroups!");
+				throw new ArgumentException($"Slash command group '{groupAttribute.Name}' has both subcommands and subgroups!");
 
 			DiscordApplicationCommandLocalization nameLocalizations = null;
 			DiscordApplicationCommandLocalization descriptionLocalizations = null;
@@ -222,9 +222,9 @@ internal class NestedCommandWorker
 				//Gets the parameters and accounts for InteractionContext
 				var parameters = submethod.GetParameters();
 				if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
-					throw new ArgumentException($"The first argument must be an InteractionContext!");
+					throw new ArgumentException($"The first argument of the command '{commandAttribute.Name}' has to be an InteractionContext!");
 
-				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), guildId);
+				var options = await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), commandAttribute.Name, guildId);
 
 				DiscordApplicationCommandLocalization subNameLocalizations = null;
 				DiscordApplicationCommandLocalization subDescriptionLocalizations = null;
@@ -307,9 +307,9 @@ internal class NestedCommandWorker
 					var commatt = subsubmethod.GetCustomAttribute<SlashCommandAttribute>();
 					var parameters = subsubmethod.GetParameters();
 					if (parameters.Length == 0 || parameters == null || !ReferenceEquals(parameters.First().ParameterType, typeof(InteractionContext)))
-						throw new ArgumentException($"The first argument must be an InteractionContext!");
+						throw new ArgumentException($"The first argument of the command '{subgroupAttribute.Name}' has to be an InteractionContext!");
 
-					suboptions = suboptions.Concat(await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), guildId)).ToList();
+					suboptions = suboptions.Concat(await ApplicationCommandsExtension.ParseParametersAsync(parameters.Skip(1), subgroupAttribute.Name, guildId)).ToList();
 
 					DiscordApplicationCommandLocalization subSubNameLocalizations = null;
 					DiscordApplicationCommandLocalization subSubDescriptionLocalizations = null;

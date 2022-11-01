@@ -240,7 +240,7 @@ public sealed class DiscordEmbedBuilder
 	/// <returns>This embed builder.</returns>
 	public DiscordEmbedBuilder WithTimestamp(DateTime? timestamp)
 	{
-		this.Timestamp = timestamp == null ? null : (DateTimeOffset?)new DateTimeOffset(timestamp.Value);
+		this.Timestamp = timestamp == null ? null : new DateTimeOffset(timestamp.Value);
 		return this;
 	}
 

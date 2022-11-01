@@ -37,7 +37,7 @@ public class ForumReactionEmoji
 		this.EmojiId = emojiId;
 		this.EmojiName = unicodeEmojiString;
 	}
-	
+
 	/// <summary>
 	/// Gets the emoji id of the forum post tag.
 	/// </summary>

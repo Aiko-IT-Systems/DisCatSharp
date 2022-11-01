@@ -107,10 +107,10 @@ internal sealed class RestChannelCreatePayload
 	/// Gets or sets the default auto archive duration.
 	/// </summary>
 	[JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
-	public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; set; }
+	public Optional<ThreadAutoArchiveDuration?> DefaultAutoArchiveDuration { get; set; }
 
 	/// <summary>
-	/// List of available tags for forum posts.
+	/// Gets the default reaction emoji for forum posts.
 	/// </summary>
 	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<ForumReactionEmoji> DefaultReactionEmoji { get; internal set; }
@@ -212,7 +212,7 @@ internal sealed class RestChannelModifyPayload
 	/// Gets or sets the default auto archive duration.
 	/// </summary>
 	[JsonProperty("default_auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
-	public ThreadAutoArchiveDuration? DefaultAutoArchiveDuration { get; set; }
+	public Optional<ThreadAutoArchiveDuration?> DefaultAutoArchiveDuration { get; set; }
 
 	/// <summary>
 	/// Gets or sets the permission overwrites.
@@ -221,7 +221,7 @@ internal sealed class RestChannelModifyPayload
 	public IEnumerable<DiscordRestOverwrite> PermissionOverwrites { get; set; }
 
 	/// <summary>
-	/// List of available tags for forum posts.
+	/// Gets the default reaction emoji for forum posts.
 	/// </summary>
 	[JsonProperty("default_reaction_emoji", NullValueHandling = NullValueHandling.Ignore)]
 	public Optional<ForumReactionEmoji> DefaultReactionEmoji { get; internal set; }
@@ -230,13 +230,19 @@ internal sealed class RestChannelModifyPayload
 	/// Gets the default forum post sort order
 	/// </summary>
 	[JsonProperty("default_sort_order", NullValueHandling = NullValueHandling.Ignore)]
-	public Optional<ForumPostSortOrder> DefaultSortOrder { get; internal set; }
+	public Optional<ForumPostSortOrder?> DefaultSortOrder { get; internal set; }
 
 	/// <summary>
 	/// Gets or sets the channel flags.
 	/// </summary>
 	[JsonProperty("flags", NullValueHandling = NullValueHandling.Include)]
 	public Optional<ChannelFlags?> Flags { internal get; set; }
+
+	/// <summary>
+	/// Gets or sets the available tags.
+	/// </summary>
+	[JsonProperty("available_tags", NullValueHandling = NullValueHandling.Ignore)]
+	public Optional<List<ForumPostTag>?> AvailableTags { internal get; set; }
 }
 
 /// <summary>
@@ -405,7 +411,7 @@ internal sealed class RestChannelInviteCreatePayload
 	/// Gets or sets the target application.
 	/// </summary>
 	[JsonProperty("target_application_id", NullValueHandling = NullValueHandling.Ignore)]
-	public TargetActivity? TargetApplication { get; set; }
+	public ulong? TargetApplicationId { get; set; }
 
 	/// <summary>
 	/// Gets or sets the target user id.
@@ -498,7 +504,7 @@ internal sealed class RestThreadChannelCreatePayload
 	/// Gets or sets the auto archive duration.
 	/// </summary>
 	[JsonProperty("auto_archive_duration", NullValueHandling = NullValueHandling.Ignore)]
-	public ThreadAutoArchiveDuration? AutoArchiveDuration { get; set; }
+	public Optional<ThreadAutoArchiveDuration?> AutoArchiveDuration { get; set; }
 
 	/// <summary>
 	/// Gets or sets the rate limit per user.

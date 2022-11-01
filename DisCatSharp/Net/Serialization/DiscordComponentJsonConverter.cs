@@ -72,8 +72,12 @@ internal sealed class DiscordComponentJsonConverter : JsonConverter
 			ComponentType.ActionRow => new DiscordActionRowComponent(),
 			ComponentType.Button when (string)job["url"] is not null => new DiscordLinkButtonComponent(),
 			ComponentType.Button => new DiscordButtonComponent(),
-			ComponentType.Select => new DiscordSelectComponent(),
+			ComponentType.StringSelect => new DiscordStringSelectComponent(),
 			ComponentType.InputText => new DiscordTextComponent(),
+			ComponentType.UserSelect => new DiscordUserSelectComponent(),
+			ComponentType.RoleSelect => new DiscordRoleSelectComponent(),
+			ComponentType.MentionableSelect => new DiscordMentionableSelectComponent(),
+			ComponentType.ChannelSelect => new DiscordChannelSelectComponent(),
 			_ => new DiscordComponent() { Type = type.Value }
 		};
 

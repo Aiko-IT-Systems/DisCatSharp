@@ -93,7 +93,7 @@ public sealed class DiscordInteractionModalBuilder
 	/// <param name="components">The components to append. Up to five.</param>
 	/// <returns>The current builder to chain calls with.</returns>
 	/// <exception cref="ArgumentException">Thrown when passing more than 5 components.</exception>
-	public DiscordInteractionModalBuilder AddSelectComponents(params DiscordSelectComponent[] components)
+	public DiscordInteractionModalBuilder AddSelectComponents(params DiscordBaseSelectComponent[] components)
 		=> this.AddModalComponents(components);
 
 	/// <summary>
@@ -109,7 +109,7 @@ public sealed class DiscordInteractionModalBuilder
 	/// </summary>
 	/// <param name="component">The component to append.</param>
 	/// <returns>The current builder to chain calls with.</returns>
-	public DiscordInteractionModalBuilder AddSelectComponent(DiscordSelectComponent component)
+	public DiscordInteractionModalBuilder AddSelectComponent(DiscordBaseSelectComponent component)
 		=> this.AddModalComponents(component);
 
 	/// <summary>

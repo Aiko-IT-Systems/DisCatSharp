@@ -52,6 +52,7 @@ internal class TransportUser
 	/// <summary>
 	/// Gets the username with discriminator.
 	/// </summary>
+	[JsonIgnore]
 	internal string UsernameWithDiscriminator
 		=> $"{this.Username}#{this.Discriminator}";
 
@@ -76,13 +77,13 @@ internal class TransportUser
 	/// <summary>
 	/// Gets the banner color.
 	/// </summary>
-	[JsonProperty("accent_color")]
+	[JsonProperty("accent_color", NullValueHandling = NullValueHandling.Ignore)]
 	public int? BannerColor { get; internal set; }
 
 	/// <summary>
 	/// Gets the users theme colors.
 	/// </summary>
-	[JsonProperty("theme_colors")]
+	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
 	public int[]? ThemeColors { get; internal set; }
 
 	/// <summary>

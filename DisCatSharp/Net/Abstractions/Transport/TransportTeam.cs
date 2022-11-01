@@ -59,7 +59,7 @@ internal sealed class TransportTeam
 	/// Gets or sets the members.
 	/// </summary>
 	[JsonProperty("members", NullValueHandling = NullValueHandling.Include)]
-	public IEnumerable<TransportTeamMember> Members { get; set; }
+	public List<TransportTeamMember> Members { get; set; }
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TransportTeam"/> class.
@@ -82,7 +82,7 @@ internal sealed class TransportTeamMember
 	/// Gets or sets the permissions.
 	/// </summary>
 	[JsonProperty("permissions", NullValueHandling = NullValueHandling.Include)]
-	public IEnumerable<string> Permissions { get; set; }
+	public List<string> Permissions { get; set; }
 
 	/// <summary>
 	/// Gets or sets the team id.

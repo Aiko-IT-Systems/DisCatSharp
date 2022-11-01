@@ -10,3 +10,4 @@ _site
 
 # .manifest files
 api/.manifest
+libdev/.manifest
