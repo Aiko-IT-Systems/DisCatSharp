@@ -14,9 +14,6 @@ on:
 
 jobs:
   release:
-    strategy:
-      matrix:
-        dotnet: [6.0.400]
     runs-on: windows-latest
     name: Build library and release
     steps:
@@ -25,7 +22,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3.0.3
         with:
-          dotnet-version: ${{ matrix.dotnet }}
+          dotnet-version: 6.0.400
       - name: Restore dependencies
         run: dotnet restore
       - name: Build library as full release
