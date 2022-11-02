@@ -33,38 +33,11 @@ namespace DisCatSharp.Entities
 	/// </summary>
 	public class AutomodRule : SnowflakeObject
 	{
-		public AutomodRule(ulong? ruleId, ulong? guildId, string ruleName, ulong? creatorId, AutomodEventType eventType, AutomodTriggerType triggerType, AutomodTriggerMetadata triggerMetadata,
-			ReadOnlyCollection<AutomodAction> actions, bool enabled, ReadOnlyCollection<ulong> exemptRoles, ReadOnlyCollection<ulong> exemptChannels)
-		{
-			this.RuleId = ruleId;
-			this.GuildId = guildId;
-			this.RuleName = ruleName;
-			this.CreatorId = creatorId;
-			this.EventType = eventType;
-			this.TriggerType = triggerType;
-			this.TriggerMetadata = triggerMetadata;
-			this.Actions = actions;
-			this.Enabled = enabled;
-			this.ExemptRoles = exemptRoles;
-			this.ExemptChannels = exemptChannels;
-		}
-
-		/// <summary>
-		/// Gets the base client.
-		/// </summary>
-		internal BaseDiscordClient Discord { get; set; }
-
-		/// <summary>
-		/// Gets the id of this rule.
-		/// </summary>
-		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-		public ulong? RuleId { get; internal set; }
-
 		/// <summary>
 		/// Gets the id of the guild this rule belongs to.
 		/// </summary>
 		[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
-		public ulong? GuildId { get; internal set; }
+		public ulong GuildId { get; internal set; }
 
 		/// <summary>
 		/// Gets the name of this rule.
@@ -76,7 +49,7 @@ namespace DisCatSharp.Entities
 		/// The id of the user who first created this rule.
 		/// </summary>
 		[JsonProperty("creator_id", NullValueHandling = NullValueHandling.Ignore)]
-		public ulong? CreatorId { get; internal set; }
+		public ulong CreatorId { get; internal set; }
 
 		/// <summary>
 		/// Gets the type of this rule.

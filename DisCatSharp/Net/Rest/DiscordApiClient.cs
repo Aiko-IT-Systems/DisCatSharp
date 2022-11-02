@@ -965,7 +965,7 @@ public sealed class DiscordApiClient
 
 		var ret = json.ToDiscordObject<DiscordWidget>();
 		ret.Discord = this.Discord;
-		ret.Guild = (this.Discord.Guilds.ContainsKey(guildId)) ? this.Discord.Guilds[guildId] : null;
+		ret.Guild = this.Discord.Guilds.ContainsKey(guildId) ? this.Discord.Guilds[guildId] : null;
 
 		ret.Channels = ret.Guild == null
 			? rawChannels.Select(r => new DiscordChannel
@@ -2151,7 +2151,7 @@ public sealed class DiscordApiClient
 	/// <param name="sendStartNotification">Whether everyone should be notified about the stage.</param>
 	/// <param name="privacyLevel">The privacy_level.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordStageInstance> CreateStageInstanceAsync(ulong channelId, string topic, bool sendStartNotification, StagePrivacyLevel privacyLevel, string reason)
+	internal async Task<DiscordStageInstance> CreateStageInstanceAsync(ulong channelId, string topic, bool sendStartNotification, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly, string reason = null)
 	{
 		var pld = new RestStageInstanceCreatePayload
 		{
