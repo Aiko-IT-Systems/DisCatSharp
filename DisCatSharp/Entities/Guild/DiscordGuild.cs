@@ -1069,10 +1069,10 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="exemptChannels">The new exempt channels of the rule.</param>
 	/// <param name="reason">The reason for this modification.</param>
 	/// <returns>The updated rule.</returns>
-	public Task<AutomodRule> ModifyAutomodRuleAsync(ulong guildId, ulong ruleId, Optional<string> name, Optional<AutomodEventType> eventType, Optional<AutomodTriggerType> triggerType,
+	public Task<AutomodRule> ModifyAutomodRuleAsync(ulong ruleId, Optional<string> name, Optional<AutomodEventType> eventType, Optional<AutomodTriggerType> triggerType,
 		Optional<AutomodTriggerMetadata> metadata, Optional<IEnumerable<AutomodAction>> actions, Optional<bool> enabled, Optional<IEnumerable<ulong>> exemptRoles,
 		Optional<IEnumerable<ulong>> exemptChannels, string reason = null)
-		=> this.Discord.ApiClient.ModifyAutomodRuleAsync(guildId, ruleId, name, eventType, triggerType, metadata, actions, enabled, exemptRoles, exemptChannels, reason);
+		=> this.Discord.ApiClient.ModifyAutomodRuleAsync(this.Id, ruleId, name, eventType, triggerType, metadata, actions, enabled, exemptRoles, exemptChannels, reason);
 
 	/// <summary>
 	/// Deletes an auto mod rule.
