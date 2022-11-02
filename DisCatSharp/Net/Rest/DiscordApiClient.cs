@@ -1383,7 +1383,7 @@ public sealed class DiscordApiClient
 	/// <param name="exemptChannels">The new exempt channels of the rule.</param>
 	/// <param name="reason">The reason for this modification.</param>
 	/// <returns>The updated automod rule</returns>
-	internal async Task<AutomodRule> ModifyAutomodRuleAsync(ulong guildId, ulong ruleId, Optional<string> name, Optional<AutomodEventType> eventType, Optional<AutomodTriggerType> triggerType,Optional<AutomodTriggerMetadata> metadata, Optional<IEnumerable<AutomodAction>> actions,
+	internal async Task<AutomodRule> ModifyAutomodRuleAsync(ulong guildId, ulong ruleId, Optional<string> name, Optional<AutomodEventType> eventType, Optional<AutomodTriggerType> triggerType, Optional<AutomodTriggerMetadata> metadata, Optional<IEnumerable<AutomodAction>> actions,
 		Optional<bool> enabled, Optional<IEnumerable<ulong>> exemptRoles, Optional<IEnumerable<ulong>> exemptChannels, string reason = null)
 	{
 		var pld = new RestAutomodRuleModifyPayload
