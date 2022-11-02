@@ -228,6 +228,11 @@ public sealed partial class DiscordClient
 
 			#endregion
 
+			// TODO: Hook dispatch
+			#region Guild Automod
+
+			#endregion
+
 			#region Guild Ban
 
 			case "guild_ban_add":
@@ -1378,7 +1383,7 @@ public sealed partial class DiscordClient
 	/// <param name="matchedContent">The matched content.</param>
 	/// <returns></returns>
 	internal async Task OnAutomodActionExecuted(DiscordGuild guild, AutomodAction executedAction, ulong ruleId, AutomodTriggerType triggerType, DiscordMember member, DiscordChannel channel,
-		ulong messageId, ulong alertMessageId, string content, string? matchedKeyword, string? matchedContent)
+		ulong? messageId = null, ulong? alertMessageId = null, string content = "", string? matchedKeyword = null, string? matchedContent = null)
 	{
 		var ea = new AutomodActionExecutedEventArgs(this.ServiceProvider)
 		{

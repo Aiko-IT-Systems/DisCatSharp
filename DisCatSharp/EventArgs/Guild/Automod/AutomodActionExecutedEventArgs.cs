@@ -66,13 +66,13 @@ namespace DisCatSharp.EventArgs
 		/// The id of any user message the content belongs to.
 		/// This will not exist if the message was blocked or content was not part of message.
 		/// </summary>
-		public ulong MessageId { get; internal set; }
+		public ulong? MessageId { get; internal set; }
 
 		/// <summary>
 		/// The id of any system auto moderation messages posted as a result of this action.
 		/// This will not exist if the event doesn't correspond to an action with type SendAlertMessage.
 		/// </summary>
-		public ulong AlertMessageId { get; internal set; }
+		public ulong? AlertMessageId { get; internal set; }
 
 		/// <summary>
 		/// The user-generated text content.
