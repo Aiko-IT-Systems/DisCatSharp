@@ -33,11 +33,8 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a discord forum post tag.
 /// </summary>
-public class ForumPostTag : SnowflakeObject, IEquatable<ForumPostTag>
+public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 {
-	[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
-	public new ulong? Id;
-
 	/// <summary>
 	/// Gets the channel id this tag belongs to.
 	/// </summary>
