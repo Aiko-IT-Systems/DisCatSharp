@@ -1295,7 +1295,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
 
 		var ret = JsonConvert.DeserializeObject<List<AutomodRule>>(res.Response);
-		return new ReadOnlyCollection<AutomodRule>(ret);
+		return ret.AsReadOnly();
 	}
 
 	/// <summary>
@@ -1317,7 +1317,7 @@ public sealed class DiscordApiClient
 	}
 
 	/// <summary>
-	/// 
+	/// Creates a auto mod rule.
 	/// </summary>
 	/// <param name="guildId"></param>
 	/// <param name="name"></param>
@@ -1328,23 +1328,29 @@ public sealed class DiscordApiClient
 	/// <param name="enabled"></param>
 	/// <param name="exemptRoles"></param>
 	/// <param name="exemptChannels"></param>
-	/// <returns></returns>
-	internal async Task CreateAutomodRuleAsync(ulong guildId, string name, AutomodEventType eventType, AutomodTriggerType triggerType, List<AutomodAction> actions,
-		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, List<ulong> exemptRoles = null, List<ulong> exemptChannels = null)
-	{
-		var pld = new AutomodRule(null, null, name, null, eventType, triggerType, triggerMetadata, new ReadOnlyCollection<AutomodAction>(actions), enabled, new ReadOnlyCollection<ulong>(exemptRoles),
-			new ReadOnlyCollection<ulong>(exemptChannels));
-
-		await this.CreateAutomodRuleAsync(guildId, pld);
-	}
-
-	internal async Task<AutomodRule> CreateAutomodRuleAsync(ulong guildId, AutomodRule automodRule)
+	internal async Task<AutomodRule> CreateAutomodRuleAsync(ulong guildId, string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
+		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
 
+		RestAutomodRuleModifyPayload pld = new()
+		{
+			Name = name,
+			EventType = eventType,
+			TriggerType = triggerType,
+			Actions = actions.ToArray(),
+			Enabled = enabled,
+			TriggerMetadata = triggerMetadata ?? null
+		};
+
+		if (exemptChannels != null)
+			pld.ExemptChannels = exemptChannels.ToArray();
+		if (exemptRoles != null)
+			pld.ExemptRoles = exemptRoles.ToArray();
+
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(automodRule)).ConfigureAwait(false);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
 
@@ -1356,14 +1362,15 @@ public sealed class DiscordApiClient
 		return ret;
 	}
 
-	internal async Task<AutomodRule> ModifyAutomodRuleAsync(ulong guildId, ulong ruleId, Optional<string> name, Optional<AutomodEventType> eventType, Optional<AutomodTriggerMetadata> metadata, Optional<List<AutomodAction>> actions,
-		Optional<bool> enabled, Optional<List<ulong>> exemptRoles, Optional<List<ulong>> exemptChannels)
+	internal async Task<AutomodRule> ModifyAutomodRuleAsync(ulong guildId, ulong ruleId, Optional<string> name, Optional<AutomodEventType> eventType, Optional<AutomodTriggerType> triggerType,Optional<AutomodTriggerMetadata> metadata, Optional<IEnumerable<AutomodAction>> actions,
+		Optional<bool> enabled, Optional<IEnumerable<ulong>> exemptRoles, Optional<IEnumerable<ulong>> exemptChannels)
 	{
-		var pld = new AutomodRuleModifyPayload
+		var pld = new RestAutomodRuleModifyPayload
 		{
 			Name = name,
 			EventType = eventType,
 			TriggerMetadata = metadata,
+			TriggerType = triggerType,
 			Actions = actions,
 			Enabled = enabled,
 			ExemptRoles = exemptRoles,
