@@ -63,6 +63,11 @@ namespace DisCatSharp.EventArgs
 		public DiscordChannel? Channel { get; internal set; }
 
 		/// <summary>
+		/// Fall-back channel id if channel wasn't found in cache.
+		/// </summary>
+		public ulong? ChannelId { get; internal set; }
+
+		/// <summary>
 		/// The id of any user message the content belongs to.
 		/// This will not exist if the message was blocked or content was not part of message.
 		/// </summary>
