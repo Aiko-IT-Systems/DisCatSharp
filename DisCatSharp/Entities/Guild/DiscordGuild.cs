@@ -1081,8 +1081,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="ruleId">The rule id.</param>
 	/// <param name="reason">The reason for this deletion.</param>
 	/// <returns>The deleted auto mod rule.</returns>
-	public Task<AutomodRule> DeleteAutomodRuleAsync(ulong guildId, ulong ruleId, string reason = null)
-		=> this.Discord.ApiClient.DeleteAutomodRuleAsync(guildId, ruleId, reason);
+	public Task<AutomodRule> DeleteAutomodRuleAsync(ulong ruleId, string reason = null)
+		=> this.Discord.ApiClient.DeleteAutomodRuleAsync(this.Id, ruleId, reason);
 
 	#region Scheduled Events
 
