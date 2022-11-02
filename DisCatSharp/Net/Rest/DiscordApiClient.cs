@@ -1329,7 +1329,7 @@ public sealed class DiscordApiClient
 	/// <param name="exemptRoles"></param>
 	/// <param name="exemptChannels"></param>
 	internal async Task<AutomodRule> CreateAutomodRuleAsync(ulong guildId, string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
-		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null)
+		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null, string reason = null)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
@@ -1349,8 +1349,12 @@ public sealed class DiscordApiClient
 		if (exemptRoles != null)
 			pld.ExemptRoles = exemptRoles.ToArray();
 
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
 
@@ -1363,7 +1367,7 @@ public sealed class DiscordApiClient
 	}
 
 	internal async Task<AutomodRule> ModifyAutomodRuleAsync(ulong guildId, ulong ruleId, Optional<string> name, Optional<AutomodEventType> eventType, Optional<AutomodTriggerType> triggerType,Optional<AutomodTriggerMetadata> metadata, Optional<IEnumerable<AutomodAction>> actions,
-		Optional<bool> enabled, Optional<IEnumerable<ulong>> exemptRoles, Optional<IEnumerable<ulong>> exemptChannels)
+		Optional<bool> enabled, Optional<IEnumerable<ulong>> exemptRoles, Optional<IEnumerable<ulong>> exemptChannels, string reason = null)
 	{
 		var pld = new RestAutomodRuleModifyPayload
 		{
@@ -1377,11 +1381,15 @@ public sealed class DiscordApiClient
 			ExemptChannels = exemptChannels
 		};
 
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules/:rule_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId, rule_id = ruleId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: DiscordJson.SerializeObject(pld));
 
 		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
 
@@ -1393,16 +1401,26 @@ public sealed class DiscordApiClient
 		return ret;
 	}
 
-	internal async Task DeleteAutomodRuleAsync(ulong guildId, ulong ruleId)
+	internal async Task<AutomodRule> DeleteAutomodRuleAsync(ulong guildId, ulong ruleId, string reason = null)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules/:rule_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id = guildId, rule_id = ruleId }, out var path);
 
-		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route).ConfigureAwait(false);
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
 
-		// don't fire anything cause it doesn't return anything
-		// maybe cache rules to still return something??
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
+
+		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+
+		if (this.Discord is DiscordClient dc)
+		{
+			await dc.OnAutomodRuleDeleted(ret).ConfigureAwait(false);
+		}
+
+		return ret;
 	}
 
 
