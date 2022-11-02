@@ -1293,7 +1293,7 @@ public sealed class DiscordApiClient
 		return new ReadOnlyCollection<AutomodRule>(ret);
 	}
 
-	internal async Task<AutomodRule> GetAutoModRuleAsync(ulong guildId, ulong ruleId)
+	internal async Task<AutomodRule> GetAutomodRuleAsync(ulong guildId, ulong ruleId)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules/:rule_id";
 		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId, rule_id = ruleId }, out var path);
@@ -1303,6 +1303,33 @@ public sealed class DiscordApiClient
 
 		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
 		return ret;
+	}
+
+	internal async Task CreateAutomodRuleAsync(ulong guildId, string name, AutomodEventType eventType, AutomodTriggerType triggerType, List<AutomodAction> actions,
+		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, List<ulong> exemptRoles = null, List<ulong> exemptChannels = null)
+	{
+		var pld = new AutomodRule
+		{
+			GuildId = guildId,
+			RuleName = name,
+			EventType = eventType,
+			TriggerType = triggerType,
+			Actions = new ReadOnlyCollection<AutomodAction>(actions),
+			TriggerMetadata = triggerMetadata,
+			Enabled = enabled,
+			ExemptRoles = new ReadOnlyCollection<ulong>(exemptRoles),
+			ExemptChannels = new ReadOnlyCollection<ulong>(exemptChannels)
+		};
+
+		await this.CreateAutomodRuleAsync(pld);
+	}
+
+	internal async Task CreateAutomodRuleAsync(AutomodRule automodRule)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = automodRule.GuildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 	}
 	#endregion
 

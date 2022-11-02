@@ -31,7 +31,6 @@ namespace DisCatSharp.Entities
 	/// <summary>
 	/// Represents the rule's meta data.
 	/// </summary>
-	[JsonObject(MemberSerialization = MemberSerialization.OptOut)]
 	public class AutomodTriggerMetadata
 	{
 		/// <summary>

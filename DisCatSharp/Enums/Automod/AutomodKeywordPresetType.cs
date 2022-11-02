@@ -35,7 +35,7 @@ namespace DisCatSharp.Enums
 		/// <summary>
 		/// Words that refer to sexually explicit behavior or activity.
 		/// </summary>
-		SexaulContent = 2,
+		SexualContent = 2,
 
 		/// <summary>
 		/// Personal insults or words that may be considered hate speech.

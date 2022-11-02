@@ -28,7 +28,6 @@ namespace DisCatSharp.Entities
 	/// Additional data used when an action is executed.
 	/// Different fields are relevant based on the action type.
 	/// </summary>
-	[JsonObject(MemberSerialization = MemberSerialization.OptOut)]
 	public class AutomodActionMetaData
 	{
 		/// <summary>
