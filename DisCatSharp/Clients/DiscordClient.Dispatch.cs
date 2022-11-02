@@ -228,9 +228,23 @@ public sealed partial class DiscordClient
 
 			#endregion
 
-			// TODO: Hook dispatch
 			#region Guild Automod
+			case "guild_automod_rule_create":
+				await this.OnAutomodRuleCreated(dat.ToDiscordObject<AutomodRule>());
+				break;
+			case "guild_automod_rule_update":
+				await this.OnAutomodRuleUpdated(dat.ToDiscordObject<AutomodRule>());
+				break;
+			case "guild_automod_rule_delete":
+				await this.OnAutomodRuleDeleted(dat.ToDiscordObject<AutomodRule>());
+				break;
+			case "guild_automod_action_execute":
+				gid = (ulong)dat["guild_id"];
 
+				await this.OnAutomodActionExecuted(this.GuildsInternal[gid], dat.ToDiscordObject<AutomodAction>(), (ulong)dat["rule_id"], dat.ToDiscordObject<AutomodTriggerType>(),
+					(ulong)dat["user_id"], (ulong)dat["channel_id"], (ulong)dat["message_id"], (ulong)dat["alert_system_message_id"], (string)dat["content"],
+					(string?)dat["matched_keyword"] ?? null, (string?)dat["matched_content"]);
+				break;
 			#endregion
 
 			#region Guild Ban
@@ -1374,27 +1388,30 @@ public sealed partial class DiscordClient
 	/// <param name="executedAction">The executed action.</param>
 	/// <param name="ruleId">The rule id.</param>
 	/// <param name="triggerType">The trigger type.</param>
-	/// <param name="member">The member who caused this event.</param>
-	/// <param name="channel">The channel.</param>
+	/// <param name="userId">The member who caused this event.</param>
+	/// <param name="channelId">The channel id.</param>
 	/// <param name="messageId">The message</param>
 	/// <param name="alertMessageId">The alert message id, if present.</param>
 	/// <param name="content">The content of the message.</param>
 	/// <param name="matchedKeyword">The matched keyword.</param>
 	/// <param name="matchedContent">The matched content.</param>
 	/// <returns></returns>
-	internal async Task OnAutomodActionExecuted(DiscordGuild guild, AutomodAction executedAction, ulong ruleId, AutomodTriggerType triggerType, DiscordMember member, DiscordChannel channel,
+	internal async Task OnAutomodActionExecuted(DiscordGuild guild, AutomodAction executedAction, ulong ruleId, AutomodTriggerType triggerType, ulong userId, ulong? channelId,
 		ulong? messageId = null, ulong? alertMessageId = null, string content = "", string? matchedKeyword = null, string? matchedContent = null)
 	{
+		guild.Members.TryGetValue(userId, out var member);
+		var channel = this.InternalGetCachedChannel((ulong)channelId);
+
 		var ea = new AutomodActionExecutedEventArgs(this.ServiceProvider)
 		{
 			Guild = guild,
 			Action = executedAction,
 			RuleId = ruleId,
 			TriggerType = triggerType,
-			Member = member,
+			Member =  member,
 			Channel = channel,
-			MessageId = messageId,
-			AlertMessageId = alertMessageId,
+			MessageId = messageId ?? null,
+			AlertMessageId = alertMessageId ?? null,
 			MessageContent = content,
 			MatchedKeyword = matchedKeyword,
 			MatchedContent = matchedContent
@@ -3447,7 +3464,6 @@ public sealed partial class DiscordClient
 
 		var guild = this.InternalGetCachedGuild(guildId);
 		var usr = this.UpdateUser(new DiscordUser { Id = userId, Discord = this }, guildId, guild, mbr);
-
 		var ea = new TypingStartEventArgs(this.ServiceProvider)
 		{
 			Channel = channel,

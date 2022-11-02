@@ -60,7 +60,7 @@ namespace DisCatSharp.EventArgs
 		/// <summary>
 		/// The channel this event happened in.
 		/// </summary>
-		public DiscordChannel Channel { get; internal set; }
+		public DiscordChannel? Channel { get; internal set; }
 
 		/// <summary>
 		/// The id of any user message the content belongs to.
