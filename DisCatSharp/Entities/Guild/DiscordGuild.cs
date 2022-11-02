@@ -1019,6 +1019,71 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		}
 	}
 
+	/// <summary>
+	/// Gets all auto mod rules for a guild.
+	/// </summary>
+	/// <param name="guildId">The guild id to get the rules for.</param>
+	/// <returns>A collection of all rules in the guild.</returns>
+	public Task<ReadOnlyCollection<AutomodRule>> GetAutomodRulesAsync(ulong guildId)
+		=> this.Discord.ApiClient.GetAutomodRulesAsync(guildId);
+
+	/// <summary>
+	/// Gets a specific auto mod rule.
+	/// </summary>
+	/// <param name="guildId">The guild id of the rule.</param>
+	/// <param name="ruleId">The rule id to get.</param>
+	/// <returns>The auto mod rule.</returns>
+	public Task<AutomodRule> GetAutomodRuleAsync(ulong guildId, ulong ruleId)
+		=> this.Discord.ApiClient.GetAutomodRuleAsync(guildId, ruleId);
+
+	/// <summary>
+	/// Creates a new auto mod rule in a guild.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="name">The name of the rule.</param>
+	/// <param name="eventType">The event type of the rule.</param>
+	/// <param name="triggerType">The trigger type of the rule.</param>
+	/// <param name="actions">The actions of the rule.</param>
+	/// <param name="triggerMetadata">The meta data of the rule.</param>
+	/// <param name="enabled">Whether this rule is enabled.</param>
+	/// <param name="exemptRoles">The exempt roles of the rule.</param>
+	/// <param name="exemptChannels">The exempt channels of the rule.</param>
+	/// <param name="reason">The reason for this addition</param>
+	/// <returns>The created rule.</returns>
+	public Task<AutomodRule> CreateAutomodRuleAsync(ulong guildId, string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
+		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null, string reason = null)
+		=> this.Discord.ApiClient.CreateAutomodRuleAsync(guildId, name, eventType, triggerType, actions, triggerMetadata, enabled, exemptRoles, exemptChannels, reason);
+
+	/// <summary>
+	/// Modifies an auto mod rule.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="ruleId">The rule id.</param>
+	/// <param name="name">The new name of the rule.</param>
+	/// <param name="eventType">The new event type of the rule.</param>
+	/// <param name="triggerType">The new trigger type of the rule.</param>
+	/// <param name="metadata">The new metadata of the rule.</param>
+	/// <param name="actions">The new actions of the rule.</param>
+	/// <param name="enabled">Whether this rule should be enabled.</param>
+	/// <param name="exemptRoles">The new exempt roles of the rule.</param>
+	/// <param name="exemptChannels">The new exempt channels of the rule.</param>
+	/// <param name="reason">The reason for this modification.</param>
+	/// <returns>The updated rule.</returns>
+	public Task<AutomodRule> ModifyAutomodRuleAsync(ulong guildId, ulong ruleId, Optional<string> name, Optional<AutomodEventType> eventType, Optional<AutomodTriggerType> triggerType,
+		Optional<AutomodTriggerMetadata> metadata, Optional<IEnumerable<AutomodAction>> actions, Optional<bool> enabled, Optional<IEnumerable<ulong>> exemptRoles,
+		Optional<IEnumerable<ulong>> exemptChannels, string reason = null)
+		=> this.Discord.ApiClient.ModifyAutomodRuleAsync(guildId, ruleId, name, eventType, triggerType, metadata, actions, enabled, exemptRoles, exemptChannels, reason);
+
+	/// <summary>
+	/// Deletes an auto mod rule.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="ruleId">The rule id.</param>
+	/// <param name="reason">The reason for this deletion.</param>
+	/// <returns>The deleted auto mod rule.</returns>
+	public Task<AutomodRule> DeleteAutomodRuleAsync(ulong guildId, ulong ruleId, string reason = null)
+		=> this.Discord.ApiClient.DeleteAutomodRuleAsync(guildId, ruleId, reason);
+
 	#region Scheduled Events
 
 	/// <summary>
