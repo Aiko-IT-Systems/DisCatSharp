@@ -1024,8 +1024,8 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// </summary>
 	/// <param name="guildId">The guild id to get the rules for.</param>
 	/// <returns>A collection of all rules in the guild.</returns>
-	public Task<ReadOnlyCollection<AutomodRule>> GetAutomodRulesAsync(ulong guildId)
-		=> this.Discord.ApiClient.GetAutomodRulesAsync(guildId);
+	public Task<ReadOnlyCollection<AutomodRule>> GetAutomodRulesAsync()
+		=> this.Discord.ApiClient.GetAutomodRulesAsync(this.Id);
 
 	/// <summary>
 	/// Gets a specific auto mod rule.
