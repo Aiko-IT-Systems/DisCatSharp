@@ -58,12 +58,7 @@ namespace DisCatSharp.EventArgs
 		public DiscordMember Member { get; internal set; }
 
 		/// <summary>
-		/// The channel this event happened in.
-		/// </summary>
-		public DiscordChannel? Channel { get; internal set; }
-
-		/// <summary>
-		/// Fall-back channel id if channel wasn't found in cache.
+		/// Fall-back channel id this event happened in.
 		/// </summary>
 		public ulong? ChannelId { get; internal set; }
 

@@ -1400,7 +1400,6 @@ public sealed partial class DiscordClient
 		ulong? messageId = null, ulong? alertMessageId = null, string content = "", string? matchedKeyword = null, string? matchedContent = null)
 	{
 		guild.Members.TryGetValue(userId, out var member);
-		var channel = this.InternalGetCachedChannel((ulong)channelId);
 
 		var ea = new AutomodActionExecutedEventArgs(this.ServiceProvider)
 		{
@@ -1409,7 +1408,6 @@ public sealed partial class DiscordClient
 			RuleId = ruleId,
 			TriggerType = triggerType,
 			Member =  member,
-			Channel = channel ?? null,
 			ChannelId = channelId,
 			MessageId = messageId ?? null,
 			AlertMessageId = alertMessageId ?? null,
