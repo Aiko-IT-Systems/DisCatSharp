@@ -1320,6 +1320,84 @@ public sealed partial class DiscordClient
 		await this._guildStickersUpdated.InvokeAsync(this, sea).ConfigureAwait(false);
 	}
 
+	/// <summary>
+	/// Handles the created rule.
+	/// </summary>
+	/// <param name="newRule">The new added rule.</param>
+	internal async Task OnAutomodRuleCreated(AutomodRule newRule)
+	{
+		var sea = new AutomodCreateRuleEventArgs(this.ServiceProvider)
+		{
+			Rule = newRule
+		};
+
+		await this._automodRuleCreated.InvokeAsync(this, sea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the updated rule.
+	/// </summary>
+	/// <param name="updatedRule">The updated rule.</param>
+	internal async Task OnAutomodRuleUpdated(AutomodRule updatedRule)
+	{
+		var sea = new AutomodUpdateRuleEventArgs(this.ServiceProvider)
+		{
+			Rule = updatedRule
+		};
+
+		await this._automodRuleUpdated.InvokeAsync(this, sea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the deleted rule.
+	/// </summary>
+	/// <param name="deletedRule">The deleted rule.</param>
+	internal async Task OnAutomodRuleDeleted(AutomodRule deletedRule)
+	{
+		var sea = new AutomodDeleteRuleEventArgs(this.ServiceProvider)
+		{
+			Rule = deletedRule
+		};
+
+		await this._automodRuleDeleted.InvokeAsync(this, sea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the rule action execution.
+	/// </summary>
+	/// <param name="guild">The guild.</param>
+	/// <param name="executedAction">The executed action.</param>
+	/// <param name="ruleId">The rule id.</param>
+	/// <param name="triggerType">The trigger type.</param>
+	/// <param name="member">The member who caused this event.</param>
+	/// <param name="channel">The channel.</param>
+	/// <param name="messageId">The message</param>
+	/// <param name="alertMessageId">The alert message id, if present.</param>
+	/// <param name="content">The content of the message.</param>
+	/// <param name="matchedKeyword">The matched keyword.</param>
+	/// <param name="matchedContent">The matched content.</param>
+	/// <returns></returns>
+	internal async Task OnAutomodActionExecuted(DiscordGuild guild, AutomodAction executedAction, ulong ruleId, AutomodTriggerType triggerType, DiscordMember member, DiscordChannel channel,
+		ulong messageId, ulong alertMessageId, string content, string? matchedKeyword, string? matchedContent)
+	{
+		var ea = new AutomodActionExecutedEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			Action = executedAction,
+			RuleId = ruleId,
+			TriggerType = triggerType,
+			Member = member,
+			Channel = channel,
+			MessageId = messageId,
+			AlertMessageId = alertMessageId,
+			MessageContent = content,
+			MatchedKeyword = matchedKeyword,
+			MatchedContent = matchedContent
+		};
+
+		await this._automodActionExecuted.InvokeAsync(this, ea).ConfigureAwait(false);
+	}
+
 	#endregion
 
 	#region Guild Ban

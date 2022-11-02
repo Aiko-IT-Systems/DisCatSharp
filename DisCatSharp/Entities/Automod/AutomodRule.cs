@@ -33,7 +33,7 @@ namespace DisCatSharp.Entities
 	/// </summary>
 	public class AutomodRule : SnowflakeObject
 	{
-		public AutomodRule(ulong ruleId, ulong guildId, string ruleName, ulong creatorId, AutomodEventType eventType, AutomodTriggerType triggerType, AutomodTriggerMetadata triggerMetadata,
+		public AutomodRule(ulong? ruleId, ulong? guildId, string ruleName, ulong? creatorId, AutomodEventType eventType, AutomodTriggerType triggerType, AutomodTriggerMetadata triggerMetadata,
 			ReadOnlyCollection<AutomodAction> actions, bool enabled, ReadOnlyCollection<ulong> exemptRoles, ReadOnlyCollection<ulong> exemptChannels)
 		{
 			this.RuleId = ruleId;
@@ -57,14 +57,14 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Gets the id of this rule.
 		/// </summary>
-		[JsonProperty("id")]
-		public ulong RuleId { get; internal set; }
+		[JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+		public ulong? RuleId { get; internal set; }
 
 		/// <summary>
 		/// Gets the id of the guild this rule belongs to.
 		/// </summary>
-		[JsonProperty("guild_id")]
-		public ulong GuildId { get; internal set; }
+		[JsonProperty("guild_id", NullValueHandling = NullValueHandling.Ignore)]
+		public ulong? GuildId { get; internal set; }
 
 		/// <summary>
 		/// Gets the name of this rule.
@@ -75,7 +75,8 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// The id of the user who first created this rule.
 		/// </summary>
-		public ulong CreatorId { get; internal set; }
+		[JsonProperty("creator_id", NullValueHandling = NullValueHandling.Ignore)]
+		public ulong? CreatorId { get; internal set; }
 
 		/// <summary>
 		/// Gets the type of this rule.
