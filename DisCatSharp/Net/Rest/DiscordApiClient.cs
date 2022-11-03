@@ -1322,6 +1322,7 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild id of the rule.</param>
 	/// <param name="name">The name of the rule.</param>
 	/// <param name="eventType">The event type of the rule.</param>
+	/// <param name="triggerType">The trigger type.</param>
 	/// <param name="actions">The actions of the rule.</param>
 	/// <param name="triggerMetadata">The metadata of the rule.</param>
 	/// <param name="enabled">Whether this rule is enabled.</param>
@@ -1329,7 +1330,7 @@ public sealed class DiscordApiClient
 	/// <param name="exemptChannels">The exempt channels of the rule.</param>
 	/// <param name="reason">The reason for this addition.</param>
 	/// <returns>The new auto mod rule.</returns>
-	internal async Task<AutomodRule> CreateAutomodRuleAsync(ulong guildId, string name, AutomodEventType eventType, IEnumerable<AutomodAction> actions,
+	internal async Task<AutomodRule> CreateAutomodRuleAsync(ulong guildId, string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
 		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null, string reason = null)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules";
@@ -1339,6 +1340,7 @@ public sealed class DiscordApiClient
 		{
 			Name = name,
 			EventType = eventType,
+			TriggerType = triggerType,
 			Actions = actions.ToArray(),
 			Enabled = enabled,
 			TriggerMetadata = triggerMetadata ?? null

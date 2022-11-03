@@ -32,6 +32,8 @@ namespace DisCatSharp.Entities
 
 		public Optional<AutomodEventType> EventType { get; set; }
 
+		public Optional<AutomodTriggerType> TriggerType { get; set; }
+
 		public Optional<AutomodTriggerMetadata> TriggerMetadata { get; set; }
 
 		public Optional<IEnumerable<AutomodAction>> Actions { get; set; }

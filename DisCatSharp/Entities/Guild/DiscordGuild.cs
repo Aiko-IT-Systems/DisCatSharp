@@ -1022,7 +1022,6 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Gets all auto mod rules for a guild.
 	/// </summary>
-	/// <param name="guildId">The guild id to get the rules for.</param>
 	/// <returns>A collection of all rules in the guild.</returns>
 	public Task<ReadOnlyCollection<AutomodRule>> GetAutomodRulesAsync()
 		=> this.Discord.ApiClient.GetAutomodRulesAsync(this.Id);
@@ -1038,7 +1037,6 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Creates a new auto mod rule in a guild.
 	/// </summary>
-	/// <param name="guildId">The guild id.</param>
 	/// <param name="name">The name of the rule.</param>
 	/// <param name="eventType">The event type of the rule.</param>
 	/// <param name="triggerType">The trigger type of the rule.</param>
@@ -1065,7 +1063,6 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Deletes an auto mod rule.
 	/// </summary>
-	/// <param name="guildId">The guild id.</param>
 	/// <param name="ruleId">The rule id.</param>
 	/// <param name="reason">The reason for this deletion.</param>
 	/// <returns>The deleted auto mod rule.</returns>
