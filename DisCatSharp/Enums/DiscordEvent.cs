@@ -54,7 +54,7 @@ public class EventHandlerAttribute : Attribute { }
 /// <summary>
 /// All events available in <see cref="DiscordClient"/> for use with <see cref="EventAttribute"/>.
 /// </summary>
-public enum DiscordEvent
+public enum DiscordEvent : long
 {
 	ApplicationCommandCreated,
 	ApplicationCommandDeleted,
@@ -137,6 +137,10 @@ public enum DiscordEvent
 	VoiceStateUpdated,
 	WebhooksUpdated,
 	Zombied,
+	AutomodRuleCreated,
+	AutomodRuleUpdated,
+	AutomodRuleDeleted,
+	AutomodActionExecuted,
 	GuildJoined = GuildCreated,
-	JoinedGuild = GuildCreated,
+	JoinedGuild = GuildCreated
 }
