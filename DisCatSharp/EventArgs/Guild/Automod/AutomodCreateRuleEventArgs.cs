@@ -29,7 +29,7 @@ namespace DisCatSharp.EventArgs
 	/// <summary>
 	/// Represents arguments for <see cref="DiscordClient.AutomodRuleCreated"/> event.
 	/// </summary>
-	public class AutomodCreateRuleEventArgs : DiscordEventArgs
+	public class AutomodRuleCreateEventArgs : DiscordEventArgs
 	{
 		/// <summary>
 		/// Gets the rule that has been created.
@@ -37,8 +37,8 @@ namespace DisCatSharp.EventArgs
 		public AutomodRule Rule { get; internal set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AutomodCreateRuleEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="AutomodRuleCreateEventArgs"/> class.
 		/// </summary>
-		public AutomodCreateRuleEventArgs(IServiceProvider provider) : base(provider) { }
+		public AutomodRuleCreateEventArgs(IServiceProvider provider) : base(provider) { }
 	}
 }

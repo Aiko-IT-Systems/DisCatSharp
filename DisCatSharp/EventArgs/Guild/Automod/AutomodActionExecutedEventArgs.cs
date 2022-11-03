@@ -55,7 +55,16 @@ namespace DisCatSharp.EventArgs
 		/// <summary>
 		/// The member which caused this event.
 		/// </summary>
-		public DiscordMember Member { get; internal set; }
+		public DiscordMember Member
+			=> this.Guild.Members.TryGetValue(this.UserId, out var member) ? member : this.Guild.GetMemberAsync(this.UserId, true).Result;
+
+		/// <summary>
+		/// The user id which caused this event.
+		/// </summary>
+		public ulong UserId { get; internal set; }
+
+		public DiscordChannel? Channel
+			=> this.ChannelId.HasValue ? this.Guild.GetChannel(this.ChannelId.Value) : null;
 
 		/// <summary>
 		/// Fall-back channel id this event happened in.
@@ -77,7 +86,7 @@ namespace DisCatSharp.EventArgs
 		/// <summary>
 		/// The user-generated text content.
 		/// </summary>
-		public string MessageContent { get; internal set; }
+		public string? MessageContent { get; internal set; }
 
 		/// <summary>
 		/// The word or phrase configured in the rule that triggered this.

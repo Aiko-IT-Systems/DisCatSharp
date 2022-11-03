@@ -241,9 +241,7 @@ public sealed partial class DiscordClient
 			case "guild_automod_action_execute":
 				gid = (ulong)dat["guild_id"];
 
-				await this.OnAutomodActionExecuted(this.GuildsInternal[gid], dat.ToDiscordObject<AutomodAction>(), (ulong)dat["rule_id"], dat.ToDiscordObject<AutomodTriggerType>(),
-					(ulong)dat["user_id"], (ulong)dat["channel_id"], (ulong)dat["message_id"], (ulong)dat["alert_system_message_id"], (string)dat["content"],
-					(string?)dat["matched_keyword"] ?? null, (string?)dat["matched_content"]);
+				await this.OnAutomodActionExecuted(this.GuildsInternal[gid], dat);
 				break;
 			#endregion
 
@@ -1345,7 +1343,7 @@ public sealed partial class DiscordClient
 	/// <param name="newRule">The new added rule.</param>
 	internal async Task OnAutomodRuleCreated(AutomodRule newRule)
 	{
-		var sea = new AutomodCreateRuleEventArgs(this.ServiceProvider)
+		var sea = new AutomodRuleCreateEventArgs(this.ServiceProvider)
 		{
 			Rule = newRule
 		};
@@ -1359,7 +1357,7 @@ public sealed partial class DiscordClient
 	/// <param name="updatedRule">The updated rule.</param>
 	internal async Task OnAutomodRuleUpdated(AutomodRule updatedRule)
 	{
-		var sea = new AutomodUpdateRuleEventArgs(this.ServiceProvider)
+		var sea = new AutomodRuleUpdateEventArgs(this.ServiceProvider)
 		{
 			Rule = updatedRule
 		};
@@ -1373,7 +1371,7 @@ public sealed partial class DiscordClient
 	/// <param name="deletedRule">The deleted rule.</param>
 	internal async Task OnAutomodRuleDeleted(AutomodRule deletedRule)
 	{
-		var sea = new AutomodDeleteRuleEventArgs(this.ServiceProvider)
+		var sea = new AutomodRuleDeleteEventArgs(this.ServiceProvider)
 		{
 			Rule = deletedRule
 		};
@@ -1385,21 +1383,19 @@ public sealed partial class DiscordClient
 	/// Handles the rule action execution.
 	/// </summary>
 	/// <param name="guild">The guild.</param>
-	/// <param name="executedAction">The executed action.</param>
-	/// <param name="ruleId">The rule id.</param>
-	/// <param name="triggerType">The trigger type.</param>
-	/// <param name="userId">The member who caused this event.</param>
-	/// <param name="channelId">The channel id.</param>
-	/// <param name="messageId">The message</param>
-	/// <param name="alertMessageId">The alert message id, if present.</param>
-	/// <param name="content">The content of the message.</param>
-	/// <param name="matchedKeyword">The matched keyword.</param>
-	/// <param name="matchedContent">The matched content.</param>
-	/// <returns></returns>
-	internal async Task OnAutomodActionExecuted(DiscordGuild guild, AutomodAction executedAction, ulong ruleId, AutomodTriggerType triggerType, ulong userId, ulong? channelId,
-		ulong? messageId = null, ulong? alertMessageId = null, string content = "", string? matchedKeyword = null, string? matchedContent = null)
+	/// <param name="rawPayload">The raw payload.</param>
+	internal async Task OnAutomodActionExecuted(DiscordGuild guild, JObject rawPayload)
 	{
-		guild.Members.TryGetValue(userId, out var member);
+		var executedAction = rawPayload.ToDiscordObject<AutomodAction>();
+		var ruleId = (ulong)rawPayload["rule_id"];
+		var triggerType = rawPayload.ToDiscordObject<AutomodTriggerType>();
+		var userId = (ulong)rawPayload["user_id"];
+		var channelId = rawPayload.ContainsKey("channel_id") ? (ulong?)rawPayload["channel_id"] : null;
+		var messageId = rawPayload.ContainsKey("message_id") ? (ulong?)rawPayload["message_id"] : null;
+		var alertMessageId = rawPayload.ContainsKey("alert_system_message_id") ? (ulong?)rawPayload["alert_system_message_id"] : null;
+		string? content = rawPayload.ContainsKey("content") ?(string?)rawPayload["content"] : null;
+		string? matchedKeyword = rawPayload.ContainsKey("matched_keyword") ? (string?)rawPayload["matched_keyword"] : null;
+		string? matchedContent = rawPayload.ContainsKey("matched_content") ? (string?)rawPayload["matched_content"] : null;
 
 		var ea = new AutomodActionExecutedEventArgs(this.ServiceProvider)
 		{
@@ -1407,10 +1403,10 @@ public sealed partial class DiscordClient
 			Action = executedAction,
 			RuleId = ruleId,
 			TriggerType = triggerType,
-			Member =  member,
+			UserId = userId,
 			ChannelId = channelId,
-			MessageId = messageId ?? null,
-			AlertMessageId = alertMessageId ?? null,
+			MessageId = messageId,
+			AlertMessageId = alertMessageId,
 			MessageContent = content,
 			MatchedKeyword = matchedKeyword,
 			MatchedContent = matchedContent

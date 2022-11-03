@@ -266,32 +266,32 @@ public sealed partial class DiscordClient
 	/// <summary>
 	/// Fired when an auto mod rule gets created.
 	/// </summary>
-	public event AsyncEventHandler<DiscordClient, AutomodCreateRuleEventArgs> AutomodRuleCreated
+	public event AsyncEventHandler<DiscordClient, AutomodRuleCreateEventArgs> AutomodRuleCreated
 	{
 		add => this._automodRuleCreated.Register(value);
 		remove => this._automodRuleCreated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, AutomodCreateRuleEventArgs> _automodRuleCreated;
+	private AsyncEvent<DiscordClient, AutomodRuleCreateEventArgs> _automodRuleCreated;
 
 	/// <summary>
 	/// Fired when an auto mod rule gets updated.
 	/// </summary>
-	public event AsyncEventHandler<DiscordClient, AutomodUpdateRuleEventArgs> AutomodRuleUpdated
+	public event AsyncEventHandler<DiscordClient, AutomodRuleUpdateEventArgs> AutomodRuleUpdated
 	{
 		add => this._automodRuleUpdated.Register(value);
 		remove => this._automodRuleUpdated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, AutomodUpdateRuleEventArgs> _automodRuleUpdated;
+	private AsyncEvent<DiscordClient, AutomodRuleUpdateEventArgs> _automodRuleUpdated;
 
 	/// <summary>
 	/// Fired when an auto mod rule gets deleted.
 	/// </summary>
-	public event AsyncEventHandler<DiscordClient, AutomodDeleteRuleEventArgs> AutomodRuleDeleted
+	public event AsyncEventHandler<DiscordClient, AutomodRuleDeleteEventArgs> AutomodRuleDeleted
 	{
 		add => this._automodRuleDeleted.Register(value);
 		remove => this._automodRuleDeleted.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, AutomodDeleteRuleEventArgs> _automodRuleDeleted;
+	private AsyncEvent<DiscordClient, AutomodRuleDeleteEventArgs> _automodRuleDeleted;
 
 	/// <summary>
 	/// Fired when a rule is triggered and an action is executed.
