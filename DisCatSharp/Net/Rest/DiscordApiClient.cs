@@ -1322,7 +1322,6 @@ public sealed class DiscordApiClient
 	/// <param name="guildId">The guild id of the rule.</param>
 	/// <param name="name">The name of the rule.</param>
 	/// <param name="eventType">The event type of the rule.</param>
-	/// <param name="triggerType">The trigger type of the rule.</param>
 	/// <param name="actions">The actions of the rule.</param>
 	/// <param name="triggerMetadata">The metadata of the rule.</param>
 	/// <param name="enabled">Whether this rule is enabled.</param>
@@ -1330,7 +1329,7 @@ public sealed class DiscordApiClient
 	/// <param name="exemptChannels">The exempt channels of the rule.</param>
 	/// <param name="reason">The reason for this addition.</param>
 	/// <returns>The new auto mod rule.</returns>
-	internal async Task<AutomodRule> CreateAutomodRuleAsync(ulong guildId, string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
+	internal async Task<AutomodRule> CreateAutomodRuleAsync(ulong guildId, string name, AutomodEventType eventType, IEnumerable<AutomodAction> actions,
 		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null, string reason = null)
 	{
 		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules";
@@ -1340,7 +1339,6 @@ public sealed class DiscordApiClient
 		{
 			Name = name,
 			EventType = eventType,
-			TriggerType = triggerType,
 			Actions = actions.ToArray(),
 			Enabled = enabled,
 			TriggerMetadata = triggerMetadata ?? null
@@ -1375,7 +1373,6 @@ public sealed class DiscordApiClient
 	/// <param name="ruleId">The rule id.</param>
 	/// <param name="name">The new name of the rule.</param>
 	/// <param name="eventType">The new event type of the rule.</param>
-	/// <param name="triggerType">The new trigger type of the rule.</param>
 	/// <param name="metadata">The new metadata of the rule.</param>
 	/// <param name="actions">The new actions of the rule.</param>
 	/// <param name="enabled">Whether this rule is enabled.</param>
@@ -1383,19 +1380,18 @@ public sealed class DiscordApiClient
 	/// <param name="exemptChannels">The new exempt channels of the rule.</param>
 	/// <param name="reason">The reason for this modification.</param>
 	/// <returns>The updated automod rule</returns>
-	internal async Task<AutomodRule> ModifyAutomodRuleAsync(ulong guildId, ulong ruleId, Optional<string> name, Optional<AutomodEventType> eventType, Optional<AutomodTriggerType> triggerType, Optional<AutomodTriggerMetadata> metadata, Optional<IEnumerable<AutomodAction>> actions,
-		Optional<bool> enabled, Optional<IEnumerable<ulong>> exemptRoles, Optional<IEnumerable<ulong>> exemptChannels, string reason = null)
+	internal async Task<AutomodRule> ModifyAutomodRuleAsync(ulong guildId, ulong ruleId, Optional<string> name, Optional<AutomodEventType> eventType, Optional<AutomodTriggerMetadata> metadata, Optional<List<AutomodAction>> actions,
+		Optional<bool> enabled, Optional<List<ulong>> exemptRoles, Optional<List<ulong>> exemptChannels, string reason = null)
 	{
 		var pld = new RestAutomodRuleModifyPayload
 		{
 			Name = name,
 			EventType = eventType,
 			TriggerMetadata = metadata,
-			TriggerType = triggerType,
-			Actions = actions,
+			Actions = actions.ValueOr(null),
 			Enabled = enabled,
-			ExemptRoles = exemptRoles,
-			ExemptChannels = exemptChannels
+			ExemptRoles = exemptRoles.ValueOr(null),
+			ExemptChannels = exemptChannels.ValueOr(null)
 		};
 
 		var headers = Utilities.GetBaseHeaders();

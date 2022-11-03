@@ -22,24 +22,28 @@
 
 using System.Collections.Generic;
 
+using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 
-namespace DisCatSharp.Entities
+namespace DisCatSharp.Net.Models
 {
-	internal class RestAutomodRuleModifyPayload
+	/// <summary>
+	/// Represents an automod rule edit model.
+	/// </summary>
+	public class AutomodRuleEditModel : BaseEditModel
 	{
-		public Optional<string> Name { get; set; }
+		public Optional<string> Name { internal get; set; }
 
-		public Optional<AutomodEventType> EventType { get; set; }
+		public Optional<AutomodEventType> EventType { internal get; set; }
 
-		public Optional<AutomodTriggerMetadata> TriggerMetadata { get; set; }
+		public Optional<AutomodTriggerMetadata> TriggerMetadata { internal get; set; }
 
-		public Optional<IEnumerable<AutomodAction>> Actions { get; set; }
+		public Optional<List<AutomodAction>> Actions { internal get; set; }
 
-		public Optional<bool> Enabled { get; set; }
+		public Optional<bool> Enabled { internal get; set; }
 
-		public Optional<IEnumerable<ulong>> ExemptRoles { get; set; }
+		public Optional<List<ulong>> ExemptRoles { internal get; set; }
 
-		public Optional<IEnumerable<ulong>> ExemptChannels { get; set; }
+		public Optional<List<ulong>> ExemptChannels { internal get; set; }
 	}
 }

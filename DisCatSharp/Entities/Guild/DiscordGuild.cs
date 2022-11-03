@@ -1030,7 +1030,6 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Gets a specific auto mod rule.
 	/// </summary>
-	/// <param name="guildId">The guild id of the rule.</param>
 	/// <param name="ruleId">The rule id to get.</param>
 	/// <returns>The auto mod rule.</returns>
 	public Task<AutomodRule> GetAutomodRuleAsync(ulong ruleId)
@@ -1057,22 +1056,11 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <summary>
 	/// Modifies an auto mod rule.
 	/// </summary>
-	/// <param name="guildId">The guild id.</param>
 	/// <param name="ruleId">The rule id.</param>
-	/// <param name="name">The new name of the rule.</param>
-	/// <param name="eventType">The new event type of the rule.</param>
-	/// <param name="triggerType">The new trigger type of the rule.</param>
-	/// <param name="metadata">The new metadata of the rule.</param>
-	/// <param name="actions">The new actions of the rule.</param>
-	/// <param name="enabled">Whether this rule should be enabled.</param>
-	/// <param name="exemptRoles">The new exempt roles of the rule.</param>
-	/// <param name="exemptChannels">The new exempt channels of the rule.</param>
-	/// <param name="reason">The reason for this modification.</param>
+	/// <param name="em">The edit model.</param>
 	/// <returns>The updated rule.</returns>
-	public Task<AutomodRule> ModifyAutomodRuleAsync(ulong ruleId, Optional<string> name, Optional<AutomodEventType> eventType, Optional<AutomodTriggerType> triggerType,
-		Optional<AutomodTriggerMetadata> metadata, Optional<IEnumerable<AutomodAction>> actions, Optional<bool> enabled, Optional<IEnumerable<ulong>> exemptRoles,
-		Optional<IEnumerable<ulong>> exemptChannels, string reason = null)
-		=> this.Discord.ApiClient.ModifyAutomodRuleAsync(this.Id, ruleId, name, eventType, triggerType, metadata, actions, enabled, exemptRoles, exemptChannels, reason);
+	public Task<AutomodRule> ModifyAutomodRuleAsync(ulong ruleId, AutomodRuleEditModel em)
+		=> this.Discord.ApiClient.ModifyAutomodRuleAsync(this.Id, ruleId, em.Name, em.EventType, em.TriggerMetadata, em.Actions, em.Enabled, em.ExemptRoles, em.ExemptChannels, em.AuditLogReason);
 
 	/// <summary>
 	/// Deletes an auto mod rule.
