@@ -43,13 +43,13 @@ namespace DisCatSharp.Entities
 		/// The internally predefined word-sets which will be searched for in content.
 		/// </summary>
 		[JsonProperty("presets", NullValueHandling = NullValueHandling.Ignore)]
-		public ReadOnlyCollection<AutomodKeywordPresetType>? Presets { get; set; }
+		public List<AutomodKeywordPresetType>? Presets { get; set; }
 
 		/// <summary>
 		/// The substrings which will be exempt from triggering the preset type.
 		/// </summary>
 		[JsonProperty("allow_list", NullValueHandling = NullValueHandling.Ignore)]
-		public ReadOnlyCollection<string>? AllowList { get; set; }
+		public List<string>? AllowList { get; set; }
 
 		/// <summary>
 		/// The total number of unique role and user mentions allowed per message.
