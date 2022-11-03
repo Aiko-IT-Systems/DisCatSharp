@@ -262,32 +262,32 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	/// Fired when an auto mod rule gets created.
 	/// </summary>
-	public event AsyncEventHandler<DiscordClient, AutomodCreateRuleEventArgs> AutomodRuleCreated
+	public event AsyncEventHandler<DiscordClient, AutomodRuleCreateEventArgs> AutomodRuleCreated
 	{
 		add => this._automodRuleCreated.Register(value);
 		remove => this._automodRuleCreated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, AutomodCreateRuleEventArgs> _automodRuleCreated;
+	private AsyncEvent<DiscordClient, AutomodRuleCreateEventArgs> _automodRuleCreated;
 
 	/// <summary>
 	/// Fired when an auto mod rule gets updated.
 	/// </summary>
-	public event AsyncEventHandler<DiscordClient, AutomodUpdateRuleEventArgs> AutomodRuleUpdated
+	public event AsyncEventHandler<DiscordClient, AutomodRuleUpdateEventArgs> AutomodRuleUpdated
 	{
 		add => this._automodRuleUpdated.Register(value);
 		remove => this._automodRuleUpdated.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, AutomodUpdateRuleEventArgs> _automodRuleUpdated;
+	private AsyncEvent<DiscordClient, AutomodRuleUpdateEventArgs> _automodRuleUpdated;
 
 	/// <summary>
 	/// Fired when an auto mod rule gets deleted.
 	/// </summary>
-	public event AsyncEventHandler<DiscordClient, AutomodDeleteRuleEventArgs> AutomodRuleDeleted
+	public event AsyncEventHandler<DiscordClient, AutomodRuleDeleteEventArgs> AutomodRuleDeleted
 	{
 		add => this._automodRuleDeleted.Register(value);
 		remove => this._automodRuleDeleted.Unregister(value);
 	}
-	private AsyncEvent<DiscordClient, AutomodDeleteRuleEventArgs> _automodRuleDeleted;
+	private AsyncEvent<DiscordClient, AutomodRuleDeleteEventArgs> _automodRuleDeleted;
 
 	/// <summary>
 	/// Fired when a rule is triggered and an action is executed.
@@ -1669,7 +1669,7 @@ public sealed partial class DiscordShardedClient
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
 	private Task Client_GuildScheduledEventUserAdded(DiscordClient client, GuildScheduledEventUserAddEventArgs e)
-	=> this._guildScheduledEventUserAdded.InvokeAsync(client, e);
+		=> this._guildScheduledEventUserAdded.InvokeAsync(client, e);
 
 	/// <summary>
 	/// Handles the scheduled event user removed event.
@@ -1677,7 +1677,39 @@ public sealed partial class DiscordShardedClient
 	/// <param name="client">The client.</param>
 	/// <param name="e">The event args.</param>
 	private Task Client_GuildScheduledEventUserRemoved(DiscordClient client, GuildScheduledEventUserRemoveEventArgs e)
-	=> this._guildScheduledEventUserRemoved.InvokeAsync(client, e);
+		=> this._guildScheduledEventUserRemoved.InvokeAsync(client, e);
+
+	/// <summary>
+	/// Handles the automod rule created event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_AutomodRuleCreated(DiscordClient client, AutomodRuleCreateEventArgs e)
+		=> this._automodRuleCreated.InvokeAsync(client, e);
+
+	/// <summary>
+	/// Handles the automod rule updated event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_AutomodRuleUpdated(DiscordClient client, AutomodRuleUpdateEventArgs e)
+		=> this._automodRuleUpdated.InvokeAsync(client, e);
+
+	/// <summary>
+	/// Handles the automod rule deleted event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_AutomodRuleDeleted(DiscordClient client, AutomodRuleDeleteEventArgs e)
+		=> this._automodRuleDeleted.InvokeAsync(client, e);
+
+	/// <summary>
+	/// Handles the automod action executed event.
+	/// </summary>
+	/// <param name="client">The client.</param>
+	/// <param name="e">The event args.</param>
+	private Task Client_AutomodActionExecuted(DiscordClient client, AutomodActionExecutedEventArgs e)
+		=> this._automodActionExecuted.InvokeAsync(client, e);
 
 	#endregion
 }
