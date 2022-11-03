@@ -54,7 +54,7 @@ public class EventHandlerAttribute : Attribute { }
 /// <summary>
 /// All events available in <see cref="DiscordClient"/> for use with <see cref="EventAttribute"/>.
 /// </summary>
-public enum DiscordEvent : long
+public enum DiscordEvent
 {
 	ApplicationCommandCreated,
 	ApplicationCommandDeleted,
