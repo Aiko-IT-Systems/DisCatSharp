@@ -37,25 +37,25 @@ namespace DisCatSharp.Entities
 		/// The substrings which will be searched for in content.
 		/// </summary>
 		[JsonProperty("keyword_filter", NullValueHandling = NullValueHandling.Ignore)]
-		public ReadOnlyCollection<string>? KeywordFilter { get; internal set; }
+		public ReadOnlyCollection<string>? KeywordFilter { get; set; }
 
 		/// <summary>
 		/// The internally predefined word-sets which will be searched for in content.
 		/// </summary>
 		[JsonProperty("presets", NullValueHandling = NullValueHandling.Ignore)]
-		public ReadOnlyCollection<AutomodKeywordPresetType>? Presets { get; internal set; }
+		public ReadOnlyCollection<AutomodKeywordPresetType>? Presets { get; set; }
 
 		/// <summary>
 		/// The substrings which will be exempt from triggering the preset type.
 		/// </summary>
 		[JsonProperty("allow_list", NullValueHandling = NullValueHandling.Ignore)]
-		public ReadOnlyCollection<string>? AllowList { get; internal set; }
+		public ReadOnlyCollection<string>? AllowList { get; set; }
 
 		/// <summary>
 		/// The total number of unique role and user mentions allowed per message.
 		/// There is a maximum of 50.
 		/// </summary>
 		[JsonProperty("mention_total_limit")]
-		public int MentionLimit { get; internal set; }
+		public int MentionLimit { get; set; }
 	}
 }

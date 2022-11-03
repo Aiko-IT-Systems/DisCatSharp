@@ -35,12 +35,28 @@ namespace DisCatSharp.Entities
 		/// The type of action.
 		/// </summary>
 		[JsonProperty("type")]
-		public AutomodActionType ActionType { get; internal set; }
+		public AutomodActionType ActionType { get; set; }
 
 		/// <summary>
 		/// The additional meta data needed during execution for this specific action type.
 		/// </summary>
 		[JsonProperty("metadata?", NullValueHandling = NullValueHandling.Ignore)]
-		public AutomodActionMetadata? Metadata { get; internal set; }
+		public AutomodActionMetadata? Metadata { get; set; }
+
+		/// <summary>
+		/// Creates a new empty automod action.
+		/// </summary>
+		public AutomodAction() { }
+
+		/// <summary>
+		/// Creates a new automod action.
+		/// </summary>
+		/// <param name="actionType">The type of action.</param>
+		/// <param name="metadata">The additional metadata for this action.</param>
+		public AutomodAction(AutomodActionType actionType, AutomodActionMetadata metadata = null)
+		{
+			this.ActionType = actionType;
+			this.Metadata = metadata;
+		}
 	}
 }
