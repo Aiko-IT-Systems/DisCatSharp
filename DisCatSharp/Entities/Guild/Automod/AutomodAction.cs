@@ -35,7 +35,7 @@ namespace DisCatSharp.Entities
 		/// The type of action.
 		/// </summary>
 		[JsonProperty("type")]
-		public AutomodActionType ActionType { get; set; }
+		public AutomodActionType ActionType { get; internal set; }
 
 		/// <summary>
 		/// The additional meta data needed during execution for this specific action type.
