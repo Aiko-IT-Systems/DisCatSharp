@@ -46,7 +46,7 @@ namespace DisCatSharp.Entities
 		/// <summary>
 		/// Creates a new empty automod action.
 		/// </summary>
-		public AutomodAction() { }
+		internal AutomodAction() { }
 
 		/// <summary>
 		/// Creates a new automod action.
