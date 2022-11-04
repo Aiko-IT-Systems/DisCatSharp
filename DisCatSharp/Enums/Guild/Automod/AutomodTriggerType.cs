@@ -34,6 +34,11 @@ namespace DisCatSharp.Enums
 		Keyword = 1,
 
 		/// <summary>
+		/// A raid was detected.
+		/// </summary>
+		Raid = 2,
+
+		/// <summary>
 		/// Checks if content represents generic spam.
 		/// Max. 1 per guild.
 		/// </summary>
