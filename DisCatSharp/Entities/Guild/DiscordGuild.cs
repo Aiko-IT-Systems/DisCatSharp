@@ -1047,18 +1047,29 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="exemptChannels">The exempt channels of the rule.</param>
 	/// <param name="reason">The reason for this addition</param>
 	/// <returns>The created rule.</returns>
-	public Task<AutomodRule> CreateAutomodRuleAsync(string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<AutomodRule> CreateAutomodRuleAsync(string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
 		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null, string reason = null)
-		=> this.Discord.ApiClient.CreateAutomodRuleAsync(this.Id, name, eventType, triggerType, actions, triggerMetadata, enabled, exemptRoles, exemptChannels, reason);
+		=> await this.Discord.ApiClient.CreateAutomodRuleAsync(this.Id, name, eventType, triggerType, actions, triggerMetadata, enabled, exemptRoles, exemptChannels, reason);
 
 	/// <summary>
 	/// Modifies an auto mod rule.
 	/// </summary>
 	/// <param name="ruleId">The rule id.</param>
-	/// <param name="em">The edit model.</param>
-	/// <returns>The updated rule.</returns>
-	public Task<AutomodRule> ModifyAutomodRuleAsync(ulong ruleId, AutomodRuleEditModel em)
-		=> this.Discord.ApiClient.ModifyAutomodRuleAsync(this.Id, ruleId, em.Name, em.EventType, em.TriggerMetadata, em.Actions, em.Enabled, em.ExemptRoles, em.ExemptChannels, em.AuditLogReason);
+	/// <param name="action">Action to perform on this rule.</param>
+	/// <returns>The modified rule object.</returns>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the rule does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<AutomodRule> ModifyAutomodRuleAsync(ulong ruleId, Action<AutomodRuleEditModel> action)
+	{
+		var mdl = new AutomodRuleEditModel();
+		action(mdl);
+		return await this.Discord.ApiClient.ModifyAutomodRuleAsync(this.Id, ruleId, mdl.Name, mdl.EventType, mdl.TriggerMetadata, mdl.Actions, mdl.Enabled, mdl.ExemptRoles, mdl.ExemptChannels, mdl.AuditLogReason);
+	}
 
 	/// <summary>
 	/// Deletes an auto mod rule.
@@ -1066,8 +1077,12 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	/// <param name="ruleId">The rule id.</param>
 	/// <param name="reason">The reason for this deletion.</param>
 	/// <returns>The deleted auto mod rule.</returns>
-	public Task<AutomodRule> DeleteAutomodRuleAsync(ulong ruleId, string reason = null)
-		=> this.Discord.ApiClient.DeleteAutomodRuleAsync(this.Id, ruleId, reason);
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="NotFoundException">Thrown when the rule does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<AutomodRule> DeleteAutomodRuleAsync(ulong ruleId, string reason = null)
+		=> await this.Discord.ApiClient.DeleteAutomodRuleAsync(this.Id, ruleId, reason);
 
 	#region Scheduled Events
 
