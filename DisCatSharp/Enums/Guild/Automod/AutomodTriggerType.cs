@@ -34,9 +34,9 @@ namespace DisCatSharp.Enums
 		Keyword = 1,
 
 		/// <summary>
-		/// A raid was detected.
+		/// Checks if content contains a suspocopis link.
 		/// </summary>
-		Raid = 2,
+		SuspiciousLinkFilter = 2,
 
 		/// <summary>
 		/// Checks if content represents generic spam.
