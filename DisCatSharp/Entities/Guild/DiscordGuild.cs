@@ -1068,6 +1068,18 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 	{
 		var mdl = new AutomodRuleEditModel();
 		action(mdl);
+
+		var rule = await this.Discord.ApiClient.GetAutomodRuleAsync(this.Id, ruleId);
+
+		if (mdl.TriggerMetadata.HasValue)
+		{
+			if ((mdl.TriggerMetadata.Value.KeywordFilter != null || mdl.TriggerMetadata.Value.RegexPatterns != null) && rule.TriggerType != AutomodTriggerType.Keyword)
+				throw new ArgumentException($"Cannot use KeywordFilter and RegexPattern for a {rule.TriggerType} rule. Only {AutomodTriggerType.Keyword} is valid in this context.");
+			else if (mdl.TriggerMetadata.Value.AllowList != null && rule.TriggerType != AutomodTriggerType.KeywordPreset)
+				throw new ArgumentException($"Cannot use AllowList for a {rule.TriggerType} rule. Only {AutomodTriggerType.KeywordPreset} is valid in this context.");
+			else if (mdl.TriggerMetadata.Value.MentionTotalLimit != null && rule.TriggerType != AutomodTriggerType.MentionSpam)
+				throw new ArgumentException($"Cannot use MentionTotalLimit for a {rule.TriggerType} rule. Only {AutomodTriggerType.MentionSpam} is valid in this context.");
+		}
 		return await this.Discord.ApiClient.ModifyAutomodRuleAsync(this.Id, ruleId, mdl.Name, mdl.EventType, mdl.TriggerMetadata, mdl.Actions, mdl.Enabled, mdl.ExemptRoles, mdl.ExemptChannels, mdl.AuditLogReason);
 	}
 
