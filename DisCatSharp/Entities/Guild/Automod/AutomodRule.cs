@@ -104,7 +104,7 @@ namespace DisCatSharp.Entities
 			=> this.Discord.Guilds.TryGetValue(this.GuildId, out var guild) ? guild : null;
 
 		/// <summary>
-		/// Modifies this.GuildId, this.Id auto mod rule.
+		/// Modifies this auto mod rule.
 		/// </summary>
 		/// <param name="action">Action to perform on this rule.</param>
 		/// <returns>The modified rule object.</returns>
