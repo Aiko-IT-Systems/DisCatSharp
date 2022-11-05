@@ -23,7 +23,7 @@
 namespace DisCatSharp.Enums;
 
 /// <summary>
-/// Represents the default sort order for posts in a forum channel.
+/// Represents the layout for posts in a forum channel.
 /// </summary>
 public enum ForumLayout : int
 {
