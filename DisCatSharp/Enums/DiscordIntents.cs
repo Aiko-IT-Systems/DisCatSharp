@@ -192,9 +192,20 @@ public enum DiscordIntents
 	/// Whether to include guild scheduled event events.
 	/// <para>These include <see cref="DiscordClient.GuildScheduledEventCreated"/>, <see cref="DiscordClient.GuildScheduledEventUpdated"/>, <see cref="DiscordClient.GuildScheduledEventDeleted"/>,</para>
 	/// <para><see cref="DiscordClient.GuildScheduledEventUserAdded"/> and <see cref="DiscordClient.GuildScheduledEventUserRemoved"/>.</para>
-	/// The events <see cref="DiscordClient.GuildScheduledEventUserAdded"/> and <see cref="DiscordClient.GuildScheduledEventUserRemoved"/> are in experiment and not officially supported.
 	/// </summary>
 	GuildScheduledEvents = 1 << 16,
+
+	/// <summary>
+	/// Whether to include automod configuration events.
+	/// <para>These include <see cref="DiscordClient.AutomodRuleCreated"/>, <see cref="DiscordClient.AutomodRuleUpdated"/> and <see cref="DiscordClient.AutomodRuleDeleted"/>.</para>
+	/// </summary>
+	AutoModerationConfiguration = 1 << 20,
+
+	/// <summary>
+	/// Whether to include automod execution events.
+	/// <para>These includes <see cref="DiscordClient.AutomodActionExecuted"/>.</para>
+	/// </summary>
+	AutoModerationExecution = 1 << 21,
 
 	/// <summary>
 	/// Includes all unprivileged intents.
@@ -202,7 +213,7 @@ public enum DiscordIntents
 	/// <para>The <see cref="DiscordIntents.GuildMessages"/> will be excluded as of April 2022.</para>
 	/// </summary>
 	AllUnprivileged = Guilds | GuildBans | GuildEmojisAndStickers | GuildIntegrations | GuildWebhooks | GuildInvites | GuildVoiceStates | GuildMessages |
-		GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents,
+		GuildMessageReactions | GuildMessageTyping | DirectMessages | DirectMessageReactions | DirectMessageTyping | GuildScheduledEvents | AutoModerationConfiguration | DiscordIntents.AutoModerationExecution,
 
 	/// <summary>
 	/// Includes all intents.
