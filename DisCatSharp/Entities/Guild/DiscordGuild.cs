@@ -1054,48 +1054,6 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null, string reason = null)
 		=> await this.Discord.ApiClient.CreateAutomodRuleAsync(this.Id, name, eventType, triggerType, actions, triggerMetadata, enabled, exemptRoles, exemptChannels, reason);
 
-	/// <summary>
-	/// Modifies an auto mod rule.
-	/// </summary>
-	/// <param name="ruleId">The rule id.</param>
-	/// <param name="action">Action to perform on this rule.</param>
-	/// <returns>The modified rule object.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
-	/// <exception cref="NotFoundException">Thrown when the rule does not exist.</exception>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<AutomodRule> ModifyAutomodRuleAsync(ulong ruleId, Action<AutomodRuleEditModel> action)
-	{
-		var mdl = new AutomodRuleEditModel();
-		action(mdl);
-
-		var rule = await this.Discord.ApiClient.GetAutomodRuleAsync(this.Id, ruleId);
-
-		if (mdl.TriggerMetadata.HasValue)
-		{
-			if ((mdl.TriggerMetadata.Value.KeywordFilter != null || mdl.TriggerMetadata.Value.RegexPatterns != null) && rule.TriggerType != AutomodTriggerType.Keyword)
-				throw new ArgumentException($"Cannot use KeywordFilter and RegexPattern for a {rule.TriggerType} rule. Only {AutomodTriggerType.Keyword} is valid in this context.");
-			else if (mdl.TriggerMetadata.Value.AllowList != null && rule.TriggerType != AutomodTriggerType.KeywordPreset)
-				throw new ArgumentException($"Cannot use AllowList for a {rule.TriggerType} rule. Only {AutomodTriggerType.KeywordPreset} is valid in this context.");
-			else if (mdl.TriggerMetadata.Value.MentionTotalLimit != null && rule.TriggerType != AutomodTriggerType.MentionSpam)
-				throw new ArgumentException($"Cannot use MentionTotalLimit for a {rule.TriggerType} rule. Only {AutomodTriggerType.MentionSpam} is valid in this context.");
-		}
-		return await this.Discord.ApiClient.ModifyAutomodRuleAsync(this.Id, ruleId, mdl.Name, mdl.EventType, mdl.TriggerMetadata, mdl.Actions, mdl.Enabled, mdl.ExemptRoles, mdl.ExemptChannels, mdl.AuditLogReason);
-	}
-
-	/// <summary>
-	/// Deletes an auto mod rule.
-	/// </summary>
-	/// <param name="ruleId">The rule id.</param>
-	/// <param name="reason">The reason for this deletion.</param>
-	/// <returns>The deleted auto mod rule.</returns>
-	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
-	/// <exception cref="NotFoundException">Thrown when the rule does not exist.</exception>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public async Task<AutomodRule> DeleteAutomodRuleAsync(ulong ruleId, string reason = null)
-		=> await this.Discord.ApiClient.DeleteAutomodRuleAsync(this.Id, ruleId, reason);
-
 	#region Scheduled Events
 
 	/// <summary>

@@ -53,7 +53,7 @@ namespace DisCatSharp.Entities
 		/// <para>Only Rust flavored regex is currently supported, which can be tested in online editors such as <see href="https://rustexp.lpil.uk/">Rustexp</see>.</para>
 		/// <para> Each regex pattern must be 75 characters or less.</para>
 		/// </summary>
-		[JsonProperty("presets", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonProperty("regex_patterns", NullValueHandling = NullValueHandling.Ignore)]
 		public List<string>? RegexPatterns { get; set; }
 
 		/// <summary>

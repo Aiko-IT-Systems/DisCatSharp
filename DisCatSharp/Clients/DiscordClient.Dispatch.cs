@@ -229,16 +229,16 @@ public sealed partial class DiscordClient
 			#endregion
 
 			#region Guild Automod
-			case "guild_automod_rule_create":
+			case "auto_moderation_rule_create":
 				await this.OnAutomodRuleCreated(dat.ToDiscordObject<AutomodRule>());
 				break;
-			case "guild_automod_rule_update":
+			case "auto_moderation_rule_update":
 				await this.OnAutomodRuleUpdated(dat.ToDiscordObject<AutomodRule>());
 				break;
-			case "guild_automod_rule_delete":
+			case "auto_moderation_rule_delete":
 				await this.OnAutomodRuleDeleted(dat.ToDiscordObject<AutomodRule>());
 				break;
-			case "guild_automod_action_execute":
+			case "auto_moderation_action_execution":
 				gid = (ulong)dat["guild_id"];
 
 				await this.OnAutomodActionExecuted(this.GuildsInternal[gid], dat);
@@ -1386,33 +1386,41 @@ public sealed partial class DiscordClient
 	/// <param name="rawPayload">The raw payload.</param>
 	internal async Task OnAutomodActionExecuted(DiscordGuild guild, JObject rawPayload)
 	{
-		var executedAction = rawPayload.ToDiscordObject<AutomodAction>();
-		var ruleId = (ulong)rawPayload["rule_id"];
-		var triggerType = rawPayload.ToDiscordObject<AutomodTriggerType>();
-		var userId = (ulong)rawPayload["user_id"];
-		var channelId = rawPayload.ContainsKey("channel_id") ? (ulong?)rawPayload["channel_id"] : null;
-		var messageId = rawPayload.ContainsKey("message_id") ? (ulong?)rawPayload["message_id"] : null;
-		var alertMessageId = rawPayload.ContainsKey("alert_system_message_id") ? (ulong?)rawPayload["alert_system_message_id"] : null;
-		string? content = rawPayload.ContainsKey("content") ?(string?)rawPayload["content"] : null;
-		string? matchedKeyword = rawPayload.ContainsKey("matched_keyword") ? (string?)rawPayload["matched_keyword"] : null;
-		string? matchedContent = rawPayload.ContainsKey("matched_content") ? (string?)rawPayload["matched_content"] : null;
-
-		var ea = new AutomodActionExecutedEventArgs(this.ServiceProvider)
+		try
 		{
-			Guild = guild,
-			Action = executedAction,
-			RuleId = ruleId,
-			TriggerType = triggerType,
-			UserId = userId,
-			ChannelId = channelId,
-			MessageId = messageId,
-			AlertMessageId = alertMessageId,
-			MessageContent = content,
-			MatchedKeyword = matchedKeyword,
-			MatchedContent = matchedContent
-		};
+			var executedAction = rawPayload["action"].ToObject<AutomodAction>();
+			var ruleId = (ulong)rawPayload["rule_id"];
+			var triggerType = rawPayload["rule_trigger_type"].ToObject<AutomodTriggerType>();
+			var userId = (ulong)rawPayload["user_id"];
+			var channelId = rawPayload.ContainsKey("channel_id") ? (ulong?)rawPayload["channel_id"] : null;
+			var messageId = rawPayload.ContainsKey("message_id") ? (ulong?)rawPayload["message_id"] : null;
+			var alertMessageId = rawPayload.ContainsKey("alert_system_message_id") ? (ulong?)rawPayload["alert_system_message_id"] : null;
+			string? content = rawPayload.ContainsKey("content") ?(string?)rawPayload["content"] : null;
+			string? matchedKeyword = rawPayload.ContainsKey("matched_keyword") ? (string?)rawPayload["matched_keyword"] : null;
+			string? matchedContent = rawPayload.ContainsKey("matched_content") ? (string?)rawPayload["matched_content"] : null;
 
-		await this._automodActionExecuted.InvokeAsync(this, ea).ConfigureAwait(false);
+			var ea = new AutomodActionExecutedEventArgs(this.ServiceProvider)
+			{
+				Guild = guild,
+				Action = executedAction,
+				RuleId = ruleId,
+				TriggerType = triggerType,
+				UserId = userId,
+				ChannelId = channelId,
+				MessageId = messageId,
+				AlertMessageId = alertMessageId,
+				MessageContent = content,
+				MatchedKeyword = matchedKeyword,
+				MatchedContent = matchedContent
+			};
+
+			await this._automodActionExecuted.InvokeAsync(this, ea).ConfigureAwait(false);
+		}
+		catch(Exception ex)
+		{
+			this.Logger.LogError(ex.Message);
+			this.Logger.LogError(ex.StackTrace);
+		}
 	}
 
 	#endregion
