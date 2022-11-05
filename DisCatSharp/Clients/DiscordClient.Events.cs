@@ -260,6 +260,48 @@ public sealed partial class DiscordClient
 		remove => this._guildIntegrationsUpdated.Unregister(value);
 	}
 	private AsyncEvent<DiscordClient, GuildIntegrationsUpdateEventArgs> _guildIntegrationsUpdated;
+	#endregion
+
+	#region Automod
+	/// <summary>
+	/// Fired when an auto mod rule gets created.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, AutomodRuleCreateEventArgs> AutomodRuleCreated
+	{
+		add => this._automodRuleCreated.Register(value);
+		remove => this._automodRuleCreated.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, AutomodRuleCreateEventArgs> _automodRuleCreated;
+
+	/// <summary>
+	/// Fired when an auto mod rule gets updated.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, AutomodRuleUpdateEventArgs> AutomodRuleUpdated
+	{
+		add => this._automodRuleUpdated.Register(value);
+		remove => this._automodRuleUpdated.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, AutomodRuleUpdateEventArgs> _automodRuleUpdated;
+
+	/// <summary>
+	/// Fired when an auto mod rule gets deleted.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, AutomodRuleDeleteEventArgs> AutomodRuleDeleted
+	{
+		add => this._automodRuleDeleted.Register(value);
+		remove => this._automodRuleDeleted.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, AutomodRuleDeleteEventArgs> _automodRuleDeleted;
+
+	/// <summary>
+	/// Fired when a rule is triggered and an action is executed.
+	/// </summary>
+	public event AsyncEventHandler<DiscordClient, AutomodActionExecutedEventArgs> AutomodActionExecuted
+	{
+		add => this._automodActionExecuted.Register(value);
+		remove => this._automodActionExecuted.Unregister(value);
+	}
+	private AsyncEvent<DiscordClient, AutomodActionExecutedEventArgs> _automodActionExecuted;
 
 	#endregion
 

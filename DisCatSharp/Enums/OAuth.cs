@@ -51,7 +51,7 @@ public static class OAuth
 	/// <summary>
 	/// The extended identify scopes.
 	/// </summary>
-	private const string IDENTIFY_EXTENDED = "identify email guilds connections";
+	private const string IDENTIFY_EXTENDED = "identify email guilds guilds.members.read connections";
 
 	/// <summary>
 	/// All scopes for bots and identify.

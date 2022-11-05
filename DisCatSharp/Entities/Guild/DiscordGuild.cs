@@ -1019,6 +1019,41 @@ public partial class DiscordGuild : SnowflakeObject, IEquatable<DiscordGuild>
 		}
 	}
 
+	/// <summary>
+	/// Gets all auto mod rules for a guild.
+	/// </summary>
+	/// <returns>A collection of all rules in the guild.</returns>
+	public Task<ReadOnlyCollection<AutomodRule>> GetAutomodRulesAsync()
+		=> this.Discord.ApiClient.GetAutomodRulesAsync(this.Id);
+
+	/// <summary>
+	/// Gets a specific auto mod rule.
+	/// </summary>
+	/// <param name="ruleId">The rule id to get.</param>
+	/// <returns>The auto mod rule.</returns>
+	public Task<AutomodRule> GetAutomodRuleAsync(ulong ruleId)
+		=> this.Discord.ApiClient.GetAutomodRuleAsync(this.Id, ruleId);
+
+	/// <summary>
+	/// Creates a new auto mod rule in a guild.
+	/// </summary>
+	/// <param name="name">The name of the rule.</param>
+	/// <param name="eventType">The event type of the rule.</param>
+	/// <param name="triggerType">The trigger type of the rule.</param>
+	/// <param name="actions">The actions of the rule.</param>
+	/// <param name="triggerMetadata">The meta data of the rule.</param>
+	/// <param name="enabled">Whether this rule is enabled.</param>
+	/// <param name="exemptRoles">The exempt roles of the rule.</param>
+	/// <param name="exemptChannels">The exempt channels of the rule.</param>
+	/// <param name="reason">The reason for this addition</param>
+	/// <returns>The created rule.</returns>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ManageGuild"/> permission.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<AutomodRule> CreateAutomodRuleAsync(string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
+		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null, string reason = null)
+		=> await this.Discord.ApiClient.CreateAutomodRuleAsync(this.Id, name, eventType, triggerType, actions, triggerMetadata, enabled, exemptRoles, exemptChannels, reason);
+
 	#region Scheduled Events
 
 	/// <summary>

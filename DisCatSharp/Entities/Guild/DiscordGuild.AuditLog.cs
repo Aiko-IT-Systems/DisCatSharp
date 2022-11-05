@@ -61,11 +61,11 @@ public partial class DiscordGuild
 			if (rmn <= 0) break;
 
 			var alr = await this.Discord.ApiClient.GetAuditLogsAsync(this.Id, rmn, null, last == 0 ? null : last, byMember?.Id, (int?)actionType).ConfigureAwait(false);
-			ac = alr.Entries.Count();
+			ac = alr.Entries.Count;
 			tc += ac;
 			if (ac > 0)
 			{
-				last = alr.Entries.Last().Id;
+				last = alr.Entries[alr.Entries.Count - 1].Id;
 				alrs.Add(alr);
 			}
 		}
