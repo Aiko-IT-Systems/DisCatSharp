@@ -1359,7 +1359,7 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
 
 		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
-		
+
 		if (this.Discord is DiscordClient dc)
 		{
 			await dc.OnAutomodRuleCreated(ret).ConfigureAwait(false);
@@ -1400,8 +1400,6 @@ public sealed class DiscordApiClient
 		if (exemptRoles.HasValue)
 			pld.ExemptRoles = exemptRoles.Value?.ToArray();
 
-		var pl = DiscordJson.SerializeObject(pld);
-		this.Discord.Logger.LogInformation(pl);
 		var headers = Utilities.GetBaseHeaders();
 		if (!string.IsNullOrWhiteSpace(reason))
 			headers.Add(REASON_HEADER_NAME, reason);
@@ -1410,7 +1408,7 @@ public sealed class DiscordApiClient
 		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId, rule_id = ruleId }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
-		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: pl);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: DiscordJson.SerializeObject(pld));
 
 		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
 
