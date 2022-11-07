@@ -13,6 +13,10 @@
 		{
 			"groupName": "dotnet",
 			"matchDatasources": ["nuget"]
+		},
+		{
+			"groupName": "actions",
+			"matchDatasources": ["github-tags","github-releases"]
 		}
 	]
 }
