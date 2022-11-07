@@ -5,10 +5,14 @@
 	],
 	"assigneesFromCodeOwners": true,
 	"labels": ["dependencies"],
-  "packageRules": [
-    {
-      "matchDepTypes": ["optionalDependencies"],
-      "addLabels": ["optional"]
-    }
-  ]
+	"packageRules": [
+		{
+			"matchDepTypes": ["optionalDependencies"],
+			"addLabels": ["optional"]
+		},
+		{
+			"groupName": "dotnet",
+			"matchDatasources": ["nuget"]
+		}
+	]
 }
