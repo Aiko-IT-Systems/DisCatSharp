@@ -198,8 +198,7 @@
 					"changelogs/**.yml",
 					"changelogs/**.md",
 					"natives/**.yml",
-					"natives/**.md",
-					".htaccess"
+					"natives/**.md"
 				],
 				"exclude":[
 					"**/bin/**",
@@ -213,7 +212,8 @@
 			{
 				"files":[
 					"images/**",
-					"natives/**.zip"
+					"natives/**.zip",
+					".htaccess"
 				],
 				"exclude":[
 					"**/bin/**",
