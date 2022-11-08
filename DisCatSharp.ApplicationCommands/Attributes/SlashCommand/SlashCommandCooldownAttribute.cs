@@ -54,7 +54,7 @@ public sealed class SlashCommandCooldownAttribute : ApplicationCommandCheckBaseA
 	/// <summary>
 	/// Gets the cooldown buckets for this command.
 	/// </summary>
-	internal readonly ConcurrentDictionary<string, SlashCommandCooldownBucket> _buckets;
+	internal readonly ConcurrentDictionary<string, SlashCommandCooldownBucket> Buckets;
 
 	/// <summary>
 	/// Defines a cooldown for this command. This means that users will be able to use the command a specific number of times before they have to wait to use it again.
@@ -67,7 +67,7 @@ public sealed class SlashCommandCooldownAttribute : ApplicationCommandCheckBaseA
 		this.MaxUses = maxUses;
 		this.Reset = TimeSpan.FromSeconds(resetAfter);
 		this.BucketType = bucketType;
-		this._buckets = new ConcurrentDictionary<string, SlashCommandCooldownBucket>();
+		this.Buckets = new ConcurrentDictionary<string, SlashCommandCooldownBucket>();
 	}
 
 	/// <summary>
@@ -78,7 +78,7 @@ public sealed class SlashCommandCooldownAttribute : ApplicationCommandCheckBaseA
 	public SlashCommandCooldownBucket GetBucket(BaseContext ctx)
 	{
 		var bid = this.GetBucketId(ctx, out _, out _, out _);
-		this._buckets.TryGetValue(bid, out var bucket);
+		this.Buckets.TryGetValue(bid, out var bucket);
 		return bucket;
 	}
 
@@ -128,10 +128,10 @@ public sealed class SlashCommandCooldownAttribute : ApplicationCommandCheckBaseA
 	public override async Task<bool> ExecuteChecksAsync(BaseContext ctx)
 	{
 		var bid = this.GetBucketId(ctx, out var usr, out var chn, out var gld);
-		if (!this._buckets.TryGetValue(bid, out var bucket))
+		if (!this.Buckets.TryGetValue(bid, out var bucket))
 		{
 			bucket = new SlashCommandCooldownBucket(this.MaxUses, this.Reset, usr, chn, gld);
-			this._buckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
+			this.Buckets.AddOrUpdate(bid, bucket, (k, v) => bucket);
 		}
 
 		return await bucket.DecrementUseAsync().ConfigureAwait(false);

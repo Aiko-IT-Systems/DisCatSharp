@@ -27,7 +27,7 @@ namespace DisCatSharp.Enums;
 /// <summary>
 /// Represents the privacy level for a stage.
 /// </summary>
-[Obsolete("Not uses anymore")]
+[Obsolete("Not used anymore")]
 public enum StagePrivacyLevel : int
 {
 	/// <summary>

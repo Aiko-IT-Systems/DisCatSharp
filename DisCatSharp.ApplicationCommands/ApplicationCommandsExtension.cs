@@ -833,8 +833,8 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				{
 					if (translation != null && translation.Any())
 					{
-						var file_name = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE-{s_registrationCount}_of_{s_expectedCount}.json";
-						var fs = File.Create(file_name);
+						var fileName = $"translation_generator_export-shard{this.Client.ShardId}-SINGLE-{s_registrationCount}_of_{s_expectedCount}.json";
+						var fs = File.Create(fileName);
 						var ms = new MemoryStream();
 						var writer = new StreamWriter(ms);
 						await writer.WriteAsync(JsonConvert.SerializeObject(translation.DistinctBy(x => x.Name), Formatting.Indented));
@@ -846,13 +846,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						await fs.DisposeAsync();
 						ms.Close();
 						await ms.DisposeAsync();
-						this.Client.Logger.LogInformation("Exported base translation to {exppath}", file_name);
+						this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
 					}
 
 					if (groupTranslation != null && groupTranslation.Any())
 					{
-						var file_name = $"translation_generator_export-shard{this.Client.ShardId}-GROUP-{s_registrationCount}_of_{s_expectedCount}.json";
-						var fs = File.Create(file_name);
+						var fileName = $"translation_generator_export-shard{this.Client.ShardId}-GROUP-{s_registrationCount}_of_{s_expectedCount}.json";
+						var fs = File.Create(fileName);
 						var ms = new MemoryStream();
 						var writer = new StreamWriter(ms);
 						await writer.WriteAsync(JsonConvert.SerializeObject(groupTranslation.DistinctBy(x => x.Name), Formatting.Indented));
@@ -864,7 +864,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						await fs.DisposeAsync();
 						ms.Close();
 						await ms.DisposeAsync();
-						this.Client.Logger.LogInformation("Exported base translation to {exppath}", file_name);
+						this.Client.Logger.LogInformation("Exported base translation to {exppath}", fileName);
 					}
 				}
 				catch (Exception ex)
