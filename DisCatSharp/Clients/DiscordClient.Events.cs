@@ -988,6 +988,7 @@ public sealed partial class DiscordClient
 		add => this._rateLimitHit.Register(value);
 		remove => this._rateLimitHit.Unregister(value);
 	}
+	// ReSharper disable once InconsistentNaming
 	internal AsyncEvent<DiscordClient, RateLimitExceptionEventArgs> _rateLimitHit;
 
 	/// <summary>

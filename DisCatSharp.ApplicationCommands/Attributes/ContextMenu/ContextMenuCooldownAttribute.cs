@@ -54,6 +54,7 @@ public sealed class ContextMenuCooldownAttribute : ContextMenuCheckBaseAttribute
 	/// <summary>
 	/// Gets the cooldown buckets for this command.
 	/// </summary>
+	// ReSharper disable once InconsistentNaming
 	internal readonly ConcurrentDictionary<string, ContextMenuCooldownBucket> _buckets;
 
 	/// <summary>

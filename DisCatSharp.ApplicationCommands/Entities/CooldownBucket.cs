@@ -72,8 +72,9 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 	/// <summary>
 	/// Gets the semaphore used to lock the use value.
 	/// </summary>
-	internal readonly SemaphoreSlim _usageSemaphore;
+	internal readonly SemaphoreSlim UsageSemaphore;
 
+	// ReSharper disable once InconsistentNaming
 	internal int _remainingUses;
 
 	/// <summary>
@@ -94,7 +95,7 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 		this.ChannelId = channelId;
 		this.GuildId = guildId;
 		this.BucketId = MakeId(userId, channelId, guildId);
-		this._usageSemaphore = new(1, 1);
+		this.UsageSemaphore = new(1, 1);
 	}
 
 	/// <summary>
@@ -103,7 +104,7 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 	/// <returns>Whether decrement succeeded or not.</returns>
 	internal async Task<bool> DecrementUseAsync()
 	{
-		await this._usageSemaphore.WaitAsync().ConfigureAwait(false);
+		await this.UsageSemaphore.WaitAsync().ConfigureAwait(false);
 		Console.WriteLine($"[DecrementUseAsync]: Remaining: {this.RemainingUses}/{this.MaxUses} Resets: {this.ResetsAt} Now: {DateTimeOffset.UtcNow} Vars[u,c,g]: {this.UserId} {this.ChannelId} {this.GuildId} Id: {this.BucketId}");
 
 		// if we're past reset time...
@@ -125,7 +126,7 @@ public class CooldownBucket : IBucket, IEquatable<CooldownBucket>
 		}
 		Console.WriteLine($"[DecrementUseAsync]: Remaining: {this.RemainingUses}/{this.MaxUses} Resets: {this.ResetsAt} Now: {DateTimeOffset.UtcNow} Vars[u,c,g]: {this.UserId} {this.ChannelId} {this.GuildId} Id: {this.BucketId}");
 		// ...otherwise just fail
-		this._usageSemaphore.Release();
+		this.UsageSemaphore.Release();
 		return success;
 	}
 

@@ -6,7 +6,7 @@
   <Import Project="../Package.targets" />
 
   <PropertyGroup>
-	<TargetFramework>net6.0</TargetFramework>
+	<TargetFramework>net7.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
