@@ -60,7 +60,7 @@ jobs:
     - name: Purge old docs
       working-directory: DisCatSharp.Docs
       shell: pwsh
-      run: Get-ChildItem -Exclude .git*,.htaccess | Remove-Item -Recurse -Force
+      run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
     - name: Extract new docs
       shell: pwsh
       run: Expand-Archive -Path dcs-docs.zip DisCatSharp.Docs/
