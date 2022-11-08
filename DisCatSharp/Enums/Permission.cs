@@ -345,7 +345,7 @@ public enum Permissions : long
 	/// </summary>
 	[PermissionString("Moderate Members")]
 	ModerateMembers = 1L << 40,
-	
+
 	/// <summary>
 	/// Allows to view creator monetization insights
 	/// </summary>

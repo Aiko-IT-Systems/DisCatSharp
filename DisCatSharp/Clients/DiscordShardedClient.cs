@@ -75,10 +75,6 @@ public sealed partial class DiscordShardedClient
 	/// </summary>
 	public DiscordApplication CurrentApplication { get; private set; }
 
-	[Obsolete("Use GetLibraryDevelopmentTeamAsync")]
-	public DisCatSharpTeam LibraryDeveloperTeam
-		=> this.GetLibraryDevelopmentTeamAsync().Result;
-
 	/// <summary>
 	/// Gets the list of available voice regions. Note that this property will not contain VIP voice regions.
 	/// </summary>
@@ -257,6 +253,7 @@ public sealed partial class DiscordShardedClient
 	/// <summary>
 	/// <see cref="BaseDiscordClient.GetLibraryDevelopmentTeamAsync"/>
 	/// </summary>
+	[Obsolete("Don't use this right now, inactive")]
 	public async Task<DisCatSharpTeam> GetLibraryDevelopmentTeamAsync()
 		=> await this.GetShard(0).GetLibraryDevelopmentTeamAsync().ConfigureAwait(false);
 
@@ -574,6 +571,11 @@ public sealed partial class DiscordShardedClient
 		this._guildMemberTimeoutAdded = new AsyncEvent<DiscordClient, GuildMemberTimeoutAddEventArgs>("GUILD_MEMBER_TIMEOUT_ADDED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildMemberTimeoutChanged = new AsyncEvent<DiscordClient, GuildMemberTimeoutUpdateEventArgs>("GUILD_MEMBER_TIMEOUT_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
 		this._guildMemberTimeoutRemoved = new AsyncEvent<DiscordClient, GuildMemberTimeoutRemoveEventArgs>("GUILD_MEMBER_TIMEOUT_REMOVED", DiscordClient.EventExecutionLimit, this.EventErrorHandler);
+		this._automodRuleCreated = new AsyncEvent<DiscordClient, AutomodRuleCreateEventArgs>("AUTO_MODERATION_RULE_CREATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler); ;
+		this._automodRuleUpdated = new AsyncEvent<DiscordClient, AutomodRuleUpdateEventArgs>("AUTO_MODERATION_RULE_UPDATED", DiscordClient.EventExecutionLimit, this.EventErrorHandler); ;
+		this._automodRuleDeleted = new AsyncEvent<DiscordClient, AutomodRuleDeleteEventArgs>("AUTO_MODERATION_RULE_DELETED", DiscordClient.EventExecutionLimit, this.EventErrorHandler); ;
+		this._automodActionExecuted = new AsyncEvent<DiscordClient, AutomodActionExecutedEventArgs>("AUTO_MODERATION_ACTION_EXECUTED", DiscordClient.EventExecutionLimit, this.EventErrorHandler); ;
+
 	}
 
 	/// <summary>
@@ -661,6 +663,10 @@ public sealed partial class DiscordShardedClient
 		client.GuildMemberTimeoutAdded += this.Client_GuildMemberTimeoutAdded;
 		client.GuildMemberTimeoutChanged += this.Client_GuildMemberTimeoutChanged;
 		client.GuildMemberTimeoutRemoved += this.Client_GuildMemberTimeoutRemoved;
+		client.AutomodRuleCreated += this.Client_AutomodRuleCreated;
+		client.AutomodRuleUpdated += this.Client_AutomodRuleUpdated;
+		client.AutomodRuleDeleted += this.Client_AutomodRuleDeleted;
+		client.AutomodActionExecuted += this.Client_AutomodActionExecuted;
 	}
 
 	/// <summary>
@@ -748,6 +754,10 @@ public sealed partial class DiscordShardedClient
 		client.GuildMemberTimeoutAdded -= this.Client_GuildMemberTimeoutAdded;
 		client.GuildMemberTimeoutChanged -= this.Client_GuildMemberTimeoutChanged;
 		client.GuildMemberTimeoutRemoved -= this.Client_GuildMemberTimeoutRemoved;
+		client.AutomodRuleCreated -= this.Client_AutomodRuleCreated;
+		client.AutomodRuleUpdated -= this.Client_AutomodRuleUpdated;
+		client.AutomodRuleDeleted -= this.Client_AutomodRuleDeleted;
+		client.AutomodActionExecuted -= this.Client_AutomodActionExecuted;
 	}
 
 	/// <summary>

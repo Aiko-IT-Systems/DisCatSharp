@@ -69,7 +69,7 @@ public sealed partial class DiscordClient
 			this.RegisterStaticEventHandler(type);
 		else
 		{
-			object anon = ActivatorUtilities.CreateInstance(this.Configuration.ServiceProvider, type);
+			var anon = ActivatorUtilities.CreateInstance(this.Configuration.ServiceProvider, type);
 
 			this._typeToAnonymousHandlers[type]
 				= this._typeToAnonymousHandlers.TryGetValue(type, out var anonObjs) ? anonObjs : (anonObjs = new());
@@ -89,7 +89,7 @@ public sealed partial class DiscordClient
 	/// <param name="assembly">The assembly from which to get the types.</param>
 	public void RegisterEventHandlers(Assembly assembly)
 	{
-		foreach (Type t in GetEventHandlersFromAssembly(assembly))
+		foreach (var t in GetEventHandlersFromAssembly(assembly))
 			this.RegisterEventHandler(t);
 	}
 
@@ -127,7 +127,7 @@ public sealed partial class DiscordClient
 				|| anonObjs.Count == 0)
 				return; // Wasn't registered
 
-			object anon = anonObjs[0];
+			var anon = anonObjs[0];
 			anonObjs.RemoveAt(0);
 
 			if (anonObjs.Count == 0)
@@ -151,7 +151,7 @@ public sealed partial class DiscordClient
 	/// <param name="assembly"></param>
 	public void UnregisterEventHandlers(Assembly assembly)
 	{
-		foreach (Type t in GetEventHandlersFromAssembly(assembly))
+		foreach (var t in GetEventHandlersFromAssembly(assembly))
 			this.UnregisterEventHandler(t);
 	}
 

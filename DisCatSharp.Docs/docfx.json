@@ -14,7 +14,8 @@
 				}
 			],
 			"dest":"api/DisCatSharp",
-			"filter":"filter_config.yml"
+			"filter":"filter_config.yml",
+			"disableDefaultFilter":false
 		},
 		{
 			"src":[
@@ -30,7 +31,8 @@
 				}
 			],
 			"dest":"api/DisCatSharp.Interactivity",
-			"filter":"filter_config.yml"
+			"filter":"filter_config.yml",
+			"disableDefaultFilter":false
 		},
 		{
 			"src":[
@@ -46,7 +48,8 @@
 				}
 			],
 			"dest":"api/DisCatSharp.Common",
-			"filter":"filter_config.yml"
+			"filter":"filter_config.yml",
+			"disableDefaultFilter":false
 		},
 		{
 			"src":[
@@ -62,7 +65,8 @@
 				}
 			],
 			"dest":"api/DisCatSharp.Hosting",
-			"filter":"filter_config.yml"
+			"filter":"filter_config.yml",
+			"disableDefaultFilter":false
 		},
 		{
 			"src":[
@@ -78,7 +82,8 @@
 				}
 			],
 			"dest":"api/DisCatSharp.Configuration",
-			"filter":"filter_config.yml"
+			"filter":"filter_config.yml",
+			"disableDefaultFilter":false
 		},
 		{
 			"src":[
@@ -94,7 +99,8 @@
 				}
 			],
 			"dest":"api/DisCatSharp.ApplicationCommands",
-			"filter":"filter_config.yml"
+			"filter":"filter_config.yml",
+			"disableDefaultFilter":false
 		},
 		{
 			"src":[
@@ -110,7 +116,8 @@
 				}
 			],
 			"dest":"api/DisCatSharp.CommandsNext",
-			"filter":"filter_config.yml"
+			"filter":"filter_config.yml",
+			"disableDefaultFilter":false
 		},
 		{
 			"src":[
@@ -126,7 +133,8 @@
 				}
 			],
 			"dest":"api/DisCatSharp.Hosting.DependencyInjection",
-			"filter":"filter_config.yml"
+			"filter":"filter_config.yml",
+			"disableDefaultFilter":false
 		},
 		{
 			"src":[
@@ -142,7 +150,8 @@
 				}
 			],
 			"dest":"api/DisCatSharp.Lavalink",
-			"filter":"filter_config.yml"
+			"filter":"filter_config.yml",
+			"disableDefaultFilter":false
 		},
 		{
 			"src":[
@@ -158,7 +167,8 @@
 				}
 			],
 			"dest":"api/DisCatSharp.VoiceNext",
-			"filter":"filter_config.yml"
+			"filter":"filter_config.yml",
+			"disableDefaultFilter":false
 		}
 	],
 	"build":{
@@ -172,6 +182,9 @@
 					"api/**/**.md",
 					"api/**.yml",
 					"api/**.md"
+				],
+				"exclude":[
+					"libdev/**"
 				]
 			},
 			{
@@ -199,7 +212,8 @@
 			{
 				"files":[
 					"images/**",
-					"natives/**.zip"
+					"natives/**.zip",
+					"./.htaccess"
 				],
 				"exclude":[
 					"**/bin/**",
@@ -209,18 +223,7 @@
 				]
 			}
 		],
-		"overwrite":[
-			{
-				"files":[
-
-				],
-				"exclude":[
-					"**/bin/**",
-					"**/obj/**",
-					"_site/**"
-				]
-			}
-		],
+		"overwrite":[],
 		"dest":"_site",
 		"globalMetadata":{
 			"_appTitle": "DisCatSharp Docs",
@@ -240,12 +243,8 @@
 		},
 		"disableGitFeatures":false,
 		"exportRawModel":true,
-		"globalMetadataFiles":[
-
-		],
-		"fileMetadataFiles":[
-
-		],
+		"globalMetadataFiles":[],
+		"fileMetadataFiles":[],
 		"template":[
 			"dcs"
 		],

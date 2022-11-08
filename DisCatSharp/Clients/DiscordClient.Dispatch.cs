@@ -39,7 +39,6 @@ using DisCatSharp.Net.Serialization;
 
 using Microsoft.Extensions.Logging;
 
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DisCatSharp;
@@ -106,7 +105,6 @@ public sealed partial class DiscordClient
 	/// Handles the dispatch payloads.
 	/// </summary>
 	/// <param name="payload">The payload.</param>
-
 	internal async Task HandleDispatchAsync(GatewayPayload payload)
 	{
 		if (payload.Data is not JObject dat)
@@ -228,6 +226,23 @@ public sealed partial class DiscordClient
 			case "guild_join_request_delete":
 				break;
 
+			#endregion
+
+			#region Guild Automod
+			case "auto_moderation_rule_create":
+				await this.OnAutomodRuleCreated(dat.ToDiscordObject<AutomodRule>());
+				break;
+			case "auto_moderation_rule_update":
+				await this.OnAutomodRuleUpdated(dat.ToDiscordObject<AutomodRule>());
+				break;
+			case "auto_moderation_rule_delete":
+				await this.OnAutomodRuleDeleted(dat.ToDiscordObject<AutomodRule>());
+				break;
+			case "auto_moderation_action_execution":
+				gid = (ulong)dat["guild_id"];
+
+				await this.OnAutomodActionExecuted(this.GuildsInternal[gid], dat);
+				break;
 			#endregion
 
 			#region Guild Ban
@@ -1320,6 +1335,84 @@ public sealed partial class DiscordClient
 		};
 
 		await this._guildStickersUpdated.InvokeAsync(this, sea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the created rule.
+	/// </summary>
+	/// <param name="newRule">The new added rule.</param>
+	internal async Task OnAutomodRuleCreated(AutomodRule newRule)
+	{
+		var sea = new AutomodRuleCreateEventArgs(this.ServiceProvider)
+		{
+			Rule = newRule
+		};
+
+		await this._automodRuleCreated.InvokeAsync(this, sea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the updated rule.
+	/// </summary>
+	/// <param name="updatedRule">The updated rule.</param>
+	internal async Task OnAutomodRuleUpdated(AutomodRule updatedRule)
+	{
+		var sea = new AutomodRuleUpdateEventArgs(this.ServiceProvider)
+		{
+			Rule = updatedRule
+		};
+
+		await this._automodRuleUpdated.InvokeAsync(this, sea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the deleted rule.
+	/// </summary>
+	/// <param name="deletedRule">The deleted rule.</param>
+	internal async Task OnAutomodRuleDeleted(AutomodRule deletedRule)
+	{
+		var sea = new AutomodRuleDeleteEventArgs(this.ServiceProvider)
+		{
+			Rule = deletedRule
+		};
+
+		await this._automodRuleDeleted.InvokeAsync(this, sea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the rule action execution.
+	/// </summary>
+	/// <param name="guild">The guild.</param>
+	/// <param name="rawPayload">The raw payload.</param>
+	internal async Task OnAutomodActionExecuted(DiscordGuild guild, JObject rawPayload)
+	{
+		var executedAction = rawPayload["action"].ToObject<AutomodAction>();
+		var ruleId = (ulong)rawPayload["rule_id"];
+		var triggerType = rawPayload["rule_trigger_type"].ToObject<AutomodTriggerType>();
+		var userId = (ulong)rawPayload["user_id"];
+		var channelId = rawPayload.ContainsKey("channel_id") ? (ulong?)rawPayload["channel_id"] : null;
+		var messageId = rawPayload.ContainsKey("message_id") ? (ulong?)rawPayload["message_id"] : null;
+		var alertMessageId = rawPayload.ContainsKey("alert_system_message_id") ? (ulong?)rawPayload["alert_system_message_id"] : null;
+		string? content = rawPayload.ContainsKey("content") ?(string?)rawPayload["content"] : null;
+		string? matchedKeyword = rawPayload.ContainsKey("matched_keyword") ? (string?)rawPayload["matched_keyword"] : null;
+		string? matchedContent = rawPayload.ContainsKey("matched_content") ? (string?)rawPayload["matched_content"] : null;
+
+		var ea = new AutomodActionExecutedEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			Action = executedAction,
+			RuleId = ruleId,
+			TriggerType = triggerType,
+			UserId = userId,
+			ChannelId = channelId,
+			MessageId = messageId,
+			AlertMessageId = alertMessageId,
+			MessageContent = content,
+			MatchedKeyword = matchedKeyword,
+			MatchedContent = matchedContent
+		};
+
+		await this._automodActionExecuted.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -2603,7 +2696,8 @@ public sealed partial class DiscordClient
 					threadOld.AppliedTagIdsInternal = null;
 					threadNew.AppliedTagIdsInternal = null;
 				}
-			} else
+			}
+			else
 			{
 				threadOld.AppliedTagIdsInternal = threadNew.AppliedTagIdsInternal;
 				threadNew.AppliedTagIdsInternal = thread.AppliedTagIdsInternal;
@@ -2879,37 +2973,13 @@ public sealed partial class DiscordClient
 			}
 		}
 
-		if (this.UserCache.TryGetValue(uid, out var usr))
-		{
-			if (old != null)
-			{
-				old.InternalUser.Username = usr.Username;
-				old.InternalUser.Discriminator = usr.Discriminator;
-				old.InternalUser.AvatarHash = usr.AvatarHash;
-			}
-
-			if (rawUser["username"] is object)
-				usr.Username = (string)rawUser["username"];
-			if (rawUser["discriminator"] is object)
-				usr.Discriminator = (string)rawUser["discriminator"];
-			if (rawUser["avatar"] is object)
-				usr.AvatarHash = (string)rawUser["avatar"];
-
-			presence.InternalUser.Username = usr.Username;
-			presence.InternalUser.Discriminator = usr.Discriminator;
-			presence.InternalUser.AvatarHash = usr.AvatarHash;
-		}
-
-		var usrafter = usr ?? new DiscordUser(presence.InternalUser);
 		var ea = new PresenceUpdateEventArgs(this.ServiceProvider)
 		{
 			Status = presence.Status,
 			Activity = presence.Activity,
-			User = usr,
+			User = presence.User,
 			PresenceBefore = old,
-			PresenceAfter = presence,
-			UserBefore = old != null ? new DiscordUser(old.InternalUser) : usrafter,
-			UserAfter = usrafter
+			PresenceAfter = presence
 		};
 		await this._presenceUpdated.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
@@ -3389,7 +3459,6 @@ public sealed partial class DiscordClient
 
 		var guild = this.InternalGetCachedGuild(guildId);
 		var usr = this.UpdateUser(new DiscordUser { Id = userId, Discord = this }, guildId, guild, mbr);
-
 		var ea = new TypingStartEventArgs(this.ServiceProvider)
 		{
 			Channel = channel,

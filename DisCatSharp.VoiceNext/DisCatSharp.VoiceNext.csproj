@@ -15,8 +15,14 @@
 
   <PropertyGroup>
     <PackageId>DisCatSharp.VoiceNext</PackageId>
-    <Description>Voice extension for DisCatSharp.</Description>
-    <PackageTags>discord, discord-api, bots, discord-bots, chat, dcs, discatsharp, csharp, dotnet, vb-net, fsharp, audio, voice, radio, music</PackageTags>
+	<Description>
+DisCatSharp Voice Next Extension
+
+Easy made audio player for discord bots.
+
+Documentation: https://docs.discatsharp.tech/articles/modules/audio/voicenext/prerequisites.html
+	</Description>
+	<PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6,Voice,Audio Player</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

@@ -22,8 +22,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
@@ -168,7 +168,7 @@ public sealed class LavalinkRestClient
 	/// </summary>
 	/// <param name="trackStrings">The array of base64 track strings.</param>
 	/// <returns></returns>
-	public Task<IEnumerable<LavalinkTrack>> DecodeTracksAsync(string[] trackStrings)
+	public Task<List<LavalinkTrack>> DecodeTracksAsync(string[] trackStrings)
 	{
 		var decodeTracksUri = new Uri($"{this.RestEndpoint.ToHttpString()}{Endpoints.DECODE_TRACKS}");
 		return this.InternalDecodeTracksAsync(decodeTracksUri, trackStrings);
@@ -179,7 +179,7 @@ public sealed class LavalinkRestClient
 	/// </summary>
 	/// <param name="trackStrings">The list of base64 track strings.</param>
 	/// <returns></returns>
-	public Task<IEnumerable<LavalinkTrack>> DecodeTracksAsync(List<string> trackStrings)
+	public Task<List<LavalinkTrack>> DecodeTracksAsync(List<string> trackStrings)
 	{
 		var decodeTracksUri = new Uri($"{this.RestEndpoint.ToHttpString()}{Endpoints.DECODE_TRACKS}");
 		return this.InternalDecodeTracksAsync(decodeTracksUri, trackStrings.ToArray());
@@ -289,7 +289,7 @@ public sealed class LavalinkRestClient
 				tracks.Add(track);
 			}
 
-			loadInfo.Tracks = new ReadOnlyCollection<LavalinkTrack>(tracks);
+			loadInfo.Tracks = new(tracks);
 
 			return loadInfo;
 		}
@@ -325,7 +325,7 @@ public sealed class LavalinkRestClient
 	/// <param name="uri">The uri.</param>
 	/// <param name="ids">The ids.</param>
 	/// <returns>A Task.</returns>
-	internal async Task<IEnumerable<LavalinkTrack>> InternalDecodeTracksAsync(Uri uri, string[] ids)
+	internal async Task<List<LavalinkTrack>> InternalDecodeTracksAsync(Uri uri, string[] ids)
 	{
 		var jsonOut = JsonConvert.SerializeObject(ids);
 		var content = new StringContent(jsonOut, Utilities.UTF8, "application/json");
@@ -349,9 +349,7 @@ public sealed class LavalinkRestClient
 			decodedTracks[i].TrackString = jarr[i]["track"].ToString();
 		}
 
-		var decodedTrackList = new ReadOnlyCollection<LavalinkTrack>(decodedTracks);
-
-		return decodedTrackList;
+		return decodedTracks.ToList();
 	}
 
 	#endregion

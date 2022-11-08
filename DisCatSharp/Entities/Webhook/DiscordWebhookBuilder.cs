@@ -81,7 +81,7 @@ public sealed class DiscordWebhookBuilder
 	/// Embeds to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<DiscordEmbed> Embeds => this._embeds;
-	private readonly List<DiscordEmbed> _embeds = new();
+	private List<DiscordEmbed> _embeds = new();
 
 	/// <summary>
 	/// Files to send on this webhook request.
@@ -93,20 +93,20 @@ public sealed class DiscordWebhookBuilder
 	/// Mentions to send on this webhook request.
 	/// </summary>
 	public IReadOnlyList<IMention> Mentions => this._mentions;
-	private readonly List<IMention> _mentions = new();
+	private List<IMention> _mentions = new();
 
 	/// <summary>
 	/// Gets the components.
 	/// </summary>
 	public IReadOnlyList<DiscordActionRowComponent> Components => this._components;
-	private readonly List<DiscordActionRowComponent> _components = new();
+	private List<DiscordActionRowComponent> _components = new();
 
 
 	/// <summary>
 	/// Attachments to keep on this webhook request.
 	/// </summary>
-	public IEnumerable<DiscordAttachment> Attachments => this.AttachmentsInternal;
-	internal readonly List<DiscordAttachment> AttachmentsInternal = new();
+	public IReadOnlyList<DiscordAttachment> Attachments => this.AttachmentsInternal;
+	internal List<DiscordAttachment> AttachmentsInternal = new();
 
 	/// <summary>
 	/// Constructs a new empty webhook request builder.

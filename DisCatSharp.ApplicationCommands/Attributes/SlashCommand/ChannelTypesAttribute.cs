@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using DisCatSharp.Enums;
 
@@ -36,7 +37,7 @@ public class ChannelTypesAttribute : Attribute
 	/// <summary>
 	/// Allowed channel types.
 	/// </summary>
-	public IEnumerable<ChannelType> ChannelTypes { get; }
+	public List<ChannelType> ChannelTypes { get; }
 
 	/// <summary>
 	/// Defines allowed channel types for a channel parameter.
@@ -44,6 +45,6 @@ public class ChannelTypesAttribute : Attribute
 	/// <param name="channelTypes">The channel types to allow.</param>
 	public ChannelTypesAttribute(params ChannelType[] channelTypes)
 	{
-		this.ChannelTypes = channelTypes;
+		this.ChannelTypes = channelTypes.ToList();
 	}
 }

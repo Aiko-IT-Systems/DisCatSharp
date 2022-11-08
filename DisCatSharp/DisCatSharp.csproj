@@ -14,8 +14,13 @@
 
   <PropertyGroup>
     <PackageId>DisCatSharp</PackageId>
-    <Description>Another C# API/Framework for Discord Bots.</Description>
-    <PackageTags>discord, discord-api, bots, discord-bots, chat, dcs, discatsharp, csharp, dotnet, vb-net, fsharp, webhooks</PackageTags>
+    <Description>
+DisCatSharp
+
+Your library to write discord bots in C# with a focus on always providing access to the latest discord features.
+Written with love and for everyone.
+	</Description>
+    <PackageTags>DisCatSharp,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

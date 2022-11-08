@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System.Collections.Generic;
-using System.Linq;
 
 using DisCatSharp.Entities;
 
@@ -29,7 +28,7 @@ namespace DisCatSharp.Interactivity
 {
 	public static class InteractivityHelpers
 	{
-		public static IEnumerable<Page> Recalculate(this List<Page> pages)
+		public static List<Page> Recalculate(this List<Page> pages)
 		{
 			List<Page> recalulatedPages = new(pages.Count);
 			int pageCount = 1;
@@ -41,7 +40,7 @@ namespace DisCatSharp.Interactivity
 				recalulatedPages.Add(tempPage);
 				pageCount++;
 			}
-			return recalulatedPages.AsEnumerable();
+			return recalulatedPages;
 		}
 	}
 }

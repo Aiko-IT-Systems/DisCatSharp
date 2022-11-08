@@ -247,6 +247,10 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		this._guildMemberTimeoutChanged = new AsyncEvent<DiscordClient, GuildMemberTimeoutUpdateEventArgs>("GUILD_MEMBER_TIMEOUT_UPDATED", EventExecutionLimit, this.EventErrorHandler);
 		this._guildMemberTimeoutRemoved = new AsyncEvent<DiscordClient, GuildMemberTimeoutRemoveEventArgs>("GUILD_MEMBER_TIMEOUT_REMOVED", EventExecutionLimit, this.EventErrorHandler);
 		this._rateLimitHit = new AsyncEvent<DiscordClient, RateLimitExceptionEventArgs>("RATELIMIT_HIT", EventExecutionLimit, this.EventErrorHandler);
+		this._automodRuleCreated = new AsyncEvent<DiscordClient, AutomodRuleCreateEventArgs>("AUTO_MODERATION_RULE_CREATED", EventExecutionLimit, this.EventErrorHandler); ;
+		this._automodRuleUpdated = new AsyncEvent<DiscordClient, AutomodRuleUpdateEventArgs>("AUTO_MODERATION_RULE_UPDATED", EventExecutionLimit, this.EventErrorHandler); ;
+		this._automodRuleDeleted = new AsyncEvent<DiscordClient, AutomodRuleDeleteEventArgs>("AUTO_MODERATION_RULE_DELETED", EventExecutionLimit, this.EventErrorHandler); ;
+		this._automodActionExecuted = new AsyncEvent<DiscordClient, AutomodActionExecutedEventArgs>("AUTO_MODERATION_ACTION_EXECUTED", EventExecutionLimit, this.EventErrorHandler); ;
 
 		this.GuildsInternal.Clear();
 
@@ -428,6 +432,17 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			return usr;
 		}
 	}
+
+	/// <summary>
+	/// Gets a applications rpc information.
+	/// </summary>
+	/// <param name="applicationId">Id of the application</param>
+	/// <returns>The requested application.</returns>
+	/// <exception cref="NotFoundException">Thrown when the application does not exist.</exception>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordRpcApplication> GetRpcApplicationAsync(ulong applicationId)
+		=> await this.ApiClient.GetApplicationInfoAsync(applicationId);
 
 	/// <summary>
 	/// Tries to get a user.
@@ -640,36 +655,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	}
 
 	/// <summary>
-	/// Executes a raw request.
-	/// </summary>
-	/// <example>
-	/// <c>
-	/// var request = await Client.ExecuteRawRequestAsync(RestRequestMethod.GET, $"{Endpoints.CHANNELS}/243184972190742178964/{Endpoints.INVITES}");
-	/// List&lt;DiscordInvite&gt; invites = DiscordJson.ToDiscordObject&lt;List&lt;DiscordInvite&gt;&gt;(request.Response);
-	/// </c>
-	/// </example>
-	/// <param name="method">The method.</param>
-	/// <param name="route">The route.</param>
-	/// <param name="routeParams">The route parameters.</param>
-	/// <param name="jsonBody">The json body.</param>
-	/// <param name="additionalHeaders">The additional headers.</param>
-	/// <param name="ratelimitWaitOverride">The ratelimit wait override.</param>
-	/// <exception cref="NotFoundException">Thrown when the resource does not exist.</exception>
-	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
-	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	/// <returns>A awaitable RestResponse</returns>
-	[Obsolete("This is no longer needed. Use DiscordClient.RestClient instead.", false)]
-	public async Task<RestResponse> ExecuteRawRequestAsync(RestRequestMethod method, string route, object routeParams, string jsonBody = null, Dictionary<string, string> additionalHeaders = null, double? ratelimitWaitOverride = null)
-	{
-		var bucket = this.ApiClient.Rest.GetBucket(method, route, routeParams, out var path);
-
-		var url = Utilities.GetApiUriFor(path, this.Configuration);
-		var res = await this.ApiClient.DoRequestAsync(this, bucket, url, method, route, additionalHeaders, DiscordJson.SerializeObject(jsonBody), ratelimitWaitOverride);
-
-		return res;
-	}
-
-	/// <summary>
 	/// Gets a guild.
 	/// <para>Setting <paramref name="withCounts"/> to true will make a REST request.</para>
 	/// </summary>
@@ -737,6 +722,35 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		try
 		{
 			return await this.ApiClient.GetGuildPreviewAsync(id).ConfigureAwait(false);
+		}
+		catch (NotFoundException)
+		{
+			return null;
+		}
+	}
+
+	/// <summary>
+	/// Gets a guild widget.
+	/// </summary>
+	/// <param name="id">The Guild Id.</param>
+	/// <returns>A guild widget.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public Task<DiscordWidget> GetGuildWidgetAsync(ulong id)
+		=> this.ApiClient.GetGuildWidgetAsync(id);
+
+	/// <summary>
+	/// Tries to get a guild widget.
+	/// </summary>
+	/// <param name="id">The Guild Id.</param>
+	/// <returns>The requested guild widget or null if not found.</returns>
+	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
+	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+	public async Task<DiscordWidget?> TryGetGuildWidgetAsync(ulong id)
+	{
+		try
+		{
+			return await this.ApiClient.GetGuildWidgetAsync(id);
 		}
 		catch (NotFoundException)
 		{
@@ -818,7 +832,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		}
 	}
 
-
 	/// <summary>
 	/// Gets all nitro sticker packs.
 	/// </summary>
@@ -827,7 +840,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordStickerPack>> GetStickerPacksAsync()
 		=> this.ApiClient.GetStickerPacksAsync();
-
 
 	/// <summary>
 	/// Gets the In-App OAuth Url.
@@ -879,7 +891,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 		}
 	}
 
-
 	/// <summary>
 	/// Gets a webhook with a token.
 	/// </summary>
@@ -911,7 +922,6 @@ public sealed partial class DiscordClient : BaseDiscordClient
 			return null;
 		}
 	}
-
 
 	/// <summary>
 	/// Updates current user's activity and status.

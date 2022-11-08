@@ -66,7 +66,7 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	/// <summary>
 	/// Gets the application's owners.
 	/// </summary>
-	public IEnumerable<DiscordUser> Owners { get; internal set; }
+	public List<DiscordUser> Owners { get; internal set; }
 
 	/// <summary>
 	/// Gets whether this application's bot user requires code grant.

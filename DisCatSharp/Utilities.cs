@@ -300,7 +300,7 @@ public static class Utilities
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <returns>A bool.</returns>
-	internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || guild.Features.CanCreatePrivateThreads;
+	internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || guild.Features.HasFeature(GuildFeaturesEnum.CanCreatePrivateThreads);
 
 	/// <summary>
 	/// Have the message intents.

@@ -192,7 +192,7 @@ To see the available locales, visit [this](xref:modules_application_commands_tra
 ## Can We Get The User And Guild Locale?
 
 Yes, you can!
-Discord sends the user on all [interaction types](xref:DisCatSharp.InteractionType), except `Ping`.
+Discord sends the user on all [interaction types](xref:DisCatSharp.Enums.InteractionType), except `Ping`.
 
 We introduced two new properties `Locale` and `GuildLocale` on [InteractionContext](xref:DisCatSharp.ApplicationCommands.Context.InteractionContext), [ContextMenuContext](xref:DisCatSharp.ApplicationCommands.Context.ContextMenuContext), [AutoCompleteContext](xref:DisCatSharp.ApplicationCommands.Context.AutocompleteContext) and [DiscordInteraction](xref:DisCatSharp.Entities.DiscordInteraction).
 `Locale` is the locale of the user and always represented.
