@@ -213,7 +213,7 @@
 				"files":[
 					"images/**",
 					"natives/**.zip",
-					".htaccess"
+					"./.htaccess"
 				],
 				"exclude":[
 					"**/bin/**",
