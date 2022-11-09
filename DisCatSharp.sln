@@ -5,8 +5,6 @@ VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp", "DisCatSharp\DisCatSharp.csproj", "{EB3D8310-DFAD-4295-97F9-82E253647583}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.VoiceNext", "DisCatSharp.VoiceNext\DisCatSharp.VoiceNext.csproj", "{FB6B9EE9-65FB-4DFB-8D51-06F0BE6C1BA5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4255B64D-92EC-46B3-BC3B-ED2C3A8073EE}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -71,8 +69,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{430C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Lavalink", "DisCatSharp.Lavalink\DisCatSharp.Lavalink.csproj", "{A8B8FB09-C6AF-4F28-89B8-B53EE0DCE6E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.VoiceNext.Natives", "DisCatSharp.VoiceNext.Natives\DisCatSharp.VoiceNext.Natives.csproj", "{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Common", "DisCatSharp.Common\DisCatSharp.Common.csproj", "{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.ApplicationCommands", "DisCatSharp.ApplicationCommands\DisCatSharp.ApplicationCommands.csproj", "{AD530FD0-523C-4DE7-9AF6-B9A3785492C2}"
@@ -104,10 +100,6 @@ Global
 		{EB3D8310-DFAD-4295-97F9-82E253647583}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB3D8310-DFAD-4295-97F9-82E253647583}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB3D8310-DFAD-4295-97F9-82E253647583}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB6B9EE9-65FB-4DFB-8D51-06F0BE6C1BA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB6B9EE9-65FB-4DFB-8D51-06F0BE6C1BA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB6B9EE9-65FB-4DFB-8D51-06F0BE6C1BA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB6B9EE9-65FB-4DFB-8D51-06F0BE6C1BA5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C8ED55FB-E028-468D-955F-1534C20274EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C8ED55FB-E028-468D-955F-1534C20274EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8ED55FB-E028-468D-955F-1534C20274EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -120,10 +112,6 @@ Global
 		{A8B8FB09-C6AF-4F28-89B8-B53EE0DCE6E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8B8FB09-C6AF-4F28-89B8-B53EE0DCE6E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8B8FB09-C6AF-4F28-89B8-B53EE0DCE6E5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BEC47B41-71E4-41D1-A4F9-BB7C56A1B82B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD84A5C7-C7FF-48CA-B23D-FA726CF80E09}.Release|Any CPU.ActiveCfg = Release|Any CPU

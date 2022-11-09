@@ -152,23 +152,6 @@
 			"dest":"api/DisCatSharp.Lavalink",
 			"filter":"filter_config.yml",
 			"disableDefaultFilter":false
-		},
-		{
-			"src":[
-				{
-					"src":"../DisCatSharp.VoiceNext/",
-					"files":[
-						"**.csproj"
-					],
-					"exclude":[
-						"**/obj/**",
-						"**/bin/**"
-					]
-				}
-			],
-			"dest":"api/DisCatSharp.VoiceNext",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":false
 		}
 	],
 	"build":{
@@ -196,9 +179,7 @@
 					"articles/**.yml",
 					"articles/**.md",
 					"changelogs/**.yml",
-					"changelogs/**.md",
-					"natives/**.yml",
-					"natives/**.md"
+					"changelogs/**.md"
 				],
 				"exclude":[
 					"**/bin/**",
@@ -212,7 +193,6 @@
 			{
 				"files":[
 					"images/**",
-					"natives/**.zip",
 					"./.htaccess"
 				],
 				"exclude":[
