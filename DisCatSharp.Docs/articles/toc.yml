@@ -87,6 +87,14 @@
         href: modules/audio/lavalink/music_commands.md
       - name: Advanced
         href: modules/audio/lavalink/advanced.md
+    - name: VoiceNext
+      items:
+      - name: Prerequisites
+        href: modules/audio/voicenext/prerequisites.md
+      - name: Transmitting
+        href: modules/audio/voicenext/transmit.md
+      - name: Receiving
+        href: modules/audio/voicenext/receive.md
   - name: Interactivity
     href: modules/interactivity.md
 - name: Miscellaneous
