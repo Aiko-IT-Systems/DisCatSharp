@@ -1508,11 +1508,15 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// </summary>
 	/// <param name="customAttributes">The custom attributes.</param>
 	/// <param name="guildId">The optional guild id</param>
-	private static async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(IEnumerable<ChoiceProviderAttribute> customAttributes, ulong? guildId = null)
+	private static async Task<List<DiscordApplicationCommandOptionChoice>> GetChoiceAttributesFromProvider(IChoiceProviderAttribute[] customAttributes, ulong? guildId = null)
 	{
 		var choices = new List<DiscordApplicationCommandOptionChoice>();
 		foreach (var choiceProviderAttribute in customAttributes)
 		{
+			/*
+			 *	Thanks to the attribute generic constraint this if statement should technically not execute
+			 *  We should be left with a valid IChoiceProvider instance that we can carry on using
+			 */
 			if (Activator.CreateInstance(choiceProviderAttribute.ProviderType) is not IChoiceProvider instance)
 				throw new NullReferenceException($"Was unable to instantiate '{nameof(choiceProviderAttribute.ProviderType.Name)}' as a ChoiceProvider");
 
@@ -1642,7 +1646,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				choices = GetChoiceAttributesFromEnumParameter(parameter.ParameterType);
 			}
 			//From choice provider
-			var choiceProviders = parameter.GetCustomAttributes<ChoiceProviderAttribute>().ToArray();
+			var choiceProviders = parameter.GetCustomAttributes(typeof(ChoiceProviderAttribute<>))
+				.Cast<IChoiceProviderAttribute>()
+				.ToArray();
+
 			if (choiceProviders.Any())
 			{
 				choices = await GetChoiceAttributesFromProvider(choiceProviders, guildId);

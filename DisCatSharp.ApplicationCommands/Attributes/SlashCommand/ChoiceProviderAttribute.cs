@@ -24,12 +24,18 @@ using System;
 
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
+internal interface IChoiceProviderAttribute
+{
+	Type ProviderType { get; }
+}
+
 /// <summary>
 /// Sets a IChoiceProvider for a command options. ChoiceProviders can be used to provide
 /// DiscordApplicationCommandOptionChoice from external sources such as a database.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true)]
-public class ChoiceProviderAttribute : Attribute
+public class ChoiceProviderAttribute<T> : Attribute, IChoiceProviderAttribute
+	where T : IChoiceProvider
 {
 
 	/// <summary>
@@ -41,8 +47,8 @@ public class ChoiceProviderAttribute : Attribute
 	/// Adds a choice provider to this command.
 	/// </summary>
 	/// <param name="providerType">The type of the provider.</param>
-	public ChoiceProviderAttribute(Type providerType)
+	public ChoiceProviderAttribute()
 	{
-		this.ProviderType = providerType;
+		this.ProviderType = typeof(T);
 	}
 }
