@@ -84,8 +84,8 @@ public sealed class LavalinkExtension : BaseExtension
 	/// <returns>The established Lavalink connection.</returns>
 	public async Task<LavalinkNodeConnection> ConnectAsync(LavalinkConfiguration config)
 	{
-		if (this._connectedNodes.ContainsKey(config.SocketEndpoint))
-			return this._connectedNodes[config.SocketEndpoint];
+		if (this._connectedNodes.TryGetValue(config.SocketEndpoint, out var endpoint))
+			return endpoint;
 
 		var con = new LavalinkNodeConnection(this.Client, this, config);
 		con.NodeDisconnected += this.Con_NodeDisconnected;
@@ -109,15 +109,15 @@ public sealed class LavalinkExtension : BaseExtension
 	/// </summary>
 	/// <param name="endpoint">Endpoint at which the node resides.</param>
 	/// <returns>Lavalink node connection.</returns>
-	public LavalinkNodeConnection GetNodeConnection(ConnectionEndpoint endpoint)
-		=> this._connectedNodes.ContainsKey(endpoint) ? this._connectedNodes[endpoint] : null;
+	public LavalinkNodeConnection? GetNodeConnection(ConnectionEndpoint endpoint)
+		=> this._connectedNodes.TryGetValue(endpoint, out var value) ? value : null;
 
 	/// <summary>
 	/// Gets a Lavalink node connection based on load balancing and an optional voice region.
 	/// </summary>
 	/// <param name="region">The region to compare with the node's <see cref="LavalinkConfiguration.Region"/>, if any.</param>
 	/// <returns>The least load affected node connection, or null if no nodes are present.</returns>
-	public LavalinkNodeConnection GetIdealNodeConnection(DiscordVoiceRegion region = null)
+	public LavalinkNodeConnection? GetIdealNodeConnection(DiscordVoiceRegion? region = null)
 	{
 		if (this._connectedNodes.Count <= 1)
 			return this._connectedNodes.Values.FirstOrDefault();

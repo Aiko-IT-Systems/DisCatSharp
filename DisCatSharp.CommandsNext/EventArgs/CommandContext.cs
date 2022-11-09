@@ -172,7 +172,7 @@ public sealed class CommandContext
 	public Task TriggerTypingAsync()
 		=> this.Channel.TriggerTypingAsync();
 
-	internal struct ServiceContext : IDisposable
+	internal readonly struct ServiceContext : IDisposable
 	{
 		/// <summary>
 		/// Gets the provider.
