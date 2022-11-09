@@ -14,7 +14,6 @@ Welcome to the DisCatSharp Global API reference.
 
 ## Voice packages
 - [DisCatSharp.Lavalink](xref:api_discatsharp_lavalink_index)
-- [DisCatSharp.VoiceNext](xref:api_discatsharp_voicenext_index)
 
 ## Hosting packages
 - [DisCatSharp.Configuration](xref:api_discatsharp_configuration_index)

@@ -152,23 +152,6 @@
 			"dest":"libdev/DisCatSharp.Lavalink",
 			"filter":"filter_config.yml",
 			"disableDefaultFilter":true
-		},
-		{
-			"src":[
-				{
-					"src":"../DisCatSharp.VoiceNext/",
-					"files":[
-						"**.csproj"
-					],
-					"exclude":[
-						"**/obj/**",
-						"**/bin/**"
-					]
-				}
-			],
-			"dest":"libdev/DisCatSharp.VoiceNext",
-			"filter":"filter_config.yml",
-			"disableDefaultFilter":true
 		}
 	],
 	"build": {

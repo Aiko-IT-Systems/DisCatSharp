@@ -19,7 +19,6 @@ You find internal and private methods and properties here.
 
 ## Voice packages
 - [DisCatSharp.Lavalink](xref:libdev_discatsharp_lavalink_index)
-- [DisCatSharp.VoiceNext](xref:libdev_discatsharp_voicenext_index)
 
 ## Hosting packages
 - [DisCatSharp.Configuration](xref:libdev_discatsharp_configuration_index)
