@@ -24,11 +24,17 @@ using System;
 
 namespace DisCatSharp.ApplicationCommands.Attributes;
 
+internal interface IAutocompleteAttribute
+{
+	Type ProviderType { get; }
+}
+
 /// <summary>
 /// The autocomplete attribute.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public class AutocompleteAttribute : Attribute
+public class AutocompleteAttribute<T> : Attribute, IAutocompleteAttribute
+	where T : IAutocompleteProvider
 {
 	/// <summary>
 	/// The type of the provider.
@@ -39,8 +45,8 @@ public class AutocompleteAttribute : Attribute
 	/// Adds an autocomplete provider to this command option.
 	/// </summary>
 	/// <param name="providerType">The type of the provider.</param>
-	public AutocompleteAttribute(Type providerType)
+	public AutocompleteAttribute()
 	{
-		this.ProviderType = providerType;
+		this.ProviderType = typeof(T);
 	}
 }

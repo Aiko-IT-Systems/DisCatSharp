@@ -932,9 +932,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						throw new InvalidOperationException("Application commands failed to register properly on startup.");
 					}
 
-					var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
-					var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
-					var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+					var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id).ToArray();
+					var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToArray();
+					var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToArray();
+
 					if (!methods.Any() && !groups.Any() && !subgroups.Any())
 					{
 						await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("A application command was executed, but no command was registered for it."));
@@ -987,9 +988,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 					throw new InvalidOperationException("Application commands failed to register properly on startup.");
 				}
 
-				var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id);
-				var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
-				var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id);
+				var methods = s_commandMethods.Where(x => x.CommandId == e.Interaction.Data.Id).ToArray();
+				var groups = s_groupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToArray();
+				var subgroups = s_subGroupCommands.Where(x => x.CommandId == e.Interaction.Data.Id).ToArray();
+
 				if (!methods.Any() && !groups.Any() && !subgroups.Any())
 				{
 					await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder().WithContent("An autocomplete interaction was created, but no command was registered for it"));
@@ -1004,9 +1006,22 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						var method = methods.First().Method;
 
 						var option = method.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
-						var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
-						var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
-						var providerInstance = Activator.CreateInstance(provider);
+
+						if (option.GetCustomAttribute(typeof(AutocompleteAttribute<>)) is not IAutocompleteAttribute providerAttribute)
+							throw new InvalidOperationException("Could not locate an AutoCompleteProvider");
+
+						var provider = providerAttribute.ProviderType;
+
+						/*
+						 *	ServiceProvider is defaulting to Null within our library
+						 *  So if the provider is available --
+						 *		Allow our users to consume whichever services might be necessary from their DI pipeline
+						 */
+
+						// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+						var providerInstance = Configuration.ServiceProvider is not null
+								? ActivatorUtilities.CreateInstance(Configuration.ServiceProvider, provider)
+								: Activator.CreateInstance(provider);
 
 						var context = new AutocompleteContext
 						{
@@ -1024,7 +1039,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							AppPermissions = e.Interaction.AppPermissions
 						};
 
-						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
+						var choices = await (providerInstance as IAutocompleteProvider)?.Provider(context)!;
 						await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
 					}
 					else if (groups.Any())
@@ -1034,9 +1049,22 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 						var focusedOption = command.Options.First(o => o.Focused);
 						var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
-						var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
-						var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
-						var providerInstance = Activator.CreateInstance(provider);
+
+						if (option.GetCustomAttribute(typeof(AutocompleteAttribute<>)) is not IAutocompleteAttribute providerAttribute)
+							throw new InvalidOperationException("Could not locate an AutoCompleteProvider");
+
+						var provider = providerAttribute.ProviderType;
+
+						/*
+						 *	ServiceProvider is defaulting to Null within our library
+						 *  So if the provider is available --
+						 *		Allow our users to consume whichever services might be necessary from their DI pipeline
+						 */
+
+						// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+						var providerInstance = Configuration.ServiceProvider is not null
+							? ActivatorUtilities.CreateInstance(Configuration.ServiceProvider, provider)
+							: Activator.CreateInstance(provider);
 
 						var context = new AutocompleteContext
 						{
@@ -1054,7 +1082,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							AppPermissions = e.Interaction.AppPermissions
 						};
 
-						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
+						var choices = await (providerInstance as IAutocompleteProvider)?.Provider(context)!;
 						await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
 					}
 					else if (subgroups.Any())
@@ -1065,9 +1093,22 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						var focusedOption = command.Options[0].Options.First(o => o.Focused);
 
 						var option = group.GetParameters().Skip(1).First(p => p.GetCustomAttribute<OptionAttribute>().Name == focusedOption.Name);
-						var provider = option.GetCustomAttribute<AutocompleteAttribute>().ProviderType;
-						var providerMethod = provider.GetMethod(nameof(IAutocompleteProvider.Provider));
-						var providerInstance = Activator.CreateInstance(provider);
+
+						if (option.GetCustomAttribute(typeof(AutocompleteAttribute<>)) is not IAutocompleteAttribute providerAttribute)
+							throw new InvalidOperationException("Could not locate an AutoCompleteProvider");
+
+						var provider = providerAttribute.ProviderType;
+
+						/*
+						 *	ServiceProvider is defaulting to Null within our library
+						 *  So if the provider is available --
+						 *		Allow our users to consume whichever services might be necessary from their DI pipeline
+						 */
+
+						// ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+						var providerInstance = Configuration.ServiceProvider is not null
+							? ActivatorUtilities.CreateInstance(Configuration.ServiceProvider, provider)
+							: Activator.CreateInstance(provider);
 
 						var context = new AutocompleteContext
 						{
@@ -1085,7 +1126,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 							AppPermissions = e.Interaction.AppPermissions
 						};
 
-						var choices = await (Task<IEnumerable<DiscordApplicationCommandAutocompleteChoice>>) providerMethod.Invoke(providerInstance, new[] { context });
+						var choices = await (providerInstance as IAutocompleteProvider)?.Provider(context)!;
 						await e.Interaction.CreateResponseAsync(InteractionResponseType.AutoCompleteResult, new DiscordInteractionResponseBuilder().AddAutoCompleteChoices(choices));
 					}
 				}
@@ -1577,7 +1618,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 			var maximumLength = parameter.GetCustomAttribute<MaximumLengthAttribute>()?.Value ?? null;
 			var channelTypes = parameter.GetCustomAttribute<ChannelTypesAttribute>()?.ChannelTypes ?? null;
 
-			var autocompleteAttribute = parameter.GetCustomAttribute<AutocompleteAttribute>();
+			var autocompleteAttribute = parameter.GetCustomAttribute(typeof(AutocompleteAttribute<>));
 			if (optionAttribute.Autocomplete && autocompleteAttribute == null)
 				throw new ArgumentException($"The command '{commandName}' has autocomplete enabled but is missing an autocomplete attribute!");
 			if (!optionAttribute.Autocomplete && autocompleteAttribute != null)
@@ -1610,7 +1651,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 				choices = GetChoiceAttributesFromEnumParameter(parameter.ParameterType);
 			}
 			//From choice provider
-			var choiceProviders = parameter.GetCustomAttributes<ChoiceProviderAttribute>();
+			var choiceProviders = parameter.GetCustomAttributes<ChoiceProviderAttribute>().ToArray();
 			if (choiceProviders.Any())
 			{
 				choices = await GetChoiceAttributesFromProvider(choiceProviders, guildId);
@@ -1956,11 +1997,11 @@ internal class DefaultHelpModule : ApplicationCommandsModule
 
 	[SlashCommand("help", "Displays command help")]
 	internal async Task DefaultHelpAsync(InteractionContext ctx,
-		[Autocomplete(typeof(DefaultHelpAutoCompleteProvider))]
+		[Autocomplete<DefaultHelpAutoCompleteProvider>()]
 		[Option("option_one", "top level command to provide help for", true)] string commandName,
-		[Autocomplete(typeof(DefaultHelpAutoCompleteLevelOneProvider))]
+		[Autocomplete<DefaultHelpAutoCompleteLevelOneProvider>()]
 		[Option("option_two", "subgroup or command to provide help for", true)] string commandOneName = null,
-		[Autocomplete(typeof(DefaultHelpAutoCompleteLevelTwoProvider))]
+		[Autocomplete<DefaultHelpAutoCompleteLevelTwoProvider>()]
 		[Option("option_three", "command to provide help for", true)] string commandTwoName = null)
 	{
 		List<DiscordApplicationCommand> applicationCommands = null;
