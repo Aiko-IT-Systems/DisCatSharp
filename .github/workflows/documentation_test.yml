@@ -19,7 +19,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.0.3
       with:
-        dotnet-version: 7.0.0
+        dotnet-version: 7.0.100
     - name: Restore packages
       working-directory: DisCatSharp
       run: dotnet restore
