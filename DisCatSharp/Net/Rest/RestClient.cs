@@ -183,9 +183,9 @@ internal sealed class RestClient : IDisposable
 				: val is IFormattable xf ? xf.ToString(null, CultureInfo.InvariantCulture) : val.ToString();
 		}
 
-		var guildId = rparams.ContainsKey("guild_id") ? rparams["guild_id"] : "";
-		var channelId = rparams.ContainsKey("channel_id") ? rparams["channel_id"] : "";
-		var webhookId = rparams.ContainsKey("webhook_id") ? rparams["webhook_id"] : "";
+		var guildId = rparams.TryGetValue("guild_id", out var value1) ? value1 : "";
+		var channelId = rparams.TryGetValue("channel_id", out var value2) ? value2 : "";
+		var webhookId = rparams.TryGetValue("webhook_id", out var value3) ? value3 : "";
 
 		// Create a generic route (minus major params) key
 		// ex: POST:/channels/channel_id/messages

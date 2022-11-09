@@ -160,7 +160,7 @@ public sealed class VoiceNextExtension : BaseExtension
 	/// </summary>
 	/// <param name="guild">Guild to get VoiceNext connection for.</param>
 	/// <returns>VoiceNext connection for the specified guild.</returns>
-	public VoiceNextConnection GetConnection(DiscordGuild guild) => this._activeConnections.ContainsKey(guild.Id) ? this._activeConnections[guild.Id] : null;
+	public VoiceNextConnection? GetConnection(DiscordGuild guild) => this._activeConnections.TryGetValue(guild.Id, out var connection) ? connection : null;
 
 	/// <summary>
 	/// Vnc_S the voice disconnected.
@@ -169,9 +169,8 @@ public sealed class VoiceNextExtension : BaseExtension
 	/// <returns>A Task.</returns>
 	private async Task Vnc_VoiceDisconnected(DiscordGuild guild)
 	{
-		VoiceNextConnection vnc = null;
 		if (this._activeConnections.ContainsKey(guild.Id))
-			this._activeConnections.TryRemove(guild.Id, out vnc);
+			this._activeConnections.TryRemove(guild.Id, out _);
 
 		var vsd = new VoiceDispatch
 		{

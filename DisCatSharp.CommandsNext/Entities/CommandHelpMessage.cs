@@ -27,7 +27,7 @@ namespace DisCatSharp.CommandsNext.Entities;
 /// <summary>
 /// Represents a formatted help message.
 /// </summary>
-public struct CommandHelpMessage
+public readonly struct CommandHelpMessage
 {
 	/// <summary>
 	/// Gets the contents of the help message.

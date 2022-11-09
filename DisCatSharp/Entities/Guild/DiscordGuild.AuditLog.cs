@@ -286,7 +286,7 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in guild update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in guild update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -420,7 +420,7 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in channel update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in channel update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -482,7 +482,7 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in overwrite update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in overwrite update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -563,7 +563,7 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in member update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in member update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -642,7 +642,7 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in role update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in role update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -756,7 +756,7 @@ public partial class DiscordGuild
 							// TODO: Add changes for target application
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in invite update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in invite update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -827,7 +827,7 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in webhook update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in webhook update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -855,7 +855,7 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in emote update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in emote update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -890,7 +890,7 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in stage instance update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in stage instance update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -978,7 +978,7 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in sticker update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in sticker update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -1116,7 +1116,7 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in integration update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in integration update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -1198,7 +1198,7 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in thread update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in thread update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -1284,7 +1284,7 @@ public partial class DiscordGuild
 								break;
 
 							default:
-								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in scheduled event update: {0} - this should be reported to library developers", xc.Key);
+								this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown key in scheduled event update: {key} - this should be reported to library developers", xc.Key);
 								break;
 						}
 					}
@@ -1295,7 +1295,7 @@ public partial class DiscordGuild
 					break;
 
 				default:
-					this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown audit log action type: {0} - this should be reported to library developers", (int)xac.ActionType);
+					this.Discord.Logger.LogWarning(LoggerEvents.AuditLog, "Unknown audit log action type: {key} - this should be reported to library developers", (int)xac.ActionType);
 					break;
 			}
 

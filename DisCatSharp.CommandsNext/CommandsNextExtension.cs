@@ -967,11 +967,9 @@ public class CommandsNextExtension : BaseExtension
 	{
 		var t = typeof(T);
 		var ti = t.GetTypeInfo();
-		if (this.ArgumentConverters.ContainsKey(t))
-			this.ArgumentConverters.Remove(t);
+		this.ArgumentConverters.Remove(t);
 
-		if (this._userFriendlyTypeNames.ContainsKey(t))
-			this._userFriendlyTypeNames.Remove(t);
+		this._userFriendlyTypeNames.Remove(t);
 
 		if (!ti.IsValueType)
 			return;
@@ -1015,14 +1013,14 @@ public class CommandsNextExtension : BaseExtension
 	/// <returns>User-friendly type name.</returns>
 	public string GetUserFriendlyTypeName(Type t)
 	{
-		if (this._userFriendlyTypeNames.ContainsKey(t))
-			return this._userFriendlyTypeNames[t];
+		if (this._userFriendlyTypeNames.TryGetValue(t, out var val))
+			return val;
 
 		var ti = t.GetTypeInfo();
 		if (ti.IsGenericTypeDefinition && t.GetGenericTypeDefinition() == typeof(Nullable<>))
 		{
 			var tn = ti.GenericTypeArguments[0];
-			return this._userFriendlyTypeNames.ContainsKey(tn) ? this._userFriendlyTypeNames[tn] : tn.Name;
+			return this._userFriendlyTypeNames.TryGetValue(tn, out var value) ? value : tn.Name;
 		}
 
 		return t.Name;

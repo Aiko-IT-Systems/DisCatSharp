@@ -25,40 +25,51 @@ using System.Runtime.InteropServices;
 
 namespace DisCatSharp.VoiceNext.Interop
 {
-	internal static unsafe class Bindings
+	internal static unsafe partial class Bindings
 	{
-		[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr opus_encoder_create(int samplingRate, int channels, int application, out OpusError error);
+		[LibraryImport("libopus")]
+		[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static partial IntPtr opus_encoder_create(int samplingRate, int channels, int application, out OpusError error);
 
-		[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-		private static extern void opus_encoder_destroy(IntPtr encoder);
+		[LibraryImport("libopus")]
+		[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static partial void opus_encoder_destroy(IntPtr encoder);
 
-		[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-		private static extern int opus_encode(IntPtr encoder, byte* pcm, int frameSize, byte* data, int maxDataBytes);
+		[LibraryImport("libopus")]
+		[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static partial int opus_encode(IntPtr encoder, byte* pcm, int frameSize, byte* data, int maxDataBytes);
 
-		[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-		private static extern OpusError opus_encoder_ctl(IntPtr encoder, OpusControl ctl, int value);
+		[LibraryImport("libopus")]
+		[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static partial OpusError opus_encoder_ctl(IntPtr encoder, OpusControl ctl, int value);
 
-		[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr opus_decoder_create(int sampleRate, int channels, out OpusError error);
+		[LibraryImport("libopus")]
+		[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static partial IntPtr opus_decoder_create(int sampleRate, int channels, out OpusError error);
 
-		[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-		private static extern void opus_decoder_destroy(IntPtr decoder);
+		[LibraryImport("libopus")]
+		[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static partial void opus_decoder_destroy(IntPtr decoder);
 
-		[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-		private static extern int opus_decode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize, int decodeFec);
+		[LibraryImport("libopus")]
+		[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static partial int opus_decode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize, int decodeFec);
 
-		[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-		private static extern int opus_packet_get_nb_channels(byte* data);
+		[LibraryImport("libopus")]
+		[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static partial int opus_packet_get_nb_channels(byte* data);
 
-		[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-		private static extern int opus_packet_get_nb_frames(byte* data, int length);
+		[LibraryImport("libopus")]
+		[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static partial int opus_packet_get_nb_frames(byte* data, int length);
 
-		[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-		private static extern int opus_packet_get_samples_per_frame(byte* data, int samplingRate);
+		[LibraryImport("libopus")]
+		[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static partial int opus_packet_get_samples_per_frame(byte* data, int samplingRate);
 
-		[DllImport("libopus", CallingConvention = CallingConvention.Cdecl)]
-		private static extern int opus_decoder_ctl(IntPtr decoder, OpusControl ctl, out int value);
+		[LibraryImport("libopus")]
+		[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+		private static partial int opus_decoder_ctl(IntPtr decoder, OpusControl ctl, out int value);
 
 		public static IntPtr CreateEncoder(int sampleRate, int channelCount, int application)
 		{

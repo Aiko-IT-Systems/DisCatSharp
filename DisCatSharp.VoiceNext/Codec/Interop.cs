@@ -28,7 +28,7 @@ namespace DisCatSharp.VoiceNext.Codec;
 /// <summary>
 /// This is an interop class. It contains wrapper methods for Opus and Sodium.
 /// </summary>
-internal static class Interop
+internal static partial class Interop
 {
 	#region Sodium wrapper
 	/// <summary>
@@ -55,25 +55,28 @@ internal static class Interop
 	/// _S the sodium secret box key size.
 	/// </summary>
 	/// <returns>An UIntPtr.</returns>
-	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_keybytes")]
+	[LibraryImport(SODIUM_LIBRARY_NAME, EntryPoint = "crypto_secretbox_xsalsa20poly1305_keybytes")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
 	[return: MarshalAs(UnmanagedType.SysUInt)]
-	private static extern UIntPtr _SodiumSecretBoxKeySize();
+	private static partial UIntPtr _SodiumSecretBoxKeySize();
 
 	/// <summary>
 	/// _S the sodium secret box nonce size.
 	/// </summary>
 	/// <returns>An UIntPtr.</returns>
-	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_noncebytes")]
+	[LibraryImport(SODIUM_LIBRARY_NAME, EntryPoint = "crypto_secretbox_xsalsa20poly1305_noncebytes")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
 	[return: MarshalAs(UnmanagedType.SysUInt)]
-	private static extern UIntPtr _SodiumSecretBoxNonceSize();
+	private static partial UIntPtr _SodiumSecretBoxNonceSize();
 
 	/// <summary>
 	/// _S the sodium secret box mac size.
 	/// </summary>
 	/// <returns>An UIntPtr.</returns>
-	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_xsalsa20poly1305_macbytes")]
+	[LibraryImport(SODIUM_LIBRARY_NAME, EntryPoint = "crypto_secretbox_xsalsa20poly1305_macbytes")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
 	[return: MarshalAs(UnmanagedType.SysUInt)]
-	private static extern UIntPtr _SodiumSecretBoxMacSize();
+	private static partial UIntPtr _SodiumSecretBoxMacSize();
 
 	/// <summary>
 	/// _S the sodium secret box create.
@@ -84,8 +87,9 @@ internal static class Interop
 	/// <param name="nonce">The nonce.</param>
 	/// <param name="key">The key.</param>
 	/// <returns>An int.</returns>
-	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_easy")]
-	private static unsafe extern int _SodiumSecretBoxCreate(byte* buffer, byte* message, ulong messageLength, byte* nonce, byte* key);
+	[LibraryImport(SODIUM_LIBRARY_NAME, EntryPoint = "crypto_secretbox_easy")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	private static unsafe partial int _SodiumSecretBoxCreate(byte* buffer, byte* message, ulong messageLength, byte* nonce, byte* key);
 
 	/// <summary>
 	/// _S the sodium secret box open.
@@ -96,8 +100,9 @@ internal static class Interop
 	/// <param name="nonce">The nonce.</param>
 	/// <param name="key">The key.</param>
 	/// <returns>An int.</returns>
-	[DllImport(SODIUM_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "crypto_secretbox_open_easy")]
-	private static unsafe extern int _SodiumSecretBoxOpen(byte* buffer, byte* encryptedMessage, ulong encryptedLength, byte* nonce, byte* key);
+	[LibraryImport(SODIUM_LIBRARY_NAME, EntryPoint = "crypto_secretbox_open_easy")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	private static unsafe partial int _SodiumSecretBoxOpen(byte* buffer, byte* encryptedMessage, ulong encryptedLength, byte* nonce, byte* key);
 
 	/// <summary>
 	/// Encrypts supplied buffer using xsalsa20_poly1305 algorithm, using supplied key and nonce to perform encryption.
@@ -154,15 +159,17 @@ internal static class Interop
 	/// <param name="application">The application.</param>
 	/// <param name="error">The error.</param>
 	/// <returns>An IntPtr.</returns>
-	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_create")]
-	private static extern IntPtr _OpusCreateEncoder(int sampleRate, int channels, int application, out OpusError error);
+	[LibraryImport(OPUS_LIBRARY_NAME, EntryPoint = "opus_encoder_create")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	private static partial IntPtr _OpusCreateEncoder(int sampleRate, int channels, int application, out OpusError error);
 
 	/// <summary>
 	/// Opuses the destroy encoder.
 	/// </summary>
 	/// <param name="encoder">The encoder.</param>
-	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_destroy")]
-	public static extern void OpusDestroyEncoder(IntPtr encoder);
+	[LibraryImport(OPUS_LIBRARY_NAME, EntryPoint = "opus_encoder_destroy")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	public static partial void OpusDestroyEncoder(IntPtr encoder);
 
 	/// <summary>
 	/// _S the opus encode.
@@ -173,8 +180,9 @@ internal static class Interop
 	/// <param name="data">The data.</param>
 	/// <param name="maxDataBytes">The max data bytes.</param>
 	/// <returns>An int.</returns>
-	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encode")]
-	private static unsafe extern int _OpusEncode(IntPtr encoder, byte* pcmData, int frameSize, byte* data, int maxDataBytes);
+	[LibraryImport(OPUS_LIBRARY_NAME, EntryPoint = "opus_encode")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	private static unsafe partial int _OpusEncode(IntPtr encoder, byte* pcmData, int frameSize, byte* data, int maxDataBytes);
 
 	/// <summary>
 	/// _S the opus encoder control.
@@ -183,8 +191,9 @@ internal static class Interop
 	/// <param name="request">The request.</param>
 	/// <param name="value">The value.</param>
 	/// <returns>An OpusError.</returns>
-	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_encoder_ctl")]
-	private static extern OpusError _OpusEncoderControl(IntPtr encoder, OpusControl request, int value);
+	[LibraryImport(OPUS_LIBRARY_NAME, EntryPoint = "opus_encoder_ctl")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	private static partial OpusError _OpusEncoderControl(IntPtr encoder, OpusControl request, int value);
 
 	/// <summary>
 	/// _S the opus create decoder.
@@ -193,15 +202,17 @@ internal static class Interop
 	/// <param name="channels">The channels.</param>
 	/// <param name="error">The error.</param>
 	/// <returns>An IntPtr.</returns>
-	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_create")]
-	private static extern IntPtr _OpusCreateDecoder(int sampleRate, int channels, out OpusError error);
+	[LibraryImport(OPUS_LIBRARY_NAME, EntryPoint = "opus_decoder_create")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	private static partial IntPtr _OpusCreateDecoder(int sampleRate, int channels, out OpusError error);
 
 	/// <summary>
 	/// Opuses the destroy decoder.
 	/// </summary>
 	/// <param name="decoder">The decoder.</param>
-	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_destroy")]
-	public static extern void OpusDestroyDecoder(IntPtr decoder);
+	[LibraryImport(OPUS_LIBRARY_NAME, EntryPoint = "opus_decoder_destroy")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	public static partial void OpusDestroyDecoder(IntPtr decoder);
 
 	/// <summary>
 	/// _S the opus decode.
@@ -213,16 +224,18 @@ internal static class Interop
 	/// <param name="frameSize">The frame size.</param>
 	/// <param name="decodeFec">The decode fec.</param>
 	/// <returns>An int.</returns>
-	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decode")]
-	private static unsafe extern int _OpusDecode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize, int decodeFec);
+	[LibraryImport(OPUS_LIBRARY_NAME, EntryPoint = "opus_decode")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	private static unsafe partial int _OpusDecode(IntPtr decoder, byte* opusData, int opusDataLength, byte* data, int frameSize, int decodeFec);
 
 	/// <summary>
 	/// _S the opus get packet channel count.
 	/// </summary>
 	/// <param name="opusData">The opus data.</param>
 	/// <returns>An int.</returns>
-	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_nb_channels")]
-	private static unsafe extern int _OpusGetPacketChannelCount(byte* opusData);
+	[LibraryImport(OPUS_LIBRARY_NAME, EntryPoint = "opus_packet_get_nb_channels")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	private static unsafe partial int _OpusGetPacketChannelCount(byte* opusData);
 
 	/// <summary>
 	/// _S the opus get packet frame count.
@@ -230,8 +243,9 @@ internal static class Interop
 	/// <param name="opusData">The opus data.</param>
 	/// <param name="length">The length.</param>
 	/// <returns>An int.</returns>
-	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_nb_frames")]
-	private static unsafe extern int _OpusGetPacketFrameCount(byte* opusData, int length);
+	[LibraryImport(OPUS_LIBRARY_NAME, EntryPoint = "opus_packet_get_nb_frames")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	private static unsafe partial int _OpusGetPacketFrameCount(byte* opusData, int length);
 
 	/// <summary>
 	/// _S the opus get packet sample per frame count.
@@ -239,8 +253,9 @@ internal static class Interop
 	/// <param name="opusData">The opus data.</param>
 	/// <param name="samplingRate">The sampling rate.</param>
 	/// <returns>An int.</returns>
-	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_packet_get_samples_per_frame")]
-	private static unsafe extern int _OpusGetPacketSamplePerFrameCount(byte* opusData, int samplingRate);
+	[LibraryImport(OPUS_LIBRARY_NAME, EntryPoint = "opus_packet_get_samples_per_frame")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	private static unsafe partial int _OpusGetPacketSamplePerFrameCount(byte* opusData, int samplingRate);
 
 	/// <summary>
 	/// _S the opus decoder control.
@@ -249,8 +264,9 @@ internal static class Interop
 	/// <param name="request">The request.</param>
 	/// <param name="value">The value.</param>
 	/// <returns>An int.</returns>
-	[DllImport(OPUS_LIBRARY_NAME, CallingConvention = CallingConvention.Cdecl, EntryPoint = "opus_decoder_ctl")]
-	private static extern int _OpusDecoderControl(IntPtr decoder, OpusControl request, out int value);
+	[LibraryImport(OPUS_LIBRARY_NAME, EntryPoint = "opus_decoder_ctl")]
+	[UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+	private static partial int _OpusDecoderControl(IntPtr decoder, OpusControl request, out int value);
 
 	/// <summary>
 	/// Opuses the create encoder.
