@@ -5,11 +5,7 @@
     <Import Project="../DisCatSharp.targets" />
     <Import Project="../Package.targets" />
     <Import Project="../NuGet.targets" />
-    <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    </PropertyGroup>
+    <Import Project="../Library.targets" />
 
   <PropertyGroup>
     <PackageId>DisCatSharp.Hosting</PackageId>

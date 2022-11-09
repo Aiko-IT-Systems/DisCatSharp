@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        dotnet: [6.0.400]
+        dotnet: [7.0.0]
     runs-on: ${{ matrix.os }}
     name: Build library
     steps:

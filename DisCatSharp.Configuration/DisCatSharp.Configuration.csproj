@@ -5,13 +5,11 @@
     <Import Project="../DisCatSharp.targets" />
     <Import Project="../Package.targets" />
     <Import Project="../NuGet.targets" />
+    <Import Project="../Library.targets" />
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-        <Nullable>enable</Nullable>
         <RootNamespace>DisCatSharp.Configuration</RootNamespace>
         <AssemblyName>DisCatSharp.Configuration</AssemblyName>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup>
