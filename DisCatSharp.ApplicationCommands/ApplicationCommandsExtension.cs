@@ -1513,31 +1513,22 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 		var choices = new List<DiscordApplicationCommandOptionChoice>();
 		foreach (var choiceProviderAttribute in customAttributes)
 		{
-			var method = choiceProviderAttribute.ProviderType.GetMethod(nameof(IChoiceProvider.Provider));
+			if (Activator.CreateInstance(choiceProviderAttribute.ProviderType) is not IChoiceProvider instance)
+				throw new NullReferenceException($"Was unable to instantiate '{nameof(choiceProviderAttribute.ProviderType.Name)}' as a ChoiceProvider");
 
-			if (method == null)
-				throw new ArgumentException("ChoiceProviders must inherit from IChoiceProvider.");
-			else
+			// Abstract class offers more properties that can be set
+			if (instance is ChoiceProvider cp)
 			{
-				var instance = Activator.CreateInstance(choiceProviderAttribute.ProviderType);
+				cp.GuildId = guildId;
+				cp.Services = Configuration.ServiceProvider;
+			}
 
-				// Abstract class offers more properties that can be set
-				if (choiceProviderAttribute.ProviderType.IsSubclassOf(typeof(ChoiceProvider)))
-				{
-					choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.GuildId))
-						?.SetValue(instance, guildId);
+			//Gets the choices from the method
+			var result = (await instance.Provider()).ToArray();
 
-					choiceProviderAttribute.ProviderType.GetProperty(nameof(ChoiceProvider.Services))
-						?.SetValue(instance, Configuration.ServiceProvider);
-				}
-
-				//Gets the choices from the method
-				var result = await (Task<IEnumerable<DiscordApplicationCommandOptionChoice>>)method.Invoke(instance, null);
-
-				if (result.Any())
-				{
-					choices.AddRange(result);
-				}
+			if (result.Any())
+			{
+				choices.AddRange(result);
 			}
 		}
 
