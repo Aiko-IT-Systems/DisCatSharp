@@ -4979,8 +4979,8 @@ public sealed class DiscordApiClient
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission/*,
-				Nsfw = command.IsNsfw*/
+				DmPermission = command.DmPermission,
+				Nsfw = command.IsNsfw
 			});
 		}
 
@@ -5014,8 +5014,8 @@ public sealed class DiscordApiClient
 			NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
-			DmPermission = command.DmPermission/*,
-			Nsfw = command.IsNsfw*/
+			DmPermission = command.DmPermission,
+			Nsfw = command.IsNsfw
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -5075,8 +5075,8 @@ public sealed class DiscordApiClient
 			DefaultMemberPermission = defaultMemberPermission,
 			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault()/*,
-			Nsfw = isNsfw*/
+			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+			Nsfw = isNsfw
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -5150,8 +5150,8 @@ public sealed class DiscordApiClient
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission/*,
-				Nsfw = command.IsNsfw*/
+				DmPermission = command.DmPermission,
+				Nsfw = command.IsNsfw
 			});
 		}
 		this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
@@ -5185,8 +5185,8 @@ public sealed class DiscordApiClient
 			NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
-			DmPermission = command.DmPermission/*,
-			Nsfw = command.IsNsfw*/
+			DmPermission = command.DmPermission,
+			Nsfw = command.IsNsfw
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
@@ -5248,8 +5248,8 @@ public sealed class DiscordApiClient
 			DefaultMemberPermission = defaultMemberPermission,
 			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault()/*,
-			Nsfw = isNsfw*/
+			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+			Nsfw = isNsfw
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";

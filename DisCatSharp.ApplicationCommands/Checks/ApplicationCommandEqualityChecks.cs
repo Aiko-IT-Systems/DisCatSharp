@@ -50,7 +50,7 @@ internal static class ApplicationCommandEqualityChecks
 			ac1.Name, ac1.Description, ac1.Options,
 			ac1.Type,
 			ac1.NameLocalizations, ac1.DescriptionLocalizations,
-			ac1.DefaultMemberPermissions, ac1.DmPermission ?? true//, ac1.IsNsfw
+			ac1.DefaultMemberPermissions, ac1.DmPermission ?? true, ac1.IsNsfw
 		);
 
 		if (sourceApplicationCommand.DefaultMemberPermissions == Permissions.None && targetApplicationCommand.DefaultMemberPermissions == null)
@@ -92,8 +92,7 @@ internal static class ApplicationCommandEqualityChecks
 				_ => source.Name == target.Name
 					&& source.Type == target.Type && source.NameLocalizations == target.NameLocalizations
 					&& source.DefaultMemberPermissions == target.DefaultMemberPermissions
-					&& sDmPerm == tDmPerm
-				//&& (source.IsNsfw == target.IsNsfw)
+					&& sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
 			}
 			: type switch
 			{
@@ -101,8 +100,7 @@ internal static class ApplicationCommandEqualityChecks
 				_ => source.Name == target.Name
 					&& source.Type == target.Type
 					&& source.DefaultMemberPermissions == target.DefaultMemberPermissions
-					&& sDmPerm == tDmPerm
-				//&& (source.IsNsfw == target.IsNsfw)
+					&& sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw
 			};
 	}
 
@@ -123,7 +121,7 @@ internal static class ApplicationCommandEqualityChecks
 		Console.WriteLine($"{source.Type == target.Type}");
 		Console.WriteLine($"{source.DefaultMemberPermissions == target.DefaultMemberPermissions} - {source.DefaultMemberPermissions} == {target.DefaultMemberPermissions}");
 		Console.WriteLine($"{sDmPerm == tDmPerm}");*/
-		rootCheck = source.Name == target.Name && source.Description == target.Description && source.Type == target.Type && source.DefaultMemberPermissions == target.DefaultMemberPermissions && sDmPerm == tDmPerm;
+		rootCheck = source.Name == target.Name && source.Description == target.Description && source.Type == target.Type && source.DefaultMemberPermissions == target.DefaultMemberPermissions && sDmPerm == tDmPerm && source.IsNsfw == target.IsNsfw;
 		if (localizationEnabled)
 			rootCheck = rootCheck && source.NameLocalizations == target.NameLocalizations && source.DescriptionLocalizations == target.DescriptionLocalizations;
 		//Console.WriteLine($"{rootCheck}");
