@@ -44,7 +44,6 @@ public class AutocompleteAttribute<T> : Attribute, IAutocompleteAttribute
 	/// <summary>
 	/// Adds an autocomplete provider to this command option.
 	/// </summary>
-	/// <param name="providerType">The type of the provider.</param>
 	public AutocompleteAttribute()
 	{
 		this.ProviderType = typeof(T);
