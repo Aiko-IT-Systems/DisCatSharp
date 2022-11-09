@@ -140,7 +140,5 @@ public enum DiscordEvent
 	AutomodRuleCreated,
 	AutomodRuleUpdated,
 	AutomodRuleDeleted,
-	AutomodActionExecuted,
-	GuildJoined = GuildCreated,
-	JoinedGuild = GuildCreated
+	AutomodActionExecuted
 }
