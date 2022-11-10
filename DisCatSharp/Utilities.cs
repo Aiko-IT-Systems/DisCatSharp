@@ -404,6 +404,16 @@ public static class Utilities
 		=> DiscordClient.DiscordEpoch.AddMilliseconds(snowflake >> 22);
 
 	/// <summary>
+	/// Computes a timestamp from a given snowflake.
+	/// </summary>
+	/// <param name="snowflake">Snowflake to compute a timestamp from.</param>
+	/// <returns>Computed timestamp.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static DateTimeOffset? GetSnowflakeTime(this ulong? snowflake)
+		=> snowflake != null && snowflake.HasValue ? DiscordClient.DiscordEpoch.AddMilliseconds(snowflake.Value >> 22) : null;
+
+
+	/// <summary>
 	/// Converts this <see cref="Permissions"/> into human-readable format.
 	/// </summary>
 	/// <param name="perm">Permissions enumeration to convert.</param>
