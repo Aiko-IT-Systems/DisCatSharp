@@ -91,7 +91,7 @@ public enum UserFlags : long
 	TeamPseudoUser = 1L << 10,
 
 	/// <summary>
-	/// User previously requested verfication and/or partnership for a guild..
+	/// User previously requested verification and/or partnership for a guild.
 	/// </summary>
 	InternalApplication = 1L << 11,
 
