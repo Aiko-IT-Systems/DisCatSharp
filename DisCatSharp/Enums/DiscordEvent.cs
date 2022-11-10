@@ -137,6 +137,8 @@ public enum DiscordEvent
 	VoiceStateUpdated,
 	WebhooksUpdated,
 	Zombied,
-	GuildJoined = GuildCreated,
-	JoinedGuild = GuildCreated,
+	AutomodRuleCreated,
+	AutomodRuleUpdated,
+	AutomodRuleDeleted,
+	AutomodActionExecuted
 }

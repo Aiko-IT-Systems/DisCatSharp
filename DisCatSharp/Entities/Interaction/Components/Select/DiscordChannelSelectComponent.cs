@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -74,7 +75,7 @@ public sealed class DiscordChannelSelectComponent : DiscordBaseSelectComponent
 	public DiscordChannelSelectComponent(string placeholder, IEnumerable<ChannelType> channelTypes = null, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false)
 	: base(ComponentType.ChannelSelect, placeholder, customId, minOptions, maxOptions, disabled)
 	{
-		this.ChannelTypes = channelTypes.ToArray();
+		this.ChannelTypes = channelTypes?.ToArray() ?? Array.Empty<ChannelType>();
 	}
 
 	/// <summary>
@@ -90,7 +91,7 @@ public sealed class DiscordChannelSelectComponent : DiscordBaseSelectComponent
 	public DiscordChannelSelectComponent(string label, string placeholder, IEnumerable<ChannelType> channelTypes = null, string customId = null, int minOptions = 1, int maxOptions = 1, bool disabled = false)
 		: base(ComponentType.ChannelSelect, label, placeholder, customId, minOptions, maxOptions, disabled)
 	{
-		this.ChannelTypes = channelTypes.ToArray();
+		this.ChannelTypes = channelTypes?.ToArray() ?? Array.Empty<ChannelType>();
 	}
 
 	/// <summary>

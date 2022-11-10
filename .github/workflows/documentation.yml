@@ -60,14 +60,14 @@ jobs:
     - name: Purge old docs
       working-directory: DisCatSharp.Docs
       shell: pwsh
-      run: Get-ChildItem -Exclude .git*,.htaccess | Remove-Item -Recurse -Force
+      run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
     - name: Extract new docs
       shell: pwsh
       run: Expand-Archive -Path dcs-docs.zip DisCatSharp.Docs/
-    #- name: Delete packed docs
-    #  uses: geekyeggo/delete-artifact@v2
-    #  with:
-    #    name: dcs-docs.zip
+    - name: Delete packed docs
+      uses: geekyeggo/delete-artifact@v2
+      with:
+        name: dcs-docs.zip
     - name: Commit and push changes
       uses: EndBug/add-and-commit@main
       with:
