@@ -91,9 +91,9 @@ public enum UserFlags : long
 	TeamPseudoUser = 1L << 10,
 
 	/// <summary>
-	/// Relates to partner/verification applications.
+	/// User previously requested verfication and/or partnership for a guild..
 	/// </summary>
-	PartnerOrVerificationApplication = 1L << 11,
+	InternalApplication = 1L << 11,
 
 	/// <summary>
 	/// Whether the user is an official system user.
@@ -151,6 +151,26 @@ public enum UserFlags : long
 	/// Read more here: https://support-dev.discord.com/hc/articles/10113997751447.
 	/// </summary>
 	ActiveDeveloper = 1L << 22,
+
+	/// <summary>
+	/// Account has a high global ratelimit.
+	/// </summary>
+	HighGlobalRateLimit = 1L << 33,
+
+	/// <summary>
+	/// Account has been deleted.
+	/// </summary>
+	Deleted = 1L << 34,
+
+	/// <summary>
+	/// Account has been disabled for suspicious activity.
+	/// </summary>
+	DisabledSuspiciousActivity = 1L << 35,
+
+	/// <summary>
+	/// Account was deleted by the user.
+	/// </summary>
+	SelfDeleted = 1L << 36,
 
 	/// <summary>
 	/// The user has a premium discriminator.
