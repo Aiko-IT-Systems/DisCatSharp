@@ -129,5 +129,5 @@ public enum ApplicationFlags : long
 	/// <summary>
 	/// Indicates if an app is considered active. This means that it has had any global command executed in the past 30 days.
 	/// </summary>
-	ActiveApplication = 1L << 24
+	Active = 1L << 24
 }
