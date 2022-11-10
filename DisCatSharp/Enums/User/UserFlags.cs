@@ -147,6 +147,12 @@ public enum UserFlags : long
 	DisablePremium = 1L << 21,
 
 	/// <summary>
+	/// User is an active developer.
+	/// Read more here: https://support-dev.discord.com/hc/articles/10113997751447.
+	/// </summary>
+	ActiveDeveloper = 1L << 22,
+
+	/// <summary>
 	/// The user has a premium discriminator.
 	/// </summary>
 	PremiumDiscriminator = 1L << 37,
