@@ -965,7 +965,7 @@ public sealed class DiscordApiClient
 
 		var ret = json.ToDiscordObject<DiscordWidget>();
 		ret.Discord = this.Discord;
-		ret.Guild = (this.Discord.Guilds.ContainsKey(guildId)) ? this.Discord.Guilds[guildId] : null;
+		ret.Guild = this.Discord.Guilds.ContainsKey(guildId) ? this.Discord.Guilds[guildId] : null;
 
 		ret.Channels = ret.Guild == null
 			? rawChannels.Select(r => new DiscordChannel
@@ -1280,6 +1280,176 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, payload: DiscordJson.SerializeObject(pld));
 	}
+
+	/// <summary>
+	/// Gets all auto mod rules for a guild.
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <returns>A collection of all auto mod rules in the guild.</returns>
+	internal async Task<ReadOnlyCollection<AutomodRule>> GetAutomodRulesAsync(ulong guildId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
+
+		var ret = JsonConvert.DeserializeObject<List<AutomodRule>>(res.Response);
+		return ret.AsReadOnly();
+	}
+
+	/// <summary>
+	/// Gets a specific auto mod rule in the guild.
+	/// </summary>
+	/// <param name="guildId">The guild id for the rule.</param>
+	/// <param name="ruleId">The rule id.</param>
+	/// <returns>The rule if one is found.</returns>
+	internal async Task<AutomodRule> GetAutomodRuleAsync(ulong guildId, ulong ruleId)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules/:rule_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { guild_id = guildId, rule_id = ruleId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route);
+
+		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+		return ret;
+	}
+
+	/// <summary>
+	/// Creates an auto mod rule.
+	/// </summary>
+	/// <param name="guildId">The guild id of the rule.</param>
+	/// <param name="name">The name of the rule.</param>
+	/// <param name="eventType">The event type of the rule.</param>
+	/// <param name="triggerType">The trigger type.</param>
+	/// <param name="actions">The actions of the rule.</param>
+	/// <param name="triggerMetadata">The metadata of the rule.</param>
+	/// <param name="enabled">Whether this rule is enabled.</param>
+	/// <param name="exemptRoles">The exempt roles of the rule.</param>
+	/// <param name="exemptChannels">The exempt channels of the rule.</param>
+	/// <param name="reason">The reason for this addition.</param>
+	/// <returns>The new auto mod rule.</returns>
+	internal async Task<AutomodRule> CreateAutomodRuleAsync(ulong guildId, string name, AutomodEventType eventType, AutomodTriggerType triggerType, IEnumerable<AutomodAction> actions,
+		AutomodTriggerMetadata triggerMetadata = null, bool enabled = false, IEnumerable<ulong> exemptRoles = null, IEnumerable<ulong> exemptChannels = null, string reason = null)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.POST, route, new { guild_id = guildId }, out var path);
+
+		RestAutomodRuleModifyPayload pld = new()
+		{
+			Name = name,
+			EventType = eventType,
+			TriggerType = triggerType,
+			Actions = actions.ToArray(),
+			Enabled = enabled,
+			TriggerMetadata = triggerMetadata ?? null
+		};
+
+		if (exemptChannels != null)
+			pld.ExemptChannels = exemptChannels.ToArray();
+		if (exemptRoles != null)
+			pld.ExemptRoles = exemptRoles.ToArray();
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.POST, route, headers, payload: DiscordJson.SerializeObject(pld)).ConfigureAwait(false);
+
+		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+
+		if (this.Discord is DiscordClient dc)
+		{
+			await dc.OnAutomodRuleCreated(ret).ConfigureAwait(false);
+		}
+
+		return ret;
+	}
+
+	/// <summary>
+	/// Modifies an auto mod role
+	/// </summary>
+	/// <param name="guildId">The guild id.</param>
+	/// <param name="ruleId">The rule id.</param>
+	/// <param name="name">The new name of the rule.</param>
+	/// <param name="eventType">The new event type of the rule.</param>
+	/// <param name="metadata">The new metadata of the rule.</param>
+	/// <param name="actions">The new actions of the rule.</param>
+	/// <param name="enabled">Whether this rule is enabled.</param>
+	/// <param name="exemptRoles">The new exempt roles of the rule.</param>
+	/// <param name="exemptChannels">The new exempt channels of the rule.</param>
+	/// <param name="reason">The reason for this modification.</param>
+	/// <returns>The updated automod rule</returns>
+	internal async Task<AutomodRule> ModifyAutomodRuleAsync(ulong guildId, ulong ruleId, Optional<string> name, Optional<AutomodEventType> eventType, Optional<AutomodTriggerMetadata> metadata, Optional<List<AutomodAction>> actions,
+		Optional<bool> enabled, Optional<List<ulong>> exemptRoles, Optional<List<ulong>> exemptChannels, string reason = null)
+	{
+		var pld = new RestAutomodRuleModifyPayload
+		{
+			Name = name,
+			EventType = eventType,
+			TriggerMetadata = metadata,
+			Enabled = enabled
+		};
+
+		if (actions.HasValue)
+			pld.Actions = actions.Value?.ToArray();
+		if (exemptChannels.HasValue)
+			pld.ExemptChannels = exemptChannels.Value?.ToArray();
+		if (exemptRoles.HasValue)
+			pld.ExemptRoles = exemptRoles.Value?.ToArray();
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules/:rule_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PATCH, route, new { guild_id = guildId, rule_id = ruleId }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PATCH, route, headers, payload: DiscordJson.SerializeObject(pld));
+
+		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+
+		if (this.Discord is DiscordClient dc)
+		{
+			await dc.OnAutomodRuleUpdated(ret).ConfigureAwait(false);
+		}
+
+		return ret;
+	}
+
+	/// <summary>
+	/// Deletes an auto mod rule.
+	/// </summary>
+	/// <param name="guildId">The guild id of the rule.</param>
+	/// <param name="ruleId">The rule id.</param>
+	/// <param name="reason">The reason for this deletion.</param>
+	/// <returns>The deleted auto mod rule.</returns>
+	internal async Task<AutomodRule> DeleteAutomodRuleAsync(ulong guildId, ulong ruleId, string reason = null)
+	{
+		var route = $"{Endpoints.GUILDS}/:guild_id/auto-moderation/rules/:rule_id";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.DELETE, route, new { guild_id = guildId, rule_id = ruleId }, out var path);
+
+		var headers = Utilities.GetBaseHeaders();
+		if (!string.IsNullOrWhiteSpace(reason))
+			headers.Add(REASON_HEADER_NAME, reason);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.DELETE, route, headers).ConfigureAwait(false);
+
+		var ret = JsonConvert.DeserializeObject<AutomodRule>(res.Response);
+
+		if (this.Discord is DiscordClient dc)
+		{
+			await dc.OnAutomodRuleDeleted(ret).ConfigureAwait(false);
+		}
+
+		return ret;
+	}
+
+
 	#endregion
 
 	#region Guild Scheduled Events
@@ -2032,7 +2202,7 @@ public sealed class DiscordApiClient
 	/// <param name="sendStartNotification">Whether everyone should be notified about the stage.</param>
 	/// <param name="privacyLevel">The privacy_level.</param>
 	/// <param name="reason">The reason.</param>
-	internal async Task<DiscordStageInstance> CreateStageInstanceAsync(ulong channelId, string topic, bool sendStartNotification, StagePrivacyLevel privacyLevel, string reason)
+	internal async Task<DiscordStageInstance> CreateStageInstanceAsync(ulong channelId, string topic, bool sendStartNotification, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly, string reason = null)
 	{
 		var pld = new RestStageInstanceCreatePayload
 		{
@@ -4809,8 +4979,8 @@ public sealed class DiscordApiClient
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission/*,
-				Nsfw = command.IsNsfw*/
+				DmPermission = command.DmPermission,
+				Nsfw = command.IsNsfw
 			});
 		}
 
@@ -4844,8 +5014,8 @@ public sealed class DiscordApiClient
 			NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
-			DmPermission = command.DmPermission/*,
-			Nsfw = command.IsNsfw*/
+			DmPermission = command.DmPermission,
+			Nsfw = command.IsNsfw
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}";
@@ -4905,8 +5075,8 @@ public sealed class DiscordApiClient
 			DefaultMemberPermission = defaultMemberPermission,
 			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault()/*,
-			Nsfw = isNsfw*/
+			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+			Nsfw = isNsfw
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.COMMANDS}/:command_id";
@@ -4980,8 +5150,8 @@ public sealed class DiscordApiClient
 				NameLocalizations = command.NameLocalizations?.GetKeyValuePairs(),
 				DescriptionLocalizations = command.DescriptionLocalizations?.GetKeyValuePairs(),
 				DefaultMemberPermission = command.DefaultMemberPermissions,
-				DmPermission = command.DmPermission/*,
-				Nsfw = command.IsNsfw*/
+				DmPermission = command.DmPermission,
+				Nsfw = command.IsNsfw
 			});
 		}
 		this.Discord.Logger.LogDebug(DiscordJson.SerializeObject(pld));
@@ -5015,8 +5185,8 @@ public sealed class DiscordApiClient
 			NameLocalizations = command.NameLocalizations.GetKeyValuePairs(),
 			DescriptionLocalizations = command.DescriptionLocalizations.GetKeyValuePairs(),
 			DefaultMemberPermission = command.DefaultMemberPermissions,
-			DmPermission = command.DmPermission/*,
-			Nsfw = command.IsNsfw*/
+			DmPermission = command.DmPermission,
+			Nsfw = command.IsNsfw
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}";
@@ -5078,8 +5248,8 @@ public sealed class DiscordApiClient
 			DefaultMemberPermission = defaultMemberPermission,
 			DmPermission = dmPermission,
 			NameLocalizations = nameLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
-			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault()/*,
-			Nsfw = isNsfw*/
+			DescriptionLocalizations = descriptionLocalization.Map(l => l.GetKeyValuePairs()).ValueOrDefault(),
+			Nsfw = isNsfw
 		};
 
 		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.GUILDS}/:guild_id{Endpoints.COMMANDS}/:command_id";

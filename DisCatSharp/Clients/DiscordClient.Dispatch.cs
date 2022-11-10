@@ -228,6 +228,23 @@ public sealed partial class DiscordClient
 
 			#endregion
 
+			#region Guild Automod
+			case "auto_moderation_rule_create":
+				await this.OnAutomodRuleCreated(dat.ToDiscordObject<AutomodRule>());
+				break;
+			case "auto_moderation_rule_update":
+				await this.OnAutomodRuleUpdated(dat.ToDiscordObject<AutomodRule>());
+				break;
+			case "auto_moderation_rule_delete":
+				await this.OnAutomodRuleDeleted(dat.ToDiscordObject<AutomodRule>());
+				break;
+			case "auto_moderation_action_execution":
+				gid = (ulong)dat["guild_id"];
+
+				await this.OnAutomodActionExecuted(this.GuildsInternal[gid], dat);
+				break;
+			#endregion
+
 			#region Guild Ban
 
 			case "guild_ban_add":
@@ -1318,6 +1335,84 @@ public sealed partial class DiscordClient
 		};
 
 		await this._guildStickersUpdated.InvokeAsync(this, sea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the created rule.
+	/// </summary>
+	/// <param name="newRule">The new added rule.</param>
+	internal async Task OnAutomodRuleCreated(AutomodRule newRule)
+	{
+		var sea = new AutomodRuleCreateEventArgs(this.ServiceProvider)
+		{
+			Rule = newRule
+		};
+
+		await this._automodRuleCreated.InvokeAsync(this, sea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the updated rule.
+	/// </summary>
+	/// <param name="updatedRule">The updated rule.</param>
+	internal async Task OnAutomodRuleUpdated(AutomodRule updatedRule)
+	{
+		var sea = new AutomodRuleUpdateEventArgs(this.ServiceProvider)
+		{
+			Rule = updatedRule
+		};
+
+		await this._automodRuleUpdated.InvokeAsync(this, sea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the deleted rule.
+	/// </summary>
+	/// <param name="deletedRule">The deleted rule.</param>
+	internal async Task OnAutomodRuleDeleted(AutomodRule deletedRule)
+	{
+		var sea = new AutomodRuleDeleteEventArgs(this.ServiceProvider)
+		{
+			Rule = deletedRule
+		};
+
+		await this._automodRuleDeleted.InvokeAsync(this, sea).ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Handles the rule action execution.
+	/// </summary>
+	/// <param name="guild">The guild.</param>
+	/// <param name="rawPayload">The raw payload.</param>
+	internal async Task OnAutomodActionExecuted(DiscordGuild guild, JObject rawPayload)
+	{
+		var executedAction = rawPayload["action"].ToObject<AutomodAction>();
+		var ruleId = (ulong)rawPayload["rule_id"];
+		var triggerType = rawPayload["rule_trigger_type"].ToObject<AutomodTriggerType>();
+		var userId = (ulong)rawPayload["user_id"];
+		var channelId = rawPayload.ContainsKey("channel_id") ? (ulong?)rawPayload["channel_id"] : null;
+		var messageId = rawPayload.ContainsKey("message_id") ? (ulong?)rawPayload["message_id"] : null;
+		var alertMessageId = rawPayload.ContainsKey("alert_system_message_id") ? (ulong?)rawPayload["alert_system_message_id"] : null;
+		string? content = rawPayload.ContainsKey("content") ?(string?)rawPayload["content"] : null;
+		string? matchedKeyword = rawPayload.ContainsKey("matched_keyword") ? (string?)rawPayload["matched_keyword"] : null;
+		string? matchedContent = rawPayload.ContainsKey("matched_content") ? (string?)rawPayload["matched_content"] : null;
+
+		var ea = new AutomodActionExecutedEventArgs(this.ServiceProvider)
+		{
+			Guild = guild,
+			Action = executedAction,
+			RuleId = ruleId,
+			TriggerType = triggerType,
+			UserId = userId,
+			ChannelId = channelId,
+			MessageId = messageId,
+			AlertMessageId = alertMessageId,
+			MessageContent = content,
+			MatchedKeyword = matchedKeyword,
+			MatchedContent = matchedContent
+		};
+
+		await this._automodActionExecuted.InvokeAsync(this, ea).ConfigureAwait(false);
 	}
 
 	#endregion
@@ -3364,7 +3459,6 @@ public sealed partial class DiscordClient
 
 		var guild = this.InternalGetCachedGuild(guildId);
 		var usr = this.UpdateUser(new DiscordUser { Id = userId, Discord = this }, guildId, guild, mbr);
-
 		var ea = new TypingStartEventArgs(this.ServiceProvider)
 		{
 			Channel = channel,
