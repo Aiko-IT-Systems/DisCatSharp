@@ -53,6 +53,30 @@ public class DiscordConnection
 	///			<description>Obsolete (Non-assignable)</description>
 	///		</listheader>
 	///		<item>
+	///			<term>instagram</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>crunchyroll</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>tiktok</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>paypal</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>epicgames</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
+	///			<term>ebay</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
 	///			<term>twitch</term>
 	///			<description>false</description>
 	///		</item>
@@ -159,6 +183,12 @@ public class DiscordConnection
 	/// </summary>
 	[JsonProperty("visibility", NullValueHandling = NullValueHandling.Ignore)]
 	public ConnectionVisibilityType Visibility { get; internal set; }
+
+	/// <summary>
+	/// Gets the metadata visibility of the connection.
+	/// </summary>
+	[JsonProperty("metadata_visibility", NullValueHandling = NullValueHandling.Ignore)]
+	public ConnectionMetadataVisibilityType MetadataVisibility { get; internal set; }
 
 	/// <summary>
 	/// Gets the client instance this object is tied to.
