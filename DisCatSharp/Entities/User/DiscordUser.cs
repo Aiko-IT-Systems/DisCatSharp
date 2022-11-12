@@ -300,6 +300,14 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	[JsonIgnore]
 	public bool IsBotDev
 			=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.VerifiedDeveloper);
+			
+	/// <summary>
+	/// Whether this member is a <see cref="UserFlags.ActiveDeveloper"/>
+	/// </summary>
+	/// <returns><see cref="bool"/></returns>
+	[JsonIgnore]
+	public bool IsActiveDeveloper
+			=> this.Flags.HasValue && this.Flags.Value.HasFlag(UserFlags.ActiveDeveloper);
 
 	/// <summary>
 	/// Whether this member is a <see cref="UserFlags.Staff"/>
