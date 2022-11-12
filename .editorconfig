@@ -285,3 +285,15 @@ dotnet_naming_style.constant_style.required_prefix =
 dotnet_naming_style.constant_style.required_suffix =
 dotnet_naming_style.constant_style.word_separator = _
 dotnet_naming_style.constant_style.capitalization = all_upper
+
+# DV0001: Ungültige Abhängigkeit
+
+dotnet_diagnostic.DV0001.severity = none
+
+# DV2001: Kein Abhängigkeitsdiagramm verknüpft
+
+dotnet_diagnostic.DV2001.severity = silent
+
+# CA1416: Plattformkompatibilität überprüfen
+
+dotnet_diagnostic.CA1416.severity = silent
