@@ -25,7 +25,7 @@ namespace DisCatSharp.Enums;
 /// <summary>
 /// The metadata visibility type of user account connections.
 /// </summary>
-public enum ConnectionMetadataVisibilityType : long
+public enum ConnectionMetadataVisibilityType : int
 {
 	/// <summary>
 	/// This connections metadata is only visible to the owning user.

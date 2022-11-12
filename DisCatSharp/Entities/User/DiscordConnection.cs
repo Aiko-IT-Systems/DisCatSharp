@@ -53,6 +53,10 @@ public class DiscordConnection
 	///			<description>Obsolete (Non-assignable)</description>
 	///		</listheader>
 	///		<item>
+	///			<term>contacts</term>
+	///			<description>false</description>
+	///		</item>
+	///		<item>
 	///			<term>instagram</term>
 	///			<description>false</description>
 	///		</item>
@@ -126,7 +130,7 @@ public class DiscordConnection
 	///		</item>
 	///		<item>
 	///			<term>leagueoflegends</term>
-	///			<description>true</description>
+	///			<description>false</description>
 	///		</item>
 	///		<item>
 	///			<term>skype</term>
