@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
@@ -35,6 +37,7 @@ public enum PremiumType
 	/// <summary>
 	/// Includes basic app perks like animated emojis and avatars.
 	/// </summary>
+	[Obsolete("Nitro Classic got replaced by Nitro Basic")]
 	NitroClassic = 1,
 
 	/// <summary>
@@ -43,8 +46,7 @@ public enum PremiumType
 	Nitro = 2,
 
 	/// <summary>
-	/// Includes lite app perks.
-	/// Unknown if it will be 3.
+	/// Includes basic app perks.
 	/// </summary>
-	NitroLite = 3
+	NitroBasic = 3
 }
