@@ -199,7 +199,7 @@ public sealed class DiscordApiClient
 		var req = new RestRequest(client, bucket, url, method, route, headers, payload, ratelimitWaitOverride);
 
 		if (this.Discord != null)
-			this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, "Error while executing request");
+			this.Rest.ExecuteRequestAsync(req).LogTaskFault(this.Discord.Logger, LogLevel.Error, LoggerEvents.RestError, $"Error while executing request. Url: {url.AbsoluteUri}");
 		else
 			_ = this.Rest.ExecuteRequestAsync(req);
 
