@@ -270,7 +270,7 @@ internal sealed class RestClient : IDisposable
 				// Decrement the remaining number of requests as there can be other concurrent requests before this one finishes and has a chance to update the bucket
 				if (Interlocked.Decrement(ref bucket.RemainingInternal) < 0)
 				{
-					this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {0} is blocked", bucket.ToString());
+					this._logger.LogWarning(LoggerEvents.RatelimitDiag, "Request for {bucket} is blocked. Url: {url}", bucket.ToString(), request.Url.AbsoluteUri);
 					var delay = bucket.Reset - now;
 					var resetDate = bucket.Reset;
 
@@ -296,10 +296,10 @@ internal sealed class RestClient : IDisposable
 
 					return;
 				}
-				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {0} is allowed", bucket.ToString());
+				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Request for {bucket} is allowed. Url: {url}", bucket.ToString(), request.Url.AbsoluteUri);
 			}
 			else
-				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Initial request for {0} is allowed", bucket.ToString());
+				this._logger.LogDebug(LoggerEvents.RatelimitDiag, "Initial request for {bucket} is allowed. Url: {url}", bucket.ToString(), request.Url.AbsoluteUri);
 
 			var req = this.BuildRequest(request);
 
@@ -325,7 +325,7 @@ internal sealed class RestClient : IDisposable
 			}
 			catch (HttpRequestException httpex)
 			{
-				this._logger.LogError(LoggerEvents.RestError, httpex, "Request to {0} triggered an HttpException", request.Url);
+				this._logger.LogError(LoggerEvents.RestError, httpex, "Request to {0} triggered an HttpException", request.Url.AbsoluteUri);
 				request.SetFaulted(httpex);
 				this.FailInitialRateLimitTest(request, ratelimitTcs);
 				return;
@@ -364,7 +364,7 @@ internal sealed class RestClient : IDisposable
 						if (global)
 						{
 							bucket.IsGlobal = true;
-							this._logger.LogError(LoggerEvents.RatelimitHit, "Global ratelimit hit, cooling down");
+							this._logger.LogError(LoggerEvents.RatelimitHit, "Global ratelimit hit, cooling down for {uri}", request.Url.AbsoluteUri);
 							try
 							{
 								this._globalRateLimitEvent.Reset();
@@ -388,7 +388,7 @@ internal sealed class RestClient : IDisposable
 									ApiEndpoint = request.Url.AbsoluteUri
 								});
 							}
-							this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeuing request to {0}", request.Url);
+							this._logger.LogError(LoggerEvents.RatelimitHit, "Ratelimit hit, requeuing request to {url}", request.Url.AbsoluteUri);
 							await wait.ConfigureAwait(false);
 							this.ExecuteRequestAsync(request, bucket, ratelimitTcs)
 								.LogTaskFault(this._logger, LogLevel.Error, LoggerEvents.RestError, "Error while retrying request");
@@ -413,7 +413,7 @@ internal sealed class RestClient : IDisposable
 		}
 		catch (Exception ex)
 		{
-			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {0} triggered an exception", request.Url);
+			this._logger.LogError(LoggerEvents.RestError, ex, "Request to {0} triggered an exception", request.Url.AbsoluteUri);
 
 			// if something went wrong and we couldn't get rate limits for the first request here, allow the next request to run
 			if (bucket != null && ratelimitTcs != null && bucket.LimitTesting != 0)
