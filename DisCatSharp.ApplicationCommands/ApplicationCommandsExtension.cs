@@ -187,6 +187,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// <param name="configuration">The configuration.</param>
 	internal ApplicationCommandsExtension(ApplicationCommandsConfiguration configuration = null)
 	{
+		configuration ??= new ApplicationCommandsConfiguration();
 		Configuration = configuration;
 		DebugEnabled = configuration?.DebugStartup ?? false;
 		CheckAllGuilds = configuration?.CheckAllGuilds ?? false;
