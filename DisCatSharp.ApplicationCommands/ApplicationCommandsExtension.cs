@@ -656,6 +656,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 						s_singletonModules.Add(CreateInstance(module, Configuration?.ServiceProvider));
 				}
 			}
+			catch (NullReferenceException ex)
+			{
+				this.Client.Logger.LogCritical(ex, "NRE Exception thrown: {msg}\nStack: {stack}", ex.Message, ex.StackTrace);
+			}
 			catch (Exception ex)
 			{
 				if (ex is BadRequestException brex)
@@ -720,9 +724,13 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 								var actualCommands = regCommands.Distinct().ToList();
 								commands.AddRange(actualCommands);
 								GuildCommandsInternal.Add(guildId.Value, actualCommands);
-
-								if (this.Client.Guilds.TryGetValue(guildId.Value, out var guild))
-									guild.InternalRegisteredApplicationCommands.AddRange(actualCommands);
+								try
+								{
+									if (this.Client.Guilds.TryGetValue(guildId.Value, out var guild))
+										guild.InternalRegisteredApplicationCommands.AddRange(actualCommands);
+								}
+								catch (NullReferenceException)
+								{ }
 							}
 							else
 							{
@@ -794,6 +802,10 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 
 					s_registrationCount++;
 					this.CheckRegistrationStartup(ManOr);
+				}
+				catch (NullReferenceException ex)
+				{
+					this.Client.Logger.LogCritical(ex, "NRE Exception thrown: {msg}\nStack: {stack}", ex.Message, ex.StackTrace);
 				}
 				catch (Exception ex)
 				{
