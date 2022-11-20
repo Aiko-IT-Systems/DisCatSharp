@@ -61,7 +61,7 @@ namespace Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don&apos;t use in production.
+        ///   Looks up a localized string similar to {1}.
         /// </summary>
         internal static string AnalyzerDescription {
             get {
