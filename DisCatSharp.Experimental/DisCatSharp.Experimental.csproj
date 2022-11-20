@@ -5,7 +5,7 @@
   <Import Project="../DisCatSharp.targets" />
   <Import Project="../Package.targets" />
   <Import Project="../NuGet.targets" />
-  <Import Project="../Library.targets" />
+  <!--<Import Project="../Library.targets" />-->
 
   <PropertyGroup>
 	<AssemblyName>DisCatSharp.Experimental</AssemblyName>
@@ -20,14 +20,25 @@
 	  Experimental changes for DisCatSharp.
 	</Description>
 	<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6</PackageTags>
+	<OutputType>Exe</OutputType>
+	<TargetFramework>net6</TargetFramework>
   </PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Microsoft.CodeAnalysis" Version="4.4.0" />
+	  <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="4.4.0" />
+	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.4.0" />
+	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.4.0" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 	</ItemGroup>
   
 	<ItemGroup>
 	<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
+	  <ProjectReference Include="..\Attributes\Attributes.csproj" />
   </ItemGroup>
 
 </Project>
