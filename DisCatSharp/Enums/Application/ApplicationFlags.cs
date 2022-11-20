@@ -42,14 +42,19 @@ public enum ApplicationFlags : long
 	ManagedEmoji = 1L << 2,
 
 	/// <summary>
+	/// Unknown, relates to in app purchase.
+	/// </summary>
+	EmbeddedIap = 1L << 3,
+
+	/// <summary>
 	/// The application can create group dms.
 	/// </summary>
-	GroupDmCreate = 1L << 5,
+	GroupDmCreate = 1L << 4,
 
 	/// <summary>
 	/// Allows the application to access the local RPC server.
 	/// </summary>
-	RpcPrivateBeta = 1L << 5,
+	RpcPrivateBeta = 1L << 6,
 
 	/// <summary>
 	/// Allows the application to create activity assets.
