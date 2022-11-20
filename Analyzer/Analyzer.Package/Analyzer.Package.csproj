@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>DisCatSharp.Analyzer</PackageId>
-    <PackageVersion>3.0.0.0</PackageVersion>
+    <PackageVersion>4.2.0.0</PackageVersion>
     <Authors>Lala Sabathil</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>DisCatSharp Analyzer</Description>

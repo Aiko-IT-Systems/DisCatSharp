@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AnalyzerDescription" xml:space="preserve">
-    <value>{1}</value>
+    <value>This is considered experimental and shouldn't be used in production.</value>
     <comment>An optional longer localizable description of the diagnostic.</comment>
   </data>
   <data name="AnalyzerMessageFormat" xml:space="preserve">
-    <value>Function '{0}' is experimental</value>
+    <value>'{0}' is considered experimental: {1}</value>
     <comment>The format-able message the diagnostic displays.</comment>
   </data>
   <data name="AnalyzerTitle" xml:space="preserve">
-    <value>Function is experimental</value>
+    <value>Experimental</value>
     <comment>The title of the diagnostic.</comment>
   </data>
 </root>

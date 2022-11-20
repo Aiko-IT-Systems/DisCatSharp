@@ -60,20 +60,6 @@ namespace Analyzer
 			context.RegisterSyntaxNodeAction(AnalyzerInvocation, SyntaxKind.InvocationExpression);
 		}
 
-		private static void AnalyzeSymbol(SymbolAnalysisContext context)
-		{
-			var namedTypeSymbol = (INamedTypeSymbol)context.Symbol;
-
-			// Find just those named type symbols with names containing lowercase letters.
-			if (namedTypeSymbol.Name.ToCharArray().Any(char.IsLower))
-			{
-				// For all such symbols, produce a diagnostic.
-				var diagnostic = Diagnostic.Create(Rule, namedTypeSymbol.Locations[0], namedTypeSymbol.Name);
-
-				context.ReportDiagnostic(diagnostic);
-			}
-		}
-
 		private static void AnalyzerInvocation(SyntaxNodeAnalysisContext context)
 		{
 			var invocation = (InvocationExpressionSyntax)context.Node;
@@ -113,7 +99,7 @@ namespace Analyzer
 				return "Do not use in production";
 			}
 
-			return (attribute.ConstructorArguments[0].Value as string);
+			return attribute.ConstructorArguments[0].Value as string;
 		}
 	}
 }

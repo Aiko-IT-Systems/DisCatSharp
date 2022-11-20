@@ -61,7 +61,7 @@ namespace Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {1}.
+        ///   Looks up a localized string similar to This is considered experimental and shouldn&apos;t be used in production..
         /// </summary>
         internal static string AnalyzerDescription {
             get {
@@ -70,7 +70,7 @@ namespace Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Function &apos;{0}&apos; is experimental.
+        ///   Looks up a localized string similar to &apos;{0}&apos; is considered experimental: {1}.
         /// </summary>
         internal static string AnalyzerMessageFormat {
             get {
@@ -79,7 +79,7 @@ namespace Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Function is experimental.
+        ///   Looks up a localized string similar to Experimental.
         /// </summary>
         internal static string AnalyzerTitle {
             get {
