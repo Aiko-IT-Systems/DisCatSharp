@@ -6,13 +6,13 @@ public class Program
 {
 	public static void Main(string[] args = null)
 	{
-		Test();
+		Test2();
 	}
 
 
-	[Experimental("Test")]
-	public static void Test()
+	[Experimental("Test2")]
+	public static void Test2()
 	{
-		Console.WriteLine("Test");
+		Console.WriteLine("Test2");
 	}
 }

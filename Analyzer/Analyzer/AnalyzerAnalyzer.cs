@@ -110,7 +110,7 @@ namespace Analyzer
 		{
 			if (attribute.ConstructorArguments.Length < 1)
 			{
-				return "This method is obsolete";
+				return "Do not use in production";
 			}
 
 			return (attribute.ConstructorArguments[0].Value as string);
