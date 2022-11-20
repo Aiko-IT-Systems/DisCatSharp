@@ -28,7 +28,7 @@ namespace DisCatSharp.CommandsNext.Converters;
 /// <summary>
 /// Represents a argument binding result.
 /// </summary>
-public struct ArgumentBindingResult
+public readonly struct ArgumentBindingResult
 {
 	/// <summary>
 	/// Gets a value indicating whether the binding is successful.

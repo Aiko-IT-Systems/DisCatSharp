@@ -31,7 +31,7 @@ namespace DisCatSharp.VoiceNext;
 /// <summary>
 /// Defines the format of PCM data consumed or produced by Opus.
 /// </summary>
-public struct AudioFormat
+public readonly struct AudioFormat
 {
 	/// <summary>
 	/// Gets the collection of sampling rates (in Hz) the Opus encoder can use.

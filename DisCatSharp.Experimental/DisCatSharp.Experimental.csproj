@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Version.targets" />
+  <Import Project="../DisCatSharp.targets" />
+  <Import Project="../Package.targets" />
+  <Import Project="../NuGet.targets" />
+  <Import Project="../Library.targets" />
+
+  <PropertyGroup>
+	<AssemblyName>DisCatSharp.Experimental</AssemblyName>
+	<RootNamespace>DisCatSharp.Experimental</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<PackageId>DisCatSharp.Experimental</PackageId>
+	<Description>
+	  DisCatSharp.Experimental
+
+	  Experimental changes for DisCatSharp.
+	</Description>
+	<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6</PackageTags>
+  </PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+  
+	<ItemGroup>
+	<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
+  </ItemGroup>
+
+</Project>
