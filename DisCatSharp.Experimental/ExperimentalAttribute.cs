@@ -22,12 +22,12 @@
 
 using System;
 
-namespace DisCatSharp.Experimental;
-
-internal class Program
+namespace DisCatSharp.Experimental
 {
-	static void Main(string[] args)
+	[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
+	public sealed class ExperimentalAttribute : Attribute
 	{
-		Console.WriteLine("Hello, World!");
+		public ExperimentalAttribute()
+		{ }
 	}
 }
