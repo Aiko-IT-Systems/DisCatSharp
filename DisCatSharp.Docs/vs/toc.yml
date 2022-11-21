@@ -5,4 +5,4 @@
   - name: DisCatSharp Analyzer
     items:
     - name: DCS0001
-      href: dcs/0001.md
+      href: analyzer/dcs/0001.md
