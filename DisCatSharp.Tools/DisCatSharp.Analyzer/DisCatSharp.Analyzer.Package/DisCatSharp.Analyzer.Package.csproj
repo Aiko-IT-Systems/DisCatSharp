@@ -10,7 +10,7 @@
   <PropertyGroup>
     <PackageId>DisCatSharp.Analyzer</PackageId>
     <PackageVersion>4.5.0.0</PackageVersion>
-    <Authors>Lala Sabathil</Authors>
+    <Authors>AITSYS</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>DisCatSharp Analyzer</Description>
     <PackageReleaseNotes>Various DisCatSharp Analyzers.</PackageReleaseNotes>
@@ -20,14 +20,42 @@
     <NoPackageAnalysis>true</NoPackageAnalysis>
 
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
+
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+
+    <Title>DisCatSharp Analyzer</Title>
+
+    <PackageIcon>logobig.png</PackageIcon>
+
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <RepositoryType>git</RepositoryType>
+
+    <RepositoryUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</RepositoryUrl>
+
+    <PackageProjectUrl>https://github.com/Aiko-IT-Systems/DisCatSharp</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\..\DisCatSharp.Logos\logobig.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" />
+	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.4.0" PrivateAssets="all" />
+	<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="tools\*.ps1" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="" />
+	<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
   <Target Name="_AddAnalyzersToOutput">

@@ -57,7 +57,7 @@ namespace DisCatSharp.Analyzer
 
 		private static void AnalyzerInvocation(SyntaxNodeAnalysisContext context)
 		{
-			var invocation = (InvocationExpressionSyntax)context.Node;
+			var invocation = context.Node;
 			var declaration = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
 
 			var attributes = declaration.GetAttributes();

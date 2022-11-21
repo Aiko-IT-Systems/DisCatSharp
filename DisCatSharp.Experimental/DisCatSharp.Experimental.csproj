@@ -10,6 +10,7 @@
   <PropertyGroup>
 	<AssemblyName>DisCatSharp.Experimental</AssemblyName>
 	<RootNamespace>DisCatSharp.Experimental</RootNamespace>
+	<CodeAnalysisRuleSet>..\DisCatSharp.Tools\DisCatSharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>
