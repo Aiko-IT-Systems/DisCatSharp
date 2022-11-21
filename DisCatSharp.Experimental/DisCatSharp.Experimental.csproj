@@ -27,7 +27,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-	  <ProjectReference Include="..\DisCatSharp.Tools\DisCatSharp.Analyzer\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" SetTargetFramework="TargetFramework=netstandard2.0" />
+	  <!--<ProjectReference Include="..\DisCatSharp.Tools\DisCatSharp.Analyzer\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" SetTargetFramework="TargetFramework=netstandard2.0" />-->
 	</ItemGroup>
 
 	<ItemGroup>

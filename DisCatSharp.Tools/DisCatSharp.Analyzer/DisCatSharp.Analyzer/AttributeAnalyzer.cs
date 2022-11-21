@@ -52,23 +52,87 @@ namespace DisCatSharp.Analyzer
 			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 			context.EnableConcurrentExecution();
 
-			context.RegisterSyntaxNodeAction(AnalyzerInvocation, SyntaxKind.InvocationExpression);
+			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.Parameter);
+			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.Property);
+			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.NamedType);
+			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.Method);
+			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.Field);
+			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.Event);
+			context.RegisterSyntaxNodeAction(ExperimentalAnalyzer, SyntaxKind.InvocationExpression);
+			context.RegisterSyntaxNodeAction(ExperimentalAnalyzer, SyntaxKind.ObjectCreationExpression);
+			context.RegisterSyntaxNodeAction(ExperimentalAnalyzer, SyntaxKind.FieldDeclaration); // Don't work
+			context.RegisterSyntaxNodeAction(ExperimentalAnalyzer, SyntaxKind.PropertyDeclaration); // Don't work, one of the not working ones should create a report if a property is used. I.e.:
+			/*
+			 
+			var test = new Test("test");
+			test.Invoke();
+			var str = test.TestString; <- Fire here for TestString
+			 
+			 */
 		}
-
-		private static void AnalyzerInvocation(SyntaxNodeAnalysisContext context)
+		private static void ExperimentalAnalyzer(SyntaxNodeAnalysisContext context)
 		{
 			var invocation = context.Node;
 			var declaration = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
-
+			if (null == declaration)
+			{
+				Console.WriteLine("Faulty");
+				//context.ReportDiagnostic(Diagnostic.Create(ExperimentalRule, invocation.GetLocation(), "unknown", "unknown", "unknown"));
+				return;
+			}
 			var attributes = declaration.GetAttributes();
 			var attributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(ExperimentalAttribute)));
 			if (null == attributeData)
 			{
+				Console.WriteLine("Faulty 2");
+				return;
+			}
+			var name = declaration.Name;
+			var kind = declaration.Kind.ToString();
+			if (name == ".ctor")
+			{
+				name = declaration.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+				kind = "Constructor";
+			}
+			var message = GetMessage(attributeData);
+			var diagnostic = Diagnostic.Create(ExperimentalRule, invocation.GetLocation(), kind, name, message);
+			context.ReportDiagnostic(diagnostic);
+
+		}
+
+		private static void ExperimentalAnalyzer(SymbolAnalysisContext context)
+		{
+			Console.WriteLine("Handling " + context.Symbol.Kind.ToString());
+			var syntaxTrees = from x in context.Symbol.Locations
+						  where x.IsInSource
+						  select x.SourceTree;
+			var declaration = context.Symbol;
+			if (null == declaration)
+			{
+				Console.WriteLine("Faulty");
+				return;
+			}
+			var attributes = declaration.GetAttributes();
+			var attributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.Compilation.GetSemanticModel(syntaxTrees.First()), attr, typeof(ExperimentalAttribute)));
+			if (null == attributeData)
+			{
+				Console.WriteLine("Faulty 2");
 				return;
 			}
 
 			var message = GetMessage(attributeData);
-			var diagnostic = Diagnostic.Create(ExperimentalRule, invocation.GetLocation(), declaration.Kind.ToString(), declaration.Name, message);
+			var name = declaration.Name;
+			var kind = declaration.Kind.ToString();
+			if (name == ".ctor")
+			{
+				name = declaration.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+				kind = "Constructor";
+			}
+			else if (kind == "NamedType")
+			{
+				kind = "Class";
+			}
+			var diagnostic = Diagnostic.Create(ExperimentalRule, context.Symbol.Locations.First(x => x.IsInSource), kind, name, message);
 			context.ReportDiagnostic(diagnostic);
 		}
 
