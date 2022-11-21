@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using DisCatSharp.Experimental;
+using DisCatSharp.Attributes;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -43,7 +43,7 @@ namespace DisCatSharp.Analyzer
 		private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
 		private const string Category = "Information";
 
-		private static readonly DiagnosticDescriptor ExperimentalRule = new DiagnosticDescriptor(DiagnosticIdPrefix + "0001", Title, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description, "https://docs.discatsharp.tech/vs/analyzer/dcs/0001", "DisCatSharp", "Experimental");
+		private static readonly DiagnosticDescriptor ExperimentalRule = new DiagnosticDescriptor(DiagnosticIdPrefix + "0001", Title, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description, "https://docs.discatsharp.tech/vs/analyzer/dcs/0001.html");
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(ExperimentalRule); } }
 
@@ -58,24 +58,17 @@ namespace DisCatSharp.Analyzer
 		private static void AnalyzerInvocation(SyntaxNodeAnalysisContext context)
 		{
 			var invocation = (InvocationExpressionSyntax)context.Node;
+			var declaration = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
 
-			var methodDeclaration = (context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol as IMethodSymbol);
-
-			//There are several reason why this may be null e.g invoking a delegate
-			if (null == methodDeclaration)
-			{
-				return;
-			}
-
-			var methodAttributes = methodDeclaration.GetAttributes();
-			var attributeData = methodAttributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(ExperimentalAttribute)));
+			var attributes = declaration.GetAttributes();
+			var attributeData = attributes.FirstOrDefault(attr => IsRequiredAttribute(context.SemanticModel, attr, typeof(ExperimentalAttribute)));
 			if (null == attributeData)
 			{
 				return;
 			}
 
 			var message = GetMessage(attributeData);
-			var diagnostic = Diagnostic.Create(ExperimentalRule, invocation.GetLocation(), methodDeclaration.Name, message);
+			var diagnostic = Diagnostic.Create(ExperimentalRule, invocation.GetLocation(), declaration.Kind.ToString(), declaration.Name, message);
 			context.ReportDiagnostic(diagnostic);
 		}
 

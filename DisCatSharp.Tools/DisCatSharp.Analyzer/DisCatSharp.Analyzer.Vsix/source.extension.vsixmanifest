@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="DisCatSharp.Analyzer.6f8ea3a4-90fb-43b8-be66-880513079279" Version="4.3" Language="en-US" Publisher="Lala Sabathil"/>
+    <Identity Id="DisCatSharp.Analyzer.6f8ea3a4-90fb-43b8-be66-880513079279" Version="4.5" Language="en-US" Publisher="Lala Sabathil"/>
     <DisplayName>DisCatSharp Analyzer</DisplayName>
     <Description xml:space="preserve">This is an diagnostic extension for DisCatSharp.</Description>
   </Metadata>

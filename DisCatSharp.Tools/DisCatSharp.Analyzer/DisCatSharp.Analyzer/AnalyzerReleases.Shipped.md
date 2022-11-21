@@ -9,7 +9,6 @@ Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 DcsExp | Informations | Warning | Informs if a method or attribute or similar is considered experimental
 
-
 ## Release 4.3
 
 ### New Rules
@@ -23,3 +22,11 @@ DCS0001 | Informations | Warning | Experimental Attribute Analyzer
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
 DcsExp | Informations | Warning | Informs if a method or attribute or similar is considered experimental
+
+## Release 4.4
+
+### Updates Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|-------
+DCS0001 | Informations | Warning | Experimental Attribute Analyzer

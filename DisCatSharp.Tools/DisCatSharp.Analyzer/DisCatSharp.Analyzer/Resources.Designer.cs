@@ -70,7 +70,7 @@ namespace DisCatSharp.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; is considered experimental: {1}.
+        ///   Looks up a localized string similar to {0} &apos;{1}&apos; is considered experimental: {2}.
         /// </summary>
         internal static string AnalyzerMessageFormat {
             get {

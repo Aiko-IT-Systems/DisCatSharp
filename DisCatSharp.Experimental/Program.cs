@@ -1,5 +1,7 @@
 using System;
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Experimental;
 
 public class Program
@@ -9,18 +11,13 @@ public class Program
 		Test2();
 	}
 
-
-
-
-
-
-
-
-
+	[Experimental("Something")]
+	public static string TestString { get; set; }
 
 	[Experimental]
 	public static void Test2()
 	{
-		Console.WriteLine("Test2");
+		TestString = "Test";
+		Console.WriteLine(TestString);
 	}
 }
