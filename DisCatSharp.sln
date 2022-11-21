@@ -81,8 +81,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting.Depende
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Experimental", "DisCatSharp.Experimental\DisCatSharp.Experimental.csproj", "{CF03EADC-E178-45B3-BD72-B6F70B625C8F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SideTools", "SideTools", "{B5D3367B-92DC-4B7F-ABCF-E1F72E205230}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
