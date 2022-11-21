@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="Analyzer.6f8ea3a4-90fb-43b8-be66-880513079279" Version="4.2" Language="en-US" Publisher="Lala Sabathil"/>
+    <Identity Id="DisCatSharp.Analyzer.6f8ea3a4-90fb-43b8-be66-880513079279" Version="4.3" Language="en-US" Publisher="Lala Sabathil"/>
     <DisplayName>DisCatSharp Analyzer</DisplayName>
     <Description xml:space="preserve">This is an diagnostic extension for DisCatSharp.</Description>
   </Metadata>
@@ -17,8 +17,8 @@
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.7,)" />
   </Dependencies>
   <Assets>
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Analyzer" Path="|Analyzer|"/>
-    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Analyzer" Path="|Analyzer|"/>
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="DisCatSharp.Analyzer" Path="|DisCatSharp.Analyzer|"/>
+    <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="DisCatSharp.Analyzer" Path="|DisCatSharp.Analyzer|"/>
   </Assets>
   <Prerequisites>
     <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.5,)" DisplayName="Visual Studio core editor" />

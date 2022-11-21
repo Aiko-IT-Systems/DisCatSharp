@@ -18,7 +18,7 @@ public class Program
 
 
 
-	[Experimental("Booba.")]
+	[Experimental]
 	public static void Test2()
 	{
 		Console.WriteLine("Test2");

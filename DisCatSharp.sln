@@ -81,13 +81,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Hosting.Depende
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Experimental", "DisCatSharp.Experimental\DisCatSharp.Experimental.csproj", "{CF03EADC-E178-45B3-BD72-B6F70B625C8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyzer", "Analyzer\Analyzer\Analyzer.csproj", "{C13DBEE0-AFB9-4022-B2CC-BE898F90737C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Analyzer", "Analyzer\Analyzer\DisCatSharp.Analyzer.csproj", "{C13DBEE0-AFB9-4022-B2CC-BE898F90737C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyzer.Package", "Analyzer\Analyzer.Package\Analyzer.Package.csproj", "{20DC6B91-69A3-407B-AAE1-0C8F2F2A93C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Analyzer.Package", "Analyzer\Analyzer.Package\DisCatSharp.Analyzer.Package.csproj", "{20DC6B91-69A3-407B-AAE1-0C8F2F2A93C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Attributes", "Attributes\Attributes.csproj", "{2EEA9FC8-D358-47BB-9998-2128A0182ABB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Attributes", "Attributes\Attributes.csproj", "{2EEA9FC8-D358-47BB-9998-2128A0182ABB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Vsix", "Analyzer\Analyzer.Vsix\Analyzer.Vsix.csproj", "{560384C1-B4D2-4B83-925C-3DF9F148E4F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Analyzer.Vsix", "Analyzer\Analyzer.Vsix\DisCatSharp.Analyzer.Vsix.csproj", "{560384C1-B4D2-4B83-925C-3DF9F148E4F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SideTools", "SideTools", "{B5D3367B-92DC-4B7F-ABCF-E1F72E205230}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -170,6 +172,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C13DBEE0-AFB9-4022-B2CC-BE898F90737C} = {B5D3367B-92DC-4B7F-ABCF-E1F72E205230}
+		{20DC6B91-69A3-407B-AAE1-0C8F2F2A93C2} = {B5D3367B-92DC-4B7F-ABCF-E1F72E205230}
+		{2EEA9FC8-D358-47BB-9998-2128A0182ABB} = {B5D3367B-92DC-4B7F-ABCF-E1F72E205230}
+		{560384C1-B4D2-4B83-925C-3DF9F148E4F4} = {B5D3367B-92DC-4B7F-ABCF-E1F72E205230}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23F3A981-51B8-4285-A38C-3267F1D25FE7}

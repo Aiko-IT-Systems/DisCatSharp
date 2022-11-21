@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>DisCatSharp.Analyzer</PackageId>
-    <PackageVersion>4.2.0.0</PackageVersion>
+    <PackageVersion>4.3.0.0</PackageVersion>
     <Authors>Lala Sabathil</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>DisCatSharp Analyzer</Description>
@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Analyzer\Analyzer.csproj" />
+    <ProjectReference Include="..\Analyzer\DisCatSharp.Analyzer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,7 +32,7 @@
 
   <Target Name="_AddAnalyzersToOutput">
     <ItemGroup>
-      <TfmSpecificPackageFile Include="$(OutputPath)\Analyzer.dll" PackagePath="analyzers/dotnet/cs" />
+      <TfmSpecificPackageFile Include="$(OutputPath)\DisCatSharp.Analyzer.dll" PackagePath="analyzers/dotnet/cs" />
     </ItemGroup>
   </Target>
 

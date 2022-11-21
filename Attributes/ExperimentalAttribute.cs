@@ -27,10 +27,14 @@ namespace DisCatSharp.Experimental
 	[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
 	public sealed class ExperimentalAttribute : Attribute
 	{
-		public string Message;
-		public ExperimentalAttribute(string message = "This is experimental")
+		public string Message { get; set; }
+
+		public ExperimentalAttribute(string message)
 		{
 			this.Message = message;
 		}
+
+		public ExperimentalAttribute()
+		{ }
 	}
 }
