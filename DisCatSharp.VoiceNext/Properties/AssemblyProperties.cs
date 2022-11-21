@@ -26,6 +26,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("DisCatSharp.CommandsNext")]
 [assembly: InternalsVisibleTo("DisCatSharp.Common")]
 [assembly: InternalsVisibleTo("DisCatSharp.Configuration")]
+[assembly: InternalsVisibleTo("DisCatSharp.Experimental")]
 [assembly: InternalsVisibleTo("DisCatSharp.Configuration.Tests")]
 [assembly: InternalsVisibleTo("DisCatSharp.Hosting")]
 [assembly: InternalsVisibleTo("DisCatSharp.Hosting.DependencyInjection")]
