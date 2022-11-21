@@ -22,7 +22,7 @@ ist = "ist"
 ignore-vcs = true
 ignore-files = true
 ignore-dot = true
-extend-exclude = ["DisCatSharp.Docs/dcs/src/*","DisCatSharp.Docs/dcs/partials/*"]
+extend-exclude = ["DisCatSharp.Docs/dcs/src/*","DisCatSharp.Docs/dcs/partials/*","Analyzer/*"]
 
 [default]
 locale = "en-us"
