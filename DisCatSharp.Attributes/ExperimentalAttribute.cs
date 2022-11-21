@@ -22,7 +22,7 @@
 
 using System;
 
-namespace DisCatSharp.Experimental
+namespace DisCatSharp.Attributes
 {
 	[AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
 	public sealed class ExperimentalAttribute : Attribute

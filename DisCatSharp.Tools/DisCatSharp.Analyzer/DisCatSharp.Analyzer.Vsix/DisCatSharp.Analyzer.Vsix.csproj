@@ -33,7 +33,7 @@
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="Exists('$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets')" />
 
   <ItemGroup>
-    <ProjectReference Include="..\Analyzer\DisCatSharp.Analyzer.csproj" />
+    <ProjectReference Include="..\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

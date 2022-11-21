@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Attributes\Attributes.csproj" />
+    <ProjectReference Include="..\..\..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>DisCatSharp.Analyzer</PackageId>
-    <PackageVersion>4.3.0.0</PackageVersion>
+    <PackageVersion>4.5.0.0</PackageVersion>
     <Authors>Lala Sabathil</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>DisCatSharp Analyzer</Description>
@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Analyzer\DisCatSharp.Analyzer.csproj" />
+    <ProjectReference Include="..\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
