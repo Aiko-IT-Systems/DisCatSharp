@@ -8,16 +8,25 @@ public class Program
 {
 	public static void Main(string[] args = null)
 	{
-		Test2();
+		var test = new Test("test");
+		test.Invoke();
 	}
+}
 
-	[Experimental("Something")]
-	public static string TestString { get; set; }
+[Experimental("class")]
+public class Test
+{
 
-	[Experimental]
-	public static void Test2()
+	[Experimental("property")]
+	public string TestString { get; set; }
+
+	[Experimental("construct")]
+	public Test(string test = null)
 	{
-		TestString = "Test";
-		Console.WriteLine(TestString);
+		this.TestString = test;
 	}
+
+	[Experimental("method")]
+	public void Invoke()
+		=> Console.WriteLine(this.TestString);
 }

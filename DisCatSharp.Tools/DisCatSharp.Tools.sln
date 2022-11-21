@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ref", "Ref", "{C88304B3-5BF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Attributes", "..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj", "{FBEB40B3-4D62-462D-9F44-2B0BCDA0D2E7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisCatSharp.Experimental", "..\DisCatSharp.Experimental\DisCatSharp.Experimental.csproj", "{239A4661-461C-4956-8512-2A3537F6A2E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{FBEB40B3-4D62-462D-9F44-2B0BCDA0D2E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBEB40B3-4D62-462D-9F44-2B0BCDA0D2E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBEB40B3-4D62-462D-9F44-2B0BCDA0D2E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{239A4661-461C-4956-8512-2A3537F6A2E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{239A4661-461C-4956-8512-2A3537F6A2E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{239A4661-461C-4956-8512-2A3537F6A2E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{239A4661-461C-4956-8512-2A3537F6A2E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{B3122D6C-A0FE-42C3-9FCE-4A9789E66E1B} = {122968B7-2707-4FC2-819D-7E90B804A8E4}
 		{AFEFCFB5-9110-423D-B022-A6AA46307B90} = {122968B7-2707-4FC2-819D-7E90B804A8E4}
 		{FBEB40B3-4D62-462D-9F44-2B0BCDA0D2E7} = {C88304B3-5BF3-4F25-A36A-42CC42BB2D3B}
+		{239A4661-461C-4956-8512-2A3537F6A2E8} = {C88304B3-5BF3-4F25-A36A-42CC42BB2D3B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C9C1591B-8805-457A-BC51-D975D32BCC3A}
