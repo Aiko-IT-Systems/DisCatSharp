@@ -25,19 +25,8 @@
   </PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.CodeAnalysis" Version="4.4.0" />
-	  <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="4.4.0" />
-	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.4.0" />
-	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.4.0" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-	  <ProjectReference Include="..\DisCatSharp.Tools\DisCatSharp.Analyzer\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj"
-						OutputItemType="Analyzer"
-                        ReferenceOutputAssembly="true"
-                        SetTargetFramework="TargetFramework=netstandard2.0"/>
+	  <ProjectReference Include="..\DisCatSharp.Tools\DisCatSharp.Analyzer\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" SetTargetFramework="TargetFramework=netstandard2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
