@@ -12,4 +12,4 @@ This section contains information on how to use the Visual Studio tools for DisC
 #### DisCatSharp Analyzer
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
-DCS0001 | Informations | Warning | Experimental Attribute Analyzer
+DCS0001 | Information | Warning | Experimental Attribute Analyzer

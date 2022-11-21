@@ -41,7 +41,7 @@ namespace DisCatSharp.Analyzer
 		private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
 		private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
 		private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
-		private const string Category = "Informations";
+		private const string Category = "Information";
 
 		private static readonly DiagnosticDescriptor ExperimentalRule = new DiagnosticDescriptor(DiagnosticIdPrefix + "0001", Title, MessageFormat, Category, DiagnosticSeverity.Warning, true, Description, "https://docs.discatsharp.tech/vs/analyzer/dcs/0001", "DisCatSharp", "Experimental");
 
