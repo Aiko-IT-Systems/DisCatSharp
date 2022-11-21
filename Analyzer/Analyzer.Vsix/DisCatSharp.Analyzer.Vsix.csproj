@@ -4,8 +4,8 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <RootNamespace>Analyzer.Vsix</RootNamespace>
-    <AssemblyName>Analyzer.Vsix</AssemblyName>
+    <RootNamespace>DisCatSharp.Analyzer.Vsix</RootNamespace>
+    <AssemblyName>DisCatSharp.Analyzer.Vsix</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -33,7 +33,7 @@
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="Exists('$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets')" />
 
   <ItemGroup>
-    <ProjectReference Include="..\Analyzer\Analyzer.csproj" />
+    <ProjectReference Include="..\Analyzer\DisCatSharp.Analyzer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
