@@ -23,6 +23,7 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("DisCatSharp.ApplicationCommands")]
+[assembly: InternalsVisibleTo("DisCatSharp.Experimental")]
 [assembly: InternalsVisibleTo("DisCatSharp")]
 [assembly: InternalsVisibleTo("DisCatSharp.Common")]
 [assembly: InternalsVisibleTo("DisCatSharp.Configuration")]

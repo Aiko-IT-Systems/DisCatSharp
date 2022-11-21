@@ -6,7 +6,9 @@
   href: faq.md
 - name: API Documentation
   href: api/index.md
-- name: Library Development Docs
-  href: libdev/index.md
 - name: Voice Natives
   href: natives/index.md
+- name: Visual Studio Tools
+  href: vs/index.md
+- name: Discord API
+  href: https://discord.com/developers/docs/intro
