@@ -54,14 +54,14 @@ public static class OAuth
 	private const string IDENTIFY_EXTENDED = "identify email guilds guilds.members.read connections";
 
 	/// <summary>
-	/// All scopes for bots and identify.
+	/// The role connection scope.
 	/// </summary>
-	private const string ALL = BOT_DEFAULT + " " + IDENTIFY_EXTENDED;
+	private const string ROLE_CONNECTIONS_WRITE = "role_connections.write";
 
 	/// <summary>
-	/// The oauth scope.
+	/// All scopes for bots and identify.
 	/// </summary>
-
+	private const string ALL = BOT_DEFAULT + " " + IDENTIFY_EXTENDED + " " + ROLE_CONNECTIONS_WRITE;
 
 	/// <summary>
 	/// Resolves the scopes.
@@ -111,7 +111,12 @@ public enum OAuthScopes
 	IDENTIFY_EXTENDED = 4,
 
 	/// <summary>
-	/// Scopes: bot applications.commands applications.commands.permissions.update identify email guilds connections
+	/// Scopes: bot applications.commands applications.commands.permissions.update identify email guilds connections role_connections.write
 	/// </summary>
-	ALL = 5
+	ALL = 5,
+
+	/// <summary>
+	/// Scopes: role_connections.write
+	/// </summary>
+	ROLE_CONNECTIONS_WRITE = 6
 }
