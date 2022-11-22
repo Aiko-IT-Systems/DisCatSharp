@@ -36,7 +36,7 @@ namespace DisCatSharp.Entities;
 public sealed class DiscordApplicationRoleConnectionMetadata : SnowflakeObject, IEquatable<DiscordApplicationRoleConnectionMetadata>
 {
 	/// <summary>
-	/// Gets the type of this application command.
+	/// Gets the type of this role connection metadata object.
 	/// </summary>
 	[JsonProperty("type")]
 	public ApplicationRoleConnectionMetadataType Type { get; internal set; }
