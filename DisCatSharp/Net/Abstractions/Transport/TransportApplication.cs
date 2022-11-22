@@ -167,6 +167,12 @@ internal sealed class TransportApplication
 	public DiscordApplicationInstallParams InstallParams { get; set; }
 
 	/// <summary>
+	/// Gets or sets the role connection verification entry point.
+	/// </summary>
+	[JsonProperty("role_connections_verification_url")]
+	public string RoleConnectionsVerificationUrl { get; set; }
+
+	/// <summary>
 	/// Gets or sets the tags.
 	/// </summary>
 	[JsonProperty("tags", NullValueHandling = NullValueHandling.Include)]

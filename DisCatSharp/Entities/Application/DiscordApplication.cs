@@ -145,6 +145,12 @@ public sealed class DiscordApplication : DiscordMessageApplication, IEquatable<D
 	public DiscordApplicationInstallParams InstallParams { get; internal set; }
 
 	/// <summary>
+	/// The application's role connection verification entry point,
+	/// which when configured will render the app as a verification method in the guild role verification configuration.
+	/// </summary>
+	public string RoleConnectionsVerificationUrl { get; internal set; }
+
+	/// <summary>
 	/// The application tags.
 	/// Not used atm.
 	/// </summary>
