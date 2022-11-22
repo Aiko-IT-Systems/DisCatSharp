@@ -271,12 +271,12 @@ internal class RestApplicationRoleConnectionMetadataPayload
 	/// <summary>
 	/// Gets the metadata name translations.
 	/// </summary>
-	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("name_localizations", NullValueHandling = NullValueHandling.Ignore)]
 	public Dictionary<string, string> NameLocalizations { get; set; }
 
 	/// <summary>
 	/// Gets the metadata description localizations.
 	/// </summary>
-	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+	[JsonProperty("description_localizations", NullValueHandling = NullValueHandling.Ignore)]
 	public Dictionary<string, string> DescriptionLocalizations { get; set; }
 }
