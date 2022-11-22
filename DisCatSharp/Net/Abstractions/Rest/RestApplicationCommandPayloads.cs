@@ -238,3 +238,45 @@ internal class RestFollowupMessageCreatePayload
 	[JsonProperty("attachments", NullValueHandling = NullValueHandling.Ignore)]
 	public List<DiscordAttachment> Attachments { get; set; }
 }
+
+/// <summary>
+/// Represents a role connection metadata payload.
+/// </summary>
+internal class RestApplicationRoleConnectionMetadataPayload
+{
+	/// <summary>
+	/// Gets the metadata type.
+	/// </summary>
+	[JsonProperty("type")]
+	public ApplicationRoleConnectionMetadataType Type { get; set; }
+
+	/// <summary>
+	/// Gets the metadata key.
+	/// </summary>
+	[JsonProperty("key")]
+	public string Key { get; set; }
+
+	/// <summary>
+	/// Gets the metadata name.
+	/// </summary>
+	[JsonProperty("name")]
+	public string Name { get; set; }
+
+	/// <summary>
+	/// Gets the metadata description.
+	/// </summary>
+	[JsonProperty("description")]
+	public string Description { get; set; }
+
+	/// <summary>
+	/// Gets the metadata name translations.
+	/// </summary>
+	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+	public Dictionary<string, string> NameLocalizations { get; set; }
+
+	/// <summary>
+	/// Gets the metadata description localizations.
+	/// </summary>
+	[JsonProperty("components", NullValueHandling = NullValueHandling.Ignore)]
+	public Dictionary<string, string> DescriptionLocalizations { get; set; }
+}
