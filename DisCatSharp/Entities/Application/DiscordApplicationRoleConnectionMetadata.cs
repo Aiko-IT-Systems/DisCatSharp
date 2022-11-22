@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using DisCatSharp.Enums;
 
@@ -33,7 +32,7 @@ namespace DisCatSharp.Entities;
 /// <summary>
 /// Represents a role connection metadata object that is registered to an application.
 /// </summary>
-public sealed class DiscordApplicationRoleConnectionMetadata : SnowflakeObject, IEquatable<DiscordApplicationRoleConnectionMetadata>
+public sealed class DiscordApplicationRoleConnectionMetadata : IEquatable<DiscordApplicationRoleConnectionMetadata>
 {
 	/// <summary>
 	/// Gets the type of this role connection metadata object.
@@ -108,7 +107,7 @@ public sealed class DiscordApplicationRoleConnectionMetadata : SnowflakeObject, 
 	/// <param name="other">The command to compare to.</param>
 	/// <returns>Whether the command is equal to this <see cref="DiscordApplicationRoleConnectionMetadata"/>.</returns>
 	public bool Equals(DiscordApplicationRoleConnectionMetadata other)
-		=> this.Id == other.Id;
+		=> this.Key == other.Key;
 
 	/// <summary>
 	/// Determines if two <see cref="DiscordApplicationRoleConnectionMetadata"/> objects are equal.
@@ -141,5 +140,5 @@ public sealed class DiscordApplicationRoleConnectionMetadata : SnowflakeObject, 
 	/// </summary>
 	/// <returns>The hash code for this <see cref="DiscordApplicationRoleConnectionMetadata"/>.</returns>
 	public override int GetHashCode()
-		=> this.Id.GetHashCode();
+		=> this.Key.GetHashCode();
 }

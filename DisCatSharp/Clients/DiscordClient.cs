@@ -468,14 +468,14 @@ public sealed partial class DiscordClient : BaseDiscordClient
 	/// Gets the applications role connection metadata.
 	/// </summary>
 	/// <returns>A list of metadata records or <see langword="null"/>.</returns>
-	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>?> GetRoleConnectionMetadata()
+	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> GetRoleConnectionMetadata()
 		 => await this.ApiClient.GetRoleConnectionMetadataRecords(this.CurrentApplication.Id);
 
 	/// <summary>
 	/// Updates the applications role connection metadata.
 	/// </summary>
 	/// <param name="metadata">A list of metadata objects. Max 5.</param>
-	public async Task UpdateRoleConnectionMetadata(IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata)
+	public async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> UpdateRoleConnectionMetadata(IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata)
 		 => await this.ApiClient.UpdateRoleConnectionMetadataRecords(this.CurrentApplication.Id, metadata);
 
 	/// <summary>

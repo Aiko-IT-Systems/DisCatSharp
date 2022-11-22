@@ -3557,7 +3557,7 @@ public sealed class DiscordApiClient
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
 
-		var metadataRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationRoleConnectionMetadata>>(res.Response).Select(xc => { xc.Discord = this.Discord; return xc; });
+		var metadataRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationRoleConnectionMetadata>>(res.Response);
 
 		return new ReadOnlyCollection<DiscordApplicationRoleConnectionMetadata>(new List<DiscordApplicationRoleConnectionMetadata>(metadataRaw));
 	}
@@ -3591,8 +3591,6 @@ public sealed class DiscordApiClient
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
 
 		var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationRoleConnectionMetadata>>(res.Response);
-		foreach (var met in ret)
-			met.Discord = this.Discord;
 		return new ReadOnlyCollection<DiscordApplicationRoleConnectionMetadata>(new List<DiscordApplicationRoleConnectionMetadata>(ret));
 	}
 	#endregion
