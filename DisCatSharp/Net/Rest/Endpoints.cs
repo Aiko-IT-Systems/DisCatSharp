@@ -493,4 +493,14 @@ public static class Endpoints
 	/// The rpc endpoint.
 	/// </summary>
 	public const string RPC = "/rpc";
+
+	/// <summary>
+	/// The role connections endpoint.
+	/// </summary>
+	public const string ROLE_CONNECTIONS = "/role-connections";
+
+	/// <summary>
+	/// The metadata endpoint.
+	/// </summary>
+	public const string METADATA = "/metadata";
 }

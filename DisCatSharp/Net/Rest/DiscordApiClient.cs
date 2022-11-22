@@ -3529,7 +3529,6 @@ public sealed class DiscordApiClient
 	/// <summary>
 	/// Gets the users connections async.
 	/// </summary>
-
 	internal async Task<IReadOnlyList<DiscordConnection>> GetUserConnectionsAsync()
 	{
 		var route = $"{Endpoints.USERS}{Endpoints.ME}{Endpoints.CONNECTIONS}";
@@ -3541,6 +3540,34 @@ public sealed class DiscordApiClient
 		var connectionsRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordConnection>>(res.Response).Select(xc => { xc.Discord = this.Discord; return xc; });
 
 		return new ReadOnlyCollection<DiscordConnection>(new List<DiscordConnection>(connectionsRaw));
+	}
+
+	/// <summary>
+	/// Gets the applications role connection metadata records.
+	/// </summary>
+	/// <param name="id">The application id.</param>
+	/// <returns>A list of metadata records or <see langword="null"/>.</returns>s
+	internal async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> GetRoleConnectionMetadataRecords(ulong id)
+	{
+		var route = $"{Endpoints.APPLICATIONS}/:id{Endpoints.ROLE_CONNECTIONS}{Endpoints.METADATA}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { id }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
+
+		var metadataRaw = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationRoleConnectionMetadata>>(res.Response).Select(xc => { xc.Discord = this.Discord; return xc; });
+
+		return new ReadOnlyCollection<DiscordApplicationRoleConnectionMetadata>(new List<DiscordApplicationRoleConnectionMetadata>(metadataRaw));
+	}
+
+	/// <summary>
+	/// Updates the applications role connection metadata records.
+	/// </summary>
+	/// <param name="id">The application id.</param>
+	/// <param name="metadata">A list of metadata objects. Max 5.</param>
+	internal async Task UpdateRoleConnectionMetadataRecords(ulong id, IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata)
+	{
+		// TODO: Implement update role connection metadata
 	}
 	#endregion
 

@@ -190,6 +190,7 @@ public abstract class BaseDiscordClient : IDisposable
 			TermsOfServiceUrl = tapp.TermsOfServiceUrl,
 			CustomInstallUrl = tapp.CustomInstallUrl,
 			InstallParams = tapp.InstallParams,
+			RoleConnectionsVerificationUrl = tapp.RoleConnectionsVerificationUrl,
 			Tags = (tapp.Tags ?? Enumerable.Empty<string>()).ToArray()
 		};
 
