@@ -39,6 +39,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+using static System.Net.Mime.MediaTypeNames;
+
 namespace DisCatSharp.Net;
 
 /// <summary>
@@ -3549,8 +3551,8 @@ public sealed class DiscordApiClient
 	/// <returns>A list of metadata records or <see langword="null"/>.</returns>s
 	internal async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> GetRoleConnectionMetadataRecords(ulong id)
 	{
-		var route = $"{Endpoints.APPLICATIONS}/:id{Endpoints.ROLE_CONNECTIONS}{Endpoints.METADATA}";
-		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { id }, out var path);
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ROLE_CONNECTIONS}{Endpoints.METADATA}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.GET, route, new { application_id = id }, out var path);
 
 		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
 		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.GET, route).ConfigureAwait(false);
@@ -3564,10 +3566,34 @@ public sealed class DiscordApiClient
 	/// Updates the applications role connection metadata records.
 	/// </summary>
 	/// <param name="id">The application id.</param>
-	/// <param name="metadata">A list of metadata objects. Max 5.</param>
-	internal async Task UpdateRoleConnectionMetadataRecords(ulong id, IEnumerable<DiscordApplicationRoleConnectionMetadata> metadata)
+	/// <param name="metadataObjects">A list of metadata objects. Max 5.</param>
+	/// <returns>A list of the created metadata records.</returns>s
+	internal async Task<IReadOnlyList<DiscordApplicationRoleConnectionMetadata>> UpdateRoleConnectionMetadataRecords(ulong id, IEnumerable<DiscordApplicationRoleConnectionMetadata> metadataObjects)
 	{
-		// TODO: Implement update role connection metadata
+		var pld = new List<RestApplicationRoleConnectionMetadataPayload>();
+		foreach (var metadataObject in metadataObjects)
+		{
+			pld.Add(new RestApplicationRoleConnectionMetadataPayload
+			{
+				Type = metadataObject.Type,
+				Key = metadataObject.Key,
+				Name = metadataObject.Name,
+				Description = metadataObject.Description,
+				NameLocalizations = metadataObject.NameLocalizations?.GetKeyValuePairs(),
+				DescriptionLocalizations = metadataObject.DescriptionLocalizations?.GetKeyValuePairs()
+			});
+		}
+
+		var route = $"{Endpoints.APPLICATIONS}/:application_id{Endpoints.ROLE_CONNECTIONS}{Endpoints.METADATA}";
+		var bucket = this.Rest.GetBucket(RestRequestMethod.PUT, route, new { application_id = id }, out var path);
+
+		var url = Utilities.GetApiUriFor(path, this.Discord.Configuration);
+		var res = await this.DoRequestAsync(this.Discord, bucket, url, RestRequestMethod.PUT, route, payload: DiscordJson.SerializeObject(pld));
+
+		var ret = JsonConvert.DeserializeObject<IEnumerable<DiscordApplicationRoleConnectionMetadata>>(res.Response);
+		foreach (var met in ret)
+			met.Discord = this.Discord;
+		return new ReadOnlyCollection<DiscordApplicationRoleConnectionMetadata>(new List<DiscordApplicationRoleConnectionMetadata>(ret));
 	}
 	#endregion
 
