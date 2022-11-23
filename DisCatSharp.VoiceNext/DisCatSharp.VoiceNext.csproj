@@ -37,7 +37,6 @@ Documentation: https://docs.discatsharp.tech/articles/modules/audio/voicenext/pr
 
   <ItemGroup>
     <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
-	<ProjectReference Include="..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj" />
   </ItemGroup>
 
   <ItemGroup>

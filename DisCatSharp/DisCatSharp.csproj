@@ -42,7 +42,6 @@ Written with love and for everyone.
 
   <ItemGroup>
     <ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
-	<ProjectReference Include="..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj" />
   </ItemGroup>
 
   <ItemGroup>

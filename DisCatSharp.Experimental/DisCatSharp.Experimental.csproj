@@ -31,7 +31,6 @@
   </ItemGroup>
 
 	<ItemGroup>
-	<ProjectReference Include="..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj" />
 	<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
 	  <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
   </ItemGroup>
