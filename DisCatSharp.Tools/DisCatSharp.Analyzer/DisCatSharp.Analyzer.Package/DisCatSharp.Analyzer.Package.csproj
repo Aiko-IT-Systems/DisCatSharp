@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>DisCatSharp.Analyzer</PackageId>
+    <PackageId>DisCatSharp.Analyzer.Roselyn</PackageId>
     <PackageVersion>4.5.0.0</PackageVersion>
     <Authors>AITSYS</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -48,10 +48,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" />
-	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.4.0" PrivateAssets="all" />
+	<ProjectReference Include="..\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.4.0" />
+	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.4.0" PrivateAssets="all" IncludeInPackage="false" />
+	<PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.4.0">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
 	<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
+
+  <!--<Target Name="AddNuGetDlls" BeforeTargets="_GetPackageFiles">
+	<JoinItems Left="@(ResolvedCompileFileDefinitions)" LeftKey="NuGetPackageId" LeftMetadata="*" Right="@(PackageReference)" RightKey="" RightMetadata="*" ItemSpecToUse="Left">
+	  <Output TaskParameter="JoinResult" ItemName="_PackagesToPack" />
+	</JoinItems>
+
+	<ItemGroup>
+	  <_PackagesToPack Remove="@(_PackagesToPack)" Condition="%(NuGetPackageId) == 'NETStandard.Library'" />
+	  <_PackagesToPack Remove="@(_PackagesToPack)" Condition="%(NuGetPackageId) == 'Microsoft.CodeAnalysis.CSharp.Workspaces'" />
+	</ItemGroup>
+
+	<Message Importance="High" Text="Adding DLLs from the following packages: @(_PackagesToPack->'%(NuGetPackageId)')" />
+
+	<ItemGroup>
+	  <None Include="@(_PackagesToPack)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+	  <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	</ItemGroup>
+  </Target>-->
 
   <ItemGroup>
     <None Update="tools\*.ps1" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="" />
