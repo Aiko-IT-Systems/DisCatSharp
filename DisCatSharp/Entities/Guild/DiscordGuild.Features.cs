@@ -664,9 +664,9 @@ public enum GuildFeaturesEnum
 	[DiscordUnreleased]
 	VoiceInThreadsEnabled,
 
-	[DiscordUnreleased]
+	[DiscordUnreleased("Feature related to automod.")]
 	RaidAlertsEnabled,
 
-	[Experimental("Was recently added to determine whether guilds uses the newer permission system for application commands.")]
+	[DiscordInExperiment("Was recently added to determine whether guilds uses the newer permission system for application commands.")]
 	UsesApplicationCommandsPermissionsV2,
 }

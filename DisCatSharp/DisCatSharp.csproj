@@ -24,7 +24,7 @@ Written with love and for everyone.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="5.1.0">
+    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="5.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
