@@ -143,7 +143,9 @@ public class DiscordWebhook : SnowflakeObject, IEquatable<DiscordWebhook>
 	/// </summary>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public async Task<DiscordMessage?> TryGetMessageAsync(ulong messageId)
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		try
 		{

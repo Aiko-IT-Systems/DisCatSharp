@@ -1393,9 +1393,21 @@ public sealed partial class DiscordClient
 		var channelId = rawPayload.ContainsKey("channel_id") ? (ulong?)rawPayload["channel_id"] : null;
 		var messageId = rawPayload.ContainsKey("message_id") ? (ulong?)rawPayload["message_id"] : null;
 		var alertMessageId = rawPayload.ContainsKey("alert_system_message_id") ? (ulong?)rawPayload["alert_system_message_id"] : null;
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		string? content = rawPayload.ContainsKey("content") ?(string?)rawPayload["content"] : null;
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		string? matchedKeyword = rawPayload.ContainsKey("matched_keyword") ? (string?)rawPayload["matched_keyword"] : null;
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		string? matchedContent = rawPayload.ContainsKey("matched_content") ? (string?)rawPayload["matched_content"] : null;
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 		var ea = new AutomodActionExecutedEventArgs(this.ServiceProvider)
 		{

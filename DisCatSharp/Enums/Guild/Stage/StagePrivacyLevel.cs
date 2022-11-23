@@ -22,12 +22,14 @@
 
 using System;
 
+using DisCatSharp.Attributes;
+
 namespace DisCatSharp.Enums;
 
 /// <summary>
 /// Represents the privacy level for a stage.
 /// </summary>
-[Obsolete("Not uses anymore")]
+[DiscordDeprecated("Discord removed the feature for stage discovery. Option is defaulting to GuildOnly."), Obsolete]
 public enum StagePrivacyLevel : int
 {
 	/// <summary>

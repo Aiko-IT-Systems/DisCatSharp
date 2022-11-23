@@ -20,8 +20,6 @@
 	  Experimental changes for DisCatSharp.
 	</Description>
 	<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6</PackageTags>
-	<!--<OutputType>Exe</OutputType>
-	<TargetFramework>net6</TargetFramework>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,10 +27,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="DisCatSharp.Attributes" Version="10.3.1" />
+    <!--<PackageReference Include="DisCatSharp.Attributes" Version="10.3.1" />-->
   </ItemGroup>
 
 	<ItemGroup>
+	<ProjectReference Include="..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj" />
 	<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
 	  <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
   </ItemGroup>

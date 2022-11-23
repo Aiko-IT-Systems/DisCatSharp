@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using DisCatSharp.Attributes;
 using DisCatSharp.Enums;
 
 namespace DisCatSharp.Entities;
@@ -47,10 +48,19 @@ public class GuildFeatures
 	{
 		this.Features = new List<GuildFeaturesEnum>();
 
+		if (guild.RawFeatures.Contains("APPLICATION_COMMAND_PERMISSIONS_V2")) this.Features.Add(GuildFeaturesEnum.UsesApplicationCommandsPermissionsV2);
+		if (guild.RawFeatures.Contains("RAID_ALERTS_ENABLED")) this.Features.Add(GuildFeaturesEnum.RaidAlertsEnabled);
+		if (guild.RawFeatures.Contains("CREATOR_MONETIZABLE_RESTRICTED")) this.Features.Add(GuildFeaturesEnum.CreatorMonetizableRestricted);
+		if (guild.RawFeatures.Contains("VOICE_IN_THREADS")) this.Features.Add(GuildFeaturesEnum.VoiceInThreadsEnabled);
+		if (guild.RawFeatures.Contains("CHANNEL_HIGHLIGHTS_DISABLED")) this.Features.Add(GuildFeaturesEnum.ChannelHighlightsDisabled);
+		if (guild.RawFeatures.Contains("CHANNEL_HIGHLIGHTS")) this.Features.Add(GuildFeaturesEnum.ChannelHighlights);
+		if (guild.RawFeatures.Contains("GUILD_ONBOARDING_EVER_ENABLED")) this.Features.Add(GuildFeaturesEnum.HadGuildOnBoardingEverEnabled);
+		if (guild.RawFeatures.Contains("BURST_REACTIONS")) this.Features.Add(GuildFeaturesEnum.CanUseBurstReactions);
+		if (guild.RawFeatures.Contains("CREATOR_STORE_PAGE")) this.Features.Add(GuildFeaturesEnum.CanUseCreaterStorePage);
+
 		if (guild.RawFeatures.Contains("ANIMATED_ICON")) this.Features.Add(GuildFeaturesEnum.CanSetAnimatedIcon);
 		if (guild.RawFeatures.Contains("ANIMATED_BANNER")) this.Features.Add(GuildFeaturesEnum.CanSetAnimatedBanner);
 		if (guild.RawFeatures.Contains("BANNER")) this.Features.Add(GuildFeaturesEnum.CanSetBanner);
-		if (guild.RawFeatures.Contains("CHANNEL_BANNER")) this.Features.Add(GuildFeaturesEnum.CanSetChannelBanner);
 		if (guild.RawFeatures.Contains("COMMUNITY")) this.Features.Add(GuildFeaturesEnum.HasCommunityEnabled);
 		if (!guild.RawFeatures.Contains("DISCOVERABLE_DISABLED") && guild.RawFeatures.Contains("DISCOVERABLE")) this.Features.Add(GuildFeaturesEnum.IsDiscoverable);
 		if (guild.RawFeatures.Contains("FEATUREABLE")) this.Features.Add(GuildFeaturesEnum.IsFeatureable);
@@ -67,7 +77,6 @@ public class GuildFeatures
 		if (guild.RawFeatures.Contains("TICKETED_EVENTS_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasTicketedEventsEnabled);
 		if (guild.RawFeatures.Contains("MONETIZATION_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasMonetizationEnabled);
 		if (guild.RawFeatures.Contains("MORE_STICKERS")) this.Features.Add(GuildFeaturesEnum.CanUploadMoreStickers);
-		if (guild.RawFeatures.Contains("PRIVATE_THREADS")) this.Features.Add(GuildFeaturesEnum.CanCreatePrivateThreads);
 		if (guild.RawFeatures.Contains("HUB")) this.Features.Add(GuildFeaturesEnum.IsHub);
 		if (guild.RawFeatures.Contains("THREADS_ENABLED_TESTING")) this.Features.Add(GuildFeaturesEnum.HasThreadTestingEnabled);
 		if (guild.RawFeatures.Contains("THREADS_ENABLED")) this.Features.Add(GuildFeaturesEnum.HasThreadsEnabled);
@@ -120,16 +129,42 @@ public class GuildFeatures
 		if (guild.RawFeatures.Contains("VOICE_CHANNEL_EFFECTS")) this.Features.Add(GuildFeaturesEnum.VoiceChannelEffects);
 		if (guild.RawFeatures.Contains("SOUNDBOARD")) this.Features.Add(GuildFeaturesEnum.Soundboard);
 
+#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("COMMERCE")) this.Features.Add(GuildFeaturesEnum.Commerce);
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("EXPOSED_TO_BOOSTING_TIERS_EXPERIMENT")) this.Features.Add(GuildFeaturesEnum.ExposedToBoostingTiersExperiment);
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("PUBLIC_DISABLED")) this.Features.Add(GuildFeaturesEnum.PublicDisabled);
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("PUBLIC")) this.Features.Add(GuildFeaturesEnum.Public);
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("SEVEN_DAY_THREAD_ARCHIVE")) this.Features.Add(GuildFeaturesEnum.SevenDayThreadArchive);
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("THREE_DAY_THREAD_ARCHIVE")) this.Features.Add(GuildFeaturesEnum.ThreeDayThreadArchive);
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("FEATURABLE")) this.Features.Add(GuildFeaturesEnum.Featurable);
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("FORCE_RELAY")) this.Features.Add(GuildFeaturesEnum.ForceRelay);
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("LURKABLE")) this.Features.Add(GuildFeaturesEnum.Lurkable);
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("MEMBER_LIST_DISABLED")) this.Features.Add(GuildFeaturesEnum.MemberListDisabled);
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
+		if (guild.RawFeatures.Contains("CHANNEL_BANNER")) this.Features.Add(GuildFeaturesEnum.CanSetChannelBanner);
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
+		if (guild.RawFeatures.Contains("PRIVATE_THREADS")) this.Features.Add(GuildFeaturesEnum.CanCreatePrivateThreads);
+#pragma warning restore CS0612 // Type or member is obsolete
 	}
 
 	/// <summary>
@@ -281,20 +316,21 @@ public enum GuildFeaturesEnum
 	/// Guild has access to the three day archive time for threads.
 	/// Needs Premium Tier 1 (<see cref="PremiumTier.TierOne"/>).
 	/// </summary>
-	[Obsolete("Auto archive duration isn't locked to boosts anymore.")]
+	[DiscordDeprecated("Auto archive duration isn't locked to boosts anymore."), Obsolete]
 	CanSetThreadArchiveDurationThreeDays,
 
 	/// <summary>
 	/// Guild has access to the seven day archive time for threads.
 	/// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
 	/// </summary>
-	[Obsolete("Auto archive duration isn't locked to boosts anymore.")]
+	[DiscordDeprecated("Auto archive duration isn't locked to boosts anymore."), Obsolete]
 	CanSetThreadArchiveDurationSevenDays,
 
 	/// <summary>
 	/// Guild has access to create private threads.
 	/// Needs Premium Tier 2 (<see cref="PremiumTier.TierTwo"/>).
 	/// </summary>
+	[DiscordDeprecated("Private threads aren't bound to the server boost level anymore and can be used by everyone."), Obsolete]
 	CanCreatePrivateThreads,
 
 	/// <summary>
@@ -373,7 +409,7 @@ public enum GuildFeaturesEnum
 	/// Guild can set an animated banner.
 	/// Needs Premium Tier 3 (<see cref="PremiumTier.TierThree"/>).
 	/// </summary>
-	[Obsolete("Feature was removed")]
+	[DiscordDeprecated("Feature was removed"), Obsolete]
 	CanSetChannelBanner,
 
 	/// <summary>
@@ -574,60 +610,87 @@ public enum GuildFeaturesEnum
 	/// <summary>
 	/// Ability to create and use store channels.
 	/// </summary>
-	[Obsolete("This feature is depcreated")]
+	[DiscordDeprecated("This feature is depcreated"), Obsolete]
 	Commerce,
 
 	/// <summary>
 	/// Currently unknown.
 	/// </summary>
-	[Obsolete("This feature is depcreated")]
+	[DiscordDeprecated("This feature is depcreated"), Obsolete]
 	ExposedToBoostingTiersExperiment,
 
 	/// <summary>
 	/// Deprecated in favor of Community.
 	/// </summary>
-	[Obsolete("This feature is depcreated")]
+	[DiscordDeprecated("This feature is depcreated"), Obsolete]
 	PublicDisabled,
 
 	/// <summary>
 	/// Deprecated in favor of Community.
 	/// </summary>
-	[Obsolete("This feature is depcreated")]
+	[DiscordDeprecated("This feature is depcreated"), Obsolete]
 	Public,
 
 	/// <summary>
 	/// The guild can use the seven-day archive time for threads.
 	/// </summary>
-	[Obsolete("This feature is depcreated")]
+	[DiscordDeprecated("This feature is depcreated"), Obsolete]
 	SevenDayThreadArchive,
 
 	/// <summary>
 	/// The guild can use the three-day archive time for threads.
 	/// </summary>
-	[Obsolete("This feature is depcreated")]
+	[DiscordDeprecated("This feature is depcreated"), Obsolete]
 	ThreeDayThreadArchive,
 
 	/// <summary>
 	/// Previously used to control which servers were displayed under the "Featured" category in Discovery.
 	/// </summary>
-	[Obsolete("This feature is depcreated")]
+	[DiscordDeprecated("This feature is depcreated"), Obsolete]
 	Featurable,
 
 	/// <summary>
 	/// Shards connections to the guild to different nodes that relay information between each other.
 	/// </summary>
-	[Obsolete("This feature is depcreated")]
+	[DiscordDeprecated("This feature is depcreated"), Obsolete]
 	ForceRelay,
 
 	/// <summary>
 	/// Currently unknown.
 	/// </summary>
-	[Obsolete("This feature is depcreated")]
+	[DiscordDeprecated("This feature is depcreated"), Obsolete]
 	Lurkable,
 
 	/// <summary>
 	/// Created for the Fortnite server blackout event on Oct 13, 2019, when viewing the member list it would show "There's nothing to see here.".
 	/// </summary>
-	[Obsolete("This feature is depcreated")]
+	[DiscordDeprecated("This feature is depcreated"), Obsolete]
 	MemberListDisabled,
+
+	[DiscordInExperiment]
+	CanUseCreaterStorePage,
+
+	[DiscordInExperiment]
+	CanUseBurstReactions,
+
+	[DiscordInExperiment]
+	HadGuildOnBoardingEverEnabled,
+
+	[DiscordInExperiment]
+	ChannelHighlightsDisabled,
+
+	[DiscordInExperiment]
+	ChannelHighlights,
+
+	[DiscordInExperiment]
+	CreatorMonetizableRestricted,
+
+	[DiscordUnreleased]
+	VoiceInThreadsEnabled,
+
+	[DiscordUnreleased]
+	RaidAlertsEnabled,
+
+	[Experimental("Was recently added to determine whether guilds uses the newer permission system for application commands.")]
+	UsesApplicationCommandsPermissionsV2,
 }

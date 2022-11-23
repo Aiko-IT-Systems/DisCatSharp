@@ -1773,7 +1773,9 @@ public sealed class DiscordApiClient
 	/// <param name="qualityMode">The quality mode.</param>
 	/// <param name="defaultAutoArchiveDuration">The default auto archive duration.</param>
 	/// <param name="reason">The reason.</param>
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 	internal async Task<DiscordChannel> CreateGuildChannelAsync(ulong guildId, string name, ChannelType type, ulong? parent, Optional<string> topic, int? bitrate, int? userLimit, IEnumerable<DiscordOverwriteBuilder> overwrites, bool? nsfw, Optional<int?> perUserRateLimit, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? defaultAutoArchiveDuration, Optional<ChannelFlags?> flags, string reason)
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 	{
 		var restOverwrites = new List<DiscordRestOverwrite>();
 		if (overwrites != null)
@@ -1830,8 +1832,12 @@ public sealed class DiscordApiClient
 	internal async Task<DiscordChannel> CreateForumChannelAsync(ulong guildId, string name, ulong? parent,
 		Optional<string> topic, Optional<string> template,
 		bool? nsfw, Optional<ForumReactionEmoji> defaultReactionEmoji,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit, Optional<ForumPostSortOrder> defaultSortOrder,
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 		ThreadAutoArchiveDuration? defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
@@ -1892,7 +1898,9 @@ public sealed class DiscordApiClient
 	/// <param name="type">The type.</param>
 	/// <param name="permissionOverwrites">The permission overwrites.</param>
 	/// <param name="reason">The reason.</param>
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 	internal Task ModifyChannelAsync(ulong channelId, string name, int? position, Optional<string> topic, bool? nsfw, Optional<ulong?> parent, int? bitrate, int? userLimit, Optional<int?> perUserRateLimit, Optional<string> rtcRegion, VideoQualityMode? qualityMode, ThreadAutoArchiveDuration? autoArchiveDuration, Optional<ChannelType> type, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 	{
 		List<DiscordRestOverwrite> restoverwrites = null;
 		if (permissionOverwrites != null)
@@ -1933,7 +1941,9 @@ public sealed class DiscordApiClient
 
 	internal async Task<DiscordChannel> ModifyForumChannelAsync(ulong channelId, string name, int? position,
 		Optional<string> topic, Optional<string> template, bool? nsfw,
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		Optional<ulong?> parent, Optional<List<ForumPostTag>?> availableTags, Optional<ForumReactionEmoji> defaultReactionEmoji,
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		Optional<int?> perUserRateLimit, Optional<int?> postCreateUserRateLimit, Optional<ForumPostSortOrder?> defaultSortOrder,
 		Optional<ThreadAutoArchiveDuration?> defaultAutoArchiveDuration, IEnumerable<DiscordOverwriteBuilder> permissionOverwrites, Optional<ChannelFlags?> flags, string reason)
 	{
@@ -2047,7 +2057,9 @@ public sealed class DiscordApiClient
 	/// <param name="mentionReply">If true, mention reply.</param>
 	/// <param name="failOnInvalidReply">If true, fail on invalid reply.</param>
 	/// <param name="components">The components.</param>
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	internal async Task<DiscordMessage> CreateMessageAsync(ulong channelId, string content, IEnumerable<DiscordEmbed> embeds, DiscordSticker sticker, ulong? replyMessageId, bool mentionReply, bool failOnInvalidReply, ReadOnlyCollection<DiscordActionRowComponent>? components = null)
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		if (content != null && content.Length > 2000)
 			throw new ArgumentException("Message content length cannot exceed 2000 characters.");
@@ -2204,7 +2216,11 @@ public sealed class DiscordApiClient
 	/// <param name="sendStartNotification">Whether everyone should be notified about the stage.</param>
 	/// <param name="privacyLevel">The privacy_level.</param>
 	/// <param name="reason">The reason.</param>
+#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
 	internal async Task<DiscordStageInstance> CreateStageInstanceAsync(ulong channelId, string topic, bool sendStartNotification, StagePrivacyLevel privacyLevel = StagePrivacyLevel.GuildOnly, string reason = null)
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning restore CS0612 // Type or member is obsolete
 	{
 		var pld = new RestStageInstanceCreatePayload
 		{
@@ -2252,7 +2268,9 @@ public sealed class DiscordApiClient
 	/// <param name="topic">The topic.</param>
 	/// <param name="privacyLevel">The privacy_level.</param>
 	/// <param name="reason">The reason.</param>
+#pragma warning disable CS0612 // Type or member is obsolete
 	internal Task ModifyStageInstanceAsync(ulong channelId, Optional<string> topic, Optional<StagePrivacyLevel> privacyLevel, string reason)
+#pragma warning restore CS0612 // Type or member is obsolete
 	{
 		var pld = new RestStageInstanceModifyPayload
 		{
@@ -4305,7 +4323,13 @@ public sealed class DiscordApiClient
 	/// <param name="appliedTags">The tags to add on creation.</param>
 	/// <param name="reason">The reason.</param>
 	internal async Task<DiscordThreadChannel> CreateThreadAsync(ulong channelId, ulong? messageId, string name,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 		ThreadAutoArchiveDuration? autoArchiveDuration, ChannelType? type, int? rateLimitPerUser, IEnumerable<ForumPostTag>? appliedTags = null, DiscordMessageBuilder builder = null, bool isForum = false, string reason = null)
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 	{
 		var pld = new RestThreadChannelCreatePayload
 		{
@@ -5114,7 +5138,9 @@ public sealed class DiscordApiClient
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	internal async Task<DiscordApplicationCommand> EditGlobalApplicationCommandAsync(ulong applicationId, ulong commandId,
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		Optional<string> name, Optional<string> description, Optional<List<DiscordApplicationCommandOption>?> options,
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
 		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
 	{
@@ -5287,7 +5313,9 @@ public sealed class DiscordApiClient
 	/// <param name="dmPermission">The dm permission.</param>
 	/// <param name="isNsfw">Whether this command is marked as NSFW.</param>
 	internal async Task<DiscordApplicationCommand> EditGuildApplicationCommandAsync(ulong applicationId, ulong guildId, ulong commandId,
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		Optional<string> name, Optional<string> description, Optional<List<DiscordApplicationCommandOption>?> options,
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		Optional<DiscordApplicationCommandLocalization> nameLocalization, Optional<DiscordApplicationCommandLocalization> descriptionLocalization,
 		Optional<Permissions?> defaultMemberPermission, Optional<bool> dmPermission, Optional<bool> isNsfw)
 	{

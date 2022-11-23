@@ -228,11 +228,14 @@ public abstract class BaseDiscordClient : IDisposable
 		return app;
 	}
 
-	/// <summary>
+	
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+/// <summary>
 	/// Gets a list of voice regions.
 	/// </summary>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<IReadOnlyList<DiscordVoiceRegion>> ListVoiceRegionsAsync()
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.ApiClient.ListVoiceRegionsAsync();
 
 	/// <summary>

@@ -129,7 +129,9 @@ public class DiscordThreadChannel : DiscordChannel
 		var canContinue = !mdl.AutoArchiveDuration.HasValue || !mdl.AutoArchiveDuration.Value.HasValue || Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.AutoArchiveDuration.Value.Value);
 		if (mdl.Invitable.HasValue)
 		{
+#pragma warning disable CS0612 // Type or member is obsolete
 			canContinue = this.Guild.Features.HasFeature(GuildFeaturesEnum.CanCreatePrivateThreads);
+#pragma warning restore CS0612 // Type or member is obsolete
 		}
 		return this.Parent.Type == ChannelType.Forum && mdl.AppliedTags.HasValue && mdl.AppliedTags.Value.Count() > 5
 			? throw new NotSupportedException("Cannot have more than 5 applied tags.")
@@ -230,7 +232,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <param name="memberId">The id of the member to get.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public async Task<DiscordThreadChannelMember?> TryGetMemberAsync(ulong memberId)
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		try
 		{
@@ -258,7 +262,9 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <param name="member">The member to get.</param>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public async Task<DiscordThreadChannelMember?> TryGetMemberAsync(DiscordMember member)
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		try
 		{

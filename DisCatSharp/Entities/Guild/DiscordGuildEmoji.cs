@@ -50,7 +50,13 @@ public sealed class DiscordGuildEmoji : DiscordEmoji
 	internal DiscordGuildEmoji()
 	{ }
 
-	/// <summary>
+	
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+/// <summary>
 	/// Modifies this emoji.
 	/// </summary>
 	/// <param name="name">New name for this emoji.</param>
@@ -62,9 +68,20 @@ public sealed class DiscordGuildEmoji : DiscordEmoji
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordGuildEmoji> ModifyAsync(string name, IEnumerable<DiscordRole> roles = null, string reason = null)
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Guild.ModifyEmojiAsync(this, name, roles, reason);
 
-	/// <summary>
+	
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+/// <summary>
 	/// Deletes this emoji.
 	/// </summary>
 	/// <param name="reason">Reason for audit log.</param>
@@ -73,5 +90,10 @@ public sealed class DiscordGuildEmoji : DiscordEmoji
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task DeleteAsync(string reason = null)
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Guild.DeleteEmojiAsync(this, reason);
 }

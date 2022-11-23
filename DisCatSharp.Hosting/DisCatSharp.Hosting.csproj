@@ -20,9 +20,14 @@
     <ItemGroup>
       <ProjectReference Include="..\DisCatSharp.Configuration\DisCatSharp.Configuration.csproj" />
       <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+	  <ProjectReference Include="..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="4.8.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />

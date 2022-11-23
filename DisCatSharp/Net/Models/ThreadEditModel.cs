@@ -65,7 +65,9 @@ public class ThreadEditModel : BaseEditModel
 	/// <summary>
 	/// Sets the thread's applied tags.
 	/// </summary>
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public Optional<IEnumerable<ForumPostTag>?> AppliedTags { internal get; set; }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ThreadEditModel"/> class.
