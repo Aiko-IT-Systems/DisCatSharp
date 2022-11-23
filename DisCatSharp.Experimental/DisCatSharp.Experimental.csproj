@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Version.targets" />
+  <Import Project="../DisCatSharp.targets" />
+  <Import Project="../Package.targets" />
+  <Import Project="../NuGet.targets" />
+  <Import Project="../Library.targets" />
+
+  <PropertyGroup>
+	<AssemblyName>DisCatSharp.Experimental</AssemblyName>
+	<RootNamespace>DisCatSharp.Experimental</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<PackageId>DisCatSharp.Experimental</PackageId>
+	<Description>
+	  DisCatSharp.Experimental
+
+	  Experimental changes for DisCatSharp.
+	</Description>
+	<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6</PackageTags>
+	<!--<OutputType>Exe</OutputType>
+	<TargetFramework>net6</TargetFramework>-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="4.8.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="DisCatSharp.Attributes" Version="10.3.1" />
+  </ItemGroup>
+
+	<ItemGroup>
+	<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
+	  <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+  </ItemGroup>
+
+</Project>

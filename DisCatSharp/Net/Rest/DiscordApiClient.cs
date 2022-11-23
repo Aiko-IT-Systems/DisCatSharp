@@ -4000,7 +4000,7 @@ public sealed class DiscordApiClient
 				attachments.Add(att);
 				fileId++;
 			}
-			if (builder.Attachments != null && builder.Attachments?.Count() > 0)
+			if (builder.Attachments != null && builder.Attachments?.Count > 0)
 				attachments.AddRange(builder.Attachments);
 
 			pld.Attachments = attachments;

@@ -198,7 +198,9 @@
 					"changelogs/**.yml",
 					"changelogs/**.md",
 					"natives/**.yml",
-					"natives/**.md"
+					"natives/**.md",
+					"vs/**.yml",
+					"vs/**.md"
 				],
 				"exclude":[
 					"**/bin/**",

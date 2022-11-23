@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Version.targets" />
+  <Import Project="../DisCatSharp.targets" />
+  <Import Project="../Package.targets" />
+  <Import Project="../NuGet.targets" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<OutputType>Library</OutputType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<AssemblyName>DisCatSharp.Attributes</AssemblyName>
+	<RootNamespace>DisCatSharp.Attributes</RootNamespace>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+	<PackageId>DisCatSharp.Attributes</PackageId>
+	<Description>
+	  DisCatSharp.Attributes
+
+	  Special Attributes for DisCatSharp.
+	</Description>
+	<PackageTags>DisCatSharp</PackageTags>
+  </PropertyGroup>
+</Project>
