@@ -61,29 +61,110 @@ namespace DisCatSharp.Analyzer {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This is considered experimental and shouldn&apos;t be used in production..
+        ///   Looks up a localized string similar to Discord deprecated this..
         /// </summary>
-        internal static string AnalyzerDescription {
+        internal static string AnalyzerDescriptionDiscordDeprecated {
             get {
-                return ResourceManager.GetString("AnalyzerDescription", resourceCulture);
+                return ResourceManager.GetString("AnalyzerDescriptionDiscordDeprecated", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} &apos;{1}&apos; is considered experimental: {2}.
+        ///   Looks up a localized string similar to Discord has released it as experiment. Do not use in production..
         /// </summary>
-        internal static string AnalyzerMessageFormat {
+        internal static string AnalyzerDescriptionDiscordInExperiment {
             get {
-                return ResourceManager.GetString("AnalyzerMessageFormat", resourceCulture);
+                return ResourceManager.GetString("AnalyzerDescriptionDiscordInExperiment", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Experimental.
+        ///   Looks up a localized string similar to Discord hasn&apos;t released this yet. Do not use in production.
         /// </summary>
-        internal static string AnalyzerTitle {
+        internal static string AnalyzerDescriptionDiscordUnreleased {
             get {
-                return ResourceManager.GetString("AnalyzerTitle", resourceCulture);
+                return ResourceManager.GetString("AnalyzerDescriptionDiscordUnreleased", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DisCatSharp considers this as experimental. Do not use in production..
+        /// </summary>
+        internal static string AnalyzerDescriptionExperimental {
+            get {
+                return ResourceManager.GetString("AnalyzerDescriptionExperimental", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &apos;{1}&apos; is deprecated: {2}.
+        /// </summary>
+        internal static string AnalyzerMessageFormatDiscordDeprecated {
+            get {
+                return ResourceManager.GetString("AnalyzerMessageFormatDiscordDeprecated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &apos;{1}&apos; is in experiment: {2}.
+        /// </summary>
+        internal static string AnalyzerMessageFormatDiscordInExperiment {
+            get {
+                return ResourceManager.GetString("AnalyzerMessageFormatDiscordInExperiment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &apos;{1}&apos; isn&apos;t released yet: {2}.
+        /// </summary>
+        internal static string AnalyzerMessageFormatDiscordUnreleased {
+            get {
+                return ResourceManager.GetString("AnalyzerMessageFormatDiscordUnreleased", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &apos;{1}&apos; is experimental: {2}.
+        /// </summary>
+        internal static string AnalyzerMessageFormatExperimental {
+            get {
+                return ResourceManager.GetString("AnalyzerMessageFormatExperimental", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [Discord] Deprecated.
+        /// </summary>
+        internal static string AnalyzerTitleDiscordDeprecated {
+            get {
+                return ResourceManager.GetString("AnalyzerTitleDiscordDeprecated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [Discord] InExperiment.
+        /// </summary>
+        internal static string AnalyzerTitleDiscordInExperiment {
+            get {
+                return ResourceManager.GetString("AnalyzerTitleDiscordInExperiment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [Discord] Unreleased.
+        /// </summary>
+        internal static string AnalyzerTitleDiscordUnreleased {
+            get {
+                return ResourceManager.GetString("AnalyzerTitleDiscordUnreleased", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [DCS] Experimental.
+        /// </summary>
+        internal static string AnalyzerTitleExperimental {
+            get {
+                return ResourceManager.GetString("AnalyzerTitleExperimental", resourceCulture);
             }
         }
     }

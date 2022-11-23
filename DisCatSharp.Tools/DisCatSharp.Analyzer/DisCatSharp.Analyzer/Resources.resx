@@ -117,16 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AnalyzerDescription" xml:space="preserve">
-    <value>This is considered experimental and shouldn't be used in production.</value>
-    <comment>An optional longer localizable description of the diagnostic.</comment>
+  <data name="AnalyzerDescriptionDiscordDeprecated" xml:space="preserve">
+    <value>Discord deprecated this.</value>
   </data>
-  <data name="AnalyzerMessageFormat" xml:space="preserve">
-    <value>{0} '{1}' is considered experimental: {2}</value>
-    <comment>The format-able message the diagnostic displays.</comment>
+  <data name="AnalyzerDescriptionDiscordInExperiment" xml:space="preserve">
+    <value>Discord has released it as experiment. Do not use in production.</value>
   </data>
-  <data name="AnalyzerTitle" xml:space="preserve">
-    <value>Experimental</value>
-    <comment>The title of the diagnostic.</comment>
+  <data name="AnalyzerDescriptionDiscordUnreleased" xml:space="preserve">
+    <value>Discord hasn't released this yet. Do not use in production</value>
+  </data>
+  <data name="AnalyzerDescriptionExperimental" xml:space="preserve">
+    <value>DisCatSharp considers this as experimental. Do not use in production.</value>
+  </data>
+  <data name="AnalyzerMessageFormatDiscordDeprecated" xml:space="preserve">
+    <value>{0} '{1}' is deprecated: {2}</value>
+  </data>
+  <data name="AnalyzerMessageFormatDiscordInExperiment" xml:space="preserve">
+    <value>{0} '{1}' is in experiment: {2}</value>
+  </data>
+  <data name="AnalyzerMessageFormatDiscordUnreleased" xml:space="preserve">
+    <value>{0} '{1}' isn't released yet: {2}</value>
+  </data>
+  <data name="AnalyzerMessageFormatExperimental" xml:space="preserve">
+    <value>{0} '{1}' is experimental: {2}</value>
+  </data>
+  <data name="AnalyzerTitleDiscordDeprecated" xml:space="preserve">
+    <value>[Discord] Deprecated</value>
+  </data>
+  <data name="AnalyzerTitleDiscordInExperiment" xml:space="preserve">
+    <value>[Discord] InExperiment</value>
+  </data>
+  <data name="AnalyzerTitleDiscordUnreleased" xml:space="preserve">
+    <value>[Discord] Unreleased</value>
+  </data>
+  <data name="AnalyzerTitleExperimental" xml:space="preserve">
+    <value>[DCS] Experimental</value>
   </data>
 </root>

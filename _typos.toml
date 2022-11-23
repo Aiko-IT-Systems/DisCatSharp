@@ -17,6 +17,7 @@ desktopbsd = "desktopbsd"
 deffered = "deffered"
 Rythm = "Rythm"
 ist = "ist"
+Monetizable = "Monetizable"
 
 [files]
 ignore-vcs = true

@@ -56,7 +56,7 @@ public class GuildFeatures
 		if (guild.RawFeatures.Contains("CHANNEL_HIGHLIGHTS")) this.Features.Add(GuildFeaturesEnum.ChannelHighlights);
 		if (guild.RawFeatures.Contains("GUILD_ONBOARDING_EVER_ENABLED")) this.Features.Add(GuildFeaturesEnum.HadGuildOnBoardingEverEnabled);
 		if (guild.RawFeatures.Contains("BURST_REACTIONS")) this.Features.Add(GuildFeaturesEnum.CanUseBurstReactions);
-		if (guild.RawFeatures.Contains("CREATOR_STORE_PAGE")) this.Features.Add(GuildFeaturesEnum.CanUseCreaterStorePage);
+		if (guild.RawFeatures.Contains("CREATOR_STORE_PAGE")) this.Features.Add(GuildFeaturesEnum.CanUseCreatorStorePage);
 
 		if (guild.RawFeatures.Contains("ANIMATED_ICON")) this.Features.Add(GuildFeaturesEnum.CanSetAnimatedIcon);
 		if (guild.RawFeatures.Contains("ANIMATED_BANNER")) this.Features.Add(GuildFeaturesEnum.CanSetAnimatedBanner);
@@ -668,7 +668,7 @@ public enum GuildFeaturesEnum
 	MemberListDisabled,
 
 	[DiscordInExperiment]
-	CanUseCreaterStorePage,
+	CanUseCreatorStorePage,
 
 	[DiscordInExperiment]
 	CanUseBurstReactions,
