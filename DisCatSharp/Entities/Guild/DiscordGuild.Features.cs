@@ -129,42 +129,18 @@ public class GuildFeatures
 		if (guild.RawFeatures.Contains("VOICE_CHANNEL_EFFECTS")) this.Features.Add(GuildFeaturesEnum.VoiceChannelEffects);
 		if (guild.RawFeatures.Contains("SOUNDBOARD")) this.Features.Add(GuildFeaturesEnum.Soundboard);
 
-#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("COMMERCE")) this.Features.Add(GuildFeaturesEnum.Commerce);
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("EXPOSED_TO_BOOSTING_TIERS_EXPERIMENT")) this.Features.Add(GuildFeaturesEnum.ExposedToBoostingTiersExperiment);
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("PUBLIC_DISABLED")) this.Features.Add(GuildFeaturesEnum.PublicDisabled);
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("PUBLIC")) this.Features.Add(GuildFeaturesEnum.Public);
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("SEVEN_DAY_THREAD_ARCHIVE")) this.Features.Add(GuildFeaturesEnum.SevenDayThreadArchive);
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("THREE_DAY_THREAD_ARCHIVE")) this.Features.Add(GuildFeaturesEnum.ThreeDayThreadArchive);
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("FEATURABLE")) this.Features.Add(GuildFeaturesEnum.Featurable);
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("FORCE_RELAY")) this.Features.Add(GuildFeaturesEnum.ForceRelay);
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("LURKABLE")) this.Features.Add(GuildFeaturesEnum.Lurkable);
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("MEMBER_LIST_DISABLED")) this.Features.Add(GuildFeaturesEnum.MemberListDisabled);
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("CHANNEL_BANNER")) this.Features.Add(GuildFeaturesEnum.CanSetChannelBanner);
-#pragma warning restore CS0612 // Type or member is obsolete
-#pragma warning disable CS0612 // Type or member is obsolete
 		if (guild.RawFeatures.Contains("PRIVATE_THREADS")) this.Features.Add(GuildFeaturesEnum.CanCreatePrivateThreads);
-#pragma warning restore CS0612 // Type or member is obsolete
 	}
 
 	/// <summary>
