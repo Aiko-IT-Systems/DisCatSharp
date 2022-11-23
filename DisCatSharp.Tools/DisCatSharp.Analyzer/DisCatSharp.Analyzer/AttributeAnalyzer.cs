@@ -24,11 +24,9 @@ using DisCatSharp.Attributes;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -43,15 +41,15 @@ namespace DisCatSharp.Analyzer
 		private static readonly LocalizableString TitleExperimental = new LocalizableResourceString(nameof(Resources.AnalyzerTitleExperimental), Resources.ResourceManager, typeof(Resources));
 		private static readonly LocalizableString MessageFormatExperimental = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatExperimental), Resources.ResourceManager, typeof(Resources));
 		private static readonly LocalizableString DescriptionExperimental = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionExperimental), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString TitleDiscordInExperiment = new LocalizableResourceString(nameof(Resources.AnalyzerTitleExperimental), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString MessageFormatDiscordInExperiment = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatExperimental), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString DescriptionDiscordInExperiment = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionExperimental), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString TitleDiscordDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerTitleExperimental), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString MessageFormatDiscordDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatExperimental), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString DescriptionDiscordDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionExperimental), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString TitleDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerTitleExperimental), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString MessageFormatDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatExperimental), Resources.ResourceManager, typeof(Resources));
-		private static readonly LocalizableString DescriptionDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionExperimental), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString TitleDiscordInExperiment = new LocalizableResourceString(nameof(Resources.AnalyzerTitleDiscordInExperiment), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString MessageFormatDiscordInExperiment = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatDiscordInExperiment), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString DescriptionDiscordInExperiment = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDiscordInExperiment), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString TitleDiscordDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerTitleDiscordDeprecated), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString MessageFormatDiscordDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDiscordDeprecated), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString DescriptionDiscordDeprecated = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDiscordDeprecated), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString TitleDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerTitleDiscordUnreleased), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString MessageFormatDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDiscordUnreleased), Resources.ResourceManager, typeof(Resources));
+		private static readonly LocalizableString DescriptionDiscordUnreleased = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionDiscordUnreleased), Resources.ResourceManager, typeof(Resources));
 
 		private static readonly DiagnosticDescriptor ExperimentalRule = new DiagnosticDescriptor(DiagnosticIdPrefix + "0001", TitleExperimental, MessageFormatExperimental, Category, DiagnosticSeverity.Warning, true, DescriptionExperimental, "https://docs.discatsharp.tech/vs/analyzer/dcs/0001.html");
 		private static readonly DiagnosticDescriptor DiscordInExperimentRule = new DiagnosticDescriptor(DiagnosticIdPrefix + "0101", TitleDiscordInExperiment, MessageFormatDiscordInExperiment, Category, DiagnosticSeverity.Warning, true, DescriptionDiscordInExperiment, "https://docs.discatsharp.tech/vs/analyzer/dcs/0101.html");

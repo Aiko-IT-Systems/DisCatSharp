@@ -52,3 +52,14 @@ Rule ID | Category | Severity | Notes
 DCS0101 | Information | Warning | DiscordInExperiment Attribute Analyzer
 DCS0102 | Information | Warning | DiscordDeprecated Attribute Analyzer
 DCS0103 | Information | Warning | DiscordUnreleased Attribute Analyzer
+
+
+## Release 5.1
+
+### Changed Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|--------------------
+DCS0101 | Information | Warning | DiscordInExperiment Attribute Analyzer
+DCS0102 | Information | Warning | DiscordDeprecated Attribute Analyzer
+DCS0103 | Information | Warning | DiscordUnreleased Attribute Analyzer

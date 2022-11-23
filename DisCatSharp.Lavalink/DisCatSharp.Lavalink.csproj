@@ -31,7 +31,7 @@ Documentation: https://docs.discatsharp.tech/articles/modules/audio/lavalink/set
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="4.8.0">
+    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="5.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
