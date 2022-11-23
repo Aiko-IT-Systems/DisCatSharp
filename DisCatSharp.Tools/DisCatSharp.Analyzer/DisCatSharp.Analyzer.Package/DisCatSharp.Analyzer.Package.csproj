@@ -9,7 +9,8 @@
 
   <PropertyGroup>
     <PackageId>DisCatSharp.Analyzer.Roselyn</PackageId>
-    <PackageVersion>4.5.0.0</PackageVersion>
+	<Version>4.8.0</Version>
+    <PackageVersion>4.8.0</PackageVersion>
     <Authors>AITSYS</Authors>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>DisCatSharp Analyzer</Description>
@@ -19,9 +20,9 @@
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
 
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);AddNuGetDlls;_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
 
-    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 
     <Title>DisCatSharp Analyzer</Title>
 
@@ -41,24 +42,23 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
+	<None Include="README.md">
+	  <Pack>True</Pack>
+	  <PackagePath>\</PackagePath>
+	</None>
   </ItemGroup>
-
+  <PropertyGroup>
+	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
   <ItemGroup>
 	<ProjectReference Include="..\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="4.4.0" />
-	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.4.0" PrivateAssets="all" IncludeInPackage="false" />
-	<PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.4.0">
-	  <PrivateAssets>all</PrivateAssets>
-	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	</PackageReference>
+	<PackageReference Include="DisCatSharp.Attributes" Version="10.3.1" PrivateAssets="all" GeneratePathProperty="true" />
+	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.4.0" PrivateAssets="all" />
 	<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
   </ItemGroup>
 
-  <!--<Target Name="AddNuGetDlls" BeforeTargets="_GetPackageFiles">
+  <Target Name="AddNuGetDlls" BeforeTargets="_GetPackageFiles">
 	<JoinItems Left="@(ResolvedCompileFileDefinitions)" LeftKey="NuGetPackageId" LeftMetadata="*" Right="@(PackageReference)" RightKey="" RightMetadata="*" ItemSpecToUse="Left">
 	  <Output TaskParameter="JoinResult" ItemName="_PackagesToPack" />
 	</JoinItems>
@@ -73,9 +73,9 @@
 	<ItemGroup>
 	  <None Include="@(_PackagesToPack)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 
-	  <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	  <!--<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />-->
 	</ItemGroup>
-  </Target>-->
+  </Target>
 
   <ItemGroup>
     <None Update="tools\*.ps1" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="" />

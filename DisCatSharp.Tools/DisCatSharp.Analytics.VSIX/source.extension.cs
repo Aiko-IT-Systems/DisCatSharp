@@ -11,7 +11,7 @@ namespace DisCatSharp.Analyzer
         public const string Name = "DisCatSharp Analyzer";
         public const string Description = @"DisCatSharp Analyzer Extension for Development";
         public const string Language = "en-US";
-        public const string Version = "4.5";
+        public const string Version = "4.7";
         public const string Author = "AITSYS";
         public const string Tags = "DisCatSharp,Analyzer";
     }
