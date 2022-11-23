@@ -40,17 +40,25 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 	public string Name;
 
 	[JsonProperty("icon")]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public string? IconHash;
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	[JsonIgnore]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public string? Icon
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		=> this.IconHash != null ? $"https://cdn.discordapp.com{Endpoints.APP_ICONS}/{this.Id}/{this.IconHash}.png" : null;
 
 	[JsonProperty("description")]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public string? Description;
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	[JsonProperty("summary")]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public string? Summary;
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	[JsonProperty("type")]
 	public string Type;
@@ -68,10 +76,14 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 	public bool RequiresCodeGrant;
 
 	[JsonProperty("terms_of_service_url")]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public string? TermsOfServiceUrl;
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	[JsonProperty("privacy_policy_url")]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public string? PrivacyPolicyUrl;
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	[JsonProperty("install_params")]
 	public DiscordApplicationInstallParams InstallParams;
@@ -83,7 +95,9 @@ public sealed class DiscordRpcApplication : SnowflakeObject, IEquatable<DiscordR
 	public ApplicationFlags Flags;
 
 	[JsonProperty("tags")]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public List<string>? Tags;
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordRpcApplication"/> class.

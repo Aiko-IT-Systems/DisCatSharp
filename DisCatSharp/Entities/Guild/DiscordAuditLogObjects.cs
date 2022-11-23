@@ -749,7 +749,9 @@ public sealed class DiscordAuditLogStageEntry : DiscordAuditLogEntry
 	/// <summary>
 	/// Gets the description of stage instance's privacy level change.
 	/// </summary>
+#pragma warning disable CS0612 // Type or member is obsolete
 	public PropertyChange<StagePrivacyLevel?> PrivacyLevelChange { get; internal set; }
+#pragma warning restore CS0612 // Type or member is obsolete
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DiscordAuditLogStageEntry"/> class.

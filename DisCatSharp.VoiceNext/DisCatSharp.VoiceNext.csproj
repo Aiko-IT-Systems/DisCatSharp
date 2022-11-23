@@ -26,6 +26,10 @@ Documentation: https://docs.discatsharp.tech/articles/modules/audio/voicenext/pr
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DisCatSharp.Analyzer.Roselyn" Version="4.8.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="System.Threading.Channels" Version="7.0.0" />
@@ -33,6 +37,7 @@ Documentation: https://docs.discatsharp.tech/articles/modules/audio/voicenext/pr
 
   <ItemGroup>
     <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
+	<ProjectReference Include="..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -63,7 +63,9 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 	/// Gets the unicode emoji of the forum post tag.
 	/// </summary>
 	[JsonProperty("emoji_name", NullValueHandling = NullValueHandling.Include)]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public string? UnicodeEmojiString { get; internal set; }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 
 	/// <summary>
@@ -92,7 +94,9 @@ public class ForumPostTag : NullableSnowflakeObject, IEquatable<ForumPostTag>
 	/// <param name="emojiId">The tags emoji id. Defaults to <see langword="null"/>.</param>
 	/// <param name="emojiName">The tags emoji name (unicode emoji). Defaults to <see langword="null"/>.</param>
 	/// <param name="moderated">Whether this tag can only be applied by moderators. Defaults to <see langword="false"/>.</param>
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public ForumPostTag(string name, ulong? emojiId = null, string? emojiName = null, bool moderated = false)
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	{
 		this.Id = null;
 		this.Name = name;

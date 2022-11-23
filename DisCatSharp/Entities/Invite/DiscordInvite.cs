@@ -177,7 +177,12 @@ public class DiscordInvite
 	internal DiscordInvite()
 	{ }
 
-	/// <summary>
+	
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+/// <summary>
 	/// Deletes the invite.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
@@ -187,6 +192,10 @@ public class DiscordInvite
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordInvite> DeleteAsync(string reason = null)
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.DeleteInviteAsync(this.Code, reason);
 
 	/// <summary>

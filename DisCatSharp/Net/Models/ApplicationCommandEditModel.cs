@@ -76,7 +76,9 @@ public class ApplicationCommandEditModel
 	/// <summary>
 	/// Sets the command's new options.
 	/// </summary>
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public Optional<List<DiscordApplicationCommandOption>?> Options { internal get; set; }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Sets the command's needed permissions.

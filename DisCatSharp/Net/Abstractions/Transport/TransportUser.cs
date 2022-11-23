@@ -84,7 +84,9 @@ internal class TransportUser
 	/// Gets the users theme colors.
 	/// </summary>
 	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public int[]? ThemeColors { get; internal set; }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Gets a value indicating whether is bot.

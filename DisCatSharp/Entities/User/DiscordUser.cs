@@ -110,7 +110,9 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets the user's theme colors, if set.
 	/// </summary>
 	[JsonIgnore]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public virtual IReadOnlyList<DiscordColor>? ThemeColors
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		=> !(this.ThemeColorsInternal is not null && this.ThemeColorsInternal.Count != 0) ? null : this.ThemeColorsInternal.Select(x => new DiscordColor(x)).ToList();
 
 	/// <summary>
@@ -123,7 +125,9 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets the user's theme color integers.
 	/// </summary>
 	[JsonProperty("theme_colors", NullValueHandling = NullValueHandling.Ignore)]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	internal List<int>? ThemeColorsInternal;
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Gets the user's banner url
@@ -181,7 +185,9 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// Gets the user's avatar decoration url.
 	/// </summary>
 	[JsonIgnore]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public string? AvatarDecorationUrl
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		=> string.IsNullOrWhiteSpace(this.AvatarDecorationHash) ? null : $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.AVATARS_DECORATIONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.AvatarDecorationHash}.{(this.AvatarDecorationHash.StartsWith("a_") ? "gif" : "png")}?size=1024";
 
 	/// <summary>
@@ -333,8 +339,12 @@ public class DiscordUser : SnowflakeObject, IEquatable<DiscordUser>
 	/// <exception cref="NotFoundException">Thrown when the application does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public async Task<DiscordRpcApplication?> GetRpcInfoAsync()
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		=> this.IsBot ? await this.Discord.ApiClient.GetApplicationInfoAsync(this.Id) : await Task.FromResult<DiscordRpcApplication?>(null);
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Whether this user is in a <see cref="DiscordGuild"/>

@@ -40,13 +40,17 @@ namespace DisCatSharp.Entities
 		/// <para>See <see href="https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-keyword-matching-strategies">keyword matching strategies</see>. Each keyword must be 30 characters or less.</para>
 		/// </summary>
 		[JsonProperty("keyword_filter", NullValueHandling = NullValueHandling.Ignore)]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		public ReadOnlyCollection<string>? KeywordFilter { get; set; }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 		/// <summary>
 		/// The internally predefined word-sets which will be searched for in content.
 		/// </summary>
 		[JsonProperty("presets", NullValueHandling = NullValueHandling.Ignore)]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		public IReadOnlyList<AutomodKeywordPresetType>? Presets { get; internal set; }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 		/// <summary>
 		/// <para>The regex patterns the content will be checked against. Maximum of 10.</para>
@@ -54,13 +58,17 @@ namespace DisCatSharp.Entities
 		/// <para> Each regex pattern must be 75 characters or less.</para>
 		/// </summary>
 		[JsonProperty("regex_patterns", NullValueHandling = NullValueHandling.Ignore)]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		public List<string>? RegexPatterns { get; set; }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 		/// <summary>
 		/// The substrings which will be exempt from triggering the preset type. Maximum of 1000.
 		/// </summary>
 		[JsonProperty("allow_list", NullValueHandling = NullValueHandling.Ignore)]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		public List<string>? AllowList { get; set; }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 		/// <summary>
 		/// The total number of unique role and user mentions allowed per message. Maximum of 50.

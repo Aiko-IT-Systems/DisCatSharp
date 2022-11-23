@@ -300,7 +300,9 @@ public static class Utilities
 	/// </summary>
 	/// <param name="guild">The guild.</param>
 	/// <returns>A bool.</returns>
+#pragma warning disable CS0612 // Type or member is obsolete
 	internal static bool CheckThreadPrivateFeature(DiscordGuild guild) => guild.PremiumTier.HasFlag(PremiumTier.TierTwo) || guild.Features.HasFeature(GuildFeaturesEnum.CanCreatePrivateThreads);
+#pragma warning restore CS0612 // Type or member is obsolete
 
 	/// <summary>
 	/// Have the message intents.

@@ -89,7 +89,9 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	/// Gets the potential parameters for this command.
 	/// </summary>
 	[JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 	public List<DiscordApplicationCommandOption>? Options { get; internal set; } = null;
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 	/// <summary>
 	/// Gets the commands needed permissions.
@@ -136,7 +138,9 @@ public sealed class DiscordApplicationCommand : SnowflakeObject, IEquatable<Disc
 	/// <param name="isNsfw">Whether this command is NSFW.</param>
 	public DiscordApplicationCommand(
 		string name, string description,
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		IEnumerable<DiscordApplicationCommandOption>? options = null,
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		ApplicationCommandType type = ApplicationCommandType.ChatInput,
 		DiscordApplicationCommandLocalization nameLocalizations = null, DiscordApplicationCommandLocalization descriptionLocalizations = null,
 		Permissions? defaultMemberPermissions = null, bool? dmPermission = null, bool isNsfw = false)

@@ -48,7 +48,9 @@ internal sealed class RestStageInstanceCreatePayload
 	/// Gets or sets the privacy level.
 	/// </summary>
 	[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
+#pragma warning disable CS0612 // Type or member is obsolete
 	public StagePrivacyLevel PrivacyLevel { get; set; }
+#pragma warning restore CS0612 // Type or member is obsolete
 
 	/// <summary>
 	/// Whether everyone should be notified about the start.
@@ -72,5 +74,7 @@ internal sealed class RestStageInstanceModifyPayload
 	/// Gets or sets the privacy level.
 	/// </summary>
 	[JsonProperty("privacy_level", NullValueHandling = NullValueHandling.Ignore)]
+#pragma warning disable CS0612 // Type or member is obsolete
 	public Optional<StagePrivacyLevel> PrivacyLevel { get; set; }
+#pragma warning restore CS0612 // Type or member is obsolete
 }

@@ -40,7 +40,10 @@ namespace DisCatSharp.Entities;
 public partial class DiscordGuild
 {
 	// TODO: Rework audit logs!
-	/// <summary>
+	
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
+/// <summary>
 	/// Gets audit log entries for this guild.
 	/// </summary>
 	/// <param name="limit">Maximum number of entries to fetch.</param>
@@ -50,6 +53,8 @@ public partial class DiscordGuild
 	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.ViewAuditLog"/> permission.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<IReadOnlyList<DiscordAuditLogEntry>> GetAuditLogsAsync(int? limit = null, DiscordMember byMember = null, AuditLogActionType? actionType = null)
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	{
 		var alrs = new List<AuditLog>();
 		int ac = 1, tc = 0, rmn = 100;
@@ -881,11 +886,17 @@ public partial class DiscordGuild
 								};
 								break;
 							case "privacy_level":
+#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0612 // Type or member is obsolete
 								entrysta.PrivacyLevelChange = new PropertyChange<StagePrivacyLevel?>
 								{
 									Before = long.TryParse(xc.OldValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t5) ? (StagePrivacyLevel?)t5 : null,
 									After = long.TryParse(xc.NewValue as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out t6) ? (StagePrivacyLevel?)t6 : null,
 								};
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning restore CS0612 // Type or member is obsolete
+#pragma warning restore CS0612 // Type or member is obsolete
 								break;
 
 							default:
