@@ -27,6 +27,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DisCatSharp;
+using DisCatSharp.Attributes;
 using DisCatSharp.Entities;
 using DisCatSharp.Enums;
 using DisCatSharp.EventArgs;
@@ -36,13 +37,11 @@ namespace DisCatSharp.Experimental
 {
 	public static class DisCatSharp
 	{
-		internal static DiscordApiClientHook Hook { get; set; }
-
-		public static async Task<(string FullyQualifiedUsername, DiscordUser User)> GetUserV2Async(this DiscordClient client, ulong id)
+		[Experimental("This function is being tested and might change at any time.")]
+		public static async Task<string> GetUsernameAsync(this DiscordClient client, ulong id)
 		{
-			Hook = new(client.ApiClient);
-			var user = await Hook.ApiClient.GetUserAsync(id);
-			return (user.UsernameWithDiscriminator, user);
+			var user = await client.ApiClient.GetUserAsync(id);
+			return user.UsernameWithDiscriminator;
 		}
 	}
 }
