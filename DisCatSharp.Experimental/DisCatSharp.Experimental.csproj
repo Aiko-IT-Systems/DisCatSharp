@@ -10,7 +10,6 @@
   <PropertyGroup>
 	<AssemblyName>DisCatSharp.Experimental</AssemblyName>
 	<RootNamespace>DisCatSharp.Experimental</RootNamespace>
-	<CodeAnalysisRuleSet>..\DisCatSharp.Tools\DisCatSharp.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -26,14 +25,14 @@
   </PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="DisCatSharp.Attributes" Version="10.3.1" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-	  <!--<ProjectReference Include="..\DisCatSharp.Tools\DisCatSharp.Analyzer\DisCatSharp.Analyzer\DisCatSharp.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" SetTargetFramework="TargetFramework=netstandard2.0" />-->
 	</ItemGroup>
 
 	<ItemGroup>
 	<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
+	<ProjectReference Include="..\DisCatSharp.Tools\DisCatSharp.Analyzer\DisCatSharp.Analyzer.Package\DisCatSharp.Analyzer.Package.csproj" />
 	  <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
-	<ProjectReference Include="..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,13 +1,13 @@
-﻿using DisCatSharp.Analytics.VSIX;
+using DisCatSharp.Analyzer;
 
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("DisCatSharp Analytics")]
-[assembly: AssemblyDescription("DisCatSharp Analytics Extension")]
+[assembly: AssemblyTitle("DisCatSharp Analyzer")]
+[assembly: AssemblyDescription("DisCatSharp Analyzer Extension")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("AITSYS")]
-[assembly: AssemblyProduct("DisCatSharp.Analytics")]
+[assembly: AssemblyProduct("DisCatSharp.Analyzer")]
 [assembly: AssemblyCopyright("2022 AITSYS")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
