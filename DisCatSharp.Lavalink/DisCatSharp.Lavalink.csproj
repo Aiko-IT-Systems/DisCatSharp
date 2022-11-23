@@ -28,7 +28,6 @@ Documentation: https://docs.discatsharp.tech/articles/modules/audio/lavalink/set
 
   <ItemGroup>
     <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
-	<ProjectReference Include="..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -20,7 +20,6 @@
     <ItemGroup>
       <ProjectReference Include="..\DisCatSharp.Configuration\DisCatSharp.Configuration.csproj" />
       <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
-	  <ProjectReference Include="..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj" />
     </ItemGroup>
 
     <ItemGroup>
