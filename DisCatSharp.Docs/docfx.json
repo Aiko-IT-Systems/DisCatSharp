@@ -169,6 +169,40 @@
 			"dest":"api/DisCatSharp.VoiceNext",
 			"filter":"filter_config.yml",
 			"disableDefaultFilter":false
+		},
+		{
+			"src":[
+				{
+					"src":"../DisCatSharp.Attributes/",
+					"files":[
+						"**.csproj"
+					],
+					"exclude":[
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest":"api/DisCatSharp.Attributes",
+			"filter":"filter_config.yml",
+			"disableDefaultFilter":false
+		},
+		{
+			"src":[
+				{
+					"src":"../DisCatSharp.Experimental/",
+					"files":[
+						"**.csproj"
+					],
+					"exclude":[
+						"**/obj/**",
+						"**/bin/**"
+					]
+				}
+			],
+			"dest":"api/DisCatSharp.Experimental",
+			"filter":"filter_config.yml",
+			"disableDefaultFilter":false
 		}
 	],
 	"build":{

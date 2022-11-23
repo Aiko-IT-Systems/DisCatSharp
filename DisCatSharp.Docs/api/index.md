@@ -21,5 +21,9 @@ Welcome to the DisCatSharp Global API reference.
 - [DisCatSharp.Hosting](xref:api_discatsharp_hosting_index)
 - [DisCatSharp.DependencyInjection](xref:api_discatsharp_hosting_dependencyinjection_index)
 
+## Experimental packages
+- [DisCatSharp.Experimental](xref:api_discatsharp_experimental_index)
+
 ## Other packages
 - [DisCatSharp.Common](xref:api_discatsharp_common_index)
+- [DisCatSharp.Attributes](xref:api_discatsharp_attributes_index)

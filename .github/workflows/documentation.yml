@@ -78,7 +78,7 @@ jobs:
         committer_name: NyuwBot
         committer_email: nyuw@aitsys.dev
         commit: --signoff
-        message: 'Docs update for commit ${{ github.repository }} (${{ github.sha }})'
+        message: 'Docs update for commit ${{github.sha}}\n [${{github.repository}}@${{github.sha}}](https://github.com/${{github.repository}}/commit/${{github.sha}})'
   publish-main:
     runs-on: ubuntu-latest
     name: Publish documentation on main server
