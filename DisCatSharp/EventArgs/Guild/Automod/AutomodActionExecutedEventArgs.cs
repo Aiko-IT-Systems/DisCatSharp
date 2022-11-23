@@ -50,7 +50,7 @@ namespace DisCatSharp.EventArgs
 		/// <summary>
 		/// The type of trigger of the rule which was executed.
 		/// </summary>
-		public AutomodTriggerType TriggerType { get; internal set;  }
+		public AutomodTriggerType TriggerType { get; internal set; }
 
 		/// <summary>
 		/// The member which caused this event.
