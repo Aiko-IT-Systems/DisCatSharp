@@ -5,7 +5,7 @@
   <Import Project="../DisCatSharp.targets" />
   <Import Project="../Package.targets" />
   <Import Project="../NuGet.targets" />
-  <!--<Import Project="../Library.targets" />-->
+  <Import Project="../Library.targets" />
 
   <PropertyGroup>
 	<AssemblyName>DisCatSharp.Experimental</AssemblyName>
@@ -21,8 +21,8 @@
 	  Experimental changes for DisCatSharp.
 	</Description>
 	<PackageTags>DisCatSharp,Experimental,Discord API Wrapper,Discord,Bots,Discord Bots,AITSYS,Net6</PackageTags>
-	<OutputType>Exe</OutputType>
-	<TargetFramework>net6</TargetFramework>
+	<!--<OutputType>Exe</OutputType>
+	<TargetFramework>net6</TargetFramework>-->
   </PropertyGroup>
 
 	<ItemGroup>
@@ -32,6 +32,7 @@
 
 	<ItemGroup>
 	<ProjectReference Include="..\DisCatSharp.Common\DisCatSharp.Common.csproj" />
+	  <ProjectReference Include="..\DisCatSharp\DisCatSharp.csproj" />
 	<ProjectReference Include="..\DisCatSharp.Attributes\DisCatSharp.Attributes.csproj" />
   </ItemGroup>
 
