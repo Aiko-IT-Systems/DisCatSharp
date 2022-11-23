@@ -4,9 +4,9 @@ using DisCatSharp.Attributes;
 
 namespace DisCatSharp.Experimental;
 
-public class Program
+internal class Program
 {
-	public static void Main(string[] args = null)
+	internal static void Main(string[] args = null)
 	{
 		var test = new Test("test");
 		test.Invoke();
@@ -15,22 +15,22 @@ public class Program
 }
 
 [Experimental("class")]
-public class Test
+internal class Test
 {
 	[Experimental("property")]
-	public string TestString { get; set; }
+	internal string TestString { get; set; }
 
 	[Experimental("construct")]
-	public Test([Experimental("test arg")] string test = null)
+	internal Test([Experimental("test arg")] string test = null)
 	{
 		this.TestString = test;
 	}
 
 	[Experimental("construct 2")]
-	public Test()
+	internal Test()
 	{ }
 
 	[Experimental("method")]
-	public void Invoke()
+	internal void Invoke()
 		=> Console.WriteLine(this.TestString);
 }
