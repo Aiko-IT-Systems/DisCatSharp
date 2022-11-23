@@ -41,3 +41,14 @@ DCS0001 | Information | Warning | Experimental Attribute Analyzer
 Rule ID | Category | Severity | Notes
 --------|----------|----------|--------------------
 DCS0001 | Information | Warning  | Experimental Attribute Analyzer
+
+
+## Release 5.0
+
+### New Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|--------------------
+DCS0101 | Information | Warning | DiscordInExperiment Attribute Analyzer
+DCS0102 | Information | Warning | DiscordDeprecated Attribute Analyzer
+DCS0103 | Information | Warning | DiscordUnreleased Attribute Analyzer
