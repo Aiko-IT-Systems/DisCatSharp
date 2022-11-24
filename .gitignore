@@ -317,7 +317,6 @@ Thumbs.db
 [Bb]in
 [Dd]ebug*/
 *.lib
-obj/
 [Rr]elease*/
 [Tt]est[Rr]esult*
 #Nuget packages folder
