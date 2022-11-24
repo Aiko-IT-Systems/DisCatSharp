@@ -59,7 +59,7 @@ jobs:
         name: dcs-docs.zip
     - name: Purge old docs
       working-directory: DisCatSharp.Docs
-      run: shopt -s extglob && rm -rv !(".gitignore"|".git")
+      run: shopt -s extglob && rm -rv !\(".gitignore"|".git"\)
     - name: Extract new docs
       run: unzip dcs-docs.zip -d DisCatSharp.Docs
     - name: Delete packed docs
