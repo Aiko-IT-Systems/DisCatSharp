@@ -11,18 +11,15 @@ env:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-22.04
     name: Build documentation
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
         path: DisCatSharp
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1.3
-      with:
-        vs-version: '[17.0)'
-        msbuild-architecture: 'x64'
+    - name: Update packages
+      run: sudo apt update && sudo apt-get full-upgrade -y && sudo apt-get install -y mono-roslyn mono-complete mono-dbg msbuild dotnet-sdk-6.0
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.0.3
       with:
