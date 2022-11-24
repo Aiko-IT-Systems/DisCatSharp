@@ -48,6 +48,12 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 	public string TeamName { get; internal set; }
 
 	/// <summary>
+	/// Gets the overall owner.
+	/// </summary>
+	public string Owner
+		=> "Lala Sabathil";
+
+	/// <summary>
 	/// Gets the team's icon.
 	/// </summary>
 	public string Icon

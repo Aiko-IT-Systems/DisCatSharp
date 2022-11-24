@@ -25,6 +25,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 
 using Newtonsoft.Json;
@@ -67,11 +68,7 @@ public class DiscordDmChannel : DiscordChannel
 	public string IconUrl
 		=> !string.IsNullOrWhiteSpace(this.IconHash) ? $"{DiscordDomain.GetDomain(CoreDomain.DiscordCdn).Url}{Endpoints.CHANNEL_ICONS}/{this.Id.ToString(CultureInfo.InvariantCulture)}/{this.IconHash}.png" : null;
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token.
 	/// </summary>
 	/// <param name="userId">The id of the user to add.</param>
@@ -81,16 +78,9 @@ public class DiscordDmChannel : DiscordChannel
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task AddDmRecipientAsync(ulong userId, string accessToken, string nickname)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.AddGroupDmRecipientAsync(this.Id, userId, accessToken, nickname);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Only use for Group DMs! Whitelisted bots only. Requires user's oauth2 access token.
 	/// </summary>
 	/// <param name="userId">The id of the User to remove.</param>
@@ -99,8 +89,5 @@ public class DiscordDmChannel : DiscordChannel
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RemoveDmRecipientAsync(ulong userId, string accessToken)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.RemoveGroupDmRecipientAsync(this.Id, userId);
 }
