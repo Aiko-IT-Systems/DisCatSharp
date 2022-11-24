@@ -90,8 +90,8 @@ function Install-DocFX([string] $target_dir_path)
         $release = $release_json[$tries]        # Pick the next available release
         $release_version = $release.ToString()  # Convert to string
 		#$release_version = "2.60.1"
-        #$release_asset = "https://github.com/Aiko-IT-Systems/docfx/releases/download/v2.60.1/docfx.zip"
-		$release_asset = "https://github.com/dotnet/docfx/releases/download/v$release_version/docfx.zip"
+        $release_asset = "https://github.com/Aiko-IT-Systems/docfx/releases/download/v3-internal/docfx.zip"
+		#$release_asset = "https://github.com/dotnet/docfx/releases/download/v$release_version/docfx.zip"
 
         # increment try counter
         $tries = $tries + 1
