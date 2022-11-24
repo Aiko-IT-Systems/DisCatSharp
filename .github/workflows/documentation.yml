@@ -74,6 +74,8 @@ jobs:
       uses: geekyeggo/delete-artifact@v2
       with:
         name: dcs-docs.zip
+    - name: Set access rights
+      run: sudo chmod 777 -R .
     - name: Commit and push changes
       uses: EndBug/add-and-commit@main
       with:
