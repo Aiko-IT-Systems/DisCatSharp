@@ -17,24 +17,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
-        path: DisCatSharp
         token:  ${{ secrets.NYUW_TOKEN_GH }}
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.0.3
       with:
         dotnet-version: 6.x
     - name: Restore packages
-      working-directory: DisCatSharp
       run: dotnet restore
     - name: Build library
-      working-directory: DisCatSharp
       run: dotnet build -c Release
     - name: Test library
-      working-directory: DisCatSharp
       run: dotnet test -c Release
       continue-on-error: true
     - name: Build Docs
-      working-directory: DisCatSharp
       shell: pwsh
       run: ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output ".." -PackageName "dcs-docs"
     - name: Upload packed docs
@@ -46,7 +41,6 @@ jobs:
     - name: Commit and push changes
       uses: EndBug/add-and-commit@main
       with:
-        cwd: DisCatSharp
         default_author: user_info
         author_name: NyuwBot
         author_email: nyuw@aitsys.dev
@@ -64,18 +58,18 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: Aiko-IT-Systems/DisCatSharp.Docs
-        path: DisCatSharp.Docs
         token: ${{ secrets.NYUW_TOKEN_GH }}
+    - name: Purge old docs
+      shell: pwsh
+      run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
     - name: Download packed docs
       uses: actions/download-artifact@v3
       with:
         name: dcs-docs.zip
-    - name: Purge old docs
-      working-directory: DisCatSharp.Docs
-      shell: pwsh
-      run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
     - name: Extract new docs
-      run: unzip dcs-docs.zip -d DisCatSharp.Docs
+      run: unzip dcs-docs.zip -d .
+    - name: Deleze zip
+      run: rm dcs-docs.zip
     - name: Delete packed docs
       uses: geekyeggo/delete-artifact@v2
       with:
@@ -83,7 +77,6 @@ jobs:
     - name: Commit and push changes
       uses: EndBug/add-and-commit@main
       with:
-        cwd: DisCatSharp.Docs
         default_author: user_info
         author_name: NyuwBot
         author_email: nyuw@aitsys.dev

@@ -286,8 +286,7 @@
 		],
 		"postProcessors":[
 			"ExtractSearchIndex",
-			"CustomMemberIndexer",
-			"MemberLevelManagedReference"
+			"CustomMemberIndexer"
 		],
 		"noLangKeyword":false,
 		"keepFileLink":false,

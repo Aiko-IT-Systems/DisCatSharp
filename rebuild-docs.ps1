@@ -177,7 +177,7 @@ function BuildDocs([string] $target_dir_path)
     $docs_site = Join-Path "$target_path" "_site"
     # $libdev_api = Join-Path "$target_path" "libdev"
     $docs_api = Join-Path "$target_path" "api"
-    $docs_obj = Join-Path "$target_path" "obj"
+    #$docs_obj = Join-Path "$target_path" "obj"
 
     # Check if API documentation source path exists
     if (-not (Test-Path "$docs_api"))
@@ -222,15 +222,15 @@ function BuildDocs([string] $target_dir_path)
 
     # Check if old object cache exists
     # If it does, remove it
-    if (Test-Path "$docs_obj")
-    {
-        Write-Host "Purging object cache"
-        Remove-Item -recurse -force "$docs_obj"
-    }
+    #if (Test-Path "$docs_obj")
+    #{
+    #    Write-Host "Purging object cache"
+    #    Remove-Item -recurse -force "$docs_obj"
+    #}
 
     # Create target directory for the object cache
-    $docs_obj = New-Item -type directory "$docs_obj"
-    $docs_obj = $docs_obj.FullName
+    #$docs_obj = New-Item -type directory "$docs_obj"
+    #$docs_obj = $docs_obj.FullName
 
     # Enter the documentation directory
     Set-Location -path "$target_path"
