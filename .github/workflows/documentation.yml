@@ -47,8 +47,8 @@ jobs:
       uses: EndBug/add-and-commit@main
       with:
         cwd: DisCatSharp
-        default_author: NyuwBot
-        author_name: DisCatSharp
+        default_author: user_info
+        author_name: NyuwBot
         author_email: nyuw@aitsys.dev
         committer_name: NyuwBot
         committer_email: nyuw@aitsys.dev
