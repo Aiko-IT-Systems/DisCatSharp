@@ -321,3 +321,4 @@ Thumbs.db
 [Tt]est[Rr]esult*
 #Nuget packages folder
 packages/
+!DisCatSharp.Docs/obj
