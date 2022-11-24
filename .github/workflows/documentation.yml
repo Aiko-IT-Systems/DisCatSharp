@@ -22,6 +22,8 @@ jobs:
       uses: actions/setup-dotnet@v3.0.3
       with:
         dotnet-version: 6.x
+    - name: Git fetch unshallow
+      run: git fetch --unshallow
     - name: Restore packages
       run: dotnet restore
     - name: Build library

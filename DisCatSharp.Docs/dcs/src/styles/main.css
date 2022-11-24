@@ -33,3 +33,27 @@ span.xref
 {
 	color: #e87408;
 }
+
+.collapse-container > :nth-child(2n) {
+	background-color: #b00555 !important;
+	margin-top: 2px !important;
+}
+
+.collapse-container > :nth-child(2n+1) {
+	background-color: #bf0163 !important;
+	background-image: none !important;
+}
+
+div.accordion > div {
+	margin-top: 2px !important;
+}
+
+.arrow-r {
+	margin-bottom: 1px !important;
+	border-left: 5px solid #22c13b !important;
+}
+
+.arrow-d {
+	margin-bottom: 3px !important;
+	border-top: 5px solid #22c13b !important;
+}
