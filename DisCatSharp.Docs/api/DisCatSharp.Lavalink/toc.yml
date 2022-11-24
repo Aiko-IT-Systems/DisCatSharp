@@ -1,0 +1,74 @@
+### YamlMime:TableOfContent
+- uid: DisCatSharp.Lavalink
+  name: DisCatSharp.Lavalink
+  items:
+  - uid: DisCatSharp.Lavalink.DiscordClientExtensions
+    name: DiscordClientExtensions
+  - uid: DisCatSharp.Lavalink.LavalinkBandAdjustment
+    name: LavalinkBandAdjustment
+  - uid: DisCatSharp.Lavalink.LavalinkConfiguration
+    name: LavalinkConfiguration
+  - uid: DisCatSharp.Lavalink.LavalinkEvents
+    name: LavalinkEvents
+  - uid: DisCatSharp.Lavalink.LavalinkExtension
+    name: LavalinkExtension
+  - uid: DisCatSharp.Lavalink.LavalinkGuildConnection
+    name: LavalinkGuildConnection
+  - uid: DisCatSharp.Lavalink.LavalinkLoadFailedInfo
+    name: LavalinkLoadFailedInfo
+  - uid: DisCatSharp.Lavalink.LavalinkLoadResult
+    name: LavalinkLoadResult
+  - uid: DisCatSharp.Lavalink.LavalinkLoadResultType
+    name: LavalinkLoadResultType
+  - uid: DisCatSharp.Lavalink.LavalinkNodeConnection
+    name: LavalinkNodeConnection
+  - uid: DisCatSharp.Lavalink.LavalinkPlaylistInfo
+    name: LavalinkPlaylistInfo
+  - uid: DisCatSharp.Lavalink.LavalinkRestClient
+    name: LavalinkRestClient
+  - uid: DisCatSharp.Lavalink.LavalinkRoutePlannerType
+    name: LavalinkRoutePlannerType
+  - uid: DisCatSharp.Lavalink.LavalinkSearchType
+    name: LavalinkSearchType
+  - uid: DisCatSharp.Lavalink.LavalinkTrack
+    name: LavalinkTrack
+  - uid: DisCatSharp.Lavalink.LavalinkUtilities
+    name: LavalinkUtilities
+  - uid: DisCatSharp.Lavalink.LoadFailedSeverity
+    name: LoadFailedSeverity
+- uid: DisCatSharp.Lavalink.Entities
+  name: DisCatSharp.Lavalink.Entities
+  items:
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkFailedAddress
+    name: LavalinkFailedAddress
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkIpBlock
+    name: LavalinkIpBlock
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkPlayerState
+    name: LavalinkPlayerState
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkRouteStatus
+    name: LavalinkRouteStatus
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkRouteStatusDetails
+    name: LavalinkRouteStatusDetails
+  - uid: DisCatSharp.Lavalink.Entities.LavalinkStatistics
+    name: LavalinkStatistics
+- uid: DisCatSharp.Lavalink.EventArgs
+  name: DisCatSharp.Lavalink.EventArgs
+  items:
+  - uid: DisCatSharp.Lavalink.EventArgs.NodeDisconnectedEventArgs
+    name: NodeDisconnectedEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.PlayerUpdateEventArgs
+    name: PlayerUpdateEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.StatisticsReceivedEventArgs
+    name: StatisticsReceivedEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.TrackEndReason
+    name: TrackEndReason
+  - uid: DisCatSharp.Lavalink.EventArgs.TrackExceptionEventArgs
+    name: TrackExceptionEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.TrackFinishEventArgs
+    name: TrackFinishEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.TrackStartEventArgs
+    name: TrackStartEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.TrackStuckEventArgs
+    name: TrackStuckEventArgs
+  - uid: DisCatSharp.Lavalink.EventArgs.WebSocketCloseEventArgs
+    name: WebSocketCloseEventArgs

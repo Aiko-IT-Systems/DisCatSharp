@@ -1,0 +1,6 @@
+### YamlMime:TableOfContent
+- uid: DisCatSharp.Hosting.DependencyInjection
+  name: DisCatSharp.Hosting.DependencyInjection
+  items:
+  - uid: DisCatSharp.Hosting.DependencyInjection.ServiceCollectionExtensions
+    name: ServiceCollectionExtensions

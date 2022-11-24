@@ -1,0 +1,12 @@
+### YamlMime:TableOfContent
+- uid: DisCatSharp.Attributes
+  name: DisCatSharp.Attributes
+  items:
+  - uid: DisCatSharp.Attributes.DiscordDeprecatedAttribute
+    name: DiscordDeprecatedAttribute
+  - uid: DisCatSharp.Attributes.DiscordInExperimentAttribute
+    name: DiscordInExperimentAttribute
+  - uid: DisCatSharp.Attributes.DiscordUnreleasedAttribute
+    name: DiscordUnreleasedAttribute
+  - uid: DisCatSharp.Attributes.ExperimentalAttribute
+    name: ExperimentalAttribute
