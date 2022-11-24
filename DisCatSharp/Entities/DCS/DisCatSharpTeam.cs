@@ -50,7 +50,7 @@ public sealed class DisCatSharpTeam : SnowflakeObject
 	/// <summary>
 	/// Gets the overall owner.
 	/// </summary>
-	public string Owner
+	public string MainOwner
 		=> "Lala Sabathil";
 
 	/// <summary>
