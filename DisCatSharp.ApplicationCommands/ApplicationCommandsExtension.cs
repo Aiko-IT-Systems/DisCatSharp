@@ -1573,6 +1573,7 @@ public sealed class ApplicationCommandsExtension : BaseExtension
 	/// Parses the parameters.
 	/// </summary>
 	/// <param name="parameters">The parameters.</param>
+	/// <param name="commandName">The command name.</param>
 	/// <param name="guildId">The optional guild id.</param>
 	internal static async Task<List<DiscordApplicationCommandOption>> ParseParametersAsync(IEnumerable<ParameterInfo> parameters, string commandName, ulong? guildId)
 	{

@@ -4610,8 +4610,9 @@ public sealed class DiscordApiClient
 	/// <param name="autoArchiveDuration">The new auto archive duration.</param>
 	/// <param name="invitable">The new user invitable state.</param>
 	/// <param name="appliedTags">The tags to add on creation.</param>
+	/// <param name="pinned">Whether the post is pinned.</param>
 	/// <param name="reason">The reason for the modification.</param>
-	internal Task ModifyThreadAsync(ulong threadId, ChannelType parentType, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<int?> perUserRateLimit, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<bool?> invitable, Optional<IEnumerable<ForumPostTag>> appliedTags, string reason)
+	internal Task ModifyThreadAsync(ulong threadId, ChannelType parentType, string name, Optional<bool?> locked, Optional<bool?> archived, Optional<int?> perUserRateLimit, Optional<ThreadAutoArchiveDuration?> autoArchiveDuration, Optional<bool?> invitable, Optional<IEnumerable<ForumPostTag>> appliedTags, Optional<bool?> pinned, string reason)
 	{
 		var pld = new RestThreadChannelModifyPayload
 		{
@@ -4622,7 +4623,7 @@ public sealed class DiscordApiClient
 			PerUserRateLimit = perUserRateLimit,
 			Invitable = invitable
 		};
-		// TODO: Pinned threads in forum
+
 		if (parentType == ChannelType.Forum)
 		{
 			if (appliedTags.HasValue && appliedTags.Value != null)
@@ -4634,6 +4635,8 @@ public sealed class DiscordApiClient
 
 				pld.AppliedTags = tags;
 			}
+			if (pinned.HasValue && pinned.Value.HasValue)
+				pld.Flags = pinned.Value.Value ? ChannelFlags.Pinned : Optional.None;
 		}
 
 		var headers = Utilities.GetBaseHeaders();

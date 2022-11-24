@@ -126,16 +126,9 @@ public class DiscordThreadChannel : DiscordChannel
 		var mdl = new ThreadEditModel();
 		action(mdl);
 
-		var canContinue = !mdl.AutoArchiveDuration.HasValue || !mdl.AutoArchiveDuration.Value.HasValue || Utilities.CheckThreadAutoArchiveDurationFeature(this.Guild, mdl.AutoArchiveDuration.Value.Value);
-		if (mdl.Invitable.HasValue)
-		{
-#pragma warning disable CS0612 // Type or member is obsolete
-			canContinue = this.Guild.Features.HasFeature(GuildFeaturesEnum.CanCreatePrivateThreads);
-#pragma warning restore CS0612 // Type or member is obsolete
-		}
 		return this.Parent.Type == ChannelType.Forum && mdl.AppliedTags.HasValue && mdl.AppliedTags.Value.Count() > 5
 			? throw new NotSupportedException("Cannot have more than 5 applied tags.")
-			: canContinue ? this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, mdl.Name, mdl.Locked, mdl.Archived, mdl.PerUserRateLimit, mdl.AutoArchiveDuration, mdl.Invitable, mdl.AppliedTags, mdl.AuditLogReason) : throw new NotSupportedException($"Cannot modify ThreadAutoArchiveDuration. Guild needs boost tier {(mdl.AutoArchiveDuration.Value.Value == ThreadAutoArchiveDuration.ThreeDays ? "one" : "two")}.");
+			: this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, mdl.Name, mdl.Locked, mdl.Archived, mdl.PerUserRateLimit, mdl.AutoArchiveDuration, mdl.Invitable, mdl.AppliedTags, mdl.Pinned, mdl.AuditLogReason);
 	}
 
 	/// <summary>
@@ -150,7 +143,7 @@ public class DiscordThreadChannel : DiscordChannel
 	public Task AddTagAsync(ForumPostTag tag, string reason = null)
 		=> this.AppliedTagIds.Count == 5 ?
 			throw new NotSupportedException("Cannot have more than 5 applied tags.") :
-			this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags) { tag }, reason: reason);
+			this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags) { tag }, null, reason);
 
 	/// <summary>
 	/// Remove a tag from the current thread.
@@ -162,7 +155,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task RemoveTagAsync(ForumPostTag tag, string reason = null)
-		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags).Where(x => x != tag).ToList(), reason: reason);
+		=> await this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, null, null, null, null, new List<ForumPostTag>(this.AppliedTags).Where(x => x != tag).ToList(), null, reason);
 
 	/// <summary>
 	/// Archives a thread.
@@ -174,7 +167,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ArchiveAsync(bool locked = true, string reason = null)
-		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, locked, true, null, null, null, null, reason: reason);
+		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, locked, true, null, null, null, null, null, reason);
 
 	/// <summary>
 	/// Unarchives a thread.
@@ -184,7 +177,7 @@ public class DiscordThreadChannel : DiscordChannel
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task UnarchiveAsync(string reason = null)
-		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, false, null, null, null, null, reason: reason);
+		=> this.Discord.ApiClient.ModifyThreadAsync(this.Id, this.Parent.Type, null, null, false, null, null, null, null, null, reason);
 
 	/// <summary>
 	/// Gets the members of a thread. Needs the <see cref="DiscordIntents.GuildMembers"/> intent.
