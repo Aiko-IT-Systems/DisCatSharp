@@ -401,7 +401,7 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		=> this.Discord.ApiClient.DeleteChannelAsync(this.Id, reason);
 
 	/// <summary>
-	/// Clones this channel. This operation will create a channel with identical settings to this one. Note that this will not copy messages.
+	/// Clones this channel. This operation will create a channel with identical settings to this one. Note that this will not copy messages or tags.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
 	/// <returns>Newly-created channel.</returns>
@@ -417,8 +417,6 @@ public class DiscordChannel : SnowflakeObject, IEquatable<DiscordChannel>
 		var ovrs = new List<DiscordOverwriteBuilder>();
 		foreach (var ovr in this.PermissionOverwritesInternal)
 			ovrs.Add(await new DiscordOverwriteBuilder().FromAsync(ovr).ConfigureAwait(false));
-
-		// TODO: Add forum tags option missing?
 
 		var bitrate = this.Bitrate;
 		var userLimit = this.UserLimit;

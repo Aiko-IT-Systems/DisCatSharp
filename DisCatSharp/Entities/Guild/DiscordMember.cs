@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DisCatSharp.Enums;
+using DisCatSharp.Exceptions;
 using DisCatSharp.Net;
 using DisCatSharp.Net.Abstractions;
 using DisCatSharp.Net.Models;
@@ -117,7 +118,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// The color of this member's banner. Mutually exclusive with <see cref="GuildBannerHash"/>.
 	/// </summary>
 	[JsonIgnore]
-	public override DiscordColor? BannerColor => this.User.BannerColor;
+	public override DiscordColor? BannerColor
+		=> this.User.BannerColor;
 
 	/// <summary>
 	/// Gets this member's nickname.
@@ -257,7 +259,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// Gets the permissions for the current member.
 	/// </summary>
 	[JsonIgnore]
-	public Permissions Permissions => this.GetPermissions();
+	public Permissions Permissions
+		=> this.GetPermissions();
 
 	#region Overridden user properties
 
@@ -382,12 +385,8 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 
 	#endregion
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+
+	/// <summary>
 	/// Creates a direct message channel to this member.
 	/// </summary>
 	/// <returns>Direct message channel to this member.</returns>
@@ -396,18 +395,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task<DiscordDmChannel> CreateDmChannelAsync()
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.CreateDmAsync(this.Id);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Sends a direct message to this member. Creates a direct message channel if one does not exist already.
 	/// </summary>
 	/// <param name="content">Content of the message to send.</param>
@@ -417,10 +407,6 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> SendMessageAsync(string content)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
 			throw new ArgumentException("Bots cannot DM each other.");
@@ -429,12 +415,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		return await chn.SendMessageAsync(content).ConfigureAwait(false);
 	}
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Sends a direct message to this member. Creates a direct message channel if one does not exist already.
 	/// </summary>
 	/// <param name="embed">Embed to attach to the message.</param>
@@ -444,10 +425,6 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> SendMessageAsync(DiscordEmbed embed)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
 			throw new ArgumentException("Bots cannot DM each other.");
@@ -456,12 +433,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		return await chn.SendMessageAsync(embed).ConfigureAwait(false);
 	}
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Sends a direct message to this member. Creates a direct message channel if one does not exist already.
 	/// </summary>
 	/// <param name="content">Content of the message to send.</param>
@@ -472,10 +444,6 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> SendMessageAsync(string content, DiscordEmbed embed)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
 			throw new ArgumentException("Bots cannot DM each other.");
@@ -484,12 +452,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		return await chn.SendMessageAsync(content, embed).ConfigureAwait(false);
 	}
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Sends a direct message to this member. Creates a direct message channel if one does not exist already.
 	/// </summary>
 	/// <param name="message">Builder to with the message.</param>
@@ -499,10 +462,6 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task<DiscordMessage> SendMessageAsync(DiscordMessageBuilder message)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	{
 		if (this.IsBot && this.Discord.CurrentUser.IsBot)
 			throw new ArgumentException("Bots cannot DM each other.");
@@ -511,12 +470,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		return await chn.SendMessageAsync(message).ConfigureAwait(false);
 	}
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Sets this member's voice mute status.
 	/// </summary>
 	/// <param name="mute">Whether the member is to be muted.</param>
@@ -526,18 +480,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task SetMuteAsync(bool mute, string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, mute, default, default, reason);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Sets this member's voice deaf status.
 	/// </summary>
 	/// <param name="deaf">Whether the member is to be deafened.</param>
@@ -547,18 +492,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task SetDeafAsync(bool deaf, string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.GuildId, this.Id, default, default, default, deaf, default, reason);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Modifies this member.
 	/// </summary>
 	/// <param name="action">Action to perform on this member.</param>
@@ -567,10 +503,6 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task ModifyAsync(Action<MemberEditModel> action)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	{
 		var mdl = new MemberEditModel();
 		action(mdl);
@@ -598,14 +530,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <summary>
 	/// Disconnects the member from their current voice channel.
 	/// </summary>
-	public async Task DisconnectFromVoiceAsync() => await this.ModifyAsync(x => x.VoiceChannel = null);
+	public async Task DisconnectFromVoiceAsync()
+		=> await this.ModifyAsync(x => x.VoiceChannel = null);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Adds a timeout to a member.
 	/// </summary>
 	/// <param name="until">The datetime offset to time out the user. Up to 28 days.</param>
@@ -615,18 +543,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task TimeoutAsync(DateTimeOffset until, string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> until.Subtract(DateTimeOffset.UtcNow).Days > 28 ? throw new ArgumentException("Timeout can not be longer than 28 days") : this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, until, reason);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Adds a timeout to a member.
 	/// </summary>
 	/// <param name="until">The timespan to time out the user. Up to 28 days.</param>
@@ -636,18 +555,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task TimeoutAsync(TimeSpan until, string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.TimeoutAsync(DateTimeOffset.UtcNow + until, reason);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Adds a timeout to a member.
 	/// </summary>
 	/// <param name="until">The datetime to time out the user. Up to 28 days.</param>
@@ -657,18 +567,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task TimeoutAsync(DateTime until, string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.TimeoutAsync(until.ToUniversalTime() - DateTime.UtcNow, reason);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Removes the timeout from a member.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
@@ -676,18 +577,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task RemoveTimeoutAsync(string reason = null) => this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, null, reason);
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+	public Task RemoveTimeoutAsync(string reason = null)
+		=> this.Discord.ApiClient.ModifyTimeoutAsync(this.Guild.Id, this.Id, null, reason);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Grants a role to the member.
 	/// </summary>
 	/// <param name="role">Role to grant.</param>
@@ -697,18 +590,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task GrantRoleAsync(DiscordRole role, string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.AddGuildMemberRoleAsync(this.Guild.Id, this.Id, role.Id, reason);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Revokes a role from a member.
 	/// </summary>
 	/// <param name="role">Role to revoke.</param>
@@ -718,18 +602,9 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RevokeRoleAsync(DiscordRole role, string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.RemoveGuildMemberRoleAsync(this.Guild.Id, this.Id, role.Id, reason);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Sets the member's roles to ones specified.
 	/// </summary>
 	/// <param name="roles">Roles to set.</param>
@@ -739,19 +614,10 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task ReplaceRolesAsync(IEnumerable<DiscordRole> roles, string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.ModifyGuildMemberAsync(this.Guild.Id, this.Id, default,
 			Optional.Some(roles.Select(xr => xr.Id)), default, default, default, reason);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Bans this member from their guild.
 	/// </summary>
 	/// <param name="deleteMessageDays">How many days to remove messages from.</param>
@@ -761,34 +627,19 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task BanAsync(int deleteMessageDays = 0, string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Guild.BanMemberAsync(this, deleteMessageDays, reason);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Unbans this member from their guild.
 	/// </summary>
 	/// <exception cref = "Exceptions.UnauthorizedException" > Thrown when the client does not have the<see cref="Permissions.BanMembers"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
-	public Task UnbanAsync(string reason = null) => this.Guild.UnbanMemberAsync(this, reason);
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
+	public Task UnbanAsync(string reason = null)
+		=> this.Guild.UnbanMemberAsync(this, reason);
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Kicks this member from their guild.
 	/// </summary>
 	/// <param name="reason">Reason for audit logs.</param>
@@ -798,31 +649,17 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task RemoveAsync(string reason = null)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> this.Discord.ApiClient.RemoveGuildMemberAsync(this.GuildId, this.Id, reason);
 
 	/// <summary>
 	/// Moves this member to the specified voice channel
 	/// </summary>
 	/// <param name="channel"></param>
-
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MoveMembers"/> permission.</exception>
+	/// <exception cref="UnauthorizedException">Thrown when the client does not have the <see cref="Permissions.MoveMembers"/> permission.</exception>
 	/// <exception cref="NotFoundException">Thrown when the member does not exist.</exception>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public Task PlaceInAsync(DiscordChannel channel)
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 		=> channel.PlaceMemberAsync(this);
 
 	/// <summary>
@@ -839,12 +676,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, channel.Id, suppress).ConfigureAwait(false);
 	}
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Makes the user a speaker.
 	/// </summary>
 	/// <exception cref="ArgumentException">Thrown when the user is not inside an stage channel.</exception>
@@ -853,10 +685,6 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task MakeSpeakerAsync()
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	{
 		var vs = this.VoiceState;
 		if (vs == null || vs.Channel.Type != ChannelType.Stage)
@@ -865,12 +693,7 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 		await this.Discord.ApiClient.UpdateUserVoiceStateAsync(this.Guild.Id, this.Id, vs.Channel.Id, false).ConfigureAwait(false);
 	}
 
-	
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning disable CS1574 // XML comment has cref attribute that could not be resolved
-/// <summary>
+	/// <summary>
 	/// Moves the user to audience.
 	/// </summary>
 	/// <exception cref="ArgumentException">Thrown when the user is not inside an stage channel.</exception>
@@ -879,10 +702,6 @@ public class DiscordMember : DiscordUser, IEquatable<DiscordMember>
 	/// <exception cref="BadRequestException">Thrown when an invalid parameter was provided.</exception>
 	/// <exception cref="ServerErrorException">Thrown when Discord is unable to process the request.</exception>
 	public async Task MoveToAudienceAsync()
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 	{
 		var vs = this.VoiceState;
 		if (vs == null || vs.Channel.Type != ChannelType.Stage)

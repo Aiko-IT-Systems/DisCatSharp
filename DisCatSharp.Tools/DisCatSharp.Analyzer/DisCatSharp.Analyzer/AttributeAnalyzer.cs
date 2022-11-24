@@ -77,15 +77,8 @@ namespace DisCatSharp.Analyzer
 			context.RegisterSymbolAction(ExperimentalAnalyzer, SymbolKind.Event);
 			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.InvocationExpression);
 			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.ObjectCreationExpression);
-			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.FieldDeclaration); // Don't work
-			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.PropertyDeclaration); // Don't work, one of the not working ones should create a report if a property is used. I.e.:
-			/*
-			 
-			var test = new Test("test");
-			test.Invoke();
-			var str = test.TestString; <- Fire here for TestString
-			 
-			 */
+			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.ElementAccessExpression);
+			context.RegisterSyntaxNodeAction(StatusAnalyzer, SyntaxKind.SimpleMemberAccessExpression);
 		}
 		private static void StatusAnalyzer(SyntaxNodeAnalysisContext context)
 		{

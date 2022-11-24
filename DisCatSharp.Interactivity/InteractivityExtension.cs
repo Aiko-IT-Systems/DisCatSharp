@@ -362,6 +362,7 @@ public class InteractivityExtension : BaseExtension
 	/// </summary>
 	/// <param name="message">The message to wait for.</param>
 	/// <param name="predicate">A filter predicate.</param>
+	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
 	/// <exception cref="ArgumentException">Thrown when the Provided message does not contain any dropdowns</exception>
 	public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, ComponentType selectType, TimeSpan? timeoutOverride = null)
@@ -372,6 +373,7 @@ public class InteractivityExtension : BaseExtension
 	/// </summary>
 	/// <param name="message">The message to wait for.</param>
 	/// <param name="predicate">A filter predicate.</param>
+	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="token">A token that can be used to cancel interactivity. Pass <see cref="CancellationToken.None"/> to wait indefinitely.</param>
 	/// <exception cref="ArgumentException">Thrown when the Provided message does not contain any dropdowns</exception>
 	public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, ComponentType selectType, CancellationToken token)
@@ -399,6 +401,7 @@ public class InteractivityExtension : BaseExtension
 	/// <remarks>This is here for backwards-compatibility and will internally create a cancellation token.</remarks>
 	/// <param name="message">The message to wait on.</param>
 	/// <param name="id">The Id of the dropdown to wait on.</param>
+	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
 	/// <exception cref="ArgumentException">Thrown when the message does not have any dropdowns or any dropdown with the specified Id.</exception>
 	public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, string id, ComponentType selectType, TimeSpan? timeoutOverride = null)
@@ -409,6 +412,7 @@ public class InteractivityExtension : BaseExtension
 	/// </summary>
 	/// <param name="message">The message to wait on.</param>
 	/// <param name="id">The Id of the dropdown to wait on.</param>
+	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 	/// <exception cref="ArgumentException">Thrown when the message does not have any dropdowns or any dropdown with the specified Id.</exception>
 	public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, string id, ComponentType selectType, CancellationToken token)
@@ -439,6 +443,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="message">The message to wait on.</param>
 	/// <param name="user">The user to wait on.</param>
 	/// <param name="id">The Id of the dropdown to wait on.</param>
+	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
 	/// <exception cref="ArgumentException">Thrown when the message does not have any dropdowns or any dropdown with the specified Id.</exception>
 	public Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, DiscordUser user, string id, ComponentType selectType, TimeSpan? timeoutOverride = null)
@@ -450,6 +455,7 @@ public class InteractivityExtension : BaseExtension
 	/// <param name="message">The message to wait on.</param>
 	/// <param name="user">The user to wait on.</param>
 	/// <param name="id">The Id of the dropdown to wait on.</param>
+	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 	/// <exception cref="ArgumentException">Thrown when the message does not have any dropdowns or any dropdown with the specified Id.</exception>
 	public async Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(DiscordMessage message, DiscordUser user, string id, ComponentType selectType, CancellationToken token)

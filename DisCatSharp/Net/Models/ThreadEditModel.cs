@@ -63,6 +63,11 @@ public class ThreadEditModel : BaseEditModel
 	public Optional<bool?> Invitable { internal get; set; }
 
 	/// <summary>
+	/// Whether the thread is pinned within the <see cref="ChannelType.Forum">forum</see> channel.
+	/// </summary>
+	public Optional<bool?> Pinned { internal get; set; }
+
+	/// <summary>
 	/// Sets the thread's applied tags.
 	/// </summary>
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.

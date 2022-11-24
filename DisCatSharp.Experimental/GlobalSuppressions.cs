@@ -5,4 +5,3 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0022:Use expression body for methods", Justification = "<Pending>", Scope = "member", Target = "~M:DisCatSharp.Experimental.Program.Main(System.String[])")]

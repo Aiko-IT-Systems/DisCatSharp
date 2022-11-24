@@ -135,6 +135,7 @@ public static class MessageExtensions
 	/// </summary>
 	/// <param name="message">The message to wait for.</param>
 	/// <param name="predicate">A filter predicate.</param>
+	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="timeoutOverride">Override the timeout period specified in <see cref="InteractivityConfiguration"/>.</param>
 	/// <exception cref="ArgumentException">Thrown when the message doesn't contain any dropdowns</exception>
 	public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, ComponentType selectType, TimeSpan? timeoutOverride = null)
@@ -146,6 +147,7 @@ public static class MessageExtensions
 	/// </summary>
 	/// <param name="message">The message to wait for.</param>
 	/// <param name="predicate">A filter predicate.</param>
+	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="token">A token that can be used to cancel interactivity. Pass <see cref="CancellationToken.None"/> to wait indefinitely.</param>
 	/// <exception cref="ArgumentException">Thrown when the message doesn't contain any dropdowns</exception>
 	public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, Func<ComponentInteractionCreateEventArgs, bool> predicate, ComponentType selectType, CancellationToken token)
@@ -156,6 +158,7 @@ public static class MessageExtensions
 	/// </summary>
 	/// <param name="message">The message to wait on.</param>
 	/// <param name="id">The Id of the dropdown to wait for.</param>
+	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="timeoutOverride">Overrides the timeout set in <see cref="InteractivityConfiguration.Timeout"/></param>
 	public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, string id, ComponentType selectType, TimeSpan? timeoutOverride = null)
 		=> GetInteractivity(message).WaitForSelectAsync(message, id, selectType, timeoutOverride);
@@ -165,6 +168,7 @@ public static class MessageExtensions
 	/// </summary>
 	/// <param name="message">The message to wait on.</param>
 	/// <param name="id">The Id of the dropdown to wait for.</param>
+	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 	public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, string id, ComponentType selectType, CancellationToken token)
 		=> GetInteractivity(message).WaitForSelectAsync(message, id, selectType, token);
@@ -175,6 +179,7 @@ public static class MessageExtensions
 	/// <param name="message">The message to wait on.</param>
 	/// <param name="user">The user to wait for.</param>
 	/// <param name="id">The Id of the dropdown to wait for.</param>
+	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="timeoutOverride"></param>
 	public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, DiscordUser user, string id, ComponentType selectType, TimeSpan? timeoutOverride = null)
 		=> GetInteractivity(message).WaitForSelectAsync(message, user, id, selectType, timeoutOverride);
@@ -185,6 +190,7 @@ public static class MessageExtensions
 	/// <param name="message">The message to wait on.</param>
 	/// <param name="user">The user to wait for.</param>
 	/// <param name="id">The Id of the dropdown to wait for.</param>
+	/// <param name="selectType">The <see cref="ComponentType">type</see> of the select menu.</param>
 	/// <param name="token">A custom cancellation token that can be cancelled at any point.</param>
 	public static Task<InteractivityResult<ComponentInteractionCreateEventArgs>> WaitForSelectAsync(this DiscordMessage message, DiscordUser user, string id, ComponentType selectType, CancellationToken token)
    => GetInteractivity(message).WaitForSelectAsync(message, user, id, selectType, token);
