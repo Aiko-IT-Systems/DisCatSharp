@@ -285,12 +285,14 @@
 		"template":[
 			"default",
 			"dcs",
-			"_template/last-modified"
+			"_template/last-modified",
+			"_template/description-generator"
 		],
 		"postProcessors":[
 			"ExtractSearchIndex",
 			"CustomMemberIndexer",
-			"LastModifiedPostProcessor"
+			"LastModifiedPostProcessor",
+			"DescriptionPostProcessor"
 		],
 		"noLangKeyword":false,
 		"keepFileLink":false,
