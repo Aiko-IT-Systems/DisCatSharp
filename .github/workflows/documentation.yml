@@ -36,6 +36,8 @@ jobs:
         name: dcs-docs.zip
         path: dcs-docs.zip
         retention-days: 30
+    - name: Debug
+      run: ls -la DisCatSharp.Docs/obj/.cache/build/ && git add DisCatSharp.Docs/obj
     - name: Commit and push changes
       uses: EndBug/add-and-commit@main
       with:
