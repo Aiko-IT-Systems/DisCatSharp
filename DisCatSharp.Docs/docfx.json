@@ -284,15 +284,13 @@
 		"fileMetadataFiles":[],
 		"template":[
 			"default",
-			"dcs",
-			"_template/last-modified",
-			"_template/description-generator"
+			"dcs"
 		],
 		"postProcessors":[
 			"ExtractSearchIndex",
 			"CustomMemberIndexer",
-			"LastModifiedPostProcessor",
-			"DescriptionPostProcessor"
+			"DescriptionPostProcessor",
+			"LastModifiedPostProcessor"
 		],
 		"noLangKeyword":false,
 		"keepFileLink":false,
