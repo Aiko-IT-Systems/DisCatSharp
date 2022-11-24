@@ -283,11 +283,14 @@
 		"globalMetadataFiles":[],
 		"fileMetadataFiles":[],
 		"template":[
-			"dcs"
+			"default",
+			"dcs",
+			"_template/last-modified"
 		],
 		"postProcessors":[
 			"ExtractSearchIndex",
-			"CustomMemberIndexer"
+			"CustomMemberIndexer",
+			"LastModifiedPostProcessor"
 		],
 		"noLangKeyword":false,
 		"keepFileLink":false,

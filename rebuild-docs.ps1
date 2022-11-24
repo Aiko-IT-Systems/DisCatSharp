@@ -220,6 +220,9 @@ function BuildDocs([string] $target_dir_path)
     $docs_site = New-Item -type directory "$docs_site"
     $docs_site = $docs_site.FullName
 
+	# Add .htaccess to docs_site
+	Copy-Item ".htaccess" "$docs_site/.htaccess"
+
     # Check if old object cache exists
     # If it does, remove it
     #if (Test-Path "$docs_obj")
