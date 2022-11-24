@@ -18,6 +18,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: DisCatSharp
+        token:  ${{ secrets.NYUW_TOKEN_GH }}
     - name: Setup .NET
       uses: actions/setup-dotnet@v3.0.3
       with:
@@ -46,9 +47,9 @@ jobs:
       uses: EndBug/add-and-commit@main
       with:
         cwd: DisCatSharp
-        default_author: user_info
+        default_author: NyuwBot
         author_name: DisCatSharp
-        author_email: team@aitsys.dev
+        author_email: nyuw@aitsys.dev
         committer_name: NyuwBot
         committer_email: nyuw@aitsys.dev
         commit: --signoff
@@ -84,8 +85,8 @@ jobs:
       with:
         cwd: DisCatSharp.Docs
         default_author: user_info
-        author_name: DisCatSharp
-        author_email: team@aitsys.dev
+        author_name: NyuwBot
+        author_email: nyuw@aitsys.dev
         committer_name: NyuwBot
         committer_email: nyuw@aitsys.dev
         commit: --signoff
