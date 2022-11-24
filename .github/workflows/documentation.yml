@@ -43,7 +43,7 @@ jobs:
         path: dcs-docs.zip
         retention-days: 30
   documentation:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     name: Upload documentation
     needs: build
     steps:
@@ -59,11 +59,9 @@ jobs:
         name: dcs-docs.zip
     - name: Purge old docs
       working-directory: DisCatSharp.Docs
-      shell: pwsh
-      run: Get-ChildItem -Exclude .git* | Remove-Item -Recurse -Force
+      run: shopt -s extglob && rm -- !(.git*)
     - name: Extract new docs
-      shell: pwsh
-      run: Expand-Archive -Path dcs-docs.zip DisCatSharp.Docs/
+      run: unzip dcs-docs.zip -d DisCatSharp.Docs
     - name: Delete packed docs
       uses: geekyeggo/delete-artifact@v2
       with:
