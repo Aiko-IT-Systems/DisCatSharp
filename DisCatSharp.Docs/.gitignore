@@ -5,10 +5,6 @@
 /**/TEMP/
 /**/packages/
 /**/bin/
-/**/obj/
 _site
 
-# .manifest files
-api/.manifest
-libdev/.manifest
 !.htaccess

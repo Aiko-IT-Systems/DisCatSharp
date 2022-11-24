@@ -314,7 +314,6 @@ Thumbs.db
 #Ignore files built by Visual Studio
 *.exe
 *.bak
-*.cache
 [Bb]in
 [Dd]ebug*/
 *.lib
