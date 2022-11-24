@@ -26,8 +26,6 @@ jobs:
       run: dotnet restore
     - name: Build library
       run: dotnet build -c Release
-    - name: Test library
-      run: dotnet test -c Release
       continue-on-error: true
     - name: Build Docs
       shell: pwsh
@@ -36,7 +34,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: dcs-docs.zip
-        path: dcs-docs.zip
+        path: ../dcs-docs.zip
         retention-days: 30
     - name: Commit and push changes
       uses: EndBug/add-and-commit@main
