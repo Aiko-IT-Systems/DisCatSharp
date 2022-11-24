@@ -53,6 +53,7 @@ jobs:
         committer_email: nyuw@aitsys.dev
         commit: --signoff
         message: '[ci skip] Sync docs changes'
+        tag_push: '--force'
   documentation:
     runs-on: ubuntu-latest
     name: Upload documentation
