@@ -278,7 +278,8 @@
 			}
 		},
 		"disableGitFeatures":false,
-		"exportRawModel":true,
+		"exportRawModel":false,
+		"exportViewModel": false,
 		"globalMetadataFiles":[],
 		"fileMetadataFiles":[],
 		"template":[
