@@ -29,12 +29,12 @@ jobs:
       continue-on-error: true
     - name: Build Docs
       shell: pwsh
-      run: ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output ".." -PackageName "dcs-docs"
+      run: ./rebuild-docs.ps1 -DocsPath "./DisCatSharp.Docs" -Output "." -PackageName "dcs-docs"
     - name: Upload packed docs
       uses: actions/upload-artifact@v3
       with:
         name: dcs-docs.zip
-        path: ../dcs-docs.zip
+        path: dcs-docs.zip
         retention-days: 30
     - name: Commit and push changes
       uses: EndBug/add-and-commit@main
