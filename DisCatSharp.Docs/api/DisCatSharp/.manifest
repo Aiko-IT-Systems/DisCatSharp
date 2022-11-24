@@ -504,6 +504,7 @@
   "DisCatSharp.Entities.DisCatSharpTeam.IconHash": "DisCatSharp.Entities.DisCatSharpTeam.yml",
   "DisCatSharp.Entities.DisCatSharpTeam.Logo": "DisCatSharp.Entities.DisCatSharpTeam.yml",
   "DisCatSharp.Entities.DisCatSharpTeam.LogoHash": "DisCatSharp.Entities.DisCatSharpTeam.yml",
+  "DisCatSharp.Entities.DisCatSharpTeam.MainOwner": "DisCatSharp.Entities.DisCatSharpTeam.yml",
   "DisCatSharp.Entities.DisCatSharpTeam.Owner": "DisCatSharp.Entities.DisCatSharpTeam.yml",
   "DisCatSharp.Entities.DisCatSharpTeam.PrivacyPolicyUrl": "DisCatSharp.Entities.DisCatSharpTeam.yml",
   "DisCatSharp.Entities.DisCatSharpTeam.RepoUrl": "DisCatSharp.Entities.DisCatSharpTeam.yml",
