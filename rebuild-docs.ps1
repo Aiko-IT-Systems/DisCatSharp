@@ -175,7 +175,7 @@ function BuildDocs([string] $target_dir_path)
 
     # Form component paths
     $docs_site = Join-Path "$target_path" "_site"
-    $libdev_api = Join-Path "$target_path" "libdev"
+    # $libdev_api = Join-Path "$target_path" "libdev"
     $docs_api = Join-Path "$target_path" "api"
     $docs_obj = Join-Path "$target_path" "obj"
 
@@ -188,24 +188,24 @@ function BuildDocs([string] $target_dir_path)
 
     # Check if API documentation source path is a directory
     $docs_api_dir = Get-Item "$docs_api"
-	$libdev_api_dir = Get-Item "$libdev_api"
+	# $libdev_api_dir = Get-Item "$libdev_api"
     if (-not ($docs_api_dir -is [System.IO.DirectoryInfo]))
     {
         #Write-Host "API build target directory is not a directory"
         Return 32768
     }
-	if (-not ($libdev_api_dir -is [System.IO.DirectoryInfo]))
-    {
-        #Write-Host "LibDev API build target directory is not a directory"
-        Return 32768
-    }
+	#if (-not ($libdev_api_dir -is [System.IO.DirectoryInfo]))
+    #{
+    #    #Write-Host "LibDev API build target directory is not a directory"
+    #    Return 32768
+    #}
 
     # Purge old API documentation
     Write-Host "Purging old API documentation"
     Set-Location -path "$docs_api"
     Remove-Item "*.yml"
-    Set-Location -path "$libdev_api"
-    Remove-Item "*.yml"
+    #Set-Location -path "$libdev_api"
+    #Remove-Item "*.yml"
     Set-Location -path "$current_location"
 
     # Check if old built site exists
