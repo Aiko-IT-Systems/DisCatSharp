@@ -3,15 +3,17 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   {%- if title and _appTitle -%}
-  <title>{{title}} | {{appTitle}}</title>
-  <meta name="title" content="{{title}} | {{appTitle}}">
+	<title>{{title}} | {{appTitle}}</title>
+	<meta name="title" content="{{title}} | {{appTitle}}">
+	<meta name="og:title" content="{{title}} | {{appTitle}}">
   {%- else -%}
     {%- if title or _appTitle -%}
-  <title>{{title}}{{appTitle}}</title>
-  <meta name="title" content="{{title}}{{appTitle}}">
+		<title>{{title}}{{appTitle}}</title>
+		<meta name="title" content="{{title}}{{appTitle}}">
+		<meta name="og:title" content="{{title}}{{appTitle}}">
     {%- endif -%}
   {%- endif -%}
-  <meta name="viewport" content="width=device-width">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <meta name="generator" content="docfx {{_docfxVersion}}">
   {%- if _description -%}
   <meta name="description" content="{{_description}}">
@@ -21,6 +23,11 @@
   {%- else -%}
   <link rel="shortcut icon" href="{{_rel}}favicon.ico">
   {%- endif -%}
+<meta name="og:type" content="website">
+<meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+<meta name="og:image:alt" content="DisCatSharp Logo">
+<meta name="og:image:type" content="image/png">
+<meta name="og:site_name" content="DisCatSharp Documentation">
 <link rel="apple-touch-icon" sizes="57x57" href="{{_rel}}apple-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="{{_rel}}apple-icon-60x60.png">
 <link rel="apple-touch-icon" sizes="72x72" href="{{_rel}}apple-icon-72x72.png">
