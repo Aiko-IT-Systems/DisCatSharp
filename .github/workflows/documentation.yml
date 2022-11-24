@@ -42,6 +42,17 @@ jobs:
         name: dcs-docs.zip
         path: dcs-docs.zip
         retention-days: 30
+    - name: Commit and push changes
+      uses: EndBug/add-and-commit@main
+      with:
+        cwd: DisCatSharp
+        default_author: user_info
+        author_name: DisCatSharp
+        author_email: team@aitsys.dev
+        committer_name: NyuwBot
+        committer_email: nyuw@aitsys.dev
+        commit: --signoff
+        message: '[ci skip] Sync docs changes'
   documentation:
     runs-on: ubuntu-latest
     name: Upload documentation
