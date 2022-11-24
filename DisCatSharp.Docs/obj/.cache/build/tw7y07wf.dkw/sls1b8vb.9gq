@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+    
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Your First Bot  | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="title" content="Your First Bot  | DisCatSharp Docs ">
+      <meta name="og:title" content="Your First Bot  | DisCatSharp Docs ">
+      <meta name="generator" content="docfx 2.60.1.0">
+      
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="../../src/styles/config.css">
+      <link rel="stylesheet" href="../../src/styles/discord.css">
+      <link rel="stylesheet" href="../../src/styles/dcs.css">
+      <link rel="stylesheet" href="../../src/styles/main.css">
+      <link rel="stylesheet" href="../../src/styles/colors.css">
+      <link rel="stylesheet" href="../../src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+      
+      <meta property="docfx:rel" content="../../">
+      <meta property="docfx:newtab" content="true">
+    </head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+            
+            <a class="navbar-brand" href="../../index.html">
+              <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+                    
+                    <div>
+                      <div class="mobile-hide">
+                        
+                        <a class="navbar-brand" href="../../index.html">
+                          <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+                    
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+                        
+                        <div id="sidetoggle">
+                          <div id="sidetoc"></div>
+                        </div>
+                </div>
+                <div class="footer">
+                  <strong>Made with ♥ by AITSYS</strong>
+                  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+                
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+                        
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+						
+						<div id="sidetoggle">
+						  <div id="sidetoc"></div>
+						</div>
+						<div class="article row grid-right">
+
+                    <article class="content wrap" id="_content" data-uid="basics_first_bot">
+<h1 id="your-first-bot" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="6" sourceendlinenumber="6">Your First Bot</h1>
+
+<div class="NOTE" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="7" sourceendlinenumber="7"><h5>Note</h5><p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="8" sourceendlinenumber="8">This article assumes the following:</p>
+<ul sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="9" sourceendlinenumber="10">
+<li sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="9" sourceendlinenumber="9">You have <a class="xref" href="bot_account.html" title="Creating a Bot Account" data-raw-source="[created a bot account](xref:basics_bot_account &quot;Creating a Bot Account&quot;)" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="9" sourceendlinenumber="9">created a bot account</a> and have a bot token.</li>
+<li sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="10" sourceendlinenumber="10">You have <a href="https://visualstudio.microsoft.com/vs/" data-raw-source="[Visual Studio 2022](https://visualstudio.microsoft.com/vs/)" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="10" sourceendlinenumber="10">Visual Studio 2022</a> installed on your computer.</li>
+</ul>
+</div>
+<h2 id="create-a-project" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="13" sourceendlinenumber="13">Create a Project</h2>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="14" sourceendlinenumber="14">Open up Visual Studio and click on <code>Create a new project</code> towards the bottom right.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="16" sourceendlinenumber="16"><img src="/images/basics_first_bot_01.png" alt="Visual Studio Start Screen" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="16" sourceendlinenumber="16"></p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="18" sourceendlinenumber="19"><br>
+Select <code>Console App</code> then click on the <code>Next</code> button.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="21" sourceendlinenumber="21"><img src="/images/basics_first_bot_02.png" alt="New Project Screen" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="21" sourceendlinenumber="21"></p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="23" sourceendlinenumber="25"><br>
+Next, you&#39;ll give your project a name. For this example, we&#39;ll name it <code>MyFirstBot</code>.<br>
+If you&#39;d like, you can also change the directory that your project will be created in.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="27" sourceendlinenumber="27">Enter your desired project name, then click on the <code>Create</code> button.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="29" sourceendlinenumber="29"><img src="/images/basics_first_bot_03.png" alt="Name Project Screen" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="29" sourceendlinenumber="29"></p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="31" sourceendlinenumber="32"><br>
+Now select <code>.NET 6.0 (Long-term support)</code> from the dropdown menu, tick the <code>Do not use top-level statements</code> checkbox and click on the <code>Next</code> button.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="34" sourceendlinenumber="34"><img src="/images/basics_first_bot_04.png" alt="Framework Project Screen" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="34" sourceendlinenumber="34"></p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="36" sourceendlinenumber="38"><br>
+Voilà! Your project has been created!
+<img src="/images/basics_first_bot_05.png" alt="Visual Studio IDE" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="38" sourceendlinenumber="38"></p>
+<h2 id="install-package" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="41" sourceendlinenumber="41">Install Package</h2>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="42" sourceendlinenumber="43">Now that you have a project created, you&#39;ll want to get DisCatSharp installed.
+Locate the <em>solution explorer</em> on the right side, then right click on <code>Dependencies</code> and select <code>Manage NuGet Packages</code> from the context menu.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="45" sourceendlinenumber="45"><img src="/images/basics_first_bot_06.png" alt="Dependencies Context Menu" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="45" sourceendlinenumber="45"></p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="47" sourceendlinenumber="48"><br>
+You&#39;ll then be greeted by the NuGet package manager.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="50" sourceendlinenumber="50">Select the <code>Browse</code> tab towards the top left, then type <code>DisCatSharp</code> into the search text box with the Pre-release checkbox checked <strong>ON</strong>.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="52" sourceendlinenumber="52"><img src="/images/basics_first_bot_07.png" alt="NuGet Package Search" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="52" sourceendlinenumber="52"></p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="54" sourceendlinenumber="55"><br>
+The first results should be the DisCatSharp packages.</p>
+<!--![Search Results](/images/basics_first_bot_07.png)-->
+<table sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="58" sourceendlinenumber="67">
+<thead>
+<tr>
+<th style="text-align:center">Package</th>
+<th style="text-align:center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>DisCatSharp</code></td>
+<td style="text-align:center">Main package; Discord API client.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>DisCatSharp.CommandsNext</code></td>
+<td style="text-align:center">Add-on which provides a command framework.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>DisCatSharp.Common</code></td>
+<td style="text-align:center">Common tools &amp; converters</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>DisCatSharp.Interactivity</code></td>
+<td style="text-align:center">Add-on which allows for interactive commands.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>DisCatSharp.Lavalink</code></td>
+<td style="text-align:center">Client implementation for <a class="xref" href="../modules/audio/lavalink/setup.html" data-raw-source="[Lavalink](xref:modules_audio_lavalink_setup)" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="64" sourceendlinenumber="64">Lavalink</a>. Useful for music bots.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>DisCatSharp.ApplicationCommands</code></td>
+<td style="text-align:center">Add-on which makes dealing with application commands easier.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>DisCatSharp.VoiceNext</code></td>
+<td style="text-align:center">Add-on which enables connectivity to Discord voice channels.</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>DisCatSharp.VoiceNext.Natives</code></td>
+<td style="text-align:center">Voice next natives.</td>
+</tr>
+</tbody>
+</table>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="69" sourceendlinenumber="71"><br>
+We&#39;ll only need the <code>DisCatSharp</code> package for the basic bot we&#39;ll be writing in this article.<br>
+Select it from the list then click the <code>Install</code> button to the right.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="73" sourceendlinenumber="73"><img src="/images/basics_first_bot_08.png" alt="Install DisCatSharp" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="73" sourceendlinenumber="73"></p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="75" sourceendlinenumber="75">You&#39;re now ready to write some code!</p>
+<h2 id="first-lines-of-code" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="78" sourceendlinenumber="78">First Lines of Code</h2>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="79" sourceendlinenumber="80">DisCatSharp implements <a href="https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/consuming-the-task-based-asynchronous-pattern" data-raw-source="[Task-based Asynchronous Pattern](https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/consuming-the-task-based-asynchronous-pattern)" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="79" sourceendlinenumber="79">Task-based Asynchronous Pattern</a>.
+Because of this, the majority of DisCatSharp methods must be executed in a method marked as <code>async</code> so they can be properly <code>await</code>ed.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="82" sourceendlinenumber="83">Due to the way the compiler generates the underlying <a href="https://en.wikipedia.org/wiki/Common_Intermediate_Language" data-raw-source="[IL](https://en.wikipedia.org/wiki/Common_Intermediate_Language)" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="82" sourceendlinenumber="82">IL</a> code,
+marking our <code>Main</code> method as <code>async</code> has the potential to cause problems. As a result, we must pass the program execution to an <code>async</code> method.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="85" sourceendlinenumber="85">Head back to your <em>Program.cs</em> tab and empty the <code>Main</code> method by deleting line 9.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="87" sourceendlinenumber="87"><img src="/images/basics_first_bot_09.png" alt="Code Editor" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="87" sourceendlinenumber="87"></p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="89" sourceendlinenumber="90">Now, create a new <code>static</code> method named <code>MainAsync</code> beneath your <code>Main</code> method. Have it return type <code>Task</code> and mark it as <code>async</code>.
+After that, add <code>MainAsync().GetAwaiter().GetResult();</code> to your <code>Main</code> method.</p>
+<pre sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="92" sourceendlinenumber="102"><code class="lang-cs">static void Main(string[] args)
+{
+    MainAsync().GetAwaiter().GetResult();
+}
+
+static async Task MainAsync()
+{
+
+}
+</code></pre><p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="104" sourceendlinenumber="105">If you typed this in by hand, Intellisense should have generated the required <code>using</code> directive for you.<br>
+However, if you copy-pasted the snippet above, VS will complain about being unable to find the <code>Task</code> type.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="107" sourceendlinenumber="107">Hover over <code>Task</code> with your mouse and click on <code>Show potential fixes</code> from the tooltip.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="109" sourceendlinenumber="109"><img src="/images/basics_first_bot_10.png" alt="Error Tooltip" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="109" sourceendlinenumber="109"></p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="111" sourceendlinenumber="111">Then apply the recommended solution.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="113" sourceendlinenumber="113"><img src="/images/basics_first_bot_11.png" alt="Solution Menu" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="113" sourceendlinenumber="113"></p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="115" sourceendlinenumber="116"><br>
+We&#39;ll now create a new <code>DiscordClient</code> instance in our brand new asynchronous method.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="118" sourceendlinenumber="123">Create a new variable in <code>MainAsync</code> and assign it a new <code>DiscordClient</code> instance, then pass an instance of <code>DiscordConfiguration</code> to its constructor.
+Create an object initializer for <code>DiscordConfiguration</code> and populate the <code>Token</code> property with your bot token then set the <code>TokenType</code> property to <code>TokenType.Bot</code>.
+Next add the <code>Intents</code> Property and Populated it with the <a class="xref" href="../../api/DisCatSharp/DisCatSharp.DiscordIntents.html#DisCatSharp_DiscordIntents_AllUnprivileged" data-raw-source="@DisCatSharp.DiscordIntents.AllUnprivileged" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="120" sourceendlinenumber="120">AllUnprivileged</a> and DiscordIntents.MessageContent values.
+The message content intent must be enabled in the developer portal as well.
+These Intents
+are required for certain Events to be fired.  Please visit this <a class="xref" href="../beyond_basics/intents.html" data-raw-source="[article](xref:beyond_basics_intents)" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="123" sourceendlinenumber="123">article</a> for more information.</p>
+<pre sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="125" sourceendlinenumber="132"><code class="lang-cs">var discord = new DiscordClient(new DiscordConfiguration()
+{
+    Token = &quot;My First Token&quot;,
+    TokenType = TokenType.Bot,
+    Intents = DiscordIntents.AllUnprivileged | DiscordIntents.MessageContent
+});
+</code></pre><div class="WARNING" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="134" sourceendlinenumber="134"><h5>Warning</h5><p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="135" sourceendlinenumber="135">We hard-code the token in the above snippet to keep things simple and easy to understand.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="137" sourceendlinenumber="138">Hard-coding your token is <em>not</em> a smart idea, especially if you plan on distributing your source code.
+Instead you should store your token in an external medium, such as a configuration file or environment variable, and read that into your program to be used with DisCatSharp.</p>
+</div>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="140" sourceendlinenumber="140">Follow that up with <code>await discord.ConnectAsync();</code> to connect and login to Discord, and <code>await Task.Delay(-1);</code> at the end of the method to prevent the console window from closing prematurely.</p>
+<pre sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="141" sourceendlinenumber="146"><code class="lang-cs">var discord = new DiscordClient();
+
+await discord.ConnectAsync();
+await Task.Delay(-1);
+</code></pre><p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="147" sourceendlinenumber="148">As before, Intellisense will have auto generated the needed <code>using</code> directive for you if you typed this in by hand.<br>
+If you&#39;ve copied the snippet, be sure to apply the recommended suggestion to insert the required directive.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="150" sourceendlinenumber="150">If you hit <code>F5</code> on your keyboard to compile and run your program, you&#39;ll be greeted by a happy little console with a single log message from DisCatSharp. Woo hoo!</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="152" sourceendlinenumber="152"><img src="/images/basics_first_bot_12.png" alt="Program Console" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="152" sourceendlinenumber="152"></p>
+<h2 id="spicing-up-your-bot" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="155" sourceendlinenumber="155">Spicing Up Your Bot</h2>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="156" sourceendlinenumber="156">Right now our bot doesn&#39;t do a whole lot. Let&#39;s bring it to life by having it respond to a message!</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="158" sourceendlinenumber="160">Hook the <code>MessageCreated</code> event fired by <code>DiscordClient</code> with a
+<a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/lambda-expressions" data-raw-source="[lambda](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/lambda-expressions)" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="159" sourceendlinenumber="159">lambda</a>.<br>
+Mark it as <code>async</code> and give it two parameters: <code>s</code> and <code>e</code>.</p>
+<pre sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="162" sourceendlinenumber="167"><code class="lang-cs">discord.MessageCreated += async (s, e) =&gt;
+{
+
+};
+</code></pre><p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="169" sourceendlinenumber="170">Then, add an <code>if</code> statement into the body of your event lambda that will check if <code>e.Message.Content</code> starts with your desired trigger word and respond with
+a message using <code>e.Message.RespondAsync</code> if it does. For this example, we&#39;ll have the bot to respond with <em>pong!</em> for each message that starts with <em>ping</em>.</p>
+<pre sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="172" sourceendlinenumber="178"><code class="lang-cs">discord.MessageCreated += async (s, e) =&gt;
+{
+    if (e.Message.Content.ToLower().StartsWith(&quot;ping&quot;))
+        await e.Message.RespondAsync(&quot;pong!&quot;);
+};
+</code></pre><h2 id="the-finished-product" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="181" sourceendlinenumber="181">The Finished Product</h2>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="182" sourceendlinenumber="182">Your entire program should now look like this:</p>
+<pre sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="184" sourceendlinenumber="219"><code class="lang-cs">using System;
+using System.Threading.Tasks;
+using DisCatSharp;
+
+namespace MyFirstBot
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            MainAsync().GetAwaiter().GetResult();
+        }
+
+        static async Task MainAsync()
+        {
+            var discord = new DiscordClient(new DiscordConfiguration()
+            {
+                Token = &quot;My First Token&quot;,
+                TokenType = TokenType.Bot,
+                Intents = DiscordIntents.AllUnprivileged | DiscordIntents.MessageContent
+            });
+
+            discord.MessageCreated += async (s, e) =&gt;
+            {
+                if (e.Message.Content.ToLower().StartsWith(&quot;ping&quot;))
+                    await e.Message.RespondAsync(&quot;pong!&quot;);
+
+            };
+
+            await discord.ConnectAsync();
+            await Task.Delay(-1);
+        }
+    }
+}
+</code></pre><p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="221" sourceendlinenumber="222">Hit <code>F5</code> to run your bot, then send <em>ping</em> in any channel your bot account has access to.<br>
+Your bot should respond with <em>pong!</em> for each <em>ping</em> you send.</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="224" sourceendlinenumber="224">Congrats, your bot now does something!</p>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="226" sourceendlinenumber="226"><img src="/images/basics_first_bot_13.png" alt="Bot Response" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="226" sourceendlinenumber="226"></p>
+<h2 id="further-reading" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="229" sourceendlinenumber="229">Further Reading</h2>
+<p sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="230" sourceendlinenumber="230">Now that you have a basic bot up and running, you should take a look at the following:</p>
+<ul sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="232" sourceendlinenumber="234">
+<li sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="232" sourceendlinenumber="232"><a class="xref" href="../beyond_basics/events.html" data-raw-source="[Events](xref:beyond_basics_events)" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="232" sourceendlinenumber="232">Events</a></li>
+<li sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="233" sourceendlinenumber="233"><a class="xref" href="../modules/commandsnext/intro.html" data-raw-source="[CommandsNext](xref:modules_commandsnext_intro)" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="233" sourceendlinenumber="233">CommandsNext</a></li>
+<li sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="234" sourceendlinenumber="234"><a class="xref" href="../modules/application_commands/intro.html" data-raw-source="[ApplicationCommands](xref:modules_application_commands_intro)" sourcefile="articles/basics/first_bot.md" sourcestartlinenumber="234" sourceendlinenumber="234">ApplicationCommands</a></li>
+</ul>
+</article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        
+
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="../../src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="../../src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="../../src/scripts/lunr.js"></script>
+    </div></body>
+</html>

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+    
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class ApplicationCommandsExtension
+      | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="title" content="Class ApplicationCommandsExtension
+      | DisCatSharp Docs ">
+      <meta name="og:title" content="Class ApplicationCommandsExtension
+      | DisCatSharp Docs ">
+      <meta name="generator" content="docfx 2.60.1.0">
+      
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="../../src/styles/config.css">
+      <link rel="stylesheet" href="../../src/styles/discord.css">
+      <link rel="stylesheet" href="../../src/styles/dcs.css">
+      <link rel="stylesheet" href="../../src/styles/main.css">
+      <link rel="stylesheet" href="../../src/styles/colors.css">
+      <link rel="stylesheet" href="../../src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+      
+      <meta property="docfx:rel" content="../../">
+      <meta property="docfx:newtab" content="true">
+    </head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+            
+            <a class="navbar-brand" href="../../index.html">
+              <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+                    
+                    <div>
+                      <div class="mobile-hide">
+                        
+                        <a class="navbar-brand" href="../../index.html">
+                          <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+                    
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+                        
+                        <div id="sidetoggle">
+                          <div id="sidetoc"></div>
+                        </div>
+                </div>
+                <div class="footer">
+                  <strong>Made with ♥ by AITSYS</strong>
+                  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+                
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+                        
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+						
+						<div id="sidetoggle">
+						  <div id="sidetoc"></div>
+						</div>
+						<div class="article row grid-right">
+
+                    <article class="content wrap" id="_content" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension">
+  
+  
+  <h1 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension" class="text-break">Class ApplicationCommandsExtension
+  </h1>
+  <div class="markdown level0 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">A class that handles slash commands for a client.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="../DisCatSharp/DisCatSharp.BaseExtension.html">BaseExtension</a></div>
+    <div class="level2"><span class="xref">ApplicationCommandsExtension</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="../DisCatSharp/DisCatSharp.BaseExtension.html#DisCatSharp_BaseExtension_Client">BaseExtension.Client</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="DisCatSharp.ApplicationCommands.html">DisCatSharp.ApplicationCommands</a></h6>
+  <h6><strong>Assembly</strong>: DisCatSharp.ApplicationCommands.dll</h6>
+  <h5 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class ApplicationCommandsExtension : BaseExtension</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_GlobalCommands.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.GlobalCommands%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L117">View Source</a>
+  </span>
+  <a id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_GlobalCommands_" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.GlobalCommands*"></a>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_GlobalCommands" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.GlobalCommands">GlobalCommands</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets a list of registered global commands.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;DiscordApplicationCommand&gt; GlobalCommands { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="../DisCatSharp/DisCatSharp.Entities.DiscordApplicationCommand.html">DiscordApplicationCommand</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_GuildCommands.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.GuildCommands%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L124">View Source</a>
+  </span>
+  <a id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_GuildCommands_" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.GuildCommands*"></a>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_GuildCommands" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.GuildCommands">GuildCommands</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets a list of registered guild commands mapped by guild id.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyDictionary&lt;ulong, IReadOnlyList&lt;DiscordApplicationCommand&gt;&gt; GuildCommands { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a>, <span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="../DisCatSharp/DisCatSharp.Entities.DiscordApplicationCommand.html">DiscordApplicationCommand</a>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisteredCommands.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisteredCommands%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L110">View Source</a>
+  </span>
+  <a id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisteredCommands_" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisteredCommands*"></a>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisteredCommands" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisteredCommands">RegisteredCommands</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets a list of registered commands. The key is the guild id (null if global).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;KeyValuePair&lt;ulong?, IReadOnlyList&lt;DiscordApplicationCommand&gt;&gt;&gt; RegisteredCommands { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyList</span>&lt;<span class="xref">KeyValuePair</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a>&gt;, <span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="../DisCatSharp/DisCatSharp.Entities.DiscordApplicationCommand.html">DiscordApplicationCommand</a>&gt;&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_Services.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.Services%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L175">View Source</a>
+  </span>
+  <a id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_Services_" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.Services*"></a>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_Services" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.Services">Services</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Gets the service provider this module was configured with.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IServiceProvider Services { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IServiceProvider</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_CleanModule.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.CleanModule%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L254">View Source</a>
+  </span>
+  <a id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_CleanModule_" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.CleanModule*"></a>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_CleanModule" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.CleanModule">CleanModule()</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="3">Cleans the module for a new start of the bot.
+DO NOT USE IF YOU DON&apos;T KNOW WHAT IT DOES.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void CleanModule()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisterGlobalCommands_Type_Action_DisCatSharp_ApplicationCommands_Context_ApplicationCommandsTranslationContext__.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisterGlobalCommands(Type%2CAction%7BDisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L323">View Source</a>
+  </span>
+  <a id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisterGlobalCommands_" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisterGlobalCommands*"></a>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisterGlobalCommands_Type_Action_DisCatSharp_ApplicationCommands_Context_ApplicationCommandsTranslationContext__" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisterGlobalCommands(Type,Action{DisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext})">RegisterGlobalCommands(Type, Action&lt;ApplicationCommandsTranslationContext&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Registers a command class with optional translation setup globally.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RegisterGlobalCommands(Type type, Action&lt;ApplicationCommandsTranslationContext&gt; translationSetup = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Type</span></td>
+        <td><span class="parametername">type</span></td>
+        <td><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The <see cref="!:System.Type"></see> of the command class to register.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="DisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext.html">ApplicationCommandsTranslationContext</a>&gt;</td>
+        <td><span class="parametername">translationSetup</span></td>
+        <td><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="1" sourceendlinenumber="1">A callback to setup translations with.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisterGlobalCommands__1_Action_DisCatSharp_ApplicationCommands_Context_ApplicationCommandsTranslationContext__.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisterGlobalCommands%60%601(Action%7BDisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L315">View Source</a>
+  </span>
+  <a id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisterGlobalCommands_" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisterGlobalCommands*"></a>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisterGlobalCommands__1_Action_DisCatSharp_ApplicationCommands_Context_ApplicationCommandsTranslationContext__" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisterGlobalCommands``1(Action{DisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext})">RegisterGlobalCommands&lt;T&gt;(Action&lt;ApplicationCommandsTranslationContext&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Registers a command class with optional translation setup globally.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RegisterGlobalCommands&lt;T&gt;(Action&lt;ApplicationCommandsTranslationContext&gt; translationSetup = null)
+    where T : ApplicationCommandsModule</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="DisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext.html">ApplicationCommandsTranslationContext</a>&gt;</td>
+        <td><span class="parametername">translationSetup</span></td>
+        <td><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="1" sourceendlinenumber="1">A callback to setup translations with.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The command class to register.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisterGuildCommands_Type_System_UInt64_Action_DisCatSharp_ApplicationCommands_Context_ApplicationCommandsTranslationContext__.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisterGuildCommands(Type%2CSystem.UInt64%2CAction%7BDisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L303">View Source</a>
+  </span>
+  <a id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisterGuildCommands_" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisterGuildCommands*"></a>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisterGuildCommands_Type_System_UInt64_Action_DisCatSharp_ApplicationCommands_Context_ApplicationCommandsTranslationContext__" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisterGuildCommands(Type,System.UInt64,Action{DisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext})">RegisterGuildCommands(Type, UInt64, Action&lt;ApplicationCommandsTranslationContext&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Registers a command class with optional translation setup for a guild.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RegisterGuildCommands(Type type, ulong guildId, Action&lt;ApplicationCommandsTranslationContext&gt; translationSetup = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Type</span></td>
+        <td><span class="parametername">type</span></td>
+        <td><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The <see cref="!:System.Type"></see> of the command class to register.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">guildId</span></td>
+        <td><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The guild id to register it on.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="DisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext.html">ApplicationCommandsTranslationContext</a>&gt;</td>
+        <td><span class="parametername">translationSetup</span></td>
+        <td><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="1" sourceendlinenumber="1">A callback to setup translations with.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisterGuildCommands__1_System_UInt64_Action_DisCatSharp_ApplicationCommands_Context_ApplicationCommandsTranslationContext__.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisterGuildCommands%60%601(System.UInt64%2CAction%7BDisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L294">View Source</a>
+  </span>
+  <a id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisterGuildCommands_" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisterGuildCommands*"></a>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_RegisterGuildCommands__1_System_UInt64_Action_DisCatSharp_ApplicationCommands_Context_ApplicationCommandsTranslationContext__" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.RegisterGuildCommands``1(System.UInt64,Action{DisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext})">RegisterGuildCommands&lt;T&gt;(UInt64, Action&lt;ApplicationCommandsTranslationContext&gt;)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Registers a command class with optional translation setup for a guild.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RegisterGuildCommands&lt;T&gt;(ulong guildId, Action&lt;ApplicationCommandsTranslationContext&gt; translationSetup = null)
+    where T : ApplicationCommandsModule</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">guildId</span></td>
+        <td><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The guild id to register it on.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="DisCatSharp.ApplicationCommands.Context.ApplicationCommandsTranslationContext.html">ApplicationCommandsTranslationContext</a>&gt;</td>
+        <td><span class="parametername">translationSetup</span></td>
+        <td><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="1" sourceendlinenumber="1">A callback to setup translations with.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The command class to register.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_Setup_DisCatSharp_DiscordClient_.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.Setup(DisCatSharp.DiscordClient)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L203">View Source</a>
+  </span>
+  <a id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_Setup_" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.Setup*"></a>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_Setup_DisCatSharp_DiscordClient_" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.Setup(DisCatSharp.DiscordClient)">Setup(DiscordClient)</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="3">Runs setup.
+<div class="CAUTION"><h5>caution</h5><p>DO NOT RUN THIS MANUALLY. DO NOT DO ANYTHING WITH THIS.</p></div></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void Setup(DiscordClient client)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp/DisCatSharp.DiscordClient.html">DiscordClient</a></td>
+        <td><span class="parametername">client</span></td>
+        <td><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="1" sourceendlinenumber="1">The client to setup on.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="../DisCatSharp/DisCatSharp.BaseExtension.html#DisCatSharp_BaseExtension_Setup_DisCatSharp_DiscordClient_">BaseExtension.Setup(DiscordClient)</a></div>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_ApplicationCommandsModuleReady.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.ApplicationCommandsModuleReady%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L333">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_ApplicationCommandsModuleReady" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.ApplicationCommandsModuleReady">ApplicationCommandsModuleReady</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Fired when the application commands module is ready.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;ApplicationCommandsExtension, ApplicationCommandsModuleReadyEventArgs&gt; ApplicationCommandsModuleReady</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp.Common/DisCatSharp.Common.Utilities.AsyncEventHandler-2.html">AsyncEventHandler</a>&lt;<a class="xref" href="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.html">ApplicationCommandsExtension</a>, <a class="xref" href="DisCatSharp.ApplicationCommands.EventArgs.ApplicationCommandsModuleReadyEventArgs.html">ApplicationCommandsModuleReadyEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_ApplicationCommandsModuleStartupFinished.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.ApplicationCommandsModuleStartupFinished%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L343">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_ApplicationCommandsModuleStartupFinished" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.ApplicationCommandsModuleStartupFinished">ApplicationCommandsModuleStartupFinished</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Fired when the application commands modules startup is finished.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;ApplicationCommandsExtension, ApplicationCommandsModuleStartupFinishedEventArgs&gt; ApplicationCommandsModuleStartupFinished</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp.Common/DisCatSharp.Common.Utilities.AsyncEventHandler-2.html">AsyncEventHandler</a>&lt;<a class="xref" href="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.html">ApplicationCommandsExtension</a>, <a class="xref" href="DisCatSharp.ApplicationCommands.EventArgs.ApplicationCommandsModuleStartupFinishedEventArgs.html">ApplicationCommandsModuleStartupFinishedEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_ContextMenuErrored.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.ContextMenuErrored%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L1689">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_ContextMenuErrored" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.ContextMenuErrored">ContextMenuErrored</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Fires when the execution of a context menu fails.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;ApplicationCommandsExtension, ContextMenuErrorEventArgs&gt; ContextMenuErrored</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp.Common/DisCatSharp.Common.Utilities.AsyncEventHandler-2.html">AsyncEventHandler</a>&lt;<a class="xref" href="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.html">ApplicationCommandsExtension</a>, <a class="xref" href="DisCatSharp.ApplicationCommands.EventArgs.ContextMenuErrorEventArgs.html">ContextMenuErrorEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_ContextMenuExecuted.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.ContextMenuExecuted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L1699">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_ContextMenuExecuted" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.ContextMenuExecuted">ContextMenuExecuted</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Fire when the execution of a context menu is successful.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;ApplicationCommandsExtension, ContextMenuExecutedEventArgs&gt; ContextMenuExecuted</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp.Common/DisCatSharp.Common.Utilities.AsyncEventHandler-2.html">AsyncEventHandler</a>&lt;<a class="xref" href="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.html">ApplicationCommandsExtension</a>, <a class="xref" href="DisCatSharp.ApplicationCommands.EventArgs.ContextMenuExecutedEventArgs.html">ContextMenuExecutedEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_GlobalApplicationCommandsRegistered.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.GlobalApplicationCommandsRegistered%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L364">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_GlobalApplicationCommandsRegistered" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.GlobalApplicationCommandsRegistered">GlobalApplicationCommandsRegistered</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Fired when the global commands are registered.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;ApplicationCommandsExtension, GlobalApplicationCommandsRegisteredEventArgs&gt; GlobalApplicationCommandsRegistered</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp.Common/DisCatSharp.Common.Utilities.AsyncEventHandler-2.html">AsyncEventHandler</a>&lt;<a class="xref" href="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.html">ApplicationCommandsExtension</a>, <a class="xref" href="DisCatSharp.ApplicationCommands.EventArgs.GlobalApplicationCommandsRegisteredEventArgs.html">GlobalApplicationCommandsRegisteredEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_GuildApplicationCommandsRegistered.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.GuildApplicationCommandsRegistered%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L354">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_GuildApplicationCommandsRegistered" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.GuildApplicationCommandsRegistered">GuildApplicationCommandsRegistered</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Fired when guild commands are registered on a guild.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;ApplicationCommandsExtension, GuildApplicationCommandsRegisteredEventArgs&gt; GuildApplicationCommandsRegistered</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp.Common/DisCatSharp.Common.Utilities.AsyncEventHandler-2.html">AsyncEventHandler</a>&lt;<a class="xref" href="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.html">ApplicationCommandsExtension</a>, <a class="xref" href="DisCatSharp.ApplicationCommands.EventArgs.GuildApplicationCommandsRegisteredEventArgs.html">GuildApplicationCommandsRegisteredEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_SlashCommandErrored.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.SlashCommandErrored%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L1669">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_SlashCommandErrored" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.SlashCommandErrored">SlashCommandErrored</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Fires when the execution of a slash command fails.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;ApplicationCommandsExtension, SlashCommandErrorEventArgs&gt; SlashCommandErrored</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp.Common/DisCatSharp.Common.Utilities.AsyncEventHandler-2.html">AsyncEventHandler</a>&lt;<a class="xref" href="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.html">ApplicationCommandsExtension</a>, <a class="xref" href="DisCatSharp.ApplicationCommands.EventArgs.SlashCommandErrorEventArgs.html">SlashCommandErrorEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_SlashCommandExecuted.md&amp;value=---%0Auid%3A%20DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.SlashCommandExecuted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp.ApplicationCommands/ApplicationCommandsExtension.cs/#L1679">View Source</a>
+  </span>
+  <h4 id="DisCatSharp_ApplicationCommands_ApplicationCommandsExtension_SlashCommandExecuted" data-uid="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.SlashCommandExecuted">SlashCommandExecuted</h4>
+  <div class="markdown level1 summary"><p sourcefile="api/DisCatSharp.ApplicationCommands/DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.yml" sourcestartlinenumber="2" sourceendlinenumber="2">Fires when the execution of a slash command is successful.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event AsyncEventHandler&lt;ApplicationCommandsExtension, SlashCommandExecutedEventArgs&gt; SlashCommandExecuted</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../DisCatSharp.Common/DisCatSharp.Common.Utilities.AsyncEventHandler-2.html">AsyncEventHandler</a>&lt;<a class="xref" href="DisCatSharp.ApplicationCommands.ApplicationCommandsExtension.html">ApplicationCommandsExtension</a>, <a class="xref" href="DisCatSharp.ApplicationCommands.EventArgs.SlashCommandExecutedEventArgs.html">SlashCommandExecutedEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+</article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        
+
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="../../src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="../../src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="../../src/scripts/lunr.js"></script>
+    </div></body>
+</html>

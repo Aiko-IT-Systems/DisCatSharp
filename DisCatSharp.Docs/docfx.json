@@ -284,12 +284,12 @@
 		"fileMetadataFiles":[],
 		"template":[
 			"default",
-			"dcs",
-			"_template/last-modified"
+			"dcs"
 		],
 		"postProcessors":[
 			"ExtractSearchIndex",
 			"CustomMemberIndexer",
+			"DescriptionPostProcessor",
 			"LastModifiedPostProcessor"
 		],
 		"noLangKeyword":false,

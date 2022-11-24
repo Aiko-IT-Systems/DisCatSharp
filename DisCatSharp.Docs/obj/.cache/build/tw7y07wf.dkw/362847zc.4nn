@@ -1,0 +1,41 @@
+
+<div id="sidetoggle">
+  <div>
+    <div class="sidefilter">
+      <form class="toc-filter">
+        <i class="bi bi-funnel-fill filter-icon"></i>
+        <i id="toc_filter_clear" class="bi bi-x-lg clear-icon"></i>
+        <input type="text" id="toc_filter_input" placeholder="Enter here to filter..." autocomplete="off" onkeypress="if(event.keyCode==13) {return false;}">
+      </form>
+    </div>
+    <div class="sidetoc">
+      <div class="toc" id="toc">
+          
+          <ul class="nav level1">
+                <li>
+                    <span class="expand-stub"></span>
+                    <a href="DisCatSharp.Hosting.html" name="" title="DisCatSharp.Hosting">DisCatSharp.Hosting</a>
+                    
+                    <ul class="nav level2">
+                          <li>
+                              <a href="DisCatSharp.Hosting.BaseHostedService.html" name="" title="BaseHostedService">BaseHostedService</a>
+                          </li>
+                          <li>
+                              <a href="DisCatSharp.Hosting.DiscordHostedService.html" name="" title="DiscordHostedService">DiscordHostedService</a>
+                          </li>
+                          <li>
+                              <a href="DisCatSharp.Hosting.DiscordShardedHostedService.html" name="" title="DiscordShardedHostedService">DiscordShardedHostedService</a>
+                          </li>
+                          <li>
+                              <a href="DisCatSharp.Hosting.IDiscordHostedService.html" name="" title="IDiscordHostedService">IDiscordHostedService</a>
+                          </li>
+                          <li>
+                              <a href="DisCatSharp.Hosting.IDiscordHostedShardService.html" name="" title="IDiscordHostedShardService">IDiscordHostedShardService</a>
+                          </li>
+                    </ul>
+                </li>
+          </ul>
+      </div>
+    </div>
+  </div>
+</div>
