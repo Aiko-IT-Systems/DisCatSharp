@@ -1,0 +1,2285 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>
+
+Class DiscordThreadChannel
+
+
+
+
+
+
+
+
+
+
+
+
+
+ | DisCatSharp Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <meta name="title" content="
+
+Class DiscordThreadChannel
+
+
+
+
+
+
+
+
+
+
+
+
+
+ | DisCatSharp Docs ">
+      <meta name="og:title" content="
+
+Class DiscordThreadChannel
+
+
+
+
+
+
+
+
+
+
+
+
+
+ | DisCatSharp Docs ">
+      <meta name="generator" content="docfx 2.60.0.0">
+  
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="https://cdn.aitsys.dev/file/data/kmjpa6f64me66dsm7dz3/PHID-FILE-degpfzd7nbw2q5yko5j7/logobig.png">
+    <meta name="og:image:alt" content="DisCatSharp Logo">
+    <meta name="og:image:type" content="image/png">
+    <meta name="og:site_name" content="DisCatSharp Documentation">
+    <link rel="apple-touch-icon" sizes="57x57" href="../../apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../../ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <script defer="" src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "de6c22ce0b3e4c17bb78c8c31b4e695b"}'></script>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/night-owl.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" integrity="sha384-EvBWSlnoFgZlXJvpzS+MAUEjvN7+gcCwH+qh7GRFOGgZO0PuwOFro7qPOJnLfe7l" crossorigin="anonymous">
+      <link rel="stylesheet" href="../../src/styles/config.css">
+      <link rel="stylesheet" href="../../src/styles/discord.css">
+      <link rel="stylesheet" href="../../src/styles/dcs.css">
+      <link rel="stylesheet" href="../../src/styles/main.css">
+      <link rel="stylesheet" href="../../src/styles/colors.css">
+      <link rel="stylesheet" href="../../src/styles/highlight/github-dark.min.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+  
+  <meta property="docfx:rel" content="../../">
+  <meta property="docfx:newtab" content="true">
+    <meta property="og:description" content="Represents a discord thread channel."><meta property="description" content="Represents a discord thread channel."><description>Represents a discord thread channel.</description></head>
+
+    <body>
+        <div class="top-navbar">
+            <a class="burger-icon" onclick="toggleMenu()">
+                <svg name="Hamburger" style="vertical-align: middle;" width="34" height="34" viewbox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20 6H4V9H20V6ZM4 10.999H20V13.999H4V10.999ZM4 15.999H20V18.999H4V15.999Z"></path></svg>
+            </a>
+
+
+            <a class="navbar-brand" href="../../index.html">
+              <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+            </a>
+        </div>
+
+        <div class="body-content">
+            <div id="blackout" class="blackout" onclick="toggleMenu()"></div>
+
+            <nav id="sidebar" role="navigation">
+                <div class="sidebar">
+
+                    <div>
+                      <div class="mobile-hide">
+
+                        <a class="navbar-brand" href="../../index.html">
+                          <img id="logo" class="svg" src="../../logo.png" alt="DisCatSharp">
+                        </a>
+                      </div>
+
+                      <div class="sidesearch">
+                        <form id="search" role="search" class="search">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text" id="search-query" placeholder="Search" autocomplete="off">
+                        </form>
+                      </div>
+
+                      <div id="navbar">
+                      </div>
+                    </div>
+                    <div class="sidebar-item-separator"></div>
+
+                        <div id="sidetoggle">
+                          <div id="sidetoc"></div>
+                        </div>
+                </div>
+                <div class="footer">
+  <strong>Made with ♥ by AITSYS</strong>
+  
+                </div>
+            </nav>
+
+            <main class="main-panel">
+
+                <div id="search-results" style="display: none;">
+                  <h1 class="search-list">Search Results for <span></span></h1>
+                  <div class="sr-items">
+                    <p class="lsearch"><i class="bi bi-hourglass-split index-loading"></i></p>
+                  </div>
+                  <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+                </div>
+
+                <div role="main" class="hide-when-search">
+
+                        <div class="subnav navbar navbar-default">
+                          <div class="container hide-when-search" id="breadcrumb">
+                            <ul class="breadcrumb">
+                              <li></li>
+                            </ul>
+                          </div>
+                        </div>
+
+      <div id="sidetoggle">
+        <div id="sidetoc"></div>
+      </div>
+						<div class="article row grid-right">
+
+                    <article class="content wrap" id="_content" data-uid="DisCatSharp.Entities.DiscordThreadChannel">
+
+
+  <h1 id="DisCatSharp_Entities_DiscordThreadChannel" data-uid="DisCatSharp.Entities.DiscordThreadChannel" class="text-break">
+
+Class DiscordThreadChannel
+
+
+
+
+
+
+
+
+
+
+
+
+
+</h1>
+  <div class="markdown level0 summary"><p>Represents a discord thread channel.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="DisCatSharp.Entities.SnowflakeObject.html">SnowflakeObject</a></div>
+    <div class="level2"><a class="xref" href="DisCatSharp.Entities.DiscordChannel.html">DiscordChannel</a></div>
+    <div class="level3"><span class="xref">DiscordThreadChannel</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordChannel.html">DiscordChannel</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GuildId">DiscordChannel.GuildId</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_ParentId">DiscordChannel.ParentId</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Parent">DiscordChannel.Parent</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Name">DiscordChannel.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Type">DiscordChannel.Type</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Template">DiscordChannel.Template</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Position">DiscordChannel.Position</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Flags">DiscordChannel.Flags</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetMaxPosition">DiscordChannel.GetMaxPosition()</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetMinPosition">DiscordChannel.GetMinPosition()</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_IsPrivate">DiscordChannel.IsPrivate</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_IsCategory">DiscordChannel.IsCategory</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_IsStage">DiscordChannel.IsStage</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Guild">DiscordChannel.Guild</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_PermissionOverwrites">DiscordChannel.PermissionOverwrites</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Topic">DiscordChannel.Topic</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_LastMessageId">DiscordChannel.LastMessageId</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Bitrate">DiscordChannel.Bitrate</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_UserLimit">DiscordChannel.UserLimit</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_PerUserRateLimit">DiscordChannel.PerUserRateLimit</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_PostCreateUserRateLimit">DiscordChannel.PostCreateUserRateLimit</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_QualityMode">DiscordChannel.QualityMode</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_AvailableTags">DiscordChannel.AvailableTags</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_DefaultReactionEmoji">DiscordChannel.DefaultReactionEmoji</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_DefaultSortOrder">DiscordChannel.DefaultSortOrder</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_LastPinTimestamp">DiscordChannel.LastPinTimestamp</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_DefaultAutoArchiveDuration">DiscordChannel.DefaultAutoArchiveDuration</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Mention">DiscordChannel.Mention</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Children">DiscordChannel.Children</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Users">DiscordChannel.Users</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_IsNsfw">DiscordChannel.IsNsfw</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_RtcRegion">DiscordChannel.RtcRegion</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_UserPermissions">DiscordChannel.UserPermissions</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_SendMessageAsync_System_String_">DiscordChannel.SendMessageAsync(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_SendMessageAsync_DisCatSharp_Entities_DiscordEmbed_">DiscordChannel.SendMessageAsync(DiscordEmbed)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_SendMessageAsync_System_String_DisCatSharp_Entities_DiscordEmbed_">DiscordChannel.SendMessageAsync(String, DiscordEmbed)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_SendMessageAsync_DisCatSharp_Entities_DiscordMessageBuilder_">DiscordChannel.SendMessageAsync(DiscordMessageBuilder)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_SendMessageAsync_Action_DisCatSharp_Entities_DiscordMessageBuilder__">DiscordChannel.SendMessageAsync(Action&lt;DiscordMessageBuilder&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_DeleteAsync_System_String_">DiscordChannel.DeleteAsync(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_CloneAsync_System_String_">DiscordChannel.CloneAsync(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetMessageAsync_System_UInt64_System_Boolean_">DiscordChannel.GetMessageAsync(UInt64, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_TryGetMessageAsync_System_UInt64_System_Boolean_">DiscordChannel.TryGetMessageAsync(UInt64, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_ModifyAsync_Action_DisCatSharp_Net_Models_ChannelEditModel__">DiscordChannel.ModifyAsync(Action&lt;ChannelEditModel&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_ModifyForumAsync_Action_DisCatSharp_Net_Models_ForumChannelEditModel__">DiscordChannel.ModifyForumAsync(Action&lt;ForumChannelEditModel&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_ModifyPositionAsync_System_Int32_System_String_">DiscordChannel.ModifyPositionAsync(Int32, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_ModifyPositionInCategoryAsync_System_Int32_System_String_">DiscordChannel.ModifyPositionInCategoryAsync(Int32, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_RefreshPositionsAsync">DiscordChannel.RefreshPositionsAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_ModifyPositionInCategorySmartAsync_System_String_System_Int32_System_String_">DiscordChannel.ModifyPositionInCategorySmartAsync(String, Int32, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_ModifyParentAsync_DisCatSharp_Entities_DiscordChannel_System_Nullable_System_Boolean__System_String_">DiscordChannel.ModifyParentAsync(DiscordChannel, Nullable&lt;Boolean&gt;, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_RemoveParentAsync_System_String_">DiscordChannel.RemoveParentAsync(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetMessagesBeforeAsync_System_UInt64_System_Int32_">DiscordChannel.GetMessagesBeforeAsync(UInt64, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetMessagesAfterAsync_System_UInt64_System_Int32_">DiscordChannel.GetMessagesAfterAsync(UInt64, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetMessagesAroundAsync_System_UInt64_System_Int32_">DiscordChannel.GetMessagesAroundAsync(UInt64, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetMessagesAsync_System_Int32_">DiscordChannel.GetMessagesAsync(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_DeleteMessagesAsync_IEnumerable_DisCatSharp_Entities_DiscordMessage__System_String_">DiscordChannel.DeleteMessagesAsync(IEnumerable&lt;DiscordMessage&gt;, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_DeleteMessageAsync_DisCatSharp_Entities_DiscordMessage_System_String_">DiscordChannel.DeleteMessageAsync(DiscordMessage, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetInvitesAsync">DiscordChannel.GetInvitesAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_CreateInviteAsync_System_Int32_System_Int32_System_Boolean_System_Boolean_System_Nullable_DisCatSharp_Enums_TargetType__System_Nullable_System_UInt64__System_Nullable_System_UInt64__System_String_">DiscordChannel.CreateInviteAsync(Int32, Int32, Boolean, Boolean, Nullable&lt;TargetType&gt;, Nullable&lt;UInt64&gt;, Nullable&lt;UInt64&gt;, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_OpenStageAsync_System_String_System_Boolean_DisCatSharp_Enums_StagePrivacyLevel_System_String_">DiscordChannel.OpenStageAsync(String, Boolean, StagePrivacyLevel, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_ModifyStageAsync_DisCatSharp_Entities_Optional_System_String__DisCatSharp_Entities_Optional_DisCatSharp_Enums_StagePrivacyLevel__System_String_">DiscordChannel.ModifyStageAsync(Optional&lt;String&gt;, Optional&lt;StagePrivacyLevel&gt;, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_CloseStageAsync_System_String_">DiscordChannel.CloseStageAsync(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetStageAsync">DiscordChannel.GetStageAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_CreateScheduledEventAsync_System_String_DateTimeOffset_System_String_DisCatSharp_Entities_Optional_Stream__System_String_">DiscordChannel.CreateScheduledEventAsync(String, DateTimeOffset, String, Optional&lt;Stream&gt;, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_CreateThreadAsync_System_String_DisCatSharp_Enums_ThreadAutoArchiveDuration_DisCatSharp_Enums_ChannelType_System_Nullable_System_Int32__System_String_">DiscordChannel.CreateThreadAsync(String, ThreadAutoArchiveDuration, ChannelType, Nullable&lt;Int32&gt;, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_CreatePostAsync_System_String_DisCatSharp_Entities_DiscordMessageBuilder_System_Nullable_System_Int32__System_Nullable_IEnumerable_DisCatSharp_Entities_ForumPostTag___System_String_">DiscordChannel.CreatePostAsync(String, DiscordMessageBuilder, Nullable&lt;Int32&gt;, Nullable&lt;IEnumerable&lt;ForumPostTag&gt;&gt;, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetJoinedPrivateArchivedThreadsAsync_System_Nullable_System_UInt64__System_Nullable_System_Int32__">DiscordChannel.GetJoinedPrivateArchivedThreadsAsync(Nullable&lt;UInt64&gt;, Nullable&lt;Int32&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetPublicArchivedThreadsAsync_System_Nullable_System_UInt64__System_Nullable_System_Int32__">DiscordChannel.GetPublicArchivedThreadsAsync(Nullable&lt;UInt64&gt;, Nullable&lt;Int32&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetPrivateArchivedThreadsAsync_System_Nullable_System_UInt64__System_Nullable_System_Int32__">DiscordChannel.GetPrivateArchivedThreadsAsync(Nullable&lt;UInt64&gt;, Nullable&lt;Int32&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetForumPostTag_System_UInt64_">DiscordChannel.GetForumPostTag(UInt64)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_TryGetForumPostTag_System_UInt64_">DiscordChannel.TryGetForumPostTag(UInt64)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_CreateForumPostTagAsync_System_String_DisCatSharp_Entities_DiscordEmoji_System_Boolean_System_String_">DiscordChannel.CreateForumPostTagAsync(String, DiscordEmoji, Boolean, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_DeleteForumPostTag_System_UInt64_System_String_">DiscordChannel.DeleteForumPostTag(UInt64, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_AddOverwriteAsync_DisCatSharp_Entities_DiscordRole_DisCatSharp_Enums_Permissions_DisCatSharp_Enums_Permissions_System_String_">DiscordChannel.AddOverwriteAsync(DiscordRole, Permissions, Permissions, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_AddOverwriteAsync_DisCatSharp_Entities_DiscordMember_DisCatSharp_Enums_Permissions_DisCatSharp_Enums_Permissions_System_String_">DiscordChannel.AddOverwriteAsync(DiscordMember, Permissions, Permissions, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_DeleteOverwriteAsync_DisCatSharp_Entities_DiscordMember_System_String_">DiscordChannel.DeleteOverwriteAsync(DiscordMember, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_DeleteOverwriteAsync_DisCatSharp_Entities_DiscordRole_System_String_">DiscordChannel.DeleteOverwriteAsync(DiscordRole, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_TriggerTypingAsync">DiscordChannel.TriggerTypingAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetPinnedMessagesAsync">DiscordChannel.GetPinnedMessagesAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_CreateWebhookAsync_System_String_DisCatSharp_Entities_Optional_Stream__System_String_">DiscordChannel.CreateWebhookAsync(String, Optional&lt;Stream&gt;, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetWebhooksAsync">DiscordChannel.GetWebhooksAsync()</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_PlaceMemberAsync_DisCatSharp_Entities_DiscordMember_">DiscordChannel.PlaceMemberAsync(DiscordMember)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_FollowAsync_DisCatSharp_Entities_DiscordChannel_">DiscordChannel.FollowAsync(DiscordChannel)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_CrosspostMessageAsync_DisCatSharp_Entities_DiscordMessage_">DiscordChannel.CrosspostMessageAsync(DiscordMessage)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_UpdateCurrentUserVoiceStateAsync_System_Nullable_System_Boolean__System_Nullable_DateTimeOffset__">DiscordChannel.UpdateCurrentUserVoiceStateAsync(Nullable&lt;Boolean&gt;, Nullable&lt;DateTimeOffset&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_PermissionsFor_DisCatSharp_Entities_DiscordMember_">DiscordChannel.PermissionsFor(DiscordMember)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Equals_System_Object_">DiscordChannel.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_Equals_DisCatSharp_Entities_DiscordChannel_">DiscordChannel.Equals(DiscordChannel)</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_GetHashCode">DiscordChannel.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.SnowflakeObject.html#DisCatSharp_Entities_SnowflakeObject_Id">SnowflakeObject.Id</a>
+    </div>
+    <div>
+      <a class="xref" href="DisCatSharp.Entities.SnowflakeObject.html#DisCatSharp_Entities_SnowflakeObject_CreationTimestamp">SnowflakeObject.CreationTimestamp</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="DisCatSharp.Entities.html">DisCatSharp.Entities</a></h6>
+  <h6><strong>Assembly</strong>: DisCatSharp.dll</h6>
+  <h5 id="DisCatSharp_Entities_DiscordThreadChannel_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class DiscordThreadChannel : DiscordChannel</code></pre>
+  </div>
+  <h3 id="properties">Properties
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_AppliedTags.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.AppliedTags%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L103">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_AppliedTags_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.AppliedTags*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_AppliedTags" data-uid="DisCatSharp.Entities.DiscordThreadChannel.AppliedTags">AppliedTags</h4>
+  <div class="markdown level1 summary"><p>Gets the list of applied tags.
+Only applicable for forum channel posts.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;ForumPostTag&gt; AppliedTags { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="DisCatSharp.Entities.ForumPostTag.html">ForumPostTag</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_CurrentMember.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.CurrentMember%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L67">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_CurrentMember_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.CurrentMember*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_CurrentMember" data-uid="DisCatSharp.Entities.DiscordThreadChannel.CurrentMember">CurrentMember</h4>
+  <div class="markdown level1 summary"><p>Represents the current member for this thread. This will have a value if the user has joined the thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DiscordThreadChannelMember CurrentMember { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordThreadChannelMember.html">DiscordThreadChannelMember</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_MemberCount.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.MemberCount%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L61">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_MemberCount_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.MemberCount*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_MemberCount" data-uid="DisCatSharp.Entities.DiscordThreadChannel.MemberCount">MemberCount</h4>
+  <div class="markdown level1 summary"><p>Gets an approximate count of users in a thread, stops counting at 50.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int? MemberCount { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_MessageCount.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.MessageCount%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L55">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_MessageCount_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.MessageCount*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_MessageCount" data-uid="DisCatSharp.Entities.DiscordThreadChannel.MessageCount">MessageCount</h4>
+  <div class="markdown level1 summary"><p>Gets an approximate count of messages in a thread, stops counting at 50.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int? MessageCount { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_OwnerId.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.OwnerId%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L46">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_OwnerId_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.OwnerId*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_OwnerId" data-uid="DisCatSharp.Entities.DiscordThreadChannel.OwnerId">OwnerId</h4>
+  <div class="markdown level1 summary"><p>Gets ID of the owner that started this thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ulong OwnerId { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_ThreadMembers.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.ThreadMembers%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L79">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_ThreadMembers_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.ThreadMembers*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_ThreadMembers" data-uid="DisCatSharp.Entities.DiscordThreadChannel.ThreadMembers">ThreadMembers</h4>
+  <div class="markdown level1 summary"><p>Gets the thread members object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IReadOnlyDictionary&lt;ulong, DiscordThreadChannelMember&gt; ThreadMembers { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IReadOnlyDictionary</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a>, <a class="xref" href="DisCatSharp.Entities.DiscordThreadChannelMember.html">DiscordThreadChannelMember</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_ThreadMetadata.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.ThreadMetadata%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L73">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_ThreadMetadata_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.ThreadMetadata*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_ThreadMetadata" data-uid="DisCatSharp.Entities.DiscordThreadChannel.ThreadMetadata">ThreadMetadata</h4>
+  <div class="markdown level1 summary"><p>Gets the threads metadata.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DiscordThreadChannelMetadata ThreadMetadata { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordThreadChannelMetadata.html">DiscordThreadChannelMetadata</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_TotalMessagesSent.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.TotalMessagesSent%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L49">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_TotalMessagesSent_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.TotalMessagesSent*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_TotalMessagesSent" data-uid="DisCatSharp.Entities.DiscordThreadChannel.TotalMessagesSent">TotalMessagesSent</h4>
+  <div class="markdown level1 summary"><p>Represents a discord thread channel.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int TotalMessagesSent { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+</h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_AddMemberAsync_DisCatSharp_Entities_DiscordMember_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.AddMemberAsync(DisCatSharp.Entities.DiscordMember)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L208">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_AddMemberAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.AddMemberAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_AddMemberAsync_DisCatSharp_Entities_DiscordMember_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.AddMemberAsync(DisCatSharp.Entities.DiscordMember)">AddMemberAsync(DiscordMember)</h4>
+  <div class="markdown level1 summary"><p>Adds a member to this thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task AddMemberAsync(DiscordMember member)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordMember.html">DiscordMember</a></td>
+        <td><span class="parametername">member</span></td>
+        <td><p>The member to be added.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_AddMemberAsync_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.AddMemberAsync(System.UInt64)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L198">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_AddMemberAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.AddMemberAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_AddMemberAsync_System_UInt64_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.AddMemberAsync(System.UInt64)">AddMemberAsync(UInt64)</h4>
+  <div class="markdown level1 summary"><p>Adds a member to this thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task AddMemberAsync(ulong memberId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">memberId</span></td>
+        <td><p>The member id to be added.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_AddRoleAsync_DisCatSharp_Entities_DiscordRole_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.AddRoleAsync(DisCatSharp.Entities.DiscordRole)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L317">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_AddRoleAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.AddRoleAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_AddRoleAsync_DisCatSharp_Entities_DiscordRole_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.AddRoleAsync(DisCatSharp.Entities.DiscordRole)">AddRoleAsync(DiscordRole)</h4>
+  <div class="markdown level1 summary"><p>Adds a role to this thread. Only applicable to private threads.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task AddRoleAsync(DiscordRole role)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordRole.html">DiscordRole</a></td>
+        <td><span class="parametername">role</span></td>
+        <td><p>The role to be added.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_AddRoleAsync_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.AddRoleAsync(System.UInt64)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L299">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_AddRoleAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.AddRoleAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_AddRoleAsync_System_UInt64_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.AddRoleAsync(System.UInt64)">AddRoleAsync(UInt64)</h4>
+  <div class="markdown level1 summary"><p>Adds a role to this thread. Only applicable to private threads.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task AddRoleAsync(ulong roleId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">roleId</span></td>
+        <td><p>The role id to be added.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_AddTagAsync_DisCatSharp_Entities_ForumPostTag_System_String_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.AddTagAsync(DisCatSharp.Entities.ForumPostTag%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L143">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_AddTagAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.AddTagAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_AddTagAsync_DisCatSharp_Entities_ForumPostTag_System_String_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.AddTagAsync(DisCatSharp.Entities.ForumPostTag,System.String)">AddTagAsync(ForumPostTag, String)</h4>
+  <div class="markdown level1 summary"><p>Add a tag to the current thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task AddTagAsync(ForumPostTag tag, string reason = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.ForumPostTag.html">ForumPostTag</a></td>
+        <td><span class="parametername">tag</span></td>
+        <td><p>The tag to add.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">reason</span></td>
+        <td><p>The reason for the audit logs.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.UnauthorizedException.html">UnauthorizedException</a></td>
+        <td><p>Thrown when the client does not have the <a class="xref" href="DisCatSharp.Enums.Permissions.html#DisCatSharp_Enums_Permissions_ManageThreads">ManageThreads</a> permission.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_ArchiveAsync_System_Boolean_System_String_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.ArchiveAsync(System.Boolean%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L169">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_ArchiveAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.ArchiveAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_ArchiveAsync_System_Boolean_System_String_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.ArchiveAsync(System.Boolean,System.String)">ArchiveAsync(Boolean, String)</h4>
+  <div class="markdown level1 summary"><p>Archives a thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ArchiveAsync(bool locked = true, string reason = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">locked</span></td>
+        <td><p>Whether the thread should be locked.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">reason</span></td>
+        <td><p>Reason for audit logs.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.UnauthorizedException.html">UnauthorizedException</a></td>
+        <td><p>Thrown when the client does not have the <a class="xref" href="DisCatSharp.Enums.Permissions.html#DisCatSharp_Enums_Permissions_ManageThreads">ManageThreads</a> permission.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_GetMemberAsync_DisCatSharp_Entities_DiscordMember_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.GetMemberAsync(DisCatSharp.Entities.DiscordMember)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L249">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_GetMemberAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.GetMemberAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_GetMemberAsync_DisCatSharp_Entities_DiscordMember_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.GetMemberAsync(DisCatSharp.Entities.DiscordMember)">GetMemberAsync(DiscordMember)</h4>
+  <div class="markdown level1 summary"><p>Gets a member in this thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;DiscordThreadChannelMember&gt; GetMemberAsync(DiscordMember member)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordMember.html">DiscordMember</a></td>
+        <td><span class="parametername">member</span></td>
+        <td><p>The member to get.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordThreadChannelMember.html">DiscordThreadChannelMember</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the member is not part of the thread.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_GetMemberAsync_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.GetMemberAsync(System.UInt64)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L218">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_GetMemberAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.GetMemberAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_GetMemberAsync_System_UInt64_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.GetMemberAsync(System.UInt64)">GetMemberAsync(UInt64)</h4>
+  <div class="markdown level1 summary"><p>Gets a member in this thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task&lt;DiscordThreadChannelMember&gt; GetMemberAsync(ulong memberId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">memberId</span></td>
+        <td><p>The id of the member to get.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordThreadChannelMember.html">DiscordThreadChannelMember</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the member is not part of the thread.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_GetMembersAsync.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.GetMembersAsync%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L188">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_GetMembersAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.GetMembersAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_GetMembersAsync" data-uid="DisCatSharp.Entities.DiscordThreadChannel.GetMembersAsync">GetMembersAsync()</h4>
+  <div class="markdown level1 summary"><p>Gets the members of a thread. Needs the <a class="xref" href="DisCatSharp.DiscordIntents.html#DisCatSharp_DiscordIntents_GuildMembers">GuildMembers</a> intent.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task&lt;IReadOnlyList&lt;DiscordThreadChannelMember&gt;&gt; GetMembersAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordThreadChannelMember.html">DiscordThreadChannelMember</a>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_JoinAsync.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.JoinAsync%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L355">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_JoinAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.JoinAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_JoinAsync" data-uid="DisCatSharp.Entities.DiscordThreadChannel.JoinAsync">JoinAsync()</h4>
+  <div class="markdown level1 summary"><p>Joins a thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task JoinAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.UnauthorizedException.html">UnauthorizedException</a></td>
+        <td><p>Thrown when the client has no access to this thread.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_LeaveAsync.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.LeaveAsync%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L365">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_LeaveAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.LeaveAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_LeaveAsync" data-uid="DisCatSharp.Entities.DiscordThreadChannel.LeaveAsync">LeaveAsync()</h4>
+  <div class="markdown level1 summary"><p>Leaves a thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task LeaveAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.UnauthorizedException.html">UnauthorizedException</a></td>
+        <td><p>Thrown when the client has no access to this thread.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_ModifyAsync_Action_DisCatSharp_Net_Models_ThreadEditModel__.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.ModifyAsync(Action%7BDisCatSharp.Net.Models.ThreadEditModel%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L124">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_ModifyAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.ModifyAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_ModifyAsync_Action_DisCatSharp_Net_Models_ThreadEditModel__" data-uid="DisCatSharp.Entities.DiscordThreadChannel.ModifyAsync(Action{DisCatSharp.Net.Models.ThreadEditModel})">ModifyAsync(Action&lt;ThreadEditModel&gt;)</h4>
+  <div class="markdown level1 summary"><p>Modifies the current thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task ModifyAsync(Action&lt;ThreadEditModel&gt; action)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Action</span>&lt;<a class="xref" href="DisCatSharp.Net.Models.ThreadEditModel.html">ThreadEditModel</a>&gt;</td>
+        <td><span class="parametername">action</span></td>
+        <td><p>Action to perform on this thread</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.UnauthorizedException.html">UnauthorizedException</a></td>
+        <td><p>Thrown when the client does not have the <a class="xref" href="DisCatSharp.Enums.Permissions.html#DisCatSharp_Enums_Permissions_ManageThreads">ManageThreads</a> permission.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_RemoveMemberAsync_DisCatSharp_Entities_DiscordMember_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.RemoveMemberAsync(DisCatSharp.Entities.DiscordMember)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L289">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_RemoveMemberAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.RemoveMemberAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_RemoveMemberAsync_DisCatSharp_Entities_DiscordMember_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.RemoveMemberAsync(DisCatSharp.Entities.DiscordMember)">RemoveMemberAsync(DiscordMember)</h4>
+  <div class="markdown level1 summary"><p>Removes a member from this thread. Only applicable to private threads.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task RemoveMemberAsync(DiscordMember member)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordMember.html">DiscordMember</a></td>
+        <td><span class="parametername">member</span></td>
+        <td><p>The member to be removed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_RemoveMemberAsync_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.RemoveMemberAsync(System.UInt64)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L279">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_RemoveMemberAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.RemoveMemberAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_RemoveMemberAsync_System_UInt64_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.RemoveMemberAsync(System.UInt64)">RemoveMemberAsync(UInt64)</h4>
+  <div class="markdown level1 summary"><p>Removes a member from this thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task RemoveMemberAsync(ulong memberId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">memberId</span></td>
+        <td><p>The member id to be removed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_RemoveRoleAsync_DisCatSharp_Entities_DiscordRole_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.RemoveRoleAsync(DisCatSharp.Entities.DiscordRole)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L345">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_RemoveRoleAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.RemoveRoleAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_RemoveRoleAsync_DisCatSharp_Entities_DiscordRole_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.RemoveRoleAsync(DisCatSharp.Entities.DiscordRole)">RemoveRoleAsync(DiscordRole)</h4>
+  <div class="markdown level1 summary"><p>Removes a role from this thread. Only applicable to private threads.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task RemoveRoleAsync(DiscordRole role)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordRole.html">DiscordRole</a></td>
+        <td><span class="parametername">role</span></td>
+        <td><p>The role to be removed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_RemoveRoleAsync_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.RemoveRoleAsync(System.UInt64)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L327">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_RemoveRoleAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.RemoveRoleAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_RemoveRoleAsync_System_UInt64_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.RemoveRoleAsync(System.UInt64)">RemoveRoleAsync(UInt64)</h4>
+  <div class="markdown level1 summary"><p>Removes a role from this thread. Only applicable to private threads.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task RemoveRoleAsync(ulong roleId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">roleId</span></td>
+        <td><p>The role id to be removed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_RemoveTagAsync_DisCatSharp_Entities_ForumPostTag_System_String_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.RemoveTagAsync(DisCatSharp.Entities.ForumPostTag%2CSystem.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L157">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_RemoveTagAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.RemoveTagAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_RemoveTagAsync_DisCatSharp_Entities_ForumPostTag_System_String_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.RemoveTagAsync(DisCatSharp.Entities.ForumPostTag,System.String)">RemoveTagAsync(ForumPostTag, String)</h4>
+  <div class="markdown level1 summary"><p>Remove a tag from the current thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task RemoveTagAsync(ForumPostTag tag, string reason = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.ForumPostTag.html">ForumPostTag</a></td>
+        <td><span class="parametername">tag</span></td>
+        <td><p>The tag to remove.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">reason</span></td>
+        <td><p>The reason for the audit logs.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.UnauthorizedException.html">UnauthorizedException</a></td>
+        <td><p>Thrown when the client does not have the <a class="xref" href="DisCatSharp.Enums.Permissions.html#DisCatSharp_Enums_Permissions_ManageThreads">ManageThreads</a> permission.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_ToString.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.ToString%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L372">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_ToString_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.ToString*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_ToString" data-uid="DisCatSharp.Entities.DiscordThreadChannel.ToString">ToString()</h4>
+  <div class="markdown level1 summary"><p>Returns a string representation of this thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>String representation of this thread.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="DisCatSharp.Entities.DiscordChannel.html#DisCatSharp_Entities_DiscordChannel_ToString">DiscordChannel.ToString()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_TryGetMemberAsync_DisCatSharp_Entities_DiscordMember_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.TryGetMemberAsync(DisCatSharp.Entities.DiscordMember)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L259">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_TryGetMemberAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.TryGetMemberAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_TryGetMemberAsync_DisCatSharp_Entities_DiscordMember_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.TryGetMemberAsync(DisCatSharp.Entities.DiscordMember)">TryGetMemberAsync(DiscordMember)</h4>
+  <div class="markdown level1 summary"><p>Tries to get a member in this thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task&lt;DiscordThreadChannelMember&gt; TryGetMemberAsync(DiscordMember member)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Entities.DiscordMember.html">DiscordMember</a></td>
+        <td><span class="parametername">member</span></td>
+        <td><p>The member to get.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordThreadChannelMember.html">DiscordThreadChannelMember</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_TryGetMemberAsync_System_UInt64_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.TryGetMemberAsync(System.UInt64)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L229">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_TryGetMemberAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.TryGetMemberAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_TryGetMemberAsync_System_UInt64_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.TryGetMemberAsync(System.UInt64)">TryGetMemberAsync(UInt64)</h4>
+  <div class="markdown level1 summary"><p>Tries to get a member in this thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task&lt;DiscordThreadChannelMember&gt; TryGetMemberAsync(ulong memberId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">memberId</span></td>
+        <td><p>The id of the member to get.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="DisCatSharp.Entities.DiscordThreadChannelMember.html">DiscordThreadChannelMember</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/new/main/apiSpec/new?filename=DisCatSharp_Entities_DiscordThreadChannel_UnarchiveAsync_System_String_.md&amp;value=---%0Auid%3A%20DisCatSharp.Entities.DiscordThreadChannel.UnarchiveAsync(System.String)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Aiko-IT-Systems/DisCatSharp/blob/main/DisCatSharp/Entities/Guild/ThreadAndForum/DiscordThreadChannel.cs/#L179">View Source</a>
+  </span>
+  <a id="DisCatSharp_Entities_DiscordThreadChannel_UnarchiveAsync_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.UnarchiveAsync*"></a>
+  <h4 id="DisCatSharp_Entities_DiscordThreadChannel_UnarchiveAsync_System_String_" data-uid="DisCatSharp.Entities.DiscordThreadChannel.UnarchiveAsync(System.String)">UnarchiveAsync(String)</h4>
+  <div class="markdown level1 summary"><p>Unarchives a thread.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task UnarchiveAsync(string reason = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">reason</span></td>
+        <td><p>Reason for audit logs.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.NotFoundException.html">NotFoundException</a></td>
+        <td><p>Thrown when the thread does not exist.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.BadRequestException.html">BadRequestException</a></td>
+        <td><p>Thrown when an invalid parameter was provided.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="DisCatSharp.Exceptions.ServerErrorException.html">ServerErrorException</a></td>
+        <td><p>Thrown when Discord is unable to process the request.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">IEquatable&lt;&gt;</span>
+  </div>
+
+</article>
+                </div>
+
+                <div class="copyright-footer">
+                    <span>&#169; Aiko IT Systems. All rights reserved.</span>
+                </div>
+            </div></main>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.vendor.js"></script>
+        <script type="text/javascript" src="../../src/scripts/docfx.js"></script>
+        <script type="text/javascript" src="../../src/scripts/url.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/highlight/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
+        <script type="text/javascript" src="../../src/scripts/jquery.twbsPagination.js"></script>
+        <script type="text/javascript" src="../../src/scripts/dcs.js"></script>
+        <script type="text/javascript" src="../../src/scripts/lunr.js"></script>
+    </body>
+</html>
